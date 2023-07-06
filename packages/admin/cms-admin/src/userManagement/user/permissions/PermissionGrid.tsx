@@ -9,9 +9,9 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { PermissionContentScopesDialog } from "./PermissionContentScopesDialog";
 import { PermissionDialog } from "./PermissionDialog";
-import { GQLPermissionsQuery, GQLPermissionsQueryVariables, namedOperations } from "./Permissions.generated";
+import { GQLPermissionForGridFragment, GQLPermissionsQuery, GQLPermissionsQueryVariables, namedOperations } from "./PermissionGrid.generated";
 
-export const Permissions: React.FC<{
+export const PermissionGrid: React.FC<{
     userId: string;
 }> = ({ userId }) => {
     const intl = useIntl();
@@ -22,18 +22,21 @@ export const Permissions: React.FC<{
         gql`
             query Permissions($userId: String!) {
                 permissions: userManagementPermissionList(userId: $userId) {
-                    id
-                    permission
-                    name
-                    description
-                    source
-                    validFrom
-                    validTo
-                    reason
-                    requestedBy
-                    approvedBy
-                    overrideContentScopes
+                    ...PermissionForGrid
                 }
+            }
+            fragment PermissionForGrid on UserPermission {
+                id
+                permission
+                name
+                description
+                source
+                validFrom
+                validTo
+                reason
+                requestedBy
+                approvedBy
+                overrideContentScopes
             }
         `,
         {
@@ -43,7 +46,7 @@ export const Permissions: React.FC<{
         },
     );
 
-    const columns: GridColDef<GQLPermissionsQuery["permissions"][0]>[] = [
+    const columns: GridColDef<GQLPermissionForGridFragment>[] = [
         {
             field: "name",
             flex: 1,
@@ -169,13 +172,11 @@ export const Permissions: React.FC<{
 
     return (
         <Card>
-            <DataGrid
-                checkboxSelection={true}
+            <DataGrid<GQLPermissionForGridFragment>
                 autoHeight={true}
                 rows={data?.permissions ?? []}
                 columns={columns}
                 rowCount={data?.permissions.length ?? 0}
-                disableSelectionOnClick
                 loading={loading}
                 getRowHeight={() => "auto"}
                 sx={{ "&.MuiDataGrid-root .MuiDataGrid-cell": { py: "8px" } }}

@@ -1,38 +1,36 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { Field, FinalForm, FinalFormCheckbox, SaveButton, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Card, CardContent, CircularProgress, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Card, CardContent, CircularProgress, Toolbar, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { CardToolbar } from "../../Comet";
 import {
     GQLContentScopesQuery,
     GQLContentScopesQueryVariables,
     GQLSetContentScopeMutation,
     GQLSetContentScopeMutationVariables,
-} from "./ContentScopes.generated";
+} from "./ContentScopeGrid.generated";
 
 interface FormSubmitData {
     [key: string]: Array<string>;
 }
 
-export const ContentScopes: React.FC<{
+export const ContentScopeGrid: React.FC<{
     userId: string;
 }> = ({ userId }) => {
-    const [update] = useMutation<GQLSetContentScopeMutation, GQLSetContentScopeMutationVariables>(gql`
-        mutation SetContentScope($input: UserContentScopesInput!) {
-            userManagementSetContentScope(input: $input) {
-                userId
-                scopes {
-                    scope
-                    values
-                }
-            }
-        }
-    `);
+    const client = useApolloClient();
+
     const submit = async (data: FormSubmitData) => {
-        await update({
+        await client.mutate<GQLSetContentScopeMutation, GQLSetContentScopeMutationVariables>({
+            mutation: gql`
+                mutation SetContentScope($input: UserContentScopesInput!) {
+                    userManagementSetContentScope(input: $input) {
+                        userId
+                    }
+                }
+            `,
             variables: {
                 input: {
                     userId,
@@ -70,7 +68,6 @@ export const ContentScopes: React.FC<{
         `,
         {
             variables: { userId },
-            //fetchPolicy: "network-only",
         },
     );
 
@@ -144,4 +141,7 @@ export const ContentScopes: React.FC<{
     );
 };
 
-export default ContentScopes;
+const CardToolbar = styled(Toolbar)`
+    top: 0px;
+    border-bottom: 1px solid ${({ theme }) => theme.palette.grey[100]};
+`;

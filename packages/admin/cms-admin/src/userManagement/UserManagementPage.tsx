@@ -1,8 +1,8 @@
 import { MainContent, Stack, StackPage, StackSwitch } from "@comet/admin";
+import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { FullHeightBox } from "./Comet";
 import { UserPage } from "./user/UserPage";
 import { UserGrid } from "./UserGrid";
 
@@ -18,9 +18,9 @@ export const UserManagementPage = (props: UserManagementPageProps): React.ReactE
             <StackSwitch>
                 <StackPage name="table">
                     <MainContent>
-                        <FullHeightBox bottomSpacing={50}>
+                        <DataGridContainer>
                             <UserGrid />
-                        </FullHeightBox>
+                        </DataGridContainer>
                     </MainContent>
                 </StackPage>
                 <StackPage name="edit">{(userId) => <UserPage userId={userId} />}</StackPage>
@@ -28,3 +28,8 @@ export const UserManagementPage = (props: UserManagementPageProps): React.ReactE
         </Stack>
     </UserManagementSettings.Provider>
 );
+
+const DataGridContainer = styled("div")`
+    width: 100%;
+    height: calc(100vh - var(--comet-admin-master-layout-content-top-spacing) - 50px);
+`;

@@ -14,20 +14,18 @@ import {
 import { Edit } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, GridColDef, GridSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import React from "react";
 import { useIntl } from "react-intl";
 
-import { GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
+import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
 
 export const UserGrid: React.FC = () => {
-    const dataGridProps = { ...useDataGridRemote({ pageSize: 25 }), ...usePersistentColumnState("UserGrid") };
+    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserGrid") };
     const intl = useIntl();
     const stackApi = React.useContext(StackSwitchApiContext);
 
-    const [selectionModel, setSelectionModel] = React.useState<GridSelectionModel>([]);
-
-    const columns: GridColDef<GQLUserGridQuery["users"]["nodes"][0]>[] = [
+    const columns: GridColDef<GQLUserForGridFragment>[] = [
         {
             field: "name",
             flex: 1,
@@ -80,14 +78,17 @@ export const UserGrid: React.FC = () => {
             query UserGrid($offset: Int, $limit: Int, $filter: UserFilter, $sort: [UserSort!], $search: String) {
                 users: userManagementUsers(offset: $offset, limit: $limit, filter: $filter, sort: $sort, search: $search) {
                     nodes {
-                        id
-                        name
-                        email
-                        language
-                        status
+                        ...UserForGrid
                     }
                     totalCount
                 }
+            }
+            fragment UserForGrid on User {
+                id
+                name
+                email
+                language
+                status
             }
         `,
         {
@@ -103,17 +104,11 @@ export const UserGrid: React.FC = () => {
     if (error) throw new Error(error.message);
 
     return (
-        <DataGrid
-            checkboxSelection
-            onSelectionModelChange={(newSelectionModel) => {
-                setSelectionModel(newSelectionModel);
-            }}
-            selectionModel={selectionModel}
+        <DataGrid<GQLUserForGridFragment>
             {...dataGridProps}
             rows={data?.users.nodes ?? []}
             columns={columns}
             rowCount={data?.users.totalCount ?? 0}
-            disableSelectionOnClick
             loading={loading}
             components={{
                 Toolbar: () => (

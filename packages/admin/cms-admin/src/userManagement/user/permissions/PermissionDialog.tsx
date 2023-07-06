@@ -1,12 +1,12 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, SaveButton } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, InputBaseProps } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import React from "react";
 import { FieldRenderProps, Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { Fieldset } from "../../Comet";
 import { UserManagementSettings } from "../../UserManagementPage";
 import {
     GQLAvailablePermissionsQuery,
@@ -17,6 +17,7 @@ import {
     GQLPermissionQueryVariables,
     GQLUpdateUserPermissionMutation,
     GQLUpdateUserPermissionMutationVariables,
+    GQLUserPermissionDialogFragment,
     namedOperations,
 } from "./PermissionDialog.generated";
 
@@ -49,6 +50,62 @@ const Configuration = ({ configurationComponent, input, disabled }: Configuratio
     );
 };
 
+const createMutation = gql`
+    mutation CreateUserPermission(
+        $userId: String!
+        $permission: String!
+        $configuration: JSONObject
+        $validFrom: DateTime
+        $validTo: DateTime
+        $reason: String
+        $requestedBy: String
+        $approvedBy: String
+    ) {
+        userManagementCreatePermission(
+            data: {
+                userId: $userId
+                permission: $permission
+                configuration: $configuration
+                validFrom: $validFrom
+                validTo: $validTo
+                reason: $reason
+                requestedBy: $requestedBy
+                approvedBy: $approvedBy
+            }
+        ) {
+            id
+        }
+    }
+`;
+
+const updateMutation = gql`
+    mutation UpdateUserPermission(
+        $id: ID!
+        $permission: String!
+        $configuration: JSONObject
+        $validFrom: DateTime
+        $validTo: DateTime
+        $reason: String
+        $requestedBy: String
+        $approvedBy: String
+    ) {
+        userManagementUpdatePermission(
+            data: {
+                id: $id
+                permission: $permission
+                configuration: $configuration
+                validFrom: $validFrom
+                validTo: $validTo
+                reason: $reason
+                requestedBy: $requestedBy
+                approvedBy: $approvedBy
+            }
+        ) {
+            id
+        }
+    }
+`;
+
 interface FormProps {
     userId: string;
     permissionId: string | "add";
@@ -56,65 +113,20 @@ interface FormProps {
 }
 export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, handleDialogClose }) => {
     const settings = React.useContext(UserManagementSettings);
-    const [create] = useMutation<GQLCreateUserPermissionMutation, GQLCreateUserPermissionMutationVariables>(gql`
-        mutation CreateUserPermission(
-            $userId: String!
-            $permission: String!
-            $configuration: JSONObject
-            $validFrom: DateTime
-            $validTo: DateTime
-            $reason: String
-            $requestedBy: String
-            $approvedBy: String
-        ) {
-            userManagementCreatePermission(
-                data: {
-                    userId: $userId
-                    permission: $permission
-                    configuration: $configuration
-                    validFrom: $validFrom
-                    validTo: $validTo
-                    reason: $reason
-                    requestedBy: $requestedBy
-                    approvedBy: $approvedBy
-                }
-            ) {
-                id
-            }
-        }
-    `);
-    const [update] = useMutation<GQLUpdateUserPermissionMutation, GQLUpdateUserPermissionMutationVariables>(gql`
-        mutation UpdateUserPermission(
-            $id: ID!
-            $permission: String!
-            $configuration: JSONObject
-            $validFrom: DateTime
-            $validTo: DateTime
-            $reason: String
-            $requestedBy: String
-            $approvedBy: String
-        ) {
-            userManagementUpdatePermission(
-                data: {
-                    id: $id
-                    permission: $permission
-                    configuration: $configuration
-                    validFrom: $validFrom
-                    validTo: $validTo
-                    reason: $reason
-                    requestedBy: $requestedBy
-                    approvedBy: $approvedBy
-                }
-            ) {
-                id
-            }
-        }
-    `);
-    const submit = async (data: Omit<GQLPermissionQuery["userPermission"], "id">) => {
+    const client = useApolloClient();
+    const submit = async (data: GQLUserPermissionDialogFragment) => {
         if (permissionId && permissionId !== "add") {
-            await update({ variables: { id: permissionId, ...data }, refetchQueries: [namedOperations.Query.Permission, "Permissions"] });
+            await client.mutate<GQLUpdateUserPermissionMutation, GQLUpdateUserPermissionMutationVariables>({
+                mutation: updateMutation,
+                variables: { id: permissionId, ...data },
+                refetchQueries: [namedOperations.Query.Permission, "Permissions"],
+            });
         } else {
-            await create({ variables: { userId, ...data }, refetchQueries: [namedOperations.Query.Permission, "Permissions"] });
+            await client.mutate<GQLCreateUserPermissionMutation, GQLCreateUserPermissionMutationVariables>({
+                mutation: createMutation,
+                variables: { userId, ...data },
+                refetchQueries: [namedOperations.Query.Permission, "Permissions"],
+            });
         }
         handleDialogClose();
     };
@@ -123,18 +135,20 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
         gql`
             query Permission($permissionId: ID!, $userId: String) {
                 userPermission: userManagementPermission(id: $permissionId, userId: $userId) {
-                    id
-                    permission
-                    name
-                    description
-                    source
-                    configuration
-                    validFrom
-                    validTo
-                    reason
-                    requestedBy
-                    approvedBy
+                    ...UserPermissionDialog
                 }
+            }
+            fragment UserPermissionDialog on UserPermission {
+                permission
+                name
+                description
+                source
+                configuration
+                validFrom
+                validTo
+                reason
+                requestedBy
+                approvedBy
             }
         `,
         {
@@ -179,7 +193,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
 
     return (
         <Dialog maxWidth="sm" open={true}>
-            <FinalForm
+            <FinalForm<GQLUserPermissionDialogFragment>
                 mode={permissionId ? "edit" : "add"}
                 onSubmit={submit}
                 initialValues={initialValues}
@@ -266,3 +280,8 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
         </Dialog>
     );
 };
+
+// TODO Make children aware of when disabled is set to true
+const Fieldset = styled("fieldset")`
+    border: none;
+`;

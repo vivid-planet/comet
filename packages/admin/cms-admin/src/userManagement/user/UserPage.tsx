@@ -6,8 +6,8 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { UserBasicData } from "./basicData/UserBasicData";
-import { ContentScopes } from "./permissions/ContentScopes";
-import { Permissions } from "./permissions/Permissions";
+import { ContentScopeGrid } from "./permissions/ContentScopeGrid";
+import { PermissionGrid } from "./permissions/PermissionGrid";
 import { GQLUserPageQuery, GQLUserPageQueryVariables } from "./UserPage.generated";
 
 export const UserPage: React.FC<{ userId: string }> = ({ userId }) => {
@@ -49,9 +49,9 @@ export const UserPage: React.FC<{ userId: string }> = ({ userId }) => {
                         <UserBasicData id={userId} />
                     </Tab>
                     <Tab label={<FormattedMessage id="comet.userManagemant.permissions" defaultMessage="Permissions" />}>
-                        <ContentScopes userId={userId} />
+                        <ContentScopeGrid userId={userId} />
                         <Box sx={{ height: 20 }} />
-                        <Permissions userId={userId} />
+                        <PermissionGrid userId={userId} />
                     </Tab>
                 </Tabs>
             </MainContent>

@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { CancelButton, Field, FinalForm, FinalFormCheckbox, FinalFormSwitch, SaveButton } from "@comet/admin";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import {
@@ -34,22 +34,17 @@ interface FormProps {
     handleDialogClose: () => void;
 }
 export const PermissionContentScopesDialog: React.FC<FormProps> = ({ permissionId, userId, handleDialogClose }) => {
-    const [update] = useMutation<GQLsetUserPermissionContentScopesMutation, GQLsetUserPermissionContentScopesMutationVariables>(
-        gql`
-            mutation setUserPermissionContentScopes($data: UserPermissionContentScopesInput!) {
-                userManagementSetPermissionContentScopes(data: $data) {
-                    source
-                    overrideContentScopes
-                    contentScopes {
-                        scope
-                        values
+    const client = useApolloClient();
+
+    const submit = async (data: FormSubmitData) => {
+        await client.mutate<GQLsetUserPermissionContentScopesMutation, GQLsetUserPermissionContentScopesMutationVariables>({
+            mutation: gql`
+                mutation setUserPermissionContentScopes($data: UserPermissionContentScopesInput!) {
+                    userManagementSetPermissionContentScopes(data: $data) {
+                        id
                     }
                 }
-            }
-        `,
-    );
-    const submit = async (data: FormSubmitData) => {
-        await update({
+            `,
             variables: {
                 data: {
                     permissionId,
@@ -106,7 +101,7 @@ export const PermissionContentScopesDialog: React.FC<FormProps> = ({ permissionI
 
     return (
         <Dialog maxWidth="sm" open={true}>
-            <FinalForm
+            <FinalForm<FormSubmitData>
                 mode="edit"
                 onSubmit={submit}
                 initialValues={initialValues}

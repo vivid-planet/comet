@@ -1,10 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
 import { Field, FinalForm, FinalFormInput, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
-import { Card, CardContent, CircularProgress, Switch } from "@mui/material";
+import { Card, CardContent, CircularProgress, Switch, Toolbar } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { CardToolbar } from "../../Comet";
 import { GQLUserBasicDataQuery, GQLUserBasicDataQueryVariables } from "./UserBasicData.generated";
 
 export const UserBasicData: React.FC<{
@@ -84,3 +84,8 @@ export const UserBasicData: React.FC<{
         </Card>
     );
 };
+
+const CardToolbar = styled(Toolbar)`
+    top: 0px;
+    border-bottom: 1px solid ${({ theme }) => theme.palette.grey[100]};
+`;
