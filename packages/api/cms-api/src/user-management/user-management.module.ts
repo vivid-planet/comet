@@ -45,14 +45,14 @@ interface UserModuleAsyncConfig<AvailablePermissions extends string> extends Pic
 @Global()
 @Module({})
 export class UserManagementModule {
-    static register<AvailablePermissions extends string>(config: UserModuleConfig<AvailablePermissions>): DynamicModule {
+    static forRoot<AvailablePermissions extends string>(config: UserModuleConfig<AvailablePermissions>): DynamicModule {
         return UserManagementModule._register({
             provide: USER_MODULE_CONFIG,
             useValue: config,
         });
     }
 
-    static registerAsync<AvailablePermissions extends string>(asyncConfig: UserModuleAsyncConfig<AvailablePermissions>): DynamicModule {
+    static forRootAsync<AvailablePermissions extends string>(asyncConfig: UserModuleAsyncConfig<AvailablePermissions>): DynamicModule {
         return UserManagementModule._register({
             provide: USER_MODULE_CONFIG,
             ...asyncConfig,

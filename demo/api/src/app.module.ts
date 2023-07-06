@@ -74,7 +74,8 @@ export class AppModule {
                     inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
                 }),
                 AuthModule,
-                UserManagementModule.register<USERMANAGEMENT.pageTree | typeof USERMANAGEMENT.userManagement | "news" | "products">({
+                UserManagementModule.forRoot<USERMANAGEMENT.pageTree | typeof USERMANAGEMENT.userManagement | "news" | "products">({
+                    // To use a real user service, instantiate this module with forRootAsync and inject required services
                     userService: {
                         findUsers: async (args: FindUsersArgs) => {
                             const search = args.search?.toLowerCase();
