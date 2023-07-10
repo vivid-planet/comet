@@ -1,5 +1,22 @@
 # @comet/cms-api
 
+## 4.3.0
+
+### Minor Changes
+
+-   afc7a6b6: Add human readable label for publisher (cron jobs and jobs)
+-   b4264f18: Make changes checker scope-aware
+
+### Patch Changes
+
+-   44fbe3f9: add stream end when create files from buffer in filestorage
+-   92f23a46: Change propagationPolicy for deleting jobs from default to Background
+
+    Currently we use the default propagationPolicy for deleting jobs. This results in pods from jobs being deleted in k8s but not on OpenShift. With the value fixed to "Background", the jobs should get deleted on every system.
+    Foreground would be blocking, so we use Background to be non blocking.
+
+    -   @comet/blocks-api@4.3.0
+
 ## 4.2.0
 
 ### Minor Changes

@@ -1,5 +1,28 @@
 # @comet/cms-admin
 
+## 4.3.0
+
+### Minor Changes
+
+-   afc7a6b6: Add human readable label for publisher (cron jobs and jobs)
+-   c302bc46: Admin: AboutModal: make logo configurable
+
+### Patch Changes
+
+-   c725984f: Disable the DAM license feature per default.
+
+    The form fields to add license information to assets are now hidden per default. License warnings are not shown per default.
+    Setting the `enableLicenseFeature` option via the DamConfigProvider is now necessary to show the license fields and warnings.
+
+-   Updated dependencies [3dc5f55a]
+-   Updated dependencies [865cc5cf]
+    -   @comet/admin-rte@4.3.0
+    -   @comet/admin@4.3.0
+    -   @comet/admin-date-time@4.3.0
+    -   @comet/admin-icons@4.3.0
+    -   @comet/admin-theme@4.3.0
+    -   @comet/blocks-admin@4.3.0
+
 ## 4.2.0
 
 ### Minor Changes
