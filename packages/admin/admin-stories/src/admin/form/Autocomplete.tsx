@@ -20,6 +20,10 @@ const initialValues = {
     autocompleteAsync: { value: "strawberry", label: "Strawberry" },
     select: { value: "strawberry", label: "Strawberry" },
     selectAsync: { value: "strawberry", label: "Strawberry" },
+    selectAsyncMultiple: [
+        { value: "strawberry", label: "Strawberry" },
+        { value: "chocolate", label: "Chocolate" },
+    ],
 };
 
 function Story() {
@@ -27,6 +31,9 @@ function Story() {
         return new Promise((resolve) => setTimeout(() => resolve(options), 500));
     });
     const selectAsyncProps = useAsyncOptionsProps<Option>(async () => {
+        return new Promise((resolve) => setTimeout(() => resolve(options), 500));
+    });
+    const selectAsyncMultipleProps = useAsyncOptionsProps<Option>(async () => {
         return new Promise((resolve) => setTimeout(() => resolve(options), 500));
     });
     return (
@@ -87,6 +94,18 @@ function Story() {
                                 {...selectAsyncProps}
                                 name="selectAsync"
                                 label="SelectAsync"
+                                fullWidth
+                            />
+                            <Field
+                                component={FinalFormSelect}
+                                getOptionLabel={(option: Option) => option.label}
+                                getOptionSelected={(option: Option, value: Option) => {
+                                    return option.value === value.value;
+                                }}
+                                {...selectAsyncMultipleProps}
+                                name="selectAsyncMultiple"
+                                label="SelectAsyncMultiple"
+                                multiple
                                 fullWidth
                             />
                             <Button color="primary" variant="contained" type="submit">
