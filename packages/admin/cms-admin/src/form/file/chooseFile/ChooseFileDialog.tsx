@@ -7,6 +7,7 @@ import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
 
 import { DamScopeProvider } from "../../../dam/config/DamScopeProvider";
+import { useDamConfig } from "../../../dam/config/useDamConfig";
 import { useDamScope } from "../../../dam/config/useDamScope";
 import { DamTable } from "../../../dam/DamTable";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
@@ -46,11 +47,11 @@ const TableRowButton = styled(Button)`
 const renderDamLabel = (
     row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
     onChooseFile: (fileId: string) => void,
-    { matches, filterApi }: RenderDamLabelOptions,
+    { matches, filterApi, showLicenseWarnings = false }: RenderDamLabelOptions,
 ) => {
     return isFile(row) ? (
         <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
-            <DamItemLabel asset={row} matches={matches} />
+            <DamItemLabel asset={row} matches={matches} showLicenseWarnings={showLicenseWarnings} />
         </TableRowButton>
     ) : (
         <Link
@@ -79,6 +80,7 @@ interface ChooseFileDialogProps {
 }
 
 export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes }: ChooseFileDialogProps): React.ReactElement => {
+    const damConfig = useDamConfig();
     let stateKey = "choose-file-dam-location";
     const scope = useDamScope();
 
@@ -99,7 +101,7 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
                     <RedirectToPersistedDamLocation stateKey={stateKey} />
                     <DamTable
                         renderDamLabel={(row, { matches, filterApi }: RenderDamLabelOptions) =>
-                            renderDamLabel(row, onChooseFile, { matches, filterApi })
+                            renderDamLabel(row, onChooseFile, { matches, filterApi, showLicenseWarnings: damConfig.enableLicenseFeature })
                         }
                         allowedMimetypes={allowedMimetypes}
                         hideContextMenu={true}

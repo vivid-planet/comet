@@ -60,6 +60,11 @@ scalar DateTime
 type BuildTemplate {
   id: ID!
   name: String!
+
+  """
+  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+  """
+  label: String
 }
 
 type AutoBuildStatus {
@@ -72,6 +77,11 @@ type Build {
   id: ID!
   status: JobStatus!
   name: String
+
+  """
+  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+  """
+  label: String
   trigger: String
   startTime: DateTime
   completionTime: DateTime

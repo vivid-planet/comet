@@ -4,6 +4,7 @@ import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
 import { BuildTemplatesService } from "./build-templates.service";
+import { LABEL_ANNOTATION } from "./builds.constants";
 import { BuildTemplateObject } from "./dto/build-template.object";
 
 @Resolver(() => BuildTemplateObject)
@@ -17,6 +18,10 @@ export class BuildTemplatesResolver {
         }
 
         const builderCronJobs = await this.buildTemplatesService.getAllowedBuilderCronJobs(user);
-        return builderCronJobs.map((cronJob) => ({ id: cronJob.metadata?.uid as string, name: cronJob.metadata?.name as string }));
+        return builderCronJobs.map((cronJob) => ({
+            id: cronJob.metadata?.uid as string,
+            name: cronJob.metadata?.name as string,
+            label: cronJob.metadata?.annotations?.[LABEL_ANNOTATION],
+        }));
     }
 }

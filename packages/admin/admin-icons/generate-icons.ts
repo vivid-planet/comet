@@ -1,7 +1,7 @@
 import { Presets, SingleBar } from "cli-progress";
 import { ESLint } from "eslint";
 import { parse } from "fast-xml-parser";
-import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { pascalCase, pascalCaseTransformMerge } from "pascal-case";
 const eslint = new ESLint({ fix: true });
 
@@ -15,6 +15,10 @@ const main = async () => {
         Presets.shades_classic,
     );
     bar.start(files.length, 0);
+
+    if (existsSync("src/generated")) {
+        rmSync("src/generated", { recursive: true });
+    }
 
     mkdirSync("src/generated");
     await Promise.all(

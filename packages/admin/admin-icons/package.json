@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-icons",
-    "version": "4.2.0",
+    "version": "4.3.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -12,7 +12,7 @@
         "build": "run-s clean generate-icons && run-p build:babel build:types",
         "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
-        "clean": "rimraf lib && rimraf src/generated",
+        "clean": "rimraf lib",
         "generate-icons": "ts-node generate-icons.ts",
         "lint": "run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ package.json",
@@ -24,8 +24,8 @@
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^4.2.0",
-        "@comet/eslint-config": "workspace:^4.2.0",
+        "@comet/admin-babel-preset": "workspace:^4.3.0",
+        "@comet/eslint-config": "workspace:^4.3.0",
         "@mui/material": "^5.0.0",
         "@types/cli-progress": "^3.8.0",
         "@types/node": "^18.0.0",
