@@ -67,6 +67,7 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
                     data.pipe(stream);
                 } else {
                     stream.write(data);
+                    stream.end();
                 }
             }),
             await fs.promises.writeFile(`${this.path}/${folderName}/${fileName}-${this.headersFile}`, JSON.stringify(headers), {

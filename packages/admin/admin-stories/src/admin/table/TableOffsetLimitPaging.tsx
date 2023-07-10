@@ -3,50 +3,45 @@ import { createOffsetLimitPagingAction, MainContent, Table, TableQuery, useTable
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
-
-const query = gql`
-    query Post($offset: Int, $limit: Int) {
-        posts(offset: $offset, limit: $limit) @rest(type: "PostPayload", path: "posts?_start={args.offset}&_limit={args.limit}") {
-            id
-            title
-        }
-    }
-`;
-
-interface Post {
-    id: string;
-    title: string;
-}
-
-interface IQueryData {
-    posts: Post[];
-    totalCount: number;
-}
-
-interface IVariables {
-    offset: number;
-    limit: number;
-}
+import { LaunchesPastResult } from "../../../.storybook/mocks/handlers";
+import { apolloStoryDecorator } from "../../apollo-story.decorator";
 
 function Story() {
     const pagingApi = useTableQueryPaging(0);
     const limit = 10;
-    const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
-        variables: {
-            offset: pagingApi.current,
-            limit,
+    const { tableData, api, loading, error } = useTableQuery<
+        { launchesPastResult: LaunchesPastResult },
+        { limit?: number; offset?: number; sort?: string; order?: string }
+    >()(
+        gql`
+            query LaunchesPast($limit: Int, $offset: Int, $sort: String, $order: String) {
+                launchesPastResult(limit: $limit, offset: $offset, sort: $sort, order: $order) {
+                    data {
+                        id
+                        mission_name
+                        launch_date_local
+                    }
+                    result {
+                        totalCount
+                    }
+                }
+            }
+        `,
+        {
+            variables: {
+                offset: pagingApi.current,
+                limit,
+            },
+            resolveTableData: (data) => {
+                return {
+                    data: data?.launchesPastResult?.data,
+                    totalCount: data?.launchesPastResult?.result.totalCount,
+                    pagingInfo: createOffsetLimitPagingAction(pagingApi, { totalCount: data?.launchesPastResult?.result.totalCount }, limit),
+                };
+            },
+            notifyOnNetworkStatusChange: true,
         },
-        resolveTableData: (data) => {
-            data.totalCount = 100; // Don't calculate this in a real application
-            return {
-                data: data.posts,
-                totalCount: data.totalCount,
-                pagingInfo: createOffsetLimitPagingAction(pagingApi, data, limit),
-            };
-        },
-        notifyOnNetworkStatusChange: true,
-    });
+    );
 
     return (
         <TableQuery api={api} loading={loading} error={error}>
@@ -56,8 +51,8 @@ function Story() {
                         {...tableData}
                         columns={[
                             {
-                                name: "title",
-                                header: "Title",
+                                name: "mission_name",
+                                header: "Mission Name",
                             },
                         ]}
                     />
@@ -68,9 +63,5 @@ function Story() {
 }
 
 storiesOf("@comet/admin/table", module)
-    .addDecorator(
-        apolloRestStoryDecorator({
-            uri: "https://swapi.co/api/",
-        }),
-    )
+    .addDecorator(apolloStoryDecorator("/graphql"))
     .add("Paging Offset Limit", () => <Story />);

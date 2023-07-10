@@ -46,8 +46,9 @@ const useStyles = makeStyles(() => ({
 interface AboutModalProps {
     onClose?: () => void;
     open: boolean;
+    logo?: React.ReactElement;
 }
-function AboutModal({ open, onClose }: AboutModalProps): React.ReactElement {
+function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo /> }: AboutModalProps): React.ReactElement {
     const classes = useStyles();
     const buildInformation = useBuildInformation();
 
@@ -67,7 +68,7 @@ function AboutModal({ open, onClose }: AboutModalProps): React.ReactElement {
                     </div>
                 </DialogTitle>
                 <DialogContent classes={{ root: classes.content }}>
-                    <CometDigitalExperienceLogo />
+                    {logo}
                     <div className={classes.versionContainer}>
                         <Typography classes={{ root: classes.version }}>{`v${version}`}</Typography>
                         {buildInformation?.number && buildInformation.commitHash && (
