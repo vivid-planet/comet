@@ -1,17 +1,16 @@
-import React from "react";
-import clsx from "clsx";
-import useIsBrowser from "@docusaurus/useIsBrowser";
-import { LiveProvider, LiveEditor, LiveError, LivePreview } from "react-live";
-import Translate from "@docusaurus/Translate";
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import { ChevronDown, ChevronUp } from "@comet/admin-icons";
 import BrowserOnly from "@docusaurus/BrowserOnly";
 import { usePrismTheme } from "@docusaurus/theme-common";
-import type { Props } from "@theme/Playground";
+import type { ThemeConfig } from "@docusaurus/theme-live-codeblock";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import useIsBrowser from "@docusaurus/useIsBrowser";
 import { Button } from "@mui/material";
-import { ChevronDown, ChevronUp } from "@comet/admin-icons";
+import type { Props } from "@theme/Playground";
+import clsx from "clsx";
+import React from "react";
+import { LiveEditor, LiveError, LivePreview, LiveProvider } from "react-live";
 
 import styles from "./styles.module.css";
-import type { ThemeConfig } from "@docusaurus/theme-live-codeblock";
 
 function Header({ children }: { children: React.ReactNode }) {
     return <div className={clsx(styles.playgroundHeader)}>{children}</div>;
@@ -26,11 +25,6 @@ function LivePreviewLoader() {
 function ResultWithHeader() {
     return (
         <>
-            <Header>
-                <Translate id="theme.Playground.result" description="The result label of the live codeblocks">
-                    Result
-                </Translate>
-            </Header>
             {/* https://github.com/facebook/docusaurus/issues/5747 */}
             <div className={styles.playgroundPreview}>
                 <BrowserOnly fallback={<LivePreviewLoader />}>
@@ -65,9 +59,7 @@ function EditorWithHeader() {
     return (
         <>
             <Header>
-                <Translate id="theme.Playground.liveEditor" description="The live editor label of the live codeblocks">
-                    Live Editor
-                </Translate>
+                Code
                 <Button
                     endIcon={isEditorOpen ? <ChevronUp /> : <ChevronDown />}
                     onClick={() => {
