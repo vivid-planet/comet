@@ -141,6 +141,7 @@ storiesOf("stories/form/FinalForm Fields", module)
             () => ({
                 select: { value: "strawberry", label: "Strawberry" },
                 selectAsync: { value: "strawberry", label: "Strawberry" },
+                selectMultiple: [{ value: "strawberry", label: "Strawberry" }],
             }),
             [],
         );
@@ -177,6 +178,18 @@ storiesOf("stories/form/FinalForm Fields", module)
                     {...selectAsyncProps}
                     name="selectAsync"
                     label="SelectAsync"
+                    fullWidth
+                />
+                <Field
+                    component={FinalFormSelect}
+                    multiple
+                    getOptionLabel={(option: Option) => option.label}
+                    getOptionSelected={(option: Option, value: Option) => {
+                        return option.value === value.value;
+                    }}
+                    options={options}
+                    name="selectMultiple"
+                    label="Select multiple values"
                     fullWidth
                 />
                 <Button color="primary" variant="contained" type="submit">

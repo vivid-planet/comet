@@ -54,7 +54,7 @@ const getFolderPath = (folder: GQLDamFolderTableFragment) => {
     return `/${pathArr.join("/")}`;
 };
 
-const DamItemLabel = ({ asset, showPath = false, matches, showLicenseWarnings = true }: DamItemLabelProps): React.ReactElement => {
+const DamItemLabel = ({ asset, showPath = false, matches, showLicenseWarnings = false }: DamItemLabelProps): React.ReactElement => {
     return (
         <LabelWrapper>
             <DamThumbnail asset={asset} />
