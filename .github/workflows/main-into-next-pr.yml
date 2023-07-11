@@ -22,20 +22,23 @@ jobs:
               run: |
                   git checkout next
                   git merge main
+                  echo 'PR_TITLE=Merge main into next' >> $GITHUB_ENV
+                  echo 'PR_BODY=This is an automated pull request to merge changes from `main` into `next`.' >> $GITHUB_ENV
 
             - name: Merge with conflicts if automatic merge failed
               if: failure()
               run: |
                   git add .
                   git commit -m "Merge main into next"
+                  echo 'PR_TITLE=[Conflicts] Merge main into next' >> $GITHUB_ENV
+                  echo 'PR_BODY=This is an automated pull request to merge changes from `main` into `next`. It has merge conflicts. To resolve conflicts, check out the branch `merge-main-into-next` locally, make any necessary changes to conflicting files, and commit and publish your changes.' >> $GITHUB_ENV
 
             - name: Create pull request
               if: success() || failure()
               uses: peter-evans/create-pull-request@v5
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
-                  title: "Merge main into next"
-                  body: |
-                      This is an automated pull request to merge changes from `main` into `next`.
+                  title: ${{ env.PR_TITLE }}
+                  body: ${{ env.PR_BODY }}
                   base: next
                   branch: merge-main-into-next
