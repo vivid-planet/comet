@@ -335,6 +335,31 @@ type PaginatedNews {
   totalCount: Int!
 }
 
+type ProductCategory implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  title: String!
+  slug: String!
+  createdAt: DateTime!
+  products: [Product!]!
+}
+
+type ProductTag implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  title: String!
+  createdAt: DateTime!
+  products: [Product!]!
+}
+
+type ProductVariant implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  name: String!
+  image: DamImageBlockData!
+  createdAt: DateTime!
+}
+
 type Product implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -347,6 +372,9 @@ type Product implements DocumentInterface {
   inStock: Boolean!
   image: DamImageBlockData!
   createdAt: DateTime!
+  category: ProductCategory
+  variants: [ProductVariant!]!
+  tags: [ProductTag!]!
 }
 
 enum ProductType {
@@ -357,6 +385,16 @@ enum ProductType {
 
 type PaginatedProducts {
   nodes: [Product!]!
+  totalCount: Int!
+}
+
+type PaginatedProductCategories {
+  nodes: [ProductCategory!]!
+  totalCount: Int!
+}
+
+type PaginatedProductTags {
+  nodes: [ProductTag!]!
   totalCount: Int!
 }
 
@@ -470,6 +508,11 @@ type Query {
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
   products(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
+  productCategory(id: ID!): ProductCategory!
+  productCategoryBySlug(slug: String!): ProductCategory
+  productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
+  productTag(id: ID!): ProductTag!
+  productTags(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductTagFilter, sort: [ProductTagSort!]): PaginatedProductTags!
 }
 
 enum SortDirection {
@@ -590,6 +633,7 @@ input ProductFilter {
   type: ProductTypeEnumFilter
   price: NumberFilter
   inStock: BooleanFilter
+  category: ManyToOneFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   and: [ProductFilter!]
@@ -611,6 +655,12 @@ input NumberFilter {
   notEqual: Float
 }
 
+input ManyToOneFilter {
+  isAnyOf: [ID!]
+  equal: ID
+  notEqual: ID
+}
+
 input ProductSort {
   field: ProductSortField!
   direction: SortDirection! = ASC
@@ -624,6 +674,47 @@ enum ProductSortField {
   type
   price
   inStock
+  category
+  createdAt
+  updatedAt
+}
+
+input ProductCategoryFilter {
+  title: StringFilter
+  slug: StringFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  and: [ProductCategoryFilter!]
+  or: [ProductCategoryFilter!]
+}
+
+input ProductCategorySort {
+  field: ProductCategorySortField!
+  direction: SortDirection! = ASC
+}
+
+enum ProductCategorySortField {
+  title
+  slug
+  createdAt
+  updatedAt
+}
+
+input ProductTagFilter {
+  title: StringFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  and: [ProductTagFilter!]
+  or: [ProductTagFilter!]
+}
+
+input ProductTagSort {
+  field: ProductTagSortField!
+  direction: SortDirection! = ASC
+}
+
+enum ProductTagSortField {
+  title
   createdAt
   updatedAt
 }
@@ -670,6 +761,12 @@ type Mutation {
   updateProduct(id: ID!, input: ProductUpdateInput!, lastUpdatedAt: DateTime): Product!
   deleteProduct(id: ID!): Boolean!
   updateProductVisibility(id: ID!, visible: Boolean!): Product!
+  createProductCategory(input: ProductCategoryInput!): ProductCategory!
+  updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!, lastUpdatedAt: DateTime): ProductCategory!
+  deleteProductCategory(id: ID!): Boolean!
+  createProductTag(input: ProductTagInput!): ProductTag!
+  updateProductTag(id: ID!, input: ProductTagUpdateInput!, lastUpdatedAt: DateTime): ProductTag!
+  deleteProductTag(id: ID!): Boolean!
 }
 
 input CreateBuildsInput {
@@ -840,6 +937,14 @@ input ProductInput {
   price: Float
   inStock: Boolean!
   image: DamImageBlockInput!
+  variants: [ProductVariantInput!]!
+  category: ID
+  tags: [ID!]!
+}
+
+input ProductVariantInput {
+  name: String!
+  image: DamImageBlockInput!
 }
 
 input ProductUpdateInput {
@@ -850,4 +955,29 @@ input ProductUpdateInput {
   price: Float
   inStock: Boolean
   image: DamImageBlockInput
+  variants: [ProductVariantInput!]
+  category: ID
+  tags: [ID!]
+}
+
+input ProductCategoryInput {
+  title: String!
+  slug: String!
+  products: [ID!]!
+}
+
+input ProductCategoryUpdateInput {
+  title: String
+  slug: String
+  products: [ID!]
+}
+
+input ProductTagInput {
+  title: String!
+  products: [ID!]!
+}
+
+input ProductTagUpdateInput {
+  title: String
+  products: [ID!]
 }

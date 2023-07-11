@@ -32,6 +32,8 @@ import {
     GQLProductsListFragment,
     GQLProductsListQuery,
     GQLProductsListQueryVariables,
+    GQLProductTableCategoriesQuery,
+    GQLProductTableCategoriesQueryVariables,
     GQLUpdateProductVisibilityMutation,
     GQLUpdateProductVisibilityMutationVariables,
 } from "./ProductsTable.generated";
@@ -60,6 +62,7 @@ function ProductsTable() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
+    const { data: categoriesData } = useQuery<GQLProductTableCategoriesQuery, GQLProductTableCategoriesQueryVariables>(productCategoriesQuery);
 
     const columns: GridColDef<GQLProductsListFragment>[] = [
         {
@@ -85,6 +88,14 @@ function ProductsTable() {
         { field: "description", headerName: "Description", width: 150 },
         { field: "price", headerName: "Price", width: 150, type: "number" },
         { field: "type", headerName: "Type", width: 150, type: "singleSelect", valueOptions: ["Cap", "Shirt", "Tie"] },
+        {
+            field: "category",
+            headerName: "Category",
+            width: 150,
+            renderCell: (params) => <>{params.row.category?.title}</>,
+            type: "singleSelect",
+            valueOptions: categoriesData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
+        },
         { field: "inStock", headerName: "In Stock", width: 50, type: "boolean" },
         {
             field: "visible",
@@ -133,6 +144,9 @@ function ProductsTable() {
                                             slug: input.slug,
                                             title: input.title,
                                             type: input.type,
+                                            tags: [], // todo copy tags
+                                            category: null, // todo copy category
+                                            variants: [], // todo copy variants
                                         },
                                     },
                                 });
@@ -194,6 +208,10 @@ const productsFragment = gql`
         inStock
         image
         visible
+        category {
+            id
+            title
+        }
     }
 `;
 
@@ -208,6 +226,17 @@ const productsQuery = gql`
         }
     }
     ${productsFragment}
+`;
+
+const productCategoriesQuery = gql`
+    query ProductTableCategories {
+        productCategories {
+            nodes {
+                id
+                title
+            }
+        }
+    }
 `;
 
 const deleteProductMutation = gql`

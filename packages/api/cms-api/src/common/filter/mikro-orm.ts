@@ -3,6 +3,7 @@ import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
 import { BooleanFilter } from "./boolean.filter";
 import { DateFilter } from "./date.filter";
 import { EnumFilterInterface, isEnumFilter } from "./enum.filter.factory";
+import { ManyToOneFilter } from "./many-to-one.filter";
 import { NumberFilter } from "./number.filter";
 import { StringFilter } from "./string.filter";
 
@@ -15,7 +16,7 @@ export function filterToMikroOrmQuery(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): FilterQuery<any> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const ret: ObjectQuery<any> = {};
+    const ret: any = {};
     if (filterProperty instanceof StringFilter) {
         const ilike: string[] = [];
         if (filterProperty.contains !== undefined) {
@@ -84,6 +85,16 @@ export function filterToMikroOrmQuery(
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
         }
+    } else if (filterProperty instanceof ManyToOneFilter) {
+        if (filterProperty.equal !== undefined) {
+            ret.$eq = filterProperty.equal;
+        }
+        if (filterProperty.notEqual !== undefined) {
+            ret.$ne = filterProperty.notEqual;
+        }
+        if (filterProperty.isAnyOf !== undefined) {
+            ret.$in = filterProperty.isAnyOf;
+        }
     } else if (isEnumFilter(filterProperty)) {
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
@@ -108,7 +119,7 @@ export function filtersToMikroOrmQuery(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): ObjectQuery<any> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const genericFilter = (filter: any): FilterQuery<any> => {
+    const genericFilter = (filter: any): ObjectQuery<any> => {
         return Object.keys(filter).reduce((acc, filterPropertyName) => {
             if (filterPropertyName == "and") {
                 if (filter.and) {
@@ -125,7 +136,8 @@ export function filtersToMikroOrmQuery(
                         applyFilter(acc, filterProperty, filterPropertyName);
                     } else {
                         const query = filterToMikroOrmQuery(filterProperty, filterPropertyName);
-                        if (Object.keys(query).length > 0) {
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        if (Object.keys(query as any).length > 0) {
                             acc[filterPropertyName] = query;
                         }
                     }
@@ -143,9 +155,14 @@ export function searchToMikroOrmQuery(search: string, fields: string[]): ObjectQ
     const quotedSearch = search.replace(/([%_\\])/g, "\\$1");
     return {
         $or: fields.map((field) => {
-            return {
-                [field]: { $ilike: `%${quotedSearch}%` },
-            };
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const ret: any = {};
+            let nestedFilter = ret;
+            for (const fieldPart of field.split(".")) {
+                nestedFilter = nestedFilter[fieldPart] = {};
+            }
+            nestedFilter.$ilike = `%${quotedSearch}%`;
+            return ret;
         }),
     };
 }

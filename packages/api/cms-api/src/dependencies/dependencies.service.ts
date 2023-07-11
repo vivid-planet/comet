@@ -1,4 +1,5 @@
-import { AnyEntity, Connection, EntityManager } from "@mikro-orm/core";
+import { AnyEntity, Connection } from "@mikro-orm/core";
+import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import * as console from "console";
 

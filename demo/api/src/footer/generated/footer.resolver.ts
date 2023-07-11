@@ -11,7 +11,7 @@ import { FooterInput } from "./dto/footer.input";
 import { FootersService } from "./footers.service";
 
 @Resolver(() => Footer)
-export class FooterCrudResolver {
+export class FooterResolver {
     constructor(
         private readonly entityManager: EntityManager,
         private readonly footersService: FootersService,
