@@ -37,6 +37,7 @@
         "lint:eslint": "pnpm recursive run lint:eslint",
         "lint:tsc": "pnpm recursive run lint:tsc",
         "storybook": "pnpm --filter comet-admin-stories run storybook",
+        "docs": "pnpm --filter ./docs run start",
         "test": "pnpm recursive run test",
         "version": "$npm_execpath changeset version && pnpm install --lockfile-only",
         "publish": "pnpm run build:lib && $npm_execpath changeset publish"
