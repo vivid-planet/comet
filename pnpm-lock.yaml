@@ -829,7 +829,13 @@ importers:
         specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
     devDependencies:
+      '@comet/eslint-config':
+        specifier: workspace:^4.3.0
+        version: link:../packages/eslint-config
       '@docusaurus/module-type-aliases':
+        specifier: 2.0.1
+        version: 2.0.1(react-dom@17.0.2)(react@17.0.2)
+      '@docusaurus/types':
         specifier: 2.0.1
         version: 2.0.1(react-dom@17.0.2)(react@17.0.2)
       '@tsconfig/docusaurus':
@@ -841,12 +847,6 @@ importers:
       '@types/react-dom':
         specifier: ^17.0.17
         version: 17.0.18
-      husky:
-        specifier: ^7.0.4
-        version: 7.0.4
-      lint-staged:
-        specifier: ^12.3.7
-        version: 12.5.0
       prettier:
         specifier: ^2.6.2
         version: 2.8.3
@@ -4485,7 +4485,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.12.9
-      '@babel/helper-plugin-utils': 7.20.2
+      '@babel/helper-plugin-utils': 7.22.5
       '@babel/plugin-syntax-object-rest-spread': 7.8.3(@babel/core@7.12.9)
       '@babel/plugin-transform-parameters': 7.20.7(@babel/core@7.12.9)
     dev: false
@@ -4670,7 +4670,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.12.9
-      '@babel/helper-plugin-utils': 7.20.2
+      '@babel/helper-plugin-utils': 7.22.5
     dev: false
 
   /@babel/plugin-syntax-jsx@7.18.6(@babel/core@7.20.12):
