@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Next minor
+
+_tba_
+
+### @comet/cms-api
+
+#### Changes
+
+-   get file stats from uploaded file in filestorage
+
 ## 3.2.4
 
 _Jun 19, 2023_
