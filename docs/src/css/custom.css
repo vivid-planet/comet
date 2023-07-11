@@ -1,0 +1,51 @@
+:root {
+    --ifm-color-primary: #29b6f6;
+    --ifm-color-primary-dark: #0086c3;
+    --ifm-color-primary-darker: #005992;
+    --ifm-color-primary-darkest: #003064;
+    --ifm-color-primary-light: #73e8ff;
+    --ifm-color-primary-lighter: #aaffff;
+    --ifm-color-primary-lightest: #deffff;
+    --ifm-code-font-size: 95%;
+    --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+    --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+.code-block-addition-line,
+.code-block-removal-line {
+    display: block;
+    margin: 0 calc(-1 * var(--ifm-pre-padding));
+    padding: 0 var(--ifm-pre-padding);
+}
+
+.code-block-addition-line,
+.code-block-addition-line > * {
+    /* !important is required to override inline styles */
+    color: var(--ifm-color-success-dark) !important;
+}
+
+.code-block-addition-line::before {
+    position: absolute;
+    content: "+";
+    left: 3px;
+}
+
+.code-block-removal-line,
+.code-block-removal-line > * {
+    /* !important is required to override inline styles */
+    color: var(--ifm-color-danger-dark) !important;
+}
+
+.code-block-removal-line::before {
+    position: absolute;
+    content: "-";
+    left: 3px;
+}
+
+/*body {
+    font-family: Montserrat;
+}*/
+/* TODO: check, if comet dxp font should be used */
