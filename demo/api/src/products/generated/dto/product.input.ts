@@ -6,7 +6,7 @@ import { Field, ID, InputType } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
 
-import { ProductType } from "../../entities/product.entity";
+import { ProductType } from "../../entities/product-type.enum";
 import { ProductVariantInput } from "./product-variant.nested.input";
 
 @InputType()

@@ -14,20 +14,12 @@ import {
     Ref,
     types,
 } from "@mikro-orm/core";
-import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
-
-export enum ProductType {
-    Cap = "Cap",
-    Shirt = "Shirt",
-    Tie = "Tie",
-}
-registerEnumType(ProductType, {
-    name: "ProductType",
-});
 
 import { ProductCategory } from "./product-category.entity";
 import { ProductTag } from "./product-tag.entity";
+import { ProductType } from "./product-type.enum";
 import { ProductVariant } from "./product-variant.entity";
 
 @ObjectType({

@@ -5,7 +5,7 @@ import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
 
-import { ProductType } from "../../entities/product.entity";
+import { ProductType } from "../../entities/product-type.enum";
 
 @InputType()
 class ProductTypeEnumFilter extends createEnumFilter(ProductType) {}
