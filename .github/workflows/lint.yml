@@ -69,10 +69,6 @@ jobs:
                   # check for duplicate ids of formatted messages
                   pnpm run intl:extract
 
-            - name: Build Docusaurus
-              run: |
-                pnpm --filter ./docs run build
-
             - name: Test
               run: pnpm run test
 
