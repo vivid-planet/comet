@@ -95,7 +95,7 @@ export class BlobStorageFileStorage implements BlobStorageBackendInterface {
     }
 
     async getFileMetaData(folderName: string, fileName: string): Promise<StorageMetaData> {
-        const stat = await fs.promises.stat(`${this.path}/${folderName}/${fileName}-${this.headersFile}`);
+        const stat = await fs.promises.stat(`${this.path}/${folderName}/${fileName}`);
         const rawHeaders = await fs.promises.readFile(`${this.path}/${folderName}/${fileName}-${this.headersFile}`, {
             encoding: "utf-8",
         });
