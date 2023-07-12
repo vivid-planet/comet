@@ -11,8 +11,8 @@ import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission } from "./entities/user-permission.entity";
-import { createUserResolver } from "./user.resolver";
-import { createUserContentScopesResolver } from "./user-content-scopes.resolver";
+import { UserManagementResolver } from "./user.resolver";
+import { UserContentScopesResolver } from "./user-content-scopes.resolver";
 import { UserManagementService } from "./user-management.service";
 import {
     AvailableContentScopes,
@@ -22,7 +22,7 @@ import {
     USER_MODULE_CONFIG,
     USERMANAGEMENT,
 } from "./user-management.types";
-import { createUserPermissionResolver } from "./user-permission.resolver";
+import { UserPermissionResolver } from "./user-permission.resolver";
 
 export interface UserModuleConfig<PermissionKeys extends string = string> {
     userService: {
@@ -71,9 +71,9 @@ export class UserManagementModule {
                 configProvider,
                 ContentScopeService,
                 UserManagementService,
-                createUserResolver(),
-                createUserPermissionResolver(),
-                createUserContentScopesResolver(),
+                UserManagementResolver,
+                UserPermissionResolver,
+                UserContentScopesResolver,
                 {
                     provide: APP_GUARD,
                     useClass: UserManagementGuard,

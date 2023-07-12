@@ -61,7 +61,7 @@ export class UserManagementService {
                 }
             }),
         );
-        await this.permissionRepository.persistAndFlush(permission);
+        await this.permissionRepository.persist(permission);
         return permission;
     }
 
