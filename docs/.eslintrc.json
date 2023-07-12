@@ -1,4 +1,15 @@
 {
     "extends": "@comet/eslint-config/react",
-    "ignorePatterns": [".docusaurus", "build"]
+    "ignorePatterns": [".docusaurus", "build"],
+    "rules": {
+        "@calm/react-intl/missing-formatted-message": "off",
+        "@typescript-eslint/no-unused-vars": "off"
+    },
+    "env": {
+        "node": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 2022,
+        "sourceType": "module"
+    }
 }
