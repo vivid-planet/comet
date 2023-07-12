@@ -350,7 +350,7 @@ export function createEditPageNode({
                                                                                             <FormattedMessage
                                                                                                 tagName="span"
                                                                                                 id="comet.pages.pages.page.createAutomaticRedirects.numberOfPages"
-                                                                                                defaultMessage="for this page and all {numberOfDescendants} descending pages"
+                                                                                                defaultMessage="for this page and {numberOfDescendants} {numberOfDescendants, plural, one {subpage} other {subpages}}"
                                                                                                 values={{
                                                                                                     numberOfDescendants,
                                                                                                 }}
