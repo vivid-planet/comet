@@ -353,7 +353,11 @@ export function createEditPageNode({
                                                                     </>
                                                                 }
                                                             >
-                                                                <Field name="createAutomaticRedirectsOnSlugChange" type="checkbox">
+                                                                <Field
+                                                                    name="createAutomaticRedirectsOnSlugChange"
+                                                                    type="checkbox"
+                                                                    initialValue={true}
+                                                                >
                                                                     {(props) => (
                                                                         <FormControlLabel
                                                                             label={

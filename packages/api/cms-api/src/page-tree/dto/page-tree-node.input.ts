@@ -67,7 +67,7 @@ export abstract class PageTreeNodeBaseUpdateInput {
     @IsBoolean()
     hideInMenu?: boolean;
 
-    @Field({ nullable: true, defaultValue: false })
+    @Field({ nullable: true, defaultValue: true })
     @IsOptional()
     @IsBoolean()
     createAutomaticRedirectsOnSlugChange: boolean;
