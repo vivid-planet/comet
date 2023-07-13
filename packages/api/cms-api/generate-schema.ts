@@ -26,10 +26,10 @@ import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
-import { CurrentUserContentScope, CurrentUserPermission } from "./src/user-management/current-user";
-import { createUserResolver } from "./src/user-management/user.resolver";
-import { createUserContentScopesResolver } from "./src/user-management/user-content-scopes.resolver";
-import { createUserPermissionResolver } from "./src/user-management/user-permission.resolver";
+import { CurrentUserContentScope, CurrentUserPermission } from "./src/user-permissions/current-user";
+import { UserResolver } from "./src/user-permissions/user.resolver";
+import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
+import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
 
 @ObjectType()
 class PageTreeNode extends PageTreeNodeBase {
@@ -97,9 +97,9 @@ async function generateSchema(): Promise<void> {
         pageTreeResolver,
         CronJobsResolver,
         AuthResolver,
-        createUserResolver(),
-        createUserPermissionResolver(),
-        createUserContentScopesResolver(),
+        UserResolver(),
+        UserPermissionResolver(),
+        UserContentScopesResolver(),
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

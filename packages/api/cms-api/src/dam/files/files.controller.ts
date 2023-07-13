@@ -24,8 +24,8 @@ import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.d
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { ContentScopeService } from "../../content-scope/content-scope.service";
-import { PermissionCheck } from "../../user-management/auth/permission-check";
-import { USERMANAGEMENT } from "../../user-management/user-management.types";
+import { PermissionCheck } from "../../user-permissions/auth/permission-check";
+import { USERPERMISSIONS } from "../../user-permissions/user-permissions.types";
 import { CDN_ORIGIN_CHECK_HEADER, DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { DamScopeInterface } from "../types";
@@ -51,7 +51,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
     const UploadFileBody = createUploadFileBody({ Scope });
 
     @Controller("dam/files")
-    @PermissionCheck({ allowedForPermissions: [USERMANAGEMENT.dam, USERMANAGEMENT.pageTree] })
+    @PermissionCheck({ allowedForPermissions: [USERPERMISSIONS.dam, USERPERMISSIONS.pageTree] })
     class FilesController {
         constructor(
             @Inject(DAM_CONFIG) private readonly damConfig: DamConfig,

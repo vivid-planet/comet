@@ -3,7 +3,7 @@
 "@comet/cms-api": major
 ---
 
-Add UserManagement-Module
+Add UserPermissions-Module
 
 Breaking in cms-api:
 

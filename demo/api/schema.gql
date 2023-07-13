@@ -406,11 +406,11 @@ type Mutation {
   updateProductVisibility(id: ID!, visible: Boolean!): Product!
   updateRedirect(id: ID!, input: RedirectInput!, lastUpdatedAt: DateTime): Redirect!
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
-  userManagementCreatePermission(data: CreateUserPermissionInput!): UserPermission!
-  userManagementDeletePermission(id: ID!): Boolean!
-  userManagementSetContentScope(input: UserContentScopesInput!): UserContentScopes!
-  userManagementSetPermissionContentScopes(data: UserPermissionContentScopesInput!): UserPermission!
-  userManagementUpdatePermission(data: UpdateUserPermissionInput!): UserPermission!
+  userPermissionsCreatePermission(data: CreateUserPermissionInput!): UserPermission!
+  userPermissionsDeletePermission(id: ID!): Boolean!
+  userPermissionsSetContentScope(input: UserContentScopesInput!): UserContentScopes!
+  userPermissionsSetPermissionContentScopes(data: UserPermissionContentScopesInput!): UserPermission!
+  userPermissionsUpdatePermission(data: UpdateUserPermissionInput!): UserPermission!
 }
 
 type News implements DocumentInterface {
@@ -776,13 +776,13 @@ type Query {
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
   redirects(active: Boolean, query: String, scope: RedirectScopeInput!, sortColumnName: String, sortDirection: SortDirection! = ASC, type: RedirectGenerationType): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
-  userManagementAvailableContentScopes: [AvailableContentScopes!]!
-  userManagementAvailablePermissions: [AvailablePermission!]!
-  userManagementContentScope(skipManual: Boolean, userId: String!): UserContentScopes!
-  userManagementPermission(id: ID!, userId: String): UserPermission!
-  userManagementPermissionList(userId: String!): [UserPermission!]!
-  userManagementUserById(id: String!): User!
-  userManagementUsers(filter: UserFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [UserSort!]): PaginatedUserList!
+  userPermissionsAvailableContentScopes: [AvailableContentScopes!]!
+  userPermissionsAvailablePermissions: [AvailablePermission!]!
+  userPermissionsContentScope(skipManual: Boolean, userId: String!): UserContentScopes!
+  userPermissionsPermission(id: ID!, userId: String): UserPermission!
+  userPermissionsPermissionList(userId: String!): [UserPermission!]!
+  userPermissionsUserById(id: String!): User!
+  userPermissionsUsers(filter: UserFilter, limit: Int! = 25, offset: Int! = 0, search: String, sort: [UserSort!]): PaginatedUserList!
 }
 
 type Redirect implements DocumentInterface {

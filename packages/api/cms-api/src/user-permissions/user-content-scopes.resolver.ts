@@ -5,8 +5,8 @@ import { Args, Field, Mutation, ObjectType, Query, Resolver } from "@nestjs/grap
 import { PermissionCheck } from "./auth/permission-check";
 import { UserContentScopesInput } from "./dto/user-content-scopes.input";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
-import { UserManagementService } from "./user-management.service";
-import { USERMANAGEMENT } from "./user-management.types";
+import { UserPermissionsService } from "./user-permissions.service";
+import { USERPERMISSIONS } from "./user-permissions.types";
 
 @ObjectType()
 class AvailableContentScopes {
@@ -31,17 +31,17 @@ export class AvailableContentScopeValues {
 
 @Resolver(() => UserContentScopes)
 @PermissionCheck({
-    allowedForPermissions: [USERMANAGEMENT.userManagement],
+    allowedForPermissions: [USERPERMISSIONS.userPermissions],
     skipScopeCheck: true,
 })
 export class UserContentScopesResolver {
     constructor(
         @InjectRepository(UserContentScopes) private readonly repository: EntityRepository<UserContentScopes>,
-        private readonly userService: UserManagementService,
+        private readonly userService: UserPermissionsService,
     ) {}
 
     @Mutation(() => UserContentScopes)
-    async userManagementSetContentScope(
+    async userPermissionsSetContentScope(
         @Args("input", { type: () => UserContentScopesInput }) data: UserContentScopesInput,
     ): Promise<UserContentScopes> {
         const allowedScopes = await this.userService.getAvailableContentScopes();
@@ -68,7 +68,7 @@ export class UserContentScopesResolver {
     }
 
     @Query(() => UserContentScopes)
-    async userManagementContentScope(
+    async userPermissionsContentScope(
         @Args("userId", { type: () => String }) userId: string,
         @Args("skipManual", { type: () => Boolean, nullable: true }) skipManual = false,
     ): Promise<UserContentScopes> {
@@ -76,7 +76,7 @@ export class UserContentScopesResolver {
     }
 
     @Query(() => [AvailableContentScopes])
-    async userManagementAvailableContentScopes(): Promise<AvailableContentScopes[]> {
+    async userPermissionsAvailableContentScopes(): Promise<AvailableContentScopes[]> {
         const contentScopes = await this.userService.getAvailableContentScopes();
         return Object.keys(contentScopes).map((scope) => ({
             scope,

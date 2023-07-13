@@ -15,8 +15,8 @@ import {
     PageTreeService,
     PublicUploadModule,
     RedirectsModule,
-    USERMANAGEMENT,
-    UserManagementModule,
+    USERPERMISSIONS,
+    UserPermissionsModule,
 } from "@comet/cms-api";
 import { ApolloDriver } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
@@ -74,7 +74,7 @@ export class AppModule {
                     inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
                 }),
                 AuthModule,
-                UserManagementModule.forRoot<USERMANAGEMENT.pageTree | typeof USERMANAGEMENT.userManagement | "news" | "products">({
+                UserPermissionsModule.forRoot<USERPERMISSIONS.pageTree | typeof USERPERMISSIONS.userPermissions | "news" | "products">({
                     // To use a real user service, instantiate this module with forRootAsync and inject required services
                     userService: {
                         findUsers: async (args: FindUsersArgs) => {
@@ -100,15 +100,15 @@ export class AppModule {
                         pageTree: {
                             name: "Page Tree",
                         },
-                        userManagement: {
+                        userPermissions: {
                             name: "User Management",
                         },
                     }),
                     getPermissions: async (user) => {
                         if (user.email.endsWith("@comet-dxp.com")) {
-                            return USERMANAGEMENT.allPermissions;
+                            return USERPERMISSIONS.allPermissions;
                         } else {
-                            return [{ permission: USERMANAGEMENT.pageTree }, { permission: "news" }];
+                            return [{ permission: USERPERMISSIONS.pageTree }, { permission: "news" }];
                         }
                     },
                     getAvailableContentScopes: async () => ({
@@ -129,7 +129,7 @@ export class AppModule {
                     }),
                     getContentScopes: async (user) => {
                         if (user.email.endsWith("@comet-dxp.com")) {
-                            return USERMANAGEMENT.allContentScopes;
+                            return USERPERMISSIONS.allContentScopes;
                         } else {
                             return {
                                 domain: ["main"],

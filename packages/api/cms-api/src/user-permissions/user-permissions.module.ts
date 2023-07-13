@@ -5,24 +5,24 @@ import { APP_GUARD } from "@nestjs/core";
 import { ContentScope } from "../common/decorators/content-scope.interface";
 import { CAN_ACCESS_SCOPE } from "../content-scope/conent-scope.constants";
 import { ContentScopeService } from "../content-scope/content-scope.service";
-import { UserManagementGuard } from "./auth/user-management.guard";
+import { UserPermissionsGuard } from "./auth/user-permissions.guard";
 import { CurrentUser } from "./current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission } from "./entities/user-permission.entity";
-import { UserManagementResolver } from "./user.resolver";
+import { UserResolver } from "./user.resolver";
 import { UserContentScopesResolver } from "./user-content-scopes.resolver";
-import { UserManagementService } from "./user-management.service";
+import { UserPermissionResolver } from "./user-permission.resolver";
+import { UserPermissionsService } from "./user-permissions.service";
 import {
     AvailableContentScopes,
     AvailablePermissions,
     ContentScopes,
     Permissions,
     USER_MODULE_CONFIG,
-    USERMANAGEMENT,
-} from "./user-management.types";
-import { UserPermissionResolver } from "./user-permission.resolver";
+    USERPERMISSIONS,
+} from "./user-permissions.types";
 
 export interface UserModuleConfig<PermissionKeys extends string = string> {
     userService: {
@@ -31,7 +31,7 @@ export interface UserModuleConfig<PermissionKeys extends string = string> {
     };
     getAvailablePermissions?: () => Promise<AvailablePermissions<PermissionKeys>>;
     getAvailableContentScopes?: () => Promise<AvailableContentScopes>;
-    getPermissions?: (user: User) => Promise<Permissions<PermissionKeys | "userManagement" | "pageTree" | "dam"> | "all-permissions">;
+    getPermissions?: (user: User) => Promise<Permissions<PermissionKeys | "userPermissions" | "pageTree" | "dam"> | "all-permissions">;
     getContentScopes?: (user: User) => Promise<ContentScopes>;
 }
 
@@ -44,16 +44,16 @@ interface UserModuleAsyncConfig<AvailablePermissions extends string> extends Pic
 
 @Global()
 @Module({})
-export class UserManagementModule {
+export class UserPermissionsModule {
     static forRoot<AvailablePermissions extends string>(config: UserModuleConfig<AvailablePermissions>): DynamicModule {
-        return UserManagementModule._register({
+        return UserPermissionsModule._register({
             provide: USER_MODULE_CONFIG,
             useValue: config,
         });
     }
 
     static forRootAsync<AvailablePermissions extends string>(asyncConfig: UserModuleAsyncConfig<AvailablePermissions>): DynamicModule {
-        return UserManagementModule._register({
+        return UserPermissionsModule._register({
             provide: USER_MODULE_CONFIG,
             ...asyncConfig,
         });
@@ -61,25 +61,25 @@ export class UserManagementModule {
 
     private static _register(configProvider: Provider): DynamicModule {
         return {
-            module: UserManagementModule,
+            module: UserPermissionsModule,
             imports: [MikroOrmModule.forFeature([UserPermission, UserContentScopes])],
             providers: [
                 {
                     provide: CAN_ACCESS_SCOPE,
-                    useValue: (requestScope: ContentScope, user: CurrentUser) => user.isAllowed(USERMANAGEMENT.pageTree, requestScope),
+                    useValue: (requestScope: ContentScope, user: CurrentUser) => user.isAllowed(USERPERMISSIONS.pageTree, requestScope),
                 },
                 configProvider,
                 ContentScopeService,
-                UserManagementService,
-                UserManagementResolver,
+                UserPermissionsService,
+                UserResolver,
                 UserPermissionResolver,
                 UserContentScopesResolver,
                 {
                     provide: APP_GUARD,
-                    useClass: UserManagementGuard,
+                    useClass: UserPermissionsGuard,
                 },
             ],
-            exports: [UserManagementService, ContentScopeService],
+            exports: [UserPermissionsService, ContentScopeService],
         };
     }
 }

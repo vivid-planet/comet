@@ -13,8 +13,8 @@ import { ScopeGuardActive } from "../content-scope/decorators/scope-guard-active
 import { DependenciesService } from "../dependencies/dependencies.service";
 import { Dependency } from "../dependencies/dependency";
 import { validateNotModified } from "../document/validateNotModified";
-import { PermissionCheck } from "../user-management/auth/permission-check";
-import { USERMANAGEMENT } from "../user-management/user-management.types";
+import { PermissionCheck } from "../user-permissions/auth/permission-check";
+import { USERPERMISSIONS } from "../user-permissions/user-permissions.types";
 import { EmptyRedirectScope } from "./dto/empty-redirect-scope";
 import { PaginatedRedirectsArgsFactory } from "./dto/paginated-redirects-args.factory";
 import { RedirectInputInterface } from "./dto/redirect-input.factory";
@@ -56,7 +56,7 @@ export function createRedirectsResolver({
 
     @Resolver(() => Redirect)
     @ScopeGuardActive(hasNonEmptyScope)
-    @PermissionCheck({ allowedForPermissions: [USERMANAGEMENT.pageTree] })
+    @PermissionCheck({ allowedForPermissions: [USERPERMISSIONS.pageTree] })
     class RedirectsResolver {
         constructor(
             private readonly redirectService: RedirectsService,

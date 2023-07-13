@@ -2,7 +2,7 @@ import { Field, ID, InputType, PartialType } from "@nestjs/graphql";
 import { IsArray, IsBoolean, IsDate, IsObject, IsOptional, IsString, IsUUID } from "class-validator";
 import { GraphQLJSONObject } from "graphql-type-json";
 
-import { PermissionConfiguration } from "../user-management.types";
+import { PermissionConfiguration } from "../user-permissions.types";
 
 @InputType()
 export class UserPermissionContentScopesInput {

@@ -8,7 +8,7 @@ import {
     PermissionCheck,
     SortArgs,
     SubjectEntity,
-    USERMANAGEMENT,
+    USERPERMISSIONS,
     validateNotModified,
 } from "@comet/cms-api";
 import { FindOptions } from "@mikro-orm/core";
@@ -26,7 +26,7 @@ import { Page } from "./entities/page.entity";
 export class PagesArgs extends IntersectionType(OffsetBasedPaginationArgs, SortArgs) {}
 
 @Resolver(() => Page)
-@PermissionCheck({ allowedForPermissions: [USERMANAGEMENT.pageTree] })
+@PermissionCheck({ allowedForPermissions: [USERPERMISSIONS.pageTree] })
 export class PagesResolver {
     constructor(
         @InjectRepository(Page) private readonly repository: EntityRepository<Page>,

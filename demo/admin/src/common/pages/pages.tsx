@@ -1,5 +1,5 @@
 import { Assets, Dashboard as DashboardIcon, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
-import { AllCategories, createRedirectsPage, CronJobsPage, DamPage, PagesPage, PublisherPage, UserManagementPage } from "@comet/cms-admin";
+import { AllCategories, createRedirectsPage, CronJobsPage, DamPage, PagesPage, PublisherPage, UserPermissionsPage } from "@comet/cms-admin";
 import { Person } from "@mui/icons-material";
 import Dashboard from "@src/dashboard/Dashboard";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
@@ -186,13 +186,13 @@ export const pages: Pages = [
         },
     },
     {
-        requiredPermission: "userManagement",
+        requiredPermission: "userPermissions",
         route: {
-            path: "/user-management",
-            component: UserManagementPage,
+            path: "/user-permissions",
+            component: UserPermissionsPage,
         },
         menu: {
-            primary: <FormattedMessage id="menu.userManagement" defaultMessage="User Management" />,
+            primary: <FormattedMessage id="menu.userPermissions" defaultMessage="User Permissions" />,
             icon: <Person />,
         },
     },

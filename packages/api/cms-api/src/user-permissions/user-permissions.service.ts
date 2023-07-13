@@ -8,11 +8,11 @@ import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
 import { UserContentScope, UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
-import { UserModuleConfig } from "./user-management.module";
-import { AvailableContentScope, AvailablePermissions, USER_MODULE_CONFIG, USERMANAGEMENT } from "./user-management.types";
+import { UserModuleConfig } from "./user-permissions.module";
+import { AvailableContentScope, AvailablePermissions, USER_MODULE_CONFIG, USERPERMISSIONS } from "./user-permissions.types";
 
 @Injectable()
-export class UserManagementService {
+export class UserPermissionsService {
     constructor(
         @Inject(USER_MODULE_CONFIG) private readonly config: UserModuleConfig,
         @InjectRepository(UserContentScopes) private readonly contentScopeRepository: EntityRepository<UserContentScopes>,
@@ -93,7 +93,7 @@ export class UserManagementService {
             const user = await this.getUser(userId);
             if (user) {
                 let permissionsByRule = await this.config.getPermissions(user);
-                if (permissionsByRule === USERMANAGEMENT.allPermissions) {
+                if (permissionsByRule === USERPERMISSIONS.allPermissions) {
                     permissionsByRule = availablePermissionNames.map((permission) => ({ permission }));
                 }
                 for (const p of permissionsByRule) {
@@ -131,7 +131,7 @@ export class UserManagementService {
             const user = await this.getUser(userId);
             if (user) {
                 const contentScopes = await this.config.getContentScopes(user);
-                if (contentScopes === USERMANAGEMENT.allContentScopes) {
+                if (contentScopes === USERPERMISSIONS.allContentScopes) {
                     for (const scope of Object.keys(availableContentScopes)) {
                         ret.push({
                             scope: scope,

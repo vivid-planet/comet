@@ -3,13 +3,13 @@ import { Query, Resolver } from "@nestjs/graphql";
 import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
-import { PermissionCheck } from "../user-management/auth/permission-check";
-import { USERMANAGEMENT } from "../user-management/user-management.types";
+import { PermissionCheck } from "../user-permissions/auth/permission-check";
+import { USERPERMISSIONS } from "../user-permissions/user-permissions.types";
 import { BuildTemplatesService } from "./build-templates.service";
 import { BuildTemplateObject } from "./dto/build-template.object";
 
 @Resolver(() => BuildTemplateObject)
-@PermissionCheck({ allowedForPermissions: [USERMANAGEMENT.pageTree], skipScopeCheck: true })
+@PermissionCheck({ allowedForPermissions: [USERPERMISSIONS.pageTree], skipScopeCheck: true })
 export class BuildTemplatesResolver {
     constructor(private readonly kubernetesService: KubernetesService, private readonly buildTemplatesService: BuildTemplatesService) {}
 

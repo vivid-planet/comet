@@ -14,7 +14,7 @@ export const UserPage: React.FC<{ userId: string }> = ({ userId }) => {
     const { data, error, loading } = useQuery<GQLUserPageQuery, GQLUserPageQueryVariables>(
         gql`
             query UserPage($id: String!) {
-                user: userManagementUserById(id: $id) {
+                user: userPermissionsUserById(id: $id) {
                     name
                     email
                 }

@@ -6,15 +6,15 @@ import { FormattedMessage } from "react-intl";
 import { UserPage } from "./user/UserPage";
 import { UserGrid } from "./UserGrid";
 
-export interface UserManagementPageProps {
+export interface UserPermissionsPageProps {
     configurationSlots?: { [key: string]: () => JSX.Element };
 }
 
-export const UserManagementSettings = React.createContext<UserManagementPageProps>({});
+export const UserPermissionsSettings = React.createContext<UserPermissionsPageProps>({});
 
-export const UserManagementPage = (props: UserManagementPageProps): React.ReactElement => (
-    <UserManagementSettings.Provider value={props}>
-        <Stack topLevelTitle={<FormattedMessage id="comet.userManagement.title" defaultMessage="User Management" />}>
+export const UserPermissionsPage = (props: UserPermissionsPageProps): React.ReactElement => (
+    <UserPermissionsSettings.Provider value={props}>
+        <Stack topLevelTitle={<FormattedMessage id="comet.userPermissions.title" defaultMessage="User Management" />}>
             <StackSwitch>
                 <StackPage name="table">
                     <MainContent>
@@ -26,7 +26,7 @@ export const UserManagementPage = (props: UserManagementPageProps): React.ReactE
                 <StackPage name="edit">{(userId) => <UserPage userId={userId} />}</StackPage>
             </StackSwitch>
         </Stack>
-    </UserManagementSettings.Provider>
+    </UserPermissionsSettings.Provider>
 );
 
 const DataGridContainer = styled("div")`

@@ -2,8 +2,8 @@ import { ContentScope } from "../common/decorators/content-scope.interface";
 
 export type PermissionConfiguration = Record<string, unknown>;
 
-export enum USERMANAGEMENT {
-    userManagement = "userManagement",
+export enum USERPERMISSIONS {
+    userPermissions = "userPermissions",
     pageTree = "pageTree",
     dam = "dam",
     allContentScopes = "all-content-scopes",
@@ -37,7 +37,7 @@ export type ContentScopes =
     | {
           [key in keyof ContentScope]: Array<ContentScope[key]>;
       }
-    | typeof USERMANAGEMENT.allContentScopes;
+    | typeof USERPERMISSIONS.allContentScopes;
 
 export type AvailableContentScope<T extends string = string> = {
     label: string;

@@ -13,7 +13,7 @@ export const UserBasicData: React.FC<{
     const { data, error, loading } = useQuery<GQLUserBasicDataQuery, GQLUserBasicDataQueryVariables>(
         gql`
             query UserBasicData($id: String!) {
-                user: userManagementUserById(id: $id) {
+                user: userPermissionsUserById(id: $id) {
                     id
                     name
                     email
@@ -39,7 +39,7 @@ export const UserBasicData: React.FC<{
         <Card>
             <CardToolbar>
                 <ToolbarTitleItem>
-                    <FormattedMessage id="comet.userManagement.basicData" defaultMessage="Basic Data" />
+                    <FormattedMessage id="comet.userPermissions.basicData" defaultMessage="Basic Data" />
                 </ToolbarTitleItem>
                 <ToolbarFillSpace />
             </CardToolbar>
@@ -56,28 +56,28 @@ export const UserBasicData: React.FC<{
                         name="status"
                         component={(props) => <Switch defaultChecked={props.input.value === "ACTIVE"} {...props} />}
                         disabled={true}
-                        label={<FormattedMessage id="comet.userManagement.status" defaultMessage="Status" />}
+                        label={<FormattedMessage id="comet.userPermissions.status" defaultMessage="Status" />}
                     />
                     <Field
                         variant="horizontal"
                         name="email"
                         component={FinalFormInput}
                         disabled={true}
-                        label={<FormattedMessage id="comet.userManagement.email" defaultMessage="E-Mail" />}
+                        label={<FormattedMessage id="comet.userPermissions.email" defaultMessage="E-Mail" />}
                     />
                     <Field
                         variant="horizontal"
                         name="name"
                         component={FinalFormInput}
                         disabled={true}
-                        label={<FormattedMessage id="comet.userManagement.name" defaultMessage="Name" />}
+                        label={<FormattedMessage id="comet.userPermissions.name" defaultMessage="Name" />}
                     />
                     <Field
                         variant="horizontal"
                         name="language"
                         component={FinalFormInput}
                         disabled={true}
-                        label={<FormattedMessage id="comet.userManagement.language" defaultMessage="Language" />}
+                        label={<FormattedMessage id="comet.userPermissions.language" defaultMessage="Language" />}
                     />
                 </FinalForm>
             </CardContent>

@@ -11,7 +11,7 @@ import { CurrentUser } from "../current-user";
 import { PermissionCheckOptions } from "./permission-check";
 
 @Injectable()
-export class UserManagementGuard extends ScopeGuard {
+export class UserPermissionsGuard extends ScopeGuard {
     private async getBody(request: Request): Promise<Record<string, unknown>> {
         const postMulterRequest: Request = await new Promise((resolve, reject) => {
             multer().any()(request, {} as Response, function (err) {

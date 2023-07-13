@@ -26,7 +26,7 @@ export const ContentScopeGrid: React.FC<{
         await client.mutate<GQLSetContentScopeMutation, GQLSetContentScopeMutationVariables>({
             mutation: gql`
                 mutation SetContentScope($input: UserContentScopesInput!) {
-                    userManagementSetContentScope(input: $input) {
+                    userPermissionsSetContentScope(input: $input) {
                         userId
                     }
                 }
@@ -44,7 +44,7 @@ export const ContentScopeGrid: React.FC<{
     const { data, error } = useQuery<GQLContentScopesQuery, GQLContentScopesQueryVariables>(
         gql`
             query ContentScopes($userId: String!) {
-                availableContentScopes: userManagementAvailableContentScopes {
+                availableContentScopes: userPermissionsAvailableContentScopes {
                     scope
                     label
                     values {
@@ -52,13 +52,13 @@ export const ContentScopeGrid: React.FC<{
                         value
                     }
                 }
-                contentScope: userManagementContentScope(userId: $userId) {
+                contentScope: userPermissionsContentScope(userId: $userId) {
                     scopes {
                         scope
                         values
                     }
                 }
-                contentScopeSkipManual: userManagementContentScope(userId: $userId, skipManual: true) {
+                contentScopeSkipManual: userPermissionsContentScope(userId: $userId, skipManual: true) {
                     scopes {
                         scope
                         values
@@ -91,7 +91,7 @@ export const ContentScopeGrid: React.FC<{
                     <ToolbarFillSpace />
                     <ToolbarActions>
                         <SaveButton type="submit">
-                            <FormattedMessage id="comet.userManagement.save" defaultMessage="Save" />
+                            <FormattedMessage id="comet.userPermissions.save" defaultMessage="Save" />
                         </SaveButton>
                     </ToolbarActions>
                 </CardToolbar>
@@ -105,7 +105,7 @@ export const ContentScopeGrid: React.FC<{
                                     </Typography>
                                     <Typography variant="body2" color="textSecondary">
                                         <FormattedMessage
-                                            id="comet.userManagement.contentScopesCount"
+                                            id="comet.userPermissions.contentScopesCount"
                                             defaultMessage="{selected} of {count} selected"
                                             values={{
                                                 selected:

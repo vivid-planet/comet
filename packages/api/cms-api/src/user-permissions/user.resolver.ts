@@ -4,27 +4,27 @@ import { PaginatedResponseFactory } from "../common/pagination/paginated-respons
 import { PermissionCheck } from "./auth/permission-check";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
-import { UserManagementService } from "./user-management.service";
-import { USERMANAGEMENT } from "./user-management.types";
+import { UserPermissionsService } from "./user-permissions.service";
+import { USERPERMISSIONS } from "./user-permissions.types";
 
 @ObjectType()
 class PaginatedUserList extends PaginatedResponseFactory.create(User) {}
 
 @Resolver(() => User)
 @PermissionCheck({
-    allowedForPermissions: [USERMANAGEMENT.userManagement],
+    allowedForPermissions: [USERPERMISSIONS.userPermissions],
     skipScopeCheck: true,
 })
-export class UserManagementResolver {
-    constructor(private readonly userService: UserManagementService) {}
+export class UserResolver {
+    constructor(private readonly userService: UserPermissionsService) {}
 
     @Query(() => User)
-    async userManagementUserById(@Args("id", { type: () => String }) id: string): Promise<User> {
+    async userPermissionsUserById(@Args("id", { type: () => String }) id: string): Promise<User> {
         return this.userService.getUser(id);
     }
 
     @Query(() => PaginatedUserList)
-    async userManagementUsers(@Args() args: FindUsersArgs): Promise<PaginatedUserList> {
+    async userPermissionsUsers(@Args() args: FindUsersArgs): Promise<PaginatedUserList> {
         const [users, totalCount] = await this.userService.findUsers(args);
         return new PaginatedUserList(users, totalCount, args);
     }

@@ -3,12 +3,12 @@ import { Query, Resolver } from "@nestjs/graphql";
 import { BUILDER_LABEL } from "../builds/builds.constants";
 import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
-import { PermissionCheck } from "../user-management/auth/permission-check";
-import { USERMANAGEMENT } from "../user-management/user-management.types";
+import { PermissionCheck } from "../user-permissions/auth/permission-check";
+import { USERPERMISSIONS } from "../user-permissions/user-permissions.types";
 import { CronJob } from "./dto/cron-job.object";
 
 @Resolver(() => CronJob)
-@PermissionCheck({ allowedForPermissions: [USERMANAGEMENT.pageTree], skipScopeCheck: true })
+@PermissionCheck({ allowedForPermissions: [USERPERMISSIONS.pageTree], skipScopeCheck: true })
 export class CronJobsResolver {
     constructor(private readonly kubernetesService: KubernetesService) {}
 

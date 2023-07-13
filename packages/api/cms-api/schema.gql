@@ -337,13 +337,13 @@ type Query {
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   cronJobs: [CronJob!]!
   currentUser: CurrentUser!
-  userManagementUserById(id: String!): User!
-  userManagementUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
-  userManagementPermissionList(userId: String!): [UserPermission!]!
-  userManagementPermission(id: ID!, userId: String): UserPermission!
-  userManagementAvailablePermissions: [AvailablePermission!]!
-  userManagementContentScope(userId: String!, skipManual: Boolean): UserContentScopes!
-  userManagementAvailableContentScopes: [AvailableContentScopes!]!
+  userPermissionsUserById(id: String!): User!
+  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
+  userPermissionsPermissionList(userId: String!): [UserPermission!]!
+  userPermissionsPermission(id: ID!, userId: String): UserPermission!
+  userPermissionsAvailablePermissions: [AvailablePermission!]!
+  userPermissionsContentScope(userId: String!, skipManual: Boolean): UserContentScopes!
+  userPermissionsAvailableContentScopes: [AvailableContentScopes!]!
 }
 
 input RedirectScopeInput {
@@ -482,11 +482,11 @@ type Mutation {
   updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
   createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
   currentUserSignOut: String!
-  userManagementCreatePermission(data: CreateUserPermissionInput!): UserPermission!
-  userManagementUpdatePermission(data: UpdateUserPermissionInput!): UserPermission!
-  userManagementSetPermissionContentScopes(data: UserPermissionContentScopesInput!): UserPermission!
-  userManagementDeletePermission(id: ID!): Boolean!
-  userManagementSetContentScope(input: UserContentScopesInput!): UserContentScopes!
+  userPermissionsCreatePermission(data: CreateUserPermissionInput!): UserPermission!
+  userPermissionsUpdatePermission(data: UpdateUserPermissionInput!): UserPermission!
+  userPermissionsSetPermissionContentScopes(data: UserPermissionContentScopesInput!): UserPermission!
+  userPermissionsDeletePermission(id: ID!): Boolean!
+  userPermissionsSetContentScope(input: UserContentScopesInput!): UserContentScopes!
 }
 
 input CreateBuildsInput {

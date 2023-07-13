@@ -40,7 +40,7 @@ export const PermissionContentScopesDialog: React.FC<FormProps> = ({ permissionI
         await client.mutate<GQLsetUserPermissionContentScopesMutation, GQLsetUserPermissionContentScopesMutationVariables>({
             mutation: gql`
                 mutation setUserPermissionContentScopes($data: UserPermissionContentScopesInput!) {
-                    userManagementSetPermissionContentScopes(data: $data) {
+                    userPermissionsSetPermissionContentScopes(data: $data) {
                         id
                     }
                 }
@@ -60,7 +60,7 @@ export const PermissionContentScopesDialog: React.FC<FormProps> = ({ permissionI
     const { data, error } = useQuery<GQLPermissionContentScopesQuery, GQLPermissionContentScopesQueryVariables>(
         gql`
             query PermissionContentScopes($permissionId: ID!, $userId: String) {
-                availableContentScopes: userManagementAvailableContentScopes {
+                availableContentScopes: userPermissionsAvailableContentScopes {
                     scope
                     label
                     values {
@@ -68,7 +68,7 @@ export const PermissionContentScopesDialog: React.FC<FormProps> = ({ permissionI
                         value
                     }
                 }
-                permission: userManagementPermission(id: $permissionId, userId: $userId) {
+                permission: userPermissionsPermission(id: $permissionId, userId: $userId) {
                     source
                     overrideContentScopes
                     contentScopes {
@@ -108,12 +108,12 @@ export const PermissionContentScopesDialog: React.FC<FormProps> = ({ permissionI
                 render={({ values }) => (
                     <>
                         <DialogTitle>
-                            <FormattedMessage id="comet.userManagement.scopes" defaultMessage="Scopes" />
+                            <FormattedMessage id="comet.userPermissions.scopes" defaultMessage="Scopes" />
                         </DialogTitle>
                         <DialogContent>
                             <Field
                                 name="overrideContentScopes"
-                                label={<FormattedMessage id="comet.userManagement.overrideScopes" defaultMessage="Override Scopes" />}
+                                label={<FormattedMessage id="comet.userPermissions.overrideScopes" defaultMessage="Override Scopes" />}
                                 component={FinalFormSwitch}
                                 type="checkbox"
                             />
@@ -127,7 +127,7 @@ export const PermissionContentScopesDialog: React.FC<FormProps> = ({ permissionI
                                                 </Typography>
                                                 <Typography variant="body2" color="textSecondary">
                                                     <FormattedMessage
-                                                        id="comet.userManagement.contentScopesCount"
+                                                        id="comet.userPermissions.contentScopesCount"
                                                         defaultMessage="{selected} of {count} selected"
                                                         values={{
                                                             selected:
@@ -159,7 +159,7 @@ export const PermissionContentScopesDialog: React.FC<FormProps> = ({ permissionI
                         </DialogContent>
                         <DialogActions>
                             <CancelButton onClick={() => handleDialogClose()}>
-                                <FormattedMessage id="comet.userManagement.close" defaultMessage="Close" />
+                                <FormattedMessage id="comet.userPermissions.close" defaultMessage="Close" />
                             </CancelButton>
                             {!disabled && <SaveButton type="submit" />}
                         </DialogActions>

@@ -21,7 +21,7 @@ export const PermissionGrid: React.FC<{
     const { data, loading, error } = useQuery<GQLPermissionsQuery, GQLPermissionsQueryVariables>(
         gql`
             query Permissions($userId: String!) {
-                permissions: userManagementPermissionList(userId: $userId) {
+                permissions: userPermissionsPermissionList(userId: $userId) {
                     ...PermissionForGrid
                 }
             }
@@ -51,7 +51,7 @@ export const PermissionGrid: React.FC<{
             field: "name",
             flex: 1,
             pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userManagement.permission", defaultMessage: "Permission" }),
+            headerName: intl.formatMessage({ id: "comet.userPermissions.permission", defaultMessage: "Permission" }),
             renderCell: ({ row }) => (
                 <>
                     <Typography variant="h6">{row.name}</Typography>
@@ -69,13 +69,13 @@ export const PermissionGrid: React.FC<{
             field: "source",
             width: 100,
             pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userManagement.source", defaultMessage: "Source" }),
+            headerName: intl.formatMessage({ id: "comet.userPermissions.source", defaultMessage: "Source" }),
         },
         {
             field: "validityPeriod",
             width: 200,
             pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userManagement.validityPeriod", defaultMessage: "Validity period" }),
+            headerName: intl.formatMessage({ id: "comet.userPermissions.validityPeriod", defaultMessage: "Validity period" }),
             renderCell: ({ row }) =>
                 `${row.validFrom ? new Date(row.validFrom).toLocaleDateString() : "∞"} - ${
                     row.validTo ? new Date(row.validTo).toLocaleDateString() : "∞"
@@ -86,28 +86,28 @@ export const PermissionGrid: React.FC<{
             flex: 1,
             filterable: false,
             pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userManagement.status", defaultMessage: "Status" }),
+            headerName: intl.formatMessage({ id: "comet.userPermissions.status", defaultMessage: "Status" }),
             renderCell: ({ row }) => (
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
                     {row.overrideContentScopes && (
                         <Chip
                             icon={<ToggleOn />}
                             color="info"
-                            label={<FormattedMessage id="comet.userManagement.overidingScopes" defaultMessage="Overriding Scopes" />}
+                            label={<FormattedMessage id="comet.userPermissions.overidingScopes" defaultMessage="Overriding Scopes" />}
                         />
                     )}
                     {row.validTo && new Date(row.validTo) < new Date() && (
                         <Chip
                             icon={<Reject />}
                             color="error"
-                            label={<FormattedMessage id="comet.userManagement.expired" defaultMessage="Expired" />}
+                            label={<FormattedMessage id="comet.userPermissions.expired" defaultMessage="Expired" />}
                         />
                     )}
                     {row.validTo && new Date(row.validTo) >= new Date() && new Date(row.validTo) < new Date(Date.now() + 3600 * 1000 * 24 * 30) && (
                         <Chip
                             icon={<Info />}
                             color="warning"
-                            label={<FormattedMessage id="comet.userManagement.expiringSoon" defaultMessage="Expiring soon" />}
+                            label={<FormattedMessage id="comet.userPermissions.expiringSoon" defaultMessage="Expiring soon" />}
                         />
                     )}
                 </div>
@@ -123,7 +123,7 @@ export const PermissionGrid: React.FC<{
             renderCell: ({ row }) =>
                 row.source !== "BY_RULE" && (
                     <Button onClick={() => setContentScopeId(row.id)}>
-                        <FormattedMessage id="comet.userManagement.overrideScopes" defaultMessage="Override Scopes" />
+                        <FormattedMessage id="comet.userPermissions.overrideScopes" defaultMessage="Override Scopes" />
                     </Button>
                 ),
         },
@@ -157,7 +157,7 @@ export const PermissionGrid: React.FC<{
                         icon={<Delete />}
                         mutation={gql`
                             mutation DeletePermission($id: ID!) {
-                                userManagementDeletePermission(id: $id)
+                                userPermissionsDeletePermission(id: $id)
                             }
                         `}
                         selectedId={`${row.id}`}
@@ -184,7 +184,7 @@ export const PermissionGrid: React.FC<{
                     Toolbar: () => (
                         <GridToolbar>
                             <ToolbarTitleItem>
-                                <FormattedMessage id="comet.userManagement.permissions" defaultMessage="Permissions" />
+                                <FormattedMessage id="comet.userPermissions.permissions" defaultMessage="Permissions" />
                             </ToolbarTitleItem>
                             <ToolbarFillSpace />
                             <ToolbarActions>
@@ -196,7 +196,7 @@ export const PermissionGrid: React.FC<{
                                         setPermissionId("add");
                                     }}
                                 >
-                                    <FormattedMessage id="comet.userManagement.addPermission" defaultMessage="Add new permission" />
+                                    <FormattedMessage id="comet.userPermissions.addPermission" defaultMessage="Add new permission" />
                                 </Button>
                             </ToolbarActions>
                         </GridToolbar>

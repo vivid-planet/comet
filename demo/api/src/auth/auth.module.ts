@@ -1,7 +1,7 @@
 import {
     createAuthResolver,
     createCometAuthGuard,
-    createUserManagementStaticAuthedUserStrategy,
+    createUserPermissionsStaticAuthedUserStrategy,
     CurrentUser,
     User,
     UserStatus,
@@ -28,7 +28,7 @@ export const staticUsers: User[] = [
 
 @Module({
     providers: [
-        createUserManagementStaticAuthedUserStrategy({
+        createUserPermissionsStaticAuthedUserStrategy({
             staticAuthedUser: staticUsers[0],
         }),
         createAuthResolver({

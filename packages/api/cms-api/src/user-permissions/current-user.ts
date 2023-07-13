@@ -2,7 +2,7 @@ import { Field, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
 
 import { ContentScope } from "../common/decorators/content-scope.interface";
-import { PermissionConfiguration } from "./user-management.types";
+import { PermissionConfiguration } from "./user-permissions.types";
 
 interface CurrentUserInterface {
     permissions: CurrentUserPermission[];

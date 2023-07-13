@@ -7,7 +7,7 @@ import React from "react";
 import { FieldRenderProps, Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { UserManagementSettings } from "../../UserManagementPage";
+import { UserPermissionsSettings } from "../../UserPermissionsPage";
 import {
     GQLAvailablePermissionsQuery,
     GQLAvailablePermissionsQueryVariables,
@@ -36,7 +36,7 @@ const Configuration = ({ configurationComponent, input, disabled }: Configuratio
         return configurationComponent();
     };
     return (
-        <FormSection title={<FormattedMessage id="comet.userManagement.configuration" defaultMessage="Configuration" />}>
+        <FormSection title={<FormattedMessage id="comet.userPermissions.configuration" defaultMessage="Configuration" />}>
             <Fieldset disabled={disabled}>
                 <Form
                     onSubmit={() => {
@@ -61,7 +61,7 @@ const createMutation = gql`
         $requestedBy: String
         $approvedBy: String
     ) {
-        userManagementCreatePermission(
+        userPermissionsCreatePermission(
             data: {
                 userId: $userId
                 permission: $permission
@@ -89,7 +89,7 @@ const updateMutation = gql`
         $requestedBy: String
         $approvedBy: String
     ) {
-        userManagementUpdatePermission(
+        userPermissionsUpdatePermission(
             data: {
                 id: $id
                 permission: $permission
@@ -112,7 +112,7 @@ interface FormProps {
     handleDialogClose: () => void;
 }
 export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, handleDialogClose }) => {
-    const settings = React.useContext(UserManagementSettings);
+    const settings = React.useContext(UserPermissionsSettings);
     const client = useApolloClient();
     const submit = async (data: GQLUserPermissionDialogFragment) => {
         if (permissionId && permissionId !== "add") {
@@ -134,7 +134,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
     const { data, error } = useQuery<GQLPermissionQuery, GQLPermissionQueryVariables>(
         gql`
             query Permission($permissionId: ID!, $userId: String) {
-                userPermission: userManagementPermission(id: $permissionId, userId: $userId) {
+                userPermission: userPermissionsPermission(id: $permissionId, userId: $userId) {
                     ...UserPermissionDialog
                 }
             }
@@ -162,7 +162,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
     >(
         gql`
             query AvailablePermissions {
-                availablePermissions: userManagementAvailablePermissions {
+                availablePermissions: userPermissionsAvailablePermissions {
                     permission
                     name
                     description
@@ -200,7 +200,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
                 render={({ values }) => (
                     <>
                         <DialogTitle>
-                            <FormattedMessage id="comet.userManagement.showPermission" defaultMessage="Show permission" />
+                            <FormattedMessage id="comet.userPermissions.showPermission" defaultMessage="Show permission" />
                         </DialogTitle>
                         <DialogContent>
                             <Field
@@ -213,11 +213,11 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
                                     availablePermissionsData.availablePermissions.find((p) => p.permission === option)?.name
                                 }
                                 disabled={disabled}
-                                label={<FormattedMessage id="comet.userManagement.permission" defaultMessage="Permission" />}
+                                label={<FormattedMessage id="comet.userPermissions.permission" defaultMessage="Permission" />}
                             />
                             <Field
                                 name="validFrom"
-                                label={<FormattedMessage id="comet.userManagement.validFrom" defaultMessage="Valid from" />}
+                                label={<FormattedMessage id="comet.userPermissions.validFrom" defaultMessage="Valid from" />}
                                 fullWidth
                                 component={FinalFormDatePicker}
                                 disabled={disabled}
@@ -226,7 +226,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
                             />
                             <Field
                                 name="validTo"
-                                label={<FormattedMessage id="comet.userManagement.validTo" defaultMessage="Valid to" />}
+                                label={<FormattedMessage id="comet.userPermissions.validTo" defaultMessage="Valid to" />}
                                 fullWidth
                                 component={FinalFormDatePicker}
                                 disabled={disabled}
@@ -244,33 +244,33 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
                                 />
                             )}
 
-                            <FormSection title={<FormattedMessage id="comet.userManagement.documentation" defaultMessage="Documentation" />}>
+                            <FormSection title={<FormattedMessage id="comet.userPermissions.documentation" defaultMessage="Documentation" />}>
                                 <Field
                                     fullWidth
                                     name="reason"
                                     component={FinalFormInput}
                                     disabled={disabled}
-                                    label={<FormattedMessage id="comet.userManagement.reason" defaultMessage="Reason" />}
+                                    label={<FormattedMessage id="comet.userPermissions.reason" defaultMessage="Reason" />}
                                 />
                                 <Field
                                     fullWidth
                                     name="requestedBy"
                                     component={FinalFormInput}
                                     disabled={disabled}
-                                    label={<FormattedMessage id="comet.userManagement.requestedBy" defaultMessage="Requested by" />}
+                                    label={<FormattedMessage id="comet.userPermissions.requestedBy" defaultMessage="Requested by" />}
                                 />
                                 <Field
                                     fullWidth
                                     name="approvedBy"
                                     component={FinalFormInput}
                                     disabled={disabled}
-                                    label={<FormattedMessage id="comet.userManagement.approvedBy" defaultMessage="Approved by" />}
+                                    label={<FormattedMessage id="comet.userPermissions.approvedBy" defaultMessage="Approved by" />}
                                 />
                             </FormSection>
                         </DialogContent>
                         <DialogActions>
                             <CancelButton onClick={handleDialogClose}>
-                                <FormattedMessage id="comet.userManagement.close" defaultMessage="Close" />
+                                <FormattedMessage id="comet.userPermissions.close" defaultMessage="Close" />
                             </CancelButton>
                             {!disabled && <SaveButton type="submit" />}
                         </DialogActions>

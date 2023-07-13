@@ -30,7 +30,7 @@ export const UserGrid: React.FC = () => {
             field: "name",
             flex: 1,
             pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userManagement.name", defaultMessage: "Name" }),
+            headerName: intl.formatMessage({ id: "comet.userPermissions.name", defaultMessage: "Name" }),
             renderCell: ({ row }) => (
                 <Typography>
                     <NameBox>{row.name}</NameBox>
@@ -41,19 +41,19 @@ export const UserGrid: React.FC = () => {
             field: "email",
             flex: 1,
             pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userManagement.email", defaultMessage: "E-Mail" }),
+            headerName: intl.formatMessage({ id: "comet.userPermissions.email", defaultMessage: "E-Mail" }),
         },
         {
             field: "language",
             flex: 0.5,
             pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userManagement.language", defaultMessage: "Language" }),
+            headerName: intl.formatMessage({ id: "comet.userPermissions.language", defaultMessage: "Language" }),
             renderCell: ({ row }) => row.language.toUpperCase(),
         },
         {
             field: "status",
             flex: 1,
-            headerName: intl.formatMessage({ id: "comet.userManagement.status", defaultMessage: "Status" }),
+            headerName: intl.formatMessage({ id: "comet.userPermissions.status", defaultMessage: "Status" }),
         },
         {
             field: "actions",
@@ -76,7 +76,7 @@ export const UserGrid: React.FC = () => {
     const { data, loading, error } = useQuery<GQLUserGridQuery, GQLUserGridQueryVariables>(
         gql`
             query UserGrid($offset: Int, $limit: Int, $filter: UserFilter, $sort: [UserSort!], $search: String) {
-                users: userManagementUsers(offset: $offset, limit: $limit, filter: $filter, sort: $sort, search: $search) {
+                users: userPermissionsUsers(offset: $offset, limit: $limit, filter: $filter, sort: $sort, search: $search) {
                     nodes {
                         ...UserForGrid
                     }

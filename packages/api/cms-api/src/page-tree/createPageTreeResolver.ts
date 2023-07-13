@@ -6,8 +6,8 @@ import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { DependenciesService } from "../dependencies/dependencies.service";
 import { Dependency } from "../dependencies/dependency";
 import { DocumentInterface } from "../document/dto/document-interface";
-import { PermissionCheck } from "../user-management/auth/permission-check";
-import { USERMANAGEMENT } from "../user-management/user-management.types";
+import { PermissionCheck } from "../user-permissions/auth/permission-check";
+import { USERPERMISSIONS } from "../user-permissions/user-permissions.types";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
 import {
@@ -63,7 +63,7 @@ export function createPageTreeResolver({
 
     @Resolver(() => PageTreeNode)
     @PermissionCheck({
-        allowedForPermissions: [USERMANAGEMENT.pageTree],
+        allowedForPermissions: [USERPERMISSIONS.pageTree],
     })
     class PageTreeResolver {
         constructor(

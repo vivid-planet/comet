@@ -5,16 +5,16 @@ import { Strategy } from "passport-custom";
 import { ExtractJwt } from "passport-jwt";
 
 import { CurrentUser } from "../current-user";
-import { UserManagementService } from "../user-management.service";
+import { UserPermissionsService } from "../user-permissions.service";
 
-interface UserManagementJwtStrategyConfig {
+interface UserPermissionsJwtStrategyConfig {
     jwksUri: string;
 }
 
-export function createUserManagementJwtStrategy(config: UserManagementJwtStrategyConfig): Type {
+export function createUserPermissionsJwtStrategy(config: UserPermissionsJwtStrategyConfig): Type {
     @Injectable()
-    class UserManagementJwtStrategy extends PassportStrategy(Strategy, "jwt") {
-        constructor(private userService: UserManagementService) {
+    class UserPermissionsJwtStrategy extends PassportStrategy(Strategy, "jwt") {
+        constructor(private userService: UserPermissionsService) {
             super({
                 jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
                 secretOrKeyProvider: passportJwtSecret({
@@ -29,5 +29,5 @@ export function createUserManagementJwtStrategy(config: UserManagementJwtStrateg
             return this.userService.createCurrentUser(await this.userService.getUser(data.sub));
         }
     }
-    return UserManagementJwtStrategy;
+    return UserPermissionsJwtStrategy;
 }
