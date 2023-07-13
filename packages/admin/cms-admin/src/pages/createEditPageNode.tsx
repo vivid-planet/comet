@@ -337,13 +337,25 @@ export function createEditPageNode({
                                                                         />
                                                                         <Tooltip
                                                                             title={
-                                                                                <FormattedMessage
-                                                                                    id="comet.pages.pages.page.createAutomaticRedirects.tooltip"
-                                                                                    defaultMessage="A redirect will automatically send users and search engines to the correct page even if they visit the old path. So if you have already published or shared {numberOfDescendants, plural, =0 {this link} other {these links}}, check this box."
-                                                                                    values={{
-                                                                                        numberOfDescendants,
-                                                                                    }}
-                                                                                />
+                                                                                <>
+                                                                                    <Typography variant="body2">
+                                                                                        <strong>
+                                                                                            <FormattedMessage
+                                                                                                id="comet.pages.pages.page.createAutomaticRedirects.tooltip.title"
+                                                                                                defaultMessage="Generate redirects"
+                                                                                            />
+                                                                                        </strong>
+                                                                                    </Typography>
+                                                                                    <Typography variant="body2">
+                                                                                        <FormattedMessage
+                                                                                            id="comet.pages.pages.page.createAutomaticRedirects.tooltip.text"
+                                                                                            defaultMessage="You have changed the slug, so redirects should be created so that users and search engines automatically land at the correct page, even if they visit the old path. So if you already have published or shared {numberOfDescendants, plural, =0 {this page} other {these pages}}, check this box."
+                                                                                            values={{
+                                                                                                numberOfDescendants,
+                                                                                            }}
+                                                                                        />
+                                                                                    </Typography>
+                                                                                </>
                                                                             }
                                                                         >
                                                                             <IconButton>
@@ -378,10 +390,7 @@ export function createEditPageNode({
                                                                                                 <FormattedMessage
                                                                                                     tagName="span"
                                                                                                     id="comet.pages.pages.page.createAutomaticRedirects.labelSubline"
-                                                                                                    defaultMessage="for this page and all its child items"
-                                                                                                    values={{
-                                                                                                        numberOfDescendants,
-                                                                                                    }}
+                                                                                                    defaultMessage="for this page and all its child pages"
                                                                                                 />
                                                                                             </Typography>
                                                                                         )}
