@@ -96,6 +96,18 @@ function ProductsTable() {
             type: "singleSelect",
             valueOptions: categoriesData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
         },
+        {
+            field: "tags",
+            headerName: "Tags",
+            width: 150,
+            renderCell: (params) => <>{params.row.tags.map((tag) => tag.title).join(", ")}</>,
+        },
+        {
+            field: "variants",
+            headerName: "Variants",
+            width: 150,
+            renderCell: (params) => <>{params.row.variants.length}</>,
+        },
         { field: "inStock", headerName: "In Stock", width: 50, type: "boolean" },
         {
             field: "visible",
@@ -144,12 +156,15 @@ function ProductsTable() {
                                             slug: input.slug,
                                             title: input.title,
                                             type: input.type,
-                                            tags: [], // todo copy tags
-                                            category: null, // todo copy category
-                                            variants: [], // todo copy variants
-                                            articleNumbers: [],
-                                            discounts: [],
-                                            packageDimensions: { width: 0, height: 0, depth: 0 },
+                                            category: input.category?.id,
+                                            tags: input.tags.map((i) => i.id),
+                                            variants: input.variants.map((variant) => ({
+                                                name: variant.name,
+                                                image: DamImageBlock.state2Output(DamImageBlock.input2State(variant.image)),
+                                            })),
+                                            articleNumbers: input.articleNumbers,
+                                            discounts: input.discounts,
+                                            packageDimensions: input.packageDimensions,
                                             statistics: { views: 0 },
                                         },
                                     },
@@ -215,6 +230,24 @@ const productsFragment = gql`
         category {
             id
             title
+        }
+        tags {
+            id
+            title
+        }
+        variants {
+            image
+            name
+        }
+        articleNumbers
+        discounts {
+            quantity
+            price
+        }
+        packageDimensions {
+            width
+            height
+            depth
         }
     }
 `;
