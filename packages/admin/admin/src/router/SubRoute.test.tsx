@@ -184,3 +184,43 @@ test("Subrote other route hidden", async () => {
     });
     expect(rendered.queryByText("Cmp2 Sub")).not.toBeInTheDocument();
 });
+
+test("Route below Subroute", async () => {
+    function Cmp2() {
+        const urlPrefix = useSubRoutePrefix();
+        return <div>urlPrefix={urlPrefix}</div>;
+    }
+    function Cmp1() {
+        const urlPrefix = useSubRoutePrefix();
+        return (
+            <>
+                <Link to={`${urlPrefix}/sub`}>Sub</Link>
+                <Route path={`${urlPrefix}/sub`}>
+                    <Cmp2 />
+                </Route>
+            </>
+        );
+    }
+    function Story() {
+        return (
+            <>
+                <SubRoute path="/foo">
+                    <Cmp1 />
+                </SubRoute>
+            </>
+        );
+    }
+
+    const history = createMemoryHistory();
+
+    const rendered = render(
+        <MuiThemeProvider theme={createTheme()}>
+            <Router history={history}>
+                <Story />
+            </Router>
+        </MuiThemeProvider>,
+    );
+
+    fireEvent.click(rendered.getByText("Sub"));
+    expect(rendered.getByText("urlPrefix=/foo/sub")).toBeInTheDocument();
+});
