@@ -1,44 +1,40 @@
 name: Build Docs
 
 on:
-  pull_request:
-    paths:
-      - docs/**
-    branches:
-      - main
-      - next
-  push:
-    paths:
-      - docs/**
-    branches:
-      - main
-      - next
+    pull_request:
+        paths:
+            - docs/**
+        branches:
+            - main
+            - next
+    push:
+        paths:
+            - docs/**
+        branches:
+            - main
+            - next
 
 jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "${{ github.actor }}"
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "${{ github.actor }}"
 
-      - uses: actions/checkout@v3
+            - uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
 
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          registry-url: "https://registry.npmjs.org"
-          cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
+            - name: Use Node.js 18.x
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 18
+                  registry-url: "https://registry.npmjs.org"
+                  cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
 
-      - run: pnpm install --frozen-lockfile
+            - run: pnpm install --frozen-lockfile
 
-      - name: Build admin libs
-        run: pnpm recursive --filter "./packages/admin/admin*" run build
-
-      - name: Build docusaurus
-        run: |
-          pnpm --filter ./docs run build
+            - name: Build docs
+              run: pnpm run build:docs
