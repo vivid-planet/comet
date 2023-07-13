@@ -29,16 +29,16 @@ import {
     GQLCreateProductMutationVariables,
     GQLDeleteProductMutation,
     GQLDeleteProductMutationVariables,
+    GQLProductGridCategoriesQuery,
+    GQLProductGridCategoriesQueryVariables,
     GQLProductsListFragment,
     GQLProductsListQuery,
     GQLProductsListQueryVariables,
-    GQLProductTableCategoriesQuery,
-    GQLProductTableCategoriesQueryVariables,
     GQLUpdateProductVisibilityMutation,
     GQLUpdateProductVisibilityMutationVariables,
-} from "./ProductsTable.generated";
+} from "./ProductsGrid.generated";
 
-function ProductsTableToolbar() {
+function ProductsGridToolbar() {
     return (
         <Toolbar>
             <ToolbarAutomaticTitleItem />
@@ -58,11 +58,11 @@ function ProductsTableToolbar() {
     );
 }
 
-function ProductsTable() {
+function ProductsGrid() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
-    const { data: categoriesData } = useQuery<GQLProductTableCategoriesQuery, GQLProductTableCategoriesQueryVariables>(productCategoriesQuery);
+    const { data: categoriesData } = useQuery<GQLProductGridCategoriesQuery, GQLProductGridCategoriesQueryVariables>(productCategoriesQuery);
 
     const columns: GridColDef<GQLProductsListFragment>[] = [
         {
@@ -209,7 +209,7 @@ function ProductsTable() {
                 loading={loading}
                 error={error}
                 components={{
-                    Toolbar: ProductsTableToolbar,
+                    Toolbar: ProductsGridToolbar,
                 }}
             />
         </Box>
@@ -266,7 +266,7 @@ const productsQuery = gql`
 `;
 
 const productCategoriesQuery = gql`
-    query ProductTableCategories {
+    query ProductGridCategories {
         productCategories {
             nodes {
                 id
@@ -299,4 +299,4 @@ const updateProductVisibilityMutation = gql`
     }
 `;
 
-export default ProductsTable;
+export default ProductsGrid;
