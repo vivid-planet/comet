@@ -104,6 +104,9 @@ export class Stack extends React.Component<StackProps, IState> {
                     {(routerProps: RouteComponentProps<any>) => {
                         const { topLevelTitle, children } = this.props;
                         this.history = routerProps.history;
+                        if (!routerProps.match) {
+                            return children;
+                        }
                         return (
                             <>
                                 <StackBreadcrumb title={topLevelTitle} url={routerProps.match.url} ignoreParentId={true}>
