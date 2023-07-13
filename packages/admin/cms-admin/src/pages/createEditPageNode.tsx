@@ -324,61 +324,71 @@ export function createEditPageNode({
                                             return (
                                                 <>
                                                     <Typography>
-                                                        {parentPath}
-                                                        <strong>/{values.slug}</strong>
+                                                        {parentPath}/{values.slug}
                                                     </Typography>
                                                     {mode === "edit" && dirtyFields.slug && (
                                                         <Box mt={3}>
-                                                            <Field name="createAutomaticRedirectsOnSlugChange" type="checkbox">
-                                                                {(props) => (
-                                                                    <FormControlLabel
-                                                                        label={
-                                                                            <Typography display="flex" alignItems="center">
-                                                                                <div>
-                                                                                    <Typography variant="body1">
-                                                                                        <FormattedMessage
-                                                                                            tagName="span"
-                                                                                            id="comet.pages.pages.page.createAutomaticRedirects.fromOldToNewPath"
-                                                                                            defaultMessage="Create {numberOfDescendants, plural, =0 {a redirect} other {redirects}} from the old to the new path"
-                                                                                            values={{
-                                                                                                numberOfDescendants,
-                                                                                            }}
-                                                                                        />
-                                                                                    </Typography>
-                                                                                    {numberOfDescendants > 0 && (
-                                                                                        <Typography variant="body2" color="rgba(0, 0, 0, 0.6)">
+                                                            <FieldContainer
+                                                                label={
+                                                                    <>
+                                                                        <FormattedMessage
+                                                                            id="comet.pages.pages.page.createAutomaticRedirects.headline"
+                                                                            defaultMessage="Redirects"
+                                                                        />
+                                                                        <Tooltip
+                                                                            title={
+                                                                                <FormattedMessage
+                                                                                    id="comet.pages.pages.page.createAutomaticRedirects.tooltip"
+                                                                                    defaultMessage="A redirect will automatically send users and search engines to the correct page even if they visit the old path. So if you have already published or shared {numberOfDescendants, plural, =0 {this link} other {these links}}, check this box."
+                                                                                    values={{
+                                                                                        numberOfDescendants,
+                                                                                    }}
+                                                                                />
+                                                                            }
+                                                                        >
+                                                                            <IconButton>
+                                                                                <Info />
+                                                                            </IconButton>
+                                                                        </Tooltip>
+                                                                    </>
+                                                                }
+                                                            >
+                                                                <Field name="createAutomaticRedirectsOnSlugChange" type="checkbox">
+                                                                    {(props) => (
+                                                                        <FormControlLabel
+                                                                            label={
+                                                                                <Typography display="flex" alignItems="center">
+                                                                                    <div>
+                                                                                        <Typography variant="body1">
                                                                                             <FormattedMessage
                                                                                                 tagName="span"
-                                                                                                id="comet.pages.pages.page.createAutomaticRedirects.numberOfPages"
-                                                                                                defaultMessage="for this page and {numberOfDescendants} {numberOfDescendants, plural, one {subpage} other {subpages}}"
+                                                                                                id="comet.pages.pages.page.createAutomaticRedirects.label"
+                                                                                                defaultMessage="Create {numberOfDescendants, plural, =0 {a redirect} other {redirects}}"
                                                                                                 values={{
                                                                                                     numberOfDescendants,
                                                                                                 }}
                                                                                             />
                                                                                         </Typography>
-                                                                                    )}
-                                                                                </div>
-                                                                                <Tooltip
-                                                                                    title={
-                                                                                        <FormattedMessage
-                                                                                            id="comet.pages.pages.page.createAutomaticRedirects.tooltip"
-                                                                                            defaultMessage="You should create the {numberOfDescendants, plural, =0 {redirect} other {redirects}} if the URL is known by users or search engines, so they can still find the page after renaming it. If the path is not known (e.g. newly created) you can skip it."
-                                                                                            values={{
-                                                                                                numberOfDescendants,
-                                                                                            }}
-                                                                                        />
-                                                                                    }
-                                                                                >
-                                                                                    <IconButton>
-                                                                                        <Info />
-                                                                                    </IconButton>
-                                                                                </Tooltip>
-                                                                            </Typography>
-                                                                        }
-                                                                        control={<FinalFormCheckbox {...props} />}
-                                                                    />
-                                                                )}
-                                                            </Field>
+                                                                                        {numberOfDescendants > 0 && (
+                                                                                            <Typography variant="body2" color="rgba(0, 0, 0, 0.6)">
+                                                                                                <FormattedMessage
+                                                                                                    tagName="span"
+                                                                                                    id="comet.pages.pages.page.createAutomaticRedirects.labelSubline"
+                                                                                                    defaultMessage="for this page and all its child items"
+                                                                                                    values={{
+                                                                                                        numberOfDescendants,
+                                                                                                    }}
+                                                                                                />
+                                                                                            </Typography>
+                                                                                        )}
+                                                                                    </div>
+                                                                                </Typography>
+                                                                            }
+                                                                            control={<FinalFormCheckbox {...props} />}
+                                                                        />
+                                                                    )}
+                                                                </Field>
+                                                            </FieldContainer>
                                                         </Box>
                                                     )}
                                                 </>
