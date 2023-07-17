@@ -20,6 +20,7 @@
         "build:cms:skippable": "test -f packages/admin/cms-admin/lib/index.d.ts && echo 'Skipping CMS build' || $npm_execpath build:cms",
         "build:storybook": "pnpm recursive --filter '@comet/admin*' --filter '@comet/eslint-plugin' run build && pnpm --filter comet-admin-stories run build-storybook",
         "build:lib": "pnpm recursive --filter '@comet/*' run build",
+        "build:docs": "pnpm recursive --filter '@comet/admin*' --filter 'comet-docs' run build",
         "clean": "pnpm recursive run clean",
         "copy-schema-files": "node copy-schema-files.js",
         "dev:admin": "pnpm recursive --filter '@comet/admin*' run clean && dotenv -c -- dev-pm start @comet-admin",
@@ -37,6 +38,7 @@
         "lint:eslint": "pnpm recursive run lint:eslint",
         "lint:tsc": "pnpm recursive run lint:tsc",
         "storybook": "pnpm --filter comet-admin-stories run storybook",
+        "docs": "pnpm --filter ./docs run start",
         "test": "pnpm recursive run test",
         "version": "$npm_execpath changeset version && pnpm install --lockfile-only",
         "publish": "pnpm run build:lib && $npm_execpath changeset publish"
