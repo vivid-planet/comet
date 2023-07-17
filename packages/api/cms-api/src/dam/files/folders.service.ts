@@ -153,14 +153,17 @@ export class FoldersService {
         return qb.getSingleResult();
     }
 
-    async create({ parentId, ...data }: CreateFolderInput, scope?: DamScopeInterface): Promise<FolderInterface> {
+    async create(
+        { parentId, isImportFolder = false, ...data }: CreateFolderInput & { isImportFolder?: boolean },
+        scope?: DamScopeInterface,
+    ): Promise<FolderInterface> {
         let parent = undefined;
         let mpath: string[] = [];
         if (parentId) {
             parent = await this.findOneById(parentId);
             mpath = (await this.findAncestorsByParentId(parentId)).map((folder) => folder.id);
         }
-        const folder = this.foldersRepository.create({ ...data, parent, mpath, scope });
+        const folder = this.foldersRepository.create({ ...data, isImportFolder, parent, mpath, scope });
         await this.foldersRepository.persistAndFlush(folder);
         return folder;
     }
@@ -182,6 +185,7 @@ export class FoldersService {
         const folder = entity.assign({
             ...input,
             parent: parentId !== undefined ? parent : entity.parent,
+            isImportFolder: entity.name === input.name ? entity.isImportFolder : false,
         });
 
         if (parentIsDirty) {

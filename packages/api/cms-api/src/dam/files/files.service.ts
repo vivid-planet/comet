@@ -4,6 +4,7 @@ import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import * as console from "console";
 import { createHmac } from "crypto";
+import { format } from "date-fns";
 import exifr from "exifr";
 import { createReadStream } from "fs";
 import getColors from "get-image-colors";
@@ -386,13 +387,26 @@ export class FilesService {
         return Number(result.rows[0].row_number) - 1;
     }
 
-    async copyFilesToScope({ fileIds, targetScope }: { fileIds: string[]; targetScope: DamScopeInterface }) {
+    async copyFilesToScope({ fileIds, rootScope, targetScope }: { fileIds: string[]; rootScope: DamScopeInterface; targetScope: DamScopeInterface }) {
         const files = await withFilesSelect(this.selectQueryBuilder(), {})
             .where({ id: { $in: fileIds } })
             .getResult();
 
-        const mappedFileIds: Array<{ rootFile: FileInterface; copy: FileInterface }> = [];
+        if (files.length === 0) {
+            throw new Error("No valid file ids provided");
+        }
 
+        const scopeString = Object.values(rootScope).join("-");
+        const date = new Date();
+        const importFolder = await this.foldersService.create(
+            {
+                name: `Imported from ${scopeString} on ${format(date, "dd.MM.yyyy")} at ${format(date, "HH:mm:ss")}`,
+                isImportFolder: true,
+            },
+            targetScope,
+        );
+
+        const mappedFileIds: Array<{ rootFile: FileInterface; copy: FileInterface }> = [];
         for (const file of files) {
             if (isEqual(file.scope, targetScope)) {
                 continue;
@@ -412,7 +426,7 @@ export class FilesService {
                 ...Utils.copy(file),
                 image: fileImageInput,
                 // TODO: replace with inbox
-                folderId: undefined,
+                folderId: importFolder.id,
                 copyOf: file.id,
                 scope: targetScope,
             };

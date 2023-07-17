@@ -242,6 +242,7 @@ type DamFolder {
   numberOfFiles: Int!
   mpath: [ID!]!
   archived: Boolean!
+  isImportFolder: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
   scope: DamScope!
@@ -815,7 +816,7 @@ type Mutation {
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
-  copyFilesToScope(fileIds: [ID!]!, targetScope: DamScopeInput!): [DamFile!]!
+  copyFilesToScope(fileIds: [ID!]!, rootScope: DamScopeInput!, targetScope: DamScopeInput!): [DamFile!]!
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
   restoreDamFile(id: ID!): DamFile!

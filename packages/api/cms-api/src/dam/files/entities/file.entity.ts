@@ -19,6 +19,7 @@ export interface FileInterface extends BaseEntity<FileInterface, "id"> {
     title?: string;
     altText?: string;
     archived: boolean;
+    copyOf?: string;
     image?: FileImage;
     license?: License;
     createdAt: Date;
