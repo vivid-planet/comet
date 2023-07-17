@@ -108,6 +108,16 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             return this.filesService.moveBatch(files, targetFolder);
         }
 
+        @Mutation(() => [File])
+        @SkipBuild()
+        async copyFilesToScope(
+            @Args("fileIds", { type: () => [ID] }) fileIds: string[],
+            @Args("targetScope", { type: () => Scope }) targetScope: typeof Scope,
+        ): Promise<FileInterface[]> {
+            console.log(await this.filesService.copyFilesToScope({ fileIds, targetScope }));
+            return [];
+        }
+
         @Mutation(() => File)
         @SubjectEntity(File)
         @SkipBuild()

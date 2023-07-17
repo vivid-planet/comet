@@ -1,7 +1,8 @@
-import { MikroORM } from "@mikro-orm/core";
+import { MikroORM, Utils } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
+import * as console from "console";
 import { createHmac } from "crypto";
 import exifr from "exifr";
 import { createReadStream } from "fs";
@@ -383,6 +384,53 @@ export class FilesService {
 
         // make the positions start with 0
         return Number(result.rows[0].row_number) - 1;
+    }
+
+    async copyFilesToScope({ fileIds, targetScope }: { fileIds: string[]; targetScope: DamScopeInterface }) {
+        const files = await withFilesSelect(this.selectQueryBuilder(), {})
+            .where({ id: { $in: fileIds } })
+            .getResult();
+
+        const mappedFileIds: Array<{ rootFile: FileInterface; copy: FileInterface }> = [];
+
+        for (const file of files) {
+            if (isEqual(file.scope, targetScope)) {
+                continue;
+            }
+
+            const fileImageInput = { ...Utils.copy(file.image) };
+            if (fileImageInput) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                delete fileImageInput.id;
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                delete fileImageInput.file;
+            }
+
+            const fileInput = {
+                ...Utils.copy(file),
+                image: fileImageInput,
+                // TODO: replace with inbox
+                folderId: undefined,
+                copyOf: file.id,
+                scope: targetScope,
+            };
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            delete fileInput.id;
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            delete fileInput.createdAt;
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            delete fileInput.updatedAt;
+
+            const newFile = await this.create(fileInput);
+            mappedFileIds.push({ rootFile: file, copy: newFile });
+        }
+
+        return mappedFileIds;
     }
 
     async findNextAvailableFilename({

@@ -259,6 +259,7 @@ type DamFile {
   title: String
   altText: String
   archived: Boolean!
+  copyOf: String
   image: DamFileImage
   license: DamFileLicense
   createdAt: DateTime!
@@ -814,6 +815,7 @@ type Mutation {
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
+  copyFilesToScope(fileIds: [ID!]!, targetScope: DamScopeInput!): [DamFile!]!
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
   restoreDamFile(id: ID!): DamFile!

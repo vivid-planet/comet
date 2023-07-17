@@ -81,6 +81,10 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         })
         archived: boolean;
 
+        @Field({ nullable: true })
+        @Property({ columnType: "uuid", nullable: true })
+        copyOf?: string;
+
         @Field(() => FileImage, { nullable: true })
         @OneToOne({
             entity: () => FileImage,
