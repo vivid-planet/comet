@@ -27,7 +27,7 @@ describe("GenerateCrudInputRelations", () => {
     it("n:1 input dto should contain relation id", async () => {
         LazyMetadataStorage.load();
         const orm = await MikroORM.init({
-            type: "sqlite",
+            type: "postgresql",
             dbName: "test-db",
             entities: [Product, ProductCategory],
         });
@@ -59,7 +59,7 @@ describe("GenerateCrudInputRelations", () => {
     it("1:n input dto should contain relation id", async () => {
         LazyMetadataStorage.load();
         const orm = await MikroORM.init({
-            type: "sqlite",
+            type: "postgresql",
             dbName: "test-db",
             entities: [Product, ProductCategory],
         });

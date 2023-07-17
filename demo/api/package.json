@@ -69,7 +69,6 @@
         "nestjs-console": "^8.0.0",
         "node-fetch": "^2.0.0",
         "passport": "^0.4.0",
-        "pg": "^8.0.0",
         "pg-error-constants": "^1.0.0",
         "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.0",
