@@ -2,9 +2,9 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Next minor
+## 3.2.5
 
-_tba_
+_Jul 17, 2023_
 
 ### @comet/cms-api
 
