@@ -147,6 +147,9 @@ function ProductsTable() {
                                             tags: [], // todo copy tags
                                             category: null, // todo copy category
                                             variants: [], // todo copy variants
+                                            articleNumbers: [],
+                                            discounts: [],
+                                            packageDimensions: { width: 0, height: 0, depth: 0 },
                                         },
                                     },
                                 });
