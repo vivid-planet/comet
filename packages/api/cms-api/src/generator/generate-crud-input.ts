@@ -65,7 +65,7 @@ export async function generateCrudInput(
                 decorators.push("@IsSlug()");
             }
             decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
-        } else if (prop.type === "DecimalType") {
+        } else if (prop.type === "DecimalType" || prop.type === "number") {
             decorators.push("@IsNumber()");
             decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
             type = "number";
@@ -124,6 +124,21 @@ export async function generateCrudInput(
             decorators.push(`@IsArray()`);
             decorators.push(`@IsUUID(undefined, { each: true })`);
             type = "string[]";
+        } else if (prop.reference == "1:1") {
+            {
+                if (!prop.targetMeta) throw new Error("No targetMeta");
+                const excludeFields = prop.targetMeta.props.filter((p) => p.reference == "1:1" && p.targetMeta == metadata).map((p) => p.name);
+                const nestedInputFiles = await generateCrudInput(generatorOptions, prop.targetMeta, { nested: true, excludeFields });
+                generatedFiles.push(...nestedInputFiles);
+                importsOut += `import { ${prop.targetMeta.className}Input } from "${nestedInputFiles[0].name
+                    .replace(/^dto/, ".")
+                    .replace(/\.ts$/, "")}";`;
+            }
+            const inputName = `${prop.targetMeta.className}Input`;
+            decorators.push(`@Field(() => ${inputName})`);
+            decorators.push(`@Type(() => ${inputName})`);
+            decorators.push("@ValidateNested()");
+            type = `${inputName}`;
         } else if (prop.type == "JsonType" || prop.embeddable) {
             const tsProp = morphTsProperty(prop.name, metadata);
 

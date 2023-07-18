@@ -10,6 +10,7 @@ import {
     ManyToMany,
     ManyToOne,
     OneToMany,
+    OneToOne,
     OptionalProps,
     PrimaryKey,
     Property,
@@ -21,6 +22,7 @@ import { IsNumber } from "class-validator";
 import { v4 as uuid } from "uuid";
 
 import { ProductCategory } from "./product-category.entity";
+import { ProductStatistics } from "./product-statistics.entity";
 import { ProductTag } from "./product-tag.entity";
 import { ProductType } from "./product-type.enum";
 import { ProductVariant } from "./product-variant.entity";
@@ -140,6 +142,10 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Embedded(() => ProductPackageDimensions)
     @Field(() => ProductPackageDimensions)
     packageDimensions: ProductPackageDimensions;
+
+    @OneToOne(() => ProductStatistics, { inversedBy: "product", owner: true, ref: true })
+    @Field(() => ProductStatistics)
+    statistics: Ref<ProductStatistics>;
 
     @OneToMany(() => ProductVariant, (variant) => variant.product, { orphanRemoval: true })
     @CrudField({

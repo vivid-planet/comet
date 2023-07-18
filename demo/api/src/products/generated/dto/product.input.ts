@@ -8,6 +8,7 @@ import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, Val
 
 import { ProductDimensions, ProductDiscounts, ProductPackageDimensions } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
+import { ProductStatisticsInput } from "./product-statistics.nested.input";
 import { ProductVariantInput } from "./product-variant.nested.input";
 
 @InputType()
@@ -73,6 +74,12 @@ export class ProductInput {
     @Type(() => ProductPackageDimensions)
     @Field(() => ProductPackageDimensions)
     packageDimensions: ProductPackageDimensions;
+
+    @IsNotEmpty()
+    @Field(() => ProductStatisticsInput)
+    @Type(() => ProductStatisticsInput)
+    @ValidateNested()
+    statistics: ProductStatisticsInput;
 
     @Field(() => [ProductVariantInput])
     @IsArray()

@@ -344,6 +344,13 @@ type ProductCategory implements DocumentInterface {
   products: [Product!]!
 }
 
+type ProductStatistics {
+  id: ID!
+  views: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type ProductTag implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -392,6 +399,7 @@ type Product implements DocumentInterface {
   articleNumbers: [String!]!
   dimensions: ProductDimensions
   packageDimensions: ProductPackageDimensions!
+  statistics: ProductStatistics!
   createdAt: DateTime!
   category: ProductCategory
   variants: [ProductVariant!]!
@@ -979,9 +987,14 @@ input ProductInput {
   articleNumbers: [String!]!
   dimensions: ProductDimensionsInput
   packageDimensions: ProductPackageDimensionsInput!
+  statistics: ProductStatisticsInput!
   variants: [ProductVariantInput!]!
   category: ID
   tags: [ID!]!
+}
+
+input ProductStatisticsInput {
+  views: Float!
 }
 
 input ProductVariantInput {
@@ -1001,6 +1014,7 @@ input ProductUpdateInput {
   articleNumbers: [String!]
   dimensions: ProductDimensionsInput
   packageDimensions: ProductPackageDimensionsInput
+  statistics: ProductStatisticsInput
   variants: [ProductVariantInput!]
   category: ID
   tags: [ID!]
