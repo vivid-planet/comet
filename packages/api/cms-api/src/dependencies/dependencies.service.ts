@@ -1,7 +1,6 @@
 import { AnyEntity, Connection } from "@mikro-orm/core";
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
-import * as console from "console";
 
 import { Dependency } from "./dependency";
 import { DiscoverService } from "./discover.service";
@@ -77,19 +76,59 @@ export class DependenciesService {
         console.timeEnd("refresh materialized block dependency");
     }
 
-    async getDependents(target: AnyEntity<{ id: string }>): Promise<Dependency[]> {
-        const entityName = target.constructor.name;
-        return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."targetEntityName" = ? AND idx."targetId" = ?`, [
-            entityName,
-            target.id,
-        ]);
+    async getDependents(
+        target: AnyEntity<{ id: string }> | { entityName: string; id: string },
+        filter?: {
+            rootEntityName?: string;
+            rootId?: string;
+            rootColumnName?: string;
+        },
+    ): Promise<Dependency[]> {
+        const entityName = "entityName" in target ? target.entityName : target.constructor.name;
+        const qb = this.entityManager.getKnex("read").select("*").from({ idx: "block_index_dependencies" }).where({
+            targetEntityName: entityName,
+            targetId: target.id,
+        });
+
+        if (filter?.rootEntityName) {
+            qb.andWhere({ targetEntityName: filter.rootEntityName });
+        }
+        if (filter?.rootId) {
+            qb.andWhere({ targetId: filter.rootId });
+        }
+        if (filter?.rootColumnName) {
+            qb.andWhere({ rootColumnName: filter.rootColumnName });
+        }
+
+        const results: Dependency[] = await qb;
+        return results;
     }
 
-    async getDependencies(root: AnyEntity<{ id: string }>): Promise<Dependency[]> {
-        const entityName = root.constructor.name;
-        return this.connection.execute(`SELECT * FROM block_index_dependencies as idx WHERE idx."rootEntityName" = ? AND idx."rootId" = ?`, [
-            entityName,
-            root.id,
-        ]);
+    async getDependencies(
+        root: AnyEntity<{ id: string }> | { entityName: string; id: string },
+        filter?: {
+            targetEntityName?: string;
+            targetId?: string;
+            rootColumnName?: string;
+        },
+    ): Promise<Dependency[]> {
+        const entityName = "entityName" in root ? root.entityName : root.constructor.name;
+        const qb = this.entityManager.getKnex("read").select("*").from({ idx: "block_index_dependencies" }).where({
+            rootEntityName: entityName,
+            rootId: root.id,
+        });
+
+        if (filter?.targetEntityName) {
+            qb.andWhere({ targetEntityName: filter.targetEntityName });
+        }
+        if (filter?.targetId) {
+            qb.andWhere({ targetId: filter.targetId });
+        }
+        if (filter?.rootColumnName) {
+            qb.andWhere({ rootColumnName: filter.rootColumnName });
+        }
+
+        const results: Dependency[] = await qb;
+        return results;
     }
 }
