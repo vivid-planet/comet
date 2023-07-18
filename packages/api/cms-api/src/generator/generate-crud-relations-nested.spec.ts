@@ -35,7 +35,7 @@ describe("GenerateCrudRelations", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
             const orm = await MikroORM.init({
-                type: "sqlite",
+                type: "postgresql",
                 dbName: "test-db",
                 entities: [TestEntityProduct, TestEntityVariant],
             });
