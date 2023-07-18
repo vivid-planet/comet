@@ -157,7 +157,7 @@ function ProductsGrid() {
                                             title: input.title,
                                             type: input.type,
                                             category: input.category?.id,
-                                            tags: input.tags.map((i) => i.id),
+                                            tags: input.tags.map((tag) => tag.id),
                                             variants: input.variants.map((variant) => ({
                                                 name: variant.name,
                                                 image: DamImageBlock.state2Output(DamImageBlock.input2State(variant.image)),
