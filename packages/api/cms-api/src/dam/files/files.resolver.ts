@@ -2,6 +2,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { NotFoundException, Type } from "@nestjs/common";
 import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import * as console from "console";
 import { basename, extname } from "path";
 
 import { CurrentUserInterface } from "../../auth/current-user/current-user";
@@ -13,12 +14,13 @@ import { ContentScopeService } from "../../content-scope/content-scope.service";
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
 import { DependentsResolver } from "../../dependencies/dependencies.resolver";
 import { DependenciesService } from "../../dependencies/dependencies.service";
+import { PageTreeService } from "../../page-tree/page-tree.service";
 import { DamScopeInterface } from "../types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
-import { FileInterface } from "./entities/file.entity";
+import { FILE_ENTITY, FileInterface } from "./entities/file.entity";
 import { FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
 import { slugifyFilename } from "./files.utils";
@@ -49,6 +51,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             @InjectRepository("Folder") private readonly foldersRepository: EntityRepository<FolderInterface>,
             private readonly contentScopeService: ContentScopeService,
             private readonly dependenciesService: DependenciesService,
+            private readonly pageTreeService: PageTreeService,
         ) {
             super(dependenciesService);
         }
@@ -106,6 +109,34 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             }
 
             return this.filesService.moveBatch(files, targetFolder);
+        }
+
+        @Query(() => [File])
+        async getAllFilesUsedOnPage(@Args("pageTreeNodeId", { type: () => [ID] }) pageTreeNodeId: string): Promise<FileInterface[]> {
+            const node = await this.pageTreeService.createReadApi().getNode(pageTreeNodeId);
+
+            if (node === null) {
+                throw new Error("PageTreeNode not found");
+            }
+
+            const document = await this.pageTreeService.getActiveAttachedDocument(node.id, node.documentType);
+
+            if (document === null) {
+                return [];
+            }
+
+            await this.dependenciesService.refreshViews();
+            const dependencies = await this.dependenciesService.getDependencies(
+                { entityName: document.type, id: document.documentId },
+                { targetEntityName: FILE_ENTITY },
+            );
+
+            const fileIds = dependencies.map((dependency) => dependency.targetId);
+            const files = await this.filesService.findMultipleByIds(fileIds);
+
+            console.log(files);
+
+            return files;
         }
 
         @Mutation(() => [File])

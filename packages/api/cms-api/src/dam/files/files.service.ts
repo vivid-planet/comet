@@ -170,6 +170,12 @@ export class FilesService {
         return withFilesSelect(this.selectQueryBuilder(), { contentHash }).getResult();
     }
 
+    async findMultipleByIds(ids: string[]) {
+        return withFilesSelect(this.selectQueryBuilder(), {})
+            .where({ id: { $in: ids } })
+            .getResult();
+    }
+
     async findOneById(id: string): Promise<FileInterface | null> {
         return withFilesSelect(this.selectQueryBuilder(), { id }).getSingleResult();
     }
@@ -388,9 +394,10 @@ export class FilesService {
     }
 
     async copyFilesToScope({ fileIds, rootScope, targetScope }: { fileIds: string[]; rootScope: DamScopeInterface; targetScope: DamScopeInterface }) {
-        const files = await withFilesSelect(this.selectQueryBuilder(), {})
-            .where({ id: { $in: fileIds } })
-            .getResult();
+        // const files = await withFilesSelect(this.selectQueryBuilder(), {})
+        //     .where({ id: { $in: fileIds } })
+        //     .getResult();
+        const files = await this.findMultipleByIds(fileIds);
 
         if (files.length === 0) {
             throw new Error("No valid file ids provided");
