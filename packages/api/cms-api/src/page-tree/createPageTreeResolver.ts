@@ -115,6 +115,18 @@ export function createPageTreeResolver({
             return this.pageTreeReadApi.getChildNodes(node);
         }
 
+        @ResolveField(() => Number)
+        async numberOfDescendants(@Parent() node: PageTreeNodeInterface): Promise<number> {
+            const childNodes = await this.pageTreeReadApi.getChildNodes(node);
+            let numberOfDescendants = childNodes.length;
+
+            for (const childNode of childNodes) {
+                numberOfDescendants += await this.numberOfDescendants(childNode);
+            }
+
+            return numberOfDescendants;
+        }
+
         @ResolveField(() => PageTreeNode, { nullable: true })
         async parentNode(@Parent() node: PageTreeNodeInterface): Promise<PageTreeNodeInterface | null> {
             return this.pageTreeReadApi.getParentNode(node);
