@@ -1,8 +1,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { ErrorScope, Field, FieldContainer, FinalForm, FinalFormCheckbox, FinalFormInput, FinalFormSelect, Tooltip } from "@comet/admin";
 import { Info } from "@comet/admin-icons";
-import { Box, CircularProgress, Divider, FormControlLabel, IconButton, MenuItem, Theme, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Box, CircularProgress, Divider, FormControlLabel, IconButton, MenuItem, Typography } from "@mui/material";
 import { Mutator } from "final-form";
 import setFieldTouched from "final-form-set-field-touched";
 import { DocumentNode } from "graphql";
@@ -48,15 +47,6 @@ export interface EditPageNodeProps {
     category: string;
     documentTypes: Record<DocumentType, DocumentInterface>;
 }
-
-const CustomDivider = styled(Divider)`
-    margin: ${(props: { theme: Theme }) => props.theme.spacing(6)} 0;
-`;
-
-const RedirectsTooltip = styled(Tooltip)`
-    margin-left: ${(props: { theme: Theme }) => props.theme.spacing(1)};
-    padding: ${(props: { theme: Theme }) => props.theme.spacing(1)};
-`;
 
 export function createEditPageNode({
     additionalFormFields,
@@ -351,7 +341,7 @@ export function createEditPageNode({
                                                                         id="comet.pages.pages.page.createAutomaticRedirects.headline"
                                                                         defaultMessage="Redirects"
                                                                     />
-                                                                    <RedirectsTooltip
+                                                                    <Tooltip
                                                                         title={
                                                                             <>
                                                                                 <Typography variant="body2">
@@ -374,10 +364,12 @@ export function createEditPageNode({
                                                                             </>
                                                                         }
                                                                     >
-                                                                        <IconButton>
-                                                                            <Info />
-                                                                        </IconButton>
-                                                                    </RedirectsTooltip>
+                                                                        <Box component="span" marginLeft={1}>
+                                                                            <IconButton>
+                                                                                <Info />
+                                                                            </IconButton>
+                                                                        </Box>
+                                                                    </Tooltip>
                                                                 </>
                                                             }
                                                         >
@@ -421,7 +413,9 @@ export function createEditPageNode({
                                     }}
                                 </FormSpy>
 
-                                <CustomDivider />
+                                <Box marginY={6}>
+                                    <Divider />
+                                </Box>
 
                                 <Field
                                     label={intl.formatMessage({
@@ -462,8 +456,6 @@ export function createEditPageNode({
                                         />
                                     )}
                                 </Field>
-
-                                <CustomDivider />
 
                                 {additionalFormFields}
                             </>

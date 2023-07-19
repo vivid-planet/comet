@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 import { Field, FinalFormSelect } from "@comet/admin";
 import { createEditPageNode } from "@comet/cms-admin";
-import { MenuItem } from "@mui/material";
+import { Box, Divider, MenuItem } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 export type { GQLPageTreeNodeAdditionalFieldsFragment } from "./EditPageNode.generated"; //re-export
@@ -38,7 +38,10 @@ export const EditPageNode = createEditPageNode({
     },
     nodeFragment: additionalPageTreeNodeFieldsFragment,
     additionalFormFields: (
-        <div>
+        <>
+            <Box marginY={6}>
+                <Divider />
+            </Box>
             <Field
                 label={<FormattedMessage id="pageTreeNode.fields.userGroup" defaultMessage="User-Group" />}
                 name="userGroup"
@@ -55,6 +58,6 @@ export const EditPageNode = createEditPageNode({
                     </FinalFormSelect>
                 )}
             </Field>
-        </div>
+        </>
     ),
 });
