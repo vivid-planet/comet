@@ -41,8 +41,5 @@ ln -sf ../api/schema.gql ./demo/site/schema.gql
 ln -sf ../api/block-meta.json ./demo/site/block-meta.json
 ln -sf ../api/comet-config.json ./demo/site/comet-config.json
 
-# Build CLI package to be used for dev startup
-cd packages/cli && pnpm run build
-
-# Build eslint-config package
-cd ../eslint-plugin && pnpm run build
+# Build the packages CLI and eslint-plugin to be used for dev startup
+pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build
