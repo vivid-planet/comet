@@ -797,7 +797,7 @@ input PageTreeNodeUpdateInput {
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
-  createAutomaticRedirectsOnSlugChange: Boolean = false
+  createAutomaticRedirectsOnSlugChange: Boolean = true
   userGroup: UserGroup! = All
 }
 
