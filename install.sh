@@ -43,3 +43,6 @@ ln -sf ../api/comet-config.json ./demo/site/comet-config.json
 
 # Build CLI package to be used for dev startup
 cd packages/cli && pnpm run build
+
+# Build eslint-config package
+cd ../eslint-plugin && pnpm run build
