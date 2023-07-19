@@ -29,16 +29,16 @@ import {
     GQLCreateProductMutationVariables,
     GQLDeleteProductMutation,
     GQLDeleteProductMutationVariables,
+    GQLProductGridCategoriesQuery,
+    GQLProductGridCategoriesQueryVariables,
     GQLProductsListFragment,
     GQLProductsListQuery,
     GQLProductsListQueryVariables,
-    GQLProductTableCategoriesQuery,
-    GQLProductTableCategoriesQueryVariables,
     GQLUpdateProductVisibilityMutation,
     GQLUpdateProductVisibilityMutationVariables,
-} from "./ProductsTable.generated";
+} from "./ProductsGrid.generated";
 
-function ProductsTableToolbar() {
+function ProductsGridToolbar() {
     return (
         <Toolbar>
             <ToolbarAutomaticTitleItem />
@@ -58,11 +58,11 @@ function ProductsTableToolbar() {
     );
 }
 
-function ProductsTable() {
+function ProductsGrid() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
-    const { data: categoriesData } = useQuery<GQLProductTableCategoriesQuery, GQLProductTableCategoriesQueryVariables>(productCategoriesQuery);
+    const { data: categoriesData } = useQuery<GQLProductGridCategoriesQuery, GQLProductGridCategoriesQueryVariables>(productCategoriesQuery);
 
     const columns: GridColDef<GQLProductsListFragment>[] = [
         {
@@ -95,6 +95,18 @@ function ProductsTable() {
             renderCell: (params) => <>{params.row.category?.title}</>,
             type: "singleSelect",
             valueOptions: categoriesData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
+        },
+        {
+            field: "tags",
+            headerName: "Tags",
+            width: 150,
+            renderCell: (params) => <>{params.row.tags.map((tag) => tag.title).join(", ")}</>,
+        },
+        {
+            field: "variants",
+            headerName: "Variants",
+            width: 150,
+            renderCell: (params) => <>{params.row.variants.length}</>,
         },
         { field: "inStock", headerName: "In Stock", width: 50, type: "boolean" },
         {
@@ -144,12 +156,15 @@ function ProductsTable() {
                                             slug: input.slug,
                                             title: input.title,
                                             type: input.type,
-                                            tags: [], // todo copy tags
-                                            category: null, // todo copy category
-                                            variants: [], // todo copy variants
-                                            articleNumbers: [],
-                                            discounts: [],
-                                            packageDimensions: { width: 0, height: 0, depth: 0 },
+                                            category: input.category?.id,
+                                            tags: input.tags.map((tag) => tag.id),
+                                            variants: input.variants.map((variant) => ({
+                                                name: variant.name,
+                                                image: DamImageBlock.state2Output(DamImageBlock.input2State(variant.image)),
+                                            })),
+                                            articleNumbers: input.articleNumbers,
+                                            discounts: input.discounts,
+                                            packageDimensions: input.packageDimensions,
                                             statistics: { views: 0 },
                                         },
                                     },
@@ -194,7 +209,7 @@ function ProductsTable() {
                 loading={loading}
                 error={error}
                 components={{
-                    Toolbar: ProductsTableToolbar,
+                    Toolbar: ProductsGridToolbar,
                 }}
             />
         </Box>
@@ -216,6 +231,24 @@ const productsFragment = gql`
             id
             title
         }
+        tags {
+            id
+            title
+        }
+        variants {
+            image
+            name
+        }
+        articleNumbers
+        discounts {
+            quantity
+            price
+        }
+        packageDimensions {
+            width
+            height
+            depth
+        }
     }
 `;
 
@@ -233,7 +266,7 @@ const productsQuery = gql`
 `;
 
 const productCategoriesQuery = gql`
-    query ProductTableCategories {
+    query ProductGridCategories {
         productCategories {
             nodes {
                 id
@@ -266,4 +299,4 @@ const updateProductVisibilityMutation = gql`
     }
 `;
 
-export default ProductsTable;
+export default ProductsGrid;
