@@ -42,6 +42,7 @@ export const withFilesSelect = (
     args: {
         query?: string;
         id?: string;
+        copyOf?: string;
         filename?: string;
         folderId?: string | null;
         imageId?: string;
@@ -59,6 +60,7 @@ export const withFilesSelect = (
         qb.andWhere("file.name ILIKE ANY (ARRAY[?])", [args.query.split(" ").map((term) => `%${term}%`)]);
     }
     if (args.id) qb.andWhere({ id: args.id });
+    if (args.copyOf) qb.andWhere({ copyOf: args.copyOf });
     if (args.filename) qb.andWhere({ name: args.filename });
     if (args.contentHash) qb.andWhere({ contentHash: args.contentHash });
     if (args.archived !== undefined) qb.andWhere({ archived: args.archived });
@@ -174,6 +176,10 @@ export class FilesService {
         return withFilesSelect(this.selectQueryBuilder(), {})
             .where({ id: { $in: ids } })
             .getResult();
+    }
+
+    async findCopiesOfFileInScope(rootFileId: string, scope: DamScopeInterface) {
+        return withFilesSelect(this.selectQueryBuilder(), { copyOf: rootFileId, scope: scope }).getResult();
     }
 
     async findOneById(id: string): Promise<FileInterface | null> {
@@ -394,9 +400,6 @@ export class FilesService {
     }
 
     async copyFilesToScope({ fileIds, rootScope, targetScope }: { fileIds: string[]; rootScope: DamScopeInterface; targetScope: DamScopeInterface }) {
-        // const files = await withFilesSelect(this.selectQueryBuilder(), {})
-        //     .where({ id: { $in: fileIds } })
-        //     .getResult();
         const files = await this.findMultipleByIds(fileIds);
 
         if (files.length === 0) {
@@ -413,45 +416,64 @@ export class FilesService {
             targetScope,
         );
 
-        const mappedFileIds: Array<{ rootFile: FileInterface; copy: FileInterface }> = [];
+        let numberNewlyCopiedFiles = 0;
+        let numberAlreadyCopiedFiles = 0;
+
+        const mappedFiles: Array<{ rootFile: FileInterface; copy: FileInterface; isNewCopy: boolean }> = [];
         for (const file of files) {
             if (isEqual(file.scope, targetScope)) {
                 continue;
             }
 
-            const fileImageInput = { ...Utils.copy(file.image) };
-            if (fileImageInput) {
+            let copiedFile: FileInterface;
+            let isNewCopy: boolean;
+
+            const copiesInTargetScope = await this.findCopiesOfFileInScope(file.id, targetScope);
+            if (copiesInTargetScope.length > 0) {
+                copiedFile = copiesInTargetScope[0];
+                numberAlreadyCopiedFiles++;
+                isNewCopy = false;
+            } else {
+                const fileImageInput = { ...Utils.copy(file.image) };
+                if (fileImageInput) {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    delete fileImageInput.id;
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    delete fileImageInput.file;
+                }
+
+                const fileInput = {
+                    ...Utils.copy(file),
+                    image: fileImageInput,
+                    folderId: importFolder.id,
+                    copyOf: file.id,
+                    scope: targetScope,
+                };
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
-                delete fileImageInput.id;
+                delete fileInput.id;
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
-                delete fileImageInput.file;
+                delete fileInput.createdAt;
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                delete fileInput.updatedAt;
+
+                copiedFile = await this.create(fileInput);
+                numberNewlyCopiedFiles++;
+                isNewCopy = true;
             }
 
-            const fileInput = {
-                ...Utils.copy(file),
-                image: fileImageInput,
-                // TODO: replace with inbox
-                folderId: importFolder.id,
-                copyOf: file.id,
-                scope: targetScope,
-            };
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            delete fileInput.id;
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            delete fileInput.createdAt;
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            delete fileInput.updatedAt;
-
-            const newFile = await this.create(fileInput);
-            mappedFileIds.push({ rootFile: file, copy: newFile });
+            mappedFiles.push({ rootFile: file, copy: copiedFile, isNewCopy });
         }
 
-        return mappedFileIds;
+        if (numberNewlyCopiedFiles === 0) {
+            await this.foldersService.delete(importFolder.id);
+        }
+
+        return { numberNewlyCopiedFiles, numberAlreadyCopiedFiles, mappedFiles };
     }
 
     async findNextAvailableFilename({
