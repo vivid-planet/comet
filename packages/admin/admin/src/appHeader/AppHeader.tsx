@@ -1,6 +1,6 @@
-import { AppBar, AppBarClassKey, ComponentsOverrides, Theme } from "@mui/material";
+import { AppBar as MuiAppBar, AppBarClassKey, capitalize, ComponentsOverrides, Theme, useThemeProps } from "@mui/material";
 import { AppBarProps } from "@mui/material/AppBar";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { styled } from "@mui/material/styles";
 import * as React from "react";
 
 import { MasterLayoutContext } from "../mui/MasterLayoutContext";
@@ -14,52 +14,47 @@ interface AppHeaderProps extends AppBarProps {
 
 export type AppHeaderClassKey = AppBarClassKey;
 
-const styles = ({ palette, zIndex }: Theme) => {
-    return createStyles<AppHeaderClassKey, AppHeaderProps>({
-        root: {
-            backgroundColor: palette.grey["A400"],
-            height: "var(--header-height)",
-            flexDirection: "row",
-            alignItems: "center",
-        },
-        positionFixed: {},
-        positionAbsolute: {},
-        positionSticky: {},
-        positionStatic: {},
-        positionRelative: {},
-        colorDefault: {},
-        colorPrimary: {},
-        colorSecondary: {},
-        colorInherit: {},
-        colorTransparent: {},
-    });
-};
+const AppHeaderRoot = styled(MuiAppBar, {
+    name: "CometAdminAppHeader",
+    slot: "Root",
+    overridesResolver({ position, color }, styles) {
+        return [styles.root, styles[`position${capitalize(position)}`], styles[`color${capitalize(color)}`]];
+    },
+})(({ theme }) => {
+    return {
+        backgroundColor: theme.palette.grey["A400"],
+        height: "var(--header-height)",
+        flexDirection: "row",
+        alignItems: "center",
+    };
+});
 
-function Header({
-    children,
-    headerHeight: passedHeaderHeight,
-    classes,
-    ...restProps
-}: AppHeaderProps & WithStyles<typeof styles>): React.ReactElement {
+export function AppHeader(inProps: AppHeaderProps): React.ReactElement {
+    const props = useThemeProps({ props: inProps, name: "CometAdminAppHeader" });
+    const { children, headerHeight: passedHeaderHeight, position = "fixed", color = "primary", ...restProps } = props;
+
     const { headerHeight: masterLayoutHeaderHeight } = React.useContext(MasterLayoutContext);
     const headerHeight = passedHeaderHeight === undefined ? masterLayoutHeaderHeight : passedHeaderHeight;
 
     return (
-        <AppBar classes={classes} {...restProps} style={{ "--header-height": `${headerHeight}px` } as React.CSSProperties}>
+        <AppHeaderRoot position={position} color={color} {...restProps} style={{ "--header-height": `${headerHeight}px` } as React.CSSProperties}>
             {children}
-        </AppBar>
+        </AppHeaderRoot>
     );
 }
-
-export const AppHeader = withStyles(styles, { name: "CometAdminAppHeader" })(Header);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminAppHeader: AppHeaderClassKey;
     }
 
+    interface ComponentsPropsList {
+        CometAdminAppHeader: AppHeaderProps;
+    }
+
     interface Components {
         CometAdminAppHeader?: {
+            defaultProps?: ComponentsPropsList["CometAdminAppHeader"];
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminAppHeader"];
         };
     }
