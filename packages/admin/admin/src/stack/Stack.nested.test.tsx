@@ -11,7 +11,7 @@ import { StackPage } from "./Page";
 import { Stack } from "./Stack";
 import { StackSwitch, StackSwitchApiContext } from "./Switch";
 
-test("basic test", async () => {
+test("StackNested basic test", async () => {
     function Page1() {
         const switchApi = React.useContext(StackSwitchApiContext);
         return (
