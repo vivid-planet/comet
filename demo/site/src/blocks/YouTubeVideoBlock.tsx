@@ -14,7 +14,7 @@ const getHeightInPercentForAspectRatio = (aspectRatio: YouTubeVideoBlockData["as
 };
 
 const YouTubeVideoBlock: React.FunctionComponent<PropsWithData<YouTubeVideoBlockData>> = ({
-    data: { youtubeIdentifier, autoplay, showControls, aspectRatio },
+    data: { youtubeIdentifier, autoplay, loop, showControls, aspectRatio },
 }) => {
     try {
         const url = new URL(youtubeIdentifier);
@@ -29,10 +29,11 @@ const YouTubeVideoBlock: React.FunctionComponent<PropsWithData<YouTubeVideoBlock
 
     return (
         <sc.VideoContainer heightInPercent={getHeightInPercentForAspectRatio(aspectRatio)}>
+            {/* the playlist parameter is needed so that the video loops. See https://developers.google.com/youtube/player_parameters#loop */}
             <iframe
-                src={`https://www.youtube-nocookie.com/embed/${youtubeIdentifier}?&modestbranding=1&autoplay=${Number(autoplay)}&controls=${Number(
-                    showControls,
-                )}`}
+                src={`https://www.youtube-nocookie.com/embed/${youtubeIdentifier}?&modestbranding=1&autoplay=${Number(autoplay)}${
+                    autoplay ? `&mute=1` : ""
+                }&controls=${Number(showControls)}&loop=${Number(loop)}${loop ? `&playlist=${youtubeIdentifier}` : ""}`}
                 frameBorder="0"
             />
         </sc.VideoContainer>
