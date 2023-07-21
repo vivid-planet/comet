@@ -17,10 +17,15 @@ interface DamMoreActionsProps {
 
 export const DamMoreActions = ({ button, transformOrigin, anchorOrigin }: DamMoreActionsProps): React.ReactElement => {
     const damSelectionActionsApi = useDamSelectionApi();
+    const { selectionMap, archiveSelected, deleteSelected, downloadSelected, restoreSelected, moveSelected } = damSelectionActionsApi;
     const snackbarApi = useSnackbarApi();
     const intl = useIntl();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+    const selectionMapValues = Array.from(selectionMap.values());
+    const lengthOfSelectedFiles = selectionMapValues.filter((value) => value === "file").length;
+    const onlyFoldersSelected = selectionMapValues.every((value) => value === "folder");
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -30,46 +35,42 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin }: DamMor
         setAnchorEl(null);
     };
 
-    const selectionMapValues = Array.from(damSelectionActionsApi.selectionMap.values());
-    const lengthOfSelectedFiles = selectionMapValues.filter((value) => value === "file").length;
-    const isFolderInSelection = selectionMapValues.some((value) => value === "folder");
-    const onlyFoldersSelected = selectionMapValues.every((value) => value === "folder");
+    const handleDownloadClick = () => {
+        const isFolderInSelection = selectionMapValues.some((value) => value === "folder");
+        const snackbarElement = (
+            <Snackbar
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                autoHideDuration={5000}
+                TransitionComponent={(props: SlideProps) => <Slide {...props} direction="right" />}
+                message={intl.formatMessage({
+                    id: "comet.dam.moreActions.folderNotDownloaded",
+                    defaultMessage: "Download of files started successfully. Folder downloads are not supported yet.",
+                })}
+            />
+        );
 
-    const snackbarComponent = (
-        <Snackbar
-            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-            autoHideDuration={5000}
-            TransitionComponent={(props: SlideProps) => <Slide {...props} direction="right" />}
-            message={intl.formatMessage({
-                id: "comet.dam.moreActions.folderNotDownloaded",
-                defaultMessage: "Download of files started successfully. Folder downloads are not supported yet.",
-            })}
-        />
-    );
-
-    const onDownloadClick = () => {
-        damSelectionActionsApi.downloadSelected();
+        downloadSelected();
         handleClose();
-        isFolderInSelection && snackbarApi.showSnackbar(snackbarComponent);
+        isFolderInSelection && snackbarApi.showSnackbar(snackbarElement);
     };
 
-    const onMoveClick = () => {
-        damSelectionActionsApi.moveSelected();
+    const handleMoveClick = () => {
+        moveSelected();
         handleClose();
     };
 
-    const onArchiveClick = () => {
-        damSelectionActionsApi.archiveSelected();
+    const handleArchiveClick = () => {
+        archiveSelected();
         handleClose();
     };
 
-    const onRestoreClick = () => {
-        damSelectionActionsApi.restoreSelected();
+    const handleRestoreClick = () => {
+        restoreSelected();
         handleClose();
     };
 
-    const onDeleteClick = () => {
-        damSelectionActionsApi.deleteSelected();
+    const handleDeleteClick = () => {
+        deleteSelected();
         handleClose();
     };
 
@@ -87,7 +88,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin }: DamMor
                 <MenuList>
                     {!onlyFoldersSelected && (
                         <>
-                            <MenuItem onClick={onDownloadClick}>
+                            <MenuItem onClick={handleDownloadClick}>
                                 <ListItemIcon>
                                     <Download />
                                 </ListItemIcon>
@@ -99,33 +100,33 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin }: DamMor
                             <StyledDivider />
                         </>
                     )}
-                    <MenuItem onClick={onMoveClick}>
+                    <MenuItem onClick={handleMoveClick}>
                         <ListItemIcon>
                             <Move />
                         </ListItemIcon>
                         <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.moveItems" defaultMessage="Move items" />} />
-                        <NumberSelectedChip>{damSelectionActionsApi.selectionMap.size}</NumberSelectedChip>
+                        <NumberSelectedChip>{selectionMap.size}</NumberSelectedChip>
                     </MenuItem>
-                    <MenuItem onClick={onArchiveClick}>
+                    <MenuItem onClick={handleArchiveClick}>
                         <ListItemIcon>
                             <Archive />
                         </ListItemIcon>
                         <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.archiveItems" defaultMessage="Archive items" />} />
-                        <NumberSelectedChip>{damSelectionActionsApi.selectionMap.size}</NumberSelectedChip>
+                        <NumberSelectedChip>{selectionMap.size}</NumberSelectedChip>
                     </MenuItem>
-                    <MenuItem onClick={onRestoreClick}>
+                    <MenuItem onClick={handleRestoreClick}>
                         <ListItemIcon>
                             <Restore />
                         </ListItemIcon>
                         <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.restoreItems" defaultMessage="Restore items" />} />
-                        <NumberSelectedChip>{damSelectionActionsApi.selectionMap.size}</NumberSelectedChip>
+                        <NumberSelectedChip>{selectionMap.size}</NumberSelectedChip>
                     </MenuItem>
-                    <MenuItem onClick={onDeleteClick}>
+                    <MenuItem onClick={handleDeleteClick}>
                         <ListItemIcon>
                             <Delete />
                         </ListItemIcon>
                         <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.deleteItems" defaultMessage="Delete items" />} />
-                        <NumberSelectedChip>{damSelectionActionsApi.selectionMap.size}</NumberSelectedChip>
+                        <NumberSelectedChip>{selectionMap.size}</NumberSelectedChip>
                     </MenuItem>
                 </MenuList>
             </Menu>
