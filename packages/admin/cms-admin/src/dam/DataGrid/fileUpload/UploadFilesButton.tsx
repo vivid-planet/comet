@@ -1,5 +1,4 @@
 import { useApolloClient } from "@apollo/client";
-import { SplitButton } from "@comet/admin";
 import { Upload } from "@comet/admin-icons";
 import { Button } from "@mui/material";
 import * as React from "react";
@@ -17,12 +16,11 @@ interface UploadSplitButtonProps {
     };
 }
 
-export const UploadSplitButton = ({ folderId, filter }: UploadSplitButtonProps): React.ReactElement => {
+export const UploadFilesButton = ({ folderId, filter }: UploadSplitButtonProps): React.ReactElement => {
     const client = useApolloClient();
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
     const fileInputRef = React.useRef<HTMLInputElement>(null);
-    const folderInputRef = React.useRef<HTMLInputElement>(null);
 
     const {
         uploadFiles,
@@ -45,33 +43,18 @@ export const UploadSplitButton = ({ folderId, filter }: UploadSplitButtonProps):
 
     return (
         <>
-            <SplitButton localStorageKey="damUpload">
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<Upload />}
-                    onClick={() => {
-                        // Add explicit onClick to make it work in SplitButton
-                        fileInputRef.current?.click();
-                    }}
-                >
-                    <FormattedMessage id="comet.pages.dam.uploadFiles" defaultMessage="Upload files" />
-                </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<Upload />}
-                    onClick={() => {
-                        // Add explicit onClick to make it work in SplitButton
-                        folderInputRef.current?.click();
-                    }}
-                >
-                    <FormattedMessage id="comet.pages.dam.uploadFolder" defaultMessage="Upload folder" />
-                </Button>
-            </SplitButton>
+            <Button
+                variant="contained"
+                color="primary"
+                startIcon={<Upload />}
+                onClick={() => {
+                    // Trigger file input with button click
+                    fileInputRef.current?.click();
+                }}
+            >
+                <FormattedMessage id="comet.pages.dam.uploadFiles" defaultMessage="Upload files" />
+            </Button>
             <input type="file" hidden {...getInputProps()} ref={fileInputRef} />
-            {/* eslint-disable-next-line react/no-unknown-property */}
-            <input type="file" hidden {...getInputProps()} webkitdirectory="webkitdirectory" directory="directory" ref={folderInputRef} />
             {fileUploadDialogs}
         </>
     );
