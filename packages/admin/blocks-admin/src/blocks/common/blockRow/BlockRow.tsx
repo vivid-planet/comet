@@ -6,8 +6,6 @@ import { DropTargetMonitor, useDrag, useDrop, XYCoord } from "react-dnd";
 import { FormattedMessage } from "react-intl";
 
 import { usePromise } from "../../../common/usePromise";
-import { PreviewContent } from "../../types";
-import { BlockPreview } from "./BlockPreview";
 import * as sc from "./BlockRow.sc";
 import InsertInBetweenAction from "./InsertInBetweenAction";
 import InsertInBetweenActionButton from "./InsertInBetweenActionButton";
@@ -17,8 +15,7 @@ const ItemTypes = {
 };
 
 interface BlockRowProps {
-    name: React.ReactNode;
-    previewContent: PreviewContent[];
+    renderPreviewContent: () => React.ReactNode;
     onContentClick?: () => void;
     onDeleteClick?: () => void;
     id: string;
@@ -44,7 +41,7 @@ interface IDragItem {
 }
 
 export function BlockRow(props: BlockRowProps): JSX.Element {
-    const { index, onAddNewBlock, slideIn, previewContent } = props;
+    const { index, onAddNewBlock, slideIn } = props;
     const ref = React.useRef<HTMLDivElement>(null);
     const [, drop] = useDrop({
         accept: ItemTypes.BLOCK,
@@ -175,9 +172,7 @@ export function BlockRow(props: BlockRowProps): JSX.Element {
                     </sc.SelectBlock>
                     <sc.OuterContent>
                         <sc.Content>
-                            <sc.PreviewTextContainer>
-                                <BlockPreview title={props.name} content={previewContent} />
-                            </sc.PreviewTextContainer>
+                            <sc.PreviewTextContainer>{props.renderPreviewContent()}</sc.PreviewTextContainer>
                         </sc.Content>
                         {props.additionalContent}
                     </sc.OuterContent>

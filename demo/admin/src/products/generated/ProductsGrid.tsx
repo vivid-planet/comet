@@ -17,7 +17,8 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
-import { BlockPreviewContent, DamImageBlock } from "@comet/cms-admin";
+import { BlockPreviewContent } from "@comet/blocks-admin";
+import { DamImageBlock } from "@comet/cms-admin";
 import { Box, Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";

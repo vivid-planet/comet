@@ -7,7 +7,7 @@ export { AdminComponentSectionGroup } from "./blocks/common/AdminComponentSectio
 export { AdminTabLabel } from "./blocks/common/AdminTabLabel";
 export type { AdminTabsProps } from "./blocks/common/AdminTabs";
 export { AdminTabs } from "./blocks/common/AdminTabs";
-export { BlockPreview } from "./blocks/common/blockRow/BlockPreview";
+export { BlockPreviewContent } from "./blocks/common/blockRow/BlockPreviewContent";
 export { BlockRow } from "./blocks/common/blockRow/BlockRow";
 export { HiddenInSubroute } from "./blocks/common/HiddenInSubroute";
 export { ColumnsLayoutPreview, ColumnsLayoutPreviewContent, ColumnsLayoutPreviewSpacing } from "./blocks/factories/columnsBlock/ColumnsLayoutPreview";

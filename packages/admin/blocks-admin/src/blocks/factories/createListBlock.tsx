@@ -6,7 +6,6 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { useBlockContext } from "../../context/useBlockContext";
 import { HoverPreviewComponent } from "../../iframebridge/HoverPreviewComponent";
 import { SelectPreviewComponent } from "../../iframebridge/SelectPreviewComponent";
 import { parallelAsyncEvery } from "../../utils/parallelAsyncEvery";
@@ -14,6 +13,7 @@ import { AdminComponentButton } from "../common/AdminComponentButton";
 import { AdminComponentPaper } from "../common/AdminComponentPaper";
 import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter";
 import { AdminComponentStickyHeader } from "../common/AdminComponentStickyHeader";
+import { BlockPreviewContent } from "../common/blockRow/BlockPreviewContent";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { BlockInterface, BlockState, PreviewContent } from "../types";
@@ -198,8 +198,6 @@ export function createListBlock<T extends BlockInterface>({
                 deleteBlocks,
             } = useAdminComponent({ state, updateState });
 
-            const blockContext = useBlockContext();
-
             return (
                 <SelectPreviewComponent>
                     <StackSwitch>
@@ -255,9 +253,10 @@ export function createListBlock<T extends BlockInterface>({
                                                             return (
                                                                 <HoverPreviewComponent key={data.key} componentSlug={`${data.key}/edit`}>
                                                                     <BlockRow
-                                                                        name={block.dynamicDisplayName?.(data.props) ?? block.displayName}
                                                                         id={data.key}
-                                                                        previewContent={block.previewContent(data.props, blockContext)}
+                                                                        renderPreviewContent={() => (
+                                                                            <BlockPreviewContent block={block} state={data.props} />
+                                                                        )}
                                                                         index={blockIndex}
                                                                         onContentClick={() => {
                                                                             stackApi.activatePage("edit", data.key);
