@@ -6,7 +6,9 @@ import { Field, ID, InputType } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
 
+import { ProductDimensions, ProductDiscounts, ProductPackageDimensions } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
+import { ProductStatisticsInput } from "./product-statistics.nested.input";
 import { ProductVariantInput } from "./product-variant.nested.input";
 
 @InputType()
@@ -47,6 +49,37 @@ export class ProductInput {
     @Transform(({ value }) => (isBlockInputInterface(value) ? value : DamImageBlock.blockInputFactory(value)), { toClassOnly: true })
     @ValidateNested()
     image: BlockInputInterface;
+
+    @IsNotEmpty()
+    @IsArray()
+    @ValidateNested()
+    @Type(() => ProductDiscounts)
+    @Field(() => [ProductDiscounts])
+    discounts: ProductDiscounts[];
+
+    @IsNotEmpty()
+    @IsArray()
+    @Field(() => [String])
+    @IsString({ each: true })
+    articleNumbers: string[];
+
+    @IsNullable()
+    @ValidateNested()
+    @Type(() => ProductDimensions)
+    @Field(() => ProductDimensions, { nullable: true })
+    dimensions?: ProductDimensions;
+
+    @IsNotEmpty()
+    @ValidateNested()
+    @Type(() => ProductPackageDimensions)
+    @Field(() => ProductPackageDimensions)
+    packageDimensions: ProductPackageDimensions;
+
+    @IsNotEmpty()
+    @Field(() => ProductStatisticsInput)
+    @Type(() => ProductStatisticsInput)
+    @ValidateNested()
+    statistics: ProductStatisticsInput;
 
     @Field(() => [ProductVariantInput])
     @IsArray()

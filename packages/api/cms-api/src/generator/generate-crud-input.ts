@@ -1,9 +1,15 @@
 import { EntityMetadata } from "@mikro-orm/core";
-import { ModuleKind, Project } from "ts-morph";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
 import { buildNameVariants } from "./utils/build-name-variants";
-import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName } from "./utils/ts-morph-helper";
+import {
+    findBlockImportPath,
+    findBlockName,
+    findEnumImportPath,
+    findEnumName,
+    findInputClassImportPath,
+    morphTsProperty,
+} from "./utils/ts-morph-helper";
 import { GeneratedFile, writeGeneratedFiles } from "./utils/write-generated-files";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,18 +26,10 @@ export async function generateCrudInput(
 ): Promise<GeneratedFile[]> {
     const generatedFiles: GeneratedFile[] = [];
 
-    const project = new Project({
-        compilerOptions: {
-            strictNullChecks: true,
-            module: ModuleKind.Node16,
-        },
-    });
-    const tsSource = project.addSourceFileAtPath(metadata.path);
-
-    const tsClass = tsSource.getClass(metadata.className);
-    if (!tsClass) throw new Error(`Class ${metadata.className} not found in ${metadata.path}`);
-
     const props = metadata.props
+        .filter((prop) => {
+            return !prop.embedded;
+        })
         .filter((prop) => {
             return hasFieldFeature(metadata.class, prop.name, "input");
         })
@@ -48,7 +46,7 @@ export async function generateCrudInput(
         } else {
             decorators.push("@IsNullable()");
         }
-        if (["id", "createdAt", "updatedAt", "visible"].includes(prop.name)) {
+        if (["id", "createdAt", "updatedAt", "visible", "scope"].includes(prop.name)) {
             //skip those (TODO find a non-magic solution?)
             continue;
         } else if (prop.enum) {
@@ -67,7 +65,7 @@ export async function generateCrudInput(
                 decorators.push("@IsSlug()");
             }
             decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
-        } else if (prop.type === "DecimalType") {
+        } else if (prop.type === "DecimalType" || prop.type === "number") {
             decorators.push("@IsNumber()");
             decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
             type = "number";
@@ -126,8 +124,59 @@ export async function generateCrudInput(
             decorators.push(`@IsArray()`);
             decorators.push(`@IsUUID(undefined, { each: true })`);
             type = "string[]";
+        } else if (prop.reference == "1:1") {
+            {
+                if (!prop.targetMeta) throw new Error("No targetMeta");
+                const excludeFields = prop.targetMeta.props.filter((p) => p.reference == "1:1" && p.targetMeta == metadata).map((p) => p.name);
+                const nestedInputFiles = await generateCrudInput(generatorOptions, prop.targetMeta, { nested: true, excludeFields });
+                generatedFiles.push(...nestedInputFiles);
+                importsOut += `import { ${prop.targetMeta.className}Input } from "${nestedInputFiles[0].name
+                    .replace(/^dto/, ".")
+                    .replace(/\.ts$/, "")}";`;
+            }
+            const inputName = `${prop.targetMeta.className}Input`;
+            decorators.push(`@Field(() => ${inputName})`);
+            decorators.push(`@Type(() => ${inputName})`);
+            decorators.push("@ValidateNested()");
+            type = `${inputName}`;
+        } else if (prop.type == "JsonType" || prop.embeddable) {
+            const tsProp = morphTsProperty(prop.name, metadata);
+
+            let tsType = tsProp.getType();
+            if (tsType.isUnion() && tsType.getUnionTypes().length == 2 && tsType.getUnionTypes()[0].getText() == "undefined") {
+                // undefinded | type (or prop?: type) -> type
+                tsType = tsType.getUnionTypes()[1];
+            }
+            type = tsType.getText(tsProp);
+            if (tsType.isArray()) {
+                decorators.push(`@IsArray()`);
+                if (type == "string[]") {
+                    decorators.push(`@Field(() => [String])`);
+                    decorators.push("@IsString({ each: true })");
+                } else if (type == "number[]") {
+                    decorators.push(`@Field(() => [Number])`);
+                    decorators.push("@IsNumber({ each: true })");
+                } else if (type == "boolean[]") {
+                    decorators.push(`@Field(() => [Boolean])`);
+                    decorators.push("@IsBoolean({ each: true })");
+                } else {
+                    const nestedClassName = tsType.getArrayElementTypeOrThrow().getText(tsProp);
+                    const importPath = findInputClassImportPath(nestedClassName, generatorOptions, metadata);
+                    importsOut += `import { ${nestedClassName} } from "${importPath}";`;
+                    decorators.push(`@ValidateNested()`);
+                    decorators.push(`@Type(() => ${nestedClassName})`);
+                    decorators.push(`@Field(() => [${nestedClassName}]${prop.nullable ? ", { nullable: true }" : ""})`);
+                }
+            } else {
+                const nestedClassName = tsType.getText(tsProp);
+                const importPath = findInputClassImportPath(nestedClassName, generatorOptions, metadata);
+                importsOut += `import { ${nestedClassName} } from "${importPath}";`;
+                decorators.push(`@ValidateNested()`);
+                decorators.push(`@Type(() => ${nestedClassName})`);
+                decorators.push(`@Field(() => ${nestedClassName}${prop.nullable ? ", { nullable: true }" : ""})`);
+            }
         } else {
-            //unsupported type TODO support more
+            console.warn(`${prop.name}: unsupported type ${type}`);
             continue;
         }
         fieldsOut += `${decorators.join("\n")}

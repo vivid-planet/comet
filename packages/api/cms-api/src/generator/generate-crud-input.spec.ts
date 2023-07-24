@@ -54,7 +54,7 @@ describe("GenerateCrudInput", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
             const orm = await MikroORM.init({
-                type: "sqlite",
+                type: "postgresql",
                 dbName: "test-db",
                 entities: [TestEntityWithString],
             });
@@ -88,7 +88,7 @@ describe("GenerateCrudInput", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
             const orm = await MikroORM.init({
-                type: "sqlite",
+                type: "postgresql",
                 dbName: "test-db",
                 entities: [TestEntityWithDate],
             });
@@ -122,7 +122,7 @@ describe("GenerateCrudInput", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
             const orm = await MikroORM.init({
-                type: "sqlite",
+                type: "postgresql",
                 dbName: "test-db",
                 entities: [TestEntityWithBoolean],
             });
@@ -157,7 +157,7 @@ describe("GenerateCrudInput", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
             const orm = await MikroORM.init({
-                type: "sqlite",
+                type: "postgresql",
                 dbName: "test-db",
                 entities: [TestEntityWithEnum],
             });

@@ -6,6 +6,7 @@ import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
 import { PageContentBlock } from "@src/pages/blocks/PageContentBlock";
 import { PageInput } from "@src/pages/dto/page.input";
 import { Page } from "@src/pages/entities/page.entity";
+import { UserGroup } from "@src/user-groups/user-group";
 import faker from "faker";
 
 import { generateImageBlock } from "./blocks/image.generator";
@@ -71,6 +72,7 @@ export class ManyImagesTestPageGenerator {
                 visible: true,
                 type: "image",
                 props: c,
+                userGroup: UserGroup.All,
             })),
         });
 

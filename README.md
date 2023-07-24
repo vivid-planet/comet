@@ -74,6 +74,14 @@ pnpm run storybook
 
 Storybook will be available at [http://localhost:26638/](http://localhost:26638/)
 
+#### Start Docs
+
+```bash
+pnpm run docs
+```
+
+The docs will be available at [http://localhost:3000/](http://localhost:3000/)
+
 ### Stop Processes
 
 ```bash

@@ -1,4 +1,4 @@
-import { StackLink } from "@comet/admin";
+import { StackLink, SubRoute } from "@comet/admin";
 import { Close } from "@comet/admin-icons";
 import { Button, Dialog, DialogTitle, IconButton, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -98,16 +98,18 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
             </StyledDialogTitle>
             <DamScopeProvider>
                 <MemoryRouter>
-                    <RedirectToPersistedDamLocation stateKey={stateKey} />
-                    <DamTable
-                        renderDamLabel={(row, { matches, filterApi }: RenderDamLabelOptions) =>
-                            renderDamLabel(row, onChooseFile, { matches, filterApi, showLicenseWarnings: damConfig.enableLicenseFeature })
-                        }
-                        allowedMimetypes={allowedMimetypes}
-                        hideContextMenu={true}
-                        hideMultiselect={true}
-                        hideArchiveFilter={true}
-                    />
+                    <SubRoute path="">
+                        <RedirectToPersistedDamLocation stateKey={stateKey} />
+                        <DamTable
+                            renderDamLabel={(row, { matches, filterApi }: RenderDamLabelOptions) =>
+                                renderDamLabel(row, onChooseFile, { matches, filterApi, showLicenseWarnings: damConfig.enableLicenseFeature })
+                            }
+                            allowedMimetypes={allowedMimetypes}
+                            hideContextMenu={true}
+                            hideMultiselect={true}
+                            hideArchiveFilter={true}
+                        />
+                    </SubRoute>
                 </MemoryRouter>
             </DamScopeProvider>
         </FixedHeightDialog>

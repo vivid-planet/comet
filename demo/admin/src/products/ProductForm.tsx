@@ -61,7 +61,7 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormState = Omit<GQLProductFormFragment, "price" | "image"> & {
+type FormValues = Omit<GQLProductFormFragment, "price" | "image"> & {
     price: string;
     image: BlockState<typeof rootBlocks.image>;
 };
@@ -70,7 +70,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     const stackApi = useStackApi();
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
-    const formApiRef = useFormApiRef<FormState>();
+    const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
 
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -78,7 +78,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues: Partial<FormState> = data?.product
+    const initialValues: Partial<FormValues> = data?.product
         ? {
               ...filter<GQLProductFormFragment>(productFormFragment, data.product),
               price: String(data.product.price),
@@ -100,16 +100,20 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         },
     });
 
-    const handleSubmit = async (formState: FormState, form: FormApi<FormState>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
-            ...formState,
-            price: parseFloat(formState.price),
-            image: rootBlocks.image.state2Output(formState.image),
-            type: formState.type as GQLProductType,
-            category: formState.category?.id,
-            tags: formState.tags.map((i) => i.id),
+            ...formValues,
+            price: parseFloat(formValues.price),
+            image: rootBlocks.image.state2Output(formValues.image),
+            type: formValues.type as GQLProductType,
+            category: formValues.category?.id,
+            tags: formValues.tags.map((i) => i.id),
             variants: [],
+            articleNumbers: [],
+            discounts: [],
+            packageDimensions: { width: 0, height: 0, depth: 0 },
+            statistics: { views: 0 },
         };
         if (mode === "edit") {
             if (!id) throw new Error();
@@ -151,7 +155,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     }
 
     return (
-        <FinalForm<FormState>
+        <FinalForm<FormValues>
             apiRef={formApiRef}
             onSubmit={handleSubmit}
             mode={mode}
