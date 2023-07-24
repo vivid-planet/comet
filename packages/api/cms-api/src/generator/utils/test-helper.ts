@@ -1,7 +1,7 @@
 import { ESLint } from "eslint";
 import { Project, SourceFile } from "ts-morph";
 
-import { GeneratedFiles } from "./write-generated-files";
+import { GeneratedFile } from "./write-generated-files";
 
 export async function lintSource(sourceCode: string): Promise<string> {
     const eslint = new ESLint({
@@ -30,12 +30,15 @@ export async function lintSource(sourceCode: string): Promise<string> {
     return ret;
 }
 
-export async function lintGeneratedFiles(files: GeneratedFiles): Promise<GeneratedFiles> {
-    const ret: GeneratedFiles = {};
-    for (const fileName in files) {
-        ret[fileName] = await lintSource(files[fileName]);
-    }
-    return ret;
+export async function lintGeneratedFiles(files: GeneratedFile[]): Promise<GeneratedFile[]> {
+    return Promise.all(
+        files.map(async (file) => {
+            return {
+                ...file,
+                content: await lintSource(file.content),
+            };
+        }),
+    );
 }
 
 export function parseSource(source: string): SourceFile {

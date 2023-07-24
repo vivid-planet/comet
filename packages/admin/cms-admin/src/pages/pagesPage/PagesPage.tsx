@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import {
+    LocalErrorScopeApolloContext,
     MainContent,
     messages,
     Stack,
@@ -65,11 +66,13 @@ export function PagesPage({
         };
     }, [setRedirectPathAfterChange, path]);
 
-    const { loading, data, refetch, startPolling, stopPolling } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
+    const { loading, data, error, refetch, startPolling, stopPolling } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
+        fetchPolicy: "cache-and-network",
         variables: {
             contentScope: scope,
             category,
         },
+        context: LocalErrorScopeApolloContext,
     });
 
     useFocusAwarePolling({
@@ -78,6 +81,22 @@ export function PagesPage({
         startPolling,
         stopPolling,
     });
+
+    const isInitialLoad = React.useRef(true);
+
+    if (error) {
+        const isPollingError = !isInitialLoad.current;
+
+        if (isPollingError) {
+            // Ignore
+        } else {
+            throw error;
+        }
+    }
+
+    if (isInitialLoad.current && !loading) {
+        isInitialLoad.current = false;
+    }
 
     const [EditDialog, editDialogSelection, editDialogApi] = useEditDialog();
 

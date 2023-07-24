@@ -31,6 +31,17 @@ export interface ErrorDialogProps {
     errorOptions?: ErrorDialogOptions;
 }
 
+export const ErrorDialogLoginMessage: React.ReactNode = (
+    <>
+        <Typography>
+            <FormattedMessage id="comet.errorDialog.loginExpired" defaultMessage="Your login-session has expired." />
+        </Typography>
+        <Button href="/" color="info" variant="outlined" sx={{ marginTop: "10px", marginBottom: "10px" }}>
+            <FormattedMessage id="comet.errorDialog.login" defaultMessage="Login" />
+        </Button>
+    </>
+);
+
 export const ErrorDialog: React.FunctionComponent<ErrorDialogProps> = ({ show = false, onCloseClicked, errorOptions }) => {
     const intl = useIntl();
 

@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-import { damFileThumbnailFragment } from "./thumbnail/DamThumbnail.gql";
+import { damFileThumbnailFragment } from "./thumbnail/DamThumbnail";
 
 export const damFileTableFragment = gql`
     fragment DamFileTable on DamFile {
@@ -104,8 +104,8 @@ export const moveDamFilesMutation = gql`
 `;
 
 export const moveDamFoldersMutation = gql`
-    mutation MoveDamFolders($folderIds: [ID!]!, $targetFolderId: ID) {
-        moveDamFolders(folderIds: $folderIds, targetFolderId: $targetFolderId) {
+    mutation MoveDamFolders($folderIds: [ID!]!, $targetFolderId: ID, $scope: DamScopeInput!) {
+        moveDamFolders(folderIds: $folderIds, targetFolderId: $targetFolderId, scope: $scope) {
             id
             mpath
         }

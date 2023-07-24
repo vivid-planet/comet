@@ -1,8 +1,9 @@
 import { ComponentsOverrides, Tab as MuiTab, TabProps as MuiTabProps, Tabs, TabsProps, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
-import { Route, RouteComponentProps, withRouter } from "react-router-dom";
+import { Route, useHistory } from "react-router-dom";
 
+import { useSubRoutePrefix } from "../router/SubRoute";
 import { useStackApi } from "../stack/Api";
 import { StackBreadcrumb } from "../stack/Breadcrumb";
 import { useStackSwitchApi } from "../stack/Switch";
@@ -21,22 +22,17 @@ interface TabProps extends Omit<MuiTabProps, "children"> {
 
 export const RouterTab: React.FunctionComponent<TabProps> = () => null;
 
-export interface Props extends RouteComponentProps {
+export interface Props {
     children: Array<React.ReactElement<TabProps> | boolean | null | undefined> | React.ReactElement<TabProps>;
     tabComponent?: React.ComponentType<MuiTabProps>;
     tabsProps?: Partial<TabsProps>;
 }
 
-function RouterTabsComponent({
-    children,
-    tabComponent: TabComponent = MuiTab,
-    tabsProps,
-    history,
-    match,
-    classes,
-}: Props & WithStyles<typeof styles>) {
+function RouterTabsComponent({ children, tabComponent: TabComponent = MuiTab, tabsProps, classes }: Props & WithStyles<typeof styles>) {
     const stackApi = useStackApi();
     const stackSwitchApi = useStackSwitchApi();
+    const history = useHistory();
+    const subRoutePrefix = useSubRoutePrefix();
 
     const childrenArr = React.Children.toArray(children);
 
@@ -44,7 +40,7 @@ function RouterTabsComponent({
         const paths = childrenArr.map((child) => {
             return React.isValidElement<TabProps>(child) ? child.props.path : null;
         });
-        history.push(deduplicateSlashesInUrl(match.url + paths[value]));
+        history.push(deduplicateSlashesInUrl(subRoutePrefix + paths[value]));
     };
 
     const paths = childrenArr.map((child) => {
@@ -87,7 +83,7 @@ function RouterTabsComponent({
     return (
         <div className={classes.root}>
             {shouldShowTabBar && (
-                <Route path={deduplicateSlashesInUrl(`${match.url}/:tab`)}>
+                <Route path={deduplicateSlashesInUrl(`${subRoutePrefix}/:tab`)}>
                     {({ match }) => {
                         const routePath = match ? `/${match.params.tab}` : "";
                         const value = paths.includes(routePath) ? paths.indexOf(routePath) : defaultPathIndex;
@@ -107,7 +103,7 @@ function RouterTabsComponent({
             )}
             {React.Children.map(rearrangedChildren, (child) => {
                 return React.isValidElement<TabProps>(child) ? (
-                    <Route path={deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)}>
+                    <Route path={deduplicateSlashesInUrl(`${subRoutePrefix}/${child.props.path}`)}>
                         {({ match }) => {
                             if (match && stackApi && stackSwitchApi && !foundFirstMatch) {
                                 foundFirstMatch = true;
@@ -136,7 +132,7 @@ function RouterTabsComponent({
     );
 }
 
-export const RouterTabs = withRouter(withStyles(styles, { name: "CometAdminRouterTabs" })(RouterTabsComponent));
+export const RouterTabs = withStyles(styles, { name: "CometAdminRouterTabs" })(RouterTabsComponent);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

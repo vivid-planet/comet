@@ -36,7 +36,7 @@ export class BlocksModule {
 
         return {
             module: BlocksModule,
-            imports: [],
+            imports: options.imports ?? [],
             providers: [
                 optionsProvider,
                 transformerDependenciesProvider,

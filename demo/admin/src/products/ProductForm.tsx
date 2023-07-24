@@ -13,6 +13,7 @@ import {
     ToolbarFillSpace,
     ToolbarItem,
     ToolbarTitleItem,
+    useAsyncOptionsProps,
     useFormApiRef,
     useStackApi,
     useStackSwitchApi,
@@ -28,8 +29,18 @@ import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
+    createProductMutation,
+    productCategoriesQuery,
+    productFormFragment,
+    productQuery,
+    productTagsQuery,
+    updateProductMutation,
+} from "./ProductForm.gql";
+import {
+    GQLProductCategoriesQuery,
+    GQLProductCategoriesQueryVariables,
+    GQLProductCategorySelectFragment,
     GQLProductFormCreateProductMutation,
     GQLProductFormCreateProductMutationVariables,
     GQLProductFormFragment,
@@ -37,7 +48,10 @@ import {
     GQLProductFormUpdateProductMutationVariables,
     GQLProductQuery,
     GQLProductQueryVariables,
+    GQLProductTagsQuery,
+    GQLProductTagsSelectFragment,
 } from "./ProductForm.gql.generated";
+import { GQLProductTagsListQueryVariables } from "./tags/ProductTagTable.generated";
 
 interface FormProps {
     id?: string;
@@ -47,7 +61,7 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormState = Omit<GQLProductFormFragment, "price" | "image"> & {
+type FormValues = Omit<GQLProductFormFragment, "price" | "image"> & {
     price: string;
     image: BlockState<typeof rootBlocks.image>;
 };
@@ -56,7 +70,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     const stackApi = useStackApi();
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
-    const formApiRef = useFormApiRef<FormState>();
+    const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
 
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -64,7 +78,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues: Partial<FormState> = data?.product
+    const initialValues: Partial<FormValues> = data?.product
         ? {
               ...filter<GQLProductFormFragment>(productFormFragment, data.product),
               price: String(data.product.price),
@@ -86,13 +100,20 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         },
     });
 
-    const handleSubmit = async (formState: FormState, form: FormApi<FormState>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
-            ...formState,
-            price: parseFloat(formState.price),
-            image: rootBlocks.image.state2Output(formState.image),
-            type: formState.type as GQLProductType,
+            ...formValues,
+            price: parseFloat(formValues.price),
+            image: rootBlocks.image.state2Output(formValues.image),
+            type: formValues.type as GQLProductType,
+            category: formValues.category?.id,
+            tags: formValues.tags.map((i) => i.id),
+            variants: [],
+            articleNumbers: [],
+            discounts: [],
+            packageDimensions: { width: 0, height: 0, depth: 0 },
+            statistics: { views: 0 },
         };
         if (mode === "edit") {
             if (!id) throw new Error();
@@ -116,6 +137,15 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         }
     };
 
+    const categorySelectAsyncProps = useAsyncOptionsProps(async () => {
+        const categories = await client.query<GQLProductCategoriesQuery, GQLProductCategoriesQueryVariables>({ query: productCategoriesQuery });
+        return categories.data.productCategories.nodes;
+    });
+    const tagsSelectAsyncProps = useAsyncOptionsProps(async () => {
+        const tags = await client.query<GQLProductTagsQuery, GQLProductTagsListQueryVariables>({ query: productTagsQuery });
+        return tags.data.productTags.nodes;
+    });
+
     if (error) {
         return <FormattedMessage id="common.error" defaultMessage="An error has occured. Please try again at later" />;
     }
@@ -125,7 +155,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     }
 
     return (
-        <FinalForm<FormState>
+        <FinalForm<FormValues>
             apiRef={formApiRef}
             onSubmit={handleSubmit}
             mode={mode}
@@ -190,6 +220,29 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                                 </FinalFormSelect>
                             )}
                         </Field>
+                        <Field
+                            fullWidth
+                            name="category"
+                            label="Category"
+                            component={FinalFormSelect}
+                            {...categorySelectAsyncProps}
+                            getOptionLabel={(option: GQLProductCategorySelectFragment) => option.title}
+                            getOptionSelected={(option: GQLProductCategorySelectFragment, value: GQLProductCategorySelectFragment) => {
+                                return option.id === value.id;
+                            }}
+                        />
+                        <Field
+                            fullWidth
+                            name="tags"
+                            label="Tags"
+                            component={FinalFormSelect}
+                            multiple
+                            {...tagsSelectAsyncProps}
+                            getOptionLabel={(option: GQLProductTagsSelectFragment) => option.title}
+                            getOptionSelected={(option: GQLProductTagsSelectFragment, value: GQLProductTagsSelectFragment) => {
+                                return option.id === value.id;
+                            }}
+                        />
                         <Field
                             fullWidth
                             name="price"

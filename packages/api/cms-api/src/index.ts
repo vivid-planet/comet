@@ -35,10 +35,15 @@ export { BUILDS_CONFIG, BUILDS_MODULE_OPTIONS } from "./builds/builds.constants"
 export { BuildsModule } from "./builds/builds.module";
 export { BuildsResolver } from "./builds/builds.resolver";
 export { BuildsService } from "./builds/builds.service";
+/**
+ * @deprecated Do not use.
+ *
+ * TODO Remove this export in the next major version.
+ */
+export { ChangesCheckerInterceptor as SkipBuildInterceptor } from "./builds/changes-checker.interceptor";
 export { AutoBuildStatus } from "./builds/dto/auto-build-status.object";
 export { ChangesSinceLastBuild } from "./builds/entities/changes-since-last-build.entity";
 export { SKIP_BUILD_METADATA_KEY, SkipBuild } from "./builds/skip-build.decorator";
-export { SkipBuildInterceptor } from "./builds/skip-build.interceptor";
 export { ContentScope } from "./common/decorators/content-scope.interface";
 export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInterface } from "./common/decorators/request-context.decorator";
 export { ScopedEntity, ScopedEntityMeta } from "./common/decorators/scoped-entity.decorator";
@@ -52,15 +57,19 @@ export { ValidationExceptionFactory } from "./common/errors/validation.exception
 export { BooleanFilter } from "./common/filter/boolean.filter";
 export { DateFilter } from "./common/filter/date.filter";
 export { createEnumFilter } from "./common/filter/enum.filter.factory";
+export { ManyToOneFilter } from "./common/filter/many-to-one.filter";
 export { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
 export { NumberFilter } from "./common/filter/number.filter";
 export { StringFilter } from "./common/filter/string.filter";
 export { extractGraphqlFields } from "./common/graphql/extract-graphql-fields";
+export { PartialType } from "./common/helper/partial-type.helper";
 export { OffsetBasedPaginationArgs } from "./common/pagination/offset-based.args";
 export { PaginatedResponseFactory } from "./common/pagination/paginated-response.factory";
 export { SortArgs } from "./common/sorting/sort.args";
 export { SortDirection } from "./common/sorting/sort-direction.enum";
+export { IsNullable } from "./common/validators/is-nullable";
 export { IsSlug } from "./common/validators/is-slug";
+export { IsUndefinable } from "./common/validators/is-undefinable";
 export { ContentScopeModule } from "./content-scope/content-scope.module";
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";

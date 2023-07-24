@@ -9,7 +9,7 @@ import { FormattedMessage } from "react-intl";
 
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
-import { GQLDamFileDetailFragment } from "./EditFile";
+import { DamFileDetails } from "./EditFile";
 import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./FilePreview.gql";
 import {
     GQLArchiveFileMutation,
@@ -53,7 +53,7 @@ const ZipFileIcon = styled(ZipFile)`
 `;
 
 interface FilePreviewProps {
-    file: GQLDamFileDetailFragment;
+    file: DamFileDetails;
 }
 
 export const FilePreview = ({ file }: FilePreviewProps): React.ReactElement => {

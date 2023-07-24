@@ -6,12 +6,13 @@ import parser from "cron-parser";
 import { format } from "date-fns";
 
 import { CurrentUserInterface } from "../auth/current-user/current-user";
+import { ContentScope } from "../common/decorators/content-scope.interface";
 import { ContentScopeService } from "../content-scope/content-scope.service";
 import { JobStatus } from "../kubernetes/job-status.enum";
 import { INSTANCE_LABEL, PARENT_CRON_JOB_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
 import { BuildTemplatesService } from "./build-templates.service";
-import { BUILDER_LABEL, TRIGGER_ANNOTATION } from "./builds.constants";
+import { BUILDER_LABEL, LABEL_ANNOTATION, TRIGGER_ANNOTATION } from "./builds.constants";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
 import { Build } from "./dto/build.object";
 import { ChangesSinceLastBuild } from "./entities/changes-since-last-build.entity";
@@ -106,6 +107,7 @@ export class BuildsService {
                         `${PARENT_CRON_JOB_LABEL} = ${job.metadata?.labels?.[PARENT_CRON_JOB_LABEL]}`,
                     ),
                     trigger: job.metadata?.annotations?.[TRIGGER_ANNOTATION],
+                    label: job.metadata?.annotations?.[LABEL_ANNOTATION],
                 };
             }),
         );
@@ -132,9 +134,15 @@ export class BuildsService {
         return autoBuildStatus;
     }
 
-    async setChangesSinceLastBuild(): Promise<void> {
-        if ((await this.changesRepository.count()) < 1) {
-            await this.changesRepository.persistAndFlush(this.changesRepository.create({}));
+    async setChangesSinceLastBuild(scope: ContentScope | "all" = "all"): Promise<void> {
+        const isEmptyScope = scope !== "all" && Object.keys(scope).length === 0; // Caused by features with optional scoping, e.g. redirects
+
+        if (isEmptyScope) {
+            scope = "all";
+        }
+
+        if ((await this.changesRepository.findOne({ scope })) === null) {
+            await this.changesRepository.persistAndFlush(this.changesRepository.create({ scope }));
         }
     }
 
@@ -144,5 +152,13 @@ export class BuildsService {
 
     async deleteChangesSinceLastBuild(): Promise<void> {
         await this.changesRepository.createQueryBuilder().truncate().execute();
+    }
+
+    async shouldRebuildAllScopes(): Promise<boolean> {
+        return (await this.changesRepository.findOne({ scope: "all" })) !== null;
+    }
+
+    async getScopesWithChanges(): Promise<ContentScope[]> {
+        return (await this.changesRepository.find({ scope: { $ne: "all" } })).map((change) => change.scope) as ContentScope[];
     }
 }

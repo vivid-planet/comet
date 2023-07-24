@@ -3,10 +3,10 @@ import * as path from "path";
 
 import { CrudSingleGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { generateCrudInput } from "./generate-crud-input";
-import { GeneratedFiles } from "./utils/write-generated-files";
+import { GeneratedFile } from "./utils/write-generated-files";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOptions, metadata: EntityMetadata<any>): Promise<GeneratedFiles> {
+export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOptions, metadata: EntityMetadata<any>): Promise<GeneratedFile[]> {
     const classNameSingular = metadata.className;
     const classNamePlural = !metadata.className.endsWith("s") ? `${metadata.className}s` : metadata.className;
     const instanceNameSingular = classNameSingular[0].toLocaleLowerCase() + classNameSingular.slice(1);
@@ -14,8 +14,8 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     const fileNameSingular = instanceNameSingular.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
     const fileNamePlural = instanceNamePlural.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
 
-    async function generateCrudResolver(): Promise<GeneratedFiles> {
-        const generatedFiles: GeneratedFiles = {};
+    async function generateCrudResolver(): Promise<GeneratedFile[]> {
+        const generatedFiles: GeneratedFile[] = [];
 
         const scopeProp = metadata.props.find((prop) => prop.name == "scope");
         if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
@@ -35,7 +35,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         
     }
     `;
-        generatedFiles[`${fileNamePlural}.service.ts`] = serviceOut;
+        generatedFiles.push({ name: `${fileNamePlural}.service.ts`, content: serviceOut, type: "service" });
 
         const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
@@ -56,7 +56,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
 
     @Resolver(() => ${metadata.className})
-    export class ${classNameSingular}CrudResolver {
+    export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
             private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
@@ -106,13 +106,10 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     }
     `;
 
-        generatedFiles[`${fileNameSingular}.crud.resolver.ts`] = resolverOut;
+        generatedFiles.push({ name: `${fileNameSingular}.resolver.ts`, content: resolverOut, type: "resolver" });
 
         return generatedFiles;
     }
 
-    return {
-        [`dto/${fileNameSingular}.input.ts`]: await generateCrudInput(generatorOptions, metadata),
-        ...(await generateCrudResolver()),
-    };
+    return [...(await generateCrudInput(generatorOptions, metadata)), ...(await generateCrudResolver())];
 }

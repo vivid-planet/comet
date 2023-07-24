@@ -27,7 +27,7 @@ import ReactSplit from "react-split";
 
 import { useContentScope } from "../../contentScope/Provider";
 import { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
-import { usePersistedDamLocation } from "../DataGrid/RedirectToPersistedDamLocation";
+import { useDamConfig } from "../config/useDamConfig";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
 import { damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
@@ -41,7 +41,6 @@ import {
 import { FilePreview } from "./FilePreview";
 import { FileSettingsFields, LicenseType } from "./FileSettingsFields";
 import { ImageInfos } from "./ImageInfos";
-export { GQLDamFileDetailFragment } from "./EditFile.gql.generated";
 
 export interface EditImageFormValues {
     focalPoint: GQLFocalPoint;
@@ -78,16 +77,12 @@ const useInitialValues = (id: string) => {
 
 const EditFile = ({ id }: EditFormProps): React.ReactElement => {
     const { match: scopeMatch } = useContentScope();
-    const persistedDamLocationApi = usePersistedDamLocation();
     const initialValues = useInitialValues(id);
     const file = initialValues.data?.damFile;
 
     if (initialValues.loading) {
         return <CircularProgress />;
     } else if (initialValues.error || file === undefined) {
-        // otherwise, the user always gets redirected to the broken file and is stuck there
-        persistedDamLocationApi?.reset();
-
         return (
             <Card>
                 <CardContent>
@@ -112,14 +107,17 @@ const EditFile = ({ id }: EditFormProps): React.ReactElement => {
     return <EditFileInner file={file} id={id} />;
 };
 
+export type DamFileDetails = GQLDamFileDetailFragment;
+
 interface EditFileInnerProps {
-    file: GQLDamFileDetailFragment;
+    file: DamFileDetails;
     id: string;
 }
 
 const EditFileInner = ({ file, id }: EditFileInnerProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
+    const damConfig = useDamConfig();
 
     const [updateDamFile, { loading: saving, error: hasSaveErrors }] = useMutation<GQLUpdateFileMutation, GQLUpdateFileMutationVariables>(
         updateDamFileMutation,
@@ -202,16 +200,17 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                     <Toolbar>
                         <ToolbarBackButton />
                         <ToolbarTitleItem>{file.name}</ToolbarTitleItem>
-                        {(file.license?.isNotValidYet || file.license?.expiresWithinThirtyDays || file.license?.hasExpired) && (
-                            <ToolbarItem>
-                                <LicenseValidityTags
-                                    expirationDate={file.license?.expirationDate ? new Date(file.license.expirationDate) : undefined}
-                                    isNotValidYet={file.license?.isNotValidYet}
-                                    expiresWithinThirtyDays={file.license?.expiresWithinThirtyDays}
-                                    hasExpired={file.license?.hasExpired}
-                                />
-                            </ToolbarItem>
-                        )}
+                        {damConfig.enableLicenseFeature &&
+                            (file.license?.isNotValidYet || file.license?.expiresWithinThirtyDays || file.license?.hasExpired) && (
+                                <ToolbarItem>
+                                    <LicenseValidityTags
+                                        expirationDate={file.license?.expirationDate ? new Date(file.license.expirationDate) : undefined}
+                                        isNotValidYet={file.license?.isNotValidYet}
+                                        expiresWithinThirtyDays={file.license?.expiresWithinThirtyDays}
+                                        hasExpired={file.license?.hasExpired}
+                                    />
+                                </ToolbarItem>
+                            )}
                         <ToolbarFillSpace />
                         <ToolbarActions>
                             <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="editFileSave">

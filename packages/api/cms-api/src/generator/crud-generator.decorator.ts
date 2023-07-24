@@ -21,16 +21,23 @@ export function CrudSingleGenerator(options: CrudSingleGeneratorOptions): ClassD
 }
 
 export interface CrudFieldOptions {
+    resolveField?: boolean; //only for relations, for others customize using @Field
     search?: boolean;
     filter?: boolean;
     sort?: boolean;
     input?: boolean;
 }
 
-export function CrudField({ search = true, filter = true, sort = true, input = true }: CrudFieldOptions = {}): PropertyDecorator {
+export function CrudField({
+    resolveField: output = true,
+    search = true,
+    filter = true,
+    sort = true,
+    input = true,
+}: CrudFieldOptions = {}): PropertyDecorator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (target: any, propertyKey: string | symbol) {
-        Reflect.defineMetadata(`data:crudField`, { search, filter, sort, input }, target.constructor, propertyKey);
+        Reflect.defineMetadata(`data:crudField`, { output, search, filter, sort, input }, target.constructor, propertyKey);
     };
 }
 

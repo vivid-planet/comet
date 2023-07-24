@@ -14,7 +14,7 @@ export class UnsplashImageFileFixture {
             max: 3000,
         });
 
-        const imageUrl = `https://source.unsplash.com/random/${width}x${height}`;
+        const imageUrl = `https://source.unsplash.com/all/${width}x${height}`;
         console.log(`Downloading ${imageUrl}.`);
         const downloadedImage = await download(imageUrl);
         console.log(`Downloading ${imageUrl} done.`);

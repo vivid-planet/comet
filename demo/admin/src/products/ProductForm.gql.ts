@@ -9,6 +9,14 @@ export const productFormFragment = gql`
         type
         inStock
         image
+        category {
+            id
+            title
+        }
+        tags {
+            id
+            title
+        }
     }
 `;
 
@@ -35,7 +43,7 @@ export const createProductMutation = gql`
 `;
 
 export const updateProductMutation = gql`
-    mutation ProductFormUpdateProduct($id: ID!, $input: ProductInput!, $lastUpdatedAt: DateTime) {
+    mutation ProductFormUpdateProduct($id: ID!, $input: ProductUpdateInput!, $lastUpdatedAt: DateTime) {
         updateProduct(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
             id
             updatedAt
@@ -43,4 +51,40 @@ export const updateProductMutation = gql`
         }
     }
     ${productFormFragment}
+`;
+
+export const productCategorySelectFragment = gql`
+    fragment ProductCategorySelect on ProductCategory {
+        id
+        title
+    }
+`;
+
+export const productCategoriesQuery = gql`
+    query ProductCategories {
+        productCategories {
+            nodes {
+                ...ProductCategorySelect
+            }
+        }
+    }
+    ${productCategorySelectFragment}
+`;
+
+export const productTagsSelectFragment = gql`
+    fragment ProductTagsSelect on ProductTag {
+        id
+        title
+    }
+`;
+
+export const productTagsQuery = gql`
+    query ProductTags {
+        productTags {
+            nodes {
+                ...ProductTagsSelect
+            }
+        }
+    }
+    ${productTagsSelectFragment}
 `;

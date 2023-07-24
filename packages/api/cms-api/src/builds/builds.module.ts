@@ -6,8 +6,8 @@ import { BuildTemplatesService } from "./build-templates.service";
 import { BuildsResolver } from "./builds.resolver";
 import { BuildsService } from "./builds.service";
 import { ChangesCheckerConsole } from "./changes-checker.console";
+import { ChangesCheckerInterceptor } from "./changes-checker.interceptor";
 import { ChangesSinceLastBuild } from "./entities/changes-since-last-build.entity";
-import { SkipBuildInterceptor } from "./skip-build.interceptor";
 
 @Module({
     imports: [MikroOrmModule.forFeature([ChangesSinceLastBuild])],
@@ -18,7 +18,7 @@ import { SkipBuildInterceptor } from "./skip-build.interceptor";
         BuildsService,
         {
             provide: "APP_INTERCEPTOR",
-            useClass: SkipBuildInterceptor,
+            useClass: ChangesCheckerInterceptor,
         },
         ChangesCheckerConsole,
     ],

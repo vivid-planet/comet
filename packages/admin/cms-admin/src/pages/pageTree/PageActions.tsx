@@ -59,76 +59,78 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
         <>
             <RowActionsMenu>
                 {children && children}
-                {page.visibility !== "Archived" && (
-                    <>
+                {page.visibility !== "Archived" && [
+                    <RowActionsItem
+                        key="edit"
+                        disabled={!isEditable}
+                        icon={<Edit />}
+                        onClick={() => {
+                            stackSwitchApi.activatePage("edit", String(page.id));
+                        }}
+                        componentsProps={{
+                            iconButton: {
+                                color: "primary",
+                            },
+                        }}
+                    >
+                        <FormattedMessage id="comet.pages.pages.page.editContent" defaultMessage="Edit content" />
+                    </RowActionsItem>,
+                    <RowActionsItem
+                        key="preview"
+                        icon={<Preview />}
+                        onClick={() => {
+                            openSitePreviewWindow(page.path, contentScopeMatch.url);
+                        }}
+                    >
+                        <FormattedMessage id="comet.pages.pages.page.openPreview" defaultMessage="Open preview" />
+                    </RowActionsItem>,
+                ]}
+                <RowActionsMenu>
+                    {page.visibility !== "Archived" && [
                         <RowActionsItem
-                            disabled={!isEditable}
+                            key="edit"
                             icon={<Edit />}
                             onClick={() => {
                                 stackSwitchApi.activatePage("edit", String(page.id));
                             }}
-                            componentsProps={{
-                                iconButton: {
-                                    color: "primary",
-                                },
-                            }}
                         >
                             <FormattedMessage id="comet.pages.pages.page.editContent" defaultMessage="Edit content" />
-                        </RowActionsItem>
+                        </RowActionsItem>,
                         <RowActionsItem
-                            icon={<Preview />}
+                            key="pageProperties"
+                            icon={<Settings />}
                             onClick={() => {
-                                openSitePreviewWindow(page.path, contentScopeMatch.url);
+                                editDialog?.openEditDialog(page.id);
                             }}
                         >
-                            <FormattedMessage id="comet.pages.pages.page.openPreview" defaultMessage="Open preview" />
-                        </RowActionsItem>
-                    </>
-                )}
-                <RowActionsMenu>
-                    {page.visibility !== "Archived" && (
-                        <>
-                            <RowActionsItem
-                                icon={<Edit />}
-                                onClick={() => {
-                                    stackSwitchApi.activatePage("edit", String(page.id));
-                                }}
-                            >
-                                <FormattedMessage id="comet.pages.pages.page.editContent" defaultMessage="Edit content" />
-                            </RowActionsItem>
-                            <RowActionsItem
-                                icon={<Settings />}
-                                onClick={() => {
-                                    editDialog?.openEditDialog(page.id);
-                                }}
-                            >
-                                <FormattedMessage id="comet.pages.pages.page.properties" defaultMessage="Page properties" />
-                            </RowActionsItem>
-                            <RowActionsItem
-                                icon={<Domain />}
-                                onClick={() => {
-                                    writeClipboard(`${siteUrl}${page.path}`);
-                                }}
-                            >
-                                <FormattedMessage id="comet.pages.pages.page.copyUrl" defaultMessage="Copy URL" />
-                            </RowActionsItem>
-                            <Divider />
-                            <RowActionsItem
-                                icon={<Add />}
-                                onClick={() => {
-                                    editDialog?.openAddDialog(serializeInitialValues({ parent: page.id }));
-                                }}
-                            >
-                                <FormattedMessage id="comet.pages.pages.page.newSubpage" defaultMessage="New subpage" />
-                            </RowActionsItem>
-                            <MovePageMenuItem page={page} />
-                            <Divider />
-                            <CopyPasteMenuItem page={page} />
-                            <Divider />
-                            <ExtractImportMenuItem page={page} />
-                            <Divider />
-                        </>
-                    )}
+                            <FormattedMessage id="comet.pages.pages.page.properties" defaultMessage="Page properties" />
+                        </RowActionsItem>,
+                        <RowActionsItem
+                            key="copyUrl"
+                            icon={<Domain />}
+                            onClick={() => {
+                                writeClipboard(`${siteUrl}${page.path}`);
+                            }}
+                        >
+                            <FormattedMessage id="comet.pages.pages.page.copyUrl" defaultMessage="Copy URL" />
+                        </RowActionsItem>,
+                        <Divider key="divider1" />,
+                        <RowActionsItem
+                            key="newSubpage"
+                            icon={<Add />}
+                            onClick={() => {
+                                editDialog?.openAddDialog(serializeInitialValues({ parent: page.id }));
+                            }}
+                        >
+                            <FormattedMessage id="comet.pages.pages.page.newSubpage" defaultMessage="New subpage" />
+                        </RowActionsItem>,
+                        <MovePageMenuItem key="movePage" page={page} />,
+                        <Divider key="divider2" />,
+                        <CopyPasteMenuItem key="copyPaste" page={page} />,
+                        <Divider key="divider3" />,
+                        <ExtractImportMenuItem key="extractImport" page={page} />,
+                        <Divider key="divider4" />,
+                    ]}
                     <RowActionsItem
                         icon={<Delete />}
                         disabled={page.slug === "home"}
