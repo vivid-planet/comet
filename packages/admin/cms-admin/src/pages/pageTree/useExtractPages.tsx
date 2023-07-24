@@ -115,13 +115,17 @@ function useExtractImportPages(): UseExtractPagesApi {
                         const query = documentType.getQuery;
 
                         if (query) {
-                            const { data } = await client.query<GQLPageQuery, GQLPageQueryVariables>({
+                            const { data, error } = await client.query<GQLPageQuery, GQLPageQueryVariables>({
                                 query,
                                 variables: {
                                     id: page.id,
                                 },
                                 context: LocalErrorScopeApolloContext,
                             });
+
+                            if (error) {
+                                throw new Error(`Error while fetching page`);
+                            }
 
                             textContents.push(page.name, page.slug);
 
@@ -155,7 +159,7 @@ function useExtractImportPages(): UseExtractPagesApi {
                         const query = documentType.getQuery;
 
                         if (query) {
-                            const { data } = await client.query<GQLPageQuery, GQLPageQueryVariables>({
+                            const { data, error } = await client.query<GQLPageQuery, GQLPageQueryVariables>({
                                 query,
                                 variables: {
                                     id: page.id,
@@ -163,11 +167,15 @@ function useExtractImportPages(): UseExtractPagesApi {
                                 context: LocalErrorScopeApolloContext,
                             });
 
+                            if (error) {
+                                throw new Error(`Error while fetching page`);
+                            }
+
                             if (data?.page?.document) {
                                 const documentWithUpdateContents = documentType.replaceTextContents?.(data.page.document, content.contents);
 
                                 if (documentWithUpdateContents && documentType.updateMutation && documentType.inputToOutput) {
-                                    await client.mutate<GQLUpdatePageMutation, GQLUpdatePageMutationVariables>({
+                                    const { errors } = await client.mutate<GQLUpdatePageMutation, GQLUpdatePageMutationVariables>({
                                         mutation: documentType.updateMutation,
                                         variables: {
                                             pageId: data.page.document.id,
@@ -176,6 +184,10 @@ function useExtractImportPages(): UseExtractPagesApi {
                                         },
                                         context: LocalErrorScopeApolloContext,
                                     });
+
+                                    if (errors) {
+                                        throw new Error(`Error while updating document`);
+                                    }
                                 }
                             }
 
@@ -189,7 +201,7 @@ function useExtractImportPages(): UseExtractPagesApi {
                                     attachedDocument.id = data.page?.document.id;
                                 }
 
-                                await client.mutate<GQLUpdatePageNodeMutation, GQLUpdatePageNodeMutationVariables>({
+                                const { errors } = await client.mutate<GQLUpdatePageNodeMutation, GQLUpdatePageNodeMutationVariables>({
                                     mutation: updatePageNodeMutation,
                                     variables: {
                                         nodeId: page.id,
@@ -202,6 +214,10 @@ function useExtractImportPages(): UseExtractPagesApi {
                                     },
                                     context: LocalErrorScopeApolloContext,
                                 });
+
+                                if (errors) {
+                                    throw new Error(`Error while updating page`);
+                                }
                             }
                         }
                     } catch (e) {
