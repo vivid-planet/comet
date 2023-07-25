@@ -434,14 +434,18 @@ export class FilesService {
                 numberAlreadyCopiedFiles++;
                 isNewCopy = false;
             } else {
-                const fileImageInput = { ...Utils.copy(file.image) };
-                if (fileImageInput) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete fileImageInput.id;
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete fileImageInput.file;
+                let fileImageInput: Partial<FileImage> | undefined;
+                if (file.image) {
+                    fileImageInput = { ...Utils.copy(file.image) };
+
+                    if (fileImageInput) {
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        delete fileImageInput.id;
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        delete fileImageInput.file;
+                    }
                 }
 
                 const fileInput = {
