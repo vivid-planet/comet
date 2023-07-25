@@ -91,10 +91,10 @@ export class DependenciesService {
         });
 
         if (filter?.rootEntityName) {
-            qb.andWhere({ targetEntityName: filter.rootEntityName });
+            qb.andWhere({ rootEntityName: filter.rootEntityName });
         }
         if (filter?.rootId) {
-            qb.andWhere({ targetId: filter.rootId });
+            qb.andWhere({ rootId: filter.rootId });
         }
         if (filter?.rootColumnName) {
             qb.andWhere({ rootColumnName: filter.rootColumnName });
