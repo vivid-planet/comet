@@ -115,7 +115,8 @@ interface UseCopyPastePagesApi {
      *      1. traverses the tree with top-down strategy
      *          1a. Create new document with new id
      *          1b. Generate unique slug by adding "-{uniqueNumber}" to the slug
-     *          1c. Create new PageTreeNode
+     *          1c. If the page is copied from one scope to another, copy the files on this page to the new scope
+     *          1d. Create new PageTreeNode
      *              - with new name "{name} {uniqueNumber}"
      *              - and new parent id
      *              - new document id (created in step 1a)
@@ -310,6 +311,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                     const output = documentType.inputToOutput(node.document, { idsMap });
                     let stringifiedOutput = JSON.stringify(output);
 
+                    // TODO: implement a more graceful approach replace the ids
                     for (const mappedFile of copiedFiles.copyFilesToScope.mappedFiles) {
                         stringifiedOutput = stringifiedOutput.replace(mappedFile.rootFile.id, mappedFile.copy.id);
                     }
