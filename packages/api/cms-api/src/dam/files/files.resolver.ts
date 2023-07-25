@@ -16,6 +16,7 @@ import { DependentsResolver } from "../../dependencies/dependencies.resolver";
 import { DependenciesService } from "../../dependencies/dependencies.service";
 import { PageTreeService } from "../../page-tree/page-tree.service";
 import { DamScopeInterface } from "../types";
+import { CopyFilesResponseInterface, createCopyFilesTypes } from "./dto/copyFiles.types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
@@ -38,6 +39,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
     }
 
     const FileArgs = createFileArgs({ Scope });
+    const { CopyFilesResponse } = createCopyFilesTypes({ File });
 
     @ObjectType()
     class PaginatedDamFiles extends PaginatedResponseFactory.create(File) {}
@@ -112,7 +114,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Query(() => [File])
-        async getAllFilesUsedOnPage(@Args("pageTreeNodeId", { type: () => [ID] }) pageTreeNodeId: string): Promise<FileInterface[]> {
+        async getAllFilesUsedOnPage(@Args("pageTreeNodeId", { type: () => ID }) pageTreeNodeId: string): Promise<FileInterface[]> {
             const node = await this.pageTreeService.createReadApi().getNode(pageTreeNodeId);
 
             if (node === null) {
@@ -139,15 +141,16 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             return files;
         }
 
-        @Mutation(() => [File])
+        @Mutation(() => CopyFilesResponse)
         @SkipBuild()
         async copyFilesToScope(
             @Args("fileIds", { type: () => [ID] }) fileIds: string[],
             @Args("rootScope", { type: () => Scope }) rootScope: typeof Scope,
             @Args("targetScope", { type: () => Scope }) targetScope: typeof Scope,
-        ): Promise<FileInterface[]> {
-            console.log(await this.filesService.copyFilesToScope({ fileIds, rootScope, targetScope }));
-            return [];
+        ): Promise<CopyFilesResponseInterface> {
+            const copiedFiles = await this.filesService.copyFilesToScope({ fileIds, rootScope, targetScope });
+            console.log(copiedFiles);
+            return copiedFiles;
         }
 
         @Mutation(() => File)

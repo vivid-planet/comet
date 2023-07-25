@@ -255,6 +255,18 @@ type PaginatedDamItems {
 
 union DamItem = DamFile | DamFolder
 
+type CopyFilesResponse {
+  numberNewlyCopiedFiles: Float!
+  numberAlreadyCopiedFiles: Float!
+  mappedFiles: [MappedFile!]!
+}
+
+type MappedFile {
+  rootFile: DamFile!
+  copy: DamFile!
+  isNewCopy: Boolean!
+}
+
 type PaginatedDamFiles {
   nodes: [DamFile!]!
   totalCount: Int!
@@ -277,7 +289,7 @@ type Query {
   damItemListPosition(sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Int!
   damFilesList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
-  getAllFilesUsedOnPage(pageTreeNodeId: [ID!]!): [DamFile!]!
+  getAllFilesUsedOnPage(pageTreeNodeId: ID!): [DamFile!]!
   damIsFilenameOccupied(filename: String!, scope: DamScopeInput! = {}, folderId: String): Boolean!
   damAreFilenamesOccupied(filenames: [FilenameInput!]!, scope: DamScopeInput! = {}): [FilenameResponse!]!
   damFoldersFlat(scope: DamScopeInput! = {}): [DamFolder!]!
@@ -400,7 +412,7 @@ type Mutation {
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
-  copyFilesToScope(fileIds: [ID!]!, rootScope: DamScopeInput!, targetScope: DamScopeInput!): [DamFile!]!
+  copyFilesToScope(fileIds: [ID!]!, rootScope: DamScopeInput!, targetScope: DamScopeInput!): CopyFilesResponse!
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
   restoreDamFile(id: ID!): DamFile!
