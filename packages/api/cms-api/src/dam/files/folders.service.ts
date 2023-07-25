@@ -185,6 +185,7 @@ export class FoldersService {
         const folder = entity.assign({
             ...input,
             parent: parentId !== undefined ? parent : entity.parent,
+            // if the user changes the folder name, it's treated as a normal folder now (isImportFolder = false)
             isImportFolder: entity.name === input.name ? entity.isImportFolder : false,
         });
 
