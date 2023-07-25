@@ -421,7 +421,10 @@ export class FilesService {
 
         const mappedFiles: Array<{ rootFile: FileInterface; copy: FileInterface; isNewCopy: boolean }> = [];
         for (const file of files) {
-            if (isEqual(file.scope, targetScope)) {
+            // The objects are cloned because file.scope is an instance of DamScope
+            // and targetScope is a plain object. Thus, they are not deep equal
+            // although they have the same scope
+            if (file.scope && isEqual({ ...file.scope }, { ...targetScope })) {
                 continue;
             }
 
