@@ -6,11 +6,16 @@ import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { useContentScope } from "../../contentScope/Provider";
+import { useDamScope } from "../../dam/config/useDamScope";
 import { GQLDocument, GQLPageQuery, GQLPageQueryVariables, GQLUpdatePageMutationVariables, IdsMap } from "../../documents/types";
 import { arrayToTreeMap } from "./treemap/TreeMapUtils";
 import {
+    GQLCopyFilesToScopeMutation,
+    GQLCopyFilesToScopeMutationVariables,
     GQLCreatePageNodeMutation,
     GQLCreatePageNodeMutationVariables,
+    GQLGetAllFilesUsedOnPageQuery,
+    GQLGetAllFilesUsedOnPageQueryVariables,
     GQLSlugAvailableQuery,
     GQLSlugAvailableQueryVariables,
 } from "./useCopyPastePages.generated";
@@ -27,6 +32,32 @@ const createPageNodeMutation = gql`
     mutation CreatePageNode($input: PageTreeNodeCreateInput!, $contentScope: PageTreeNodeScopeInput!, $category: String!) {
         createPageTreeNode(input: $input, scope: $contentScope, category: $category) {
             id
+        }
+    }
+`;
+
+const getAllFilesUsedOnPageQuery = gql`
+    query GetAllFilesUsedOnPage($pageTreeNodeId: ID!) {
+        getAllFilesUsedOnPage(pageTreeNodeId: $pageTreeNodeId) {
+            id
+        }
+    }
+`;
+
+const copyFilesToScopeMutation = gql`
+    mutation CopyFilesToScope($fileIds: [ID!]!, $rootScope: DamScopeInput!, $targetScope: DamScopeInput!) {
+        copyFilesToScope(fileIds: $fileIds, rootScope: $rootScope, targetScope: $targetScope) {
+            numberNewlyCopiedFiles
+            numberAlreadyCopiedFiles
+            mappedFiles {
+                rootFile {
+                    id
+                }
+                copy {
+                    id
+                }
+                isNewCopy
+            }
         }
     }
 `;
@@ -104,6 +135,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     const { documentTypes } = usePageTreeContext();
     const client = useApolloClient();
     const { scope } = useContentScope();
+    const damScope = useDamScope();
 
     const prepareForClipboard = React.useCallback(
         async (pages: GQLPageTreePageFragment[]): Promise<PagesClipboard> => {
@@ -259,14 +291,40 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                     throw Error("Did not receive new uuid for page tree node");
                 }
 
-                // 1c. Create new document
+                // 1c. Copy all files used on page to target scope
+                const { data: filesOnPage } = await client.query<GQLGetAllFilesUsedOnPageQuery, GQLGetAllFilesUsedOnPageQueryVariables>({
+                    query: getAllFilesUsedOnPageQuery,
+                    variables: {
+                        pageTreeNodeId: node.id,
+                    },
+                });
+                const fileIds = filesOnPage.getAllFilesUsedOnPage.map((file) => file.id);
+
+                const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
+                    mutation: copyFilesToScopeMutation,
+                    variables: { fileIds, rootScope: { domain: "secondary" }, targetScope: damScope },
+                });
+
+                let newOutput: Record<string, unknown> | undefined;
+                if (copiedFiles && node?.document != null && documentType.updateMutation && documentType.inputToOutput) {
+                    const output = documentType.inputToOutput(node.document, { idsMap });
+                    let stringifiedOutput = JSON.stringify(output);
+
+                    for (const mappedFile of copiedFiles.copyFilesToScope.mappedFiles) {
+                        stringifiedOutput = stringifiedOutput.replace(mappedFile.rootFile.id, mappedFile.copy.id);
+                    }
+
+                    newOutput = JSON.parse(stringifiedOutput);
+                }
+
+                // 1d. Create new document
                 const newDocumentId = uuid();
                 if (node?.document != null && documentType.updateMutation && documentType.inputToOutput) {
                     await client.mutate<unknown, GQLUpdatePageMutationVariables>({
                         mutation: documentType.updateMutation,
                         variables: {
                             pageId: newDocumentId,
-                            input: documentType.inputToOutput(node.document, { idsMap }),
+                            input: newOutput ?? documentType.inputToOutput(node.document, { idsMap }),
                             attachedPageTreeNodeId: data.createPageTreeNode.id,
                         },
                         context: LocalErrorScopeApolloContext,

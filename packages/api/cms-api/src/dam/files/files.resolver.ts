@@ -2,7 +2,6 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { NotFoundException, Type } from "@nestjs/common";
 import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
-import * as console from "console";
 import { basename, extname } from "path";
 
 import { CurrentUserInterface } from "../../auth/current-user/current-user";
@@ -134,11 +133,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             );
 
             const fileIds = dependencies.map((dependency) => dependency.targetId);
-            const files = await this.filesService.findMultipleByIds(fileIds);
-
-            console.log(files);
-
-            return files;
+            return this.filesService.findMultipleByIds(fileIds);
         }
 
         @Mutation(() => CopyFilesResponse)
@@ -148,9 +143,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             @Args("rootScope", { type: () => Scope }) rootScope: typeof Scope,
             @Args("targetScope", { type: () => Scope }) targetScope: typeof Scope,
         ): Promise<CopyFilesResponseInterface> {
-            const copiedFiles = await this.filesService.copyFilesToScope({ fileIds, rootScope, targetScope });
-            console.log(copiedFiles);
-            return copiedFiles;
+            return this.filesService.copyFilesToScope({ fileIds, rootScope, targetScope });
         }
 
         @Mutation(() => File)
