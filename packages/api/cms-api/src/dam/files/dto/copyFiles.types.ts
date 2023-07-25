@@ -42,15 +42,3 @@ export function createCopyFilesTypes({ File }: { File: Type<FileInterface> }) {
 
     return { CopyFilesResponse };
 }
-
-// @ObjectType()
-// export class MappedFilesObject {
-//     @Field(() => File)
-//     rootFile: FileInterface;
-//
-//     @Field(() => File)
-//     copy: FileInterface;
-//
-//     @Field(() => Boolean)
-//     isNewCopy: boolean;
-// }
