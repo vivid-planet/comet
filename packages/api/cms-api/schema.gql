@@ -412,7 +412,7 @@ type Mutation {
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
-  copyFilesToScope(fileIds: [ID!]!, rootScope: DamScopeInput!, targetScope: DamScopeInput!): CopyFilesResponse!
+  copyFilesToScope(fileIds: [ID!]!, targetScope: DamScopeInput!): CopyFilesResponse!
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
   restoreDamFile(id: ID!): DamFile!

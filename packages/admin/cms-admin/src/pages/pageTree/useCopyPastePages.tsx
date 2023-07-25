@@ -45,8 +45,8 @@ const getAllFilesUsedOnPageQuery = gql`
 `;
 
 const copyFilesToScopeMutation = gql`
-    mutation CopyFilesToScope($fileIds: [ID!]!, $rootScope: DamScopeInput!, $targetScope: DamScopeInput!) {
-        copyFilesToScope(fileIds: $fileIds, rootScope: $rootScope, targetScope: $targetScope) {
+    mutation CopyFilesToScope($fileIds: [ID!]!, $targetScope: DamScopeInput!) {
+        copyFilesToScope(fileIds: $fileIds, targetScope: $targetScope) {
             numberNewlyCopiedFiles
             numberAlreadyCopiedFiles
             mappedFiles {
@@ -302,7 +302,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
 
                 const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
                     mutation: copyFilesToScopeMutation,
-                    variables: { fileIds, rootScope: { domain: "secondary" }, targetScope: damScope },
+                    variables: { fileIds, targetScope: damScope },
                 });
 
                 let newOutput: Record<string, unknown> | undefined;
@@ -350,7 +350,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
             // 2. Refetch Pages query
             client.refetchQueries({ include: ["Pages"] });
         },
-        [client, documentTypes, scope],
+        [client, damScope, documentTypes, scope],
     );
 
     return { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages };

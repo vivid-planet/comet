@@ -399,14 +399,14 @@ export class FilesService {
         return Number(result.rows[0].row_number) - 1;
     }
 
-    async copyFilesToScope({ fileIds, rootScope, targetScope }: { fileIds: string[]; rootScope: DamScopeInterface; targetScope: DamScopeInterface }) {
+    async copyFilesToScope({ fileIds, targetScope }: { fileIds: string[]; targetScope: DamScopeInterface }) {
         const files = await this.findMultipleByIds(fileIds);
 
         if (files.length === 0) {
             throw new Error("No valid file ids provided");
         }
 
-        const scopeString = Object.values(rootScope).join("-");
+        const scopeString = files[0].scope ? Object.values(files[0].scope).join("-") : "unknown";
         const date = new Date();
         const importFolder = await this.foldersService.create(
             {

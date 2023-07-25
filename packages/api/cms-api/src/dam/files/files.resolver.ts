@@ -140,10 +140,9 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         @SkipBuild()
         async copyFilesToScope(
             @Args("fileIds", { type: () => [ID] }) fileIds: string[],
-            @Args("rootScope", { type: () => Scope }) rootScope: typeof Scope,
             @Args("targetScope", { type: () => Scope }) targetScope: typeof Scope,
         ): Promise<CopyFilesResponseInterface> {
-            return this.filesService.copyFilesToScope({ fileIds, rootScope, targetScope });
+            return this.filesService.copyFilesToScope({ fileIds, targetScope });
         }
 
         @Mutation(() => File)
