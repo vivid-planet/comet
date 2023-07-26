@@ -20,7 +20,7 @@ test("RouterTabs in SubRoute", async () => {
             <SubRoute path={`${urlPrefix}/sub`}>
                 <RouterTabs>
                     <RouterTab label="Foo" path="">
-                        foo
+                        <p>foo tab content</p>
                     </RouterTab>
                     <RouterTab label="Bar" path="/bar">
                         <p>bar tab content</p>
@@ -40,6 +40,7 @@ test("RouterTabs in SubRoute", async () => {
             </Router>
         </MuiThemeProvider>,
     );
+    expect(rendered.getByText("foo tab content")).toBeInTheDocument();
 
     fireEvent.click(rendered.getByText("Bar"));
 

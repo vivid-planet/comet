@@ -1,7 +1,7 @@
 import { ComponentsOverrides, Tab as MuiTab, TabProps as MuiTabProps, Tabs, TabsProps, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
-import { Route, useHistory } from "react-router-dom";
+import { Route, useHistory, useRouteMatch } from "react-router-dom";
 
 import { useSubRoutePrefix } from "../router/SubRoute";
 import { useStackApi } from "../stack/Api";
@@ -33,6 +33,7 @@ function RouterTabsComponent({ children, tabComponent: TabComponent = MuiTab, ta
     const stackSwitchApi = useStackSwitchApi();
     const history = useHistory();
     const subRoutePrefix = useSubRoutePrefix();
+    const routeMatch = useRouteMatch();
 
     const childrenArr = React.Children.toArray(children);
 
@@ -102,17 +103,17 @@ function RouterTabsComponent({ children, tabComponent: TabComponent = MuiTab, ta
                 </Route>
             )}
             {React.Children.map(rearrangedChildren, (child) => {
-                return React.isValidElement<TabProps>(child) ? (
-                    <Route path={deduplicateSlashesInUrl(`${subRoutePrefix}/${child.props.path}`)}>
+                if (!React.isValidElement<TabProps>(child)) {
+                    return null;
+                }
+                const path = child.props.path != "" ? deduplicateSlashesInUrl(`${subRoutePrefix}/${child.props.path}`) : routeMatch.path;
+                return (
+                    <Route path={path}>
                         {({ match }) => {
                             if (match && stackApi && stackSwitchApi && !foundFirstMatch) {
                                 foundFirstMatch = true;
                                 return (
-                                    <StackBreadcrumb
-                                        url={deduplicateSlashesInUrl(`${match.url}/${child.props.path}`)}
-                                        title={child.props.label}
-                                        invisible={true}
-                                    >
+                                    <StackBreadcrumb url={path} title={child.props.label} invisible={true}>
                                         <div className={classes.content}>{child.props.children}</div>
                                     </StackBreadcrumb>
                                 );
@@ -126,7 +127,7 @@ function RouterTabsComponent({ children, tabComponent: TabComponent = MuiTab, ta
                             }
                         }}
                     </Route>
-                ) : null;
+                );
             })}
         </div>
     );
