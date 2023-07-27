@@ -80,10 +80,10 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         @SkipBuild()
         async moveDamFiles(
             @Args("fileIds", { type: () => [ID] }) fileIds: string[],
-            @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string | null | undefined,
+            @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string | null,
             @GetCurrentUser() user: CurrentUserInterface,
         ): Promise<FileInterface[]> {
-            let targetFolder;
+            let targetFolder = null;
 
             if (targetFolderId != null) {
                 targetFolder = await this.foldersRepository.findOneOrFail(targetFolderId);

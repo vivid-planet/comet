@@ -126,7 +126,7 @@ export class UpdateFileInput {
     @Field(() => ID, { nullable: true })
     @IsUUID()
     @IsOptional()
-    folderId?: string;
+    folderId: string | null | undefined;
 
     @Field({ nullable: true })
     @Type(() => LicenseInput)
