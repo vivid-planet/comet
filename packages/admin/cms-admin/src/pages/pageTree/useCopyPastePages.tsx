@@ -304,6 +304,11 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                 const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
                     mutation: copyFilesToScopeMutation,
                     variables: { fileIds, targetScope: damScope },
+                    update: (cache, result) => {
+                        if (result.data && result.data.copyFilesToScope.numberNewlyCopiedFiles > 0) {
+                            cache.evict({ fieldName: "damItemsList" });
+                        }
+                    },
                 });
 
                 let newOutput: Record<string, unknown> | undefined;
