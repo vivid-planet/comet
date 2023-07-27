@@ -5,6 +5,7 @@ export const updateDamFolderMutation = gql`
         updateDamFolder(id: $id, input: $input) {
             id
             name
+            isInboxFromOtherScope
         }
     }
 `;
