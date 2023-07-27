@@ -8,6 +8,8 @@ import { GQLDamFileThumbnailFragment } from "./DamThumbnail.gql.generated";
 import { VideoThumbnail } from "./VideoThumbnail";
 export { damFileThumbnailFragment } from "./DamThumbnail.gql";
 
+export const inboxFolderColor = "#952F80";
+
 const ThumbnailWrapper = styled("div")`
     display: flex;
     justify-content: center;
@@ -50,7 +52,7 @@ export const DamThumbnail = ({ asset }: DamThumbnailProps): React.ReactElement =
         }
     } else if (asset.__typename === "DamFolder") {
         if (asset.isInboxFromOtherScope) {
-            thumbnail = <FolderCopy htmlColor="#952F80" />;
+            thumbnail = <FolderCopy htmlColor={inboxFolderColor} />;
         } else {
             thumbnail = <Folder />;
         }

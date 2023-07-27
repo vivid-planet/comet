@@ -1,6 +1,8 @@
 import { alpha } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
+import { inboxFolderColor } from "./thumbnail/DamThumbnail";
+
 interface TableHoverHighlightProps {
     isHovered?: boolean;
 }
@@ -25,9 +27,9 @@ export const FolderOuterHoverHighlight = styled("div", { shouldForwardProp: (pro
         }
     }
     & .MuiDataGrid-row.CometDataGridRow--inboxFolder {
-        background-color: ${({ isHovered }) => (isHovered ? alpha("#952F80", 0.1) : alpha("#952F80", 0.05))};
+        background-color: ${({ isHovered }) => (isHovered ? alpha(inboxFolderColor, 0.1) : alpha(inboxFolderColor, 0.05))};
         &:hover {
-            background-color: ${alpha("#952F80", 0.1)};
+            background-color: ${alpha(inboxFolderColor, 0.1)};
         }
     }
 `;
