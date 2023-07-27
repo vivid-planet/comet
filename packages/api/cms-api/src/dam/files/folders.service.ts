@@ -154,7 +154,7 @@ export class FoldersService {
     }
 
     async create(
-        { parentId, isImportFolder = false, ...data }: CreateFolderInput & { isImportFolder?: boolean },
+        { parentId, isInboxFromOtherScope = false, ...data }: CreateFolderInput & { isInboxFromOtherScope?: boolean },
         scope?: DamScopeInterface,
     ): Promise<FolderInterface> {
         let parent = undefined;
@@ -163,7 +163,7 @@ export class FoldersService {
             parent = await this.findOneById(parentId);
             mpath = (await this.findAncestorsByParentId(parentId)).map((folder) => folder.id);
         }
-        const folder = this.foldersRepository.create({ ...data, isImportFolder, parent, mpath, scope });
+        const folder = this.foldersRepository.create({ ...data, isInboxFromOtherScope, parent, mpath, scope });
         await this.foldersRepository.persistAndFlush(folder);
         return folder;
     }
@@ -185,8 +185,8 @@ export class FoldersService {
         const folder = entity.assign({
             ...input,
             parent: parentId !== undefined ? parent : entity.parent,
-            // if the user changes the folder name, it's treated as a normal folder now (isImportFolder = false)
-            isImportFolder: entity.name === input.name ? entity.isImportFolder : false,
+            // if the user changes the folder name, it's treated as a normal folder now (isInboxFromOtherScope = false)
+            isInboxFromOtherScope: entity.name === input.name ? entity.isInboxFromOtherScope : false,
         });
 
         if (parentIsDirty) {

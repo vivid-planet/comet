@@ -410,8 +410,8 @@ export class FilesService {
         const date = new Date();
         const importFolder = await this.foldersService.create(
             {
-                name: `Imported from ${scopeString} on ${format(date, "dd.MM.yyyy")} at ${format(date, "HH:mm:ss")}`,
-                isImportFolder: true,
+                name: `Copy from ${scopeString} ${format(date, "dd.MM.yyyy")}, ${format(date, "HH:mm:ss")}`,
+                isInboxFromOtherScope: true,
             },
             targetScope,
         );

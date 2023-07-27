@@ -220,7 +220,7 @@ type DamFolder {
   numberOfFiles: Int!
   mpath: [ID!]!
   archived: Boolean!
-  isImportFolder: Boolean!
+  isInboxFromOtherScope: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
   parent: DamFolder

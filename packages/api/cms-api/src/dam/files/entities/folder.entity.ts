@@ -16,7 +16,7 @@ export interface FolderInterface extends BaseEntity<FolderInterface, "id"> {
     numberOfFiles: number;
     mpath: string[];
     archived: boolean;
-    isImportFolder: boolean;
+    isInboxFromOtherScope: boolean;
     files: FileInterface[];
     createdAt: Date;
     updatedAt: Date;
@@ -68,7 +68,7 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
 
         @Property({ columnType: "boolean", default: false })
         @Field()
-        isImportFolder: boolean;
+        isInboxFromOtherScope: boolean;
 
         @OneToMany("File", (file: FileInterface) => file.folder)
         files: FileInterface[];
