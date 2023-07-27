@@ -335,6 +335,10 @@ const FolderDataGrid = ({
             return "CometDataGridRow--highlighted";
         }
 
+        if (row.isInboxFromOtherScope) {
+            return "CometDataGridRow--inboxFolder";
+        }
+
         return "";
     };
 
