@@ -1,5 +1,9 @@
 # Comet DXP
 
+![npm (scoped with tag)](https://img.shields.io/npm/v/%40comet/admin/latest)
+![npm (scoped with tag)](https://img.shields.io/npm/v/%40comet/admin/canary)
+![npm (scoped with tag)](https://img.shields.io/npm/v/%40comet/admin/next-canary)
+
 ![main](https://github.com/vivid-planet/comet/actions/workflows/lint.yml/badge.svg?branch=main)
 ![next](https://github.com/vivid-planet/comet/actions/workflows/lint.yml/badge.svg?branch=next)
 
