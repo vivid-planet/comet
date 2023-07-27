@@ -258,6 +258,7 @@ union DamItem = DamFile | DamFolder
 type CopyFilesResponse {
   numberNewlyCopiedFiles: Float!
   numberAlreadyCopiedFiles: Float!
+  inboxFolderId: String!
   mappedFiles: [MappedFile!]!
 }
 
@@ -412,7 +413,15 @@ type Mutation {
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
-  copyFilesToScope(fileIds: [ID!]!, targetScope: DamScopeInput!): CopyFilesResponse!
+  copyFilesToScope(
+    fileIds: [ID!]!
+    targetScope: DamScopeInput!
+
+    """
+    You can set this argument to use the same inbox folder for multiple consecutive copy operations. Keep it empty for the first copy operation and get the ID from the response.
+    """
+    targetFolderId: ID
+  ): CopyFilesResponse!
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
   restoreDamFile(id: ID!): DamFile!

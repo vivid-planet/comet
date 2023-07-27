@@ -6,6 +6,7 @@ import { FileInterface } from "../entities/file.entity";
 export interface CopyFilesResponseInterface {
     numberNewlyCopiedFiles: number;
     numberAlreadyCopiedFiles: number;
+    inboxFolderId: string;
     mappedFiles: Array<MappedFileInterface>;
 }
 
@@ -23,6 +24,9 @@ export function createCopyFilesTypes({ File }: { File: Type<FileInterface> }) {
 
         @Field(() => Number)
         numberAlreadyCopiedFiles: number;
+
+        @Field(() => String)
+        inboxFolderId: string;
 
         @Field(() => [MappedFile])
         mappedFiles: Array<MappedFile>;

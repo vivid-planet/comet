@@ -45,10 +45,10 @@ const getAllFilesUsedOnPageQuery = gql`
 `;
 
 const copyFilesToScopeMutation = gql`
-    mutation CopyFilesToScope($fileIds: [ID!]!, $targetScope: DamScopeInput!) {
-        copyFilesToScope(fileIds: $fileIds, targetScope: $targetScope) {
+    mutation CopyFilesToScope($fileIds: [ID!]!, $targetScope: DamScopeInput!, $targetFolderId: ID) {
+        copyFilesToScope(fileIds: $fileIds, targetScope: $targetScope, targetFolderId: $targetFolderId) {
             numberNewlyCopiedFiles
-            numberAlreadyCopiedFiles
+            inboxFolderId
             mappedFiles {
                 rootFile {
                     id
@@ -235,6 +235,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
         async (parentId: string | null, { pages }: PagesClipboard, options?: SendPagesOptions): Promise<void> => {
             const tree = arrayToTreeMap<PageClipboard>(pages);
             const idsMap = createIdsMap(pages);
+            let inboxFolderIdForCopiedFiles: string | undefined = undefined;
 
             const handlePageTreeNode = async (node: PageClipboard, newParentId: string | null, posOffset: number): Promise<string> => {
                 const documentType = documentTypes[node.documentType];
@@ -305,13 +306,15 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                 if (fileIds.length > 0) {
                     const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
                         mutation: copyFilesToScopeMutation,
-                        variables: { fileIds, targetScope: damScope },
+                        variables: { fileIds, targetScope: damScope, targetFolderId: inboxFolderIdForCopiedFiles },
                         update: (cache, result) => {
                             if (result.data && result.data.copyFilesToScope.numberNewlyCopiedFiles > 0) {
                                 cache.evict({ fieldName: "damItemsList" });
                             }
                         },
                     });
+
+                    inboxFolderIdForCopiedFiles = copiedFiles?.copyFilesToScope.inboxFolderId;
 
                     if (copiedFiles && node?.document != null && documentType.updateMutation && documentType.inputToOutput) {
                         const output = documentType.inputToOutput(node.document, { idsMap });

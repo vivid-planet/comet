@@ -399,7 +399,7 @@ export class FilesService {
         return Number(result.rows[0].row_number) - 1;
     }
 
-    async copyFilesToScope({ fileIds, targetScope }: { fileIds: string[]; targetScope: DamScopeInterface }) {
+    async copyFilesToScope({ fileIds, targetScope, targetFolderId }: { fileIds: string[]; targetScope: DamScopeInterface; targetFolderId?: string }) {
         const files = await this.findMultipleByIds(fileIds);
 
         if (files.length === 0) {
@@ -408,13 +408,23 @@ export class FilesService {
 
         const scopeString = files[0].scope ? Object.values(files[0].scope).join("-") : "unknown";
         const date = new Date();
-        const importFolder = await this.foldersService.create(
-            {
-                name: `Copy from ${scopeString} ${format(date, "dd.MM.yyyy")}, ${format(date, "HH:mm:ss")}`,
-                isInboxFromOtherScope: true,
-            },
-            targetScope,
-        );
+        let inboxFolder: FolderInterface;
+        if (targetFolderId) {
+            const folder = await this.foldersService.findOneById(targetFolderId);
+            if (folder === null) {
+                throw new Error("Specified target folder doesn't exist.");
+            }
+
+            inboxFolder = folder;
+        } else {
+            inboxFolder = await this.foldersService.create(
+                {
+                    name: `Copy from ${scopeString} ${format(date, "dd.MM.yyyy")}, ${format(date, "HH:mm:ss")}`,
+                    isInboxFromOtherScope: true,
+                },
+                targetScope,
+            );
+        }
 
         let numberNewlyCopiedFiles = 0;
         let numberAlreadyCopiedFiles = 0;
@@ -454,7 +464,7 @@ export class FilesService {
                 const fileInput = {
                     ...Utils.copy(file),
                     image: fileImageInput,
-                    folderId: importFolder.id,
+                    folderId: inboxFolder.id,
                     copyOf: file.id,
                     scope: targetScope,
                 };
@@ -477,10 +487,10 @@ export class FilesService {
         }
 
         if (numberNewlyCopiedFiles === 0) {
-            await this.foldersService.delete(importFolder.id);
+            await this.foldersService.delete(inboxFolder.id);
         }
 
-        return { numberNewlyCopiedFiles, numberAlreadyCopiedFiles, mappedFiles };
+        return { inboxFolderId: inboxFolder.id, numberNewlyCopiedFiles, numberAlreadyCopiedFiles, mappedFiles };
     }
 
     async findNextAvailableFilename({
