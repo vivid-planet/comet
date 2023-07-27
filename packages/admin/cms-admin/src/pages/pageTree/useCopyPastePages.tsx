@@ -301,27 +301,29 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                 });
                 const fileIds = filesOnPage.getAllFilesUsedOnPage.map((file) => file.id);
 
-                const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
-                    mutation: copyFilesToScopeMutation,
-                    variables: { fileIds, targetScope: damScope },
-                    update: (cache, result) => {
-                        if (result.data && result.data.copyFilesToScope.numberNewlyCopiedFiles > 0) {
-                            cache.evict({ fieldName: "damItemsList" });
-                        }
-                    },
-                });
-
                 let newOutput: Record<string, unknown> | undefined;
-                if (copiedFiles && node?.document != null && documentType.updateMutation && documentType.inputToOutput) {
-                    const output = documentType.inputToOutput(node.document, { idsMap });
-                    let stringifiedOutput = JSON.stringify(output);
+                if (fileIds.length > 0) {
+                    const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
+                        mutation: copyFilesToScopeMutation,
+                        variables: { fileIds, targetScope: damScope },
+                        update: (cache, result) => {
+                            if (result.data && result.data.copyFilesToScope.numberNewlyCopiedFiles > 0) {
+                                cache.evict({ fieldName: "damItemsList" });
+                            }
+                        },
+                    });
 
-                    // TODO: implement a more graceful approach replace the ids
-                    for (const mappedFile of copiedFiles.copyFilesToScope.mappedFiles) {
-                        stringifiedOutput = stringifiedOutput.replace(mappedFile.rootFile.id, mappedFile.copy.id);
+                    if (copiedFiles && node?.document != null && documentType.updateMutation && documentType.inputToOutput) {
+                        const output = documentType.inputToOutput(node.document, { idsMap });
+                        let stringifiedOutput = JSON.stringify(output);
+
+                        // TODO: implement a more graceful approach to replace the ids
+                        for (const mappedFile of copiedFiles.copyFilesToScope.mappedFiles) {
+                            stringifiedOutput = stringifiedOutput.replace(mappedFile.rootFile.id, mappedFile.copy.id);
+                        }
+
+                        newOutput = JSON.parse(stringifiedOutput);
                     }
-
-                    newOutput = JSON.parse(stringifiedOutput);
                 }
 
                 // 1d. Create new document
