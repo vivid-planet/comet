@@ -3,7 +3,7 @@ import type { Props as PlaygroundProps } from "@theme/Playground";
 import React, { PropsWithChildren } from "react";
 import { transform } from "sucrase";
 
-export const LiveCodeBlock = ({ children, ...props }: PropsWithChildren<PlaygroundProps>) => {
+export const Story = ({ children, ...props }: PropsWithChildren<PlaygroundProps>) => {
     return (
         <CodeBlock
             language="tsx"
