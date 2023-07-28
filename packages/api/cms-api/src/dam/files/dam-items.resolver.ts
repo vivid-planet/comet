@@ -64,7 +64,7 @@ export function createDamItemsResolver({
             return new PaginatedDamItems(damItems, totalCount);
         }
 
-        @Query(() => Number)
+        @Query(() => Int)
         async damItemListPosition(@Args({ type: () => DamItemsPositionArgs }) args: DamItemPositionArgsInterface): Promise<number> {
             return this.damItemsService.getDamItemPosition(args, nonEmptyScopeOrNothing(args.scope));
         }
