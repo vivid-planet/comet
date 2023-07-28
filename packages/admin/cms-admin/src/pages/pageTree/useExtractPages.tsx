@@ -9,7 +9,7 @@ import { useContentScope } from "../../contentScope/Provider";
 import { GQLPageQuery, GQLPageQueryVariables, GQLUpdatePageMutation, GQLUpdatePageMutationVariables } from "../../documents/types";
 import { useLocale } from "../../locale/useLocale";
 import { GQLUpdatePageNodeMutation, GQLUpdatePageNodeMutationVariables } from "../createEditPageNode.generated";
-import { convertCsvToTextContents } from "./convertCsvToTextContents";
+import { convertCsvToTextContents } from "./extractImport/convertCsvToTextContents";
 import { GQLPageTreePageFragment } from "./usePageTree.generated";
 import { usePageTreeContext } from "./usePageTreeContext";
 

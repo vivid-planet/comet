@@ -4,11 +4,11 @@ import { writeClipboard } from "@comet/blocks-admin";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { subTreeFromNode, treeMapToArray } from "../treemap/TreeMapUtils";
+import { useExtractImportPages } from "../useExtractPages";
+import { PageTreePage } from "../usePageTree";
+import { usePageTreeContext } from "../usePageTreeContext";
 import { convertTextContentsToCsv } from "./convertTextContentsToCsv";
-import { subTreeFromNode, treeMapToArray } from "./treemap/TreeMapUtils";
-import { useExtractImportPages } from "./useExtractPages";
-import { PageTreePage } from "./usePageTree";
-import { usePageTreeContext } from "./usePageTreeContext";
 
 interface Props {
     page: PageTreePage;
