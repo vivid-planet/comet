@@ -284,4 +284,123 @@ describe("transformStateToXml", () => {
             'Now <inline id="1">some </inline><entity id="1"><inline id="1">links</inline></entity><inline id="1"> are added</inline>, pointing <inline id="2">somewhere </inline><entity id="2"><inline id="2">ex</inline>ternal</entity> and <entity id="3">internal</entity> also including some styling tags.',
         ]);
     });
+
+    it("should insert pseudo-tags with right ids for combined entity ranges and inline styles", () => {
+        const rawContent = {
+            blocks: [
+                {
+                    key: "bcmko",
+                    text: "This is an example bacon ipsum. Testing some repeating bold inline styles included in a link and also italic.",
+                    type: "unstyled",
+                    depth: 0,
+                    inlineStyleRanges: [
+                        {
+                            offset: 19,
+                            length: 5,
+                            style: "BOLD" as DraftInlineStyleType,
+                        },
+                        {
+                            offset: 55,
+                            length: 4,
+                            style: "BOLD" as DraftInlineStyleType,
+                        },
+                        {
+                            offset: 32,
+                            length: 7,
+                            style: "ITALIC" as DraftInlineStyleType,
+                        },
+                        {
+                            offset: 102,
+                            length: 6,
+                            style: "ITALIC" as DraftInlineStyleType,
+                        },
+                    ],
+                    entityRanges: [
+                        {
+                            offset: 11,
+                            length: 13,
+                            key: 0,
+                        },
+                        {
+                            offset: 88,
+                            length: 4,
+                            key: 1,
+                        },
+                    ],
+                    data: {},
+                },
+            ],
+            entityMap: {
+                "0": {
+                    type: "LINK",
+                    mutability: "MUTABLE" as DraftEntityMutability,
+                    data: {
+                        attachedBlocks: [
+                            {
+                                type: "internal",
+                                props: {
+                                    targetPage: {
+                                        id: "36193842-9c36-49e6-9384-6dd0cd572b23",
+                                        name: "Home",
+                                        path: "/",
+                                        documentType: "Page",
+                                    },
+                                },
+                            },
+                        ],
+                        block: {
+                            type: "internal",
+                            props: {
+                                targetPage: {
+                                    id: "36193842-9c36-49e6-9384-6dd0cd572b23",
+                                    name: "Home",
+                                    path: "/",
+                                    documentType: "Page",
+                                },
+                            },
+                        },
+                        activeType: "internal",
+                    },
+                },
+                "1": {
+                    type: "LINK",
+                    mutability: "MUTABLE" as DraftEntityMutability,
+                    data: {
+                        attachedBlocks: [
+                            {
+                                type: "internal",
+                                props: {
+                                    targetPage: {
+                                        id: "36193842-9c36-49e6-9384-6dd0cd572b23",
+                                        name: "Home",
+                                        path: "/",
+                                        documentType: "Page",
+                                    },
+                                },
+                            },
+                        ],
+                        block: {
+                            type: "internal",
+                            props: {
+                                targetPage: {
+                                    id: "36193842-9c36-49e6-9384-6dd0cd572b23",
+                                    name: "Home",
+                                    path: "/",
+                                    documentType: "Page",
+                                },
+                            },
+                        },
+                        activeType: "internal",
+                    },
+                },
+            },
+        };
+
+        const content = convertFromRaw(rawContent);
+        const mockState = { editorState: EditorState.createWithContent(content) };
+
+        expect(transformStateToXml(mockState.editorState.getCurrentContent())).toEqual([
+            'This is an <entity id="1">example <inline id="1">bacon</inline></entity> ipsum. <inline id="2">Testing</inline> some repeating <inline id="3">bold</inline> inline styles included in a <entity id="2">link</entity> and also <inline id="4">italic</inline>.',
+        ]);
+    });
 });

@@ -80,7 +80,7 @@ If a style range starts before an entity range and extends into it, the last sty
             // when entity ranges are in the text, the text is split up at their positions, therefore it's needed to look at the previous style
             const enduringStyle = lastPreviousStyleRange.find((item) => item.style === style);
 
-            if (enduringStyle) {
+            if (enduringStyle && ranges[i - 1]?.[1].toArray().length !== 0) {
                 return { style, id: enduringStyle.id };
             } else if (i > 0 && ranges[i - 1][1].toArray().includes(style)) {
                 const previousStyle = styleRangesWithIds[i - 1][1].find((previousStyle) => previousStyle.style === style);

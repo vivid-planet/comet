@@ -54,7 +54,7 @@ export const updateBlockContent = (block: RawDraftContentBlock) => {
         if (id) {
             // opening pseudo tags are added to the stack
             stylesStack.push({
-                id: parseInt(id ?? ""),
+                id: parseInt(id),
                 offset,
                 length: 0,
             });
@@ -98,7 +98,7 @@ export const updateBlockContent = (block: RawDraftContentBlock) => {
 
         if (id) {
             entitiesStack.push({
-                key: parseInt(id ?? ""),
+                key: parseInt(id),
                 offset,
                 length: 0,
             });
