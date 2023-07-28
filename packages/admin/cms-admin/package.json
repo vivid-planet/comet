@@ -41,7 +41,6 @@
         "@mui/lab": "^5.0.0-alpha.76",
         "class-validator": "0.13.2",
         "clsx": "^1.1.1",
-        "csv-string": "^4.1.1",
         "date-fns": "^2.0.0",
         "file-saver": "^2.0.0",
         "final-form-arrays": "^3.0.2",
