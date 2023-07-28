@@ -2,7 +2,7 @@ import { CharacterMetadata, ContentBlock, ContentState } from "draft-js";
 import type { List } from "immutable";
 
 /*
-    This is a first, very basic implementation, inspired by https://github.com/jpuri/draftjs-to-html.
+    This is a first, very basic implementation, inspired by https://github.com/sstur/draft-js-utils/blob/master/packages/draft-js-export-html/src/stateToHTML.js.
     Images, code snippets, custom options as attributes, elements or styles are not taken into account.
 
 */
