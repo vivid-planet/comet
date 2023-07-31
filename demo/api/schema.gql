@@ -171,6 +171,7 @@ type PageTreeNode {
   category: PageTreeNodeCategory!
   userGroup: UserGroup!
   childNodes: [PageTreeNode!]!
+  numberOfDescendants: Float!
   parentNode: PageTreeNode
   path: String!
   parentNodes: [PageTreeNode!]!
@@ -532,7 +533,7 @@ type Query {
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
   damItemsList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
-  damItemListPosition(sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput!, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Float!
+  damItemListPosition(sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput!, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Int!
   damFilesList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput!, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
   damIsFilenameOccupied(filename: String!, scope: DamScopeInput!, folderId: String): Boolean!
@@ -842,6 +843,7 @@ input PageTreeNodeUpdateInput {
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
+  createAutomaticRedirectsOnSlugChange: Boolean = true
   userGroup: UserGroup! = All
 }
 

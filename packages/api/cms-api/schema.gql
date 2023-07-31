@@ -57,6 +57,16 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Dependency {
+  rootId: String!
+  rootGraphqlObjectType: String!
+  rootColumnName: String!
+  jsonPath: String!
+  visible: Boolean!
+  targetGraphqlObjectType: String!
+  targetId: String!
+}
+
 type BuildTemplate {
   id: ID!
   name: String!
@@ -95,16 +105,6 @@ enum JobStatus {
   failed
 }
 
-type Dependency {
-  rootId: String!
-  rootGraphqlObjectType: String!
-  rootColumnName: String!
-  jsonPath: String!
-  visible: Boolean!
-  targetGraphqlObjectType: String!
-  targetId: String!
-}
-
 type CronJob {
   id: ID!
   name: String!
@@ -129,6 +129,7 @@ type PageTreeNode {
   hideInMenu: Boolean!
   category: String!
   childNodes: [PageTreeNode!]!
+  numberOfDescendants: Float!
   parentNode: PageTreeNode
   path: String!
   parentNodes: [PageTreeNode!]!
@@ -253,7 +254,7 @@ type Query {
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput! = {}, source: String!): Boolean!
   damItemsList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
-  damItemListPosition(sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Float!
+  damItemListPosition(sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Int!
   damFilesList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
   damIsFilenameOccupied(filename: String!, scope: DamScopeInput! = {}, folderId: String): Boolean!
@@ -449,6 +450,7 @@ input PageTreeNodeUpdateInput {
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
+  createAutomaticRedirectsOnSlugChange: Boolean = true
 }
 
 input AttachedDocumentInput {

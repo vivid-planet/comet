@@ -1,5 +1,5 @@
 import * as React from "react";
-import { matchPath, Route, useLocation, useRouteMatch } from "react-router";
+import { __RouterContext, matchPath, Route, useLocation, useRouteMatch } from "react-router";
 
 interface SubRoutesContext {
     path: string;
@@ -23,9 +23,17 @@ export function SubRoute({ children, path }: { children: React.ReactNode; path: 
 }
 
 export function useSubRoutePrefix() {
-    const match = useRouteMatch();
+    const routerContext = React.useContext(__RouterContext);
     const subRoutesContext = React.useContext(SubRoutesContext);
-    let ret = subRoutesContext?.path || match.url;
+    let ret;
+    if (subRoutesContext?.path) {
+        ret = subRoutesContext.path;
+        if (routerContext?.match?.url && routerContext.match.url.startsWith(subRoutesContext.path)) {
+            ret = routerContext.match.url;
+        }
+    } else {
+        ret = routerContext?.match.url || "";
+    }
     ret = ret.replace(/\/$/, ""); //remove trailing slash
     return ret;
 }
