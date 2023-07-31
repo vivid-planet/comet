@@ -3,6 +3,7 @@ import {
     CrudContextMenu,
     GridFilterButton,
     muiGridFilterToGql,
+    muiGridPagingToGql,
     muiGridSortToGql,
     StackLink,
     Toolbar,
@@ -118,8 +119,7 @@ function ProductsTable() {
     const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            ...muiGridPagingToGql({ page: dataGridProps.page, pageSize: dataGridProps.pageSize }),
             sort: muiGridSortToGql(sortModel),
         },
     });
