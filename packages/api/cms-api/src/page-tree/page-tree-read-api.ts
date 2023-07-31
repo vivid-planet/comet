@@ -1,8 +1,10 @@
 import { FilterQuery, NotFoundError } from "@mikro-orm/core";
 import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import opentelemetry from "@opentelemetry/api";
+import { compareAsc, compareDesc, isEqual } from "date-fns";
 
-import { PageTreeNodeSort } from "./dto/page-tree-node.sort";
+import { SortDirection } from "../common/sorting/sort-direction.enum";
+import { PageTreeNodeSort, PageTreeNodeSortField } from "./dto/page-tree-node.sort";
 import { AttachedDocument } from "./entities/attached-document.entity";
 import { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility as Visibility, ScopeInterface } from "./types";
 import pathBuilder from "./utils/path-builder";
@@ -86,23 +88,10 @@ export function createReadApi(
 
             nodes = filterPreloadedNodes(nodes, where);
 
-            if (sort && sort[0].field === "pos" && sort[0].direction === "ASC") {
-                sort.shift();
+            if (sort) {
+                nodes = sortPreloadedNodes(nodes, sort);
             }
 
-            if (sort) {
-                sort.forEach((sortItem) => {
-                    nodes = nodes.sort((a, b) => {
-                        if (sortItem.field === "updatedAt") {
-                            return sortItem.direction === "ASC"
-                                ? new Date(a.updatedAt).valueOf() - new Date(b.updatedAt).valueOf()
-                                : new Date(b.updatedAt).valueOf() - new Date(a.updatedAt).valueOf();
-                        } else {
-                            return sortItem.direction === "ASC" ? a[sortItem.field] - b[sortItem.field] : b[sortItem.field] - a[sortItem.field];
-                        }
-                    });
-                });
-            }
             if (offset !== undefined && limit !== undefined) {
                 nodes = nodes.slice(offset, limit);
             }
@@ -431,4 +420,38 @@ export function createReadApi(
             });
         },
     };
+}
+
+export function sortPreloadedNodes(nodes: PageTreeNodeInterface[], sort: PageTreeNodeSort[]): PageTreeNodeInterface[] {
+    return nodes.sort((a, b) => {
+        for (const { field, direction } of sort) {
+            if (field === PageTreeNodeSortField.pos) {
+                if (a.pos === b.pos) {
+                    // Can't use position for sorting, continue with next sort field
+                    continue;
+                }
+
+                if (direction === SortDirection.ASC) {
+                    return a.pos - b.pos;
+                } else {
+                    return b.pos - a.pos;
+                }
+            }
+
+            if (field === PageTreeNodeSortField.updatedAt) {
+                if (isEqual(a.updatedAt, b.updatedAt)) {
+                    // Can't use updatedAt for sorting, continue with next sort field
+                    continue;
+                }
+
+                if (direction === SortDirection.ASC) {
+                    return compareAsc(a.updatedAt, b.updatedAt);
+                } else {
+                    return compareDesc(a.updatedAt, b.updatedAt);
+                }
+            }
+        }
+
+        return 0;
+    });
 }
