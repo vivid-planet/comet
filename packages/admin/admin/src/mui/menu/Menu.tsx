@@ -67,6 +67,7 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
             <Drawer
                 variant="temporary"
                 className={temporaryDrawerClasses.join(" ")}
+                // workaround for issue: https://github.com/mui/material-ui/issues/35793
                 open={initialRender.current ? false : temporaryOpen}
                 PaperProps={{ style: { width: drawerWidth }, ...temporaryDrawerPaperProps }}
                 onClose={toggleOpen}
