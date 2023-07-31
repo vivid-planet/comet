@@ -16,7 +16,6 @@ import {
     registerBlock,
     TransformResponse,
 } from "../block";
-import { lookupPath } from "./lookupPath";
 import { strictBlockDataFactoryDecorator } from "./strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./strictBlockInputFactoryDecorator";
 
@@ -154,7 +153,6 @@ export function composeBlocks<BlockMap extends BaseBlockMap>(
                 };
             }),
         },
-        path: lookupPath(),
     };
 
     registerBlock(block);

@@ -1,3 +1,3 @@
 module.exports = {
-    "./*{js,json,md,yml}": "npx yarn exec prettier --check",
+    "./*{js,json,md,yml}": "pnpm exec prettier --check",
 };

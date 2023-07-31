@@ -18,16 +18,13 @@ import { EditPageLayout, openSitePreviewWindow, SplitPreview, useBlockPreview, u
 import { Button } from "@mui/material";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import {
-    GQLEditMainMenuItemFragment,
-    GQLUpdateMainMenuItemMutation,
-    GQLUpdateMainMenuItemMutationVariables,
-    namedOperations,
-} from "@src/graphql.generated";
 import isEqual from "lodash.isequal";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router-dom";
+
+import { GQLEditMainMenuItemFragment, GQLUpdateMainMenuItemMutation, GQLUpdateMainMenuItemMutationVariables } from "./EditMainMenuItem.generated";
+export type { GQLEditMainMenuItemFragment } from "./EditMainMenuItem.generated"; // re-export
 
 export const editMainMenuItemFragment = gql`
     fragment EditMainMenuItem on MainMenuItem {
@@ -109,7 +106,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                 input: { content: content ? RichTextBlock.state2Output(content) : null },
                 lastUpdatedAt: item.updatedAt,
             },
-            refetchQueries: [namedOperations.Query.MainMenuItem],
+            refetchQueries: ["MainMenuItem"],
         });
     };
 
@@ -136,7 +133,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                             openSitePreviewWindow(item.node.path, contentScopeMatch.url);
                         }}
                     >
-                        <FormattedMessage id="cometDemo.pages.pages.page.edit.preview" defaultMessage="Web preview" />
+                        <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
                     </Button>
 
                     <SplitButton localStorageKey="EditMainMenuItemSave" disabled={!hasChanges}>
@@ -180,7 +177,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                     <SplitPreview url={`${siteConfig.previewUrl}/admin/main-menu`} previewState={previewState} previewApi={previewApi}>
                         <div>
                             {content ? (
-                                <AdminComponentRoot title={intl.formatMessage({ id: "cometDemo.mainMenu.menuItem", defaultMessage: "Menu item" })}>
+                                <AdminComponentRoot title={intl.formatMessage({ id: "mainMenu.menuItem", defaultMessage: "Menu item" })}>
                                     <RichTextBlock.AdminComponent
                                         state={content}
                                         updateState={(setStateAction) => {
@@ -189,13 +186,13 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                                     />
                                     <HiddenInSubroute>
                                         <Button startIcon={<Delete />} onClick={handleRemoveContentClick}>
-                                            <FormattedMessage id="cometDemo.mainMenu.removeContent" defaultMessage="Remove content" />
+                                            <FormattedMessage id="mainMenu.removeContent" defaultMessage="Remove content" />
                                         </Button>
                                     </HiddenInSubroute>
                                 </AdminComponentRoot>
                             ) : (
                                 <Button startIcon={<Add />} onClick={handleAddContentClick}>
-                                    <FormattedMessage id="cometDemo.mainMenu.addContent" defaultMessage="Add content" />
+                                    <FormattedMessage id="mainMenu.addContent" defaultMessage="Add content" />
                                 </Button>
                             )}
                         </div>

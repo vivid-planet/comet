@@ -72,7 +72,10 @@ export default function useListIndent({ editorState, setEditorState, supportedTh
     const intl = useIntl();
 
     // can check if indenting lists is supported
-    const supported = React.useMemo(() => supportedThings.some((c) => ["ordered-list", "unordered-list"].includes(c)), [supportedThings]);
+    const supported = React.useMemo(
+        () => supportedThings.some((c) => ["ordered-list", "unordered-list"].includes(c) && listLevelMax !== 0),
+        [supportedThings, listLevelMax],
+    );
 
     const active = React.useMemo(() => {
         const currentBlock = getCurrentBlock(editorState);

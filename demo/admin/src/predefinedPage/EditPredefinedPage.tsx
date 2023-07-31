@@ -15,15 +15,16 @@ import {
 import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout, PageName } from "@comet/cms-admin";
 import { CircularProgress, IconButton, MenuItem } from "@mui/material";
+import { FORM_ERROR } from "final-form";
+import * as React from "react";
+import { FormattedMessage } from "react-intl";
+
 import {
     GQLPredefinedPageQuery,
     GQLPredefinedPageQueryVariables,
     GQLUpdatePredefinedPageMutation,
     GQLUpdatePredefinedPageMutationVariables,
-} from "@src/graphql.generated";
-import { FORM_ERROR } from "final-form";
-import * as React from "react";
-import { FormattedMessage } from "react-intl";
+} from "./EditPredefinedPage.generated";
 
 const getQuery = gql`
     query PredefinedPage($id: ID!) {
@@ -116,7 +117,7 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
                             </ToolbarItem>
                         </Toolbar>
                         <MainContent>
-                            <Field label={<FormattedMessage id="cometDemo.structuredContent.type" defaultMessage="Type" />} name="type" fullWidth>
+                            <Field label={<FormattedMessage id="structuredContent.type" defaultMessage="Type" />} name="type" fullWidth>
                                 {(props) => (
                                     <FinalFormSelect {...props}>
                                         {predefinedPageOptions.map((item, index) => (
@@ -135,4 +136,4 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
     );
 };
 
-const predefinedPageOptions = [{ value: "News", name: <FormattedMessage id="cometDemo.structuredContent.news" defaultMessage="News" /> }];
+const predefinedPageOptions = [{ value: "News", name: <FormattedMessage id="structuredContent.news" defaultMessage="News" /> }];

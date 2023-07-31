@@ -1,6 +1,7 @@
 import { ClearInputAdornment, InputWithPopper, InputWithPopperProps } from "@comet/admin";
 import { Time } from "@comet/admin-icons";
-import { ComponentsOverrides, InputAdornment, ListItemText, MenuItem, MenuList, Theme } from "@mui/material";
+import { ComponentsOverrides, InputAdornment, ListItemText, MenuItem, MenuList } from "@mui/material";
+import { Theme } from "@mui/material/styles";
 import { WithStyles, withStyles } from "@mui/styles";
 import { format } from "date-fns";
 import * as React from "react";

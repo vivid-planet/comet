@@ -1,14 +1,5 @@
 import { gql } from "@apollo/client";
-import {
-    MainContent as CometMainContent,
-    messages,
-    RouterPrompt,
-    Toolbar,
-    ToolbarActions,
-    ToolbarFillSpace,
-    ToolbarItem,
-    useStackApi,
-} from "@comet/admin";
+import { MainContent, messages, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft, Preview } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
@@ -22,20 +13,14 @@ import {
     useSiteConfig,
 } from "@comet/cms-admin";
 import { Button, CircularProgress, IconButton } from "@mui/material";
-import { withStyles } from "@mui/styles";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import {
-    GQLEditPageQuery,
-    GQLEditPageQueryVariables,
-    GQLPageTreeNodeCategory,
-    GQLUpdatePageMutation,
-    GQLUpdatePageMutationVariables,
-} from "@src/graphql.generated";
+import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory, useRouteMatch } from "react-router";
 
+import { GQLEditPageQuery, GQLEditPageQueryVariables, GQLUpdatePageMutation, GQLUpdatePageMutationVariables } from "./EditPage.generated";
 import { PageContentBlock } from "./PageContentBlock";
 
 interface Props {
@@ -80,13 +65,6 @@ const usePage = createUsePage({
         }
     `,
 });
-
-// TODO: Add `disablePaddingBottom` prop to `MainContent` in @comet/admin
-const MainContent = withStyles({
-    root: {
-        paddingBottom: 0,
-    },
-})(CometMainContent);
 
 export const EditPage: React.FC<Props> = ({ id, category }) => {
     const intl = useIntl();
@@ -160,34 +138,30 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                             openSitePreviewWindow(pageState.path, contentScopeMatch.url);
                         }}
                     >
-                        <FormattedMessage id="cometDemo.pages.pages.page.edit.preview" defaultMessage="Web preview" />
+                        <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
                     </Button>
                     {pageSaveButton}
                 </ToolbarActions>
             </Toolbar>
-            <MainContent>
+            <MainContent disablePaddingBottom>
                 <BlockPreviewWithTabs previewUrl={`${siteConfig.previewUrl}/admin/page`} previewState={previewState} previewApi={previewApi}>
                     {[
                         {
                             key: "content",
                             label: (
                                 <AdminTabLabel isValid={rootBlocksApi.content.isValid}>
-                                    <FormattedMessage id="comet.blocks" defaultMessage="Blocks" />
+                                    <FormattedMessage {...messages.content} />
                                 </AdminTabLabel>
                             ),
                             content: (
-                                <AdminComponentRoot
-                                    title={intl.formatMessage({ id: "cometDemo.pages.pages.page.edit.pageBlocks.title", defaultMessage: "Page" })}
-                                >
-                                    {rootBlocksApi.content.adminUI}
-                                </AdminComponentRoot>
+                                <AdminComponentRoot title={intl.formatMessage(messages.page)}>{rootBlocksApi.content.adminUI}</AdminComponentRoot>
                             ),
                         },
                         {
                             key: "config",
                             label: (
                                 <AdminTabLabel isValid={rootBlocksApi.seo.isValid}>
-                                    <FormattedMessage id="cometDemo.pages.pages.page.edit.config" defaultMessage="Config" />{" "}
+                                    <FormattedMessage id="pages.pages.page.edit.config" defaultMessage="Config" />
                                 </AdminTabLabel>
                             ),
                             content: rootBlocksApi.seo.adminUI,

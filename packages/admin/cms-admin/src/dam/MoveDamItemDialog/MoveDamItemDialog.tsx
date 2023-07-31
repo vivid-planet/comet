@@ -9,18 +9,17 @@ import { FormattedMessage } from "react-intl";
 
 import { TextMatch } from "../../common/MarkedMatches";
 import { SearchInput } from "../../common/SearchInput";
+import { useDamScope } from "../config/useDamScope";
 import {
-    GQLAllFoldersWithoutFiltersQuery,
-    GQLAllFoldersWithoutFiltersQueryVariables,
     GQLMoveDamFilesMutation,
     GQLMoveDamFilesMutationVariables,
     GQLMoveDamFoldersMutation,
     GQLMoveDamFoldersMutationVariables,
-} from "../../graphql.generated";
-import { moveDamFilesMutation, moveDamFoldersMutation } from "../DataGrid/FolderDataGrid.gql";
+    moveDamFilesMutation,
+    moveDamFoldersMutation,
+} from "../DataGrid/FolderDataGrid";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
-import { ChooseFolder } from "./ChooseFolder";
-import { allFoldersQuery } from "./ChooseFolder.gql";
+import { allFoldersQuery, ChooseFolder, GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables } from "./ChooseFolder";
 import { useFolderTree } from "./useFolderTree";
 import { useFolderTreeSearch } from "./useFolderTreeSearch";
 
@@ -42,7 +41,7 @@ interface MoveDamItemDialogProps {
     hasErrors?: boolean;
 }
 
-export const MoveDamItemDialog = ({
+const MoveDamItemDialogInner = ({
     open,
     damItemsToMove,
     setMoving,
@@ -52,8 +51,12 @@ export const MoveDamItemDialog = ({
     hasErrors = false,
 }: MoveDamItemDialogProps) => {
     const apolloClient = useApolloClient();
+    const scope = useDamScope();
     const { data, loading } = useQuery<GQLAllFoldersWithoutFiltersQuery, GQLAllFoldersWithoutFiltersQueryVariables>(allFoldersQuery, {
-        fetchPolicy: "network-only",
+        fetchPolicy: "cache-and-network",
+        variables: {
+            scope,
+        },
     });
 
     const {
@@ -113,6 +116,7 @@ export const MoveDamItemDialog = ({
                     variables: {
                         folderIds,
                         targetFolderId: selectedId,
+                        scope,
                     },
                     errorPolicy: "all",
                 }),
@@ -129,7 +133,7 @@ export const MoveDamItemDialog = ({
         }
 
         setMoving?.(false);
-    }, [apolloClient, damItemsToMove, handleHasErrors, selectedId, setMoving]);
+    }, [apolloClient, damItemsToMove, handleHasErrors, scope, selectedId, setMoving]);
 
     const handleClose = () => {
         setSelectedId(undefined);
@@ -223,4 +227,12 @@ export const MoveDamItemDialog = ({
             </DialogActions>
         </FixedHeightDialog>
     );
+};
+
+export const MoveDamItemDialog = (props: MoveDamItemDialogProps) => {
+    if (!props.open) {
+        return null;
+    }
+
+    return <MoveDamItemDialogInner {...props} />;
 };

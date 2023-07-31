@@ -1,15 +1,23 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+    Dialog,
+    DialogActions,
+    DialogActionsProps,
+    DialogContent,
+    DialogContentProps,
+    DialogProps,
+    DialogTitle,
+    DialogTitleProps,
+} from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
 import { SaveButton } from "./common/buttons/save/SaveButton";
-import { DirtyHandler } from "./DirtyHandler";
-import { DirtyHandlerApiContext, IDirtyHandlerApi } from "./DirtyHandlerApiContext";
 import { CloseDialogOptions, EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
 import { EditDialogFormApiProvider, useEditDialogFormApi } from "./EditDialogFormApiContext";
-import { SubmitResult } from "./form/SubmitResult";
 import { messages } from "./messages";
+import { RouterContext } from "./router/Context";
+import { SaveAction } from "./router/PromptHandler";
 import { ISelectionApi } from "./SelectionApi";
 import { useSelectionRoute } from "./SelectionRoute";
 
@@ -18,11 +26,21 @@ interface ITitle {
     add: React.ReactNode;
 }
 
-interface IProps {
-    title?: ITitle | string;
+interface EditDialogComponentsProps {
+    dialog?: Omit<Partial<DialogProps>, "open" | "onClose">;
+    dialogActions?: Partial<DialogActionsProps>;
+    dialogContent?: Partial<DialogContentProps>;
+    dialogTitle?: Partial<DialogTitleProps>;
 }
 
-export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi, ISelectionApi] {
+interface EditDialogProps {
+    title?: ITitle | string;
+    disableCloseAfterSave?: boolean;
+    onAfterSave?: () => void;
+    componentsProps?: EditDialogComponentsProps;
+}
+
+export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi, ISelectionApi] {
     const [Selection, selection, selectionApi] = useSelectionRoute();
 
     const openAddDialog = React.useCallback(
@@ -64,7 +82,7 @@ export function useEditDialog(): [React.ComponentType<IProps>, { id?: string; mo
     }, [closeDialog, openAddDialog, openEditDialog]);
 
     const EditDialogWithHookProps = React.useMemo(() => {
-        return (props: IProps) => {
+        return (props: EditDialogProps) => {
             return (
                 <Selection>
                     <EditDialogFormApiProvider>
@@ -87,33 +105,46 @@ interface IHookProps {
     api: IEditDialogApi;
 }
 
-const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selection, selectionApi, api, title: maybeTitle, children }) => {
+const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = ({
+    selection,
+    selectionApi,
+    api,
+    title: maybeTitle,
+    disableCloseAfterSave = false,
+    onAfterSave,
+    children,
+    componentsProps,
+}) => {
     const intl = useIntl();
     const editDialogFormApi = useEditDialogFormApi();
+    const parentRouterContext = React.useContext(RouterContext);
+    const saveActionRef = React.useRef<SaveAction>();
 
     const title = maybeTitle ?? {
         edit: intl.formatMessage(messages.edit),
         add: intl.formatMessage(messages.add),
     };
 
-    let dirtyHandlerApi: IDirtyHandlerApi | undefined;
-    const handleSaveClick = () => {
-        if (dirtyHandlerApi) {
-            dirtyHandlerApi.submitBindings().then((submitResults: Array<SubmitResult>) => {
-                const failed = submitResults.some((submitResult) => !!submitResult.error);
+    const handleSaveClick = async () => {
+        if (!saveActionRef.current) {
+            console.error("Can't save, no RouterPrompt registered with saveAction");
+            return;
+        }
+        const saveResult = await saveActionRef.current();
 
-                if (!failed) {
-                    setTimeout(() => {
-                        if (dirtyHandlerApi) dirtyHandlerApi.resetBindings();
-                        api.closeDialog({ delay: true });
-                    });
+        if (saveResult) {
+            setTimeout(() => {
+                // TODO DirtyHandler removal: do we need a onReset functionality here?
+                if (!disableCloseAfterSave) {
+                    api.closeDialog({ delay: true });
                 }
+                onAfterSave?.();
             });
         }
     };
 
     const handleCancelClick = () => {
-        if (dirtyHandlerApi) dirtyHandlerApi.resetBindings();
+        // TODO DirtyHandler removal: do we need a onReset functionality here?
         api.closeDialog();
     };
 
@@ -121,44 +152,55 @@ const EditDialogInner: React.FunctionComponent<IProps & IHookProps> = ({ selecti
         api.closeDialog();
     };
 
+    const isOpen = !!selection.mode;
+
     return (
-        <EditDialogApiContext.Provider value={api}>
-            <DirtyHandler>
-                <Dialog open={!!selection.mode} onClose={handleCloseClick}>
+        <RouterContext.Provider
+            value={{
+                register: ({ saveAction, ...args }) => {
+                    saveActionRef.current = saveAction;
+                    parentRouterContext?.register({ saveAction, ...args });
+                },
+                unregister: (id) => {
+                    saveActionRef.current = undefined;
+                    parentRouterContext?.unregister(id);
+                },
+            }}
+        >
+            <EditDialogApiContext.Provider value={api}>
+                <Dialog open={isOpen} onClose={handleCloseClick} {...componentsProps?.dialog}>
                     <div>
-                        <DialogTitle>{typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}</DialogTitle>
-                        <DialogContent>{children}</DialogContent>
-                        <DialogActions>
+                        <DialogTitle {...componentsProps?.dialogTitle}>
+                            {typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}
+                        </DialogTitle>
+                        <DialogContent {...componentsProps?.dialogContent}>{children}</DialogContent>
+                        <DialogActions {...componentsProps?.dialogActions}>
                             <CancelButton onClick={handleCancelClick} />
-                            <DirtyHandlerApiContext.Consumer>
-                                {(injectedDirtyHandlerApi) => {
-                                    dirtyHandlerApi = injectedDirtyHandlerApi; // TODO replace by ref on <DirtyHandler>
-                                    return (
-                                        <SaveButton
-                                            saving={editDialogFormApi?.saving}
-                                            hasErrors={editDialogFormApi?.hasErrors}
-                                            onClick={handleSaveClick}
-                                        >
-                                            <FormattedMessage {...messages.save} />
-                                        </SaveButton>
-                                    );
-                                }}
-                            </DirtyHandlerApiContext.Consumer>
+                            <SaveButton saving={editDialogFormApi?.saving} hasErrors={editDialogFormApi?.hasErrors} onClick={handleSaveClick}>
+                                <FormattedMessage {...messages.save} />
+                            </SaveButton>
                         </DialogActions>
                     </div>
                 </Dialog>
-            </DirtyHandler>
-        </EditDialogApiContext.Provider>
+            </EditDialogApiContext.Provider>
+        </RouterContext.Provider>
     );
 };
 
-interface IEditDialogHooklessProps extends IProps {
+interface IEditDialogHooklessProps extends EditDialogProps {
     children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => React.ReactNode;
 }
 
-const EditDialogHooklessInner: React.RefForwardingComponent<IEditDialogApi, IEditDialogHooklessProps> = ({ children, title }, ref) => {
+const EditDialogHooklessInner: React.RefForwardingComponent<IEditDialogApi, IEditDialogHooklessProps> = (
+    { children, title, onAfterSave, componentsProps },
+    ref,
+) => {
     const [EditDialogConfigured, selection, api] = useEditDialog();
     React.useImperativeHandle(ref, () => api);
-    return <EditDialogConfigured title={title}>{children({ selectedId: selection.id, selectionMode: selection.mode })}</EditDialogConfigured>;
+    return (
+        <EditDialogConfigured title={title} onAfterSave={onAfterSave} componentsProps={componentsProps}>
+            {children({ selectedId: selection.id, selectionMode: selection.mode })}
+        </EditDialogConfigured>
+    );
 };
 export const EditDialog = React.forwardRef(EditDialogHooklessInner);

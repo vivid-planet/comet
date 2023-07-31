@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-import { damFileThumbnailFragment } from "./thumbnail/DamThumbnail.gql";
+import { damFileThumbnailFragment } from "./thumbnail/DamThumbnail";
 
 export const damFileTableFragment = gql`
     fragment DamFileTable on DamFile {
@@ -11,6 +11,14 @@ export const damFileTableFragment = gql`
         size
         mimetype
         contentHash
+        license {
+            durationFrom
+            durationTo
+            expirationDate
+            isNotValidYet
+            expiresWithinThirtyDays
+            hasExpired
+        }
         folder {
             id
             name
@@ -60,6 +68,7 @@ export const damItemsListQuery = gql`
         $sortDirection: SortDirection
         $offset: Int
         $limit: Int
+        $scope: DamScopeInput!
     ) {
         damItemsList(
             folderId: $folderId
@@ -69,6 +78,7 @@ export const damItemsListQuery = gql`
             sortDirection: $sortDirection
             offset: $offset
             limit: $limit
+            scope: $scope
         ) {
             nodes {
                 ... on DamFile {
@@ -94,8 +104,8 @@ export const moveDamFilesMutation = gql`
 `;
 
 export const moveDamFoldersMutation = gql`
-    mutation MoveDamFolders($folderIds: [ID!]!, $targetFolderId: ID) {
-        moveDamFolders(folderIds: $folderIds, targetFolderId: $targetFolderId) {
+    mutation MoveDamFolders($folderIds: [ID!]!, $targetFolderId: ID, $scope: DamScopeInput!) {
+        moveDamFolders(folderIds: $folderIds, targetFolderId: $targetFolderId, scope: $scope) {
             id
             mpath
         }
@@ -111,6 +121,7 @@ export const damItemListPosition = gql`
         $filter: DamItemFilterInput
         $sortColumnName: String
         $sortDirection: SortDirection
+        $scope: DamScopeInput!
     ) {
         damItemListPosition(
             id: $id
@@ -120,6 +131,7 @@ export const damItemListPosition = gql`
             filter: $filter
             sortColumnName: $sortColumnName
             sortDirection: $sortDirection
+            scope: $scope
         )
     }
 `;

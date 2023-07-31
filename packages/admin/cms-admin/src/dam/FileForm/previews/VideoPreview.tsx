@@ -2,7 +2,7 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLDamFileDetailFragment } from "../../../graphql.generated";
+import { DamFileDetails } from "../EditFile";
 
 const VideoPreviewWrapper = styled("div")`
     width: 100%;
@@ -18,7 +18,7 @@ const StyledVideo = styled("video")`
 `;
 
 interface VideoPreviewProps {
-    file: GQLDamFileDetailFragment;
+    file: DamFileDetails;
 }
 
 export const VideoPreview = ({ file }: VideoPreviewProps): React.ReactElement => {

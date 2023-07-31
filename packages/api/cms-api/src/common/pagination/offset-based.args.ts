@@ -8,7 +8,7 @@ export class OffsetBasedPaginationArgs {
     @Min(0)
     offset: number;
 
-    @Field(() => Int, { defaultValue: 20 })
+    @Field(() => Int, { defaultValue: 25 })
     @Min(1)
     @Max(100)
     limit: number;

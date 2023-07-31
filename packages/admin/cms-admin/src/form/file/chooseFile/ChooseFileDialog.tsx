@@ -1,4 +1,4 @@
-import { StackLink } from "@comet/admin";
+import { StackLink, SubRoute } from "@comet/admin";
 import { Close } from "@comet/admin-icons";
 import { Button, Dialog, DialogTitle, IconButton, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -6,11 +6,15 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
 
+import { DamScopeProvider } from "../../../dam/config/DamScopeProvider";
+import { useDamConfig } from "../../../dam/config/useDamConfig";
+import { useDamScope } from "../../../dam/config/useDamScope";
 import { DamTable } from "../../../dam/DamTable";
+import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
 import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
 import { RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
 import { isFile } from "../../../dam/helpers/isFile";
-import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../graphql.generated";
+import { RedirectToPersistedDamLocation } from "./RedirectToPersistedDamLocation";
 
 const FixedHeightDialog = styled(Dialog)`
     & .MuiDialog-paper {
@@ -43,11 +47,11 @@ const TableRowButton = styled(Button)`
 const renderDamLabel = (
     row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
     onChooseFile: (fileId: string) => void,
-    { matches, filterApi }: RenderDamLabelOptions,
+    { matches, filterApi, showLicenseWarnings = false }: RenderDamLabelOptions,
 ) => {
     return isFile(row) ? (
         <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
-            <DamItemLabel asset={row} matches={matches} />
+            <DamItemLabel asset={row} matches={matches} showLicenseWarnings={showLicenseWarnings} />
         </TableRowButton>
     ) : (
         <Link
@@ -76,6 +80,14 @@ interface ChooseFileDialogProps {
 }
 
 export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes }: ChooseFileDialogProps): React.ReactElement => {
+    const damConfig = useDamConfig();
+    let stateKey = "choose-file-dam-location";
+    const scope = useDamScope();
+
+    if (Object.keys(scope).length > 0) {
+        stateKey = `${Object.values(scope).join("-")}-${stateKey}`;
+    }
+
     return (
         <FixedHeightDialog open={open} onClose={onClose} fullWidth maxWidth="xl">
             <StyledDialogTitle>
@@ -84,17 +96,22 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
                     <Close />
                 </CloseButton>
             </StyledDialogTitle>
-            <MemoryRouter>
-                <DamTable
-                    renderDamLabel={(row, { matches, filterApi }: RenderDamLabelOptions) => renderDamLabel(row, onChooseFile, { matches, filterApi })}
-                    allowedMimetypes={allowedMimetypes}
-                    damLocationStorageKey="choose-file-dam-location"
-                    hideContextMenu={true}
-                    disableScopeIndicator={true}
-                    hideMultiselect={true}
-                    hideArchiveFilter={true}
-                />
-            </MemoryRouter>
+            <DamScopeProvider>
+                <MemoryRouter>
+                    <SubRoute path="">
+                        <RedirectToPersistedDamLocation stateKey={stateKey} />
+                        <DamTable
+                            renderDamLabel={(row, { matches, filterApi }: RenderDamLabelOptions) =>
+                                renderDamLabel(row, onChooseFile, { matches, filterApi, showLicenseWarnings: damConfig.enableLicenseFeature })
+                            }
+                            allowedMimetypes={allowedMimetypes}
+                            hideContextMenu={true}
+                            hideMultiselect={true}
+                            hideArchiveFilter={true}
+                        />
+                    </SubRoute>
+                </MemoryRouter>
+            </DamScopeProvider>
         </FixedHeightDialog>
     );
 };

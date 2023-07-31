@@ -1,31 +1,57 @@
 {
     "name": "@comet/admin-rte",
-    "version": "4.0.0",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
-    "files": [
-        "lib"
-    ],
+    "version": "4.3.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
         "directory": "packages/admin/admin-rte"
     },
+    "license": "BSD-2-Clause",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "files": [
+        "lib"
+    ],
+    "scripts": {
+        "build": "$npm_execpath run clean && run-p build:babel build:types",
+        "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
+        "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
+        "clean": "rimraf lib",
+        "lint": "run-p lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:tsc": "tsc --noEmit",
+        "start": "run-p start:babel start:types",
+        "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
+        "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
+    },
     "dependencies": {
         "detect-browser": "^5.2.1",
-        "draftjs-conductor": "^3.0.0"
+        "draftjs-conductor": "^3.0.0",
+        "immutable": "~3.7.4"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
-        "@comet/admin-babel-preset": "^4.0.0",
-        "@comet/eslint-config": "^4.0.0",
-        "@types/draft-js": "^0.10.38",
+        "@babel/core": "^7.20.12",
+        "@comet/admin-babel-preset": "workspace:^4.3.0",
+        "@comet/eslint-config": "workspace:^4.3.0",
+        "@mui/icons-material": "^5.0.0",
+        "@mui/material": "^5.0.0",
+        "@mui/styles": "^5.0.0",
+        "@types/draft-js": "^0.11.10",
         "@types/immutable": "^3.8.7",
+        "@types/react": "^17.0.0",
+        "@types/react-dom": "^17.0.0",
+        "draft-js": "^0.11.4",
         "eslint": "^8.0.0",
+        "final-form": "^4.16.1",
+        "npm-run-all": "^4.1.5",
         "prettier": "^2.0.0",
+        "react": "^17.0",
+        "react-dom": "^17.0",
+        "react-final-form": "^6.3.1",
+        "react-intl": "^5.10.0",
         "rimraf": "^3.0.2",
-        "typescript": "^4.0.0",
-        "yarn-run-all": "^3.0.0"
+        "typescript": "^4.0.0"
     },
     "peerDependencies": {
         "@mui/icons-material": "^5.0.0",
@@ -33,27 +59,13 @@
         "@mui/styles": "^5.0.0",
         "draft-js": "^0.11.4",
         "final-form": "^4.16.1",
-        "immutable": "~3.7.4",
         "react": "^17.0",
         "react-dom": "^17.0",
         "react-final-form": "^6.3.1",
         "react-intl": "^5.10.0"
     },
-    "scripts": {
-        "clean": "rimraf lib",
-        "build": "yarn run clean && run-p build:babel build:types",
-        "build:babel": "npx babel ./src -x \".ts,.tsx\" -d lib",
-        "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
-        "start": "run-p start:babel start:types",
-        "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
-        "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput",
-        "lint": "run-p lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/",
-        "lint:tsc": "tsc --noEmit"
-    },
     "publishConfig": {
-        "registry": "https://registry.npmjs.org",
-        "access": "public"
-    },
-    "license": "BSD-2-Clause"
+        "access": "public",
+        "registry": "https://registry.npmjs.org"
+    }
 }

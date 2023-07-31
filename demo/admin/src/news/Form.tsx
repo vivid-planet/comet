@@ -18,10 +18,12 @@ import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import { GQLMutationcreateNewsArgs, GQLMutationupdateNewsArgs, GQLNewsInput, GQLNewsQuery, GQLNewsQueryVariables } from "@src/graphql.generated";
+import { GQLMutationcreateNewsArgs, GQLMutationupdateNewsArgs, GQLNewsInput } from "@src/graphql.generated";
 import { FORM_ERROR } from "final-form";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+
+import { GQLNewsQuery, GQLNewsQueryVariables } from "./Form.generated";
 
 const newsQuery = gql`
     query News($id: ID!) {
@@ -84,7 +86,7 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
                             </IconButton>
                         </ToolbarItem>
                         <ToolbarTitleItem>
-                            {values.title ? values.title : <FormattedMessage id="cometDemo.news.newsDetail" defaultMessage="News Detail" />}
+                            {values.title ? values.title : <FormattedMessage id="news.newsDetail" defaultMessage="News Detail" />}
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
@@ -115,7 +117,7 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
                             type="text"
                             name="title"
                             fullWidth
-                            label={intl.formatMessage({ id: "cometDemo.news.title", defaultMessage: "Title" })}
+                            label={intl.formatMessage({ id: "news.title", defaultMessage: "Title" })}
                             component={FinalFormInput}
                             required
                         />
@@ -123,14 +125,14 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
                             type="text"
                             name="slug"
                             fullWidth
-                            label={intl.formatMessage({ id: "cometDemo.news.slug", defaultMessage: "Slug" })}
+                            label={intl.formatMessage({ id: "news.slug", defaultMessage: "Slug" })}
                             component={FinalFormInput}
                             required
                             format={(value: string) => (value ? value.toLowerCase() : "")}
                             validate={async (value) => {
                                 if (!isValidSlug(value)) {
                                     return intl.formatMessage({
-                                        id: "cometDemo.news.slugErrorMsg",
+                                        id: "news.slugErrorMsg",
                                         defaultMessage: "Slug contains forbidden symbols",
                                     });
                                 }
@@ -146,7 +148,7 @@ const NewsForm: React.FC<NewsFormProps> = ({ newsId }) => {
 export default NewsForm;
 
 const updateNewsMutation = gql`
-    mutation UpdateNews($id: ID!, $input: NewsInput!) {
+    mutation UpdateNews($id: ID!, $input: NewsUpdateInput!) {
         updateNews(id: $id, input: $input) {
             id
             slug

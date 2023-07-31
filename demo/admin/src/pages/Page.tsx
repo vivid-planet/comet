@@ -1,9 +1,11 @@
+import { messages } from "@comet/admin";
 import { File, FileNotMenu } from "@comet/admin-icons";
 import { DocumentInterface, rewriteInternalLinks } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
-import { GQLPage, GQLPageInput, GQLPageTreeNodeAdditionalFieldsFragment } from "@src/graphql.generated";
+import { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
+import { GQLPage, GQLPageInput } from "@src/graphql.generated";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -12,7 +14,7 @@ import { EditPage } from "./EditPage";
 import { PageContentBlock } from "./PageContentBlock";
 
 export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageInput> = {
-    displayName: <FormattedMessage id="cometDemo.generic.page" defaultMessage="Page" />,
+    displayName: <FormattedMessage {...messages.page} />,
     editComponent: EditPage,
     getQuery: gql`
         query PageDocument($id: ID!) {

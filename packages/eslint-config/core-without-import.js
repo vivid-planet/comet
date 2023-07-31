@@ -1,20 +1,22 @@
 module.exports = {
-    extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
-    parser: "@typescript-eslint/parser",
-    plugins: ["@typescript-eslint", "simple-import-sort", "unused-imports"],
+    extends: ["eslint:recommended", "plugin:prettier/recommended"],
+    plugins: ["simple-import-sort", "unused-imports", "json-files", "@comet"],
     rules: {
         "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": ["error", { ignoreRestSiblings: true }],
         "prefer-template": "error",
         "simple-import-sort/exports": "error",
         "simple-import-sort/imports": "error",
         "unused-imports/no-unused-imports": "error",
         "no-console": ["error", { allow: ["warn", "error"] }],
         "no-return-await": "error",
+        "json-files/sort-package-json": "error",
     },
     overrides: [
         {
             files: ["*.ts", "*.tsx"],
+            parser: "@typescript-eslint/parser",
+            extends: ["plugin:@typescript-eslint/recommended"],
+            plugins: ["@typescript-eslint"],
             rules: {
                 "@typescript-eslint/no-unused-vars": ["error", { args: "none", ignoreRestSiblings: true }],
             },

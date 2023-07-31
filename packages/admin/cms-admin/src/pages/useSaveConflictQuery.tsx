@@ -1,4 +1,5 @@
 import { DocumentNode, QueryOptions, TypedDocumentNode, useApolloClient } from "@apollo/client";
+import { LocalErrorScopeApolloContext } from "@comet/admin";
 
 import { SaveConflictHookReturn, useSaveConflict } from "./useSaveConflict";
 
@@ -20,13 +21,18 @@ export function useSaveConflictQuery<TData, TVariables>(
     const { resolveHasConflict, skip, ...restOptions } = options;
     const checkConflict = async () => {
         if (skip) return false;
-        const { data, error } = await client.query({
-            query,
-            fetchPolicy: "no-cache",
-            ...restOptions,
-        });
-        if (error) return false;
-        return resolveHasConflict(data);
+        try {
+            const { data, error } = await client.query({
+                query,
+                fetchPolicy: "no-cache",
+                context: LocalErrorScopeApolloContext,
+                ...restOptions,
+            });
+            if (error) return false;
+            return resolveHasConflict(data);
+        } catch (error) {
+            return false;
+        }
     };
     return useSaveConflict({ checkConflict, ...dialogOptions, hasChanges: () => dialogOptions.hasChanges });
 }

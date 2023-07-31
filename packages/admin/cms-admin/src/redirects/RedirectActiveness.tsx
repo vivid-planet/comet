@@ -9,7 +9,7 @@ import {
     GQLRedirectActivenessFragment,
     GQLUpdateRedirectActivenessMutation,
     GQLUpdateRedirectActivenessMutationVariables,
-} from "../graphql.generated";
+} from "./RedirectActiveness.generated";
 
 export const updateRedirectActivenessMutation = gql`
     mutation UpdateRedirectActiveness($id: ID!, $input: RedirectUpdateActivenessInput!) {

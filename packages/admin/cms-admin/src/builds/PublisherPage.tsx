@@ -9,9 +9,9 @@ import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
-import { GQLBuildsQuery } from "../graphql.generated";
 import { BuildRuntime } from "./BuildRuntime";
 import { PublishButton } from "./PublishButton";
+import { GQLBuildsQuery } from "./PublisherPage.generated";
 
 const ScopeIndicatorLabelBold = styled(Typography)`
     && {
@@ -32,6 +32,7 @@ const buildsQuery = gql`
             id
             status
             name
+            label
             trigger
             startTime
             completionTime
@@ -81,6 +82,9 @@ export function PublisherPage(): React.ReactElement {
                             field: "name",
                             headerName: intl.formatMessage({ id: "comet.pages.publisher.name", defaultMessage: "Name" }),
                             flex: 2,
+                            renderCell: ({ row }) => {
+                                return row.label && row.label.length > 0 ? row.label : row.name;
+                            },
                         },
                         {
                             field: "runtime",

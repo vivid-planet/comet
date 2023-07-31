@@ -3,9 +3,10 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 
 import { MarkedMatches, TextMatch } from "../../../common/MarkedMatches";
-import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../graphql.generated";
 import { isFile } from "../../helpers/isFile";
+import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../FolderDataGrid";
 import { ArchivedTag } from "../tags/ArchivedTag";
+import { LicenseValidityTags } from "../tags/LicenseValidityTags";
 import { DamThumbnail } from "../thumbnail/DamThumbnail";
 
 const LabelWrapper = styled("div")`
@@ -23,13 +24,6 @@ const NameWrapper = styled("div")`
     justify-content: space-between;
 `;
 
-const TagWrapper = styled("div")`
-    margin-left: 10px;
-    display: flex;
-    justify-content: space-between;
-    gap: 5px;
-`;
-
 const Path = styled(Typography)`
     color: ${({ theme }) => theme.palette.grey[300]};
 `;
@@ -38,6 +32,7 @@ interface DamItemLabelProps {
     asset: GQLDamFolderTableFragment | GQLDamFileTableFragment;
     showPath?: boolean;
     matches?: TextMatch[];
+    showLicenseWarnings?: boolean;
 }
 
 const getFilePath = (file: GQLDamFileTableFragment) => {
@@ -59,7 +54,7 @@ const getFolderPath = (folder: GQLDamFolderTableFragment) => {
     return `/${pathArr.join("/")}`;
 };
 
-const DamItemLabel = ({ asset, showPath = false, matches }: DamItemLabelProps): React.ReactElement => {
+const DamItemLabel = ({ asset, showPath = false, matches, showLicenseWarnings = false }: DamItemLabelProps): React.ReactElement => {
     return (
         <LabelWrapper>
             <DamThumbnail asset={asset} />
@@ -67,10 +62,14 @@ const DamItemLabel = ({ asset, showPath = false, matches }: DamItemLabelProps): 
                 <Typography>{matches ? <MarkedMatches text={asset.name} matches={matches} /> : asset.name}</Typography>
                 {showPath && <Path variant="body2">{isFile(asset) ? getFilePath(asset) : getFolderPath(asset)}</Path>}
             </NameWrapper>
-            {isFile(asset) && asset.archived && (
-                <TagWrapper>
-                    <ArchivedTag />
-                </TagWrapper>
+            {isFile(asset) && asset.archived && <ArchivedTag />}
+            {isFile(asset) && showLicenseWarnings && (
+                <LicenseValidityTags
+                    expirationDate={asset.license?.expirationDate ? new Date(asset.license.expirationDate) : undefined}
+                    isNotValidYet={asset.license?.isNotValidYet}
+                    expiresWithinThirtyDays={asset.license?.expiresWithinThirtyDays}
+                    hasExpired={asset.license?.hasExpired}
+                />
             )}
         </LabelWrapper>
     );

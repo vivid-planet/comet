@@ -19,20 +19,23 @@ import { useStackSwitchApi } from "@comet/admin/lib/stack/Switch";
 import { BlockInterface, BlockState, createFinalFormBlock, isValidUrl } from "@comet/blocks-admin";
 import { Card, CardContent, CircularProgress, Grid, MenuItem } from "@mui/material";
 import { FORM_ERROR } from "final-form";
+import isEqual from "lodash.isequal";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { GQLRedirectSourceTypeValues } from "../graphql.generated";
+import { GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
+import { redirectDetailQuery } from "./RedirectForm.gql";
 import {
     GQLCreateRedirectMutation,
     GQLRedirectDetailFragment,
     GQLRedirectDetailQuery,
     GQLRedirectDetailQueryVariables,
-    GQLRedirectSourceAvailableQuery,
-    GQLRedirectSourceAvailableQueryVariables,
-    GQLRedirectSourceTypeValues,
-} from "../graphql.generated";
-import { redirectDetailQuery } from "./RedirectForm.gql";
+} from "./RedirectForm.gql.generated";
 import { useSubmitMutation } from "./submitMutation";
+export { GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
+export { createRedirectMutation, updateRedirectMutation } from "./RedirectForm.gql";
+export { GQLCreateRedirectMutation, GQLUpdateRedirectMutation } from "./RedirectForm.gql.generated";
 
 interface Props {
     id?: string;
@@ -168,6 +171,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
             onAfterSubmit={(values, form) => {
                 form.reset(values);
             }}
+            initialValuesEqual={isEqual}
         >
             {({ values, pristine, hasValidationErrors, submitting, handleSubmit, validating }) => (
                 <>

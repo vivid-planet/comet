@@ -6,13 +6,25 @@ export const productFormFragment = gql`
         slug
         description
         price
+        type
         inStock
+        image
+        category {
+            id
+            title
+        }
+        tags {
+            id
+            title
+        }
     }
 `;
 
 export const productQuery = gql`
     query Product($id: ID!) {
         product(id: $id) {
+            id
+            updatedAt
             ...ProductForm
         }
     }
@@ -22,6 +34,8 @@ export const productQuery = gql`
 export const createProductMutation = gql`
     mutation ProductFormCreateProduct($input: ProductInput!) {
         createProduct(input: $input) {
+            id
+            updatedAt
             ...ProductForm
         }
     }
@@ -29,10 +43,48 @@ export const createProductMutation = gql`
 `;
 
 export const updateProductMutation = gql`
-    mutation ProductFormUpdateProduct($id: ID!, $input: ProductInput!) {
-        updateProduct(id: $id, input: $input) {
+    mutation ProductFormUpdateProduct($id: ID!, $input: ProductUpdateInput!, $lastUpdatedAt: DateTime) {
+        updateProduct(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
+            id
+            updatedAt
             ...ProductForm
         }
     }
     ${productFormFragment}
+`;
+
+export const productCategorySelectFragment = gql`
+    fragment ProductCategorySelect on ProductCategory {
+        id
+        title
+    }
+`;
+
+export const productCategoriesQuery = gql`
+    query ProductCategories {
+        productCategories {
+            nodes {
+                ...ProductCategorySelect
+            }
+        }
+    }
+    ${productCategorySelectFragment}
+`;
+
+export const productTagsSelectFragment = gql`
+    fragment ProductTagsSelect on ProductTag {
+        id
+        title
+    }
+`;
+
+export const productTagsQuery = gql`
+    query ProductTags {
+        productTags {
+            nodes {
+                ...ProductTagsSelect
+            }
+        }
+    }
+    ${productTagsSelectFragment}
 `;

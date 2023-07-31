@@ -2,9 +2,11 @@ import { File, Folder, Pdf } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 
-import { GQLDamFile, GQLDamFileThumbnailFragment, GQLDamFolder } from "../../../graphql.generated";
+import { GQLDamFile, GQLDamFolder } from "../../../graphql.generated";
 import { AudioThumbnail } from "./AudioThumbnail";
+import { GQLDamFileThumbnailFragment } from "./DamThumbnail.gql.generated";
 import { VideoThumbnail } from "./VideoThumbnail";
+export { damFileThumbnailFragment } from "./DamThumbnail.gql";
 
 const ThumbnailWrapper = styled("div")`
     display: flex;

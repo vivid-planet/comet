@@ -3,11 +3,12 @@ import { Table, TableQuery, useTableQuery } from "@comet/admin";
 import { ArrowRight } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import { GQLLatestContentUpdatesQuery, GQLLatestContentUpdatesQueryVariables } from "@src/graphql.generated";
 import { categoryToUrlParam } from "@src/utils/pageTreeNodeCategoryMapping";
 import * as React from "react";
 import { FormattedDate, FormattedTime, useIntl } from "react-intl";
 import { Link } from "react-router-dom";
+
+import { GQLLatestContentUpdatesQuery, GQLLatestContentUpdatesQueryVariables } from "./LatestContentUpdates.generated";
 
 const LATEST_CONTENT_UPDATES_QUERY = gql`
     query LatestContentUpdates($scope: PageTreeNodeScopeInput!) {
@@ -56,11 +57,11 @@ export const LatestContentUpdates: React.FC = () => {
                         columns={[
                             {
                                 name: "name",
-                                header: intl.formatMessage({ id: "comet.dashboard.latestContentUpdates.name", defaultMessage: "Page Name" }),
+                                header: intl.formatMessage({ id: "dashboard.latestContentUpdates.name", defaultMessage: "Page Name" }),
                             },
                             {
                                 name: "updatedAt",
-                                header: intl.formatMessage({ id: "comet.dashboard.latestContentUpdates.updatedAt", defaultMessage: "Updated At" }),
+                                header: intl.formatMessage({ id: "dashboard.latestContentUpdates.updatedAt", defaultMessage: "Updated At" }),
                                 render: (row) => (
                                     <div>
                                         <FormattedDate value={row.updatedAt} day="2-digit" month="2-digit" year="numeric" />

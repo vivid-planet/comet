@@ -1,10 +1,11 @@
 import { gql } from "@apollo/client";
 import { Table, TableQuery, useTableQuery } from "@comet/admin";
 import { BuildRuntime } from "@comet/cms-admin";
-import { GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables } from "@src/graphql.generated";
 import { parseISO } from "date-fns";
 import * as React from "react";
 import { useIntl } from "react-intl";
+
+import { GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables } from "./LatestBuilds.generated";
 
 const LATEST_BUILDS = gql`
     query LatestBuilds {
@@ -38,7 +39,7 @@ export const LatestBuilds: React.FC = () => {
                         columns={[
                             {
                                 name: "runtime",
-                                header: intl.formatMessage({ id: "comet.pages.publisher.runtime", defaultMessage: "Runtime" }),
+                                header: intl.formatMessage({ id: "pages.publisher.runtime", defaultMessage: "Runtime" }),
                                 render: (row) => (
                                     <BuildRuntime
                                         startTime={row.startTime ? parseISO(row.startTime) : undefined}
@@ -48,7 +49,7 @@ export const LatestBuilds: React.FC = () => {
                             },
                             {
                                 name: "status",
-                                header: intl.formatMessage({ id: "comet.pages.publisher.status", defaultMessage: "Status" }),
+                                header: intl.formatMessage({ id: "pages.publisher.status", defaultMessage: "Status" }),
                             },
                         ]}
                     />

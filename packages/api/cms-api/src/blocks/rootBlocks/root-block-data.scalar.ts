@@ -13,7 +13,6 @@ export function RootBlockDataScalar(block: Block): GraphQLScalarType {
 
     scalar = new GraphQLScalarType({
         ...GraphQLJSONObject,
-        specifiedByUrl: undefined,
         name: `${block.name}BlockData`,
         description: `${block.name} root block data`,
     });

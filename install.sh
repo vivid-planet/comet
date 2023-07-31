@@ -7,8 +7,8 @@ cd $(dirname $0)
 # use correct node version and install dependencies
 nvm install
 nvm use
-npm i -g yarn
-yarn install
+npm i -g pnpm@8
+pnpm install
 
 # admin Blocks
 ln -sf ../../api/blocks-api/block-meta.json ./packages/admin/blocks-admin/block-meta.json
@@ -41,5 +41,5 @@ ln -sf ../api/schema.gql ./demo/site/schema.gql
 ln -sf ../api/block-meta.json ./demo/site/block-meta.json
 ln -sf ../api/comet-config.json ./demo/site/comet-config.json
 
-# Build CLI package to be used for dev startup
-npx yarn workspace @comet/cli build
+# Build the packages CLI and eslint-plugin to be used for dev startup
+pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build

@@ -5,7 +5,7 @@ import { AnyObject, Form, FormProps, FormSpy } from "react-final-form";
 interface AutoSaveSpyProps<FormValues> {
     onSubmit: FormProps<FormValues>["onSubmit"];
 }
-function AutosaveSpy<FormValues extends AnyObject>({ onSubmit }: AutoSaveSpyProps<FormValues>) {
+function AutosaveSpy<FormValues>({ onSubmit }: AutoSaveSpyProps<FormValues>) {
     return (
         <FormSpy<FormValues> subscription={{ dirty: true }}>
             {({ form, dirty }) => {

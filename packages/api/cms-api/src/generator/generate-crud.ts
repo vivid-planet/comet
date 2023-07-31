@@ -1,170 +1,259 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { EntityMetadata } from "@mikro-orm/core";
 import * as path from "path";
+import { singular } from "pluralize";
 
 import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
-import { writeCrudInput } from "./generate-crud-input";
-import { writeGenerated } from "./utils/write-generated";
+import { generateCrudInput } from "./generate-crud-input";
+import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
+import { findEnumImportPath, findEnumName } from "./utils/ts-morph-helper";
+import { GeneratedFile } from "./utils/write-generated-files";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function generateCrud(generatorOptions: CrudGeneratorOptions, metadata: EntityMetadata<any>): Promise<void> {
-    const classNameSingular = metadata.className;
-    const classNamePlural = !metadata.className.endsWith("s") ? `${metadata.className}s` : metadata.className;
-    const instanceNameSingular = classNameSingular[0].toLocaleLowerCase() + classNameSingular.slice(1);
-    const instanceNamePlural = classNamePlural[0].toLocaleLowerCase() + classNamePlural.slice(1);
-    const fileNameSingular = instanceNameSingular.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
-    const fileNamePlural = instanceNamePlural.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function buildOptions(metadata: EntityMetadata<any>) {
+    const { classNameSingular, classNamePlural, fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
 
-    async function writeCrudResolver(): Promise<void> {
-        const crudSearchProps = metadata.props.filter(
-            (prop) => prop.type === "string" && hasFieldFeature(metadata.class, prop.name, "search") && !prop.name.startsWith("scope_"),
-        );
-        const hasSearchArg = crudSearchProps.length > 0;
-        const crudFilterProps = metadata.props.filter(
-            (prop) =>
-                hasFieldFeature(metadata.class, prop.name, "filter") &&
-                !prop.name.startsWith("scope_") &&
-                (prop.type === "string" ||
-                    prop.type === "DecimalType" ||
-                    prop.type === "BooleanType" ||
-                    prop.type === "boolean" ||
-                    prop.type === "DateType" ||
-                    prop.type === "Date"),
-        );
-        const hasFilterArg = crudFilterProps.length > 0;
-        const crudSortProps = metadata.props.filter(
-            (prop) =>
-                hasFieldFeature(metadata.class, prop.name, "sort") &&
-                !prop.name.startsWith("scope_") &&
-                (prop.type === "string" ||
-                    prop.type === "DecimalType" ||
-                    prop.type === "BooleanType" ||
-                    prop.type === "boolean" ||
-                    prop.type === "DateType" ||
-                    prop.type === "Date"),
-        );
-        const hasSortArg = crudSortProps.length > 0;
-
-        const hasSlugProp = metadata.props.some((prop) => prop.name == "slug");
-        const hasVisibleProp = metadata.props.some((prop) => prop.name == "visible");
-        const scopeProp = metadata.props.find((prop) => prop.name == "scope");
-        if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
-        const hasUpdatedAt = metadata.props.some((prop) => prop.name == "updatedAt");
-        const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
-        const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
-
-        const blockProps = metadata.props.filter((prop) => {
-            return hasFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
-        });
-
-        if (hasFilterArg) {
-            const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter } from "@comet/cms-api";
-            import { Field, InputType } from "@nestjs/graphql";
-            import { Type } from "class-transformer";
-            import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
-
-            @InputType()
-            export class ${classNameSingular}Filter {
-                ${crudFilterProps
-                    .map((prop) => {
-                        if (prop.enum) {
-                            //TODO add support for enum
-                        } else if (prop.type === "string") {
-                            return `@Field(() => StringFilter, { nullable: true })
-                            @ValidateNested()
-                            @Type(() => StringFilter)
-                            ${prop.name}?: StringFilter;
-                            `;
-                        } else if (prop.type === "DecimalType") {
-                            return `@Field(() => NumberFilter, { nullable: true })
-                            @ValidateNested()
-                            @Type(() => NumberFilter)
-                            ${prop.name}?: NumberFilter;
-                            `;
-                        } else if (prop.type === "boolean" || prop.type === "BooleanType") {
-                            return `@Field(() => BooleanFilter, { nullable: true })
-                            @ValidateNested()
-                            @Type(() => BooleanFilter)
-                            ${prop.name}?: BooleanFilter;
-                            `;
-                        } else if (prop.type === "DateType" || prop.type === "Date") {
-                            return `@Field(() => DateFilter, { nullable: true })
-                            @ValidateNested()
-                            @Type(() => DateFilter)
-                            ${prop.name}?: DateFilter;
-                            `;
-                        } else {
-                            //unsupported type TODO support more
+    const crudSearchPropNames = metadata.props
+        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "search") && !prop.name.startsWith("scope_"))
+        .reduce((acc, prop) => {
+            if (prop.type === "string") {
+                acc.push(prop.name);
+            } else if (prop.reference == "m:1") {
+                if (!prop.targetMeta) {
+                    throw new Error(`reference ${prop.name} has no targetMeta`);
+                }
+                prop.targetMeta.props
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    .filter((innerProp) => hasFieldFeature(prop.targetMeta!.class, innerProp.name, "search") && !innerProp.name.startsWith("scope_"))
+                    .forEach((innerProp) => {
+                        if (innerProp.type === "string") {
+                            acc.push(`${prop.name}.${innerProp.name}`);
                         }
-                        return "";
-                    })
-                    .join("\n")}
-
-                @Field(() => [${classNameSingular}Filter], { nullable: true })
-                @Type(() => ${classNameSingular}Filter)
-                @ValidateNested({ each: true })
-                and?: ${classNameSingular}Filter[];
-
-                @Field(() => [${classNameSingular}Filter], { nullable: true })
-                @Type(() => ${classNameSingular}Filter)
-                @ValidateNested({ each: true })
-                or?: ${classNameSingular}Filter[];
+                    });
             }
-            `;
-            await writeGenerated(`${generatorOptions.targetDirectory}/dto/${fileNameSingular}.filter.ts`, filterOut);
+            return acc;
+        }, [] as string[]);
+    const hasSearchArg = crudSearchPropNames.length > 0;
+
+    const crudFilterProps = metadata.props.filter(
+        (prop) =>
+            hasFieldFeature(metadata.class, prop.name, "filter") &&
+            !prop.name.startsWith("scope_") &&
+            (prop.enum ||
+                prop.type === "string" ||
+                prop.type === "DecimalType" ||
+                prop.type === "BooleanType" ||
+                prop.type === "boolean" ||
+                prop.type === "DateType" ||
+                prop.type === "Date" ||
+                prop.reference === "m:1"),
+    );
+    const hasFilterArg = crudFilterProps.length > 0;
+    const crudSortProps = metadata.props.filter(
+        (prop) =>
+            hasFieldFeature(metadata.class, prop.name, "sort") &&
+            !prop.name.startsWith("scope_") &&
+            (prop.type === "string" ||
+                prop.type === "DecimalType" ||
+                prop.type === "BooleanType" ||
+                prop.type === "boolean" ||
+                prop.type === "DateType" ||
+                prop.type === "Date" ||
+                prop.reference === "m:1"),
+    );
+    const hasSortArg = crudSortProps.length > 0;
+
+    const hasSlugProp = metadata.props.some((prop) => prop.name == "slug");
+    const hasVisibleProp = metadata.props.some((prop) => prop.name == "visible");
+    const scopeProp = metadata.props.find((prop) => prop.name == "scope");
+    if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
+    const hasUpdatedAt = metadata.props.some((prop) => prop.name == "updatedAt");
+    const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
+    const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
+
+    const blockProps = metadata.props.filter((prop) => {
+        return hasFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
+    });
+
+    return {
+        crudSearchPropNames,
+        hasSearchArg,
+        crudFilterProps,
+        hasFilterArg,
+        crudSortProps,
+        hasSortArg,
+        hasSlugProp,
+        hasVisibleProp,
+        scopeProp,
+        hasUpdatedAt,
+        argsClassName,
+        argsFileName,
+        blockProps,
+    };
+}
+
+function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
+    const { classNameSingular } = buildNameVariants(metadata);
+    const { crudFilterProps } = buildOptions(metadata);
+
+    let importsOut = "";
+    let enumFiltersOut = "";
+
+    const generatedEnumNames = new Set<string>();
+    crudFilterProps.map((prop) => {
+        if (prop.enum) {
+            const enumName = findEnumName(prop.name, metadata);
+            const importPath = findEnumImportPath(enumName, generatorOptions, metadata);
+            if (!generatedEnumNames.has(enumName)) {
+                generatedEnumNames.add(enumName);
+                enumFiltersOut += `@InputType()
+                    class ${enumName}EnumFilter extends createEnumFilter(${enumName}) {}
+                `;
+                importsOut += `import { ${enumName} } from "${importPath}";`;
+            }
         }
-        if (hasSortArg) {
-            const sortOut = `import { SortDirection } from "@comet/cms-api";
-            import { Field, InputType, registerEnumType } from "@nestjs/graphql";
-            import { Type } from "class-transformer";
-            import { IsEnum } from "class-validator";
+    });
 
-            export enum ${classNameSingular}SortField {
-                ${crudSortProps
-                    .map((prop) => {
-                        return `${prop.name} = "${prop.name}",`;
-                    })
-                    .join("\n")}
-            }
-            registerEnumType(${classNameSingular}SortField, {
-                name: "${classNameSingular}SortField",
-            });
-            
-            @InputType()
-            export class ${classNameSingular}Sort {
-                @Field(() => ${classNameSingular}SortField)
-                @IsEnum(${classNameSingular}SortField)
-                field: ${classNameSingular}SortField;
-            
-                @Field(() => SortDirection, { defaultValue: SortDirection.ASC })
-                @IsEnum(SortDirection)
-                direction: SortDirection = SortDirection.ASC;
-            }
-            `;
-            await writeGenerated(`${generatorOptions.targetDirectory}/dto/${fileNameSingular}.sort.ts`, sortOut);
-        }
-        const paginatedOut = `import { ObjectType } from "@nestjs/graphql";
+    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, ManyToOneFilter, createEnumFilter } from "@comet/cms-api";
+    import { Field, InputType } from "@nestjs/graphql";
+    import { Type } from "class-transformer";
+    import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+    ${importsOut}
+
+    ${enumFiltersOut}
+
+    @InputType()
+    export class ${classNameSingular}Filter {
+        ${crudFilterProps
+            .map((prop) => {
+                if (prop.enum) {
+                    const enumName = findEnumName(prop.name, metadata);
+                    return `@Field(() => ${enumName}EnumFilter, { nullable: true })
+                    @ValidateNested()
+                    @IsOptional()
+                    @Type(() => ${enumName}EnumFilter)
+                    ${prop.name}?: ${enumName}EnumFilter;
+                    `;
+                } else if (prop.type === "string") {
+                    return `@Field(() => StringFilter, { nullable: true })
+                    @ValidateNested()
+                    @IsOptional()
+                    @Type(() => StringFilter)
+                    ${prop.name}?: StringFilter;
+                    `;
+                } else if (prop.type === "DecimalType") {
+                    return `@Field(() => NumberFilter, { nullable: true })
+                    @ValidateNested()
+                    @IsOptional()
+                    @Type(() => NumberFilter)
+                    ${prop.name}?: NumberFilter;
+                    `;
+                } else if (prop.type === "boolean" || prop.type === "BooleanType") {
+                    return `@Field(() => BooleanFilter, { nullable: true })
+                    @ValidateNested()
+                    @IsOptional()
+                    @Type(() => BooleanFilter)
+                    ${prop.name}?: BooleanFilter;
+                    `;
+                } else if (prop.type === "DateType" || prop.type === "Date") {
+                    return `@Field(() => DateFilter, { nullable: true })
+                    @ValidateNested()
+                    @IsOptional()
+                    @Type(() => DateFilter)
+                    ${prop.name}?: DateFilter;
+                    `;
+                } else if (prop.reference === "m:1") {
+                    return `@Field(() => ManyToOneFilter, { nullable: true })
+                    @ValidateNested()
+                    @IsOptional()
+                    @Type(() => ManyToOneFilter)
+                    ${prop.name}?: ManyToOneFilter;
+                    `;
+                } else {
+                    //unsupported type TODO support more
+                }
+                return "";
+            })
+            .join("\n")}
+
+        @Field(() => [${classNameSingular}Filter], { nullable: true })
+        @Type(() => ${classNameSingular}Filter)
+        @ValidateNested({ each: true })
+        @IsOptional()
+        and?: ${classNameSingular}Filter[];
+
+        @Field(() => [${classNameSingular}Filter], { nullable: true })
+        @Type(() => ${classNameSingular}Filter)
+        @ValidateNested({ each: true })
+        @IsOptional()
+        or?: ${classNameSingular}Filter[];
+    }
+    `;
+
+    return filterOut;
+}
+
+function generateSortDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
+    const { classNameSingular } = buildNameVariants(metadata);
+    const { crudSortProps } = buildOptions(metadata);
+
+    const sortOut = `import { SortDirection } from "@comet/cms-api";
+    import { Field, InputType, registerEnumType } from "@nestjs/graphql";
+    import { Type } from "class-transformer";
+    import { IsEnum } from "class-validator";
+
+    export enum ${classNameSingular}SortField {
+        ${crudSortProps
+            .map((prop) => {
+                return `${prop.name} = "${prop.name}",`;
+            })
+            .join("\n")}
+    }
+    registerEnumType(${classNameSingular}SortField, {
+        name: "${classNameSingular}SortField",
+    });
+    
+    @InputType()
+    export class ${classNameSingular}Sort {
+        @Field(() => ${classNameSingular}SortField)
+        @IsEnum(${classNameSingular}SortField)
+        field: ${classNameSingular}SortField;
+    
+        @Field(() => SortDirection, { defaultValue: SortDirection.ASC })
+        @IsEnum(SortDirection)
+        direction: SortDirection = SortDirection.ASC;
+    }
+    `;
+
+    return sortOut;
+}
+function generatePaginatedDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
+    const { classNamePlural } = buildNameVariants(metadata);
+
+    const paginatedOut = `import { ObjectType } from "@nestjs/graphql";
     import { PaginatedResponseFactory } from "@comet/cms-api";
-    
+
     import { ${metadata.className} } from "${path.relative(`${generatorOptions.targetDirectory}/dto`, metadata.path).replace(/\.ts$/, "")}";
-    
+
     @ObjectType()
     export class Paginated${classNamePlural} extends PaginatedResponseFactory.create(${metadata.className}) {}
     `;
-        await writeGenerated(`${generatorOptions.targetDirectory}/dto/paginated-${fileNamePlural}.ts`, paginatedOut);
 
-        const argsOut = `import { ArgsType, Field, IntersectionType } from "@nestjs/graphql";
+    return paginatedOut;
+}
+
+function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
+    const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
+    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg } = buildOptions(metadata);
+
+    const argsOut = `import { ArgsType, Field, IntersectionType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsOptional, IsString, ValidateNested } from "class-validator";
     import { OffsetBasedPaginationArgs } from "@comet/cms-api";
     import { ${classNameSingular}Filter } from "./${fileNameSingular}.filter";
     import { ${classNameSingular}Sort } from "./${fileNameSingular}.sort";
-    ${
-        scopeProp && scopeProp.targetMeta
-            ? `import { ${scopeProp.targetMeta.className} } from "../${path
-                  .relative(generatorOptions.targetDirectory, scopeProp.targetMeta.path)
-                  .replace(/\.ts$/, "")}";`
-            : ""
-    }
+
+    ${scopeProp && scopeProp.targetMeta ? generateImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`) : ""}
 
     @ArgsType()
     export class ${argsClassName} extends OffsetBasedPaginationArgs {
@@ -196,6 +285,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         @Field(() => ${classNameSingular}Filter, { nullable: true })
         @ValidateNested()
         @Type(() => ${classNameSingular}Filter)
+        @IsOptional()
         filter?: ${classNameSingular}Filter;
         `
                 : ""
@@ -207,22 +297,29 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         @Field(() => [${classNameSingular}Sort], { nullable: true })
         @ValidateNested({ each: true })
         @Type(() => ${classNameSingular}Sort)
+        @IsOptional()
         sort?: ${classNameSingular}Sort[];
         `
                 : ""
         }
     }
     `;
-        await writeGenerated(`${generatorOptions.targetDirectory}/dto/${argsFileName}.ts`, argsOut);
+    return argsOut;
+}
 
-        const serviceOut = `import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "@comet/cms-api";
+function generateService({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
+    const { classNameSingular, fileNameSingular, classNamePlural } = buildNameVariants(metadata);
+    const { hasSearchArg, hasFilterArg, crudSearchPropNames } = buildOptions(metadata);
+
+    const serviceOut = `import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "@comet/cms-api";
     import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
     import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository } from "@mikro-orm/postgresql";
     import { Injectable } from "@nestjs/common";
-    import { ${metadata.className} } from "${path.relative(generatorOptions.targetDirectory, metadata.path).replace(/\.ts$/, "")}";
+
+    ${generateImport(metadata, generatorOptions.targetDirectory)}
     import { ${classNameSingular}Filter } from "./dto/${fileNameSingular}.filter";
-    
+
     @Injectable()
     export class ${classNamePlural}Service {    
         ${
@@ -236,7 +333,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
                 hasSearchArg
                     ? `
             if (options.search) {
-                andFilters.push(searchToMikroOrmQuery(options.search, [${crudSearchProps.map((prop) => `"${prop.name}", `).join("")}]));
+                andFilters.push(searchToMikroOrmQuery(options.search, [${crudSearchPropNames.map((propName) => `"${propName}", `).join("")}]));
             }
             `
                     : ""
@@ -250,7 +347,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             `
                     : ""
             }
-    
+
             return andFilters.length > 0 ? { $and: andFilters } : {};
         }
         `
@@ -258,59 +355,358 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         }
     }
     `;
-        await writeGenerated(`${generatorOptions.targetDirectory}/${fileNamePlural}.service.ts`, serviceOut);
+    return serviceOut;
+}
 
-        const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
-    import { EntityRepository } from "@mikro-orm/postgresql";
-    import { FindOptions } from "@mikro-orm/core";
-    import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
-    import { SortDirection, SubjectEntity, validateNotModified } from "@comet/cms-api";
-    
-    import { ${metadata.className} } from "${path.relative(generatorOptions.targetDirectory, metadata.path).replace(/\.ts$/, "")}";
+function generateImport(targetMetadata: EntityMetadata<any>, relativeTo: string): string {
+    return `import { ${targetMetadata.className} } from "${path.relative(relativeTo, targetMetadata.path).replace(/\.ts$/, "")}";`;
+}
+
+function generateInputHandling(
+    options: { mode: "create" | "update" | "updateNested"; inputName: string; assignEntityCode: string; excludeFields?: string[] },
+    metadata: EntityMetadata<any>,
+): string {
+    const { instanceNameSingular } = buildNameVariants(metadata);
+    const { blockProps, hasVisibleProp, scopeProp } = buildOptions(metadata);
+
+    const props = metadata.props.filter((prop) => !options.excludeFields || !options.excludeFields.includes(prop.name));
+
+    const relationManyToOneProps = props.filter((prop) => prop.reference === "m:1");
+    const relationOneToManyProps = props.filter((prop) => prop.reference === "1:m");
+    const relationManyToManyProps = props.filter((prop) => prop.reference === "m:n");
+    const relationOneToOneProps = props.filter((prop) => prop.reference === "1:1");
+
+    const inputRelationManyToOneProps = relationManyToOneProps
+        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
+        .map((prop) => {
+            return {
+                name: prop.name,
+                singularName: singular(prop.name),
+                nullable: prop.nullable,
+                type: prop.type,
+                repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
+            };
+        });
+
+    const inputRelationOneToOneProps = relationOneToOneProps
+        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
+        .map((prop) => {
+            const targetMeta = prop.targetMeta;
+            if (!targetMeta) throw new Error("targetMeta is not set for relation");
+            return {
+                name: prop.name,
+                singularName: singular(prop.name),
+                nullable: prop.nullable,
+                type: prop.type,
+                repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
+                targetMeta,
+            };
+        });
+    const inputRelationToManyProps = [...relationOneToManyProps, ...relationManyToManyProps]
+        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
+        .map((prop) => {
+            const targetMeta = prop.targetMeta;
+            if (!targetMeta) throw new Error("targetMeta is not set for relation");
+            return {
+                name: prop.name,
+                singularName: singular(prop.name),
+                nullable: prop.nullable,
+                type: prop.type,
+                repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
+                orphanRemoval: prop.orphanRemoval,
+                targetMeta,
+            };
+        });
+
+    const noAssignProps = [...inputRelationToManyProps, ...inputRelationManyToOneProps, ...inputRelationOneToOneProps, ...blockProps];
+    return `
     ${
-        scopeProp && scopeProp.targetMeta
-            ? `import { ${scopeProp.targetMeta.className} } from "${path
-                  .relative(generatorOptions.targetDirectory, scopeProp.targetMeta.path)
-                  .replace(/\.ts$/, "")}";`
+        noAssignProps.length
+            ? `const { ${noAssignProps.map((prop) => `${prop.name}: ${prop.name}Input`).join(", ")}, ...assignInput } = ${options.inputName};`
             : ""
     }
-    import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
-    import { ${classNameSingular}Input } from "./dto/${fileNameSingular}.input";
-    import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
-    import { ${argsClassName} } from "./dto/${argsFileName}";
+    ${options.assignEntityCode}
+    ...${noAssignProps.length ? `assignInput` : options.inputName},
+        ${options.mode == "create" && hasVisibleProp ? `visible: false,` : ""}
+        ${options.mode == "create" && scopeProp ? `scope,` : ""}
+        ${inputRelationManyToOneProps
+            .map(
+                (prop) =>
+                    `${prop.name}: ${prop.nullable ? `${prop.name}Input ? ` : ""}Reference.create(await this.${prop.repositoryName}.findOneOrFail(${
+                        prop.name
+                    }Input))${prop.nullable ? ` : undefined` : ""}, `,
+            )
+            .join("")}
+        ${
+            options.mode == "create" || options.mode == "updateNested"
+                ? blockProps.map((prop) => `${prop.name}: ${prop.name}Input.transformToBlockData(),`).join("")
+                : ""
+        }
+        ${
+            options.mode == "create" || options.mode == "updateNested"
+                ? inputRelationOneToOneProps
+                      .map((prop) => `${prop.name}: this.${prop.repositoryName}.assign(new ${prop.type}(), ${prop.name}Input),`)
+                      .join("")
+                : ""
+        }
+});
+${inputRelationToManyProps
+    .map((prop) => {
+        if (prop.orphanRemoval) {
+            return `if (${prop.name}Input) {
+        ${instanceNameSingular}.${prop.name}.set(
+            ${prop.name}Input.map((${prop.singularName}Input) => {
+                ${generateInputHandling(
+                    {
+                        mode: "updateNested",
+                        inputName: `${prop.singularName}Input`,
+
+                        // alternative `return this.${prop.repositoryName}.create({` requires back relation to be set
+                        assignEntityCode: `return this.${prop.repositoryName}.assign(new ${prop.type}(), {`,
+
+                        excludeFields: prop.targetMeta.props
+                            .filter((prop) => prop.reference == "m:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
+                            .map((prop) => prop.name),
+                    },
+                    prop.targetMeta,
+                )}
+            }),
+        );
+        }`;
+        } else {
+            return `
+            if (${prop.name}Input) {
+                const ${prop.name} = await this.${prop.repositoryName}.find({ id: ${prop.name}Input });
+                if (${prop.name}.length != ${prop.name}Input.length) throw new Error("Couldn't find all ${prop.name} that were passed as input");
+                await ${instanceNameSingular}.${prop.name}.loadItems();
+                ${instanceNameSingular}.${prop.name}.set(${prop.name}.map((${prop.singularName}) => Reference.create(${prop.singularName})));
+            }`;
+        }
+    })
+    .join("")}
+
+${
+    options.mode == "update"
+        ? inputRelationOneToOneProps
+              .map(
+                  (prop) => `
+                    if (${prop.name}Input) {
+                        const ${prop.singularName} = await ${instanceNameSingular}.${prop.name}.load();
+                        ${generateInputHandling(
+                            {
+                                mode: "updateNested",
+                                inputName: `${prop.name}Input`,
+                                assignEntityCode: `this.${prop.repositoryName}.assign(${prop.singularName}, {`,
+                                excludeFields: prop.targetMeta.props
+                                    .filter((prop) => prop.reference == "1:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
+                                    .map((prop) => prop.name),
+                            },
+                            prop.targetMeta,
+                        )}
+                    }`,
+              )
+              .join("")
+        : ""
+}
+
+${
+    options.mode == "update"
+        ? blockProps
+              .map(
+                  (prop) => `
+                    if (${prop.name}Input) {
+                        ${instanceNameSingular}.${prop.name} = ${prop.name}Input.transformToBlockData();
+                    }`,
+              )
+              .join("")
+        : ""
+}
+    `;
+}
+
+function generateNestedEntityResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
+    const { classNameSingular } = buildNameVariants(metadata);
+
+    const { importsCode, code, hasOutputRelations } = generateRelationsFieldResolver({ generatorOptions, metadata });
+    if (!hasOutputRelations) return null;
+
+    return `
+    import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
+    ${generateImport(metadata, generatorOptions.targetDirectory)}
+    ${importsCode}
 
     @Resolver(() => ${metadata.className})
-    export class ${classNameSingular}CrudResolver {
+    export class ${classNameSingular}Resolver {
+        ${code}
+    }
+    `;
+}
+
+function generateRelationsFieldResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
+    const { instanceNameSingular } = buildNameVariants(metadata);
+
+    const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
+    const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
+    const relationManyToManyProps = metadata.props.filter((prop) => prop.reference === "m:n");
+    const relationOneToOneProps = metadata.props.filter((prop) => prop.reference === "1:1");
+    const outputRelationManyToOneProps = relationManyToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationOneToManyProps = relationOneToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationManyToManyProps = relationManyToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationOneToOneProps = relationOneToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+    for (const prop of metadata.props) {
+        if (
+            !hasFieldFeature(metadata.class, prop.name, "resolveField") &&
+            !relationManyToOneProps.includes(prop) &&
+            !relationOneToManyProps.includes(prop) &&
+            !outputRelationManyToManyProps.includes(prop) &&
+            !outputRelationOneToOneProps.includes(prop)
+        ) {
+            throw new Error("@CrudField resolveField=false is only used for relations, for other props simply remove @Field() to disable its output");
+        }
+    }
+
+    const hasOutputRelations =
+        outputRelationManyToOneProps.length > 0 ||
+        outputRelationOneToManyProps.length > 0 ||
+        outputRelationManyToManyProps.length > 0 ||
+        outputRelationOneToOneProps.length > 0;
+
+    let importsCode = "";
+
+    for (const prop of [...relationManyToOneProps, ...relationOneToManyProps, ...relationManyToManyProps, ...relationOneToOneProps]) {
+        if (!prop.targetMeta) throw new Error(`Relation ${prop.name} has targetMeta not set`);
+        importsCode += generateImport(prop.targetMeta, generatorOptions.targetDirectory);
+    }
+
+    const code = `
+    ${outputRelationManyToOneProps.map(
+        (prop) => `
+        @ResolveField(() => ${prop.type}${prop.nullable ? `, { nullable: true }` : ""})
+        async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}${prop.nullable ? ` | undefined` : ""}> {
+            return ${instanceNameSingular}.${prop.name}${prop.nullable ? `?` : ""}.load();
+        }    
+    `,
+    )}
+
+    ${outputRelationOneToManyProps.map(
+        (prop) => `
+        @ResolveField(() => [${prop.type}])
+        async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}[]> {
+            return ${instanceNameSingular}.${prop.name}.loadItems();
+        }   
+    `,
+    )}
+
+    ${outputRelationManyToManyProps.map(
+        (prop) => `
+        @ResolveField(() => [${prop.type}])
+        async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}[]> {
+            return ${instanceNameSingular}.${prop.name}.loadItems();
+        }
+    `,
+    )}
+
+    ${outputRelationOneToOneProps.map(
+        (prop) => `
+        @ResolveField(() => ${prop.type}${prop.nullable ? `, { nullable: true }` : ""})
+        async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}${prop.nullable ? ` | undefined` : ""}> {
+            return ${instanceNameSingular}.${prop.name}${prop.nullable ? `?` : ""}.load();
+        }
+    `,
+    )}
+
+    `.trim();
+
+    return {
+        code,
+        importsCode,
+        hasOutputRelations,
+    };
+}
+
+function generateResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
+    const { classNameSingular, fileNameSingular, instanceNameSingular, classNamePlural, fileNamePlural, instanceNamePlural } =
+        buildNameVariants(metadata);
+    const { scopeProp, argsClassName, argsFileName, hasSlugProp, hasSearchArg, hasSortArg, hasFilterArg, hasVisibleProp, hasUpdatedAt } =
+        buildOptions(metadata);
+
+    const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
+    const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
+    const relationManyToManyProps = metadata.props.filter((prop) => prop.reference === "m:n");
+    const relationOneToOneProps = metadata.props.filter((prop) => prop.reference === "1:1");
+    const outputRelationManyToOneProps = relationManyToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationOneToManyProps = relationOneToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationManyToManyProps = relationManyToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+    const outputRelationOneToOneProps = relationOneToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
+
+    const injectRepositories = new Set<string>();
+
+    [...relationManyToOneProps, ...relationOneToOneProps, ...relationOneToManyProps, ...relationManyToManyProps]
+        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
+        .forEach((prop) => {
+            injectRepositories.add(prop.type);
+        });
+
+    const {
+        importsCode: relationsFieldResolverImportsCode,
+        code: relationsFieldResolverCode,
+        hasOutputRelations,
+    } = generateRelationsFieldResolver({
+        generatorOptions,
+        metadata,
+    });
+
+    const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
+    import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
+    import { FindOptions, Reference } from "@mikro-orm/core";
+    import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
+    import { extractGraphqlFields, SortDirection, SubjectEntity, validateNotModified } from "@comet/cms-api";
+    import { GraphQLResolveInfo } from "graphql";
+
+    ${generateImport(metadata, generatorOptions.targetDirectory)}
+    ${scopeProp && scopeProp.targetMeta ? generateImport(scopeProp.targetMeta, generatorOptions.targetDirectory) : ""}
+    import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
+    import { ${classNameSingular}Input, ${classNameSingular}UpdateInput } from "./dto/${fileNameSingular}.input";
+    import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
+    import { ${argsClassName} } from "./dto/${argsFileName}";
+    ${relationsFieldResolverImportsCode}
+
+    @Resolver(() => ${metadata.className})
+    export class ${classNameSingular}Resolver {
         constructor(
+            private readonly entityManager: EntityManager,
             private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
-            @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>
+            @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
+            ${[...injectRepositories]
+                .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>`)
+                .join(", ")}
         ) {}
-    
+
         @Query(() => ${metadata.className})
         @SubjectEntity(${metadata.className})
         async ${instanceNameSingular}(@Args("id", { type: () => ID }) id: string): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
             return ${instanceNameSingular};
         }
-    
+
         ${
             hasSlugProp
                 ? `
         @Query(() => ${metadata.className}, { nullable: true })
         async ${instanceNameSingular}BySlug(@Args("slug") slug: string): Promise<${metadata.className} | null> {
             const ${instanceNameSingular} = await this.repository.findOne({ slug });
-    
+
             return ${instanceNameSingular} ?? null;
         }
         `
                 : ""
         }
-    
+
         @Query(() => Paginated${classNamePlural})
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
             @Args() { ${scopeProp ? `scope, ` : ""}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${
-            hasSortArg ? `sort, ` : ""
-        }offset, limit }: ${argsClassName}
+        hasSortArg ? `sort, ` : ""
+    }offset, limit }: ${argsClassName}${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
         ): Promise<Paginated${classNamePlural}> {
             const where = ${
                 hasSearchArg || hasFilterArg
@@ -318,8 +714,27 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
                     : "{}"
             }
             ${scopeProp ? `where.scope = scope;` : ""}
-            const options: FindOptions<${metadata.className}> = { offset, limit };
-    
+
+            ${
+                hasOutputRelations
+                    ? `const fields = extractGraphqlFields(info, { root: "nodes" });
+            const populate: string[] = [];`
+                    : ""
+            }
+            ${[...outputRelationManyToOneProps, ...outputRelationOneToManyProps, ...outputRelationManyToManyProps, ...outputRelationOneToOneProps]
+                .map(
+                    (r) =>
+                        `if (fields.includes("${r.name}")) {
+                            populate.push("${r.name}");
+                        }`,
+                )
+                .join("\n")}
+
+            ${hasOutputRelations ? `// eslint-disable-next-line @typescript-eslint/no-explicit-any` : ""}
+            const options: FindOptions<${metadata.className}${hasOutputRelations ? `, any` : ""}> = { offset, limit${
+        hasOutputRelations ? `, populate` : ""
+    }};
+
             ${
                 hasSortArg
                     ? `if (sort) {
@@ -334,30 +749,30 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
 
             const [entities, totalCount] = await this.repository.findAndCount(where, options);
             return new Paginated${classNamePlural}(entities, totalCount);
-    
+
         }
-    
+
         @Mutation(() => ${metadata.className})
         async create${classNameSingular}(
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
             @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
-            const ${instanceNameSingular} = this.repository.create({
-                ...input,
-                ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
-                ${hasVisibleProp ? `visible: false,` : ""}
-                ${scopeProp ? `scope,` : ""}
-            });
-    
-            await this.repository.persistAndFlush(${instanceNameSingular});
+
+            ${generateInputHandling(
+                { mode: "create", inputName: "input", assignEntityCode: `const ${instanceNameSingular} = this.repository.create({` },
+                metadata,
+            )}
+
+            await this.entityManager.flush();
+
             return ${instanceNameSingular};
         }
-    
+
         @Mutation(() => ${metadata.className})
         @SubjectEntity(${metadata.className})
         async update${classNameSingular}(
             @Args("id", { type: () => ID }) id: string,
-            @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input,
+            @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput,
             ${hasUpdatedAt ? `@Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,` : ""}
         ): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
@@ -368,22 +783,19 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             }`
                     : ""
             }
-            ${instanceNameSingular}.assign({
-                ...input,
-                ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
-            });
-    
-            await this.repository.persistAndFlush(${instanceNameSingular});
-    
+            ${generateInputHandling({ mode: "update", inputName: "input", assignEntityCode: `${instanceNameSingular}.assign({` }, metadata)}
+
+            await this.entityManager.flush();
+
             return ${instanceNameSingular};
         }
-    
+
         @Mutation(() => Boolean)
         @SubjectEntity(${metadata.className})
         async delete${metadata.className}(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
-            await this.repository.removeAndFlush(${instanceNameSingular});
-    
+            await this.entityManager.remove(${instanceNameSingular});
+            await this.entityManager.flush();
             return true;
         }
 
@@ -397,23 +809,87 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
             @Args("visible", { type: () => Boolean }) visible: boolean,
         ): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
-    
+
             ${instanceNameSingular}.assign({
                 visible,
             });
-            await this.repository.flush();
-    
+            await this.entityManager.flush();
+
             return ${instanceNameSingular};
         }
         `
                 : ""
         }
+
+        ${relationsFieldResolverCode}
+
     }
     `;
+    return resolverOut;
+}
 
-        await writeGenerated(`${generatorOptions.targetDirectory}/${fileNameSingular}.crud.resolver.ts`, resolverOut);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function generateCrud(generatorOptions: CrudGeneratorOptions, metadata: EntityMetadata<any>): Promise<GeneratedFile[]> {
+    const generatedFiles: GeneratedFile[] = [];
+
+    const { fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
+    const { hasFilterArg, hasSortArg, argsFileName } = buildOptions(metadata);
+
+    async function generateCrudResolver(): Promise<GeneratedFile[]> {
+        if (hasFilterArg) {
+            generatedFiles.push({
+                name: `dto/${fileNameSingular}.filter.ts`,
+                content: generateFilterDto({ generatorOptions, metadata }),
+                type: "filter",
+            });
+        }
+        if (hasSortArg) {
+            generatedFiles.push({
+                name: `dto/${fileNameSingular}.sort.ts`,
+                content: generateSortDto({ generatorOptions, metadata }),
+                type: "sort",
+            });
+        }
+        generatedFiles.push({
+            name: `dto/paginated-${fileNamePlural}.ts`,
+            content: generatePaginatedDto({ generatorOptions, metadata }),
+            type: "sort",
+        });
+        generatedFiles.push({
+            name: `dto/${argsFileName}.ts`,
+            content: generateArgsDto({ generatorOptions, metadata }),
+            type: "args",
+        });
+        generatedFiles.push({
+            name: `${fileNamePlural}.service.ts`,
+            content: generateService({ generatorOptions, metadata }),
+            type: "service",
+        });
+        generatedFiles.push({
+            name: `${fileNameSingular}.resolver.ts`,
+            content: generateResolver({ generatorOptions, metadata }),
+            type: "resolver",
+        });
+
+        metadata.props
+            .filter((prop) => prop.reference === "1:m" && prop.orphanRemoval)
+            .forEach((prop) => {
+                if (!prop.targetMeta) throw new Error(`Target metadata not set`);
+                const { fileNameSingular } = buildNameVariants(prop.targetMeta);
+                const content = generateNestedEntityResolver({ generatorOptions, metadata: prop.targetMeta });
+
+                //can be null if no relations exist
+                if (content) {
+                    generatedFiles.push({
+                        name: `${fileNameSingular}.resolver.ts`,
+                        content,
+                        type: "resolver",
+                    });
+                }
+            });
+
+        return generatedFiles;
     }
 
-    await writeCrudInput(generatorOptions, metadata);
-    await writeCrudResolver();
+    return [...(await generateCrudInput(generatorOptions, metadata)), ...(await generateCrudResolver())];
 }

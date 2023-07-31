@@ -132,6 +132,18 @@ export function createPageTreeResolver({
             return this.pageTreeReadApi.getChildNodes(node);
         }
 
+        @ResolveField(() => Number)
+        async numberOfDescendants(@Parent() node: PageTreeNodeInterface): Promise<number> {
+            const childNodes = await this.pageTreeReadApi.getChildNodes(node);
+            let numberOfDescendants = childNodes.length;
+
+            for (const childNode of childNodes) {
+                numberOfDescendants += await this.numberOfDescendants(childNode);
+            }
+
+            return numberOfDescendants;
+        }
+
         @ResolveField(() => PageTreeNode, { nullable: true })
         async parentNode(@Parent() node: PageTreeNodeInterface): Promise<PageTreeNodeInterface | null> {
             return this.pageTreeReadApi.getParentNode(node);
@@ -249,14 +261,10 @@ export function createPageTreeResolver({
             @Args("id", { type: () => ID }) id: string,
             @Args("input", { type: () => PageTreeNodeUpdateVisibilityInput }) input: PageTreeNodeUpdateVisibilityInput,
         ): Promise<PageTreeNodeInterface> {
-            const readApi = this.pageTreeService.createReadApi({ visibility: "all" });
-
-            const existingNode = await readApi.getNodeOrFail(id);
-            if (!existingNode) throw new GraphQLError("Can't find page-tree-node with id");
-
             await this.pageTreeService.updateNodeVisibility(id, input.visibility);
 
-            return readApi.getNodeOrFail(id);
+            const pageTreeReadApi = this.pageTreeService.createReadApi({ visibility: "all" });
+            return pageTreeReadApi.getNodeOrFail(id);
         }
 
         @Mutation(() => PageTreeNode)

@@ -1,4 +1,4 @@
-import { AnyObject, createForm, FormApi } from "final-form";
+import { createForm, FormApi } from "final-form";
 import debounce from "lodash.debounce";
 import isEqual from "lodash.isequal";
 import * as React from "react";
@@ -6,7 +6,7 @@ import * as React from "react";
 import { usePersistedState } from "./usePersistedState";
 import { IPagingApi } from "./useTableQueryPaging";
 
-export interface IFilterApi<FilterValues extends AnyObject> {
+export interface IFilterApi<FilterValues> {
     current: FilterValues;
     formApi: FormApi<FilterValues>;
 }

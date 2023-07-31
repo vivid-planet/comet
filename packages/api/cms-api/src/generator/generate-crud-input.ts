@@ -1,43 +1,61 @@
-import { Block } from "@comet/blocks-api";
 import { EntityMetadata } from "@mikro-orm/core";
-import * as path from "path";
-import { RootBlockType } from "src/blocks/root-block-type";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
-import { writeGenerated } from "./utils/write-generated";
+import { buildNameVariants } from "./utils/build-name-variants";
+import {
+    findBlockImportPath,
+    findBlockName,
+    findEnumImportPath,
+    findEnumName,
+    findInputClassImportPath,
+    morphTsProperty,
+} from "./utils/ts-morph-helper";
+import { GeneratedFile, writeGeneratedFiles } from "./utils/write-generated-files";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function writeCrudInput(generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): Promise<void> {
-    const classNameSingular = metadata.className;
-    const instanceNameSingular = classNameSingular[0].toLocaleLowerCase() + classNameSingular.slice(1);
-    const fileNameSingular = instanceNameSingular.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
-
-    const inputOut = await generateCrudInput(generatorOptions, metadata);
-    await writeGenerated(`${generatorOptions.targetDirectory}/dto/${fileNameSingular}.input.ts`, inputOut);
+    const files = await generateCrudInput(generatorOptions, metadata);
+    await writeGeneratedFiles(files, generatorOptions);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function generateCrudInput(generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): Promise<string> {
-    const props = metadata.props.filter((prop) => {
-        return hasFieldFeature(metadata.class, prop.name, "input");
-    });
+export async function generateCrudInput(
+    generatorOptions: { targetDirectory: string },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    metadata: EntityMetadata<any>,
+    options: { nested: boolean; excludeFields: string[] } = { nested: false, excludeFields: [] },
+): Promise<GeneratedFile[]> {
+    const generatedFiles: GeneratedFile[] = [];
+
+    const props = metadata.props
+        .filter((prop) => {
+            return !prop.embedded;
+        })
+        .filter((prop) => {
+            return hasFieldFeature(metadata.class, prop.name, "input");
+        })
+        .filter((prop) => !options.excludeFields.includes(prop.name));
 
     let fieldsOut = "";
     let importsOut = "";
     for (const prop of props) {
         let type = prop.type;
+        const fieldName = prop.name;
         const decorators = [] as Array<string>;
         if (!prop.nullable) {
             decorators.push("@IsNotEmpty()");
         } else {
-            decorators.push("@IsOptional()");
+            decorators.push("@IsNullable()");
         }
-        if (prop.name === "id" || prop.name == "createdAt" || prop.name == "updatedAt") {
+        if (["id", "createdAt", "updatedAt", "visible", "scope"].includes(prop.name)) {
             //skip those (TODO find a non-magic solution?)
             continue;
         } else if (prop.enum) {
-            //TODO add support for enum
-            continue;
+            const enumName = findEnumName(prop.name, metadata);
+            const importPath = findEnumImportPath(enumName, generatorOptions, metadata);
+            importsOut += `import { ${enumName} } from "${importPath}";`;
+            decorators.push(`@IsEnum(${enumName})`);
+            decorators.push(`@Field(() => ${enumName}${prop.nullable ? ", { nullable: true }" : ""})`);
+            type = enumName;
         } else if (prop.type === "string") {
             decorators.push("@IsString()");
             if (prop.name.startsWith("scope_")) {
@@ -47,7 +65,7 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
                 decorators.push("@IsSlug()");
             }
             decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
-        } else if (prop.type === "DecimalType") {
+        } else if (prop.type === "DecimalType" || prop.type === "number") {
             decorators.push("@IsNumber()");
             decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
             type = "number";
@@ -60,49 +78,116 @@ export async function generateCrudInput(generatorOptions: { targetDirectory: str
             decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
             type = "boolean";
         } else if (prop.type === "RootBlockType") {
-            const rootBlockType = prop.customType as RootBlockType | undefined;
-            let blockExportName: string;
-            if (rootBlockType?.block.name == "DamImage") {
-                // TODO (detect that is block is defined in library (or use completely other technique))
-                importsOut += `import { DamImageBlock } from "@comet/cms-api";`;
-                blockExportName = "DamImageBlock";
-            } else {
-                if (!rootBlockType) throw new Error("Custom type not set");
-                if (!rootBlockType.block.path) throw new Error(`No path found for block ${rootBlockType.block.name}`);
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
-                const exports = require(rootBlockType.block.path);
-                const blockExport = Object.entries(exports).find((i) => {
-                    const b = i[1] as Block | undefined;
-                    return b && b.blockDataFactory == rootBlockType.block.blockDataFactory;
-                });
-                if (!blockExport) {
-                    throw new Error(`Can't find block export ${rootBlockType.block.name} in ${rootBlockType.block.path}`);
-                }
-                blockExportName = blockExport[0];
-                importsOut += `import { ${blockExportName} } from "${path
-                    .relative(`${generatorOptions.targetDirectory}/dto`, rootBlockType.block.path)
-                    .replace(/\.ts$/, "")}";`;
-            }
+            const blockName = findBlockName(prop.name, metadata);
+            const importPath = findBlockImportPath(blockName, generatorOptions, metadata);
+            importsOut += `import { ${blockName} } from "${importPath}";`;
 
-            decorators.push(`@Field(() => RootBlockInputScalar(${blockExportName})${prop.nullable ? ", { nullable: true }" : ""})`);
+            decorators.push(`@Field(() => RootBlockInputScalar(${blockName})${prop.nullable ? ", { nullable: true }" : ""})`);
             decorators.push(
-                `@Transform(({ value }) => (isBlockInputInterface(value) ? value : ${blockExportName}.blockInputFactory(value)), { toClassOnly: true })`,
+                `@Transform(({ value }) => (isBlockInputInterface(value) ? value : ${blockName}.blockInputFactory(value)), { toClassOnly: true })`,
             );
             decorators.push("@ValidateNested()");
             type = "BlockInputInterface";
+        } else if (prop.reference == "m:1") {
+            decorators.push(`@Field(() => ID${prop.nullable ? ", { nullable: true }" : ""})`);
+            decorators.push("@IsUUID()");
+            type = "string";
+        } else if (prop.reference == "1:m") {
+            if (prop.orphanRemoval) {
+                //if orphanRemoval is enabled, we need to generate a nested input type
+                decorators.length = 0;
+                {
+                    if (!prop.targetMeta) throw new Error("No targetMeta");
+                    const excludeFields = prop.targetMeta.props.filter((p) => p.reference == "m:1" && p.targetMeta == metadata).map((p) => p.name);
+                    const nestedInputFiles = await generateCrudInput(generatorOptions, prop.targetMeta, { nested: true, excludeFields });
+                    generatedFiles.push(...nestedInputFiles);
+                    importsOut += `import { ${prop.targetMeta.className}Input } from "${nestedInputFiles[0].name
+                        .replace(/^dto/, ".")
+                        .replace(/\.ts$/, "")}";`;
+                }
+                const inputName = `${prop.targetMeta.className}Input`;
+                decorators.push(`@Field(() => [${inputName}])`);
+                decorators.push(`@IsArray()`);
+                decorators.push(`@Type(() => ${inputName})`);
+                type = `${inputName}[]`;
+            } else {
+                //if orphanRemoval is disabled, we reference the id in input
+                decorators.length = 0;
+                decorators.push(`@Field(() => [ID])`);
+                decorators.push(`@IsArray()`);
+                decorators.push(`@IsUUID(undefined, { each: true })`);
+                type = "string[]";
+            }
+        } else if (prop.reference == "m:n") {
+            decorators.length = 0;
+            decorators.push(`@Field(() => [ID])`);
+            decorators.push(`@IsArray()`);
+            decorators.push(`@IsUUID(undefined, { each: true })`);
+            type = "string[]";
+        } else if (prop.reference == "1:1") {
+            {
+                if (!prop.targetMeta) throw new Error("No targetMeta");
+                const excludeFields = prop.targetMeta.props.filter((p) => p.reference == "1:1" && p.targetMeta == metadata).map((p) => p.name);
+                const nestedInputFiles = await generateCrudInput(generatorOptions, prop.targetMeta, { nested: true, excludeFields });
+                generatedFiles.push(...nestedInputFiles);
+                importsOut += `import { ${prop.targetMeta.className}Input } from "${nestedInputFiles[0].name
+                    .replace(/^dto/, ".")
+                    .replace(/\.ts$/, "")}";`;
+            }
+            const inputName = `${prop.targetMeta.className}Input`;
+            decorators.push(`@Field(() => ${inputName})`);
+            decorators.push(`@Type(() => ${inputName})`);
+            decorators.push("@ValidateNested()");
+            type = `${inputName}`;
+        } else if (prop.type == "JsonType" || prop.embeddable) {
+            const tsProp = morphTsProperty(prop.name, metadata);
+
+            let tsType = tsProp.getType();
+            if (tsType.isUnion() && tsType.getUnionTypes().length == 2 && tsType.getUnionTypes()[0].getText() == "undefined") {
+                // undefinded | type (or prop?: type) -> type
+                tsType = tsType.getUnionTypes()[1];
+            }
+            type = tsType.getText(tsProp);
+            if (tsType.isArray()) {
+                decorators.push(`@IsArray()`);
+                if (type == "string[]") {
+                    decorators.push(`@Field(() => [String])`);
+                    decorators.push("@IsString({ each: true })");
+                } else if (type == "number[]") {
+                    decorators.push(`@Field(() => [Number])`);
+                    decorators.push("@IsNumber({ each: true })");
+                } else if (type == "boolean[]") {
+                    decorators.push(`@Field(() => [Boolean])`);
+                    decorators.push("@IsBoolean({ each: true })");
+                } else {
+                    const nestedClassName = tsType.getArrayElementTypeOrThrow().getText(tsProp);
+                    const importPath = findInputClassImportPath(nestedClassName, generatorOptions, metadata);
+                    importsOut += `import { ${nestedClassName} } from "${importPath}";`;
+                    decorators.push(`@ValidateNested()`);
+                    decorators.push(`@Type(() => ${nestedClassName})`);
+                    decorators.push(`@Field(() => [${nestedClassName}]${prop.nullable ? ", { nullable: true }" : ""})`);
+                }
+            } else {
+                const nestedClassName = tsType.getText(tsProp);
+                const importPath = findInputClassImportPath(nestedClassName, generatorOptions, metadata);
+                importsOut += `import { ${nestedClassName} } from "${importPath}";`;
+                decorators.push(`@ValidateNested()`);
+                decorators.push(`@Type(() => ${nestedClassName})`);
+                decorators.push(`@Field(() => ${nestedClassName}${prop.nullable ? ", { nullable: true }" : ""})`);
+            }
         } else {
-            //unsupported type TODO support more
+            console.warn(`${prop.name}: unsupported type ${type}`);
             continue;
         }
         fieldsOut += `${decorators.join("\n")}
-    ${prop.name}${prop.nullable ? "?" : ""}: ${type};
+    ${fieldName}${prop.nullable ? "?" : ""}: ${type};
     
     `;
     }
-    const inputOut = `import { Field, InputType } from "@nestjs/graphql";
-import { Transform } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional } from "class-validator";
-import { IsSlug, RootBlockInputScalar } from "@comet/cms-api";
+    const inputOut = `import { Field, InputType, ID } from "@nestjs/graphql";
+import { Transform, Type } from "class-transformer";
+import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray } from "class-validator";
+import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
 ${importsOut}
@@ -111,7 +196,22 @@ ${importsOut}
 export class ${metadata.className}Input {
     ${fieldsOut}
 }
+
+${
+    !options.nested
+        ? `
+@InputType()
+export class ${metadata.className}UpdateInput extends PartialType(${metadata.className}Input) {}
+`
+        : ""
+}
 `;
 
-    return inputOut;
+    const { fileNameSingular } = buildNameVariants(metadata);
+    generatedFiles.push({
+        name: !options.nested ? `dto/${fileNameSingular}.input.ts` : `dto/${fileNameSingular}.nested.input.ts`,
+        content: inputOut,
+        type: "input",
+    });
+    return generatedFiles;
 }

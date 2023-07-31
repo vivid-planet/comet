@@ -5,11 +5,12 @@ import * as React from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 
 import { TextMatch } from "../../../common/MarkedMatches";
-import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../graphql.generated";
+import { useDamConfig } from "../../config/useDamConfig";
 import { DamFilter } from "../../DamTable";
 import { isFile } from "../../helpers/isFile";
 import { isFolder } from "../../helpers/isFolder";
 import { FileUploadApi } from "../fileUpload/useFileUpload";
+import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../FolderDataGrid";
 import { DamItemMatches } from "../useDamSearchHighlighting";
 import DamItemLabel from "./DamItemLabel";
 
@@ -31,6 +32,7 @@ const DamItemLabelWrapper = styled(Box, { shouldForwardProp: (prop) => prop !== 
 export interface RenderDamLabelOptions {
     matches?: TextMatch[];
     filterApi: IFilterApi<DamFilter>;
+    showLicenseWarnings?: boolean;
 }
 
 interface DamItemLabelColumnProps {
@@ -63,6 +65,7 @@ export const DamItemLabelColumn: React.VoidFunctionComponent<DamItemLabelColumnP
     hoverApi,
     scrollIntoView = false,
 }) => {
+    const damConfig = useDamConfig();
     const columnRef = React.useRef<HTMLDivElement>();
 
     React.useEffect(() => {
@@ -99,7 +102,7 @@ export const DamItemLabelColumn: React.VoidFunctionComponent<DamItemLabelColumnP
     return (
         <DamItemLabelWrapper ref={columnRef} isHovered={hoverApi.isHovered} {...(isFolder(item) && getFolderRootProps())}>
             {renderDamLabel ? (
-                renderDamLabel(item, { matches: matches.get(item.id), filterApi })
+                renderDamLabel(item, { matches: matches.get(item.id), filterApi, showLicenseWarnings: damConfig.enableLicenseFeature })
             ) : (
                 <Link
                     underline="none"
@@ -116,7 +119,12 @@ export const DamItemLabelColumn: React.VoidFunctionComponent<DamItemLabelColumnP
                         height: "100%",
                     }}
                 >
-                    <DamItemLabel asset={item} showPath={isSearching} matches={matches.get(item.id)} />
+                    <DamItemLabel
+                        asset={item}
+                        showPath={isSearching}
+                        matches={matches.get(item.id)}
+                        showLicenseWarnings={damConfig.enableLicenseFeature}
+                    />
                 </Link>
             )}
         </DamItemLabelWrapper>

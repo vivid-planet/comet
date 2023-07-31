@@ -3,21 +3,21 @@ import React from "react";
 import { useIntl } from "react-intl";
 
 import ProductForm from "./ProductForm";
-import ProductsTable from "./ProductsTable";
+import ProductsGrid from "./ProductsGrid";
 
 const ProductsPage: React.FC = () => {
     const intl = useIntl();
 
     return (
-        <Stack topLevelTitle={intl.formatMessage({ id: "comet.products.products", defaultMessage: "Products" })}>
-            <StackSwitch initialPage="table">
-                <StackPage name="table">
-                    <ProductsTable />
+        <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
+            <StackSwitch initialPage="grid">
+                <StackPage name="grid">
+                    <ProductsGrid />
                 </StackPage>
-                <StackPage name="edit" title={intl.formatMessage({ id: "comet.products.editProduct", defaultMessage: "Edit product" })}>
+                <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit product" })}>
                     {(selectedId) => <ProductForm id={selectedId} />}
                 </StackPage>
-                <StackPage name="add" title={intl.formatMessage({ id: "comet.products.addProduct", defaultMessage: "Add product" })}>
+                <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add product" })}>
                     <ProductForm />
                 </StackPage>
             </StackSwitch>

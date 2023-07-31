@@ -290,9 +290,12 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
                     keyBindingFn={keyBindingFn}
                     customStyleMap={customStyleMap}
                     blockRenderMap={blockRenderMap}
-                    // @ts-expect-error the onCopy and onPaste APIs are not exposed publicly
-                    onCopy={onDraftEditorCopy}
-                    onCut={onDraftEditorCut}
+                    onCopy={(editor, event) => {
+                        onDraftEditorCopy(editor, event as React.ClipboardEvent<HTMLElement>);
+                    }}
+                    onCut={(editor, event) => {
+                        onDraftEditorCut(editor, event as React.ClipboardEvent<HTMLElement>);
+                    }}
                     handlePastedText={(text: string, html: string | undefined, editorState: EditorState): DraftHandleValue => {
                         const nextEditorState = pasteAndFilterText(html, editorState, options);
 

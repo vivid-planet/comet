@@ -1,16 +1,14 @@
 import { gql, useQuery } from "@apollo/client";
-import { MainContent, messages, Stack } from "@comet/admin";
-import { Domain } from "@comet/admin-icons";
-import { ContentScopeIndicator } from "@comet/cms-admin";
+import { MainContent, Stack } from "@comet/admin";
 import { Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ScopeIndicatorContent, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
+import { ContentScopeIndicator } from "@src/common/ContentScopeIndicator";
 import DateTime from "@src/dashboard/DateTime";
-import { GQLDashboardCurrentUserQuery } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { DashboardWidgetContainer } from "./components/DashboardWidgetContainer";
+import { GQLDashboardCurrentUserQuery } from "./Dashboard.generated";
 import backgroundImage1x from "./dashboard-image@1x.jpg";
 import backgroundImage2x from "./dashboard-image@2x.jpg";
 import { LatestBuilds } from "./LatestBuilds";
@@ -51,40 +49,31 @@ const Dashboard: React.FC = () => {
     const { data } = useQuery<GQLDashboardCurrentUserQuery>(currentUserQuery);
 
     return (
-        <Stack topLevelTitle={intl.formatMessage({ id: "cometDemo.dashboard", defaultMessage: "Dashboard" })}>
+        <Stack topLevelTitle={intl.formatMessage({ id: "dashboard", defaultMessage: "Dashboard" })}>
             <Header>
                 <DateTime />
                 <Greeting variant="h1">
                     {data ? (
                         <FormattedMessage
-                            id="cometDemo.pages.dashboard.helloUser"
+                            id="pages.dashboard.helloUser"
                             defaultMessage="Hallo {givenName}!"
                             values={{ givenName: data.currentUser.name }}
                         />
                     ) : (
-                        <FormattedMessage id="cometDemo.pages.dashboard.hello" defaultMessage="Hallo!" />
+                        <FormattedMessage id="pages.dashboard.hello" defaultMessage="Hallo!" />
                     )}
                 </Greeting>
             </Header>
             <MainContent>
-                <ContentScopeIndicator global>
-                    <ScopeIndicatorContent>
-                        <Domain fontSize="small" />
-                        <ScopeIndicatorLabelBold variant="body2">
-                            <FormattedMessage {...messages.globalContentScope} />
-                        </ScopeIndicatorLabelBold>
-                    </ScopeIndicatorContent>
-                </ContentScopeIndicator>
+                <ContentScopeIndicator global />
                 <Grid container direction="row" spacing={4}>
                     <DashboardWidgetContainer
-                        header={<FormattedMessage id="cometDemo.pages.dashboard.latestContentUpdates" defaultMessage="Latest Content Updates" />}
+                        header={<FormattedMessage id="pages.dashboard.latestContentUpdates" defaultMessage="Latest Content Updates" />}
                     >
                         <LatestContentUpdates />
                     </DashboardWidgetContainer>
                     {process.env.NODE_ENV !== "development" && (
-                        <DashboardWidgetContainer
-                            header={<FormattedMessage id="cometDemo.pages.dashboard.latestBuilds" defaultMessage="Latest Builds" />}
-                        >
+                        <DashboardWidgetContainer header={<FormattedMessage id="pages.dashboard.latestBuilds" defaultMessage="Latest Builds" />}>
                             <LatestBuilds />
                         </DashboardWidgetContainer>
                     )}

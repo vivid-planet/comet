@@ -13,8 +13,9 @@ import {
     useSitesConfig,
 } from "@comet/cms-admin";
 import { CircularProgress } from "@mui/material";
-import { GQLCurrentUserScopeQuery } from "@src/graphql.generated";
 import React from "react";
+
+import { GQLCurrentUserScopeQuery } from "./ContentScopeProvider.generated";
 
 type Domain = "main" | "secondary" | string;
 type Language = "en" | string;
@@ -31,6 +32,11 @@ export function useContentScope(): UseContentScopeApi<ContentScope> {
 const controlsConfig: ContentScopeControlsConfig<ContentScope> = {
     domain: {
         label: "Domain",
+        icon: DomainIcon,
+        searchable: true,
+    },
+    language: {
+        label: "Language",
         icon: DomainIcon,
     },
 };

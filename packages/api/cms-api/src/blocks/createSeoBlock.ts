@@ -1,10 +1,13 @@
 import {
+    AnnotationBlockMeta,
     Block,
     BlockData,
     BlockDataInterface,
     BlockField,
     BlockInput,
     BlockInputInterface,
+    BlockMetaField,
+    BlockMetaFieldKind,
     ChildBlock,
     ChildBlockInput,
     createBlock,
@@ -113,7 +116,6 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         canonicalUrl?: string;
 
         //Alternate Hreflang
-        @BlockField({ type: "json" })
         alternativeLinks: AlternativeLink[] = [];
 
         async transformToPlain(): Promise<TraversableTransformResponse> {
@@ -192,7 +194,6 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         canonicalUrl?: string;
 
         //Alternate Hreflang
-        @BlockField({ type: "json" }) // TODO support array types in block meta
         @Type(() => AlternativeLink)
         @ValidateNested({ each: true })
         alternativeLinks: AlternativeLink[] = [];
@@ -202,7 +203,7 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         }
     }
 
-    return createBlock(SeoBlockData, SeoBlockInput, "Seo");
+    return createBlock(SeoBlockData, SeoBlockInput, { name: "Seo", blockMeta: new Meta(SeoBlockData), blockInputMeta: new InputMeta(SeoBlockData) });
 }
 
 class AlternativeLink {
@@ -216,4 +217,36 @@ class AlternativeLink {
     @IsOptional()
     @IsUrl()
     url?: string;
+}
+
+const alternativeLinksField: BlockMetaField = {
+    name: "alternativeLinks",
+    kind: BlockMetaFieldKind.NestedObjectList,
+    object: {
+        fields: [
+            {
+                name: "code",
+                kind: BlockMetaFieldKind.String,
+                nullable: true,
+            },
+            {
+                name: "url",
+                kind: BlockMetaFieldKind.String,
+                nullable: true,
+            },
+        ],
+    },
+    nullable: false,
+};
+
+class Meta extends AnnotationBlockMeta {
+    get fields(): BlockMetaField[] {
+        return [...super.fields, alternativeLinksField];
+    }
+}
+
+class InputMeta extends AnnotationBlockMeta {
+    get fields(): BlockMetaField[] {
+        return [...super.fields, alternativeLinksField];
+    }
 }

@@ -23,9 +23,9 @@ import { DataGrid, getGridSingleSelectOperators, GridColDef, GridToolbarQuickFil
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables, namedOperations } from "../graphql.generated";
 import RedirectActiveness from "./RedirectActiveness";
 import { deleteRedirectMutation, paginatedRedirectsQuery } from "./RedirectsTable.gql";
+import { GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables, namedOperations } from "./RedirectsTable.gql.generated";
 
 interface Props {
     linkBlock: BlockInterface;

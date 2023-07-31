@@ -1,10 +1,18 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Field, FinalFormInput, FormSection } from "@comet/admin";
+import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection } from "@comet/admin";
+import { FinalFormDatePicker } from "@comet/admin-date-time";
+import { Calendar } from "@comet/admin-icons";
+import { InputAdornment } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables } from "../../graphql.generated";
+import { GQLLicenseType } from "../../graphql.generated";
+import { useDamConfig } from "../config/useDamConfig";
+import { useDamScope } from "../config/useDamScope";
 import { CropSettingsFields } from "./CropSettingsFields";
+import { EditFileFormValues } from "./EditFile";
+import { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables } from "./FileSettingsFields.generated";
 
 interface SettingsFormProps {
     isImage: boolean;
@@ -12,14 +20,28 @@ interface SettingsFormProps {
 }
 
 const damIsFilenameOccupiedQuery = gql`
-    query DamIsFilenameOccupied($filename: String!, $folderId: String) {
-        damIsFilenameOccupied(filename: $filename, folderId: $folderId)
+    query DamIsFilenameOccupied($filename: String!, $folderId: String, $scope: DamScopeInput!) {
+        damIsFilenameOccupied(filename: $filename, folderId: $folderId, scope: $scope)
     }
 `;
+
+export type LicenseType = GQLLicenseType | "NO_LICENSE";
+
+const licenseTypeArray: readonly LicenseType[] = ["NO_LICENSE", "ROYALTY_FREE", "RIGHTS_MANAGED", "SUBSCRIPTION", "MICRO"];
+
+const licenseTypeLabels: { [key in LicenseType]: React.ReactNode } = {
+    NO_LICENSE: "-",
+    ROYALTY_FREE: <FormattedMessage id="comet.dam.file.licenseType.royaltyFree" defaultMessage="Royalty free" />,
+    RIGHTS_MANAGED: <FormattedMessage id="comet.dam.file.licenseType.rightsManaged" defaultMessage="Rights managed" />,
+    SUBSCRIPTION: <FormattedMessage id="comet.dam.file.licenseType.subscription" defaultMessage="Subscription" />,
+    MICRO: <FormattedMessage id="comet.dam.file.licenseType.micro" defaultMessage="Micro" />,
+};
 
 export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): React.ReactElement => {
     const intl = useIntl();
     const apollo = useApolloClient();
+    const scope = useDamScope();
+    const damConfig = useDamConfig();
     const damIsFilenameOccupied = React.useCallback(
         async (filename: string): Promise<boolean> => {
             const { data } = await apollo.query<GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables>({
@@ -27,13 +49,14 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                 variables: {
                     filename,
                     folderId,
+                    scope,
                 },
                 fetchPolicy: "network-only",
             });
 
             return data.damIsFilenameOccupied;
         },
-        [apollo, folderId],
+        [apollo, folderId, scope],
     );
 
     return (
@@ -80,6 +103,93 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                     fullWidth
                 />
             </FormSection>
+            {damConfig.enableLicenseFeature && (
+                <FormSection title={<FormattedMessage id="comet.dam.file.licenseInformation" defaultMessage="License information" />}>
+                    <Field
+                        component={FinalFormSelect}
+                        options={licenseTypeArray}
+                        getOptionLabel={(option: LicenseType) => licenseTypeLabels[option]}
+                        getOptionSelected={(option: LicenseType, selectedOption: LicenseType) => {
+                            return option === selectedOption;
+                        }}
+                        name="license.type"
+                        label={<FormattedMessage id="comet.dam.file.type" defaultMessage="Type" />}
+                        fullWidth
+                    />
+                    <Field name="license.type">
+                        {({ input: { value } }) => {
+                            return (
+                                <>
+                                    <Field
+                                        label={<FormattedMessage id="comet.dam.file.licenseDetails" defaultMessage="License details" />}
+                                        name="license.details"
+                                        component={FinalFormInput}
+                                        multiline
+                                        minRows={3}
+                                        fullWidth
+                                        disabled={value === "NO_LICENSE"}
+                                    />
+                                    <Field
+                                        label={<FormattedMessage id="comet.dam.file.creatorOrAuthor" defaultMessage="Creator/Author" />}
+                                        name="license.author"
+                                        component={FinalFormInput}
+                                        fullWidth
+                                        disabled={value === "NO_LICENSE"}
+                                    />
+                                    <FieldContainer
+                                        label={<FormattedMessage id="comet.dam.file.licenseDuration" defaultMessage="License duration" />}
+                                        fullWidth
+                                        disabled={value === "NO_LICENSE"}
+                                    >
+                                        <DurationFieldWrapper>
+                                            <Field
+                                                name="license.durationFrom"
+                                                placeholder="from"
+                                                component={FinalFormDatePicker}
+                                                clearable
+                                                startAdornment={null}
+                                                endAdornment={
+                                                    <InputAdornment position="start">
+                                                        <Calendar />
+                                                    </InputAdornment>
+                                                }
+                                                disabled={value === "NO_LICENSE"}
+                                            />
+                                            <Field
+                                                name="license.durationTo"
+                                                placeholder="to"
+                                                component={FinalFormDatePicker}
+                                                clearable
+                                                startAdornment={null}
+                                                endAdornment={
+                                                    <InputAdornment position="start">
+                                                        <Calendar />
+                                                    </InputAdornment>
+                                                }
+                                                validate={(value: Date | undefined, allValues) => {
+                                                    if (value && allValues && value < (allValues as EditFileFormValues).license?.durationFrom) {
+                                                        return (
+                                                            <FormattedMessage
+                                                                id="comet.dam.file.error.durationTo"
+                                                                defaultMessage="The end date of the license must be after the start date"
+                                                            />
+                                                        );
+                                                    }
+                                                }}
+                                                disabled={value === "NO_LICENSE"}
+                                            />
+                                        </DurationFieldWrapper>
+                                    </FieldContainer>
+                                </>
+                            );
+                        }}
+                    </Field>
+                </FormSection>
+            )}
         </div>
     );
 };
+
+const DurationFieldWrapper = styled("div")`
+    display: flex;
+`;

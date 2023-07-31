@@ -15,16 +15,9 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
 
-import {
-    GQLDamFolderQuery,
-    GQLDamFolderQueryVariables,
-    GQLDamItemListPositionQuery,
-    GQLDamItemListPositionQueryVariables,
-    GQLDamItemsListQuery,
-    GQLDamItemsListQueryVariables,
-    GQLDamItemType,
-} from "../../graphql.generated";
+import { GQLDamItemType } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
+import { useDamScope } from "../config/useDamScope";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
@@ -35,6 +28,14 @@ import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
 import DamContextMenu from "./DamContextMenu";
 import { useFileUpload } from "./fileUpload/useFileUpload";
 import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
+import {
+    GQLDamFolderQuery,
+    GQLDamFolderQueryVariables,
+    GQLDamItemListPositionQuery,
+    GQLDamItemListPositionQueryVariables,
+    GQLDamItemsListQuery,
+    GQLDamItemsListQueryVariables,
+} from "./FolderDataGrid.gql.generated";
 import * as sc from "./FolderDataGrid.sc";
 import { FolderHead } from "./FolderHead";
 import { DamSelectionFooter } from "./footer/SelectionFooter";
@@ -42,6 +43,18 @@ import { DamUploadFooter } from "./footer/UploadFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
 import { useDamSelectionApi } from "./selection/DamSelectionContext";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
+export { damFolderQuery } from "./FolderDataGrid.gql";
+export { moveDamFilesMutation, moveDamFoldersMutation } from "./FolderDataGrid.gql";
+export {
+    GQLDamFileTableFragment,
+    GQLDamFolderQuery,
+    GQLDamFolderQueryVariables,
+    GQLDamFolderTableFragment,
+    GQLMoveDamFilesMutation,
+    GQLMoveDamFilesMutationVariables,
+    GQLMoveDamFoldersMutation,
+    GQLMoveDamFoldersMutationVariables,
+} from "./FolderDataGrid.gql.generated";
 
 export type DamItemSelectionMap = Map<string, "file" | "folder">;
 
@@ -67,6 +80,7 @@ const FolderDataGrid = ({
     const apolloClient = useApolloClient();
     const switchApi = useStackSwitchApi();
     const damSelectionActionsApi = useDamSelectionApi();
+    const scope = useDamScope();
 
     const [redirectedToId, setRedirectedToId] = useStoredState<string | null>("FolderDataGrid-redirectedToId", null, window.sessionStorage);
 
@@ -106,6 +120,7 @@ const FolderDataGrid = ({
             sortDirection: filterApi.current.sort?.direction,
             limit: dataGridProps.pageSize,
             offset: dataGridProps.page * dataGridProps.pageSize,
+            scope,
         },
     });
 
@@ -189,6 +204,7 @@ const FolderDataGrid = ({
                     },
                     sortColumnName: filterApi.current.sort?.columnName,
                     sortDirection: filterApi.current.sort?.direction,
+                    scope,
                 },
             });
 

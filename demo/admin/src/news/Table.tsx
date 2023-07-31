@@ -10,15 +10,16 @@ import {
     ToolbarItem,
     useTableQuery,
 } from "@comet/admin";
-import { Add as AddIcon, Delete as DeleteIcon, Domain, Edit } from "@comet/admin-icons";
-import { ContentScopeIndicator, EditPageLayout } from "@comet/cms-admin";
+import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
+import { EditPageLayout } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
-import { ScopeIndicatorContent, ScopeIndicatorLabel, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
+import { ContentScopeIndicator } from "@src/common/ContentScopeIndicator";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import { GQLNewsListQuery, GQLNewsListQueryVariables, namedOperations } from "@src/graphql.generated";
 import gql from "graphql-tag";
 import React from "react";
 import { FormattedMessage } from "react-intl";
+
+import { GQLNewsListQuery, GQLNewsListQueryVariables, namedOperations } from "./Table.generated";
 
 const NewsTable: React.FC = () => {
     const stackApi = React.useContext(StackSwitchApiContext);
@@ -36,20 +37,13 @@ const NewsTable: React.FC = () => {
 
     return (
         <EditPageLayout>
-            <ContentScopeIndicator variant="toolbar">
-                <ScopeIndicatorContent>
-                    <Domain fontSize="small" />
-                    <ScopeIndicatorLabelBold variant="body2">{scope.domain}</ScopeIndicatorLabelBold>
-                </ScopeIndicatorContent>
-                {` | `}
-                <ScopeIndicatorLabel variant="body2">{scope.language}</ScopeIndicatorLabel>
-            </ContentScopeIndicator>
+            <ContentScopeIndicator scope={scope} variant="toolbar" />
             <Toolbar>
                 <ToolbarAutomaticTitleItem />
                 <ToolbarFillSpace />
                 <ToolbarItem>
                     <Button startIcon={<AddIcon />} onClick={() => stackApi.activatePage("edit", "new")} variant="contained" color="primary">
-                        <FormattedMessage id="cometDemo.news.newNews" defaultMessage="New News" />
+                        <FormattedMessage id="news.newNews" defaultMessage="New News" />
                     </Button>
                 </ToolbarItem>
             </Toolbar>
@@ -61,11 +55,11 @@ const NewsTable: React.FC = () => {
                             columns={[
                                 {
                                     name: "title",
-                                    header: <FormattedMessage id="cometDemo.news.title" defaultMessage="Title" />,
+                                    header: <FormattedMessage id="news.title" defaultMessage="Title" />,
                                 },
                                 {
                                     name: "slug",
-                                    header: <FormattedMessage id="cometDemo.news.slug" defaultMessage="Slug" />,
+                                    header: <FormattedMessage id="news.slug" defaultMessage="Slug" />,
                                 },
 
                                 {

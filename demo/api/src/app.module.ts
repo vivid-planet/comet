@@ -30,6 +30,9 @@ import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.en
 import { Request } from "express";
 
 import { AuthModule } from "./auth/auth.module";
+import { DamScope } from "./dam/dto/dam-scope";
+import { DamFile } from "./dam/entities/dam-file.entity";
+import { DamFolder } from "./dam/entities/dam-folder.entity";
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
@@ -121,6 +124,9 @@ export class AppModule {
                         maxFileSize: config.dam.uploadsMaxFileSize,
                     },
                     imgproxyConfig: config.imgproxy,
+                    Scope: DamScope,
+                    File: DamFile,
+                    Folder: DamFolder,
                 }),
                 PublicUploadModule.register({
                     maxFileSize: config.publicUploads.maxFileSize,

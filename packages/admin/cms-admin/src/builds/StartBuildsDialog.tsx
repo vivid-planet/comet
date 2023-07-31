@@ -5,13 +5,14 @@ import { DataGrid, GridSelectionModel } from "@mui/x-data-grid";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLBuildTemplatesQuery, GQLCreateBuildsMutation, GQLCreateBuildsMutationVariables, namedOperations } from "../graphql.generated";
+import { GQLBuildTemplatesQuery, GQLCreateBuildsMutation, GQLCreateBuildsMutationVariables } from "./StartBuildsDialog.generated";
 
 const buildTemplatesQuery = gql`
     query BuildTemplates {
         buildTemplates {
             id
             name
+            label
         }
     }
 `;
@@ -36,7 +37,7 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
         context: LocalErrorScopeApolloContext,
     });
     const [startBuilds, { loading }] = useMutation<GQLCreateBuildsMutation, GQLCreateBuildsMutationVariables>(createBuildsMutation, {
-        refetchQueries: [namedOperations.Query.Builds],
+        refetchQueries: ["Builds"],
     });
 
     const [selectionModel, setSelectionModel] = React.useState<GridSelectionModel>([]);
@@ -66,6 +67,9 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                                 defaultMessage: "Name",
                             }),
                             flex: 1,
+                            renderCell: ({ row }) => {
+                                return row.label && row.label.length > 0 ? row.label : row.name;
+                            },
                         },
                     ]}
                     checkboxSelection

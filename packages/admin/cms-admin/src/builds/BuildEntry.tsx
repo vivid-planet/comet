@@ -8,7 +8,7 @@ import * as React from "react";
 import { FormattedMessage, FormattedTime } from "react-intl";
 
 import { DropdownMenuItem } from "../common/DropdownMenuItem";
-import { GQLBuildStatusQuery } from "../graphql.generated";
+import { GQLBuildStatusQuery } from "./BuildEntry.generated";
 import { PublishButton } from "./PublishButton";
 
 const buildStatusQuery = gql`

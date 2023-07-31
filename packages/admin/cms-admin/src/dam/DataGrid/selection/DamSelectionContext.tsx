@@ -3,6 +3,10 @@ import { saveAs } from "file-saver";
 import { GraphQLError } from "graphql";
 import React from "react";
 
+import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
+import { clearDamItemCache } from "../../helpers/clearDamItemCache";
+import { MoveDamItemDialog } from "../../MoveDamItemDialog/MoveDamItemDialog";
+import { DamItemSelectionMap } from "../FolderDataGrid";
 import {
     GQLArchiveFilesMutation,
     GQLArchiveFilesMutationVariables,
@@ -13,11 +17,7 @@ import {
     GQLDeleteDamFolderMutationVariables,
     GQLRestoreFilesMutation,
     GQLRestoreFilesMutationVariables,
-} from "../../../graphql.generated";
-import { ConfirmDeleteDialog } from "../../FileActions/ConfirmDeleteDialog";
-import { clearDamItemCache } from "../../helpers/clearDamItemCache";
-import { MoveDamItemDialog } from "../../MoveDamItemDialog/MoveDamItemDialog";
-import { DamItemSelectionMap } from "../FolderDataGrid";
+} from "./DamSelectionContext.generated";
 
 export const damFileDownloadInfoFragment = gql`
     fragment DamFileDownloadInfo on DamFile {

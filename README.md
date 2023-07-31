@@ -1,5 +1,8 @@
 # Comet DXP
 
+![main](https://github.com/vivid-planet/comet/actions/workflows/lint.yml/badge.svg?branch=main)
+![next](https://github.com/vivid-planet/comet/actions/workflows/lint.yml/badge.svg?branch=next)
+
 ## Docs
 
 Visit https://docs.comet-dxp.com/ to view the documentation.
@@ -25,28 +28,30 @@ _It is recommend to run `install.sh` every time you switch to the `main` branch.
 
 ### Start development processes
 
+[dev-process-manager](https://github.com/vivid-planet/dev-process-manager) is used for local development.
+
 Start Comet Admin packages
 
 ```bash
-yarn dev:admin
+pnpm run dev:admin
 ```
 
 Start CMS packages
 
 ```bash
-yarn dev:cms
+pnpm run dev:cms
 ```
 
 It is also possbile to start specific microservices
 
 ```bash
-yarn dev:cms:api # (api|admin|site)
+pnpm run dev:cms:api # (api|admin|site)
 ```
 
 #### Start Demo
 
 ```bash
-yarn dev:demo
+pnpm run dev:demo
 ```
 
 Demo will be available at
@@ -58,16 +63,30 @@ Demo will be available at
 It is also possbile to start specific microservices
 
 ```bash
-yarn dev:demo:api # (api|admin|site)
+pnpm run dev:demo:api # (api|admin|site)
 ```
 
 #### Start Storybook
 
 ```bash
-yarn storybook
+pnpm run storybook
 ```
 
 Storybook will be available at [http://localhost:26638/](http://localhost:26638/)
+
+#### Start Docs
+
+```bash
+pnpm run docs
+```
+
+The docs will be available at [http://localhost:3000/](http://localhost:3000/)
+
+### Stop Processes
+
+```bash
+npx dev-pm shutdown
+```
 
 ## Develop in a project
 
@@ -81,6 +100,6 @@ Storybook will be available at [http://localhost:26638/](http://localhost:26638/
     ./wml-add.sh ../example
     wml start
 
-## Notes
+## Contributing
 
-Please note that this project is released with a [Contributor Code of Conduct](CODE-OF-CONDUCT.md). By participating in this project you agree to abide by its terms.
+Please read our [Contributing](CONTRIBUTING.md) file.

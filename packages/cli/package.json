@@ -1,6 +1,12 @@
 {
     "name": "@comet/cli",
-    "version": "4.0.0",
+    "version": "4.3.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vivid-planet/comet",
+        "directory": "packages/cli"
+    },
+    "license": "BSD-2-Clause",
     "main": "lib/index.js",
     "typings": "lib/index.d.ts",
     "bin": {
@@ -10,34 +16,28 @@
         "bin/**/*.js",
         "lib/**/*.js"
     ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/vivid-planet/comet",
-        "directory": "packages/cli"
+    "scripts": {
+        "build": "$npm_execpath run clean && tsc",
+        "clean": "rimraf lib",
+        "dev": "tsc --watch",
+        "lint": "run-p lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:tsc": "tsc"
     },
     "dependencies": {
         "commander": "^9.2.0",
         "prettier": "^2.7.1"
     },
     "devDependencies": {
-        "@comet/eslint-config": "^4.0.0",
+        "@comet/eslint-config": "^4.3.0",
         "@types/node": "^18.0.0",
         "eslint": "^8.0.0",
+        "npm-run-all": "^4.1.5",
         "rimraf": "^3.0.0",
-        "typescript": "^4.0.0",
-        "yarn-run-all": "^3.0.0"
-    },
-    "scripts": {
-        "clean": "rimraf lib",
-        "build": "yarn run clean && tsc",
-        "dev": "tsc --watch",
-        "lint": "run-p lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/",
-        "lint:tsc": "tsc"
+        "typescript": "^4.0.0"
     },
     "publishConfig": {
-        "registry": "https://registry.npmjs.org",
-        "access": "public"
-    },
-    "license": "BSD-2-Clause"
+        "access": "public",
+        "registry": "https://registry.npmjs.org"
+    }
 }

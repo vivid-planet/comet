@@ -6,8 +6,7 @@ import { FormattedMessage } from "react-intl";
 import { PixelImageBlockData, SvgImageBlockData } from "../../blocks.generated";
 import { PixelImageBlock } from "../../blocks/PixelImageBlock";
 import { SvgImageBlock } from "../../blocks/SvgImageBlock";
-import { FileField } from "../../form/file/FileField";
-import { GQLDamFileFieldFileFragment } from "../../graphql.generated";
+import { FileField, GQLDamFileFieldFileFragment } from "../../form/file/FileField";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 
 const supportedBlocks: Record<string, BlockInterface> = {
@@ -28,7 +27,7 @@ const DamImageBlock = createOneOfBlock({
 DamImageBlock.AdminComponent = function AdminComponent({ state, updateState }) {
     const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
-    if (state.activeType === null) {
+    if (!state.activeType) {
         throw new Error("No active type");
     }
 
