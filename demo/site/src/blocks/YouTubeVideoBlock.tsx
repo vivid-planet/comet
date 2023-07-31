@@ -1,5 +1,6 @@
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { YouTubeVideoBlockData } from "@src/blocks.generated";
+import { URLSearchParams } from "next/dist/compiled/@edge-runtime/primitives/url";
 import * as React from "react";
 
 import * as sc from "./YouTubeVideoBlock.sc";
@@ -27,15 +28,28 @@ const YouTubeVideoBlock: React.FunctionComponent<PropsWithData<YouTubeVideoBlock
         // no url, but ID was specified
     }
 
+    const getSearchParams = () => {
+        const searchParams = new URLSearchParams();
+        searchParams.append("modestbranding", "1");
+
+        searchParams.append("autoplay", Number(autoplay).toString());
+        autoplay && searchParams.append("mute", "1");
+
+        searchParams.append("controls", Number(showControls).toString());
+
+        searchParams.append("loop", Number(loop).toString());
+        loop && searchParams.append("playlist", youtubeIdentifier);
+        return searchParams.toString();
+    };
+
+    const youtubeBaseUrl = "https://www.youtube-nocookie.com/embed/";
+    const youtubeUrl = new URL(`${youtubeBaseUrl}${youtubeIdentifier}`);
+    youtubeUrl.search = getSearchParams();
+
     return (
         <sc.VideoContainer heightInPercent={getHeightInPercentForAspectRatio(aspectRatio)}>
             {/* the playlist parameter is needed so that the video loops. See https://developers.google.com/youtube/player_parameters#loop */}
-            <iframe
-                src={`https://www.youtube-nocookie.com/embed/${youtubeIdentifier}?&modestbranding=1&autoplay=${Number(autoplay)}${
-                    autoplay ? `&mute=1` : ""
-                }&controls=${Number(showControls)}&loop=${Number(loop)}${loop ? `&playlist=${youtubeIdentifier}` : ""}`}
-                frameBorder="0"
-            />
+            <iframe src={youtubeUrl.toString()} frameBorder="0" />
         </sc.VideoContainer>
     );
 };
