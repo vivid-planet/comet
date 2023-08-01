@@ -80,12 +80,15 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         @SkipBuild()
         async moveDamFiles(
             @Args("fileIds", { type: () => [ID] }) fileIds: string[],
-            @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string | null,
+            @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string | null | undefined,
             @GetCurrentUser() user: CurrentUserInterface,
         ): Promise<FileInterface[]> {
-            let targetFolder = null;
+            if (targetFolderId === undefined) {
+                throw new Error("targetFolderId must be null or a string");
+            }
 
-            if (targetFolderId != null) {
+            let targetFolder = null;
+            if (targetFolderId !== null) {
                 targetFolder = await this.foldersRepository.findOneOrFail(targetFolderId);
 
                 if (targetFolder.scope !== undefined && !this.contentScopeService.canAccessScope(targetFolder.scope, user)) {
