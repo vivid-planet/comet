@@ -423,6 +423,11 @@ export function createReadApi(
 }
 
 export function sortPreloadedNodes(nodes: PageTreeNodeInterface[], sort: PageTreeNodeSort[]): PageTreeNodeInterface[] {
+    if (sort.length === 1 && sort[0].field === PageTreeNodeSortField.pos && sort[0].direction === SortDirection.ASC) {
+        // Preloaded nodes are already sorted by position ascending, so we can skip sorting
+        return nodes;
+    }
+
     return nodes.sort((a, b) => {
         for (const { field, direction } of sort) {
             if (field === PageTreeNodeSortField.pos) {

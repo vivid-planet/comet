@@ -7,12 +7,11 @@ import { PageTreeNodeInterface } from "./types";
 
 describe("PageTreeReadApi", () => {
     describe("sortPreloadedNodes", () => {
-        it("should sort by pos ascending", () => {
-            const unsorted = [{ pos: 2 }, { pos: 1 }] as PageTreeNodeInterface[];
+        it("should skip sorting if only sort criteria is by pos ascending", () => {
+            const alreadySorted = [{ pos: 1 }, { pos: 2 }] as PageTreeNodeInterface[];
 
-            const sorted = [{ pos: 1 }, { pos: 2 }] as PageTreeNodeInterface[];
-
-            expect(sortPreloadedNodes(unsorted, [{ field: PageTreeNodeSortField.pos, direction: SortDirection.ASC }])).toEqual(sorted);
+            // Use toBe() to check if the array is the same instance
+            expect(sortPreloadedNodes(alreadySorted, [{ field: PageTreeNodeSortField.pos, direction: SortDirection.ASC }])).toBe(alreadySorted);
         });
 
         it("should sort by pos descending", () => {
