@@ -251,10 +251,7 @@ const FolderDataGrid = ({
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             autoHideDuration={5000}
             TransitionComponent={(props: SlideProps) => <Slide {...props} direction="right" />}
-            message={intl.formatMessage({
-                id: "comet.dam.upload.noEmptyFolders",
-                defaultMessage: "Empty folders can't be uploaded",
-            })}
+            message={<FormattedMessage id="comet.dam.upload.noEmptyFolders" defaultMessage={"Empty folders can't be uploaded"} />}
         />
     );
 
