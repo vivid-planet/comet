@@ -135,7 +135,10 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
                     const blockState: any = (state as any)[attr];
 
-                    const embeddedBlockState = extractedBlock.createPreviewState(blockState, previewContext);
+                    const embeddedBlockState = extractedBlock.createPreviewState(blockState, {
+                        ...previewContext,
+                        parentUrl: `${previewContext.parentUrl}/${attr}`,
+                    });
                     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
                     (blockPreviewState as any)[attr] = { ...embeddedBlockState, adminMeta: { route: `${previewContext.parentUrl}#${attr}` } };
                 }
