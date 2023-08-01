@@ -30,11 +30,14 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
     const history = useHistory();
     const { open, toggleOpen } = React.useContext(MenuContext);
     const { headerHeight } = React.useContext(MasterLayoutContext);
+    const initialRender = React.useRef(true);
 
     // Close the menu on initial render if it is temporary to prevent a page-overlay when initially loading the page.
     React.useEffect(() => {
         if (variant === "temporary" && open) {
             toggleOpen();
+            // workaround for issue: https://github.com/mui/material-ui/issues/35793
+            initialRender.current = false;
         }
         // useEffect dependencies need to stay empty, because the function should only be called on first render.
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,13 +67,15 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
             <Drawer
                 variant="temporary"
                 className={temporaryDrawerClasses.join(" ")}
-                open={temporaryOpen}
+                // workaround for issue: https://github.com/mui/material-ui/issues/35793
+                open={initialRender.current ? false : temporaryOpen}
                 PaperProps={{ style: { width: drawerWidth }, ...temporaryDrawerPaperProps }}
                 onClose={toggleOpen}
                 {...temporaryDrawerProps}
             >
                 {children}
             </Drawer>
+
             <Drawer
                 variant="permanent"
                 className={permanentDrawerClasses.join(" ")}
