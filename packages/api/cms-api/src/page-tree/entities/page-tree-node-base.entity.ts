@@ -52,4 +52,11 @@ export abstract class PageTreeNodeBase extends BaseEntity<PageTreeNodeBase, "id"
     hideInMenu: boolean;
 
     category: PageTreeNodeCategory;
+
+    @Property({
+        columnType: "timestamp with time zone",
+        onUpdate: () => new Date(),
+    })
+    @Field()
+    updatedAt: Date = new Date();
 }

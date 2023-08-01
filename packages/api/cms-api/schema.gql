@@ -127,6 +127,7 @@ type PageTreeNode {
   visibility: PageTreeNodeVisibility!
   documentType: String!
   hideInMenu: Boolean!
+  updatedAt: DateTime!
   category: String!
   childNodes: [PageTreeNode!]!
   numberOfDescendants: Float!
@@ -192,6 +193,11 @@ enum RedirectGenerationType {
 
 type PaginatedRedirects {
   nodes: [Redirect!]!
+  totalCount: Int!
+}
+
+type PaginatedPageTreeNodes {
+  nodes: [PageTreeNode!]!
   totalCount: Int!
 }
 
@@ -266,6 +272,7 @@ type Query {
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
+  paginatedPageTreeNodes(scope: PageTreeNodeScopeInput! = {}, category: String, sort: [PageTreeNodeSort!], offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   cronJobs: [CronJob!]!
   currentUser: CurrentUser!
@@ -352,6 +359,16 @@ input FolderFilterInput {
 
 input PageTreeNodeScopeInput {
   thisScopeHasNoFields____: String
+}
+
+input PageTreeNodeSort {
+  field: PageTreeNodeSortField!
+  direction: SortDirection! = ASC
+}
+
+enum PageTreeNodeSortField {
+  updatedAt
+  pos
 }
 
 enum SlugAvailability {
