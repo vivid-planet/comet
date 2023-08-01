@@ -858,7 +858,7 @@ scalar SeoBlockInput @specifiedBy(url: "http://www.ecma-international.org/public
 input PageTreeNodeUpdateInput {
   name: String!
   slug: String!
-  attachedDocument: AttachedDocumentInput!
+  attachedDocument: AttachedDocumentInput
   hideInMenu: Boolean
   createAutomaticRedirectsOnSlugChange: Boolean = true
   userGroup: UserGroup! = All

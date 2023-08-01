@@ -465,7 +465,7 @@ input UpdateDamFolderInput {
 input PageTreeNodeUpdateInput {
   name: String!
   slug: String!
-  attachedDocument: AttachedDocumentInput!
+  attachedDocument: AttachedDocumentInput
   hideInMenu: Boolean
   createAutomaticRedirectsOnSlugChange: Boolean = true
 }
