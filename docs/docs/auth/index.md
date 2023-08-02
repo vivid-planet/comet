@@ -9,14 +9,24 @@ TODO general information about how we handle authentication
 
 ### @PublicApi
 
-`@PublicApi()` can be used to expose a handler (one query or one route) or a whole class (resolver or controller) publicly.
+`@PublicApi()` can be used to expose a single handler (query, mutation or route) or a whole class (resolver or controller) publicly.
 
 :::caution
 
-Use with caution at class level because later added handlers are automatically public.
+Using the decorator at class level causes later added handlers to be automatically public. Prefer using the decorator for single handlers only.
 
 :::
 
 ### @DisableGlobalAuthGuard
 
-`@DisableGlobalAuthGuard()` can disable the global auth guard (`CometAuthGuard`). This can be used if a different authentication method is desired (e.g., basic authentication). Assign a class a custom guard with `@UseGuards`. The custom guard can leverage `@PublicApi` as well to expose handlers publicly.
+`@DisableGlobalAuthGuard()` disables the global auth guard (`CometAuthGuard`). This may be used if a different authentication method is desired (e.g., basic authentication) for a specific handler or class. It should be used in combination with a custom guard. The custom guard may leverage `@PublicApi` as well to expose handlers publicly.
+
+e.g.:
+
+```typescript
+@DisableGlobalGuard()
+@UseGuards(MyCustomGuard)
+async handlerThatUsesACustomGuard(): {
+    ...
+}
+```
