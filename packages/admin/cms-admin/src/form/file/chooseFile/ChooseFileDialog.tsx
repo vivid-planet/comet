@@ -19,6 +19,9 @@ import { RedirectToPersistedDamLocation } from "./RedirectToPersistedDamLocation
 const FixedHeightDialog = styled(Dialog)`
     & .MuiDialog-paper {
         height: 80vh;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: max-content max-content auto;
     }
 `;
 
