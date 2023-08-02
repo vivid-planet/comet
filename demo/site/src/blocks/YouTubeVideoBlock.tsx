@@ -13,18 +13,25 @@ const getHeightInPercentForAspectRatio = (aspectRatio: YouTubeVideoBlockData["as
     }
 };
 
+const EXPECTED_YT_ID_LENGTH = 11;
+
+const parseYoutubeUrl = (url: string) => {
+    // regex from https://stackoverflow.com/a/27728417
+    const regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|&v(?:i)?=))([^#&?]*).*/;
+    const match = url.match(regExp);
+    const youtubeId = match && match[1].length == EXPECTED_YT_ID_LENGTH ? match[1] : null;
+
+    if (youtubeId) return youtubeId;
+    else throw new Error("Invalid YouTube URL");
+};
+
 const YouTubeVideoBlock: React.FunctionComponent<PropsWithData<YouTubeVideoBlockData>> = ({
     data: { youtubeIdentifier, autoplay, loop, showControls, aspectRatio },
 }) => {
     try {
-        const url = new URL(youtubeIdentifier);
-        const searchParams = url.searchParams;
-        if (!searchParams.has("v")) {
-            throw new Error("URL has no ID (v) param");
-        }
-        youtubeIdentifier = searchParams.get("v") as string;
+        youtubeIdentifier = parseYoutubeUrl(youtubeIdentifier);
     } catch (error) {
-        // no url, but ID was specified
+        youtubeIdentifier = "";
     }
 
     const searchParams = new URLSearchParams();
@@ -45,7 +52,7 @@ const YouTubeVideoBlock: React.FunctionComponent<PropsWithData<YouTubeVideoBlock
 
     return (
         <sc.VideoContainer heightInPercent={getHeightInPercentForAspectRatio(aspectRatio)}>
-            <iframe src={youtubeUrl.toString()} frameBorder="0" />
+            <iframe src={youtubeUrl.toString()} style={{ border: 0 }} />
         </sc.VideoContainer>
     );
 };
