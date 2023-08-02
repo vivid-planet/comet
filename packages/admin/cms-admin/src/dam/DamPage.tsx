@@ -40,6 +40,13 @@ const ScopeIndicatorContent = styled("div")`
     align-items: center;
 `;
 
+const DamTableWrapper = styled("div")`
+    display: grid;
+    height: calc(100vh - var(--comet-admin-master-layout-content-top-spacing));
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content;
+`;
+
 function DamPage({ renderContentScopeIndicator = defaultRenderContentScopeIndicator }: Props): React.ReactElement {
     const { scope, match } = useContentScope();
     const routeMatch = useRouteMatch();
@@ -48,7 +55,9 @@ function DamPage({ renderContentScopeIndicator = defaultRenderContentScopeIndica
 
     return (
         <DamScopeProvider>
-            <DamTable contentScopeIndicator={renderContentScopeIndicator(scope)} />
+            <DamTableWrapper>
+                <DamTable contentScopeIndicator={renderContentScopeIndicator(scope)} />
+            </DamTableWrapper>
         </DamScopeProvider>
     );
 }
