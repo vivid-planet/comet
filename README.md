@@ -28,7 +28,7 @@ Run the `install.sh` script to install dependencies and setup needed symlinks.
 sh install.sh
 ```
 
-_It is recommend to run `install.sh` every time you switch to the `main` branch._
+_It is recommended to run `install.sh` every time you switch to the `main` branch._
 
 ### Start development processes
 
