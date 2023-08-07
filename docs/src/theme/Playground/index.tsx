@@ -4,12 +4,12 @@ import { usePrismTheme } from "@docusaurus/theme-common";
 import type { ThemeConfig } from "@docusaurus/theme-live-codeblock";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import useIsBrowser from "@docusaurus/useIsBrowser";
-import { Button } from "@mui/material";
 import type { Props } from "@theme/Playground";
 import clsx from "clsx";
 import React from "react";
 import { LiveEditor, LiveError, LivePreview, LiveProvider } from "react-live";
 
+import { Button } from "./Button";
 import styles from "./styles.module.css";
 
 function Header({ children }: { children: React.ReactNode }) {
