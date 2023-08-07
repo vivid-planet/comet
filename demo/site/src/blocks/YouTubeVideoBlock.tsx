@@ -27,24 +27,21 @@ const YouTubeVideoBlock: React.FunctionComponent<PropsWithData<YouTubeVideoBlock
         // no url, but ID was specified
     }
 
-    const getSearchParams = React.useCallback(() => {
-        const searchParams = new URLSearchParams();
-        searchParams.append("modestbranding", "1");
+    const searchParams = new URLSearchParams();
+    searchParams.append("modestbranding", "1");
 
-        searchParams.append("autoplay", Number(autoplay).toString());
-        autoplay && searchParams.append("mute", "1");
+    searchParams.append("autoplay", Number(autoplay).toString());
+    autoplay && searchParams.append("mute", "1");
 
-        searchParams.append("controls", Number(showControls).toString());
+    searchParams.append("controls", Number(showControls).toString());
 
-        searchParams.append("loop", Number(loop).toString());
-        /* the playlist parameter is needed so that the video loops. See https://developers.google.com/youtube/player_parameters#loop */
-        loop && searchParams.append("playlist", youtubeIdentifier);
-        return searchParams.toString();
-    }, [autoplay, loop, showControls, youtubeIdentifier]);
+    searchParams.append("loop", Number(loop).toString());
+    // the playlist parameter is needed so that the video loops. See https://developers.google.com/youtube/player_parameters#loop
+    loop && searchParams.append("playlist", youtubeIdentifier);
 
     const youtubeBaseUrl = "https://www.youtube-nocookie.com/embed/";
     const youtubeUrl = new URL(`${youtubeBaseUrl}${youtubeIdentifier}`);
-    youtubeUrl.search = getSearchParams();
+    youtubeUrl.search = searchParams.toString();
 
     return (
         <sc.VideoContainer heightInPercent={getHeightInPercentForAspectRatio(aspectRatio)}>
