@@ -813,9 +813,21 @@ importers:
       '@comet/admin':
         specifier: workspace:^4.3.0
         version: link:../packages/admin/admin
+      '@comet/admin-color-picker':
+        specifier: workspace:^4.3.0
+        version: link:../packages/admin/admin-color-picker
+      '@comet/admin-date-time':
+        specifier: workspace:^4.3.0
+        version: link:../packages/admin/admin-date-time
       '@comet/admin-icons':
         specifier: workspace:^4.3.0
         version: link:../packages/admin/admin-icons
+      '@comet/admin-react-select':
+        specifier: workspace:^4.3.0
+        version: link:../packages/admin/admin-react-select
+      '@comet/admin-rte':
+        specifier: workspace:^4.3.0
+        version: link:../packages/admin/admin-rte
       '@comet/admin-theme':
         specifier: workspace:^4.3.0
         version: link:../packages/admin/admin-theme
