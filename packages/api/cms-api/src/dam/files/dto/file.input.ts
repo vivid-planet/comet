@@ -3,6 +3,8 @@ import { Type } from "class-transformer";
 import { IsDate, IsEnum, IsHash, IsInt, IsMimeType, IsNotEmpty, IsObject, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 import { DamScopeInterface } from "src/dam/types";
 
+import { IsNullable } from "../../../common/validators/is-nullable";
+import { IsUndefinable } from "../../../common/validators/is-undefinable";
 import { ImageCropAreaInput } from "../../images/dto/image-crop-area.input";
 import { LicenseType } from "../entities/license.embeddable";
 
@@ -125,8 +127,9 @@ export class UpdateFileInput {
 
     @Field(() => ID, { nullable: true })
     @IsUUID()
-    @IsOptional()
-    folderId?: string;
+    @IsNullable()
+    @IsUndefinable()
+    folderId: string | null | undefined;
 
     @Field({ nullable: true })
     @Type(() => LicenseInput)
