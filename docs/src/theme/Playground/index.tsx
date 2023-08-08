@@ -1,4 +1,3 @@
-import { ChevronDown, ChevronUp } from "@comet/admin-icons";
 import BrowserOnly from "@docusaurus/BrowserOnly";
 import { usePrismTheme } from "@docusaurus/theme-common";
 import type { ThemeConfig } from "@docusaurus/theme-live-codeblock";
@@ -59,7 +58,7 @@ function EditorWithHeader() {
             <Header>
                 Code
                 <Button
-                    endIcon={isEditorOpen ? <ChevronUp /> : <ChevronDown />}
+                    isOpen={isEditorOpen}
                     onClick={() => {
                         setIsEditorOpen((isOpen) => !isOpen);
                     }}
