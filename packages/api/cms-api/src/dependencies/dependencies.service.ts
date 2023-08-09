@@ -96,7 +96,7 @@ export class DependenciesService {
         };
 
         if (options?.force) {
-            console.log("force refresh -> refresh sync");
+            // force refresh -> refresh sync
             await this.refreshRepository.qb().truncate();
             await refresh();
             return;
@@ -104,7 +104,7 @@ export class DependenciesService {
 
         const lastRefreshes = await this.refreshRepository.find({}, { orderBy: { finishedAt: QueryOrder.DESC_NULLS_FIRST }, limit: 1 });
         if (lastRefreshes.length === 0) {
-            console.log("first refresh -> refresh sync");
+            // first refresh -> refresh sync");
             await refresh();
             return;
         }
@@ -115,19 +115,21 @@ export class DependenciesService {
         const isRefreshInProgress = lastRefresh.finishedAt === null && lastRefresh.startedAt > subMinutes(new Date(), 15);
 
         if (isRefreshInProgress) {
-            console.log("refresh in progress -> do nothing");
+            // refresh in progress -> don't refresh
             return;
         } else if (lastRefresh.finishedAt && lastRefresh.finishedAt > subMinutes(new Date(), 5)) {
-            console.log("newer than 5 minutes -> don't refresh");
+            // newer than 5 minutes -> don't refresh
             return;
         } else if (lastRefresh.finishedAt && lastRefresh.finishedAt > subMinutes(new Date(), 15)) {
-            console.log("newer than 15 minutes -> refresh async");
+            // newer than 15 minutes -> refresh async
             const refreshPromise = refresh({ concurrently: true });
             if (options?.consoleCommand) {
+                // await if executed as a console command
+                // otherwise the command exits and the refresh method is interrupted
                 await refreshPromise;
             }
         } else {
-            console.log("older than 15 minutes -> refresh sync");
+            // older than 15 minutes / faulty previous refresh -> refresh sync
             await refresh();
         }
     }
