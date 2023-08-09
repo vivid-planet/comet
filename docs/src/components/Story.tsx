@@ -25,8 +25,8 @@ export const Story = ({ children, ...props }: PropsWithChildren<PlaygroundProps>
                                     transforms: ["typescript", "jsx"],
                                     jsxRuntime: "preserve",
                                 }).code;
-                                const codeWithoutImports = compiledCode.replace(/import.*\n/g, "");
-                                return codeWithoutImports;
+                                const codeWithoutImportsAndExports = compiledCode.replace(/import.*\n/g, "").replace(/export.*/g, "");
+                                return codeWithoutImportsAndExports;
                             }}
                             {...props}
                         >
