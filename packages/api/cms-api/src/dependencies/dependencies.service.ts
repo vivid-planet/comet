@@ -9,7 +9,7 @@ import { Dependency } from "./dependency";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
-import { RefreshBlockIndex } from "./entities/refresh-block-index.entity";
+import { BlockIndexRefreshes } from "./entities/block-index-refreshes.entity";
 
 @Injectable()
 export class DependenciesService {
@@ -17,7 +17,7 @@ export class DependenciesService {
     private connection: Connection;
 
     constructor(
-        @InjectRepository(RefreshBlockIndex) private readonly refreshRepository: EntityRepository<RefreshBlockIndex>,
+        @InjectRepository(BlockIndexRefreshes) private readonly refreshRepository: EntityRepository<BlockIndexRefreshes>,
         private readonly discoverService: DiscoverService,
         entityManager: EntityManager,
     ) {
@@ -86,12 +86,12 @@ export class DependenciesService {
     async refreshViews(options?: { force?: boolean; consoleCommand?: boolean }): Promise<void> {
         const refresh = async (options?: { concurrently: boolean }) => {
             console.time("refresh materialized block dependency");
-            const refreshBlockIndex = this.refreshRepository.create({ startedAt: new Date() });
-            await this.refreshRepository.getEntityManager().persistAndFlush(refreshBlockIndex);
+            const blockIndexRefresh = this.refreshRepository.create({ startedAt: new Date() });
+            await this.refreshRepository.getEntityManager().persistAndFlush(blockIndexRefresh);
 
             await this.connection.execute(`REFRESH MATERIALIZED VIEW ${options?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
 
-            await this.refreshRepository.getEntityManager().persistAndFlush(Object.assign(refreshBlockIndex, { finishedAt: new Date() }));
+            await this.refreshRepository.getEntityManager().persistAndFlush(Object.assign(blockIndexRefresh, { finishedAt: new Date() }));
             console.timeEnd("refresh materialized block dependency");
         };
 

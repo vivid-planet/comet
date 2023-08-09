@@ -37,7 +37,7 @@ export class CommandsService {
         ],
     })
     @UseRequestContext()
-    async refreshBlockIndexViews(args: { force: boolean }): Promise<void> {
+    async BlockIndexRefreshesViews(args: { force: boolean }): Promise<void> {
         await this.dependenciesService.refreshViews({ consoleCommand: true, force: args.force });
     }
 }

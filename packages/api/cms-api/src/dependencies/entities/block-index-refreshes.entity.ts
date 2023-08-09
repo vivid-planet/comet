@@ -2,7 +2,7 @@ import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-
 import { v4 as uuid } from "uuid";
 
 @Entity()
-export class RefreshBlockIndex extends BaseEntity<RefreshBlockIndex, "id"> {
+export class BlockIndexRefreshes extends BaseEntity<BlockIndexRefreshes, "id"> {
     [OptionalProps]?: "createdAt";
 
     @PrimaryKey({ columnType: "uuid" })
