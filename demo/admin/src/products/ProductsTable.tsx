@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     GridFilterButton,
+    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -15,7 +16,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
     GQLCreateProductMutation,
@@ -127,7 +128,7 @@ function ProductsTable() {
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
     return (
-        <Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
+        <MainContent fullHeight disablePadding>
             <DataGridPro
                 {...dataGridProps}
                 disableSelectionOnClick
@@ -140,7 +141,7 @@ function ProductsTable() {
                     Toolbar: ProductsTableToolbar,
                 }}
             />
-        </Box>
+        </MainContent>
     );
 }
 
