@@ -3,6 +3,7 @@ import {
     Field,
     FinalForm,
     FinalFormSelect,
+    Loading,
     MainContent,
     messages,
     SaveButton,
@@ -14,7 +15,7 @@ import {
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout, PageName } from "@comet/cms-admin";
-import { CircularProgress, IconButton, MenuItem } from "@mui/material";
+import { IconButton, MenuItem } from "@mui/material";
 import {
     GQLPredefinedPageQuery,
     GQLPredefinedPageQueryVariables,
@@ -72,7 +73,7 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
     });
 
     if (loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
 
     return (

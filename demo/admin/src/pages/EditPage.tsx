@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { MainContent, messages, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
+import { Loading, MainContent, messages, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft, Preview } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
@@ -12,7 +12,7 @@ import {
     useCmsBlockContext,
     useSiteConfig,
 } from "@comet/cms-admin";
-import { Button, CircularProgress, IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import {
@@ -112,7 +112,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
     if (!pageState) return <></>;
 
     if (loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
 
     return (

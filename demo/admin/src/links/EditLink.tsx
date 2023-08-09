@@ -1,9 +1,20 @@
 import { gql } from "@apollo/client";
-import { MainContent, messages, RouterPrompt, RouterTab, RouterTabs, Toolbar, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
+import {
+    Loading,
+    MainContent,
+    messages,
+    RouterPrompt,
+    RouterTab,
+    RouterTabs,
+    Toolbar,
+    ToolbarFillSpace,
+    ToolbarItem,
+    useStackApi,
+} from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { AdminComponentRoot } from "@comet/blocks-admin";
 import { createUsePage, EditPageLayout, PageName } from "@comet/cms-admin";
-import { CircularProgress, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { GQLEditLinkQuery, GQLEditLinkQueryVariables, GQLUpdateLinkMutation, GQLUpdateLinkMutationVariables } from "@src/graphql.generated";
 import * as React from "react";
@@ -76,7 +87,7 @@ export const EditLink: React.FC<Props> = ({ id }) => {
     };
 
     if (loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
 
     if (!linkState) return <></>;

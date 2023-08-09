@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import {
     FinalForm,
+    Loading,
     LocalErrorScopeApolloContext,
     MainContent,
     messages,
@@ -16,7 +17,7 @@ import {
     ToolbarTitleItem,
     useStackApi,
 } from "@comet/admin";
-import { Card, CardContent, CircularProgress, Link, Typography } from "@mui/material";
+import { Card, CardContent, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FORM_ERROR } from "final-form";
 import isEqual from "lodash.isequal";
@@ -85,7 +86,7 @@ const EditFile = ({ id }: EditFormProps): React.ReactElement => {
     const file = initialValues.data?.damFile;
 
     if (initialValues.loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     } else if (initialValues.error || file === undefined) {
         // otherwise, the user always gets redirected to the broken file and is stuck there
         persistedDamLocationApi?.reset();

@@ -5,6 +5,7 @@ import {
     FinalFormCheckbox,
     FinalFormInput,
     FinalFormSelect,
+    Loading,
     MainContent,
     messages,
     SaveButton,
@@ -18,7 +19,7 @@ import {
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout } from "@comet/cms-admin";
-import { CircularProgress, FormControlLabel, IconButton, MenuItem } from "@mui/material";
+import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import {
     GQLProductFormCreateProductMutation,
     GQLProductFormCreateProductMutationVariables,
@@ -79,7 +80,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     }
 
     if (loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
 
     return (

@@ -1,10 +1,10 @@
 import { useApolloClient } from "@apollo/client";
-import { CircularProgress } from "@mui/material";
 import { FORM_ERROR, FormApi, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
 import setFieldData from "final-form-set-field-data";
 import * as React from "react";
 import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
 
+import { Loading } from "./common/Loading";
 import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import { useEditDialogFormApi } from "./EditDialogFormApiContext";
@@ -171,7 +171,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     {(formRenderProps.submitError || formRenderProps.error) && (
                         <div className="error">{formRenderProps.submitError || formRenderProps.error}</div>
                     )}
-                    {!editDialog && <>{formRenderProps.submitting && <CircularProgress />}</>}
+                    {!editDialog && <>{formRenderProps.submitting && <Loading behavior="fillParent" />}</>}
                 </form>
             </FinalFormContextProvider>
         );
