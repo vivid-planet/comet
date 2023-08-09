@@ -27,6 +27,7 @@ export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonCont
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
+export { Loading, LoadingProps } from "./common/Loading";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
 export {
     ToolbarAutomaticTitleItem,
