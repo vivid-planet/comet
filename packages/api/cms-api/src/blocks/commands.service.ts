@@ -1,4 +1,4 @@
-import { MikroORM, UseRequestContext } from "@mikro-orm/core";
+import { UseRequestContext } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
 
@@ -8,11 +8,7 @@ import { BlockMigrateService } from "./block-migrate.service";
 @Injectable()
 @Console()
 export class CommandsService {
-    constructor(
-        private readonly dependenciesService: DependenciesService,
-        private readonly blockMigrateService: BlockMigrateService,
-        private readonly orm: MikroORM,
-    ) {}
+    constructor(private readonly dependenciesService: DependenciesService, private readonly blockMigrateService: BlockMigrateService) {}
 
     @Command({
         command: "migrateBlocks",
