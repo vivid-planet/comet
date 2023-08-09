@@ -2,11 +2,12 @@ import { Inject, Type } from "@nestjs/common";
 import { Args, ArgsType, createUnionType, ID, Info, Mutation, ObjectType, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
-import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { DependenciesService } from "../dependencies/dependencies.service";
 import { Dependency } from "../dependencies/dependency";
 import { DocumentInterface } from "../document/dto/document-interface";
+import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
 import {
@@ -68,6 +69,7 @@ export function createPageTreeResolver({
     });
 
     @Resolver(() => PageTreeNode)
+    @RequiredPermission(["pageTree"], { skipScopeCheck: !hasNonEmptyScope })
     class PageTreeResolver {
         constructor(
             protected readonly pageTreeService: PageTreeService,
@@ -77,7 +79,7 @@ export function createPageTreeResolver({
             protected readonly dependenciesService: DependenciesService,
         ) {}
         @Query(() => PageTreeNode, { nullable: true })
-        @SubjectEntity(PageTreeNode)
+        @AffectedEntity(PageTreeNode)
         async pageTreeNode(@Args("id", { type: () => ID }) id: string): Promise<PageTreeNodeInterface> {
             return this.pageTreeReadApi.getNodeOrFail(id);
         }
@@ -227,7 +229,7 @@ export function createPageTreeResolver({
         }
 
         @Mutation(() => PageTreeNode)
-        @SubjectEntity(PageTreeNode)
+        @AffectedEntity(PageTreeNode)
         async updatePageTreeNode(
             @Args("id", { type: () => ID }) id: string,
             @Args("input", { type: () => PageTreeNodeUpdateInput }) input: PageTreeNodeUpdateInputInterface,
@@ -245,7 +247,7 @@ export function createPageTreeResolver({
         }
 
         @Mutation(() => Boolean)
-        @SubjectEntity(PageTreeNode)
+        @AffectedEntity(PageTreeNode)
         async deletePageTreeNode(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
             const pageTreeReadApi = this.pageTreeService.createReadApi({
                 visibility: "all",
@@ -256,7 +258,7 @@ export function createPageTreeResolver({
         }
 
         @Mutation(() => PageTreeNode)
-        @SubjectEntity(PageTreeNode)
+        @AffectedEntity(PageTreeNode)
         async updatePageTreeNodeVisibility(
             @Args("id", { type: () => ID }) id: string,
             @Args("input", { type: () => PageTreeNodeUpdateVisibilityInput }) input: PageTreeNodeUpdateVisibilityInput,
@@ -268,7 +270,7 @@ export function createPageTreeResolver({
         }
 
         @Mutation(() => PageTreeNode)
-        @SubjectEntity(PageTreeNode)
+        @AffectedEntity(PageTreeNode)
         async updatePageTreeNodeSlug(
             @Args("id", { type: () => ID }) id: string,
             @Args("slug", { type: () => String }) slug: string,
@@ -277,7 +279,7 @@ export function createPageTreeResolver({
         }
 
         @Mutation(() => [PageTreeNode])
-        @SubjectEntity(PageTreeNode, { idArg: "ids" })
+        @AffectedEntity(PageTreeNode, { argsSelector: "ids" })
         async movePageTreeNodesByPos(
             @Args("ids", { type: () => [ID] }) ids: string[],
             @Args("input", { type: () => MovePageTreeNodesByPosInput }) input: MovePageTreeNodesByPosInput,
@@ -328,7 +330,7 @@ export function createPageTreeResolver({
         }
 
         @Mutation(() => [PageTreeNode])
-        @SubjectEntity(PageTreeNode, { idArg: "ids" })
+        @AffectedEntity(PageTreeNode, { argsSelector: "ids" })
         async movePageTreeNodesByNeighbour(
             @Args("ids", { type: () => [ID] }) ids: string[],
             @Args("input", { type: () => MovePageTreeNodesByNeighbourInput }) input: MovePageTreeNodesByNeighbourInput,
@@ -365,7 +367,7 @@ export function createPageTreeResolver({
         }
 
         @Mutation(() => PageTreeNode)
-        @SubjectEntity(PageTreeNode)
+        @AffectedEntity(PageTreeNode)
         async updatePageTreeNodeCategory(
             @Args("id", { type: () => ID }) id: string,
             @Args("category", { type: () => String }) category: PageTreeNodeCategory,

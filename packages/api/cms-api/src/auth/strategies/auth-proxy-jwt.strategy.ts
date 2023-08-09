@@ -5,7 +5,7 @@ import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 
 import { CurrentUserInterface, CurrentUserLoaderInterface } from "../current-user/current-user";
 
-interface AuthProxyJwtStrategyConfig {
+export interface AuthProxyJwtStrategyConfig {
     jwksUri: string;
     currentUserLoader?: CurrentUserLoaderInterface;
     strategyName?: string;
@@ -21,8 +21,6 @@ class CurrentUserLoader implements CurrentUserLoaderInterface {
             name: data.name,
             email: data.email,
             language: data.language,
-            role: data.ext?.role,
-            rights: data.ext?.rights,
         };
     }
 }

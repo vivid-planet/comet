@@ -660,7 +660,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { FindOptions, Reference } from "@mikro-orm/core";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
-    import { extractGraphqlFields, SortDirection, SubjectEntity, validateNotModified } from "@comet/cms-api";
+    import { AffectedEntity, extractGraphqlFields, RequiredPermission, SortDirection, validateNotModified } from "@comet/cms-api";
     import { GraphQLResolveInfo } from "graphql";
 
     ${generateImport(metadata, generatorOptions.targetDirectory)}
@@ -672,6 +672,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     ${relationsFieldResolverImportsCode}
 
     @Resolver(() => ${metadata.className})
+    @RequiredPermission(["${generatorOptions.requiredPermission ?? instanceNamePlural}"]${!scopeProp ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
@@ -683,7 +684,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         ) {}
 
         @Query(() => ${metadata.className})
-        @SubjectEntity(${metadata.className})
+        @AffectedEntity(${metadata.className})
         async ${instanceNameSingular}(@Args("id", { type: () => ID }) id: string): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
             return ${instanceNameSingular};
@@ -769,7 +770,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
 
         @Mutation(() => ${metadata.className})
-        @SubjectEntity(${metadata.className})
+        @AffectedEntity(${metadata.className})
         async update${classNameSingular}(
             @Args("id", { type: () => ID }) id: string,
             @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput,
@@ -791,7 +792,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
 
         @Mutation(() => Boolean)
-        @SubjectEntity(${metadata.className})
+        @AffectedEntity(${metadata.className})
         async delete${metadata.className}(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
             await this.entityManager.remove(${instanceNameSingular});
@@ -803,7 +804,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             hasVisibleProp
                 ? `
         @Mutation(() => ${metadata.className})
-        @SubjectEntity(${metadata.className})
+        @AffectedEntity(${metadata.className})
         async update${classNameSingular}Visibility(
             @Args("id", { type: () => ID }) id: string,
             @Args("visible", { type: () => Boolean }) visible: boolean,

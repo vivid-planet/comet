@@ -1,10 +1,10 @@
 import { Field, ID, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsDate, IsEnum, IsHash, IsInt, IsMimeType, IsNotEmpty, IsObject, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
-import { DamScopeInterface } from "src/dam/types";
 
 import { IsNullable } from "../../../common/validators/is-nullable";
 import { IsUndefinable } from "../../../common/validators/is-undefinable";
+import { DamScopeInterface } from "../../../dam/types";
 import { ImageCropAreaInput } from "../../images/dto/image-crop-area.input";
 import { LicenseType } from "../entities/license.embeddable";
 

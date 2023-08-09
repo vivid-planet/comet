@@ -54,6 +54,7 @@
         "hasha": "^5.2.2",
         "jsonwebtoken": "^8.5.1",
         "jwks-rsa": "^3.0.0",
+        "lodash.get": "^4.4.2",
         "lodash.isequal": "^4.0.0",
         "mime": "^3.0.0",
         "mime-db": "^1.0.0",
@@ -69,7 +70,8 @@
         "rimraf": "^3.0.0",
         "slugify": "^1.6.4",
         "ts-morph": "^16.0.0",
-        "uuid": "^9.0.0"
+        "uuid": "^9.0.0",
+        "uuid-by-string": "^4.0.0"
     },
     "devDependencies": {
         "@aws-sdk/client-s3": "^3.47.0",
@@ -89,6 +91,7 @@
         "@types/express": "^4.0.0",
         "@types/jest": "^29.5.0",
         "@types/jsonwebtoken": "^8.5.9",
+        "@types/lodash.get": "^4.4.6",
         "@types/lodash.isequal": "^4.0.0",
         "@types/mime": "^2.0.0",
         "@types/mime-db": "^1.0.0",

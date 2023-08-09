@@ -1,10 +1,12 @@
 import { Args, Int, Parent, ResolveField, Resolver } from "@nestjs/graphql";
 
+import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { ImagesService } from "../images/images.service";
 import { FileImage } from "./entities/file-image.entity";
 import { FilesService } from "./files.service";
 
 @Resolver(() => FileImage)
+@RequiredPermission(["pageTree", "dam"])
 export class FileImagesResolver {
     constructor(private readonly imagesService: ImagesService, private readonly filesService: FilesService) {}
 

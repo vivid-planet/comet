@@ -9,7 +9,7 @@ import { Product } from "./product.entity";
     implements: () => [DocumentInterface],
 })
 @Entity()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: "products" })
 export class ProductCategory extends BaseEntity<ProductCategory, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 

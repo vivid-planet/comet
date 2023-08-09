@@ -4,7 +4,7 @@ import { addMinutes, differenceInMinutes } from "date-fns";
 import fs from "fs";
 
 import { CONTENT_SCOPE_ANNOTATION } from "../builds/builds.constants";
-import { ContentScope } from "../common/decorators/content-scope.interface";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { JobStatus } from "./job-status.enum";
 import { KUBERNETES_CONFIG } from "./kubernetes.constants";
 import { KubernetesConfig } from "./kubernetes.module";

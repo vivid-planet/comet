@@ -4,10 +4,7 @@ import {
     BlocksModule,
     BlocksTransformerMiddlewareFactory,
     BuildsModule,
-    ContentScope,
-    ContentScopeModule,
     CronJobsModule,
-    CurrentUserInterface,
     DamModule,
     DependenciesModule,
     FilesService,
@@ -17,6 +14,7 @@ import {
     PageTreeService,
     PublicUploadModule,
     RedirectsModule,
+    UserPermissionsModule,
 } from "@comet/cms-api";
 import { ApolloDriver } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
@@ -45,6 +43,8 @@ import { Page } from "./pages/entities/page.entity";
 import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
+import { UserPermissionConfigService } from "./user-permission/config.service";
+import { UserPermissionModule } from "./user-permission/user-permission.module";
 
 @Module({})
 export class AppModule {
@@ -73,11 +73,12 @@ export class AppModule {
                     inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
                 }),
                 AuthModule,
-                ContentScopeModule.forRoot({
-                    canAccessScope(requestScope: ContentScope, user: CurrentUserInterface) {
-                        if (!user.domains) return true; //all domains
-                        return user.domains.includes(requestScope.domain);
-                    },
+                UserPermissionsModule.forRootAsync({
+                    useFactory: async (config: UserPermissionConfigService) => ({
+                        config,
+                    }),
+                    inject: [UserPermissionConfigService],
+                    imports: [UserPermissionModule],
                 }),
                 BlocksModule.forRoot({
                     imports: [PagesModule],

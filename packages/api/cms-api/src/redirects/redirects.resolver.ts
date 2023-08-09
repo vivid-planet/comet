@@ -6,13 +6,13 @@ import { Args, ArgsType, ID, Mutation, ObjectType, Parent, Query, ResolveField, 
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 
-import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { CometValidationException } from "../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
-import { ScopeGuardActive } from "../content-scope/decorators/scope-guard-active.decorator";
 import { DependenciesService } from "../dependencies/dependencies.service";
 import { Dependency } from "../dependencies/dependency";
 import { validateNotModified } from "../document/validateNotModified";
+import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { EmptyRedirectScope } from "./dto/empty-redirect-scope";
 import { PaginatedRedirectsArgsFactory } from "./dto/paginated-redirects-args.factory";
 import { RedirectInputInterface } from "./dto/redirect-input.factory";
@@ -53,7 +53,7 @@ export function createRedirectsResolver({
     class PaginatedRedirectsArgs extends PaginatedRedirectsArgsFactory.create({ Scope }) {}
 
     @Resolver(() => Redirect)
-    @ScopeGuardActive(hasNonEmptyScope)
+    @RequiredPermission(["pageTree"], { skipScopeCheck: !hasNonEmptyScope })
     class RedirectsResolver {
         constructor(
             private readonly redirectService: RedirectsService,
@@ -100,7 +100,7 @@ export function createRedirectsResolver({
         }
 
         @Query(() => Redirect)
-        @SubjectEntity(Redirect)
+        @AffectedEntity(Redirect)
         async redirect(@Args("id", { type: () => ID }) id: string): Promise<RedirectInterface | null> {
             const redirect = await this.repository.findOne(id);
             return redirect ?? null;
@@ -141,7 +141,7 @@ export function createRedirectsResolver({
         }
 
         @Mutation(() => Redirect)
-        @SubjectEntity(Redirect)
+        @AffectedEntity(Redirect)
         async updateRedirect(
             @Args("id", { type: () => ID }) id: string,
             @Args("input", { type: () => RedirectInput }) input: RedirectInputInterface,
@@ -170,7 +170,7 @@ export function createRedirectsResolver({
         }
 
         @Mutation(() => Redirect)
-        @SubjectEntity(Redirect)
+        @AffectedEntity(Redirect)
         async updateRedirectActiveness(
             @Args("id", { type: () => ID }) id: string,
             @Args("input", { type: () => RedirectUpdateActivenessInput }) input: RedirectUpdateActivenessInput,
@@ -184,7 +184,7 @@ export function createRedirectsResolver({
         }
 
         @Mutation(() => Boolean)
-        @SubjectEntity(Redirect)
+        @AffectedEntity(Redirect)
         async deleteRedirect(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
             const entity = await this.repository.findOneOrFail(id);
             await this.repository.removeAndFlush(entity);

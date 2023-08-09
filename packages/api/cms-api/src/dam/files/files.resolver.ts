@@ -1,18 +1,19 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { NotFoundException, Type } from "@nestjs/common";
+import { Inject, NotFoundException, Type } from "@nestjs/common";
 import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { basename, extname } from "path";
 
 import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { SkipBuild } from "../../builds/skip-build.decorator";
-import { SubjectEntity } from "../../common/decorators/subject-entity.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
-import { ContentScopeService } from "../../content-scope/content-scope.service";
-import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
 import { DependenciesService } from "../../dependencies/dependencies.service";
 import { Dependency } from "../../dependencies/dependency";
+import { AccessControlService } from "../../user-permissions/access-control.service";
+import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
+import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
+import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.types";
 import { DamScopeInterface } from "../types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
@@ -40,14 +41,14 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
     @ObjectType()
     class PaginatedDamFiles extends PaginatedResponseFactory.create(File) {}
 
-    @ScopeGuardActive(hasNonEmptyScope)
+    @RequiredPermission(["pageTree", "dam"], { skipScopeCheck: !hasNonEmptyScope })
     @Resolver(() => File)
     class FilesResolver {
         constructor(
             private readonly filesService: FilesService,
             @InjectRepository("File") private readonly filesRepository: EntityRepository<FileInterface>,
             @InjectRepository("Folder") private readonly foldersRepository: EntityRepository<FolderInterface>,
-            private readonly contentScopeService: ContentScopeService,
+            @Inject(ACCESS_CONTROL_SERVICE) private readonly accessControlService: AccessControlService,
             private readonly dependenciesService: DependenciesService,
         ) {}
 
@@ -58,7 +59,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Query(() => File)
-        @SubjectEntity(File)
+        @AffectedEntity(File)
         async damFile(@Args("id", { type: () => ID }) id: string): Promise<FileInterface> {
             const file = await this.filesService.findOneById(id);
             if (!file) {
@@ -68,7 +69,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => File)
-        @SubjectEntity(File)
+        @AffectedEntity(File)
         async updateDamFile(
             @Args("id", { type: () => ID }) id: string,
             @Args("input", { type: () => UpdateFileInput }) input: UpdateFileInput,
@@ -86,7 +87,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             if (targetFolderId !== null) {
                 targetFolder = await this.foldersRepository.findOneOrFail(targetFolderId);
 
-                if (targetFolder.scope !== undefined && !this.contentScopeService.canAccessScope(targetFolder.scope, user)) {
+                if (targetFolder.scope !== undefined && !this.accessControlService.canAccessScope(targetFolder.scope, user)) {
                     throw new Error("Can't access parent folder");
                 }
             }
@@ -96,7 +97,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             for (const id of fileIds) {
                 const file = await this.filesRepository.findOneOrFail(id);
 
-                if (file.scope !== undefined && !this.contentScopeService.canAccessScope(file.scope, user)) {
+                if (file.scope !== undefined && !this.accessControlService.canAccessScope(file.scope, user)) {
                     throw new Error("Can't access file");
                 }
 
@@ -107,7 +108,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => File)
-        @SubjectEntity(File)
+        @AffectedEntity(File)
         @SkipBuild()
         async archiveDamFile(@Args("id", { type: () => ID }) id: string): Promise<FileInterface> {
             const entity = await this.filesRepository.findOneOrFail(id);
@@ -131,7 +132,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => File)
-        @SubjectEntity(File)
+        @AffectedEntity(File)
         @SkipBuild()
         async restoreDamFile(@Args("id", { type: () => ID }) id: string): Promise<FileInterface> {
             const entity = await this.filesRepository.findOneOrFail(id);
@@ -155,7 +156,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => Boolean)
-        @SubjectEntity(File)
+        @AffectedEntity(File)
         @SkipBuild()
         async deleteDamFile(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
             return this.filesService.delete(id);

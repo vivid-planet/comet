@@ -1,5 +1,6 @@
 export interface CrudGeneratorOptions {
     targetDirectory: string;
+    requiredPermission?: string;
 }
 
 export function CrudGenerator(options: CrudGeneratorOptions): ClassDecorator {
@@ -11,6 +12,7 @@ export function CrudGenerator(options: CrudGeneratorOptions): ClassDecorator {
 
 export interface CrudSingleGeneratorOptions {
     targetDirectory: string;
+    requiredPermission?: string;
 }
 
 export function CrudSingleGenerator(options: CrudSingleGeneratorOptions): ClassDecorator {

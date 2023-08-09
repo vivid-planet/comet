@@ -1,9 +1,9 @@
 import { MikroORM, UseRequestContext } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
-import { ContentScope } from "src/common/decorators/content-scope.interface";
 
 import { KubernetesService } from "../kubernetes/kubernetes.service";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { BuildTemplatesService } from "./build-templates.service";
 import { BuildsService } from "./builds.service";
 

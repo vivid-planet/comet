@@ -3,17 +3,13 @@ import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { Observable } from "rxjs";
 
-import { ContentScopeService } from "../content-scope/content-scope.service";
+import { InferScopeService } from "../user-permissions/infer-scope.service";
 import { BuildsService } from "./builds.service";
 import { SKIP_BUILD_METADATA_KEY } from "./skip-build.decorator";
 
 @Injectable()
 export class ChangesCheckerInterceptor implements NestInterceptor {
-    constructor(
-        private reflector: Reflector,
-        private readonly buildsService: BuildsService,
-        private readonly contentScopeService: ContentScopeService,
-    ) {}
+    constructor(private reflector: Reflector, private readonly buildsService: BuildsService, private readonly inferScopeService: InferScopeService) {}
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
@@ -25,8 +21,7 @@ export class ChangesCheckerInterceptor implements NestInterceptor {
                     this.reflector.get<string[]>(SKIP_BUILD_METADATA_KEY, context.getClass());
 
                 if (!skipBuild) {
-                    const scope = await this.contentScopeService.inferScopeFromExecutionContext(context);
-
+                    const scope = await this.inferScopeService.inferScopeFromExecutionContext(context);
                     await this.buildsService.setChangesSinceLastBuild(scope);
                 }
             }

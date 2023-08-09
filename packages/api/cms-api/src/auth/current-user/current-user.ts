@@ -3,13 +3,19 @@ export interface CurrentUserInterface {
     name: string;
     email: string;
     language: string;
-    role: string;
-    rights?: CurrentUserRightInterface[];
-}
-
-export interface CurrentUserRightInterface {
-    right: string;
-    values: string[];
+    permissions?: {
+        permission: string;
+        configuration?: Record<string, unknown>;
+        overrideContentScopes: boolean;
+        contentScopes: {
+            scope: string;
+            values: string[];
+        }[];
+    }[];
+    contentScopes?: {
+        scope: string;
+        values: string[];
+    }[];
 }
 
 export interface CurrentUserLoaderInterface {
