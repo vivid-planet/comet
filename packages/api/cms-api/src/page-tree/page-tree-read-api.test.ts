@@ -2,7 +2,7 @@ import { parseISO } from "date-fns";
 
 import { SortDirection } from "../common/sorting/sort-direction.enum";
 import { PageTreeNodeSortField } from "./dto/page-tree-node.sort";
-import { sortPreloadedNodes } from "./page-tree-read-api";
+import { paginateNodes, sortPreloadedNodes } from "./page-tree-read-api";
 import { PageTreeNodeInterface } from "./types";
 
 describe("PageTreeReadApi", () => {
@@ -98,6 +98,88 @@ describe("PageTreeReadApi", () => {
                     { field: PageTreeNodeSortField.pos, direction: SortDirection.ASC },
                 ]),
             ).toEqual(sorted);
+        });
+    });
+
+    describe("paginateNodes", () => {
+        describe("Nodes [1, 2, 3] with correct offset and limit options", () => {
+            it("Should return [1] with offset 0 limit 1", () => {
+                const nodes = [1, 2, 3];
+                const options = {
+                    offset: 0,
+                    limit: 1,
+                };
+
+                expect(paginateNodes(nodes, options)).toEqual([1]);
+            });
+
+            it("Should return [2, 3] with offset 1 limit 2", () => {
+                const nodes = [1, 2, 3];
+                const options = {
+                    offset: 1,
+                    limit: 2,
+                };
+
+                expect(paginateNodes(nodes, options)).toEqual([2, 3]);
+            });
+
+            it("Should return empty array with offset 3 limit 1", () => {
+                const nodes = [1, 2, 3];
+                const options = {
+                    offset: 3,
+                    limit: 1,
+                };
+
+                expect(paginateNodes(nodes, options)).toEqual([]);
+            });
+        });
+
+        describe("Nodes [1, 2, 3] with incorrect offset and limit options", () => {
+            it("Should return [1, 2, 3] with offset undefined limit 1", () => {
+                const nodes = [1, 2, 3];
+                const options = {
+                    offset: undefined,
+                    limit: 1,
+                };
+
+                expect(paginateNodes(nodes, options)).toEqual(nodes);
+            });
+
+            it("Should return [1, 2, 3] with offset 0 limit undefined", () => {
+                const nodes = [1, 2, 3];
+                const options = {
+                    offset: 0,
+                    limit: undefined,
+                };
+
+                expect(paginateNodes(nodes, options)).toEqual(nodes);
+            });
+
+            it("Should return [1, 2, 3] with offset undefined limit undefined", () => {
+                const nodes = [1, 2, 3];
+
+                expect(paginateNodes(nodes, {})).toEqual(nodes);
+            });
+
+            it("Should return [1, 2, 3] with offset -1 limit 2", () => {
+                const nodes = [1, 2, 3];
+                const options = {
+                    offset: -1,
+                    limit: 2,
+                };
+
+                expect(paginateNodes(nodes, options)).toEqual(nodes);
+            });
+
+            it("Should return [1, 2, 3] with offset 1 limit -1", () => {
+                const nodes = [1, 2, 3];
+                const options = {
+                    offset: 1,
+                    limit: -1,
+                };
+
+                expect(paginateNodes(nodes, options)).toEqual(nodes);
+            });
         });
     });
 });

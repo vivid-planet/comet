@@ -92,9 +92,7 @@ export function createReadApi(
                 nodes = sortPreloadedNodes(nodes, sort);
             }
 
-            if (offset !== undefined && limit !== undefined) {
-                nodes = nodes.slice(offset, limit);
-            }
+            nodes = paginateNodes(nodes, { offset, limit });
 
             return nodes;
         } else {
@@ -420,6 +418,19 @@ export function createReadApi(
             });
         },
     };
+}
+
+export function paginateNodes<T>(nodes: T[], options: { offset?: number; limit?: number }) {
+    const offset = options.offset ?? -1;
+    const limit = options.limit ?? -1;
+
+    if (offset < 0 || limit <= 0) {
+        return nodes;
+    }
+    const start = offset;
+    const end = offset + limit;
+
+    return nodes.slice(start, end);
 }
 
 export function sortPreloadedNodes(nodes: PageTreeNodeInterface[], sort: PageTreeNodeSort[]): PageTreeNodeInterface[] {
