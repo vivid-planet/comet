@@ -1,19 +1,26 @@
-import { AnyEntity, Connection } from "@mikro-orm/core";
-import { EntityManager, Knex } from "@mikro-orm/postgresql";
+import { AnyEntity, Connection, QueryOrder } from "@mikro-orm/core";
+import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityManager, EntityRepository, Knex } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import * as console from "console";
+import { subMinutes } from "date-fns";
 
 import { Dependency } from "./dependency";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
+import { RefreshBlockIndex } from "./entities/refresh-block-index.entity";
 
 @Injectable()
 export class DependenciesService {
     private entityManager: EntityManager;
     private connection: Connection;
 
-    constructor(entityManager: EntityManager, private readonly discoverService: DiscoverService) {
+    constructor(
+        @InjectRepository(RefreshBlockIndex) private readonly refreshRepository: EntityRepository<RefreshBlockIndex>,
+        private readonly discoverService: DiscoverService,
+        entityManager: EntityManager,
+    ) {
         this.entityManager = entityManager;
         this.connection = entityManager.getConnection();
     }
@@ -66,6 +73,9 @@ export class DependenciesService {
         console.time("creating block dependency materialized view");
         await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS block_index_dependencies`);
         await this.connection.execute(`CREATE MATERIALIZED VIEW block_index_dependencies AS ${viewSql}`);
+        await this.connection.execute(
+            `CREATE UNIQUE INDEX ON block_index_dependencies ("rootId", "rootTableName", "rootColumnName", "blockname", "jsonPath", "targetTableName", "targetId")`,
+        );
         console.timeEnd("creating block dependency materialized view");
 
         console.time("creating block dependency materialized view index");
@@ -73,10 +83,53 @@ export class DependenciesService {
         console.timeEnd("creating block dependency materialized view index");
     }
 
-    async refreshViews(): Promise<void> {
-        console.time("refresh materialized block dependency");
-        await this.connection.execute("REFRESH MATERIALIZED VIEW block_index_dependencies");
-        console.timeEnd("refresh materialized block dependency");
+    async refreshViews(options?: { force?: boolean; consoleCommand?: boolean }): Promise<void> {
+        const refresh = async (options?: { concurrently: boolean }) => {
+            console.time("refresh materialized block dependency");
+            const refreshBlockIndex = this.refreshRepository.create({ startedAt: new Date() });
+            await this.refreshRepository.getEntityManager().persistAndFlush(refreshBlockIndex);
+
+            await this.connection.execute(`REFRESH MATERIALIZED VIEW ${options?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
+
+            await this.refreshRepository.getEntityManager().persistAndFlush(Object.assign(refreshBlockIndex, { finishedAt: new Date() }));
+            console.timeEnd("refresh materialized block dependency");
+        };
+
+        if (options?.force) {
+            console.log("force refresh -> refresh sync");
+            await this.refreshRepository.qb().truncate();
+            await refresh();
+            return;
+        }
+
+        const lastRefreshes = await this.refreshRepository.find({}, { orderBy: { finishedAt: QueryOrder.DESC_NULLS_FIRST }, limit: 1 });
+        if (lastRefreshes.length === 0) {
+            console.log("first refresh -> refresh sync");
+            await refresh();
+            return;
+        }
+
+        const lastRefresh = lastRefreshes[0];
+        // if the DB state indicates that a refresh takes more than 15 minutes,
+        // it's likely that the previous refresh isn't actually in progress but was interrupted unexpectedly
+        const isRefreshInProgress = lastRefresh.finishedAt === null && lastRefresh.startedAt > subMinutes(new Date(), 15);
+
+        if (isRefreshInProgress) {
+            console.log("refresh in progress -> do nothing");
+            return;
+        } else if (lastRefresh.finishedAt && lastRefresh.finishedAt > subMinutes(new Date(), 5)) {
+            console.log("newer than 5 minutes -> don't refresh");
+            return;
+        } else if (lastRefresh.finishedAt && lastRefresh.finishedAt > subMinutes(new Date(), 15)) {
+            console.log("newer than 15 minutes -> refresh async");
+            const refreshPromise = refresh({ concurrently: true });
+            if (options?.consoleCommand) {
+                await refreshPromise;
+            }
+        } else {
+            console.log("older than 15 minutes -> refresh sync");
+            await refresh();
+        }
     }
 
     async getDependents(

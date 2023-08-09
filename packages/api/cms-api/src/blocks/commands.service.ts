@@ -1,3 +1,4 @@
+import { MikroORM, UseRequestContext } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
 
@@ -7,7 +8,11 @@ import { BlockMigrateService } from "./block-migrate.service";
 @Injectable()
 @Console()
 export class CommandsService {
-    constructor(private readonly dependenciesService: DependenciesService, private readonly blockMigrateService: BlockMigrateService) {}
+    constructor(
+        private readonly dependenciesService: DependenciesService,
+        private readonly blockMigrateService: BlockMigrateService,
+        private readonly orm: MikroORM,
+    ) {}
 
     @Command({
         command: "migrateBlocks",
@@ -27,8 +32,16 @@ export class CommandsService {
 
     @Command({
         command: "refreshBlockIndexViews",
+        options: [
+            {
+                flags: "-f, --force [boolean]",
+                defaultValue: false,
+                description: "Force a refresh (otherwise no update is made if the last refresh was less than 5 minutes ago)",
+            },
+        ],
     })
-    async refreshBlockIndexViews(): Promise<void> {
-        await this.dependenciesService.refreshViews();
+    @UseRequestContext()
+    async refreshBlockIndexViews(args: { force: boolean }): Promise<void> {
+        await this.dependenciesService.refreshViews({ consoleCommand: true, force: args.force });
     }
 }
