@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import NextImage, { ImageLoaderProps, ImageProps as NextImageProps } from "next/image";
 import * as React from "react";
 
