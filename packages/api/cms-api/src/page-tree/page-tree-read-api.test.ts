@@ -1,6 +1,7 @@
 import { parseISO } from "date-fns";
 
 import { SortDirection } from "../common/sorting/sort-direction.enum";
+import { getError, NoErrorThrownError } from "../common/test/get-error";
 import { PageTreeNodeSortField } from "./dto/page-tree-node.sort";
 import { paginateNodes, sortPreloadedNodes } from "./page-tree-read-api";
 import { PageTreeNodeInterface } from "./types";
@@ -104,7 +105,7 @@ describe("PageTreeReadApi", () => {
     describe("paginateNodes", () => {
         describe("Nodes [1, 2, 3] with correct offset and limit options", () => {
             it("Should return [1] with offset 0 limit 1", () => {
-                const nodes = [1, 2, 3];
+                const nodes = [1, 2, 3] as unknown as PageTreeNodeInterface[];
                 const options = {
                     offset: 0,
                     limit: 1,
@@ -114,7 +115,7 @@ describe("PageTreeReadApi", () => {
             });
 
             it("Should return [2, 3] with offset 1 limit 2", () => {
-                const nodes = [1, 2, 3];
+                const nodes = [1, 2, 3] as unknown as PageTreeNodeInterface[];
                 const options = {
                     offset: 1,
                     limit: 2,
@@ -124,7 +125,7 @@ describe("PageTreeReadApi", () => {
             });
 
             it("Should return empty array with offset 3 limit 1", () => {
-                const nodes = [1, 2, 3];
+                const nodes = [1, 2, 3] as unknown as PageTreeNodeInterface[];
                 const options = {
                     offset: 3,
                     limit: 1,
@@ -135,50 +136,28 @@ describe("PageTreeReadApi", () => {
         });
 
         describe("Nodes [1, 2, 3] with incorrect offset and limit options", () => {
-            it("Should return [1, 2, 3] with offset undefined limit 1", () => {
-                const nodes = [1, 2, 3];
-                const options = {
-                    offset: undefined,
-                    limit: 1,
-                };
-
-                expect(paginateNodes(nodes, options)).toEqual(nodes);
-            });
-
-            it("Should return [1, 2, 3] with offset 0 limit undefined", () => {
-                const nodes = [1, 2, 3];
-                const options = {
-                    offset: 0,
-                    limit: undefined,
-                };
-
-                expect(paginateNodes(nodes, options)).toEqual(nodes);
-            });
-
-            it("Should return [1, 2, 3] with offset undefined limit undefined", () => {
-                const nodes = [1, 2, 3];
-
-                expect(paginateNodes(nodes, {})).toEqual(nodes);
-            });
-
-            it("Should return [1, 2, 3] with offset -1 limit 2", () => {
-                const nodes = [1, 2, 3];
+            it("Should throw Error with offset -1 limit 2", async () => {
+                const nodes = [1, 2, 3] as unknown as PageTreeNodeInterface[];
                 const options = {
                     offset: -1,
                     limit: 2,
                 };
+                const error = await getError(() => paginateNodes(nodes, options));
 
-                expect(paginateNodes(nodes, options)).toEqual(nodes);
+                expect(error).not.toBeInstanceOf(NoErrorThrownError);
+                expect(error).toHaveProperty("message", "Invalid pagination options");
             });
 
-            it("Should return [1, 2, 3] with offset 1 limit -1", () => {
-                const nodes = [1, 2, 3];
+            it("Should throw Error with offset 1 limit -1", async () => {
+                const nodes = [1, 2, 3] as unknown as PageTreeNodeInterface[];
                 const options = {
                     offset: 1,
                     limit: -1,
                 };
+                const error = await getError(() => paginateNodes(nodes, options));
 
-                expect(paginateNodes(nodes, options)).toEqual(nodes);
+                expect(error).not.toBeInstanceOf(NoErrorThrownError);
+                expect(error).toHaveProperty("message", "Invalid pagination options");
             });
         });
     });

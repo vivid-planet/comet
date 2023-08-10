@@ -92,7 +92,9 @@ export function createReadApi(
                 nodes = sortPreloadedNodes(nodes, sort);
             }
 
-            nodes = paginateNodes(nodes, { offset, limit });
+            if (offset !== undefined && limit !== undefined) {
+                nodes = paginateNodes(nodes, { offset, limit });
+            }
 
             return nodes;
         } else {
@@ -420,12 +422,9 @@ export function createReadApi(
     };
 }
 
-export function paginateNodes<T>(nodes: T[], options: { offset?: number; limit?: number }) {
-    const offset = options.offset ?? -1;
-    const limit = options.limit ?? -1;
-
+export function paginateNodes(nodes: PageTreeNodeInterface[], { offset, limit }: { offset: number; limit: number }) {
     if (offset < 0 || limit <= 0) {
-        return nodes;
+        throw new Error("Invalid pagination options");
     }
     const start = offset;
     const end = offset + limit;
