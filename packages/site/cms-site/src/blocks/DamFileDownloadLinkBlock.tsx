@@ -10,8 +10,13 @@ interface Props extends PropsWithData<DamFileDownloadLinkBlockData> {
     title?: string;
 }
 
+enum OpenFileTypeMethod {
+    NEW_TAB = "NEW_TAB",
+    DOWNLOAD = "DOWNLOAD",
+}
+
 export const DamFileDownloadLinkBlock = withPreview(
-    ({ data: { file, tracking }, children, title }: Props) => {
+    ({ data: { file, tracking, openFileType }, children, title }: Props) => {
         if (file === undefined) {
             return children;
         }
@@ -19,18 +24,21 @@ export const DamFileDownloadLinkBlock = withPreview(
         const handleClick = (event: React.MouseEvent) => {
             event.preventDefault();
 
-            saveAs(file.fileUrl, file.name);
+            if (openFileType === OpenFileTypeMethod.DOWNLOAD) {
+                saveAs(file.fileUrl, file.name);
+            } else if (openFileType === OpenFileTypeMethod.NEW_TAB) {
+                window.open(file.fileUrl);
+            }
         };
 
         return React.cloneElement(children, {
             href: "#",
             onClick: handleClick,
             title,
-            "data-gtm-element": "download",
+            "data-gtm-element": "infomaterial-download",
             "data-gtm-element-type": tracking?.gtmElementType ?? "Download",
             "data-gtm-element-name": tracking?.gtmElementName ?? file.name,
             "data-gtm-element-url": file.fileUrl,
-            "data-gtm-element-size": file.size,
         });
     },
     { label: "DamFileDownloadLink" },

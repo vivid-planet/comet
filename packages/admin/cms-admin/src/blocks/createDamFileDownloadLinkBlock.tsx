@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Field, FinalFormInput } from "@comet/admin";
+import { Field, FinalFormInput, FinalFormSelect } from "@comet/admin";
 import { Delete } from "@comet/admin-icons";
 import {
     AdminComponentButton,
@@ -10,16 +10,19 @@ import {
     BlocksFinalForm,
     createBlockSkeleton,
 } from "@comet/blocks-admin";
-import { Box, Divider, Typography } from "@mui/material";
+import { Box, Divider, MenuItem, Typography } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput } from "../blocks.generated";
-import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { GQLDamFileDownloadLinkFileQuery, GQLDamFileDownloadLinkFileQueryVariables } from "./createDamFileDownloadLinkBlock.generated";
 
+enum OpenFileTypeMethod {
+    NEW_TAB = "NEW_TAB",
+    DOWNLOAD = "DOWNLOAD",
+}
 type DamFileDownloadLinkBlockOptions = {
     label?: React.ReactElement;
     required?: boolean;
@@ -36,16 +39,21 @@ export function createDamFileDownloadLinkBlock(options?: DamFileDownloadLinkBloc
 
         category: BlockCategory.Navigation,
 
-        defaultValues: () => ({}),
+        defaultValues: () => ({
+            openFileType: OpenFileTypeMethod.DOWNLOAD,
+        }),
 
         state2Output: (state) => ({
             fileId: state.file?.id ?? undefined,
             gtmElementType: state.tracking?.gtmElementType,
             gtmElementName: state.tracking?.gtmElementName,
+            openFileType: state.openFileType,
         }),
 
         output2State: async (output, { apolloClient }: CmsBlockContext): Promise<DamFileDownloadLinkBlockData> => {
-            const ret: DamFileDownloadLinkBlockData = {};
+            const ret: DamFileDownloadLinkBlockData = {
+                openFileType: output.openFileType,
+            };
 
             if (output.gtmElementType || output.gtmElementName) {
                 ret.tracking = {};
@@ -63,7 +71,6 @@ export function createDamFileDownloadLinkBlock(options?: DamFileDownloadLinkBloc
                         damFile(id: $id) {
                             id
                             name
-                            size
                             damPath
                             fileUrl
                         }
@@ -77,7 +84,6 @@ export function createDamFileDownloadLinkBlock(options?: DamFileDownloadLinkBloc
             ret.file = {
                 id: damFile.id,
                 name: damFile.name,
-                size: damFile.size,
                 damPath: damFile.damPath,
                 fileUrl: damFile.fileUrl,
             };
@@ -88,18 +94,21 @@ export function createDamFileDownloadLinkBlock(options?: DamFileDownloadLinkBloc
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {
-            const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
-
             return (
                 <>
                     <BlocksFinalForm<{
+                        openFileType: DamFileDownloadLinkBlockData["openFileType"];
                         file?: DamFileDownloadLinkBlockData["file"];
                         tracking?: DamFileDownloadLinkBlockData["tracking"];
                     }>
                         onSubmit={(newValues) => {
-                            updateState({ file: newValues.file ?? undefined, tracking: newValues.tracking });
+                            updateState({ file: newValues.file ?? undefined, tracking: newValues.tracking, openFileType: newValues.openFileType });
                         }}
-                        initialValues={{ file: state.file, tracking: state.tracking }}
+                        initialValues={{
+                            file: state.file,
+                            tracking: state.tracking,
+                            openFileType: state.openFileType ?? OpenFileTypeMethod.DOWNLOAD,
+                        }}
                     >
                         {state.file !== undefined ? (
                             <AdminComponentPaper disablePadding>
@@ -110,20 +119,37 @@ export function createDamFileDownloadLinkBlock(options?: DamFileDownloadLinkBloc
                                     </Typography>
                                 </Box>
                                 <Divider />
-                                <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ file: undefined })}>
+                                <AdminComponentButton
+                                    startIcon={<Delete />}
+                                    onClick={() => updateState({ file: undefined, openFileType: OpenFileTypeMethod.NEW_TAB })}
+                                >
                                     <FormattedMessage id="generic.empty" defaultMessage="Empty" />
                                 </AdminComponentButton>
                             </AdminComponentPaper>
                         ) : (
-                            <Field
-                                name="file"
-                                component={FileField}
-                                required={options?.required}
-                                fullWidth
-                                label={options?.label}
-                                allowedMimetypes={Object.values(filteredAcceptedMimeTypes).flat()}
-                            />
+                            <Field name="file" component={FileField} required={options?.required} fullWidth label={options?.label} />
                         )}
+
+                        <Divider />
+                        <AdminComponentPaper>
+                            <Field
+                                name="openFileType"
+                                fullWidth
+                                label={<FormattedMessage id="blocks.damFileDownloadLink.openFileType" defaultMessage="Open File Type" />}
+                            >
+                                {(props) => (
+                                    <>
+                                        <FinalFormSelect {...props}>
+                                            {openFileTypeOptions.map((item, index) => (
+                                                <MenuItem value={item.value} key={index}>
+                                                    {item.name}
+                                                </MenuItem>
+                                            ))}
+                                        </FinalFormSelect>
+                                    </>
+                                )}
+                            </Field>
+                        </AdminComponentPaper>
 
                         <Divider />
                         <AdminComponentPaper>
@@ -156,3 +182,14 @@ export function createDamFileDownloadLinkBlock(options?: DamFileDownloadLinkBloc
     };
     return DamFileDownloadLinkBlock;
 }
+
+const openFileTypeOptions = [
+    {
+        value: OpenFileTypeMethod.DOWNLOAD,
+        name: <FormattedMessage id="blocks.damFileDownloadLink.openFileType.download" defaultMessage="Download" />,
+    },
+    {
+        value: OpenFileTypeMethod.NEW_TAB,
+        name: <FormattedMessage id="blocks.damFileDownloadLink.openFileType.newTab" defaultMessage="Open in a new tab" />,
+    },
+];

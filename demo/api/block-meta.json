@@ -143,11 +143,6 @@
                             "nullable": false
                         },
                         {
-                            "name": "size",
-                            "kind": "Number",
-                            "nullable": false
-                        },
-                        {
                             "name": "damPath",
                             "kind": "String",
                             "nullable": false
@@ -160,6 +155,15 @@
                     ]
                 },
                 "nullable": true
+            },
+            {
+                "name": "openFileType",
+                "kind": "Enum",
+                "enum": [
+                    "NEW_TAB",
+                    "DOWNLOAD"
+                ],
+                "nullable": false
             },
             {
                 "name": "tracking",
@@ -196,6 +200,15 @@
                 "name": "gtmElementName",
                 "kind": "String",
                 "nullable": true
+            },
+            {
+                "name": "openFileType",
+                "kind": "Enum",
+                "enum": [
+                    "NEW_TAB",
+                    "DOWNLOAD"
+                ],
+                "nullable": false
             }
         ]
     },
