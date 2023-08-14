@@ -65,6 +65,7 @@ export { IsSlug } from "./common/validators/is-slug";
 export { IsUndefinable } from "./common/validators/is-undefinable";
 export { ContentScopeModule } from "./content-scope/content-scope.module";
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
+export { DamFileDownloadLinkBlock } from "./dam/blocks/dam-file-download-link.block";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";
 export { ScaledImagesCacheService } from "./dam/cache/scaled-images-cache.service";
 export { FocalPoint } from "./dam/common/enums/focal-point.enum";
