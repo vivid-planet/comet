@@ -49,7 +49,7 @@ const createApiRedirects = async (): Promise<Redirect[]> => {
         let destination: string | undefined;
 
         if (redirect.sourceType === "path") {
-            source = redirect.source;
+            source = redirect.source.replaceAll(":", "\\:"); // escape colon, otherwise it is used for next.js regex path matching  (https://nextjs.org/docs/pages/api-reference/next-config-js/redirects#regex-path-matching)
         }
 
         const target = redirect.target as RedirectsLinkBlockData;

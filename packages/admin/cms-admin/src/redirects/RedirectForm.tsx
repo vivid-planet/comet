@@ -114,7 +114,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                 return <FormattedMessage id="comet.pages.redirects.validate.path.error" defaultMessage="Needs to start with /" />;
             } else if (value.includes("?")) {
                 return <FormattedMessage id="comet.pages.redirects.validate.path.queryStringError" defaultMessage="Must not contain ?" />;
-            } else if (!/^\/([a-zA-Z0-9-._~/]|%[0-9a-fA-F]{2})+$/.test(value)) {
+            } else if (!/^\/([a-zA-Z0-9-._~/:]|%[0-9a-fA-F]{2})+$/.test(value)) {
                 return <FormattedMessage id="comet.pages.redirects.validate.path.invalidPathError" defaultMessage="Invalid path" />;
             }
 
