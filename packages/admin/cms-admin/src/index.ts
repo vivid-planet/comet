@@ -1,5 +1,6 @@
 export { AnchorBlock } from "./blocks/AnchorBlock";
 export { CmsBlockContext, CmsBlockContextProvider } from "./blocks/CmsBlockContextProvider";
+export { createDamFileDownloadLinkBlock } from "./blocks/createDamFileDownloadLinkBlock";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
 export { createLinkBlock } from "./blocks/createLinkBlock";
 export type { RichTextBlockFactoryOptions } from "./blocks/createRichTextBlock";
