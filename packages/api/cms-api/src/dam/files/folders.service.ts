@@ -1,13 +1,18 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
+import JSZip from "jszip";
 
+import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
+import { DamConfig } from "../dam.config";
+import { DAM_CONFIG } from "../dam.constants";
 import { FolderArgs } from "./dto/folder.args";
 import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
 import { Folder } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
+import { createHashedPath } from "./files.utils";
 
 export const withFoldersSelect = (
     qb: QueryBuilder<Folder>,
@@ -67,6 +72,8 @@ export class FoldersService {
     constructor(
         @InjectRepository(Folder) private readonly foldersRepository: EntityRepository<Folder>,
         @Inject(forwardRef(() => FilesService)) private readonly filesService: FilesService,
+        @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
+        @Inject(DAM_CONFIG) private readonly config: DamConfig,
     ) {}
 
     async findAll({ parentId, includeArchived, filter, sortColumnName, sortDirection }: Omit<FolderArgs, "offset" | "limit">): Promise<Folder[]> {
@@ -207,6 +214,32 @@ export class FoldersService {
             .where({ id: { $in: mpath } })
             .getResult();
         return mpath.map((id) => folders.find((folder) => folder.id === id) as Folder);
+    }
+
+    async createZipStreamFromFolder(folderId: string): Promise<NodeJS.ReadableStream> {
+        const zip = new JSZip();
+
+        await this.addFolderToZip(folderId, zip);
+
+        return zip.generateNodeStream({ streamFiles: true });
+    }
+
+    private async addFolderToZip(folderId: string, zip: JSZip): Promise<void> {
+        const files = await this.filesService.findAll({ folderId: folderId });
+        const subfolders = await this.findAll({ parentId: folderId });
+
+        for (const file of files) {
+            const fileStream = await this.blobStorageBackendService.getFile(this.config.filesDirectory, createHashedPath(file.contentHash));
+
+            zip.file(file.name, fileStream);
+        }
+
+        for (const subfolder of subfolders) {
+            const subfolderZip = zip.folder(subfolder.name);
+            // TODO: handle same name folders
+            if (!subfolderZip) continue; // TODO: throw error if there is an actual possibility that subfolderZip is null
+            await this.addFolderToZip(subfolder.id, subfolderZip);
+        }
     }
 
     private selectQueryBuilder(): QueryBuilder<Folder> {
