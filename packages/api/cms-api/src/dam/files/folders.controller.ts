@@ -9,10 +9,12 @@ export class FoldersController {
 
     @Get("/:folderId/zip")
     async createZip(@Param("folderId") folderId: string, @Res() res: Response): Promise<void> {
-        const folderName = await this.foldersService.findOneById(folderId);
+        const folder = await this.foldersService.findOneById(folderId);
+        const folderName = folder?.name ? folder.name : "folder";
+        console.log(`starting zip generation for folder ${folderName} with id: ${folderId}`);
         const zipBuffer = await this.foldersService.createZipStreamFromFolder(folderId);
 
-        res.setHeader("Content-Disposition", `attachment; filename=${folderName?.name || "folderDownload"}.zip`);
+        res.setHeader("Content-Disposition", `attachment; filename="${folderName || "folder"}.zip"`);
         res.setHeader("Content-Type", "application/zip");
         zipBuffer.pipe(res);
     }
