@@ -93,7 +93,7 @@ export function createReadApi(
             }
 
             if (offset !== undefined && limit !== undefined) {
-                nodes = paginateNodes(nodes, { offset, limit });
+                nodes = paginatePreloadedNodes(nodes, { offset, limit });
             }
 
             return nodes;
@@ -422,7 +422,7 @@ export function createReadApi(
     };
 }
 
-export function paginateNodes(nodes: PageTreeNodeInterface[], { offset, limit }: { offset: number; limit: number }) {
+export function paginatePreloadedNodes(nodes: PageTreeNodeInterface[], { offset, limit }: { offset: number; limit: number }) {
     if (offset < 0 || limit <= 0) {
         throw new Error("Invalid pagination options");
     }
