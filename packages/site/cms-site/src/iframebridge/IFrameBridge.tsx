@@ -1,8 +1,30 @@
 "use client";
 import * as React from "react";
+import styled from "styled-components";
 import { useDebouncedCallback } from "use-debounce";
 
 import { AdminMessage, AdminMessageType, IFrameMessage, IFrameMessageType } from "./IFrameMessage";
+import { PreviewOverlay } from "./PreviewOverlay";
+import { getCombinedPositioningOfElements, getRecursiveChildrenOfPreviewElement } from "./utils";
+
+export type PreviewElement = {
+    element: HTMLElement;
+    adminRoute: string;
+    label: string;
+    nestingLevel: number;
+};
+
+export type OverlayElementData = {
+    adminRoute: string;
+    label: string;
+    position: {
+        zIndex: number;
+        top: number;
+        left: number;
+        width: number;
+        height: number;
+    };
+};
 
 export interface IFrameBridgeContext {
     hasBridge: boolean;
@@ -19,6 +41,9 @@ export interface IFrameBridgeContext {
     sendMessage: (message: IFrameMessage) => void;
     showOutlines: boolean;
     contentScope: unknown;
+    previewElementsData: OverlayElementData[];
+    addPreviewElement: (element: PreviewElement) => void;
+    removePreviewElement: (element: PreviewElement) => void;
 }
 
 export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
@@ -35,6 +60,13 @@ export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
         //empty
     },
     contentScope: undefined,
+    previewElementsData: [],
+    removePreviewElement: () => {
+        // empty
+    },
+    addPreviewElement: () => {
+        // empty
+    },
 });
 
 export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
@@ -44,6 +76,54 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
     const [hoveredAdminRoute, setHoveredAdminRoute] = React.useState<string | undefined>(undefined);
     const [showOutlines, setShowOutlines] = React.useState<boolean>(false);
     const [contentScope, setContentScope] = React.useState<unknown>(undefined);
+    const [previewElements, setPreviewElements] = React.useState<PreviewElement[]>([]);
+    const [recalculatePreviewDataIndex, setRecalculatePreviewDataIndex] = React.useState<number>(0);
+
+    const childrenWrapperRef = React.useRef<HTMLDivElement>(null);
+
+    const triggerRecalculationOfPreviewData = React.useCallback(() => {
+        setRecalculatePreviewDataIndex((index) => index + 1);
+    }, []);
+
+    React.useEffect(() => {
+        const mutationObserver = new MutationObserver(() => {
+            triggerRecalculationOfPreviewData();
+        });
+
+        const resizeObserver = new ResizeObserver(() => {
+            triggerRecalculationOfPreviewData();
+        });
+
+        if (childrenWrapperRef.current) {
+            mutationObserver.observe(childrenWrapperRef.current, { childList: true, subtree: true });
+            resizeObserver.observe(childrenWrapperRef.current);
+        }
+
+        return () => {
+            mutationObserver.disconnect();
+            resizeObserver.disconnect();
+        };
+    }, [triggerRecalculationOfPreviewData]);
+
+    const calculatedPreviewElementsData: OverlayElementData[] = React.useMemo(() => {
+        return previewElements.map((previewElement) => {
+            const childNodes = getRecursiveChildrenOfPreviewElement(previewElement.element);
+            const positioning = getCombinedPositioningOfElements(childNodes);
+
+            return {
+                adminRoute: previewElement.adminRoute,
+                label: previewElement.label,
+                position: {
+                    zIndex: previewElement.nestingLevel + 1,
+                    top: positioning.top,
+                    left: positioning.left,
+                    width: positioning.width,
+                    height: positioning.height,
+                },
+            };
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [previewElements, recalculatePreviewDataIndex]);
 
     const sendMessage = (message: IFrameMessage) => {
         window.parent.postMessage(JSON.stringify(message), "*");
@@ -127,6 +207,13 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
                 },
                 sendMessage,
                 contentScope,
+                previewElementsData: calculatedPreviewElementsData,
+                addPreviewElement: (element: PreviewElement) => {
+                    setPreviewElements((prev) => [...prev, element]);
+                },
+                removePreviewElement: (element: PreviewElement) => {
+                    setPreviewElements((prev) => prev.filter((el) => el.adminRoute !== element.adminRoute));
+                },
             }}
         >
             <div
@@ -135,8 +222,14 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
                     debounceDeactivateOutlines();
                 }}
             >
-                {children}
+                <PreviewOverlay />
+                <ChildrenWrapper ref={childrenWrapperRef}>{children}</ChildrenWrapper>
             </div>
         </IFrameBridgeContext.Provider>
     );
 };
+
+const ChildrenWrapper = styled.div`
+    position: relative;
+    z-index: 1;
+`;

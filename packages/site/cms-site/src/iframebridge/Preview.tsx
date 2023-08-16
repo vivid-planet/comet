@@ -1,30 +1,55 @@
 "use client";
 import * as React from "react";
 import scrollIntoView from "scroll-into-view-if-needed";
+import styled from "styled-components";
 
-import { ComponentTitle, Root, Selection } from "./Preview.sc";
 import { useIFrameBridge } from "./useIFrameBridge";
+import { BLOCK_PREVIEW_CONTAINER_DATA_ATTRIBUTE } from "./utils";
 
-interface PreviewProps {
+interface Props {
     adminRoute: string;
-    type: string;
+    label: string;
     enabledAutoScrolling?: boolean;
     children: React.ReactNode;
 }
 
-export const Preview: React.FunctionComponent<PreviewProps> = ({ adminRoute, type, children, enabledAutoScrolling = true }) => {
+const NestingLevelContext = React.createContext<number>(0);
+
+export const Preview: React.FunctionComponent<Props> = ({ adminRoute, children, label, enabledAutoScrolling = true }) => {
     const iFrameBridge = useIFrameBridge();
     const isSelected = adminRoute === iFrameBridge.selectedAdminRoute;
     const isHovered = adminRoute === iFrameBridge.hoveredAdminRoute;
-    const rootEl = React.useRef<HTMLDivElement | null>(null);
+    const previewElementContainerRef = React.useRef<HTMLDivElement>(null);
+    const nestingLevel = React.useContext(NestingLevelContext);
 
-    // scroll block into view when it gets selected
+    React.useEffect(() => {
+        const previewElement = previewElementContainerRef.current
+            ? {
+                  label,
+                  adminRoute,
+                  element: previewElementContainerRef.current,
+                  nestingLevel,
+              }
+            : null;
+
+        if (previewElement) {
+            iFrameBridge.addPreviewElement(previewElement);
+        }
+
+        return () => {
+            if (previewElement) {
+                iFrameBridge.removePreviewElement(previewElement);
+            }
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     React.useEffect(() => {
         const timeout = setTimeout(() => {
             if (enabledAutoScrolling) {
                 if (isHovered || isSelected) {
-                    if (rootEl.current) {
-                        scrollIntoView(rootEl.current, {
+                    if (previewElementContainerRef.current?.firstElementChild) {
+                        scrollIntoView(previewElementContainerRef.current.firstElementChild, {
                             scrollMode: "if-needed",
                             block: "center",
                             inline: "nearest",
@@ -39,27 +64,19 @@ export const Preview: React.FunctionComponent<PreviewProps> = ({ adminRoute, typ
         };
     }, [enabledAutoScrolling, isHovered, isSelected]);
 
-    return iFrameBridge.hasBridge ? (
-        <Root ref={rootEl} $isSelected={isSelected} $isHovered={isHovered} $showOutlines={iFrameBridge.showOutlines}>
-            <Selection
-                $showOutlines={iFrameBridge.showOutlines}
-                $isSelected={isSelected}
-                $isHovered={isHovered}
-                onClick={() => {
-                    iFrameBridge.sendSelectComponent(adminRoute);
-                }}
-                onMouseEnter={() => {
-                    iFrameBridge.sendHoverComponent(adminRoute);
-                }}
-                onMouseLeave={() => {
-                    iFrameBridge.sendHoverComponent(null);
-                }}
-            >
-                {isSelected && <ComponentTitle>{type}</ComponentTitle>}
-            </Selection>
-            {children}
-        </Root>
-    ) : (
-        <>{children}</>
-    );
+    if (iFrameBridge.hasBridge) {
+        return (
+            <NestingLevelContext.Provider value={nestingLevel + 1}>
+                <PreviewElementContainer ref={previewElementContainerRef} {...{ [BLOCK_PREVIEW_CONTAINER_DATA_ATTRIBUTE]: "" }}>
+                    {children}
+                </PreviewElementContainer>
+            </NestingLevelContext.Provider>
+        );
+    }
+
+    return <>{children}</>;
 };
+
+export const PreviewElementContainer = styled.div`
+    display: contents;
+`;
