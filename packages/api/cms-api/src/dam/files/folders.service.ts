@@ -233,13 +233,34 @@ export class FoldersService {
 
             zip.file(file.name, fileStream);
         }
+        const countedSubfolderNames: Record<string, number> = {};
 
         for (const subfolder of subfolders) {
-            const subfolderZip = zip.folder(subfolder.name);
-            // TODO: handle same name folders
-            if (!subfolderZip) continue; // TODO: throw error if there is an actual possibility that subfolderZip is null
+            const subfolderName = subfolder.name;
+            const updatedSubfolderName = this.getUniqueFolderName(subfolderName, countedSubfolderNames);
+
+            const subfolderZip = zip.folder(updatedSubfolderName);
+            if (!subfolderZip) {
+                continue;
+            } // TODO: throw error if there is an actual possibility that subfolderZip is null
             await this.addFolderToZip(subfolder.id, subfolderZip);
         }
+    }
+
+    private getUniqueFolderName(folderName: string, countedFolderNames: Record<string, number>) {
+        if (!countedFolderNames[folderName]) {
+            countedFolderNames[folderName] = 1;
+        } else {
+            countedFolderNames[folderName]++;
+        }
+
+        const duplicateCount = countedFolderNames[folderName];
+
+        let updatedFolderName = folderName;
+        if (duplicateCount > 1) {
+            updatedFolderName = `${folderName} ${duplicateCount}`;
+        }
+        return updatedFolderName;
     }
 
     private selectQueryBuilder(): QueryBuilder<Folder> {
