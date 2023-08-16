@@ -423,9 +423,12 @@ export function createReadApi(
 }
 
 export function paginatePreloadedNodes(nodes: PageTreeNodeInterface[], { offset, limit }: { offset: number; limit: number }) {
-    if (offset < 0 || limit <= 0) {
-        throw new Error("Invalid pagination options");
+    if (offset < 0) {
+        throw new Error(`Invalid offset '${offset}'`);
+    } else if (limit <= 0) {
+        throw new Error(`Invalid limit '${limit}'`);
     }
+
     const start = offset;
     const end = offset + limit;
 

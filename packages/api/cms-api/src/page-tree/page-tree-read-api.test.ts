@@ -145,7 +145,7 @@ describe("PageTreeReadApi", () => {
                 const error = await getError(() => paginatePreloadedNodes(nodes, options));
 
                 expect(error).not.toBeInstanceOf(NoErrorThrownError);
-                expect(error).toHaveProperty("message", "Invalid pagination options");
+                expect(error).toHaveProperty("message", "Invalid offset '-1'");
             });
 
             it("Should throw Error with offset 1 limit -1", async () => {
@@ -157,7 +157,7 @@ describe("PageTreeReadApi", () => {
                 const error = await getError(() => paginatePreloadedNodes(nodes, options));
 
                 expect(error).not.toBeInstanceOf(NoErrorThrownError);
-                expect(error).toHaveProperty("message", "Invalid pagination options");
+                expect(error).toHaveProperty("message", "Invalid limit '-1'");
             });
         });
     });
