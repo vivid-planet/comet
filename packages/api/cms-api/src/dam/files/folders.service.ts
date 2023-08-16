@@ -241,8 +241,8 @@ export class FoldersService {
 
             const subfolderZip = zip.folder(updatedSubfolderName);
             if (!subfolderZip) {
-                continue;
-            } // TODO: throw error if there is an actual possibility that subfolderZip is null
+                throw new Error(`Error while creating zip from folder with id ${folderId}`);
+            }
             await this.addFolderToZip(subfolder.id, subfolderZip);
         }
     }
