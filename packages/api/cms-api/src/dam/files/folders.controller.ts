@@ -12,10 +12,10 @@ export class FoldersController {
         const folder = await this.foldersService.findOneById(folderId);
         const folderName = folder?.name ? folder.name : "folder";
         console.log(`starting zip generation for folder ${folderName} with id: ${folderId}`);
-        const zipBuffer = await this.foldersService.createZipStreamFromFolder(folderId);
+        const zipStream = await this.foldersService.createZipStreamFromFolder(folderId);
 
         res.setHeader("Content-Disposition", `attachment; filename="${folderName || "folder"}.zip"`);
         res.setHeader("Content-Type", "application/zip");
-        zipBuffer.pipe(res);
+        zipStream.pipe(res);
     }
 }
