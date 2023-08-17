@@ -6,6 +6,7 @@ import saveAs from "file-saver";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { UnknownError } from "../../common/errors/errorMessages";
 import {
     GQLArchiveFileMutation,
@@ -40,6 +41,7 @@ const FolderInnerMenu = ({ folder }: FolderInnerMenuProps): React.ReactElement =
     const editDialogApi = useEditDialogApi();
     const errorDialog = useErrorDialog();
     const apolloClient = useApolloClient();
+    const context = useCmsBlockContext();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
 
@@ -63,6 +65,8 @@ const FolderInnerMenu = ({ folder }: FolderInnerMenuProps): React.ReactElement =
         }
     };
 
+    const downloadUrl = `${context.damConfig.apiUrl}/dam/folders/${folder.id}/zip`;
+
     return (
         <>
             <RowActionsMenu>
@@ -74,6 +78,14 @@ const FolderInnerMenu = ({ folder }: FolderInnerMenuProps): React.ReactElement =
                         }}
                     >
                         <FormattedMessage id="comet.pages.dam.rename" defaultMessage="Rename" />
+                    </RowActionsItem>
+                    <RowActionsItem<"a">
+                        icon={<Download />}
+                        componentsProps={{
+                            menuItem: { component: "a", href: downloadUrl, target: "_blank" },
+                        }}
+                    >
+                        <FormattedMessage id="comet.pages.dam.downloadFolder" defaultMessage="Download folder" />
                     </RowActionsItem>
                     <RowActionsItem
                         icon={<Delete />}
