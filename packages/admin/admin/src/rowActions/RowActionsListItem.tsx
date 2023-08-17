@@ -4,20 +4,23 @@ import * as React from "react";
 
 import { CommonRowActionItemProps } from "./RowActionsItem";
 
-export type RowActionsListItemComponentsProps<T extends React.ElementType = "li"> = React.PropsWithChildren<{
+export type RowActionsListItemComponentsProps<MenuItemComponent extends React.ElementType = "li"> = React.PropsWithChildren<{
     listItemIcon?: Partial<ListItemIconProps>;
     listItemText?: Partial<ListItemTextProps>;
-    menuItem?: Partial<MenuItemProps<T> & { component: T }>;
+    menuItem?: Partial<MenuItemProps<MenuItemComponent> & { component: MenuItemComponent }>;
 }>;
 
-export interface RowActionsListItemProps<T extends React.ElementType = "li"> extends CommonRowActionItemProps {
+export interface RowActionsListItemProps<MenuItemComponent extends React.ElementType = "li"> extends CommonRowActionItemProps {
     textSecondary?: React.ReactNode;
     endIcon?: React.ReactNode;
-    componentsProps?: RowActionsListItemComponentsProps<T>;
+    componentsProps?: RowActionsListItemComponentsProps<MenuItemComponent>;
     children?: React.ReactNode;
 }
 
-const RowActionsListItemNoRef = <T extends React.ElementType>(props: RowActionsListItemProps<T>, ref: React.ForwardedRef<HTMLLIElement>) => {
+const RowActionsListItemNoRef = <MenuItemComponent extends React.ElementType>(
+    props: RowActionsListItemProps<MenuItemComponent>,
+    ref: React.ForwardedRef<HTMLLIElement>,
+) => {
     const { icon, children, textSecondary, endIcon, componentsProps = {}, ...restMenuItemProps } = props;
     const { listItemIcon: listItemIconProps, listItemText: listItemTextProps, menuItem: menuItemProps } = componentsProps;
 
@@ -30,8 +33,8 @@ const RowActionsListItemNoRef = <T extends React.ElementType>(props: RowActionsL
     );
 };
 
-export const RowActionsListItem = React.forwardRef(RowActionsListItemNoRef) as <T extends React.ElementType>(
-    props: RowActionsListItemProps<T> & { ref?: React.ForwardedRef<HTMLLIElement> },
+export const RowActionsListItem = React.forwardRef(RowActionsListItemNoRef) as <MenuItemComponent extends React.ElementType>(
+    props: RowActionsListItemProps<MenuItemComponent> & { ref?: React.ForwardedRef<HTMLLIElement> },
 ) => React.ReactElement;
 
 const EndIcon = styled("div")(({ theme }) => ({

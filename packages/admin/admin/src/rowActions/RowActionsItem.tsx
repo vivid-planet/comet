@@ -20,14 +20,14 @@ export interface RowActionsItemProps<T extends React.ElementType = "li">
     children?: React.ReactNode;
 }
 
-export function RowActionsItem<T extends React.ElementType = "li">({
+export function RowActionsItem<MenuItemComponent extends React.ElementType = "li">({
     icon,
     children,
     disabled,
     onClick,
     componentsProps,
     ...restListItemProps
-}: RowActionsItemProps<T>): React.ReactElement<RowActionsItemProps<T>> {
+}: RowActionsItemProps<MenuItemComponent>): React.ReactElement<RowActionsItemProps<MenuItemComponent>> {
     const { level, closeAllMenus } = React.useContext(RowActionsMenuContext);
 
     if (level === 1) {
@@ -43,7 +43,7 @@ export function RowActionsItem<T extends React.ElementType = "li">({
     }
 
     return (
-        <RowActionsListItem<T>
+        <RowActionsListItem<MenuItemComponent>
             icon={icon}
             disabled={disabled}
             onClick={(event) => {
