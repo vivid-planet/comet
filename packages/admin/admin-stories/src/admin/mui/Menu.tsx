@@ -7,6 +7,7 @@ import {
     MasterLayout,
     Menu,
     MenuCollapsibleItem,
+    MenuGroupSection,
     MenuItemAnchorLink,
     MenuItemRouterLink,
     useWindowSize,
@@ -26,24 +27,28 @@ const AppMenu: React.FC = () => {
 
     return (
         <Menu variant={windowSize.width < permanentMenuMinWidth ? "temporary" : "permanent"}>
-            <MenuItemRouterLink primary="Dashboard" icon={<Dashboard />} to="/dashboard" />
-            <MenuItemRouterLink primary="Settings" icon={<Settings />} to="/settings" />
-            <MenuCollapsibleItem primary="More Items" icon={<Sort />}>
-                <MenuItemRouterLink primary="Foo1" to="/foo1" />
-                <MenuItemRouterLink primary="Foo2" to="/foo2" />
-            </MenuCollapsibleItem>
-            <MenuCollapsibleItem primary="Even More Items" icon={<Sort />}>
-                <MenuItemRouterLink primary="Foo3" to="/foo3" />
-                <MenuItemRouterLink primary="Foo4" to="/foo4" />
-            </MenuCollapsibleItem>
-            <MenuItemAnchorLink
-                primary="Comet Admin"
-                secondary="View on GitHub"
-                target="_blank"
-                href="https://github.com/vivid-planet/comet"
-                icon={<CometColor />}
-                secondaryAction={<LinkExternal />}
-            />
+            <MenuGroupSection title="Some Section">
+                <MenuItemRouterLink primary="Dashboard" icon={<Dashboard />} to="/dashboard" />
+                <MenuCollapsibleItem primary="More Items" icon={<Sort />}>
+                    <MenuItemRouterLink primary="Foo1" to="/foo1" />
+                    <MenuItemRouterLink primary="Foo2" to="/foo2" />
+                </MenuCollapsibleItem>
+                <MenuCollapsibleItem primary="Even More Items" icon={<Sort />}>
+                    <MenuItemRouterLink primary="Foo3" to="/foo3" />
+                    <MenuItemRouterLink primary="Foo4" to="/foo4" />
+                </MenuCollapsibleItem>
+            </MenuGroupSection>
+            <MenuGroupSection title="Further Layers">
+                <MenuItemRouterLink primary="Settings" icon={<Settings />} to="/settings" />
+                <MenuItemAnchorLink
+                    primary="Comet Admin"
+                    secondary="View on GitHub"
+                    target="_blank"
+                    href="https://github.com/vivid-planet/comet"
+                    icon={<CometColor />}
+                    secondaryAction={<LinkExternal />}
+                />
+            </MenuGroupSection>
         </Menu>
     );
 };
