@@ -94,6 +94,7 @@ export { MasterLayoutClassKey } from "./mui/MasterLayout.styles";
 export { MasterLayoutContext } from "./mui/MasterLayoutContext";
 export { MenuCollapsibleItem, MenuCollapsibleItemClassKey, MenuCollapsibleItemProps, MenuLevel } from "./mui/menu/CollapsibleItem";
 export { IMenuContext, IWithMenu, MenuContext, withMenu } from "./mui/menu/Context";
+export { MenuGroupSection, MenuGroupSectionClassKey, MenuGroupSectionProps } from "./mui/menu/GroupSection";
 export { MenuItem, MenuItemClassKey, MenuItemProps } from "./mui/menu/Item";
 export { MenuItemAnchorLink } from "./mui/menu/ItemAnchorLink";
 export { MenuItemRouterLink, MenuItemRouterLinkProps } from "./mui/menu/ItemRouterLink";
