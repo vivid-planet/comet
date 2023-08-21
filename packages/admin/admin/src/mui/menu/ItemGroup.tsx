@@ -17,7 +17,6 @@ const styles = (theme: Theme) =>
             color: ({ drawerOpen }) => (drawerOpen ? `${theme.palette.common.black}` : `${theme.palette.grey[300]}`),
         },
         groupTitleContainer: {
-            borderBottom: `1px solid ${theme.palette.grey[50]}`,
             display: "flex",
             justifyContent: ({ drawerOpen }) => (drawerOpen ? "flex-start" : "center"),
             padding: ({ drawerOpen }) => `${theme.spacing(2)} ${drawerOpen ? theme.spacing(4) : 0}`,

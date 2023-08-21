@@ -28,7 +28,7 @@ const styles = (theme: Theme) =>
     });
 
 export interface MenuLevel {
-    level?: 1 | 2;
+    level?: 1 | 2 | 3;
 }
 
 type MenuChild = React.ReactElement<MenuItemRouterLinkProps>;
@@ -53,7 +53,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
     children,
     ...otherProps
 }) => {
-    const itemLevel: 1 | 2 = level ? level : 1;
+    const itemLevel: MenuLevel["level"] = level ? level : 1;
     let hasSelectedChild = false;
     const location = useLocation();
 
@@ -65,7 +65,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
         const newItemLevel = itemLevel + 1;
 
         return React.cloneElement<MenuLevel>(child, {
-            level: newItemLevel === 1 || newItemLevel === 2 ? newItemLevel : undefined,
+            level: newItemLevel === 1 || newItemLevel === 2 || newItemLevel === 3 ? newItemLevel : undefined,
         });
     });
 
@@ -82,6 +82,8 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
                     primary={primary}
                     showText={showText}
                     secondary={secondary}
+                    hasChildElements={!!childElements?.length}
+                    isCollapsibleOpen={open}
                     icon={icon}
                     level={level}
                     onClick={() => setOpen(!open)}
