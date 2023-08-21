@@ -432,7 +432,7 @@ export class FilesService {
         const mappedFiles: Array<{ rootFile: FileInterface; copy: FileInterface; isNewCopy: boolean }> = [];
         for (const file of files) {
             // The objects are cloned because file.scope is an instance of DamScope
-            // and targetScope is a plain object. Thus, they are not deep equal
+            // and targetScope is a plain object. Thus, they are not deep equal,
             // although they have the same scope
             if (file.scope && isEqual({ ...file.scope }, { ...targetScope })) {
                 continue;
@@ -449,34 +449,27 @@ export class FilesService {
             } else {
                 let fileImageInput: Partial<FileImage> | undefined;
                 if (file.image) {
-                    fileImageInput = { ...Utils.copy(file.image) };
-
-                    if (fileImageInput) {
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
-                        delete fileImageInput.id;
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
-                        delete fileImageInput.file;
-                    }
+                    const { id: ignoreId, file: ignoreFile, ...imageProps } = file.image;
+                    fileImageInput = { ...Utils.copy(imageProps) };
                 }
 
+                const {
+                    id: ignoreId,
+                    createdAt: ignoreCreatedAt,
+                    updatedAt: ignoreUpdatedAt,
+                    folder: ignoreFolder,
+                    image: ignoreImage,
+                    scope: ignoreScope,
+                    ...fileProps
+                } = file;
+
                 const fileInput = {
-                    ...Utils.copy(file),
+                    ...Utils.copy(fileProps),
                     image: fileImageInput,
                     folderId: inboxFolder.id,
                     copyOf: file.id,
                     scope: targetScope,
                 };
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                delete fileInput.id;
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                delete fileInput.createdAt;
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                delete fileInput.updatedAt;
 
                 copiedFile = await this.create(fileInput);
                 numberNewlyCopiedFiles++;
