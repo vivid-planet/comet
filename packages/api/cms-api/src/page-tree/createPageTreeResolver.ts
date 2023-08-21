@@ -4,6 +4,8 @@ import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
+import { FILE_ENTITY, FileInterface } from "../dam/files/entities/file.entity";
+import { FilesService } from "../dam/files/files.service";
 import { DependentsResolver } from "../dependencies/dependencies.resolver";
 import { DependenciesService } from "../dependencies/dependencies.service";
 import { DocumentInterface } from "../document/dto/document-interface";
@@ -37,12 +39,14 @@ export function createPageTreeResolver({
     PageTreeNodeUpdateInput = DefaultPageTreeNodeUpdateInput,
     Documents,
     Scope: PassedScope,
+    File,
 }: {
     PageTreeNode: Type<PageTreeNodeInterface>;
     PageTreeNodeCreateInput?: Type<PageTreeNodeCreateInputInterface>;
     PageTreeNodeUpdateInput?: Type<PageTreeNodeUpdateInputInterface>;
     Documents: Type<DocumentInterface>[];
     Scope?: Type<ScopeInterface>;
+    File: Type<FileInterface>;
 }): Type<unknown> {
     const Scope = PassedScope || EmptyPageTreeNodeScope;
 
@@ -75,9 +79,11 @@ export function createPageTreeResolver({
             @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
             private readonly attachedDocumentLoaderService: AttachedDocumentLoaderService,
             private readonly dependenciesService: DependenciesService,
+            protected readonly filesService: FilesService,
         ) {
             super(dependenciesService);
         }
+
         @Query(() => PageTreeNode, { nullable: true })
         @SubjectEntity(PageTreeNode)
         async pageTreeNode(@Args("id", { type: () => ID }) id: string): Promise<PageTreeNodeInterface> {
@@ -221,6 +227,24 @@ export function createPageTreeResolver({
 
             //if document needs to be loaded use DataLoader for batch loading
             return this.attachedDocumentLoaderService.load(node);
+        }
+
+        @ResolveField(() => [File])
+        async filesOnPage(@Parent() node: PageTreeNodeInterface): Promise<FileInterface[]> {
+            const document = await this.pageTreeService.getActiveAttachedDocument(node.id, node.documentType);
+
+            if (document === null) {
+                return [];
+            }
+
+            await this.dependenciesService.refreshViews();
+            const dependencies = await this.dependenciesService.getDependencies(
+                { entityName: document.type, id: document.documentId },
+                { targetEntityName: FILE_ENTITY },
+            );
+
+            const fileIds = dependencies.map((dependency) => dependency.targetId);
+            return this.filesService.findMultipleByIds(fileIds);
         }
 
         @Mutation(() => PageTreeNode)

@@ -20,7 +20,7 @@ import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
-import { FILE_ENTITY, FileInterface } from "./entities/file.entity";
+import { FileInterface } from "./entities/file.entity";
 import { FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
 import { slugifyFilename } from "./files.utils";
@@ -110,30 +110,6 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             }
 
             return this.filesService.moveBatch(files, targetFolder);
-        }
-
-        @Query(() => [File])
-        async getAllFilesUsedOnPage(@Args("pageTreeNodeId", { type: () => ID }) pageTreeNodeId: string): Promise<FileInterface[]> {
-            const node = await this.pageTreeService.createReadApi().getNode(pageTreeNodeId);
-
-            if (node === null) {
-                throw new Error("PageTreeNode not found");
-            }
-
-            const document = await this.pageTreeService.getActiveAttachedDocument(node.id, node.documentType);
-
-            if (document === null) {
-                return [];
-            }
-
-            await this.dependenciesService.refreshViews();
-            const dependencies = await this.dependenciesService.getDependencies(
-                { entityName: document.type, id: document.documentId },
-                { targetEntityName: FILE_ENTITY },
-            );
-
-            const fileIds = dependencies.map((dependency) => dependency.targetId);
-            return this.filesService.findMultipleByIds(fileIds);
         }
 
         @Mutation(() => CopyFilesResponse)
