@@ -2,7 +2,6 @@ import { MikroORM, Utils } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
-import * as console from "console";
 import { createHmac } from "crypto";
 import { format } from "date-fns";
 import exifr from "exifr";
