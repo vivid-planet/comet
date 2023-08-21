@@ -34,7 +34,7 @@ class SvgImageBlockData extends BlockData {
         }
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { createdAt, updatedAt, folder, ...data } = file;
+        const { createdAt, updatedAt, folder, copyOf, copies, ...data } = file;
 
         return {
             damFile: {

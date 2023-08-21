@@ -25,7 +25,7 @@ import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
 import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
 import { DamScopeInterface } from "../types";
 import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
-import { CreateFileInput, UpdateFileInput } from "./dto/file.input";
+import { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
 import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
@@ -41,7 +41,7 @@ export const withFilesSelect = (
     args: {
         query?: string;
         id?: string;
-        copyOf?: string;
+        copyOfId?: string;
         filename?: string;
         folderId?: string | null;
         imageId?: string;
@@ -59,7 +59,7 @@ export const withFilesSelect = (
         qb.andWhere("file.name ILIKE ANY (ARRAY[?])", [args.query.split(" ").map((term) => `%${term}%`)]);
     }
     if (args.id) qb.andWhere({ id: args.id });
-    if (args.copyOf) qb.andWhere({ copyOf: args.copyOf });
+    if (args.copyOfId) qb.andWhere({ copyOf: { id: args.copyOfId } });
     if (args.filename) qb.andWhere({ name: args.filename });
     if (args.contentHash) qb.andWhere({ contentHash: args.contentHash });
     if (args.archived !== undefined) qb.andWhere({ archived: args.archived });
@@ -178,7 +178,7 @@ export class FilesService {
     }
 
     async findCopiesOfFileInScope(rootFileId: string, scope: DamScopeInterface) {
-        return withFilesSelect(this.selectQueryBuilder(), { copyOf: rootFileId, scope: scope }).getResult();
+        return withFilesSelect(this.selectQueryBuilder(), { copyOfId: rootFileId, scope: scope }).getResult();
     }
 
     async findOneById(id: string): Promise<FileInterface | null> {
@@ -215,7 +215,7 @@ export class FilesService {
         return withFilesSelect(this.selectQueryBuilder(), { imageId }).getSingleResult();
     }
 
-    async create({ folderId, ...data }: CreateFileInput): Promise<FileInterface> {
+    async create({ folderId, ...data }: CreateFileInput & { copyOf?: FileInterface }): Promise<FileInterface> {
         const folder = folderId ? await this.foldersService.findOneById(folderId) : undefined;
         return this.save(this.filesRepository.create({ ...data, license: { ...data.license }, folder: folder?.id }));
     }
@@ -448,7 +448,7 @@ export class FilesService {
                 numberAlreadyCopiedFiles++;
                 isNewCopy = false;
             } else {
-                let fileImageInput: Partial<FileImage> | undefined;
+                let fileImageInput: ImageFileInput | undefined;
                 if (file.image) {
                     const { id: ignoreId, file: ignoreFile, ...imageProps } = file.image;
                     fileImageInput = { ...Utils.copy(imageProps) };
@@ -461,14 +461,15 @@ export class FilesService {
                     folder: ignoreFolder,
                     image: ignoreImage,
                     scope: ignoreScope,
+                    copies: ignoreCopies,
                     ...fileProps
                 } = file;
 
-                const fileInput = {
+                const fileInput: CreateFileInput & { copyOf: FileInterface } = {
                     ...Utils.copy(fileProps),
                     image: fileImageInput,
                     folderId: inboxFolder.id,
-                    copyOf: file.id,
+                    copyOf: file,
                     scope: targetScope,
                 };
 

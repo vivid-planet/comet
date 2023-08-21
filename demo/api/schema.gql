@@ -260,7 +260,6 @@ type DamFile {
   title: String
   altText: String
   archived: Boolean!
-  copyOf: String
   image: DamFileImage
   license: DamFileLicense
   createdAt: DateTime!

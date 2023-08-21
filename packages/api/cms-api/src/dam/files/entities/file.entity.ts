@@ -1,4 +1,17 @@
-import { BaseEntity, BigIntType, Cascade, Embedded, Entity, Index, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+    BaseEntity,
+    BigIntType,
+    Cascade,
+    Embedded,
+    Entity,
+    Index,
+    ManyToOne,
+    OneToMany,
+    OneToOne,
+    OptionalProps,
+    PrimaryKey,
+    Property,
+} from "@mikro-orm/core";
 import { Type } from "@nestjs/common";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
@@ -9,7 +22,7 @@ import { FolderInterface } from "./folder.entity";
 import { License } from "./license.embeddable";
 
 export interface FileInterface extends BaseEntity<FileInterface, "id"> {
-    [OptionalProps]?: "createdAt" | "updatedAt" | "archived";
+    [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "copies";
     id: string;
     folder?: FolderInterface;
     name: string;
@@ -19,7 +32,8 @@ export interface FileInterface extends BaseEntity<FileInterface, "id"> {
     title?: string;
     altText?: string;
     archived: boolean;
-    copyOf?: string;
+    copyOf?: FileInterface;
+    copies: FileInterface[];
     image?: FileImage;
     license?: License;
     createdAt: Date;
@@ -61,6 +75,17 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         @Index()
         contentHash: string;
 
+        @ManyToOne({
+            entity: "File",
+            inversedBy: (file: FileInterface) => file.copies,
+            joinColumn: "copyOfId",
+            nullable: true,
+        })
+        copyOf?: FileInterface;
+
+        @OneToMany("File", (file: FileInterface) => file.copyOf)
+        copies: FileInterface[];
+
         @Field({ nullable: true })
         @Property({
             columnType: "text",
@@ -81,11 +106,6 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
             default: false,
         })
         archived: boolean;
-
-        @Field({ nullable: true })
-        @Property({ columnType: "uuid", nullable: true })
-        @Index()
-        copyOf?: string;
 
         @Field(() => FileImage, { nullable: true })
         @OneToOne({

@@ -44,7 +44,7 @@ class DamVideoBlockData extends BlockData {
         }
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { createdAt, updatedAt, folder, image, ...data } = file;
+        const { createdAt, updatedAt, folder, image, copyOf, copies, ...data } = file;
 
         return {
             damFile: {
