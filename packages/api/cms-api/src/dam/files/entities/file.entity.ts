@@ -76,14 +76,14 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         contentHash: string;
 
         @ManyToOne({
-            entity: "File",
+            entity: FILE_ENTITY,
             inversedBy: (file: FileInterface) => file.copies,
             joinColumn: "copyOfId",
             nullable: true,
         })
         copyOf?: FileInterface;
 
-        @OneToMany("File", (file: FileInterface) => file.copyOf)
+        @OneToMany(FILE_ENTITY, (file: FileInterface) => file.copyOf)
         copies: FileInterface[];
 
         @Field({ nullable: true })
