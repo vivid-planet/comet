@@ -103,6 +103,7 @@ export interface MenuItemProps extends MenuLevel {
     secondary?: React.ReactNode;
     icon?: React.ReactElement;
     secondaryAction?: React.ReactNode;
+    showText?: boolean;
 }
 
 type MuiListItemProps = Pick<ListItemProps, Exclude<keyof ListItemProps, "innerRef" | "button">> & { component?: React.ElementType };
@@ -114,6 +115,7 @@ const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProp
     icon,
     level = 1,
     secondaryAction,
+    showText = true,
     ...otherProps
 }) => {
     const context = React.useContext(MenuContext);
@@ -131,8 +133,8 @@ const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProp
 
     return (
         <ListItem component="div" button classes={{ root: listItemClasses.join(" ") }} {...otherProps}>
-            {hasIcon && <ListItemIcon>{icon}</ListItemIcon>}
-            <ListItemText primary={primary} secondary={secondary} inset={!icon} />
+            {hasIcon && <ListItemIcon sx={{ my: 1.25 }}>{icon}</ListItemIcon>}
+            {showText && <ListItemText primary={primary} secondary={secondary} inset={!icon} />}
             {!!secondaryAction && secondaryAction}
         </ListItem>
     );

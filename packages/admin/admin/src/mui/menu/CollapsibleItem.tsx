@@ -45,6 +45,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
     level,
     primary,
     secondary,
+    showText = true,
     icon,
     openByDefault = false,
     openedIcon = <ChevronUp />,
@@ -79,6 +80,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
             <div className={classes.listItem}>
                 <MenuItem
                     primary={primary}
+                    showText={showText}
                     secondary={secondary}
                     icon={icon}
                     level={level}
