@@ -81,15 +81,16 @@ async function generateSchema(): Promise<void> {
     const RedirectEntity = RedirectEntityFactory.create({ linkBlock });
     const RedirectInput = RedirectInputFactory.create({ linkBlock });
 
+    const Folder = createFolderEntity();
+    const File = createFileEntity({ Folder });
+
     const redirectsResolver = createRedirectsResolver({ Redirect: RedirectEntity, RedirectInput });
     const pageTreeResolver = createPageTreeResolver({
         PageTreeNode,
         Documents: [Page],
+        File,
     }); // no scope
     const AuthResolver = createAuthResolver({ currentUser: CurrentUser });
-
-    const Folder = createFolderEntity();
-    const File = createFileEntity({ Folder });
 
     const schema = await gqlSchemaFactory.create([
         BuildsResolver,

@@ -136,6 +136,7 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
+  filesOnPage: [DamFile!]!
 }
 
 enum PageTreeNodeVisibility {
@@ -203,16 +204,6 @@ input DependenciesFilterInput {
   rootColumnName: String
 }
 
-type PaginatedRedirects {
-  nodes: [Redirect!]!
-  totalCount: Int!
-}
-
-type PaginatedPageTreeNodes {
-  nodes: [PageTreeNode!]!
-  totalCount: Int!
-}
-
 type DamFolder {
   id: ID!
   name: String!
@@ -245,6 +236,16 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
+}
+
+type PaginatedRedirects {
+  nodes: [Redirect!]!
+  totalCount: Int!
+}
+
+type PaginatedPageTreeNodes {
+  nodes: [PageTreeNode!]!
+  totalCount: Int!
 }
 
 type PaginatedDamItems {
@@ -289,7 +290,6 @@ type Query {
   damItemListPosition(sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Int!
   damFilesList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
-  getAllFilesUsedOnPage(pageTreeNodeId: ID!): [DamFile!]!
   damIsFilenameOccupied(filename: String!, scope: DamScopeInput! = {}, folderId: String): Boolean!
   damAreFilenamesOccupied(filenames: [FilenameInput!]!, scope: DamScopeInput! = {}): [FilenameResponse!]!
   damFoldersFlat(scope: DamScopeInput! = {}): [DamFolder!]!
