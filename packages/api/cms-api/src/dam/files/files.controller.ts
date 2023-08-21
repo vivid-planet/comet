@@ -24,6 +24,7 @@ import { UploadFileBody } from "./dto/file.body";
 import { FileParams, HashFileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
 import { File } from "./entities/file.entity";
+import { FileSanitizationInterceptor } from "./file-sanitization.interceptor";
 import { FilesService } from "./files.service";
 import { calculatePartialRanges, createHashedPath } from "./files.utils";
 
@@ -38,7 +39,7 @@ export class FilesController {
     ) {}
 
     @Post("upload")
-    @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
+    @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD), FileSanitizationInterceptor)
     async upload(@UploadedFile() file: FileUploadInterface, @Body() { folderId }: UploadFileBody): Promise<File> {
         const uploadedFile = await this.filesService.upload(file, folderId);
         return Object.assign(uploadedFile, { fileUrl: await this.filesService.createFileUrl(uploadedFile) });

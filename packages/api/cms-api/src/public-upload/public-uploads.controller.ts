@@ -3,6 +3,7 @@ import { Controller, Post, UploadedFile, UseInterceptors } from "@nestjs/common"
 import rimraf from "rimraf";
 
 import { PublicApi } from "../auth/decorators/public-api.decorator";
+import { FileSanitizationInterceptor } from "../dam/files/file-sanitization.interceptor";
 import { PublicUploadFileUploadInterface } from "./dto/public-upload-file-upload.interface";
 import { PublicUpload } from "./entities/public-upload.entity";
 import { PublicUploadFileInterceptor } from "./public-upload-file.interceptor";
@@ -14,7 +15,7 @@ export class PublicUploadsController {
     constructor(private readonly publicUploadsService: PublicUploadsService, private readonly entityManager: EntityManager) {}
 
     @Post("upload")
-    @UseInterceptors(PublicUploadFileInterceptor("file"))
+    @UseInterceptors(PublicUploadFileInterceptor("file"), FileSanitizationInterceptor)
     @PublicApi()
     async upload(@UploadedFile() file: PublicUploadFileUploadInterface): Promise<PublicUpload> {
         const publicUploadsFile = await this.publicUploadsService.upload(file);
