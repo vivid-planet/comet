@@ -38,8 +38,11 @@ const createPageNodeMutation = gql`
 
 const getAllFilesUsedOnPageQuery = gql`
     query GetAllFilesUsedOnPage($pageTreeNodeId: ID!) {
-        getAllFilesUsedOnPage(pageTreeNodeId: $pageTreeNodeId) {
+        pageTreeNode(id: $pageTreeNodeId) {
             id
+            filesOnPage {
+                id
+            }
         }
     }
 `;
@@ -300,7 +303,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                         pageTreeNodeId: node.id,
                     },
                 });
-                const fileIds = filesOnPage.getAllFilesUsedOnPage.map((file) => file.id);
+                const fileIds = filesOnPage.pageTreeNode?.filesOnPage.map((file) => file.id) ?? [];
 
                 let newOutput: Record<string, unknown> | undefined;
                 if (fileIds.length > 0) {
