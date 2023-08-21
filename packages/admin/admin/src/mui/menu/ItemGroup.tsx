@@ -1,31 +1,60 @@
-import { Box, ComponentsOverrides, Theme, Typography } from "@mui/material";
+import { Box, ComponentsOverrides, Theme, Tooltip, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
-export type MenuItemGroupClassKey = "root" | "groupTitle";
+export type MenuItemGroupClassKey = "root" | "groupTitleContainer" | "groupTitle";
 
 const styles = (theme: Theme) =>
     createStyles<MenuItemGroupClassKey, MenuItemGroupProps>({
         root: { marginTop: theme.spacing(8) },
         groupTitle: {
             fontWeight: theme.typography.fontWeightBold,
-            fontSize: 14,
+            fontSize: ({ drawerOpen }) => (drawerOpen ? 14 : 12),
+            border: ({ drawerOpen }) => (drawerOpen ? `2px solid ${theme.palette.common.white}` : `2px solid ${theme.palette.grey[100]}`),
+            borderRadius: ({ drawerOpen }) => (drawerOpen ? "initial" : 20),
+            padding: ({ drawerOpen }) => (drawerOpen ? "0" : theme.spacing(2, 4)),
             lineHeight: "20px",
+            color: ({ drawerOpen }) => (drawerOpen ? `${theme.palette.common.black}` : `${theme.palette.grey[300]}`),
+        },
+        groupTitleContainer: {
             borderBottom: `1px solid ${theme.palette.grey[50]}`,
-            padding: theme.spacing(2, 4),
+            display: "flex",
+            justifyContent: ({ drawerOpen }) => (drawerOpen ? "flex-start" : "center"),
+            padding: ({ drawerOpen }) => `${theme.spacing(2)} ${drawerOpen ? theme.spacing(4) : 0}`,
         },
     });
 
 export interface MenuItemGroupProps {
-    title?: string;
+    title: string;
+    drawerOpen?: boolean;
 }
 
-const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({ title, children, classes }) => {
+const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({ title, children, classes, drawerOpen }) => {
+    const initialTitle = title;
+    function getInitials(title: string) {
+        const words = title.split(/\s+/).filter((word) => word.match(/[A-Za-z]/));
+        return words.map((word) => word[0].toUpperCase()).join("");
+    }
+
+    if (drawerOpen === false) {
+        title = getInitials(title);
+    }
+
     return (
         <Box className={classes.root}>
-            <Typography className={classes.groupTitle} variant="h3">
-                {title}
-            </Typography>
+            <Tooltip
+                placement="right"
+                disableHoverListener={drawerOpen}
+                disableFocusListener={drawerOpen}
+                disableTouchListener={drawerOpen}
+                title={initialTitle}
+            >
+                <Box className={classes.groupTitleContainer}>
+                    <Typography className={classes.groupTitle} variant="h3">
+                        {title}
+                    </Typography>
+                </Box>
+            </Tooltip>
             {children}
         </Box>
     );

@@ -28,7 +28,7 @@ const MasterMenu: React.FC = () => {
 
     return (
         <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
-            <MenuItemGroup title={sectionScopeTitle}>
+            <MenuItemGroup title={sectionScopeTitle} drawerOpen={open}>
                 <MenuItemRouterLink
                     primary={intl.formatMessage({ id: "menu.dashboard", defaultMessage: "Dashboard" })}
                     icon={<Dashboard />}
@@ -71,7 +71,7 @@ const MasterMenu: React.FC = () => {
                     <MenuItemRouterLink primary="Products Handmade" to={`${match.url}/products-handmade`} icon={<Snips />} />
                 </MenuCollapsibleItem>
             </MenuItemGroup>
-            <MenuItemGroup title={intl.formatMessage({ id: "menu.section.furtherLayers", defaultMessage: "Further layers" })}>
+            <MenuItemGroup title={intl.formatMessage({ id: "menu.section.furtherLayers", defaultMessage: "Further layers" })} drawerOpen={open}>
                 <MenuItemRouterLink
                     primary={intl.formatMessage({ id: "menu.dam", defaultMessage: "Assets" })}
                     icon={<Assets />}
