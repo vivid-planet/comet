@@ -407,6 +407,7 @@ export class FilesService {
 
         const scopeString = files[0].scope ? Object.values(files[0].scope).join("-") : "unknown";
         const date = new Date();
+        let createdInboxFolderAutomatically = false;
         let inboxFolder: FolderInterface;
         if (targetFolderId) {
             const folder = await this.foldersService.findOneById(targetFolderId);
@@ -423,6 +424,7 @@ export class FilesService {
                 },
                 targetScope,
             );
+            createdInboxFolderAutomatically = true;
         }
 
         let numberNewlyCopiedFiles = 0;
@@ -478,7 +480,7 @@ export class FilesService {
             mappedFiles.push({ rootFile: file, copy: copiedFile, isNewCopy });
         }
 
-        if (numberNewlyCopiedFiles === 0) {
+        if (createdInboxFolderAutomatically && numberNewlyCopiedFiles === 0) {
             await this.foldersService.delete(inboxFolder.id);
         }
 
