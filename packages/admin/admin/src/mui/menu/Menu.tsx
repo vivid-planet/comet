@@ -1,16 +1,19 @@
-import { ComponentsOverrides, Drawer, DrawerProps, PaperProps, Theme } from "@mui/material";
+import { ComponentsOverrides, DrawerProps, PaperProps, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { useHistory } from "react-router";
 
-import { MasterLayoutContext } from "../MasterLayoutContext";
 import { MenuContext } from "./Context";
-import { MenuClassKey, styles } from "./Menu.styles";
+import { Drawer, MenuClassKey, styles } from "./Menu.styles";
+
+export const DRAWER_WIDTH = 300;
+export const DRAWER_WIDTH_COLLAPSED = 60;
 
 export interface MenuProps {
     children: React.ReactNode;
     variant?: "permanent" | "temporary";
     drawerWidth?: number;
+    drawerWidthCollapsed?: number;
     temporaryDrawerProps?: DrawerProps;
     permanentDrawerProps?: DrawerProps;
     temporaryDrawerPaperProps?: PaperProps;
@@ -20,7 +23,8 @@ export interface MenuProps {
 const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
     classes,
     children,
-    drawerWidth = 300,
+    drawerWidth = DRAWER_WIDTH,
+    drawerWidthCollapsed = DRAWER_WIDTH_COLLAPSED,
     variant = "permanent",
     temporaryDrawerProps = {},
     permanentDrawerProps = {},
@@ -29,7 +33,6 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
 }) => {
     const history = useHistory();
     const { open, toggleOpen } = React.useContext(MenuContext);
-    const { headerHeight } = React.useContext(MasterLayoutContext);
     const initialRender = React.useRef(true);
 
     // Close the menu on initial render if it is temporary to prevent a page-overlay when initially loading the page.
@@ -66,10 +69,11 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
         <>
             <Drawer
                 variant="temporary"
+                drawerWidth={drawerWidth}
                 className={temporaryDrawerClasses.join(" ")}
                 // workaround for issue: https://github.com/mui/material-ui/issues/35793
                 open={initialRender.current ? false : temporaryOpen}
-                PaperProps={{ style: { width: drawerWidth }, ...temporaryDrawerPaperProps }}
+                PaperProps={{ ...temporaryDrawerPaperProps }}
                 onClose={toggleOpen}
                 {...temporaryDrawerProps}
             >
@@ -78,17 +82,13 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
 
             <Drawer
                 variant="permanent"
+                drawerWidth={drawerWidth}
+                drawerWidthCollapsed={drawerWidthCollapsed}
                 className={permanentDrawerClasses.join(" ")}
                 open={permanentOpen}
-                style={{ width: permanentOpen ? drawerWidth : 0 }}
+                hidden={variant === "temporary"}
                 PaperProps={{
                     elevation: 2,
-                    style: {
-                        top: headerHeight,
-                        height: `calc(100% - ${headerHeight}px)`,
-                        width: drawerWidth,
-                        marginLeft: permanentOpen ? 0 : -drawerWidth,
-                    },
                     ...permanentDrawerPaperProps,
                 }}
                 {...permanentDrawerProps}
