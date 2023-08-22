@@ -252,10 +252,10 @@ type DamFile {
   createdAt: DateTime!
   updatedAt: DateTime!
   scope: DamScope!
+  dependents: [Dependency!]!
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
-  dependents: [Dependency!]!
 }
 
 type FooterContentScope {
@@ -316,8 +316,8 @@ type News implements DocumentInterface {
   content: NewsContentBlockData!
   createdAt: DateTime!
   comments: [NewsComment!]!
-  dependents: [Dependency!]!
   dependencies: [Dependency!]!
+  dependents: [Dependency!]!
 }
 
 enum NewsCategory {

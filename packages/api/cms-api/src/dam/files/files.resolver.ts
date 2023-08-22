@@ -11,8 +11,7 @@ import { SubjectEntity } from "../../common/decorators/subject-entity.decorator"
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { ContentScopeService } from "../../content-scope/content-scope.service";
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
-import { DependenciesService } from "../../dependencies/dependencies.service";
-import { Dependency } from "../../dependencies/dependency";
+import { DependentsResolver } from "../../dependencies/dependencies.resolver";
 import { DamScopeInterface } from "../types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
@@ -42,14 +41,15 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
 
     @ScopeGuardActive(hasNonEmptyScope)
     @Resolver(() => File)
-    class FilesResolver {
+    class FilesResolver extends DependentsResolver(File) {
         constructor(
             private readonly filesService: FilesService,
             @InjectRepository("File") private readonly filesRepository: EntityRepository<FileInterface>,
             @InjectRepository("Folder") private readonly foldersRepository: EntityRepository<FolderInterface>,
             private readonly contentScopeService: ContentScopeService,
-            private readonly dependenciesService: DependenciesService,
-        ) {}
+        ) {
+            super();
+        }
 
         @Query(() => PaginatedDamFiles)
         async damFilesList(@Args({ type: () => FileArgs }) args: FileArgsInterface): Promise<PaginatedDamFiles> {
@@ -218,11 +218,6 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         @ResolveField(() => String)
         async damPath(@Parent() file: FileInterface): Promise<string> {
             return this.filesService.getDamPath(file);
-        }
-
-        @ResolveField(() => [Dependency])
-        async dependents(@Parent() file: FileInterface): Promise<Dependency[]> {
-            return this.dependenciesService.getDependents(file);
         }
     }
 

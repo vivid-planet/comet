@@ -129,13 +129,13 @@ type PageTreeNode {
   hideInMenu: Boolean!
   updatedAt: DateTime!
   category: String!
+  dependents: [Dependency!]!
   childNodes: [PageTreeNode!]!
   numberOfDescendants: Float!
   parentNode: PageTreeNode
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
-  dependents: [Dependency!]!
 }
 
 enum PageTreeNodeVisibility {
@@ -228,10 +228,10 @@ type DamFile {
   license: DamFileLicense
   createdAt: DateTime!
   updatedAt: DateTime!
+  dependents: [Dependency!]!
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
-  dependents: [Dependency!]!
 }
 
 type PaginatedDamItems {
