@@ -79,6 +79,7 @@ export class DependenciesService {
     async getDependents(
         target: AnyEntity<{ id: string }> | { entityName: string; id: string },
         filter?: {
+            rootGraphqlObjectType?: string;
             rootEntityName?: string;
             rootId?: string;
             rootColumnName?: string;
@@ -90,6 +91,9 @@ export class DependenciesService {
             targetId: target.id,
         });
 
+        if (filter?.rootGraphqlObjectType) {
+            qb.andWhere({ rootGraphqlObjectType: filter.rootGraphqlObjectType });
+        }
         if (filter?.rootEntityName) {
             qb.andWhere({ rootEntityName: filter.rootEntityName });
         }
@@ -107,6 +111,7 @@ export class DependenciesService {
     async getDependencies(
         root: AnyEntity<{ id: string }> | { entityName: string; id: string },
         filter?: {
+            targetGraphqlObjectType?: string;
             targetEntityName?: string;
             targetId?: string;
             rootColumnName?: string;
@@ -118,6 +123,9 @@ export class DependenciesService {
             rootId: root.id,
         });
 
+        if (filter?.targetGraphqlObjectType) {
+            qb.andWhere({ targetGraphqlObjectType: filter.targetGraphqlObjectType });
+        }
         if (filter?.targetEntityName) {
             qb.andWhere({ targetEntityName: filter.targetEntityName });
         }

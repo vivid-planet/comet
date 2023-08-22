@@ -1,5 +1,6 @@
 import {
     DependenciesResolver,
+    DependenciesService,
     PageTreeNodeVisibility,
     PageTreeService,
     RequestContext,
@@ -19,8 +20,9 @@ export class MainMenuItemResolver extends DependenciesResolver(MainMenuItem) {
     constructor(
         @InjectRepository(MainMenuItem) private readonly mainMenuItemRepository: EntityRepository<MainMenuItem>,
         private readonly pageTreeService: PageTreeService,
+        private readonly dependenciesService: DependenciesService,
     ) {
-        super();
+        super(dependenciesService);
     }
 
     @Query(() => MainMenuItem)

@@ -11,6 +11,7 @@ import { CometValidationException } from "../common/errors/validation.exception"
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { ScopeGuardActive } from "../content-scope/decorators/scope-guard-active.decorator";
 import { DependenciesResolver } from "../dependencies/dependencies.resolver";
+import { DependenciesService } from "../dependencies/dependencies.service";
 import { validateNotModified } from "../document/validateNotModified";
 import { EmptyRedirectScope } from "./dto/empty-redirect-scope";
 import { PaginatedRedirectsArgsFactory } from "./dto/paginated-redirects-args.factory";
@@ -57,8 +58,9 @@ export function createRedirectsResolver({
         constructor(
             private readonly redirectService: RedirectsService,
             @InjectRepository("Redirect") private readonly repository: EntityRepository<RedirectInterface>,
+            private readonly dependenciesService: DependenciesService,
         ) {
-            super();
+            super(dependenciesService);
         }
 
         @Query(() => [Redirect], { deprecationReason: "Use paginatedRedirects instead. Will be removed in the next version." })

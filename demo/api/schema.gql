@@ -143,7 +143,7 @@ type Page implements DocumentInterface {
   content: PageContentBlockData!
   seo: SeoBlockData!
   createdAt: DateTime!
-  dependencies: [Dependency!]!
+  dependencies(filter: DependenciesFilterInput): [Dependency!]!
   pageTreeNode: PageTreeNode
 }
 
@@ -152,6 +152,12 @@ scalar PageContentBlockData @specifiedBy(url: "http://www.ecma-international.org
 
 """Seo root block data"""
 scalar SeoBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+input DependenciesFilterInput {
+  targetGraphqlObjectType: String
+  targetId: String
+  rootColumnName: String
+}
 
 type PageTreeNodeScope {
   domain: String!
@@ -177,7 +183,7 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
-  dependents: [Dependency!]!
+  dependents(filter: DependentsFilterInput): [Dependency!]!
 }
 
 enum PageTreeNodeVisibility {
@@ -198,6 +204,12 @@ enum UserGroup {
 }
 
 union PageContentUnion = Page | Link | PredefinedPage
+
+input DependentsFilterInput {
+  rootGraphqlObjectType: String
+  rootId: String
+  rootColumnName: String
+}
 
 type PaginatedPages {
   nodes: [Page!]!
@@ -252,7 +264,7 @@ type DamFile {
   createdAt: DateTime!
   updatedAt: DateTime!
   scope: DamScope!
-  dependents: [Dependency!]!
+  dependents(filter: DependentsFilterInput): [Dependency!]!
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
@@ -269,7 +281,7 @@ type Footer implements DocumentInterface {
   content: FooterContentBlockData!
   scope: FooterContentScope!
   createdAt: DateTime!
-  dependencies: [Dependency!]!
+  dependencies(filter: DependenciesFilterInput): [Dependency!]!
 }
 
 """FooterContent root block data"""
@@ -281,7 +293,7 @@ type MainMenuItem {
   content: RichTextBlockData
   createdAt: DateTime!
   updatedAt: DateTime!
-  dependencies: [Dependency!]!
+  dependencies(filter: DependenciesFilterInput): [Dependency!]!
 }
 
 """RichText root block data"""
@@ -316,8 +328,8 @@ type News implements DocumentInterface {
   content: NewsContentBlockData!
   createdAt: DateTime!
   comments: [NewsComment!]!
-  dependencies: [Dependency!]!
-  dependents: [Dependency!]!
+  dependencies(filter: DependenciesFilterInput): [Dependency!]!
+  dependents(filter: DependentsFilterInput): [Dependency!]!
 }
 
 enum NewsCategory {
@@ -449,7 +461,7 @@ type Redirect implements DocumentInterface {
   generationType: RedirectGenerationType!
   createdAt: DateTime!
   scope: RedirectScope!
-  dependencies: [Dependency!]!
+  dependencies(filter: DependenciesFilterInput): [Dependency!]!
 }
 
 enum RedirectSourceTypeValues {
