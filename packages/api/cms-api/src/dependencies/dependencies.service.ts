@@ -85,6 +85,8 @@ export class DependenciesService {
             rootColumnName?: string;
         },
     ): Promise<Dependency[]> {
+        await this.refreshViews();
+
         const entityName = "entityName" in target ? target.entityName : target.constructor.name;
         const qb = this.entityManager.getKnex("read").select("*").from({ idx: "block_index_dependencies" }).where({
             targetEntityName: entityName,
@@ -117,6 +119,8 @@ export class DependenciesService {
             rootColumnName?: string;
         },
     ): Promise<Dependency[]> {
+        await this.refreshViews();
+
         const entityName = "entityName" in root ? root.entityName : root.constructor.name;
         const qb = this.entityManager.getKnex("read").select("*").from({ idx: "block_index_dependencies" }).where({
             rootEntityName: entityName,
