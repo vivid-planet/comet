@@ -4,8 +4,7 @@ import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
-import { DependenciesService } from "../dependencies/dependencies.service";
-import { Dependency } from "../dependencies/dependency";
+import { DependentsResolver } from "../dependencies/dependencies.resolver";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
@@ -68,14 +67,15 @@ export function createPageTreeResolver({
     });
 
     @Resolver(() => PageTreeNode)
-    class PageTreeResolver {
+    class PageTreeResolver extends DependentsResolver(PageTreeNode) {
         constructor(
             protected readonly pageTreeService: PageTreeService,
             protected readonly pageTreeReadApi: PageTreeReadApiService,
             @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
             private readonly attachedDocumentLoaderService: AttachedDocumentLoaderService,
-            protected readonly dependenciesService: DependenciesService,
-        ) {}
+        ) {
+            super();
+        }
         @Query(() => PageTreeNode, { nullable: true })
         @SubjectEntity(PageTreeNode)
         async pageTreeNode(@Args("id", { type: () => ID }) id: string): Promise<PageTreeNodeInterface> {
@@ -219,11 +219,6 @@ export function createPageTreeResolver({
 
             //if document needs to be loaded use DataLoader for batch loading
             return this.attachedDocumentLoaderService.load(node);
-        }
-
-        @ResolveField(() => [Dependency])
-        async dependents(@Parent() node: PageTreeNodeInterface): Promise<Dependency[]> {
-            return this.dependenciesService.getDependents(node);
         }
 
         @Mutation(() => PageTreeNode)

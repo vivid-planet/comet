@@ -1,6 +1,5 @@
 import {
-    DependenciesService,
-    Dependency,
+    DependenciesResolver,
     PageTreeNodeVisibility,
     PageTreeService,
     RequestContext,
@@ -9,19 +8,20 @@ import {
 } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 
 import { MainMenuItemInput } from "./dto/main-menu-item.input";
 import { MainMenuItem } from "./entities/main-menu-item.entity";
 
 @Resolver(() => MainMenuItem)
-export class MainMenuItemResolver {
+export class MainMenuItemResolver extends DependenciesResolver(MainMenuItem) {
     constructor(
         @InjectRepository(MainMenuItem) private readonly mainMenuItemRepository: EntityRepository<MainMenuItem>,
         private readonly pageTreeService: PageTreeService,
-        private readonly dependenciesService: DependenciesService,
-    ) {}
+    ) {
+        super();
+    }
 
     @Query(() => MainMenuItem)
     async mainMenuItem(
@@ -72,10 +72,5 @@ export class MainMenuItemResolver {
         }
 
         return this.mainMenuItemRepository.findOneOrFail({ node });
-    }
-
-    @ResolveField(() => [Dependency])
-    async dependencies(@Parent() mainMenuItem: MainMenuItem): Promise<Dependency[]> {
-        return this.dependenciesService.getDependencies(mainMenuItem);
     }
 }
