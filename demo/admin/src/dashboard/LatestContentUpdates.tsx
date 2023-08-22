@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import { Table, TableQuery, useTableQuery } from "@comet/admin";
 import { ArrowRight } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
+import { useContentScope } from "@src/common/ContentScopeProvider";
 import { categoryToUrlParam } from "@src/utils/pageTreeNodeCategoryMapping";
 import * as React from "react";
 import { FormattedDate, FormattedTime, useIntl } from "react-intl";
@@ -10,21 +11,18 @@ import { Link } from "react-router-dom";
 import { GQLLatestContentUpdatesQuery, GQLLatestContentUpdatesQueryVariables } from "./LatestContentUpdates.generated";
 
 const LATEST_CONTENT_UPDATES_QUERY = gql`
-    query LatestContentUpdates {
-        pages(offset: 0, limit: 5, sortColumnName: "updatedAt", sortDirection: DESC) {
+    query LatestContentUpdates($scope: PageTreeNodeScopeInput!) {
+        paginatedPageTreeNodes(offset: 0, limit: 5, scope: $scope, sort: [{ field: updatedAt, direction: DESC }]) {
             nodes {
                 id
                 updatedAt
-                pageTreeNode {
-                    id
-                    name
-                    path
-                    scope {
-                        domain
-                        language
-                    }
-                    category
+                name
+                path
+                scope {
+                    domain
+                    language
                 }
+                category
             }
             totalCount
         }
@@ -33,18 +31,19 @@ const LATEST_CONTENT_UPDATES_QUERY = gql`
 
 export const LatestContentUpdates: React.FC = () => {
     const intl = useIntl();
+    const { scope } = useContentScope();
 
     const { tableData, api, loading, error } = useTableQuery<GQLLatestContentUpdatesQuery, GQLLatestContentUpdatesQueryVariables>()(
         LATEST_CONTENT_UPDATES_QUERY,
         {
             resolveTableData: (data) => {
-                // in rare cases, pages can exist without being linked in the pagetree (e.g. pasting with conflicts), we hide them
-                const pageTreeNodesLinkedInPageTree = data.pages.nodes.filter((pageTreeNode) => pageTreeNode.pageTreeNode);
-
                 return {
-                    data: pageTreeNodesLinkedInPageTree,
-                    totalCount: pageTreeNodesLinkedInPageTree.length,
+                    data: data.paginatedPageTreeNodes.nodes,
+                    totalCount: data.paginatedPageTreeNodes.totalCount,
                 };
+            },
+            variables: {
+                scope,
             },
         },
     );
@@ -57,15 +56,12 @@ export const LatestContentUpdates: React.FC = () => {
                         {...tableData}
                         columns={[
                             {
-                                name: "pageTreeNode.name",
+                                name: "name",
                                 header: intl.formatMessage({ id: "dashboard.latestContentUpdates.name", defaultMessage: "Page Name" }),
                             },
                             {
                                 name: "updatedAt",
-                                header: intl.formatMessage({
-                                    id: "dashboard.latestContentUpdates.updatedAt",
-                                    defaultMessage: "Updated At",
-                                }),
+                                header: intl.formatMessage({ id: "dashboard.latestContentUpdates.updatedAt", defaultMessage: "Updated At" }),
                                 render: (row) => (
                                     <div>
                                         <FormattedDate value={row.updatedAt} day="2-digit" month="2-digit" year="numeric" />
@@ -78,16 +74,16 @@ export const LatestContentUpdates: React.FC = () => {
                                 name: "jumpTo",
                                 cellProps: { align: "right" },
                                 render: (row) => {
-                                    if (!row.pageTreeNode) {
+                                    if (!row) {
                                         return null;
                                     }
 
                                     return (
                                         <IconButton
                                             component={Link}
-                                            to={`/${row.pageTreeNode.scope.domain}/${
-                                                row.pageTreeNode.scope.language
-                                            }/pages/pagetree/${categoryToUrlParam(row.pageTreeNode.category)}/${row.pageTreeNode.id}/edit`}
+                                            to={`/${row.scope.domain}/${row.scope.language}/pages/pagetree/${categoryToUrlParam(row.category)}/${
+                                                row.id
+                                            }/edit`}
                                         >
                                             <ArrowRight />
                                         </IconButton>

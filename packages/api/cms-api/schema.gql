@@ -127,6 +127,7 @@ type PageTreeNode {
   visibility: PageTreeNodeVisibility!
   documentType: String!
   hideInMenu: Boolean!
+  updatedAt: DateTime!
   category: String!
   childNodes: [PageTreeNode!]!
   numberOfDescendants: Float!
@@ -195,6 +196,11 @@ type PaginatedRedirects {
   totalCount: Int!
 }
 
+type PaginatedPageTreeNodes {
+  nodes: [PageTreeNode!]!
+  totalCount: Int!
+}
+
 type DamFolder {
   id: ID!
   name: String!
@@ -254,7 +260,7 @@ type Query {
   redirect(id: ID!): Redirect!
   redirectSourceAvailable(scope: RedirectScopeInput! = {}, source: String!): Boolean!
   damItemsList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
-  damItemListPosition(sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Float!
+  damItemListPosition(sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Int!
   damFilesList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
   damIsFilenameOccupied(filename: String!, scope: DamScopeInput! = {}, folderId: String): Boolean!
@@ -266,6 +272,7 @@ type Query {
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
+  paginatedPageTreeNodes(scope: PageTreeNodeScopeInput! = {}, category: String, sort: [PageTreeNodeSort!], offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   cronJobs: [CronJob!]!
   currentUser: CurrentUser!
@@ -352,6 +359,16 @@ input FolderFilterInput {
 
 input PageTreeNodeScopeInput {
   thisScopeHasNoFields____: String
+}
+
+input PageTreeNodeSort {
+  field: PageTreeNodeSortField!
+  direction: SortDirection! = ASC
+}
+
+enum PageTreeNodeSortField {
+  updatedAt
+  pos
 }
 
 enum SlugAvailability {
@@ -448,7 +465,7 @@ input UpdateDamFolderInput {
 input PageTreeNodeUpdateInput {
   name: String!
   slug: String!
-  attachedDocument: AttachedDocumentInput!
+  attachedDocument: AttachedDocumentInput
   hideInMenu: Boolean
   createAutomaticRedirectsOnSlugChange: Boolean = true
 }

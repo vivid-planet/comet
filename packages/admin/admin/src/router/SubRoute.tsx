@@ -15,7 +15,11 @@ export function SubRouteIndexRoute({ children }: { children: React.ReactNode }) 
     const matchIndex = matchPath(location.pathname, { path: match.url, exact: true });
     const routeProps = matchIndex ? { path: match.url, exact: true } : { path: urlPrefix };
 
-    return <Route {...routeProps}>{children}</Route>;
+    return (
+        <SubRoute path={`${urlPrefix}/index`}>
+            <Route {...routeProps}>{children}</Route>
+        </SubRoute>
+    );
 }
 
 export function SubRoute({ children, path }: { children: React.ReactNode; path: string }) {
@@ -32,7 +36,7 @@ export function useSubRoutePrefix() {
             ret = routerContext.match.url;
         }
     } else {
-        ret = routerContext?.match.url || "";
+        ret = routerContext?.match?.url || "";
     }
     ret = ret.replace(/\/$/, ""); //remove trailing slash
     return ret;

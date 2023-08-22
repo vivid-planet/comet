@@ -63,6 +63,9 @@ export class PageTreeReadApiService {
     async getNodes(options?: PageTreeReadApiOptions): Promise<PageTreeNodeInterface[]> {
         return this.api.getNodes(options);
     }
+    async getNodesCount(options?: PageTreeReadApiOptions): Promise<number> {
+        return this.api.getNodesCount(options);
+    }
     async getChildNodes(node: PageTreeNodeInterface): Promise<PageTreeNodeInterface[]> {
         return this.api.getChildNodes(node);
     }

@@ -68,7 +68,7 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                             }),
                             flex: 1,
                             renderCell: ({ row }) => {
-                                return row.label ?? row.name;
+                                return row.label && row.label.length > 0 ? row.label : row.name;
                             },
                         },
                     ]}

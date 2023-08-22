@@ -15,7 +15,7 @@ import { DependenciesService } from "../../dependencies/dependencies.service";
 import { Dependency } from "../../dependencies/dependency";
 import { DamScopeInterface } from "../types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
-import { createFileArgs, FileArgsInterface } from "./dto/file.args";
+import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { FileInterface } from "./entities/file.entity";
@@ -79,13 +79,11 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         @Mutation(() => [File])
         @SkipBuild()
         async moveDamFiles(
-            @Args("fileIds", { type: () => [ID] }) fileIds: string[],
-            @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string | null | undefined,
+            @Args({ type: () => MoveDamFilesArgs }) { fileIds, targetFolderId }: MoveDamFilesArgs,
             @GetCurrentUser() user: CurrentUserInterface,
         ): Promise<FileInterface[]> {
-            let targetFolder;
-
-            if (targetFolderId != null) {
+            let targetFolder = null;
+            if (targetFolderId !== null) {
                 targetFolder = await this.foldersRepository.findOneOrFail(targetFolderId);
 
                 if (targetFolder.scope !== undefined && !this.contentScopeService.canAccessScope(targetFolder.scope, user)) {

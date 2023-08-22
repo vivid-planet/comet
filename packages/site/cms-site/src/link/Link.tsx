@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import * as React from "react";
 

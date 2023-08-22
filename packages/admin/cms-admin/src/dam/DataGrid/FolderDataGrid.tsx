@@ -246,12 +246,12 @@ const FolderDataGrid = ({
         setHoveredId(null);
     };
 
-    const getSnackbarElement = (message: string) => (
+    const emptyFolderSnackbarElement = (
         <Snackbar
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             autoHideDuration={5000}
             TransitionComponent={(props: SlideProps) => <Slide {...props} direction="right" />}
-            message={message}
+            message={<FormattedMessage id="comet.dam.upload.noEmptyFolders" defaultMessage={"Empty folders can't be uploaded"} />}
         />
     );
 
@@ -285,14 +285,7 @@ const FolderDataGrid = ({
             // react-dropzone doesn't support folder drops natively
             // the only way to find out if an empty folder was dropped is if there are no rejected files and no accepted files
             if (!fileRejections.length && !acceptedFiles.length) {
-                snackbarApi.showSnackbar(
-                    getSnackbarElement(
-                        intl.formatMessage({
-                            id: "comet.dam.upload.noEmptyFolders",
-                            defaultMessage: "Empty folders can't be uploaded",
-                        }),
-                    ),
-                );
+                snackbarApi.showSnackbar(emptyFolderSnackbarElement);
             }
         },
     });
