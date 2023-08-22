@@ -12,6 +12,7 @@ import { PaginatedResponseFactory } from "../../common/pagination/paginated-resp
 import { ContentScopeService } from "../../content-scope/content-scope.service";
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
 import { DependentsResolver } from "../../dependencies/dependencies.resolver";
+import { DependenciesService } from "../../dependencies/dependencies.service";
 import { DamScopeInterface } from "../types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
@@ -47,8 +48,9 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             @InjectRepository("File") private readonly filesRepository: EntityRepository<FileInterface>,
             @InjectRepository("Folder") private readonly foldersRepository: EntityRepository<FolderInterface>,
             private readonly contentScopeService: ContentScopeService,
+            private readonly dependenciesService: DependenciesService,
         ) {
-            super();
+            super(dependenciesService);
         }
 
         @Query(() => PaginatedDamFiles)

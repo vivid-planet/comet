@@ -1,5 +1,6 @@
 import {
     DependenciesResolver,
+    DependenciesService,
     OffsetBasedPaginationArgs,
     PageTreeNodeInterface,
     PageTreeNodeVisibility,
@@ -24,8 +25,12 @@ export class PagesArgs extends IntersectionType(OffsetBasedPaginationArgs, SortA
 
 @Resolver(() => Page)
 export class PagesResolver extends DependenciesResolver(Page) {
-    constructor(@InjectRepository(Page) private readonly repository: EntityRepository<Page>, private readonly pageTreeService: PageTreeService) {
-        super();
+    constructor(
+        @InjectRepository(Page) private readonly repository: EntityRepository<Page>,
+        private readonly pageTreeService: PageTreeService,
+        private readonly dependenciesService: DependenciesService,
+    ) {
+        super(dependenciesService);
     }
 
     // TODO add scope argument (who uses this anyway? probably dashboard)
