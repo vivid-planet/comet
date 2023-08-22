@@ -3,6 +3,7 @@ import DOMPurify from "dompurify";
 import fs from "fs";
 import { JSDOM } from "jsdom";
 import { Observable } from "rxjs";
+import * as util from "util";
 
 @Injectable()
 export class FileSanitizationInterceptor implements NestInterceptor {
@@ -13,14 +14,17 @@ export class FileSanitizationInterceptor implements NestInterceptor {
         this.domPurify = DOMPurify(window);
     }
 
-    intercept(context: ExecutionContext, next: CallHandler<unknown>): Observable<unknown> | Promise<Observable<unknown>> {
+    async intercept(context: ExecutionContext, next: CallHandler<unknown>): Promise<Observable<unknown>> {
         const ctx = context.switchToHttp();
         const file = ctx.getRequest().file;
 
         if (file && file.mimetype === "image/svg+xml") {
-            const fileContent = fs.readFileSync(file.path, "utf-8");
+            const readFile = util.promisify(fs.readFile);
+            const writeFile = util.promisify(fs.writeFile);
+
+            const fileContent = await readFile(file.path, { encoding: "utf-8" });
             const sanitizedContent = this.domPurify.sanitize(fileContent);
-            fs.writeFileSync(file.path, sanitizedContent);
+            await writeFile(file.path, sanitizedContent);
         }
 
         return next.handle();
