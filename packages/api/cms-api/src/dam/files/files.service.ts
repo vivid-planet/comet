@@ -233,7 +233,7 @@ export class FilesService {
         return this.save(file);
     }
 
-    async moveBatch(files: FileInterface[], targetFolder?: FolderInterface): Promise<FileInterface[]> {
+    async moveBatch(files: FileInterface[], targetFolder: FolderInterface | null): Promise<FileInterface[]> {
         const updatedFiles = [];
 
         for (const file of files) {
@@ -242,7 +242,7 @@ export class FilesService {
                 throw new Error("Target folder scope doesn't match file scope");
             }
 
-            updatedFiles.push(await this.updateByEntity(file, { folderId: targetFolder?.id }));
+            updatedFiles.push(await this.updateByEntity(file, { folderId: targetFolder?.id ?? null }));
         }
 
         return updatedFiles;
