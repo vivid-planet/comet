@@ -23,7 +23,7 @@ const ViewWithNoError: React.FunctionComponent = () => {
 };
 
 const ViewWithError: React.FunctionComponent = () => {
-    throw new Error("Some error occured");
+    throw new Error("Some error occurred");
     return (
         <div>
             <Typography>Error</Typography>
