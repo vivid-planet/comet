@@ -21,7 +21,7 @@
         "lint": "$npm_execpath generate-block-types && run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 --ext .ts,.tsx,.js,.jsx,.json,.md src/ package.json",
         "lint:tsc": "tsc --noEmit",
-        "test": "jest --verbose=true",
+        "test": "jest --verbose=true --passWithNoTests",
         "test:watch": "jest --watch"
     },
     "dependencies": {

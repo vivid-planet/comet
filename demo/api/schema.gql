@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Hmac {
+  timestamp: Float!
+  hash: String!
+}
+
 type Dependency {
   rootId: String!
   rootGraphqlObjectType: String!
@@ -592,6 +597,8 @@ type Query {
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
+  hmacCreate: Hmac!
+  hmacValidate(timestamp: Float!, hash: String!): Boolean!
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!

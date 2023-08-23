@@ -76,7 +76,7 @@ export class AppModule {
                     }),
                     inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
                 }),
-                AuthModule,
+                AuthModule.forRoot(config),
                 ContentScopeModule.forRoot({
                     canAccessScope(requestScope: ContentScope, user: CurrentUserInterface) {
                         if (!user.domains) return true; //all domains

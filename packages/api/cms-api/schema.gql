@@ -13,6 +13,11 @@ type PaginatedDependencies {
   totalCount: Int!
 }
 
+type Hmac {
+  timestamp: Float!
+  hash: String!
+}
+
 type ImageCropArea {
   focalPoint: FocalPoint!
   width: Float
@@ -345,6 +350,8 @@ type Query {
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
+  hmacCreate: Hmac!
+  hmacValidate(timestamp: Float!, hash: String!): Boolean!
 }
 
 input RedirectScopeInput {

@@ -53,6 +53,10 @@ export class EnvironmentVariables {
 
     @IsString()
     @MinLength(16)
+    HMAC_SECRET: string;
+
+    @IsString()
+    @MinLength(16)
     DAM_SECRET: string;
 
     @IsString()
