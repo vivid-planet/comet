@@ -43,8 +43,7 @@ import { Page } from "./pages/entities/page.entity";
 import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
-import { UserPermissionConfigService } from "./user-permission/config.service";
-import { UserPermissionModule } from "./user-permission/user-permission.module";
+import { userPermissionConfig } from "./user-permission/config";
 
 @Module({})
 export class AppModule {
@@ -74,11 +73,9 @@ export class AppModule {
                 }),
                 AuthModule,
                 UserPermissionsModule.forRootAsync({
-                    useFactory: async (config: UserPermissionConfigService) => ({
-                        config,
+                    useFactory: async () => ({
+                        config: userPermissionConfig,
                     }),
-                    inject: [UserPermissionConfigService],
-                    imports: [UserPermissionModule],
                 }),
                 BlocksModule.forRoot({
                     imports: [PagesModule],
