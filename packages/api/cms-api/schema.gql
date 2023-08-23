@@ -136,6 +136,7 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
+  documentDependencies(filter: DependenciesFilterInput): [Dependency!]!
   filesOnPage: [DamFile!]!
 }
 
@@ -161,6 +162,12 @@ type Page implements DocumentInterface {
 interface DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+}
+
+input DependenciesFilterInput {
+  targetGraphqlObjectType: String
+  targetId: String
+  rootColumnName: String
 }
 
 type CurrentUserRight {
@@ -196,12 +203,6 @@ enum RedirectSourceTypeValues {
 enum RedirectGenerationType {
   manual
   automatic
-}
-
-input DependenciesFilterInput {
-  targetGraphqlObjectType: String
-  targetId: String
-  rootColumnName: String
 }
 
 type DamFolder {

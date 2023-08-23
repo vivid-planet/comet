@@ -8,6 +8,8 @@ import { FILE_ENTITY, FileInterface } from "../dam/files/entities/file.entity";
 import { FilesService } from "../dam/files/files.service";
 import { DependentsResolver } from "../dependencies/dependencies.resolver";
 import { DependenciesService } from "../dependencies/dependencies.service";
+import { Dependency } from "../dependencies/dependency";
+import { DependenciesFilterInput } from "../dependencies/dto/dependencies.args";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
@@ -227,6 +229,21 @@ export function createPageTreeResolver({
 
             //if document needs to be loaded use DataLoader for batch loading
             return this.attachedDocumentLoaderService.load(node);
+        }
+
+        @ResolveField(() => [Dependency])
+        async documentDependencies(
+            @Parent() node: PageTreeNodeInterface,
+            @Args("filter", { type: () => DependenciesFilterInput, nullable: true }) filter?: DependenciesFilterInput,
+        ): Promise<Dependency[]> {
+            const document = await this.pageTreeService.getActiveAttachedDocument(node.id, node.documentType);
+
+            if (document === null) {
+                return [];
+            }
+
+            const dependencies = await this.dependenciesService.getDependencies({ entityName: document.type, id: document.documentId }, filter);
+            return dependencies;
         }
 
         @ResolveField(() => [File])

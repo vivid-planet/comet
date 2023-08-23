@@ -183,6 +183,7 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
+  documentDependencies(filter: DependenciesFilterInput): [Dependency!]!
   filesOnPage: [DamFile!]!
   dependents(filter: DependentsFilterInput): [Dependency!]!
 }
