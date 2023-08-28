@@ -68,6 +68,7 @@
         "reflect-metadata": "^0.1.0",
         "rimraf": "^3.0.0",
         "slugify": "^1.6.4",
+        "svg-parser": "^2.0.4",
         "uuid": "^9.0.0"
     },
     "devDependencies": {
@@ -101,6 +102,7 @@
         "@types/passport-jwt": "^3.0.7",
         "@types/probe-image-size": "^7.0.0",
         "@types/rimraf": "^3.0.0",
+        "@types/svg-parser": "^2.0.3",
         "@types/uuid": "^9.0.0",
         "chokidar-cli": "^2.0.0",
         "class-transformer": "^0.5.0",

@@ -5,8 +5,13 @@ import { JSDOM } from "jsdom";
 import { Observable } from "rxjs";
 import * as util from "util";
 
+import { svgContainsJavaScript } from "./files.utils";
+
+const readFile = util.promisify(fs.readFile);
+const unlinkFile = util.promisify(fs.unlink);
+
 @Injectable()
-export class FileSanitizationInterceptor implements NestInterceptor {
+export class FileValidationInterceptor implements NestInterceptor {
     private domPurify;
 
     constructor() {
@@ -19,12 +24,20 @@ export class FileSanitizationInterceptor implements NestInterceptor {
         const file = ctx.getRequest().file;
 
         if (file && file.mimetype === "image/svg+xml") {
-            const readFile = util.promisify(fs.readFile);
-            const writeFile = util.promisify(fs.writeFile);
-
             const fileContent = await readFile(file.path, { encoding: "utf-8" });
-            const sanitizedContent = this.domPurify.sanitize(fileContent);
-            await writeFile(file.path, sanitizedContent);
+
+            if (svgContainsJavaScript(fileContent)) {
+                // https://github.com/expressjs/multer/blob/master/storage/disk.js#L54-L62
+                const path = file.path;
+
+                delete file.destination;
+                delete file.filename;
+                delete file.path;
+
+                await unlinkFile(path);
+
+                throw new Error("SVG contains JavaScript");
+            }
         }
 
         return next.handle();

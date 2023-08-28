@@ -5,6 +5,7 @@ import os from "os";
 import { sep } from "path";
 import slugify from "slugify";
 import stream from "stream";
+import { Node as SvgNode, parse as parseSvg, RootNode as SvgRootNode } from "svg-parser";
 import { promisify } from "util";
 import { v4 as uuid } from "uuid";
 
@@ -65,4 +66,47 @@ export const calculatePartialRanges = (size: number, range: string): { start: nu
         end,
         contentLength: end - start + 1,
     };
+};
+
+const recursivelyFindJSInSvg = (svg: SvgRootNode | SvgNode): boolean => {
+    if (svg.type === "text") {
+        // is TextNode -> can't contain JS
+        return false;
+    }
+
+    if (svg.type === "element") {
+        // is ElementNode -> can be a script tag or have an event handler attribute
+
+        if (svg.tagName && svg.tagName.toLowerCase() === "script") {
+            // is script tag
+            return true;
+        }
+
+        if (svg.properties && Object.keys(svg.properties).some((propKey) => propKey.toLowerCase().startsWith("on"))) {
+            // has event handler
+            return true;
+        }
+    }
+
+    // is ElementNode or RootNode -> can contain JS in its children
+    if (svg.children.length > 0) {
+        let containsJS = false;
+
+        for (const child of svg.children) {
+            if (typeof child === "object") {
+                if (recursivelyFindJSInSvg(child)) {
+                    containsJS = true;
+                }
+            }
+        }
+
+        return containsJS;
+    }
+
+    return false;
+};
+
+export const svgContainsJavaScript = (svg: string) => {
+    const parsedSvg = parseSvg(svg);
+    return recursivelyFindJSInSvg(parsedSvg);
 };

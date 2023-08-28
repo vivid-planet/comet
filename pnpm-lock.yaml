@@ -2422,6 +2422,9 @@ importers:
       slugify:
         specifier: ^1.6.4
         version: 1.6.5
+      svg-parser:
+        specifier: ^2.0.4
+        version: 2.0.4
       uuid:
         specifier: ^9.0.0
         version: 9.0.0
@@ -2516,6 +2519,9 @@ importers:
       '@types/rimraf':
         specifier: ^3.0.0
         version: 3.0.2
+      '@types/svg-parser':
+        specifier: ^2.0.3
+        version: 2.0.3
       '@types/uuid':
         specifier: ^9.0.0
         version: 9.0.0
@@ -14139,6 +14145,10 @@ packages:
       '@types/hoist-non-react-statics': 3.3.1
       '@types/react': 17.0.53
       csstype: 3.1.1
+    dev: true
+
+  /@types/svg-parser@2.0.3:
+    resolution: {integrity: sha512-PKEmDmVWO8f4wwSZDHKHtdnYRM5NI4dCB0lawtUYpxfGhhuQ0qUky80qk6CR8SZhFrRcJmNnWOpN+8uh/X9qgg==}
     dev: true
 
   /@types/tapable@1.0.8:
