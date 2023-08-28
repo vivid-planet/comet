@@ -1,7 +1,5 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
-import DOMPurify from "dompurify";
 import fs from "fs";
-import { JSDOM } from "jsdom";
 import { Observable } from "rxjs";
 import * as util from "util";
 
@@ -12,13 +10,6 @@ const unlinkFile = util.promisify(fs.unlink);
 
 @Injectable()
 export class FileValidationInterceptor implements NestInterceptor {
-    private domPurify;
-
-    constructor() {
-        const window = new JSDOM("").window;
-        this.domPurify = DOMPurify(window);
-    }
-
     async intercept(context: ExecutionContext, next: CallHandler<unknown>): Promise<Observable<unknown>> {
         const ctx = context.switchToHttp();
         const file = ctx.getRequest().file;
