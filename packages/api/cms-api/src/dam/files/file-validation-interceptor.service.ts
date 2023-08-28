@@ -27,7 +27,7 @@ export class FileValidationInterceptor implements NestInterceptor {
 
                 await unlinkFile(path);
 
-                throw new Error("SVG contains JavaScript");
+                throw new Error("Rejected File Upload: SVG must not contain JavaScript");
             }
         }
 
