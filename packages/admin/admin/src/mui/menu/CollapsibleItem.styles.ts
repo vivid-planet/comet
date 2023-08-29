@@ -8,9 +8,11 @@ export type MenuCollapsibleItemClassKey =
     | "childSelected"
     | "listItem"
     | "open"
+    | "collapsedMenuParentTitle"
     | "itemTitle"
-    | "collapsedMenuOpenIcon"
-    | "collapsedMenuClosedIcon"
+    | "collapsibleIcon"
+    | "colorGrey"
+    | "colorWhite"
     | "collapsibleOpen";
 
 export const styles = (theme: Theme) =>
@@ -29,6 +31,13 @@ export const styles = (theme: Theme) =>
                     color: theme.palette.primary.main,
                 },
             },
+            "& [class*='MuiListItemIcon-root']": {
+                color: theme.palette.primary.main,
+            },
+        },
+        collapsedMenuParentTitle: {
+            backgroundColor: ({ level, isMenuOpen, isCollapsibleOpen }) =>
+                level === 1 && !isMenuOpen && isCollapsibleOpen ? theme.palette.primary.main : theme.palette.grey[50],
         },
         itemTitle: {
             fontWeight: theme.typography.fontWeightBold,
@@ -44,15 +53,16 @@ export const styles = (theme: Theme) =>
                 color: ({ isMenuOpen }) => (!isMenuOpen ? `${theme.palette.common.white} !important` : undefined),
             },
         },
-        collapsedMenuOpenIcon: {
-            fontSize: 12,
-            color: theme.palette.common.white,
-        },
-        collapsedMenuClosedIcon: {
+        collapsibleIcon: {
             fontSize: 12,
             color: theme.palette.grey[200],
         },
-
+        colorGrey: {
+            color: theme.palette.grey[500],
+        },
+        colorWhite: {
+            color: theme.palette.common.white,
+        },
         listItem: {},
         open: {},
     });
