@@ -82,7 +82,12 @@ export function DamUploadFileInterceptor(fieldName: string): Type<NestIntercepto
             this.fileInterceptor = new (NestFileInterceptor(fieldName, multerOptions))();
         }
 
-        async validateFileContent(file: { mimetype: string; destination?: string; filename?: string; path?: string }) {
+        async validateFileContent(file: {
+            mimetype: string;
+            destination?: string;
+            filename?: string;
+            path?: string;
+        }): Promise<Observable<unknown> | undefined> {
             if (file && file.path && file.mimetype === "image/svg+xml") {
                 const fileContent = await readFile(file.path, { encoding: "utf-8" });
 
@@ -109,7 +114,10 @@ export function DamUploadFileInterceptor(fieldName: string): Type<NestIntercepto
             const ctx = context.switchToHttp();
             const file = ctx.getRequest().file;
 
-            await this.validateFileContent(file);
+            const err = await this.validateFileContent(file);
+            if (err) {
+                return err;
+            }
 
             return fileInterceptor;
         }

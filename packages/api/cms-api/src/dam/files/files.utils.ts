@@ -1,3 +1,4 @@
+import { XMLParser } from "fast-xml-parser";
 import FileType from "file-type";
 import fs from "fs";
 import got from "got";
@@ -5,7 +6,6 @@ import os from "os";
 import { sep } from "path";
 import slugify from "slugify";
 import stream from "stream";
-import { Node as SvgNode, parse as parseSvg, RootNode as SvgRootNode } from "svg-parser";
 import { promisify } from "util";
 import { v4 as uuid } from "uuid";
 
@@ -68,32 +68,29 @@ export const calculatePartialRanges = (size: number, range: string): { start: nu
     };
 };
 
-const recursivelyFindJSInSvg = (svg: SvgRootNode | SvgNode): boolean => {
-    if (svg.type === "text") {
-        // is TextNode -> can't contain JS
+type SvgNode =
+    | string
+    | {
+          [key: string]: SvgNode;
+      };
+
+const recursivelyFindJSInSvg = (node: SvgNode): boolean => {
+    if (typeof node === "string") {
+        // is plain text -> can't contain JS
         return false;
     }
 
-    if (svg.type === "element") {
-        // is ElementNode -> can be a script tag or have an event handler attribute
-
-        if (svg.tagName && svg.tagName.toLowerCase() === "script") {
-            // is script tag
+    for (const tagOrAttr of Object.keys(node)) {
+        if (tagOrAttr.toLowerCase() === "script" || tagOrAttr.toLowerCase().startsWith("on")) {
+            // is script tag or event handler
             return true;
         }
 
-        if (svg.properties && Object.keys(svg.properties).some((propKey) => propKey.toLowerCase().startsWith("on"))) {
-            // has event handler
+        // is node -> children can contain JS
+        const child = node[tagOrAttr];
+        const childContainsJS = recursivelyFindJSInSvg(child);
+        if (childContainsJS) {
             return true;
-        }
-    }
-
-    // is ElementNode or RootNode -> can contain JS in its children
-    if (svg.children.length > 0) {
-        for (const child of svg.children) {
-            if (typeof child === "object" && recursivelyFindJSInSvg(child)) {
-                return true;
-            }
         }
     }
 
@@ -101,6 +98,8 @@ const recursivelyFindJSInSvg = (svg: SvgRootNode | SvgNode): boolean => {
 };
 
 export const svgContainsJavaScript = (svg: string) => {
-    const parsedSvg = parseSvg(svg);
-    return recursivelyFindJSInSvg(parsedSvg);
+    const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "" });
+    const jsonObj = parser.parse(svg) as SvgNode;
+
+    return recursivelyFindJSInSvg(jsonObj);
 };
