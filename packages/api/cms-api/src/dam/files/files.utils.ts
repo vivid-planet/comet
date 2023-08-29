@@ -90,17 +90,11 @@ const recursivelyFindJSInSvg = (svg: SvgRootNode | SvgNode): boolean => {
 
     // is ElementNode or RootNode -> can contain JS in its children
     if (svg.children.length > 0) {
-        let containsJS = false;
-
         for (const child of svg.children) {
-            if (typeof child === "object") {
-                if (recursivelyFindJSInSvg(child)) {
-                    containsJS = true;
-                }
+            if (typeof child === "object" && recursivelyFindJSInSvg(child)) {
+                return true;
             }
         }
-
-        return containsJS;
     }
 
     return false;
