@@ -47,9 +47,23 @@ const createApiRedirects = async (): Promise<Redirect[]> => {
     for (const redirect of response.redirects) {
         let source: string | undefined;
         let destination: string | undefined;
+        let has: Redirect["has"];
 
         if (redirect.sourceType === "path") {
-            source = redirect.source.replaceAll(":", "\\:"); // escape colon, otherwise it is used for next.js regex path matching  (https://nextjs.org/docs/pages/api-reference/next-config-js/redirects#regex-path-matching)
+            source = redirect.source.replace(/:/g, "\\:"); // escape colon, otherwise it is used for next.js regex path matching  (https://nextjs.org/docs/pages/api-reference/next-config-js/redirects#regex-path-matching)
+
+            // query parameters have to be defined with has, see: https://nextjs.org/docs/pages/api-reference/next-config-js/redirects#header-cookie-and-query-matching
+            if (source?.includes("?")) {
+                const searchParams = new URLSearchParams(source.split("?")[1]);
+                source = source.split("?")[0];
+                has = [];
+
+                searchParams.forEach((value, key) => {
+                    if (has) {
+                        has.push({ type: "query", key, value });
+                    }
+                });
+            }
         }
 
         const target = redirect.target as RedirectsLinkBlockData;
@@ -78,7 +92,7 @@ const createApiRedirects = async (): Promise<Redirect[]> => {
         }
 
         if (source && destination) {
-            redirects.push({ source, destination, permanent: true });
+            redirects.push({ source, destination, has, permanent: true });
         }
     }
 
