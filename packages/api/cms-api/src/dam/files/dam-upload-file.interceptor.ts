@@ -1,17 +1,24 @@
-import { Inject, Injectable, mixin, NestInterceptor, Type } from "@nestjs/common";
+import { HttpException, Inject, Injectable, mixin, NestInterceptor, Type } from "@nestjs/common";
+import { ExecutionContext } from "@nestjs/common/interfaces/features/execution-context.interface";
+import { CallHandler } from "@nestjs/common/interfaces/features/nest-interceptor.interface";
 import { FileInterceptor as NestFileInterceptor } from "@nestjs/platform-express";
 import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 import fs from "fs";
 import * as mimedb from "mime-db";
 import * as multer from "multer";
 import os from "os";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
+import util from "util";
 import { v4 as uuid } from "uuid";
 
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { defaultDamAcceptedMimetypes } from "../common/mimeTypes/default-dam-accepted-mimetypes";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
+import { svgContainsJavaScript } from "./files.utils";
+
+const readFile = util.promisify(fs.readFile);
+const unlinkFile = util.promisify(fs.unlink);
 
 export function DamUploadFileInterceptor(fieldName: string): Type<NestInterceptor> {
     @Injectable()
@@ -75,8 +82,36 @@ export function DamUploadFileInterceptor(fieldName: string): Type<NestIntercepto
             this.fileInterceptor = new (NestFileInterceptor(fieldName, multerOptions))();
         }
 
-        intercept(...args: Parameters<NestInterceptor["intercept"]>): Observable<unknown> | Promise<Observable<unknown>> {
-            return this.fileInterceptor.intercept(...args);
+        async validateFileContent(file: { mimetype: string; destination?: string; filename?: string; path?: string }) {
+            if (file && file.path && file.mimetype === "image/svg+xml") {
+                const fileContent = await readFile(file.path, { encoding: "utf-8" });
+
+                if (svgContainsJavaScript(fileContent)) {
+                    // https://github.com/expressjs/multer/blob/master/storage/disk.js#L54-L62
+                    const path = file.path;
+
+                    delete file.destination;
+                    delete file.filename;
+                    delete file.path;
+
+                    if (path) {
+                        await unlinkFile(path);
+                    }
+
+                    return throwError(() => new HttpException("Rejected File Upload: SVG must not contain JavaScript", 422));
+                }
+            }
+        }
+
+        async intercept(context: ExecutionContext, next: CallHandler<unknown>): Promise<Observable<unknown>> {
+            const fileInterceptor = await this.fileInterceptor.intercept(context, next);
+
+            const ctx = context.switchToHttp();
+            const file = ctx.getRequest().file;
+
+            await this.validateFileContent(file);
+
+            return fileInterceptor;
         }
     }
     return mixin(Interceptor);
