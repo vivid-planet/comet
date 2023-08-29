@@ -154,7 +154,7 @@ export function PagesPage({
                         </ToolbarActions>
                     </Toolbar>
                     <PageTreeContext.Provider value={{ allCategories, documentTypes, tree, query: pagesQuery }}>
-                        <FullHeightMainContent>
+                        <PageTreeContent fullHeight>
                             <ActionToolbarBox>
                                 <PagesPageActionToolbar
                                     selectedState={selectState}
@@ -189,7 +189,7 @@ export function PagesPage({
                                     siteUrl={siteConfig.url}
                                 />
                             </FullHeightPaper>
-                        </FullHeightMainContent>
+                        </PageTreeContent>
                     </PageTreeContext.Provider>
 
                     <EditDialog>
@@ -229,9 +229,8 @@ export function PagesPage({
     );
 }
 
-const FullHeightMainContent = withStyles({
+const PageTreeContent = withStyles({
     root: {
-        height: "calc(100vh - 140px)",
         display: "flex",
         flexDirection: "column",
     },

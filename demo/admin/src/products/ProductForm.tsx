@@ -147,7 +147,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     });
 
     if (error) {
-        return <FormattedMessage id="common.error" defaultMessage="An error has occured. Please try again at later" />;
+        return <FormattedMessage id="common.error" defaultMessage="An error has occurred. Please try again at later" />;
     }
 
     if (loading) {

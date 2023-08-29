@@ -1,11 +1,10 @@
 import { FormSection, PrettyBytes, Table } from "@comet/admin";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { isDateString } from "class-validator";
 import React from "react";
 import { FormattedDate, FormattedTime, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
-
-import { isValidISOString } from "../../common/helpers/isValidISOString";
 
 interface ImageInfos {
     width: number;
@@ -110,7 +109,7 @@ export const ImageInfos = ({ imageInfos: { width, height, fileSize, fileFormat, 
                                 render: (row) => {
                                     if (typeof row.value === "object") {
                                         return JSON.stringify(row.value);
-                                    } else if (typeof row.value === "string" && isValidISOString(row.value)) {
+                                    } else if (typeof row.value === "string" && isDateString(row.value)) {
                                         return (
                                             <>
                                                 <FormattedDate value={row.value} day="2-digit" month="2-digit" year="numeric" />
