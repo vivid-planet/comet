@@ -12,6 +12,7 @@ export interface MenuItemProps extends MenuLevel {
     icon?: React.ReactElement;
     secondaryAction?: React.ReactNode;
     showText?: boolean;
+    isMenuOpen?: boolean;
     isCollapsibleOpen?: boolean;
     hasChildElements?: boolean;
 }
@@ -25,9 +26,11 @@ const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProp
     icon,
     level = 1,
     secondaryAction,
-    showText = true,
+    showText,
+    isMenuOpen,
     ...otherProps
 }) => {
+    showText = isMenuOpen ? showText || true : level === 2 || level === 3 ? showText || true : false;
     const context = React.useContext(MenuContext);
     if (!context) throw new Error("Could not find context for menu");
     if (level > 3) throw new Error("Maximum nesting level of 2 exceeded.");
@@ -38,6 +41,7 @@ const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProp
     if (level === 1) listItemClasses.push(classes.level1);
     if (level === 2) listItemClasses.push(classes.level2);
     if (level === 3) listItemClasses.push(classes.level3);
+    if (level === 3 && isMenuOpen) listItemClasses.push(classes.level3Enumeration);
     if (hasIcon) listItemClasses.push(classes.hasIcon);
     if (secondary) listItemClasses.push(classes.hasSecondaryText);
     if (secondaryAction) listItemClasses.push(classes.hasSecondaryAction);

@@ -4,6 +4,7 @@ import * as React from "react";
 import { useHistory } from "react-router";
 
 import { MenuContext } from "./Context";
+import { MenuItemGroupProps } from "./ItemGroup";
 import { Drawer, MenuClassKey, styles } from "./Menu.styles";
 
 export const DRAWER_WIDTH = 300;
@@ -64,6 +65,12 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
     const temporaryOpen = variant === "temporary" && open;
     const permanentOpen = variant === "permanent" && open;
 
+    const childElements = React.Children.map(children, (child: React.ReactElement<MenuItemGroupProps>) => {
+        return React.cloneElement<MenuItemGroupProps>(child, {
+            isMenuOpen: open,
+        });
+    });
+
     // Always render both temporary and permanent drawers to make sure, the opening and closing animations run fully when switching between variants.
     return (
         <>
@@ -77,7 +84,7 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
                 onClose={toggleOpen}
                 {...temporaryDrawerProps}
             >
-                {children}
+                {childElements}
             </Drawer>
 
             <Drawer
@@ -93,7 +100,7 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
                 }}
                 {...permanentDrawerProps}
             >
-                {children}
+                {childElements}
             </Drawer>
         </>
     );

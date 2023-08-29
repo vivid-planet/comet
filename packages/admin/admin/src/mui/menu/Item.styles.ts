@@ -3,7 +3,7 @@ import { createStyles } from "@mui/styles";
 
 import { MenuItemProps, MuiListItemProps } from "./Item";
 
-export type MenuItemClassKey = "root" | "level1" | "level2" | "level3" | "hasIcon" | "hasSecondaryText" | "hasSecondaryAction";
+export type MenuItemClassKey = "root" | "level1" | "level2" | "level3" | "hasIcon" | "hasSecondaryText" | "hasSecondaryAction" | "level3Enumeration";
 
 const colors = {
     textLevel1: "#242424",
@@ -59,13 +59,13 @@ export const styles = (theme: Theme) =>
         },
         level2: {
             color: colors.textLevel2,
-            paddingLeft: 20,
+            paddingLeft: ({ isMenuOpen }) => (isMenuOpen ? 35 : 20),
             paddingRight: 20,
             paddingTop: 10,
             paddingBottom: 10,
             "&:last-child": {
-                borderBottom: ({ level, hasChildElements, isCollapsibleOpen }) =>
-                    level === 2 && (!hasChildElements || !isCollapsibleOpen) ? `1px solid ${theme.palette.grey[50]}` : "initial",
+                borderBottom: ({ level, hasChildElements, isMenuOpen, isCollapsibleOpen }) =>
+                    level === 2 && isMenuOpen && !hasChildElements && !isCollapsibleOpen ? `1px solid ${theme.palette.grey[50]}` : "initial",
                 boxSizing: "border-box",
             },
             "&[class*='Mui-selected']": {
@@ -92,57 +92,14 @@ export const styles = (theme: Theme) =>
         },
         level3: {
             color: colors.textLevel2,
-            paddingLeft: 20,
+            paddingLeft: ({ isMenuOpen }) => (isMenuOpen ? 50 : 20),
             paddingRight: 20,
             paddingTop: 0,
             paddingBottom: 0,
             position: "relative",
-            "&:not(:last-child)": {
-                "& [class*='MuiListItemText-root']": {
-                    position: "relative",
-                    "&:before": {
-                        content: "''",
-                        position: "absolute",
-                        width: 1,
-                        height: "100%",
-                        top: 0,
-                        backgroundColor: theme.palette.grey[100],
-                    },
-                    "&:after": {
-                        content: "''",
-                        position: "absolute",
-                        width: 5,
-                        height: 1,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        backgroundColor: theme.palette.grey[100],
-                    },
-                },
-            },
             "&:last-child": {
-                borderBottom: `1px solid ${theme.palette.grey[50]}`,
+                borderBottom: ({ isMenuOpen, level }) => (isMenuOpen && level !== 3 ? `1px solid ${theme.palette.grey[50]}` : "initial"),
                 boxSizing: "border-box",
-
-                "& [class*='MuiListItemText-root']": {
-                    position: "relative",
-                    "&:before": {
-                        content: "''",
-                        position: "absolute",
-                        width: 1,
-                        height: "50%",
-                        top: 0,
-                        backgroundColor: theme.palette.grey[100],
-                    },
-                    "&:after": {
-                        content: "''",
-                        position: "absolute",
-                        width: 5,
-                        height: 1,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        backgroundColor: theme.palette.grey[100],
-                    },
-                },
             },
             "&[class*='Mui-selected']": {
                 backgroundColor: theme.palette.primary.main,
@@ -167,6 +124,52 @@ export const styles = (theme: Theme) =>
                 paddingLeft: 14,
                 paddingTop: 14,
                 paddingBottom: 14,
+            },
+        },
+        level3Enumeration: {
+            "&:not(:last-child)": {
+                "& [class*='MuiListItemText-root']": {
+                    position: "relative",
+                    "&:before": {
+                        content: "''",
+                        position: "absolute",
+                        width: 1,
+                        height: "100%",
+                        top: 0,
+                        backgroundColor: theme.palette.grey[100],
+                    },
+                    "&:after": {
+                        content: "''",
+                        position: "absolute",
+                        width: 5,
+                        height: 1,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        backgroundColor: theme.palette.grey[100],
+                    },
+                },
+            },
+            "&:last-child": {
+                "& [class*='MuiListItemText-root']": {
+                    position: "relative",
+                    "&:before": {
+                        content: "''",
+                        position: "absolute",
+                        width: 1,
+                        height: "50%",
+                        top: 0,
+                        backgroundColor: theme.palette.grey[100],
+                    },
+                    "&:after": {
+                        content: "''",
+                        position: "absolute",
+                        width: 5,
+                        height: 1,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        backgroundColor: theme.palette.grey[100],
+                    },
+                },
             },
         },
         hasIcon: {},

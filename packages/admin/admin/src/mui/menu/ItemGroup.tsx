@@ -2,6 +2,10 @@ import { Box, ComponentsOverrides, Theme, Tooltip, Typography } from "@mui/mater
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
+import { MenuChild, MenuCollapsibleItemProps } from "./CollapsibleItem";
+import { MenuItemProps } from "./Item";
+import { MenuItemRouterLinkProps } from "./ItemRouterLink";
+
 export type MenuItemGroupClassKey = "root" | "groupTitleContainer" | "groupTitle";
 
 const styles = (theme: Theme) =>
@@ -9,43 +13,49 @@ const styles = (theme: Theme) =>
         root: { marginTop: theme.spacing(8) },
         groupTitle: {
             fontWeight: theme.typography.fontWeightBold,
-            fontSize: ({ drawerOpen }) => (drawerOpen ? 14 : 12),
-            border: ({ drawerOpen }) => (drawerOpen ? `2px solid ${theme.palette.common.white}` : `2px solid ${theme.palette.grey[100]}`),
-            borderRadius: ({ drawerOpen }) => (drawerOpen ? "initial" : 20),
-            padding: ({ drawerOpen }) => (drawerOpen ? "0" : theme.spacing(2, 4)),
+            fontSize: ({ isMenuOpen }) => (isMenuOpen ? 14 : 12),
+            border: ({ isMenuOpen }) => (isMenuOpen ? `2px solid ${theme.palette.common.white}` : `2px solid ${theme.palette.grey[100]}`),
+            borderRadius: ({ isMenuOpen }) => (isMenuOpen ? "initial" : 20),
+            padding: ({ isMenuOpen }) => (isMenuOpen ? "0" : theme.spacing(2, 4)),
             lineHeight: "20px",
-            color: ({ drawerOpen }) => (drawerOpen ? `${theme.palette.common.black}` : `${theme.palette.grey[300]}`),
+            color: ({ isMenuOpen }) => (isMenuOpen ? `${theme.palette.common.black}` : `${theme.palette.grey[300]}`),
         },
         groupTitleContainer: {
             display: "flex",
-            justifyContent: ({ drawerOpen }) => (drawerOpen ? "flex-start" : "center"),
-            padding: ({ drawerOpen }) => `${theme.spacing(2)} ${drawerOpen ? theme.spacing(4) : 0}`,
+            justifyContent: ({ isMenuOpen }) => (isMenuOpen ? "flex-start" : "center"),
+            padding: ({ isMenuOpen }) => `${theme.spacing(2)} ${isMenuOpen ? theme.spacing(4) : 0}`,
         },
     });
 
 export interface MenuItemGroupProps {
     title: string;
-    drawerOpen?: boolean;
+    isMenuOpen?: boolean;
 }
 
-const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({ title, children, classes, drawerOpen }) => {
+const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({ title, children, classes, isMenuOpen }) => {
     const initialTitle = title;
     function getInitials(title: string) {
         const words = title.split(/\s+/).filter((word) => word.match(/[A-Za-z]/));
         return words.map((word) => word[0].toUpperCase()).join("");
     }
 
-    if (drawerOpen === false) {
+    if (isMenuOpen === false) {
         title = getInitials(title);
     }
+
+    const childElements = React.Children.map(children, (child: MenuChild) => {
+        return React.cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
+            isMenuOpen,
+        });
+    });
 
     return (
         <Box className={classes.root}>
             <Tooltip
                 placement="right"
-                disableHoverListener={drawerOpen}
-                disableFocusListener={drawerOpen}
-                disableTouchListener={drawerOpen}
+                disableHoverListener={isMenuOpen}
+                disableFocusListener={isMenuOpen}
+                disableTouchListener={isMenuOpen}
                 title={initialTitle}
             >
                 <Box className={classes.groupTitleContainer}>
@@ -54,7 +64,7 @@ const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & Me
                     </Typography>
                 </Box>
             </Tooltip>
-            {children}
+            {childElements}
         </Box>
     );
 };
