@@ -54,7 +54,7 @@ export const ErrorDialog: React.FunctionComponent<ErrorDialogProps> = ({ show = 
     // Destructuring and default values
     const {
         title = intl.formatMessage({ id: "comet.errorDialog.title", defaultMessage: "Error" }),
-        userMessage = intl.formatMessage({ id: "comet.errorDialog.abstractUserMessage", defaultMessage: "An error occured" }),
+        userMessage = intl.formatMessage({ id: "comet.errorDialog.abstractUserMessage", defaultMessage: "An error occurred" }),
         error,
     } = errorOptions;
 

@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import { FormSection, useStackApi } from "@comet/admin";
 import { BallTriangle as BallTriangleIcon, Link as LinkIcon, OpenNewTab as OpenNewTabIcon, Reload as ReloadIcon } from "@comet/admin-icons";
 import { Button, IconButton, Link, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -86,7 +87,9 @@ const Duplicates: React.FC<{ fileId: string }> = ({ fileId }) => {
 
                     return (
                         <ListItem key={file.id} divider>
-                            <ListItemText primary={file.name} secondary={`/${folderPath.join("/")}`} />
+                            <ListItemTextWrapper>
+                                <ListItemText primary={file.name} secondary={`/${folderPath.join("/")}`} />
+                            </ListItemTextWrapper>
                             <ListItemSecondaryAction>
                                 <IconButton component={Link} underline="none" href={href} size="large">
                                     <LinkIcon />
@@ -111,3 +114,7 @@ const Duplicates: React.FC<{ fileId: string }> = ({ fileId }) => {
 };
 
 export default Duplicates;
+
+const ListItemTextWrapper = styled("div")`
+    padding-right: 48px;
+`;
