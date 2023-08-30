@@ -2,66 +2,13 @@ import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
 import { Collapse, ComponentsOverrides, Fade, List, Menu, Theme, Typography } from "@mui/material";
 import { MenuProps } from "@mui/material/Menu/Menu";
 import { SvgIconProps } from "@mui/material/SvgIcon";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { matchPath, useLocation } from "react-router";
 
+import { MenuCollapsibleItemClassKey, styles } from "./CollapsibleItem.styles";
 import { MenuItem, MenuItemProps } from "./Item";
 import { MenuItemRouterLinkProps } from "./ItemRouterLink";
-
-export type MenuCollapsibleItemClassKey =
-    | "root"
-    | "childSelected"
-    | "listItem"
-    | "open"
-    | "itemTitle"
-    | "collapsedMenuOpenIcon"
-    | "collapsedMenuClosedIcon"
-    | "collapsibleOpen";
-
-const styles = (theme: Theme) =>
-    createStyles<MenuCollapsibleItemClassKey, MenuCollapsibleItemProps>({
-        root: {},
-        childSelected: {
-            color: theme.palette.primary.main,
-            "& $listItem": {
-                "& [class*='MuiListItemText-root']": {
-                    color: theme.palette.primary.main,
-                    "& [class*='MuiListItemText-primary']": {
-                        fontWeight: ({ level }) => level === 2 || (level === 3 && theme.typography.fontWeightBold),
-                    },
-                },
-                "& [class*='MuiListItemIcon-root']": {
-                    color: theme.palette.primary.main,
-                },
-            },
-        },
-        itemTitle: {
-            fontWeight: theme.typography.fontWeightBold,
-            fontSize: 12,
-            padding: "15px 15px 20px 15px",
-            lineHeight: "16px",
-            color: theme.palette.grey[500],
-        },
-        collapsibleOpen: {
-            backgroundColor: ({ isMenuOpen }) => (!isMenuOpen ? theme.palette.primary.main : undefined),
-            color: ({ isMenuOpen }) => (!isMenuOpen ? `${theme.palette.common.white} !important` : undefined),
-            "& [class*='MuiListItemIcon-root']": {
-                color: ({ isMenuOpen }) => (!isMenuOpen ? `${theme.palette.common.white} !important` : undefined),
-            },
-        },
-        collapsedMenuOpenIcon: {
-            fontSize: 12,
-            color: theme.palette.common.white,
-        },
-        collapsedMenuClosedIcon: {
-            fontSize: 12,
-            color: theme.palette.grey[200],
-        },
-
-        listItem: {},
-        open: {},
-    });
 
 export interface MenuLevel {
     level?: 1 | 2 | 3;
