@@ -1,5 +1,6 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
 import { Collapse, ComponentsOverrides, Fade, List, Menu, Theme, Typography } from "@mui/material";
+import { MenuProps } from "@mui/material/Menu/Menu";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { matchPath, useLocation } from "react-router";
@@ -46,6 +47,7 @@ export interface MenuCollapsibleItemProps extends MenuItemProps {
     openedIcon?: React.ReactNode;
     closedIcon?: React.ReactNode;
     isMenuOpen?: boolean;
+    collapsedMenuTransitionComponent?: MenuProps["TransitionComponent"];
 }
 
 const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemProps> = ({
@@ -60,6 +62,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
     openedIcon,
     closedIcon,
     children,
+    collapsedMenuTransitionComponent = Fade,
     ...otherProps
 }) => {
     openedIcon = openedIcon || (isMenuOpen ? <ChevronUp /> : <ChevronRight fontSize="small" />);
@@ -132,7 +135,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
             >
                 <MenuItem
                     primary={primary}
-                    showText={isMenuOpen ? showText : level === 2 || level === 3}
+                    showText={isMenuOpen ? showText : itemLevel > 1}
                     secondary={secondary}
                     hasChildElements={!!childElements?.length}
                     isCollapsibleOpen={open}
@@ -160,7 +163,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
                     }}
                     open={open}
                     anchorEl={anchorEl}
-                    TransitionComponent={Fade}
+                    TransitionComponent={collapsedMenuTransitionComponent}
                     anchorOrigin={{
                         vertical: "center",
                         horizontal: "right",
