@@ -12,7 +12,7 @@ const MasterMenu: React.FC = () => {
     const windowSize = useWindowSize();
     const intl = useIntl();
     const match = useRouteMatch();
-    const { scope } = useContentScope();
+    const { scope, values } = useContentScope();
     const useTemporaryMenu: boolean = windowSize.width < permanentMenuMinWidth;
 
     // Open menu when changing to permanent variant and close when changing to temporary variant.
@@ -24,7 +24,9 @@ const MasterMenu: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
 
-    const sectionScopeTitle = `${scope?.domain.charAt(0).toUpperCase() + scope?.domain.slice(1)} - ${scope?.language?.toUpperCase()}`;
+    const sectionScopeTitle = `${scope?.domain.charAt(0).toUpperCase() + scope?.domain.slice(1)} - ${
+        values.language[0].label ?? scope?.language?.toUpperCase()
+    }`;
 
     return (
         <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
