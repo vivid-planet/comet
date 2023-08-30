@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
 import { Collapse, ComponentsOverrides, Fade, List, Menu, Theme, Typography } from "@mui/material";
 import { MenuProps } from "@mui/material/Menu/Menu";
+import { SvgIconProps } from "@mui/material/SvgIcon";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { matchPath, useLocation } from "react-router";
@@ -8,7 +9,15 @@ import { matchPath, useLocation } from "react-router";
 import { MenuItem, MenuItemProps } from "./Item";
 import { MenuItemRouterLinkProps } from "./ItemRouterLink";
 
-export type MenuCollapsibleItemClassKey = "root" | "childSelected" | "listItem" | "open" | "itemTitle";
+export type MenuCollapsibleItemClassKey =
+    | "root"
+    | "childSelected"
+    | "listItem"
+    | "open"
+    | "itemTitle"
+    | "collapsedMenuOpenIcon"
+    | "collapsedMenuClosedIcon"
+    | "collapsibleOpen";
 
 const styles = (theme: Theme) =>
     createStyles<MenuCollapsibleItemClassKey, MenuCollapsibleItemProps>({
@@ -18,6 +27,9 @@ const styles = (theme: Theme) =>
             "& $listItem": {
                 "& [class*='MuiListItemText-root']": {
                     color: theme.palette.primary.main,
+                    "& [class*='MuiListItemText-primary']": {
+                        fontWeight: ({ level }) => level === 2 || (level === 3 && theme.typography.fontWeightBold),
+                    },
                 },
                 "& [class*='MuiListItemIcon-root']": {
                     color: theme.palette.primary.main,
@@ -31,6 +43,22 @@ const styles = (theme: Theme) =>
             lineHeight: "16px",
             color: theme.palette.grey[500],
         },
+        collapsibleOpen: {
+            backgroundColor: ({ isMenuOpen }) => (!isMenuOpen ? theme.palette.primary.main : undefined),
+            color: ({ isMenuOpen }) => (!isMenuOpen ? `${theme.palette.common.white} !important` : undefined),
+            "& [class*='MuiListItemIcon-root']": {
+                color: ({ isMenuOpen }) => (!isMenuOpen ? `${theme.palette.common.white} !important` : undefined),
+            },
+        },
+        collapsedMenuOpenIcon: {
+            fontSize: 12,
+            color: theme.palette.common.white,
+        },
+        collapsedMenuClosedIcon: {
+            fontSize: 12,
+            color: theme.palette.grey[200],
+        },
+
         listItem: {},
         open: {},
     });
@@ -44,8 +72,8 @@ export type MenuChild = React.ReactElement<MenuCollapsibleItemProps | MenuItemRo
 export interface MenuCollapsibleItemProps extends MenuItemProps {
     children: MenuChild | MenuChild[];
     openByDefault?: boolean;
-    openedIcon?: React.ReactNode;
-    closedIcon?: React.ReactNode;
+    OpenedIcon?: React.JSXElementConstructor<SvgIconProps>;
+    ClosedIcon?: React.JSXElementConstructor<SvgIconProps>;
     isMenuOpen?: boolean;
     collapsedMenuTransitionComponent?: MenuProps["TransitionComponent"];
 }
@@ -59,26 +87,41 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
     isMenuOpen,
     icon,
     openByDefault = false,
-    openedIcon,
-    closedIcon,
+    OpenedIcon,
+    ClosedIcon,
     children,
     collapsedMenuTransitionComponent = Fade,
     ...otherProps
 }) => {
-    openedIcon = openedIcon || (isMenuOpen ? <ChevronUp /> : <ChevronRight fontSize="small" />);
-    closedIcon = closedIcon || (isMenuOpen ? <ChevronDown /> : <ChevronRight fontSize="small" />);
+    OpenedIcon = OpenedIcon || (isMenuOpen ? ChevronUp : ChevronRight);
+    ClosedIcon = ClosedIcon || (isMenuOpen ? ChevronDown : ChevronRight);
 
     const itemLevel: MenuLevel["level"] = level ? level : 1;
     let hasSelectedChild = false;
     const location = useLocation();
+
+    const [open, setOpen] = React.useState<boolean>(openByDefault || hasSelectedChild);
+    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
     React.useEffect(() => {
         // set open state manually to false to avoid a menu opening when isMenuOpen state changes
         if (!isMenuOpen) setOpen(false);
     }, [isMenuOpen]);
 
+    function checkIfPathInLocation(child: React.ReactElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>) {
+        return "to" in child.props && matchPath(location.pathname, { path: child.props.to, strict: true });
+    }
+
     const childElements = React.Children.map(children, (child: MenuChild) => {
-        if ("to" in child.props && matchPath(location.pathname, { path: child.props.to, strict: true })) {
+        // child is selected
+        if (checkIfPathInLocation(child)) {
+            hasSelectedChild = true;
+        }
+
+        // sub child is selected
+        const subChildElements =
+            "children" in child.props ? React.Children.map(child?.props?.children, (child: MenuChild) => child) : ([] as MenuChild[]);
+        if (subChildElements?.some((child: MenuChild) => child.props && checkIfPathInLocation(child))) {
             hasSelectedChild = true;
         }
 
@@ -90,7 +133,10 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
         });
     });
 
-    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+    const closeMenu = () => {
+        setAnchorEl(null);
+        setOpen(false);
+    };
 
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
         if (isMenuOpen) return;
@@ -98,11 +144,6 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
             setAnchorEl(event.currentTarget);
             setOpen(true);
         }
-    };
-
-    const closeMenu = () => {
-        setAnchorEl(null);
-        setOpen(false);
     };
 
     const handlePopoverClose = (e: React.MouseEvent<HTMLElement>) => {
@@ -115,8 +156,6 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
 
         closeMenu();
     };
-
-    const [open, setOpen] = React.useState<boolean>(openByDefault || hasSelectedChild);
 
     const listClasses = [classes.root];
     if (hasSelectedChild) listClasses.push(classes.childSelected);
@@ -143,7 +182,14 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
                     icon={icon}
                     level={level}
                     onClick={() => setOpen(!open)}
-                    secondaryAction={open ? openedIcon : closedIcon}
+                    secondaryAction={
+                        itemLevel === 1 && open ? (
+                            <OpenedIcon className={classes.collapsedMenuOpenIcon} />
+                        ) : (
+                            <ClosedIcon className={classes.collapsedMenuClosedIcon} />
+                        )
+                    }
+                    className={itemLevel === 1 && open ? classes.collapsedMenuOpenIcon : undefined}
                 />
             </div>
             {isMenuOpen ? (

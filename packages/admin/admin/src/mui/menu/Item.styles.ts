@@ -29,9 +29,6 @@ export const styles = (theme: Theme) =>
             "& [class*='MuiListItemText-inset']": {
                 paddingLeft: 28,
             },
-            "& [class*='MuiSvgIcon-root']": {
-                fontSize: 16,
-            },
         },
         level1: {
             borderBottom: `1px solid ${theme.palette.grey[50]}`,
@@ -41,6 +38,13 @@ export const styles = (theme: Theme) =>
             paddingRight: 20,
             paddingTop: 16,
             paddingBottom: 16,
+            "&:hover": {
+                backgroundColor: ({ isMenuOpen }) => !isMenuOpen && theme.palette.primary.main,
+                color: ({ isMenuOpen }) => !isMenuOpen && `${theme.palette.common.white} !important`,
+                "& [class*='MuiListItemIcon-root']": {
+                    color: ({ isMenuOpen }) => !isMenuOpen && `${theme.palette.common.white} !important`,
+                },
+            },
             "&[class*='Mui-selected']": {
                 backgroundColor: theme.palette.grey[50],
                 color: theme.palette.primary.main,
@@ -63,31 +67,35 @@ export const styles = (theme: Theme) =>
             paddingRight: 20,
             paddingTop: 10,
             paddingBottom: 10,
+            "& [class*='MuiListItemText-primary']": {
+                fontWeight: theme.typography.fontWeightRegular,
+                fontSize: 14,
+                lineHeight: "20px",
+            },
             "&:last-child": {
                 borderBottom: ({ level, hasChildElements, isMenuOpen, isCollapsibleOpen }) =>
                     level === 2 && isMenuOpen && !hasChildElements && !isCollapsibleOpen ? `1px solid ${theme.palette.grey[50]}` : "initial",
                 boxSizing: "border-box",
             },
             "&[class*='Mui-selected']": {
-                backgroundColor: theme.palette.primary.main,
-                color: "#fff",
+                backgroundColor: theme.palette.common.white,
+                color: theme.palette.primary.main,
+                fontWeight: theme.typography.fontWeightBold,
                 "&:after": {
-                    backgroundColor: theme.palette.primary.dark,
+                    backgroundColor: ({ isMenuOpen }) => isMenuOpen && theme.palette.primary.main,
                 },
                 "&:hover": {
-                    backgroundColor: theme.palette.primary.dark,
+                    backgroundColor: theme.palette.grey[50],
                 },
                 "& [class*='MuiListItemText-primary']": {
                     fontWeight: theme.typography.fontWeightBold,
                 },
+                "& [class*='MuiListItemIcon-root']": {
+                    color: theme.palette.primary.main,
+                },
             },
             "& [class*='MuiListItemText-root']": {
                 margin: 0,
-            },
-            "& [class*='MuiListItemText-primary']": {
-                fontWeight: theme.typography.fontWeightRegular,
-                fontSize: 14,
-                lineHeight: "20px",
             },
         },
         level3: {
@@ -97,21 +105,23 @@ export const styles = (theme: Theme) =>
             paddingTop: 0,
             paddingBottom: 0,
             position: "relative",
+
             "&:last-child": {
                 borderBottom: ({ isMenuOpen, level }) => (isMenuOpen && level !== 3 ? `1px solid ${theme.palette.grey[50]}` : "initial"),
                 boxSizing: "border-box",
             },
             "&[class*='Mui-selected']": {
-                backgroundColor: theme.palette.primary.main,
-                color: "#fff",
-                "&:after": {
-                    backgroundColor: theme.palette.primary.dark,
-                },
+                backgroundColor: theme.palette.common.white,
+                color: theme.palette.primary.main,
+                fontWeight: theme.typography.fontWeightBold,
                 "&:hover": {
-                    backgroundColor: theme.palette.primary.dark,
+                    backgroundColor: theme.palette.grey[50],
                 },
                 "& [class*='MuiListItemText-primary']": {
                     fontWeight: theme.typography.fontWeightBold,
+                },
+                "& [class*='MuiListItemIcon-root']": {
+                    color: theme.palette.primary.main,
                 },
             },
             "& [class*='MuiListItemText-root']": {
@@ -148,6 +158,20 @@ export const styles = (theme: Theme) =>
                         backgroundColor: theme.palette.grey[100],
                     },
                 },
+                "&[class*='Mui-selected']": {
+                    backgroundColor: theme.palette.common.white,
+                    "&:hover": {
+                        backgroundColor: theme.palette.grey[50],
+                    },
+                    "& [class*='MuiListItemText-root']": {
+                        "&:before": {
+                            backgroundColor: theme.palette.primary.main,
+                        },
+                        "&:after": {
+                            backgroundColor: theme.palette.primary.main,
+                        },
+                    },
+                },
             },
             "&:last-child": {
                 "& [class*='MuiListItemText-root']": {
@@ -172,6 +196,7 @@ export const styles = (theme: Theme) =>
                 },
             },
         },
+
         hasIcon: {},
         hasSecondaryText: {},
         hasSecondaryAction: {
