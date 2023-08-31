@@ -679,9 +679,6 @@ importers:
       express:
         specifier: ^4.0.0
         version: 4.18.2
-      file-saver:
-        specifier: ^2.0.5
-        version: 2.0.5
       fs-extra:
         specifier: ^9.0.0
         version: 9.1.0
@@ -761,9 +758,6 @@ importers:
       '@types/draft-js':
         specifier: ^0.11.10
         version: 0.11.10
-      '@types/file-saver':
-        specifier: ^2.0.5
-        version: 2.0.5
       '@types/fs-extra':
         specifier: ^9.0.0
         version: 9.0.13
@@ -2746,6 +2740,9 @@ importers:
       '@types/jsonwebtoken':
         specifier: ^8.5.9
         version: 8.5.9
+      file-saver:
+        specifier: 2.0.5
+        version: 2.0.5
       jsonwebtoken:
         specifier: ^8.5.1
         version: 8.5.1
@@ -2795,9 +2792,6 @@ importers:
       eslint:
         specifier: ^8.0.0
         version: 8.32.0
-      file-saver:
-        specifier: 2.0.5
-        version: 2.0.5
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.15.3)(ts-node@10.9.1)
@@ -20267,6 +20261,7 @@ packages:
 
   /file-saver@2.0.5:
     resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
+    dev: false
 
   /file-selector@0.6.0:
     resolution: {integrity: sha512-QlZ5yJC0VxHxQQsQhXvBaC7VRJ2uaxTf+Tfpu4Z/OcVQJVpZO+DGU0rkoVW5ce2SccxugvpBJoMvUs59iILYdw==}

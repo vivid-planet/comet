@@ -26,6 +26,7 @@
     },
     "dependencies": {
         "@types/jsonwebtoken": "^8.5.9",
+        "file-saver": "2.0.5",
         "jsonwebtoken": "^8.5.1",
         "jwks-rsa": "^3.0.0",
         "rimraf": "^3.0.0",
@@ -44,7 +45,6 @@
         "@types/styled-components": "^5.0.0",
         "chokidar-cli": "^2.0.0",
         "eslint": "^8.0.0",
-        "file-saver": "2.0.5",
         "jest": "^29.5.0",
         "jest-environment-jsdom": "^29.5.0",
         "jest-junit": "^15.0.0",
