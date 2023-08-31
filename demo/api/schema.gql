@@ -211,6 +211,40 @@ type PredefinedPage implements DocumentInterface {
   type: String
 }
 
+type ShopProductVariant {
+  id: ID!
+  size: String!
+  color: String!
+  price: Float!
+  product: ShopProduct!
+}
+
+type ShopProduct {
+  id: ID!
+  name: String!
+  description: String!
+  price: Float!
+  category: ShopProductCategory!
+  variants: [ShopProductVariant!]!
+}
+
+enum ShopProductCategory {
+  ELECTRONICS
+  CLOTHING
+  BEAUTY
+  GAMES
+}
+
+type PaginatedShopProducts {
+  nodes: [ShopProduct!]!
+  totalCount: Int!
+}
+
+type PaginatedShopProductVariants {
+  nodes: [ShopProductVariant!]!
+  totalCount: Int!
+}
+
 type CurrentUser {
   name: String!
   email: String!
@@ -567,6 +601,10 @@ type Query {
   productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
   productTag(id: ID!): ProductTag!
   productTags(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductTagFilter, sort: [ProductTagSort!]): PaginatedProductTags!
+  shopProduct(id: ID!): ShopProduct!
+  shopProducts(offset: Int! = 0, limit: Int! = 25, search: String, filter: ShopProductFilter, sort: [ShopProductSort!]): PaginatedShopProducts!
+  shopProductVariant(id: ID!): ShopProductVariant!
+  shopProductVariants(offset: Int! = 0, limit: Int! = 25, search: String, filter: ShopProductVariantFilter, sort: [ShopProductVariantSort!]): PaginatedShopProductVariants!
 }
 
 enum SortDirection {
@@ -783,6 +821,48 @@ enum ProductTagSortField {
   updatedAt
 }
 
+input ShopProductFilter {
+  name: StringFilter
+  category: ShopProductCategoryEnumFilter
+  and: [ShopProductFilter!]
+  or: [ShopProductFilter!]
+}
+
+input ShopProductCategoryEnumFilter {
+  isAnyOf: [ShopProductCategory!]
+  equal: ShopProductCategory
+  notEqual: ShopProductCategory
+}
+
+input ShopProductSort {
+  field: ShopProductSortField!
+  direction: SortDirection! = ASC
+}
+
+enum ShopProductSortField {
+  name
+  category
+}
+
+input ShopProductVariantFilter {
+  product: ManyToOneFilter
+  size: StringFilter
+  color: StringFilter
+  and: [ShopProductVariantFilter!]
+  or: [ShopProductVariantFilter!]
+}
+
+input ShopProductVariantSort {
+  field: ShopProductVariantSortField!
+  direction: SortDirection! = ASC
+}
+
+enum ShopProductVariantSortField {
+  product
+  size
+  color
+}
+
 type Mutation {
   currentUserSignOut: String!
   createBuilds(input: CreateBuildsInput!): Boolean!
@@ -831,6 +911,12 @@ type Mutation {
   createProductTag(input: ProductTagInput!): ProductTag!
   updateProductTag(id: ID!, input: ProductTagUpdateInput!, lastUpdatedAt: DateTime): ProductTag!
   deleteProductTag(id: ID!): Boolean!
+  createShopProduct(input: ShopProductInput!): ShopProduct!
+  updateShopProduct(id: ID!, input: ShopProductUpdateInput!): ShopProduct!
+  deleteShopProduct(id: ID!): Boolean!
+  createShopProductVariant(input: ShopProductVariantInput!): ShopProductVariant!
+  updateShopProductVariant(id: ID!, input: ShopProductVariantUpdateInput!): ShopProductVariant!
+  deleteShopProductVariant(id: ID!): Boolean!
 }
 
 input CreateBuildsInput {
@@ -1059,4 +1145,34 @@ input ProductTagInput {
 input ProductTagUpdateInput {
   title: String
   products: [ID!]
+}
+
+input ShopProductInput {
+  name: String!
+  description: String!
+  price: Float!
+  category: ShopProductCategory!
+  variants: [ID!]!
+}
+
+input ShopProductUpdateInput {
+  name: String
+  description: String
+  price: Float
+  category: ShopProductCategory
+  variants: [ID!]
+}
+
+input ShopProductVariantInput {
+  product: ID!
+  size: String!
+  color: String!
+  price: Float!
+}
+
+input ShopProductVariantUpdateInput {
+  product: ID
+  size: String
+  color: String
+  price: Float
 }
