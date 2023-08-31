@@ -1,15 +1,7 @@
 import { gql } from "@apollo/client";
-import { Field, FinalFormInput, FinalFormSelect } from "@comet/admin";
+import { Field, FinalFormSelect } from "@comet/admin";
 import { Delete } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    AdminComponentSection,
-    BlockCategory,
-    BlockInterface,
-    BlocksFinalForm,
-    createBlockSkeleton,
-} from "@comet/blocks-admin";
+import { AdminComponentButton, AdminComponentPaper, BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/blocks-admin";
 import { Box, Divider, MenuItem, Typography } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -17,7 +9,7 @@ import { FormattedMessage } from "react-intl";
 import { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput } from "../blocks.generated";
 import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
-import { GQLDamFileDownloadLinkFileQuery, GQLDamFileDownloadLinkFileQueryVariables } from "./createDamFileDownloadLinkBlock.generated";
+import { GQLDamFileDownloadLinkFileQuery, GQLDamFileDownloadLinkFileQueryVariables } from "./DamFileDownloadLinkBlock.generated";
 
 enum OpenFileTypeMethod {
     NEW_TAB = "NEW_TAB",
@@ -41,8 +33,6 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
 
     state2Output: (state) => ({
         fileId: state.file?.id ?? undefined,
-        gtmElementType: state.tracking?.gtmElementType,
-        gtmElementName: state.tracking?.gtmElementName,
         openFileType: state.openFileType,
     }),
 
@@ -50,12 +40,6 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
         const ret: DamFileDownloadLinkBlockData = {
             openFileType: output.openFileType,
         };
-
-        if (output.gtmElementType || output.gtmElementName) {
-            ret.tracking = {};
-            if (output.gtmElementType) ret.tracking.gtmElementType = output.gtmElementType;
-            if (output.gtmElementName) ret.tracking.gtmElementName = output.gtmElementName;
-        }
 
         if (output.fileId === undefined) {
             return ret;
@@ -95,18 +79,15 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                 <BlocksFinalForm<{
                     openFileType: DamFileDownloadLinkBlockData["openFileType"];
                     file?: DamFileDownloadLinkBlockData["file"];
-                    tracking?: DamFileDownloadLinkBlockData["tracking"];
                 }>
                     onSubmit={(newValues) => {
                         updateState({
                             file: newValues.file ?? undefined,
-                            tracking: newValues.tracking,
                             openFileType: newValues.openFileType,
                         });
                     }}
                     initialValues={{
                         file: state.file,
-                        tracking: state.tracking,
                         openFileType: state.openFileType ?? OpenFileTypeMethod.DOWNLOAD,
                     }}
                 >
@@ -149,26 +130,6 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                                 </>
                             )}
                         </Field>
-                    </AdminComponentPaper>
-
-                    <Divider />
-                    <AdminComponentPaper>
-                        <AdminComponentSection
-                            title={<FormattedMessage id="blocks.damFileDownloadLink.tracking" defaultMessage="Data-Attributes for Tracking" />}
-                        >
-                            <Field
-                                name="tracking.gtmElementType"
-                                component={FinalFormInput}
-                                fullWidth
-                                label={<FormattedMessage id="blocks.damFileDownloadLink.tracking.gtmElementType" defaultMessage="Element Type" />}
-                            />
-                            <Field
-                                name="tracking.gtmElementName"
-                                component={FinalFormInput}
-                                fullWidth
-                                label={<FormattedMessage id="blocks.damFileDownloadLink.tracking.gtmElementName" defaultMessage="Element Name" />}
-                            />
-                        </AdminComponentSection>
                     </AdminComponentPaper>
                 </BlocksFinalForm>
                 <Divider />

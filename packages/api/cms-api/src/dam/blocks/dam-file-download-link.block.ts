@@ -10,7 +10,7 @@ import {
     inputToData,
     TraversableTransformResponse,
 } from "@comet/blocks-api";
-import { IsEnum, IsOptional, IsString, IsUUID } from "class-validator";
+import { IsEnum, IsUUID } from "class-validator";
 import { FilesService } from "src/dam/files/files.service";
 
 import { IsUndefinable } from "../../common/validators/is-undefinable";
@@ -22,8 +22,6 @@ export enum OpenFileTypeMethod {
 
 class DamFileDownloadLinkBlockData extends BlockData {
     fileId?: string;
-    gtmElementType?: string;
-    gtmElementName?: string;
 
     @BlockField({ type: "enum", enum: OpenFileTypeMethod })
     openFileType: OpenFileTypeMethod;
@@ -33,12 +31,6 @@ class DamFileDownloadLinkBlockData extends BlockData {
         { previewDamUrls }: BlockContext,
     ): Promise<TraversableTransformResponse> {
         const ret: TraversableTransformResponse = {};
-
-        if (this.gtmElementType || this.gtmElementName) {
-            ret.tracking = {};
-            if (this.gtmElementType) ret.tracking.gtmElementType = this.gtmElementType;
-            if (this.gtmElementName) ret.tracking.gtmElementName = this.gtmElementName;
-        }
 
         ret.openFileType = this.openFileType;
 
@@ -66,16 +58,6 @@ class DamFileDownloadLinkBlockInput extends BlockInput {
     @IsUUID()
     @BlockField({ nullable: true })
     fileId?: string;
-
-    @IsOptional()
-    @IsString()
-    @BlockField({ nullable: true })
-    gtmElementType?: string;
-
-    @IsOptional()
-    @IsString()
-    @BlockField({ nullable: true })
-    gtmElementName?: string;
 
     @IsEnum(OpenFileTypeMethod)
     @BlockField({ type: "enum", enum: OpenFileTypeMethod })
@@ -119,25 +101,6 @@ class Meta extends AnnotationBlockMeta {
                 },
             },
             ...super.fields,
-            {
-                name: "tracking",
-                kind: BlockMetaFieldKind.NestedObject,
-                nullable: true,
-                object: {
-                    fields: [
-                        {
-                            name: "gtmElementType",
-                            kind: BlockMetaFieldKind.String,
-                            nullable: true,
-                        },
-                        {
-                            name: "gtmElementName",
-                            kind: BlockMetaFieldKind.String,
-                            nullable: true,
-                        },
-                    ],
-                },
-            },
         ];
     }
 }

@@ -16,7 +16,7 @@ enum OpenFileTypeMethod {
 }
 
 export const DamFileDownloadLinkBlock = withPreview(
-    ({ data: { file, tracking, openFileType }, children, title }: Props) => {
+    ({ data: { file, openFileType }, children, title }: Props) => {
         if (file === undefined) {
             return children;
         }
@@ -35,10 +35,6 @@ export const DamFileDownloadLinkBlock = withPreview(
             href: "#",
             onClick: handleClick,
             title,
-            "data-gtm-element": "infomaterial-download",
-            "data-gtm-element-type": tracking?.gtmElementType ?? "Download",
-            "data-gtm-element-name": tracking?.gtmElementName ?? file.name,
-            "data-gtm-element-url": file.fileUrl,
         });
     },
     { label: "DamFileDownloadLink" },
