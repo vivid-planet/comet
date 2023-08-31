@@ -146,5 +146,3 @@ export const DamFileDownloadLinkBlock = createBlock(DamFileDownloadLinkBlockData
     name: "DamFileDownloadLink",
     blockMeta: new Meta(DamFileDownloadLinkBlockData),
 });
-
-export type { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput };
