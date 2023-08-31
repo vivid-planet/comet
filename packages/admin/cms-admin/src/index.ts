@@ -1,6 +1,5 @@
 export { AnchorBlock } from "./blocks/AnchorBlock";
 export { CmsBlockContext, CmsBlockContextProvider } from "./blocks/CmsBlockContextProvider";
-export { createDamFileDownloadLinkBlock } from "./blocks/createDamFileDownloadLinkBlock";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
 export { createLinkBlock } from "./blocks/createLinkBlock";
 export type { RichTextBlockFactoryOptions } from "./blocks/createRichTextBlock";
@@ -9,6 +8,7 @@ export { createSeoBlock } from "./blocks/createSeoBlock";
 export type { TextImageBlockFactoryOptions } from "./blocks/createTextImageBlock";
 export { createTextImageBlock } from "./blocks/createTextImageBlock";
 export { createTextLinkBlock } from "./blocks/createTextLinkBlock";
+export { DamFileDownloadLinkBlock } from "./blocks/DamFileDownloadLinkBlock";
 export { DamVideoBlock } from "./blocks/DamVideoBlock";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { EditImageDialog } from "./blocks/image/EditImageDialog";
