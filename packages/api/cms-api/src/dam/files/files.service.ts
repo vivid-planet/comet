@@ -502,6 +502,22 @@ export class FilesService {
             return { targetFolder, createdTargetFolderAutomatically };
         };
 
+        const findCopyWithSameCroppingInTargetScope = async (file: FileInterface) => {
+            const copiesInTargetScope = await this.findCopiesOfFileInScope(file.id, targetScope);
+
+            if (copiesInTargetScope.length === 0) {
+                return undefined;
+            }
+
+            for (const copy of copiesInTargetScope) {
+                if (isEqual(file.image?.cropArea, copy.image?.cropArea)) {
+                    return copy;
+                }
+            }
+
+            return undefined;
+        };
+
         if (!this.contentScopeService.canAccessScope(targetScope, user)) {
             throw new ForbiddenException("User can't access the target scope");
         }
@@ -516,7 +532,12 @@ export class FilesService {
             throw new ForbiddenException(`User can't access the scope of one or more files`);
         }
 
-        const { targetFolder, createdTargetFolderAutomatically } = await getOrCreateTargetFolder({ targetFolderId, targetScope, fileScopes });
+        const { targetFolder: returnedTargetFolder, createdTargetFolderAutomatically } = await getOrCreateTargetFolder({
+            targetFolderId,
+            targetScope,
+            fileScopes,
+        });
+        let targetFolder: FolderInterface | undefined = returnedTargetFolder;
         if (!this.contentScopeService.scopesAreEqual(targetScope, targetFolder.scope)) {
             throw new Error("Target scope and target folder scope don't match");
         }
@@ -533,9 +554,9 @@ export class FilesService {
             let copiedFile: FileInterface;
             let isNewCopy: boolean;
 
-            const copiesInTargetScope = await this.findCopiesOfFileInScope(file.id, targetScope);
-            if (copiesInTargetScope.length > 0) {
-                copiedFile = copiesInTargetScope[0];
+            const copyInTargetScope = await findCopyWithSameCroppingInTargetScope(file);
+            if (copyInTargetScope) {
+                copiedFile = copyInTargetScope;
                 numberAlreadyCopiedFiles++;
                 isNewCopy = false;
             } else {
@@ -549,9 +570,10 @@ export class FilesService {
 
         if (createdTargetFolderAutomatically && numberNewlyCopiedFiles === 0) {
             await this.foldersService.delete(targetFolder.id);
+            targetFolder = undefined;
         }
 
-        return { inboxFolderId: targetFolder.id, numberNewlyCopiedFiles, numberAlreadyCopiedFiles, mappedFiles };
+        return { inboxFolderId: targetFolder?.id, numberNewlyCopiedFiles, numberAlreadyCopiedFiles, mappedFiles };
     }
 
     async findNextAvailableFilename({

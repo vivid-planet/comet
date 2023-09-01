@@ -322,7 +322,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                         },
                     });
 
-                    inboxFolderIdForCopiedFiles = copiedFiles?.copyFilesToScope.inboxFolderId;
+                    inboxFolderIdForCopiedFiles = copiedFiles?.copyFilesToScope.inboxFolderId ?? undefined;
 
                     if (copiedFiles && node?.document != null && documentType.updateMutation && documentType.inputToOutput) {
                         const output = documentType.inputToOutput(node.document, { idsMap });

@@ -491,7 +491,7 @@ union DamItem = DamFile | DamFolder
 type CopyFilesResponse {
   numberNewlyCopiedFiles: Float!
   numberAlreadyCopiedFiles: Float!
-  inboxFolderId: String!
+  inboxFolderId: String
   mappedFiles: [MappedFile!]!
 }
 
