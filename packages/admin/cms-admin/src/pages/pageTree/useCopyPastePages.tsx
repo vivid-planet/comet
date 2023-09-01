@@ -22,34 +22,7 @@ import {
 } from "./useCopyPastePages.generated";
 import { GQLPageTreePageFragment } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
-
-const deepReplace = (obj: { [key: string]: any }, keyArr: string[], { oldValue, newValue }: { oldValue: string; newValue: string }): void => {
-    console.log({ obj, keyArr, newValue });
-    const copiedKeyArr = [...keyArr];
-    const firstSegment = copiedKeyArr.shift();
-
-    if (keyArr.length === 1) {
-        let stringifiedObj = JSON.stringify(obj[firstSegment]);
-        stringifiedObj = stringifiedObj.replace(oldValue, newValue);
-
-        console.log("oldValue ", oldValue);
-        console.log("newValue ", newValue);
-
-        obj[firstSegment] = JSON.parse(stringifiedObj);
-        return;
-    }
-
-    if (firstSegment === undefined || obj[firstSegment] === undefined) {
-        console.log("firstSegment ", firstSegment);
-        console.log("copiedKeyArr ", copiedKeyArr);
-        console.log("obj ", obj);
-
-        throw Error("The object doesn't have a property corresponding to the segment");
-    }
-
-    // TODO: Array wenn der Segment Key eine Zahl ist
-    deepReplace(obj[firstSegment], copiedKeyArr, { oldValue, newValue });
-};
+import { replaceNestedIdInBlockJson } from "./utils/copy-paste-utils";
 
 const slugAvailableQuery = gql`
     query SlugAvailable($parentId: ID, $slug: String!, $scope: PageTreeNodeScopeInput!) {
@@ -354,9 +327,8 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                     if (copiedFiles && node?.document != null && documentType.updateMutation && documentType.inputToOutput) {
                         const output = documentType.inputToOutput(node.document, { idsMap });
                         const mappedFiles = copiedFiles.copyFilesToScope.mappedFiles;
-                        console.log("output ", output);
 
-                        newOutput = cloneDeep(output) as Record<string, unknown>;
+                        newOutput = cloneDeep(output);
                         for (const dependency of dependencies) {
                             const mappedFile = mappedFiles.find((mappedFile) => mappedFile.rootFile.id === dependency.targetId);
                             if (mappedFile === undefined) {
@@ -367,18 +339,11 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                             jsonPathArr.splice(0, 1);
                             jsonPathArr.unshift(dependency.rootColumnName);
 
-                            deepReplace(newOutput, jsonPathArr, { oldValue: mappedFile.rootFile.id, newValue: mappedFile.copy.id });
+                            replaceNestedIdInBlockJson(newOutput, jsonPathArr, {
+                                oldValue: mappedFile.rootFile.id,
+                                newValue: mappedFile.copy.id,
+                            });
                         }
-                        console.log("newOutput ", newOutput);
-
-                        // let stringifiedOutput = JSON.stringify(output);
-                        //
-                        // // TODO: implement a more graceful approach to replace the ids
-                        // for (const mappedFile of copiedFiles.copyFilesToScope.mappedFiles) {
-                        //     stringifiedOutput = stringifiedOutput.replace(mappedFile.rootFile.id, mappedFile.copy.id);
-                        // }
-                        //
-                        // newOutput = JSON.parse(stringifiedOutput);
                     }
                 }
 
@@ -389,7 +354,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                         mutation: documentType.updateMutation,
                         variables: {
                             pageId: newDocumentId,
-                            input: newOutput ?? documentType.inputToOutput(node.document, { idsMap }),
+                            input: (newOutput as Record<string, unknown>) ?? documentType.inputToOutput(node.document, { idsMap }),
                             attachedPageTreeNodeId: data.createPageTreeNode.id,
                         },
                         context: LocalErrorScopeApolloContext,
