@@ -21,6 +21,14 @@ export class ContentScopeService {
         @Optional() private readonly pageTreeService?: PageTreeService,
     ) {}
 
+    scopesAreEqual(scope1: ContentScope | undefined, scope2: ContentScope | undefined): boolean {
+        // The scopes are cloned because they could be
+        //   - an instance of a class (e.g. DamScope)
+        //   - or a plain object (from a GraphQL input)
+        // Then they are not deeply equal, although they represent the same scope
+        return isEqual({ ...scope1 }, { ...scope2 });
+    }
+
     canAccessScope(requestScope: ContentScope, user: CurrentUserInterface): boolean {
         return this.canAccessScopeConfig(requestScope, user);
     }
