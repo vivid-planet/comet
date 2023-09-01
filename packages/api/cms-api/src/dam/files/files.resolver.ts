@@ -115,6 +115,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         @Mutation(() => CopyFilesResponse)
         @SkipBuild()
         async copyFilesToScope(
+            @GetCurrentUser() user: CurrentUserInterface,
             @Args("fileIds", { type: () => [ID] }) fileIds: string[],
             @Args("targetScope", { type: () => Scope }) targetScope: typeof Scope,
             @Args("targetFolderId", {
@@ -125,7 +126,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             })
             targetFolderId?: string,
         ): Promise<CopyFilesResponseInterface> {
-            return this.filesService.copyFilesToScope({ fileIds, targetScope, targetFolderId });
+            return this.filesService.copyFilesToScope({ fileIds, targetScope, targetFolderId, user });
         }
 
         @Mutation(() => File)

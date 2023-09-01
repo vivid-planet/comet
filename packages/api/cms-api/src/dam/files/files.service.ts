@@ -1,7 +1,8 @@
 import { MikroORM, Utils } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
-import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
+import { ForbiddenException, forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
+import * as console from "console";
 import { createHmac } from "crypto";
 import { format } from "date-fns";
 import exifr from "exifr";
@@ -14,9 +15,11 @@ import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
 
+import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
+import { ContentScopeService } from "../../content-scope/content-scope.service";
 import { FocalPoint } from "../common/enums/focal-point.enum";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
@@ -107,6 +110,7 @@ export class FilesService {
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
         private readonly imgproxyService: ImgproxyService,
         private readonly orm: MikroORM,
+        private readonly contentScopeService: ContentScopeService,
     ) {}
 
     private selectQueryBuilder(): QueryBuilder<FileInterface> {
@@ -177,8 +181,8 @@ export class FilesService {
             .getResult();
     }
 
-    async findCopiesOfFileInScope(rootFileId: string, scope: DamScopeInterface) {
-        return withFilesSelect(this.selectQueryBuilder(), { copyOfId: rootFileId, scope: scope }).getResult();
+    async findCopiesOfFileInScope(fileId: string, scope: DamScopeInterface) {
+        return withFilesSelect(this.selectQueryBuilder(), { copyOfId: fileId, scope: scope }).getResult();
     }
 
     async findOneById(id: string): Promise<FileInterface | null> {
@@ -398,33 +402,123 @@ export class FilesService {
         return Number(result.rows[0].row_number) - 1;
     }
 
-    async copyFilesToScope({ fileIds, targetScope, targetFolderId }: { fileIds: string[]; targetScope: DamScopeInterface; targetFolderId?: string }) {
-        const files = await this.findMultipleByIds(fileIds);
+    async createCopyOfFile(file: FileInterface, { targetFolder }: { targetFolder: FolderInterface }) {
+        let fileImageInput: ImageFileInput | undefined;
+        if (file.image) {
+            const { id: ignoreId, file: ignoreFile, ...imageProps } = file.image;
+            fileImageInput = { ...Utils.copy(imageProps) };
+        }
 
+        const {
+            id: ignoreId,
+            createdAt: ignoreCreatedAt,
+            updatedAt: ignoreUpdatedAt,
+            folder: ignoreFolder,
+            image: ignoreImage,
+            scope: ignoreScope,
+            copies: ignoreCopies,
+            ...fileProps
+        } = file;
+
+        const fileInput: CreateFileInput & { copyOf: FileInterface } = {
+            ...Utils.copy(fileProps),
+            image: fileImageInput,
+            folderId: targetFolder.id,
+            copyOf: file,
+            scope: targetFolder.scope,
+        };
+
+        return this.create(fileInput);
+    }
+
+    async copyFilesToScope({
+        user,
+        fileIds,
+        targetScope,
+        targetFolderId,
+    }: {
+        user: CurrentUserInterface;
+        fileIds: string[];
+        targetScope: DamScopeInterface;
+        targetFolderId?: string;
+    }) {
+        const getUniqueFileScopes = (files: FileInterface[]): DamScopeInterface[] => {
+            const fileScopes: DamScopeInterface[] = [];
+            for (const file of files) {
+                if (file.scope === undefined) {
+                    continue;
+                }
+
+                const isDuplicateScope = Boolean(fileScopes.find((scope) => this.contentScopeService.scopesAreEqual(scope, file.scope)));
+                if (!isDuplicateScope) {
+                    fileScopes.push(file.scope);
+                }
+            }
+            return fileScopes;
+        };
+
+        const canAccessFileScopes = (fileScopes: DamScopeInterface[], user: CurrentUserInterface) => {
+            for (const scope of fileScopes) {
+                const canAccessFileScope = this.contentScopeService.canAccessScope(scope, user);
+                if (!canAccessFileScope) {
+                    return false;
+                }
+            }
+            return true;
+        };
+
+        const getOrCreateTargetFolder = async ({
+            targetFolderId,
+            targetScope,
+            fileScopes,
+        }: {
+            targetFolderId?: string;
+            targetScope: DamScopeInterface;
+            fileScopes: DamScopeInterface[];
+        }) => {
+            let createdTargetFolderAutomatically = false;
+            let targetFolder: FolderInterface;
+            if (targetFolderId) {
+                const folder = await this.foldersService.findOneById(targetFolderId);
+                if (folder === null) {
+                    throw new Error("Specified target folder doesn't exist.");
+                }
+
+                targetFolder = folder;
+            } else {
+                const scopeString = fileScopes.length === 0 ? "unknown" : fileScopes.map((scope) => Object.values(scope).join("-")).join(", ");
+                const date = new Date();
+
+                targetFolder = await this.foldersService.create(
+                    {
+                        name: `Copy from ${scopeString} ${format(date, "dd.MM.yyyy")}, ${format(date, "HH:mm:ss")}`,
+                        isInboxFromOtherScope: true,
+                    },
+                    targetScope,
+                );
+                createdTargetFolderAutomatically = true;
+            }
+
+            return { targetFolder, createdTargetFolderAutomatically };
+        };
+
+        if (!this.contentScopeService.canAccessScope(targetScope, user)) {
+            throw new ForbiddenException("User can't access the target scope");
+        }
+
+        const files = await this.findMultipleByIds(fileIds);
         if (files.length === 0) {
             throw new Error("No valid file ids provided");
         }
 
-        const scopeString = files[0].scope ? Object.values(files[0].scope).join("-") : "unknown";
-        const date = new Date();
-        let createdInboxFolderAutomatically = false;
-        let inboxFolder: FolderInterface;
-        if (targetFolderId) {
-            const folder = await this.foldersService.findOneById(targetFolderId);
-            if (folder === null) {
-                throw new Error("Specified target folder doesn't exist.");
-            }
+        const fileScopes = getUniqueFileScopes(files);
+        if (!canAccessFileScopes(fileScopes, user)) {
+            throw new ForbiddenException(`User can't access the scope of one or more files`);
+        }
 
-            inboxFolder = folder;
-        } else {
-            inboxFolder = await this.foldersService.create(
-                {
-                    name: `Copy from ${scopeString} ${format(date, "dd.MM.yyyy")}, ${format(date, "HH:mm:ss")}`,
-                    isInboxFromOtherScope: true,
-                },
-                targetScope,
-            );
-            createdInboxFolderAutomatically = true;
+        const { targetFolder, createdTargetFolderAutomatically } = await getOrCreateTargetFolder({ targetFolderId, targetScope, fileScopes });
+        if (!this.contentScopeService.scopesAreEqual(targetScope, targetFolder.scope)) {
+            throw new Error("Target scope and target folder scope don't match");
         }
 
         let numberNewlyCopiedFiles = 0;
@@ -432,10 +526,7 @@ export class FilesService {
 
         const mappedFiles: Array<{ rootFile: FileInterface; copy: FileInterface; isNewCopy: boolean }> = [];
         for (const file of files) {
-            // The objects are cloned because file.scope is an instance of DamScope
-            // and targetScope is a plain object. Thus, they are not deep equal,
-            // although they have the same scope
-            if (file.scope && isEqual({ ...file.scope }, { ...targetScope })) {
+            if (this.contentScopeService.scopesAreEqual(file.scope, targetScope)) {
                 continue;
             }
 
@@ -448,32 +539,7 @@ export class FilesService {
                 numberAlreadyCopiedFiles++;
                 isNewCopy = false;
             } else {
-                let fileImageInput: ImageFileInput | undefined;
-                if (file.image) {
-                    const { id: ignoreId, file: ignoreFile, ...imageProps } = file.image;
-                    fileImageInput = { ...Utils.copy(imageProps) };
-                }
-
-                const {
-                    id: ignoreId,
-                    createdAt: ignoreCreatedAt,
-                    updatedAt: ignoreUpdatedAt,
-                    folder: ignoreFolder,
-                    image: ignoreImage,
-                    scope: ignoreScope,
-                    copies: ignoreCopies,
-                    ...fileProps
-                } = file;
-
-                const fileInput: CreateFileInput & { copyOf: FileInterface } = {
-                    ...Utils.copy(fileProps),
-                    image: fileImageInput,
-                    folderId: inboxFolder.id,
-                    copyOf: file,
-                    scope: targetScope,
-                };
-
-                copiedFile = await this.create(fileInput);
+                copiedFile = await this.createCopyOfFile(file, { targetFolder });
                 numberNewlyCopiedFiles++;
                 isNewCopy = true;
             }
@@ -481,11 +547,11 @@ export class FilesService {
             mappedFiles.push({ rootFile: file, copy: copiedFile, isNewCopy });
         }
 
-        if (createdInboxFolderAutomatically && numberNewlyCopiedFiles === 0) {
-            await this.foldersService.delete(inboxFolder.id);
+        if (createdTargetFolderAutomatically && numberNewlyCopiedFiles === 0) {
+            await this.foldersService.delete(targetFolder.id);
         }
 
-        return { inboxFolderId: inboxFolder.id, numberNewlyCopiedFiles, numberAlreadyCopiedFiles, mappedFiles };
+        return { inboxFolderId: targetFolder.id, numberNewlyCopiedFiles, numberAlreadyCopiedFiles, mappedFiles };
     }
 
     async findNextAvailableFilename({
