@@ -400,8 +400,8 @@ type Product implements DocumentInterface {
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
   dimensions: ProductDimensions
-  packageDimensions: ProductPackageDimensions!
-  statistics: ProductStatistics!
+  packageDimensions: ProductPackageDimensions
+  statistics: ProductStatistics
   createdAt: DateTime!
   category: ProductCategory
   variants: [ProductVariant!]!
@@ -952,7 +952,7 @@ input NewsInput {
   slug: String!
   title: String!
   date: DateTime!
-  category: NewsCategory!
+  category: NewsCategory! = Awards
   image: DamImageBlockInput!
   content: NewsContentBlockInput!
 }
@@ -1000,16 +1000,16 @@ input ProductInput {
   description: String!
   type: ProductType!
   price: Float
-  inStock: Boolean!
+  inStock: Boolean! = true
   image: DamImageBlockInput!
-  discounts: [ProductDiscountsInput!]!
-  articleNumbers: [String!]!
+  discounts: [ProductDiscountsInput!]! = []
+  articleNumbers: [String!]! = []
   dimensions: ProductDimensionsInput
-  packageDimensions: ProductPackageDimensionsInput!
-  statistics: ProductStatisticsInput!
-  variants: [ProductVariantInput!]!
-  category: ID
-  tags: [ID!]!
+  packageDimensions: ProductPackageDimensionsInput
+  statistics: ProductStatisticsInput
+  variants: [ProductVariantInput!]! = []
+  category: ID = null
+  tags: [ID!]! = []
 }
 
 input ProductStatisticsInput {
@@ -1042,7 +1042,7 @@ input ProductUpdateInput {
 input ProductCategoryInput {
   title: String!
   slug: String!
-  products: [ID!]!
+  products: [ID!]! = []
 }
 
 input ProductCategoryUpdateInput {
@@ -1053,7 +1053,7 @@ input ProductCategoryUpdateInput {
 
 input ProductTagInput {
   title: String!
-  products: [ID!]!
+  products: [ID!]! = []
 }
 
 input ProductTagUpdateInput {

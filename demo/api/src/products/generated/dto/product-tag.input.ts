@@ -11,7 +11,7 @@ export class ProductTagInput {
     @Field()
     title: string;
 
-    @Field(() => [ID])
+    @Field(() => [ID], { defaultValue: [] })
     @IsArray()
     @IsUUID(undefined, { each: true })
     products: string[];

@@ -24,9 +24,7 @@ function morphTsClass(metadata: EntityMetadata<any>) {
 }
 export function morphTsProperty(name: string, metadata: EntityMetadata<any>) {
     const tsClass = morphTsClass(metadata);
-    const tsProp = tsClass.getInstanceProperties().find((i) => i.getName() == name);
-    if (!tsProp) throw new Error("property not found");
-    return tsProp;
+    return tsClass.getPropertyOrThrow(name);
 }
 
 function findImportPath(importName: string, generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>) {
