@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.2.6
+
+_Sep 4, 2023_
+
+### @comet/cms-api
+
+#### Changes
+
+-   add content validation for SVG files to prevent the upload of SVGs containing JavaScript
+
+### @comet/cms-admin
+
+#### Changes
+
+-   add error message for SVG content validation
+
 ## 3.2.5
 
 _Jul 17, 2023_
