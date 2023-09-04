@@ -1,10 +1,8 @@
-import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/core";
 import { v4 as uuid } from "uuid";
 
 @Entity()
 export class BlockIndexRefresh extends BaseEntity<BlockIndexRefresh, "id"> {
-    [OptionalProps]?: "createdAt";
-
     @PrimaryKey({ columnType: "uuid" })
     id: string = uuid();
 
