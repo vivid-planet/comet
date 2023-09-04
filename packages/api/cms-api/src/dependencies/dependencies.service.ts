@@ -9,7 +9,7 @@ import { Dependency } from "./dependency";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
-import { BlockIndexRefreshes } from "./entities/block-index-refreshes.entity";
+import { BlockIndexRefresh } from "./entities/block-index-refresh.entity";
 
 @Injectable()
 export class DependenciesService {
@@ -17,7 +17,7 @@ export class DependenciesService {
     private connection: Connection;
 
     constructor(
-        @InjectRepository(BlockIndexRefreshes) private readonly refreshRepository: EntityRepository<BlockIndexRefreshes>,
+        @InjectRepository(BlockIndexRefresh) private readonly refreshRepository: EntityRepository<BlockIndexRefresh>,
         private readonly discoverService: DiscoverService,
         entityManager: EntityManager,
     ) {

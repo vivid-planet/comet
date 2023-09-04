@@ -3,11 +3,11 @@ import { Global, Module } from "@nestjs/common";
 
 import { DependenciesService } from "./dependencies.service";
 import { DiscoverService } from "./discover.service";
-import { BlockIndexRefreshes } from "./entities/block-index-refreshes.entity";
+import { BlockIndexRefresh } from "./entities/block-index-refresh.entity";
 
 @Global()
 @Module({
-    imports: [MikroOrmModule.forFeature([BlockIndexRefreshes])],
+    imports: [MikroOrmModule.forFeature([BlockIndexRefresh])],
     providers: [DiscoverService, DependenciesService],
     exports: [DiscoverService, DependenciesService],
 })
