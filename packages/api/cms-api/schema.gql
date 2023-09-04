@@ -129,7 +129,7 @@ type PageTreeNode {
   hideInMenu: Boolean!
   updatedAt: DateTime!
   category: String!
-  dependents(filter: DependentsFilterInput): [Dependency!]!
+  dependents(filter: DependentsFilter): [Dependency!]!
   childNodes: [PageTreeNode!]!
   numberOfDescendants: Float!
   parentNode: PageTreeNode
@@ -144,7 +144,7 @@ enum PageTreeNodeVisibility {
   Archived
 }
 
-input DependentsFilterInput {
+input DependentsFilter {
   rootGraphqlObjectType: String
   rootId: String
   rootColumnName: String
@@ -185,7 +185,7 @@ type Redirect implements DocumentInterface {
   active: Boolean!
   generationType: RedirectGenerationType!
   createdAt: DateTime!
-  dependencies(filter: DependenciesFilterInput): [Dependency!]!
+  dependencies(filter: DependenciesFilter): [Dependency!]!
 }
 
 enum RedirectSourceTypeValues {
@@ -197,7 +197,7 @@ enum RedirectGenerationType {
   automatic
 }
 
-input DependenciesFilterInput {
+input DependenciesFilter {
   targetGraphqlObjectType: String
   targetId: String
   rootColumnName: String
@@ -240,7 +240,7 @@ type DamFile {
   license: DamFileLicense
   createdAt: DateTime!
   updatedAt: DateTime!
-  dependents(filter: DependentsFilterInput): [Dependency!]!
+  dependents(filter: DependentsFilter): [Dependency!]!
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!

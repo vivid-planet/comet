@@ -4,15 +4,15 @@ import { Args, Parent, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { DependenciesService } from "./dependencies.service";
 import { Dependency } from "./dependency";
-import { DependenciesFilterInput, DependentsFilterInput } from "./dto/dependencies.args";
+import { DependenciesFilter, DependentsFilter } from "./dto/dependencies.args";
 
 type AbstractConstructor<T> = abstract new (...args: [DependenciesService]) => T;
 
 interface DependenciesResolverInterface {
-    dependencies: (entity: AnyEntity<{ id: string }>, filter: DependenciesFilterInput) => Promise<Dependency[]>;
+    dependencies: (entity: AnyEntity<{ id: string }>, filter: DependenciesFilter) => Promise<Dependency[]>;
 }
 interface DependentsResolverInterface {
-    dependents: (entity: AnyEntity<{ id: string }>, filter: DependentsFilterInput) => Promise<Dependency[]>;
+    dependents: (entity: AnyEntity<{ id: string }>, filter: DependentsFilter) => Promise<Dependency[]>;
 }
 
 export function DependenciesResolver<T extends Type<unknown>>(classRef: T): AbstractConstructor<DependenciesResolverInterface> {
@@ -23,7 +23,7 @@ export function DependenciesResolver<T extends Type<unknown>>(classRef: T): Abst
         @ResolveField(() => [Dependency])
         async dependencies(
             @Parent() node: AnyEntity<{ id: string }>,
-            @Args("filter", { type: () => DependenciesFilterInput, nullable: true }) filter?: DependenciesFilterInput,
+            @Args("filter", { type: () => DependenciesFilter, nullable: true }) filter?: DependenciesFilter,
         ): Promise<Dependency[]> {
             return this.dependenciesService.getDependencies(node, filter);
         }
@@ -41,7 +41,7 @@ export function DependentsResolver<T extends Type<unknown>>(classRef: T): Abstra
         @ResolveField(() => [Dependency])
         async dependents(
             @Parent() node: AnyEntity<{ id: string }>,
-            @Args("filter", { type: () => DependentsFilterInput, nullable: true }) filter?: DependentsFilterInput,
+            @Args("filter", { type: () => DependentsFilter, nullable: true }) filter?: DependentsFilter,
         ): Promise<Dependency[]> {
             return this.dependenciesService.getDependents(node, filter);
         }
@@ -61,7 +61,7 @@ export function DependenciesAndDependentsResolver<T extends Type<unknown>>(
         @ResolveField(() => [Dependency])
         async dependencies(
             @Parent() node: AnyEntity<{ id: string }>,
-            @Args("filter", { type: () => DependenciesFilterInput, nullable: true }) filter?: DependenciesFilterInput,
+            @Args("filter", { type: () => DependenciesFilter, nullable: true }) filter?: DependenciesFilter,
         ): Promise<Dependency[]> {
             return this.dependenciesService.getDependencies(node, filter);
         }
@@ -69,7 +69,7 @@ export function DependenciesAndDependentsResolver<T extends Type<unknown>>(
         @ResolveField(() => [Dependency])
         async dependents(
             @Parent() node: AnyEntity<{ id: string }>,
-            @Args("filter", { type: () => DependentsFilterInput, nullable: true }) filter?: DependentsFilterInput,
+            @Args("filter", { type: () => DependentsFilter, nullable: true }) filter?: DependentsFilter,
         ): Promise<Dependency[]> {
             return this.dependenciesService.getDependents(node, filter);
         }
