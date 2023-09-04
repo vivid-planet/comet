@@ -57,16 +57,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Dependency {
-  rootId: String!
-  rootGraphqlObjectType: String!
-  rootColumnName: String!
-  jsonPath: String!
-  visible: Boolean!
-  targetGraphqlObjectType: String!
-  targetId: String!
-}
-
 type BuildTemplate {
   id: ID!
   name: String!
@@ -129,7 +119,6 @@ type PageTreeNode {
   hideInMenu: Boolean!
   updatedAt: DateTime!
   category: String!
-  dependents(filter: DependentsFilter): [Dependency!]!
   childNodes: [PageTreeNode!]!
   numberOfDescendants: Float!
   parentNode: PageTreeNode
@@ -142,12 +131,6 @@ enum PageTreeNodeVisibility {
   Published
   Unpublished
   Archived
-}
-
-input DependentsFilter {
-  rootGraphqlObjectType: String
-  rootId: String
-  rootColumnName: String
 }
 
 union PageContentUnion = Page
@@ -185,7 +168,6 @@ type Redirect implements DocumentInterface {
   active: Boolean!
   generationType: RedirectGenerationType!
   createdAt: DateTime!
-  dependencies(filter: DependenciesFilter): [Dependency!]!
 }
 
 enum RedirectSourceTypeValues {
@@ -195,12 +177,6 @@ enum RedirectSourceTypeValues {
 enum RedirectGenerationType {
   manual
   automatic
-}
-
-input DependenciesFilter {
-  targetGraphqlObjectType: String
-  targetId: String
-  rootColumnName: String
 }
 
 type PaginatedRedirects {
@@ -240,7 +216,6 @@ type DamFile {
   license: DamFileLicense
   createdAt: DateTime!
   updatedAt: DateTime!
-  dependents(filter: DependentsFilter): [Dependency!]!
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!

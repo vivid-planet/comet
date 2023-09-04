@@ -1,3 +1,4 @@
+import { DependenciesResolverFactory } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
 import { PagesModule } from "@src/pages/pages.module";
@@ -8,6 +9,6 @@ import { MenusResolver } from "./menus.resolver";
 
 @Module({
     imports: [PagesModule, MikroOrmModule.forFeature([MainMenuItem])],
-    providers: [MenusResolver, MainMenuItemResolver],
+    providers: [MenusResolver, MainMenuItemResolver, DependenciesResolverFactory.create(MainMenuItem)],
 })
 export class MenusModule {}

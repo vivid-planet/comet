@@ -143,8 +143,8 @@ type Page implements DocumentInterface {
   content: PageContentBlockData!
   seo: SeoBlockData!
   createdAt: DateTime!
-  dependencies(filter: DependenciesFilter): [Dependency!]!
   pageTreeNode: PageTreeNode
+  dependencies(filter: DependenciesFilter): [Dependency!]!
 }
 
 """PageContent root block data"""
@@ -264,10 +264,10 @@ type DamFile {
   createdAt: DateTime!
   updatedAt: DateTime!
   scope: DamScope!
-  dependents(filter: DependentsFilter): [Dependency!]!
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
+  dependents(filter: DependentsFilter): [Dependency!]!
 }
 
 type FooterContentScope {

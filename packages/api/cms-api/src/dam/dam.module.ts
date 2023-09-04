@@ -2,7 +2,7 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
-import { BlobStorageModule } from "..";
+import { BlobStorageModule, DependentsResolverFactory } from "..";
 import { ScaledImagesCacheService } from "./cache/scaled-images-cache.service";
 import { DamConfig } from "./dam.config";
 import { DAM_CONFIG, IMGPROXY_CONFIG } from "./dam.constants";
@@ -62,6 +62,7 @@ export class DamModule {
 
         const DamItemsResolver = createDamItemsResolver({ File, Folder, Scope });
         const FilesResolver = createFilesResolver({ File, Scope });
+        const FileDependentsResolver = DependentsResolverFactory.create(File);
         const FoldersResolver = createFoldersResolver({ Folder, Scope });
 
         if (Scope) {
@@ -94,6 +95,7 @@ export class DamModule {
                 ScaledImagesCacheService,
                 ImgproxyService,
                 FilesResolver,
+                FileDependentsResolver,
                 FilesService,
                 FileLicensesResolver,
                 FoldersResolver,

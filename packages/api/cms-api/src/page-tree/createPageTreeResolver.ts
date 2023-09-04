@@ -4,8 +4,6 @@ import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
-import { DependentsResolver } from "../dependencies/dependencies.resolver";
-import { DependenciesService } from "../dependencies/dependencies.service";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
@@ -68,16 +66,13 @@ export function createPageTreeResolver({
     });
 
     @Resolver(() => PageTreeNode)
-    class PageTreeResolver extends DependentsResolver(PageTreeNode) {
+    class PageTreeResolver {
         constructor(
             protected readonly pageTreeService: PageTreeService,
             protected readonly pageTreeReadApi: PageTreeReadApiService,
             @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
             private readonly attachedDocumentLoaderService: AttachedDocumentLoaderService,
-            private readonly dependenciesService: DependenciesService,
-        ) {
-            super(dependenciesService);
-        }
+        ) {}
         @Query(() => PageTreeNode, { nullable: true })
         @SubjectEntity(PageTreeNode)
         async pageTreeNode(@Args("id", { type: () => ID }) id: string): Promise<PageTreeNodeInterface> {
