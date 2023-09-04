@@ -4,7 +4,7 @@ import { Args, Parent, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { DependenciesService } from "./dependencies.service";
 import { Dependency } from "./dependency";
-import { DependenciesFilter } from "./dto/dependencies.args";
+import { DependenciesFilter } from "./dto/dependencies.filter";
 
 export class DependenciesResolverFactory {
     static create<T extends Type<AnyEntity<{ id: string }>>>(classRef: T) {
