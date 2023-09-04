@@ -32,12 +32,8 @@ import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createUploadFileBody, UploadFileBodyInterface } from "./dto/file.body";
 import { FileParams, HashFileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
-<<<<<<< HEAD
 import { FileInterface } from "./entities/file.entity";
-=======
-import { File } from "./entities/file.entity";
 import { FileValidationInterceptor } from "./file-validation-interceptor.service";
->>>>>>> main
 import { FilesService } from "./files.service";
 import { calculatePartialRanges, createHashedPath } from "./files.utils";
 
@@ -47,16 +43,8 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
     const Scope = PassedScope ?? EmptyDamScope;
     const hasNonEmptyScope = PassedScope != null;
 
-<<<<<<< HEAD
     function nonEmptyScopeOrNothing(scope: DamScopeInterface): DamScopeInterface | undefined {
         return hasNonEmptyScope ? scope : undefined;
-=======
-    @Post("upload")
-    @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD), FileValidationInterceptor)
-    async upload(@UploadedFile() file: FileUploadInterface, @Body() { folderId }: UploadFileBody): Promise<File> {
-        const uploadedFile = await this.filesService.upload(file, folderId);
-        return Object.assign(uploadedFile, { fileUrl: await this.filesService.createFileUrl(uploadedFile) });
->>>>>>> main
     }
 
     const UploadFileBody = createUploadFileBody({ Scope });
@@ -71,7 +59,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         ) {}
 
         @Post("upload")
-        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
+        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD), FileValidationInterceptor)
         async upload(
             @UploadedFile() file: FileUploadInterface,
             @Body() body: UploadFileBodyInterface,
