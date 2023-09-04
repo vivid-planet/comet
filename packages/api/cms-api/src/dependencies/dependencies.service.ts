@@ -83,7 +83,7 @@ export class DependenciesService {
         console.timeEnd("creating block dependency materialized view index");
     }
 
-    async refreshViews(options?: { force?: boolean; consoleCommand?: boolean }): Promise<void> {
+    async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
         const refresh = async (options?: { concurrently: boolean }) => {
             console.time("refresh materialized block dependency");
             const blockIndexRefresh = this.refreshRepository.create({ startedAt: new Date() });
@@ -123,8 +123,8 @@ export class DependenciesService {
         } else if (lastRefresh.finishedAt && lastRefresh.finishedAt > subMinutes(new Date(), 15)) {
             // newer than 15 minutes -> refresh async
             const refreshPromise = refresh({ concurrently: true });
-            if (options?.consoleCommand) {
-                // await if executed as a console command
+            if (options?.awaitRefresh) {
+                // needed if refresh is executed as a console command
                 // otherwise the command exits and the refresh method is interrupted
                 await refreshPromise;
             }
