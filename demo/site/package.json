@@ -23,7 +23,7 @@
         "serve": "npm run extract:publicGenerated && NODE_ENV=production node server.js"
     },
     "dependencies": {
-        "@comet/cms-site": "workspace:^4.3.0",
+        "@comet/cms-site": "workspace:^4.4.0",
         "@googlemaps/js-api-loader": "^1.0.0",
         "@googlemaps/markerclustererplus": "^1.0.0",
         "@opentelemetry/api": "^1.4.0",
@@ -53,8 +53,8 @@
     },
     "devDependencies": {
         "@babel/core": "^7.16.0",
-        "@comet/cli": "workspace:^4.3.0",
-        "@comet/eslint-config": "workspace:^4.3.0",
+        "@comet/cli": "workspace:^4.4.0",
+        "@comet/eslint-config": "workspace:^4.4.0",
         "@graphql-codegen/add": "^3.0.0",
         "@graphql-codegen/cli": "^2.0.0",
         "@graphql-codegen/named-operations-object": "^2.0.0",
