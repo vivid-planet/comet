@@ -44,6 +44,7 @@ export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";
 export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
+export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
 export { muiGridSortToGql } from "./dataGrid/muiGridSortToGql";
 export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
 export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
