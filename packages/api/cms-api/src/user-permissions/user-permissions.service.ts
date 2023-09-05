@@ -33,6 +33,7 @@ export class UserPermissionsService {
                 "dam",
                 "pageTree",
                 "userPermissions",
+                "system",
                 ...(this.service.getAvailablePermissions ? await this.service.getAvailablePermissions() : []),
             ]),
         ];
