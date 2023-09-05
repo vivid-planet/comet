@@ -51,7 +51,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
     const UploadFileBody = createUploadFileBody({ Scope });
 
     @Controller("dam/files")
-    @RequiredPermission(["pageTree", "dam"], { skipScopeCheck: !hasNonEmptyScope })
+    @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
     class FilesController {
         constructor(
             @Inject(DAM_CONFIG) private readonly damConfig: DamConfig,

@@ -53,7 +53,7 @@ export function createDamItemsResolver({
         }
     }
 
-    @RequiredPermission(["pageTree", "dam"], { skipScopeCheck: !hasNonEmptyScope })
+    @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
     @Resolver(() => DamItem)
     class DamItemsResolver {
         constructor(private readonly damItemsService: DamItemsService) {}

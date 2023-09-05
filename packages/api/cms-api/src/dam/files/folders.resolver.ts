@@ -36,7 +36,7 @@ export function createFoldersResolver({
     @ObjectType()
     class PaginatedDamFolders extends PaginatedResponseFactory.create(Folder) {}
 
-    @RequiredPermission(["pageTree", "dam"], { skipScopeCheck: !hasNonEmptyScope })
+    @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
     @Resolver(() => Folder)
     class FoldersResolver {
         constructor(private readonly foldersService: FoldersService) {}

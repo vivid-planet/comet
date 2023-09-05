@@ -41,7 +41,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
     @ObjectType()
     class PaginatedDamFiles extends PaginatedResponseFactory.create(File) {}
 
-    @RequiredPermission(["pageTree", "dam"], { skipScopeCheck: !hasNonEmptyScope })
+    @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
     @Resolver(() => File)
     class FilesResolver {
         constructor(
