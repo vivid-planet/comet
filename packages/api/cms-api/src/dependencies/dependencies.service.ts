@@ -1,9 +1,12 @@
 import { AnyEntity, Connection } from "@mikro-orm/core";
-import { EntityManager } from "@mikro-orm/postgresql";
+import { EntityManager, Knex } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
+import * as console from "console";
 
 import { Dependency } from "./dependency";
 import { DiscoverService } from "./discover.service";
+import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
+import { PaginatedDependencies } from "./dto/paginated-dependencies";
 
 @Injectable()
 export class DependenciesService {
@@ -78,69 +81,102 @@ export class DependenciesService {
 
     async getDependents(
         target: AnyEntity<{ id: string }> | { entityName: string; id: string },
-        filter?: {
-            rootGraphqlObjectType?: string;
+        filter?: DependentFilter & {
             rootEntityName?: string;
-            rootId?: string;
-            rootColumnName?: string;
         },
-    ): Promise<Dependency[]> {
+        paginationArgs?: { offset: number; limit: number },
+    ): Promise<PaginatedDependencies> {
         await this.refreshViews();
 
         const entityName = "entityName" in target ? target.entityName : target.constructor.name;
-        const qb = this.entityManager.getKnex("read").select("*").from({ idx: "block_index_dependencies" }).where({
-            targetEntityName: entityName,
-            targetId: target.id,
-        });
 
-        if (filter?.rootGraphqlObjectType) {
-            qb.andWhere({ rootGraphqlObjectType: filter.rootGraphqlObjectType });
-        }
-        if (filter?.rootEntityName) {
-            qb.andWhere({ rootEntityName: filter.rootEntityName });
-        }
-        if (filter?.rootId) {
-            qb.andWhere({ rootId: filter.rootId });
-        }
-        if (filter?.rootColumnName) {
-            qb.andWhere({ rootColumnName: filter.rootColumnName });
-        }
+        const qb = this.getQueryBuilderWithFilters(
+            {
+                ...filter,
+                targetEntityName: entityName,
+                targetId: target.id,
+            },
+            paginationArgs,
+        );
 
         const results: Dependency[] = await qb;
-        return results;
+
+        const countResult = await this.withCount(qb).select("rootId").groupBy(["rootId", "rootEntityName"]);
+        const totalCount = countResult[0]?.count ?? 0;
+
+        return new PaginatedDependencies(results, Number(totalCount));
     }
 
     async getDependencies(
         root: AnyEntity<{ id: string }> | { entityName: string; id: string },
-        filter?: {
-            targetGraphqlObjectType?: string;
+        filter?: DependencyFilter & {
             targetEntityName?: string;
-            targetId?: string;
-            rootColumnName?: string;
         },
-    ): Promise<Dependency[]> {
+        paginationArgs?: { offset: number; limit: number },
+    ): Promise<PaginatedDependencies> {
         await this.refreshViews();
 
         const entityName = "entityName" in root ? root.entityName : root.constructor.name;
-        const qb = this.entityManager.getKnex("read").select("*").from({ idx: "block_index_dependencies" }).where({
-            rootEntityName: entityName,
-            rootId: root.id,
-        });
 
+        const qb = this.getQueryBuilderWithFilters(
+            {
+                ...filter,
+                rootEntityName: entityName,
+                rootId: root.id,
+            },
+            paginationArgs,
+        );
+
+        const results: Dependency[] = await qb;
+
+        const countResult: Array<{ count: string | number }> = await this.withCount(qb).select("rootId").groupBy(["rootId", "rootEntityName"]);
+        const totalCount = countResult[0]?.count ?? 0;
+
+        return new PaginatedDependencies(results, Number(totalCount));
+    }
+
+    private getQueryBuilderWithFilters(
+        filter: DependentFilter &
+            DependencyFilter & {
+                targetEntityName?: string;
+                rootEntityName?: string;
+            },
+        paginationArgs?: { offset: number; limit: number },
+    ) {
+        const qb = this.entityManager.getKnex("read").select("*").from({ idx: "block_index_dependencies" });
+
+        if (paginationArgs?.offset !== undefined && paginationArgs?.limit !== undefined) {
+            qb.offset(paginationArgs.offset).limit(paginationArgs.limit);
+        }
+
+        if (filter.targetEntityName) {
+            qb.andWhere({ targetEntityName: filter.targetEntityName });
+        }
         if (filter?.targetGraphqlObjectType) {
             qb.andWhere({ targetGraphqlObjectType: filter.targetGraphqlObjectType });
         }
-        if (filter?.targetEntityName) {
-            qb.andWhere({ targetEntityName: filter.targetEntityName });
-        }
-        if (filter?.targetId) {
+        if (filter.targetId) {
             qb.andWhere({ targetId: filter.targetId });
         }
+
+        if (filter.rootEntityName) {
+            qb.andWhere({ rootEntityName: filter.rootEntityName });
+        }
+        if (filter.rootGraphqlObjectType) {
+            qb.andWhere({ rootGraphqlObjectType: filter.rootGraphqlObjectType });
+        }
+        if (filter.rootId) {
+            qb.andWhere({ rootId: filter.rootId });
+        }
+
         if (filter?.rootColumnName) {
             qb.andWhere({ rootColumnName: filter.rootColumnName });
         }
 
-        const results: Dependency[] = await qb;
-        return results;
+        return qb;
+    }
+
+    private withCount(qb: Knex.QueryBuilder) {
+        return qb.offset(0).clearSelect().count();
     }
 }

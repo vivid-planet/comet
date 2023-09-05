@@ -71,6 +71,11 @@ type Dependency {
   targetId: String!
 }
 
+type PaginatedDependencies {
+  nodes: [Dependency!]!
+  totalCount: Int!
+}
+
 type BuildTemplate {
   id: ID!
   name: String!
@@ -144,7 +149,7 @@ type Page implements DocumentInterface {
   seo: SeoBlockData!
   createdAt: DateTime!
   pageTreeNode: PageTreeNode
-  dependencies(filter: DependenciesFilter): [Dependency!]!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
 }
 
 """PageContent root block data"""
@@ -153,7 +158,7 @@ scalar PageContentBlockData @specifiedBy(url: "http://www.ecma-international.org
 """Seo root block data"""
 scalar SeoBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
-input DependenciesFilter {
+input DependencyFilter {
   targetGraphqlObjectType: String
   targetId: String
   rootColumnName: String
@@ -183,7 +188,7 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
-  dependents(filter: DependentsFilter): [Dependency!]!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter): PaginatedDependencies!
 }
 
 enum PageTreeNodeVisibility {
@@ -205,7 +210,7 @@ enum UserGroup {
 
 union PageContentUnion = Page | Link | PredefinedPage
 
-input DependentsFilter {
+input DependentFilter {
   rootGraphqlObjectType: String
   rootId: String
   rootColumnName: String
@@ -267,7 +272,7 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
-  dependents(filter: DependentsFilter): [Dependency!]!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter): PaginatedDependencies!
 }
 
 type FooterContentScope {
@@ -281,7 +286,7 @@ type Footer implements DocumentInterface {
   content: FooterContentBlockData!
   scope: FooterContentScope!
   createdAt: DateTime!
-  dependencies(filter: DependenciesFilter): [Dependency!]!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
 }
 
 """FooterContent root block data"""
@@ -293,7 +298,7 @@ type MainMenuItem {
   content: RichTextBlockData
   createdAt: DateTime!
   updatedAt: DateTime!
-  dependencies(filter: DependenciesFilter): [Dependency!]!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
 }
 
 """RichText root block data"""
@@ -328,8 +333,8 @@ type News implements DocumentInterface {
   content: NewsContentBlockData!
   createdAt: DateTime!
   comments: [NewsComment!]!
-  dependencies(filter: DependenciesFilter): [Dependency!]!
-  dependents(filter: DependentsFilter): [Dependency!]!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter): PaginatedDependencies!
 }
 
 enum NewsCategory {
@@ -461,7 +466,7 @@ type Redirect implements DocumentInterface {
   generationType: RedirectGenerationType!
   createdAt: DateTime!
   scope: RedirectScope!
-  dependencies(filter: DependenciesFilter): [Dependency!]!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
 }
 
 enum RedirectSourceTypeValues {

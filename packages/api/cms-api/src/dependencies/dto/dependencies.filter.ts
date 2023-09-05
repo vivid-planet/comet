@@ -4,7 +4,7 @@ import { IsString } from "class-validator";
 import { IsUndefinable } from "../../common/validators/is-undefinable";
 
 @InputType()
-export class DependenciesFilter {
+export class DependencyFilter {
     @Field({ nullable: true })
     @IsString()
     @IsUndefinable()
@@ -22,7 +22,7 @@ export class DependenciesFilter {
 }
 
 @InputType()
-export class DependentsFilter {
+export class DependentFilter {
     @Field({ nullable: true })
     @IsString()
     @IsUndefinable()
