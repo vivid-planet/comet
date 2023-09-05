@@ -7,6 +7,7 @@ import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
 
 import { TextMatch } from "../../../common/MarkedMatches";
+import { useDamConfig } from "../../../dam/config/useDamConfig";
 import { DamTable } from "../../../dam/DamTable";
 import DamLabel from "../../../dam/Table/DamLabel";
 import { isFile } from "../../../dam/Table/FolderTableRow";
@@ -43,12 +44,12 @@ const TableRowButton = styled(Button)`
 const renderDamLabel = (
     row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
     onChooseFile: (fileId: string) => void,
-    { matches }: { matches?: TextMatch[] },
+    { matches, showLicenseWarnings = false }: { matches?: TextMatch[]; showLicenseWarnings?: boolean },
 ) => {
     return isFile(row) ? (
         <div>
             <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
-                <DamLabel asset={row} matches={matches} />
+                <DamLabel asset={row} matches={matches} showLicenseWarnings={showLicenseWarnings} />
             </TableRowButton>
         </div>
     ) : (
@@ -66,6 +67,8 @@ interface ChooseFileDialogProps {
 }
 
 export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes }: ChooseFileDialogProps): React.ReactElement => {
+    const damConfig = useDamConfig();
+
     return (
         <FixedHeightDialog open={open} onClose={onClose} fullWidth maxWidth="xl">
             <StyledDialogTitle>
@@ -76,7 +79,9 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
             </StyledDialogTitle>
             <MemoryRouter>
                 <DamTable
-                    renderDamLabel={(row, { matches }) => renderDamLabel(row, onChooseFile, { matches })}
+                    renderDamLabel={(row, { matches }) =>
+                        renderDamLabel(row, onChooseFile, { matches, showLicenseWarnings: damConfig.enableLicenseFeature })
+                    }
                     TableContainer={DialogContent}
                     allowedMimetypes={allowedMimetypes}
                     damLocationStorageKey="choose-file-dam-location"

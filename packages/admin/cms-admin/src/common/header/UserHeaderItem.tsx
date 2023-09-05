@@ -40,7 +40,13 @@ const signOutMutation = gql`
     }
 `;
 
-export function UserHeaderItem(): React.ReactElement {
+interface UserHeaderItemProps {
+    aboutModalLogo?: React.ReactElement;
+}
+
+export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
+    const { aboutModalLogo } = props;
+
     const [showAboutModal, setShowAboutModal] = React.useState(false);
     const { loading, data } = useQuery<GQLCurrentUserQuery>(currentUserQuery);
     const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
@@ -84,6 +90,7 @@ export function UserHeaderItem(): React.ReactElement {
                 onClose={() => {
                     setShowAboutModal(false);
                 }}
+                logo={aboutModalLogo}
             />
         </AppHeaderDropdown>
     );

@@ -68,7 +68,7 @@ export class KubernetesService {
     }
 
     async deleteJob(name: string): Promise<void> {
-        const { response } = await this.batchApi.deleteNamespacedJob(name, this.namespace);
+        const { response } = await this.batchApi.deleteNamespacedJob(name, this.namespace, undefined, undefined, undefined, undefined, "Background");
         if (response.statusCode !== 200) {
             throw new Error(`Error deleting Job "${name}"`);
         }

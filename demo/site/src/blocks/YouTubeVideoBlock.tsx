@@ -14,7 +14,7 @@ const getHeightInPercentForAspectRatio = (aspectRatio: YouTubeVideoBlockData["as
 };
 
 const YouTubeVideoBlock: React.FunctionComponent<PropsWithData<YouTubeVideoBlockData>> = ({
-    data: { youtubeIdentifier, autoplay, showControls, aspectRatio },
+    data: { youtubeIdentifier, autoplay, loop, showControls, aspectRatio },
 }) => {
     try {
         const url = new URL(youtubeIdentifier);
@@ -27,14 +27,25 @@ const YouTubeVideoBlock: React.FunctionComponent<PropsWithData<YouTubeVideoBlock
         // no url, but ID was specified
     }
 
+    const searchParams = new URLSearchParams();
+    searchParams.append("modestbranding", "1");
+
+    searchParams.append("autoplay", Number(autoplay).toString());
+    autoplay && searchParams.append("mute", "1");
+
+    searchParams.append("controls", Number(showControls).toString());
+
+    searchParams.append("loop", Number(loop).toString());
+    // the playlist parameter is needed so that the video loops. See https://developers.google.com/youtube/player_parameters#loop
+    loop && searchParams.append("playlist", youtubeIdentifier);
+
+    const youtubeBaseUrl = "https://www.youtube-nocookie.com/embed/";
+    const youtubeUrl = new URL(`${youtubeBaseUrl}${youtubeIdentifier}`);
+    youtubeUrl.search = searchParams.toString();
+
     return (
         <sc.VideoContainer heightInPercent={getHeightInPercentForAspectRatio(aspectRatio)}>
-            <iframe
-                src={`https://www.youtube-nocookie.com/embed/${youtubeIdentifier}?&modestbranding=1&autoplay=${Number(autoplay)}&controls=${Number(
-                    showControls,
-                )}`}
-                frameBorder="0"
-            />
+            <iframe src={youtubeUrl.toString()} frameBorder="0" />
         </sc.VideoContainer>
     );
 };

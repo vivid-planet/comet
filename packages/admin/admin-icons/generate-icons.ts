@@ -1,7 +1,7 @@
 import { Presets, SingleBar } from "cli-progress";
 import { ESLint } from "eslint";
-import { parse } from "fast-xml-parser";
-import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
+import { XMLParser } from "fast-xml-parser";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { pascalCase, pascalCaseTransformMerge } from "pascal-case";
 const eslint = new ESLint({ fix: true });
 
@@ -15,6 +15,10 @@ const main = async () => {
         Presets.shades_classic,
     );
     bar.start(files.length, 0);
+
+    if (existsSync("src/generated")) {
+        rmSync("src/generated", { recursive: true });
+    }
 
     mkdirSync("src/generated");
     await Promise.all(
@@ -37,13 +41,17 @@ const getComponentName = (fileName: string) => pascalCase(fileName.split(".")[0]
 
 const getPathData = (fileName: string) => {
     const fileContents = readFileSync(`icons/${fileName}`);
-    const parsedXml = parse(fileContents.toString(), { ignoreAttributes: false, attributeNamePrefix: "" });
+    const parsedXml = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "" }).parse(fileContents.toString());
 
     return parsedXml.svg.path.d;
 };
 
 const getFormattedText = async (text: string) => {
-    const results = await eslint.lintText(text);
+    const results = await eslint.lintText(text, {
+        // Configures ESLint to treat supplied text as TypeScript JSX file.
+        // See docs: https://eslint.org/docs/latest/integrate/nodejs-api#-eslintlinttextcode-options
+        filePath: "dummy.tsx",
+    });
 
     return results[0].output;
 };

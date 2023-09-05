@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import {
+    LocalErrorScopeApolloContext,
     MainContent,
     messages,
     Stack,
@@ -66,11 +67,13 @@ export function PagesPage({
         };
     }, [setRedirectPathAfterChange, path]);
 
-    const { loading, data, refetch, startPolling, stopPolling } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
+    const { loading, data, error, refetch, startPolling, stopPolling } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
+        fetchPolicy: "cache-and-network",
         variables: {
             contentScope: scope,
             category,
         },
+        context: LocalErrorScopeApolloContext,
     });
 
     useFocusAwarePolling({
@@ -80,6 +83,22 @@ export function PagesPage({
         stopPolling,
     });
 
+    const isInitialLoad = React.useRef(true);
+
+    if (error) {
+        const isPollingError = !isInitialLoad.current;
+
+        if (isPollingError) {
+            // Ignore
+        } else {
+            throw error;
+        }
+    }
+
+    if (isInitialLoad.current && !loading) {
+        isInitialLoad.current = false;
+    }
+
     const [EditDialog, editDialogSelection, editDialogApi] = useEditDialog();
 
     const refPageTree = React.useRef<PageTreeRefApi>(null);
@@ -87,10 +106,11 @@ export function PagesPage({
 
     const ignorePages = React.useCallback((page: GQLPageTreePageFragment) => (showArchive ? true : page.visibility !== "Archived"), [showArchive]);
 
-    const { tree, pagesToRender, setExpandedIds, toggleExpand, onSelectChanged, setSelectedIds, selectState, selectedTree } = usePageTree({
-        pages: data?.pages ?? [],
-        filter: ignorePages,
-    });
+    const { tree, pagesToRender, setExpandedIds, expandedIds, toggleExpand, onSelectChanged, setSelectedIds, selectState, selectedTree } =
+        usePageTree({
+            pages: data?.pages ?? [],
+            filter: ignorePages,
+        });
 
     const pageSearchApi = usePageSearch({
         tree,
@@ -135,7 +155,7 @@ export function PagesPage({
                         </ToolbarActions>
                     </Toolbar>
                     <PageTreeContext.Provider value={{ allCategories, documentTypes, tree, query: pagesQuery }}>
-                        <FullHeightMainContent>
+                        <PageTreeContent fullHeight>
                             <ActionToolbarBox>
                                 <PagesPageActionToolbar
                                     selectedState={selectState}
@@ -151,12 +171,12 @@ export function PagesPage({
                                         }
                                     }}
                                     selectedTree={selectedTree}
+                                    collapseAllDisabled={!expandedIds.length}
                                     onCollapseAllPressed={() => {
                                         setExpandedIds([]);
                                     }}
                                 />
                             </ActionToolbarBox>
-
                             <FullHeightPaper variant="outlined">
                                 {loading && <CircularProgress />}
 
@@ -170,7 +190,7 @@ export function PagesPage({
                                     siteUrl={siteConfig.url}
                                 />
                             </FullHeightPaper>
-                        </FullHeightMainContent>
+                        </PageTreeContent>
                     </PageTreeContext.Provider>
 
                     <EditDialog>
@@ -210,9 +230,8 @@ export function PagesPage({
     );
 }
 
-const FullHeightMainContent = withStyles({
+const PageTreeContent = withStyles({
     root: {
-        height: "calc(100vh - 140px)",
         display: "flex",
         flexDirection: "column",
     },

@@ -1,5 +1,109 @@
 # @comet/admin
 
+## 4.4.0
+
+### Minor Changes
+
+-   e824ffa6: Add `fullHeight` & `disablePadding` props to MainContent
+
+    `fullHeight` makes MainContent take up the remaining space below to fill the entire page.
+    This is helpful for virtualized components that need a fixed height, such as DataGrid or the PageTree.
+
+    `disablePadding` is helpful if a component requires the `fullHeight` behaviour but should fill the entire page without the surrounding space.
+
+-   3e15b819: Add field components to simplify the creation of forms with final-form.
+
+    -   TextField
+    -   TextAreaField
+    -   SearchField
+    -   SelectField
+    -   CheckboxField
+    -   SwitchField
+    -   ColorField
+    -   DateField
+    -   DateRangeField
+    -   TimeField
+    -   TimeRangeField
+    -   DateTimeField
+
+    **Example with TextField**
+
+    ```tsx
+    // You can now do:
+    <TextField name="text" label="Text" />
+    ```
+
+    ```tsx
+    // Instead of:
+    <Field name="text" label="Text" component={FinalFormInput} />
+    ```
+
+    **Example with SelectField**
+
+    ```tsx
+    // You can now do:
+    <SelectField name="select" label="Select">
+        {options.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+                {option.label}
+            </MenuItem>
+        ))}
+    </SelectField>
+    ```
+
+    ```tsx
+    // Instead of:
+    <Field name="select" label="Select">
+        {(props) => (
+            <FinalFormSelect {...props}>
+                {options.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                    </MenuItem>
+                ))}
+            </FinalFormSelect>
+        )}
+    </Field>
+    ```
+
+-   a77da844: Add little helper for mui grid pagination (muiGridPagingToGql)
+
+    Sample usage:
+
+    ```
+    const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
+        variables: {
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+            ...muiGridPagingToGql({ page: dataGridProps.page, pageSize: dataGridProps.pageSize }),
+            sort: muiGridSortToGql(sortModel),
+        },
+    });
+    ```
+
+### Patch Changes
+
+-   @comet/admin-icons@4.4.0
+
+## 4.3.0
+
+### Patch Changes
+
+-   @comet/admin-icons@4.3.0
+
+## 4.2.0
+
+### Minor Changes
+
+-   3567533e: Add componentsProps to EditDialog
+-   d25a7cbb: Allow disabling `RowActionsItem` using a `disabled` prop.
+
+### Patch Changes
+
+-   67e54a82: Add styling variants to Tooltip
+-   7b614c13: Add styleOverrides to ToolbarAutomaticTitleItem
+-   aaf1586c: Fix multiple prop in FinalFormAutocomplete
+    -   @comet/admin-icons@4.2.0
+
 ## 4.1.0
 
 ### Minor Changes

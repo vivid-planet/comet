@@ -9,7 +9,7 @@ interface Props {
     title?: React.ReactNode;
 }
 
-const StackBreadcrumbs = withStyles(({ palette }) => ({
+const StackBreadcrumbs = withStyles(({ palette, spacing }) => ({
     root: {
         paddingTop: 0,
         paddingBottom: 20,
@@ -17,6 +17,7 @@ const StackBreadcrumbs = withStyles(({ palette }) => ({
         zIndex: 15,
         backgroundColor: palette.background.default,
         top: 0,
+        marginTop: spacing(-4),
     },
 }))(CometAdminStackBreadcrumbs);
 

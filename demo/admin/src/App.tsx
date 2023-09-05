@@ -140,7 +140,7 @@ class App extends React.Component {
                                                                                         path={`${match.path}/project-snips/main-menu`}
                                                                                         component={MainMenu}
                                                                                     />
-                                                                                    <Route
+                                                                                    <RouteWithErrorBoundary
                                                                                         path={`${match.path}/pages/pagetree/:category`}
                                                                                         render={({ match: { params } }) => {
                                                                                             const category = urlParamToCategory(params.category);

@@ -1,5 +1,9 @@
 # Comet DXP
 
+![npm (scoped with tag)](https://img.shields.io/npm/v/%40comet/admin/latest)
+![npm (scoped with tag)](https://img.shields.io/npm/v/%40comet/admin/canary)
+![npm (scoped with tag)](https://img.shields.io/npm/v/%40comet/admin/next-canary)
+
 ![main](https://github.com/vivid-planet/comet/actions/workflows/lint.yml/badge.svg?branch=main)
 ![next](https://github.com/vivid-planet/comet/actions/workflows/lint.yml/badge.svg?branch=next)
 
@@ -24,7 +28,7 @@ Run the `install.sh` script to install dependencies and setup needed symlinks.
 sh install.sh
 ```
 
-_It is recommend to run `install.sh` every time you switch to the `main` branch._
+_It is recommended to run `install.sh` every time you switch to the `main` branch._
 
 ### Start development processes
 
@@ -74,6 +78,14 @@ pnpm run storybook
 
 Storybook will be available at [http://localhost:26638/](http://localhost:26638/)
 
+#### Start Docs
+
+```bash
+pnpm run docs
+```
+
+The docs will be available at [http://localhost:3000/](http://localhost:3000/)
+
 ### Stop Processes
 
 ```bash
@@ -94,8 +106,4 @@ npx dev-pm shutdown
 
 ## Contributing
 
-Make sure to [add a changeset](https://github.com/changesets/changesets/blob/main/docs/adding-a-changeset.md).
-
-## Notes
-
-Please note that this project is released with a [Contributor Code of Conduct](CODE-OF-CONDUCT.md). By participating in this project you agree to abide by its terms.
+Please read our [Contributing](CONTRIBUTING.md) file.

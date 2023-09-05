@@ -32,6 +32,11 @@ const controlsConfig: ContentScopeControlsConfig<ContentScope> = {
     domain: {
         label: "Domain",
         icon: DomainIcon,
+        searchable: true,
+    },
+    language: {
+        label: "Language",
+        icon: DomainIcon,
     },
 };
 

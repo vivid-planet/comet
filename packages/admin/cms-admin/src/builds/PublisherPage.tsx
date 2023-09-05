@@ -32,6 +32,7 @@ const buildsQuery = gql`
             id
             status
             name
+            label
             trigger
             startTime
             completionTime
@@ -81,6 +82,9 @@ export function PublisherPage(): React.ReactElement {
                             field: "name",
                             headerName: intl.formatMessage({ id: "comet.pages.publisher.name", defaultMessage: "Name" }),
                             flex: 2,
+                            renderCell: ({ row }) => {
+                                return row.label ?? row.name;
+                            },
                         },
                         {
                             field: "runtime",
