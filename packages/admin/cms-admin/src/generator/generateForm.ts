@@ -1,4 +1,11 @@
-import { IntrospectionEnumType, IntrospectionField, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import {
+    IntrospectionEnumType,
+    IntrospectionField,
+    IntrospectionInputObjectType,
+    IntrospectionNamedTypeRef,
+    IntrospectionObjectType,
+    IntrospectionQuery,
+} from "graphql";
 
 import { CrudGeneratorConfig } from "./types";
 import { buildNameVariants } from "./utils/buildNameVariants";
@@ -16,9 +23,17 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         | IntrospectionObjectType
         | undefined;
     if (!schemaEntity) throw new Error("didn't find entity in schema types");
+
+    const updateSchemaEntity = schema.__schema.types.find((type) => type.kind === "INPUT_OBJECT" && type.name === `${entityName}UpdateInput`) as
+        | IntrospectionInputObjectType
+        | undefined;
+    if (!updateSchemaEntity) throw new Error("didn't find UpdateInput in schema types");
+    const inputFieldNames = updateSchemaEntity.inputFields.map((field) => field.name);
+
     const formFields = schemaEntity.fields
         .filter((field) => {
             if (field.name === "id" || field.name === "updatedAt" || field.name === "createdAt" || field.name === "scope") return false;
+            if (!inputFieldNames.includes(field.name)) return false;
             return true;
         })
         .filter((field) => {

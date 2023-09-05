@@ -167,14 +167,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             label={<FormattedMessage id="product.title" defaultMessage="Title" />}
                         />
-                        <Field name="visible" label="" type="checkbox" fullWidth>
-                            {(props) => (
-                                <FormControlLabel
-                                    label={<FormattedMessage id="product.visible" defaultMessage="Visible" />}
-                                    control={<FinalFormCheckbox {...props} />}
-                                />
-                            )}
-                        </Field>
                         <Field
                             required
                             fullWidth

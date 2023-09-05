@@ -46,6 +46,7 @@ const productsFragment = gql`
         type
         price
         inStock
+        soldCount
         image
         createdAt
     }
@@ -127,6 +128,7 @@ export function ProductsGrid(): React.ReactElement {
         },
         { field: "price", headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }), type: "number", width: 150 },
         { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }), type: "boolean", width: 150 },
+        { field: "soldCount", headerName: intl.formatMessage({ id: "product.soldCount", defaultMessage: "Sold Count" }), type: "number", width: 150 },
         {
             field: "image",
             headerName: intl.formatMessage({ id: "product.image", defaultMessage: "Image" }),
