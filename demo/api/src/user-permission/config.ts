@@ -12,10 +12,7 @@ export const userPermissionConfig: UserPermissionConfigInterface = {
         const users = staticUsers.filter((user) => !search || user.name.toLowerCase().includes(search) || user.email.toLowerCase().includes(search));
         return [users, users.length];
     },
-    getAvailablePermissions: () => ({
-        news: "news",
-        products: "products",
-    }),
+    getAvailablePermissions: () => ["news", "products"],
     getAvailableContentScopes: () => [
         { domain: "main", language: "de" },
         { domain: "main", language: "en" },

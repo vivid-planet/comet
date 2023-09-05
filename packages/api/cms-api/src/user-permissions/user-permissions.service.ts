@@ -10,6 +10,7 @@ import { User } from "./dto/user";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
+import { Permission } from "./interfaces/user-permission.interface";
 import { USER_PERMISSIONS_CONFIG_SERVICE } from "./user-permissions.const";
 import { UserPermissionConfigInterface, UserPermissions } from "./user-permissions.types";
 import { getDate } from "./utils/getDate";
@@ -25,12 +26,14 @@ export class UserPermissionsService {
         return this.service.getAvailableContentScopes ? this.service.getAvailableContentScopes() : [];
     }
 
-    async getAvailablePermissions(): Promise<string[]> {
+    async getAvailablePermissions(): Promise<(keyof Permission)[]> {
         return [
-            "dam",
-            "pageTree",
-            "userPermissions",
-            ...(this.service.getAvailablePermissions ? Object.keys(await this.service.getAvailablePermissions()) : []),
+            ...new Set<keyof Permission>([
+                "dam",
+                "pageTree",
+                "userPermissions",
+                ...(this.service.getAvailablePermissions ? await this.service.getAvailablePermissions() : []),
+            ]),
         ];
     }
 
@@ -87,7 +90,9 @@ export class UserPermissionsService {
             }
         }
 
-        return permissions.sort((a, b) => availablePermissions.indexOf(a.permission) - availablePermissions.indexOf(b.permission));
+        return permissions.sort(
+            (a, b) => availablePermissions.indexOf(a.permission as keyof Permission) - availablePermissions.indexOf(b.permission as keyof Permission),
+        );
     }
 
     async getContentScopes(userId: string, skipManual = false): Promise<ContentScope[]> {

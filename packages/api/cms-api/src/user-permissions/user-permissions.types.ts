@@ -20,7 +20,7 @@ export type ContentScopes = ContentScope[] | UserPermissions.allContentScopes;
 export interface UserPermissionConfigInterface {
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<[User[], number]> | [User[], number];
-    getAvailablePermissions?: () => Promise<Permission> | Permission;
+    getAvailablePermissions?: () => Promise<(keyof Permission)[]> | (keyof Permission)[];
     getAvailableContentScopes?: () => Promise<ContentScope[]> | ContentScope[];
     getPermissionsForUser?: (user: User) => Promise<Permissions> | Permissions;
     getContentScopesForUser?: (user: User) => Promise<ContentScopes> | ContentScopes;
