@@ -53,7 +53,7 @@ const ContentScopeProvider: React.FC<Pick<ContentScopeProviderProps, "children">
     const sitesConfig = useSitesConfig();
     const user = useCurrentUser();
 
-    const allowedUserDomains = user.contentScopes.find((scope) => scope.scope === "domain")?.values ?? [];
+    const allowedUserDomains = user.contentScopes.map((scope) => scope.domain);
 
     const allowedSiteConfigs = Object.fromEntries(
         Object.entries(sitesConfig.configs).filter(([siteKey, siteConfig]) => allowedUserDomains.includes(siteKey)),

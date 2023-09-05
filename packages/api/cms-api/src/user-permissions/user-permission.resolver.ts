@@ -65,7 +65,8 @@ export class UserPermissionResolver {
         @Args("data", { type: () => UserPermissionContentScopesInput }) data: UserPermissionContentScopesInput,
     ): Promise<UserPermission> {
         const permission = await this.getPermission(data.permissionId);
-        permission.assign(data);
+        permission.overrideContentScopes = data.overrideContentScopes;
+        permission.contentScopes = data.contentScopes;
         await this.persistPermission(permission);
         return permission;
     }

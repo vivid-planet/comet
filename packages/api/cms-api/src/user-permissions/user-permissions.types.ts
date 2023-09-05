@@ -15,11 +15,7 @@ type UserPermissions =
     | Pick<UserPermission, "permission" | "configuration" | "validFrom" | "validTo" | "reason" | "requestedBy" | "approvedBy">[]
     | USERPERMISSIONS.allPermissions;
 
-export type ContentScopeValues = {
-    [key in keyof ContentScope]: ContentScope[key][];
-};
-
-export type UserContentScopes = ContentScopeValues | USERPERMISSIONS.allContentScopes;
+export type UserContentScopes = ContentScope[] | USERPERMISSIONS.allContentScopes;
 
 export const USERPERMISSIONS_CONFIG = "userpermissions-config";
 export const USERPERMISSIONS_CONFIG_SERVICE = "userpermissions-config-service";
@@ -29,7 +25,7 @@ export interface UserPermissionConfigInterface {
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<[User[], number]> | [User[], number];
     getAvailablePermissions?: () => Promise<Permission> | Permission;
-    getAvailableContentScopes?: () => Promise<ContentScopeValues> | ContentScopeValues;
+    getAvailableContentScopes?: () => Promise<ContentScope[]> | ContentScope[];
     getPermissionsForUser?: (user: User) => Promise<UserPermissions> | UserPermissions;
     getContentScopesForUser?: (user: User) => Promise<UserContentScopes> | UserContentScopes;
 }

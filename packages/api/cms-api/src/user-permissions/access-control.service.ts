@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
 import { CurrentUserInterface } from "../auth/current-user/current-user";
-import { CurrentUserContentScope } from "./dto/current-user";
 import { ContentScope } from "./interfaces/content-scope.interface";
 import { Permission } from "./interfaces/user-permission.interface";
 import { PermissionConfiguration } from "./user-permissions.types";
@@ -50,10 +49,9 @@ export class AccessControlService {
         return true;
     }
 
-    private checkContentScope(contentScopes: CurrentUserContentScope[], contentScope?: ContentScope) {
+    private checkContentScope(contentScopes: ContentScope[], contentScope?: ContentScope) {
         if (!contentScope) return true;
-        return Object.keys(contentScope).every((scope) =>
-            contentScopes.find((cs) => cs.scope === scope)?.values.some((v) => v === contentScope[scope as keyof ContentScope]),
-        );
+
+        return contentScopes.some((cs) => Object.entries(cs).every(([scope, value]) => contentScope[scope as keyof ContentScope] === value));
     }
 }

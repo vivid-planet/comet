@@ -48,7 +48,8 @@ export class InferScopeService {
         }
     }
 
-    private async getFromArgs(context: ExecutionContext, selector: string): Promise<string> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private async getFromArgs(context: ExecutionContext, selector: string): Promise<any> {
         let args: Record<string, unknown>;
 
         if (context.getType().toString() === "graphql") {

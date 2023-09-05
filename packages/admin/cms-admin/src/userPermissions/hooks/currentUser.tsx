@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import React from "react";
 
-import { GQLCurrentUserContentScope, GQLCurrentUserPermission } from "../../graphql.generated";
+import { GQLCurrentUserPermission } from "../../graphql.generated";
 import { GQLCurrentUserQuery } from "./currentUser.generated";
 
 const CurrentUserContext = React.createContext<CurrentUser | undefined>(undefined);
@@ -15,12 +15,16 @@ export type UserPermission =
       }
     | string;
 
+export type ContentScope = {
+    [key: string]: string;
+};
+
 export class CurrentUser {
     name = undefined;
     email = undefined;
     language = undefined;
     permissions: GQLCurrentUserPermission[] = [];
-    contentScopes: GQLCurrentUserContentScope[] = [];
+    contentScopes: ContentScope[] = [];
     isAllowed(permission?: UserPermission): boolean {
         if (this.email === undefined) return false;
         if (!permission) return true;
@@ -46,18 +50,12 @@ export const CurrentUserProvider: React.FC = ({ children }) => {
             currentUser {
                 name
                 email
-                contentScopes {
-                    scope
-                    values
-                }
+                contentScopes
                 permissions {
                     permission
                     configuration
                     overrideContentScopes
-                    contentScopes {
-                        scope
-                        values
-                    }
+                    contentScopes
                 }
             }
         }

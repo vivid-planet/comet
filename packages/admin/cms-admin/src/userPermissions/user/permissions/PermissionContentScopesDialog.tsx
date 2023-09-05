@@ -1,18 +1,6 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { CancelButton, Field, FinalForm, FinalFormCheckbox, FinalFormSwitch, SaveButton } from "@comet/admin";
-import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Box,
-    CircularProgress,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Typography,
-} from "@mui/material";
+import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -27,13 +15,17 @@ import {
 
 interface FormSubmitData {
     overrideContentScopes: boolean;
-    contentScopes: { [key: string]: Array<string> };
+    contentScopes: string[];
 }
 interface FormProps {
     permissionId: string;
     userId: string;
     handleDialogClose: () => void;
 }
+type ContentScope = {
+    [key: string]: string;
+};
+
 export const PermissionContentScopesDialog: React.FC<FormProps> = ({ permissionId, userId, handleDialogClose }) => {
     const client = useApolloClient();
 
@@ -50,7 +42,7 @@ export const PermissionContentScopesDialog: React.FC<FormProps> = ({ permissionI
                 data: {
                     permissionId,
                     overrideContentScopes: data.overrideContentScopes,
-                    contentScopes: Object.entries(data.contentScopes).map((v) => ({ scope: v[0], values: v[1] })),
+                    contentScopes: data.contentScopes.map((contentScope) => JSON.parse(contentScope)),
                 },
             },
             refetchQueries: [namedOperations.Query.PermissionContentScopes, "Permissions"],
@@ -61,17 +53,11 @@ export const PermissionContentScopesDialog: React.FC<FormProps> = ({ permissionI
     const { data, error } = useQuery<GQLPermissionContentScopesQuery, GQLPermissionContentScopesQueryVariables>(
         gql`
             query PermissionContentScopes($permissionId: ID!, $userId: String) {
-                availableContentScopes: userPermissionsAvailableContentScopes {
-                    scope
-                    values
-                }
+                availableContentScopes: userPermissionsAvailableContentScopes
                 permission: userPermissionsPermission(id: $permissionId, userId: $userId) {
                     source
                     overrideContentScopes
-                    contentScopes {
-                        scope
-                        values
-                    }
+                    contentScopes
                 }
             }
         `,
@@ -90,9 +76,7 @@ export const PermissionContentScopesDialog: React.FC<FormProps> = ({ permissionI
 
     const initialValues: FormSubmitData = {
         overrideContentScopes: data.permission.overrideContentScopes,
-        contentScopes: Object.fromEntries(
-            data.availableContentScopes.map((v) => [v.scope, data.permission.contentScopes.find((cs) => cs.scope === v.scope)?.values ?? []]),
-        ),
+        contentScopes: data.permission.contentScopes.map((v) => JSON.stringify(v)),
     };
     const disabled = data && data.permission.source === "BY_RULE";
 
@@ -115,51 +99,31 @@ export const PermissionContentScopesDialog: React.FC<FormProps> = ({ permissionI
                                 type="checkbox"
                             />
                             {values.overrideContentScopes &&
-                                data.availableContentScopes.map((contentScope) => (
-                                    <Accordion key={contentScope.scope} expanded={data.availableContentScopes.length < 10}>
-                                        <AccordionSummary expandIcon={<ArrowForwardIosSharpIcon />}>
-                                            <Box sx={{ flexDirection: "column" }}>
-                                                <Typography variant="h5" sx={{ fontWeight: "medium" }}>
-                                                    <FormattedMessage
-                                                        id={`contentScope.scope.${contentScope.scope}`}
-                                                        defaultMessage={camelCaseToHumanReadable(contentScope.scope)}
-                                                    />
-                                                </Typography>
-                                                <Typography variant="body2" color="textSecondary">
-                                                    <FormattedMessage
-                                                        id="comet.userPermissions.contentScopesCount"
-                                                        defaultMessage="{selected} of {count} selected"
-                                                        values={{
-                                                            selected:
-                                                                data.permission.contentScopes.find((scope) => scope.scope === contentScope.scope)
-                                                                    ?.values.length ?? 0,
-                                                            count: contentScope.values.length,
-                                                        }}
-                                                    />
-                                                </Typography>
-                                            </Box>
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                            {contentScope.values.map((value) => (
-                                                <Field
-                                                    fieldContainerProps={{ fieldMargin: "never" }}
-                                                    key={value}
-                                                    name={`contentScopes.${contentScope.scope}`}
-                                                    variant="horizontal"
-                                                    type="checkbox"
-                                                    component={FinalFormCheckbox}
-                                                    value={value}
-                                                    label={
-                                                        <FormattedMessage
-                                                            id={`contentScope.value.${contentScope.scope}.${value}`}
-                                                            defaultMessage={camelCaseToHumanReadable(value)}
-                                                        />
-                                                    }
-                                                    disabled={disabled}
+                                data.availableContentScopes.map((contentScope: ContentScope) => (
+                                    <Field
+                                        disabled={disabled}
+                                        key={JSON.stringify(contentScope)}
+                                        name="contentScopes"
+                                        fullWidth
+                                        variant="horizontal"
+                                        type="checkbox"
+                                        component={FinalFormCheckbox}
+                                        value={JSON.stringify(contentScope)}
+                                        label={Object.entries(contentScope).map(([scope, value]) => (
+                                            <>
+                                                <FormattedMessage
+                                                    id={`contentScope.scope.${scope}`}
+                                                    defaultMessage={camelCaseToHumanReadable(scope)}
                                                 />
-                                            ))}
-                                        </AccordionDetails>
-                                    </Accordion>
+                                                :{" "}
+                                                <FormattedMessage
+                                                    id={`contentScope.values.${value}`}
+                                                    defaultMessage={camelCaseToHumanReadable(value)}
+                                                />
+                                                <br />
+                                            </>
+                                        ))}
+                                    />
                                 ))}
                         </DialogContent>
                         <DialogActions>

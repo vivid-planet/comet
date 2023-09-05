@@ -2,6 +2,7 @@ import { Field, ID, InputType, PartialType } from "@nestjs/graphql";
 import { IsArray, IsBoolean, IsDate, IsObject, IsOptional, IsString, IsUUID } from "class-validator";
 import { GraphQLJSONObject } from "graphql-type-json";
 
+import { ContentScope } from "../interfaces/content-scope.interface";
 import { PermissionConfiguration } from "../user-permissions.types";
 
 @InputType()
@@ -14,20 +15,9 @@ export class UserPermissionContentScopesInput {
     @IsBoolean()
     overrideContentScopes: boolean;
 
-    @Field(() => [UserPermissionContentScopeInput], { defaultValue: [] })
+    @Field(() => [GraphQLJSONObject], { defaultValue: [] })
     @IsArray()
-    contentScopes: UserPermissionContentScopeInput[] = [];
-}
-
-@InputType()
-export class UserPermissionContentScopeInput {
-    @Field()
-    @IsString()
-    scope: string;
-
-    @Field(() => [String])
-    @IsArray()
-    values: string[] = [];
+    contentScopes: ContentScope[] = [];
 }
 
 @InputType()

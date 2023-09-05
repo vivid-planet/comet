@@ -122,22 +122,7 @@ type CurrentUserPermission {
   permission: String!
   configuration: JSONObject
   overrideContentScopes: Boolean!
-  contentScopes: [CurrentUserContentScope!]!
-}
-
-type CurrentUserContentScope {
-  scope: String!
-  values: [String!]!
-}
-
-type UserContentScopes {
-  userId: String!
-  scopes: [UserContentScope!]!
-}
-
-type UserContentScope {
-  scope: String!
-  values: [String!]!
+  contentScopes: [JSONObject!]!
 }
 
 type UserPermission {
@@ -151,7 +136,7 @@ type UserPermission {
   requestedBy: String
   approvedBy: String
   overrideContentScopes: Boolean!
-  contentScopes: [UserContentScope!]!
+  contentScopes: [JSONObject!]!
 }
 
 enum UserPermissionSource {
@@ -169,11 +154,6 @@ type User {
 type PaginatedUserList {
   nodes: [User!]!
   totalCount: Int!
-}
-
-type AvailableContentScopes {
-  scope: String!
-  values: [String!]!
 }
 
 type PageTreeNode {
@@ -218,7 +198,7 @@ type CurrentUser {
   name: String!
   email: String!
   language: String!
-  contentScopes: [CurrentUserContentScope!]!
+  contentScopes: [JSONObject!]!
   permissions: [CurrentUserPermission!]!
 }
 
@@ -334,8 +314,8 @@ type Query {
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
   userPermissionsPermission(id: ID!, userId: String): UserPermission!
   userPermissionsAvailablePermissions: [String!]!
-  userPermissionsContentScope(userId: String!, skipManual: Boolean): UserContentScopes!
-  userPermissionsAvailableContentScopes: [AvailableContentScopes!]!
+  userPermissionsContentScope(userId: String!, skipManual: Boolean): [JSONObject!]!
+  userPermissionsAvailableContentScopes: [JSONObject!]!
 }
 
 input RedirectScopeInput {
@@ -488,7 +468,7 @@ type Mutation {
   userPermissionsUpdatePermission(data: UpdateUserPermissionInput!): UserPermission!
   userPermissionsSetPermissionContentScopes(data: UserPermissionContentScopesInput!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!
-  userPermissionsSetContentScope(input: UserContentScopesInput!): UserContentScopes!
+  userPermissionsSetContentScope(userId: String!, contentScopes: [JSONObject!]!): [JSONObject!]!
 }
 
 input CreateBuildsInput {
@@ -611,20 +591,5 @@ input UpdateUserPermissionInput {
 input UserPermissionContentScopesInput {
   permissionId: ID!
   overrideContentScopes: Boolean!
-  contentScopes: [UserPermissionContentScopeInput!]! = []
-}
-
-input UserPermissionContentScopeInput {
-  scope: String!
-  values: [String!]! = []
-}
-
-input UserContentScopesInput {
-  userId: String!
-  scopes: [UserContentScopeInput!]!
-}
-
-input UserContentScopeInput {
-  scope: String!
-  values: [String!]!
+  contentScopes: [JSONObject!]! = []
 }

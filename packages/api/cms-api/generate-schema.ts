@@ -3,9 +3,11 @@ import { NestFactory } from "@nestjs/core";
 import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType } from "@nestjs/graphql";
 import { writeFile } from "fs/promises";
 import { printSchema } from "graphql";
+import { GraphQLJSONObject } from "graphql-type-json";
 
 import {
     BuildsResolver,
+    ContentScope,
     createAuthResolver,
     createPageTreeResolver,
     createRedirectsResolver,
@@ -26,7 +28,7 @@ import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
-import { CurrentUserContentScope, CurrentUserPermission } from "./src/user-permissions/dto/current-user";
+import { CurrentUserPermission } from "./src/user-permissions/dto/current-user";
 import { UserResolver } from "./src/user-permissions/user.resolver";
 import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
 import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
@@ -54,8 +56,8 @@ class CurrentUser implements CurrentUserInterface {
     email: string;
     @Field()
     language: string;
-    @Field(() => [CurrentUserContentScope])
-    contentScopes: CurrentUserContentScope[];
+    @Field(() => [GraphQLJSONObject])
+    contentScopes: ContentScope[];
     @Field(() => [CurrentUserPermission])
     permissions: CurrentUserPermission[];
 }

@@ -1,66 +1,46 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { Field, FinalForm, FinalFormCheckbox, SaveButton, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
-import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Card, CardContent, CircularProgress, Toolbar, Typography } from "@mui/material";
+import { Card, CardContent, CircularProgress, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
-import {
-    GQLContentScopesQuery,
-    GQLContentScopesQueryVariables,
-    GQLSetContentScopeMutation,
-    GQLSetContentScopeMutationVariables,
-} from "./ContentScopeGrid.generated";
 
-interface FormSubmitData {
-    [key: string]: Array<string>;
-}
+type FormValues = {
+    contentScopes: string[];
+};
+type ContentScope = {
+    [key: string]: string;
+};
 
 export const ContentScopeGrid: React.FC<{
     userId: string;
 }> = ({ userId }) => {
     const client = useApolloClient();
 
-    const submit = async (data: FormSubmitData) => {
-        await client.mutate<GQLSetContentScopeMutation, GQLSetContentScopeMutationVariables>({
+    const submit = async (data: FormValues) => {
+        await client.mutate({
             mutation: gql`
-                mutation SetContentScope($input: UserContentScopesInput!) {
-                    userPermissionsSetContentScope(input: $input) {
-                        userId
-                    }
+                mutation SetContentScope($userId: String!, $contentScopes: [JSONObject!]!) {
+                    userPermissionsSetContentScope(userId: $userId, contentScopes: $contentScopes)
                 }
             `,
             variables: {
-                input: {
-                    userId,
-                    scopes: Object.entries(data).map((v) => ({ scope: v[0], values: v[1] })),
-                },
+                userId,
+                contentScopes: data.contentScopes.map((contentScope) => JSON.parse(contentScope)),
             },
             refetchQueries: ["ContentScopes"],
         });
     };
 
-    const { data, error } = useQuery<GQLContentScopesQuery, GQLContentScopesQueryVariables>(
+    const { data, error } = useQuery(
         gql`
             query ContentScopes($userId: String!) {
-                availableContentScopes: userPermissionsAvailableContentScopes {
-                    scope
-                    values
-                }
-                contentScope: userPermissionsContentScope(userId: $userId) {
-                    scopes {
-                        scope
-                        values
-                    }
-                }
-                contentScopeSkipManual: userPermissionsContentScope(userId: $userId, skipManual: true) {
-                    scopes {
-                        scope
-                        values
-                    }
-                }
+                availableContentScopes: userPermissionsAvailableContentScopes
+                userContentScopes: userPermissionsContentScope(userId: $userId)
+                userContentScopesSkipManual: userPermissionsContentScope(userId: $userId, skipManual: true)
             }
         `,
         {
@@ -70,17 +50,13 @@ export const ContentScopeGrid: React.FC<{
 
     if (error) throw new Error(error.message);
 
-    if (!data || !data.contentScope || !data.contentScopeSkipManual) {
+    if (!data) {
         return <CircularProgress />;
     }
 
     return (
         <Card>
-            <FinalForm<FormSubmitData>
-                mode="edit"
-                onSubmit={submit}
-                initialValues={Object.fromEntries(data.contentScope.scopes.map((v) => [v.scope, v.values]))}
-            >
+            <FinalForm<FormValues> mode="edit" onSubmit={submit} initialValues={{ contentScopes: data.userContentScopes.map(JSON.stringify) }}>
                 <CardToolbar>
                     <ToolbarTitleItem>
                         <FormattedMessage id="comet.userManagemant.scopes" defaultMessage="Scopes" />
@@ -93,52 +69,24 @@ export const ContentScopeGrid: React.FC<{
                     </ToolbarActions>
                 </CardToolbar>
                 <CardContent>
-                    {data.availableContentScopes.map((contentScope) => (
-                        <Accordion key={contentScope.scope} expanded={data.availableContentScopes.length < 10}>
-                            <AccordionSummary expandIcon={<ArrowForwardIosSharpIcon />}>
-                                <Box sx={{ flexDirection: "column" }}>
-                                    <Typography variant="h5" sx={{ fontWeight: "medium" }}>
-                                        <FormattedMessage
-                                            id={`contentScope.scope.${contentScope.scope}`}
-                                            defaultMessage={camelCaseToHumanReadable(contentScope.scope)}
-                                        />
-                                    </Typography>
-                                    <Typography variant="body2" color="textSecondary">
-                                        <FormattedMessage
-                                            id="comet.userPermissions.contentScopesCount"
-                                            defaultMessage="{selected} of {count} selected"
-                                            values={{
-                                                selected:
-                                                    data.contentScope.scopes.find((scope) => scope.scope === contentScope.scope)?.values.length ?? 0,
-                                                count: contentScope.values.length,
-                                            }}
-                                        />
-                                    </Typography>
-                                </Box>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                {contentScope.values.map((value) => (
-                                    <Field
-                                        fieldContainerProps={{ fieldMargin: "never" }}
-                                        disabled={data.contentScopeSkipManual.scopes
-                                            .find((scope) => scope.scope === contentScope.scope)
-                                            ?.values.includes(value)}
-                                        key={value}
-                                        name={`${contentScope.scope}`}
-                                        variant="horizontal"
-                                        type="checkbox"
-                                        component={FinalFormCheckbox}
-                                        value={value}
-                                        label={
-                                            <FormattedMessage
-                                                id={`contentScope.value.${contentScope.scope}.${value}`}
-                                                defaultMessage={camelCaseToHumanReadable(value)}
-                                            />
-                                        }
-                                    />
-                                ))}
-                            </AccordionDetails>
-                        </Accordion>
+                    {data.availableContentScopes.map((contentScope: ContentScope) => (
+                        <Field
+                            disabled={data.userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, contentScope))}
+                            key={JSON.stringify(contentScope)}
+                            name="contentScopes"
+                            fullWidth
+                            variant="horizontal"
+                            type="checkbox"
+                            component={FinalFormCheckbox}
+                            value={JSON.stringify(contentScope)}
+                            label={Object.entries(contentScope).map(([scope, value]) => (
+                                <>
+                                    <FormattedMessage id={`contentScope.scope.${scope}`} defaultMessage={camelCaseToHumanReadable(scope)} />:{" "}
+                                    <FormattedMessage id={`contentScope.values.${value}`} defaultMessage={camelCaseToHumanReadable(value)} />
+                                    <br />
+                                </>
+                            ))}
+                        />
                     ))}
                 </CardContent>
             </FinalForm>

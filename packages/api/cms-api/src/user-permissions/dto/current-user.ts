@@ -2,6 +2,7 @@ import { Field, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
 
 import { CurrentUserInterface } from "../../auth/current-user/current-user";
+import { ContentScope } from "../interfaces/content-scope.interface";
 import { PermissionConfiguration } from "../user-permissions.types";
 
 @ObjectType()
@@ -12,16 +13,8 @@ export class CurrentUserPermission {
     configuration?: PermissionConfiguration;
     @Field()
     overrideContentScopes: boolean;
-    @Field(() => [CurrentUserContentScope])
-    contentScopes: CurrentUserContentScope[];
-}
-
-@ObjectType()
-export class CurrentUserContentScope {
-    @Field()
-    scope: string;
-    @Field(() => [String])
-    values: string[];
+    @Field(() => [GraphQLJSONObject])
+    contentScopes: ContentScope[];
 }
 
 @ObjectType()
@@ -34,8 +27,8 @@ export class CurrentUser implements CurrentUserInterface {
     email: string;
     @Field()
     language: string;
-    @Field(() => [CurrentUserContentScope])
-    contentScopes: CurrentUserContentScope[];
+    @Field(() => [GraphQLJSONObject])
+    contentScopes: ContentScope[];
     @Field(() => [CurrentUserPermission])
     permissions: CurrentUserPermission[];
 }

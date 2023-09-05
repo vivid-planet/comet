@@ -1,11 +1,11 @@
-import { BaseEntity, Embedded, Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 /* eslint-disable @typescript-eslint/naming-convention */
 import { GraphQLJSONObject } from "graphql-type-json";
 import { v4 } from "uuid";
 
+import { ContentScope } from "../interfaces/content-scope.interface";
 import { PermissionConfiguration } from "../user-permissions.types";
-import { UserContentScope } from "./user-content-scopes.entity";
 
 export enum UserPermissionSource {
     MANUAL = "manual",
@@ -60,7 +60,7 @@ export class UserPermission extends BaseEntity<UserPermission, "id"> {
     @Property({ columnType: "boolean" })
     overrideContentScopes = false;
 
-    @Field(() => [UserContentScope])
-    @Embedded(() => UserContentScope, { array: true })
-    contentScopes: UserContentScope[] = [];
+    @Field(() => [GraphQLJSONObject])
+    @Property({ type: "json" })
+    contentScopes: ContentScope[] = [];
 }

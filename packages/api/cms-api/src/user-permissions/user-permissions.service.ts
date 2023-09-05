@@ -1,14 +1,15 @@
 import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Inject, Injectable } from "@nestjs/common";
+import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
 
 import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
-import { UserContentScope, UserContentScopes } from "./entities/user-content-scopes.entity";
+import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
-import { AvailableContentScopes } from "./user-content-scopes.resolver";
+import { ContentScope } from "./interfaces/content-scope.interface";
 import { UserPermissionConfigInterface, USERPERMISSIONS, USERPERMISSIONS_CONFIG_SERVICE } from "./user-permissions.types";
 import { getDate } from "./utils/getDate";
 @Injectable()
@@ -19,10 +20,8 @@ export class UserPermissionsService {
         @InjectRepository(UserContentScopes) private readonly contentScopeRepository: EntityRepository<UserContentScopes>,
     ) {}
 
-    async getAvailableContentScopes(): Promise<AvailableContentScopes[]> {
-        return this.service.getAvailableContentScopes
-            ? Object.entries(this.service.getAvailableContentScopes()).map(([scope, values]) => ({ scope, values }))
-            : [];
+    async getAvailableContentScopes(): Promise<ContentScope[]> {
+        return this.service.getAvailableContentScopes ? this.service.getAvailableContentScopes() : [];
     }
 
     async getAvailablePermissions(): Promise<string[]> {
@@ -42,19 +41,12 @@ export class UserPermissionsService {
         return this.service.findUsers(args);
     }
 
-    async checkContentScopes(contentScopes: UserContentScope[]): Promise<void> {
+    async checkContentScopes(contentScopes: ContentScope[]): Promise<void> {
         const availableContentScopes = await this.getAvailableContentScopes();
-        const allowedScopes = availableContentScopes.map((c) => c.scope);
         contentScopes.forEach((scope) => {
-            if (!allowedScopes.includes(scope.scope)) {
-                throw new Error(`ContentScope does not exist: ${scope.scope}. Existing scopes: ${allowedScopes.join(", ")}`);
+            if (!availableContentScopes.some((cs) => isEqual(cs, scope))) {
+                throw new Error(`ContentScope does not exist: ${JSON.stringify(scope)}.`);
             }
-            const allowedValues = availableContentScopes.find((c) => c.scope === scope.scope)?.values ?? [];
-            scope.values.forEach((value) => {
-                if (!allowedValues.includes(value)) {
-                    throw new Error(`ContentScopeValue of ContentScope ${scope.scope} does not exist: ${value}.`);
-                }
-            });
         });
     }
 
@@ -97,51 +89,29 @@ export class UserPermissionsService {
         return permissions.sort((a, b) => availablePermissions.indexOf(a.permission) - availablePermissions.indexOf(b.permission));
     }
 
-    async getContentScopes(userId: string, skipManual = false): Promise<UserContentScope[]> {
+    async getContentScopes(userId: string, skipManual = false): Promise<ContentScope[]> {
         const availableContentScopes = await this.getAvailableContentScopes();
-        const ret: UserContentScope[] = [];
+        const contentScopes: ContentScope[] = [];
         if (this.service.getContentScopesForUser) {
             const user = await this.getUser(userId);
             if (user) {
-                const contentScopes = await this.service.getContentScopesForUser(user);
-                if (contentScopes === USERPERMISSIONS.allContentScopes) {
-                    ret.push(...availableContentScopes);
+                const userContentScopes = await this.service.getContentScopesForUser(user);
+                if (userContentScopes === USERPERMISSIONS.allContentScopes) {
+                    contentScopes.push(...availableContentScopes);
                 } else {
-                    for (const [scope, values] of Object.entries(contentScopes)) {
-                        ret.push({
-                            scope,
-                            values: (values as string[]).map((v) => v.toString()),
-                        });
-                    }
+                    contentScopes.push(...userContentScopes);
                 }
             }
         }
         if (!skipManual) {
-            const contentScope = await this.contentScopeRepository.findOne({ userId });
-            if (contentScope) {
-                for (const scope of contentScope.scopes) {
-                    const currentScope = ret.find((s) => s.scope === scope.scope);
-                    if (currentScope) {
-                        currentScope.values = currentScope.values.concat(scope.values);
-                    } else {
-                        ret.push(scope);
-                    }
-                }
+            const entity = await this.contentScopeRepository.findOne({ userId });
+            if (entity) {
+                contentScopes.push(...entity.contentScopes);
             }
         }
-        for (const scope of ret) {
-            const allowedValues = availableContentScopes.find((c) => c.scope === scope.scope)?.values ?? [];
-            // Make values unique
-            scope.values = [...new Set(scope.values)];
-            // Allow only values that are defined in availableContentScopes
-            scope.values = scope.values.filter((value) => allowedValues.includes(value));
-            // Order by availableContentScopes
-            scope.values.sort((a, b) => allowedValues.indexOf(a) - allowedValues.indexOf(b));
-        }
-        // Order scopes by availableContentScopes
-        ret.sort((a, b) => Object.keys(availableContentScopes).indexOf(a.scope) - Object.keys(availableContentScopes).indexOf(b.scope));
-
-        return ret;
+        return [...new Set(contentScopes)] // Make values unique
+            .filter((value) => availableContentScopes.some((cs) => isEqual(cs, value))) // Allow only values that are defined in availableContentScopes
+            .sort((a, b) => availableContentScopes.indexOf(a) - availableContentScopes.indexOf(b)); // Order by availableContentScopes
     }
 
     async createCurrentUser(user: User): Promise<CurrentUser> {
@@ -151,6 +121,7 @@ export class UserPermissionsService {
             name: user.name,
             email: user.email ?? "",
             language: user.language,
+            contentScopes: await this.getContentScopes(user.id),
             permissions: (await this.getPermissions(user.id))
                 .filter((p) => (!p.validFrom || getDate(p.validFrom) <= getDate()) && (!p.validTo || getDate(p.validTo) >= getDate()))
                 .map((p) => ({
@@ -160,7 +131,6 @@ export class UserPermissionsService {
                     overrideContentScopes: p.overrideContentScopes,
                     contentScopes: p.overrideContentScopes ? p.contentScopes : [],
                 })),
-            contentScopes: await this.getContentScopes(user.id),
         });
         return currentUser;
     }

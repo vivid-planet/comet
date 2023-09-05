@@ -16,10 +16,11 @@ export const userPermissionConfig: UserPermissionConfigInterface = {
         news: "news",
         products: "products",
     }),
-    getAvailableContentScopes: () => ({
-        domain: ["main", "secondary"],
-        language: ["en", "de"],
-    }),
+    getAvailableContentScopes: () => [
+        { domain: "main", language: "de" },
+        { domain: "main", language: "en" },
+        { domain: "secondary", language: "en" },
+    ],
     getPermissionsForUser: (user: User) => {
         if (user.email.endsWith("@comet-dxp.com")) {
             return USERPERMISSIONS.allPermissions;
@@ -31,10 +32,7 @@ export const userPermissionConfig: UserPermissionConfigInterface = {
         if (user.email.endsWith("@comet-dxp.com")) {
             return USERPERMISSIONS.allContentScopes;
         } else {
-            return {
-                domain: ["main"],
-                language: [user.language],
-            };
+            return [{ domain: "main", language: "en" }];
         }
     },
 };

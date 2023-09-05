@@ -1,3 +1,5 @@
+import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
+
 export interface CurrentUserInterface {
     id: string;
     name: string;
@@ -7,15 +9,9 @@ export interface CurrentUserInterface {
         permission: string;
         configuration?: Record<string, unknown>;
         overrideContentScopes: boolean;
-        contentScopes: {
-            scope: string;
-            values: string[];
-        }[];
+        contentScopes: ContentScope[];
     }[];
-    contentScopes?: {
-        scope: string;
-        values: string[];
-    }[];
+    contentScopes?: ContentScope[];
 }
 
 export interface CurrentUserLoaderInterface {
