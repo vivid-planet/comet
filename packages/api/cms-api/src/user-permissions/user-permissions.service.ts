@@ -1,6 +1,7 @@
 import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Inject, Injectable } from "@nestjs/common";
+import { differenceInDays } from "date-fns";
 import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
 
@@ -13,7 +14,7 @@ import { ContentScope } from "./interfaces/content-scope.interface";
 import { Permission } from "./interfaces/user-permission.interface";
 import { USER_PERMISSIONS_CONFIG_SERVICE } from "./user-permissions.const";
 import { UserPermissionConfigInterface, UserPermissions } from "./user-permissions.types";
-import { getDate } from "./utils/getDate";
+
 @Injectable()
 export class UserPermissionsService {
     constructor(
@@ -129,9 +130,12 @@ export class UserPermissionsService {
             language: user.language,
             contentScopes: await this.getContentScopes(user.id),
             permissions: (await this.getPermissions(user.id))
-                .filter((p) => (!p.validFrom || getDate(p.validFrom) <= getDate()) && (!p.validTo || getDate(p.validTo) >= getDate()))
+                .filter(
+                    (p) =>
+                        (!p.validFrom || differenceInDays(new Date(), p.validFrom) >= 0) &&
+                        (!p.validTo || differenceInDays(p.validTo, new Date()) >= 0),
+                )
                 .map((p) => ({
-                    // TODO Filter by valid date
                     permission: p.permission,
                     configuration: p.configuration,
                     overrideContentScopes: p.overrideContentScopes,

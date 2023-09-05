@@ -4,11 +4,11 @@ import { Add, Delete, Edit, Info, Reject, ToggleOn } from "@comet/admin-icons";
 import { Button, Card, Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridColDef, GridToolbarContainer } from "@mui/x-data-grid";
+import { differenceInDays, parseISO } from "date-fns";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
-import { getDate } from "../../utils/getDate";
 import { PermissionContentScopesDialog } from "./PermissionContentScopesDialog";
 import { PermissionDialog } from "./PermissionDialog";
 import { GQLPermissionForGridFragment, GQLPermissionsQuery, GQLPermissionsQueryVariables, namedOperations } from "./PermissionGrid.generated";
@@ -91,7 +91,7 @@ export const PermissionGrid: React.FC<{
                             label={<FormattedMessage id="comet.userPermissions.overidingScopes" defaultMessage="Overriding Scopes" />}
                         />
                     )}
-                    {row.validTo && getDate(row.validTo) < getDate() && (
+                    {row.validTo && differenceInDays(parseISO(row.validTo), new Date()) < 0 && (
                         <Chip
                             icon={<Reject />}
                             color="error"
@@ -99,8 +99,8 @@ export const PermissionGrid: React.FC<{
                         />
                     )}
                     {row.validTo &&
-                        getDate(row.validTo) >= getDate() &&
-                        getDate(row.validTo) < getDate(new Date(Date.now() + 3600 * 1000 * 24 * 30)) && (
+                        differenceInDays(parseISO(row.validTo), new Date()) >= 0 &&
+                        differenceInDays(parseISO(row.validTo), new Date()) < 30 && (
                             <Chip
                                 icon={<Info />}
                                 color="warning"
