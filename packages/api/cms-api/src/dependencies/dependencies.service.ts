@@ -137,7 +137,7 @@ export class DependenciesService {
         );
         const lastRefresh = lastRefreshes[0];
 
-        if (lastRefreshes.length > 0) {
+        if (lastRefreshes.length === 0) {
             // first refresh -> refresh sync
             await refresh();
             return;
