@@ -11,6 +11,12 @@ import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
 import { BlockIndexRefresh } from "./entities/block-index-refresh.entity";
 
+interface PGStatActivity {
+    pid: number;
+    state: string;
+    query: string;
+}
+
 @Injectable()
 export class DependenciesService {
     private entityManager: EntityManager;
@@ -95,29 +101,54 @@ export class DependenciesService {
             console.timeEnd("refresh materialized block dependency");
         };
 
+        const abortActiveRefreshes = async (activeRefreshes: PGStatActivity[]) => {
+            for (const refresh of activeRefreshes) {
+                await this.entityManager.getKnex("write").raw(`SELECT pg_cancel_backend(?);`, [refresh.pid]);
+            }
+        };
+
+        const activeRefreshes: PGStatActivity[] = await this.entityManager
+            .getKnex("read")
+            .select("pid", "state", "query")
+            .from("pg_stat_activity")
+            .where({
+                state: "active",
+            })
+            .andWhereILike("query", "REFRESH MATERIALIZED VIEW%")
+            .andWhereILike("query", "%block_index_dependencies%");
+
         if (options?.force) {
             // force refresh -> refresh sync
+            await abortActiveRefreshes(activeRefreshes);
             await this.refreshRepository.qb().truncate();
             await refresh();
             return;
         }
 
-        const lastRefreshes = await this.refreshRepository.find({}, { orderBy: { finishedAt: QueryOrder.DESC_NULLS_FIRST }, limit: 1 });
-        if (lastRefreshes.length === 0) {
-            // first refresh -> refresh sync");
+        const refreshIsActive = activeRefreshes.length > 0;
+        if (refreshIsActive) {
+            // refresh in progress -> don't refresh
+            return;
+        }
+
+        const lastRefreshes = await this.refreshRepository.find(
+            {},
+            { orderBy: [{ finishedAt: QueryOrder.DESC_NULLS_FIRST }, { startedAt: QueryOrder.DESC }], limit: 1 },
+        );
+        const lastRefresh = lastRefreshes[0];
+
+        if (lastRefreshes.length > 0) {
+            // first refresh -> refresh sync
             await refresh();
             return;
         }
 
-        const lastRefresh = lastRefreshes[0];
-        // if the DB state indicates that a refresh takes more than 15 minutes,
-        // it's likely that the previous refresh isn't actually in progress but was interrupted unexpectedly
-        const isRefreshInProgress = lastRefresh.finishedAt === null && lastRefresh.startedAt > subMinutes(new Date(), 15);
+        if (!refreshIsActive && lastRefresh.finishedAt === null) {
+            // faulty DB state -> truncate table
+            await this.refreshRepository.qb().truncate();
+        }
 
-        if (isRefreshInProgress) {
-            // refresh in progress -> don't refresh
-            return;
-        } else if (lastRefresh.finishedAt && lastRefresh.finishedAt > subMinutes(new Date(), 5)) {
+        if (lastRefresh.finishedAt && lastRefresh.finishedAt > subMinutes(new Date(), 5)) {
             // newer than 5 minutes -> don't refresh
             return;
         } else if (lastRefresh.finishedAt && lastRefresh.finishedAt > subMinutes(new Date(), 15)) {
