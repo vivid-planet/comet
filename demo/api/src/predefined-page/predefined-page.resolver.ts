@@ -33,7 +33,7 @@ export class PredefinedPageResolver {
     }
 
     @Mutation(() => PredefinedPage)
-    @AffectedEntity(PredefinedPage, { pageTreeArgsSelector: "attachedPageTreeNodeId" })
+    @AffectedEntity(PredefinedPage, { pageTreeNodeArgsSelector: "attachedPageTreeNodeId" })
     async savePredefinedPage(
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => PredefinedPageInput }) input: PredefinedPageInput,

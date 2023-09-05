@@ -19,9 +19,9 @@ export class InferScopeService {
     async inferScopeFromExecutionContext(context: ExecutionContext): Promise<ContentScope> {
         const affectedEntity = this.reflector.getAllAndOverride<AffectedEntity>("affectedEntity", [context.getHandler(), context.getClass()]);
         if (affectedEntity) {
-            if (affectedEntity.options?.pageTreeArgsSelector) {
-                if (this.pageTreeService === undefined) throw new Error("pageTreeArgsSelector was given but no PageTreeModule is registered");
-                const nodeId = await this.getFromArgs(context, affectedEntity.options.pageTreeArgsSelector);
+            if (affectedEntity.options?.pageTreeNodeArgsSelector) {
+                if (this.pageTreeService === undefined) throw new Error("pageTreeNodeArgsSelector was given but no PageTreeModule is registered");
+                const nodeId = await this.getFromArgs(context, affectedEntity.options.pageTreeNodeArgsSelector);
                 const node = await this.pageTreeService.createReadApi({ visibility: "all" }).getNode(nodeId);
                 if (!node) throw new Error(`Can't find pageTreeNode with ID ${nodeId}`);
                 if (!node.scope) throw new Error(`PageTreeNode with ID ${nodeId} has no scope`);

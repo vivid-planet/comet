@@ -3,7 +3,7 @@ import { CustomDecorator, SetMetadata } from "@nestjs/common";
 
 type AffectedEntityOptions = {
     argsSelector?: string;
-    pageTreeArgsSelector?: string;
+    pageTreeNodeArgsSelector?: string;
 };
 
 export type AffectedEntity<Entity extends object = object> = {

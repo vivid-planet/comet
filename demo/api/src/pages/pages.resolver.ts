@@ -57,7 +57,7 @@ export class PagesResolver {
     }
 
     @Mutation(() => Page)
-    @AffectedEntity(Page, { pageTreeArgsSelector: "attachedPageTreeNodeId" })
+    @AffectedEntity(Page, { pageTreeNodeArgsSelector: "attachedPageTreeNodeId" })
     async savePage(
         @Args("pageId", { type: () => ID }) pageId: string,
         @Args("input", { type: () => PageInput }) input: PageInput,

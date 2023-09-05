@@ -18,7 +18,7 @@ export class LinksResolver {
     }
 
     @Mutation(() => Link)
-    @AffectedEntity(Link, { pageTreeArgsSelector: "attachedPageTreeNodeId" })
+    @AffectedEntity(Link, { pageTreeNodeArgsSelector: "attachedPageTreeNodeId" })
     async saveLink(
         @Args("linkId", { type: () => ID }) linkId: string,
         @Args("input", { type: () => LinkInput }) input: LinkInput,
