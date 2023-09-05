@@ -4,7 +4,15 @@ import { IntrospectionObjectType, IntrospectionQuery } from "graphql";
 import { CrudGeneratorConfig } from "../types";
 
 const fallbackLibraryBlocks: { [key: string]: string } = {
+    AnchorBlock: "@comet/cms-admin",
     DamImageBlock: "@comet/cms-admin",
+    DamVideoBlock: "@comet/cms-admin",
+    ExternalLinkBlock: "@comet/cms-admin",
+    InternalLinkBlock: "@comet/cms-admin",
+    PixelImageBlock: "@comet/cms-admin",
+    SpaceBlock: "@comet/blocks-admin",
+    SvgImageBlock: "@comet/cms-admin",
+    YouTubeVideoBlock: "@comet/blocks-admin",
 };
 
 export function findRootBlocks({ entityName, ...generatorOptions }: CrudGeneratorConfig, schema: IntrospectionQuery) {
