@@ -23,10 +23,12 @@ import { getMuiFormControlLabel } from "./MuiFormControlLabel";
 import { getMuiFormHelperText } from "./MuiFormHelperText";
 import { getMuiFormLabel } from "./MuiFormLabel";
 import { getMuiIconButton } from "./MuiIconButton";
+import { getMuiInput } from "./MuiInput";
 import { getMuiInputAdornment } from "./MuiInputAdornment";
 import { getMuiInputBase } from "./MuiInputBase";
 import { getMuiLink } from "./MuiLink";
 import { getMuiListItem } from "./MuiListItem";
+import { getMuiNativeSelect } from "./MuiNativeSelect";
 import { getMuiPaper } from "./MuiPaper";
 import { getMuiPopover } from "./MuiPopover";
 import { getMuiRadio } from "./MuiRadio";
@@ -77,12 +79,14 @@ export const getComponentsTheme = (components: Components, themeData: ThemeData)
     MuiIconButton: getMuiIconButton(components.MuiIconButton, themeData),
     MuiInputAdornment: getMuiInputAdornment(components.MuiInputAdornment, themeData),
     MuiInputBase: getMuiInputBase(components.MuiInputBase, themeData),
+    MuiInput: getMuiInput(components.MuiInput, themeData),
     MuiLink: getMuiLink(components.MuiLink, themeData),
     MuiListItem: getMuiListItem(components.MuiListItem, themeData),
     MuiPaper: getMuiPaper(components.MuiPaper, themeData),
     MuiPopover: getMuiPopover(components.MuiPopover, themeData),
     MuiRadio: getMuiRadio(components.MuiRadio, themeData),
     MuiSelect: getMuiSelect(components.MuiSelect, themeData),
+    MuiNativeSelect: getMuiNativeSelect(components.MuiNativeSelect, themeData),
     MuiSvgIcon: getMuiSvgIcon(components.MuiSvgIcon, themeData),
     MuiSwitch: getMuiSwitch(components.MuiSwitch, themeData),
     MuiTab: getMuiTab(components.MuiTab, themeData),
