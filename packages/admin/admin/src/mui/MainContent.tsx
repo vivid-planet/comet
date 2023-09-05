@@ -43,7 +43,7 @@ function Main({
     classes,
 }: MainContentProps & WithStyles<typeof styles>) {
     const mainRef = React.useRef<HTMLElement>(null);
-    const topPosition = fullHeight ? mainRef.current?.offsetTop : 0;
+    const topPosition = fullHeight && mainRef.current ? mainRef.current.offsetTop : 0;
 
     const rootClasses: string[] = [classes.root];
     if (disablePaddingTop) rootClasses.push(classes.disablePaddingTop);
