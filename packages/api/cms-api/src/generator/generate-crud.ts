@@ -752,6 +752,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
         }
 
+        ${
+            generatorOptions.create
+                ? `
+
         @Mutation(() => ${metadata.className})
         async create${classNameSingular}(
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
@@ -767,7 +771,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             return ${instanceNameSingular};
         }
+        `
+                : ""
+        }
 
+        ${
+            generatorOptions.update
+                ? `
         @Mutation(() => ${metadata.className})
         @SubjectEntity(${metadata.className})
         async update${classNameSingular}(
@@ -789,7 +799,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             return ${instanceNameSingular};
         }
+        `
+                : ""
+        }
 
+        ${
+            generatorOptions.delete
+                ? `
         @Mutation(() => Boolean)
         @SubjectEntity(${metadata.className})
         async delete${metadata.className}(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
@@ -798,9 +814,12 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             await this.entityManager.flush();
             return true;
         }
+        `
+                : ""
+        }
 
         ${
-            hasVisibleProp
+            hasVisibleProp && generatorOptions.update
                 ? `
         @Mutation(() => ${metadata.className})
         @SubjectEntity(${metadata.className})
