@@ -86,7 +86,7 @@ export class ShopProductVariantResolver {
         shopProductVariant.assign({
             ...assignInput,
 
-            product: Reference.create(await this.shopProductRepository.findOneOrFail(productInput as string)),
+            product: productInput ? Reference.create(await this.shopProductRepository.findOneOrFail(productInput)) : shopProductVariant.product,
         });
 
         await this.entityManager.flush();

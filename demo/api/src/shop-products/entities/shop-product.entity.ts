@@ -1,19 +1,9 @@
 import { CrudField, CrudGenerator } from "@comet/cms-api";
-import { BaseEntity, Collection, Entity, Enum, ManyToMany, PrimaryKey, Property } from "@mikro-orm/core";
-import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { BaseEntity, Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Property, Ref } from "@mikro-orm/core";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { ShopProductCategory } from "@src/shop-products/entities/shop-product-category.entitiy";
 import { ShopProductVariant } from "@src/shop-products/entities/shop-product-variant.entity";
 import { v4 as uuid } from "uuid";
-
-export enum ShopProductCategory {
-    ELECTRONICS = "ELECTRONICS",
-    CLOTHING = "CLOTHING",
-    BEAUTY = "BEAUTY",
-    GAMES = "GAMES",
-}
-
-registerEnumType(ShopProductCategory, {
-    name: "ShopProductCategory",
-});
 
 @Entity()
 @ObjectType()
@@ -37,14 +27,9 @@ export class ShopProduct extends BaseEntity<ShopProduct, "id"> {
     })
     description: string;
 
-    @Property()
-    @Field()
-    price: number;
+    @ManyToOne(() => ShopProductCategory, { ref: true })
+    category: Ref<ShopProductCategory>;
 
-    @Enum({ items: () => ShopProductCategory })
-    @Field(() => ShopProductCategory)
-    category: ShopProductCategory;
-
-    @ManyToMany(() => ShopProductVariant)
+    @OneToMany(() => ShopProductVariant, (variant) => variant.product)
     variants = new Collection<ShopProductVariant>(this);
 }

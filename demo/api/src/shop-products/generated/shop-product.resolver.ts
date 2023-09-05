@@ -8,6 +8,7 @@ import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from 
 import { GraphQLResolveInfo } from "graphql";
 
 import { ShopProduct } from "../entities/shop-product.entity";
+import { ShopProductCategory } from "../entities/shop-product-category.entitiy";
 import { ShopProductVariant } from "../entities/shop-product-variant.entity";
 import { PaginatedShopProducts } from "./dto/paginated-shop-products";
 import { ShopProductInput, ShopProductUpdateInput } from "./dto/shop-product.input";
@@ -20,6 +21,7 @@ export class ShopProductResolver {
         private readonly entityManager: EntityManager,
         private readonly shopProductsService: ShopProductsService,
         @InjectRepository(ShopProduct) private readonly repository: EntityRepository<ShopProduct>,
+        @InjectRepository(ShopProductCategory) private readonly shopProductCategoryRepository: EntityRepository<ShopProductCategory>,
         @InjectRepository(ShopProductVariant) private readonly shopProductVariantRepository: EntityRepository<ShopProductVariant>,
     ) {}
 
@@ -39,6 +41,9 @@ export class ShopProductResolver {
 
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];
+        if (fields.includes("category")) {
+            populate.push("category");
+        }
         if (fields.includes("variants")) {
             populate.push("variants");
         }
@@ -60,9 +65,11 @@ export class ShopProductResolver {
 
     @Mutation(() => ShopProduct)
     async createShopProduct(@Args("input", { type: () => ShopProductInput }) input: ShopProductInput): Promise<ShopProduct> {
-        const { variants: variantsInput, ...assignInput } = input;
+        const { variants: variantsInput, category: categoryInput, ...assignInput } = input;
         const shopProduct = this.repository.create({
             ...assignInput,
+
+            category: Reference.create(await this.shopProductCategoryRepository.findOneOrFail(categoryInput)),
         });
 
         if (variantsInput) {
@@ -85,9 +92,11 @@ export class ShopProductResolver {
     ): Promise<ShopProduct> {
         const shopProduct = await this.repository.findOneOrFail(id);
 
-        const { variants: variantsInput, ...assignInput } = input;
+        const { variants: variantsInput, category: categoryInput, ...assignInput } = input;
         shopProduct.assign({
             ...assignInput,
+
+            category: categoryInput ? Reference.create(await this.shopProductCategoryRepository.findOneOrFail(categoryInput)) : shopProduct.category,
         });
 
         if (variantsInput) {
@@ -109,6 +118,11 @@ export class ShopProductResolver {
         await this.entityManager.remove(shopProduct);
         await this.entityManager.flush();
         return true;
+    }
+
+    @ResolveField(() => ShopProductCategory)
+    async category(@Parent() shopProduct: ShopProduct): Promise<ShopProductCategory> {
+        return shopProduct.category.load();
     }
 
     @ResolveField(() => [ShopProductVariant])

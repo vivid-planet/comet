@@ -5,7 +5,7 @@ import { Field, ID, InputType } from "@nestjs/graphql";
 import { IsArray, IsNotEmpty, IsString, IsUUID } from "class-validator";
 
 @InputType()
-export class ShopProductInput {
+export class ShopProductCategoryInput {
     @IsNotEmpty()
     @IsString()
     @Field()
@@ -16,16 +16,11 @@ export class ShopProductInput {
     @Field()
     description: string;
 
-    @IsNotEmpty()
-    @Field(() => ID)
-    @IsUUID()
-    category: string;
-
     @Field(() => [ID])
     @IsArray()
     @IsUUID(undefined, { each: true })
-    variants: string[];
+    products: string[];
 }
 
 @InputType()
-export class ShopProductUpdateInput extends PartialType(ShopProductInput) {}
+export class ShopProductCategoryUpdateInput extends PartialType(ShopProductCategoryInput) {}

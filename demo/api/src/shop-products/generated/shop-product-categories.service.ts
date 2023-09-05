@@ -4,16 +4,16 @@ import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "@comet/cms-api";
 import { ObjectQuery } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
 
-import { ShopProduct } from "../entities/shop-product.entity";
-import { ShopProductFilter } from "./dto/shop-product.filter";
+import { ShopProductCategory } from "../entities/shop-product-category.entitiy";
+import { ShopProductCategoryFilter } from "./dto/shop-product-category.filter";
 
 @Injectable()
-export class ShopProductsService {
-    getFindCondition(options: { search?: string; filter?: ShopProductFilter }): ObjectQuery<ShopProduct> {
+export class ShopProductCategoriesService {
+    getFindCondition(options: { search?: string; filter?: ShopProductCategoryFilter }): ObjectQuery<ShopProductCategory> {
         const andFilters = [];
 
         if (options.search) {
-            andFilters.push(searchToMikroOrmQuery(options.search, ["name", "description", "category.name", "category.description"]));
+            andFilters.push(searchToMikroOrmQuery(options.search, ["name", "description"]));
         }
 
         if (options.filter) {
