@@ -25,7 +25,7 @@ import { BlobStorageBackendService } from "../../blob-storage/backends/blob-stor
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { AccessControlService } from "../../user-permissions/access-control.service";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
-import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.types";
+import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.const";
 import { CDN_ORIGIN_CHECK_HEADER, DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { DamScopeInterface } from "../types";

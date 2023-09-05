@@ -1,4 +1,4 @@
-import { FindUsersArgs, User, UserPermissionConfigInterface, USERPERMISSIONS } from "@comet/cms-api";
+import { FindUsersArgs, User, UserPermissionConfigInterface, UserPermissions } from "@comet/cms-api";
 import { staticUsers } from "@src/auth/auth.module";
 
 export const userPermissionConfig: UserPermissionConfigInterface = {
@@ -23,14 +23,14 @@ export const userPermissionConfig: UserPermissionConfigInterface = {
     ],
     getPermissionsForUser: (user: User) => {
         if (user.email.endsWith("@comet-dxp.com")) {
-            return USERPERMISSIONS.allPermissions;
+            return UserPermissions.allPermissions;
         } else {
             return [{ permission: "news" }];
         }
     },
     getContentScopesForUser: (user: User) => {
         if (user.email.endsWith("@comet-dxp.com")) {
-            return USERPERMISSIONS.allContentScopes;
+            return UserPermissions.allContentScopes;
         } else {
             return [{ domain: "main", language: "en" }];
         }

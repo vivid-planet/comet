@@ -10,12 +10,13 @@ import { User } from "./dto/user";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
-import { UserPermissionConfigInterface, USERPERMISSIONS, USERPERMISSIONS_CONFIG_SERVICE } from "./user-permissions.types";
+import { USER_PERMISSIONS_CONFIG_SERVICE } from "./user-permissions.const";
+import { UserPermissionConfigInterface, UserPermissions } from "./user-permissions.types";
 import { getDate } from "./utils/getDate";
 @Injectable()
 export class UserPermissionsService {
     constructor(
-        @Inject(USERPERMISSIONS_CONFIG_SERVICE) private readonly service: UserPermissionConfigInterface,
+        @Inject(USER_PERMISSIONS_CONFIG_SERVICE) private readonly service: UserPermissionConfigInterface,
         @InjectRepository(UserPermission) private readonly permissionRepository: EntityRepository<UserPermission>,
         @InjectRepository(UserContentScopes) private readonly contentScopeRepository: EntityRepository<UserContentScopes>,
     ) {}
@@ -64,7 +65,7 @@ export class UserPermissionsService {
             const user = await this.getUser(userId);
             if (user) {
                 let permissionsByRule = await this.service.getPermissionsForUser(user);
-                if (permissionsByRule === USERPERMISSIONS.allPermissions) {
+                if (permissionsByRule === UserPermissions.allPermissions) {
                     permissionsByRule = availablePermissions.map((permission) => ({ permission }));
                 }
                 for (const p of permissionsByRule) {
@@ -96,7 +97,7 @@ export class UserPermissionsService {
             const user = await this.getUser(userId);
             if (user) {
                 const userContentScopes = await this.service.getContentScopesForUser(user);
-                if (userContentScopes === USERPERMISSIONS.allContentScopes) {
+                if (userContentScopes === UserPermissions.allContentScopes) {
                     contentScopes.push(...availableContentScopes);
                 } else {
                     contentScopes.push(...userContentScopes);

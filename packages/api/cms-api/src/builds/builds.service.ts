@@ -11,7 +11,7 @@ import { INSTANCE_LABEL, PARENT_CRON_JOB_LABEL } from "../kubernetes/kubernetes.
 import { KubernetesService } from "../kubernetes/kubernetes.service";
 import { AccessControlService } from "../user-permissions/access-control.service";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.types";
+import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.const";
 import { BuildTemplatesService } from "./build-templates.service";
 import { BUILDER_LABEL, LABEL_ANNOTATION, TRIGGER_ANNOTATION } from "./builds.constants";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";

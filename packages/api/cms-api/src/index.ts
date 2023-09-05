@@ -156,4 +156,4 @@ export { ContentScope } from "./user-permissions/interfaces/content-scope.interf
 export { Permission } from "./user-permissions/interfaces/user-permission.interface";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export { UserPermissionsService } from "./user-permissions/user-permissions.service";
-export { UserPermissionConfigInterface, USERPERMISSIONS } from "./user-permissions/user-permissions.types";
+export { UserPermissionConfigInterface, UserPermissions } from "./user-permissions/user-permissions.types";

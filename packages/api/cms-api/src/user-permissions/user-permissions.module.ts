@@ -10,13 +10,9 @@ import { InferScopeService } from "./infer-scope.service";
 import { UserResolver } from "./user.resolver";
 import { UserContentScopesResolver } from "./user-content-scopes.resolver";
 import { UserPermissionResolver } from "./user-permission.resolver";
+import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_CONFIG, USER_PERMISSIONS_CONFIG_SERVICE } from "./user-permissions.const";
 import { UserPermissionsService } from "./user-permissions.service";
-import {
-    ACCESS_CONTROL_SERVICE,
-    UserPermissionConfigInterface,
-    USERPERMISSIONS_CONFIG,
-    USERPERMISSIONS_CONFIG_SERVICE,
-} from "./user-permissions.types";
+import { UserPermissionConfigInterface } from "./user-permissions.types";
 
 type UserModuleConfig = {
     config: UserPermissionConfigInterface;
@@ -34,25 +30,25 @@ interface UserModuleAsyncConfig extends Pick<ModuleMetadata, "imports"> {
 export class UserPermissionsModule {
     static forRootAsync(config: UserModuleAsyncConfig): DynamicModule {
         const configServiceProvider = {
-            provide: USERPERMISSIONS_CONFIG_SERVICE,
+            provide: USER_PERMISSIONS_CONFIG_SERVICE,
             useFactory: (config: UserModuleConfig): UserPermissionConfigInterface => {
                 return config.config;
             },
-            inject: [USERPERMISSIONS_CONFIG],
+            inject: [USER_PERMISSIONS_CONFIG],
         };
         const accessControlServiceProvider = {
             provide: ACCESS_CONTROL_SERVICE,
             useFactory: (config: UserModuleConfig) => {
                 return config.accessControlService ?? new AccessControlService();
             },
-            inject: [USERPERMISSIONS_CONFIG],
+            inject: [USER_PERMISSIONS_CONFIG],
         };
         return {
             module: UserPermissionsModule,
             imports: [MikroOrmModule.forFeature([UserPermission, UserContentScopes]), ...(config.imports ?? [])],
             providers: [
                 {
-                    provide: USERPERMISSIONS_CONFIG,
+                    provide: USER_PERMISSIONS_CONFIG,
                     ...config,
                 },
                 accessControlServiceProvider,

@@ -8,7 +8,7 @@ import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
 import { AccessControlService } from "../user-permissions/access-control.service";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
-import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.types";
+import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.const";
 import { BuildsService } from "./builds.service";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
 import { Build } from "./dto/build.object";

@@ -13,7 +13,7 @@ import { Dependency } from "../../dependencies/dependency";
 import { AccessControlService } from "../../user-permissions/access-control.service";
 import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
-import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.types";
+import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.const";
 import { DamScopeInterface } from "../types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";

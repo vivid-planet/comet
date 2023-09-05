@@ -8,7 +8,7 @@ import { RequiredPermission } from "../decorators/required-permission.decorator"
 import { CurrentUser } from "../dto/current-user";
 import { InferScopeService } from "../infer-scope.service";
 import { ContentScope } from "../interfaces/content-scope.interface";
-import { ACCESS_CONTROL_SERVICE } from "../user-permissions.types";
+import { ACCESS_CONTROL_SERVICE } from "../user-permissions.const";
 
 @Injectable()
 export class UserPermissionsGuard implements CanActivate {

@@ -6,26 +6,22 @@ import { Permission } from "./interfaces/user-permission.interface";
 
 export type PermissionConfiguration = Record<string, unknown>;
 
-export enum USERPERMISSIONS {
+export enum UserPermissions {
     allContentScopes = "all-content-scopes",
     allPermissions = "all-permissions",
 }
 
-type UserPermissions =
+type Permissions =
     | Pick<UserPermission, "permission" | "configuration" | "validFrom" | "validTo" | "reason" | "requestedBy" | "approvedBy">[]
-    | USERPERMISSIONS.allPermissions;
+    | UserPermissions.allPermissions;
 
-export type UserContentScopes = ContentScope[] | USERPERMISSIONS.allContentScopes;
-
-export const USERPERMISSIONS_CONFIG = "userpermissions-config";
-export const USERPERMISSIONS_CONFIG_SERVICE = "userpermissions-config-service";
-export const ACCESS_CONTROL_SERVICE = "access-control-service";
+export type ContentScopes = ContentScope[] | UserPermissions.allContentScopes;
 
 export interface UserPermissionConfigInterface {
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<[User[], number]> | [User[], number];
     getAvailablePermissions?: () => Promise<Permission> | Permission;
     getAvailableContentScopes?: () => Promise<ContentScope[]> | ContentScope[];
-    getPermissionsForUser?: (user: User) => Promise<UserPermissions> | UserPermissions;
-    getContentScopesForUser?: (user: User) => Promise<UserContentScopes> | UserContentScopes;
+    getPermissionsForUser?: (user: User) => Promise<Permissions> | Permissions;
+    getContentScopesForUser?: (user: User) => Promise<ContentScopes> | ContentScopes;
 }
