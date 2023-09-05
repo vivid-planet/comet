@@ -23,6 +23,7 @@ import { getMuiFormControlLabel } from "./MuiFormControlLabel";
 import { getMuiFormHelperText } from "./MuiFormHelperText";
 import { getMuiFormLabel } from "./MuiFormLabel";
 import { getMuiIconButton } from "./MuiIconButton";
+import { getMuiInput } from "./MuiInput";
 import { getMuiInputAdornment } from "./MuiInputAdornment";
 import { getMuiInputBase } from "./MuiInputBase";
 import { getMuiLink } from "./MuiLink";
@@ -77,6 +78,7 @@ export const getComponentsTheme = (components: Components, themeData: ThemeData)
     MuiIconButton: getMuiIconButton(components.MuiIconButton, themeData),
     MuiInputAdornment: getMuiInputAdornment(components.MuiInputAdornment, themeData),
     MuiInputBase: getMuiInputBase(components.MuiInputBase, themeData),
+    MuiInput: getMuiInput(components.MuiInput, themeData),
     MuiLink: getMuiLink(components.MuiLink, themeData),
     MuiListItem: getMuiListItem(components.MuiListItem, themeData),
     MuiPaper: getMuiPaper(components.MuiPaper, themeData),
