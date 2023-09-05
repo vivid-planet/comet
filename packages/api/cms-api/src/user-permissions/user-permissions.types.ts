@@ -16,20 +16,19 @@ type UserPermissions =
     | USERPERMISSIONS.allPermissions;
 
 export type ContentScopeValues = {
-    [key in keyof ContentScope]: ContentScope[key][];
+    [key in keyof ContentScope]: readonly ContentScope[key][];
 };
 
 export type UserContentScopes = ContentScopeValues | USERPERMISSIONS.allContentScopes;
 
-export const USERPERMISSIONS_CONFIG = "userpermissions-config";
 export const USERPERMISSIONS_CONFIG_SERVICE = "userpermissions-config-service";
 export const ACCESS_CONTROL_SERVICE = "access-control-service";
 
 export interface UserPermissionConfigInterface {
-    getUser: (id: string) => Promise<User> | User;
-    findUsers: (args: FindUsersArgs) => Promise<[User[], number]> | [User[], number];
-    getAvailablePermissions?: () => Promise<Permission> | Permission;
-    getAvailableContentScopes?: () => Promise<ContentScopeValues> | ContentScopeValues;
-    getPermissionsForUser?: (user: User) => Promise<UserPermissions> | UserPermissions;
-    getContentScopesForUser?: (user: User) => Promise<UserContentScopes> | UserContentScopes;
+    getUser(id: string): Promise<User> | User;
+    findUsers(args: FindUsersArgs): Promise<[User[], number]> | [User[], number];
+    getAvailablePermissions(): Promise<Permission> | Permission;
+    getAvailableContentScopes(): Promise<ContentScopeValues> | ContentScopeValues;
+    getPermissionsForUser(user: User): Promise<UserPermissions> | UserPermissions;
+    getContentScopesForUser(user: User): Promise<UserContentScopes> | UserContentScopes;
 }
