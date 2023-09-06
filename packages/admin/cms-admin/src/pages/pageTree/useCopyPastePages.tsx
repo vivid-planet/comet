@@ -43,9 +43,11 @@ const getAllFilesUsedOnPageQuery = gql`
         pageTreeNode(id: $pageTreeNodeId) {
             id
             documentDependencies(filter: { targetGraphqlObjectType: "DamFile" }) {
-                targetId
-                rootColumnName
-                jsonPath
+                nodes {
+                    targetId
+                    rootColumnName
+                    jsonPath
+                }
             }
         }
     }
@@ -307,7 +309,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                         pageTreeNodeId: node.id,
                     },
                 });
-                const dependencies = filesOnPage.pageTreeNode?.documentDependencies ?? [];
+                const dependencies = filesOnPage.pageTreeNode?.documentDependencies.nodes ?? [];
                 const fileIds = dependencies.map((dependency) => dependency.targetId) ?? [];
 
                 let newOutput: Record<string, unknown> | undefined;

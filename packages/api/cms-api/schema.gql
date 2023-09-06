@@ -8,6 +8,11 @@ type Dependency {
   targetId: String!
 }
 
+type PaginatedDependencies {
+  nodes: [Dependency!]!
+  totalCount: Int!
+}
+
 type ImageCropArea {
   focalPoint: FocalPoint!
   width: Float
@@ -129,27 +134,20 @@ type PageTreeNode {
   hideInMenu: Boolean!
   updatedAt: DateTime!
   category: String!
-  dependents(filter: DependentsFilterInput): [Dependency!]!
   childNodes: [PageTreeNode!]!
   numberOfDescendants: Float!
   parentNode: PageTreeNode
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
-  documentDependencies(filter: DependenciesFilterInput): [Dependency!]!
-  filesOnPage: [DamFile!]!
+  documentDependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter): PaginatedDependencies!
 }
 
 enum PageTreeNodeVisibility {
   Published
   Unpublished
   Archived
-}
-
-input DependentsFilterInput {
-  rootGraphqlObjectType: String
-  rootId: String
-  rootColumnName: String
 }
 
 union PageContentUnion = Page
@@ -164,9 +162,15 @@ interface DocumentInterface {
   updatedAt: DateTime!
 }
 
-input DependenciesFilterInput {
+input DependencyFilter {
   targetGraphqlObjectType: String
   targetId: String
+  rootColumnName: String
+}
+
+input DependentFilter {
+  rootGraphqlObjectType: String
+  rootId: String
   rootColumnName: String
 }
 
@@ -193,7 +197,7 @@ type Redirect implements DocumentInterface {
   active: Boolean!
   generationType: RedirectGenerationType!
   createdAt: DateTime!
-  dependencies(filter: DependenciesFilterInput): [Dependency!]!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
 }
 
 enum RedirectSourceTypeValues {
@@ -233,10 +237,10 @@ type DamFile {
   license: DamFileLicense
   createdAt: DateTime!
   updatedAt: DateTime!
-  dependents(filter: DependentsFilterInput): [Dependency!]!
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter): PaginatedDependencies!
 }
 
 type PaginatedRedirects {

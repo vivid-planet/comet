@@ -1,5 +1,18 @@
 # @comet/cms-api
 
+## 4.4.0
+
+### Minor Changes
+
+-   d4960b05: Add loop toggle to YouTubeVideo block
+
+### Patch Changes
+
+-   53ce0682: get file stats from uploaded file in filestorage
+-   11583624: Add content validation for SVG files to prevent the upload of SVGs containing JavaScript
+-   Updated dependencies [d4960b05]
+    -   @comet/blocks-api@4.4.0
+
 ## 4.3.0
 
 ### Minor Changes

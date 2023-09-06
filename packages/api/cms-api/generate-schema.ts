@@ -11,6 +11,8 @@ import {
     createRedirectsResolver,
     CurrentUserInterface,
     CurrentUserRightInterface,
+    DependenciesResolverFactory,
+    DependentsResolverFactory,
     DocumentInterface,
     FileImagesResolver,
     InternalLinkBlock,
@@ -83,6 +85,7 @@ async function generateSchema(): Promise<void> {
 
     const Folder = createFolderEntity();
     const File = createFileEntity({ Folder });
+    const FileDependentsResolver = DependentsResolverFactory.create(File);
 
     const redirectsResolver = createRedirectsResolver({ Redirect: RedirectEntity, RedirectInput });
     const pageTreeResolver = createPageTreeResolver({
@@ -90,7 +93,10 @@ async function generateSchema(): Promise<void> {
         Documents: [Page],
         File,
     }); // no scope
+    const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
+
     const AuthResolver = createAuthResolver({ currentUser: CurrentUser });
+    const RedirectsDependenciesResolver = DependenciesResolverFactory.create(RedirectEntity);
 
     const schema = await gqlSchemaFactory.create([
         BuildsResolver,
@@ -104,6 +110,9 @@ async function generateSchema(): Promise<void> {
         pageTreeResolver,
         CronJobsResolver,
         AuthResolver,
+        RedirectsDependenciesResolver,
+        PageTreeDependentsResolver,
+        FileDependentsResolver,
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

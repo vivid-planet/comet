@@ -1,40 +1,24 @@
-import { Field, InputType } from "@nestjs/graphql";
-import { IsString } from "class-validator";
+import { ArgsType, Field } from "@nestjs/graphql";
+import { Type } from "class-transformer";
+import { IsOptional, ValidateNested } from "class-validator";
 
-import { IsUndefinable } from "../../common/validators/is-undefinable";
+import { OffsetBasedPaginationArgs } from "../../common/pagination/offset-based.args";
+import { DependencyFilter, DependentFilter } from "./dependencies.filter";
 
-@InputType()
-export class DependenciesFilterInput {
-    @Field({ nullable: true })
-    @IsString()
-    @IsUndefinable()
-    targetGraphqlObjectType?: string;
-
-    @Field({ nullable: true })
-    @IsString()
-    @IsUndefinable()
-    targetId?: string;
-
-    @Field({ nullable: true })
-    @IsString()
-    @IsUndefinable()
-    rootColumnName?: string;
+@ArgsType()
+export class DependenciesArgs extends OffsetBasedPaginationArgs {
+    @Field(() => DependencyFilter, { nullable: true })
+    @ValidateNested()
+    @Type(() => DependencyFilter)
+    @IsOptional()
+    filter?: DependencyFilter;
 }
 
-@InputType()
-export class DependentsFilterInput {
-    @Field({ nullable: true })
-    @IsString()
-    @IsUndefinable()
-    rootGraphqlObjectType?: string;
-
-    @Field({ nullable: true })
-    @IsString()
-    @IsUndefinable()
-    rootId?: string;
-
-    @Field({ nullable: true })
-    @IsString()
-    @IsUndefinable()
-    rootColumnName?: string;
+@ArgsType()
+export class DependentsArgs extends OffsetBasedPaginationArgs {
+    @Field(() => DependentFilter, { nullable: true })
+    @ValidateNested()
+    @Type(() => DependentFilter)
+    @IsOptional()
+    filter?: DependentFilter;
 }

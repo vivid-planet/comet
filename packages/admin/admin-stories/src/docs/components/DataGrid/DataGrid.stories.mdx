@@ -91,10 +91,11 @@ Component that can be rendered as ContextMenu in a row that has some basic CRUD 
 
 ## DataGrid to Comet Graphl API Converter
 
-Comet Admin comes with two helper that convert MUI DataGrid state to standard Comet GraphQL API variables.
+Comet Admin comes with three helpers that convert MUI DataGrid state to standard Comet GraphQL API variables.
 
 -   `muiGridFilterToGql`
 -   `muiGridSortToGql`
+-   `muiGridPagingToGql`
 
 Typical Usage Example:
 
@@ -104,8 +105,7 @@ const sortModel = dataGridProps.sortModel;
 const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
     variables: {
         ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-        offset: dataGridProps.page * dataGridProps.pageSize,
-        limit: dataGridProps.pageSize,
+        ...muiGridPagingToGql({ page: dataGridProps.page, pageSize: dataGridProps.pageSize }),
         sort: muiGridSortToGql(sortModel),
     },
 });
