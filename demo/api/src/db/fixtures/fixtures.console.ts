@@ -13,12 +13,18 @@ import { Inject, Injectable } from "@nestjs/common";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
 import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generator";
+import { generateShopProduct } from "@src/db/fixtures/generators/shop-products/shop-product.generator";
+import { generateShopProductCategory } from "@src/db/fixtures/generators/shop-products/shop-product-category.generator";
+import { generateShopProductVariant } from "@src/db/fixtures/generators/shop-products/shop-product-variant.generator";
 import { Link } from "@src/links/entities/link.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
 import { PageContentBlock } from "@src/pages/blocks/PageContentBlock";
 import { PageInput } from "@src/pages/dto/page.input";
 import { Page } from "@src/pages/entities/page.entity";
+import { ShopProduct } from "@src/shop-products/entities/shop-product.entity";
+import { ShopProductCategory } from "@src/shop-products/entities/shop-product-category.entitiy";
+import { ShopProductVariant } from "@src/shop-products/entities/shop-product-variant.entity";
 import faker from "faker";
 import { Command, Console } from "nestjs-console";
 import slugify from "slugify";
@@ -54,6 +60,9 @@ export class FixturesConsole {
         private readonly orm: MikroORM,
         @InjectRepository(Page) private readonly pagesRepository: EntityRepository<Page>,
         @InjectRepository(Link) private readonly linksRepository: EntityRepository<Link>,
+        @InjectRepository(ShopProductCategory) private readonly shopProductCategoriesRepository: EntityRepository<ShopProductCategory>,
+        @InjectRepository(ShopProduct) private readonly shopProductsRepository: EntityRepository<ShopProduct>,
+        @InjectRepository(ShopProductVariant) private readonly shopProductVariantsRepository: EntityRepository<ShopProductVariant>,
     ) {}
 
     @Command({
@@ -62,6 +71,24 @@ export class FixturesConsole {
     })
     @UseRequestContext()
     async execute(): Promise<void> {
+        const createShopProductsWithVariants = async (productQuantity = 10, categoryQuantity = 4, maxVariantsQuantity = 10) => {
+            const categories: string[] = [];
+            for (let i = 0; i < categoryQuantity; i++) {
+                categories.push(await generateShopProductCategory(this.shopProductCategoriesRepository));
+            }
+
+            for (let i = 0; i < productQuantity; i++) {
+                const shopProductUuid = await generateShopProduct(
+                    this.shopProductsRepository,
+                    categories[Math.floor(Math.random() * categories.length)],
+                );
+                for (let j = 0; j < faker.datatype.number({ min: 1, max: maxVariantsQuantity }); j++) {
+                    await generateShopProductVariant(this.shopProductVariantsRepository, shopProductUuid);
+                }
+            }
+            await generateLinks(this.linksRepository, pageTreeNodes);
+        };
+
         const pageTreeNodes: PageTreeNodesFixtures = {};
         // ensure repeatable runs
         faker.seed(123456);
@@ -199,6 +226,10 @@ export class FixturesConsole {
         console.log("generate links");
         await generateLinks(this.linksRepository, pageTreeNodes);
         console.log("links generated");
+
+        console.log("generate shop products with variants");
+        await createShopProductsWithVariants();
+        console.log("shop products and variants generated");
 
         console.log("generate many images test page");
         const manyImagesTestGenerator = new ManyImagesTestPageGenerator(this.pageTreeService, this.filesService, this.pagesRepository);

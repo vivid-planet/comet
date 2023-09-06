@@ -20,5 +20,6 @@ import { ShopProductsService } from "@src/shop-products/generated/shop-products.
         ShopProductCategoryResolver,
         ShopProductCategoriesService,
     ],
+    exports: [MikroOrmModule],
 })
 export class ShopProductsModule {}

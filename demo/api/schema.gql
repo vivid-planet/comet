@@ -153,6 +153,29 @@ scalar PageContentBlockData @specifiedBy(url: "http://www.ecma-international.org
 """Seo root block data"""
 scalar SeoBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
+type ShopProductCategory {
+  id: ID!
+  name: String!
+  description: String!
+  products: [ShopProduct!]!
+}
+
+type ShopProductVariant {
+  id: ID!
+  size: String!
+  color: String!
+  price: Float!
+  product: ShopProduct!
+}
+
+type ShopProduct {
+  id: ID!
+  name: String!
+  description: String!
+  category: ShopProductCategory!
+  variants: [ShopProductVariant!]!
+}
+
 type PageTreeNodeScope {
   domain: String!
   language: String!
@@ -204,36 +227,6 @@ type PaginatedPages {
   totalCount: Int!
 }
 
-type PredefinedPage implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  createdAt: DateTime!
-  type: String
-}
-
-type ShopProductCategory {
-  id: ID!
-  name: String!
-  description: String!
-  products: [ShopProduct!]!
-}
-
-type ShopProductVariant {
-  id: ID!
-  size: String!
-  color: String!
-  price: Float!
-  product: ShopProduct!
-}
-
-type ShopProduct {
-  id: ID!
-  name: String!
-  description: String!
-  category: ShopProductCategory!
-  variants: [ShopProductVariant!]!
-}
-
 type PaginatedShopProducts {
   nodes: [ShopProduct!]!
   totalCount: Int!
@@ -247,6 +240,13 @@ type PaginatedShopProductCategories {
 type PaginatedShopProductVariants {
   nodes: [ShopProductVariant!]!
   totalCount: Int!
+}
+
+type PredefinedPage implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+  type: String
 }
 
 type CurrentUser {
