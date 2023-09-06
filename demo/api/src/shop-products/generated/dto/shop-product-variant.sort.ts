@@ -6,6 +6,7 @@ import { IsEnum } from "class-validator";
 
 export enum ShopProductVariantSortField {
     product = "product",
+    name = "name",
     size = "size",
     color = "color",
 }

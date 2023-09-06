@@ -17,6 +17,12 @@ export class ShopProductVariantFilter {
     @ValidateNested()
     @IsOptional()
     @Type(() => StringFilter)
+    name?: StringFilter;
+
+    @Field(() => StringFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => StringFilter)
     size?: StringFilter;
 
     @Field(() => StringFilter, { nullable: true })

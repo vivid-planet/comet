@@ -1,5 +1,6 @@
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { ShopProductVariant } from "@src/shop-products/entities/shop-product-variant.entity";
+import faker from "faker";
 import { v4 } from "uuid";
 
 export const generateShopProductVariant = async (
@@ -13,6 +14,7 @@ export const generateShopProductVariant = async (
         shopProductVariantsRepository.create({
             id: v4(),
             product: productId,
+            name: faker.lorem.word(),
             size: sizes[Math.floor(Math.random() * sizes.length)],
             color: colors[Math.floor(Math.random() * colors.length)],
             price: Math.random() * 100,

@@ -18,6 +18,10 @@ export class ShopProductVariant extends BaseEntity<ShopProductVariant, "id"> {
 
     @Property()
     @Field()
+    name: string;
+
+    @Property()
+    @Field()
     size: string;
 
     @Property()

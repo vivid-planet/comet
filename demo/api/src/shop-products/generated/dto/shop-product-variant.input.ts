@@ -14,6 +14,11 @@ export class ShopProductVariantInput {
     @IsNotEmpty()
     @IsString()
     @Field()
+    name: string;
+
+    @IsNotEmpty()
+    @IsString()
+    @Field()
     size: string;
 
     @IsNotEmpty()

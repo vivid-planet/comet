@@ -162,6 +162,7 @@ type ShopProductCategory {
 
 type ShopProductVariant {
   id: ID!
+  name: String!
   size: String!
   color: String!
   price: Float!
@@ -846,6 +847,7 @@ enum ShopProductSortField {
 
 input ShopProductVariantFilter {
   product: ManyToOneFilter
+  name: StringFilter
   size: StringFilter
   color: StringFilter
   and: [ShopProductVariantFilter!]
@@ -859,6 +861,7 @@ input ShopProductVariantSort {
 
 enum ShopProductVariantSortField {
   product
+  name
   size
   color
 }
@@ -1181,6 +1184,7 @@ input ShopProductUpdateInput {
 
 input ShopProductVariantInput {
   product: ID!
+  name: String!
   size: String!
   color: String!
   price: Float!
@@ -1188,6 +1192,7 @@ input ShopProductVariantInput {
 
 input ShopProductVariantUpdateInput {
   product: ID
+  name: String
   size: String
   color: String
   price: Float
