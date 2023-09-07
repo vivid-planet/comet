@@ -1,37 +1,18 @@
 import { Menu, MenuCollapsibleItem, MenuContext, MenuItemRouterLink, useWindowSize } from "@comet/admin";
-import { CurrentUser, useCurrentUser } from "@comet/cms-admin";
+import { useMenuForCurrentUser } from "@comet/cms-admin";
 import * as React from "react";
 import { useRouteMatch } from "react-router";
 
-import { Page } from "./pages/page.type";
 import { pages } from "./pages/pages";
 
 const permanentMenuMinWidth = 1024;
-
-const MenuItem = ({ basePath, page, user }: { basePath: string; page: Page; user: CurrentUser }) => {
-    if (!page.menu) return <></>;
-    if (page.menu.subMenu !== undefined) {
-        const { subMenu: _, ...menu } = page.menu;
-        return (
-            <MenuCollapsibleItem {...menu}>
-                {page.menu.subMenu
-                    .filter((subMenu) => subMenu && user.isAllowed(subMenu.requiredPermission || page.requiredPermission))
-                    .map((subMenu, index) => (
-                        <MenuItemRouterLink key={index} {...subMenu} to={`${basePath}${subMenu.to}`} />
-                    ))}
-            </MenuCollapsibleItem>
-        );
-    } else {
-        const route = page.route ? page.route.path : page.routes && page.routes[0] && page.routes[0].path;
-        return <MenuItemRouterLink to={`${basePath}${route}`} {...page.menu} />;
-    }
-};
 
 const MasterMenu: React.FC = () => {
     const { open, toggleOpen } = React.useContext(MenuContext);
     const windowSize = useWindowSize();
     const match = useRouteMatch();
-    const user = useCurrentUser();
+
+    const menu = useMenuForCurrentUser(pages, match.url);
 
     const useTemporaryMenu: boolean = windowSize.width < permanentMenuMinWidth;
 
@@ -46,11 +27,17 @@ const MasterMenu: React.FC = () => {
 
     return (
         <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
-            {pages
-                .filter((page) => user && page.menu && user.isAllowed(page.requiredPermission))
-                .map((page, index) => (
-                    <MenuItem key={index} page={page} user={user} basePath={match.url} />
-                ))}
+            {menu.map((menuItem, index) =>
+                menuItem.hasSubMenu ? (
+                    <MenuCollapsibleItem key={index} {...menuItem.menuItem}>
+                        {menuItem.subMenu.map((subMenu, index) => (
+                            <MenuItemRouterLink key={index} {...subMenu.menuItem} />
+                        ))}
+                    </MenuCollapsibleItem>
+                ) : (
+                    <MenuItemRouterLink key={index} {...menuItem.menuItem} />
+                ),
+            )}
         </Menu>
     );
 };

@@ -1,5 +1,5 @@
 import { Assets, Dashboard as DashboardIcon, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
-import { AllCategories, createRedirectsPage, CronJobsPage, DamPage, PagesPage, PublisherPage, UserPermissionsPage } from "@comet/cms-admin";
+import { AllCategories, createRedirectsPage, CronJobsPage, DamPage, Pages, PagesPage, PublisherPage, UserPermissionsPage } from "@comet/cms-admin";
 import { Person } from "@mui/icons-material";
 import Dashboard from "@src/dashboard/Dashboard";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
@@ -20,9 +20,7 @@ import { Redirect } from "react-router";
 import { ComponentDemo } from "../ComponentDemo";
 import { ContentScopeIndicator } from "../ContentScopeIndicator";
 import { EditPageNode } from "../EditPageNode";
-import { Pages } from "./page.type";
 
-const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock }, scopeParts: ["domain"] });
 export const pageTreeCategories: AllCategories = [
     {
         category: "MainNavigation",
@@ -40,185 +38,155 @@ export const pageTreeDocumentTypes = {
     PredefinedPage,
 };
 
+const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock }, scopeParts: ["domain"] });
+
 export const pages: Pages = [
     {
+        primary: <FormattedMessage id="menu.dashboard" defaultMessage="Dashboard" />,
+        icon: <DashboardIcon />,
         route: {
             path: "/dashboard",
             component: Dashboard,
         },
-        menu: {
-            primary: <FormattedMessage id="menu.dashboard" defaultMessage="Dashboard" />,
-            icon: <DashboardIcon />,
-        },
     },
     {
-        routes: [
-            {
-                path: "/pages/pagetree/:category",
-                render: ({ match }) => {
-                    const category = urlParamToCategory(match.params.category);
+        primary: <FormattedMessage id="menu.pageTree" defaultMessage="Page tree" />,
+        icon: <PageTree />,
+        subMenu: pageTreeCategories.map((category) => ({
+            primary: category.label,
+            to: `/pages/pagetree/${categoryToUrlParam(category.category as GQLPageTreeNodeCategory)}`,
+        })),
+        route: {
+            path: "/pages/pagetree/:category",
+            render: ({ match }) => {
+                const category = urlParamToCategory(match.params.category);
 
-                    if (category === undefined) {
-                        return <Redirect to={`${match.url}/dashboard`} />;
-                    }
+                if (category === undefined) {
+                    return <Redirect to={`${match.url}/dashboard`} />;
+                }
 
-                    return (
-                        <PagesPage
-                            path={`/pages/pagetree/${match.params.category}`}
-                            allCategories={pageTreeCategories}
-                            documentTypes={pageTreeDocumentTypes}
-                            editPageNode={EditPageNode}
-                            category={category}
-                            renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} variant="toolbar" />}
-                        />
-                    );
-                },
+                return (
+                    <PagesPage
+                        path={`/pages/pagetree/${match.params.category}`}
+                        allCategories={pageTreeCategories}
+                        documentTypes={pageTreeDocumentTypes}
+                        editPageNode={EditPageNode}
+                        category={category}
+                        renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} variant="toolbar" />}
+                    />
+                );
             },
-        ],
-        menu: {
-            primary: <FormattedMessage id="menu.pageTree" defaultMessage="Page tree" />,
-            icon: <PageTree />,
-            subMenu: pageTreeCategories.map((category) => ({
-                primary: category.label,
-                to: `/pages/pagetree/${categoryToUrlParam(category.category as GQLPageTreeNodeCategory)}`,
-            })),
         },
         requiredPermission: "pageTree",
     },
     {
-        route: {
-            path: "/structured-content/news",
-            component: News,
-        },
-        menu: {
-            primary: <FormattedMessage id="menu.structuredContent" defaultMessage="Structured Content" />,
-            icon: <Data />,
-            subMenu: [
-                {
-                    primary: <FormattedMessage id="menu.news" defaultMessage="News" />,
-                    to: "/structured-content/news",
+        primary: <FormattedMessage id="menu.structuredContent" defaultMessage="Structured Content" />,
+        icon: <Data />,
+        subMenu: [
+            {
+                primary: <FormattedMessage id="menu.news" defaultMessage="News" />,
+                route: {
+                    path: "/structured-content/news",
+                    component: News,
                 },
-            ],
-        },
+            },
+        ],
         requiredPermission: "news",
     },
     {
+        primary: <FormattedMessage id="menu.dam" defaultMessage="Assets" />,
+        icon: <Assets />,
         route: {
             path: "/assets",
             render: () => <DamPage renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} domainOnly variant="toolbar" />} />,
         },
-        menu: {
-            primary: <FormattedMessage id="menu.dam" defaultMessage="Assets" />,
-            icon: <Assets />,
-        },
         requiredPermission: "pageTree",
     },
     {
-        route: {
-            path: "/project-snips/main-menu",
-            component: MainMenu,
-        },
-        menu: {
-            primary: <FormattedMessage id="menu.projectSnips" defaultMessage="Project snips" />,
-            icon: <Snips />,
-            subMenu: [
-                {
-                    primary: <FormattedMessage id="menu.mainMenu" defaultMessage="Main menu" />,
-                    to: "/project-snips/main-menu",
+        primary: <FormattedMessage id="menu.projectSnips" defaultMessage="Project snips" />,
+        icon: <Snips />,
+        subMenu: [
+            {
+                primary: <FormattedMessage id="menu.mainMenu" defaultMessage="Main menu" />,
+                route: {
+                    path: "/project-snips/main-menu",
+                    component: MainMenu,
                 },
-            ],
-        },
-        requiredPermission: "pageTree",
-    },
-    {
-        routes: [
-            {
-                path: "/system/publisher",
-                component: PublisherPage,
-            },
-            {
-                path: "/system/redirects",
-                render: () => <RedirectsPage redirectPathAfterChange="/system/redirects" />,
-            },
-            {
-                path: "/system/cron-jobs",
-                component: CronJobsPage,
             },
         ],
-        menu: {
-            primary: <FormattedMessage id="menu.system" defaultMessage="System" />,
-            icon: <Wrench />,
-            subMenu: [
-                {
-                    primary: <FormattedMessage id="menu.publisher" defaultMessage="Publisher" />,
-                    to: "/system/publisher",
-                },
-                {
-                    primary: <FormattedMessage id="menu.cronJobs" defaultMessage="Cron Jobs" />,
-                    to: "/system/cron-jobs",
-                },
-                {
-                    primary: <FormattedMessage id="menu.redirects" defaultMessage="Redirects" />,
-                    to: "/system/redirects",
-                },
-            ],
-        },
         requiredPermission: "pageTree",
     },
     {
+        primary: <FormattedMessage id="menu.system" defaultMessage="System" />,
+        icon: <Wrench />,
+        subMenu: [
+            {
+                primary: <FormattedMessage id="menu.publisher" defaultMessage="Publisher" />,
+                route: {
+                    path: "/system/publisher",
+                    component: PublisherPage,
+                },
+            },
+            {
+                primary: <FormattedMessage id="menu.cronJobs" defaultMessage="Cron Jobs" />,
+                route: {
+                    path: "/system/redirects",
+                    render: () => <RedirectsPage redirectPathAfterChange="/system/redirects" />,
+                },
+            },
+            {
+                primary: <FormattedMessage id="menu.redirects" defaultMessage="Redirects" />,
+                route: {
+                    path: "/system/cron-jobs",
+                    component: CronJobsPage,
+                },
+            },
+        ],
+        requiredPermission: "pageTree",
+    },
+    {
+        primary: <FormattedMessage id="menu.componentDemo" defaultMessage="Component demo" />,
+        icon: <Snips />,
         route: {
             path: "/component-demo",
             component: ComponentDemo,
         },
-        menu: {
-            primary: <FormattedMessage id="menu.componentDemo" defaultMessage="Component demo" />,
-            icon: <Snips />,
-        },
         requiredPermission: "pageTree",
     },
     {
-        routes: [
+        primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
+        icon: <Snips />,
+        subMenu: [
             {
-                path: "/products",
-                component: ProductsPage,
+                primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
+                route: {
+                    path: "/products",
+                    component: ProductsPage,
+                },
             },
             {
-                path: "/product-categories",
-                component: ProductCategoriesPage,
+                primary: <FormattedMessage id="menu.productCategories" defaultMessage="Categories" />,
+                route: {
+                    path: "/product-categories",
+                    component: ProductCategoriesPage,
+                },
             },
             {
-                path: "/product-tags",
-                component: ProductTagsPage,
+                primary: <FormattedMessage id="menu.productTags" defaultMessage="Tags" />,
+                route: {
+                    path: "/product-tags",
+                    component: ProductTagsPage,
+                },
             },
         ],
-        menu: {
-            primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
-            icon: <Snips />,
-            subMenu: [
-                {
-                    primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
-                    to: "/products",
-                },
-                {
-                    primary: <FormattedMessage id="menu.productCategories" defaultMessage="Categories" />,
-                    to: "/product-categories",
-                },
-                {
-                    primary: <FormattedMessage id="menu.productTags" defaultMessage="Tags" />,
-                    to: "/product-tags",
-                },
-            ],
-        },
         requiredPermission: "products",
     },
     {
+        primary: <FormattedMessage id="menu.userPermissions" defaultMessage="User Permissions" />,
+        icon: <Person />,
         route: {
             path: "/user-permissions",
             component: UserPermissionsPage,
-        },
-        menu: {
-            primary: <FormattedMessage id="menu.userPermissions" defaultMessage="User Permissions" />,
-            icon: <Person />,
         },
         requiredPermission: "userPermissions",
     },

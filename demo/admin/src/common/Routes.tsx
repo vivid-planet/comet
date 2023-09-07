@@ -1,21 +1,15 @@
 import { MasterLayout, RouteWithErrorBoundary } from "@comet/admin";
-import { SitePreview, useCurrentUser } from "@comet/cms-admin";
-import { CircularProgress } from "@mui/material";
+import { SitePreview, useRoutesForCurrentUser } from "@comet/cms-admin";
 import ContentScopeProvider from "@src/common/ContentScopeProvider";
 import * as React from "react";
-import { Redirect, Route, RouteProps, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 
 import MasterHeader from "./MasterHeader";
 import MasterMenu from "./MasterMenu";
 import { pages } from "./pages/pages";
 
 export const Routes: React.FC = () => {
-    const user = useCurrentUser();
-    if (!user) return <CircularProgress />;
-
-    const routesForUser: RouteProps[] = pages
-        .flatMap((page) => [page.route && { ...page.route, requiredPermission: page.requiredPermission }, ...(page.routes ?? [])])
-        .filter((route) => route && user.isAllowed(route.requiredPermission)) as RouteProps[];
+    const routes = useRoutesForCurrentUser(pages);
     return (
         <ContentScopeProvider>
             {({ match }) => (
@@ -26,10 +20,8 @@ export const Routes: React.FC = () => {
                         render={() => (
                             <MasterLayout headerComponent={MasterHeader} menuComponent={MasterMenu}>
                                 <Switch>
-                                    {typeof routesForUser[0]?.path === "string" && (
-                                        <Redirect to={`${match.url}${routesForUser[0].path}`} exact={true} from={match.path} />
-                                    )}
-                                    {routesForUser.map((route, index) => (
+                                    <Redirect to={`${match.url}${routes[0].path}`} exact={true} from={match.path} />
+                                    {routes.map((route, index) => (
                                         <RouteWithErrorBoundary key={index} {...route} path={`${match.path}${route.path}`} />
                                     ))}
                                 </Switch>
