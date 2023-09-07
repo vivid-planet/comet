@@ -44,7 +44,7 @@ export const LatestContentUpdates = () => {
     return (
         <LatestContentUpdatesDashboardWidget
             tableQuery={tableQuery}
-            getUrlFromPageTreeNode={(node: GQLLatestContentUpdatesQuery["paginatedPageTreeNodes"]["nodes"][0]) => {
+            getUrlFromPageTreeNode={(node) => {
                 return `/${node.scope.domain}/${node.scope.language}/pages/pagetree/${categoryToUrlParam(node.category)}/${node.id}/edit`;
             }}
         />

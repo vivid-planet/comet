@@ -7,24 +7,24 @@ import { Link } from "react-router-dom";
 
 import { DashboardWidgetRoot } from "./DashboardWidgetRoot";
 
-type Row = {
+type MinimalRow = {
     id: string;
     pageTreeNode?: unknown;
     name: string;
     updatedAt: string;
 };
 
-export type LatestContentUpdatesDashboardWidgetProps = {
+export type LatestContentUpdatesDashboardWidgetProps<Row extends MinimalRow> = {
     tableQuery: Pick<TableQueryProps, "api" | "loading" | "error"> & {
         tableData?: Partial<ITableProps<Row>> & Pick<ITableProps<Row>, "data" | "totalCount">;
     };
-    getUrlFromPageTreeNode?: (row: unknown) => string;
+    getUrlFromPageTreeNode?: (row: Row) => string;
 };
 
-export const LatestContentUpdatesDashboardWidget = ({
+export const LatestContentUpdatesDashboardWidget = <Row extends MinimalRow>({
     tableQuery: { tableData, api, loading, error },
     getUrlFromPageTreeNode,
-}: LatestContentUpdatesDashboardWidgetProps) => {
+}: LatestContentUpdatesDashboardWidgetProps<Row>) => {
     const intl = useIntl();
 
     return (
