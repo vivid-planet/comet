@@ -19,10 +19,6 @@ export class AccessControlService {
     }
 
     isAllowed(user: CurrentUserInterface, permission: AllowedPermission, contentScope?: ContentScope): boolean {
-        return this._isAllowed(user, permission, contentScope);
-    }
-
-    _isAllowed(user: CurrentUserInterface, permission: AllowedPermission, contentScope?: ContentScope): boolean {
         if (!user.permissions) return false;
         if (typeof permission === "string") {
             return user.permissions.some(
