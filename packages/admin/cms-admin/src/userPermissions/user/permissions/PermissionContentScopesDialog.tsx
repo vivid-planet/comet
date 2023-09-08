@@ -8,8 +8,8 @@ import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import {
     GQLPermissionContentScopesQuery,
     GQLPermissionContentScopesQueryVariables,
-    GQLsetUserPermissionContentScopesMutation,
-    GQLsetUserPermissionContentScopesMutationVariables,
+    GQLUpdateUserPermissionContentScopesMutation,
+    GQLUpdateUserPermissionContentScopesMutationVariables,
     namedOperations,
 } from "./PermissionContentScopesDialog.generated";
 
@@ -30,16 +30,16 @@ export const PermissionContentScopesDialog: React.FC<FormProps> = ({ permissionI
     const client = useApolloClient();
 
     const submit = async (data: FormSubmitData) => {
-        await client.mutate<GQLsetUserPermissionContentScopesMutation, GQLsetUserPermissionContentScopesMutationVariables>({
+        await client.mutate<GQLUpdateUserPermissionContentScopesMutation, GQLUpdateUserPermissionContentScopesMutationVariables>({
             mutation: gql`
-                mutation setUserPermissionContentScopes($data: UserPermissionContentScopesInput!) {
-                    userPermissionsSetPermissionContentScopes(data: $data) {
+                mutation UpdateUserPermissionContentScopes($input: UserPermissionContentScopesInput!) {
+                    userPermissionsUpdatePermissionContentScopes(input: $input) {
                         id
                     }
                 }
             `,
             variables: {
-                data: {
+                input: {
                     permissionId,
                     overrideContentScopes: data.overrideContentScopes,
                     contentScopes: data.contentScopes.map((contentScope) => JSON.parse(contentScope)),

@@ -4,6 +4,7 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
 
 import { RequiredPermission } from "./decorators/required-permission.decorator";
+import { UserContentScopesInput } from "./dto/user-content-scopes.input";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
 import { UserPermissionsService } from "./user-permissions.service";
@@ -17,9 +18,8 @@ export class UserContentScopesResolver {
     ) {}
 
     @Mutation(() => [GraphQLJSONObject])
-    async userPermissionsSetContentScope(
-        @Args("userId", { type: () => String }) userId: string,
-        @Args("contentScopes", { type: () => [GraphQLJSONObject] }) contentScopes: ContentScope[],
+    async userPermissionsUpdateContentScope(
+        @Args("input", { type: () => UserContentScopesInput }) { userId, contentScopes }: UserContentScopesInput,
     ): Promise<ContentScope[]> {
         this.userService.checkContentScopes(contentScopes);
         let entity = await this.repository.findOne({ userId });

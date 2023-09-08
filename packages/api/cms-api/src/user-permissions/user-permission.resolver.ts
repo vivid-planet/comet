@@ -38,7 +38,7 @@ export class UserPermissionResolver {
 
     @Mutation(() => UserPermission)
     async userPermissionsCreatePermission(
-        @Args("data", { type: () => CreateUserPermissionInput }) data: CreateUserPermissionInput,
+        @Args("input", { type: () => CreateUserPermissionInput }) data: CreateUserPermissionInput,
     ): Promise<UserPermission> {
         const permission = new UserPermission();
         permission.assign(data);
@@ -52,7 +52,7 @@ export class UserPermissionResolver {
 
     @Mutation(() => UserPermission)
     async userPermissionsUpdatePermission(
-        @Args("data", { type: () => UpdateUserPermissionInput }) data: UpdateUserPermissionInput,
+        @Args("input", { type: () => UpdateUserPermissionInput }) data: UpdateUserPermissionInput,
     ): Promise<UserPermission> {
         const permission = await this.getPermission(data.id);
         permission.assign(data);
@@ -61,8 +61,8 @@ export class UserPermissionResolver {
     }
 
     @Mutation(() => UserPermission)
-    async userPermissionsSetPermissionContentScopes(
-        @Args("data", { type: () => UserPermissionContentScopesInput }) data: UserPermissionContentScopesInput,
+    async userPermissionsUpdatePermissionContentScopes(
+        @Args("input", { type: () => UserPermissionContentScopesInput }) data: UserPermissionContentScopesInput,
     ): Promise<UserPermission> {
         const permission = await this.getPermission(data.permissionId);
         permission.overrideContentScopes = data.overrideContentScopes;

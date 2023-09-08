@@ -7,6 +7,12 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
+import {
+    GQLContentScopesQuery,
+    GQLContentScopesQueryVariables,
+    GQLUpdateContentScopeMutation,
+    GQLUpdateContentScopeMutationVariables,
+} from "./ContentScopeGrid.generated";
 
 type FormValues = {
     contentScopes: string[];
@@ -21,21 +27,23 @@ export const ContentScopeGrid: React.FC<{
     const client = useApolloClient();
 
     const submit = async (data: FormValues) => {
-        await client.mutate({
+        await client.mutate<GQLUpdateContentScopeMutation, GQLUpdateContentScopeMutationVariables>({
             mutation: gql`
-                mutation SetContentScope($userId: String!, $contentScopes: [JSONObject!]!) {
-                    userPermissionsSetContentScope(userId: $userId, contentScopes: $contentScopes)
+                mutation UpdateContentScope($input: UserContentScopesInput!) {
+                    userPermissionsUpdateContentScope(input: $input)
                 }
             `,
             variables: {
-                userId,
-                contentScopes: data.contentScopes.map((contentScope) => JSON.parse(contentScope)),
+                input: {
+                    userId,
+                    contentScopes: data.contentScopes.map((contentScope) => JSON.parse(contentScope)),
+                },
             },
             refetchQueries: ["ContentScopes"],
         });
     };
 
-    const { data, error } = useQuery(
+    const { data, error } = useQuery<GQLContentScopesQuery, GQLContentScopesQueryVariables>(
         gql`
             query ContentScopes($userId: String!) {
                 availableContentScopes: userPermissionsAvailableContentScopes
@@ -56,7 +64,11 @@ export const ContentScopeGrid: React.FC<{
 
     return (
         <Card>
-            <FinalForm<FormValues> mode="edit" onSubmit={submit} initialValues={{ contentScopes: data.userContentScopes.map(JSON.stringify) }}>
+            <FinalForm<FormValues>
+                mode="edit"
+                onSubmit={submit}
+                initialValues={{ contentScopes: data.userContentScopes.map((cs) => JSON.stringify(cs)) }}
+            >
                 <CardToolbar>
                     <ToolbarTitleItem>
                         <FormattedMessage id="comet.userManagemant.scopes" defaultMessage="Scopes" />

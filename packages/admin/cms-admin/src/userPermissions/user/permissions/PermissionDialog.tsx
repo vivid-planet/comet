@@ -51,62 +51,6 @@ const Configuration = ({ configurationComponent, input, disabled }: Configuratio
     );
 };
 
-const createMutation = gql`
-    mutation CreateUserPermission(
-        $userId: String!
-        $permission: String!
-        $configuration: JSONObject
-        $validFrom: DateTime
-        $validTo: DateTime
-        $reason: String
-        $requestedBy: String
-        $approvedBy: String
-    ) {
-        userPermissionsCreatePermission(
-            data: {
-                userId: $userId
-                permission: $permission
-                configuration: $configuration
-                validFrom: $validFrom
-                validTo: $validTo
-                reason: $reason
-                requestedBy: $requestedBy
-                approvedBy: $approvedBy
-            }
-        ) {
-            id
-        }
-    }
-`;
-
-const updateMutation = gql`
-    mutation UpdateUserPermission(
-        $id: ID!
-        $permission: String!
-        $configuration: JSONObject
-        $validFrom: DateTime
-        $validTo: DateTime
-        $reason: String
-        $requestedBy: String
-        $approvedBy: String
-    ) {
-        userPermissionsUpdatePermission(
-            data: {
-                id: $id
-                permission: $permission
-                configuration: $configuration
-                validFrom: $validFrom
-                validTo: $validTo
-                reason: $reason
-                requestedBy: $requestedBy
-                approvedBy: $approvedBy
-            }
-        ) {
-            id
-        }
-    }
-`;
-
 interface FormProps {
     userId: string;
     permissionId: string | "add";
@@ -115,17 +59,31 @@ interface FormProps {
 export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, handleDialogClose }) => {
     const settings = React.useContext(UserPermissionsSettings);
     const client = useApolloClient();
-    const submit = async (data: GQLUserPermissionDialogFragment) => {
+    const submit = async (submitData: GQLUserPermissionDialogFragment) => {
+        const { source, __typename, ...data } = submitData; // Remove source and __typename from data
+
         if (permissionId && permissionId !== "add") {
             await client.mutate<GQLUpdateUserPermissionMutation, GQLUpdateUserPermissionMutationVariables>({
-                mutation: updateMutation,
-                variables: { id: permissionId, ...data },
+                mutation: gql`
+                    mutation UpdateUserPermission($input: UpdateUserPermissionInput!) {
+                        userPermissionsUpdatePermission(input: $input) {
+                            id
+                        }
+                    }
+                `,
+                variables: { input: { id: permissionId, ...data } },
                 refetchQueries: [namedOperations.Query.Permission, "Permissions"],
             });
         } else {
             await client.mutate<GQLCreateUserPermissionMutation, GQLCreateUserPermissionMutationVariables>({
-                mutation: createMutation,
-                variables: { userId, ...data },
+                mutation: gql`
+                    mutation CreateUserPermission($input: CreateUserPermissionInput!) {
+                        userPermissionsCreatePermission(input: $input) {
+                            id
+                        }
+                    }
+                `,
+                variables: { input: { userId, ...data } },
                 refetchQueries: [namedOperations.Query.Permission, "Permissions"],
             });
         }
