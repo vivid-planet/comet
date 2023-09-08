@@ -3,7 +3,8 @@ import { Injectable } from "@nestjs/common";
 import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { ContentScope } from "./interfaces/content-scope.interface";
 import { Permission } from "./interfaces/user-permission.interface";
-import { PermissionConfiguration } from "./user-permissions.types";
+
+export type PermissionConfiguration = Record<string, unknown>;
 
 export type AllowedPermission =
     | {

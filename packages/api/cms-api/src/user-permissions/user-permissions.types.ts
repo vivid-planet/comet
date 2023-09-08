@@ -4,24 +4,26 @@ import { UserPermission } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
 import { Permission } from "./interfaces/user-permission.interface";
 
-export type PermissionConfiguration = Record<string, unknown>;
-
 export enum UserPermissions {
     allContentScopes = "all-content-scopes",
     allPermissions = "all-permissions",
 }
 
-type Permissions =
+export type Users = [User[], number];
+
+export type Permissions = (keyof Permission)[];
+export type PermissionsForUser =
     | Pick<UserPermission, "permission" | "configuration" | "validFrom" | "validTo" | "reason" | "requestedBy" | "approvedBy">[]
     | UserPermissions.allPermissions;
 
-export type ContentScopes = ContentScope[] | UserPermissions.allContentScopes;
+export type ContentScopes = ContentScope[];
+export type ContentScopesForUser = ContentScopes | UserPermissions.allContentScopes;
 
 export interface UserPermissionConfigInterface {
     getUser: (id: string) => Promise<User> | User;
-    findUsers: (args: FindUsersArgs) => Promise<[User[], number]> | [User[], number];
-    getAvailablePermissions?: () => Promise<(keyof Permission)[]> | (keyof Permission)[];
-    getAvailableContentScopes?: () => Promise<ContentScope[]> | ContentScope[];
-    getPermissionsForUser?: (user: User) => Promise<Permissions> | Permissions;
-    getContentScopesForUser?: (user: User) => Promise<ContentScopes> | ContentScopes;
+    findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
+    getAvailablePermissions?: () => Promise<Permissions> | Permissions;
+    getAvailableContentScopes?: () => Promise<ContentScopes> | ContentScopes;
+    getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
+    getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }

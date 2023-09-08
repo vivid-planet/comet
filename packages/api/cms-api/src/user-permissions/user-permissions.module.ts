@@ -1,5 +1,5 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { DynamicModule, Global, Module, ModuleMetadata } from "@nestjs/common";
+import { DynamicModule, Global, Module, ModuleMetadata, Provider, Type } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 
 import { AccessControlService } from "./access-control.service";
@@ -10,47 +10,31 @@ import { InferScopeService } from "./infer-scope.service";
 import { UserResolver } from "./user.resolver";
 import { UserContentScopesResolver } from "./user-content-scopes.resolver";
 import { UserPermissionResolver } from "./user-permission.resolver";
-import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_CONFIG, USER_PERMISSIONS_CONFIG_SERVICE } from "./user-permissions.const";
+import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_CONFIG_SERVICE } from "./user-permissions.const";
 import { UserPermissionsService } from "./user-permissions.service";
 import { UserPermissionConfigInterface } from "./user-permissions.types";
 
-type UserModuleConfig = {
-    config: UserPermissionConfigInterface;
-    accessControlService?: AccessControlService;
-};
-interface UserModuleAsyncConfig extends Pick<ModuleMetadata, "imports"> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useFactory: (...args: any[]) => Promise<UserModuleConfig>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    inject?: any[];
+interface UserModuleConfig extends Pick<ModuleMetadata, "imports"> {
+    config: Type<UserPermissionConfigInterface>;
+    accessControlService?: Type<AccessControlService>;
 }
 
 @Global()
 @Module({})
 export class UserPermissionsModule {
-    static forRootAsync(config: UserModuleAsyncConfig): DynamicModule {
-        const configServiceProvider = {
+    static forRoot(config: UserModuleConfig): DynamicModule {
+        const configServiceProvider: Provider = {
             provide: USER_PERMISSIONS_CONFIG_SERVICE,
-            useFactory: (config: UserModuleConfig): UserPermissionConfigInterface => {
-                return config.config;
-            },
-            inject: [USER_PERMISSIONS_CONFIG],
+            useClass: config.config,
         };
-        const accessControlServiceProvider = {
+        const accessControlServiceProvider: Provider = {
             provide: ACCESS_CONTROL_SERVICE,
-            useFactory: (config: UserModuleConfig) => {
-                return config.accessControlService ?? new AccessControlService();
-            },
-            inject: [USER_PERMISSIONS_CONFIG],
+            useClass: config.accessControlService ?? AccessControlService,
         };
         return {
             module: UserPermissionsModule,
             imports: [MikroOrmModule.forFeature([UserPermission, UserContentScopes]), ...(config.imports ?? [])],
             providers: [
-                {
-                    provide: USER_PERMISSIONS_CONFIG,
-                    ...config,
-                },
                 accessControlServiceProvider,
                 configServiceProvider,
                 InferScopeService,
