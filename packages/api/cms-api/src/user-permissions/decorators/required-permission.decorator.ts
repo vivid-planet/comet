@@ -2,9 +2,9 @@ import { EntityClass, EntityManager } from "@mikro-orm/core";
 import { CustomDecorator, SetMetadata } from "@nestjs/common";
 import { Request } from "express";
 
+import { AllowedPermission } from "../access-control.service";
 import { CurrentUser } from "../dto/current-user";
 import { ContentScope } from "../interfaces/content-scope.interface";
-import { Permission } from "../interfaces/user-permission.interface";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type RequiredPermissionArgs<ArgsType = any> = {
@@ -20,10 +20,10 @@ type RequiredPermissionOptions = {
 };
 
 export type RequiredPermission = {
-    requiredPermission: (keyof Permission)[];
+    requiredPermission: AllowedPermission[];
     options: RequiredPermissionOptions | undefined;
 };
 
-export const RequiredPermission = (requiredPermission: (keyof Permission)[], options?: RequiredPermissionOptions): CustomDecorator<string> => {
+export const RequiredPermission = (requiredPermission: AllowedPermission[], options?: RequiredPermissionOptions): CustomDecorator<string> => {
     return SetMetadata<string, RequiredPermission>("requiredPermission", { requiredPermission, options });
 };

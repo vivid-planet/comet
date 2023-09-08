@@ -15,7 +15,7 @@ import { ProductCategoryInput, ProductCategoryUpdateInput } from "./dto/product-
 import { ProductCategoriesService } from "./product-categories.service";
 
 @Resolver(() => ProductCategory)
-@RequiredPermission(["products"], { skipScopeCheck: true })
+@RequiredPermission([{ permission: "products", configuration: { allowCategoriesAdmin: true } }], { skipScopeCheck: true })
 export class ProductCategoryResolver {
     constructor(
         private readonly entityManager: EntityManager,

@@ -1,5 +1,5 @@
 import { Assets, Dashboard as DashboardIcon, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
-import { AllCategories, createRedirectsPage, CronJobsPage, DamPage, Pages, PagesPage, PublisherPage, UserPermissionsPage } from "@comet/cms-admin";
+import { AllCategories, createRedirectsPage, CronJobsPage, DamPage, Pages, PagesPage, PublisherPage } from "@comet/cms-admin";
 import { Person } from "@mui/icons-material";
 import Dashboard from "@src/dashboard/Dashboard";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
@@ -12,6 +12,7 @@ import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
 import ProductsPage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
+import { UserPermissionsPage } from "@src/userPermission/UserPermissionsPage";
 import { categoryToUrlParam, urlParamToCategory } from "@src/utils/pageTreeNodeCategoryMapping";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -170,6 +171,7 @@ export const pages: Pages = [
                     path: "/product-categories",
                     component: ProductCategoriesPage,
                 },
+                requiredPermission: { permission: "products", configuration: { allowCategoriesAdmin: true } },
             },
             {
                 primary: <FormattedMessage id="menu.productTags" defaultMessage="Tags" />,
