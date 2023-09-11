@@ -1,5 +1,9 @@
 # @comet/admin-rte
 
+## 4.4.1
+
+## 4.4.0
+
 ## 4.3.0
 
 ### Minor Changes

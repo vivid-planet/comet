@@ -2,6 +2,7 @@ import { Block, createOneOfBlock, ExternalLinkBlock, OneOfBlock } from "@comet/b
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 
+import { DependenciesResolverFactory } from "../dependencies/dependencies.resolver.factory";
 import { InternalLinkBlock, InternalLinkBlockData, InternalLinkBlockInput } from "../page-tree/blocks/internal-link.block";
 import { RedirectInputFactory } from "./dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./entities/redirect-entity.factory";
@@ -35,6 +36,8 @@ export class RedirectsModule {
 
         const Redirect = RedirectEntityFactory.create({ linkBlock, Scope });
         const RedirectInput = RedirectInputFactory.create({ linkBlock });
+        const RedirectsResolver = createRedirectsResolver({ Redirect, RedirectInput, Scope });
+        const RedirectsDependenciesResolver = DependenciesResolverFactory.create(Redirect);
 
         const linkBlockProvider: ValueProvider<RedirectsLinkBlock> = {
             provide: REDIRECTS_LINK_BLOCK,
@@ -44,7 +47,7 @@ export class RedirectsModule {
         return {
             module: RedirectsModule,
             imports: [MikroOrmModule.forFeature([Redirect])],
-            providers: [createRedirectsResolver({ Redirect, RedirectInput, Scope }), RedirectsService, linkBlockProvider],
+            providers: [RedirectsResolver, RedirectsDependenciesResolver, RedirectsService, linkBlockProvider],
             exports: [RedirectsService],
         };
     }

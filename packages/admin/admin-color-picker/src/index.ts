@@ -1,3 +1,4 @@
+export { ColorField, ColorFieldProps } from "./ColorField";
 export {
     ColorPicker,
     ColorPickerColorPreviewProps,

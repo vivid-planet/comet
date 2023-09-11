@@ -1,5 +1,9 @@
 # Comet DXP
 
+![npm (scoped with tag)](https://img.shields.io/npm/v/%40comet/admin/latest)
+![npm (scoped with tag)](https://img.shields.io/npm/v/%40comet/admin/canary)
+![npm (scoped with tag)](https://img.shields.io/npm/v/%40comet/admin/next-canary)
+
 ![main](https://github.com/vivid-planet/comet/actions/workflows/lint.yml/badge.svg?branch=main)
 ![next](https://github.com/vivid-planet/comet/actions/workflows/lint.yml/badge.svg?branch=next)
 
@@ -24,7 +28,7 @@ Run the `install.sh` script to install dependencies and setup needed symlinks.
 sh install.sh
 ```
 
-_It is recommend to run `install.sh` every time you switch to the `main` branch._
+_It is recommended to run `install.sh` every time you switch to the `main` branch._
 
 ### Start development processes
 
