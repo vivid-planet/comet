@@ -34,6 +34,7 @@ export type {
     AdminComponentPart,
     BindBlockAdminComponent,
     BlockAdminComponent,
+    BlockDependency,
     BlockInputApi,
     BlockInterface,
     BlockMethods,

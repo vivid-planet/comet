@@ -17,7 +17,8 @@ import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter
 import { AdminComponentStickyHeader } from "../common/AdminComponentStickyHeader";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
-import { BlockInterface, BlockState, DispatchSetStateAction, PreviewContent } from "../types";
+import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
+import { BlockDependency, BlockInterface, BlockState, DispatchSetStateAction, PreviewContent } from "../types";
 import { resolveNewState } from "../utils";
 
 interface BlocksBlockItem<T extends BlockInterface = BlockInterface> {
@@ -205,6 +206,18 @@ export function createBlocksBlock({
                 }
                 return [...anchors, ...(block.anchors?.(child.props) ?? [])];
             }, []);
+        },
+
+        dependencies: (state) => {
+            const mergedDependencies = state.blocks.reduce<BlockDependency[]>((dependencies, child) => {
+                const block = blockForType(child.type);
+                if (!block) {
+                    throw new Error(`No Block found for type ${child.type}`); // for TS
+                }
+                return [...dependencies, ...(block.dependencies?.(child.props) ?? [])];
+            }, []);
+
+            return deduplicateBlockDependencies(mergedDependencies);
         },
 
         definesOwnPadding: true,

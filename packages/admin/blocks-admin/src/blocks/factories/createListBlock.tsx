@@ -16,7 +16,8 @@ import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter
 import { AdminComponentStickyHeader } from "../common/AdminComponentStickyHeader";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
-import { BlockInterface, BlockState, PreviewContent } from "../types";
+import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
+import { BlockDependency, BlockInterface, BlockState, PreviewContent } from "../types";
 import { createUseAdminComponent } from "./listBlock/createUseAdminComponent";
 
 export interface ListBlockItem<T extends BlockInterface> {
@@ -177,6 +178,14 @@ export function createListBlock<T extends BlockInterface>({
             return state.blocks.reduce<string[]>((anchors, child) => {
                 return [...anchors, ...(block.anchors?.(child.props) ?? [])];
             }, []);
+        },
+
+        dependencies: (state) => {
+            const mergedDependencies = state.blocks.reduce<BlockDependency[]>((dependencies, child) => {
+                return [...dependencies, ...(block.dependencies?.(child.props) ?? [])];
+            }, []);
+
+            return deduplicateBlockDependencies(mergedDependencies);
         },
 
         definesOwnPadding: true,

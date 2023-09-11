@@ -71,6 +71,14 @@ export function createOptionalBlock<T extends BlockInterface>(
             return decoratedBlock.anchors?.(state.block) ?? [];
         },
 
+        dependencies: (state) => {
+            if (state.block === undefined) {
+                return [];
+            }
+
+            return decoratedBlock.dependencies?.(state.block) ?? [];
+        },
+
         definesOwnTitle: true,
 
         AdminComponent: ({ state, updateState }) => {

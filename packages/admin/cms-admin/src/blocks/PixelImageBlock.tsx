@@ -11,6 +11,7 @@ import {
     IPreviewContext,
     SelectPreviewComponent,
 } from "@comet/blocks-admin";
+import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { ButtonBase, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
@@ -119,6 +120,19 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
         const damFile = data.damFile as unknown as PixelImageBlockData["damFile"];
 
         return { damFile, cropArea: output.cropArea };
+    },
+
+    dependencies: (state) => {
+        const dependencies: BlockDependency[] = [];
+
+        if (state.damFile?.id) {
+            dependencies.push({
+                targetGraphqlObjectType: "DamFile",
+                id: state.damFile.id,
+            });
+        }
+
+        return dependencies;
     },
 
     definesOwnPadding: true,

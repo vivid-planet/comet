@@ -218,6 +218,16 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
             return block?.anchors?.(blockState.props) ?? [];
         },
 
+        dependencies: (state) => {
+            const { state: blockState, block } = getActiveBlock(state);
+
+            if (blockState === undefined) {
+                return [];
+            }
+
+            return block?.dependencies?.(blockState.props) ?? [];
+        },
+
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {

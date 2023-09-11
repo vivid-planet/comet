@@ -3,8 +3,9 @@
 import * as React from "react";
 
 import { BlockPreview } from "../../common/blockRow/BlockPreview";
-import { BlockContext, BlockInterface, BlockMethods, DispatchSetStateAction, PreviewContent, SetStateAction } from "../../types";
+import { BlockContext, BlockDependency, BlockInterface, BlockMethods, DispatchSetStateAction, PreviewContent, SetStateAction } from "../../types";
 import { resolveNewState } from "../../utils";
+import { deduplicateBlockDependencies } from "../deduplicateBlockDependencies";
 import { isBlockInterface } from "../isBlockInterface";
 import {
     AdminComponentPropsMap,
@@ -155,6 +156,17 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
                     return block.anchors?.(extractedState) ?? [];
                 });
                 return Object.values(anchorsPerBlock).reduce((anchors, blockAnchors) => [...anchors, ...blockAnchors], []);
+            },
+            dependencies: (state): BlockDependency[] => {
+                const dependenciesPerBlock: Record<keyof C, BlockDependency[]> = applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
+                    const extractedState = extractData([block, options], attr, state);
+                    return block.dependencies?.(extractedState) ?? [];
+                });
+                const mergedDependencies = Object.values(dependenciesPerBlock).reduce(
+                    (dependencies, blockDependencies) => [...dependencies, ...blockDependencies],
+                    [],
+                );
+                return deduplicateBlockDependencies(mergedDependencies);
             },
             previewContent: (state, ctx) => {
                 const previewContents = applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {

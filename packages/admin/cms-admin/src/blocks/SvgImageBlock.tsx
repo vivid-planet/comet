@@ -11,6 +11,7 @@ import {
     IPreviewContext,
     SelectPreviewComponent,
 } from "@comet/blocks-admin";
+import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -88,6 +89,19 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
         const damFile = data.damFile as unknown as SvgImageBlockData["damFile"];
 
         return { damFile };
+    },
+
+    dependencies: (state) => {
+        const dependencies: BlockDependency[] = [];
+
+        if (state.damFile?.id) {
+            dependencies.push({
+                targetGraphqlObjectType: "DamFile",
+                id: state.damFile.id,
+            });
+        }
+
+        return dependencies;
     },
 
     definesOwnPadding: true,
