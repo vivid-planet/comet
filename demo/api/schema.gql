@@ -173,8 +173,8 @@ type ShopProduct {
   id: ID!
   name: String!
   description: String!
-  category: ShopProductCategory!
   variants: [ShopProductVariant!]!
+  category: [ShopProductCategory!]!
 }
 
 type PageTreeNodeScope {
@@ -830,7 +830,6 @@ enum ProductTagSortField {
 
 input ShopProductFilter {
   name: StringFilter
-  category: ManyToOneFilter
   and: [ShopProductFilter!]
   or: [ShopProductFilter!]
 }
@@ -842,7 +841,6 @@ input ShopProductSort {
 
 enum ShopProductSortField {
   name
-  category
 }
 
 input ShopProductVariantFilter {
@@ -1171,14 +1169,14 @@ input ProductTagUpdateInput {
 input ShopProductInput {
   name: String!
   description: String!
-  category: ID!
+  category: [ID!]!
   variants: [ID!]!
 }
 
 input ShopProductUpdateInput {
   name: String
   description: String
-  category: ID
+  category: [ID!]
   variants: [ID!]
 }
 

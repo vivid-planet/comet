@@ -10,7 +10,6 @@ export const generateShopProduct = async (shopProductsRepository: EntityReposito
             id: uuid,
             name: faker.lorem.word(),
             description: faker.lorem.sentence(),
-            category: categoryId,
         }),
     );
     return uuid;

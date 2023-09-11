@@ -13,7 +13,7 @@ export class ShopProductsService {
         const andFilters = [];
 
         if (options.search) {
-            andFilters.push(searchToMikroOrmQuery(options.search, ["name", "description", "category.name", "category.description"]));
+            andFilters.push(searchToMikroOrmQuery(options.search, ["name", "description"]));
         }
 
         if (options.filter) {

@@ -21,8 +21,8 @@ export class ShopProductResolver {
         private readonly entityManager: EntityManager,
         private readonly shopProductsService: ShopProductsService,
         @InjectRepository(ShopProduct) private readonly repository: EntityRepository<ShopProduct>,
-        @InjectRepository(ShopProductCategory) private readonly shopProductCategoryRepository: EntityRepository<ShopProductCategory>,
         @InjectRepository(ShopProductVariant) private readonly shopProductVariantRepository: EntityRepository<ShopProductVariant>,
+        @InjectRepository(ShopProductCategory) private readonly shopProductCategoryRepository: EntityRepository<ShopProductCategory>,
     ) {}
 
     @Query(() => ShopProduct)
@@ -41,11 +41,11 @@ export class ShopProductResolver {
 
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];
-        if (fields.includes("category")) {
-            populate.push("category");
-        }
         if (fields.includes("variants")) {
             populate.push("variants");
+        }
+        if (fields.includes("category")) {
+            populate.push("category");
         }
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,8 +68,6 @@ export class ShopProductResolver {
         const { variants: variantsInput, category: categoryInput, ...assignInput } = input;
         const shopProduct = this.repository.create({
             ...assignInput,
-
-            category: Reference.create(await this.shopProductCategoryRepository.findOneOrFail(categoryInput)),
         });
 
         if (variantsInput) {
@@ -77,6 +75,12 @@ export class ShopProductResolver {
             if (variants.length != variantsInput.length) throw new Error("Couldn't find all variants that were passed as input");
             await shopProduct.variants.loadItems();
             shopProduct.variants.set(variants.map((variant) => Reference.create(variant)));
+        }
+        if (categoryInput) {
+            const category = await this.shopProductCategoryRepository.find({ id: categoryInput });
+            if (category.length != categoryInput.length) throw new Error("Couldn't find all category that were passed as input");
+            await shopProduct.category.loadItems();
+            shopProduct.category.set(category.map((category) => Reference.create(category)));
         }
 
         await this.entityManager.flush();
@@ -95,8 +99,6 @@ export class ShopProductResolver {
         const { variants: variantsInput, category: categoryInput, ...assignInput } = input;
         shopProduct.assign({
             ...assignInput,
-
-            category: categoryInput ? Reference.create(await this.shopProductCategoryRepository.findOneOrFail(categoryInput)) : shopProduct.category,
         });
 
         if (variantsInput) {
@@ -104,6 +106,12 @@ export class ShopProductResolver {
             if (variants.length != variantsInput.length) throw new Error("Couldn't find all variants that were passed as input");
             await shopProduct.variants.loadItems();
             shopProduct.variants.set(variants.map((variant) => Reference.create(variant)));
+        }
+        if (categoryInput) {
+            const category = await this.shopProductCategoryRepository.find({ id: categoryInput });
+            if (category.length != categoryInput.length) throw new Error("Couldn't find all category that were passed as input");
+            await shopProduct.category.loadItems();
+            shopProduct.category.set(category.map((category) => Reference.create(category)));
         }
 
         await this.entityManager.flush();
@@ -120,13 +128,13 @@ export class ShopProductResolver {
         return true;
     }
 
-    @ResolveField(() => ShopProductCategory)
-    async category(@Parent() shopProduct: ShopProduct): Promise<ShopProductCategory> {
-        return shopProduct.category.load();
-    }
-
     @ResolveField(() => [ShopProductVariant])
     async variants(@Parent() shopProduct: ShopProduct): Promise<ShopProductVariant[]> {
         return shopProduct.variants.loadItems();
+    }
+
+    @ResolveField(() => [ShopProductCategory])
+    async category(@Parent() shopProduct: ShopProduct): Promise<ShopProductCategory[]> {
+        return shopProduct.category.loadItems();
     }
 }

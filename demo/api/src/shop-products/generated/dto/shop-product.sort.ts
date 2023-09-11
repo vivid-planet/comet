@@ -6,7 +6,6 @@ import { IsEnum } from "class-validator";
 
 export enum ShopProductSortField {
     name = "name",
-    category = "category",
 }
 registerEnumType(ShopProductSortField, {
     name: "ShopProductSortField",

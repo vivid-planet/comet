@@ -1,5 +1,5 @@
 import { CrudField, CrudGenerator } from "@comet/cms-api";
-import { BaseEntity, Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Property, Ref } from "@mikro-orm/core";
+import { BaseEntity, Collection, Entity, ManyToMany, OneToMany, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { ShopProductCategory } from "@src/shop-products/entities/shop-product-category.entitiy";
 import { ShopProductVariant } from "@src/shop-products/entities/shop-product-variant.entity";
@@ -27,8 +27,8 @@ export class ShopProduct extends BaseEntity<ShopProduct, "id"> {
     })
     description: string;
 
-    @ManyToOne(() => ShopProductCategory, { ref: true })
-    category: Ref<ShopProductCategory>;
+    @ManyToMany(() => ShopProductCategory, "products", { owner: true })
+    category = new Collection<ShopProductCategory>(this);
 
     @OneToMany(() => ShopProductVariant, (variant) => variant.product)
     variants = new Collection<ShopProductVariant>(this);

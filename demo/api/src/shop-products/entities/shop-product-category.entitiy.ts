@@ -1,5 +1,5 @@
 import { CrudField, CrudGenerator } from "@comet/cms-api";
-import { BaseEntity, Collection, Entity, OneToMany, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Collection, Entity, ManyToMany, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { ShopProduct } from "@src/shop-products/entities/shop-product.entity";
 import { v4 as uuid } from "uuid";
@@ -26,6 +26,6 @@ export class ShopProductCategory extends BaseEntity<ShopProductCategory, "id"> {
     })
     description: string;
 
-    @OneToMany(() => ShopProduct, (product) => product.category)
+    @ManyToMany(() => ShopProduct, (product) => product.category)
     products = new Collection<ShopProduct>(this);
 }

@@ -16,10 +16,10 @@ export class ShopProductInput {
     @Field()
     description: string;
 
-    @IsNotEmpty()
-    @Field(() => ID)
-    @IsUUID()
-    category: string;
+    @Field(() => [ID])
+    @IsArray()
+    @IsUUID(undefined, { each: true })
+    category: string[];
 
     @Field(() => [ID])
     @IsArray()
