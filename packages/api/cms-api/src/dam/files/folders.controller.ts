@@ -11,7 +11,6 @@ export class FoldersController {
     async createZip(@Param("folderId") folderId: string, @Res() res: Response): Promise<void> {
         const folder = await this.foldersService.findOneById(folderId);
         const folderName = folder?.name ? folder.name : "folder";
-        console.log(`starting zip generation for folder ${folderName} with id: ${folderId}`);
         const zipStream = await this.foldersService.createZipStreamFromFolder(folderId);
 
         res.setHeader("Content-Disposition", `attachment; filename="${folderName || "folder"}.zip"`);
