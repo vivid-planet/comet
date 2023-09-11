@@ -16,14 +16,14 @@ export const parseIdFromIri = (iri: string) => {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IDefaultVariables {}
 
-export interface IProps {
+export interface TableQueryProps {
     api: ITableQueryApi;
     loading: boolean;
     error?: ApolloError;
     children: React.ReactNode;
 }
 
-export function Query({ classes, ...otherProps }: IProps & WithStyles<typeof styles>) {
+export function Query({ classes, ...otherProps }: TableQueryProps & WithStyles<typeof styles>) {
     return (
         <TableQueryContext.Provider
             value={{
