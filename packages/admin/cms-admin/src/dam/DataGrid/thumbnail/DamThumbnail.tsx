@@ -45,16 +45,15 @@ interface DamThumbnailProps {
 }
 
 export const DamThumbnail = ({ asset }: DamThumbnailProps): React.ReactElement => {
-    const [open, setOpen] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+    const open = Boolean(anchorEl);
 
     const handleMouseOver = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
-        setOpen(true);
     };
     const handleMouseLeave = () => {
         setAnchorEl(null);
-        setOpen(false);
     };
 
     let thumbnail;
@@ -70,7 +69,7 @@ export const DamThumbnail = ({ asset }: DamThumbnailProps): React.ReactElement =
                         onMouseLeave={handleMouseLeave}
                         src={asset.image.thumbnailUrl}
                     />
-                    <Popper id={id} open={open} anchorEl={anchorEl} placement="auto-end" onResize={undefined} onResizeCapture={undefined} transition>
+                    <Popper open={open} anchorEl={anchorEl} placement="auto-end" onResize={undefined} onResizeCapture={undefined} transition>
                         {({ TransitionProps }) => (
                             <Fade {...TransitionProps} timeout={350}>
                                 <ImagePreview src={asset.fileUrl || undefined} id="preview" />
