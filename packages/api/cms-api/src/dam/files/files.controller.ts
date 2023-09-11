@@ -33,6 +33,7 @@ import { createUploadFileBody, UploadFileBodyInterface } from "./dto/file.body";
 import { FileParams, HashFileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
 import { FileInterface } from "./entities/file.entity";
+import { FileValidationInterceptor } from "./file-validation-interceptor.service";
 import { FilesService } from "./files.service";
 import { calculatePartialRanges, createHashedPath } from "./files.utils";
 
@@ -58,7 +59,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         ) {}
 
         @Post("upload")
-        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
+        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD), FileValidationInterceptor)
         async upload(
             @UploadedFile() file: FileUploadInterface,
             @Body() body: UploadFileBodyInterface,

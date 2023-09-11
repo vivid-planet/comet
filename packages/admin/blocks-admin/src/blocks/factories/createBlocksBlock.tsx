@@ -291,6 +291,19 @@ export function createBlocksBlock({
                 [handleUndoClick, snackbarApi, updateState],
             );
 
+            const handleToggleVisibilityOfAllSelectedBlocks = (visible = false) => {
+                const blocksToShow = state.blocks.map((c) => {
+                    if (c.selected) {
+                        c.visible = visible;
+                    }
+                    return c;
+                });
+
+                updateState((prevState) => {
+                    return { ...prevState, blocks: blocksToShow };
+                });
+            };
+
             const handleDeleteAllSelectedBlocks = () => {
                 const blocksToDelete = state.blocks.filter((c) => {
                     return c.selected;
@@ -476,16 +489,39 @@ export function createBlocksBlock({
                                                             <div />
                                                         )}
                                                         <BlockListHeaderActionContainer>
-                                                            {selectedCount > 0 && (
-                                                                <>
-                                                                    <IconButton onClick={handleDeleteAllSelectedBlocks} size="large">
-                                                                        <Delete />
-                                                                    </IconButton>
-                                                                    <IconButton onClick={handleCopySelectedBlocks} size="large">
-                                                                        <Copy />
-                                                                    </IconButton>
-                                                                </>
-                                                            )}
+                                                            <IconButton
+                                                                onClick={() => {
+                                                                    handleToggleVisibilityOfAllSelectedBlocks(true);
+                                                                }}
+                                                                size="large"
+                                                                disabled={selectedCount === 0}
+                                                            >
+                                                                <Visible />
+                                                            </IconButton>
+                                                            <IconButton
+                                                                onClick={() => {
+                                                                    handleToggleVisibilityOfAllSelectedBlocks();
+                                                                }}
+                                                                size="large"
+                                                                disabled={selectedCount === 0}
+                                                            >
+                                                                <Invisible />
+                                                            </IconButton>
+                                                            <Separator />
+                                                            <IconButton
+                                                                onClick={handleDeleteAllSelectedBlocks}
+                                                                size="large"
+                                                                disabled={selectedCount === 0}
+                                                            >
+                                                                <Delete />
+                                                            </IconButton>
+                                                            <IconButton
+                                                                onClick={handleCopySelectedBlocks}
+                                                                size="large"
+                                                                disabled={selectedCount === 0}
+                                                            >
+                                                                <Copy />
+                                                            </IconButton>
                                                             <IconButton onClick={() => pasteBlock(0)} size="large">
                                                                 <Paste />
                                                             </IconButton>
@@ -685,6 +721,8 @@ const BlockListHeader = styled("div")`
 `;
 
 const BlockListHeaderActionContainer = styled("div")`
+    display: flex;
+    align-items: center;
     padding: 12px 0;
 `;
 
@@ -702,4 +740,10 @@ const LargeAddButtonContent = styled("span")`
 const LargeAddButtonIcon = styled(Add)`
     font-size: 24px;
     margin-bottom: 8px;
+`;
+
+const Separator = styled("div")`
+    background-color: ${(props) => props.theme.palette.grey["100"]};
+    height: 22px;
+    width: 1px;
 `;

@@ -1,6 +1,6 @@
 ---
 title: Deployment of Libraries & Canary Releases
-sidebar_position: 11
+sidebar_position: 12
 ---
 
 All of our packages versions use [semantic versioning](https://semver.org/). To manage all of these on the side of our big monorepo, we use the tool "[lerna](https://github.com/lerna/lerna)."

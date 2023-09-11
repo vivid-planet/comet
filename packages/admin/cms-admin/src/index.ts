@@ -45,6 +45,13 @@ export { damDefaultAcceptedMimeTypes } from "./dam/config/damDefaultAcceptedMime
 export { useDamAcceptedMimeTypes } from "./dam/config/useDamAcceptedMimeTypes";
 export { useDamConfig } from "./dam/config/useDamConfig";
 export { DamPage } from "./dam/DamPage";
+export { DashboardHeader, DashboardHeaderProps } from "./dashboard/DashboardHeader";
+export { DashboardWidgetRoot, DashboardWidgetRootProps } from "./dashboard/widgets/DashboardWidgetRoot";
+export { LatestBuildsDashboardWidget, LatestBuildsDashboardWidgetProps } from "./dashboard/widgets/LatestBuildsDashboardWidget";
+export {
+    LatestContentUpdatesDashboardWidget,
+    LatestContentUpdatesDashboardWidgetProps,
+} from "./dashboard/widgets/LatestContentUpdatesDashboardWidget";
 export { rewriteInternalLinks } from "./documents/rewriteInternalLinks";
 export type { DocumentInterface, DocumentType, IdsMap } from "./documents/types";
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
