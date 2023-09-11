@@ -3,6 +3,7 @@ import { Field, FinalFormSelect } from "@comet/admin";
 import {
     AdminComponentPaper,
     BlockCategory,
+    BlockDependency,
     BlockInterface,
     BlocksFinalForm,
     createBlockSkeleton,
@@ -69,6 +70,19 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
     isValid: () => {
         // TODO internal link validation
         return true;
+    },
+
+    dependencies: (state) => {
+        const dependencies: BlockDependency[] = [];
+
+        if (state.targetPage?.id) {
+            dependencies.push({
+                targetGraphqlObjectType: "PageTreeNode",
+                id: state.targetPage.id,
+            });
+        }
+
+        return dependencies;
     },
 
     definesOwnPadding: true,

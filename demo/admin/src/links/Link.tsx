@@ -57,4 +57,5 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
     },
     menuIcon: LinkIcon,
     anchors: () => [],
+    dependencies: (input) => LinkBlock.dependencies?.(LinkBlock.input2State(input.content)) ?? [],
 };

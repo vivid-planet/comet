@@ -1,4 +1,5 @@
 import { TypedDocumentNode } from "@apollo/client";
+import { BlockDependency } from "@comet/blocks-admin";
 import { SvgIconProps } from "@mui/material";
 
 import { GQLDocumentInterface, Maybe } from "../graphql.generated";
@@ -46,4 +47,5 @@ export interface DocumentInterface<
     hideInMenuIcon?: (props: SvgIconProps<"svg">) => JSX.Element | null;
     InfoTag?: React.ComponentType<{ page: PageTreePage }>;
     anchors: (input: DocumentInput) => string[];
+    dependencies: (input: DocumentInput) => BlockDependency[];
 }
