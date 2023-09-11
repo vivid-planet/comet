@@ -5,9 +5,13 @@ import { CurrentUserInterface } from "../current-user/current-user";
 
 // Allows injecting Current User into resolvers via `@GetCurrentUser() user: CurrentUserInterface`
 export const GetCurrentUser = createParamDecorator((data: unknown, context: ExecutionContext): CurrentUserInterface => {
+    let user: CurrentUserInterface;
     if (context.getType().toString() === "graphql") {
-        return GqlExecutionContext.create(context).getContext().req.user;
+        user = GqlExecutionContext.create(context).getContext().req.user;
     } else {
-        return context.switchToHttp().getRequest().user;
+        user = context.switchToHttp().getRequest().user;
     }
+    if (!user.permissions) user.permissions = [];
+    if (!user.contentScopes) user.contentScopes = [];
+    return user;
 });

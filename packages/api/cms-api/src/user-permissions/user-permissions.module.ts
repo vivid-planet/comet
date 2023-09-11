@@ -1,5 +1,5 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { DynamicModule, Global, Module, ModuleMetadata, Provider, Type } from "@nestjs/common";
+import { DynamicModule, Global, Module, ModuleMetadata, Type } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 
 import { AccessControlService } from "./access-control.service";
@@ -23,20 +23,18 @@ interface UserModuleConfig extends Pick<ModuleMetadata, "imports"> {
 @Module({})
 export class UserPermissionsModule {
     static forRoot(config: UserModuleConfig): DynamicModule {
-        const configServiceProvider: Provider = {
-            provide: USER_PERMISSIONS_CONFIG_SERVICE,
-            useClass: config.config,
-        };
-        const accessControlServiceProvider: Provider = {
-            provide: ACCESS_CONTROL_SERVICE,
-            useClass: config.accessControlService ?? AccessControlService,
-        };
         return {
             module: UserPermissionsModule,
             imports: [MikroOrmModule.forFeature([UserPermission, UserContentScopes]), ...(config.imports ?? [])],
             providers: [
-                accessControlServiceProvider,
-                configServiceProvider,
+                {
+                    provide: USER_PERMISSIONS_CONFIG_SERVICE,
+                    useClass: config.config,
+                },
+                {
+                    provide: ACCESS_CONTROL_SERVICE,
+                    useClass: config.accessControlService ?? AccessControlService,
+                },
                 InferScopeService,
                 UserPermissionsService,
                 UserResolver,
@@ -47,7 +45,7 @@ export class UserPermissionsModule {
                     useClass: UserPermissionsGuard,
                 },
             ],
-            exports: [UserPermissionsService, accessControlServiceProvider, InferScopeService],
+            exports: [UserPermissionsService, ACCESS_CONTROL_SERVICE, InferScopeService],
         };
     }
 }

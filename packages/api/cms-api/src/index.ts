@@ -152,8 +152,10 @@ export { RequiredPermission } from "./user-permissions/decorators/required-permi
 export { CurrentUser } from "./user-permissions/dto/current-user";
 export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
 export { User } from "./user-permissions/dto/user";
+export { InferScopeService } from "./user-permissions/infer-scope.service";
 export { ContentScope } from "./user-permissions/interfaces/content-scope.interface";
 export { Permission } from "./user-permissions/interfaces/user-permission.interface";
+export { ACCESS_CONTROL_SERVICE } from "./user-permissions/user-permissions.const";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export { UserPermissionsService } from "./user-permissions/user-permissions.service";
 export {
