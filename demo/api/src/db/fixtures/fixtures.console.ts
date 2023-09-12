@@ -1,4 +1,4 @@
-import { BlobStorageBackendService, FilesService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { BlobStorageBackendService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { MikroORM, UseRequestContext } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
@@ -32,7 +32,6 @@ export class FixturesConsole {
         @Inject(CONFIG) private readonly config: Config,
         private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly pageTreeService: PageTreeService,
-        private readonly filesService: FilesService,
         private readonly documentGeneratorService: DocumentGeneratorService,
         private readonly imageGeneratorService: ImageGeneratorService,
         private readonly orm: MikroORM,
@@ -65,7 +64,7 @@ export class FixturesConsole {
         await migrator.up();
 
         console.log("Generate Images...");
-        const imageFiles = await this.imageGeneratorService.generateImages(10);
+        await this.imageGeneratorService.generateImages(10);
 
         console.log("Generate Page Tree...");
         const scope: PageTreeNodeScope = {
@@ -73,17 +72,17 @@ export class FixturesConsole {
             language: "en",
         };
 
-        const node = await this.documentGeneratorService.generatePage({ name: "Home", scope, imageFiles });
-        await this.documentGeneratorService.generatePage({ name: "Sub", scope, imageFiles, parentId: node.id });
+        const node = await this.documentGeneratorService.generatePage({ name: "Home", scope });
+        await this.documentGeneratorService.generatePage({ name: "Sub", scope, parentId: node.id });
 
         for (let i = 0; i < 3; i++) {
-            const page = await this.documentGeneratorService.generatePage({ name: `Page ${i}`, scope, imageFiles });
+            const page = await this.documentGeneratorService.generatePage({ name: `Page ${i}`, scope });
 
             for (let subPageIndex = 0; subPageIndex < 3; subPageIndex++) {
                 if (faker.datatype.boolean()) {
-                    await this.documentGeneratorService.generatePage({ name: `Sub-Page ${subPageIndex}`, scope, imageFiles, parentId: page.id });
+                    await this.documentGeneratorService.generatePage({ name: `Sub-Page ${subPageIndex}`, scope, parentId: page.id });
                 } else {
-                    await this.documentGeneratorService.generateLink({ name: `Sub-Link ${subPageIndex}`, scope, imageFiles, parentId: page.id });
+                    await this.documentGeneratorService.generateLink({ name: `Sub-Link ${subPageIndex}`, scope, parentId: page.id });
                 }
             }
         }

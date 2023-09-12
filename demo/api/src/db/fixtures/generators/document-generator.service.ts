@@ -1,5 +1,5 @@
 import { ExternalLinkBlock } from "@comet/blocks-api";
-import { File, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable } from "@nestjs/common";
@@ -15,10 +15,11 @@ import { Page } from "@src/pages/entities/page.entity";
 import faker from "faker";
 import slugify from "slugify";
 
+import { ImageGeneratorService } from "./image-generator.service";
+
 interface GeneratePageInput {
     name: string;
     scope: PageTreeNodeScope;
-    imageFiles: File[];
     parentId?: string;
 }
 
@@ -29,12 +30,12 @@ export class DocumentGeneratorService {
         private readonly pageTreeService: PageTreeService,
         @InjectRepository(Page) private readonly pagesRepository: EntityRepository<Page>,
         @InjectRepository(Link) private readonly linkRepository: EntityRepository<Link>,
+        private readonly imageGeneratorService: ImageGeneratorService,
     ) {}
 
-    async generatePage({ name, scope, parentId, imageFiles }: GeneratePageInput): Promise<PageTreeNodeInterface> {
+    async generatePage({ name, scope, parentId }: GeneratePageInput): Promise<PageTreeNodeInterface> {
         const id = faker.datatype.uuid();
         const slug = slugify(name.toLowerCase());
-        console.log("slugPage", slug);
 
         const node = await this.pageTreeService.createNode(
             {
@@ -51,6 +52,11 @@ export class DocumentGeneratorService {
         );
         await this.pageTreeService.updateNodeVisibility(node.id, PageTreeNodeVisibility.Published);
 
+        const imageFiles = [
+            this.imageGeneratorService.getRandomImage(),
+            this.imageGeneratorService.getRandomImage(),
+            this.imageGeneratorService.getRandomImage(),
+        ]; // TODO: remove imageFiles here and put into block that needs an image when it is possible to inject imageGeneratorService directly in a block
         await this.pagesRepository.persistAndFlush(
             this.pagesRepository.create({
                 id,

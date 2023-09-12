@@ -4,17 +4,23 @@ import faker from "faker";
 
 @Injectable()
 export class ImageGeneratorService {
+    private imageFiles: File[] = [];
     constructor(private readonly filesService: FilesService) {}
 
-    public async generateImages(imageCount: number): Promise<File[]> {
-        const imageFiles = [];
+    public getRandomImage() {
+        const randomIndex = faker.datatype.number({
+            min: 0,
+            max: this.imageFiles.length - 1,
+        });
+        return this.imageFiles[randomIndex];
+    }
 
+    public async generateImages(imageCount: number): Promise<void> {
+        this.imageFiles = [];
         for (let i = 0; i < imageCount; i++) {
             const image = await this.generateImage();
-            imageFiles.push(image);
+            this.imageFiles.push(image);
         }
-
-        return imageFiles;
     }
 
     private async generateImage(): Promise<File> {
@@ -29,6 +35,7 @@ export class ImageGeneratorService {
 
         const imageUrl = `https://source.unsplash.com/random/${width}x${height}`;
         const downloadedImage = await download(imageUrl);
+
         return this.filesService.upload(downloadedImage);
     }
 }
