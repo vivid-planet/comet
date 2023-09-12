@@ -40,6 +40,9 @@ export interface DocumentInterface<
     getQuery?: TypedDocumentNode<GQLPageQuery, GQLPageQueryVariables>; // TODO better typing (see createUsePage.tsx)
     editComponent?: React.ComponentType<{ id: string; category: string }>;
     updateMutation?: TypedDocumentNode<GQLUpdatePageMutation, GQLUpdatePageMutationVariables<DocumentInput>>;
+    /**
+     * @deprecated inputToOutput might be removed in favor of createCopy in the future
+     */
     inputToOutput?: (input: DocumentInput) => DocumentOutput;
     menuIcon: (props: SvgIconProps<"svg">) => JSX.Element | null;
     hideInMenuIcon?: (props: SvgIconProps<"svg">) => JSX.Element | null;
