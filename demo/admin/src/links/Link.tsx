@@ -43,8 +43,7 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
             }
         }
     `,
-    // @ts-expect-error rewriteInternalLinks is insufficiently typed. As we plan to remove this method anyway, I did not invest more effort into it.
-    inputToOutput: (input, { idsMap }) => {
+    inputToOutput: (input) => {
         return {
             content: LinkBlock.state2Output(LinkBlock.input2State(input.content)),
         };
