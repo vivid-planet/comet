@@ -1,5 +1,5 @@
 import { TypedDocumentNode } from "@apollo/client";
-import { BlockDependency } from "@comet/blocks-admin";
+import { BlockDependency, IdsMap } from "@comet/blocks-admin";
 import { SvgIconProps } from "@mui/material";
 
 import { GQLDocumentInterface, Maybe } from "../graphql.generated";
@@ -31,8 +31,6 @@ export interface GQLDocument extends GQLDocumentInterface {
     __typename: DocumentType;
     [key: string]: unknown;
 }
-
-export type IdsMap = Map<string, string>;
 
 export interface DocumentInterface<
     DocumentInput extends Record<string, unknown> = Record<string, unknown>,

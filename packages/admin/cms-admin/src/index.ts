@@ -46,7 +46,7 @@ export { useDamAcceptedMimeTypes } from "./dam/config/useDamAcceptedMimeTypes";
 export { useDamConfig } from "./dam/config/useDamConfig";
 export { DamPage } from "./dam/DamPage";
 export { rewriteInternalLinks } from "./documents/rewriteInternalLinks";
-export type { DocumentInterface, DocumentType, IdsMap } from "./documents/types";
+export type { DocumentInterface, DocumentType } from "./documents/types";
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
 export { FileField } from "./form/file/FileField";
 export { FinalFormToggleButtonGroup } from "./form/FinalFormToggleButtonGroup";

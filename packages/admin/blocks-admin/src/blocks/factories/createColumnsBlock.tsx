@@ -189,6 +189,19 @@ export function createColumnsBlock<T extends BlockInterface>({
             return deduplicateBlockDependencies(mergedDependencies);
         },
 
+        createCopy: (state, { idsMap }) => {
+            const newState: ColumnsBlockState<T> = { ...state, columns: [] };
+
+            for (const column of state.columns) {
+                newState.columns.push({
+                    ...column,
+                    props: contentBlock.createCopy(column.props, { idsMap }),
+                });
+            }
+
+            return newState;
+        },
+
         AdminComponent: ({ state, updateState }) => {
             const intl = useIntl();
             const groupLayoutsByColumnsApi = createGroupLayoutsByColumnsApi(layouts);

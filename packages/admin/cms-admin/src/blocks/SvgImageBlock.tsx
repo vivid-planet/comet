@@ -13,6 +13,7 @@ import {
 } from "@comet/blocks-admin";
 import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { Box, Divider, Grid, Typography } from "@mui/material";
+import { deepClone } from "@mui/x-data-grid/utils/utils";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -102,6 +103,18 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
         }
 
         return dependencies;
+    },
+
+    createCopy: (state, { idsMap }) => {
+        const clonedState = deepClone(state);
+
+        if (clonedState.damFile && idsMap.has(clonedState.damFile.id)) {
+            clonedState.damFile.id = idsMap.get(clonedState.damFile.id);
+        } else {
+            clonedState.damFile.id = undefined;
+        }
+
+        return clonedState;
     },
 
     definesOwnPadding: true,

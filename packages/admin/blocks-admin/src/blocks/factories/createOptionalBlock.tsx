@@ -79,6 +79,13 @@ export function createOptionalBlock<T extends BlockInterface>(
             return decoratedBlock.dependencies?.(state.block) ?? [];
         },
 
+        createCopy: (state, { idsMap }) => {
+            return {
+                ...state,
+                block: state.block ? decoratedBlock.createCopy(state.block, { idsMap }) : undefined,
+            };
+        },
+
         definesOwnTitle: true,
 
         AdminComponent: ({ state, updateState }) => {

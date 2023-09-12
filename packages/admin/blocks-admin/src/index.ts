@@ -41,6 +41,7 @@ export type {
     BlockOutputApi,
     BlockState,
     DispatchSetStateAction,
+    IdsMap,
     IPreviewContext,
     LinkBlockInterface,
     PreviewStateInterface,

@@ -188,6 +188,19 @@ export function createListBlock<T extends BlockInterface>({
             return deduplicateBlockDependencies(mergedDependencies);
         },
 
+        createCopy: (state, { idsMap }) => {
+            const newState: ListBlockState<T> = { ...state, blocks: [] };
+
+            for (const c of state.blocks) {
+                newState.blocks.push({
+                    ...c,
+                    props: block.createCopy(c.props, { idsMap }),
+                });
+            }
+
+            return newState;
+        },
+
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {

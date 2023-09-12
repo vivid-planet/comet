@@ -1,9 +1,8 @@
+import { IdsMap } from "@comet/blocks-admin";
 import cloneDeep from "lodash.clonedeep";
 import get from "lodash.get";
 import set from "lodash.set";
 import objectScan from "object-scan";
-
-import { IdsMap } from "./types";
 
 function rewriteInternalLinks(input: Record<string, unknown>, idsMap: IdsMap): Record<string, unknown> {
     const output = cloneDeep(input);

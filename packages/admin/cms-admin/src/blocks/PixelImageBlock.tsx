@@ -15,6 +15,7 @@ import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { ButtonBase, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
+import { deepClone } from "@mui/x-data-grid/utils/utils";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -133,6 +134,18 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
         }
 
         return dependencies;
+    },
+
+    createCopy: (state, { idsMap }) => {
+        const clonedState = deepClone(state);
+
+        if (clonedState.damFile && idsMap.has(clonedState.damFile.id)) {
+            clonedState.damFile.id = idsMap.get(clonedState.damFile.id);
+        } else {
+            clonedState.damFile.id = undefined;
+        }
+
+        return clonedState;
     },
 
     definesOwnPadding: true,

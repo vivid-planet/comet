@@ -220,6 +220,21 @@ export function createBlocksBlock({
             return deduplicateBlockDependencies(mergedDependencies);
         },
 
+        createCopy: (state, { idsMap }) => {
+            const newState: BlocksBlockState = { blocks: [] };
+
+            for (const c of state.blocks) {
+                const block = blockForType(c.type);
+                if (!block) {
+                    throw new Error(`No Block found for type ${c.type}`); // for TS
+                }
+
+                newState.blocks.push({ ...c, props: block.createCopy(c.props, { idsMap }) });
+            }
+
+            return newState;
+        },
+
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {

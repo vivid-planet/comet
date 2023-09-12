@@ -228,6 +228,24 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
             return block?.dependencies?.(blockState.props) ?? [];
         },
 
+        createCopy: (state, { idsMap }) => {
+            const newState: OneOfBlockState = { ...state, attachedBlocks: [] };
+
+            for (const c of state.attachedBlocks) {
+                const block = blockForType(c.type);
+                if (!block) {
+                    throw new Error(`No Block found for type ${c.type}`); // for TS
+                }
+
+                newState.attachedBlocks.push({
+                    ...c,
+                    props: block.createCopy(c.props, { idsMap }),
+                });
+            }
+
+            return newState;
+        },
+
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {
