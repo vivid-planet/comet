@@ -12,7 +12,7 @@ import { PaginatedResponseFactory } from "../../common/pagination/paginated-resp
 import { ContentScopeService } from "../../content-scope/content-scope.service";
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
 import { DamScopeInterface } from "../types";
-import { CopyFilesResponseInterface, createCopyFilesTypes } from "./dto/copyFiles.types";
+import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
@@ -35,7 +35,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
     }
 
     const FileArgs = createFileArgs({ Scope });
-    const { CopyFilesResponse } = createCopyFilesTypes({ File });
+    const CopyFilesResponse = createCopyFilesResponseType({ File });
 
     @ObjectType()
     class PaginatedDamFiles extends PaginatedResponseFactory.create(File) {}

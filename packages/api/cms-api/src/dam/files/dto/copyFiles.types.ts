@@ -16,7 +16,7 @@ export interface MappedFileInterface {
     isNewCopy: boolean;
 }
 
-export function createCopyFilesTypes({ File }: { File: Type<FileInterface> }) {
+export function createCopyFilesResponseType({ File }: { File: Type<FileInterface> }) {
     @ObjectType()
     class CopyFilesResponse {
         @Field(() => Number)
@@ -44,5 +44,5 @@ export function createCopyFilesTypes({ File }: { File: Type<FileInterface> }) {
         isNewCopy: boolean;
     }
 
-    return { CopyFilesResponse };
+    return CopyFilesResponse;
 }
