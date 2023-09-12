@@ -1,7 +1,6 @@
 import { AnyEntity, Connection } from "@mikro-orm/core";
 import { EntityManager, Knex } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
-import * as console from "console";
 
 import { Dependency } from "./dependency";
 import { DiscoverService } from "./discover.service";
