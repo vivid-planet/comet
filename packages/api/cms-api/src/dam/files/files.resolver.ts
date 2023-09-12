@@ -115,7 +115,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
                 type: () => ID,
                 nullable: true,
                 description:
-                    "You can set this argument to use the same inbox folder for multiple consecutive copy operations. Keep it empty for the first copy operation and get the ID from the response.",
+                    "You can set this argument to use the same inbox folder for multiple consecutive copy operations. Keep it empty for the first copy operation and use the ID from the response for the following copies.",
             })
             targetFolderId?: string,
         ): Promise<CopyFilesResponseInterface> {
