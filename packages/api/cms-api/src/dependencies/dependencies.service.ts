@@ -1,18 +1,31 @@
-import { AnyEntity, Connection } from "@mikro-orm/core";
-import { EntityManager, Knex } from "@mikro-orm/postgresql";
+import { AnyEntity, Connection, QueryOrder } from "@mikro-orm/core";
+import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityManager, EntityRepository, Knex } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
+import { subMinutes } from "date-fns";
 
 import { Dependency } from "./dependency";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
+import { BlockIndexRefresh } from "./entities/block-index-refresh.entity";
+
+interface PGStatActivity {
+    pid: number;
+    state: string;
+    query: string;
+}
 
 @Injectable()
 export class DependenciesService {
     private entityManager: EntityManager;
     private connection: Connection;
 
-    constructor(entityManager: EntityManager, private readonly discoverService: DiscoverService) {
+    constructor(
+        @InjectRepository(BlockIndexRefresh) private readonly refreshRepository: EntityRepository<BlockIndexRefresh>,
+        private readonly discoverService: DiscoverService,
+        entityManager: EntityManager,
+    ) {
         this.entityManager = entityManager;
         this.connection = entityManager.getConnection();
     }
@@ -65,6 +78,9 @@ export class DependenciesService {
         console.time("creating block dependency materialized view");
         await this.connection.execute(`DROP MATERIALIZED VIEW IF EXISTS block_index_dependencies`);
         await this.connection.execute(`CREATE MATERIALIZED VIEW block_index_dependencies AS ${viewSql}`);
+        await this.connection.execute(
+            `CREATE UNIQUE INDEX ON block_index_dependencies ("rootId", "rootTableName", "rootColumnName", "blockname", "jsonPath", "targetTableName", "targetId")`,
+        );
         console.timeEnd("creating block dependency materialized view");
 
         console.time("creating block dependency materialized view index");
@@ -72,10 +88,80 @@ export class DependenciesService {
         console.timeEnd("creating block dependency materialized view index");
     }
 
-    async refreshViews(): Promise<void> {
-        console.time("refresh materialized block dependency");
-        await this.connection.execute("REFRESH MATERIALIZED VIEW block_index_dependencies");
-        console.timeEnd("refresh materialized block dependency");
+    async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
+        const refresh = async (options?: { concurrently: boolean }) => {
+            console.time("refresh materialized block dependency");
+            const blockIndexRefresh = this.refreshRepository.create({ startedAt: new Date() });
+            await this.refreshRepository.getEntityManager().persistAndFlush(blockIndexRefresh);
+
+            await this.connection.execute(`REFRESH MATERIALIZED VIEW ${options?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
+
+            await this.refreshRepository.getEntityManager().persistAndFlush(Object.assign(blockIndexRefresh, { finishedAt: new Date() }));
+            console.timeEnd("refresh materialized block dependency");
+        };
+
+        const abortActiveRefreshes = async (activeRefreshes: PGStatActivity[]) => {
+            for (const refresh of activeRefreshes) {
+                await this.entityManager.getKnex("write").raw(`SELECT pg_cancel_backend(?);`, [refresh.pid]);
+            }
+        };
+
+        const activeRefreshes: PGStatActivity[] = await this.entityManager
+            .getKnex("read")
+            .select("pid", "state", "query")
+            .from("pg_stat_activity")
+            .where({
+                state: "active",
+            })
+            .andWhereILike("query", "REFRESH MATERIALIZED VIEW%")
+            .andWhereILike("query", "%block_index_dependencies%");
+
+        if (options?.force) {
+            // force refresh -> refresh sync
+            await abortActiveRefreshes(activeRefreshes);
+            await this.refreshRepository.qb().truncate();
+            await refresh();
+            return;
+        }
+
+        const refreshIsActive = activeRefreshes.length > 0;
+        if (refreshIsActive) {
+            // refresh in progress -> don't refresh
+            return;
+        }
+
+        const lastRefreshes = await this.refreshRepository.find(
+            {},
+            { orderBy: [{ finishedAt: QueryOrder.DESC_NULLS_FIRST }, { startedAt: QueryOrder.DESC }], limit: 1 },
+        );
+        const lastRefresh = lastRefreshes[0];
+
+        if (lastRefreshes.length === 0) {
+            // first refresh -> refresh sync
+            await refresh();
+            return;
+        }
+
+        if (!refreshIsActive && lastRefresh.finishedAt === null) {
+            // faulty DB state -> truncate table
+            await this.refreshRepository.qb().truncate();
+        }
+
+        if (lastRefresh.finishedAt && lastRefresh.finishedAt > subMinutes(new Date(), 5)) {
+            // newer than 5 minutes -> don't refresh
+            return;
+        } else if (lastRefresh.finishedAt && lastRefresh.finishedAt > subMinutes(new Date(), 15)) {
+            // newer than 15 minutes -> refresh async
+            const refreshPromise = refresh({ concurrently: true });
+            if (options?.awaitRefresh) {
+                // needed if refresh is executed as a console command
+                // otherwise the command exits and the refresh method is interrupted
+                await refreshPromise;
+            }
+        } else {
+            // older than 15 minutes / faulty previous refresh -> refresh sync
+            await refresh();
+        }
     }
 
     async getDependents(

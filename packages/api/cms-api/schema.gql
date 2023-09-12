@@ -208,6 +208,16 @@ input DependencyFilter {
   rootColumnName: String
 }
 
+type PaginatedRedirects {
+  nodes: [Redirect!]!
+  totalCount: Int!
+}
+
+type PaginatedPageTreeNodes {
+  nodes: [PageTreeNode!]!
+  totalCount: Int!
+}
+
 type DamFolder {
   id: ID!
   name: String!
@@ -240,16 +250,6 @@ type DamFile {
   duplicates: [DamFile!]!
   damPath: String!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter): PaginatedDependencies!
-}
-
-type PaginatedRedirects {
-  nodes: [Redirect!]!
-  totalCount: Int!
-}
-
-type PaginatedPageTreeNodes {
-  nodes: [PageTreeNode!]!
-  totalCount: Int!
 }
 
 type PaginatedDamItems {
@@ -421,7 +421,7 @@ type Mutation {
     targetScope: DamScopeInput!
 
     """
-    You can set this argument to use the same inbox folder for multiple consecutive copy operations. Keep it empty for the first copy operation and get the ID from the response.
+    You can set this argument to use the same inbox folder for multiple consecutive copy operations. Keep it empty for the first copy operation and use the ID from the response for the following copies.
     """
     targetFolderId: ID
   ): CopyFilesResponse!
