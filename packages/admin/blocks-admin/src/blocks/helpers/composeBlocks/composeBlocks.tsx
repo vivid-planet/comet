@@ -168,8 +168,8 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
                 );
                 return deduplicateBlockDependencies(mergedDependencies);
             },
-            createCopy: (state, { idsMap }) => {
-                return applyToCompositeBlocks(
+            createCopy: (state, { idsMap }): DataMapState<C> => {
+                const copiedBlocks = applyToCompositeBlocks(
                     compositeBlocks,
                     ([block, options], attr) => {
                         const extractedOutputData = extractData([block, options], attr, state);
@@ -177,6 +177,8 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
                     },
                     { flatten: true },
                 );
+
+                return { ...state, ...copiedBlocks };
             },
             previewContent: (state, ctx) => {
                 const previewContents = applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
