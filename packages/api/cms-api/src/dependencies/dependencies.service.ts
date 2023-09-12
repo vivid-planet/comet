@@ -173,9 +173,9 @@ export class DependenciesService {
             rootEntityName?: string;
         },
         paginationArgs?: { offset: number; limit: number },
-        options?: { force: boolean },
+        options?: { forceRefresh: boolean },
     ): Promise<PaginatedDependencies> {
-        await this.refreshViews({ force: options?.force });
+        await this.refreshViews({ force: options?.forceRefresh });
 
         const entityName = "entityName" in target ? target.entityName : target.constructor.name;
 
@@ -202,9 +202,9 @@ export class DependenciesService {
             targetEntityName?: string;
         },
         paginationArgs?: { offset: number; limit: number },
-        options?: { force: boolean },
+        options?: { forceRefresh: boolean },
     ): Promise<PaginatedDependencies> {
-        await this.refreshViews({ force: options?.force });
+        await this.refreshViews({ force: options?.forceRefresh });
 
         const entityName = "entityName" in root ? root.entityName : root.constructor.name;
 
