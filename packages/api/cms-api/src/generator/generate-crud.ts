@@ -42,6 +42,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
             (prop.enum ||
                 prop.type === "string" ||
                 prop.type === "DecimalType" ||
+                prop.type === "number" ||
                 prop.type === "BooleanType" ||
                 prop.type === "boolean" ||
                 prop.type === "DateType" ||
@@ -55,6 +56,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
             !prop.name.startsWith("scope_") &&
             (prop.type === "string" ||
                 prop.type === "DecimalType" ||
+                prop.type === "number" ||
                 prop.type === "BooleanType" ||
                 prop.type === "boolean" ||
                 prop.type === "DateType" ||
@@ -141,7 +143,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     @Type(() => StringFilter)
                     ${prop.name}?: StringFilter;
                     `;
-                } else if (prop.type === "DecimalType") {
+                } else if (prop.type === "DecimalType" || prop.type == "number") {
                     return `@Field(() => NumberFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
