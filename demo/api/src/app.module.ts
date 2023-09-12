@@ -17,6 +17,7 @@ import {
     PageTreeService,
     PublicUploadModule,
     RedirectsModule,
+    UserPermissionsModule,
 } from "@comet/cms-api";
 import { ApolloDriver } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
@@ -45,6 +46,7 @@ import { Page } from "./pages/entities/page.entity";
 import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
+import { UserPermissionsConfigService } from "./user-permission/user-permission-config.service";
 
 @Module({})
 export class AppModule {
@@ -78,6 +80,9 @@ export class AppModule {
                         if (!user.domains) return true; //all domains
                         return user.domains.includes(requestScope.domain);
                     },
+                }),
+                UserPermissionsModule.forRoot({
+                    config: UserPermissionsConfigService,
                 }),
                 BlocksModule.forRoot({
                     imports: [PagesModule],

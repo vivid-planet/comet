@@ -38,7 +38,6 @@ export { BuildsService } from "./builds/builds.service";
 export { AutoBuildStatus } from "./builds/dto/auto-build-status.object";
 export { ChangesSinceLastBuild } from "./builds/entities/changes-since-last-build.entity";
 export { SKIP_BUILD_METADATA_KEY, SkipBuild } from "./builds/skip-build.decorator";
-export { ContentScope } from "./common/decorators/content-scope.interface";
 export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInterface } from "./common/decorators/request-context.decorator";
 export { ScopedEntity, ScopedEntityMeta } from "./common/decorators/scoped-entity.decorator";
 export { SubjectEntity, SubjectEntityMeta, SubjectEntityOptions } from "./common/decorators/subject-entity.decorator";
@@ -143,3 +142,19 @@ export { RedirectsModule } from "./redirects/redirects.module";
 export { createRedirectsResolver } from "./redirects/redirects.resolver";
 export { RedirectsService } from "./redirects/redirects.service";
 export { IsValidRedirectSource, IsValidRedirectSourceConstraint } from "./redirects/validators/isValidRedirectSource";
+export { CurrentUser } from "./user-permissions/dto/current-user";
+export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
+export { User } from "./user-permissions/dto/user";
+export { ContentScope } from "./user-permissions/interfaces/content-scope.interface";
+export { Permission } from "./user-permissions/interfaces/user-permission.interface";
+export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
+export { UserPermissionsService } from "./user-permissions/user-permissions.service";
+export {
+    ContentScopes,
+    ContentScopesForUser,
+    Permissions,
+    PermissionsForUser,
+    UserPermissionConfigInterface,
+    UserPermissions,
+    Users,
+} from "./user-permissions/user-permissions.types";

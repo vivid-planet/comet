@@ -123,6 +123,38 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
+type CurrentUserPermission {
+  permission: String!
+}
+
+type User {
+  id: String!
+  name: String!
+  email: String!
+  language: String!
+}
+
+type UserPermission {
+  id: ID!
+  source: UserPermissionSource
+  permission: String!
+  validFrom: DateTime
+  validTo: DateTime
+  reason: String
+  requestedBy: String
+  approvedBy: String
+}
+
+enum UserPermissionSource {
+  MANUAL
+  BY_RULE
+}
+
+type PaginatedUserList {
+  nodes: [User!]!
+  totalCount: Int!
+}
+
 type PageTreeNode {
   id: ID!
   parentId: String
@@ -178,6 +210,8 @@ type CurrentUser {
   language: String!
   role: String!
   rights: [CurrentUserRight!]
+  contentScopes: [JSONObject!]!
+  permissions: [CurrentUserPermission!]!
 }
 
 type Redirect implements DocumentInterface {
@@ -306,6 +340,13 @@ type Query {
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   cronJobs: [CronJob!]!
   currentUser: CurrentUser!
+  userPermissionsUserById(id: String!): User!
+  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
+  userPermissionsPermissionList(userId: String!): [UserPermission!]!
+  userPermissionsPermission(id: ID!, userId: String): UserPermission!
+  userPermissionsAvailablePermissions: [String!]!
+  userPermissionsContentScope(userId: String!, skipManual: Boolean): [JSONObject!]!
+  userPermissionsAvailableContentScopes: [JSONObject!]!
 }
 
 input RedirectScopeInput {
@@ -407,6 +448,27 @@ enum SlugAvailability {
   Reserved
 }
 
+input UserFilter {
+  name: StringFilter
+  email: StringFilter
+  status: StringFilter
+  language: StringFilter
+  and: [UserFilter!]
+  or: [UserFilter!]
+}
+
+input UserSort {
+  field: UserSortField!
+  direction: SortDirection! = ASC
+}
+
+enum UserSortField {
+  name
+  email
+  status
+  language
+}
+
 type Mutation {
   createBuilds(input: CreateBuildsInput!): Boolean!
   createRedirect(scope: RedirectScopeInput! = {}, input: RedirectInput!): Redirect!
@@ -442,6 +504,10 @@ type Mutation {
   updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
   createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
   currentUserSignOut: String!
+  userPermissionsCreatePermission(input: CreateUserPermissionInput!): UserPermission!
+  userPermissionsUpdatePermission(input: UpdateUserPermissionInput!): UserPermission!
+  userPermissionsDeletePermission(id: ID!): Boolean!
+  userPermissionsUpdateContentScope(input: UserContentScopesInput!): [JSONObject!]!
 }
 
 input CreateBuildsInput {
@@ -537,4 +603,29 @@ input PageTreeNodeCreateInput {
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
+}
+
+input CreateUserPermissionInput {
+  permission: String!
+  validFrom: DateTime
+  validTo: DateTime
+  reason: String
+  requestedBy: String
+  approvedBy: String
+  userId: String!
+}
+
+input UpdateUserPermissionInput {
+  permission: String
+  validFrom: DateTime
+  validTo: DateTime
+  reason: String
+  requestedBy: String
+  approvedBy: String
+  id: ID!
+}
+
+input UserContentScopesInput {
+  userId: String!
+  contentScopes: [JSONObject!]! = []
 }
