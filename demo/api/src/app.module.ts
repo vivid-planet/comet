@@ -105,7 +105,6 @@ export class AppModule {
                     PageTreeNodeUpdateInput: PageTreeNodeUpdateInput,
                     Documents: [Page, Link, PredefinedPage],
                     Scope: PageTreeNodeScope,
-                    File: DamFile,
                     reservedPaths: ["/events"],
                 }),
                 RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
