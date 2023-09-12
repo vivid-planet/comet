@@ -188,7 +188,6 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
-  documentDependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter): PaginatedDependencies!
 }
 

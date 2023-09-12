@@ -4,10 +4,6 @@ import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
-import { FileInterface } from "../dam/files/entities/file.entity";
-import { DependenciesService } from "../dependencies/dependencies.service";
-import { DependenciesArgs } from "../dependencies/dto/dependencies.args";
-import { PaginatedDependencies } from "../dependencies/dto/paginated-dependencies";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
@@ -39,14 +35,12 @@ export function createPageTreeResolver({
     PageTreeNodeUpdateInput = DefaultPageTreeNodeUpdateInput,
     Documents,
     Scope: PassedScope,
-    File,
 }: {
     PageTreeNode: Type<PageTreeNodeInterface>;
     PageTreeNodeCreateInput?: Type<PageTreeNodeCreateInputInterface>;
     PageTreeNodeUpdateInput?: Type<PageTreeNodeUpdateInputInterface>;
     Documents: Type<DocumentInterface>[];
     Scope?: Type<ScopeInterface>;
-    File: Type<FileInterface>;
 }): Type<unknown> {
     const Scope = PassedScope || EmptyPageTreeNodeScope;
 
@@ -78,7 +72,6 @@ export function createPageTreeResolver({
             protected readonly pageTreeReadApi: PageTreeReadApiService,
             @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
             private readonly attachedDocumentLoaderService: AttachedDocumentLoaderService,
-            private readonly dependenciesService: DependenciesService,
         ) {}
 
         @Query(() => PageTreeNode, { nullable: true })
@@ -224,19 +217,6 @@ export function createPageTreeResolver({
 
             //if document needs to be loaded use DataLoader for batch loading
             return this.attachedDocumentLoaderService.load(node);
-        }
-
-        @ResolveField(() => PaginatedDependencies)
-        async documentDependencies(@Parent() node: PageTreeNodeInterface, @Args() { filter }: DependenciesArgs): Promise<PaginatedDependencies> {
-            const document = await this.pageTreeService.getActiveAttachedDocument(node.id, node.documentType);
-
-            if (document === null) {
-                return new PaginatedDependencies([], 0);
-            }
-
-            const dependencies = await this.dependenciesService.getDependencies({ entityName: document.type, id: document.documentId }, filter);
-            console.log("dependencies ", dependencies);
-            return dependencies;
         }
 
         @Mutation(() => PageTreeNode)

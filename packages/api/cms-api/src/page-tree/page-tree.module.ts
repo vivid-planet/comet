@@ -2,7 +2,6 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 
-import { FileInterface } from "../dam/files/entities/file.entity";
 import { DependentsResolverFactory } from "../dependencies/dependents.resolver.factory";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
@@ -27,7 +26,6 @@ interface PageTreeModuleOptions {
     PageTreeNodeUpdateInput?: Type<PageTreeNodeBaseUpdateInput>;
     Documents: Type<DocumentInterface>[];
     Scope?: Type<ScopeInterface>;
-    File: Type<FileInterface>;
     reservedPaths?: string[];
 }
 
@@ -35,7 +33,7 @@ interface PageTreeModuleOptions {
 @Module({})
 export class PageTreeModule {
     static forRoot(options: PageTreeModuleOptions): DynamicModule {
-        const { Documents, Scope, PageTreeNode, File, PageTreeNodeCreateInput, PageTreeNodeUpdateInput, reservedPaths } = options;
+        const { Documents, Scope, PageTreeNode, PageTreeNodeCreateInput, PageTreeNodeUpdateInput, reservedPaths } = options;
 
         if (PageTreeNode.name !== PAGE_TREE_ENTITY) {
             throw new Error(`PageTreeModule: Your PageTreeNode entity must be named ${PAGE_TREE_ENTITY}`);
@@ -47,7 +45,6 @@ export class PageTreeModule {
             Scope,
             PageTreeNodeCreateInput,
             PageTreeNodeUpdateInput,
-            File,
         });
         const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
 

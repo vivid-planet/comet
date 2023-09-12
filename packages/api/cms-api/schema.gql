@@ -140,7 +140,6 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
-  documentDependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter): PaginatedDependencies!
 }
 
@@ -160,12 +159,6 @@ type Page implements DocumentInterface {
 interface DocumentInterface {
   id: ID!
   updatedAt: DateTime!
-}
-
-input DependencyFilter {
-  targetGraphqlObjectType: String
-  targetId: String
-  rootColumnName: String
 }
 
 input DependentFilter {
@@ -207,6 +200,12 @@ enum RedirectSourceTypeValues {
 enum RedirectGenerationType {
   manual
   automatic
+}
+
+input DependencyFilter {
+  targetGraphqlObjectType: String
+  targetId: String
+  rootColumnName: String
 }
 
 type DamFolder {
