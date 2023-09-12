@@ -16,7 +16,7 @@ export class DependenciesArgs extends OffsetBasedPaginationArgs {
 
     @Field(() => Boolean, { nullable: true, defaultValue: false })
     @IsUndefinable()
-    force: boolean;
+    forceRefresh: boolean;
 }
 
 @ArgsType()
@@ -29,5 +29,5 @@ export class DependentsArgs extends OffsetBasedPaginationArgs {
 
     @Field(() => Boolean, { nullable: true, defaultValue: false })
     @IsUndefinable()
-    force: boolean;
+    forceRefresh: boolean;
 }
