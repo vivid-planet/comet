@@ -14,7 +14,7 @@ export class DependenciesArgs extends OffsetBasedPaginationArgs {
     @IsUndefinable()
     filter?: DependencyFilter;
 
-    @Field(() => Boolean, { nullable: true, defaultValue: false })
+    @Field(() => Boolean, { defaultValue: false })
     @IsUndefinable()
     forceRefresh: boolean;
 }
@@ -27,7 +27,7 @@ export class DependentsArgs extends OffsetBasedPaginationArgs {
     @IsUndefinable()
     filter?: DependentFilter;
 
-    @Field(() => Boolean, { nullable: true, defaultValue: false })
+    @Field(() => Boolean, { defaultValue: false })
     @IsUndefinable()
     forceRefresh: boolean;
 }
