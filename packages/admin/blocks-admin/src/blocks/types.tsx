@@ -59,6 +59,8 @@ export type PreviewContent = PreviewContentImage | PreviewContentText;
 
 export type BlockDependency = { targetGraphqlObjectType: string; id: string };
 
+export type IdsMap = Map<string, string>;
+
 export interface BlockMethods<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     InputApi = any,
@@ -165,5 +167,3 @@ export interface LinkBlockInterface<
 > {
     url2State?: (url: string) => State | false;
 }
-
-export type IdsMap = Map<string, string>;
