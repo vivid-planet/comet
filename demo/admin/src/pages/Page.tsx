@@ -48,8 +48,11 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
     `,
     inputToOutput: (input, { idsMap }) => {
         return {
-            content: rewriteInternalLinks(PageContentBlock.state2Output(PageContentBlock.input2State(input.content)), idsMap),
-            seo: SeoBlock.state2Output(SeoBlock.input2State(input.seo)),
+            content: rewriteInternalLinks(
+                PageContentBlock.state2Output(PageContentBlock.createCopy(PageContentBlock.input2State(input.content), { idsMap })),
+                idsMap,
+            ),
+            seo: SeoBlock.state2Output(SeoBlock.createCopy(SeoBlock.input2State(input.seo), { idsMap })),
         };
     },
     InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
