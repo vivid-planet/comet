@@ -1,6 +1,6 @@
 import { messages } from "@comet/admin";
 import { File, FileNotMenu } from "@comet/admin-icons";
-import { DocumentInterface, rewriteInternalLinks } from "@comet/cms-admin";
+import { DocumentInterface } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
@@ -46,13 +46,10 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
             }
         }
     `,
-    inputToOutput: (input, { idsMap }) => {
+    inputToOutput: (input) => {
         return {
-            content: rewriteInternalLinks(
-                PageContentBlock.state2Output(PageContentBlock.createCopy(PageContentBlock.input2State(input.content), { idsMap })),
-                idsMap,
-            ),
-            seo: SeoBlock.state2Output(SeoBlock.createCopy(SeoBlock.input2State(input.seo), { idsMap })),
+            content: PageContentBlock.state2Output(PageContentBlock.input2State(input.content)),
+            seo: SeoBlock.state2Output(SeoBlock.input2State(input.seo)),
         };
     },
     InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
@@ -65,4 +62,10 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
     hideInMenuIcon: FileNotMenu,
     anchors: (input) => PageContentBlock.anchors?.(PageContentBlock.input2State(input.content)) ?? [],
     dependencies: (input) => PageContentBlock.dependencies?.(PageContentBlock.input2State(input.content)) ?? [],
+    createCopy: (input, { idsMap }) => {
+        return {
+            content: PageContentBlock.state2Output(PageContentBlock.createCopy(PageContentBlock.input2State(input.content), { idsMap })),
+            seo: SeoBlock.state2Output(SeoBlock.createCopy(SeoBlock.input2State(input.seo), { idsMap })),
+        };
+    },
 };

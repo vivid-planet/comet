@@ -139,10 +139,8 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
     createCopy: (state, { idsMap }) => {
         const clonedState = deepClone(state);
 
-        if (clonedState.damFile && idsMap.has(clonedState.damFile.id)) {
-            clonedState.damFile.id = idsMap.get(clonedState.damFile.id);
-        } else {
-            clonedState.damFile.id = undefined;
+        if (state.damFile && idsMap.has(state.damFile.id)) {
+            clonedState.damFile.id = idsMap.get(state.damFile.id);
         }
 
         return clonedState;

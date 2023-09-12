@@ -80,7 +80,7 @@ export interface BlockMethods<
     dynamicDisplayName?: (state: State) => React.ReactNode;
     anchors?: (state: State) => string[];
     dependencies?: (state: State) => BlockDependency[];
-    createCopy: (state: State, { idsMap }: { idsMap: IdsMap }) => State;
+    createCopy: (state: State, context: { idsMap: IdsMap }) => State;
 }
 
 export interface AnonymousBlockInterface<

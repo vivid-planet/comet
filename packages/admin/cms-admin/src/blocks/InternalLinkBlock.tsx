@@ -11,6 +11,7 @@ import {
     SelectPreviewComponent,
 } from "@comet/blocks-admin";
 import { Box, Divider, MenuItem } from "@mui/material";
+import { deepClone } from "@mui/x-data-grid/utils/utils";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -83,6 +84,17 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
         }
 
         return dependencies;
+    },
+
+    createCopy: (state, { idsMap }) => {
+        const clonedState: InternalLinkBlockData = deepClone(state);
+
+        if (clonedState.targetPage && idsMap.has(clonedState.targetPage.id)) {
+            // has() check in if() verifies that id exists in Map
+            clonedState.targetPage.id = idsMap.get(clonedState.targetPage.id) as string;
+        }
+
+        return clonedState;
     },
 
     definesOwnPadding: true,

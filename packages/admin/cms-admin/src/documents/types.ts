@@ -40,10 +40,11 @@ export interface DocumentInterface<
     getQuery?: TypedDocumentNode<GQLPageQuery, GQLPageQueryVariables>; // TODO better typing (see createUsePage.tsx)
     editComponent?: React.ComponentType<{ id: string; category: string }>;
     updateMutation?: TypedDocumentNode<GQLUpdatePageMutation, GQLUpdatePageMutationVariables<DocumentInput>>;
-    inputToOutput?: (input: DocumentInput, context: { idsMap: IdsMap }) => DocumentOutput;
+    inputToOutput?: (input: DocumentInput) => DocumentOutput;
     menuIcon: (props: SvgIconProps<"svg">) => JSX.Element | null;
     hideInMenuIcon?: (props: SvgIconProps<"svg">) => JSX.Element | null;
     InfoTag?: React.ComponentType<{ page: PageTreePage }>;
     anchors: (input: DocumentInput) => string[];
     dependencies: (input: DocumentInput) => BlockDependency[];
+    createCopy?: (input: DocumentInput, context: { idsMap: IdsMap }) => DocumentOutput;
 }

@@ -1,28 +1,24 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { LocalErrorScopeApolloContext } from "@comet/admin";
-import { readClipboard, writeClipboard } from "@comet/blocks-admin";
-import cloneDeep from "lodash.clonedeep";
+import { IdsMap, readClipboard, writeClipboard } from "@comet/blocks-admin";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { useContentScope } from "../../contentScope/Provider";
 import { useDamScope } from "../../dam/config/useDamScope";
-import { GQLDocument, GQLPageQuery, GQLPageQueryVariables, GQLUpdatePageMutationVariables, IdsMap } from "../../documents/types";
+import { GQLDocument, GQLPageQuery, GQLPageQueryVariables, GQLUpdatePageMutationVariables } from "../../documents/types";
 import { arrayToTreeMap } from "./treemap/TreeMapUtils";
 import {
     GQLCopyFilesToScopeMutation,
     GQLCopyFilesToScopeMutationVariables,
     GQLCreatePageNodeMutation,
     GQLCreatePageNodeMutationVariables,
-    GQLGetAllFilesUsedOnPageQuery,
-    GQLGetAllFilesUsedOnPageQueryVariables,
     GQLSlugAvailableQuery,
     GQLSlugAvailableQueryVariables,
 } from "./useCopyPastePages.generated";
 import { GQLPageTreePageFragment } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
-import { replaceNestedIdInBlockJson } from "./utils/copy-paste-utils";
 
 const slugAvailableQuery = gql`
     query SlugAvailable($parentId: ID, $slug: String!, $scope: PageTreeNodeScopeInput!) {
@@ -34,21 +30,6 @@ const createPageNodeMutation = gql`
     mutation CreatePageNode($input: PageTreeNodeCreateInput!, $contentScope: PageTreeNodeScopeInput!, $category: String!) {
         createPageTreeNode(input: $input, scope: $contentScope, category: $category) {
             id
-        }
-    }
-`;
-
-const getAllFilesUsedOnPageQuery = gql`
-    query GetAllFilesUsedOnPage($pageTreeNodeId: ID!) {
-        pageTreeNode(id: $pageTreeNodeId) {
-            id
-            documentDependencies(filter: { targetGraphqlObjectType: "DamFile" }) {
-                nodes {
-                    targetId
-                    rootColumnName
-                    jsonPath
-                }
-            }
         }
     }
 `;
@@ -243,7 +224,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     const sendPages = React.useCallback(
         async (parentId: string | null, { pages }: PagesClipboard, options?: SendPagesOptions): Promise<void> => {
             const tree = arrayToTreeMap<PageClipboard>(pages);
-            const idsMap = createIdsMap(pages);
+            const pageTreeNodeIdsMap = createPageTreeNodeIdsMap(pages);
             let inboxFolderIdForCopiedFiles: string | undefined = undefined;
 
             const handlePageTreeNode = async (node: PageClipboard, newParentId: string | null, posOffset: number): Promise<string> => {
@@ -283,7 +264,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                     mutation: createPageNodeMutation,
                     variables: {
                         input: {
-                            id: idsMap.get(node.id),
+                            id: pageTreeNodeIdsMap.get(node.id),
                             name,
                             slug,
                             hideInMenu: node.hideInMenu,
@@ -303,60 +284,41 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                 }
 
                 // 1c. Copy all files used on page to target scope
-                const { data: filesOnPage } = await client.query<GQLGetAllFilesUsedOnPageQuery, GQLGetAllFilesUsedOnPageQueryVariables>({
-                    query: getAllFilesUsedOnPageQuery,
-                    variables: {
-                        pageTreeNodeId: node.id,
-                    },
-                });
-                const dependencies = filesOnPage.pageTreeNode?.documentDependencies.nodes ?? [];
-                const fileIds = dependencies.map((dependency) => dependency.targetId) ?? [];
+                let fileIdsMap: IdsMap | undefined;
+                if (node?.document != null) {
+                    const fileDependencyIds = documentType
+                        .dependencies(node.document)
+                        .filter((dependency) => dependency.targetGraphqlObjectType === "DamFile")
+                        .map((dependency) => dependency.id);
 
-                let newOutput: Record<string, unknown> | undefined;
-                if (fileIds.length > 0) {
-                    const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
-                        mutation: copyFilesToScopeMutation,
-                        variables: { fileIds, targetScope: damScope, targetFolderId: inboxFolderIdForCopiedFiles },
-                        update: (cache, result) => {
-                            if (result.data && result.data.copyFilesToScope.numberNewlyCopiedFiles > 0) {
-                                cache.evict({ fieldName: "damItemsList" });
-                            }
-                        },
-                    });
+                    if (fileDependencyIds.length > 0) {
+                        const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
+                            mutation: copyFilesToScopeMutation,
+                            variables: { fileIds: fileDependencyIds, targetScope: damScope, targetFolderId: inboxFolderIdForCopiedFiles },
+                            update: (cache, result) => {
+                                if (result.data && result.data.copyFilesToScope.numberNewlyCopiedFiles > 0) {
+                                    cache.evict({ fieldName: "damItemsList" });
+                                }
+                            },
+                        });
 
-                    inboxFolderIdForCopiedFiles = copiedFiles?.copyFilesToScope.inboxFolderId ?? undefined;
+                        inboxFolderIdForCopiedFiles = copiedFiles?.copyFilesToScope.inboxFolderId ?? undefined;
 
-                    if (copiedFiles && node?.document != null && documentType.updateMutation && documentType.inputToOutput) {
-                        const output = documentType.inputToOutput(node.document, { idsMap });
-                        const mappedFiles = copiedFiles.copyFilesToScope.mappedFiles;
-
-                        newOutput = cloneDeep(output);
-                        for (const dependency of dependencies) {
-                            const mappedFile = mappedFiles.find((mappedFile) => mappedFile.rootFile.id === dependency.targetId);
-                            if (mappedFile === undefined) {
-                                continue;
-                            }
-
-                            const jsonPathArr = dependency.jsonPath.split(".");
-                            jsonPathArr.splice(0, 1);
-                            jsonPathArr.unshift(dependency.rootColumnName);
-
-                            replaceNestedIdInBlockJson(newOutput, jsonPathArr, {
-                                oldValue: mappedFile.rootFile.id,
-                                newValue: mappedFile.copy.id,
-                            });
+                        if (copiedFiles) {
+                            fileIdsMap = createFileIdsMap(copiedFiles.copyFilesToScope.mappedFiles);
                         }
                     }
                 }
 
                 // 1d. Create new document
                 const newDocumentId = uuid();
-                if (node?.document != null && documentType.updateMutation && documentType.inputToOutput) {
+                const idsMap = fileIdsMap === undefined ? pageTreeNodeIdsMap : mergeIdsMaps(fileIdsMap, pageTreeNodeIdsMap);
+                if (node?.document != null && documentType.updateMutation && documentType.createCopy) {
                     await client.mutate<unknown, GQLUpdatePageMutationVariables>({
                         mutation: documentType.updateMutation,
                         variables: {
                             pageId: newDocumentId,
-                            input: (newOutput as Record<string, unknown>) ?? documentType.inputToOutput(node.document, { idsMap }),
+                            input: documentType.createCopy(node.document, { idsMap: idsMap }),
                             attachedPageTreeNodeId: data.createPageTreeNode.id,
                         },
                         context: LocalErrorScopeApolloContext,
@@ -388,11 +350,31 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     return { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages };
 }
 
+function mergeIdsMaps(map1: IdsMap, map2: IdsMap): IdsMap {
+    const mergedMap = new Map(map1);
+
+    map2.forEach(function (value, key) {
+        mergedMap.set(key, value);
+    });
+
+    return mergedMap;
+}
+
+function createFileIdsMap(mappedIds: Array<{ rootFile: { id: string }; copy: { id: string } }>): IdsMap {
+    const idsMap = new Map<string, string>();
+
+    for (const item of mappedIds) {
+        idsMap.set(item.rootFile.id, item.copy.id);
+    }
+
+    return idsMap;
+}
+
 /**
  * Creates a mapping between the old page tree node ID and a new page tree ID. Used for rewriting links to internal pages.
  * @param nodes
  */
-function createIdsMap(nodes: PageClipboard[]): IdsMap {
+function createPageTreeNodeIdsMap(nodes: PageClipboard[]): IdsMap {
     const idsMap = new Map<string, string>();
 
     nodes.forEach((node) => {
