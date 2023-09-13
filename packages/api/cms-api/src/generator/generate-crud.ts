@@ -849,6 +849,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function generateCrud(generatorOptions: CrudGeneratorOptions, metadata: EntityMetadata<any>): Promise<GeneratedFile[]> {
+    generatorOptions.update = generatorOptions.update ?? true;
+    generatorOptions.create = generatorOptions.create ?? true;
+    generatorOptions.delete = generatorOptions.delete ?? true;
+
     const generatedFiles: GeneratedFile[] = [];
 
     const { fileNameSingular, fileNamePlural } = buildNameVariants(metadata);

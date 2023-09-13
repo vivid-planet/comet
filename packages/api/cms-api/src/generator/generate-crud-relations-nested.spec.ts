@@ -30,7 +30,7 @@ class TestEntityProduct extends BaseEntity<TestEntityProduct, "id"> {
     variants = new Collection<TestEntityVariant>(this);
 }
 
-describe("GenerateCrudRelations", () => {
+describe("GenerateCrudRelationsNested", () => {
     describe("resolver class", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
