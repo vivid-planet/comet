@@ -3,7 +3,7 @@ import { getMenuFromRouteMenu } from "@comet/cms-admin";
 import * as React from "react";
 import { useRouteMatch } from "react-router";
 
-import { routeMenu } from "./routes";
+import { routeMenu } from "./routeMenu";
 
 const permanentMenuMinWidth = 1024;
 

@@ -4,9 +4,9 @@ import ContentScopeProvider from "@src/common/ContentScopeProvider";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 
-import MasterHeader from "./routes/MasterHeader";
-import MasterMenu from "./routes/MasterMenu";
-import { routeMenu } from "./routes/routes";
+import MasterHeader from "./MasterHeader";
+import MasterMenu from "./MasterMenu";
+import { routeMenu } from "./routeMenu";
 
 export const Routes: React.FC = () => {
     const routes = getRoutesFromRouteMenu(routeMenu);

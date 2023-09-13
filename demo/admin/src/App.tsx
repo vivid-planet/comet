@@ -20,8 +20,8 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import * as ReactDOM from "react-dom";
 import { IntlProvider } from "react-intl";
 
+import { pageTreeCategories, pageTreeDocumentTypes } from "./common/routeMenu";
 import { Routes } from "./common/Routes";
-import { pageTreeCategories, pageTreeDocumentTypes } from "./common/routes/routes";
 import { getMessages } from "./lang";
 
 const GlobalStyle = () => (

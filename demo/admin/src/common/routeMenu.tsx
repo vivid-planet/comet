@@ -18,17 +18,17 @@ import MainMenu from "@src/pages/mainMenu/MainMenu";
 import { Page } from "@src/pages/Page";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
-import ProductsPage from "@src/products/ProductsPage";
+import { ProductsPage } from "@src/products/generated/ProductsPage";
+import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
 import { categoryToUrlParam, urlParamToCategory } from "@src/utils/pageTreeNodeCategoryMapping";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { Redirect } from "react-router";
 
-import { ComponentDemo } from "../ComponentDemo";
-import { ContentScopeIndicator } from "../ContentScopeIndicator";
-import { EditPageNode } from "../EditPageNode";
-import ProductsHandmadePage from "./products/ProductsPage";
+import { ComponentDemo } from "./ComponentDemo";
+import { ContentScopeIndicator } from "./ContentScopeIndicator";
+import { EditPageNode } from "./EditPageNode";
 
 export const pageTreeCategories: AllCategories = [
     {
