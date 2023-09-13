@@ -1,8 +1,17 @@
 import { gql } from "@apollo/client";
 import { Field, FieldContainer, FinalFormSwitch, messages } from "@comet/admin";
 import { Delete, Video } from "@comet/admin-icons";
-import { AdminComponentButton, AdminComponentPaper, BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/blocks-admin";
+import {
+    AdminComponentButton,
+    AdminComponentPaper,
+    BlockCategory,
+    BlockDependency,
+    BlockInterface,
+    BlocksFinalForm,
+    createBlockSkeleton,
+} from "@comet/blocks-admin";
 import { Box, Divider, Grid, Typography } from "@mui/material";
+import { deepClone } from "@mui/x-data-grid/utils/utils";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -71,6 +80,29 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         loop: false,
         adminMeta: { route: previewContext.parentUrl },
     }),
+
+    dependencies: (state) => {
+        const dependencies: BlockDependency[] = [];
+
+        if (state.damFile?.id) {
+            dependencies.push({
+                targetGraphqlObjectType: "DamFile",
+                id: state.damFile.id,
+            });
+        }
+
+        return dependencies;
+    },
+
+    createCopy: (state, { idsMap }) => {
+        const clonedState = deepClone(state);
+
+        if (state.damFile && idsMap.has(state.damFile.id)) {
+            clonedState.damFile.id = idsMap.get(state.damFile.id);
+        }
+
+        return clonedState;
+    },
 
     definesOwnPadding: true,
 
