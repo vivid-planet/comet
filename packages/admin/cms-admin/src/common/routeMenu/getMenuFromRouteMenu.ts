@@ -10,19 +10,19 @@ type Menu = {
     }[];
 }[];
 
-export function useMenuForCurrentUser(items: RouteMenu, basePath: string): Menu {
+export function getMenuFromRouteMenu(items: RouteMenu): Menu {
     // TODO: Filter for user-permissions once they are available
     return items.map((item) => ({
         menuItem: {
             ...item,
-            to: `${basePath}${item.to ?? item.route?.path?.toString()}`,
+            to: item.to ?? item.route?.path?.toString() ?? "",
         },
         hasSubMenu: !!item.subMenu,
         subMenu: item.subMenu
             ? item.subMenu.map((subItem) => ({
                   menuItem: {
                       ...subItem,
-                      to: `${basePath}${subItem.to ?? subItem.route?.path?.toString()}`,
+                      to: subItem.to ?? subItem.route?.path?.toString() ?? "",
                   },
               }))
             : [],

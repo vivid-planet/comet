@@ -1,5 +1,5 @@
 import { MasterLayout, RouteWithErrorBoundary } from "@comet/admin";
-import { SitePreview, useRoutesForCurrentUser } from "@comet/cms-admin";
+import { getRoutesFromRouteMenu, SitePreview } from "@comet/cms-admin";
 import ContentScopeProvider from "@src/common/ContentScopeProvider";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
@@ -9,7 +9,7 @@ import MasterMenu from "./routes/MasterMenu";
 import { routeMenu } from "./routes/routes";
 
 export const Routes: React.FC = () => {
-    const routes = useRoutesForCurrentUser(routeMenu);
+    const routes = getRoutesFromRouteMenu(routeMenu);
     return (
         <ContentScopeProvider>
             {({ match }) => (

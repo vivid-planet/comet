@@ -2,7 +2,7 @@ import { RouteProps } from "react-router-dom";
 
 import { RouteMenu } from "./routeMenu.type";
 
-export function useRoutesForCurrentUser(items: RouteMenu): RouteProps[] {
+export function getRoutesFromRouteMenu(items: RouteMenu): RouteProps[] {
     // TODO: Filter for user-permissions once they are available
     return items.flatMap((item) => {
         const ret = [];

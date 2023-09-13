@@ -1,5 +1,5 @@
 import { Menu, MenuCollapsibleItem, MenuContext, MenuItemRouterLink, useWindowSize } from "@comet/admin";
-import { useMenuForCurrentUser } from "@comet/cms-admin";
+import { getMenuFromRouteMenu } from "@comet/cms-admin";
 import * as React from "react";
 import { useRouteMatch } from "react-router";
 
@@ -12,7 +12,7 @@ const MasterMenu: React.FC = () => {
     const windowSize = useWindowSize();
     const match = useRouteMatch();
 
-    const menu = useMenuForCurrentUser(routeMenu, match.url);
+    const menu = getMenuFromRouteMenu(routeMenu);
 
     const useTemporaryMenu: boolean = windowSize.width < permanentMenuMinWidth;
 
@@ -31,11 +31,11 @@ const MasterMenu: React.FC = () => {
                 menuItem.hasSubMenu ? (
                     <MenuCollapsibleItem key={index} {...menuItem.menuItem}>
                         {menuItem.subMenu.map((subMenu, index) => (
-                            <MenuItemRouterLink key={index} {...subMenu.menuItem} />
+                            <MenuItemRouterLink key={index} {...subMenu.menuItem} to={`${match.url}${subMenu.menuItem.to}`} />
                         ))}
                     </MenuCollapsibleItem>
                 ) : (
-                    <MenuItemRouterLink key={index} {...menuItem.menuItem} />
+                    <MenuItemRouterLink key={index} {...menuItem.menuItem} to={`${match.url}${menuItem.menuItem.to}`} />
                 ),
             )}
         </Menu>
