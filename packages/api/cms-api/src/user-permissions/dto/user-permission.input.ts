@@ -2,7 +2,7 @@ import { Field, ID, InputType, PartialType } from "@nestjs/graphql";
 import { IsDate, IsOptional, IsString, IsUUID } from "class-validator";
 
 @InputType()
-export class UserPermissionInput {
+class BaseUserPermissionInput {
     @Field()
     @IsString()
     permission: string;
@@ -34,14 +34,14 @@ export class UserPermissionInput {
 }
 
 @InputType()
-export class CreateUserPermissionInput extends UserPermissionInput {
+export class CreateUserPermissionInput extends BaseUserPermissionInput {
     @Field()
     @IsString()
     userId: string;
 }
 
 @InputType()
-export class UpdateUserPermissionInput extends PartialType(UserPermissionInput) {
+export class UpdateUserPermissionInput extends PartialType(BaseUserPermissionInput) {
     @Field(() => ID)
     @IsUUID()
     id: string;
