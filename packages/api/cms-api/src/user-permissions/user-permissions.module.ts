@@ -6,7 +6,7 @@ import { UserPermission } from "./entities/user-permission.entity";
 import { UserResolver } from "./user.resolver";
 import { UserContentScopesResolver } from "./user-content-scopes.resolver";
 import { UserPermissionResolver } from "./user-permission.resolver";
-import { USER_PERMISSIONS_CONFIG_SERVICE } from "./user-permissions.const";
+import { USER_PERMISSIONS_CONFIG_SERVICE } from "./user-permissions.constants";
 import { UserPermissionsService } from "./user-permissions.service";
 import { UserPermissionConfigInterface } from "./user-permissions.types";
 

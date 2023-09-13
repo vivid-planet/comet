@@ -12,7 +12,7 @@ import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
 import { Permission } from "./interfaces/user-permission.interface";
-import { USER_PERMISSIONS_CONFIG_SERVICE } from "./user-permissions.const";
+import { USER_PERMISSIONS_CONFIG_SERVICE } from "./user-permissions.constants";
 import { UserPermissionConfigInterface, UserPermissions } from "./user-permissions.types";
 
 @Injectable()
