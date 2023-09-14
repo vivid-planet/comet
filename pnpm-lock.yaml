@@ -60,7 +60,7 @@ importers:
         specifier: workspace:^4.4.1
         version: link:../../packages/admin/admin
       '@comet/admin-date-time':
-        specifier: workspace:^4.4.0
+        specifier: workspace:^4.4.1
         version: link:../../packages/admin/admin-date-time
       '@comet/admin-icons':
         specifier: workspace:^4.4.1
