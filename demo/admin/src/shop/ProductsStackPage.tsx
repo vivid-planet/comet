@@ -1,5 +1,5 @@
 import { Stack, StackPage, StackSwitch } from "@comet/admin";
-import ShopProductsDataGrid from "@src/shop/dataGrid/ShopProductsDataGrid";
+import { ShopProductsDataGrid } from "@src/shop/dataGrid/ShopProductsDataGrid";
 import { ShopProductPage } from "@src/shop/shopProductPage/ShopProductPage";
 import React from "react";
 import { useIntl } from "react-intl";

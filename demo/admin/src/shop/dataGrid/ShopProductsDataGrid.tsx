@@ -9,7 +9,7 @@ import { ShopProductsToolbar } from "@src/shop/dataGrid/ShopProductsToolbar";
 import gql from "graphql-tag";
 import React from "react";
 
-const ShopProductsDataGrid: React.FC = () => {
+export const ShopProductsDataGrid: React.FC = () => {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
     const columns: GridColDef<GQLProductsListFragment>[] = [
@@ -60,7 +60,6 @@ const ShopProductsDataGrid: React.FC = () => {
         </Box>
     );
 };
-export default ShopProductsDataGrid;
 
 const shopProductsQuery = gql`
     query ShopProductsList($offset: Int!, $limit: Int!, $sort: [ShopProductSort!], $filter: ShopProductFilter) {
