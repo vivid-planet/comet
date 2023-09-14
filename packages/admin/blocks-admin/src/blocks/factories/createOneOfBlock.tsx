@@ -42,25 +42,37 @@ export interface OneOfBlockPreviewState extends PreviewStateInterface {
     };
 }
 
+type ActiveType<Config extends boolean> = Config extends false ? { activeType: string } : { activeType?: string };
+
+export type OneOfBlockOutput<Config extends boolean> = {
+    attachedBlocks: {
+        type: string;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        props: any;
+    }[];
+} & ActiveType<Config>;
+
 type BlockType = string;
-export interface CreateOneOfBlockOptions {
+export interface CreateOneOfBlockOptions<T extends boolean> {
     name: string;
     displayName?: React.ReactNode;
     supportedBlocks: Record<BlockType, BlockInterface>;
     category?: BlockCategory;
     variant?: "select" | "radio" | "toggle";
-    allowEmpty?: boolean;
+    allowEmpty?: T;
 }
 
-export const createOneOfBlock = ({
+export const createOneOfBlock = <T extends boolean = boolean>({
     supportedBlocks,
     name,
     displayName = "Switch",
     category = BlockCategory.Other,
     variant = "select",
-    allowEmpty = true,
-}: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, any, OneOfBlockPreviewState> => {
+    allowEmpty,
+}: CreateOneOfBlockOptions<T>): BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState> => {
+    // allowEmpty can't have a default type because it's typed by a generic
+    const internalAllowEmpty = (allowEmpty ?? true) satisfies boolean;
+
     function blockForType(type: string): BlockInterface | null {
         return supportedBlocks[type] ?? null;
     }
@@ -86,7 +98,7 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
         };
     }
 
-    const options: Array<{ value: string; label: React.ReactNode }> = allowEmpty
+    const options: Array<{ value: string; label: React.ReactNode }> = internalAllowEmpty
         ? [{ value: "none", label: <FormattedMessage id="comet.blocks.oneOfBlock.empty" defaultMessage="None" /> }]
         : [];
 
@@ -97,8 +109,7 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
         });
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const OneOfBlock: BlockInterface<OneOfBlockFragment, OneOfBlockState, any, OneOfBlockPreviewState> = {
+    const OneOfBlock: BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState> = {
         ...createBlockSkeleton(),
 
         name,
@@ -108,7 +119,7 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
         category,
 
         defaultValues: () => {
-            if (allowEmpty) {
+            if (internalAllowEmpty) {
                 return {
                     attachedBlocks: [],
                     activeType: undefined,
@@ -158,7 +169,7 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
                     };
                 }),
                 activeType: s.activeType,
-            };
+            } as OneOfBlockOutput<T>;
         },
 
         output2State: async (output, context) => {
@@ -228,22 +239,22 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
             return block?.dependencies?.(blockState.props) ?? [];
         },
 
-        createCopy: (state, { idsMap }) => {
-            const newState: OneOfBlockState = { ...state, attachedBlocks: [] };
+        replaceDependenciesInOutput: (output, replacements) => {
+            const newOutput: OneOfBlockOutput<T> = { ...output, attachedBlocks: [] };
 
-            for (const c of state.attachedBlocks) {
+            for (const c of output.attachedBlocks) {
                 const block = blockForType(c.type);
                 if (!block) {
                     throw new Error(`No Block found for type ${c.type}`); // for TS
                 }
 
-                newState.attachedBlocks.push({
+                newOutput.attachedBlocks.push({
                     ...c,
-                    props: block.createCopy(c.props, { idsMap }),
+                    props: block.replaceDependenciesInOutput(c.props, replacements),
                 });
             }
 
-            return newState;
+            return newOutput;
         },
 
         definesOwnPadding: true,

@@ -1,6 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { LocalErrorScopeApolloContext } from "@comet/admin";
-import { IdsMap, readClipboard, writeClipboard } from "@comet/blocks-admin";
+import { readClipboard, ReplaceDependencyObject, writeClipboard } from "@comet/blocks-admin";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
@@ -224,7 +224,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     const sendPages = React.useCallback(
         async (parentId: string | null, { pages }: PagesClipboard, options?: SendPagesOptions): Promise<void> => {
             const tree = arrayToTreeMap<PageClipboard>(pages);
-            const pageTreeNodeIdsMap = createPageTreeNodeIdsMap(pages);
+            const pageTreeNodeIdReplacements = createPageTreeNodeIdReplacements(pages);
             let inboxFolderIdForCopiedFiles: string | undefined = undefined;
 
             const handlePageTreeNode = async (node: PageClipboard, newParentId: string | null, posOffset: number): Promise<string> => {
@@ -264,7 +264,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                     mutation: createPageNodeMutation,
                     variables: {
                         input: {
-                            id: pageTreeNodeIdsMap.get(node.id),
+                            id: pageTreeNodeIdReplacements.find((replacement) => replacement.originalId === node.id)?.replaceWithId,
                             name,
                             slug,
                             hideInMenu: node.hideInMenu,
@@ -284,7 +284,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                 }
 
                 // 1c. Copy all files used on page to target scope
-                let fileIdsMap: IdsMap | undefined;
+                let fileIdReplacements: ReplaceDependencyObject[] | undefined;
                 if (node?.document != null) {
                     const fileDependencyIds = documentType
                         .dependencies(node.document)
@@ -305,20 +305,20 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                         inboxFolderIdForCopiedFiles = copiedFiles?.copyFilesToScope.inboxFolderId ?? undefined;
 
                         if (copiedFiles) {
-                            fileIdsMap = createFileIdsMap(copiedFiles.copyFilesToScope.mappedFiles);
+                            fileIdReplacements = createFileIdReplacements(copiedFiles.copyFilesToScope.mappedFiles);
                         }
                     }
                 }
 
                 // 1d. Create new document
                 const newDocumentId = uuid();
-                const idsMap = fileIdsMap === undefined ? pageTreeNodeIdsMap : mergeIdsMaps(fileIdsMap, pageTreeNodeIdsMap);
-                if (node?.document != null && documentType.updateMutation && documentType.createCopy) {
+                const replacements = [...pageTreeNodeIdReplacements, ...(fileIdReplacements ?? [])];
+                if (node?.document != null && documentType.updateMutation && documentType.inputToOutput && documentType.replaceDependenciesInOutput) {
                     await client.mutate<unknown, GQLUpdatePageMutationVariables>({
                         mutation: documentType.updateMutation,
                         variables: {
                             pageId: newDocumentId,
-                            input: documentType.createCopy(node.document, { idsMap: idsMap }),
+                            input: documentType.replaceDependenciesInOutput(documentType.inputToOutput(node.document), replacements),
                             attachedPageTreeNodeId: data.createPageTreeNode.id,
                         },
                         context: LocalErrorScopeApolloContext,
@@ -350,38 +350,28 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     return { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages };
 }
 
-function mergeIdsMaps(map1: IdsMap, map2: IdsMap): IdsMap {
-    const mergedMap = new Map(map1);
-
-    map2.forEach(function (value, key) {
-        mergedMap.set(key, value);
-    });
-
-    return mergedMap;
-}
-
-function createFileIdsMap(mappedIds: Array<{ rootFile: { id: string }; copy: { id: string } }>): IdsMap {
-    const idsMap = new Map<string, string>();
+function createFileIdReplacements(mappedIds: Array<{ rootFile: { id: string }; copy: { id: string } }>): ReplaceDependencyObject[] {
+    const replacements: ReplaceDependencyObject[] = [];
 
     for (const item of mappedIds) {
-        idsMap.set(item.rootFile.id, item.copy.id);
+        replacements.push({ type: "DamFile", originalId: item.rootFile.id, replaceWithId: item.copy.id });
     }
 
-    return idsMap;
+    return replacements;
 }
 
 /**
  * Creates a mapping between the old page tree node ID and a new page tree ID. Used for rewriting links to internal pages.
  * @param nodes
  */
-function createPageTreeNodeIdsMap(nodes: PageClipboard[]): IdsMap {
-    const idsMap = new Map<string, string>();
+function createPageTreeNodeIdReplacements(nodes: PageClipboard[]): ReplaceDependencyObject[] {
+    const replacements: ReplaceDependencyObject[] = [];
 
-    nodes.forEach((node) => {
-        idsMap.set(node.id, uuid());
-    });
+    for (const node of nodes) {
+        replacements.push({ type: "PageTreeNode", originalId: node.id, replaceWithId: uuid() });
+    }
 
-    return idsMap;
+    return replacements;
 }
 
 export { useCopyPastePages };

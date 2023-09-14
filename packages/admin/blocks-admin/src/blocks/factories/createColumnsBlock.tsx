@@ -189,17 +189,17 @@ export function createColumnsBlock<T extends BlockInterface>({
             return deduplicateBlockDependencies(mergedDependencies);
         },
 
-        createCopy: (state, { idsMap }) => {
-            const newState: ColumnsBlockState<T> = { ...state, columns: [] };
+        replaceDependenciesInOutput: (output, replacements) => {
+            const newOutput: ColumnsBlockFragment<T> = { ...output, columns: [] };
 
-            for (const column of state.columns) {
-                newState.columns.push({
+            for (const column of output.columns) {
+                newOutput.columns.push({
                     ...column,
-                    props: contentBlock.createCopy(column.props, { idsMap }),
+                    props: contentBlock.replaceDependenciesInOutput(column.props, replacements),
                 });
             }
 
-            return newState;
+            return newOutput;
         },
 
         AdminComponent: ({ state, updateState }) => {

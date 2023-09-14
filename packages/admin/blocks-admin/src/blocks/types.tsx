@@ -59,7 +59,7 @@ export type PreviewContent = PreviewContentImage | PreviewContentText;
 
 export type BlockDependency = { targetGraphqlObjectType: string; id: string };
 
-export type IdsMap = Map<string, string>;
+export type ReplaceDependencyObject = { originalId: string; replaceWithId: string; type: string };
 
 export interface BlockMethods<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -82,7 +82,7 @@ export interface BlockMethods<
     dynamicDisplayName?: (state: State) => React.ReactNode;
     anchors?: (state: State) => string[];
     dependencies?: (state: State) => BlockDependency[];
-    createCopy: (state: State, context: { idsMap: IdsMap }) => State;
+    replaceDependenciesInOutput: (output: OutputApi, replacements: ReplaceDependencyObject[]) => OutputApi;
 }
 
 export interface AnonymousBlockInterface<

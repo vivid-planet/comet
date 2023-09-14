@@ -43,6 +43,16 @@ export interface ListBlockFragment {
     }>;
 }
 
+export interface ListBlockOutput {
+    blocks: Array<{
+        [key: string]: unknown;
+        key: string;
+        visible: boolean;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        props: any;
+    }>;
+}
+
 export interface AdditionalItemField<Value = unknown> {
     defaultValue: Value;
 }
@@ -75,9 +85,9 @@ export function createListBlock<T extends BlockInterface>({
     additionalItemFields = {},
     AdditionalItemContextMenuItems,
     AdditionalItemContent,
-}: CreateListBlockOptions<T>): BlockInterface<ListBlockFragment, ListBlockState<T>> {
+}: CreateListBlockOptions<T>): BlockInterface<ListBlockFragment, ListBlockState<T>, ListBlockOutput> {
     const useAdminComponent = createUseAdminComponent({ block, maxVisibleBlocks, additionalItemFields });
-    const BlockListBlock: BlockInterface<ListBlockFragment, ListBlockState<T>> = {
+    const BlockListBlock: BlockInterface<ListBlockFragment, ListBlockState<T>, ListBlockOutput> = {
         ...createBlockSkeleton(),
 
         name,
@@ -141,6 +151,7 @@ export function createListBlock<T extends BlockInterface>({
 
             for (const item of output.blocks) {
                 state.blocks.push({
+                    slideIn: false,
                     ...item,
                     props: await block.output2State(item.props, context),
                     selected: false,
@@ -188,17 +199,17 @@ export function createListBlock<T extends BlockInterface>({
             return deduplicateBlockDependencies(mergedDependencies);
         },
 
-        createCopy: (state, { idsMap }) => {
-            const newState: ListBlockState<T> = { ...state, blocks: [] };
+        replaceDependenciesInOutput: (output, replacements) => {
+            const newOutput: ListBlockOutput = { ...output, blocks: [] };
 
-            for (const c of state.blocks) {
-                newState.blocks.push({
+            for (const c of output.blocks) {
+                newOutput.blocks.push({
                     ...c,
-                    props: block.createCopy(c.props, { idsMap }),
+                    props: block.replaceDependenciesInOutput(c.props, replacements),
                 });
             }
 
-            return newState;
+            return newOutput;
         },
 
         definesOwnPadding: true,

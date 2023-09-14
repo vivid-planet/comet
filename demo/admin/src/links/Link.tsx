@@ -57,9 +57,9 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
     menuIcon: LinkIcon,
     anchors: () => [],
     dependencies: (input) => LinkBlock.dependencies?.(LinkBlock.input2State(input.content)) ?? [],
-    createCopy: (input, { idsMap }) => {
+    replaceDependenciesInOutput: (output, replacements) => {
         return {
-            content: LinkBlock.state2Output(LinkBlock.createCopy(LinkBlock.input2State(input.content), { idsMap })),
+            content: LinkBlock.replaceDependenciesInOutput(output.content, replacements),
         };
     },
 };

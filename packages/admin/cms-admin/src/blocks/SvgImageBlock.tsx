@@ -105,14 +105,15 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
         return dependencies;
     },
 
-    createCopy: (state, { idsMap }) => {
-        const clonedState = deepClone(state);
+    replaceDependenciesInOutput: (output, replacements) => {
+        const clonedOutput: SvgImageBlockInput = deepClone(output);
+        const replacement = replacements.find((replacement) => replacement.type === "DamFile" && replacement.originalId === output.damFileId);
 
-        if (state.damFile && idsMap.has(state.damFile.id)) {
-            clonedState.damFile.id = idsMap.get(state.damFile.id);
+        if (replacement) {
+            clonedOutput.damFileId = replacement.replaceWithId;
         }
 
-        return clonedState;
+        return clonedOutput;
     },
 
     definesOwnPadding: true,

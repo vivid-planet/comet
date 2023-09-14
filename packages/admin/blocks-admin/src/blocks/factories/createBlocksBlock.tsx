@@ -48,6 +48,17 @@ export interface BlocksBlockFragment {
     }[];
 }
 
+export interface BlocksBlockOutput {
+    blocks: {
+        [key: string]: unknown;
+        key: string;
+        type: string;
+        visible: boolean;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        props: any;
+    }[];
+}
+
 type BlockType = string;
 
 interface AdditionalItemField<Value = unknown> {
@@ -74,7 +85,7 @@ export function createBlocksBlock({
     additionalItemFields = {},
     AdditionalItemContextMenuItems,
     AdditionalItemContent,
-}: CreateBlocksBlockOptions): BlockInterface<BlocksBlockFragment, BlocksBlockState> {
+}: CreateBlocksBlockOptions): BlockInterface<BlocksBlockFragment, BlocksBlockState, BlocksBlockOutput> {
     if (Object.keys(supportedBlocks).length === 0) {
         throw new Error("Blocks block with no supported block is not allowed. Please specify at least two supported blocks.");
     }
@@ -91,7 +102,7 @@ export function createBlocksBlock({
         return Object.entries(supportedBlocks).find(([, block]) => block.name === targetBlock.name)?.[0] ?? null;
     }
 
-    const BlocksBlock: BlockInterface<BlocksBlockFragment, BlocksBlockState> = {
+    const BlocksBlock: BlockInterface<BlocksBlockFragment, BlocksBlockState, BlocksBlockOutput> = {
         ...createBlockSkeleton(),
 
         name,
@@ -156,6 +167,7 @@ export function createBlocksBlock({
                 }
 
                 state.blocks.push({
+                    slideIn: false,
                     ...item,
                     props: await block.output2State(item.props, context),
                     selected: false,
@@ -220,19 +232,19 @@ export function createBlocksBlock({
             return deduplicateBlockDependencies(mergedDependencies);
         },
 
-        createCopy: (state, { idsMap }) => {
-            const newState: BlocksBlockState = { blocks: [] };
+        replaceDependenciesInOutput: (output, replacements) => {
+            const newOutput: BlocksBlockOutput = { blocks: [] };
 
-            for (const c of state.blocks) {
+            for (const c of output.blocks) {
                 const block = blockForType(c.type);
                 if (!block) {
-                    throw new Error(`No Block found for type ${c.type}`); // for TS
+                    throw new Error(`No Block found for type ${c.type}`);
                 }
 
-                newState.blocks.push({ ...c, props: block.createCopy(c.props, { idsMap }) });
+                newOutput.blocks.push({ ...c, props: block.replaceDependenciesInOutput(c.props, replacements) });
             }
 
-            return newState;
+            return newOutput;
         },
 
         definesOwnPadding: true,

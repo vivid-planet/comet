@@ -7,7 +7,7 @@ import { Collapsible } from "../../common/Collapsible";
 import { CollapsibleSwitchButtonHeader } from "../../common/CollapsibleSwitchButtonHeader";
 import { AdminComponentPaper } from "../common/AdminComponentPaper";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
-import { BlockInputApi, BlockInterface, BlockState, DispatchSetStateAction } from "../types";
+import { BlockInputApi, BlockInterface, BlockOutputApi, BlockState, DispatchSetStateAction } from "../types";
 import { resolveNewState } from "../utils";
 
 // @TODO: move to general types
@@ -23,11 +23,16 @@ export interface OptionalBlockDecoratorFragment<DecoratedBlock extends BlockInte
     visible: boolean;
 }
 
+export interface OptionalBlockOutput<DecoratedBlock extends BlockInterface> {
+    block?: BlockOutputApi<DecoratedBlock>;
+    visible: boolean;
+}
+
 export function createOptionalBlock<T extends BlockInterface>(
     decoratedBlock: T,
     options?: { title?: React.ReactNode; name?: string },
-): BlockInterface<OptionalBlockDecoratorFragment<T>, OptionalBlockState<T>> {
-    const OptionalBlock: BlockInterface<OptionalBlockDecoratorFragment<T>, OptionalBlockState<T>> = {
+): BlockInterface<OptionalBlockDecoratorFragment<T>, OptionalBlockState<T>, OptionalBlockOutput<T>> {
+    const OptionalBlock: BlockInterface<OptionalBlockDecoratorFragment<T>, OptionalBlockState<T>, OptionalBlockOutput<T>> = {
         ...createBlockSkeleton(),
 
         name: options?.name ?? `Optional${decoratedBlock.name}`,
@@ -79,10 +84,10 @@ export function createOptionalBlock<T extends BlockInterface>(
             return decoratedBlock.dependencies?.(state.block) ?? [];
         },
 
-        createCopy: (state, { idsMap }) => {
+        replaceDependenciesInOutput: (output, replacements) => {
             return {
-                ...state,
-                block: state.block ? decoratedBlock.createCopy(state.block, { idsMap }) : undefined,
+                ...output,
+                block: output.block ? decoratedBlock.replaceDependenciesInOutput(output.block, replacements) : undefined,
             };
         },
 

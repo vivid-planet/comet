@@ -42,7 +42,7 @@ function common<InputApi, State, OutputApi>(): Omit<
         },
         isValid: () => true,
         previewContent: () => [],
-        createCopy: (state) => state,
+        replaceDependenciesInOutput: (output) => output,
     };
 }
 

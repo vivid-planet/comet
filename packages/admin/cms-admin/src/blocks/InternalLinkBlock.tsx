@@ -86,15 +86,15 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
         return dependencies;
     },
 
-    createCopy: (state, { idsMap }) => {
-        const clonedState: InternalLinkBlockData = deepClone(state);
+    replaceDependenciesInOutput: (output, replacements) => {
+        const clonedOutput: InternalLinkBlockInput = deepClone(output);
+        const replacement = replacements.find((replacement) => replacement.type === "PageTreeNode" && replacement.originalId === output.targetPageId);
 
-        if (clonedState.targetPage && idsMap.has(clonedState.targetPage.id)) {
-            // has() check in if() verifies that id exists in Map
-            clonedState.targetPage.id = idsMap.get(clonedState.targetPage.id) as string;
+        if (replacement) {
+            clonedOutput.targetPageId = replacement.replaceWithId;
         }
 
-        return clonedState;
+        return clonedOutput;
     },
 
     definesOwnPadding: true,
