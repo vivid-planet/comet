@@ -136,7 +136,7 @@ export const createUsePage: CreateUsePage =
         GQLUpdatePageMutationVariables extends {
             pageId: string;
             input: BlockGQLData<RootBlocks>;
-            lastUpdatedAt: string | null;
+            lastUpdatedAt?: string | null;
             attachedPageTreeNodeId?: string | null;
         },
     >({
