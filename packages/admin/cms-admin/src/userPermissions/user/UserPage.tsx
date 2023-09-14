@@ -1,9 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
-import { MainContent, Tab, Tabs, Toolbar, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
+import { MainContent, RouterTab, RouterTabs, Toolbar, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
 import { Box, CircularProgress } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
+import { useIntl } from "react-intl";
 
 import { UserBasicData } from "./basicData/UserBasicData";
 import { ContentScopeGrid } from "./permissions/ContentScopeGrid";
@@ -24,6 +24,7 @@ export const UserPage: React.FC<{ userId: string }> = ({ userId }) => {
             variables: { id: userId },
         },
     );
+    const intl = useIntl();
 
     if (error) {
         throw new Error(error.message);
@@ -43,17 +44,19 @@ export const UserPage: React.FC<{ userId: string }> = ({ userId }) => {
                 </ToolbarTitleItem>
             </Toolbar>
             <MainContent>
-                {/* TODO Use RouterTabs when working under subroutes */}
-                <Tabs>
-                    <Tab label={<FormattedMessage id="comet.userManagemant.basicData" defaultMessage="Basic Data" />}>
+                <RouterTabs>
+                    <RouterTab path="" label={intl.formatMessage({ id: "comet.userPermissions.basicData", defaultMessage: "Basic Data" })}>
                         <UserBasicData id={userId} />
-                    </Tab>
-                    <Tab label={<FormattedMessage id="comet.userManagemant.permissions" defaultMessage="Permissions" />}>
+                    </RouterTab>
+                    <RouterTab
+                        path="/permissions"
+                        label={intl.formatMessage({ id: "comet.userPermissions.permissions", defaultMessage: "Permissions" })}
+                    >
                         <ContentScopeGrid userId={userId} />
                         <Box sx={{ height: 20 }} />
                         <PermissionGrid userId={userId} />
-                    </Tab>
-                </Tabs>
+                    </RouterTab>
+                </RouterTabs>
             </MainContent>
         </>
     );
