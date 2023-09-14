@@ -3,6 +3,7 @@ import {
     CrudContextMenu,
     CrudVisibility,
     GridFilterButton,
+    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -17,7 +18,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { filter } from "graphql-anywhere";
 import gql from "graphql-tag";
@@ -199,7 +200,7 @@ function ProductsGrid() {
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
     return (
-        <Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
+        <MainContent fullHeight disablePadding>
             <DataGridPro
                 {...dataGridProps}
                 disableSelectionOnClick
@@ -212,7 +213,7 @@ function ProductsGrid() {
                     Toolbar: ProductsGridToolbar,
                 }}
             />
-        </Box>
+        </MainContent>
     );
 }
 
