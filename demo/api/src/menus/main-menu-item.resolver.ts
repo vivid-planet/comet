@@ -1,15 +1,7 @@
-import {
-    DependenciesService,
-    Dependency,
-    PageTreeNodeVisibility,
-    PageTreeService,
-    RequestContext,
-    RequestContextInterface,
-    validateNotModified,
-} from "@comet/cms-api";
+import { PageTreeNodeVisibility, PageTreeService, RequestContext, RequestContextInterface, validateNotModified } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 
 import { MainMenuItemInput } from "./dto/main-menu-item.input";
@@ -20,7 +12,6 @@ export class MainMenuItemResolver {
     constructor(
         @InjectRepository(MainMenuItem) private readonly mainMenuItemRepository: EntityRepository<MainMenuItem>,
         private readonly pageTreeService: PageTreeService,
-        private readonly dependenciesService: DependenciesService,
     ) {}
 
     @Query(() => MainMenuItem)
@@ -72,10 +63,5 @@ export class MainMenuItemResolver {
         }
 
         return this.mainMenuItemRepository.findOneOrFail({ node });
-    }
-
-    @ResolveField(() => [Dependency])
-    async dependencies(@Parent() mainMenuItem: MainMenuItem): Promise<Dependency[]> {
-        return this.dependenciesService.getDependencies(mainMenuItem);
     }
 }

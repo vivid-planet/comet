@@ -103,8 +103,10 @@ export { IsValidImageAspectRatio, IsValidImageAspectRatioConstraint } from "./da
 export { Extension, Gravity, ResizingType } from "./dam/imgproxy/imgproxy.enum";
 export { ImgproxyConfig, ImgproxyService } from "./dam/imgproxy/imgproxy.service";
 export { DependenciesModule } from "./dependencies/dependencies.module";
+export { DependenciesResolverFactory } from "./dependencies/dependencies.resolver.factory";
 export { DependenciesService } from "./dependencies/dependencies.service";
 export { Dependency } from "./dependencies/dependency";
+export { DependentsResolverFactory } from "./dependencies/dependents.resolver.factory";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";

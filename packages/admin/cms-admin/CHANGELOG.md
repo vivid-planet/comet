@@ -1,5 +1,17 @@
 # @comet/cms-admin
 
+## 4.4.1
+
+### Patch Changes
+
+-   Updated dependencies [662abcc9]
+    -   @comet/admin@4.4.1
+    -   @comet/admin-date-time@4.4.1
+    -   @comet/admin-icons@4.4.1
+    -   @comet/admin-rte@4.4.1
+    -   @comet/admin-theme@4.4.1
+    -   @comet/blocks-admin@4.4.1
+
 ## 4.4.0
 
 ### Minor Changes
