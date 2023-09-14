@@ -6,7 +6,6 @@ import { Inject, Injectable } from "@nestjs/common";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
 import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generator";
-import { DocumentGeneratorService } from "@src/db/fixtures/generators/document-generator.service";
 import { ImageGeneratorService } from "@src/db/fixtures/generators/image-generator.service";
 import { Link } from "@src/links/entities/link.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
@@ -17,6 +16,9 @@ import { Page } from "@src/pages/entities/page.entity";
 import faker from "faker";
 import { Command, Console } from "nestjs-console";
 import slugify from "slugify";
+
+import { LinkGeneratorService } from "./generators/link-generator.service";
+import { PageGeneratorService } from "./generators/page-generator.service";
 
 const getDefaultPageInput = (): PageInput => {
     const pageInput = new PageInput();
@@ -32,7 +34,8 @@ export class FixturesConsole {
         @Inject(CONFIG) private readonly config: Config,
         private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly pageTreeService: PageTreeService,
-        private readonly documentGeneratorService: DocumentGeneratorService,
+        private readonly pageGeneratorService: PageGeneratorService,
+        private readonly linkGeneratorService: LinkGeneratorService,
         private readonly imageGeneratorService: ImageGeneratorService,
         private readonly orm: MikroORM,
         @InjectRepository(Page) private readonly pagesRepository: EntityRepository<Page>,
@@ -72,17 +75,17 @@ export class FixturesConsole {
             language: "en",
         };
 
-        const node = await this.documentGeneratorService.generatePage({ name: "Home", scope });
-        await this.documentGeneratorService.generatePage({ name: "Sub", scope, parentId: node.id });
+        const node = await this.pageGeneratorService.generatePage({ name: "Home", scope });
+        await this.pageGeneratorService.generatePage({ name: "Sub", scope, parentId: node.id });
 
         for (let i = 0; i < 3; i++) {
-            const page = await this.documentGeneratorService.generatePage({ name: `Page ${i}`, scope });
+            const page = await this.pageGeneratorService.generatePage({ name: `Page ${i}`, scope });
 
             for (let subPageIndex = 0; subPageIndex < 3; subPageIndex++) {
                 if (faker.datatype.boolean()) {
-                    await this.documentGeneratorService.generatePage({ name: `Sub-Page ${subPageIndex}`, scope, parentId: page.id });
+                    await this.pageGeneratorService.generatePage({ name: `Sub-Page ${subPageIndex}`, scope, parentId: page.id });
                 } else {
-                    await this.documentGeneratorService.generateLink({ name: `Sub-Link ${subPageIndex}`, scope, parentId: page.id });
+                    await this.linkGeneratorService.generateLink({ name: `Sub-Link ${subPageIndex}`, scope, parentId: page.id });
                 }
             }
         }
