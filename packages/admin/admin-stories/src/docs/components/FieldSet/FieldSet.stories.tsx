@@ -1,0 +1,32 @@
+import { FieldSet } from "@comet/admin";
+import { Info } from "@mui/icons-material";
+import { Chip, IconButton, Typography } from "@mui/material";
+import { storiesOf } from "@storybook/react";
+import * as React from "react";
+
+storiesOf("stories/components/FieldSet", module).add("BasicFieldSet", () => {
+    return (
+        <>
+            <Typography variant="h4">Collapsible FieldSet initial collapsed</Typography>
+            <FieldSet
+                title={
+                    <>
+                        TITLE WITH ICON
+                        <IconButton>
+                            <Info />
+                        </IconButton>
+                    </>
+                }
+                supportText="Support text"
+                endAdornment={<Chip color="default" label="Chip text" />}
+                initialCollapsed
+            >
+                <div>Content goes here ...</div>
+            </FieldSet>
+            <Typography variant="h4">Non-collapsible FieldSet</Typography>
+            <FieldSet title="TITLE" supportText="Support text" endAdornment="Info text" collapsible={false}>
+                <div>Content goes here ...</div>
+            </FieldSet>
+        </>
+    );
+});

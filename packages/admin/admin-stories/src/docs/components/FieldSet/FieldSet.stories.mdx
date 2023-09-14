@@ -1,0 +1,31 @@
+import { Canvas, Meta, Source, Story } from "@storybook/addon-docs";
+
+import dedent from "ts-dedent";
+
+<Meta title="Docs/Components/FieldSet" />
+
+# FieldSet
+
+> FieldSet allows user to show or hide content sections.
+>
+> \- [MUI Docs](https://mui.com/material-ui/react-accordion/)
+
+The Comet Admin `FieldSet` extends [Material UI's `Accordion`](https://mui.com/material-ui/react-accordion) by adding custom style and elements such as supportText, endAdornment, and options like collapsible and initialCollapsed.
+
+#### Props
+
+| Name              | Type   | Default   | Description                                                                      |
+| :---------------- | :----- | :----- | :------------------------------------------------------------------------------- |
+| title          | ReactNode |  | Title of the FieldSet |
+| supportText          | ReactNode (optional) |  | Additional line below the Title |
+| endAdornment          | ReactNode (optional) |  | An element on the right end of the FieldSetSummary |
+| collapsible          | boolean (optional) | true | If true, FieldSet can be opened and closed (Accordion behaviour) |
+| initialCollapsed          | boolean (optional) | false | If true, FieldSet is closed by default |
+
+In addition to its own props, the FieldSet component also accepts all props from the Material UI Accordion component.
+
+#### Example
+
+<Canvas>
+    <Story id="stories-components-fieldset--basicfieldset" />
+</Canvas>

@@ -18,8 +18,11 @@ export const getMuiAccordion: GetMuiComponentTheme<"MuiAccordion"> = (component,
             "&:before": {
                 display: "none",
             },
-            "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
+            "& .MuiAccordionSummary-expandIconWrapper": {
                 transform: "rotate(90deg)",
+            },
+            "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
+                transform: "rotate(-90deg)",
             },
             "& .MuiAccordionSummary-content": {
                 marginLeft: 10,

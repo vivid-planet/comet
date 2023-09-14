@@ -7,41 +7,43 @@ import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
 
-interface AccordionComponentsProps {
-    accordionSummary?: Partial<AccordionSummaryProps>;
-    accordionDetails?: Partial<AccordionDetailsProps>;
+interface FieldSetComponentsProps {
+    fieldSetSummary?: Partial<AccordionSummaryProps>;
+    fieldSetDetails?: Partial<AccordionDetailsProps>;
 }
-export interface AccordionProps extends Omit<Partial<Props>, "title"> {
+export interface FieldSetProps extends Omit<Partial<Props>, "title"> {
     title: React.ReactNode;
     supportText?: React.ReactNode;
     endAdornment?: React.ReactNode;
-    initialExpanded?: boolean;
-    componentsProps?: AccordionComponentsProps;
+    collapsible?: boolean;
+    initialCollapsed?: boolean;
+    componentsProps?: FieldSetComponentsProps;
 }
 
-export type AccordionClassKey = "header" | "headerColumn" | "title" | "supportText" | "endAdornment" | "placeholder" | "children" | "isExpanded";
+export type FieldSetClassKey = "header" | "headerColumn" | "title" | "supportText" | "endAdornment" | "placeholder" | "children" | "isExpanded";
 
 const styles = (theme: Theme) =>
-    createStyles<AccordionClassKey, AccordionProps>({
+    createStyles<FieldSetClassKey, FieldSetProps>({
         header: {
             display: "flex",
             flexDirection: "row-reverse",
             padding: "0 20px",
-            gap: "20px",
-            height: "86px",
+            height: "80px",
         },
         headerColumn: {
+            display: "flex",
             flexDirection: "column",
-            padding: "20px",
+            alignItems: "flex-start",
+            alignContent: "center",
+            padding: "10px",
         },
         title: {
+            display: "flex",
+            alignItems: "center",
             fontWeight: theme.typography.fontWeightMedium,
             fontSize: "14pt",
             textTransform: "uppercase",
             color: theme.palette.text.primary,
-            "&$isExpanded": {
-                color: theme.palette.primary.main,
-            },
         },
         supportText: {
             fontSize: "10pt",
@@ -63,24 +65,38 @@ const styles = (theme: Theme) =>
         isExpanded: {},
     });
 
-function Accordion({
+function FieldSet({
     title,
     supportText,
     endAdornment,
     children,
-    initialExpanded = false,
+    collapsible = true,
+    initialCollapsed = false,
     componentsProps,
     classes,
-}: AccordionProps & WithStyles<typeof styles>): React.ReactElement {
-    const [expanded, setExpanded] = React.useState(initialExpanded);
+}: FieldSetProps & WithStyles<typeof styles>): React.ReactElement {
+    const [expanded, setExpanded] = React.useState(!initialCollapsed);
 
     const handleChange = (event: React.SyntheticEvent, isExpanded: boolean) => {
         setExpanded(isExpanded);
     };
 
     return (
-        <MuiAccordion expanded={expanded} onChange={handleChange}>
-            <MuiAccordionSummary classes={{ root: classes.header }} expandIcon={<ArrowForwardIosSharpIcon />} {...componentsProps?.accordionSummary}>
+        <MuiAccordion
+            expanded={expanded}
+            onChange={
+                collapsible
+                    ? handleChange
+                    : () => {
+                          /* do nothing */
+                      }
+            }
+        >
+            <MuiAccordionSummary
+                classes={{ root: classes.header }}
+                expandIcon={collapsible && <ArrowForwardIosSharpIcon />}
+                {...componentsProps?.fieldSetSummary}
+            >
                 <div className={clsx(classes.headerColumn)}>
                     <div className={clsx(classes.title, expanded && classes.isExpanded)}>{title}</div>
                     <div className={clsx(classes.supportText)}>{supportText}</div>
@@ -88,30 +104,30 @@ function Accordion({
                 <div className={clsx(classes.placeholder)} />
                 <div className={clsx(classes.endAdornment)}>{endAdornment}</div>
             </MuiAccordionSummary>
-            <MuiAccordionDetails classes={{ root: classes.children }} {...componentsProps?.accordionDetails}>
+            <MuiAccordionDetails classes={{ root: classes.children }} {...componentsProps?.fieldSetDetails}>
                 {children}
             </MuiAccordionDetails>
         </MuiAccordion>
     );
 }
 
-const AccordionWithStyles = withStyles(styles, { name: "CometAdminAccordion" })(Accordion);
+const FieldSetWithStyles = withStyles(styles, { name: "CometAdminFieldSet" })(FieldSet);
 
-export { AccordionWithStyles as Accordion };
+export { FieldSetWithStyles as FieldSet };
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminAccordion: AccordionProps;
+        CometAdminFieldSet: FieldSetProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminAccordion: AccordionClassKey;
+        CometAdminFieldSet: FieldSetClassKey;
     }
 
     interface Components {
-        CometAdminAccordion?: {
-            defaultProps?: ComponentsPropsList["CometAdminAccordion"];
-            styleOverrides?: ComponentNameToClassKey["CometAdminAccordion"];
+        CometAdminFieldSet?: {
+            defaultProps?: ComponentsPropsList["CometAdminFieldSet"];
+            styleOverrides?: ComponentNameToClassKey["CometAdminFieldSet"];
         };
     }
 }

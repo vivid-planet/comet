@@ -8,7 +8,6 @@ export { AppHeaderMenuButton, AppHeaderMenuButtonClassKey, AppHeaderMenuButtonPr
 export { buildCreateRestMutation, buildDeleteRestMutation, buildUpdateRestMutation } from "./buildRestMutation";
 export { readClipboardText } from "./clipboard/readClipboardText";
 export { writeClipboardText } from "./clipboard/writeClipboardText";
-export { Accordion, AccordionClassKey, AccordionProps } from "./common/Accordion";
 export { CancelButton, CancelButtonClassKey, CancelButtonProps } from "./common/buttons/cancel/CancelButton";
 export { ClearInputButton, ClearInputButtonClassKey, ClearInputButtonProps } from "./common/buttons/clearinput/ClearInputButton";
 export {
@@ -27,6 +26,7 @@ export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
+export { FieldSet, FieldSetClassKey, FieldSetProps } from "./common/FieldSet";
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
 export {
