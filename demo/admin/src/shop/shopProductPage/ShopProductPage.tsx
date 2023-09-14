@@ -1,4 +1,5 @@
-import { MainContent, Tab, Tabs } from "@comet/admin";
+import { MainContent, Tab, Tabs, useStackApi } from "@comet/admin";
+import { SaveShopProductHandlerProvider } from "@src/shop/shopProductPage/SaveShopProductHandler";
 import { ShopProductToolbar } from "@src/shop/shopProductPage/ShopProductToolbar";
 import { ShopProductCategoriesPage } from "@src/shop/shopProductPage/tabs/shopProductCategories/ShopProductCategoriesPage";
 import { ShopProductInformationPage } from "@src/shop/shopProductPage/tabs/shopProductInformation/ShopProductInformationPage";
@@ -8,9 +9,10 @@ import { useIntl } from "react-intl";
 
 export const ShopProductPage: React.FunctionComponent<{ shopProductId: string }> = ({ shopProductId }) => {
     const intl = useIntl();
+    const stackApi = useStackApi();
     return (
-        <>
-            <ShopProductToolbar productName={shopProductId} />
+        <SaveShopProductHandlerProvider>
+            <ShopProductToolbar productName={shopProductId} stackApi={stackApi} />
             <MainContent>
                 <Tabs>
                     <Tab label={intl.formatMessage({ id: "shopProductPage.tab.general", defaultMessage: "General" })}>
@@ -24,6 +26,6 @@ export const ShopProductPage: React.FunctionComponent<{ shopProductId: string }>
                     </Tab>
                 </Tabs>
             </MainContent>
-        </>
+        </SaveShopProductHandlerProvider>
     );
 };

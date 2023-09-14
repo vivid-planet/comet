@@ -1,20 +1,30 @@
-import { Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem } from "@comet/admin";
+import { IStackApi, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem } from "@comet/admin";
+import { ArrowLeft } from "@comet/admin-icons";
 import { Save } from "@mui/icons-material";
-import { Button, Typography } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
+import { useSaveShopProductHandler } from "@src/shop/shopProductPage/SaveShopProductHandler";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-export const ShopProductToolbar: React.FC<{ productName: string }> = ({ productName }) => {
+export const ShopProductToolbar: React.FC<{ productName: string; stackApi?: IStackApi }> = ({
+    productName,
+
+    stackApi,
+}) => {
+    const { saveAllForms } = useSaveShopProductHandler();
     return (
         <Toolbar>
             <ToolbarItem>
+                <IconButton onClick={stackApi?.goBack}>
+                    <ArrowLeft />
+                </IconButton>
                 <Typography variant="h3">
                     <FormattedMessage id="shopProducts.dataGrid.toolbar.title" defaultMessage={productName} />
                 </Typography>
             </ToolbarItem>
             <ToolbarFillSpace />
             <ToolbarActions>
-                <Button startIcon={<Save />} variant="contained" color="primary">
+                <Button startIcon={<Save />} variant="contained" color="primary" onClick={saveAllForms}>
                     <FormattedMessage id="shopProductPage.toolbar.save" defaultMessage="Save" />
                 </Button>
             </ToolbarActions>
