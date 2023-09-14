@@ -13,7 +13,7 @@ import React from "react";
 import { useIntl } from "react-intl";
 
 export const ShopProductInformationPage: React.FunctionComponent<{ shopProductId: string }> = ({ shopProductId }) => {
-    const { registerForm } = useSaveShopProductHandler();
+    const { registerHandleSubmit } = useSaveShopProductHandler();
     const intl = useIntl();
     const client = useApolloClient();
     const { data } = useQuery<GQLShopProductQuery, GQLShopProductQueryVariables>(shopProductQuery, {
@@ -49,7 +49,7 @@ export const ShopProductInformationPage: React.FunctionComponent<{ shopProductId
             }}
         >
             {({ values, pristine, hasValidationErrors, submitting, handleSubmit, hasSubmitErrors, form }) => {
-                registerForm(form);
+                registerHandleSubmit(handleSubmit);
                 return (
                     <EditPageLayout>
                         <MainContent>

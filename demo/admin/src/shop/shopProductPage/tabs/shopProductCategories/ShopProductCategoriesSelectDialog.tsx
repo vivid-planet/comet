@@ -13,6 +13,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, 
 import { GridSelectionModel } from "@mui/x-data-grid";
 import { DataGridPro, GridColDef } from "@mui/x-data-grid-pro";
 import { GQLShopProductCategory } from "@src/graphql.generated";
+import { useSaveShopProductHandler } from "@src/shop/shopProductPage/SaveShopProductHandler";
 import {
     GQLShopProductCategoriesQuery,
     GQLShopProductCategoriesQueryVariables,
@@ -43,6 +44,7 @@ export const ShopProductCategoriesSelectDialog: React.FC<ShopProductCategoriesSe
     const onMenuClose = () => {
         setDialogOpen(false);
     };
+    const { registerHandleSubmit } = useSaveShopProductHandler();
     const [selectionModel, setSelectionModel] = React.useState<GridSelectionModel>([]);
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("AllCategoriesGrid") };
     const sortModel = dataGridProps.sortModel;
@@ -60,6 +62,7 @@ export const ShopProductCategoriesSelectDialog: React.FC<ShopProductCategoriesSe
             variables: { id: shopProductId, input: { category: categoryIdList.map((id) => id.toString()) } },
         });
     };
+    registerHandleSubmit(handleSubmit);
     const NameHeader = () => (
         <div style={{ display: "flex", alignItems: "center" }}>
             <Typography fontWeight={400} fontSize={14}>

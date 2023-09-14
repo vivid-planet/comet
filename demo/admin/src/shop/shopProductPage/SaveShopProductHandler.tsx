@@ -1,10 +1,8 @@
-import { FormApi } from "final-form";
-import * as React from "react";
-import { createContext, useContext } from "react";
+import React, { createContext, useContext } from "react";
 
 type SaveShopProductHandlerContextType = {
-    registerForm: (form: FormApi<any>) => void;
-    saveAllForms: () => Promise<void>;
+    registerHandleSubmit: any;
+    saveAll: () => Promise<void>;
 };
 
 export const SaveShopProductHandlerContext = createContext<SaveShopProductHandlerContextType | undefined>(undefined);
@@ -17,22 +15,17 @@ export function useSaveShopProductHandler(): SaveShopProductHandlerContextType {
     return context;
 }
 
-interface SaveShopProductHandlerProviderProps {
-    children: React.ReactNode;
-}
+export function SaveShopProductHandlerProvider({ children }: any) {
+    const handleSubmitFunctions: (() => Promise<void>)[] = [];
 
-export function SaveShopProductHandlerProvider({ children }: SaveShopProductHandlerProviderProps): JSX.Element {
-    const forms: FormApi<any>[] = [];
-
-    async function registerForm(form: FormApi<any>) {
-        console.log(`Registering form ${form}`);
-        forms.push(form);
+    function registerHandleSubmit(handleSubmit: any) {
+        handleSubmitFunctions.push(handleSubmit);
     }
 
-    async function saveAllForms() {
-        const savePromises = forms.map(async (form) => {
+    async function saveAll() {
+        const savePromises = handleSubmitFunctions.map(async (handleSubmit) => {
             try {
-                await form.submit();
+                await handleSubmit();
             } catch (error) {
                 console.error("Error saving form:", error);
             }
@@ -41,8 +34,8 @@ export function SaveShopProductHandlerProvider({ children }: SaveShopProductHand
     }
 
     const value = {
-        registerForm,
-        saveAllForms,
+        registerHandleSubmit,
+        saveAll,
     };
 
     return <SaveShopProductHandlerContext.Provider value={value}>{children}</SaveShopProductHandlerContext.Provider>;

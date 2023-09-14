@@ -11,7 +11,7 @@ export const ShopProductToolbar: React.FC<{ productName: string; stackApi?: ISta
 
     stackApi,
 }) => {
-    const { saveAllForms } = useSaveShopProductHandler();
+    const { saveAll } = useSaveShopProductHandler();
     return (
         <Toolbar>
             <ToolbarItem>
@@ -24,7 +24,7 @@ export const ShopProductToolbar: React.FC<{ productName: string; stackApi?: ISta
             </ToolbarItem>
             <ToolbarFillSpace />
             <ToolbarActions>
-                <Button startIcon={<Save />} variant="contained" color="primary" onClick={saveAllForms}>
+                <Button startIcon={<Save />} variant="contained" color="primary" onClick={saveAll}>
                     <FormattedMessage id="shopProductPage.toolbar.save" defaultMessage="Save" />
                 </Button>
             </ToolbarActions>
