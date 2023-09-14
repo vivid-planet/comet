@@ -205,6 +205,7 @@ export async function writeCrudGrid(
     import {
         CrudContextMenu,
         GridFilterButton,
+        MainContent,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,
@@ -422,7 +423,7 @@ export async function writeCrudGrid(
         const rows = data?.${gridQuery}.nodes ?? [];
     
         return (
-            <Box sx={{ height: \`calc(100vh - var(--comet-admin-master-layout-content-top-spacing))\` }}>
+            <MainContent fullHeight disablePadding>
                 <DataGridPro
                     {...dataGridProps}
                     disableSelectionOnClick
@@ -434,7 +435,7 @@ export async function writeCrudGrid(
                         Toolbar: ${classNamePlural}GridToolbar,
                     }}
                 />
-            </Box>
+            </MainContent>
         );
     }
     `;

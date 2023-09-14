@@ -4,6 +4,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     GridFilterButton,
+    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -19,7 +20,7 @@ import {
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { BlockPreviewContent } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Box, Button, IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import gql from "graphql-tag";
@@ -221,7 +222,7 @@ export function NewsGrid(): React.ReactElement {
     const rows = data?.newsList.nodes ?? [];
 
     return (
-        <Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
+        <MainContent fullHeight disablePadding>
             <DataGridPro
                 {...dataGridProps}
                 disableSelectionOnClick
@@ -233,6 +234,6 @@ export function NewsGrid(): React.ReactElement {
                     Toolbar: NewsGridToolbar,
                 }}
             />
-        </Box>
+        </MainContent>
     );
 }
