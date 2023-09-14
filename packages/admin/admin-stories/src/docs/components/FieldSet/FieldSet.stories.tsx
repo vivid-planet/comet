@@ -23,9 +23,9 @@ storiesOf("stories/components/FieldSet", module).add("BasicFieldSet", () => {
             >
                 <div>Content goes here ...</div>
             </FieldSet>
-            <Typography variant="h4">Non-collapsible FieldSet</Typography>
-            <FieldSet title="TITLE" supportText="Support text" endAdornment="Info text" collapsible={false}>
-                <div>Content goes here ...</div>
+            <Typography variant="h4">Non-collapsible FieldSet with disabled padding</Typography>
+            <FieldSet title="TITLE" supportText="Support text" endAdornment="Info text" collapsible={false} disablePadding>
+                <div>Full-Width-Content goes here ...</div>
             </FieldSet>
         </>
     );

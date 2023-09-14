@@ -17,25 +17,32 @@ export interface FieldSetProps extends Omit<Partial<Props>, "title"> {
     endAdornment?: React.ReactNode;
     collapsible?: boolean;
     initialCollapsed?: boolean;
+    disablePadding?: boolean;
     componentsProps?: FieldSetComponentsProps;
 }
 
-export type FieldSetClassKey = "header" | "headerColumn" | "title" | "supportText" | "endAdornment" | "placeholder" | "children" | "isExpanded";
+export type FieldSetClassKey = "header" | "headerColumn" | "title" | "supportText" | "endAdornment" | "placeholder" | "children" | "disablePadding";
 
 const styles = (theme: Theme) =>
     createStyles<FieldSetClassKey, FieldSetProps>({
         header: {
             display: "flex",
             flexDirection: "row-reverse",
-            padding: "0 20px",
+            padding: "0 10px",
             height: "80px",
+            [theme.breakpoints.up("sm")]: {
+                padding: "0 20px",
+            },
         },
         headerColumn: {
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
             alignContent: "center",
-            padding: "10px",
+            padding: "0px",
+            [theme.breakpoints.up("sm")]: {
+                padding: "10px",
+            },
         },
         title: {
             display: "flex",
@@ -60,9 +67,15 @@ const styles = (theme: Theme) =>
             display: "flex",
             flexDirection: "column",
             borderTop: `solid ${theme.palette.divider}`,
-            padding: "40px",
+            padding: "20px",
+            [theme.breakpoints.up("sm")]: {
+                padding: "40px",
+            },
+            "&$disablePadding": {
+                padding: "0px",
+            },
         },
-        isExpanded: {},
+        disablePadding: {},
     });
 
 function FieldSet({
@@ -72,6 +85,7 @@ function FieldSet({
     children,
     collapsible = true,
     initialCollapsed = false,
+    disablePadding = false,
     componentsProps,
     classes,
 }: FieldSetProps & WithStyles<typeof styles>): React.ReactElement {
@@ -98,13 +112,13 @@ function FieldSet({
                 {...componentsProps?.fieldSetSummary}
             >
                 <div className={clsx(classes.headerColumn)}>
-                    <div className={clsx(classes.title, expanded && classes.isExpanded)}>{title}</div>
+                    <div className={clsx(classes.title, expanded && classes.disablePadding)}>{title}</div>
                     <div className={clsx(classes.supportText)}>{supportText}</div>
                 </div>
                 <div className={clsx(classes.placeholder)} />
                 <div className={clsx(classes.endAdornment)}>{endAdornment}</div>
             </MuiAccordionSummary>
-            <MuiAccordionDetails classes={{ root: classes.children }} {...componentsProps?.fieldSetDetails}>
+            <MuiAccordionDetails className={clsx(classes.children, disablePadding && classes.disablePadding)} {...componentsProps?.fieldSetDetails}>
                 {children}
             </MuiAccordionDetails>
         </MuiAccordion>
