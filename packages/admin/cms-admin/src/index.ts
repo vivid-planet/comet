@@ -30,7 +30,7 @@ export type { PageListItem } from "./common/PageList";
 export { PageList } from "./common/PageList";
 export { PageName } from "./common/PageName";
 export { getMenuFromRouteMenu } from "./common/routeMenu/getMenuFromRouteMenu";
-export { getRoutesFromRouteMenu } from "./common/routeMenu/getRoutesFromRouteMenu";
+export { getRoutePropsFromRouteMenu } from "./common/routeMenu/getRoutePropsFromRouteMenu";
 export { RouteMenu } from "./common/routeMenu/routeMenu.type";
 export { useEditState } from "./common/useEditState";
 export { useSaveState } from "./common/useSaveState";
