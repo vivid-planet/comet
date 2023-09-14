@@ -294,7 +294,6 @@ export async function writeCrudGrid(
                 </ToolbarItem>`
                         : ""
                 }
-                <ToolbarFillSpace />
                 ${
                     hasFilter
                         ? `<ToolbarItem>
@@ -302,6 +301,7 @@ export async function writeCrudGrid(
             </ToolbarItem>`
                         : ""
                 }
+                <ToolbarFillSpace />
                 ${
                     hasCreateMutation
                         ? `<ToolbarActions>
