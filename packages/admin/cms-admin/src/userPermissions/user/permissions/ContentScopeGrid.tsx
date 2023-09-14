@@ -29,13 +29,13 @@ export const ContentScopeGrid: React.FC<{
     const submit = async (data: FormValues) => {
         await client.mutate<GQLUpdateContentScopeMutation, GQLUpdateContentScopeMutationVariables>({
             mutation: gql`
-                mutation UpdateContentScope($input: UserContentScopesInput!) {
-                    userPermissionsUpdateContentScope(input: $input)
+                mutation UpdateContentScope($userId: String!, $input: UserContentScopesInput!) {
+                    userPermissionsUpdateContentScope(userId: $userId, input: $input)
                 }
             `,
             variables: {
+                userId,
                 input: {
-                    userId,
                     contentScopes: data.contentScopes.map((contentScope) => JSON.parse(contentScope)),
                 },
             },

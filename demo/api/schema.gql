@@ -878,10 +878,10 @@ enum ProductTagSortField {
 
 type Mutation {
   currentUserSignOut: String!
-  userPermissionsCreatePermission(input: CreateUserPermissionInput!): UserPermission!
-  userPermissionsUpdatePermission(input: UpdateUserPermissionInput!): UserPermission!
+  userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
+  userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!
-  userPermissionsUpdateContentScope(input: UserContentScopesInput!): [JSONObject!]!
+  userPermissionsUpdateContentScope(userId: String!, input: UserContentScopesInput!): [JSONObject!]!
   createBuilds(input: CreateBuildsInput!): Boolean!
   saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
   savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
@@ -939,28 +939,16 @@ type Mutation {
   deleteProductTag(id: ID!): Boolean!
 }
 
-input CreateUserPermissionInput {
+input UserPermissionInput {
   permission: String!
   validFrom: DateTime
   validTo: DateTime
   reason: String
   requestedBy: String
   approvedBy: String
-  userId: String!
-}
-
-input UpdateUserPermissionInput {
-  permission: String
-  validFrom: DateTime
-  validTo: DateTime
-  reason: String
-  requestedBy: String
-  approvedBy: String
-  id: ID!
 }
 
 input UserContentScopesInput {
-  userId: String!
   contentScopes: [JSONObject!]! = []
 }
 

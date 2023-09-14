@@ -3,7 +3,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { Args, ArgsType, Field, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 
-import { CreateUserPermissionInput, UpdateUserPermissionInput } from "./dto/user-permission.input";
+import { UserPermissionInput } from "./dto/user-permission.input";
 import { UserPermission } from "./entities/user-permission.entity";
 import { UserPermissionsService } from "./user-permissions.service";
 
@@ -36,10 +36,13 @@ export class UserPermissionResolver {
 
     @Mutation(() => UserPermission)
     async userPermissionsCreatePermission(
-        @Args("input", { type: () => CreateUserPermissionInput }) data: CreateUserPermissionInput,
+        @Args("userId", { type: () => String }) userId: string,
+        @Args("input", { type: () => UserPermissionInput }) input: UserPermissionInput,
     ): Promise<UserPermission> {
         const permission = new UserPermission();
-        permission.assign(data);
+        this.userService.getUser(userId); //validate user exists
+        permission.userId = userId;
+        permission.assign(input);
         await this.permissionRepository.persistAndFlush(permission);
         return permission;
     }
@@ -51,10 +54,11 @@ export class UserPermissionResolver {
 
     @Mutation(() => UserPermission)
     async userPermissionsUpdatePermission(
-        @Args("input", { type: () => UpdateUserPermissionInput }) data: UpdateUserPermissionInput,
+        @Args("id", { type: () => String }) id: string,
+        @Args("input", { type: () => UserPermissionInput }) input: UserPermissionInput,
     ): Promise<UserPermission> {
-        const permission = await this.getPermission(data.id);
-        permission.assign(data);
+        const permission = await this.getPermission(id);
+        permission.assign(input);
         await this.permissionRepository.persistAndFlush(permission);
         return permission;
     }
