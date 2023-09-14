@@ -17,7 +17,8 @@ export class UserContentScopesResolver {
 
     @Mutation(() => [GraphQLJSONObject])
     async userPermissionsUpdateContentScope(
-        @Args("input", { type: () => UserContentScopesInput }) { userId, contentScopes }: UserContentScopesInput,
+        @Args("userId", { type: () => String }) userId: string,
+        @Args("input", { type: () => UserContentScopesInput }) { contentScopes }: UserContentScopesInput,
     ): Promise<ContentScope[]> {
         this.userService.checkContentScopes(contentScopes);
         let entity = await this.repository.findOne({ userId });
