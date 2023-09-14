@@ -46,6 +46,10 @@ const MasterMenu: React.FC = () => {
                     primary={intl.formatMessage({ id: "menu.news", defaultMessage: "News" })}
                     to={`${match.url}/structured-content/news`}
                 />
+                <MenuItemRouterLink
+                    primary={intl.formatMessage({ id: "menu.shopProducts", defaultMessage: "Shop Products" })}
+                    to={`${match.url}/structured-content/shop-products`}
+                />
             </MenuCollapsibleItem>
             <MenuItemRouterLink
                 primary={intl.formatMessage({ id: "menu.dam", defaultMessage: "Assets" })}

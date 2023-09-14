@@ -31,6 +31,7 @@ import MasterMenu from "@src/common/MasterMenu";
 import { createConfig } from "@src/config";
 import Dashboard from "@src/dashboard/Dashboard";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
+import ProductsStackPage from "@src/shop/ProductsStackPage";
 import theme from "@src/theme";
 import * as React from "react";
 import { DndProvider } from "react-dnd";
@@ -169,6 +170,10 @@ class App extends React.Component {
                                                                                     <RouteWithErrorBoundary
                                                                                         path={`${match.path}/structured-content/news`}
                                                                                         component={News}
+                                                                                    />
+                                                                                    <RouteWithErrorBoundary
+                                                                                        path={`${match.path}/structured-content/shop-products`}
+                                                                                        component={ProductsStackPage}
                                                                                     />
                                                                                     <RouteWithErrorBoundary
                                                                                         path={`${match.path}/assets`}
