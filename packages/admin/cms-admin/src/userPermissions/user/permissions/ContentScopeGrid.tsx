@@ -71,7 +71,7 @@ export const ContentScopeGrid: React.FC<{
             >
                 <CardToolbar>
                     <ToolbarTitleItem>
-                        <FormattedMessage id="comet.userManagemant.scopes" defaultMessage="Scopes" />
+                        <FormattedMessage id="comet.userPermissions.scopes" defaultMessage="Scopes" />
                     </ToolbarTitleItem>
                     <ToolbarFillSpace />
                     <ToolbarActions>
