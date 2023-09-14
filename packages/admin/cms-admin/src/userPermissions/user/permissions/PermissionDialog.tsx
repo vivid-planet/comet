@@ -115,6 +115,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
             <FinalForm<GQLUserPermissionDialogFragment>
                 mode={permissionId ? "edit" : "add"}
                 onSubmit={submit}
+                onAfterSubmit={() => null}
                 initialValues={initialValues}
                 render={({ values }) => (
                     <>

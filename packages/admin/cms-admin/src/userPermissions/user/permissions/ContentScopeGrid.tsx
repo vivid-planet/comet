@@ -67,6 +67,7 @@ export const ContentScopeGrid: React.FC<{
             <FinalForm<FormValues>
                 mode="edit"
                 onSubmit={submit}
+                onAfterSubmit={() => null}
                 initialValues={{ contentScopes: data.userContentScopes.map((cs) => JSON.stringify(cs)) }}
             >
                 <CardToolbar>
