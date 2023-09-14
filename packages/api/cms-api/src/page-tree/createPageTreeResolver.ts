@@ -3,6 +3,7 @@ import { Args, createUnionType, ID, Info, Mutation, Parent, Query, ResolveField,
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
+import { DynamicDtoValidationPipe } from "../common/validation/dynamic-dto-validation.pipe";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
@@ -193,7 +194,8 @@ export function createPageTreeResolver({
         @SubjectEntity(PageTreeNode)
         async updatePageTreeNode(
             @Args("id", { type: () => ID }) id: string,
-            @Args("input", { type: () => PageTreeNodeUpdateInput }) input: PageTreeNodeUpdateInputInterface,
+            @Args("input", { type: () => PageTreeNodeUpdateInput }, new DynamicDtoValidationPipe(PageTreeNodeUpdateInput))
+            input: PageTreeNodeUpdateInputInterface,
         ): Promise<PageTreeNodeInterface> {
             // Archived pages cannot be updated
             const pageTreeReadApi = this.pageTreeService.createReadApi({
@@ -348,8 +350,9 @@ export function createPageTreeResolver({
 
         @Mutation(() => PageTreeNode)
         async createPageTreeNode(
-            @Args("input", { type: () => PageTreeNodeCreateInput }) input: PageTreeNodeCreateInputInterface,
-            @Args("scope", { type: () => Scope }) scope: ScopeInterface,
+            @Args("input", { type: () => PageTreeNodeCreateInput }, new DynamicDtoValidationPipe(PageTreeNodeCreateInput))
+            input: PageTreeNodeCreateInputInterface,
+            @Args("scope", { type: () => Scope }, new DynamicDtoValidationPipe(Scope)) scope: ScopeInterface,
             @Args("category", { type: () => String }) category: PageTreeNodeCategory,
         ): Promise<PageTreeNodeInterface> {
             // Can not add a subpage under an archived page
