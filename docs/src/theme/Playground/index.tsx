@@ -91,6 +91,8 @@ export default function Playground({ children, transformCode, ...props }: Props)
                 transformCode={transformCode ?? ((code) => `${code};`)}
                 theme={prismTheme}
                 {...props}
+                // workaround for https://github.com/FormidableLabs/react-live/issues/369
+                key={children}
             >
                 {playgroundPosition === "top" ? (
                     <>
