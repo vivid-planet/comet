@@ -11,7 +11,7 @@ import { inheritPropertyInitializers, inheritTransformationMetadata, inheritVali
 
 import { IsUndefinable } from "../validators/is-undefinable";
 
-//Copy from @nestjs/graphql with applyIsOptionalDecorator changed to use IsUndefinable instead of IsOptional
+//Copy from @nestjs/graphql with applyIsOptionalDecorator changed to use IsUndefinable instead of IsOptional and changed defaultValue to undefined
 export function PartialType<T>(classRef: Type<T>, decorator?: ClassDecoratorFactory): Type<Partial<T>> {
     const { fields, decoratorFactory } = getFieldsAndDecoratorForType(classRef);
 
@@ -37,7 +37,7 @@ export function PartialType<T>(classRef: Type<T>, decorator?: ClassDecoratorFact
              */
             item.typeFn();
         }
-        Field(item.typeFn, { ...item.options, nullable: true })(PartialObjectType.prototype, item.name);
+        Field(item.typeFn, { ...item.options, nullable: true, defaultValue: undefined })(PartialObjectType.prototype, item.name);
         applyIsOptionalDecorator(PartialObjectType, item.name);
         applyFieldDecorators(PartialObjectType, item);
     });

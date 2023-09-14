@@ -444,13 +444,6 @@ function generateInputHandling(
                 ? blockProps.map((prop) => `${prop.name}: ${prop.name}Input.transformToBlockData(),`).join("")
                 : ""
         }
-        ${
-            options.mode == "create" || options.mode == "updateNested"
-                ? inputRelationOneToOneProps
-                      .map((prop) => `${prop.name}: this.${prop.repositoryName}.assign(new ${prop.type}(), ${prop.name}Input),`)
-                      .join("")
-                : ""
-        }
 });
 ${inputRelationToManyProps
     .map((prop) => {
@@ -487,29 +480,29 @@ ${inputRelationToManyProps
     })
     .join("")}
 
-${
-    options.mode == "update"
-        ? inputRelationOneToOneProps
-              .map(
-                  (prop) => `
-                    if (${prop.name}Input) {
-                        const ${prop.singularName} = await ${instanceNameSingular}.${prop.name}.load();
-                        ${generateInputHandling(
-                            {
-                                mode: "updateNested",
-                                inputName: `${prop.name}Input`,
-                                assignEntityCode: `this.${prop.repositoryName}.assign(${prop.singularName}, {`,
-                                excludeFields: prop.targetMeta.props
-                                    .filter((prop) => prop.reference == "1:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
-                                    .map((prop) => prop.name),
-                            },
-                            prop.targetMeta,
-                        )}
-                    }`,
-              )
-              .join("")
-        : ""
-}
+${inputRelationOneToOneProps
+    .map(
+        (prop) => `
+            ${options.mode != "create" || prop.nullable ? `if (${prop.name}Input) {` : "{"}
+                const ${prop.singularName} = ${
+            (options.mode == "update" || options.mode == "updateNested") && prop.nullable
+                ? `${instanceNameSingular}.${prop.name} ? await ${instanceNameSingular}.${prop.name}.load() : new ${prop.type}();`
+                : `new ${prop.type}();`
+        }
+                ${generateInputHandling(
+                    {
+                        mode: "updateNested",
+                        inputName: `${prop.name}Input`,
+                        assignEntityCode: `this.${prop.repositoryName}.assign(${prop.singularName}, {`,
+                        excludeFields: prop.targetMeta.props
+                            .filter((prop) => prop.reference == "1:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
+                            .map((prop) => prop.name),
+                    },
+                    prop.targetMeta,
+                )}
+                ${options.mode != "create" || prop.nullable ? `}` : "}"}`,
+    )
+    .join("")}
 
 ${
     options.mode == "update"
