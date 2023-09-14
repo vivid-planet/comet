@@ -3,8 +3,11 @@ import { Field, FinalForm, FinalFormInput, MainContent } from "@comet/admin";
 import { EditPageLayout } from "@comet/cms-admin";
 import { Card, CardContent } from "@mui/material";
 import { GQLMutationcreateProductArgs, GQLMutationupdateShopProductArgs, GQLShopProductInput } from "@src/graphql.generated";
-import { GQLShopProductQuery, GQLShopProductQueryVariables } from "@src/shop/.legacy/util/queries.generated";
 import { useSaveShopProductHandler } from "@src/shop/shopProductPage/SaveShopProductHandler";
+import {
+    GQLShopProductQuery,
+    GQLShopProductQueryVariables,
+} from "@src/shop/shopProductPage/tabs/shopProductCategories/ShopProductCategoriesPage.generated";
 import gql from "graphql-tag";
 import React from "react";
 import { useIntl } from "react-intl";
@@ -91,7 +94,7 @@ const shopProductQuery = gql`
     }
 `;
 
-const updateShopProductMutation = gql`
+export const updateShopProductMutation = gql`
     mutation UpdateShopProduct($id: ID!, $input: ShopProductUpdateInput!) {
         updateShopProduct(id: $id, input: $input) {
             id
@@ -99,7 +102,7 @@ const updateShopProductMutation = gql`
     }
 `;
 
-const createShopProductMutation = gql`
+export const createShopProductMutation = gql`
     mutation CreateShopProduct($input: ShopProductInput!) {
         createShopProduct(input: $input) {
             id
