@@ -1,10 +1,10 @@
-import { GridFilterButton, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem } from "@comet/admin";
+import { Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem } from "@comet/admin";
 import { Save } from "@mui/icons-material";
 import { Button, Typography } from "@mui/material";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-export const ShopProductsToolbar: React.FC<{ productName: string }> = ({ productName }) => {
+export const ShopProductToolbar: React.FC<{ productName: string }> = ({ productName }) => {
     return (
         <Toolbar>
             <ToolbarItem>
@@ -13,9 +13,6 @@ export const ShopProductsToolbar: React.FC<{ productName: string }> = ({ product
                 </Typography>
             </ToolbarItem>
             <ToolbarFillSpace />
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
             <ToolbarActions>
                 <Button startIcon={<Save />} variant="contained" color="primary">
                     <FormattedMessage id="shopProductPage.toolbar.save" defaultMessage="Save" />
