@@ -1,15 +1,15 @@
-import { ExternalLinkBlock } from "@comet/blocks-api";
 import { PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
-import { LinkBlock } from "@src/common/blocks/linkBlock/link.block";
 import { Link } from "@src/links/entities/link.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
 import { UserGroup } from "@src/user-groups/user-group";
 import faker from "faker";
 import slugify from "slugify";
+
+import { LinkBlockFixtureService } from "./blocks/link.fixture";
 
 interface GenerateLinkInput {
     name: string;
@@ -19,7 +19,11 @@ interface GenerateLinkInput {
 
 @Injectable()
 export class LinkFixtureService {
-    constructor(private readonly pageTreeService: PageTreeService, @InjectRepository(Link) private readonly linkRepository: EntityRepository<Link>) {}
+    constructor(
+        private readonly pageTreeService: PageTreeService,
+        @InjectRepository(Link) private readonly linkRepository: EntityRepository<Link>,
+        private readonly linkBlockFixture: LinkBlockFixtureService,
+    ) {}
 
     async generateLink({ name, scope, parentId }: GenerateLinkInput): Promise<{ node: PageTreeNodeInterface; link: Link }> {
         const id = faker.datatype.uuid();
@@ -42,24 +46,9 @@ export class LinkFixtureService {
         );
         await this.pageTreeService.updateNodeVisibility(node.id, PageTreeNodeVisibility.Published);
 
-        // TODO: Put in own file, link-block.generator that handles the different link types (external, internal, news)
-        const externalLinkUrls = ["https://vivid-planet.com/", "https://github.com/", "https://gitlab.com", "https://stackoverflow.com/"];
-        const content = LinkBlock.blockInputFactory({
-            attachedBlocks: [
-                {
-                    type: "external",
-                    props: ExternalLinkBlock.blockDataFactory({
-                        targetUrl: faker.random.arrayElement(externalLinkUrls),
-                        openInNewWindow: faker.datatype.boolean(),
-                    }),
-                },
-            ],
-            activeType: "external",
-        });
-
         const link = this.linkRepository.create({
             id,
-            content: content.transformToBlockData(),
+            content: (await this.linkBlockFixture.generateBlock()).transformToBlockData(),
         });
         await this.linkRepository.persistAndFlush(link);
 

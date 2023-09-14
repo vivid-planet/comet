@@ -14,7 +14,7 @@ import { DamImageBlock } from "@comet/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { ValidateNested } from "class-validator";
 
-const FullWidthImageContentBlock = createOptionalBlock(RichTextBlock);
+export const FullWidthImageContentBlock = createOptionalBlock(RichTextBlock);
 
 class FullWidthImageBlockData extends BlockData {
     @ChildBlock(DamImageBlock)

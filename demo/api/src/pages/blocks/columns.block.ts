@@ -4,14 +4,16 @@ import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 
 import { HeadlineBlock } from "./headline.block";
 
-const ColumnsContentBlock = createBlocksBlock(
+export const supportedBlocks = {
+    space: SpaceBlock,
+    richtext: RichTextBlock,
+    headline: HeadlineBlock,
+    image: DamImageBlock,
+};
+
+export const ColumnsContentBlock = createBlocksBlock(
     {
-        supportedBlocks: {
-            space: SpaceBlock,
-            richtext: RichTextBlock,
-            headline: HeadlineBlock,
-            image: DamImageBlock,
-        },
+        supportedBlocks,
     },
     "ColumnsContent",
 );

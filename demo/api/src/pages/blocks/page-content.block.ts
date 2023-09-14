@@ -13,7 +13,7 @@ import { TextImageBlock } from "./TextImageBlock";
 import { TwoListsBlock } from "./two-lists.block";
 import { VideoBlock } from "./video.block";
 
-const supportedBlocks = {
+export const supportedBlocks = {
     space: SpaceBlock,
     richtext: RichTextBlock,
     headline: HeadlineBlock,
