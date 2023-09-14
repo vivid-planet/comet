@@ -1,59 +1,31 @@
 import { useQuery } from "@apollo/client";
-import {
-    muiGridFilterToGql,
-    muiGridSortToGql,
-    StackLink,
-    Tooltip,
-    useBufferedRowCount,
-    useDataGridRemote,
-    usePersistentColumnState,
-} from "@comet/admin";
-import { Edit, Info } from "@comet/admin-icons";
-import { Box, IconButton, Typography } from "@mui/material";
+import { muiGridFilterToGql, muiGridSortToGql, StackLink, useBufferedRowCount, useDataGridRemote, usePersistentColumnState } from "@comet/admin";
+import { Edit } from "@comet/admin-icons";
+import { Box, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef } from "@mui/x-data-grid-pro";
 import { GQLProductsListFragment } from "@src/products/ProductsGrid.generated";
 import { GQLShopProductsListQuery, GQLShopProductsListQueryVariables } from "@src/shop/dataGrid/ShopProductsDataGrid.generated";
-import { ShopProductsDataGridToolbar } from "@src/shop/dataGrid/ShopProductsDataGridToolbar";
+import { ShopProductsToolbar } from "@src/shop/dataGrid/ShopProductsToolbar";
 import gql from "graphql-tag";
 import React from "react";
-import { FormattedMessage } from "react-intl";
 
 const ShopProductsDataGrid: React.FC = () => {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
-    const NameHeader = () => (
-        <div style={{ display: "flex", alignItems: "center" }}>
-            <Typography fontWeight={400} fontSize={14}>
-                Name
-            </Typography>
-            <Tooltip trigger="click" title={<FormattedMessage id="shopProducts.dataGrid.name" defaultMessage="The title/name of the product" />}>
-                <IconButton>
-                    <Info />
-                </IconButton>
-            </Tooltip>
-        </div>
-    );
     const columns: GridColDef<GQLProductsListFragment>[] = [
-        {
-            field: "name",
-            headerName: "Name",
-            width: 150,
-            renderHeader: () => <NameHeader />,
-        },
+        { field: "name", headerName: "Name", width: 150 },
         { field: "description", headerName: "Description", width: 600 },
         {
             field: "action",
             headerName: "Actions",
-            width: 100,
+            width: 150,
             sortable: false,
             filterable: false,
             renderCell: (params) => {
                 return (
-                    <>
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit color="primary" />
-                        </IconButton>
-                    </>
+                    <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
+                        <Edit color="primary" />
+                    </IconButton>
                 );
             },
         },
@@ -81,7 +53,7 @@ const ShopProductsDataGrid: React.FC = () => {
                 error={error}
                 components={{
                     Toolbar: () => {
-                        return <ShopProductsDataGridToolbar />;
+                        return <ShopProductsToolbar />;
                     },
                 }}
             />

@@ -1,6 +1,6 @@
 import { Stack, StackPage, StackSwitch } from "@comet/admin";
 import ShopProductsDataGrid from "@src/shop/dataGrid/ShopProductsDataGrid";
-import { ShopProductFinalForm } from "@src/shop/form/ShopProductFinalForm";
+import { ShopProductPage } from "@src/shop/shopProductPage/ShopProductPage";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -14,7 +14,7 @@ const ProductsStackPage: React.FC = () => {
                     <ShopProductsDataGrid />
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "shopProducts.editProduct", defaultMessage: "Edit products" })}>
-                    {(selectedId) => <ShopProductFinalForm shopProductId={selectedId} />}
+                    {(selectedId) => <ShopProductPage shopProductId={selectedId} />}
                 </StackPage>
             </StackSwitch>
         </Stack>
