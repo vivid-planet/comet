@@ -1,30 +1,23 @@
 import { MenuItemRouterLinkProps } from "@comet/admin";
 
-import { RouteMenu } from "./routeMenu.type";
+import { RouteMenu, RouteMenuItemWithSubMenu } from "./routeMenu.type";
 
-type Menu = {
+type MenuItem = {
     menuItem: MenuItemRouterLinkProps;
     hasSubMenu: boolean;
-    subMenu: {
-        menuItem: MenuItemRouterLinkProps;
-    }[];
-}[];
+    subMenu: Menu;
+};
+type Menu = MenuItem[];
 
-export function getMenuFromRouteMenu(items: RouteMenu): Menu {
+export function getMenuFromRouteMenu(items: RouteMenu<10>): Menu {
     // TODO: Filter for user-permissions once they are available
-    return items.map((item) => ({
+    const mapFn = (item: RouteMenuItemWithSubMenu): MenuItem => ({
         menuItem: {
             ...item,
             to: item.to ?? item.route?.path?.toString() ?? "",
         },
         hasSubMenu: !!item.subMenu,
-        subMenu: item.subMenu
-            ? item.subMenu.map((subItem) => ({
-                  menuItem: {
-                      ...subItem,
-                      to: subItem.to ?? subItem.route?.path?.toString() ?? "",
-                  },
-              }))
-            : [],
-    }));
+        subMenu: item.subMenu ? item.subMenu.map(mapFn) : [],
+    });
+    return items.map(mapFn);
 }

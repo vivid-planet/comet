@@ -49,7 +49,7 @@ export const pageTreeDocumentTypes = {
 
 const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock }, scopeParts: ["domain"] });
 
-export const routeMenu: RouteMenu = [
+export const routeMenu: RouteMenu<2> = [
     {
         primary: <FormattedMessage id="menu.dashboard" defaultMessage="Dashboard" />,
         icon: <DashboardIcon />,

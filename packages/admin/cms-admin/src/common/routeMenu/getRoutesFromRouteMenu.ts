@@ -1,19 +1,15 @@
 import { RouteProps } from "react-router-dom";
 
-import { RouteMenu } from "./routeMenu.type";
+import { RouteMenu, RouteMenuItemWithSubMenu } from "./routeMenu.type";
 
-export function getRoutesFromRouteMenu(items: RouteMenu): RouteProps[] {
+export function getRoutesFromRouteMenu(items: RouteMenu<10>): RouteProps[] {
     // TODO: Filter for user-permissions once they are available
-    return items.flatMap((item) => {
-        const ret = [];
-        if (item.route) ret.push(item.route);
+    const flat = (routes: RouteProps[], item: RouteMenuItemWithSubMenu): RouteProps[] => {
+        if (item.route) routes.push(item.route);
         if (item.subMenu) {
-            for (const subMenu of item.subMenu) {
-                if (subMenu.route) {
-                    ret.push(subMenu.route);
-                }
-            }
+            routes.concat(item.subMenu.reduce(flat, routes));
         }
-        return ret;
-    });
+        return routes;
+    };
+    return items.reduce(flat, []);
 }
