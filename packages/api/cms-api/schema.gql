@@ -504,10 +504,10 @@ type Mutation {
   updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
   createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
   currentUserSignOut: String!
-  userPermissionsCreatePermission(input: CreateUserPermissionInput!): UserPermission!
-  userPermissionsUpdatePermission(input: UpdateUserPermissionInput!): UserPermission!
+  userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
+  userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!
-  userPermissionsUpdateContentScope(input: UserContentScopesInput!): [JSONObject!]!
+  userPermissionsUpdateContentScope(userId: String!, input: UserContentScopesInput!): [JSONObject!]!
 }
 
 input CreateBuildsInput {
@@ -605,27 +605,15 @@ input PageTreeNodeCreateInput {
   hideInMenu: Boolean
 }
 
-input CreateUserPermissionInput {
+input UserPermissionInput {
   permission: String!
   validFrom: DateTime
   validTo: DateTime
   reason: String
   requestedBy: String
   approvedBy: String
-  userId: String!
-}
-
-input UpdateUserPermissionInput {
-  permission: String
-  validFrom: DateTime
-  validTo: DateTime
-  reason: String
-  requestedBy: String
-  approvedBy: String
-  id: ID!
 }
 
 input UserContentScopesInput {
-  userId: String!
   contentScopes: [JSONObject!]! = []
 }

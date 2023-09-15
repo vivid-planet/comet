@@ -32,7 +32,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
         if (permissionId && permissionId !== "add") {
             await client.mutate<GQLUpdateUserPermissionMutation, GQLUpdateUserPermissionMutationVariables>({
                 mutation: gql`
-                    mutation UpdateUserPermission($id: String!, $input: UpdateUserPermissionInput!) {
+                    mutation UpdateUserPermission($id: String!, $input: UserPermissionInput!) {
                         userPermissionsUpdatePermission(id: $id, input: $input) {
                             id
                         }
@@ -44,7 +44,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
         } else {
             await client.mutate<GQLCreateUserPermissionMutation, GQLCreateUserPermissionMutationVariables>({
                 mutation: gql`
-                    mutation CreateUserPermission($userId: String!, $input: CreateUserPermissionInput!) {
+                    mutation CreateUserPermission($userId: String!, $input: UserPermissionInput!) {
                         userPermissionsCreatePermission(userId: $userId, input: $input) {
                             id
                         }
