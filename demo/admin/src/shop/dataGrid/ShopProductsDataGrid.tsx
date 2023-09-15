@@ -42,7 +42,7 @@ export const ShopProductsDataGrid: React.FC = () => {
     const rowCount = useBufferedRowCount(data?.shopProducts.totalCount);
 
     return (
-        <Box sx={{ height: 400, width: "100%" }}>
+        <Box sx={{ height: 700, width: "100%" }}>
             <DataGridPro
                 {...dataGridProps}
                 disableSelectionOnClick
