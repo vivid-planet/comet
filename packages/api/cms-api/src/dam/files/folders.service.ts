@@ -153,10 +153,7 @@ export class FoldersService {
         return qb.getSingleResult();
     }
 
-    async create(
-        { parentId, isInboxFromOtherScope = false, ...data }: CreateFolderInput & { isInboxFromOtherScope?: boolean },
-        scope?: DamScopeInterface,
-    ): Promise<FolderInterface> {
+    async create({ parentId, isInboxFromOtherScope = false, ...data }: CreateFolderInput, scope?: DamScopeInterface): Promise<FolderInterface> {
         let parent = undefined;
         let mpath: string[] = [];
         if (parentId) {

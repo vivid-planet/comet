@@ -1,10 +1,13 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { LocalErrorScopeApolloContext, readClipboardText, writeClipboardText } from "@comet/admin";
 import { ReplaceDependencyObject } from "@comet/blocks-admin";
+import { format } from "date-fns";
+import isEqual from "lodash.isequal";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
+import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { useContentScope } from "../../contentScope/Provider";
 import { useDamScope } from "../../dam/config/useDamScope";
 import { GQLDocument, GQLPageQuery, GQLPageQueryVariables, GQLUpdatePageMutationVariables } from "../../documents/types";
@@ -12,6 +15,8 @@ import { arrayToTreeMap } from "./treemap/TreeMapUtils";
 import {
     GQLCopyFilesToScopeMutation,
     GQLCopyFilesToScopeMutationVariables,
+    GQLCreateIncomingFolderMutation,
+    GQLCreateIncomingFolderMutationVariables,
     GQLCreatePageNodeMutation,
     GQLCreatePageNodeMutationVariables,
     GQLSlugAvailableQuery,
@@ -35,10 +40,9 @@ const createPageNodeMutation = gql`
 `;
 
 const copyFilesToScopeMutation = gql`
-    mutation CopyFilesToScope($fileIds: [ID!]!, $targetScope: DamScopeInput!, $existingInboxFolderId: ID) {
-        copyFilesToScope(fileIds: $fileIds, targetScope: $targetScope, existingInboxFolderId: $existingInboxFolderId) {
+    mutation CopyFilesToScope($fileIds: [ID!]!, $targetFolderId: ID!) {
+        copyFilesToScope(fileIds: $fileIds, targetFolderId: $targetFolderId) {
             numberNewlyCopiedFiles
-            inboxFolderId
             mappedFiles {
                 rootFile {
                     id
@@ -126,6 +130,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     const client = useApolloClient();
     const { scope } = useContentScope();
     const damScope = useDamScope();
+    const blockContext = useCmsBlockContext();
 
     const prepareForClipboard = React.useCallback(
         async (pages: GQLPageTreePageFragment[]): Promise<PagesClipboard> => {
@@ -220,6 +225,40 @@ function useCopyPastePages(): UseCopyPastePagesApi {
             };
         }
     };
+
+    const createIncomingFolder = async ({
+        targetScope,
+        sourceScopes,
+    }: {
+        targetScope: Record<string, unknown>;
+        sourceScopes: Record<string, unknown>[];
+    }) => {
+        const scopeString = sourceScopes.length === 0 ? "unknown" : sourceScopes.map((scope) => Object.values(scope).join("-")).join(", ");
+        const date = new Date();
+        const name = `Copy from ${scopeString} ${format(date, "dd.MM.yyyy")}, ${format(date, "HH:mm:ss")}`;
+
+        const { data } = await client.mutate<GQLCreateIncomingFolderMutation, GQLCreateIncomingFolderMutationVariables>({
+            mutation: gql`
+                mutation CreateIncomingFolder($input: CreateDamFolderInput!, $contentScope: DamScopeInput!) {
+                    createDamFolder(input: $input, scope: $contentScope) {
+                        id
+                    }
+                }
+            `,
+            variables: {
+                input: {
+                    name: name,
+                    isInboxFromOtherScope: true,
+                },
+                contentScope: targetScope,
+            },
+            context: LocalErrorScopeApolloContext,
+        });
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return data!.createDamFolder;
+    };
+
     const sendPages = React.useCallback(
         async (parentId: string | null, { pages }: PagesClipboard, options?: SendPagesOptions): Promise<void> => {
             const tree = arrayToTreeMap<PageClipboard>(pages);
@@ -283,17 +322,70 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                 }
 
                 // 1c. Copy all files used on page to target scope
-                let fileIdReplacements: ReplaceDependencyObject[] | undefined;
+                const fileIdReplacements: ReplaceDependencyObject[] = [];
+                const fileIdsToCopyDirectly: string[] = [];
                 if (node?.document != null) {
-                    const fileDependencyIds = documentType
+                    const fileDependencies = documentType
                         .dependencies(node.document)
-                        .filter((dependency) => dependency.targetGraphqlObjectType === "DamFile")
-                        .map((dependency) => dependency.id);
+                        .filter((dependency) => dependency.targetGraphqlObjectType === "DamFile");
+                    for (const fileDependency of fileDependencies) {
+                        if (fileDependency.data && (fileDependency.data as any).damFile) {
+                            const { damFile } = fileDependency.data as any; // TODO typing
+                            if (damFile.fileUrl) {
+                                if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl)) {
+                                    //our own api, no need to download&upload
+                                    if (isEqual(damFile.scope, damScope)) {
+                                        //same scope, same server, no need to copy
+                                    } else {
+                                        //batch copy below
+                                        fileIdsToCopyDirectly.push(damFile.id);
+                                    }
+                                } else {
+                                    {
+                                        const fileResponse = await fetch(damFile.fileUrl);
+                                        const fileBlob = await fileResponse.blob();
+                                        const file = new File([fileBlob], damFile.name, { type: damFile.mimetype });
+                                        const formData = new FormData();
+                                        formData.append("file", file);
+                                        formData.append("scope", JSON.stringify(damScope));
+                                        if (!inboxFolderIdForCopiedFiles) {
+                                            const { id } = await createIncomingFolder({
+                                                targetScope: damScope,
+                                                sourceScopes: [], //TODO collect target scopes
+                                            });
+                                            inboxFolderIdForCopiedFiles = id;
+                                        }
+                                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                        formData.append("folderId", inboxFolderIdForCopiedFiles!);
+                                        //TODO attach other dam file data (altText, cropping, etc.)
+                                        const response: { data: { id: string } } = await blockContext.damConfig.apiClient.post(
+                                            `/dam/files/upload`,
+                                            formData,
+                                            {
+                                                // cancelToken, //TODO support cancel?
+                                                headers: {
+                                                    "Content-Type": "multipart/form-data",
+                                                },
+                                            },
+                                        );
+                                        fileIdReplacements.push({ type: "DamFile", originalId: fileDependency.id, replaceWithId: response.data.id });
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-                    if (fileDependencyIds.length > 0) {
+                    if (fileIdsToCopyDirectly.length > 0) {
+                        if (!inboxFolderIdForCopiedFiles) {
+                            const { id } = await createIncomingFolder({
+                                targetScope: damScope,
+                                sourceScopes: [], //TODO collect target scopes
+                            });
+                            inboxFolderIdForCopiedFiles = id;
+                        }
                         const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
                             mutation: copyFilesToScopeMutation,
-                            variables: { fileIds: fileDependencyIds, targetScope: damScope, existingInboxFolderId: inboxFolderIdForCopiedFiles },
+                            variables: { fileIds: fileIdsToCopyDirectly, targetFolderId: inboxFolderIdForCopiedFiles },
                             update: (cache, result) => {
                                 if (result.data && result.data.copyFilesToScope.numberNewlyCopiedFiles > 0) {
                                     cache.evict({ fieldName: "damItemsList" });
@@ -301,10 +393,10 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                             },
                         });
 
-                        inboxFolderIdForCopiedFiles = copiedFiles?.copyFilesToScope.inboxFolderId ?? undefined;
-
                         if (copiedFiles) {
-                            fileIdReplacements = createFileIdReplacements(copiedFiles.copyFilesToScope.mappedFiles);
+                            for (const item of copiedFiles.copyFilesToScope.mappedFiles) {
+                                fileIdReplacements.push({ type: "DamFile", originalId: item.rootFile.id, replaceWithId: item.copy.id });
+                            }
                         }
                     }
                 }
@@ -327,6 +419,10 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                 return data.createPageTreeNode.id;
             };
 
+            /*
+            TODO if nothing was copied/uploaded delete incoming folder again
+            */
+
             const traverse = async (parentId = "root", newParentId: string | null = null): Promise<void> => {
                 const nodes = tree.get(parentId) || [];
                 let posOffset = 0;
@@ -347,16 +443,6 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     );
 
     return { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages };
-}
-
-function createFileIdReplacements(mappedIds: Array<{ rootFile: { id: string }; copy: { id: string } }>): ReplaceDependencyObject[] {
-    const replacements: ReplaceDependencyObject[] = [];
-
-    for (const item of mappedIds) {
-        replacements.push({ type: "DamFile", originalId: item.rootFile.id, replaceWithId: item.copy.id });
-    }
-
-    return replacements;
 }
 
 /**

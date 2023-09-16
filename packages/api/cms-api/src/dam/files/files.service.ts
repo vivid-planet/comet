@@ -3,7 +3,6 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { createHmac } from "crypto";
-import { format } from "date-fns";
 import exifr from "exifr";
 import { createReadStream } from "fs";
 import getColors from "get-image-colors";
@@ -180,7 +179,7 @@ export class FilesService {
             .getResult();
     }
 
-    async findCopiesOfFileInScope(fileId: string, scope: DamScopeInterface) {
+    async findCopiesOfFileInScope(fileId: string, scope?: DamScopeInterface) {
         return withFilesSelect(this.selectQueryBuilder(), { copyOfId: fileId, scope: scope }).getResult();
     }
 
@@ -430,17 +429,15 @@ export class FilesService {
         return this.create(fileInput);
     }
 
-    async copyFilesToScope({
-        user,
-        fileIds,
-        targetScope,
-        existingInboxFolderId,
-    }: {
-        user: CurrentUserInterface;
-        fileIds: string[];
-        targetScope: DamScopeInterface;
-        existingInboxFolderId?: string;
-    }) {
+    async copyFilesToScope({ user, fileIds, targetFolderId }: { user: CurrentUserInterface; fileIds: string[]; targetFolderId: string }) {
+        const inboxFolder = await this.foldersService.findOneById(targetFolderId);
+        if (!inboxFolder) {
+            throw new Error("Specified inbox folder doesn't exist.");
+        }
+        if (inboxFolder.scope && !this.contentScopeService.canAccessScope(inboxFolder.scope, user)) {
+            throw new Error("User can't access the target scope");
+        }
+
         const getUniqueFileScopes = (files: FileInterface[]): DamScopeInterface[] => {
             const fileScopes: DamScopeInterface[] = [];
             for (const file of files) {
@@ -456,43 +453,8 @@ export class FilesService {
             return fileScopes;
         };
 
-        const getOrCreateInboxFolder = async ({
-            existingInboxFolder,
-            targetScope,
-            fileScopes,
-        }: {
-            existingInboxFolder?: string;
-            targetScope: DamScopeInterface;
-            fileScopes: DamScopeInterface[];
-        }) => {
-            let createdInboxFolderAutomatically = false;
-            let inboxFolder: FolderInterface;
-            if (existingInboxFolder) {
-                const folder = await this.foldersService.findOneById(existingInboxFolder);
-                if (folder === null) {
-                    throw new Error("Specified inbox folder doesn't exist.");
-                }
-
-                inboxFolder = folder;
-            } else {
-                const scopeString = fileScopes.length === 0 ? "unknown" : fileScopes.map((scope) => Object.values(scope).join("-")).join(", ");
-                const date = new Date();
-
-                inboxFolder = await this.foldersService.create(
-                    {
-                        name: `Copy from ${scopeString} ${format(date, "dd.MM.yyyy")}, ${format(date, "HH:mm:ss")}`,
-                        isInboxFromOtherScope: true,
-                    },
-                    targetScope,
-                );
-                createdInboxFolderAutomatically = true;
-            }
-
-            return { inboxFolder, createdInboxFolderAutomatically };
-        };
-
         const findCopyWithSameCroppingInTargetScope = async (file: FileInterface) => {
-            const copiesInTargetScope = await this.findCopiesOfFileInScope(file.id, targetScope);
+            const copiesInTargetScope = await this.findCopiesOfFileInScope(file.id, inboxFolder.scope);
 
             if (copiesInTargetScope.length === 0) {
                 return undefined;
@@ -507,10 +469,6 @@ export class FilesService {
             return undefined;
         };
 
-        if (!this.contentScopeService.canAccessScope(targetScope, user)) {
-            throw new Error("User can't access the target scope");
-        }
-
         const files = await this.findMultipleByIds(fileIds);
         if (files.length === 0) {
             throw new Error("No valid file ids provided");
@@ -524,25 +482,11 @@ export class FilesService {
             throw new Error(`User can't access the scope of one or more files`);
         }
 
-        const { inboxFolder: returnedInboxFolder, createdInboxFolderAutomatically } = await getOrCreateInboxFolder({
-            existingInboxFolder: existingInboxFolderId,
-            targetScope,
-            fileScopes,
-        });
-        let inboxFolder: FolderInterface | undefined = returnedInboxFolder;
-        if (!this.contentScopeService.scopesAreEqual(targetScope, inboxFolder.scope)) {
-            throw new Error("Target scope and inbox folder scope don't match");
-        }
-
         let numberNewlyCopiedFiles = 0;
         let numberAlreadyCopiedFiles = 0;
 
         const mappedFiles: Array<{ rootFile: FileInterface; copy: FileInterface }> = [];
         for (const file of files) {
-            if (this.contentScopeService.scopesAreEqual(file.scope, targetScope)) {
-                continue;
-            }
-
             let copiedFile: FileInterface;
 
             const copyInTargetScope = await findCopyWithSameCroppingInTargetScope(file);
@@ -557,12 +501,7 @@ export class FilesService {
             mappedFiles.push({ rootFile: file, copy: copiedFile });
         }
 
-        if (createdInboxFolderAutomatically && numberNewlyCopiedFiles === 0) {
-            await this.foldersService.delete(inboxFolder.id);
-            inboxFolder = undefined;
-        }
-
-        return { inboxFolderId: inboxFolder?.id, numberNewlyCopiedFiles, numberAlreadyCopiedFiles, mappedFiles };
+        return { numberNewlyCopiedFiles, numberAlreadyCopiedFiles, mappedFiles };
     }
 
     async findNextAvailableFilename({
