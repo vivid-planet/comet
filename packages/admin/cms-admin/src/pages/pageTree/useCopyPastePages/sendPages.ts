@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 
 import { CmsBlockContext } from "../../../blocks/CmsBlockContextProvider";
 import { ContentScopeInterface } from "../../../contentScope/Provider";
-import { GQLUpdatePageMutationVariables } from "../../../documents/types";
+import { DocumentInterface, GQLDocument, GQLUpdatePageMutationVariables } from "../../../documents/types";
 import { PageTreeContext } from "../PageTreeContext";
 import { arrayToTreeMap } from "../treemap/TreeMapUtils";
 import { PageClipboard, PagesClipboard } from "../useCopyPastePages";
@@ -16,6 +16,8 @@ import {
     GQLCopyFilesToScopeMutationVariables,
     GQLCreatePageNodeMutation,
     GQLCreatePageNodeMutationVariables,
+    GQLDeleteIncomingFolderMutation,
+    GQLDeleteIncomingFolderMutationVariables,
     GQLSlugAvailableQuery,
     GQLSlugAvailableQueryVariables,
 } from "./sendPages.generated";
@@ -70,7 +72,8 @@ interface SendPagesDependencies {
  * Iterates over passed pages synchronous and creates data with mutations
  *
  * Process:
- *      1. traverses the tree with top-down strategy
+ *      0. traverses the tree with top-down strategy and find all source scopes of file dependencies
+ *      1. traverses the tree with top-down strategy and do the actual creating of documents and page tree nodes
  *          1a. Create new document with new id
  *          1b. Generate unique slug by adding "-{uniqueNumber}" to the slug
  *          1c. If the page is copied from one scope to another, copy the files on this page to the new scope
@@ -78,7 +81,8 @@ interface SendPagesDependencies {
  *              - with new name "{name} {uniqueNumber}"
  *              - and new parent id
  *              - new document id (created in step 1a)
- *      2. Refetch Pages query
+ *      2. delete inbox folder if it was not used (as files already existed in target scope)
+ *      3. Refetch Pages query
  *
  **/
 export async function sendPages(
@@ -88,8 +92,9 @@ export async function sendPages(
     { client, scope, documentTypes, blockContext, damScope }: SendPagesDependencies,
 ): Promise<void> {
     const tree = arrayToTreeMap<PageClipboard>(pages);
-    const pageTreeNodeIdReplacements = createPageTreeNodeIdReplacements(pages);
+    const dependencyReplacements = createPageTreeNodeIdReplacements(pages);
     let inboxFolderIdForCopiedFiles: string | undefined = undefined;
+    let inboxFolderUsed = false;
 
     const handlePageTreeNode = async (node: PageClipboard, newParentId: string | null, posOffset: number): Promise<string> => {
         const documentType = documentTypes[node.documentType];
@@ -128,7 +133,8 @@ export async function sendPages(
             mutation: createPageNodeMutation,
             variables: {
                 input: {
-                    id: pageTreeNodeIdReplacements.find((replacement) => replacement.originalId === node.id)?.replaceWithId,
+                    id: dependencyReplacements.find((replacement) => replacement.type == "PageTreeNode" && replacement.originalId === node.id)
+                        ?.replaceWithId,
                     name,
                     slug,
                     hideInMenu: node.hideInMenu,
@@ -148,72 +154,45 @@ export async function sendPages(
         }
 
         // 1c. Copy all files used on page to target scope
-        const fileIdReplacements: ReplaceDependencyObject[] = [];
         const fileIdsToCopyDirectly: string[] = [];
         if (node?.document != null) {
-            const fileDependencies = documentType
-                .dependencies(node.document)
-                .filter((dependency) => dependency.targetGraphqlObjectType === "DamFile");
-            for (const fileDependency of fileDependencies) {
-                if (fileDependency.data && (fileDependency.data as any).damFile) {
-                    const { damFile } = fileDependency.data as any; // TODO typing
-                    if (damFile.fileUrl) {
-                        if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl)) {
-                            //our own api, no need to download&upload
-                            if (isEqual(damFile.scope, damScope)) {
-                                //same scope, same server, no need to copy
-                            } else {
-                                //batch copy below
-                                fileIdsToCopyDirectly.push(damFile.id);
-                            }
-                        } else {
-                            {
-                                const fileResponse = await fetch(damFile.fileUrl);
-                                const fileBlob = await fileResponse.blob();
-                                const file = new File([fileBlob], damFile.name, { type: damFile.mimetype });
-                                const formData = new FormData();
-                                formData.append("file", file);
-                                formData.append("scope", JSON.stringify(damScope));
-                                if (!inboxFolderIdForCopiedFiles) {
-                                    const { id } = await createIncomingFolder({
-                                        client,
-                                        targetScope: damScope,
-                                        sourceScopes: [], //TODO collect target scopes
-                                    });
-                                    inboxFolderIdForCopiedFiles = id;
-                                }
-                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                formData.append("folderId", inboxFolderIdForCopiedFiles!);
-                                //TODO attach other dam file data (altText, cropping, etc.)
-                                const response: { data: { id: string } } = await blockContext.damConfig.apiClient.post(
-                                    `/dam/files/upload`,
-                                    formData,
-                                    {
-                                        // cancelToken, //TODO support cancel?
-                                        headers: {
-                                            "Content-Type": "multipart/form-data",
-                                        },
-                                    },
-                                );
-                                fileIdReplacements.push({ type: "DamFile", originalId: fileDependency.id, replaceWithId: response.data.id });
-                            }
-                        }
+            for (const damFile of fileDependenciesFromDocument(documentType, node.document)) {
+                if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl)) {
+                    //our own api, no need to download&upload
+                    if (isEqual(damFile.scope, damScope)) {
+                        //same scope, same server, no need to copy
+                    } else {
+                        //batch copy below
+                        fileIdsToCopyDirectly.push(damFile.id);
+                    }
+                } else {
+                    {
+                        const fileResponse = await fetch(damFile.fileUrl);
+                        const fileBlob = await fileResponse.blob();
+                        const file = new File([fileBlob], damFile.name, { type: damFile.mimetype });
+                        const formData = new FormData();
+                        formData.append("file", file);
+                        formData.append("scope", JSON.stringify(damScope));
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        formData.append("folderId", inboxFolderIdForCopiedFiles!);
+                        //TODO attach other dam file data (altText, cropping, etc.)
+                        const response: { data: { id: string } } = await blockContext.damConfig.apiClient.post(`/dam/files/upload`, formData, {
+                            // cancelToken, //TODO support cancel?
+                            headers: {
+                                "Content-Type": "multipart/form-data",
+                            },
+                        });
+                        dependencyReplacements.push({ type: "DamFile", originalId: damFile.id, replaceWithId: response.data.id });
+                        inboxFolderUsed = true;
                     }
                 }
             }
 
             if (fileIdsToCopyDirectly.length > 0) {
-                if (!inboxFolderIdForCopiedFiles) {
-                    const { id } = await createIncomingFolder({
-                        client,
-                        targetScope: damScope,
-                        sourceScopes: [], //TODO collect target scopes
-                    });
-                    inboxFolderIdForCopiedFiles = id;
-                }
                 const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
                     mutation: copyFilesToScopeMutation,
-                    variables: { fileIds: fileIdsToCopyDirectly, targetFolderId: inboxFolderIdForCopiedFiles },
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    variables: { fileIds: fileIdsToCopyDirectly, targetFolderId: inboxFolderIdForCopiedFiles! },
                     update: (cache, result) => {
                         if (result.data && result.data.copyFilesToScope.numberNewlyCopiedFiles > 0) {
                             cache.evict({ fieldName: "damItemsList" });
@@ -222,8 +201,11 @@ export async function sendPages(
                 });
 
                 if (copiedFiles) {
+                    if (copiedFiles.copyFilesToScope.numberNewlyCopiedFiles > 0) {
+                        inboxFolderUsed = true;
+                    }
                     for (const item of copiedFiles.copyFilesToScope.mappedFiles) {
-                        fileIdReplacements.push({ type: "DamFile", originalId: item.rootFile.id, replaceWithId: item.copy.id });
+                        dependencyReplacements.push({ type: "DamFile", originalId: item.rootFile.id, replaceWithId: item.copy.id });
                     }
                 }
             }
@@ -231,13 +213,12 @@ export async function sendPages(
 
         // 1d. Create new document
         const newDocumentId = uuid();
-        const replacements = [...pageTreeNodeIdReplacements, ...(fileIdReplacements ?? [])];
         if (node?.document != null && documentType.updateMutation && documentType.inputToOutput && documentType.replaceDependenciesInOutput) {
             await client.mutate<unknown, GQLUpdatePageMutationVariables>({
                 mutation: documentType.updateMutation,
                 variables: {
                     pageId: newDocumentId,
-                    input: documentType.replaceDependenciesInOutput(documentType.inputToOutput(node.document), replacements),
+                    input: documentType.replaceDependenciesInOutput(documentType.inputToOutput(node.document), dependencyReplacements),
                     attachedPageTreeNodeId: data.createPageTreeNode.id,
                 },
                 context: LocalErrorScopeApolloContext,
@@ -247,24 +228,67 @@ export async function sendPages(
         return data.createPageTreeNode.id;
     };
 
-    /*
-    TODO if nothing was copied/uploaded delete incoming folder again
-    */
+    // 0. traverses the tree with top-down strategy and find all source scopes of file dependencies
+    {
+        const sourceScopes: Record<string, unknown>[] = [];
+        const traverse = async (parentId: string): Promise<void> => {
+            const nodes = tree.get(parentId) || [];
+            for (const node of nodes) {
+                const documentType = documentTypes[node.documentType];
+                if (!documentType) {
+                    throw new Error(`Unknown document type "${documentType}"`);
+                }
+                if (node?.document != null) {
+                    for (const damFile of fileDependenciesFromDocument(documentType, node.document)) {
+                        //TODO use damFile.size; to build a progress bar for uploading/downloading files
+                        if (!sourceScopes.some((scope) => isEqual(scope, damFile.scope))) {
+                            sourceScopes.push(damFile.scope);
+                        }
+                    }
+                }
+                await traverse(node.id);
+            }
+        };
+        await traverse("root");
 
-    const traverse = async (parentId = "root", newParentId: string | null = null): Promise<void> => {
-        const nodes = tree.get(parentId) || [];
-        let posOffset = 0;
-        for (const node of nodes) {
-            const newPageTreeUUID = await handlePageTreeNode(node, newParentId, posOffset++);
-
-            await traverse(node.id, newPageTreeUUID);
+        if (sourceScopes.length > 0) {
+            const { id } = await createIncomingFolder({
+                client,
+                targetScope: damScope,
+                sourceScopes,
+            });
+            inboxFolderIdForCopiedFiles = id;
         }
-    };
+    }
 
-    // 1. traverses the tree with top-down strategy
-    await traverse("root", parentId);
+    // 1. traverses the tree with top-down strategy and do the actual creating of documents and page tree nodes
+    {
+        const traverse = async (parentId: string, newParentId: string | null): Promise<void> => {
+            const nodes = tree.get(parentId) || [];
+            let posOffset = 0;
+            for (const node of nodes) {
+                const newPageTreeUUID = await handlePageTreeNode(node, newParentId, posOffset++);
 
-    // 2. Refetch Pages query
+                await traverse(node.id, newPageTreeUUID);
+            }
+        };
+        await traverse("root", parentId);
+    }
+
+    // 2. delete inbox folder if it was not used (as files already existed in target scope)
+    if (!inboxFolderUsed && inboxFolderIdForCopiedFiles) {
+        await client.mutate<GQLDeleteIncomingFolderMutation, GQLDeleteIncomingFolderMutationVariables>({
+            mutation: gql`
+                mutation DeleteIncomingFolder($id: ID!) {
+                    deleteDamFolder(id: $id)
+                }
+            `,
+            variables: { id: inboxFolderIdForCopiedFiles },
+            context: LocalErrorScopeApolloContext,
+        });
+    }
+
+    // 3. Refetch Pages query
     client.refetchQueries({ include: ["Pages"] });
 }
 
@@ -280,4 +304,13 @@ function createPageTreeNodeIdReplacements(nodes: PageClipboard[]): ReplaceDepend
     }
 
     return replacements;
+}
+
+function fileDependenciesFromDocument(documentType: DocumentInterface, document: GQLDocument) {
+    return documentType
+        .dependencies(document)
+        .filter((dependency) => dependency.targetGraphqlObjectType === "DamFile" && dependency.data && (dependency.data as any).damFile)
+        .map((dependency) => {
+            return (dependency.data as any).damFile; //TODO type, also return type
+        });
 }
