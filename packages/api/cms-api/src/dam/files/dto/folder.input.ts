@@ -14,6 +14,7 @@ export class CreateFolderInput {
     parentId?: string;
 
     @Field({ defaultValue: false })
+    @IsBoolean()
     isInboxFromOtherScope?: boolean;
 }
 

@@ -195,7 +195,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                                     setPasteLoading(true);
                                     const pages = await getFromClipboard();
                                     if (pages.canPaste) {
-                                        await sendPages(null, pages.content);
+                                        await sendPages(null, pages.content, { targetPos: undefined });
                                     }
                                     setPasteLoading(false);
                                 }}

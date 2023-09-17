@@ -241,8 +241,12 @@ export async function sendPages(
                 if (node?.document != null) {
                     for (const damFile of fileDependenciesFromDocument(documentType, node.document)) {
                         //TODO use damFile.size; to build a progress bar for uploading/downloading files
-                        if (!sourceScopes.some((scope) => isEqual(scope, damFile.scope))) {
-                            sourceScopes.push(damFile.scope);
+                        if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl) && isEqual(damFile.scope, damScope)) {
+                            //same scope, same server, no need to copy
+                        } else {
+                            if (!sourceScopes.some((scope) => isEqual(scope, damFile.scope))) {
+                                sourceScopes.push(damFile.scope);
+                            }
                         }
                     }
                 }
