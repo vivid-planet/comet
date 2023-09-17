@@ -251,6 +251,11 @@
                             "nullable": false
                         },
                         {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
+                        },
+                        {
                             "name": "fileUrl",
                             "kind": "String",
                             "nullable": false
@@ -1065,6 +1070,11 @@
                             "nullable": false
                         },
                         {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
+                        },
+                        {
                             "name": "image",
                             "kind": "NestedObject",
                             "object": {
@@ -1574,6 +1584,11 @@
                             "name": "archived",
                             "kind": "Boolean",
                             "nullable": false
+                        },
+                        {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
                         },
                         {
                             "name": "fileUrl",

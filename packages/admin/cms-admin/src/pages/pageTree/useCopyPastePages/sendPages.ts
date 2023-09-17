@@ -7,6 +7,7 @@ import { v4 as uuid } from "uuid";
 import { CmsBlockContext } from "../../../blocks/CmsBlockContextProvider";
 import { ContentScopeInterface } from "../../../contentScope/Provider";
 import { DocumentInterface, GQLDocument, GQLUpdatePageMutationVariables } from "../../../documents/types";
+import { GQLDamFile } from "../../../graphql.generated";
 import { PageTreeContext } from "../PageTreeContext";
 import { arrayToTreeMap } from "../treemap/TreeMapUtils";
 import { PageClipboard, PagesClipboard } from "../useCopyPastePages";
@@ -95,6 +96,7 @@ export async function sendPages(
     const dependencyReplacements = createPageTreeNodeIdReplacements(pages);
     let inboxFolderIdForCopiedFiles: string | undefined = undefined;
     let inboxFolderUsed = false;
+    const hasDamScope = Object.entries(damScope).length > 0;
 
     const handlePageTreeNode = async (node: PageClipboard, newParentId: string | null, posOffset: number): Promise<string> => {
         const documentType = documentTypes[node.documentType];
@@ -159,7 +161,7 @@ export async function sendPages(
             for (const damFile of fileDependenciesFromDocument(documentType, node.document)) {
                 if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl)) {
                     //our own api, no need to download&upload
-                    if (isEqual(damFile.scope, damScope)) {
+                    if (!hasDamScope || isEqual(damFile.scope, damScope)) {
                         //same scope, same server, no need to copy
                     } else {
                         //batch copy below
@@ -172,7 +174,7 @@ export async function sendPages(
                         const file = new File([fileBlob], damFile.name, { type: damFile.mimetype });
                         const formData = new FormData();
                         formData.append("file", file);
-                        formData.append("scope", JSON.stringify(damScope));
+                        if (hasDamScope) formData.append("scope", JSON.stringify(damScope));
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         formData.append("folderId", inboxFolderIdForCopiedFiles!);
                         //TODO attach other dam file data (altText, cropping, etc.)
@@ -241,10 +243,10 @@ export async function sendPages(
                 if (node?.document != null) {
                     for (const damFile of fileDependenciesFromDocument(documentType, node.document)) {
                         //TODO use damFile.size; to build a progress bar for uploading/downloading files
-                        if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl) && isEqual(damFile.scope, damScope)) {
+                        if (!hasDamScope || (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl) && isEqual(damFile.scope, damScope))) {
                             //same scope, same server, no need to copy
                         } else {
-                            if (!sourceScopes.some((scope) => isEqual(scope, damFile.scope))) {
+                            if (damFile.scope && !sourceScopes.some((scope) => isEqual(scope, damFile.scope))) {
                                 sourceScopes.push(damFile.scope);
                             }
                         }
@@ -311,10 +313,14 @@ function createPageTreeNodeIdReplacements(nodes: PageClipboard[]): ReplaceDepend
 }
 
 function fileDependenciesFromDocument(documentType: DocumentInterface, document: GQLDocument) {
-    return documentType
-        .dependencies(document)
-        .filter((dependency) => dependency.targetGraphqlObjectType === "DamFile" && dependency.data && (dependency.data as any).damFile)
-        .map((dependency) => {
-            return (dependency.data as any).damFile; //TODO type, also return type
-        });
+    return (
+        documentType
+            .dependencies(document)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .filter((dependency) => dependency.targetGraphqlObjectType === "DamFile" && dependency.data && (dependency.data as any).damFile)
+            .map((dependency) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                return (dependency.data as any).damFile as GQLDamFile & { scope?: Record<string, unknown> };
+            })
+    );
 }
