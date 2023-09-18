@@ -6,10 +6,10 @@ import { useSaveShopProductHandler } from "@src/shop/shopProductPage/SaveShopPro
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-export const ShopProductToolbar: React.FC<{ productName: string; stackApi?: IStackApi }> = ({
+export const ShopProductToolbar: React.FC<{ productName: string; stackApi?: IStackApi; saveAllButtonDisabled: boolean }> = ({
     productName,
-
     stackApi,
+    saveAllButtonDisabled,
 }) => {
     const { saveAll } = useSaveShopProductHandler();
     return (
@@ -24,7 +24,7 @@ export const ShopProductToolbar: React.FC<{ productName: string; stackApi?: ISta
             </ToolbarItem>
             <ToolbarFillSpace />
             <ToolbarActions>
-                <Button startIcon={<Save />} variant="contained" color="primary" onClick={saveAll}>
+                <Button startIcon={<Save />} variant="contained" color="primary" onClick={saveAll} disabled={saveAllButtonDisabled}>
                     <FormattedMessage id="shopProductPage.toolbar.save" defaultMessage="Save" />
                 </Button>
             </ToolbarActions>

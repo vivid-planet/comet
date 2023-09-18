@@ -4,9 +4,12 @@ import { ShopProductVariantsDataGrid } from "@src/shop/shopProductPage/tabs/shop
 import React from "react";
 import { useIntl } from "react-intl";
 
-export const ShopProductVariantsPage: React.FunctionComponent<{ shopProductId: string }> = ({ shopProductId }) => {
+export const ShopProductVariantsPage: React.FunctionComponent<{ shopProductId: string; setSaveAllButtonDisabled: (state: boolean) => void }> = ({
+    shopProductId,
+    setSaveAllButtonDisabled,
+}) => {
     const intl = useIntl();
-
+    setSaveAllButtonDisabled(false);
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "shopProducts.variants", defaultMessage: "Variants" })}>
             <StackSwitch initialPage="table">
@@ -14,7 +17,16 @@ export const ShopProductVariantsPage: React.FunctionComponent<{ shopProductId: s
                     <ShopProductVariantsDataGrid shopProductId={shopProductId} />
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "shopProducts.variants.edit", defaultMessage: "Edit variant" })}>
-                    {(selectedId) => <ShopProductVariantInformationPage shopProductVariantId={selectedId} shopProductId={shopProductId} />}
+                    {(selectedId) => {
+                        setSaveAllButtonDisabled(true);
+                        return (
+                            <ShopProductVariantInformationPage
+                                shopProductVariantId={selectedId}
+                                shopProductId={shopProductId}
+                                setSaveAllButtonDisabled={setSaveAllButtonDisabled}
+                            />
+                        );
+                    }}
                 </StackPage>
             </StackSwitch>
         </Stack>

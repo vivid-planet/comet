@@ -6,7 +6,7 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 
 export const ShopProductVariantToolbar: React.FC<{
-    variantName: string;
+    variantName?: string;
     stackApi?: IStackApi;
 }> = ({ variantName, stackApi }) => {
     return (
@@ -16,13 +16,13 @@ export const ShopProductVariantToolbar: React.FC<{
                     <ArrowLeft />
                 </IconButton>
                 <Typography variant="h3">
-                    <FormattedMessage id="shopProducts.variant.toolbar.title" defaultMessage={variantName} />
+                    <FormattedMessage id="shopProducts.variant.toolbar.title" defaultMessage={variantName ? variantName : "New variant"} />
                 </Typography>
             </ToolbarItem>
             <ToolbarFillSpace />
             <ToolbarActions>
                 <Button startIcon={<Save />} variant="contained" color="primary" type="submit">
-                    <FormattedMessage id="shopProducts.variant.toolbar.save" defaultMessage="Save" />
+                    <FormattedMessage id="shopProducts.variant.toolbar.save" defaultMessage={variantName ? "Save" : "Add"} />
                 </Button>
             </ToolbarActions>
         </Toolbar>

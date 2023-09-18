@@ -67,10 +67,7 @@ export const ShopProductVariantInformationPage: React.FunctionComponent<{ shopPr
             {({ values, pristine, hasValidationErrors, submitting, handleSubmit, hasSubmitErrors, form }) => {
                 return (
                     <>
-                        <ShopProductVariantToolbar
-                            variantName={data?.shopProductVariant.name ? data?.shopProductVariant.name : "New variant"}
-                            stackApi={stackApi}
-                        />
+                        <ShopProductVariantToolbar variantName={data?.shopProductVariant.name} stackApi={stackApi} />
                         <EditPageLayout>
                             <MainContent>
                                 <Card>

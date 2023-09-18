@@ -10,9 +10,10 @@ import { useIntl } from "react-intl";
 export const ShopProductPage: React.FunctionComponent<{ shopProductId: string }> = ({ shopProductId }) => {
     const intl = useIntl();
     const stackApi = useStackApi();
+    const [saveAllButtonDisabled, setSaveAllButtonDisabled] = React.useState(false);
     return (
         <SaveShopProductHandlerProvider>
-            <ShopProductToolbar productName={shopProductId} stackApi={stackApi} />
+            <ShopProductToolbar productName={shopProductId} stackApi={stackApi} saveAllButtonDisabled={saveAllButtonDisabled} />
             <MainContent>
                 <Tabs>
                     <Tab label={intl.formatMessage({ id: "shopProductPage.tab.general", defaultMessage: "General" })}>
@@ -22,7 +23,7 @@ export const ShopProductPage: React.FunctionComponent<{ shopProductId: string }>
                         <ShopProductCategoriesPage shopProductId={shopProductId} />
                     </Tab>
                     <Tab label={intl.formatMessage({ id: "shopProductPage.tab.variants", defaultMessage: "Variants" })}>
-                        <ShopProductVariantsPage shopProductId={shopProductId} />
+                        <ShopProductVariantsPage shopProductId={shopProductId} setSaveAllButtonDisabled={setSaveAllButtonDisabled} />
                     </Tab>
                 </Tabs>
             </MainContent>
