@@ -7,6 +7,7 @@ import {
     createBlock,
     createOptionalBlock,
     ExtractBlockData,
+    ExtractBlockInput,
     inputToData,
 } from "@comet/blocks-api";
 import { DamImageBlock } from "@comet/cms-api";
@@ -26,11 +27,11 @@ class FullWidthImageBlockData extends BlockData {
 class FullWidthImageBlockInput extends BlockInput {
     @ChildBlockInput(DamImageBlock)
     @ValidateNested()
-    image: ExtractBlockData<typeof DamImageBlock>;
+    image: ExtractBlockInput<typeof DamImageBlock>;
 
     @ChildBlockInput(FullWidthImageContentBlock)
     @ValidateNested()
-    content: ExtractBlockData<typeof FullWidthImageContentBlock>;
+    content: ExtractBlockInput<typeof FullWidthImageContentBlock>;
 
     transformToBlockData(): BlockDataInterface {
         return inputToData(FullWidthImageBlockData, this);
