@@ -14,13 +14,13 @@ export const ShopProductsDataGrid: React.FC = () => {
     const sortModel = dataGridProps.sortModel;
     const columns: GridColDef<GQLProductsListFragment>[] = [
         { field: "name", headerName: "Name", width: 150 },
-        { field: "description", headerName: "Description", width: 600 },
+        { field: "description", headerName: "Description", width: 600, flex: 1 },
         {
             field: "action",
-            headerName: "Actions",
-            width: 150,
             sortable: false,
             filterable: false,
+            width: 150,
+            resizable: false,
             renderCell: (params) => {
                 return (
                     <IconButton component={StackLink} pageName="edit" payload={params.row.id}>

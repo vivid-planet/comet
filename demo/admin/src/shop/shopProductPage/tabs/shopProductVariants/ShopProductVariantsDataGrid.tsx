@@ -26,7 +26,7 @@ export const ShopProductVariantsDataGrid: React.FC<{ shopProductId: string }> = 
     const stackApi = React.useContext(StackSwitchApiContext);
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductVariantsGrid") };
     const columns: GridColDef<GQLProductsListFragment>[] = [
-        { field: "name", headerName: "Name", width: 150 },
+        { field: "name", headerName: "Name", width: 150, flex: 1 },
         { field: "size", headerName: "Size", width: 150 },
         { field: "color", headerName: "Color", width: 150 },
         { field: "price", headerName: "Price", width: 150, type: "number", valueFormatter: (params) => `${params.value} €` },

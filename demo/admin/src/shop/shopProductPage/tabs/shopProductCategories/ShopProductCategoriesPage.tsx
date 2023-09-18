@@ -19,7 +19,7 @@ export const ShopProductCategoriesPage: React.FunctionComponent<{ shopProductId:
 
     const columns: GridColDef<GQLProductsListFragment>[] = [
         { field: "name", headerName: "Name", width: 150 },
-        { field: "description", headerName: "Description", width: 600 },
+        { field: "description", headerName: "Description", width: 600, flex: 1 },
         {
             field: "action",
             headerName: "Actions",
