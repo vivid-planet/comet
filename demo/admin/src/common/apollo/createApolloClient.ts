@@ -18,5 +18,10 @@ export const createApolloClient = (apiUrl: string) => {
     return new ApolloClient({
         link,
         cache,
+        defaultOptions: {
+            watchQuery: {
+                fetchPolicy: "cache-and-network",
+            },
+        },
     });
 };
