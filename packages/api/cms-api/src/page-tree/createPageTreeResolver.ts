@@ -3,11 +3,8 @@ import { Args, ArgsType, createUnionType, ID, Info, Mutation, ObjectType, Parent
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
-<<<<<<< HEAD
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
-=======
 import { DynamicDtoValidationPipe } from "../common/validation/dynamic-dto-validation.pipe";
->>>>>>> main
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
