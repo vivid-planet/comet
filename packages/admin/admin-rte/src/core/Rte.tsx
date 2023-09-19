@@ -22,7 +22,7 @@ import composeFilterEditorFns from "./filterEditor/composeFilterEditorFns";
 import defaultFilterEditorStateBeforeUpdate from "./filterEditor/default";
 import manageDefaultBlockType from "./filterEditor/manageStandardBlockType";
 import removeBlocksExceedingBlockLimit from "./filterEditor/removeBlocksExceedingBlockLimit";
-import { CustomInlineStyles, IBlocktypeMap, ICustomBlockTypeMap_Deprecated, ToolbarButtonComponent } from "./types";
+import { CustomInlineStyles, IBlocktypeMap, ToolbarButtonComponent } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 import getRteTheme from "./utils/getRteTheme";
 import { pasteAndFilterText } from "./utils/pasteAndFilterText";
@@ -73,8 +73,6 @@ export interface IRteOptions {
     filterEditorStateBeforeUpdate?: FilterEditorStateBeforeUpdateFn;
     maxBlocks?: number;
     standardBlockType: DraftBlockType;
-    // @deprecated
-    customBlockMap?: ICustomBlockTypeMap_Deprecated;
     customInlineStyles?: CustomInlineStyles;
 }
 
@@ -153,19 +151,12 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
     // merge default options with passed options
     let options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions;
 
-    // extract deprecated options and handle them specially
-    let deprecatedCustomBlockMap: ICustomBlockTypeMap_Deprecated = {};
-    if (options.customBlockMap) {
-        deprecatedCustomBlockMap = options.customBlockMap;
-        delete options.customBlockMap;
-    }
-
     cleanBlockTypeMap(options.blocktypeMap); // mutate object and print warning when configuration is wrong
 
     // blocktypes need an extra merge as they have their own merge strategy
     options = {
         ...options,
-        blocktypeMap: mergeBlocktypeMaps(defaultBlocktypeMap, deprecatedCustomBlockMap, options.blocktypeMap),
+        blocktypeMap: mergeBlocktypeMaps(defaultBlocktypeMap, options.blocktypeMap),
     };
 
     // force draftjs to be readonly when rte is disabled
