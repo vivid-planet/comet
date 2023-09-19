@@ -26,6 +26,7 @@ import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
 import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
 import { DamScopeInterface } from "../types";
 import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
+import { UploadFileBodyInterface } from "./dto/file.body";
 import { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
@@ -285,7 +286,10 @@ export class FilesService {
         return entity;
     }
 
-    async upload({ file, folderId }: { file: FileUploadInterface; folderId?: string }, scope?: DamScopeInterface): Promise<FileInterface> {
+    async upload(
+        file: FileUploadInterface,
+        { folderId, scope, ...assignData }: Omit<UploadFileBodyInterface, "scope"> & { scope?: DamScopeInterface },
+    ): Promise<FileInterface> {
         let result: FileInterface | undefined = undefined;
         try {
             const contentHash = await this.calculateHashForFile(file.path);
@@ -311,6 +315,14 @@ export class FilesService {
                 Math.round(((image.width * image.height) / 1000000) * 10) / 10 >= this.imgproxyConfig.maxSrcResolution
             ) {
                 throw new CometImageResolutionException(`Maximal image resolution exceeded`);
+            }
+
+            if (folderId) {
+                const folder = await this.foldersService.findOneById(folderId);
+                if (!folder) throw new Error("Folder not found");
+                if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
+                    throw new Error("Folder scope doesn't match passed scope");
+                }
             }
 
             await this.blobStorageBackendService.upload(file, contentHash, this.config.filesDirectory);
@@ -340,6 +352,7 @@ export class FilesService {
                         : undefined,
                 contentHash,
                 scope,
+                ...assignData,
             });
 
             if (result.image) {

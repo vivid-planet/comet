@@ -6,6 +6,7 @@ import {
     Headers,
     Inject,
     NotFoundException,
+    Options,
     Param,
     Post,
     Res,
@@ -71,14 +72,14 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             if (errors.length > 0) {
                 throw new CometValidationException("Validation failed", errors);
             }
+            const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
-            const { scope, folderId } = transformedBody;
-
-            if (hasNonEmptyScope && !this.contentScopeService.canAccessScope(scope, user)) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            if (hasNonEmptyScope && !this.contentScopeService.canAccessScope(scope!, user)) {
                 throw new ForbiddenException();
             }
 
-            const uploadedFile = await this.filesService.upload({ file, folderId }, nonEmptyScopeOrNothing(scope));
+            const uploadedFile = await this.filesService.upload(file, { ...transformedBody, scope });
             return Object.assign(uploadedFile, { fileUrl: await this.filesService.createFileUrl(uploadedFile) });
         }
 

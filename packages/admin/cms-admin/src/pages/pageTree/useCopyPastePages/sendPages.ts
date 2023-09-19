@@ -177,7 +177,11 @@ export async function sendPages(
                         if (hasDamScope) formData.append("scope", JSON.stringify(damScope));
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         formData.append("folderId", inboxFolderIdForCopiedFiles!);
-                        //TODO attach other dam file data (altText, cropping, etc.)
+                        if (damFile.title) formData.append("title", damFile.title);
+                        if (damFile.altText) formData.append("altText", damFile.altText);
+                        if (damFile.license) formData.append("license", JSON.stringify(damFile.license));
+                        if (damFile.image?.cropArea) formData.append("imageCropArea", JSON.stringify(damFile.image.cropArea));
+
                         const response: { data: { id: string } } = await blockContext.damConfig.apiClient.post(`/dam/files/upload`, formData, {
                             // cancelToken, //TODO support cancel?
                             headers: {

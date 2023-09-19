@@ -9,6 +9,6 @@ export class SvgImageFileFixture {
         // Convert to what the browser would send
         file.mimetype = "image/svg+xml";
         file.originalname = "comet-logo-claim.svg";
-        return this.filesService.upload({ file }, scope);
+        return this.filesService.upload(file, { scope });
     }
 }
