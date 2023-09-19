@@ -53,12 +53,12 @@ interface CreateUsePage {
         GQLUpdatePageMutationVariables extends {
             pageId: string;
             input: BlockGQLData<RootBlocks>;
-            lastUpdatedAt?: string;
+            lastUpdatedAt?: string | null;
             attachedPageTreeNodeId?: string | null;
         } = {
             pageId: string;
             input: BlockGQLData<RootBlocks>;
-            lastUpdatedAt?: string;
+            lastUpdatedAt?: string | null;
             attachedPageTreeNodeId?: string | null;
         }, // for type-safety, api must support those variables
     >(options: {
@@ -137,7 +137,7 @@ export const createUsePage: CreateUsePage =
         GQLUpdatePageMutationVariables extends {
             pageId: string;
             input: BlockGQLData<RootBlocks>;
-            lastUpdatedAt?: string;
+            lastUpdatedAt?: string | null;
             attachedPageTreeNodeId?: string | null;
         },
     >({

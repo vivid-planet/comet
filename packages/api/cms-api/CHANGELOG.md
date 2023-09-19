@@ -1,5 +1,13 @@
 # @comet/cms-api
 
+## 4.4.2
+
+### Patch Changes
+
+-   896265c1: Fix improper validation of input when creating/updating page tree nodes or redirects
+-   cd07c107: Prevent the fileUrl from being exposed in the Site via the PixelImageBlock
+    -   @comet/blocks-api@4.4.2
+
 ## 4.4.1
 
 ### Patch Changes
