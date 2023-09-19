@@ -1,6 +1,6 @@
 {
     "name": "@comet/cli",
-    "version": "3.2.6",
+    "version": "3.2.7",
     "main": "lib/index.js",
     "typings": "lib/index.d.ts",
     "bin": {
@@ -20,7 +20,7 @@
         "prettier": "^2.7.1"
     },
     "devDependencies": {
-        "@comet/eslint-config": "^3.2.6",
+        "@comet/eslint-config": "^3.2.7",
         "@types/node": "^14.0.0",
         "eslint": "^8.0.0",
         "rimraf": "^3.0.0",

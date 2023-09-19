@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-color-picker",
-    "version": "3.2.6",
+    "version": "3.2.7",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -12,8 +12,8 @@
         "directory": "packages/admin/admin-color-picker"
     },
     "dependencies": {
-        "@comet/admin": "^3.2.6",
-        "@comet/admin-icons": "^3.2.6",
+        "@comet/admin": "^3.2.7",
+        "@comet/admin-icons": "^3.2.7",
         "clsx": "^1.1.1",
         "react-colorful": "^5.5.1",
         "tinycolor2": "^1.4.1",
@@ -21,8 +21,8 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
-        "@comet/admin-babel-preset": "^3.2.6",
-        "@comet/eslint-config": "^3.2.6",
+        "@comet/admin-babel-preset": "^3.2.7",
+        "@comet/eslint-config": "^3.2.7",
         "@types/tinycolor2": "^1.4.2",
         "eslint": "^8.0.0",
         "prettier": "^2.0.0",

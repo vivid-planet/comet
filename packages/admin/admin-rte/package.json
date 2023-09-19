@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-rte",
-    "version": "3.2.6",
+    "version": "3.2.7",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -17,8 +17,8 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
-        "@comet/admin-babel-preset": "^3.2.6",
-        "@comet/eslint-config": "^3.2.6",
+        "@comet/admin-babel-preset": "^3.2.7",
+        "@comet/eslint-config": "^3.2.7",
         "@types/draft-js": "^0.10.38",
         "@types/immutable": "^3.8.7",
         "eslint": "^8.0.0",

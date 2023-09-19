@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-date-time",
-    "version": "3.2.6",
+    "version": "3.2.7",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -12,8 +12,8 @@
         "directory": "packages/admin/admin-date-time"
     },
     "dependencies": {
-        "@comet/admin": "^3.2.6",
-        "@comet/admin-icons": "^3.2.6",
+        "@comet/admin": "^3.2.7",
+        "@comet/admin-icons": "^3.2.7",
         "@mui/utils": "^5.4.1",
         "clsx": "^1.1.1",
         "date-fns": "^2.28.0",
@@ -21,8 +21,8 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
-        "@comet/admin-babel-preset": "^3.2.6",
-        "@comet/eslint-config": "^3.2.6",
+        "@comet/admin-babel-preset": "^3.2.7",
+        "@comet/eslint-config": "^3.2.7",
         "@types/react": "^17.0",
         "@types/react-date-range": "^1.4.3",
         "eslint": "^8.0.0",

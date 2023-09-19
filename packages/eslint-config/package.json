@@ -1,6 +1,6 @@
 {
     "name": "@comet/eslint-config",
-    "version": "3.2.6",
+    "version": "3.2.7",
     "main": "core.js",
     "repository": {
         "type": "git",
