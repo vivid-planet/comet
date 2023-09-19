@@ -1,10 +1,40 @@
-import { GridFilterButton, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem } from "@comet/admin";
-import { Add as AddIcon } from "@comet/admin-icons";
+import { messages, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, Tooltip } from "@comet/admin";
+import { Filter, Select } from "@comet/admin-icons";
 import { Button, Typography } from "@mui/material";
+import { useGridApiContext } from "@mui/x-data-grid";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-export const ShopProductCategoriesToolbar: React.FC<{ setDialogOpen: (open: boolean) => void }> = ({ setDialogOpen }) => {
+interface ShopProductCategoriesToolbarProps {
+    setDialogOpen: (open: boolean) => void;
+    allowFiltering: boolean;
+}
+
+const GridFilterButton: React.FC<{ allowFiltering: boolean }> = ({ allowFiltering }) => {
+    const apiRef = useGridApiContext();
+    const handleFilterClick = React.useCallback(() => {
+        apiRef.current.showFilterPanel();
+    }, [apiRef]);
+    return (
+        <Tooltip
+            trigger="hover"
+            title={
+                <FormattedMessage
+                    id="shopProducts.categories.toolbar.filterDisabled"
+                    defaultMessage={allowFiltering ? "Filter" : "Filtering is disabled. Please save to enable filtering."}
+                />
+            }
+        >
+            <span>
+                <Button startIcon={<Filter />} variant="text" color="info" onClick={handleFilterClick} disabled={!allowFiltering}>
+                    <FormattedMessage {...messages.filter} />
+                </Button>
+            </span>
+        </Tooltip>
+    );
+};
+
+export const ShopProductCategoriesToolbar: React.FC<ShopProductCategoriesToolbarProps> = ({ setDialogOpen, allowFiltering }) => {
     return (
         <Toolbar>
             <ToolbarItem>
@@ -14,11 +44,11 @@ export const ShopProductCategoriesToolbar: React.FC<{ setDialogOpen: (open: bool
             </ToolbarItem>
             <ToolbarFillSpace />
             <ToolbarItem>
-                <GridFilterButton />
+                <GridFilterButton allowFiltering={allowFiltering} />
             </ToolbarItem>
             <ToolbarActions>
-                <Button startIcon={<AddIcon />} onClick={() => setDialogOpen(true)} variant="contained" color="primary">
-                    <FormattedMessage id="shopProducts.categories.toolbar.addProduct" defaultMessage="Select Categories" />
+                <Button startIcon={<Select />} onClick={() => setDialogOpen(true)} variant="contained" color="primary">
+                    <FormattedMessage id="shopProducts.categories.toolbar.addProduct" defaultMessage="Select" />
                 </Button>
             </ToolbarActions>
         </Toolbar>

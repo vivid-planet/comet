@@ -1,4 +1,4 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import {
     messages,
     muiGridFilterToGql,
@@ -13,16 +13,10 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, 
 import { GridSelectionModel } from "@mui/x-data-grid";
 import { DataGridPro, GridColDef } from "@mui/x-data-grid-pro";
 import { GQLShopProductCategory } from "@src/graphql.generated";
-import { useSaveShopProductHandler } from "@src/shop/shopProductPage/SaveShopProductHandler";
 import {
     GQLShopProductCategoriesQuery,
     GQLShopProductCategoriesQueryVariables,
 } from "@src/shop/shopProductPage/tabs/shopProductCategories/ShopProductCategoriesSelectDialog.generated";
-import { updateShopProductMutation } from "@src/shop/shopProductPage/tabs/shopProductInformation/ShopProductInformationPage";
-import {
-    GQLUpdateShopProductMutation,
-    GQLUpdateShopProductMutationVariables,
-} from "@src/shop/shopProductPage/tabs/shopProductInformation/ShopProductInformationPage.generated";
 import gql from "graphql-tag";
 import * as React from "react";
 import { useEffect } from "react";
@@ -31,53 +25,26 @@ import { FormattedMessage } from "react-intl";
 interface ShopProductCategoriesSelectDialogProps {
     dialogOpen: boolean;
     setDialogOpen: (open: boolean) => void;
-    shopProductId: string;
     selectedCategories: GridSelectionModel;
+    setRows: React.Dispatch<
+        React.SetStateAction<{ __typename?: "ShopProductCategory" | undefined; id: string; name: string; description: string; isNew: boolean }[]>
+    >;
+    setAllowFiltering: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ShopProductCategoriesSelectDialog: React.FC<ShopProductCategoriesSelectDialogProps> = ({
     dialogOpen,
     setDialogOpen,
-    shopProductId,
     selectedCategories,
+    setRows,
+    setAllowFiltering,
 }) => {
     const onMenuClose = () => {
         setDialogOpen(false);
     };
-    const { registerHandleSubmit } = useSaveShopProductHandler();
     const [selectionModel, setSelectionModel] = React.useState<GridSelectionModel>([]);
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("AllCategoriesGrid") };
     const sortModel = dataGridProps.sortModel;
-    useEffect(() => {
-        setSelectionModel(selectedCategories);
-    }, [selectedCategories]);
-    const client = useApolloClient();
-    const handleSelectionModelChange = (newSelectionModel: GridSelectionModel) => {
-        setSelectionModel(newSelectionModel);
-    };
-    const handleSubmit = async (categoryIdList: GridSelectionModel) => {
-        onMenuClose();
-        return client.mutate<GQLUpdateShopProductMutation, GQLUpdateShopProductMutationVariables>({
-            mutation: updateShopProductMutation,
-            variables: { id: shopProductId, input: { category: categoryIdList.map((id) => id.toString()) } },
-        });
-    };
-    registerHandleSubmit(handleSubmit);
-    const NameHeader = () => (
-        <div style={{ display: "flex", alignItems: "center" }}>
-            <Typography fontWeight={400} fontSize={14}>
-                Name
-            </Typography>
-            <Tooltip
-                trigger="click"
-                title={<FormattedMessage id="shopProducts.categories.dialog.datagrid.name" defaultMessage="The title/name of the category" />}
-            >
-                <IconButton>
-                    <Info />
-                </IconButton>
-            </Tooltip>
-        </div>
-    );
     const columns: GridColDef<GQLShopProductCategory>[] = [
         {
             field: "name",
@@ -97,6 +64,32 @@ export const ShopProductCategoriesSelectDialog: React.FC<ShopProductCategoriesSe
     });
     const rows = data?.shopProductCategories.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.shopProductCategories.totalCount);
+    const handleSelectionModelChange = (newSelectionModel: GridSelectionModel) => {
+        setSelectionModel(newSelectionModel);
+    };
+    const handleApply = () => {
+        setAllowFiltering(false);
+        setRows(rows.filter((row) => selectionModel.includes(row.id)).map((row) => ({ ...row, isNew: !selectedCategories.includes(row.id) })));
+        onMenuClose();
+    };
+    useEffect(() => {
+        setSelectionModel(selectedCategories);
+    }, [selectedCategories]);
+    const NameHeader = () => (
+        <div style={{ display: "flex", alignItems: "center" }}>
+            <Typography fontWeight={400} fontSize={14}>
+                Name
+            </Typography>
+            <Tooltip
+                trigger="click"
+                title={<FormattedMessage id="shopProducts.categories.dialog.datagrid.name" defaultMessage="The title/name of the category" />}
+            >
+                <IconButton>
+                    <Info />
+                </IconButton>
+            </Tooltip>
+        </div>
+    );
 
     return (
         <Dialog
@@ -134,13 +127,8 @@ export const ShopProductCategoriesSelectDialog: React.FC<ShopProductCategoriesSe
                 >
                     <FormattedMessage {...messages.cancel} />
                 </Button>
-                <Button
-                    type="submit"
-                    onClick={() => {
-                        handleSubmit(selectionModel);
-                    }}
-                >
-                    <FormattedMessage {...messages.ok} />
+                <Button variant="contained" type="submit" onClick={handleApply}>
+                    <FormattedMessage {...messages.apply} />
                 </Button>
             </DialogActions>
         </Dialog>
