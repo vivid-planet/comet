@@ -1,31 +1,15 @@
-import { BlobStorageBackendService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { BlobStorageBackendService, PageTreeNodeInterface, PageTreeNodeVisibility } from "@comet/cms-api";
 import { MikroORM, UseRequestContext } from "@mikro-orm/core";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable } from "@nestjs/common";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
-import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generator";
 import { ImageGeneratorService } from "@src/db/fixtures/generators/image-generator.service";
-import { Link } from "@src/links/entities/link.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
-import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
-import { PageContentBlock } from "@src/pages/blocks/page-content.block";
-import { PageInput } from "@src/pages/dto/page.input";
-import { Page } from "@src/pages/entities/page.entity";
 import faker from "faker";
 import { Command, Console } from "nestjs-console";
-import slugify from "slugify";
 
 import { LinkGeneratorService } from "./generators/link-generator.service";
 import { PageGeneratorService } from "./generators/page-generator.service";
-
-const getDefaultPageInput = (): PageInput => {
-    const pageInput = new PageInput();
-    pageInput.seo = generateSeoBlock();
-    pageInput.content = PageContentBlock.blockInputFactory({ blocks: [] });
-    return pageInput;
-};
 
 @Injectable()
 @Console()
@@ -33,13 +17,10 @@ export class FixturesConsole {
     constructor(
         @Inject(CONFIG) private readonly config: Config,
         private readonly blobStorageBackendService: BlobStorageBackendService,
-        private readonly pageTreeService: PageTreeService,
         private readonly pageGeneratorService: PageGeneratorService,
         private readonly linkGeneratorService: LinkGeneratorService,
         private readonly imageGeneratorService: ImageGeneratorService,
         private readonly orm: MikroORM,
-        @InjectRepository(Page) private readonly pagesRepository: EntityRepository<Page>,
-        @InjectRepository(Link) private readonly linksRepository: EntityRepository<Link>,
     ) {}
 
     @Command({
@@ -103,43 +84,19 @@ export class FixturesConsole {
 
                 for (let i = 0; i < faker.datatype.number({ min: 100, max: 200 }); i++) {
                     const name = faker.lorem.sentence();
-                    const page = await this.pageTreeService.createNode(
-                        {
-                            name: name,
-                            slug: slugify(name),
-                            parentId: level > 0 ? faker.random.arrayElement(pages[level - 1]).id : undefined,
-                            attachedDocument: { type: "Page" },
-                        },
-                        PageTreeNodeCategory.MainNavigation,
-                        {
-                            domain,
-                            language: "en",
-                        },
-                    );
-                    pagesForLevel.push(page);
-                    pagesCount++;
-
-                    const pageInput = getDefaultPageInput();
-
-                    const pageId = faker.datatype.uuid();
-
-                    await this.pagesRepository.persistAndFlush(
-                        this.pagesRepository.create({
-                            id: pageId,
-                            content: pageInput.content.transformToBlockData(),
-                            seo: pageInput.seo.transformToBlockData(),
-                        }),
-                    );
-                    await this.pageTreeService.attachDocument({ id: pageId, type: "Page" }, page.id);
-
-                    await this.pageTreeService.updateNodeVisibility(
-                        page.id,
-                        faker.random.arrayElement([
+                    const page = await this.pageGeneratorService.generatePage({
+                        name,
+                        parentId: level > 0 ? faker.random.arrayElement(pages[level - 1]).id : undefined,
+                        scope: { domain, language: "en" },
+                        visibility: faker.random.arrayElement([
                             PageTreeNodeVisibility.Published,
                             PageTreeNodeVisibility.Unpublished,
                             PageTreeNodeVisibility.Archived,
                         ]),
-                    );
+                    });
+
+                    pagesForLevel.push(page);
+                    pagesCount++;
                 }
 
                 pages.push(pagesForLevel);

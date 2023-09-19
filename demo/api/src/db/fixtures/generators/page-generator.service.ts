@@ -4,7 +4,6 @@ import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable } from "@nestjs/common";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
-import { generateBlocksBlock } from "@src/db/fixtures/generators/blocks/blocks.generator";
 import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generator";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
@@ -12,12 +11,14 @@ import { Page } from "@src/pages/entities/page.entity";
 import faker from "faker";
 import slugify from "slugify";
 
+import { generateBlocksBlock } from "./blocks/blocks.generator";
 import { ImageGeneratorService } from "./image-generator.service";
 
 interface GeneratePageInput {
     name: string;
     scope: PageTreeNodeScope;
     parentId?: string;
+    visibility?: PageTreeNodeVisibility;
 }
 
 @Injectable()
@@ -29,7 +30,7 @@ export class PageGeneratorService {
         private readonly imageGeneratorService: ImageGeneratorService,
     ) {}
 
-    async generatePage({ name, scope, parentId }: GeneratePageInput): Promise<PageTreeNodeInterface> {
+    async generatePage({ name, scope, parentId, visibility }: GeneratePageInput): Promise<PageTreeNodeInterface> {
         const id = faker.datatype.uuid();
         const slug = slugify(name.toLowerCase());
 
@@ -46,7 +47,7 @@ export class PageGeneratorService {
             PageTreeNodeCategory.MainNavigation,
             scope,
         );
-        await this.pageTreeService.updateNodeVisibility(node.id, PageTreeNodeVisibility.Published);
+        await this.pageTreeService.updateNodeVisibility(node.id, visibility ?? PageTreeNodeVisibility.Published);
 
         const imageFiles = [
             this.imageGeneratorService.getRandomImage(),
