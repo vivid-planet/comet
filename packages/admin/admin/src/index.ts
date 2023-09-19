@@ -9,7 +9,6 @@ export { buildCreateRestMutation, buildDeleteRestMutation, buildUpdateRestMutati
 export { readClipboardText } from "./clipboard/readClipboardText";
 export { writeClipboardText } from "./clipboard/writeClipboardText";
 export { CancelButton, CancelButtonClassKey, CancelButtonProps } from "./common/buttons/cancel/CancelButton";
-export { ClearInputButton, ClearInputButtonClassKey, ClearInputButtonProps } from "./common/buttons/clearinput/ClearInputButton";
 export {
     CopyToClipboardButton,
     CopyToClipboardButtonClassKey,
