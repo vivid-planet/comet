@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-icons",
-    "version": "3.2.6",
+    "version": "3.2.7",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "repository": {
@@ -28,8 +28,8 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
-        "@comet/admin-babel-preset": "^3.2.6",
-        "@comet/eslint-config": "^3.2.6",
+        "@comet/admin-babel-preset": "^3.2.7",
+        "@comet/eslint-config": "^3.2.7",
         "@types/cli-progress": "^3.8.0",
         "cli-progress": "^3.8.2",
         "eslint": "^8.0.0",

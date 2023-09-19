@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-api",
-    "version": "3.2.6",
+    "version": "3.2.7",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "bin": {
@@ -55,7 +55,7 @@
         "rxjs": "^7.0.0"
     },
     "dependencies": {
-        "@comet/blocks-api": "^3.2.6",
+        "@comet/blocks-api": "^3.2.7",
         "@hapi/accept": "^5.0.2",
         "@kubernetes/client-node": "^0.16.0",
         "@nestjs/passport": "^9.0.0",
@@ -89,7 +89,7 @@
     },
     "devDependencies": {
         "@aws-sdk/types": "^3.47.0",
-        "@comet/eslint-config": "^3.2.6",
+        "@comet/eslint-config": "^3.2.7",
         "@mikro-orm/sqlite": "^5.0.0",
         "@types/express": "^4.0.0",
         "@types/lodash.isequal": "^4.0.0",

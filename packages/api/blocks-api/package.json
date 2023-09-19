@@ -1,6 +1,6 @@
 {
     "name": "@comet/blocks-api",
-    "version": "3.2.6",
+    "version": "3.2.7",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -37,7 +37,7 @@
         "rimraf": "^3.0.0"
     },
     "devDependencies": {
-        "@comet/eslint-config": "^3.2.6",
+        "@comet/eslint-config": "^3.2.7",
         "@types/draft-js": "^0.10.0",
         "@types/jest": "^27.0.0",
         "@types/node": "^14.0.0",

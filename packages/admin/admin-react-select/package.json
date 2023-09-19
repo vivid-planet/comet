@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-react-select",
-    "version": "3.2.6",
+    "version": "3.2.7",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -12,13 +12,13 @@
         "directory": "packages/admin/admin-react-select"
     },
     "dependencies": {
-        "@comet/admin": "^3.2.6",
+        "@comet/admin": "^3.2.7",
         "classnames": "^2.2.6"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
-        "@comet/admin-babel-preset": "^3.2.6",
-        "@comet/eslint-config": "^3.2.6",
+        "@comet/admin-babel-preset": "^3.2.7",
+        "@comet/eslint-config": "^3.2.7",
         "@types/react-select": "^3.1.2",
         "eslint": "^8.0.0",
         "prettier": "^2.0.0",

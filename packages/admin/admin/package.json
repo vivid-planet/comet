@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin",
-    "version": "3.2.6",
+    "version": "3.2.7",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "files": [
@@ -12,7 +12,7 @@
         "directory": "packages/admin/admin"
     },
     "dependencies": {
-        "@comet/admin-icons": "^3.2.6",
+        "@comet/admin-icons": "^3.2.7",
         "@formatjs/ecma402-abstract": "^1.0.0",
         "@mui/private-theming": "^5.0.0",
         "clsx": "^1.1.1",
@@ -25,8 +25,8 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
-        "@comet/admin-babel-preset": "^3.2.6",
-        "@comet/eslint-config": "^3.2.6",
+        "@comet/admin-babel-preset": "^3.2.7",
+        "@comet/eslint-config": "^3.2.7",
         "@types/debounce": "^1.2.0",
         "@types/file-saver": "^2.0.1",
         "@types/final-form-set-field-data": "^1.0.0",

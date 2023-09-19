@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ## 3.2.7
 
-_TBD_
+_Sep 19, 2023_
 
 ### @comet/cms-api
 
