@@ -18,7 +18,7 @@ importers:
         specifier: ^2.3.2
         version: 2.3.2
       '@comet/eslint-plugin':
-        specifier: workspace:^4.3.0
+        specifier: workspace:^4.4.2
         version: link:packages/eslint-plugin
       '@formatjs/cli':
         specifier: ^4.8.3
@@ -2629,7 +2629,7 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1
       '@comet/eslint-plugin':
-        specifier: workspace:^4.3.0
+        specifier: workspace:^4.4.2
         version: link:../eslint-plugin
       '@next/eslint-plugin-next':
         specifier: ^12.0.0
