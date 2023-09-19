@@ -1,20 +1,11 @@
 // Same file in admin and site
 
 // Messages sent from iFrame -> Admin
-import { ExternalLinkBlockData } from "../blocks.generated";
 
 export enum IFrameMessageType {
     Ready = "Ready",
     SelectComponent = "SelectComponent",
     HoverComponent = "HoverComponent",
-    /**
-     * @deprecated Use SitePreviewIFrameMessageType.OpenLink instead
-     */
-    OpenLink = "OpenLink",
-    /**
-     * @deprecated Use SitePreviewIFrameMessageType.SitePreviewLocation instead
-     */
-    SitePreviewLocation = "SitePreviewLocation",
 }
 
 export interface IReadyIFrameMessage {
@@ -28,24 +19,6 @@ export interface IFrameSelectComponentMessage {
     };
 }
 
-/**
- * @deprecated Use SitePreviewIFrameOpenLinkMessage instead
- */
-export interface IFrameOpenLinkMessage {
-    cometType: IFrameMessageType.OpenLink;
-    data: {
-        link: ExternalLinkBlockData;
-    };
-}
-
-/**
- * @deprecated Use SitePreviewIFrameLocationMessage instead
- */
-export interface IFrameLocationMessage {
-    cometType: IFrameMessageType.SitePreviewLocation;
-    data: Pick<Location, "search" | "pathname">;
-}
-
 export interface IFrameHoverComponentMessage {
     cometType: IFrameMessageType.HoverComponent;
     data: {
@@ -53,12 +26,7 @@ export interface IFrameHoverComponentMessage {
     };
 }
 
-export type IFrameMessage =
-    | IReadyIFrameMessage
-    | IFrameSelectComponentMessage
-    | IFrameOpenLinkMessage
-    | IFrameLocationMessage
-    | IFrameHoverComponentMessage;
+export type IFrameMessage = IReadyIFrameMessage | IFrameSelectComponentMessage | IFrameHoverComponentMessage;
 
 // Messages sent from Admin -> iFrame
 export enum AdminMessageType {

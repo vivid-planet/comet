@@ -4,9 +4,4 @@ function openSitePreviewWindow(previewPath: string, rootPath?: string): void {
     window.open(adminUrl);
 }
 
-/**
- * @deprecated Use openSitePreviewWindow instead
- */
-const openPreviewWindow = openSitePreviewWindow;
-
-export { openPreviewWindow, openSitePreviewWindow };
+export { openSitePreviewWindow };

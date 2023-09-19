@@ -78,7 +78,7 @@ export { BlockPreviewWithTabs } from "./preview/block/BlockPreviewWithTabs";
 export { SplitPreview } from "./preview/block/SplitPreview";
 export type { BlockPreviewApi } from "./preview/block/useBlockPreview";
 export { useBlockPreview } from "./preview/block/useBlockPreview";
-export { openPreviewWindow, openSitePreviewWindow } from "./preview/openSitePreviewWindow";
+export { openSitePreviewWindow } from "./preview/openSitePreviewWindow";
 export { SitePreview } from "./preview/site/SitePreview";
 export { createRedirectsPage } from "./redirects/createRedirectsPage";
 export type { SiteConfig } from "./sitesConfig/SitesConfigContext";

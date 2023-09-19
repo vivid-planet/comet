@@ -27,13 +27,6 @@ export function parsePreviewParams(query: ParsedUrlQuery): SitePreviewParams {
     return previewParams;
 }
 
-/**
- * @deprecated Use parsePreviewParams instead
- */
-const parsePreviewState = parsePreviewParams;
-
-export { parsePreviewState };
-
 export function createPathToPreviewPath({
     path,
     previewPath,
