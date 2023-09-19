@@ -2,12 +2,14 @@ import { IStackApi, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem } fro
 import { ArrowLeft } from "@comet/admin-icons";
 import { Save } from "@mui/icons-material";
 import { Button, IconButton, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { useSaveShopProductHandler } from "@src/shop/shopProductPage/SaveShopProductHandler";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-export const ShopProductToolbar: React.FC<{ productName: string; stackApi?: IStackApi; saveAllButtonDisabled: boolean }> = ({
+export const ShopProductToolbar: React.FC<{ productName: string; description?: string; stackApi?: IStackApi; saveAllButtonDisabled: boolean }> = ({
     productName,
+    description,
     stackApi,
     saveAllButtonDisabled,
 }) => {
@@ -18,9 +20,14 @@ export const ShopProductToolbar: React.FC<{ productName: string; stackApi?: ISta
                 <IconButton onClick={stackApi?.goBack}>
                     <ArrowLeft />
                 </IconButton>
-                <Typography variant="h3">
-                    <FormattedMessage id="shopProducts.dataGrid.toolbar.title" defaultMessage={productName} />
-                </Typography>
+                <TextWrapper>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                        <FormattedMessage id="shopProducts.dataGrid.toolbar.title" defaultMessage={productName} />
+                    </Typography>
+                    <Typography variant="body2">
+                        <FormattedMessage id="shopProducts.dataGrid.toolbar.description" defaultMessage={description} />
+                    </Typography>
+                </TextWrapper>
             </ToolbarItem>
             <ToolbarFillSpace />
             <ToolbarActions>
@@ -31,3 +38,8 @@ export const ShopProductToolbar: React.FC<{ productName: string; stackApi?: ISta
         </Toolbar>
     );
 };
+
+const TextWrapper = styled("div")`
+    display: flex;
+    flex-direction: column;
+`;

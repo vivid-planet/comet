@@ -1,25 +1,21 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { useApolloClient } from "@apollo/client";
 import { Field, FinalForm, FinalFormInput, FormSection, MainContent } from "@comet/admin";
 import { EditPageLayout } from "@comet/cms-admin";
 import { Card, CardContent } from "@mui/material";
 import { GQLMutationcreateProductArgs, GQLMutationupdateShopProductArgs, GQLShopProductInput } from "@src/graphql.generated";
 import { useSaveShopProductHandler } from "@src/shop/shopProductPage/SaveShopProductHandler";
-import {
-    GQLShopProductQuery,
-    GQLShopProductQueryVariables,
-} from "@src/shop/shopProductPage/tabs/shopProductCategories/ShopProductCategoriesPage.generated";
+import { GQLShopProductQuery } from "@src/shop/shopProductPage/tabs/shopProductCategories/ShopProductCategoriesPage.generated";
 import gql from "graphql-tag";
 import React from "react";
 import { useIntl } from "react-intl";
 
-export const ShopProductInformationPage: React.FunctionComponent<{ shopProductId: string }> = ({ shopProductId }) => {
+export const ShopProductInformationPage: React.FunctionComponent<{ shopProductId: string; shopProductData: GQLShopProductQuery | undefined }> = ({
+    shopProductId,
+    shopProductData: data,
+}) => {
     const { registerHandleSubmit } = useSaveShopProductHandler();
     const intl = useIntl();
     const client = useApolloClient();
-    const { data } = useQuery<GQLShopProductQuery, GQLShopProductQueryVariables>(shopProductQuery, {
-        variables: { id: shopProductId },
-        skip: shopProductId === "new",
-    });
     const handleSubmit = async (input: GQLShopProductInput) => {
         if (data?.shopProduct) {
             return client.mutate<GQLMutationupdateShopProductArgs>({
@@ -86,7 +82,7 @@ export const ShopProductInformationPage: React.FunctionComponent<{ shopProductId
     );
 };
 
-const shopProductQuery = gql`
+export const shopProductQuery = gql`
     query ShopProducts($id: ID!) {
         shopProduct(id: $id) {
             id
