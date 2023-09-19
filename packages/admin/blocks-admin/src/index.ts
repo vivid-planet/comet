@@ -58,7 +58,6 @@ export { CollapsibleSwitchButtonHeader } from "./common/CollapsibleSwitchButtonH
 export { usePromise } from "./common/usePromise";
 export { BlockContextProvider } from "./context/BlockContextProvider";
 export { useBlockContext } from "./context/useBlockContext";
-export { AutosaveFinalForm } from "./form/AutosaveFinalForm";
 export { BlocksFinalForm } from "./form/BlocksFinalForm";
 export { createFinalFormBlock } from "./form/createFinalFormBlock";
 export { HoverPreviewComponent } from "./iframebridge/HoverPreviewComponent";
