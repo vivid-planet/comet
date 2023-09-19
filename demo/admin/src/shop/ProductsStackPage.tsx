@@ -1,4 +1,4 @@
-import { Stack, StackPage, StackSwitch } from "@comet/admin";
+import { Stack, StackBreadcrumbs, StackPage, StackSwitch } from "@comet/admin";
 import { ShopProductsDataGrid } from "@src/shop/dataGrid/ShopProductsDataGrid";
 import { ShopProductPage } from "@src/shop/shopProductPage/ShopProductPage";
 import React from "react";
@@ -9,6 +9,7 @@ const ProductsStackPage: React.FC = () => {
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "shopProducts", defaultMessage: "Products" })}>
+            <StackBreadcrumbs />
             <StackSwitch initialPage="table">
                 <StackPage name="table">
                     <ShopProductsDataGrid />

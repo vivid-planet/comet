@@ -1,5 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { Field, FinalForm, FinalFormInput, MainContent } from "@comet/admin";
+import { Field, FinalForm, FinalFormInput, FormSection, MainContent } from "@comet/admin";
 import { EditPageLayout } from "@comet/cms-admin";
 import { Card, CardContent } from "@mui/material";
 import { GQLMutationcreateProductArgs, GQLMutationupdateShopProductArgs, GQLShopProductInput } from "@src/graphql.generated";
@@ -52,28 +52,30 @@ export const ShopProductInformationPage: React.FunctionComponent<{ shopProductId
                 registerHandleSubmit(handleSubmit);
                 return (
                     <EditPageLayout>
-                        <MainContent>
+                        <MainContent disablePadding>
                             <Card>
                                 <CardContent>
-                                    <Field
-                                        type="text"
-                                        name="name"
-                                        fullWidth
-                                        label={intl.formatMessage({ id: "shopProductInformation.finalForm.name", defaultMessage: "Name" })}
-                                        component={FinalFormInput}
-                                        required
-                                    />
-                                    <Field
-                                        type="text"
-                                        name="description"
-                                        fullWidth
-                                        label={intl.formatMessage({
-                                            id: "shopProductInformation.finalForm.description",
-                                            defaultMessage: "Description",
-                                        })}
-                                        component={FinalFormInput}
-                                        required
-                                    />
+                                    <FormSection title="Product information" disableMarginBottom>
+                                        <Field
+                                            type="text"
+                                            name="name"
+                                            fullWidth
+                                            label={intl.formatMessage({ id: "shopProductInformation.finalForm.name", defaultMessage: "Name" })}
+                                            component={FinalFormInput}
+                                            required
+                                        />
+                                        <Field
+                                            type="text"
+                                            name="description"
+                                            fullWidth
+                                            label={intl.formatMessage({
+                                                id: "shopProductInformation.finalForm.description",
+                                                defaultMessage: "Description",
+                                            })}
+                                            component={FinalFormInput}
+                                            required
+                                        />
+                                    </FormSection>
                                 </CardContent>
                             </Card>
                         </MainContent>

@@ -19,13 +19,7 @@ export const ShopProductVariantsPage: React.FunctionComponent<{ shopProductId: s
                 <StackPage name="edit" title={intl.formatMessage({ id: "shopProducts.variants.edit", defaultMessage: "Edit variant" })}>
                     {(selectedId) => {
                         setSaveAllButtonDisabled(true);
-                        return (
-                            <ShopProductVariantInformationPage
-                                shopProductVariantId={selectedId}
-                                shopProductId={shopProductId}
-                                setSaveAllButtonDisabled={setSaveAllButtonDisabled}
-                            />
-                        );
+                        return <ShopProductVariantInformationPage shopProductVariantId={selectedId} shopProductId={shopProductId} />;
                     }}
                 </StackPage>
             </StackSwitch>

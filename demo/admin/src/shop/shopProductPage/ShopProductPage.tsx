@@ -16,13 +16,13 @@ export const ShopProductPage: React.FunctionComponent<{ shopProductId: string }>
             <ShopProductToolbar productName={shopProductId} stackApi={stackApi} saveAllButtonDisabled={saveAllButtonDisabled} />
             <MainContent>
                 <Tabs>
-                    <Tab label={intl.formatMessage({ id: "shopProductPage.tab.general", defaultMessage: "General" })}>
+                    <Tab label={intl.formatMessage({ id: "shopProductPage.tab.general", defaultMessage: "General" })} forceRender={true}>
                         <ShopProductInformationPage shopProductId={shopProductId} />
                     </Tab>
-                    <Tab label={intl.formatMessage({ id: "shopProductPage.tab.categories", defaultMessage: "Categories" })}>
+                    <Tab label={intl.formatMessage({ id: "shopProductPage.tab.categories", defaultMessage: "Categories" })} forceRender={true}>
                         <ShopProductCategoriesPage shopProductId={shopProductId} />
                     </Tab>
-                    <Tab label={intl.formatMessage({ id: "shopProductPage.tab.variants", defaultMessage: "Variants" })}>
+                    <Tab label={intl.formatMessage({ id: "shopProductPage.tab.variants", defaultMessage: "Variants" })} forceRender={true}>
                         <ShopProductVariantsPage shopProductId={shopProductId} setSaveAllButtonDisabled={setSaveAllButtonDisabled} />
                     </Tab>
                 </Tabs>
