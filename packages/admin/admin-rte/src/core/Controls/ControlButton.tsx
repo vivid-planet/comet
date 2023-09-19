@@ -11,22 +11,9 @@ export interface IProps {
     onButtonClick?: (e: React.MouseEvent) => void;
     icon?: (props: SvgIconProps) => JSX.Element | null;
     children?: React.ReactNode;
-
-    /** @deprecated use icon instead */
-    Icon?: (props: SvgIconProps) => JSX.Element | null;
 }
 
-function ControlButton({
-    disabled = false,
-    selected = false,
-    onButtonClick,
-    icon,
-    children,
-    Icon: deprecatedIcon,
-    classes,
-}: IProps & WithStyles<typeof styles>) {
-    const Icon = icon || deprecatedIcon;
-
+function ControlButton({ disabled = false, selected = false, onButtonClick, icon: Icon, children, classes }: IProps & WithStyles<typeof styles>) {
     const rootClasses: string[] = [classes.root];
     if (selected) rootClasses.push(classes.selected);
     if (Icon) rootClasses.push(classes.renderAsIcon);
