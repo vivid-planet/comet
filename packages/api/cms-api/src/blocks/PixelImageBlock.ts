@@ -28,7 +28,7 @@ class PixelImageBlockData extends BlockData {
 
     async transformToPlain(
         { filesService, imagesService }: { filesService: FilesService; imagesService: ImagesService },
-        { previewDamUrls }: BlockContext,
+        { previewDamUrls, includeInvisibleContent }: BlockContext,
     ): Promise<TraversableTransformResponse> {
         if (!this.damFileId) {
             return {};
@@ -43,6 +43,8 @@ class PixelImageBlockData extends BlockData {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { createdAt, updatedAt, folder, ...data } = file;
 
+        const fileUrl = includeInvisibleContent ? await filesService.createFileUrl(file, previewDamUrls) : undefined;
+
         return {
             damFile: {
                 ...data,
@@ -55,7 +57,7 @@ class PixelImageBlockData extends BlockData {
                       }
                     : undefined,
                 damPath: await filesService.getDamPath(file),
-                fileUrl: await filesService.createFileUrl(file, previewDamUrls),
+                fileUrl,
             },
             cropArea: this.cropArea ? { ...this.cropArea } : undefined,
             urlTemplate: imagesService.createUrlTemplate({ file, cropArea: this.cropArea }, previewDamUrls),
