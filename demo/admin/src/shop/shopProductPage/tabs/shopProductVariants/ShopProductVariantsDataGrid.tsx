@@ -38,7 +38,7 @@ export const ShopProductVariantsDataGrid: React.FC<{ shopProductId: string }> = 
             filterable: false,
             renderCell: (params) => {
                 return (
-                    <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
+                    <IconButton component={StackLink} pageName="editVariant" payload={params.row.id}>
                         <Edit color="primary" />
                     </IconButton>
                 );
@@ -59,7 +59,7 @@ export const ShopProductVariantsDataGrid: React.FC<{ shopProductId: string }> = 
             <Toolbar>
                 <ToolbarFillSpace />
                 <ToolbarActions>
-                    <Button startIcon={<AddIcon />} onClick={() => stackApi.activatePage("edit", "new")} variant="contained" color="primary">
+                    <Button startIcon={<AddIcon />} onClick={() => stackApi.activatePage("editVariant", "new")} variant="contained" color="primary">
                         <FormattedMessage id="shopProduct.variants.dataGrid.toolbar.add" defaultMessage="Add variant" />
                     </Button>
                 </ToolbarActions>
