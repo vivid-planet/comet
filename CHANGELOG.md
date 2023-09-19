@@ -11,6 +11,7 @@ _TBD_
 #### Changes
 
 -   Fix improper validation of input when creating/updating page tree nodes or redirects
+-   Prevent the fileUrl from being exposed in the Site via the PixelImageBlock
 
 ## 3.2.6
 
