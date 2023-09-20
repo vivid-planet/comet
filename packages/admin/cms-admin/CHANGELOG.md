@@ -1,5 +1,17 @@
 # @comet/cms-admin
 
+## 4.4.3
+
+### Patch Changes
+
+-   0d2a2b96: Ignore empty labels for publisher
+    -   @comet/admin@4.4.3
+    -   @comet/admin-date-time@4.4.3
+    -   @comet/admin-icons@4.4.3
+    -   @comet/admin-rte@4.4.3
+    -   @comet/admin-theme@4.4.3
+    -   @comet/blocks-admin@4.4.3
+
 ## 4.4.2
 
 ### Patch Changes

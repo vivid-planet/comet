@@ -2,11 +2,25 @@ import { createCometTheme } from "@comet/admin-theme";
 import BrowserOnly from "@docusaurus/BrowserOnly";
 import CodeBlock from "@theme/CodeBlock";
 import type { Props as PlaygroundProps } from "@theme/Playground";
-import React, { PropsWithChildren } from "react";
+import React from "react";
 import { transform } from "sucrase";
 
-export const Story = ({ children, ...props }: PropsWithChildren<PlaygroundProps>) => {
+interface StoryProps extends Omit<PlaygroundProps, "children"> {
+    path: string;
+}
+
+const importStory = async (name: string) => {
+    const { default: code } = await import(`!!raw-loader!../stories/${name}`);
+    return code;
+};
+
+export const Story = ({ path, ...props }: StoryProps) => {
     const theme = createCometTheme();
+    const [code, setCode] = React.useState("");
+
+    React.useEffect(() => {
+        importStory(path).then(setCode);
+    }, [path]);
 
     return (
         <BrowserOnly>
@@ -30,7 +44,7 @@ export const Story = ({ children, ...props }: PropsWithChildren<PlaygroundProps>
                             }}
                             {...props}
                         >
-                            {children}
+                            {code}
                         </CodeBlock>
                     </MuiThemeProvider>
                 );
