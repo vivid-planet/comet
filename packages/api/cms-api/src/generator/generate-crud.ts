@@ -747,6 +747,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
         }
 
+        ${
+            generatorOptions.create
+                ? `
+
         @Mutation(() => ${metadata.className})
         async create${classNameSingular}(
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
@@ -762,7 +766,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             return ${instanceNameSingular};
         }
+        `
+                : ""
+        }
 
+        ${
+            generatorOptions.update
+                ? `
         @Mutation(() => ${metadata.className})
         @SubjectEntity(${metadata.className})
         async update${classNameSingular}(
@@ -784,7 +794,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             return ${instanceNameSingular};
         }
+        `
+                : ""
+        }
 
+        ${
+            generatorOptions.delete
+                ? `
         @Mutation(() => Boolean)
         @SubjectEntity(${metadata.className})
         async delete${metadata.className}(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
@@ -793,9 +809,12 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             await this.entityManager.flush();
             return true;
         }
+        `
+                : ""
+        }
 
         ${
-            hasVisibleProp
+            hasVisibleProp && generatorOptions.update
                 ? `
         @Mutation(() => ${metadata.className})
         @SubjectEntity(${metadata.className})
@@ -825,6 +844,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function generateCrud(generatorOptions: CrudGeneratorOptions, metadata: EntityMetadata<any>): Promise<GeneratedFile[]> {
+    generatorOptions.update = generatorOptions.update ?? true;
+    generatorOptions.create = generatorOptions.create ?? true;
+    generatorOptions.delete = generatorOptions.delete ?? true;
+
     const generatedFiles: GeneratedFile[] = [];
 
     const { fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
