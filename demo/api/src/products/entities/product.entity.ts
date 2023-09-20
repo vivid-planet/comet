@@ -123,6 +123,13 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Field()
     inStock: boolean = true;
 
+    @Property({ type: types.decimal, nullable: true })
+    @Field()
+    @CrudField({
+        input: false,
+    })
+    soldCount?: number;
+
     @Property({ customType: new RootBlockType(DamImageBlock) })
     @Field(() => RootBlockDataScalar(DamImageBlock))
     @RootBlock(DamImageBlock)

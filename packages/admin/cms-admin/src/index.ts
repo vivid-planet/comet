@@ -61,6 +61,7 @@ export { queryUpdatedAt } from "./form/queryUpdatedAt";
 export { serializeInitialValues } from "./form/serializeInitialValues";
 export { SyncFields } from "./form/SyncFields";
 export { useFormSaveConflict } from "./form/useFormSaveConflict";
+export { CrudGeneratorConfig } from "./generator/types";
 export { createHttpClient } from "./http/createHttpClient";
 export { LocaleProvider } from "./locale/LocaleProvider";
 export { useLocale } from "./locale/useLocale";
@@ -85,6 +86,7 @@ export type { SiteConfig } from "./sitesConfig/SitesConfigContext";
 export { SitesConfigProvider } from "./sitesConfig/SitesConfigProvider";
 export { useSiteConfig } from "./sitesConfig/useSiteConfig";
 export { useSitesConfig } from "./sitesConfig/useSitesConfig";
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
 import emotionStyled from "@emotion/styled";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
