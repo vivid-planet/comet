@@ -45,7 +45,7 @@
     },
     "devDependencies": {
         "@comet/dev-process-manager": "^2.3.2",
-        "@comet/eslint-plugin": "workspace:^4.4.2",
+        "@comet/eslint-plugin": "workspace:^4.4.3",
         "@formatjs/cli": "^4.8.3",
         "@types/node": "^18.0.0",
         "dotenv-cli": "^5.1.0",
