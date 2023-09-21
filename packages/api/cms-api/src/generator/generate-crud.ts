@@ -574,41 +574,49 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
     }
 
     const code = `
-    ${outputRelationManyToOneProps.map(
-        (prop) => `
+    ${outputRelationManyToOneProps
+        .map(
+            (prop) => `
         @ResolveField(() => ${prop.type}${prop.nullable ? `, { nullable: true }` : ""})
         async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}${prop.nullable ? ` | undefined` : ""}> {
             return ${instanceNameSingular}.${prop.name}${prop.nullable ? `?` : ""}.load();
         }    
     `,
-    )}
+        )
+        .join("\n")}
 
-    ${outputRelationOneToManyProps.map(
-        (prop) => `
+    ${outputRelationOneToManyProps
+        .map(
+            (prop) => `
         @ResolveField(() => [${prop.type}])
         async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}[]> {
             return ${instanceNameSingular}.${prop.name}.loadItems();
         }   
     `,
-    )}
+        )
+        .join("\n")}
 
-    ${outputRelationManyToManyProps.map(
-        (prop) => `
+    ${outputRelationManyToManyProps
+        .map(
+            (prop) => `
         @ResolveField(() => [${prop.type}])
         async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}[]> {
             return ${instanceNameSingular}.${prop.name}.loadItems();
         }
     `,
-    )}
+        )
+        .join("\n")}
 
-    ${outputRelationOneToOneProps.map(
-        (prop) => `
+    ${outputRelationOneToOneProps
+        .map(
+            (prop) => `
         @ResolveField(() => ${prop.type}${prop.nullable ? `, { nullable: true }` : ""})
         async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}${prop.nullable ? ` | undefined` : ""}> {
             return ${instanceNameSingular}.${prop.name}${prop.nullable ? `?` : ""}.load();
         }
     `,
-    )}
+        )
+        .join("\n")}
 
     `.trim();
 
