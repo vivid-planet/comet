@@ -6,11 +6,8 @@ import {
     FinalFormInput,
     FinalFormSaveSplitButton,
     FinalFormSelect,
-<<<<<<< HEAD
     FinalFormSubmitEvent,
-=======
     Loading,
->>>>>>> main
     MainContent,
     Toolbar,
     ToolbarActions,
@@ -23,10 +20,9 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
-<<<<<<< HEAD
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { CircularProgress, FormControlLabel, IconButton, MenuItem } from "@mui/material";
+import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -34,10 +30,6 @@ import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-=======
-import { EditPageLayout } from "@comet/cms-admin";
-import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
->>>>>>> main
 import {
     createProductMutation,
     productCategoriesQuery,

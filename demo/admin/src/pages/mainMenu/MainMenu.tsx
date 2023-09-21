@@ -1,11 +1,5 @@
 import { gql } from "@apollo/client";
-<<<<<<< HEAD
-import { Selected, Stack, StackPage, StackSwitch } from "@comet/admin";
-import { LinearProgress } from "@mui/material";
-=======
 import { Loading, Selected, Stack, StackPage, StackSwitch } from "@comet/admin";
-import { GQLEditMainMenuItemFragment } from "@src/graphql.generated";
->>>>>>> main
 import * as React from "react";
 import { useIntl } from "react-intl";
 

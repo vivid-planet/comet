@@ -13,11 +13,6 @@ import {
     useContentScopeConfig as useContentScopeConfigLibrary,
     useSitesConfig,
 } from "@comet/cms-admin";
-<<<<<<< HEAD
-import { CircularProgress } from "@mui/material";
-=======
-import { GQLCurrentUserScopeQuery } from "@src/graphql.generated";
->>>>>>> main
 import React from "react";
 
 import { GQLCurrentUserScopeQuery } from "./ContentScopeProvider.generated";

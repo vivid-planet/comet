@@ -15,15 +15,11 @@ import {
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout, PageName } from "@comet/cms-admin";
-<<<<<<< HEAD
-import { CircularProgress, IconButton, MenuItem } from "@mui/material";
+import { IconButton, MenuItem } from "@mui/material";
 import { FORM_ERROR } from "final-form";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-=======
-import { IconButton, MenuItem } from "@mui/material";
->>>>>>> main
 import {
     GQLPredefinedPageQuery,
     GQLPredefinedPageQueryVariables,
