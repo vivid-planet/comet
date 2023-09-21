@@ -1,11 +1,21 @@
+<<<<<<< HEAD
 import { getApolloContext } from "@apollo/client";
 import { CircularProgress } from "@mui/material";
 import { Config, Decorator, FORM_ERROR, FormApi, FormSubscription, MutableState, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
+=======
+import { useApolloClient } from "@apollo/client";
+import { FORM_ERROR, FormApi, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
+>>>>>>> main
 import setFieldData from "final-form-set-field-data";
 import * as React from "react";
 import { AnyObject, Form, FormRenderProps, RenderableProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
+<<<<<<< HEAD
+=======
+import { Loading } from "./common/Loading";
+import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
+>>>>>>> main
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import { useEditDialogFormApi } from "./EditDialogFormApiContext";
 import { renderComponent } from "./finalFormRenderComponent";
@@ -197,9 +207,18 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         {(formRenderProps.submitError || formRenderProps.error) && (
                             <div className="error">{formRenderProps.submitError || formRenderProps.error}</div>
                         )}
+<<<<<<< HEAD
                         {!editDialog && <>{formRenderProps.submitting && <CircularProgress />}</>}
                     </form>
                 </RouterPrompt>
+=======
+                    </div>
+                    {(formRenderProps.submitError || formRenderProps.error) && (
+                        <div className="error">{formRenderProps.submitError || formRenderProps.error}</div>
+                    )}
+                    {!editDialog && <>{formRenderProps.submitting && <Loading behavior="fillParent" />}</>}
+                </form>
+>>>>>>> main
             </FinalFormContextProvider>
         );
     }

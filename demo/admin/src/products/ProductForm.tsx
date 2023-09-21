@@ -6,7 +6,11 @@ import {
     FinalFormInput,
     FinalFormSaveSplitButton,
     FinalFormSelect,
+<<<<<<< HEAD
     FinalFormSubmitEvent,
+=======
+    Loading,
+>>>>>>> main
     MainContent,
     Toolbar,
     ToolbarActions,
@@ -19,6 +23,7 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
+<<<<<<< HEAD
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { CircularProgress, FormControlLabel, IconButton, MenuItem } from "@mui/material";
@@ -29,6 +34,10 @@ import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
+=======
+import { EditPageLayout } from "@comet/cms-admin";
+import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
+>>>>>>> main
 import {
     createProductMutation,
     productCategoriesQuery,
@@ -151,7 +160,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     }
 
     if (loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
 
     return (

@@ -1,7 +1,12 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
+<<<<<<< HEAD
 import { ErrorScope, Field, FieldContainer, FinalForm, FinalFormCheckbox, FinalFormInput, FinalFormSelect, Tooltip } from "@comet/admin";
 import { Info } from "@comet/admin-icons";
 import { Box, CircularProgress, Divider, FormControlLabel, IconButton, MenuItem, Typography } from "@mui/material";
+=======
+import { ErrorScope, Field, FieldContainer, FinalForm, FinalFormCheckbox, FinalFormInput, FinalFormSelect, Loading } from "@comet/admin";
+import { FormControlLabel, MenuItem, Typography } from "@mui/material";
+>>>>>>> main
 import { Mutator } from "final-form";
 import setFieldTouched from "final-form-set-field-touched";
 import { DocumentNode } from "graphql";
@@ -190,7 +195,7 @@ export function createEditPageNode({
         const debouncedValidateSlug = debounce(validateSlug, 200);
 
         if (mode === "edit" && (loading || !data?.page)) {
-            return <CircularProgress />;
+            return <Loading />;
         }
         return (
             <div>

@@ -1,6 +1,11 @@
 import { gql } from "@apollo/client";
+<<<<<<< HEAD
 import { Selected, Stack, StackPage, StackSwitch } from "@comet/admin";
 import { LinearProgress } from "@mui/material";
+=======
+import { Loading, Selected, Stack, StackPage, StackSwitch } from "@comet/admin";
+import { GQLEditMainMenuItemFragment } from "@src/graphql.generated";
+>>>>>>> main
 import * as React from "react";
 import { useIntl } from "react-intl";
 
@@ -34,7 +39,7 @@ const MainMenu: React.FunctionComponent = () => {
                             query={MAIN_MENU_ITEM_QUERY}
                             dataAccessor="mainMenuItem"
                         >
-                            {(item) => (item === undefined ? <LinearProgress /> : <EditMainMenuItem item={item} />)}
+                            {(item) => (item === undefined ? <Loading behavior="fillPageHeight" /> : <EditMainMenuItem item={item} />)}
                         </Selected>
                     )}
                 </StackPage>
