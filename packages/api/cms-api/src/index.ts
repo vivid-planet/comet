@@ -84,7 +84,7 @@ export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dt
 export { FileUploadInterface } from "./dam/files/dto/file-upload.interface";
 export { CreateFolderInput, UpdateFolderInput } from "./dam/files/dto/folder.input";
 export { createFileEntity, FileInterface } from "./dam/files/entities/file.entity";
-export { FileImage } from "./dam/files/entities/file-image.entity";
+export { DamFileImage } from "./dam/files/entities/file-image.entity";
 export { createFolderEntity, FolderInterface } from "./dam/files/entities/folder.entity";
 export { FileImagesResolver } from "./dam/files/file-image.resolver";
 export { FilesService } from "./dam/files/files.service";

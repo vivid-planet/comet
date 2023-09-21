@@ -233,7 +233,7 @@ describe("transform to save index", () => {
                 visible: true,
                 dependencies: [
                     {
-                        targetEntityName: "File",
+                        targetEntityName: "DamFile",
                         id: "abc",
                     },
                 ],
