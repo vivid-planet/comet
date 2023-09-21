@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
+import { Loading } from "@comet/admin";
 import { Domain as DomainIcon } from "@comet/admin-icons";
 import {
     ContentScopeConfigProps,
@@ -12,7 +13,6 @@ import {
     useContentScopeConfig as useContentScopeConfigLibrary,
     useSitesConfig,
 } from "@comet/cms-admin";
-import { CircularProgress } from "@mui/material";
 import { GQLCurrentUserScopeQuery } from "@src/graphql.generated";
 import React from "react";
 
@@ -64,7 +64,7 @@ const ContentScopeProvider: React.FC<Pick<ContentScopeProviderProps, "children">
     const sitesConfig = useSitesConfig();
     const { loading, data } = useQuery<GQLCurrentUserScopeQuery>(currentUserQuery);
 
-    if (loading || !data) return <CircularProgress />;
+    if (loading || !data) return <Loading behavior="fillPageHeight" />;
 
     const allowedUserDomains = data.currentUser.domains;
 

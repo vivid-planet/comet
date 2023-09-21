@@ -1,9 +1,10 @@
 import { ApolloError } from "@apollo/client";
-import { CircularProgress, ComponentsOverrides, Paper, Theme } from "@mui/material";
+import { ComponentsOverrides, Paper, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { Loading } from "../common/Loading";
 import { styles, TableQueryClassKey } from "./TableQuery.styles";
 import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
 
@@ -34,7 +35,7 @@ export function Query({ classes, ...otherProps }: IProps & WithStyles<typeof sty
                 <div className={classes.loadingContainer}>
                     {otherProps.loading && (
                         <Paper classes={{ root: classes.loadingPaper }}>
-                            <CircularProgress />
+                            <Loading behavior="fillParent" />
                         </Paper>
                     )}
                 </div>

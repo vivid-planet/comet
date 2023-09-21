@@ -88,6 +88,7 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                     variant="contained"
                     color="primary"
                     disabled={loading || selectionModel.length < 1}
+                    startIcon={loading ? <CircularProgress size={20} /> : undefined}
                     onClick={async () => {
                         await startBuilds({
                             variables: { input: { names: rows.filter((row) => selectionModel.includes(row.id)).map((row) => row.name) } },
@@ -96,7 +97,6 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                     }}
                 >
                     <FormattedMessage id="comet.pages.publisher.startBuildsDialog.button" defaultMessage="Start builds" />
-                    {loading && <CircularProgress size={16} />}
                 </Button>
             </DialogActions>
         </Dialog>
