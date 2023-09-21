@@ -7,6 +7,7 @@ import {
     FinalFormSaveSplitButton,
     FinalFormSelect,
     FinalFormSubmitEvent,
+    Loading,
     MainContent,
     Toolbar,
     ToolbarActions,
@@ -21,7 +22,7 @@ import {
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { CircularProgress, FormControlLabel, IconButton, MenuItem } from "@mui/material";
+import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -151,7 +152,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     }
 
     if (loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
 
     return (
