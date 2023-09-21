@@ -78,6 +78,6 @@
         "prettier": "^2.6.2",
         "sucrase": "^3.32.0",
         "typescript": "^4.7.4",
-        "webpack": "^5.88.1"
+        "webpack": "^5.76.0"
     }
 }
