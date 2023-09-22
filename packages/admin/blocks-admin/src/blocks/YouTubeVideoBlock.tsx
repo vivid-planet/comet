@@ -14,10 +14,11 @@ type State = YouTubeVideoBlockData;
 const EXPECTED_YT_ID_LENGTH = 11;
 
 const isValidYouTubeIdentifier = (value: string) => {
-    // regex from https://stackoverflow.com/a/27728417
-    const regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|&v(?:i)?=))([^#&?]*).*/;
+    // regex from https://stackoverflow.com/a/51870158
+    const regExp =
+        /(https?:\/\/)?(((m|www)\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-zA-Z-]+)/;
     const match = value.match(regExp);
-    return value.length === EXPECTED_YT_ID_LENGTH || (!!match && match[1].length == EXPECTED_YT_ID_LENGTH);
+    return value.length === EXPECTED_YT_ID_LENGTH || (!!match && match[8].length == EXPECTED_YT_ID_LENGTH);
 };
 
 const validateIdentifier = (value: string | undefined) => {
