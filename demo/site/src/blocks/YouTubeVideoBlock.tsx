@@ -15,21 +15,20 @@ const getHeightInPercentForAspectRatio = (aspectRatio: YouTubeVideoBlockData["as
 
 const EXPECTED_YT_ID_LENGTH = 11;
 
-const parseYoutubeUrl = (url: string): { success: boolean; identifier?: string } => {
+const parseYoutubeIdentifier = (value: string): string | undefined => {
     // regex from https://stackoverflow.com/a/27728417
     const regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|&v(?:i)?=))([^#&?]*).*/;
-    const match = url.match(regExp);
-    const youtubeId = match && match[1].length == EXPECTED_YT_ID_LENGTH ? match[1] : null;
+    const match = value.match(regExp);
+    const youtubeId = value.length === EXPECTED_YT_ID_LENGTH ? value : match && match[1].length == EXPECTED_YT_ID_LENGTH ? match[1] : null;
 
-    if (youtubeId) return { success: true, identifier: youtubeId };
-    else return { success: false };
+    return youtubeId ?? undefined;
 };
 
 const YouTubeVideoBlock: React.FunctionComponent<PropsWithData<YouTubeVideoBlockData>> = ({
     data: { youtubeIdentifier, autoplay, loop, showControls, aspectRatio },
 }) => {
-    const { success, identifier } = parseYoutubeUrl(youtubeIdentifier);
-    youtubeIdentifier = success && identifier ? identifier : "";
+    const identifier = parseYoutubeIdentifier(youtubeIdentifier);
+    youtubeIdentifier = identifier ?? "";
 
     const searchParams = new URLSearchParams();
     searchParams.append("modestbranding", "1");

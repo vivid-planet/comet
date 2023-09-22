@@ -13,11 +13,17 @@ type State = YouTubeVideoBlockData;
 
 const EXPECTED_YT_ID_LENGTH = 11;
 
-const isYtUrl = (value: string) => {
+const isValidYouTubeIdentifier = (value: string) => {
     // regex from https://stackoverflow.com/a/27728417
     const regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|&v(?:i)?=))([^#&?]*).*/;
     const match = value.match(regExp);
-    return !!match && match[1].length == EXPECTED_YT_ID_LENGTH;
+    return value.length === EXPECTED_YT_ID_LENGTH || (!!match && match[1].length == EXPECTED_YT_ID_LENGTH);
+};
+
+const validateIdentifier = (value: string | undefined) => {
+    return value && isValidYouTubeIdentifier(value) ? undefined : (
+        <FormattedMessage id="comet.blocks.youTubeVideo.validation" defaultMessage="Should be a valid YouTube URL or identifier" />
+    );
 };
 
 export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, YouTubeVideoBlockInput> = {
@@ -35,14 +41,10 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
         return { ...state, autoplay: false, adminMeta: { route: previewCtx.parentUrl } };
     },
 
-    isValid: (state) => isYtUrl(state.youtubeIdentifier),
+    isValid: (state) => isValidYouTubeIdentifier(state.youtubeIdentifier),
 
     AdminComponent: ({ state, updateState }) => {
         const intl = useIntl();
-
-        const shouldBeYtUrl = () => (value: string) => {
-            return isYtUrl(value) ? undefined : `Should be a valid YouTube URL`;
-        };
 
         return (
             <SelectPreviewComponent>
@@ -57,7 +59,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
                             id: "comet.blocks.youTubeVideo.youtubeIdentifier",
                             defaultMessage: "YouTube URL or YouTube Video ID",
                         })}
-                        validate={shouldBeYtUrl()}
+                        validate={validateIdentifier}
                         name="youtubeIdentifier"
                         component={FinalFormInput}
                         fullWidth
