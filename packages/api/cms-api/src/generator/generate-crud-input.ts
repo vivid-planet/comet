@@ -2,6 +2,7 @@ import { EntityMetadata } from "@mikro-orm/core";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
 import { buildNameVariants } from "./utils/build-name-variants";
+import { generateImportsCode, Imports } from "./utils/generate-imports-code";
 import {
     findBlockImportPath,
     findBlockName,
@@ -42,7 +43,7 @@ export async function generateCrudInput(
         .filter((prop) => !options.excludeFields.includes(prop.name));
 
     let fieldsOut = "";
-    let importsOut = "";
+    const imports: Imports = [];
     for (const prop of props) {
         let type = prop.type;
         const fieldName = prop.name;
@@ -61,7 +62,7 @@ export async function generateCrudInput(
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             const enumName = findEnumName(prop.name, metadata);
             const importPath = findEnumImportPath(enumName, generatorOptions, metadata);
-            importsOut += `import { ${enumName} } from "${importPath}";`;
+            imports.push({ name: enumName, importPath });
             decorators.push(`@IsEnum(${enumName})`);
             decorators.push(`@Field(() => ${enumName}, ${fieldOptions})`);
             type = enumName;
@@ -98,7 +99,7 @@ export async function generateCrudInput(
         } else if (prop.type === "RootBlockType") {
             const blockName = findBlockName(prop.name, metadata);
             const importPath = findBlockImportPath(blockName, generatorOptions, metadata);
-            importsOut += `import { ${blockName} } from "${importPath}";`;
+            imports.push({ name: blockName, importPath });
 
             decorators.push(`@Field(() => RootBlockInputScalar(${blockName})${prop.nullable ? ", { nullable: true }" : ""})`);
             decorators.push(
@@ -125,9 +126,10 @@ export async function generateCrudInput(
                     const excludeFields = prop.targetMeta.props.filter((p) => p.reference == "m:1" && p.targetMeta == metadata).map((p) => p.name);
                     const nestedInputFiles = await generateCrudInput(generatorOptions, prop.targetMeta, { nested: true, excludeFields });
                     generatedFiles.push(...nestedInputFiles);
-                    importsOut += `import { ${prop.targetMeta.className}Input } from "${nestedInputFiles[0].name
-                        .replace(/^dto/, ".")
-                        .replace(/\.ts$/, "")}";`;
+                    imports.push({
+                        name: `${prop.targetMeta.className}Input`,
+                        importPath: nestedInputFiles[0].name.replace(/^dto/, ".").replace(/\.ts$/, ""),
+                    });
                 }
                 const inputName = `${prop.targetMeta.className}Input`;
                 decorators.push(`@Field(() => [${inputName}], {${prop.nullable ? "nullable: true" : "defaultValue: []"}})`);
@@ -154,9 +156,10 @@ export async function generateCrudInput(
                 const excludeFields = prop.targetMeta.props.filter((p) => p.reference == "1:1" && p.targetMeta == metadata).map((p) => p.name);
                 const nestedInputFiles = await generateCrudInput(generatorOptions, prop.targetMeta, { nested: true, excludeFields });
                 generatedFiles.push(...nestedInputFiles);
-                importsOut += `import { ${prop.targetMeta.className}Input } from "${nestedInputFiles[0].name
-                    .replace(/^dto/, ".")
-                    .replace(/\.ts$/, "")}";`;
+                imports.push({
+                    name: `${prop.targetMeta.className}Input`,
+                    importPath: nestedInputFiles[0].name.replace(/^dto/, ".").replace(/\.ts$/, ""),
+                });
             }
             const inputName = `${prop.targetMeta.className}Input`;
             decorators.push(`@Field(() => ${inputName}${prop.nullable ? ", { nullable: true }" : ""})`);
@@ -194,7 +197,7 @@ export async function generateCrudInput(
                 } else {
                     const nestedClassName = tsType.getArrayElementTypeOrThrow().getText(tsProp);
                     const importPath = findInputClassImportPath(nestedClassName, generatorOptions, metadata);
-                    importsOut += `import { ${nestedClassName} } from "${importPath}";`;
+                    imports.push({ name: nestedClassName, importPath });
                     decorators.push(`@ValidateNested()`);
                     decorators.push(`@Type(() => ${nestedClassName})`);
                     decorators.push(`@Field(() => [${nestedClassName}], ${fieldOptions})`);
@@ -202,7 +205,7 @@ export async function generateCrudInput(
             } else {
                 const nestedClassName = tsType.getText(tsProp);
                 const importPath = findInputClassImportPath(nestedClassName, generatorOptions, metadata);
-                importsOut += `import { ${nestedClassName} } from "${importPath}";`;
+                imports.push({ name: nestedClassName, importPath });
                 decorators.push(`@ValidateNested()`);
                 decorators.push(`@Type(() => ${nestedClassName})`);
                 decorators.push(`@Field(() => ${nestedClassName}${prop.nullable ? ", { nullable: true }" : ""})`);
@@ -222,7 +225,7 @@ import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOp
 import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
-${importsOut}
+${generateImportsCode(imports)}
 
 @InputType()
 export class ${metadata.className}Input {

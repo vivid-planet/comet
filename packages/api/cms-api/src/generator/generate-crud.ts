@@ -6,6 +6,7 @@ import { singular } from "pluralize";
 import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { generateCrudInput } from "./generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
+import { generateImportsCode, Imports } from "./utils/generate-imports-code";
 import { findEnumImportPath, findEnumName } from "./utils/ts-morph-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
@@ -247,6 +248,10 @@ function generatePaginatedDto({ generatorOptions, metadata }: { generatorOptions
 function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
     const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg } = buildOptions(metadata);
+    const imports: Imports = [];
+    if (scopeProp && scopeProp.targetMeta) {
+        imports.push(generateEntityImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`));
+    }
 
     const argsOut = `import { ArgsType, Field, IntersectionType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
@@ -255,7 +260,7 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
     import { ${classNameSingular}Filter } from "./${fileNameSingular}.filter";
     import { ${classNameSingular}Sort } from "./${fileNameSingular}.sort";
 
-    ${scopeProp && scopeProp.targetMeta ? generateImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`) : ""}
+    ${generateImportsCode(imports)}
 
     @ArgsType()
     export class ${argsClassName} extends OffsetBasedPaginationArgs {
@@ -319,7 +324,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
     import { EntityRepository } from "@mikro-orm/postgresql";
     import { Injectable } from "@nestjs/common";
 
-    ${generateImport(metadata, generatorOptions.targetDirectory)}
+    ${generateImportsCode([generateEntityImport(metadata, generatorOptions.targetDirectory)])}
     import { ${classNameSingular}Filter } from "./dto/${fileNameSingular}.filter";
 
     @Injectable()
@@ -360,8 +365,11 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
     return serviceOut;
 }
 
-function generateImport(targetMetadata: EntityMetadata<any>, relativeTo: string): string {
-    return `import { ${targetMetadata.className} } from "${path.relative(relativeTo, targetMetadata.path).replace(/\.ts$/, "")}";`;
+function generateEntityImport(targetMetadata: EntityMetadata<any>, relativeTo: string): Imports[0] {
+    return {
+        name: targetMetadata.className,
+        importPath: path.relative(relativeTo, targetMetadata.path).replace(/\.ts$/, ""),
+    };
 }
 
 function generateInputHandling(
@@ -522,13 +530,17 @@ ${
 function generateNestedEntityResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
     const { classNameSingular } = buildNameVariants(metadata);
 
-    const { importsCode, code, hasOutputRelations } = generateRelationsFieldResolver({ generatorOptions, metadata });
+    const imports: Imports = [];
+
+    const { imports: fieldImports, code, hasOutputRelations } = generateRelationsFieldResolver({ generatorOptions, metadata });
     if (!hasOutputRelations) return null;
+    imports.push(...fieldImports);
+
+    imports.push(generateEntityImport(metadata, generatorOptions.targetDirectory));
 
     return `
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
-    ${generateImport(metadata, generatorOptions.targetDirectory)}
-    ${importsCode}
+    ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
     export class ${classNameSingular}Resolver {
@@ -566,11 +578,11 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
         outputRelationManyToManyProps.length > 0 ||
         outputRelationOneToOneProps.length > 0;
 
-    let importsCode = "";
+    const imports: Imports = [];
 
     for (const prop of [...relationManyToOneProps, ...relationOneToManyProps, ...relationManyToManyProps, ...relationOneToOneProps]) {
         if (!prop.targetMeta) throw new Error(`Relation ${prop.name} has targetMeta not set`);
-        importsCode += generateImport(prop.targetMeta, generatorOptions.targetDirectory);
+        imports.push(generateEntityImport(prop.targetMeta, generatorOptions.targetDirectory));
     }
 
     const code = `
@@ -622,7 +634,7 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
 
     return {
         code,
-        importsCode,
+        imports,
         hasOutputRelations,
     };
 }
@@ -642,6 +654,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     const outputRelationManyToManyProps = relationManyToManyProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
     const outputRelationOneToOneProps = relationOneToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
 
+    const imports: Imports = [];
+
     const injectRepositories = new Set<string>();
 
     [...relationManyToOneProps, ...relationOneToOneProps, ...relationOneToManyProps, ...relationManyToManyProps]
@@ -651,13 +665,19 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         });
 
     const {
-        importsCode: relationsFieldResolverImportsCode,
+        imports: relationsFieldResolverImports,
         code: relationsFieldResolverCode,
         hasOutputRelations,
     } = generateRelationsFieldResolver({
         generatorOptions,
         metadata,
     });
+    imports.push(...relationsFieldResolverImports);
+
+    imports.push(generateEntityImport(metadata, generatorOptions.targetDirectory));
+    if (scopeProp && scopeProp.targetMeta) {
+        imports.push(generateEntityImport(scopeProp.targetMeta, generatorOptions.targetDirectory));
+    }
 
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
@@ -666,13 +686,11 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     import { extractGraphqlFields, SortDirection, SubjectEntity, validateNotModified } from "@comet/cms-api";
     import { GraphQLResolveInfo } from "graphql";
 
-    ${generateImport(metadata, generatorOptions.targetDirectory)}
-    ${scopeProp && scopeProp.targetMeta ? generateImport(scopeProp.targetMeta, generatorOptions.targetDirectory) : ""}
     import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
     import { ${classNameSingular}Input, ${classNameSingular}UpdateInput } from "./dto/${fileNameSingular}.input";
     import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
     import { ${argsClassName} } from "./dto/${argsFileName}";
-    ${relationsFieldResolverImportsCode}
+    ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
     export class ${classNameSingular}Resolver {

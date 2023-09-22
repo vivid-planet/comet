@@ -7,56 +7,56 @@ import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
-class TestEntityFunction extends BaseEntity<TestEntityFunction, "id"> {
+class TestEntitiyProduct extends BaseEntity<TestEntitiyProduct, "id"> {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
-    @OneToMany(() => TestEntityFilter, (filters) => filters.advisorFunction)
-    advisorFunctions = new Collection<TestEntityFilter>(this);
+    @OneToMany(() => TestEntityCategory, (filters) => filters.product1)
+    categories1 = new Collection<TestEntityCategory>(this);
 
-    @OneToMany(() => TestEntityFilter, (filters) => filters.teamFunction)
-    teamFunctions = new Collection<TestEntityFilter>(this);
+    @OneToMany(() => TestEntityCategory, (filters) => filters.product2)
+    categories2 = new Collection<TestEntityCategory>(this);
 }
 
 @Entity()
-class TestEntityFilter extends BaseEntity<TestEntityFilter, "id"> {
+class TestEntityCategory extends BaseEntity<TestEntityCategory, "id"> {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
-    @ManyToOne(() => TestEntityFunction, { nullable: true, ref: true })
-    advisorFunction?: Ref<TestEntityFunction>;
+    @ManyToOne(() => TestEntitiyProduct, { nullable: true, ref: true })
+    product1?: Ref<TestEntitiyProduct>;
 
-    @ManyToOne(() => TestEntityFunction, { nullable: true, ref: true })
-    teamFunction?: Ref<TestEntityFunction>;
+    @ManyToOne(() => TestEntitiyProduct, { nullable: true, ref: true })
+    product2?: Ref<TestEntitiyProduct>;
 }
 
+const isArrayUnique = (arr: unknown[]) => Array.isArray(arr) && new Set(arr).size === arr.length;
+
 describe("GenerateCrudRelationsMultiUse", () => {
-    describe("resolver class", () => {
-        it("should be a valid generated ts file", async () => {
-            LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityFilter, TestEntityFunction],
-            });
-
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityFilter"));
-            const lintedOut = await lintGeneratedFiles(out);
-            const file = lintedOut.find((file) => file.name === "test-entity-filter.resolver.ts");
-            if (!file) throw new Error("File not found");
-
-            const source = parseSource(file.content);
-
-            const imports: string[] = [];
-            for (const importDeclaration of source.getImportDeclarations()) {
-                for (const namedImport of importDeclaration.getNamedImports()) {
-                    // Check if TestEntityFunction has been imported already. Each import can only exist once.
-                    expect(imports.includes("TestEntityFunction")).toBe(false);
-                    imports.push(namedImport.getName());
-                }
-            }
-
-            orm.close();
+    it("should import a relation reference only once if used multiple times", async () => {
+        LazyMetadataStorage.load();
+        const orm = await MikroORM.init({
+            type: "postgresql",
+            dbName: "test-db",
+            entities: [TestEntityCategory, TestEntitiyProduct],
         });
+
+        const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntitiyProduct"));
+        const lintedOut = await lintGeneratedFiles(out);
+        const file = lintedOut.find((file) => file.name === "test-entitiy-product.resolver.ts");
+        if (!file) throw new Error("File not found");
+
+        console.log(file.content);
+        const source = parseSource(file.content);
+
+        const imports: string[] = [];
+        for (const importDeclaration of source.getImportDeclarations()) {
+            for (const namedImport of importDeclaration.getNamedImports()) {
+                imports.push(namedImport.getName());
+            }
+        }
+        expect(isArrayUnique(imports)).toBe(true);
+
+        orm.close();
     });
 });

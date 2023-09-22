@@ -7,55 +7,54 @@ import { v4 as uuid } from "uuid";
 import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
-export enum TestEnumOperator {
+export enum TestEnum {
     AND = "AND",
     OR = "OR",
 }
-registerEnumType(TestEnumOperator, {
+registerEnumType(TestEnum, {
     name: "TestEnumOperator",
 });
 
 @Entity()
-class TestEntityFilter extends BaseEntity<TestEntityFilter, "id"> {
+class TestEntity extends BaseEntity<TestEntity, "id"> {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
-    @Field(() => TestEnumOperator)
-    @Enum(() => TestEnumOperator)
-    companyOperator: TestEnumOperator;
+    @Field(() => TestEnum)
+    @Enum(() => TestEnum)
+    foo: TestEnum;
 
-    @Field(() => TestEnumOperator)
-    @Enum(() => TestEnumOperator)
-    personOperator: TestEnumOperator;
+    @Field(() => TestEnum)
+    @Enum(() => TestEnum)
+    bar: TestEnum;
 }
 
+const isArrayUnique = (arr: unknown[]) => Array.isArray(arr) && new Set(arr).size === arr.length;
+
 describe("GenerateCrudEnumMultiUse", () => {
-    describe("resolver class", () => {
-        it("should be a valid generated ts file", async () => {
-            LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityFilter],
-            });
-
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityFilter"));
-            const lintedOut = await lintGeneratedFiles(out);
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-filter.input.ts");
-            if (!file) throw new Error("File not found");
-
-            const source = parseSource(file.content);
-
-            const imports: string[] = [];
-            for (const importDeclaration of source.getImportDeclarations()) {
-                for (const namedImport of importDeclaration.getNamedImports()) {
-                    // Check if TestEnumOperator has been imported already. Each import can only exist once.
-                    expect(imports.includes("TestEnumOperator")).toBe(false);
-                    imports.push(namedImport.getName());
-                }
-            }
-
-            orm.close();
+    it("should import a enum reference only once if used multiple times", async () => {
+        LazyMetadataStorage.load();
+        const orm = await MikroORM.init({
+            type: "postgresql",
+            dbName: "test-db",
+            entities: [TestEntity],
         });
+
+        const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity"));
+        const lintedOut = await lintGeneratedFiles(out);
+        const file = lintedOut.find((file) => file.name === "dto/test-entity.input.ts");
+        if (!file) throw new Error("File not found");
+        const source = parseSource(file.content);
+
+        const imports: string[] = [];
+        for (const importDeclaration of source.getImportDeclarations()) {
+            for (const namedImport of importDeclaration.getNamedImports()) {
+                imports.push(namedImport.getName());
+            }
+        }
+
+        expect(isArrayUnique(imports)).toBe(true);
+
+        orm.close();
     });
 });
