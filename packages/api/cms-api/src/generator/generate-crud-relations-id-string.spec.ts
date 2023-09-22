@@ -26,7 +26,7 @@ class TestEntityProduct extends BaseEntity<TestEntityProduct, "id"> {
 
 describe("GenerateCrudRelationsIdString", () => {
     describe("resolver class", () => {
-        it("should be a valid generated ts file", async () => {
+        it("input type to category relation should be string with isString and not IsUuid validator", async () => {
             LazyMetadataStorage.load();
             const orm = await MikroORM.init({
                 type: "postgresql",
@@ -49,7 +49,9 @@ describe("GenerateCrudRelationsIdString", () => {
             expect(structure.properties?.[0].name).toBe("category");
             expect(structure.properties?.[0].type).toBe("string");
             expect(structure.properties?.[0].decorators?.length).toBe(3);
-            expect(structure.properties?.[0].decorators?.[2].name).toBe("IsString");
+            const decorators = structure.properties?.[0].decorators?.map((dec) => dec.name);
+            expect(decorators).toContain("IsString");
+            expect(decorators).not.toContain("IsUUID");
 
             orm.close();
         });
