@@ -21,6 +21,8 @@ import {
     GQLDeleteIncomingFolderMutationVariables,
     GQLDownloadDamFileMutation,
     GQLDownloadDamFileMutationVariables,
+    GQLFindCopiesOfFileInScopeQuery,
+    GQLFindCopiesOfFileInScopeQueryVariables,
     GQLSlugAvailableQuery,
     GQLSlugAvailableQueryVariables,
 } from "./sendPages.generated";
@@ -161,7 +163,9 @@ export async function sendPages(
         const fileIdsToCopyDirectly: string[] = [];
         if (node?.document != null) {
             for (const damFile of fileDependenciesFromDocument(documentType, node.document)) {
-                if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl)) {
+                if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
+                    //already copied
+                } else if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl)) {
                     //our own api, no need to download&upload
                     if (!hasDamScope || isEqual(damFile.scope, damScope)) {
                         //same scope, same server, no need to copy
@@ -184,6 +188,7 @@ export async function sendPages(
                         if (damFile.altText) formData.append("altText", damFile.altText);
                         if (damFile.license) formData.append("license", JSON.stringify(damFile.license));
                         if (damFile.image?.cropArea) formData.append("imageCropArea", JSON.stringify(damFile.image.cropArea));
+                        formData.append("copyOfId", damFile.id);
 
                         const response: { data: { id: string } } = await blockContext.damConfig.apiClient.post(`/dam/files/upload`, formData, {
                             // cancelToken, //TODO support cancel?
@@ -197,8 +202,8 @@ export async function sendPages(
                         //remote source, download server side
                         const { data } = await client.mutate<GQLDownloadDamFileMutation, GQLDownloadDamFileMutationVariables>({
                             mutation: gql`
-                                mutation DownloadDamFile($url: String!, $scope: DamScopeInput!, $input: UpdateDamFileInput!) {
-                                    importDamFileByDownload(url: $url, scope: $scope, input: $input) {
+                                mutation DownloadDamFile($url: String!, $scope: DamScopeInput!, $copyOfId: ID!, $input: UpdateDamFileInput!) {
+                                    importDamFileByDownload(url: $url, scope: $scope, copyOfId: $copyOfId, input: $input) {
                                         id
                                     }
                                 }
@@ -206,6 +211,7 @@ export async function sendPages(
                             variables: {
                                 url: damFile.fileUrl,
                                 scope: damScope,
+                                copyOfId: damFile.id,
                                 input: {
                                     name: damFile.name,
                                     folderId: inboxFolderIdForCopiedFiles,
@@ -281,8 +287,32 @@ export async function sendPages(
                         if (!hasDamScope || (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl) && isEqual(damFile.scope, damScope))) {
                             //same scope, same server, no need to copy
                         } else {
-                            if (damFile.scope && !sourceScopes.some((scope) => isEqual(scope, damFile.scope))) {
-                                sourceScopes.push(damFile.scope);
+                            const { data } = await client.query<GQLFindCopiesOfFileInScopeQuery, GQLFindCopiesOfFileInScopeQueryVariables>({
+                                query: gql`
+                                    query FindCopiesOfFileInScope($id: ID!, $scope: DamScopeInput!, $imageCropArea: ImageCropAreaInput) {
+                                        findCopiesOfFileInScope(id: $id, scope: $scope, imageCropArea: $imageCropArea) {
+                                            id
+                                        }
+                                    }
+                                `,
+                                variables: {
+                                    id: damFile.id,
+                                    scope: damScope,
+                                    imageCropArea: damFile.image?.cropArea,
+                                },
+                            });
+                            if (data.findCopiesOfFileInScope.length > 0) {
+                                // use already existing file
+                                dependencyReplacements.push({
+                                    type: "DamFile",
+                                    originalId: damFile.id,
+                                    replaceWithId: data.findCopiesOfFileInScope[0].id,
+                                });
+                            } else {
+                                // copying is required
+                                if (damFile.scope && !sourceScopes.some((scope) => isEqual(scope, damFile.scope))) {
+                                    sourceScopes.push(damFile.scope);
+                                }
                             }
                         }
                     }

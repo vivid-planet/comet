@@ -6,7 +6,6 @@ import {
     Headers,
     Inject,
     NotFoundException,
-    Options,
     Param,
     Post,
     Res,

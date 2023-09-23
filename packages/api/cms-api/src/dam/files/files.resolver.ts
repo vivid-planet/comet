@@ -11,6 +11,7 @@ import { SubjectEntity } from "../../common/decorators/subject-entity.decorator"
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { ContentScopeService } from "../../content-scope/content-scope.service";
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
+import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
 import { DamScopeInterface } from "../types";
 import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
@@ -66,6 +67,16 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             return file;
         }
 
+        @Query(() => [File])
+        //@ SubjectEntity is not required here
+        async findCopiesOfFileInScope(
+            @Args("id", { type: () => ID }) id: string,
+            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
+            @Args("imageCropArea", { type: () => ImageCropAreaInput, nullable: true }) imageCropArea?: ImageCropAreaInput,
+        ): Promise<FileInterface[]> {
+            return this.filesService.findCopiesOfFileInScope(id, imageCropArea, scope);
+        }
+
         @Mutation(() => File)
         @SubjectEntity(File)
         async updateDamFile(
@@ -80,6 +91,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         async importDamFileByDownload(
             @Args("url", { type: () => String }) url: string,
             @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
+            @Args("copyOfId", { type: () => ID }) copyOfId: string,
             @Args("input", { type: () => UpdateFileInput }) { image: imageInput, ...input }: UpdateFileInput,
         ): Promise<FileInterface> {
             const file = await download(url);
@@ -87,6 +99,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
                 ...input,
                 imageCropArea: imageInput?.cropArea,
                 folderId: input.folderId ? input.folderId : undefined,
+                copyOfId,
                 scope,
             });
             return uploadedFile;

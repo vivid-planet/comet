@@ -22,6 +22,7 @@ import { FocalPoint } from "../common/enums/focal-point.enum";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG, IMGPROXY_CONFIG } from "../dam.constants";
+import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
 import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
 import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
 import { DamScopeInterface } from "../types";
@@ -55,6 +56,7 @@ export const withFilesSelect = (
         offset?: number;
         limit?: number;
         scope?: DamScopeInterface;
+        imageCropArea?: ImageCropAreaInput;
     },
 ): QueryBuilder<FileInterface> => {
     if (args.query) {
@@ -80,6 +82,9 @@ export const withFilesSelect = (
     }
 
     if (args.imageId) qb.andWhere({ image: { id: args.imageId } });
+    if (args.imageCropArea) {
+        qb.andWhere({ image: { cropArea: args.imageCropArea } });
+    }
 
     if (args.sortColumnName && args.sortDirection) {
         qb.orderBy({ [`file.${args.sortColumnName}`]: args.sortDirection });
@@ -180,8 +185,8 @@ export class FilesService {
             .getResult();
     }
 
-    async findCopiesOfFileInScope(fileId: string, scope?: DamScopeInterface) {
-        return withFilesSelect(this.selectQueryBuilder(), { copyOfId: fileId, scope: scope }).getResult();
+    async findCopiesOfFileInScope(fileId: string, imageCropArea?: ImageCropAreaInput, scope?: DamScopeInterface) {
+        return withFilesSelect(this.selectQueryBuilder(), { copyOfId: fileId, imageCropArea, scope }).getResult();
     }
 
     async findOneById(id: string): Promise<FileInterface | null> {
@@ -288,7 +293,7 @@ export class FilesService {
 
     async upload(
         file: FileUploadInterface,
-        { folderId, scope, ...assignData }: Omit<UploadFileBodyInterface, "scope"> & { scope?: DamScopeInterface },
+        { folderId, scope, copyOfId, ...assignData }: Omit<UploadFileBodyInterface, "scope"> & { scope?: DamScopeInterface },
     ): Promise<FileInterface> {
         let result: FileInterface | undefined = undefined;
         try {
@@ -325,6 +330,12 @@ export class FilesService {
                 }
             }
 
+            let copyOf: FileInterface | null = null;
+            if (copyOfId) {
+                copyOf = await this.findOneById(copyOfId);
+                if (!copyOf) throw new Error("Copy of file not found");
+            }
+
             await this.blobStorageBackendService.upload(file, contentHash, this.config.filesDirectory);
 
             const name = await this.findNextAvailableFilename({ filePath: file.originalname, folderId, scope });
@@ -352,6 +363,7 @@ export class FilesService {
                         : undefined,
                 contentHash,
                 scope,
+                copyOf: copyOf ? copyOf : undefined,
                 ...assignData,
             });
 
@@ -467,19 +479,12 @@ export class FilesService {
         };
 
         const findCopyWithSameCroppingInTargetScope = async (file: FileInterface) => {
-            const copiesInTargetScope = await this.findCopiesOfFileInScope(file.id, inboxFolder.scope);
+            const copiesInTargetScope = await this.findCopiesOfFileInScope(file.id, file.image?.cropArea, inboxFolder.scope);
 
             if (copiesInTargetScope.length === 0) {
                 return undefined;
             }
-
-            for (const copy of copiesInTargetScope) {
-                if (isEqual(file.image?.cropArea, copy.image?.cropArea)) {
-                    return copy;
-                }
-            }
-
-            return undefined;
+            return copiesInTargetScope[0];
         };
 
         const files = await this.findMultipleByIds(fileIds);
