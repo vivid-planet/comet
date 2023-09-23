@@ -20,7 +20,7 @@ import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { FileInterface } from "./entities/file.entity";
 import { FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
-import { slugifyFilename } from "./files.utils";
+import { download, slugifyFilename } from "./files.utils";
 
 export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<FileInterface>; Scope?: Type<DamScopeInterface> }): Type<unknown> {
     const Scope = PassedScope ?? EmptyDamScope;
@@ -73,6 +73,23 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             @Args("input", { type: () => UpdateFileInput }) input: UpdateFileInput,
         ): Promise<FileInterface> {
             return this.filesService.updateById(id, input);
+        }
+
+        @Mutation(() => File)
+        @SkipBuild()
+        async importDamFileByDownload(
+            @Args("url", { type: () => String }) url: string,
+            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
+            @Args("input", { type: () => UpdateFileInput }) { image: imageInput, ...input }: UpdateFileInput,
+        ): Promise<FileInterface> {
+            const file = await download(url);
+            const uploadedFile = await this.filesService.upload(file, {
+                ...input,
+                imageCropArea: imageInput?.cropArea,
+                folderId: input.folderId ? input.folderId : undefined,
+                scope,
+            });
+            return uploadedFile;
         }
 
         @Mutation(() => [File])

@@ -19,6 +19,8 @@ import {
     GQLCreatePageNodeMutationVariables,
     GQLDeleteIncomingFolderMutation,
     GQLDeleteIncomingFolderMutationVariables,
+    GQLDownloadDamFileMutation,
+    GQLDownloadDamFileMutationVariables,
     GQLSlugAvailableQuery,
     GQLSlugAvailableQueryVariables,
 } from "./sendPages.generated";
@@ -168,7 +170,8 @@ export async function sendPages(
                         fileIdsToCopyDirectly.push(damFile.id);
                     }
                 } else {
-                    {
+                    if (damFile.fileUrl.match(/^https?:\/\/(localhost|.*\.dev\.vivid-planet\.cloud|192\.168\.\d{1,3}\.\d{1,3}):\d{2,4}/)) {
+                        //source is local dev server, download client side and upload
                         const fileResponse = await fetch(damFile.fileUrl);
                         const fileBlob = await fileResponse.blob();
                         const file = new File([fileBlob], damFile.name, { type: damFile.mimetype });
@@ -189,6 +192,34 @@ export async function sendPages(
                             },
                         });
                         dependencyReplacements.push({ type: "DamFile", originalId: damFile.id, replaceWithId: response.data.id });
+                        inboxFolderUsed = true;
+                    } else {
+                        //remote source, download server side
+                        const { data } = await client.mutate<GQLDownloadDamFileMutation, GQLDownloadDamFileMutationVariables>({
+                            mutation: gql`
+                                mutation DownloadDamFile($url: String!, $scope: DamScopeInput!, $input: UpdateDamFileInput!) {
+                                    importDamFileByDownload(url: $url, scope: $scope, input: $input) {
+                                        id
+                                    }
+                                }
+                            `,
+                            variables: {
+                                url: damFile.fileUrl,
+                                scope: damScope,
+                                input: {
+                                    name: damFile.name,
+                                    folderId: inboxFolderIdForCopiedFiles,
+                                    title: damFile.title,
+                                    altText: damFile.altText,
+                                    license: damFile.license,
+                                    image: damFile.image ? { cropArea: damFile.image.cropArea } : undefined,
+                                },
+                            },
+                        });
+                        if (!data?.importDamFileByDownload.id) {
+                            throw Error("Did not receive new id for imported dam file");
+                        }
+                        dependencyReplacements.push({ type: "DamFile", originalId: damFile.id, replaceWithId: data?.importDamFileByDownload.id });
                         inboxFolderUsed = true;
                     }
                 }
