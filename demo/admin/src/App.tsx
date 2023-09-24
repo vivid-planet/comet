@@ -23,6 +23,7 @@ import {
     SitesConfigProvider,
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
+import { BooksPage } from "@src/books/generated/BooksPage";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
 import { additionalPageTreeNodeFieldsFragment, EditPageNode } from "@src/common/EditPageNode";
@@ -223,6 +224,11 @@ class App extends React.Component {
                                                                                     <RouteWithErrorBoundary
                                                                                         path={`${match.path}/product-tags`}
                                                                                         component={ProductTagsPage}
+                                                                                    />
+
+                                                                                    <RouteWithErrorBoundary
+                                                                                        path={`${match.path}/books`}
+                                                                                        component={BooksPage}
                                                                                     />
 
                                                                                     <Redirect from={`${match.path}`} to={`${match.url}/dashboard`} />
