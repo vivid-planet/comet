@@ -127,10 +127,17 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
-type Link implements DocumentInterface {
+type Book implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
-  content: LinkBlockData!
+  title: String!
+  description: String!
+  isAvailable: Boolean!
+  releaseDate: DateTime!
+  price: Float!
+  publisher: Publisher!
+  coverImage: DamImageBlockData!
+  link: LinkBlockData!
   createdAt: DateTime!
 }
 
@@ -139,8 +146,29 @@ interface DocumentInterface {
   updatedAt: DateTime!
 }
 
+enum Publisher {
+  Piper
+  Ullstein
+  Manhattan
+}
+
+"""DamImage root block data"""
+scalar DamImageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
 """Link root block data"""
 scalar LinkBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type PaginatedBooks {
+  nodes: [Book!]!
+  totalCount: Int!
+}
+
+type Link implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  content: LinkBlockData!
+  createdAt: DateTime!
+}
 
 type Page implements DocumentInterface {
   id: ID!
@@ -342,9 +370,6 @@ enum NewsCategory {
   Company
   Awards
 }
-
-"""DamImage root block data"""
-scalar DamImageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 """NewsContent root block data"""
 scalar NewsContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
@@ -585,6 +610,8 @@ type Query {
   productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
   productTag(id: ID!): ProductTag!
   productTags(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductTagFilter, sort: [ProductTagSort!]): PaginatedProductTags!
+  book(id: ID!): Book!
+  books(offset: Int! = 0, limit: Int! = 25, search: String, filter: BookFilter, sort: [BookSort!]): PaginatedBooks!
 }
 
 enum SortDirection {
@@ -803,6 +830,41 @@ enum ProductTagSortField {
   updatedAt
 }
 
+input BookFilter {
+  title: StringFilter
+  description: StringFilter
+  isAvailable: BooleanFilter
+  releaseDate: DateFilter
+  price: NumberFilter
+  publisher: PublisherEnumFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  and: [BookFilter!]
+  or: [BookFilter!]
+}
+
+input PublisherEnumFilter {
+  isAnyOf: [Publisher!]
+  equal: Publisher
+  notEqual: Publisher
+}
+
+input BookSort {
+  field: BookSortField!
+  direction: SortDirection! = ASC
+}
+
+enum BookSortField {
+  title
+  description
+  isAvailable
+  releaseDate
+  price
+  publisher
+  createdAt
+  updatedAt
+}
+
 type Mutation {
   currentUserSignOut: String!
   createBuilds(input: CreateBuildsInput!): Boolean!
@@ -851,6 +913,9 @@ type Mutation {
   createProductTag(input: ProductTagInput!): ProductTag!
   updateProductTag(id: ID!, input: ProductTagUpdateInput!, lastUpdatedAt: DateTime): ProductTag!
   deleteProductTag(id: ID!): Boolean!
+  createBook(input: BookInput!): Book!
+  updateBook(id: ID!, input: BookUpdateInput!, lastUpdatedAt: DateTime): Book!
+  deleteBook(id: ID!): Boolean!
 }
 
 input CreateBuildsInput {
@@ -1079,4 +1144,26 @@ input ProductTagInput {
 input ProductTagUpdateInput {
   title: String
   products: [ID!]
+}
+
+input BookInput {
+  title: String!
+  description: String!
+  isAvailable: Boolean!
+  releaseDate: DateTime!
+  price: Float!
+  publisher: Publisher!
+  coverImage: DamImageBlockInput!
+  link: LinkBlockInput!
+}
+
+input BookUpdateInput {
+  title: String
+  description: String
+  isAvailable: Boolean
+  releaseDate: DateTime
+  price: Float
+  publisher: Publisher
+  coverImage: DamImageBlockInput
+  link: LinkBlockInput
 }

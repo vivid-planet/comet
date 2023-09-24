@@ -21,6 +21,7 @@ import {
 import { ApolloDriver } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
+import { BooksModule } from "@src/books/books.module";
 import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
 import { DbModule } from "@src/db/db.module";
@@ -139,6 +140,7 @@ export class AppModule {
                 PredefinedPageModule,
                 CronJobsModule,
                 ProductsModule,
+                BooksModule,
             ],
         };
     }
