@@ -23,7 +23,7 @@ import {
     SitesConfigProvider,
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
-import { BooksPage } from "@src/books/BooksPage";
+import { BooksPage } from "@src/books/generated/BooksPage";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
 import { additionalPageTreeNodeFieldsFragment, EditPageNode } from "@src/common/EditPageNode";
