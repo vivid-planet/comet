@@ -18,6 +18,9 @@ interface IOptions {
     pageParameterName: string;
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export function createRestPagingActions<TData extends IRestPagingData>(
     pagingApi: IPagingApi<number>,
     data: TData,

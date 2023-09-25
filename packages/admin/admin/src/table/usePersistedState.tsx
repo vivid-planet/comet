@@ -5,6 +5,9 @@ const allStates: { [key: string]: any } = {};
 interface IOptions {
     persistedStateId?: string;
 }
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export function usePersistedState<T>(defaultValue: T, options: IOptions = {}): [T, React.Dispatch<React.SetStateAction<T>>] {
     const stateId = options.persistedStateId;
 
