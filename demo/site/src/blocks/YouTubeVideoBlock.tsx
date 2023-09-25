@@ -29,7 +29,6 @@ const YouTubeVideoBlock: React.FunctionComponent<PropsWithData<YouTubeVideoBlock
     data: { youtubeIdentifier, autoplay, loop, showControls, aspectRatio },
 }) => {
     const identifier = parseYoutubeIdentifier(youtubeIdentifier);
-    youtubeIdentifier = identifier ?? "";
 
     const searchParams = new URLSearchParams();
     searchParams.append("modestbranding", "1");
@@ -41,10 +40,10 @@ const YouTubeVideoBlock: React.FunctionComponent<PropsWithData<YouTubeVideoBlock
 
     searchParams.append("loop", Number(loop).toString());
     // the playlist parameter is needed so that the video loops. See https://developers.google.com/youtube/player_parameters#loop
-    loop && searchParams.append("playlist", youtubeIdentifier);
+    loop && identifier && searchParams.append("playlist", identifier);
 
     const youtubeBaseUrl = "https://www.youtube-nocookie.com/embed/";
-    const youtubeUrl = new URL(`${youtubeBaseUrl}${youtubeIdentifier}`);
+    const youtubeUrl = new URL(`${youtubeBaseUrl}${identifier ?? ""}`);
     youtubeUrl.search = searchParams.toString();
 
     return (
