@@ -15,7 +15,7 @@ class ImageBlockData extends BlockData {
         return {
             dependencies: [
                 {
-                    targetEntityName: "File",
+                    targetEntityName: "DamFile",
                     id: this.damFileId,
                 },
             ],

@@ -2,16 +2,13 @@ import { FindOptions, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
-import { Args, ArgsType, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
-import { plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
+import { Args, ArgsType, ID, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
 
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { CometValidationException } from "../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
+import { DynamicDtoValidationPipe } from "../common/validation/dynamic-dto-validation.pipe";
 import { ScopeGuardActive } from "../content-scope/decorators/scope-guard-active.decorator";
-import { DependenciesService } from "../dependencies/dependencies.service";
-import { Dependency } from "../dependencies/dependency";
 import { validateNotModified } from "../document/validateNotModified";
 import { EmptyRedirectScope } from "./dto/empty-redirect-scope";
 import { PaginatedRedirectsArgsFactory } from "./dto/paginated-redirects-args.factory";
@@ -58,7 +55,6 @@ export function createRedirectsResolver({
         constructor(
             private readonly redirectService: RedirectsService,
             @InjectRepository("Redirect") private readonly repository: EntityRepository<RedirectInterface>,
-            private readonly dependenciesService: DependenciesService,
         ) {}
 
         @Query(() => [Redirect], { deprecationReason: "Use paginatedRedirects instead. Will be removed in the next version." })
@@ -116,25 +112,18 @@ export function createRedirectsResolver({
 
         @Mutation(() => Redirect)
         async createRedirect(
-            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
-            @Args("input", { type: () => RedirectInput }) input: RedirectInputInterface,
+            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }, new DynamicDtoValidationPipe(Scope))
+            scope: typeof Scope,
+            @Args("input", { type: () => RedirectInput }, new DynamicDtoValidationPipe(RedirectInput)) input: RedirectInputInterface,
         ): Promise<RedirectInterface> {
             if (!(await this.redirectService.isRedirectSourceAvailable(input.source, nonEmptyScopeOrNothing(scope)))) {
                 throw new CometValidationException("Validation failed");
             }
 
-            const tranformedInput = plainToInstance(RedirectInput, input);
-
-            const errors = await validate(tranformedInput, { whitelist: true, forbidNonWhitelisted: true });
-
-            if (errors.length > 0) {
-                throw new CometValidationException("Validation failed", errors);
-            }
-
             const entity = this.repository.create({
                 scope: nonEmptyScopeOrNothing(scope),
-                ...tranformedInput,
-                target: tranformedInput.target.transformToBlockData(),
+                ...input,
+                target: input.target.transformToBlockData(),
             });
             await this.repository.persistAndFlush(entity);
             return this.repository.findOneOrFail(entity.id);
@@ -144,17 +133,9 @@ export function createRedirectsResolver({
         @SubjectEntity(Redirect)
         async updateRedirect(
             @Args("id", { type: () => ID }) id: string,
-            @Args("input", { type: () => RedirectInput }) input: RedirectInputInterface,
+            @Args("input", { type: () => RedirectInput }, new DynamicDtoValidationPipe(RedirectInput)) input: RedirectInputInterface,
             @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
         ): Promise<RedirectInterface> {
-            const tranformedInput = plainToInstance(RedirectInput, input);
-
-            const errors = await validate(tranformedInput, { whitelist: true, forbidNonWhitelisted: true });
-
-            if (errors.length > 0) {
-                throw new CometValidationException("Validation failed", errors);
-            }
-
             const redirect = await this.repository.findOneOrFail(id);
             if (redirect != null && lastUpdatedAt) {
                 validateNotModified(redirect, lastUpdatedAt);
@@ -164,7 +145,7 @@ export function createRedirectsResolver({
                 throw new CometValidationException("Validation failed");
             }
 
-            wrap(redirect).assign({ ...tranformedInput, target: tranformedInput.target.transformToBlockData() });
+            wrap(redirect).assign({ ...input, target: input.target.transformToBlockData() });
             await this.repository.persistAndFlush(redirect);
             return this.repository.findOneOrFail(id);
         }
@@ -189,11 +170,6 @@ export function createRedirectsResolver({
             const entity = await this.repository.findOneOrFail(id);
             await this.repository.removeAndFlush(entity);
             return true;
-        }
-
-        @ResolveField(() => [Dependency])
-        async dependencies(@Parent() redirect: RedirectInterface): Promise<Dependency[]> {
-            return this.dependenciesService.getDependencies(redirect);
         }
     }
 

@@ -1,8 +1,9 @@
 import { parseISO } from "date-fns";
 
 import { SortDirection } from "../common/sorting/sort-direction.enum";
+import { getError, NoErrorThrownError } from "../common/test/get-error";
 import { PageTreeNodeSortField } from "./dto/page-tree-node.sort";
-import { sortPreloadedNodes } from "./page-tree-read-api";
+import { paginatePreloadedNodes, sortPreloadedNodes } from "./page-tree-read-api";
 import { PageTreeNodeInterface } from "./types";
 
 describe("PageTreeReadApi", () => {
@@ -98,6 +99,66 @@ describe("PageTreeReadApi", () => {
                     { field: PageTreeNodeSortField.pos, direction: SortDirection.ASC },
                 ]),
             ).toEqual(sorted);
+        });
+    });
+
+    describe("paginatePreloadedNodes", () => {
+        describe("Nodes [1, 2, 3] with correct offset and limit options", () => {
+            it("Should return [1] with offset 0 limit 1", () => {
+                const nodes = [1, 2, 3] as unknown as PageTreeNodeInterface[];
+                const options = {
+                    offset: 0,
+                    limit: 1,
+                };
+
+                expect(paginatePreloadedNodes(nodes, options)).toEqual([1]);
+            });
+
+            it("Should return [2, 3] with offset 1 limit 2", () => {
+                const nodes = [1, 2, 3] as unknown as PageTreeNodeInterface[];
+                const options = {
+                    offset: 1,
+                    limit: 2,
+                };
+
+                expect(paginatePreloadedNodes(nodes, options)).toEqual([2, 3]);
+            });
+
+            it("Should return empty array with offset 3 limit 1", () => {
+                const nodes = [1, 2, 3] as unknown as PageTreeNodeInterface[];
+                const options = {
+                    offset: 3,
+                    limit: 1,
+                };
+
+                expect(paginatePreloadedNodes(nodes, options)).toEqual([]);
+            });
+        });
+
+        describe("Nodes [1, 2, 3] with incorrect offset and limit options", () => {
+            it("Should throw Error with offset -1 limit 2", async () => {
+                const nodes = [1, 2, 3] as unknown as PageTreeNodeInterface[];
+                const options = {
+                    offset: -1,
+                    limit: 2,
+                };
+                const error = await getError(() => paginatePreloadedNodes(nodes, options));
+
+                expect(error).not.toBeInstanceOf(NoErrorThrownError);
+                expect(error).toHaveProperty("message", "Invalid offset '-1'");
+            });
+
+            it("Should throw Error with offset 1 limit -1", async () => {
+                const nodes = [1, 2, 3] as unknown as PageTreeNodeInterface[];
+                const options = {
+                    offset: 1,
+                    limit: -1,
+                };
+                const error = await getError(() => paginatePreloadedNodes(nodes, options));
+
+                expect(error).not.toBeInstanceOf(NoErrorThrownError);
+                expect(error).toHaveProperty("message", "Invalid limit '-1'");
+            });
         });
     });
 });

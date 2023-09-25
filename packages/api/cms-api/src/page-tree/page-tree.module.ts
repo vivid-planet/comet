@@ -2,6 +2,7 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 
+import { DependentsResolverFactory } from "../dependencies/dependents.resolver.factory";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { createPageTreeResolver } from "./createPageTreeResolver";
@@ -38,13 +39,14 @@ export class PageTreeModule {
             throw new Error(`PageTreeModule: Your PageTreeNode entity must be named ${PAGE_TREE_ENTITY}`);
         }
 
-        const pageTreeResolver = createPageTreeResolver({
+        const PageTreeResolver = createPageTreeResolver({
             PageTreeNode,
             Documents,
             Scope,
             PageTreeNodeCreateInput,
             PageTreeNodeUpdateInput,
         });
+        const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
 
         const repositoryProvider = {
             provide: PAGE_TREE_REPOSITORY,
@@ -70,7 +72,8 @@ export class PageTreeModule {
                 PageTreeService,
                 PageTreeReadApiService,
                 AttachedDocumentLoaderService,
-                pageTreeResolver,
+                PageTreeResolver,
+                PageTreeDependentsResolver,
                 repositoryProvider,
                 pageTreeConfigProvider,
                 {

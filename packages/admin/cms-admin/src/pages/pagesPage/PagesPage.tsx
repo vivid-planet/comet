@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import {
+    Loading,
     LocalErrorScopeApolloContext,
     MainContent,
     messages,
@@ -13,7 +14,7 @@ import {
     useStoredState,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Box, Button, CircularProgress, FormControlLabel, Paper, Switch } from "@mui/material";
+import { Box, Button, FormControlLabel, Paper, Switch } from "@mui/material";
 import withStyles from "@mui/styles/withStyles";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -154,7 +155,7 @@ export function PagesPage({
                         </ToolbarActions>
                     </Toolbar>
                     <PageTreeContext.Provider value={{ allCategories, documentTypes, tree, query: pagesQuery }}>
-                        <FullHeightMainContent>
+                        <PageTreeContent fullHeight>
                             <ActionToolbarBox>
                                 <PagesPageActionToolbar
                                     selectedState={selectState}
@@ -177,19 +178,21 @@ export function PagesPage({
                                 />
                             </ActionToolbarBox>
                             <FullHeightPaper variant="outlined">
-                                {loading && <CircularProgress />}
-
-                                <PageTree
-                                    ref={refPageTree}
-                                    pages={pagesToRenderWithMatches}
-                                    editDialogApi={editDialogApi}
-                                    toggleExpand={toggleExpand}
-                                    onSelectChanged={onSelectChanged}
-                                    category={category}
-                                    siteUrl={siteConfig.url}
-                                />
+                                {loading ? (
+                                    <Loading behavior="fillParent" />
+                                ) : (
+                                    <PageTree
+                                        ref={refPageTree}
+                                        pages={pagesToRenderWithMatches}
+                                        editDialogApi={editDialogApi}
+                                        toggleExpand={toggleExpand}
+                                        onSelectChanged={onSelectChanged}
+                                        category={category}
+                                        siteUrl={siteConfig.url}
+                                    />
+                                )}
                             </FullHeightPaper>
-                        </FullHeightMainContent>
+                        </PageTreeContent>
                     </PageTreeContext.Provider>
 
                     <EditDialog>
@@ -229,9 +232,8 @@ export function PagesPage({
     );
 }
 
-const FullHeightMainContent = withStyles({
+const PageTreeContent = withStyles({
     root: {
-        height: "calc(100vh - 140px)",
         display: "flex",
         flexDirection: "column",
     },

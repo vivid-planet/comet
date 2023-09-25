@@ -19,15 +19,10 @@ export { Link } from "./link/Link";
 export { getAuthedUser, hasAuthedUser } from "./preview/auth";
 export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";
 export { usePreview } from "./preview/usePreview";
-export { /** @deprecated use parsePreviewState instead */ parsePreviewParams as parsePreviewState } from "./preview/utils";
-export { parsePreviewParams } from "./preview/utils";
+export { parsePreviewParams, parsePreviewState } from "./preview/utils";
 export { PreviewSkeleton } from "./previewskeleton/PreviewSkeleton";
 export { useRouter } from "./router/useRouter";
 export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSitePreviewIFrameMessage";
 export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePreviewIFrameMessage";
-export { SitePreviewPage } from "./sitePreview/SitePreviewPage";
-export {
-    /** @deprecated use SitePreviewPage instead */
-    SitePreviewPage as PreviewPage,
-} from "./sitePreview/SitePreviewPage";
+export { PreviewPage, SitePreviewPage } from "./sitePreview/SitePreviewPage";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";

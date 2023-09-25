@@ -1,9 +1,10 @@
 import { ApolloError } from "@apollo/client";
-import { CircularProgress, ComponentsOverrides, Paper, Theme } from "@mui/material";
+import { ComponentsOverrides, Paper, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { Loading } from "../common/Loading";
 import { styles, TableQueryClassKey } from "./TableQuery.styles";
 import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
 
@@ -16,14 +17,14 @@ export const parseIdFromIri = (iri: string) => {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IDefaultVariables {}
 
-export interface IProps {
+export interface TableQueryProps {
     api: ITableQueryApi;
     loading: boolean;
     error?: ApolloError;
     children: React.ReactNode;
 }
 
-export function Query({ classes, ...otherProps }: IProps & WithStyles<typeof styles>) {
+export function Query({ classes, ...otherProps }: TableQueryProps & WithStyles<typeof styles>) {
     return (
         <TableQueryContext.Provider
             value={{
@@ -34,7 +35,7 @@ export function Query({ classes, ...otherProps }: IProps & WithStyles<typeof sty
                 <div className={classes.loadingContainer}>
                     {otherProps.loading && (
                         <Paper classes={{ root: classes.loadingPaper }}>
-                            <CircularProgress />
+                            <Loading behavior="fillParent" />
                         </Paper>
                     )}
                 </div>

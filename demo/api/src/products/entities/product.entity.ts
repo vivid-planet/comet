@@ -123,6 +123,13 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Field()
     inStock: boolean = true;
 
+    @Property({ type: types.decimal, nullable: true })
+    @Field()
+    @CrudField({
+        input: false,
+    })
+    soldCount?: number;
+
     @Property({ customType: new RootBlockType(DamImageBlock) })
     @Field(() => RootBlockDataScalar(DamImageBlock))
     @RootBlock(DamImageBlock)
@@ -130,22 +137,23 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
 
     @Property({ type: "json" })
     @Field(() => [ProductDiscounts])
-    discounts: ProductDiscounts[] = [];
+    discounts?: ProductDiscounts[] = [];
+
     @Property({ type: "json" })
     @Field(() => [String])
-    articleNumbers: string[] = [];
+    articleNumbers?: string[] = [];
 
     @Property({ type: "json", nullable: true })
     @Field(() => ProductDimensions, { nullable: true })
-    dimensions?: ProductDimensions;
+    dimensions?: ProductDimensions = undefined;
 
-    @Embedded(() => ProductPackageDimensions)
-    @Field(() => ProductPackageDimensions)
-    packageDimensions: ProductPackageDimensions;
+    @Embedded(() => ProductPackageDimensions, { nullable: true })
+    @Field(() => ProductPackageDimensions, { nullable: true })
+    packageDimensions?: ProductPackageDimensions = undefined;
 
-    @OneToOne(() => ProductStatistics, { inversedBy: "product", owner: true, ref: true })
-    @Field(() => ProductStatistics)
-    statistics: Ref<ProductStatistics>;
+    @OneToOne(() => ProductStatistics, { inversedBy: "product", owner: true, ref: true, nullable: true })
+    @Field(() => ProductStatistics, { nullable: true })
+    statistics?: Ref<ProductStatistics> = undefined;
 
     @OneToMany(() => ProductVariant, (variant) => variant.product, { orphanRemoval: true })
     @CrudField({
@@ -165,7 +173,7 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
         sort: true, //default is true
         input: true, //default is true
     })
-    category?: Ref<ProductCategory>;
+    category?: Ref<ProductCategory> = undefined;
 
     @ManyToMany(() => ProductTag, "products", { owner: true })
     @CrudField({

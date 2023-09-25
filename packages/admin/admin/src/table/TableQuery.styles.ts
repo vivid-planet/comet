@@ -1,12 +1,12 @@
 import { Theme } from "@mui/material";
 import { createStyles } from "@mui/styles";
 
-import { IProps } from "./TableQuery";
+import { TableQueryProps } from "./TableQuery";
 
 export type TableQueryClassKey = "root" | "loadingContainer" | "loadingPaper";
 
 export const styles = ({ zIndex }: Theme) => {
-    return createStyles<TableQueryClassKey, IProps>({
+    return createStyles<TableQueryClassKey, TableQueryProps>({
         root: {
             position: "relative",
         },

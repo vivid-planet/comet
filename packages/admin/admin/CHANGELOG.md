@@ -1,5 +1,111 @@
 # @comet/admin
 
+## 4.4.3
+
+### Patch Changes
+
+-   @comet/admin-icons@4.4.3
+
+## 4.4.2
+
+### Patch Changes
+
+-   @comet/admin-icons@4.4.2
+
+## 4.4.1
+
+### Patch Changes
+
+-   662abcc9: Prevent the `MainContent` component from having an invalid height.
+
+    This bug would cause the page tree to have no height when navigating into a page and then navigating back again.
+
+    -   @comet/admin-icons@4.4.1
+
+## 4.4.0
+
+### Minor Changes
+
+-   e824ffa6: Add `fullHeight` & `disablePadding` props to MainContent
+
+    `fullHeight` makes MainContent take up the remaining space below to fill the entire page.
+    This is helpful for virtualized components that need a fixed height, such as DataGrid or the PageTree.
+
+    `disablePadding` is helpful if a component requires the `fullHeight` behaviour but should fill the entire page without the surrounding space.
+
+-   3e15b819: Add field components to simplify the creation of forms with final-form.
+
+    -   TextField
+    -   TextAreaField
+    -   SearchField
+    -   SelectField
+    -   CheckboxField
+    -   SwitchField
+    -   ColorField
+    -   DateField
+    -   DateRangeField
+    -   TimeField
+    -   TimeRangeField
+    -   DateTimeField
+
+    **Example with TextField**
+
+    ```tsx
+    // You can now do:
+    <TextField name="text" label="Text" />
+    ```
+
+    ```tsx
+    // Instead of:
+    <Field name="text" label="Text" component={FinalFormInput} />
+    ```
+
+    **Example with SelectField**
+
+    ```tsx
+    // You can now do:
+    <SelectField name="select" label="Select">
+        {options.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+                {option.label}
+            </MenuItem>
+        ))}
+    </SelectField>
+    ```
+
+    ```tsx
+    // Instead of:
+    <Field name="select" label="Select">
+        {(props) => (
+            <FinalFormSelect {...props}>
+                {options.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                    </MenuItem>
+                ))}
+            </FinalFormSelect>
+        )}
+    </Field>
+    ```
+
+-   a77da844: Add little helper for mui grid pagination (muiGridPagingToGql)
+
+    Sample usage:
+
+    ```
+    const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
+        variables: {
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+            ...muiGridPagingToGql({ page: dataGridProps.page, pageSize: dataGridProps.pageSize }),
+            sort: muiGridSortToGql(sortModel),
+        },
+    });
+    ```
+
+### Patch Changes
+
+-   @comet/admin-icons@4.4.0
+
 ## 4.3.0
 
 ### Patch Changes

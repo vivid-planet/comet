@@ -6,8 +6,7 @@ import * as React from "react";
 import { FormattedMessage, IntlShape, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { AdminComponentButton } from "../..";
-import { useBlockContext } from "../../context/useBlockContext";
+import { AdminComponentButton, BlockPreviewContent } from "../..";
 import { BlocksFinalForm } from "../../form/BlocksFinalForm";
 import { HoverPreviewComponent } from "../../iframebridge/HoverPreviewComponent";
 import { SelectPreviewComponent } from "../../iframebridge/SelectPreviewComponent";
@@ -210,8 +209,6 @@ export function createColumnsBlock<T extends BlockInterface>({
                 toggleVisible,
             } = useListBlockAdminComponent({ state: { blocks: state.columns }, updateState: handleListBlockAdminChange });
 
-            const blockContext = useBlockContext();
-
             return (
                 <>
                     <StackSwitch initialPage="list">
@@ -300,9 +297,10 @@ export function createColumnsBlock<T extends BlockInterface>({
                                                                 return (
                                                                     <HoverPreviewComponent key={column.key} componentSlug={`${column.key}/content`}>
                                                                         <BlockRow
-                                                                            name={columnCountLabel(intl, columnIndex + 1)}
                                                                             id={column.key}
-                                                                            previewContent={contentBlock.previewContent(column.props, blockContext)}
+                                                                            renderPreviewContent={() => (
+                                                                                <BlockPreviewContent block={contentBlock} state={column.props} />
+                                                                            )}
                                                                             index={columnIndex}
                                                                             onContentClick={() => {
                                                                                 stackApi.activatePage("edit", column.key);

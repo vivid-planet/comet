@@ -93,7 +93,7 @@ export function createReadApi(
             }
 
             if (offset !== undefined && limit !== undefined) {
-                nodes = nodes.slice(offset, limit);
+                nodes = paginatePreloadedNodes(nodes, { offset, limit });
             }
 
             return nodes;
@@ -420,6 +420,19 @@ export function createReadApi(
             });
         },
     };
+}
+
+export function paginatePreloadedNodes(nodes: PageTreeNodeInterface[], { offset, limit }: { offset: number; limit: number }) {
+    if (offset < 0) {
+        throw new Error(`Invalid offset '${offset}'`);
+    } else if (limit <= 0) {
+        throw new Error(`Invalid limit '${limit}'`);
+    }
+
+    const start = offset;
+    const end = offset + limit;
+
+    return nodes.slice(start, end);
 }
 
 export function sortPreloadedNodes(nodes: PageTreeNodeInterface[], sort: PageTreeNodeSort[]): PageTreeNodeInterface[] {
