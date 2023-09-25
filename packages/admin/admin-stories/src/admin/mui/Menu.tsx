@@ -7,8 +7,8 @@ import {
     MasterLayout,
     Menu,
     MenuCollapsibleItem,
-    MenuGroupSection,
     MenuItemAnchorLink,
+    MenuItemGroup,
     MenuItemRouterLink,
     useWindowSize,
 } from "@comet/admin";
@@ -27,7 +27,7 @@ const AppMenu: React.FC = () => {
 
     return (
         <Menu variant={windowSize.width < permanentMenuMinWidth ? "temporary" : "permanent"}>
-            <MenuGroupSection title="Some Section">
+            <MenuItemGroup title="Some Group">
                 <MenuItemRouterLink primary="Dashboard" icon={<Dashboard />} to="/dashboard" />
                 <MenuCollapsibleItem primary="More Items" icon={<Sort />}>
                     <MenuItemRouterLink primary="Foo1" to="/foo1" />
@@ -37,8 +37,8 @@ const AppMenu: React.FC = () => {
                     <MenuItemRouterLink primary="Foo3" to="/foo3" />
                     <MenuItemRouterLink primary="Foo4" to="/foo4" />
                 </MenuCollapsibleItem>
-            </MenuGroupSection>
-            <MenuGroupSection title="Further Layers">
+            </MenuItemGroup>
+            <MenuItemGroup title="Further Layers">
                 <MenuItemRouterLink primary="Settings" icon={<Settings />} to="/settings" />
                 <MenuItemAnchorLink
                     primary="Comet Admin"
@@ -48,7 +48,7 @@ const AppMenu: React.FC = () => {
                     icon={<CometColor />}
                     secondaryAction={<LinkExternal />}
                 />
-            </MenuGroupSection>
+            </MenuItemGroup>
         </Menu>
     );
 };

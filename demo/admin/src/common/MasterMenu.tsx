@@ -1,4 +1,4 @@
-import { Menu, MenuCollapsibleItem, MenuContext, MenuGroupSection, MenuItemRouterLink, useWindowSize } from "@comet/admin";
+import { Menu, MenuCollapsibleItem, MenuContext, MenuItemGroup, MenuItemRouterLink, useWindowSize } from "@comet/admin";
 import { Assets, Dashboard, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
 import { useContentScope } from "@comet/cms-admin";
 import * as React from "react";
@@ -28,7 +28,7 @@ const MasterMenu: React.FC = () => {
 
     return (
         <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
-            <MenuGroupSection title={sectionScopeTitle}>
+            <MenuItemGroup title={sectionScopeTitle}>
                 <MenuItemRouterLink
                     primary={intl.formatMessage({ id: "menu.dashboard", defaultMessage: "Dashboard" })}
                     icon={<Dashboard />}
@@ -69,8 +69,8 @@ const MasterMenu: React.FC = () => {
                     <MenuItemRouterLink primary="Categories" to={`${match.url}/product-categories`} icon={<Snips />} />
                     <MenuItemRouterLink primary="Tags" to={`${match.url}/product-tags`} icon={<Snips />} />
                 </MenuCollapsibleItem>
-            </MenuGroupSection>
-            <MenuGroupSection title={intl.formatMessage({ id: "menu.section.furtherLayers", defaultMessage: "Further layers" })}>
+            </MenuItemGroup>
+            <MenuItemGroup title={intl.formatMessage({ id: "menu.section.furtherLayers", defaultMessage: "Further layers" })}>
                 <MenuItemRouterLink
                     primary={intl.formatMessage({ id: "menu.dam", defaultMessage: "Assets" })}
                     icon={<Assets />}
@@ -95,7 +95,7 @@ const MasterMenu: React.FC = () => {
                     to={`${match.url}/component-demo`}
                     icon={<Snips />}
                 />
-            </MenuGroupSection>
+            </MenuItemGroup>
         </Menu>
     );
 };

@@ -2,12 +2,12 @@ import { Box, ComponentsOverrides, Theme, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
-export type MenuGroupSectionClassKey = "root" | "sectionTitle";
+export type MenuItemGroupClassKey = "root" | "groupTitle";
 
 const styles = (theme: Theme) =>
-    createStyles<MenuGroupSectionClassKey, MenuGroupSectionProps>({
+    createStyles<MenuItemGroupClassKey, MenuItemGroupProps>({
         root: { marginTop: theme.spacing(8) },
-        sectionTitle: {
+        groupTitle: {
             fontWeight: theme.typography.fontWeightBold,
             fontSize: 14,
             lineHeight: "20px",
@@ -16,14 +16,14 @@ const styles = (theme: Theme) =>
         },
     });
 
-export interface MenuGroupSectionProps {
+export interface MenuItemGroupProps {
     title?: string;
 }
 
-const GroupSection: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuGroupSectionProps>> = ({ title, children, classes }) => {
+const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({ title, children, classes }) => {
     return (
         <Box className={classes.root}>
-            <Typography className={classes.sectionTitle} variant="h3">
+            <Typography className={classes.groupTitle} variant="h3">
                 {title}
             </Typography>
             {children}
@@ -31,21 +31,21 @@ const GroupSection: React.FC<React.PropsWithChildren<WithStyles<typeof styles> &
     );
 };
 
-export const MenuGroupSection = withStyles(styles, { name: "CometAdminMenuGroupSection" })(GroupSection);
+export const MenuItemGroup = withStyles(styles, { name: "CometAdminMenuItemGroup" })(ItemGroup);
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminMenuGroupSection: MenuGroupSectionProps;
+        CometAdminMenuItemGroup: MenuItemGroupProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminMenuGroupSection: MenuGroupSectionClassKey;
+        CometAdminMenuItemGroup: MenuItemGroupClassKey;
     }
 
     interface Components {
-        CometAdminMenuGroupSection?: {
-            defaultProps?: ComponentsPropsList["CometAdminMenuGroupSection"];
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenuGroupSection"];
+        CometAdminMenuItemGroup?: {
+            defaultProps?: ComponentsPropsList["CometAdminMenuItemGroup"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenuItemGroup"];
         };
     }
 }
