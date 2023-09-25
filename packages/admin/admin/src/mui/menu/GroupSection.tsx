@@ -33,12 +33,17 @@ const GroupSection: React.FC<React.PropsWithChildren<WithStyles<typeof styles> &
 export const MenuGroupSection = withStyles(styles, { name: "CometAdminMenuGroupSection" })(GroupSection);
 
 declare module "@mui/material/styles" {
+    interface ComponentsPropsList {
+        CometAdminMenuGroupSection: MenuGroupSectionProps;
+    }
+
     interface ComponentNameToClassKey {
         CometAdminMenuGroupSection: MenuGroupSectionClassKey;
     }
 
     interface Components {
         CometAdminMenuGroupSection?: {
+            defaultProps?: ComponentsPropsList["CometAdminMenuGroupSection"];
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenuGroupSection"];
         };
     }
