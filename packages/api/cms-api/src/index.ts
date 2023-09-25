@@ -35,12 +35,6 @@ export { BUILDS_CONFIG, BUILDS_MODULE_OPTIONS } from "./builds/builds.constants"
 export { BuildsModule } from "./builds/builds.module";
 export { BuildsResolver } from "./builds/builds.resolver";
 export { BuildsService } from "./builds/builds.service";
-/**
- * @deprecated Do not use.
- *
- * TODO Remove this export in the next major version.
- */
-export { ChangesCheckerInterceptor as SkipBuildInterceptor } from "./builds/changes-checker.interceptor";
 export { AutoBuildStatus } from "./builds/dto/auto-build-status.object";
 export { ChangesSinceLastBuild } from "./builds/entities/changes-since-last-build.entity";
 export { SKIP_BUILD_METADATA_KEY, SkipBuild } from "./builds/skip-build.decorator";
