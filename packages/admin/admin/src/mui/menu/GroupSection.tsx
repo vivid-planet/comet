@@ -12,6 +12,7 @@ const styles = (theme: Theme) =>
             fontSize: 14,
             lineHeight: "20px",
             borderBottom: `1px solid ${theme.palette.grey[50]}`,
+            padding: theme.spacing(2, 4),
         },
     });
 
@@ -22,7 +23,7 @@ export interface MenuGroupSectionProps {
 const GroupSection: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuGroupSectionProps>> = ({ title, children, classes }) => {
     return (
         <Box className={classes.root}>
-            <Typography className={classes.sectionTitle} variant="h3" py={(theme) => theme.spacing(2)} px={(theme) => theme.spacing(4)}>
+            <Typography className={classes.sectionTitle} variant="h3">
                 {title}
             </Typography>
             {children}
