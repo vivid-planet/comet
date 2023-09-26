@@ -456,16 +456,6 @@ export class FilesService {
             return fileScopes;
         };
 
-        const canAccessFileScopes = (fileScopes: DamScopeInterface[], user: CurrentUserInterface) => {
-            for (const scope of fileScopes) {
-                const canAccessFileScope = this.contentScopeService.canAccessScope(scope, user);
-                if (!canAccessFileScope) {
-                    return false;
-                }
-            }
-            return true;
-        };
-
         const getOrCreateInboxFolder = async ({
             existingInboxFolder,
             targetScope,
@@ -527,7 +517,10 @@ export class FilesService {
         }
 
         const fileScopes = getUniqueFileScopes(files);
-        if (!canAccessFileScopes(fileScopes, user)) {
+        const canAccessAllFileScopes = fileScopes.every((scope) => {
+            return this.contentScopeService.canAccessScope(scope, user);
+        });
+        if (!canAccessAllFileScopes) {
             throw new ForbiddenException(`User can't access the scope of one or more files`);
         }
 
