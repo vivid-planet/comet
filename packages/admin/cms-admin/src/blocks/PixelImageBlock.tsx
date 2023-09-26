@@ -20,7 +20,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { FileField } from "..";
-import { PixelImageBlockData, PixelImageBlockInput, SvgImageBlockInput } from "../blocks.generated";
+import { PixelImageBlockData, PixelImageBlockInput } from "../blocks.generated";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
@@ -137,7 +137,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
     },
 
     replaceDependenciesInOutput: (output, replacements) => {
-        const clonedOutput: SvgImageBlockInput = deepClone(output);
+        const clonedOutput: PixelImageBlockInput = deepClone(output);
         const replacement = replacements.find((replacement) => replacement.type === "DamFile" && replacement.originalId === output.damFileId);
 
         if (replacement) {
