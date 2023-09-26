@@ -15,7 +15,7 @@ import { deepClone } from "@mui/x-data-grid/utils/utils";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { DamVideoBlockData, DamVideoBlockInput, SvgImageBlockInput } from "../blocks.generated";
+import { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
@@ -95,7 +95,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
     },
 
     replaceDependenciesInOutput: (output, replacements) => {
-        const clonedOutput: SvgImageBlockInput = deepClone(output);
+        const clonedOutput: DamVideoBlockInput = deepClone(output);
         const replacement = replacements.find((replacement) => replacement.type === "DamFile" && replacement.originalId === output.damFileId);
 
         if (replacement) {
