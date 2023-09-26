@@ -68,10 +68,10 @@ export const createOneOfBlock = <T extends boolean = boolean>({
     displayName = "Switch",
     category = BlockCategory.Other,
     variant = "select",
-    allowEmpty,
+    allowEmpty: passedAllowEmpty,
 }: CreateOneOfBlockOptions<T>): BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState> => {
     // allowEmpty can't have a default type because it's typed by a generic
-    const internalAllowEmpty = (allowEmpty ?? true) satisfies boolean;
+    const allowEmpty = (passedAllowEmpty ?? true) satisfies boolean;
 
     function blockForType(type: string): BlockInterface | null {
         return supportedBlocks[type] ?? null;
@@ -98,7 +98,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
         };
     }
 
-    const options: Array<{ value: string; label: React.ReactNode }> = internalAllowEmpty
+    const options: Array<{ value: string; label: React.ReactNode }> = allowEmpty
         ? [{ value: "none", label: <FormattedMessage id="comet.blocks.oneOfBlock.empty" defaultMessage="None" /> }]
         : [];
 
@@ -119,7 +119,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
         category,
 
         defaultValues: () => {
-            if (internalAllowEmpty) {
+            if (allowEmpty) {
                 return {
                     attachedBlocks: [],
                     activeType: undefined,
