@@ -66,9 +66,9 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
         @Field()
         archived: boolean;
 
-        @Property({ columnType: "boolean", default: false })
+        @Property({ columnType: "boolean" })
         @Field()
-        isInboxFromOtherScope: boolean;
+        isInboxFromOtherScope = false;
 
         @OneToMany("File", (file: FileInterface) => file.folder)
         files: FileInterface[];
