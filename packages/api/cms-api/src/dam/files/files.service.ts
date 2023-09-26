@@ -544,27 +544,24 @@ export class FilesService {
         let numberNewlyCopiedFiles = 0;
         let numberAlreadyCopiedFiles = 0;
 
-        const mappedFiles: Array<{ rootFile: FileInterface; copy: FileInterface; isNewCopy: boolean }> = [];
+        const mappedFiles: Array<{ rootFile: FileInterface; copy: FileInterface }> = [];
         for (const file of files) {
             if (this.contentScopeService.scopesAreEqual(file.scope, targetScope)) {
                 continue;
             }
 
             let copiedFile: FileInterface;
-            let isNewCopy: boolean;
 
             const copyInTargetScope = await findCopyWithSameCroppingInTargetScope(file);
             if (copyInTargetScope) {
                 copiedFile = copyInTargetScope;
                 numberAlreadyCopiedFiles++;
-                isNewCopy = false;
             } else {
                 copiedFile = await this.createCopyOfFile(file, { targetFolder: inboxFolder });
                 numberNewlyCopiedFiles++;
-                isNewCopy = true;
             }
 
-            mappedFiles.push({ rootFile: file, copy: copiedFile, isNewCopy });
+            mappedFiles.push({ rootFile: file, copy: copiedFile });
         }
 
         if (createdInboxFolderAutomatically && numberNewlyCopiedFiles === 0) {

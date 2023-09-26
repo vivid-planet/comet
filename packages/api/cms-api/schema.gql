@@ -269,7 +269,6 @@ type CopyFilesResponse {
 type MappedFile {
   rootFile: DamFile!
   copy: DamFile!
-  isNewCopy: Boolean!
 }
 
 type PaginatedDamFiles {

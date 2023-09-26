@@ -13,7 +13,6 @@ export interface CopyFilesResponseInterface {
 export interface MappedFileInterface {
     rootFile: FileInterface;
     copy: FileInterface;
-    isNewCopy: boolean;
 }
 
 export function createCopyFilesResponseType({ File }: { File: Type<FileInterface> }) {
@@ -39,9 +38,6 @@ export function createCopyFilesResponseType({ File }: { File: Type<FileInterface
 
         @Field(() => File)
         copy: FileInterface;
-
-        @Field(() => Boolean)
-        isNewCopy: boolean;
     }
 
     return CopyFilesResponse;
