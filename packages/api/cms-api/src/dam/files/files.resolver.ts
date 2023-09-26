@@ -45,8 +45,8 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
     class FilesResolver {
         constructor(
             private readonly filesService: FilesService,
-            @InjectRepository("File") private readonly filesRepository: EntityRepository<FileInterface>,
-            @InjectRepository("Folder") private readonly foldersRepository: EntityRepository<FolderInterface>,
+            @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
+            @InjectRepository("DamFolder") private readonly foldersRepository: EntityRepository<FolderInterface>,
             private readonly contentScopeService: ContentScopeService,
         ) {}
 

@@ -38,7 +38,7 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
         name: string;
 
         @ManyToOne({
-            entity: "Folder",
+            entity: "DamFolder",
             inversedBy: (folder: FolderInterface) => folder.children,
             joinColumn: "parentId",
             nullable: true,
@@ -46,7 +46,7 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
         })
         parent: FolderInterface | null;
 
-        @OneToMany("Folder", (folder: FolderInterface) => folder.parent)
+        @OneToMany("DamFolder", (folder: FolderInterface) => folder.parent)
         children: FolderInterface[];
 
         @Property({ persist: false })
@@ -70,7 +70,7 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
         @Field()
         isInboxFromOtherScope = false;
 
-        @OneToMany("File", (file: FileInterface) => file.folder)
+        @OneToMany("DamFile", (file: FileInterface) => file.folder)
         files: FileInterface[];
 
         @Property({ columnType: "timestamp with time zone" })
@@ -88,23 +88,23 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
     if (Scope) {
         @Entity({ tableName: FOLDER_TABLE_NAME })
         @ObjectType("DamFolder")
-        class Folder extends FolderBase {
+        class DamFolder extends FolderBase {
             @Embedded(() => Scope)
             @Field(() => Scope)
             scope: typeof Scope;
 
-            @Field(() => Folder, { nullable: true })
-            parent: Folder | null;
+            @Field(() => DamFolder, { nullable: true })
+            parent: DamFolder | null;
         }
-        return Folder;
+        return DamFolder;
     } else {
         @Entity({ tableName: FOLDER_TABLE_NAME })
         @ObjectType("DamFolder")
-        class Folder extends FolderBase {
-            @Field(() => Folder, { nullable: true })
-            parent: Folder | null;
+        class DamFolder extends FolderBase {
+            @Field(() => DamFolder, { nullable: true })
+            parent: DamFolder | null;
         }
-        return Folder;
+        return DamFolder;
     }
 }
 

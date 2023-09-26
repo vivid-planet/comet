@@ -149,7 +149,7 @@ type Page implements DocumentInterface {
   seo: SeoBlockData!
   createdAt: DateTime!
   pageTreeNode: PageTreeNode
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 """PageContent root block data"""
@@ -188,7 +188,7 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 enum PageTreeNodeVisibility {
@@ -273,7 +273,7 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 type FooterContentScope {
@@ -287,7 +287,7 @@ type Footer implements DocumentInterface {
   content: FooterContentBlockData!
   scope: FooterContentScope!
   createdAt: DateTime!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 """FooterContent root block data"""
@@ -299,7 +299,7 @@ type MainMenuItem {
   content: RichTextBlockData
   createdAt: DateTime!
   updatedAt: DateTime!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 """RichText root block data"""
@@ -334,8 +334,8 @@ type News implements DocumentInterface {
   content: NewsContentBlockData!
   createdAt: DateTime!
   comments: [NewsComment!]!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter): PaginatedDependencies!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 enum NewsCategory {
@@ -414,12 +414,13 @@ type Product implements DocumentInterface {
   type: ProductType!
   price: Float
   inStock: Boolean!
+  soldCount: Float!
   image: DamImageBlockData!
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
   dimensions: ProductDimensions
-  packageDimensions: ProductPackageDimensions!
-  statistics: ProductStatistics!
+  packageDimensions: ProductPackageDimensions
+  statistics: ProductStatistics
   createdAt: DateTime!
   category: ProductCategory
   variants: [ProductVariant!]!
@@ -467,7 +468,7 @@ type Redirect implements DocumentInterface {
   generationType: RedirectGenerationType!
   createdAt: DateTime!
   scope: RedirectScope!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 enum RedirectSourceTypeValues {
@@ -727,6 +728,7 @@ input ProductFilter {
   type: ProductTypeEnumFilter
   price: NumberFilter
   inStock: BooleanFilter
+  soldCount: NumberFilter
   category: ManyToOneFilter
   createdAt: DateFilter
   updatedAt: DateFilter
@@ -768,6 +770,7 @@ enum ProductSortField {
   type
   price
   inStock
+  soldCount
   category
   createdAt
   updatedAt
@@ -991,7 +994,7 @@ input NewsInput {
   slug: String!
   title: String!
   date: DateTime!
-  category: NewsCategory!
+  category: NewsCategory! = Awards
   image: DamImageBlockInput!
   content: NewsContentBlockInput!
 }
@@ -1039,16 +1042,16 @@ input ProductInput {
   description: String!
   type: ProductType!
   price: Float
-  inStock: Boolean!
+  inStock: Boolean! = true
   image: DamImageBlockInput!
-  discounts: [ProductDiscountsInput!]!
-  articleNumbers: [String!]!
+  discounts: [ProductDiscountsInput!]! = []
+  articleNumbers: [String!]! = []
   dimensions: ProductDimensionsInput
-  packageDimensions: ProductPackageDimensionsInput!
-  statistics: ProductStatisticsInput!
-  variants: [ProductVariantInput!]!
-  category: ID
-  tags: [ID!]!
+  packageDimensions: ProductPackageDimensionsInput
+  statistics: ProductStatisticsInput
+  variants: [ProductVariantInput!]! = []
+  category: ID = null
+  tags: [ID!]! = []
 }
 
 input ProductStatisticsInput {
@@ -1081,7 +1084,7 @@ input ProductUpdateInput {
 input ProductCategoryInput {
   title: String!
   slug: String!
-  products: [ID!]!
+  products: [ID!]! = []
 }
 
 input ProductCategoryUpdateInput {
@@ -1092,7 +1095,7 @@ input ProductCategoryUpdateInput {
 
 input ProductTagInput {
   title: String!
-  products: [ID!]!
+  products: [ID!]! = []
 }
 
 input ProductTagUpdateInput {

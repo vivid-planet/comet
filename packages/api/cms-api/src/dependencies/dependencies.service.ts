@@ -3,6 +3,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, Knex } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { subMinutes } from "date-fns";
+import { v4 } from "uuid";
 
 import { Dependency } from "./dependency";
 import { DiscoverService } from "./discover.service";
@@ -90,14 +91,15 @@ export class DependenciesService {
 
     async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
         const refresh = async (options?: { concurrently: boolean }) => {
-            console.time("refresh materialized block dependency");
+            const uuid = v4();
+            console.time(`refresh materialized block dependency ${uuid}`);
             const blockIndexRefresh = this.refreshRepository.create({ startedAt: new Date() });
             await this.refreshRepository.getEntityManager().persistAndFlush(blockIndexRefresh);
 
             await this.connection.execute(`REFRESH MATERIALIZED VIEW ${options?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
 
             await this.refreshRepository.getEntityManager().persistAndFlush(Object.assign(blockIndexRefresh, { finishedAt: new Date() }));
-            console.timeEnd("refresh materialized block dependency");
+            console.timeEnd(`refresh materialized block dependency ${uuid}`);
         };
 
         const abortActiveRefreshes = async (activeRefreshes: PGStatActivity[]) => {
@@ -170,8 +172,9 @@ export class DependenciesService {
             rootEntityName?: string;
         },
         paginationArgs?: { offset: number; limit: number },
+        options?: { forceRefresh: boolean },
     ): Promise<PaginatedDependencies> {
-        await this.refreshViews();
+        await this.refreshViews({ force: options?.forceRefresh });
 
         const entityName = "entityName" in target ? target.entityName : target.constructor.name;
 
@@ -198,8 +201,9 @@ export class DependenciesService {
             targetEntityName?: string;
         },
         paginationArgs?: { offset: number; limit: number },
+        options?: { forceRefresh: boolean },
     ): Promise<PaginatedDependencies> {
-        await this.refreshViews();
+        await this.refreshViews({ force: options?.forceRefresh });
 
         const entityName = "entityName" in root ? root.entityName : root.constructor.name;
 

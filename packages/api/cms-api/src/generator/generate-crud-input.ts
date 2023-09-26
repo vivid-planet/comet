@@ -18,6 +18,12 @@ export async function writeCrudInput(generatorOptions: { targetDirectory: string
     await writeGeneratedFiles(files, generatorOptions);
 }
 
+function tsCodeRecordToString(object: Record<string, string | undefined>) {
+    const filteredEntries = Object.entries(object).filter(([key, value]) => value !== undefined);
+    if (filteredEntries.length == 0) return "";
+    return `{${filteredEntries.map(([key, value]) => `${key}: ${value},`).join("\n")}}`;
+}
+
 export async function generateCrudInput(
     generatorOptions: { targetDirectory: string },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,13 +56,19 @@ export async function generateCrudInput(
             //skip those (TODO find a non-magic solution?)
             continue;
         } else if (prop.enum) {
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
+            const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             const enumName = findEnumName(prop.name, metadata);
             const importPath = findEnumImportPath(enumName, generatorOptions, metadata);
             importsOut += `import { ${enumName} } from "${importPath}";`;
             decorators.push(`@IsEnum(${enumName})`);
-            decorators.push(`@Field(() => ${enumName}${prop.nullable ? ", { nullable: true }" : ""})`);
+            decorators.push(`@Field(() => ${enumName}, ${fieldOptions})`);
             type = enumName;
         } else if (prop.type === "string") {
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
+            const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             decorators.push("@IsString()");
             if (prop.name.startsWith("scope_")) {
                 continue;
@@ -64,18 +76,24 @@ export async function generateCrudInput(
                 //TODO find a non-magic solution
                 decorators.push("@IsSlug()");
             }
-            decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
+            decorators.push(`@Field(${fieldOptions})`);
         } else if (prop.type === "DecimalType" || prop.type === "number") {
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
+            const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             decorators.push("@IsNumber()");
-            decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
+            decorators.push(`@Field(${fieldOptions})`);
             type = "number";
         } else if (prop.type === "DateType" || prop.type === "Date") {
             decorators.push("@IsDate()");
             decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
             type = "Date";
         } else if (prop.type === "BooleanType" || prop.type === "boolean") {
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
+            const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             decorators.push("@IsBoolean()");
-            decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
+            decorators.push(`@Field(${fieldOptions})`);
             type = "boolean";
         } else if (prop.type === "RootBlockType") {
             const blockName = findBlockName(prop.name, metadata);
@@ -89,7 +107,13 @@ export async function generateCrudInput(
             decorators.push("@ValidateNested()");
             type = "BlockInputInterface";
         } else if (prop.reference == "m:1") {
-            decorators.push(`@Field(() => ID${prop.nullable ? ", { nullable: true }" : ""})`);
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const defaultValueNull = prop.nullable && (initializer == "undefined" || initializer == "null");
+            const fieldOptions = tsCodeRecordToString({
+                nullable: prop.nullable ? "true" : undefined,
+                defaultValue: defaultValueNull ? "null" : undefined,
+            });
+            decorators.push(`@Field(() => ID, ${fieldOptions})`);
             decorators.push("@IsUUID()");
             type = "string";
         } else if (prop.reference == "1:m") {
@@ -106,21 +130,21 @@ export async function generateCrudInput(
                         .replace(/\.ts$/, "")}";`;
                 }
                 const inputName = `${prop.targetMeta.className}Input`;
-                decorators.push(`@Field(() => [${inputName}])`);
+                decorators.push(`@Field(() => [${inputName}], {${prop.nullable ? "nullable: true" : "defaultValue: []"}})`);
                 decorators.push(`@IsArray()`);
                 decorators.push(`@Type(() => ${inputName})`);
                 type = `${inputName}[]`;
             } else {
                 //if orphanRemoval is disabled, we reference the id in input
                 decorators.length = 0;
-                decorators.push(`@Field(() => [ID])`);
+                decorators.push(`@Field(() => [ID], {${prop.nullable ? "nullable: true" : "defaultValue: []"}})`);
                 decorators.push(`@IsArray()`);
                 decorators.push(`@IsUUID(undefined, { each: true })`);
                 type = "string[]";
             }
         } else if (prop.reference == "m:n") {
             decorators.length = 0;
-            decorators.push(`@Field(() => [ID])`);
+            decorators.push(`@Field(() => [ID], {${prop.nullable ? "nullable" : "defaultValue: []"}})`);
             decorators.push(`@IsArray()`);
             decorators.push(`@IsUUID(undefined, { each: true })`);
             type = "string[]";
@@ -135,7 +159,7 @@ export async function generateCrudInput(
                     .replace(/\.ts$/, "")}";`;
             }
             const inputName = `${prop.targetMeta.className}Input`;
-            decorators.push(`@Field(() => ${inputName})`);
+            decorators.push(`@Field(() => ${inputName}${prop.nullable ? ", { nullable: true }" : ""})`);
             decorators.push(`@Type(() => ${inputName})`);
             decorators.push("@ValidateNested()");
             type = `${inputName}`;
@@ -149,15 +173,23 @@ export async function generateCrudInput(
             }
             type = tsType.getText(tsProp);
             if (tsType.isArray()) {
+                const initializer = tsProp.getInitializer()?.getText();
+                const defaultValue =
+                    prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer == "[]" ? "[]" : undefined;
+                const fieldOptions = tsCodeRecordToString({
+                    nullable: prop.nullable ? "true" : undefined,
+                    defaultValue: defaultValue,
+                });
+
                 decorators.push(`@IsArray()`);
                 if (type == "string[]") {
-                    decorators.push(`@Field(() => [String])`);
+                    decorators.push(`@Field(() => [String], ${fieldOptions})`);
                     decorators.push("@IsString({ each: true })");
                 } else if (type == "number[]") {
-                    decorators.push(`@Field(() => [Number])`);
+                    decorators.push(`@Field(() => [Number], ${fieldOptions})`);
                     decorators.push("@IsNumber({ each: true })");
                 } else if (type == "boolean[]") {
-                    decorators.push(`@Field(() => [Boolean])`);
+                    decorators.push(`@Field(() => [Boolean], ${fieldOptions})`);
                     decorators.push("@IsBoolean({ each: true })");
                 } else {
                     const nestedClassName = tsType.getArrayElementTypeOrThrow().getText(tsProp);
@@ -165,7 +197,7 @@ export async function generateCrudInput(
                     importsOut += `import { ${nestedClassName} } from "${importPath}";`;
                     decorators.push(`@ValidateNested()`);
                     decorators.push(`@Type(() => ${nestedClassName})`);
-                    decorators.push(`@Field(() => [${nestedClassName}]${prop.nullable ? ", { nullable: true }" : ""})`);
+                    decorators.push(`@Field(() => [${nestedClassName}], ${fieldOptions})`);
                 }
             } else {
                 const nestedClassName = tsType.getText(tsProp);

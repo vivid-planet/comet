@@ -29,7 +29,7 @@ export class NewsInput {
 
     @IsNotEmpty()
     @IsEnum(NewsCategory)
-    @Field(() => NewsCategory)
+    @Field(() => NewsCategory, { defaultValue: NewsCategory.Awards })
     category: NewsCategory;
 
     @IsNotEmpty()

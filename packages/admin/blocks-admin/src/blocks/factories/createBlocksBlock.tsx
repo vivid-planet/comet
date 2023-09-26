@@ -6,7 +6,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { AdminComponentButton, AdminComponentPaper, useBlockContext } from "../..";
+import { AdminComponentButton, AdminComponentPaper, BlockPreviewContent } from "../..";
 import { CannotPasteBlockDialog } from "../../clipboard/CannotPasteBlockDialog";
 import { useBlockClipboard } from "../../clipboard/useBlockClipboard";
 import { HoverPreviewComponent } from "../../iframebridge/HoverPreviewComponent";
@@ -263,7 +263,6 @@ export function createBlocksBlock({
             const [showAddBlockDrawer, setShowAddBlockDrawer] = React.useState(false);
             const [beforeIndex, setBeforeIndex] = React.useState<number>();
             const [cannotPasteBlockError, setCannotPasteBlockError] = React.useState<React.ReactNode>();
-            const blockContext = useBlockContext();
 
             const snackbarApi = useSnackbarApi();
 
@@ -578,9 +577,10 @@ export function createBlocksBlock({
                                                         return (
                                                             <HoverPreviewComponent key={data.key} componentSlug={`${data.key}/blocks`}>
                                                                 <BlockRow
-                                                                    name={block.dynamicDisplayName?.(data.props) ?? block.displayName}
                                                                     id={data.key}
-                                                                    previewContent={block.previewContent(data.props, blockContext)}
+                                                                    renderPreviewContent={() => (
+                                                                        <BlockPreviewContent block={block} state={data.props} />
+                                                                    )}
                                                                     index={blockIndex}
                                                                     onContentClick={() => {
                                                                         stackApi.activatePage("blocks", data.key);

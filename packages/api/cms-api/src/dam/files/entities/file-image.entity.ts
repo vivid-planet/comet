@@ -8,7 +8,7 @@ import { FileInterface } from "./file.entity";
 
 @Entity({ tableName: "DamFileImage" })
 @ObjectType("DamFileImage")
-export class FileImage extends BaseEntity<FileImage, "id"> {
+export class DamFileImage extends BaseEntity<DamFileImage, "id"> {
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
     id: string = uuid();
@@ -33,6 +33,6 @@ export class FileImage extends BaseEntity<FileImage, "id"> {
     @Field(() => ImageCropArea)
     cropArea: ImageCropArea;
 
-    @OneToOne({ entity: "File", mappedBy: (file: FileInterface) => file.image, onDelete: "CASCADE" })
+    @OneToOne({ entity: "DamFile", mappedBy: (file: FileInterface) => file.image, onDelete: "CASCADE" })
     file: FileInterface;
 }

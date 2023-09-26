@@ -17,7 +17,7 @@ import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 import { DamScopeInterface } from "../../types";
-import { FileImage } from "./file-image.entity";
+import { DamFileImage } from "./file-image.entity";
 import { FolderInterface } from "./folder.entity";
 import { License } from "./license.embeddable";
 
@@ -34,7 +34,7 @@ export interface FileInterface extends BaseEntity<FileInterface, "id"> {
     archived: boolean;
     copyOf?: FileInterface;
     copies: FileInterface[];
-    image?: FileImage;
+    image?: DamFileImage;
     license?: License;
     createdAt: Date;
     updatedAt: Date;
@@ -107,16 +107,16 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         })
         archived: boolean;
 
-        @Field(() => FileImage, { nullable: true })
+        @Field(() => DamFileImage, { nullable: true })
         @OneToOne({
-            entity: () => FileImage,
+            entity: () => DamFileImage,
             inversedBy: (image) => image.file,
             joinColumn: "imageId",
             nullable: true,
             cascade: [Cascade.ALL],
             eager: true,
         })
-        image?: FileImage;
+        image?: DamFileImage;
 
         @Field(() => License, { nullable: true })
         @Embedded(() => License, { nullable: true })
@@ -141,20 +141,20 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
     if (Scope) {
         @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
-        class File extends FileBase {
+        class DamFile extends FileBase {
             @Embedded(() => Scope)
             @Field(() => Scope)
             scope: typeof Scope;
         }
-        return File;
+        return DamFile;
     } else {
         @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
-        class File extends FileBase {}
-        return File;
+        class DamFile extends FileBase {}
+        return DamFile;
     }
 }
 
-export const FILE_ENTITY = "File";
+export const FILE_ENTITY = "DamFile";
 
 export const FILE_TABLE_NAME = "DamFile";

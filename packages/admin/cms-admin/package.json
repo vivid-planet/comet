@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-admin",
-    "version": "4.4.1",
+    "version": "4.4.3",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -9,6 +9,9 @@
     "license": "BSD-2-Clause",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
+    "bin": {
+        "comet-admin-generator": "bin/comet-admin-generator.js"
+    },
     "files": [
         "lib/*"
     ],
@@ -31,16 +34,19 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "@comet/admin": "workspace:^4.4.1",
-        "@comet/admin-date-time": "workspace:^4.4.1",
-        "@comet/admin-icons": "workspace:^4.4.1",
-        "@comet/admin-rte": "workspace:^4.4.1",
-        "@comet/admin-theme": "workspace:^4.4.1",
-        "@comet/blocks-admin": "workspace:^4.4.1",
+        "@comet/admin": "workspace:^4.4.3",
+        "@comet/admin-date-time": "workspace:^4.4.3",
+        "@comet/admin-icons": "workspace:^4.4.3",
+        "@comet/admin-rte": "workspace:^4.4.3",
+        "@comet/admin-theme": "workspace:^4.4.3",
+        "@comet/blocks-admin": "workspace:^4.4.3",
+        "@graphql-tools/graphql-file-loader": "^7.5.17",
+        "@graphql-tools/load": "^7.8.14",
         "@graphql-typed-document-node/core": "^3.1.1",
         "@mui/lab": "^5.0.0-alpha.76",
         "class-validator": "0.13.2",
         "clsx": "^1.1.1",
+        "commander": "^10.0.1",
         "date-fns": "^2.0.0",
         "file-saver": "^2.0.0",
         "final-form-arrays": "^3.0.2",
@@ -53,6 +59,7 @@
         "lodash.set": "^4.3.2",
         "mime-db": "^1.0.0",
         "p-debounce": "^4.0.0",
+        "pluralize": "^8.0.0",
         "prop-types": "^15.7.2",
         "react-cool-dimensions": "^2.0.0",
         "react-dropzone": "^14.0.0",
@@ -73,9 +80,9 @@
         "@apollo/client": "^3.7.0",
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^4.4.1",
-        "@comet/cli": "workspace:^4.4.1",
-        "@comet/eslint-config": "workspace:^4.4.1",
+        "@comet/admin-babel-preset": "workspace:^4.4.3",
+        "@comet/cli": "workspace:^4.4.3",
+        "@comet/eslint-config": "workspace:^4.4.3",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
         "@graphql-codegen/cli": "^2.0.0",
@@ -100,6 +107,7 @@
         "@types/lodash.set": "^4.3.6",
         "@types/mime-db": "^1.43.1",
         "@types/node": "^18.0.0",
+        "@types/pluralize": "^0.0.29",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "@types/react-final-form-listeners": "^1.0.0",

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react";
 
-import { BlockPreview } from "../../common/blockRow/BlockPreview";
+import { BlockPreviewContent } from "../../common/blockRow/BlockPreviewContent";
 import { BlockContext, BlockDependency, BlockInterface, BlockMethods, DispatchSetStateAction, PreviewContent, SetStateAction } from "../../types";
 import { resolveNewState } from "../../utils";
 import { deduplicateBlockDependencies } from "../deduplicateBlockDependencies";
@@ -200,7 +200,7 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
                 return applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
                     if (isBlockInterface(block)) {
                         const extractedData = extractData([block, options], attr, state);
-                        return <BlockPreview title={null} content={block.previewContent(extractedData, ctx)} />;
+                        return <BlockPreviewContent title={null} block={block} state={extractedData} />;
                     } else {
                         return null; // No preview component for AnonymousBlock
                     }

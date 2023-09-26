@@ -60,6 +60,7 @@ export { queryUpdatedAt } from "./form/queryUpdatedAt";
 export { serializeInitialValues } from "./form/serializeInitialValues";
 export { SyncFields } from "./form/SyncFields";
 export { useFormSaveConflict } from "./form/useFormSaveConflict";
+export { CrudGeneratorConfig } from "./generator/types";
 export { createHttpClient } from "./http/createHttpClient";
 export { LocaleProvider } from "./locale/LocaleProvider";
 export { useLocale } from "./locale/useLocale";
@@ -77,14 +78,14 @@ export { BlockPreviewWithTabs } from "./preview/block/BlockPreviewWithTabs";
 export { SplitPreview } from "./preview/block/SplitPreview";
 export type { BlockPreviewApi } from "./preview/block/useBlockPreview";
 export { useBlockPreview } from "./preview/block/useBlockPreview";
-export { openSitePreviewWindow } from "./preview/openSitePreviewWindow";
-export { /** @deprecated use openSitePreviewWindow instead */ openSitePreviewWindow as openPreviewWindow } from "./preview/openSitePreviewWindow";
+export { openPreviewWindow, openSitePreviewWindow } from "./preview/openSitePreviewWindow";
 export { SitePreview } from "./preview/site/SitePreview";
 export { createRedirectsPage } from "./redirects/createRedirectsPage";
 export type { SiteConfig } from "./sitesConfig/SitesConfigContext";
 export { SitesConfigProvider } from "./sitesConfig/SitesConfigProvider";
 export { useSiteConfig } from "./sitesConfig/useSiteConfig";
 export { useSitesConfig } from "./sitesConfig/useSitesConfig";
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
 import emotionStyled from "@emotion/styled";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports

@@ -140,7 +140,7 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 enum PageTreeNodeVisibility {
@@ -190,7 +190,7 @@ type Redirect implements DocumentInterface {
   active: Boolean!
   generationType: RedirectGenerationType!
   createdAt: DateTime!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 enum RedirectSourceTypeValues {
@@ -249,7 +249,7 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 type PaginatedDamItems {

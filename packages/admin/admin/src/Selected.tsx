@@ -1,8 +1,10 @@
 import { ApolloError, useQuery } from "@apollo/client";
-import { Box, Card, CircularProgress, Typography } from "@mui/material";
+import { Box, Card, Typography } from "@mui/material";
 import { DocumentNode } from "graphql";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
+
+import { Loading } from "./common/Loading";
 
 interface IProps<Data extends { id: string | number } = { id: string | number }> {
     selectionMode?: "edit" | "add";
@@ -40,11 +42,7 @@ const SelectEdit = <Data extends { id: string | number }>(props: IProps<Data>) =
         );
     }
     if (queryResult.loading || !queryResult.data) {
-        return (
-            <Box display="flex" justifyContent="center">
-                <CircularProgress />
-            </Box>
-        );
+        return <Loading behavior="fillPageHeight" />;
     }
     if (!props.dataAccessor) {
         throw new Error("dataChild prop is required");

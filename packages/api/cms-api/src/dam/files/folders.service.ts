@@ -73,7 +73,7 @@ export class FoldersService {
     protected readonly logger = new Logger(FoldersService.name);
 
     constructor(
-        @InjectRepository("Folder") private readonly foldersRepository: EntityRepository<FolderInterface>,
+        @InjectRepository("DamFolder") private readonly foldersRepository: EntityRepository<FolderInterface>,
         @Inject(forwardRef(() => FilesService)) private readonly filesService: FilesService,
         private readonly orm: MikroORM,
     ) {}

@@ -46,7 +46,6 @@ const copyFilesToScopeMutation = gql`
                 copy {
                     id
                 }
-                isNewCopy
             }
         }
     }
