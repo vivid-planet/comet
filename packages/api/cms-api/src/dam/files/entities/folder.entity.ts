@@ -66,9 +66,10 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
         @Field()
         archived: boolean;
 
+        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         @Property({ columnType: "boolean" })
         @Field()
-        isInboxFromOtherScope = false;
+        isInboxFromOtherScope: boolean = false;
 
         @OneToMany("DamFile", (file: FileInterface) => file.folder)
         files: FileInterface[];
