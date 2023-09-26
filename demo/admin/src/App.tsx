@@ -22,7 +22,6 @@ import {
     SitePreview,
     SitesConfigProvider,
 } from "@comet/cms-admin";
-import { DamScopeProvider } from "@comet/cms-admin/lib/dam/config/DamScopeProvider";
 import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
@@ -151,21 +150,19 @@ class App extends React.Component {
                                                                                             }
 
                                                                                             return (
-                                                                                                <DamScopeProvider>
-                                                                                                    <PagesPage
-                                                                                                        path={`/pages/pagetree/${params.category}`}
-                                                                                                        allCategories={categories}
-                                                                                                        documentTypes={pageTreeDocumentTypes}
-                                                                                                        editPageNode={EditPageNode}
-                                                                                                        category={category}
-                                                                                                        renderContentScopeIndicator={(scope) => (
-                                                                                                            <ContentScopeIndicator
-                                                                                                                scope={scope}
-                                                                                                                variant="toolbar"
-                                                                                                            />
-                                                                                                        )}
-                                                                                                    />
-                                                                                                </DamScopeProvider>
+                                                                                                <PagesPage
+                                                                                                    path={`/pages/pagetree/${params.category}`}
+                                                                                                    allCategories={categories}
+                                                                                                    documentTypes={pageTreeDocumentTypes}
+                                                                                                    editPageNode={EditPageNode}
+                                                                                                    category={category}
+                                                                                                    renderContentScopeIndicator={(scope) => (
+                                                                                                        <ContentScopeIndicator
+                                                                                                            scope={scope}
+                                                                                                            variant="toolbar"
+                                                                                                        />
+                                                                                                    )}
+                                                                                                />
                                                                                             );
                                                                                         }}
                                                                                     />
