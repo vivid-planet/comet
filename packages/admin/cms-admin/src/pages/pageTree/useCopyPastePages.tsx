@@ -35,8 +35,8 @@ const createPageNodeMutation = gql`
 `;
 
 const copyFilesToScopeMutation = gql`
-    mutation CopyFilesToScope($fileIds: [ID!]!, $targetScope: DamScopeInput!, $targetFolderId: ID) {
-        copyFilesToScope(fileIds: $fileIds, targetScope: $targetScope, targetFolderId: $targetFolderId) {
+    mutation CopyFilesToScope($fileIds: [ID!]!, $targetScope: DamScopeInput!, $existingInboxFolderId: ID) {
+        copyFilesToScope(fileIds: $fileIds, targetScope: $targetScope, existingInboxFolderId: $existingInboxFolderId) {
             numberNewlyCopiedFiles
             inboxFolderId
             mappedFiles {
@@ -294,7 +294,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                     if (fileDependencyIds.length > 0) {
                         const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
                             mutation: copyFilesToScopeMutation,
-                            variables: { fileIds: fileDependencyIds, targetScope: damScope, targetFolderId: inboxFolderIdForCopiedFiles },
+                            variables: { fileIds: fileDependencyIds, targetScope: damScope, existingInboxFolderId: inboxFolderIdForCopiedFiles },
                             update: (cache, result) => {
                                 if (result.data && result.data.copyFilesToScope.numberNewlyCopiedFiles > 0) {
                                     cache.evict({ fieldName: "damItemsList" });

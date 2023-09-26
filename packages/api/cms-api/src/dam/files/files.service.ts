@@ -434,12 +434,12 @@ export class FilesService {
         user,
         fileIds,
         targetScope,
-        targetFolderId,
+        existingInboxFolderId,
     }: {
         user: CurrentUserInterface;
         fileIds: string[];
         targetScope: DamScopeInterface;
-        targetFolderId?: string;
+        existingInboxFolderId?: string;
     }) {
         const getUniqueFileScopes = (files: FileInterface[]): DamScopeInterface[] => {
             const fileScopes: DamScopeInterface[] = [];
@@ -466,39 +466,39 @@ export class FilesService {
             return true;
         };
 
-        const getOrCreateTargetFolder = async ({
-            targetFolderId,
+        const getOrCreateInboxFolder = async ({
+            existingInboxFolder,
             targetScope,
             fileScopes,
         }: {
-            targetFolderId?: string;
+            existingInboxFolder?: string;
             targetScope: DamScopeInterface;
             fileScopes: DamScopeInterface[];
         }) => {
-            let createdTargetFolderAutomatically = false;
-            let targetFolder: FolderInterface;
-            if (targetFolderId) {
-                const folder = await this.foldersService.findOneById(targetFolderId);
+            let createdInboxFolderAutomatically = false;
+            let inboxFolder: FolderInterface;
+            if (existingInboxFolder) {
+                const folder = await this.foldersService.findOneById(existingInboxFolder);
                 if (folder === null) {
-                    throw new Error("Specified target folder doesn't exist.");
+                    throw new Error("Specified inbox folder doesn't exist.");
                 }
 
-                targetFolder = folder;
+                inboxFolder = folder;
             } else {
                 const scopeString = fileScopes.length === 0 ? "unknown" : fileScopes.map((scope) => Object.values(scope).join("-")).join(", ");
                 const date = new Date();
 
-                targetFolder = await this.foldersService.create(
+                inboxFolder = await this.foldersService.create(
                     {
                         name: `Copy from ${scopeString} ${format(date, "dd.MM.yyyy")}, ${format(date, "HH:mm:ss")}`,
                         isInboxFromOtherScope: true,
                     },
                     targetScope,
                 );
-                createdTargetFolderAutomatically = true;
+                createdInboxFolderAutomatically = true;
             }
 
-            return { targetFolder, createdTargetFolderAutomatically };
+            return { inboxFolder, createdInboxFolderAutomatically };
         };
 
         const findCopyWithSameCroppingInTargetScope = async (file: FileInterface) => {
@@ -531,14 +531,14 @@ export class FilesService {
             throw new ForbiddenException(`User can't access the scope of one or more files`);
         }
 
-        const { targetFolder: returnedTargetFolder, createdTargetFolderAutomatically } = await getOrCreateTargetFolder({
-            targetFolderId,
+        const { inboxFolder: returnedInboxFolder, createdInboxFolderAutomatically } = await getOrCreateInboxFolder({
+            existingInboxFolder: existingInboxFolderId,
             targetScope,
             fileScopes,
         });
-        let targetFolder: FolderInterface | undefined = returnedTargetFolder;
-        if (!this.contentScopeService.scopesAreEqual(targetScope, targetFolder.scope)) {
-            throw new Error("Target scope and target folder scope don't match");
+        let inboxFolder: FolderInterface | undefined = returnedInboxFolder;
+        if (!this.contentScopeService.scopesAreEqual(targetScope, inboxFolder.scope)) {
+            throw new Error("Target scope and inbox folder scope don't match");
         }
 
         let numberNewlyCopiedFiles = 0;
@@ -559,7 +559,7 @@ export class FilesService {
                 numberAlreadyCopiedFiles++;
                 isNewCopy = false;
             } else {
-                copiedFile = await this.createCopyOfFile(file, { targetFolder });
+                copiedFile = await this.createCopyOfFile(file, { targetFolder: inboxFolder });
                 numberNewlyCopiedFiles++;
                 isNewCopy = true;
             }
@@ -567,12 +567,12 @@ export class FilesService {
             mappedFiles.push({ rootFile: file, copy: copiedFile, isNewCopy });
         }
 
-        if (createdTargetFolderAutomatically && numberNewlyCopiedFiles === 0) {
-            await this.foldersService.delete(targetFolder.id);
-            targetFolder = undefined;
+        if (createdInboxFolderAutomatically && numberNewlyCopiedFiles === 0) {
+            await this.foldersService.delete(inboxFolder.id);
+            inboxFolder = undefined;
         }
 
-        return { inboxFolderId: targetFolder?.id, numberNewlyCopiedFiles, numberAlreadyCopiedFiles, mappedFiles };
+        return { inboxFolderId: inboxFolder?.id, numberNewlyCopiedFiles, numberAlreadyCopiedFiles, mappedFiles };
     }
 
     async findNextAvailableFilename({

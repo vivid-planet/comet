@@ -111,15 +111,15 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             @GetCurrentUser() user: CurrentUserInterface,
             @Args("fileIds", { type: () => [ID] }) fileIds: string[],
             @Args("targetScope", { type: () => Scope }) targetScope: typeof Scope,
-            @Args("targetFolderId", {
+            @Args("existingInboxFolderId", {
                 type: () => ID,
                 nullable: true,
                 description:
                     "You can set this argument to use the same inbox folder for multiple consecutive copy operations. Keep it empty for the first copy operation and use the ID from the response for the following copies.",
             })
-            targetFolderId?: string,
+            existingInboxFolderId?: string,
         ): Promise<CopyFilesResponseInterface> {
-            return this.filesService.copyFilesToScope({ fileIds, targetScope, targetFolderId, user });
+            return this.filesService.copyFilesToScope({ fileIds, targetScope, existingInboxFolderId: existingInboxFolderId, user });
         }
 
         @Mutation(() => File)

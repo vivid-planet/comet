@@ -423,7 +423,7 @@ type Mutation {
     """
     You can set this argument to use the same inbox folder for multiple consecutive copy operations. Keep it empty for the first copy operation and use the ID from the response for the following copies.
     """
-    targetFolderId: ID
+    existingInboxFolderId: ID
   ): CopyFilesResponse!
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
