@@ -1,7 +1,7 @@
 import { MikroORM, Utils } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
-import { ForbiddenException, forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
+import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { createHmac } from "crypto";
 import { format } from "date-fns";
 import exifr from "exifr";
@@ -508,7 +508,7 @@ export class FilesService {
         };
 
         if (!this.contentScopeService.canAccessScope(targetScope, user)) {
-            throw new ForbiddenException("User can't access the target scope");
+            throw new Error("User can't access the target scope");
         }
 
         const files = await this.findMultipleByIds(fileIds);
@@ -517,11 +517,11 @@ export class FilesService {
         }
 
         const fileScopes = getUniqueFileScopes(files);
-        const canAccessAllFileScopes = fileScopes.every((scope) => {
+        const canAccessFileScopes = fileScopes.every((scope) => {
             return this.contentScopeService.canAccessScope(scope, user);
         });
-        if (!canAccessAllFileScopes) {
-            throw new ForbiddenException(`User can't access the scope of one or more files`);
+        if (!canAccessFileScopes) {
+            throw new Error(`User can't access the scope of one or more files`);
         }
 
         const { inboxFolder: returnedInboxFolder, createdInboxFolderAutomatically } = await getOrCreateInboxFolder({
