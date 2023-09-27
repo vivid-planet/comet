@@ -56,17 +56,17 @@ export class FixturesConsole {
             language: "en",
         };
 
-        const node = await this.pageGeneratorService.generatePage({ name: "Home", scope });
+        const { node } = await this.pageGeneratorService.generatePage({ name: "Home", scope });
         await this.pageGeneratorService.generatePage({ name: "Sub", scope, parentId: node.id });
 
         for (let i = 0; i < 3; i++) {
-            const page = await this.pageGeneratorService.generatePage({ name: `Page ${i}`, scope });
+            const { node } = await this.pageGeneratorService.generatePage({ name: `Page ${i}`, scope });
 
             for (let subPageIndex = 0; subPageIndex < 3; subPageIndex++) {
                 if (faker.datatype.boolean()) {
-                    await this.pageGeneratorService.generatePage({ name: `Sub-Page ${subPageIndex}`, scope, parentId: page.id });
+                    await this.pageGeneratorService.generatePage({ name: `Sub-Page ${subPageIndex}`, scope, parentId: node.id });
                 } else {
-                    await this.linkGeneratorService.generateLink({ name: `Sub-Link ${subPageIndex}`, scope, parentId: page.id });
+                    await this.linkGeneratorService.generateLink({ name: `Sub-Link ${subPageIndex}`, scope, parentId: node.id });
                 }
             }
         }
@@ -84,7 +84,7 @@ export class FixturesConsole {
 
                 for (let i = 0; i < faker.datatype.number({ min: 100, max: 200 }); i++) {
                     const name = faker.lorem.sentence();
-                    const page = await this.pageGeneratorService.generatePage({
+                    const { node } = await this.pageGeneratorService.generatePage({
                         name,
                         parentId: level > 0 ? faker.random.arrayElement(pages[level - 1]).id : undefined,
                         scope: { domain, language: "en" },
@@ -95,7 +95,7 @@ export class FixturesConsole {
                         ]),
                     });
 
-                    pagesForLevel.push(page);
+                    pagesForLevel.push(node);
                     pagesCount++;
                 }
 

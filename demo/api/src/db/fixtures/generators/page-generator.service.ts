@@ -30,7 +30,7 @@ export class PageGeneratorService {
         private readonly imageGeneratorService: ImageGeneratorService,
     ) {}
 
-    async generatePage({ name, scope, parentId, visibility }: GeneratePageInput): Promise<PageTreeNodeInterface> {
+    async generatePage({ name, scope, parentId, visibility }: GeneratePageInput): Promise<{ node: PageTreeNodeInterface; page: Page }> {
         const id = faker.datatype.uuid();
         const slug = slugify(name.toLowerCase());
 
@@ -54,14 +54,15 @@ export class PageGeneratorService {
             this.imageGeneratorService.getRandomImage(),
             this.imageGeneratorService.getRandomImage(),
         ]; // TODO: remove imageFiles here and put into block that needs an image when it is possible to inject imageGeneratorService directly in a block
-        await this.pagesRepository.persistAndFlush(
-            this.pagesRepository.create({
-                id,
-                content: generateBlocksBlock(imageFiles, this.config).transformToBlockData(),
-                seo: generateSeoBlock().transformToBlockData(),
-            }),
-        );
 
-        return node;
+        const page = this.pagesRepository.create({
+            id,
+            content: generateBlocksBlock(imageFiles, this.config).transformToBlockData(),
+            seo: generateSeoBlock().transformToBlockData(),
+        });
+
+        await this.pagesRepository.persistAndFlush(page);
+
+        return { node, page };
     }
 }

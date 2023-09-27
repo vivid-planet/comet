@@ -20,7 +20,7 @@ interface GenerateLinkInput {
 export class LinkGeneratorService {
     constructor(private readonly pageTreeService: PageTreeService, @InjectRepository(Link) private readonly linkRepository: EntityRepository<Link>) {}
 
-    async generateLink({ name, scope, parentId }: GenerateLinkInput): Promise<PageTreeNodeInterface> {
+    async generateLink({ name, scope, parentId }: GenerateLinkInput): Promise<{ node: PageTreeNodeInterface; link: Link }> {
         const id = faker.datatype.uuid();
         const slug = slugify(name.toLowerCase());
 
@@ -54,13 +54,12 @@ export class LinkGeneratorService {
             activeType: "external",
         });
 
-        await this.linkRepository.persistAndFlush(
-            this.linkRepository.create({
-                id,
-                content: content.transformToBlockData(),
-            }),
-        );
+        const link = this.linkRepository.create({
+            id,
+            content: content.transformToBlockData(),
+        });
+        await this.linkRepository.persistAndFlush(link);
 
-        return node;
+        return { node, link };
     }
 }
