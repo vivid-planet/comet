@@ -119,7 +119,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             })
             existingInboxFolderId?: string,
         ): Promise<CopyFilesResponseInterface> {
-            return this.filesService.copyFilesToScope({ fileIds, targetScope, existingInboxFolderId: existingInboxFolderId, user });
+            return this.filesService.copyFilesToScope({ fileIds, targetScope, existingInboxFolderId, user });
         }
 
         @Mutation(() => File)
