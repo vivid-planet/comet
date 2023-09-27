@@ -7,7 +7,15 @@ import { DamScopeInterface } from "../../types";
 import { FileInterface } from "./file.entity";
 
 export interface FolderInterface extends BaseEntity<FolderInterface, "id"> {
-    [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "children" | "numberOfFiles" | "files" | "numberOfChildFolders";
+    [OptionalProps]?:
+        | "createdAt"
+        | "updatedAt"
+        | "archived"
+        | "children"
+        | "numberOfFiles"
+        | "files"
+        | "numberOfChildFolders"
+        | "isInboxFromOtherScope";
     id: string;
     name: string;
     parent: FolderInterface | null;
@@ -27,7 +35,15 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
     @Entity({ abstract: true })
     @ObjectType({ isAbstract: true })
     class FolderBase extends BaseEntity<FolderBase, "id"> implements FolderInterface {
-        [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "children" | "numberOfFiles" | "files" | "numberOfChildFolders";
+        [OptionalProps]?:
+            | "createdAt"
+            | "updatedAt"
+            | "archived"
+            | "children"
+            | "numberOfFiles"
+            | "files"
+            | "numberOfChildFolders"
+            | "isInboxFromOtherScope";
 
         @PrimaryKey({ columnType: "uuid" })
         @Field(() => ID)
