@@ -176,6 +176,9 @@ const styles = () =>
         },
     });
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 const TableDndOrderWithStyles = withStyles(styles, { name: "CometAdminTableDndOrder" })(TableDndOrder);
 export { TableDndOrderWithStyles as TableDndOrder };
 

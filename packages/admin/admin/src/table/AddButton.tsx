@@ -10,6 +10,9 @@ interface IProps {
     selectionApi: ISelectionApi;
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export class TableAddButton extends React.Component<IProps> {
     public render() {
         return (
