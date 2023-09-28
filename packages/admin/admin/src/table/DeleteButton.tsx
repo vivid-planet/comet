@@ -20,6 +20,9 @@ interface IProps {
 
 const DeleteMessage = () => <FormattedMessage {...messages.delete} />;
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export class TableDeleteButton extends React.Component<IProps> {
     public render() {
         const { selectedId, mutation, refetchQueries, icon = <DeleteIcon />, text = <DeleteMessage />, color } = this.props;

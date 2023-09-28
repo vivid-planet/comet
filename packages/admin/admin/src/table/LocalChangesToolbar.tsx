@@ -13,6 +13,9 @@ interface Props {
     loading: boolean;
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export const TableLocalChangesToolbar = ({ tableLocalChangesApi, localChangesCount, updateMutation, loading }: Props) => {
     const handleSaveClick = () => {
         tableLocalChangesApi.submitLocalDataChanges();

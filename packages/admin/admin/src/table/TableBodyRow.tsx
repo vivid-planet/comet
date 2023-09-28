@@ -3,8 +3,14 @@ import { TableRowProps } from "@mui/material/TableRow";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export type TableBodyRowClassKey = "root" | "even" | "odd";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface TableBodyRowProps extends TableRowProps {
     index?: number;
     hideTableHead?: boolean;
@@ -25,6 +31,9 @@ const Row = React.forwardRef<HTMLTableRowElement, TableBodyRowProps & WithStyles
     },
 );
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export const TableBodyRow = withStyles(styles, { name: "CometAdminTableBodyRow" })(Row);
 
 declare module "@mui/material/styles" {

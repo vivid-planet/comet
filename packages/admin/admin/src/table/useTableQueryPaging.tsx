@@ -2,6 +2,9 @@ import * as React from "react";
 
 import { usePersistedState } from "./usePersistedState";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface IPagingApi<T> {
     init: T;
     current: T;
@@ -10,10 +13,16 @@ export interface IPagingApi<T> {
     attachTableRef: (ref: React.RefObject<HTMLDivElement | undefined>) => void;
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface IChangePageOptions {
     noScrollToTop?: boolean;
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export function useTableQueryPaging<T>(
     init: T,
     options: {

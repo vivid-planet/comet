@@ -3,6 +3,9 @@ import { createStyles } from "@mui/styles";
 
 import { FilterBarPopoverFilterProps } from "./FilterBarPopoverFilter";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export type FilterBarPopoverFilterClassKey = "root" | "fieldBarWrapper" | "popoverContentContainer" | "paper" | "buttonsContainer";
 
 export const styles = ({ palette }: Theme) => {
