@@ -98,7 +98,13 @@ const config = {
                 textColor: "var(--ifm-color-warning-contrast-foreground)",
                 isCloseable: false,
             },
+            liveCodeBlock: {
+                playgroundPosition: "top",
+            },
         }),
+
+    themes: ["@docusaurus/theme-live-codeblock"],
+    plugins: ["./src/plugins/extend-webpack-config"],
 };
 
 module.exports = config;

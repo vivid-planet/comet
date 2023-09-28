@@ -28,7 +28,7 @@ import { CreateFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
 import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
-import { FileImage } from "./entities/file-image.entity";
+import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
 import { createHashedPath, slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
@@ -96,8 +96,8 @@ export class FilesService {
     static readonly UPLOAD_FIELD = "file";
 
     constructor(
-        @InjectRepository("File") private readonly filesRepository: EntityRepository<FileInterface>,
-        @InjectRepository(FileImage) private readonly fileImagesRepository: EntityRepository<FileImage>,
+        @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
+        @InjectRepository(DamFileImage) private readonly fileImagesRepository: EntityRepository<DamFileImage>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly foldersService: FoldersService,
         @Inject(IMGPROXY_CONFIG) private readonly imgproxyConfig: ImgproxyConfig,
@@ -233,7 +233,7 @@ export class FilesService {
         return this.save(file);
     }
 
-    async moveBatch(files: FileInterface[], targetFolder?: FolderInterface): Promise<FileInterface[]> {
+    async moveBatch(files: FileInterface[], targetFolder: FolderInterface | null): Promise<FileInterface[]> {
         const updatedFiles = [];
 
         for (const file of files) {
@@ -242,7 +242,7 @@ export class FilesService {
                 throw new Error("Target folder scope doesn't match file scope");
             }
 
-            updatedFiles.push(await this.updateByEntity(file, { folderId: targetFolder?.id }));
+            updatedFiles.push(await this.updateByEntity(file, { folderId: targetFolder?.id ?? null }));
         }
 
         return updatedFiles;
@@ -333,7 +333,7 @@ export class FilesService {
                 // See https://mikro-orm.io/docs/faq#you-cannot-call-emflush-from-inside-lifecycle-hook-handlers and
                 // https://mikro-orm.io/docs/unit-of-work for more information.
                 const entityManager = this.orm.em.fork();
-                const image = await entityManager.findOneOrFail(FileImage, result.image.id);
+                const image = await entityManager.findOneOrFail(DamFileImage, result.image.id);
 
                 this.calculateDominantColor(contentHash).then((dominantColor) => {
                     image.dominantColor = dominantColor;

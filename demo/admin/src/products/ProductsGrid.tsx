@@ -3,6 +3,7 @@ import {
     CrudContextMenu,
     CrudVisibility,
     GridFilterButton,
+    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -17,7 +18,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { filter } from "graphql-anywhere";
 import gql from "graphql-tag";
@@ -31,7 +32,7 @@ import {
     GQLDeleteProductMutationVariables,
     GQLProductGridCategoriesQuery,
     GQLProductGridCategoriesQueryVariables,
-    GQLProductsListFragment,
+    GQLProductsListManualFragment,
     GQLProductsListQuery,
     GQLProductsListQueryVariables,
     GQLUpdateProductVisibilityMutation,
@@ -64,7 +65,7 @@ function ProductsGrid() {
     const client = useApolloClient();
     const { data: categoriesData } = useQuery<GQLProductGridCategoriesQuery, GQLProductGridCategoriesQueryVariables>(productCategoriesQuery);
 
-    const columns: GridColDef<GQLProductsListFragment>[] = [
+    const columns: GridColDef<GQLProductsListManualFragment>[] = [
         {
             field: "title",
             headerName: "Title",
@@ -178,7 +179,7 @@ function ProductsGrid() {
                             }}
                             refetchQueries={["ProductsList"]}
                             copyData={() => {
-                                return filter<GQLProductsListFragment>(productsFragment, params.row);
+                                return filter<GQLProductsListManualFragment>(productsFragment, params.row);
                             }}
                         />
                     </>
@@ -199,7 +200,7 @@ function ProductsGrid() {
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
     return (
-        <Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
+        <MainContent fullHeight disablePadding>
             <DataGridPro
                 {...dataGridProps}
                 disableSelectionOnClick
@@ -212,12 +213,12 @@ function ProductsGrid() {
                     Toolbar: ProductsGridToolbar,
                 }}
             />
-        </Box>
+        </MainContent>
     );
 }
 
 const productsFragment = gql`
-    fragment ProductsList on Product {
+    fragment ProductsListManual on Product {
         id
         slug
         title
@@ -257,7 +258,7 @@ const productsQuery = gql`
         products(offset: $offset, limit: $limit, sort: $sort, filter: $filter, search: $search) {
             nodes {
                 id
-                ...ProductsList
+                ...ProductsListManual
             }
             totalCount
         }

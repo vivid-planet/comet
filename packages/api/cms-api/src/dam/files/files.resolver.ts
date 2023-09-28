@@ -11,11 +11,9 @@ import { SubjectEntity } from "../../common/decorators/subject-entity.decorator"
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { ContentScopeService } from "../../content-scope/content-scope.service";
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
-import { DependenciesService } from "../../dependencies/dependencies.service";
-import { Dependency } from "../../dependencies/dependency";
 import { DamScopeInterface } from "../types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
-import { createFileArgs, FileArgsInterface } from "./dto/file.args";
+import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { FileInterface } from "./entities/file.entity";
@@ -45,10 +43,9 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
     class FilesResolver {
         constructor(
             private readonly filesService: FilesService,
-            @InjectRepository("File") private readonly filesRepository: EntityRepository<FileInterface>,
-            @InjectRepository("Folder") private readonly foldersRepository: EntityRepository<FolderInterface>,
+            @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
+            @InjectRepository("DamFolder") private readonly foldersRepository: EntityRepository<FolderInterface>,
             private readonly contentScopeService: ContentScopeService,
-            private readonly dependenciesService: DependenciesService,
         ) {}
 
         @Query(() => PaginatedDamFiles)
@@ -79,13 +76,11 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         @Mutation(() => [File])
         @SkipBuild()
         async moveDamFiles(
-            @Args("fileIds", { type: () => [ID] }) fileIds: string[],
-            @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string | null | undefined,
+            @Args({ type: () => MoveDamFilesArgs }) { fileIds, targetFolderId }: MoveDamFilesArgs,
             @GetCurrentUser() user: CurrentUserInterface,
         ): Promise<FileInterface[]> {
-            let targetFolder;
-
-            if (targetFolderId != null) {
+            let targetFolder = null;
+            if (targetFolderId !== null) {
                 targetFolder = await this.foldersRepository.findOneOrFail(targetFolderId);
 
                 if (targetFolder.scope !== undefined && !this.contentScopeService.canAccessScope(targetFolder.scope, user)) {
@@ -220,11 +215,6 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         @ResolveField(() => String)
         async damPath(@Parent() file: FileInterface): Promise<string> {
             return this.filesService.getDamPath(file);
-        }
-
-        @ResolveField(() => [Dependency])
-        async dependents(@Parent() file: FileInterface): Promise<Dependency[]> {
-            return this.dependenciesService.getDependents(file);
         }
     }
 

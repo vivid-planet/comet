@@ -1,11 +1,19 @@
 export interface CrudGeneratorOptions {
     targetDirectory: string;
+    create?: boolean;
+    update?: boolean;
+    delete?: boolean;
 }
 
-export function CrudGenerator(options: CrudGeneratorOptions): ClassDecorator {
+export function CrudGenerator({
+    targetDirectory,
+    create = true,
+    update = true,
+    delete: deleteMutation = true,
+}: CrudGeneratorOptions): ClassDecorator {
     // eslint-disable-next-line @typescript-eslint/ban-types
     return function (target: Function) {
-        Reflect.defineMetadata(`data:crudGeneratorOptions`, options, target);
+        Reflect.defineMetadata(`data:crudGeneratorOptions`, { targetDirectory, create, update, delete: deleteMutation }, target);
     };
 }
 

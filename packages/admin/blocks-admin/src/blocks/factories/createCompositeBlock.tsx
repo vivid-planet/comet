@@ -38,7 +38,10 @@ interface NormalizedBlockConfiguration extends BlockConfiguration {
 interface CreateCompositeBlockOptionsBase {
     name: string;
     displayName: React.ReactNode;
-    category?: BlockCategory; // @deprecated: use override instead to adapt the factored block
+    /**
+     * @deprecated Use override instead to adapt the factored block
+     */
+    category?: BlockCategory;
     adminLayout?: "stacked";
     blocks: Record<string, BlockConfiguration>;
 }
@@ -135,7 +138,10 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
                     const blockState: any = (state as any)[attr];
 
-                    const embeddedBlockState = extractedBlock.createPreviewState(blockState, previewContext);
+                    const embeddedBlockState = extractedBlock.createPreviewState(blockState, {
+                        ...previewContext,
+                        parentUrl: `${previewContext.parentUrl}/${attr}`,
+                    });
                     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
                     (blockPreviewState as any)[attr] = { ...embeddedBlockState, adminMeta: { route: `${previewContext.parentUrl}#${attr}` } };
                 }

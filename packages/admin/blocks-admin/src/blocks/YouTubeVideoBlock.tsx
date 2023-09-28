@@ -18,7 +18,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
 
     displayName: <FormattedMessage id="comet.blocks.youTubeVideo" defaultMessage="Video (YouTube)" />,
 
-    defaultValues: () => ({ youtubeIdentifier: "", autoplay: false, showControls: false, aspectRatio: "16X9" }),
+    defaultValues: () => ({ youtubeIdentifier: "", autoplay: false, showControls: false, loop: false, aspectRatio: "16X9" }),
 
     category: BlockCategory.Media,
 
@@ -73,6 +73,12 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
                     <Field
                         label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.showControls", defaultMessage: "Show controls" })}
                         name="showControls"
+                        type="checkbox"
+                        component={FinalFormSwitch}
+                    />
+                    <Field
+                        label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.loop", defaultMessage: "Loop" })}
+                        name="loop"
                         type="checkbox"
                         component={FinalFormSwitch}
                     />

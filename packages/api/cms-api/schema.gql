@@ -67,6 +67,11 @@ type Dependency {
   targetId: String!
 }
 
+type PaginatedDependencies {
+  nodes: [Dependency!]!
+  totalCount: Int!
+}
+
 type BuildTemplate {
   id: ID!
   name: String!
@@ -127,6 +132,7 @@ type PageTreeNode {
   visibility: PageTreeNodeVisibility!
   documentType: String!
   hideInMenu: Boolean!
+  updatedAt: DateTime!
   category: String!
   childNodes: [PageTreeNode!]!
   numberOfDescendants: Float!
@@ -134,7 +140,7 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
-  dependents: [Dependency!]!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 enum PageTreeNodeVisibility {
@@ -153,6 +159,12 @@ type Page implements DocumentInterface {
 interface DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+}
+
+input DependentFilter {
+  rootGraphqlObjectType: String
+  rootId: String
+  rootColumnName: String
 }
 
 type CurrentUserRight {
@@ -178,7 +190,7 @@ type Redirect implements DocumentInterface {
   active: Boolean!
   generationType: RedirectGenerationType!
   createdAt: DateTime!
-  dependencies: [Dependency!]!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 enum RedirectSourceTypeValues {
@@ -190,8 +202,19 @@ enum RedirectGenerationType {
   automatic
 }
 
+input DependencyFilter {
+  targetGraphqlObjectType: String
+  targetId: String
+  rootColumnName: String
+}
+
 type PaginatedRedirects {
   nodes: [Redirect!]!
+  totalCount: Int!
+}
+
+type PaginatedPageTreeNodes {
+  nodes: [PageTreeNode!]!
   totalCount: Int!
 }
 
@@ -225,7 +248,7 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
-  dependents: [Dependency!]!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 type PaginatedDamItems {
@@ -266,6 +289,7 @@ type Query {
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
+  paginatedPageTreeNodes(scope: PageTreeNodeScopeInput! = {}, category: String, sort: [PageTreeNodeSort!], offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   cronJobs: [CronJob!]!
   currentUser: CurrentUser!
@@ -352,6 +376,16 @@ input FolderFilterInput {
 
 input PageTreeNodeScopeInput {
   thisScopeHasNoFields____: String
+}
+
+input PageTreeNodeSort {
+  field: PageTreeNodeSortField!
+  direction: SortDirection! = ASC
+}
+
+enum PageTreeNodeSortField {
+  updatedAt
+  pos
 }
 
 enum SlugAvailability {
@@ -448,7 +482,7 @@ input UpdateDamFolderInput {
 input PageTreeNodeUpdateInput {
   name: String!
   slug: String!
-  attachedDocument: AttachedDocumentInput!
+  attachedDocument: AttachedDocumentInput
   hideInMenu: Boolean
   createAutomaticRedirectsOnSlugChange: Boolean = true
 }

@@ -4,6 +4,7 @@ import {
     FinalForm,
     FinalFormInput,
     FinalFormSelect,
+    Loading,
     MainContent,
     messages,
     SaveButton,
@@ -17,7 +18,7 @@ import {
 } from "@comet/admin";
 import { useStackSwitchApi } from "@comet/admin/lib/stack/Switch";
 import { BlockInterface, BlockState, createFinalFormBlock, isValidUrl } from "@comet/blocks-admin";
-import { Card, CardContent, CircularProgress, Grid, MenuItem } from "@mui/material";
+import { Card, CardContent, Grid, MenuItem } from "@mui/material";
 import { FORM_ERROR } from "final-form";
 import isEqual from "lodash.isequal";
 import * as React from "react";
@@ -105,16 +106,14 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
     const newlyCreatedRedirectId = React.useRef<string>();
 
     if (mode === "edit" && initialValues === undefined) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
 
     const validateSource = async (value: string, allValues: GQLRedirectDetailFragment) => {
         if (allValues.sourceType === "path") {
             if (!value.startsWith("/")) {
                 return <FormattedMessage id="comet.pages.redirects.validate.path.error" defaultMessage="Needs to start with /" />;
-            } else if (value.includes("?")) {
-                return <FormattedMessage id="comet.pages.redirects.validate.path.queryStringError" defaultMessage="Must not contain ?" />;
-            } else if (!/^\/([a-zA-Z0-9-._~/]|%[0-9a-fA-F]{2})+$/.test(value)) {
+            } else if (!/^\/([a-zA-Z0-9-._~/:?=&]|%[0-9a-fA-F]{2})+$/.test(value)) {
                 return <FormattedMessage id="comet.pages.redirects.validate.path.invalidPathError" defaultMessage="Invalid path" />;
             }
 

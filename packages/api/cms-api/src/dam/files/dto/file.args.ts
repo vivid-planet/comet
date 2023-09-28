@@ -1,10 +1,11 @@
 import { Type } from "@nestjs/common";
 import { ArgsType, Field, ID, InputType, IntersectionType } from "@nestjs/graphql";
 import { Type as TransformerType } from "class-transformer";
-import { IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { IsArray, IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 
 import { OffsetBasedPaginationArgs } from "../../../common/pagination/offset-based.args";
 import { SortArgs } from "../../../common/sorting/sort.args";
+import { IsNullable } from "../../../common/validators/is-nullable";
 import { DamScopeInterface } from "../../types";
 import { EmptyDamScope } from "./empty-dam-scope";
 
@@ -61,4 +62,17 @@ export interface DamFileListPositionArgs extends SortArgs {
     folderId?: string;
     includeArchived?: boolean;
     filter?: FileFilterInput;
+}
+
+@ArgsType()
+export class MoveDamFilesArgs {
+    @Field(() => [ID])
+    @IsArray()
+    @IsUUID(4, { each: true })
+    fileIds: string[];
+
+    @Field(() => ID, { nullable: true })
+    @IsNullable()
+    @IsUUID()
+    targetFolderId: string | null;
 }

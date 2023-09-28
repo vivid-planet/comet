@@ -1,4 +1,5 @@
 import {
+    CheckboxField,
     Field,
     FieldContainer,
     FinalFormCheckbox,
@@ -7,8 +8,15 @@ import {
     FinalFormSearchTextField,
     FinalFormSelect,
     FinalFormSwitch,
+    SearchField,
+    SelectField,
+    SwitchField,
+    TextAreaField,
+    TextField,
 } from "@comet/admin";
-import { Button, Card, CardContent, FormControlLabel, MenuItem } from "@mui/material";
+import { ColorField } from "@comet/admin-color-picker";
+import { DateField, DateRangeField, DateTimeField, TimeField, TimeRangeField } from "@comet/admin-date-time";
+import { Button, Card, CardContent, CardHeader, FormControlLabel, Grid, Link, MenuItem } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -21,17 +29,63 @@ function Story() {
     ];
 
     return (
-        <div style={{ width: "500px" }}>
-            <Form
-                onSubmit={(values) => {
-                    alert(JSON.stringify(values, undefined, 2));
-                }}
-                initialValues={{ checkbox: false, radio: "foo", switch: false }}
-                render={({ handleSubmit, values }) => (
-                    <>
-                        <Card variant="outlined">
-                            <CardContent>
-                                <form onSubmit={handleSubmit}>
+        <Form
+            onSubmit={(values) => {
+                alert(JSON.stringify(values, undefined, 2));
+            }}
+            initialValues={{ multiSelect: [] }}
+            render={({ handleSubmit, values }) => (
+                <form onSubmit={handleSubmit}>
+                    <Grid container mb={2} spacing={2}>
+                        <Grid item md={6}>
+                            <Card variant="outlined">
+                                <CardHeader title="Common Field-Components" titleTypographyProps={{ variant: "h3" }} />
+                                <CardContent>
+                                    <TextField name="text" label="Text" fullWidth />
+                                    <TextAreaField name="textarea" label="TextArea" fullWidth />
+                                    <SearchField name="search" label="Search" fullWidth />
+                                    <SelectField name="select" label="Select" fullWidth>
+                                        {options.map((option) => (
+                                            <MenuItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </SelectField>
+                                    <CheckboxField
+                                        name="singleCheckboxWithLink"
+                                        label={
+                                            <>
+                                                Single checkbox with a{" "}
+                                                <Link href="https://www.comet-dxp.com" target="_blank">
+                                                    link
+                                                </Link>{" "}
+                                                inside the label.
+                                            </>
+                                        }
+                                        fullWidth
+                                    />
+                                    <SwitchField name="switch" label={values.switch ? "On" : "Off"} fieldLabel="Switch" />
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid item md={6}>
+                            <Card variant="outlined">
+                                <CardHeader title="Special Field-Components" titleTypographyProps={{ variant: "h3" }} />
+                                <CardContent>
+                                    <DateField name="date" label="Date" fullWidth />
+                                    <DateRangeField name="dateRange" label="Date Range" fullWidth />
+                                    <TimeField name="time" label="Time" fullWidth />
+                                    <TimeRangeField name="timeRange" label="Time Range" fullWidth />
+                                    <DateTimeField name="dateTime" label="Date Time" fullWidth />
+                                    <ColorField name="hexColor" label="Color (hex)" fullWidth />
+                                    <ColorField name="rgbaColor" label="Color (rgba)" colorFormat="rgba" fullWidth />
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid item md={6}>
+                            <Card variant="outlined">
+                                <CardHeader title="Field & FinalForm-Components" titleTypographyProps={{ variant: "h3" }} />
+                                <CardContent>
                                     <Field name="input" label="FinalFormInput" fullWidth component={FinalFormInput} />
                                     <Field name="search" label="FinalFormSearchTextField" component={FinalFormSearchTextField} />
                                     <Field
@@ -73,16 +127,14 @@ function Story() {
                                     <Button color="primary" variant="contained" onClick={handleSubmit}>
                                         Submit
                                     </Button>
-                                </form>
-                            </CardContent>
-                        </Card>
-                        <div>
-                            <pre>{JSON.stringify(values, undefined, 2)}</pre>
-                        </div>
-                    </>
-                )}
-            />
-        </div>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    </Grid>
+                    <pre>{JSON.stringify(values, undefined, 2)}</pre>
+                </form>
+            )}
+        />
     );
 }
 

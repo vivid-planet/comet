@@ -20,6 +20,16 @@ describe("searchToMikroOrmQuery", () => {
             $or: [{ title: { $ilike: "%fo\\_o%" } }, { description: { $ilike: "%fo\\_o%" } }],
         });
     });
+    it("should split by spaces", async () => {
+        expect(searchToMikroOrmQuery("foo bar", ["title", "description"])).toStrictEqual({
+            $or: [
+                { title: { $ilike: "%foo%" } },
+                { title: { $ilike: "%bar%" } },
+                { description: { $ilike: "%foo%" } },
+                { description: { $ilike: "%bar%" } },
+            ],
+        });
+    });
 });
 
 describe("filterToMikroOrmQuery", () => {

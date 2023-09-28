@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { useRouter } from "next/router";
 import * as React from "react";
 

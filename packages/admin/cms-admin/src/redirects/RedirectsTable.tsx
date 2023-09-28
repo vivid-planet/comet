@@ -3,6 +3,7 @@ import {
     GridFilterButton,
     LocalErrorScopeApolloContext,
     muiGridFilterToGql,
+    muiGridPagingToGql,
     muiGridSortToGql,
     StackLink,
     StackSwitchApiContext,
@@ -16,7 +17,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
-import { BlockInterface, BlockPreview } from "@comet/blocks-admin";
+import { BlockInterface, BlockPreviewContent } from "@comet/blocks-admin";
 import { Button, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, getGridSingleSelectOperators, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid";
@@ -85,14 +86,9 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             field: "target",
             headerName: intl.formatMessage({ id: "comet.pages.redirects.redirect.target", defaultMessage: "Target" }),
             renderCell: (params) => {
-                const state = linkBlock.input2State(params.value);
-
                 return (
                     <TargetWrapper>
-                        <BlockPreview
-                            title={linkBlock.dynamicDisplayName?.(state) ?? linkBlock.displayName}
-                            content={linkBlock.previewContent(state)}
-                        />
+                        <BlockPreviewContent block={linkBlock} input={params.value} />
                     </TargetWrapper>
                 );
             },
@@ -175,8 +171,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
         variables: {
             scope,
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            limit: dataGridProps.pageSize,
-            offset: dataGridProps.page * dataGridProps.pageSize,
+            ...muiGridPagingToGql({ page: dataGridProps.page, pageSize: dataGridProps.pageSize }),
             sort: muiGridSortToGql(sortModel),
         },
         context: LocalErrorScopeApolloContext,

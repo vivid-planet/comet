@@ -9,7 +9,7 @@ export class Migration20230630143028 extends Migration {
     this.addSql('alter table "Product" add column "discounts" jsonb not null, add column "articleNumbers" jsonb not null, add column "dimensions" jsonb null;');
     this.addSql('alter table "Product" add column "packageDimensions_width" int not null, add column "packageDimensions_height" int not null, add column "packageDimensions_depth" int not null;');
     this.addSql('alter table "ProductVariant" add column "image" json not null;');
-    this.addSql('alter table "Product" add column "statistics" uuid not null;');
+    this.addSql('alter table "Product" add column "statistics" uuid null;');
     this.addSql('alter table "Product" add constraint "Product_statistics_foreign" foreign key ("statistics") references "ProductStatistics" ("id") on update cascade;');
     this.addSql('alter table "Product" add constraint "Product_statistics_unique" unique ("statistics");');
   }

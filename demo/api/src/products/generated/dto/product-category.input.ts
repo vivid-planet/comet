@@ -17,7 +17,7 @@ export class ProductCategoryInput {
     @Field()
     slug: string;
 
-    @Field(() => [ID])
+    @Field(() => [ID], { defaultValue: [] })
     @IsArray()
     @IsUUID(undefined, { each: true })
     products: string[];

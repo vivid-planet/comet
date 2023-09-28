@@ -16,14 +16,14 @@ import {
     useStoredState,
     useTableQueryFilter,
 } from "@comet/admin";
-import { AddFolder as AddFolderIcon, ChevronDown } from "@comet/admin-icons";
+import { MoreVertical } from "@comet/admin-icons";
 import { Button } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
-import { UploadSplitButton } from "./DataGrid/fileUpload/UploadSplitButton";
+import { UploadFilesButton } from "./DataGrid/fileUpload/UploadFilesButton";
 import { DamTableFilter } from "./DataGrid/filter/DamTableFilter";
 import FolderDataGrid, {
     damFolderQuery,
@@ -34,7 +34,7 @@ import FolderDataGrid, {
 } from "./DataGrid/FolderDataGrid";
 import { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { DamMoreActions } from "./DataGrid/selection/DamMoreActions";
-import { DamSelectionProvider, useDamSelectionApi } from "./DataGrid/selection/DamSelectionContext";
+import { DamSelectionProvider } from "./DataGrid/selection/DamSelectionContext";
 import EditFile from "./FileForm/EditFile";
 
 interface FolderProps extends DamConfig {
@@ -53,7 +53,6 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
     const [, , editDialogApi, selectionApi] = useEditDialog();
-    const damSelectionActionsApi = useDamSelectionApi();
 
     // The selectedFolderId is only used to determine the name of a folder for the "folder" stack page
     // If you want to use the id of the current folder in the "table" stack page, use the id prop
@@ -66,6 +65,10 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
         skip: selectedFolderId === undefined,
     });
 
+    const uploadFilters = {
+        allowedMimetypes: props.allowedMimetypes,
+    };
+
     return (
         <StackSwitch initialPage="table">
             <StackPage name="table">
@@ -76,15 +79,10 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                             <DamTableFilter hideArchiveFilter={props.hideArchiveFilter} filterApi={filterApi} />
                         </ToolbarItem>
                         <ToolbarFillSpace />
-                        <ToolbarItem>
+                        <ToolbarActions>
                             <DamMoreActions
                                 button={
-                                    <Button
-                                        variant="text"
-                                        color="inherit"
-                                        endIcon={<ChevronDown />}
-                                        disabled={damSelectionActionsApi.selectionMap.size === 0}
-                                    >
+                                    <Button variant="text" color="inherit" endIcon={<MoreVertical />} sx={{ mx: 2 }}>
                                         <FormattedMessage id="comet.pages.dam.moreActions" defaultMessage="More actions" />
                                     </Button>
                                 }
@@ -96,25 +94,11 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                                     vertical: "top",
                                     horizontal: "left",
                                 }}
-                            />
-                        </ToolbarItem>
-                        <ToolbarActions>
-                            <Button
-                                variant="text"
-                                color="inherit"
-                                startIcon={<AddFolderIcon />}
-                                onClick={() => {
-                                    editDialogApi.openAddDialog(id);
-                                }}
-                            >
-                                <FormattedMessage id="comet.pages.dam.addFolder" defaultMessage="Add Folder" />
-                            </Button>
-                            <UploadSplitButton
                                 folderId={id}
-                                filter={{
-                                    allowedMimetypes: props.allowedMimetypes,
-                                }}
+                                filter={uploadFilters}
                             />
+
+                            <UploadFilesButton folderId={id} filter={uploadFilters} />
                         </ToolbarActions>
                     </Toolbar>
                     <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />

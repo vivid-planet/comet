@@ -27,6 +27,7 @@ export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonCont
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
+export { Loading, LoadingProps } from "./common/Loading";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
 export {
     ToolbarAutomaticTitleItem,
@@ -45,6 +46,7 @@ export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
+export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
 export { muiGridSortToGql } from "./dataGrid/muiGridSortToGql";
 export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
 export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
@@ -72,6 +74,12 @@ export { FinalFormAutocomplete, FinalFormAutocompleteProps } from "./form/Autoco
 export { FinalFormCheckbox, FinalFormCheckboxProps } from "./form/Checkbox";
 export { Field, FieldProps } from "./form/Field";
 export { FieldContainer, FieldContainerClassKey, FieldContainerComponent, FieldContainerProps } from "./form/FieldContainer";
+export { CheckboxField, CheckboxFieldProps } from "./form/fields/CheckboxField";
+export { SearchField, SearchFieldProps } from "./form/fields/SearchField";
+export { SelectField, SelectFieldProps } from "./form/fields/SelectField";
+export { SwitchField, SwitchFieldProps } from "./form/fields/SwitchField";
+export { TextAreaField, TextAreaFieldProps } from "./form/fields/TextAreaField";
+export { TextField, TextFieldProps } from "./form/fields/TextField";
 export { FinalFormContext, FinalFormContextProvider, FinalFormContextProviderProps, useFinalFormContext } from "./form/FinalFormContextProvider";
 export { FinalFormInput, FinalFormInputProps } from "./form/FinalFormInput";
 export { FinalFormRangeInput, FinalFormRangeInputClassKey, FinalFormRangeInputProps } from "./form/FinalFormRangeInput";
@@ -172,7 +180,7 @@ export { TableBodyRow, TableBodyRowClassKey, TableBodyRowProps } from "./table/T
 export { TableDndOrder } from "./table/TableDndOrder";
 export { TableFilterFinalForm } from "./table/TableFilterFinalForm";
 export { ITableLocalChangesApi, submitChangesWithMutation, TableLocalChanges } from "./table/TableLocalChanges";
-export { IDefaultVariables, parseIdFromIri, TableQuery } from "./table/TableQuery";
+export { IDefaultVariables, parseIdFromIri, TableQuery, TableQueryProps } from "./table/TableQuery";
 export { TableQueryClassKey } from "./table/TableQuery.styles";
 export { ITableQueryApi, ITableQueryContext, TableQueryContext } from "./table/TableQueryContext";
 export { usePersistedState } from "./table/usePersistedState";

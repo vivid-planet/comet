@@ -1,6 +1,6 @@
 import { Presets, SingleBar } from "cli-progress";
 import { ESLint } from "eslint";
-import { parse } from "fast-xml-parser";
+import { XMLParser } from "fast-xml-parser";
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { pascalCase, pascalCaseTransformMerge } from "pascal-case";
 const eslint = new ESLint({ fix: true });
@@ -41,7 +41,7 @@ const getComponentName = (fileName: string) => pascalCase(fileName.split(".")[0]
 
 const getPathData = (fileName: string) => {
     const fileContents = readFileSync(`icons/${fileName}`);
-    const parsedXml = parse(fileContents.toString(), { ignoreAttributes: false, attributeNamePrefix: "" });
+    const parsedXml = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "" }).parse(fileContents.toString());
 
     return parsedXml.svg.path.d;
 };

@@ -6,7 +6,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { AdminComponentButton, AdminComponentPaper, useBlockContext } from "../..";
+import { AdminComponentButton, AdminComponentPaper, BlockPreviewContent } from "../..";
 import { CannotPasteBlockDialog } from "../../clipboard/CannotPasteBlockDialog";
 import { useBlockClipboard } from "../../clipboard/useBlockClipboard";
 import { HoverPreviewComponent } from "../../iframebridge/HoverPreviewComponent";
@@ -241,7 +241,6 @@ export function createBlocksBlock({
             const [showAddBlockDrawer, setShowAddBlockDrawer] = React.useState(false);
             const [beforeIndex, setBeforeIndex] = React.useState<number>();
             const [cannotPasteBlockError, setCannotPasteBlockError] = React.useState<React.ReactNode>();
-            const blockContext = useBlockContext();
 
             const snackbarApi = useSnackbarApi();
 
@@ -308,6 +307,19 @@ export function createBlocksBlock({
                 },
                 [handleUndoClick, snackbarApi, updateState],
             );
+
+            const handleToggleVisibilityOfAllSelectedBlocks = (visible = false) => {
+                const blocksToShow = state.blocks.map((c) => {
+                    if (c.selected) {
+                        c.visible = visible;
+                    }
+                    return c;
+                });
+
+                updateState((prevState) => {
+                    return { ...prevState, blocks: blocksToShow };
+                });
+            };
 
             const handleDeleteAllSelectedBlocks = () => {
                 const blocksToDelete = state.blocks.filter((c) => {
@@ -494,16 +506,39 @@ export function createBlocksBlock({
                                                             <div />
                                                         )}
                                                         <BlockListHeaderActionContainer>
-                                                            {selectedCount > 0 && (
-                                                                <>
-                                                                    <IconButton onClick={handleDeleteAllSelectedBlocks} size="large">
-                                                                        <Delete />
-                                                                    </IconButton>
-                                                                    <IconButton onClick={handleCopySelectedBlocks} size="large">
-                                                                        <Copy />
-                                                                    </IconButton>
-                                                                </>
-                                                            )}
+                                                            <IconButton
+                                                                onClick={() => {
+                                                                    handleToggleVisibilityOfAllSelectedBlocks(true);
+                                                                }}
+                                                                size="large"
+                                                                disabled={selectedCount === 0}
+                                                            >
+                                                                <Visible />
+                                                            </IconButton>
+                                                            <IconButton
+                                                                onClick={() => {
+                                                                    handleToggleVisibilityOfAllSelectedBlocks();
+                                                                }}
+                                                                size="large"
+                                                                disabled={selectedCount === 0}
+                                                            >
+                                                                <Invisible />
+                                                            </IconButton>
+                                                            <Separator />
+                                                            <IconButton
+                                                                onClick={handleDeleteAllSelectedBlocks}
+                                                                size="large"
+                                                                disabled={selectedCount === 0}
+                                                            >
+                                                                <Delete />
+                                                            </IconButton>
+                                                            <IconButton
+                                                                onClick={handleCopySelectedBlocks}
+                                                                size="large"
+                                                                disabled={selectedCount === 0}
+                                                            >
+                                                                <Copy />
+                                                            </IconButton>
                                                             <IconButton onClick={() => pasteBlock(0)} size="large">
                                                                 <Paste />
                                                             </IconButton>
@@ -520,9 +555,10 @@ export function createBlocksBlock({
                                                         return (
                                                             <HoverPreviewComponent key={data.key} componentSlug={`${data.key}/blocks`}>
                                                                 <BlockRow
-                                                                    name={block.dynamicDisplayName?.(data.props) ?? block.displayName}
                                                                     id={data.key}
-                                                                    previewContent={block.previewContent(data.props, blockContext)}
+                                                                    renderPreviewContent={() => (
+                                                                        <BlockPreviewContent block={block} state={data.props} />
+                                                                    )}
                                                                     index={blockIndex}
                                                                     onContentClick={() => {
                                                                         stackApi.activatePage("blocks", data.key);
@@ -703,6 +739,8 @@ const BlockListHeader = styled("div")`
 `;
 
 const BlockListHeaderActionContainer = styled("div")`
+    display: flex;
+    align-items: center;
     padding: 12px 0;
 `;
 
@@ -720,4 +758,10 @@ const LargeAddButtonContent = styled("span")`
 const LargeAddButtonIcon = styled(Add)`
     font-size: 24px;
     margin-bottom: 8px;
+`;
+
+const Separator = styled("div")`
+    background-color: ${(props) => props.theme.palette.grey["100"]};
+    height: 22px;
+    width: 1px;
 `;

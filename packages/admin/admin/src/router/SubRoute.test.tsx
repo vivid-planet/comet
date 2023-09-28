@@ -224,3 +224,55 @@ test("Route below Subroute", async () => {
     fireEvent.click(rendered.getByText("Sub"));
     expect(rendered.getByText("urlPrefix=/foo/sub")).toBeInTheDocument();
 });
+
+test("SubRouteIndexRoute nested Switch", async () => {
+    function Cmp1() {
+        const urlPrefix = useSubRoutePrefix();
+        return (
+            <>
+                <Switch>
+                    <Route path={`${urlPrefix}/cmp1-sub`}>
+                        <div>Cmp1 Sub</div>
+                    </Route>
+                    <SubRouteIndexRoute>
+                        <div>
+                            <Link to={`${urlPrefix}/cmp1-sub`}>Cmp1 SubLink</Link>
+                        </div>
+                    </SubRouteIndexRoute>
+                </Switch>
+            </>
+        );
+    }
+
+    function Story() {
+        const urlPrefix = useSubRoutePrefix();
+        return (
+            <>
+                <Switch>
+                    <Route path={`${urlPrefix}/sub1`}>
+                        <div>Sub1</div>
+                    </Route>
+                    <SubRouteIndexRoute>
+                        <Cmp1 />
+                    </SubRouteIndexRoute>
+                </Switch>
+            </>
+        );
+    }
+
+    const history = createMemoryHistory();
+
+    const rendered = render(
+        <MuiThemeProvider theme={createTheme()}>
+            <Router history={history}>
+                <Story />
+            </Router>
+        </MuiThemeProvider>,
+    );
+
+    fireEvent.click(rendered.getByText("Cmp1 SubLink"));
+
+    await waitFor(() => {
+        expect(rendered.getByText("Cmp1 Sub")).toBeInTheDocument();
+    });
+});

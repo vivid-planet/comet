@@ -3,6 +3,7 @@ import { Type } from "class-transformer";
 import { IsBoolean, IsEnum, IsInt, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 
 import { IsSlug } from "../../common/validators/is-slug";
+import { IsUndefinable } from "../../common/validators/is-undefinable";
 import { PageTreeNodeVisibility } from "../types";
 import { AttachedDocumentInput } from "./attached-document.input";
 
@@ -45,8 +46,6 @@ export abstract class PageTreeNodeBaseCreateInput {
 @InputType("PageTreeNodeCreateInput")
 export class DefaultPageTreeNodeCreateInput extends PageTreeNodeBaseCreateInput {}
 
-// input and output type are the same now
-// @TODO refactor to only one inputType
 @InputType()
 export abstract class PageTreeNodeBaseUpdateInput {
     @Field()
@@ -57,10 +56,11 @@ export abstract class PageTreeNodeBaseUpdateInput {
     @IsSlug()
     slug: string;
 
-    @Field(() => AttachedDocumentInput)
+    @Field(() => AttachedDocumentInput, { nullable: true })
     @Type(() => AttachedDocumentInput)
+    @IsUndefinable()
     @ValidateNested()
-    attachedDocument: AttachedDocumentInput;
+    attachedDocument?: AttachedDocumentInput;
 
     @Field({ nullable: true })
     @IsOptional()

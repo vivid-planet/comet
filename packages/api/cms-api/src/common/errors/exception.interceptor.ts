@@ -32,16 +32,16 @@ export class ExceptionInterceptor implements NestInterceptor {
                         errorObject.validationErrors = error.errors;
                     }
                     // Business-Logic-Level errors should be handled by the client itself and should not be considered as "server-errors"
-                    return throwError(new BadRequestException(errorObject));
+                    return throwError(() => new BadRequestException(errorObject));
                 } else if (error instanceof HttpException) {
                     // Nest-HttpExceptions are thrown as they are (mostly directly from the resolver)
-                    return throwError(error);
+                    return throwError(() => error);
                 }
                 // Every unhandeld exception is converted to an Internal Server Error (500)
 
                 console.error(error); // log error to help debugging
 
-                return throwError(this.debug ? error : new InternalServerErrorException());
+                return throwError(() => (this.debug ? error : new InternalServerErrorException()));
             }),
         );
     }

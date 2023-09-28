@@ -2,9 +2,11 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 
+import { DependentsResolverFactory } from "../dependencies/dependents.resolver.factory";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { createPageTreeResolver } from "./createPageTreeResolver";
+import { DocumentSubscriberFactory } from "./document-subscriber";
 import { PageTreeNodeBaseCreateInput, PageTreeNodeBaseUpdateInput } from "./dto/page-tree-node.input";
 import { AttachedDocument } from "./entities/attached-document.entity";
 import { PageTreeNodeBase } from "./entities/page-tree-node-base.entity";
@@ -37,13 +39,14 @@ export class PageTreeModule {
             throw new Error(`PageTreeModule: Your PageTreeNode entity must be named ${PAGE_TREE_ENTITY}`);
         }
 
-        const pageTreeResolver = createPageTreeResolver({
+        const PageTreeResolver = createPageTreeResolver({
             PageTreeNode,
             Documents,
             Scope,
             PageTreeNodeCreateInput,
             PageTreeNodeUpdateInput,
         });
+        const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
 
         const repositoryProvider = {
             provide: PAGE_TREE_REPOSITORY,
@@ -60,6 +63,8 @@ export class PageTreeModule {
             },
         };
 
+        const documentSubscriber = DocumentSubscriberFactory.create({ Documents });
+
         return {
             module: PageTreeModule,
             imports: [MikroOrmModule.forFeature([AttachedDocument, PageTreeNode, ...(Scope ? [Scope] : [])])],
@@ -67,7 +72,8 @@ export class PageTreeModule {
                 PageTreeService,
                 PageTreeReadApiService,
                 AttachedDocumentLoaderService,
-                pageTreeResolver,
+                PageTreeResolver,
+                PageTreeDependentsResolver,
                 repositoryProvider,
                 pageTreeConfigProvider,
                 {
@@ -77,6 +83,7 @@ export class PageTreeModule {
                     },
                     inject: [PageTreeService],
                 },
+                documentSubscriber,
             ],
             exports: [PageTreeService, PageTreeReadApiService, AttachedDocumentLoaderService],
         };

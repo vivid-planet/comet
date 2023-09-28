@@ -31,11 +31,32 @@ The pages a `StackSwitch` will switch. First one is the default page.
 
 Comet Admin Stack uses react-router behind the scene and creates a `Route` for every page.
 
-## Switch page programmatically
+## Switch page
+
+### StackLink (Recommended)
+
+Use the `StackLink` component for creating a link to a page.
+
+The StackLink is based on [react-router Link](https://reactrouter.com/web/api/Link).
+It can be combined with the Material UI components [`Link`](https://mui.com/api/link/) and [`Button`](https://mui.com/api/button/) using their `component` prop.
+More infos on this functionality can be found in the [Routing Libraries section of the Material UI Docs](https://mui.com/guides/composition/#routing-libraries/).
+
+#### Material UI Link with underlying StackLink
+
+<Canvas>
+    <Story id="stories-components-stack--stacklink-muilink" />
+</Canvas>
+
+#### Material UI Button with underlying StackLink
+
+<Canvas>
+    <Story id="stories-components-stack--stacklink-button" />
+</Canvas>
 
 ### activatePage
 
-To switch between pages use the API provided by `StackSwitch`:
+Alternatively, you can use the `activatePage()` method provided by the `StackSwitchApi` to change the page.
+However, it's recommended to use `StackLink` whenever possible because it behaves like a native link.
 
 <Source
     language="tsx"
@@ -66,25 +87,7 @@ This method should only be used if you cannot achieve your goal with a `StackLin
 | payload\*  | string | Additional payload containing eg. an id that will get passed into the StackPage. |
 | subUrl     | string | SubUrl to append, for nested stacks or other nested routes.                      |
 
-### StackLink
 
-It's also possible to use the `StackLink` component for creating a link to a page.
-
-The StackLink is based on [react-router Link](https://reactrouter.com/web/api/Link).
-It can be combined with the Material UI components [`Link`](https://mui.com/api/link/) and [`Button`](https://mui.com/api/button/) using their `component` prop.
-More infos on this functionality can be found in the [Routing Libraries section of the Material UI Docs](https://mui.com/guides/composition/#routing-libraries/).
-
-#### Material UI Link with underlying StackLink
-
-<Canvas>
-    <Story id="stories-components-stack--stacklink-muilink" />
-</Canvas>
-
-#### Material UI Button with underlying StackLink
-
-<Canvas>
-    <Story id="stories-components-stack--stacklink-button" />
-</Canvas>
 
 ## payload
 

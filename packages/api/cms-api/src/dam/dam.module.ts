@@ -2,14 +2,14 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
-import { BlobStorageModule } from "..";
+import { BlobStorageModule, DependentsResolverFactory } from "..";
 import { ScaledImagesCacheService } from "./cache/scaled-images-cache.service";
 import { DamConfig } from "./dam.config";
 import { DAM_CONFIG, IMGPROXY_CONFIG } from "./dam.constants";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
 import { DamItemsService } from "./files/dam-items.service";
 import { createFileEntity, FILE_ENTITY, FileInterface } from "./files/entities/file.entity";
-import { FileImage } from "./files/entities/file-image.entity";
+import { DamFileImage } from "./files/entities/file-image.entity";
 import { createFolderEntity, FolderInterface } from "./files/entities/folder.entity";
 import { FileImagesResolver } from "./files/file-image.resolver";
 import { FileLicensesResolver } from "./files/file-licenses.resolver";
@@ -62,6 +62,7 @@ export class DamModule {
 
         const DamItemsResolver = createDamItemsResolver({ File, Folder, Scope });
         const FilesResolver = createFilesResolver({ File, Scope });
+        const FileDependentsResolver = DependentsResolverFactory.create(File);
         const FoldersResolver = createFoldersResolver({ Folder, Scope });
 
         if (Scope) {
@@ -85,7 +86,7 @@ export class DamModule {
 
         return {
             module: DamModule,
-            imports: [MikroOrmModule.forFeature([File, Folder, FileImage, ImageCropArea]), BlobStorageModule],
+            imports: [MikroOrmModule.forFeature([File, Folder, DamFileImage, ImageCropArea]), BlobStorageModule],
             providers: [
                 damConfigProvider,
                 DamItemsResolver,
@@ -94,6 +95,7 @@ export class DamModule {
                 ScaledImagesCacheService,
                 ImgproxyService,
                 FilesResolver,
+                FileDependentsResolver,
                 FilesService,
                 FileLicensesResolver,
                 FoldersResolver,
