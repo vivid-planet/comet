@@ -77,6 +77,8 @@ export interface BlockMethods<
     previewContent: (state: State, context?: BlockContext) => PreviewContent[];
     dynamicDisplayName?: (state: State) => React.ReactNode;
     anchors?: (state: State) => string[];
+    extractTextContents?: (state: State) => string[];
+    replaceTextContents?: (state: State, contents: Array<{ original: string; replaceWith: string }>) => State;
 }
 
 export interface AnonymousBlockInterface<

@@ -64,6 +64,35 @@ export function createSeoBlock({ image = PixelImageBlock }: CreateSeoBlockOption
 
         displayName: <FormattedMessage id="comet.blocks.seo" defaultMessage="SEO" />,
 
+        extractTextContents: ({ htmlTitle, metaDescription, openGraphDescription, openGraphTitle, structuredData }) => {
+            const contents = [];
+
+            if (htmlTitle) contents.push(htmlTitle);
+            if (metaDescription) contents.push(metaDescription);
+            if (openGraphDescription) contents.push(openGraphDescription);
+            if (openGraphTitle) contents.push(openGraphTitle);
+            if (structuredData) contents.push(structuredData);
+
+            return contents;
+        },
+
+        replaceTextContents: (state, contents) => {
+            const htmlTitle = contents.find((content) => content.original === state.htmlTitle)?.replaceWith ?? "";
+            const metaDescription = contents.find((content) => content.original === state.metaDescription)?.replaceWith ?? "";
+            const openGraphDescription = contents.find((content) => content.original === state.openGraphDescription)?.replaceWith ?? "";
+            const openGraphTitle = contents.find((content) => content.original === state.openGraphTitle)?.replaceWith ?? "";
+            const structuredData = contents.find((content) => content.original === state.structuredData)?.replaceWith ?? "";
+
+            return {
+                ...state,
+                htmlTitle: htmlTitle !== "" ? htmlTitle : state.htmlTitle,
+                metaDescription: metaDescription !== "" ? metaDescription : state.metaDescription,
+                openGraphDescription: openGraphDescription !== "" ? openGraphDescription : state.openGraphDescription,
+                openGraphTitle: openGraphTitle !== "" ? openGraphTitle : state.openGraphTitle,
+                structuredData: structuredData !== "" ? structuredData : state.structuredData,
+            };
+        },
+
         AdminComponent: ({ state, updateState }) => {
             const intl = useIntl();
             const { openGraphImage } = composedApi.adminComponents({

@@ -40,6 +40,21 @@ export function createTextLinkBlock({ link: LinkBlock, name = "TextLink" }: Crea
 
         definesOwnPadding: true,
 
+        extractTextContents: (state) => {
+            return state.text.trim().length > 0 ? [state.text] : [];
+        },
+
+        replaceTextContents: (state, contents) => {
+            const translation = contents.find((content) => content.original === state.text);
+            const text = translation && translation.replaceWith !== "" ? translation.replaceWith : state.text;
+
+            return {
+                ...state,
+                link: block.replaceTextContents?.(state.link, contents) ?? state.link,
+                text,
+            };
+        },
+
         AdminComponent: ({ state, updateState }) => {
             const { link } = composedApi.adminComponents({ state, updateState: decomposeUpdateStateAction(updateState, ["link"]) });
 

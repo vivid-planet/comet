@@ -218,6 +218,30 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
             return block?.anchors?.(blockState.props) ?? [];
         },
 
+        extractTextContents: (state) => {
+            return state.attachedBlocks.reduce<string[]>((contentBlock, child) => {
+                const block = blockForType(child.type);
+
+                if (!block) {
+                    throw new Error(`No Block found for type ${child.type}`); // for TS
+                }
+                return [...contentBlock, ...(block.extractTextContents?.(child.props) ?? [])];
+            }, []);
+        },
+
+        replaceTextContents: (state, contents) => ({
+            ...state,
+            attachedBlocks: state.attachedBlocks.map((content) => {
+                const block = blockForType(content.type);
+
+                if (!block) {
+                    throw new Error(`No Block found for type ${content.type}`); // for TS
+                }
+
+                return { ...content, props: block.replaceTextContents?.(content.props, contents) ?? content.props };
+            }),
+        }),
+
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {

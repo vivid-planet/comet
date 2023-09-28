@@ -6,6 +6,7 @@ interface Options<State> {
     AdminComponent: BlockAdminComponent<State>;
     isValid?: (values: State) => boolean | Promise<boolean>;
     definesOwnPadding?: boolean;
+    extractTextContent?: boolean;
 }
 
 export function createSettingsAnonymousBlock<State>({
@@ -13,6 +14,7 @@ export function createSettingsAnonymousBlock<State>({
     AdminComponent,
     isValid,
     definesOwnPadding,
+    extractTextContent,
 }: Options<State>): AnonymousBlockInterface<State, State, State, State> {
     const AnonymousSettingsBlock: AnonymousBlockInterface<State, State, State, State> = {
         ...createBlockSkeleton(),
@@ -34,6 +36,38 @@ export function createSettingsAnonymousBlock<State>({
     if (isValid) {
         AnonymousSettingsBlock.isValid = isValid;
     }
+    if (extractTextContent) {
+        AnonymousSettingsBlock.extractTextContents = (state) => {
+            if (typeof state === "object") {
+                if (state === null) {
+                    return [];
+                } else {
+                    return Object.values(state).filter((value) => typeof value === "string");
+                }
+            } else if (typeof state === "string") {
+                return [state];
+            } else {
+                return [];
+            }
+        };
+
+        AnonymousSettingsBlock.replaceTextContents = (state, contents) => {
+            if (typeof state === "object") {
+                if (state === null) {
+                    return state;
+                } else {
+                    return Object.values(state).filter(
+                        (value) => contents.find((translation) => translation.original === value)?.replaceWith,
+                    ) as State;
+                }
+            } else if (typeof state === "string") {
+                return contents.find((translation) => translation.original === state)?.replaceWith as State;
+            } else {
+                return state;
+            }
+        };
+    }
+
     return AnonymousSettingsBlock;
 }
 

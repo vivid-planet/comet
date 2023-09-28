@@ -6,18 +6,21 @@ interface Options<State> {
     defaultValue: State;
     AdminComponent: BlockAdminComponent<State>;
     definesOwnPadding?: boolean;
+    extractTextContent?: boolean;
 }
 
 export function createCompositeSetting<State>({
     defaultValue,
     AdminComponent,
     definesOwnPadding,
+    extractTextContent,
 }: Options<State>): [AnonymousBlockInterface<State, State, State, State>, { flatten: false }] {
     return [
         createSettingsAnonymousBlock<State>({
             defaultValues: defaultValue,
             AdminComponent,
             definesOwnPadding,
+            extractTextContent,
         }),
 
         { flatten: false },

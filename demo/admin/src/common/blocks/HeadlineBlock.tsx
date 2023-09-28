@@ -32,6 +32,7 @@ export const HeadlineBlock = createCompositeBlock(
                             <Field name="eyebrow" label="Eyebrow" component={FinalFormInput} fullWidth />
                         </BlocksFinalForm>
                     ),
+                    extractTextContent: true,
                 }),
             },
             headline: {

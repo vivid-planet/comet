@@ -76,6 +76,7 @@ export function createListBlock<T extends BlockInterface>({
     AdditionalItemContent,
 }: CreateListBlockOptions<T>): BlockInterface<ListBlockFragment, ListBlockState<T>> {
     const useAdminComponent = createUseAdminComponent({ block, maxVisibleBlocks, additionalItemFields });
+
     const BlockListBlock: BlockInterface<ListBlockFragment, ListBlockState<T>> = {
         ...createBlockSkeleton(),
 
@@ -178,6 +179,22 @@ export function createListBlock<T extends BlockInterface>({
                 return [...anchors, ...(block.anchors?.(child.props) ?? [])];
             }, []);
         },
+
+        extractTextContents: (state) => {
+            return state.blocks.reduce<string[]>((content, child) => {
+                return [...content, ...(block.extractTextContents?.(child.props) ?? [])];
+            }, []);
+        },
+
+        replaceTextContents: (state, contents) => ({
+            ...state,
+            blocks: state.blocks.map((contentBlock) => {
+                return {
+                    ...contentBlock,
+                    props: block.replaceTextContents?.(contentBlock.props, contents) ?? contentBlock.props,
+                };
+            }),
+        }),
 
         definesOwnPadding: true,
 
