@@ -4,6 +4,9 @@ import * as React from "react";
 
 import { RouterPrompt } from "../router/Prompt";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export async function submitChangesWithMutation(options: {
     changes: { [id: string]: object };
     variables?: object;
@@ -22,6 +25,9 @@ export async function submitChangesWithMutation(options: {
     }
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface ITableLocalChangesApi {
     setLocalDataChange: (id: string, column: string, value: any) => void;
     moveRow: (dragIndex: number, hoverIndex: number) => void;
@@ -45,6 +51,9 @@ interface IState<TData> {
     };
     loading: boolean;
 }
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export class TableLocalChanges<TData extends { id: string; [key: string]: any }> extends React.Component<IProps<TData>, IState<TData>> {
     protected static defaultProps = {
         orderColumn: "pos",

@@ -1,6 +1,5 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { LocalErrorScopeApolloContext } from "@comet/admin";
-import { readClipboard, writeClipboard } from "@comet/blocks-admin";
+import { LocalErrorScopeApolloContext, readClipboardText, writeClipboardText } from "@comet/admin";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
@@ -146,11 +145,11 @@ function useCopyPastePages(): UseCopyPastePagesApi {
         [client, documentTypes],
     );
     const writeToClipboard = React.useCallback(async (pages: PagesClipboard) => {
-        return writeClipboard(JSON.stringify(pages));
+        return writeClipboardText(JSON.stringify(pages));
     }, []);
 
     const getFromClipboard = async (): Promise<GetFromClipboardResponse> => {
-        const text = await readClipboard();
+        const text = await readClipboardText();
 
         if (text === undefined) {
             return {

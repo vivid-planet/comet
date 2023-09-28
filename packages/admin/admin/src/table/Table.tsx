@@ -16,6 +16,9 @@ import { safeColumnGet } from "./safeColumnGet";
 import { TableBodyRow, TableBodyRowProps } from "./TableBodyRow";
 import { ISortApi, SortDirection } from "./useTableQuerySort";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export type ITableHeadRowProps<TRow extends IRow> = ITableHeadColumnsProps<TRow>;
 function DefaultHeadTableRow<TRow extends IRow>({ columns, sortApi }: ITableHeadRowProps<TRow>) {
     return (
@@ -25,11 +28,17 @@ function DefaultHeadTableRow<TRow extends IRow>({ columns, sortApi }: ITableHead
     );
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface ITableHeadColumnsProps<TRow extends IRow> {
     columns: Array<ITableColumn<TRow>>;
     sortApi?: ISortApi;
 }
 // render default TableCell fragments for given columns
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export function TableHeadColumns<TRow extends IRow>({ columns, sortApi }: ITableHeadColumnsProps<TRow>) {
     const handleSortClick = (name: string, ev: React.MouseEvent) => {
         if (sortApi) sortApi.changeSort(name);
@@ -60,11 +69,17 @@ export function TableHeadColumns<TRow extends IRow>({ columns, sortApi }: ITable
     );
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface ITableColumnsProps<TRow extends IRow> {
     row: TRow;
     columns: Array<ITableColumn<TRow>>;
 }
 // render default TableCell fragments for given columns
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export function TableColumns<TRow extends IRow>({ row, columns }: ITableColumnsProps<TRow>) {
     return (
         <>
@@ -79,15 +94,27 @@ export function TableColumns<TRow extends IRow>({ row, columns }: ITableColumnsP
         </>
     );
 }
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface IRow {
     id: string | number;
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export enum VisibleType {
     Browser = "browser",
     Export = "export",
 }
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export type Visible = boolean | { [key in VisibleType]?: boolean };
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface ITableColumn<TRow extends IRow> {
     name: string;
     visible?: Visible;
@@ -101,12 +128,18 @@ export interface ITableColumn<TRow extends IRow> {
     headerProps?: TableCellProps;
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface ITableRowProps<TRow extends IRow> extends ITableColumnsProps<TRow> {
     index: number;
     key: any;
     rowProps: TableBodyRowProps;
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface ITableProps<TRow extends IRow> {
     data: TRow[];
     totalCount: number;
@@ -134,6 +167,9 @@ function DefaultTableRow<TRow extends IRow>({ columns, row, rowProps }: ITableRo
     );
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>> {
     private domRef: React.RefObject<HTMLTableElement>;
     constructor(props: ITableProps<TRow>) {
