@@ -3,14 +3,10 @@ import { createStyles } from "@mui/styles";
 
 import { FilterBarMoreFiltersProps } from "./FilterBarMoreFilters";
 
-<<<<<<< HEAD
-export type FilterBarMoveFilersClassKey = "root" | "button";
-=======
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export type FilterBarMoveFilersClassKey = "root" | "textWrapper";
->>>>>>> main
+export type FilterBarMoveFilersClassKey = "root" | "button";
 
 export const styles = ({ typography }: Theme) => {
     return createStyles<FilterBarMoveFilersClassKey, FilterBarMoreFiltersProps>({
