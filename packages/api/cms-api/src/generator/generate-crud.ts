@@ -431,14 +431,18 @@ function generateInputHandling(
     ...${noAssignProps.length ? `assignInput` : options.inputName},
         ${options.mode == "create" && hasVisibleProp ? `visible: false,` : ""}
         ${options.mode == "create" && scopeProp ? `scope,` : ""}
-        ${inputRelationManyToOneProps
-            .map(
-                (prop) =>
-                    `${prop.name}: ${prop.nullable ? `${prop.name}Input ? ` : ""}Reference.create(await this.${prop.repositoryName}.findOneOrFail(${
-                        prop.name
-                    }Input))${prop.nullable ? ` : undefined` : ""}, `,
-            )
-            .join("")}
+        ${
+            options.mode == "create" || options.mode == "updateNested"
+                ? inputRelationManyToOneProps
+                      .map(
+                          (prop) =>
+                              `${prop.name}: ${prop.nullable ? `${prop.name}Input ? ` : ""}Reference.create(await this.${
+                                  prop.repositoryName
+                              }.findOneOrFail(${prop.name}Input))${prop.nullable ? ` : undefined` : ""}, `,
+                      )
+                      .join("")
+                : ""
+        }
         ${
             options.mode == "create" || options.mode == "updateNested"
                 ? blockProps.map((prop) => `${prop.name}: ${prop.name}Input.transformToBlockData(),`).join("")
@@ -503,7 +507,20 @@ ${inputRelationOneToOneProps
                 ${options.mode != "create" || prop.nullable ? `}` : "}"}`,
     )
     .join("")}
-
+${
+    options.mode == "update"
+        ? inputRelationManyToOneProps
+              .map(
+                  (prop) => `if (${prop.name}Input !== undefined) {
+                        ${instanceNameSingular}.${prop.name} =
+                            ${prop.nullable ? `${prop.name}Input ? ` : ""}
+                            Reference.create(await this.${prop.repositoryName}.findOneOrFail(${prop.name}Input))
+                            ${prop.nullable ? ` : undefined` : ""};
+                        }`,
+              )
+              .join("")
+        : ""
+}
 ${
     options.mode == "update"
         ? blockProps
