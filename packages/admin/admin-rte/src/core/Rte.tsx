@@ -73,7 +73,9 @@ export interface IRteOptions {
     filterEditorStateBeforeUpdate?: FilterEditorStateBeforeUpdateFn;
     maxBlocks?: number;
     standardBlockType: DraftBlockType;
-    // @deprecated
+    /**
+     * @deprecated use `blocktypeMap` instead
+     */
     customBlockMap?: ICustomBlockTypeMap_Deprecated;
     customInlineStyles?: CustomInlineStyles;
 }

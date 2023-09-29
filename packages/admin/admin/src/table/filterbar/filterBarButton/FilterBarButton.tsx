@@ -9,6 +9,9 @@ import * as React from "react";
 import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
 import { FilterBarButtonClassKey, styles } from "./FilterBarButton.styles";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface FilterBarButtonProps extends ButtonProps {
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
     numberDirtyFields?: number;
@@ -46,6 +49,9 @@ const FilterBarButton = ({
     );
 };
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 const FilterBarButtonWithStyles = withStyles(styles, { name: "CometAdminFilterBarButton" })(FilterBarButton);
 
 export { FilterBarButtonWithStyles as FilterBarButton };

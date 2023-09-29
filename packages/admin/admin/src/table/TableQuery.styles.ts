@@ -3,6 +3,9 @@ import { createStyles } from "@mui/styles";
 
 import { TableQueryProps } from "./TableQuery";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export type TableQueryClassKey = "root" | "loadingContainer" | "loadingPaper";
 
 export const styles = ({ zIndex }: Theme) => {
