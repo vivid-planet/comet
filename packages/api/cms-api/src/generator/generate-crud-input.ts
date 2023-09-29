@@ -145,7 +145,7 @@ export async function generateCrudInput(
                 decorators.push("@IsString()");
             } else if (refType == "integer") {
                 type = "number";
-                decorators.push("@IsInt()");
+                decorators.push("@Transform(({ value }) => parseInt(value))");
             } else {
                 console.warn(`${prop.name}: Unsupported referenced type`);
             }
@@ -186,7 +186,7 @@ export async function generateCrudInput(
                     decorators.push("@IsString({ each: true })");
                 } else if (refType == "integer") {
                     type = "number[]";
-                    decorators.push("@IsInt({ each: true })");
+                    decorators.push("@Transform(({ value }) => value.map(id) => parseInt(id))");
                 } else {
                     console.warn(`${prop.name}: Unsupported referenced type`);
                 }
@@ -209,7 +209,7 @@ export async function generateCrudInput(
                 decorators.push("@IsString({ each: true })");
             } else if (refType == "integer") {
                 type = "number[]";
-                decorators.push("@IsInt({ each: true })");
+                decorators.push("@Transform(({ value }) => value.map(id) => parseInt(id))");
             } else {
                 console.warn(`${prop.name}: Unsupported referenced type`);
             }

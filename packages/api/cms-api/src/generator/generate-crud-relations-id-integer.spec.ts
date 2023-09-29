@@ -50,7 +50,7 @@ describe("GenerateCrudRelationsIdString", () => {
             expect(structure.properties?.[0].type).toBe("number");
             expect(structure.properties?.[0].decorators?.length).toBe(3);
             const decorators = structure.properties?.[0].decorators?.map((dec) => dec.name);
-            expect(decorators).toContain("IsInt");
+            expect(decorators).toContain("Transform");
             expect(decorators).not.toContain("IsUUID");
             expect(decorators).not.toContain("IsString");
             orm.close();
