@@ -46,7 +46,7 @@ import { Page } from "./pages/entities/page.entity";
 import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
-import { UserPermissionsConfigService } from "./user-permission/user-permission-config.service";
+import { userPermissionsOptions } from "./user-permissions/user-permissions-options";
 
 @Module({})
 export class AppModule {
@@ -81,9 +81,7 @@ export class AppModule {
                         return user.domains.includes(requestScope.domain);
                     },
                 }),
-                UserPermissionsModule.forRoot({
-                    config: UserPermissionsConfigService,
-                }),
+                UserPermissionsModule.forRoot(userPermissionsOptions),
                 BlocksModule.forRoot({
                     imports: [PagesModule],
                     useFactory: (pageTreeService: PageTreeService, filesService: FilesService, imagesService: ImagesService) => {

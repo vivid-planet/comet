@@ -1,1 +1,1 @@
-export const USER_PERMISSIONS_CONFIG_SERVICE = "userpermissions-config-service";
+export const USER_PERMISSIONS_OPTIONS = "user-permissions-options";

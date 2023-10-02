@@ -1,3 +1,5 @@
+import { ModuleMetadata, Type } from "@nestjs/common";
+
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
 import { UserPermission } from "./entities/user-permission.entity";
@@ -19,11 +21,24 @@ export type PermissionsForUser =
 export type ContentScopes = ContentScope[];
 export type ContentScopesForUser = ContentScopes | UserPermissions.allContentScopes;
 
-export interface UserPermissionConfigInterface {
+export interface UserPermissionsOptions {
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
     getAvailablePermissions?: () => Promise<Permissions> | Permissions;
     getAvailableContentScopes?: () => Promise<ContentScopes> | ContentScopes;
     getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
+}
+
+export interface UserPermissionsOptionsFactory {
+    createUserPermissionsOptions(): Promise<UserPermissionsOptions> | UserPermissionsOptions;
+}
+
+export interface UserPermissionsAsyncOptions extends Pick<ModuleMetadata, "imports"> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    inject?: any[];
+    useExisting?: Type<UserPermissionsOptionsFactory>;
+    useClass?: Type<UserPermissionsOptionsFactory>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    useFactory?: (...args: any[]) => Promise<UserPermissionsOptions> | UserPermissionsOptions;
 }

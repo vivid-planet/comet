@@ -154,7 +154,8 @@ export {
     ContentScopesForUser,
     Permissions,
     PermissionsForUser,
-    UserPermissionConfigInterface,
     UserPermissions,
+    UserPermissionsOptions,
+    UserPermissionsOptionsFactory,
     Users,
 } from "./user-permissions/user-permissions.types";
