@@ -1,13 +1,17 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { LocalErrorScopeApolloContext, readClipboardText, writeClipboardText } from "@comet/admin";
+import { ReplaceDependencyObject } from "@comet/blocks-admin";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { useContentScope } from "../../contentScope/Provider";
-import { GQLDocument, GQLPageQuery, GQLPageQueryVariables, GQLUpdatePageMutationVariables, IdsMap } from "../../documents/types";
+import { useDamScope } from "../../dam/config/useDamScope";
+import { GQLDocument, GQLPageQuery, GQLPageQueryVariables, GQLUpdatePageMutationVariables } from "../../documents/types";
 import { arrayToTreeMap } from "./treemap/TreeMapUtils";
 import {
+    GQLCopyFilesToScopeMutation,
+    GQLCopyFilesToScopeMutationVariables,
     GQLCreatePageNodeMutation,
     GQLCreatePageNodeMutationVariables,
     GQLSlugAvailableQuery,
@@ -26,6 +30,23 @@ const createPageNodeMutation = gql`
     mutation CreatePageNode($input: PageTreeNodeCreateInput!, $contentScope: PageTreeNodeScopeInput!, $category: String!) {
         createPageTreeNode(input: $input, scope: $contentScope, category: $category) {
             id
+        }
+    }
+`;
+
+const copyFilesToScopeMutation = gql`
+    mutation CopyFilesToScope($fileIds: [ID!]!, $targetScope: DamScopeInput!, $existingInboxFolderId: ID) {
+        copyFilesToScope(fileIds: $fileIds, targetScope: $targetScope, existingInboxFolderId: $existingInboxFolderId) {
+            numberNewlyCopiedFiles
+            inboxFolderId
+            mappedFiles {
+                rootFile {
+                    id
+                }
+                copy {
+                    id
+                }
+            }
         }
     }
 `;
@@ -83,7 +104,8 @@ interface UseCopyPastePagesApi {
      *      1. traverses the tree with top-down strategy
      *          1a. Create new document with new id
      *          1b. Generate unique slug by adding "-{uniqueNumber}" to the slug
-     *          1c. Create new PageTreeNode
+     *          1c. If the page is copied from one scope to another, copy the files on this page to the new scope
+     *          1d. Create new PageTreeNode
      *              - with new name "{name} {uniqueNumber}"
      *              - and new parent id
      *              - new document id (created in step 1a)
@@ -103,6 +125,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     const { documentTypes } = usePageTreeContext();
     const client = useApolloClient();
     const { scope } = useContentScope();
+    const damScope = useDamScope();
 
     const prepareForClipboard = React.useCallback(
         async (pages: GQLPageTreePageFragment[]): Promise<PagesClipboard> => {
@@ -200,7 +223,8 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     const sendPages = React.useCallback(
         async (parentId: string | null, { pages }: PagesClipboard, options?: SendPagesOptions): Promise<void> => {
             const tree = arrayToTreeMap<PageClipboard>(pages);
-            const idsMap = createIdsMap(pages);
+            const pageTreeNodeIdReplacements = createPageTreeNodeIdReplacements(pages);
+            let inboxFolderIdForCopiedFiles: string | undefined = undefined;
 
             const handlePageTreeNode = async (node: PageClipboard, newParentId: string | null, posOffset: number): Promise<string> => {
                 const documentType = documentTypes[node.documentType];
@@ -239,7 +263,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                     mutation: createPageNodeMutation,
                     variables: {
                         input: {
-                            id: idsMap.get(node.id),
+                            id: pageTreeNodeIdReplacements.find((replacement) => replacement.originalId === node.id)?.replaceWithId,
                             name,
                             slug,
                             hideInMenu: node.hideInMenu,
@@ -258,14 +282,42 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                     throw Error("Did not receive new uuid for page tree node");
                 }
 
-                // 1c. Create new document
+                // 1c. Copy all files used on page to target scope
+                let fileIdReplacements: ReplaceDependencyObject[] | undefined;
+                if (node?.document != null) {
+                    const fileDependencyIds = documentType
+                        .dependencies(node.document)
+                        .filter((dependency) => dependency.targetGraphqlObjectType === "DamFile")
+                        .map((dependency) => dependency.id);
+
+                    if (fileDependencyIds.length > 0) {
+                        const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
+                            mutation: copyFilesToScopeMutation,
+                            variables: { fileIds: fileDependencyIds, targetScope: damScope, existingInboxFolderId: inboxFolderIdForCopiedFiles },
+                            update: (cache, result) => {
+                                if (result.data && result.data.copyFilesToScope.numberNewlyCopiedFiles > 0) {
+                                    cache.evict({ fieldName: "damItemsList" });
+                                }
+                            },
+                        });
+
+                        inboxFolderIdForCopiedFiles = copiedFiles?.copyFilesToScope.inboxFolderId ?? undefined;
+
+                        if (copiedFiles) {
+                            fileIdReplacements = createFileIdReplacements(copiedFiles.copyFilesToScope.mappedFiles);
+                        }
+                    }
+                }
+
+                // 1d. Create new document
                 const newDocumentId = uuid();
-                if (node?.document != null && documentType.updateMutation && documentType.inputToOutput) {
+                const replacements = [...pageTreeNodeIdReplacements, ...(fileIdReplacements ?? [])];
+                if (node?.document != null && documentType.updateMutation && documentType.inputToOutput && documentType.replaceDependenciesInOutput) {
                     await client.mutate<unknown, GQLUpdatePageMutationVariables>({
                         mutation: documentType.updateMutation,
                         variables: {
                             pageId: newDocumentId,
-                            input: documentType.inputToOutput(node.document, { idsMap }),
+                            input: documentType.replaceDependenciesInOutput(documentType.inputToOutput(node.document), replacements),
                             attachedPageTreeNodeId: data.createPageTreeNode.id,
                         },
                         context: LocalErrorScopeApolloContext,
@@ -291,24 +343,34 @@ function useCopyPastePages(): UseCopyPastePagesApi {
             // 2. Refetch Pages query
             client.refetchQueries({ include: ["Pages"] });
         },
-        [client, documentTypes, scope],
+        [client, damScope, documentTypes, scope],
     );
 
     return { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages };
+}
+
+function createFileIdReplacements(mappedIds: Array<{ rootFile: { id: string }; copy: { id: string } }>): ReplaceDependencyObject[] {
+    const replacements: ReplaceDependencyObject[] = [];
+
+    for (const item of mappedIds) {
+        replacements.push({ type: "DamFile", originalId: item.rootFile.id, replaceWithId: item.copy.id });
+    }
+
+    return replacements;
 }
 
 /**
  * Creates a mapping between the old page tree node ID and a new page tree ID. Used for rewriting links to internal pages.
  * @param nodes
  */
-function createIdsMap(nodes: PageClipboard[]): IdsMap {
-    const idsMap = new Map<string, string>();
+function createPageTreeNodeIdReplacements(nodes: PageClipboard[]): ReplaceDependencyObject[] {
+    const replacements: ReplaceDependencyObject[] = [];
 
-    nodes.forEach((node) => {
-        idsMap.set(node.id, uuid());
-    });
+    for (const node of nodes) {
+        replacements.push({ type: "PageTreeNode", originalId: node.id, replaceWithId: uuid() });
+    }
 
-    return idsMap;
+    return replacements;
 }
 
 export { useCopyPastePages };

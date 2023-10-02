@@ -1,3 +1,18 @@
+type Dependency {
+  rootId: String!
+  rootGraphqlObjectType: String!
+  rootColumnName: String!
+  jsonPath: String!
+  visible: Boolean!
+  targetGraphqlObjectType: String!
+  targetId: String!
+}
+
+type PaginatedDependencies {
+  nodes: [Dependency!]!
+  totalCount: Int!
+}
+
 type ImageCropArea {
   focalPoint: FocalPoint!
   width: Float
@@ -56,21 +71,6 @@ enum LicenseType {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
-
-type Dependency {
-  rootId: String!
-  rootGraphqlObjectType: String!
-  rootColumnName: String!
-  jsonPath: String!
-  visible: Boolean!
-  targetGraphqlObjectType: String!
-  targetId: String!
-}
-
-type PaginatedDependencies {
-  nodes: [Dependency!]!
-  totalCount: Int!
-}
 
 type BuildTemplate {
   id: ID!
@@ -225,6 +225,7 @@ type DamFolder {
   numberOfFiles: Int!
   mpath: [ID!]!
   archived: Boolean!
+  isInboxFromOtherScope: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
   parent: DamFolder
@@ -257,6 +258,18 @@ type PaginatedDamItems {
 }
 
 union DamItem = DamFile | DamFolder
+
+type CopyFilesResponse {
+  numberNewlyCopiedFiles: Float!
+  numberAlreadyCopiedFiles: Float!
+  inboxFolderId: String
+  mappedFiles: [MappedFile!]!
+}
+
+type MappedFile {
+  rootFile: DamFile!
+  copy: DamFile!
+}
 
 type PaginatedDamFiles {
   nodes: [DamFile!]!
@@ -402,6 +415,15 @@ type Mutation {
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
+  copyFilesToScope(
+    fileIds: [ID!]!
+    targetScope: DamScopeInput!
+
+    """
+    You can set this argument to use the same inbox folder for multiple consecutive copy operations. Keep it empty for the first copy operation and use the ID from the response for the following copies.
+    """
+    existingInboxFolderId: ID
+  ): CopyFilesResponse!
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
   restoreDamFile(id: ID!): DamFile!

@@ -7,7 +7,15 @@ import { DamScopeInterface } from "../../types";
 import { FileInterface } from "./file.entity";
 
 export interface FolderInterface extends BaseEntity<FolderInterface, "id"> {
-    [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "children" | "numberOfFiles" | "files" | "numberOfChildFolders";
+    [OptionalProps]?:
+        | "createdAt"
+        | "updatedAt"
+        | "archived"
+        | "children"
+        | "numberOfFiles"
+        | "files"
+        | "numberOfChildFolders"
+        | "isInboxFromOtherScope";
     id: string;
     name: string;
     parent: FolderInterface | null;
@@ -16,6 +24,7 @@ export interface FolderInterface extends BaseEntity<FolderInterface, "id"> {
     numberOfFiles: number;
     mpath: string[];
     archived: boolean;
+    isInboxFromOtherScope: boolean;
     files: FileInterface[];
     createdAt: Date;
     updatedAt: Date;
@@ -26,7 +35,15 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
     @Entity({ abstract: true })
     @ObjectType({ isAbstract: true })
     class FolderBase extends BaseEntity<FolderBase, "id"> implements FolderInterface {
-        [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "children" | "numberOfFiles" | "files" | "numberOfChildFolders";
+        [OptionalProps]?:
+            | "createdAt"
+            | "updatedAt"
+            | "archived"
+            | "children"
+            | "numberOfFiles"
+            | "files"
+            | "numberOfChildFolders"
+            | "isInboxFromOtherScope";
 
         @PrimaryKey({ columnType: "uuid" })
         @Field(() => ID)
@@ -64,6 +81,10 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
         @Property({ columnType: "boolean", default: false })
         @Field()
         archived: boolean;
+
+        @Property({ columnType: "boolean" })
+        @Field()
+        isInboxFromOtherScope: boolean = false;
 
         @OneToMany("DamFile", (file: FileInterface) => file.folder)
         files: FileInterface[];

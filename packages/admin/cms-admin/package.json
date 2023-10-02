@@ -58,7 +58,6 @@
         "lodash.isequal": "^4.0.0",
         "lodash.set": "^4.3.2",
         "mime-db": "^1.0.0",
-        "object-scan": "^18.0.0",
         "p-debounce": "^4.0.0",
         "pluralize": "^8.0.0",
         "prop-types": "^15.7.2",

@@ -52,8 +52,7 @@ export {
     LatestContentUpdatesDashboardWidget,
     LatestContentUpdatesDashboardWidgetProps,
 } from "./dashboard/widgets/LatestContentUpdatesDashboardWidget";
-export { rewriteInternalLinks } from "./documents/rewriteInternalLinks";
-export type { DocumentInterface, DocumentType, IdsMap } from "./documents/types";
+export type { DocumentInterface, DocumentType } from "./documents/types";
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
 export { FileField } from "./form/file/FileField";
 export { FinalFormToggleButtonGroup } from "./form/FinalFormToggleButtonGroup";
