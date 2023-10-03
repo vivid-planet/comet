@@ -1,10 +1,11 @@
 {
     "compilerOptions": {
         "target": "ESNext",
-        "module": "CommonJS",
+        "module": "ESNext",
+        "moduleResolution": "Node",
         "noImplicitAny": true,
         "strictNullChecks": true,
-        "jsx": "react",
+        "jsx": "react-jsx",
         "noEmit": true,
         "skipLibCheck": true,
         "baseUrl": "./",
@@ -12,7 +13,10 @@
             "@src/*": ["src/*"]
         },
         "resolveJsonModule": true,
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "sourceMap": true,
+        "inlineSources": true,
+        "types": ["vite/client"]
     },
     "include": ["src/**/*"]
 }

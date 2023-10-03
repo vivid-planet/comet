@@ -25,7 +25,7 @@ const Dashboard: React.FC = () => {
                 <ContentScopeIndicator global />
                 <Grid container direction="row" spacing={4}>
                     <LatestContentUpdates />
-                    {process.env.NODE_ENV !== "development" && <LatestBuilds />}
+                    {import.meta.env.MODE !== "development" && <LatestBuilds />}
                 </Grid>
             </MainContent>
         </Stack>
