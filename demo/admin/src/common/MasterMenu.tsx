@@ -6,13 +6,12 @@ import { useRouteMatch } from "react-router";
 import { routeMenu } from "./routeMenu";
 
 const permanentMenuMinWidth = 1024;
+const menu = getMenuFromRouteMenu(routeMenu);
 
 const MasterMenu: React.FC = () => {
     const { open, toggleOpen } = React.useContext(MenuContext);
     const windowSize = useWindowSize();
     const match = useRouteMatch();
-
-    const menu = getMenuFromRouteMenu(routeMenu);
 
     const useTemporaryMenu: boolean = windowSize.width < permanentMenuMinWidth;
 

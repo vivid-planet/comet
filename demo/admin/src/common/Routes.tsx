@@ -8,8 +8,9 @@ import MasterHeader from "./MasterHeader";
 import MasterMenu from "./MasterMenu";
 import { routeMenu } from "./routeMenu";
 
+const routes = getRoutePropsFromRouteMenu(routeMenu);
+
 export const Routes: React.FC = () => {
-    const routes = getRoutePropsFromRouteMenu(routeMenu);
     return (
         <ContentScopeProvider>
             {({ match }) => (
