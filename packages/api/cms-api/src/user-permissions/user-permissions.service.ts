@@ -24,27 +24,19 @@ export class UserPermissionsService {
     ) {}
 
     async getAvailableContentScopes(): Promise<ContentScope[]> {
-        return this.options.getAvailableContentScopes ? this.options.getAvailableContentScopes() : [];
+        return this.options.availableContentScopes ?? [];
     }
 
     async getAvailablePermissions(): Promise<(keyof Permission)[]> {
-        return [
-            ...new Set<keyof Permission>([
-                "dam",
-                "pageTree",
-                "userPermissions",
-                "system",
-                ...(this.options.getAvailablePermissions ? await this.options.getAvailablePermissions() : []),
-            ]),
-        ];
+        return [...new Set<keyof Permission>(["dam", "pageTree", "userPermissions", "system", ...(this.options.availablePermissions ?? [])])];
     }
 
     async getUser(id: string): Promise<User> {
-        return this.options.getUser(id);
+        return this.options.userService.getUser(id);
     }
 
     async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
-        return this.options.findUsers(args);
+        return this.options.userService.findUsers(args);
     }
 
     async checkContentScopes(contentScopes: ContentScope[]): Promise<void> {
@@ -66,10 +58,10 @@ export class UserPermissionsService {
             p.source = UserPermissionSource.MANUAL;
             return p;
         });
-        if (this.options.getPermissionsForUser) {
+        if (this.options.userService.getPermissionsForUser) {
             const user = await this.getUser(userId);
             if (user) {
-                let permissionsByRule = await this.options.getPermissionsForUser(user);
+                let permissionsByRule = await this.options.userService.getPermissionsForUser(user);
                 if (permissionsByRule === UserPermissions.allPermissions) {
                     permissionsByRule = availablePermissions.map((permission) => ({ permission }));
                 }
@@ -99,10 +91,10 @@ export class UserPermissionsService {
     async getContentScopes(userId: string, skipManual = false): Promise<ContentScope[]> {
         const availableContentScopes = await this.getAvailableContentScopes();
         const contentScopes: ContentScope[] = [];
-        if (this.options.getContentScopesForUser) {
+        if (this.options.userService.getContentScopesForUser) {
             const user = await this.getUser(userId);
             if (user) {
-                const userContentScopes = await this.options.getContentScopesForUser(user);
+                const userContentScopes = await this.options.userService.getContentScopesForUser(user);
                 if (userContentScopes === UserPermissions.allContentScopes) {
                     contentScopes.push(...availableContentScopes);
                 } else {

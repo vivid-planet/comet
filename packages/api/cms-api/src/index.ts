@@ -150,12 +150,11 @@ export { Permission } from "./user-permissions/interfaces/user-permission.interf
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export { UserPermissionsService } from "./user-permissions/user-permissions.service";
 export {
-    ContentScopes,
     ContentScopesForUser,
-    Permissions,
     PermissionsForUser,
     UserPermissions,
     UserPermissionsOptions,
     UserPermissionsOptionsFactory,
+    UserPermissionsUserService,
     Users,
 } from "./user-permissions/user-permissions.types";

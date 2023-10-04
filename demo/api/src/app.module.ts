@@ -31,6 +31,7 @@ import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.en
 import { Request } from "express";
 
 import { AuthModule } from "./auth/auth.module";
+import { UserService } from "./auth/user.service";
 import { DamScope } from "./dam/dto/dam-scope";
 import { DamFile } from "./dam/entities/dam-file.entity";
 import { DamFolder } from "./dam/entities/dam-folder.entity";
@@ -46,7 +47,6 @@ import { Page } from "./pages/entities/page.entity";
 import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
-import { userPermissionsOptions } from "./user-permissions/user-permissions-options";
 
 @Module({})
 export class AppModule {
@@ -81,7 +81,19 @@ export class AppModule {
                         return user.domains.includes(requestScope.domain);
                     },
                 }),
-                UserPermissionsModule.forRoot(userPermissionsOptions),
+                UserPermissionsModule.forRootAsync({
+                    useFactory: (userService: UserService) => ({
+                        availablePermissions: ["news", "products"],
+                        availableContentScopes: [
+                            { domain: "main", language: "de" },
+                            { domain: "main", language: "en" },
+                            { domain: "secondary", language: "en" },
+                        ],
+                        userService,
+                    }),
+                    inject: [UserService],
+                    imports: [AuthModule],
+                }),
                 BlocksModule.forRoot({
                     imports: [PagesModule],
                     useFactory: (pageTreeService: PageTreeService, filesService: FilesService, imagesService: ImagesService) => {

@@ -13,19 +13,21 @@ export enum UserPermissions {
 
 export type Users = [User[], number];
 
-export type Permissions = (keyof Permission)[];
 export type PermissionsForUser =
     | Pick<UserPermission, "permission" | "validFrom" | "validTo" | "reason" | "requestedBy" | "approvedBy">[]
     | UserPermissions.allPermissions;
 
-export type ContentScopes = ContentScope[];
-export type ContentScopesForUser = ContentScopes | UserPermissions.allContentScopes;
+export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentScopes;
 
 export interface UserPermissionsOptions {
+    availablePermissions?: (keyof Permission)[];
+    availableContentScopes?: ContentScope[];
+    userService: UserPermissionsUserService;
+}
+
+export interface UserPermissionsUserService {
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
-    getAvailablePermissions?: () => Promise<Permissions> | Permissions;
-    getAvailableContentScopes?: () => Promise<ContentScopes> | ContentScopes;
     getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }
