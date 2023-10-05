@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { MarkedMatches, TextMatch } from "../../common/MarkedMatches";
+import { MarkedMatches } from "../../common/MarkedMatches";
 import { PageTypeIcon } from "./PageTypeIcon";
 import { PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
@@ -14,38 +14,19 @@ interface PageLabelProps {
     onClick?: (e: React.MouseEvent) => void;
 }
 
-function createMatches(page: PageTreePage): {
-    pageMatches: TextMatch[];
-    pathMatches: TextMatch[];
-} {
-    const pageMatches: TextMatch[] = [];
-    const pathMatches: TextMatch[] = [];
-
-    page.matches.forEach((match) => {
-        if (match.where === "name") {
-            pageMatches.push(match);
-        } else if (match.where === "path") {
-            pathMatches.push(match);
-        }
-    });
-
-    return { pageMatches, pathMatches };
-}
-
 const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, onClick }) => {
     const { documentTypes } = usePageTreeContext();
     const documentType = documentTypes[page.documentType];
-    const { pageMatches, pathMatches } = createMatches(page);
 
     return (
         <Root onClick={onClick}>
             <PageTypeIcon page={page} disabled={disabled} />
             <LinkContent>
                 <LinkText color={page.visibility === "Unpublished" || disabled ? "textSecondary" : "textPrimary"}>
-                    <MarkedMatches text={page.name} matches={pageMatches} />
+                    <MarkedMatches text={page.name} matches={page.matches.filter((match) => match.where === "name")} />
                 </LinkText>
                 <LinkText color={page.visibility === "Unpublished" || disabled ? "textSecondary" : "textPrimary"}>
-                    <MarkedMatches text={page.path} matches={pathMatches} />
+                    <MarkedMatches text={page.name} matches={page.matches.filter((match) => match.where === "path")} />
                 </LinkText>
             </LinkContent>
             {page.visibility === "Archived" && (
