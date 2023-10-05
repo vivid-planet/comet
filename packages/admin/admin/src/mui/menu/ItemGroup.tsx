@@ -2,12 +2,12 @@ import { Box, ComponentsOverrides, Theme, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
-export type MenuItemGroupClassKey = "root" | "groupTitle";
+export type MenuItemGroupClassKey = "root" | "title";
 
 const styles = (theme: Theme) =>
     createStyles<MenuItemGroupClassKey, MenuItemGroupProps>({
         root: { marginTop: theme.spacing(8) },
-        groupTitle: {
+        title: {
             fontWeight: theme.typography.fontWeightBold,
             fontSize: 14,
             lineHeight: "20px",
@@ -17,13 +17,13 @@ const styles = (theme: Theme) =>
     });
 
 export interface MenuItemGroupProps {
-    title?: string;
+    title?: string | React.ReactNode;
 }
 
 const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({ title, children, classes }) => {
     return (
         <Box className={classes.root}>
-            <Typography className={classes.groupTitle} variant="h3">
+            <Typography className={classes.title} variant="h3">
                 {title}
             </Typography>
             {children}
