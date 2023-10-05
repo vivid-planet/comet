@@ -49,10 +49,6 @@ class TestEntityWithIntegerTypes extends BaseEntity<TestEntityWithIntegerTypes, 
     int8: number;
 
     @Field(() => Int)
-    @Property({ columnType: "real" })
-    real: number;
-
-    @Field(() => Int)
     @Property({ columnType: "serial" })
     serial: number;
 }
@@ -78,7 +74,7 @@ describe("GenerateCrudInputInteger", () => {
             const cls = classes[0];
             const structure = cls.getStructure();
 
-            expect(structure.properties?.length).toBe(11);
+            expect(structure.properties?.length).toBe(10);
 
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             for (const prop of structure.properties!) {
