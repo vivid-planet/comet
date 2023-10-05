@@ -1,11 +1,11 @@
-import { BaseEntity, Collection, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryKey, Ref } from "@mikro-orm/core";
+import { BaseEntity, Collection, Entity, ManyToMany, PrimaryKey } from "@mikro-orm/core";
 import { MikroORM } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
+import { CrudField } from "./crud-generator.decorator";
 import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
-import { CrudField } from "./crud-generator.decorator";
 
 @Entity()
 class TestEntityCategory extends BaseEntity<TestEntityCategory, "id"> {
