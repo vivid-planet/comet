@@ -1,5 +1,22 @@
 # @comet/cms-admin
 
+## 4.5.0
+
+### Patch Changes
+
+-   8a2c3302: Correctly position loading indicators by centring them using the new `Loading` component
+-   Updated dependencies [46cf5a8b]
+-   Updated dependencies [8a2c3302]
+-   Updated dependencies [6d4ca5bf]
+-   Updated dependencies [07d921d2]
+-   Updated dependencies [01677075]
+    -   @comet/admin@4.5.0
+    -   @comet/admin-theme@4.5.0
+    -   @comet/admin-date-time@4.5.0
+    -   @comet/admin-icons@4.5.0
+    -   @comet/admin-rte@4.5.0
+    -   @comet/blocks-admin@4.5.0
+
 ## 4.4.3
 
 ### Patch Changes
