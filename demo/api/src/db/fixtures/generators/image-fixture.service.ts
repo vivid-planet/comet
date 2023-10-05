@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import faker from "faker";
 
 @Injectable()
-export class ImageGeneratorService {
+export class ImageFixtureService {
     private imageFiles: File[] = [];
     constructor(private readonly filesService: FilesService) {}
 

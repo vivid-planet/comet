@@ -12,7 +12,7 @@ import faker from "faker";
 import slugify from "slugify";
 
 import { generateBlocksBlock } from "./blocks/blocks.generator";
-import { ImageGeneratorService } from "./image-generator.service";
+import { ImageFixtureService } from "./image-fixture.service";
 
 interface GeneratePageInput {
     name: string;
@@ -22,12 +22,12 @@ interface GeneratePageInput {
 }
 
 @Injectable()
-export class PageGeneratorService {
+export class PageFixtureService {
     constructor(
         @Inject(CONFIG) private readonly config: Config,
         private readonly pageTreeService: PageTreeService,
         @InjectRepository(Page) private readonly pagesRepository: EntityRepository<Page>,
-        private readonly imageGeneratorService: ImageGeneratorService,
+        private readonly imageFixtureService: ImageFixtureService,
     ) {}
 
     async generatePage({ name, scope, parentId, visibility }: GeneratePageInput): Promise<{ node: PageTreeNodeInterface; page: Page }> {
@@ -50,9 +50,9 @@ export class PageGeneratorService {
         await this.pageTreeService.updateNodeVisibility(node.id, visibility ?? PageTreeNodeVisibility.Published);
 
         const imageFiles = [
-            this.imageGeneratorService.getRandomImage(),
-            this.imageGeneratorService.getRandomImage(),
-            this.imageGeneratorService.getRandomImage(),
+            this.imageFixtureService.getRandomImage(),
+            this.imageFixtureService.getRandomImage(),
+            this.imageFixtureService.getRandomImage(),
         ]; // TODO: remove imageFiles here and put into block that needs an image when it is possible to inject imageGeneratorService directly in a block
 
         const page = this.pagesRepository.create({

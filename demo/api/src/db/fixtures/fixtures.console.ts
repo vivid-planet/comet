@@ -3,13 +3,13 @@ import { MikroORM, UseRequestContext } from "@mikro-orm/core";
 import { Inject, Injectable } from "@nestjs/common";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
-import { ImageGeneratorService } from "@src/db/fixtures/generators/image-generator.service";
+import { ImageFixtureService } from "@src/db/fixtures/generators/image-fixture.service";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import faker from "faker";
 import { Command, Console } from "nestjs-console";
 
-import { LinkGeneratorService } from "./generators/link-generator.service";
-import { PageGeneratorService } from "./generators/page-generator.service";
+import { LinkFixtureService } from "./generators/link-fixture.service";
+import { PageFixtureService } from "./generators/page-fixture.service";
 
 @Injectable()
 @Console()
@@ -17,9 +17,9 @@ export class FixturesConsole {
     constructor(
         @Inject(CONFIG) private readonly config: Config,
         private readonly blobStorageBackendService: BlobStorageBackendService,
-        private readonly pageGeneratorService: PageGeneratorService,
-        private readonly linkGeneratorService: LinkGeneratorService,
-        private readonly imageGeneratorService: ImageGeneratorService,
+        private readonly pageFixtureService: PageFixtureService,
+        private readonly linkFixtureService: LinkFixtureService,
+        private readonly imageFixtureService: ImageFixtureService,
         private readonly orm: MikroORM,
     ) {}
 
@@ -48,7 +48,7 @@ export class FixturesConsole {
         await migrator.up();
 
         console.log("Generate Images...");
-        await this.imageGeneratorService.generateImages(10);
+        await this.imageFixtureService.generateImages(10);
 
         console.log("Generate Page Tree...");
         const scope: PageTreeNodeScope = {
@@ -56,17 +56,17 @@ export class FixturesConsole {
             language: "en",
         };
 
-        const { node } = await this.pageGeneratorService.generatePage({ name: "Home", scope });
-        await this.pageGeneratorService.generatePage({ name: "Sub", scope, parentId: node.id });
+        const { node } = await this.pageFixtureService.generatePage({ name: "Home", scope });
+        await this.pageFixtureService.generatePage({ name: "Sub", scope, parentId: node.id });
 
         for (let i = 0; i < 3; i++) {
-            const { node } = await this.pageGeneratorService.generatePage({ name: `Page ${i}`, scope });
+            const { node } = await this.pageFixtureService.generatePage({ name: `Page ${i}`, scope });
 
             for (let subPageIndex = 0; subPageIndex < 3; subPageIndex++) {
                 if (faker.datatype.boolean()) {
-                    await this.pageGeneratorService.generatePage({ name: `Sub-Page ${subPageIndex}`, scope, parentId: node.id });
+                    await this.pageFixtureService.generatePage({ name: `Sub-Page ${subPageIndex}`, scope, parentId: node.id });
                 } else {
-                    await this.linkGeneratorService.generateLink({ name: `Sub-Link ${subPageIndex}`, scope, parentId: node.id });
+                    await this.linkFixtureService.generateLink({ name: `Sub-Link ${subPageIndex}`, scope, parentId: node.id });
                 }
             }
         }
@@ -84,7 +84,7 @@ export class FixturesConsole {
 
                 for (let i = 0; i < faker.datatype.number({ min: 100, max: 200 }); i++) {
                     const name = faker.lorem.sentence();
-                    const { node } = await this.pageGeneratorService.generatePage({
+                    const { node } = await this.pageFixtureService.generatePage({
                         name,
                         parentId: level > 0 ? faker.random.arrayElement(pages[level - 1]).id : undefined,
                         scope: { domain, language: "en" },

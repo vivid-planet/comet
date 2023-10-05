@@ -17,7 +17,7 @@ interface GenerateLinkInput {
 }
 
 @Injectable()
-export class LinkGeneratorService {
+export class LinkFixtureService {
     constructor(private readonly pageTreeService: PageTreeService, @InjectRepository(Link) private readonly linkRepository: EntityRepository<Link>) {}
 
     async generateLink({ name, scope, parentId }: GenerateLinkInput): Promise<{ node: PageTreeNodeInterface; link: Link }> {

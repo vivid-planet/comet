@@ -1,16 +1,16 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@src/config/config.module";
 import { FixturesConsole } from "@src/db/fixtures/fixtures.console";
-import { ImageGeneratorService } from "@src/db/fixtures/generators/image-generator.service";
+import { ImageFixtureService } from "@src/db/fixtures/generators/image-fixture.service";
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
 import { ConsoleModule } from "nestjs-console";
 
-import { LinkGeneratorService } from "./generators/link-generator.service";
-import { PageGeneratorService } from "./generators/page-generator.service";
+import { LinkFixtureService } from "./generators/link-fixture.service";
+import { PageFixtureService } from "./generators/page-fixture.service";
 
 @Module({
     imports: [ConfigModule, ConsoleModule, PagesModule, LinksModule],
-    providers: [FixturesConsole, PageGeneratorService, LinkGeneratorService, ImageGeneratorService],
+    providers: [FixturesConsole, PageFixtureService, LinkFixtureService, ImageFixtureService],
 })
 export class FixturesModule {}
