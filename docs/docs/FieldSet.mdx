@@ -1,18 +1,14 @@
-import { Canvas, Meta, Source, Story } from "@storybook/addon-docs";
-
-import dedent from "ts-dedent";
-
-<Meta title="Docs/Components/FieldSet" />
+import { Story } from "../src/components/Story";
 
 # FieldSet
 
-> FieldSet allows user to show or hide content sections.
+> The accordion component allows the user to show and hide sections of related content on a page.
 >
 > \- [MUI Docs](https://mui.com/material-ui/react-accordion/)
 
 The Comet Admin `FieldSet` extends [Material UI's `Accordion`](https://mui.com/material-ui/react-accordion) by adding custom style and elements such as supportText, endAdornment, and options like collapsible and initialCollapsed.
 
-#### Props
+## Props
 
 | Name              | Type   | Default   | Description                                                                      |
 | :---------------- | :----- | :----- | :------------------------------------------------------------------------------- |
@@ -25,8 +21,6 @@ The Comet Admin `FieldSet` extends [Material UI's `Accordion`](https://mui.com/m
 
 In addition to its own props, the FieldSet component also accepts all props from the Material UI Accordion component.
 
-#### Example
+## Example
 
-<Canvas>
-    <Story id="stories-components-fieldset--basicfieldset" />
-</Canvas>
+<Story path="FieldSet" />

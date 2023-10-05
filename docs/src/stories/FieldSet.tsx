@@ -1,10 +1,9 @@
 import { FieldSet } from "@comet/admin";
 import { Info } from "@mui/icons-material";
 import { Chip, IconButton, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/FieldSet", module).add("BasicFieldSet", () => {
+function Story() {
     return (
         <>
             <Typography variant="h4">Collapsible FieldSet initial collapsed</Typography>
@@ -29,4 +28,6 @@ storiesOf("stories/components/FieldSet", module).add("BasicFieldSet", () => {
             </FieldSet>
         </>
     );
-});
+}
+
+export default Story;
