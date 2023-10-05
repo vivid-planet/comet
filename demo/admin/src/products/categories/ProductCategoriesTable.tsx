@@ -104,6 +104,7 @@ function ProductCategoriesTable() {
             ...muiGridPagingToGql({ page: dataGridProps.page, pageSize: dataGridProps.pageSize }),
             sort: muiGridSortToGql(sortModel),
         },
+        fetchPolicy: "cache-and-network",
     });
     const rows = data?.productCategories.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.productCategories.totalCount);

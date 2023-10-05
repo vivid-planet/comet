@@ -417,6 +417,7 @@ export async function writeCrudGrid(
                 limit: dataGridProps.pageSize,
                 sort: muiGridSortToGql(dataGridProps.sortModel),
             },
+            fetchPolicy: "cache-and-network",
         });
         const rowCount = useBufferedRowCount(data?.${gridQuery}.totalCount);
         if (error) throw error;

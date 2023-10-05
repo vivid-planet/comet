@@ -216,6 +216,7 @@ export function NewsGrid(): React.ReactElement {
             limit: dataGridProps.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
+        fetchPolicy: "cache-and-network",
     });
     const rowCount = useBufferedRowCount(data?.newsList.totalCount);
     if (error) throw error;

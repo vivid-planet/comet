@@ -103,6 +103,7 @@ function ProductTagsTable() {
             limit: dataGridProps.pageSize,
             sort: muiGridSortToGql(sortModel),
         },
+        fetchPolicy: "cache-and-network",
     });
     const rows = data?.productTags.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.productTags.totalCount);

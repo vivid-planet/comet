@@ -195,6 +195,7 @@ function ProductsGrid() {
             limit: dataGridProps.pageSize,
             sort: muiGridSortToGql(sortModel),
         },
+        fetchPolicy: "cache-and-network",
     });
     const rows = data?.products.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.products.totalCount);

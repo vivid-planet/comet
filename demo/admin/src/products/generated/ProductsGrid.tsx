@@ -202,6 +202,7 @@ export function ProductsGrid(): React.ReactElement {
             limit: dataGridProps.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
+        fetchPolicy: "cache-and-network",
     });
     const rowCount = useBufferedRowCount(data?.products.totalCount);
     if (error) throw error;
