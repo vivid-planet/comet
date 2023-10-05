@@ -27,8 +27,8 @@ const ImageThumbnail = styled("img")`
 const ImagePreview = styled("img")`
     max-width: 300px;
     max-height: 300px;
-    padding: 0.4rem;
-    margin-left: 0.25rem;
+    padding: ${({ theme }) => theme.spacing(1.25)};
+    margin-left: ${({ theme }) => theme.spacing(1)};
     background-color: ${({ theme }) => theme.palette.background.paper};
     box-shadow: ${({ theme }) => theme.shadows[1]};
 `;
@@ -59,8 +59,7 @@ export const DamThumbnail = ({ asset }: DamThumbnailProps): React.ReactElement =
     let thumbnail;
     if (asset.__typename === "DamFile") {
         if (asset.mimetype.startsWith("image/") && asset.image && asset.image.thumbnailUrl) {
-            const canBeOpen = open && Boolean(anchorEl);
-            const id = canBeOpen ? asset.fileUrl : undefined;
+            const id = open ? asset.fileUrl : undefined;
             thumbnail = (
                 <>
                     <ImageThumbnail
