@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-admin",
-    "version": "4.4.3",
+    "version": "4.5.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -34,6 +34,7 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
+<<<<<<< HEAD
         "@comet/admin": "workspace:^4.4.3",
         "@comet/admin-date-time": "workspace:^4.4.3",
         "@comet/admin-icons": "workspace:^4.4.3",
@@ -42,6 +43,14 @@
         "@comet/blocks-admin": "workspace:^4.4.3",
         "@graphql-tools/graphql-file-loader": "^7.5.17",
         "@graphql-tools/load": "^7.8.14",
+=======
+        "@comet/admin": "workspace:^4.5.0",
+        "@comet/admin-date-time": "workspace:^4.5.0",
+        "@comet/admin-icons": "workspace:^4.5.0",
+        "@comet/admin-rte": "workspace:^4.5.0",
+        "@comet/admin-theme": "workspace:^4.5.0",
+        "@comet/blocks-admin": "workspace:^4.5.0",
+>>>>>>> main
         "@graphql-typed-document-node/core": "^3.1.1",
         "@mui/lab": "^5.0.0-alpha.76",
         "class-validator": "0.13.2",
@@ -80,9 +89,9 @@
         "@apollo/client": "^3.7.0",
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^4.4.3",
-        "@comet/cli": "workspace:^4.4.3",
-        "@comet/eslint-config": "workspace:^4.4.3",
+        "@comet/admin-babel-preset": "workspace:^4.5.0",
+        "@comet/cli": "workspace:^4.5.0",
+        "@comet/eslint-config": "workspace:^4.5.0",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
         "@graphql-codegen/cli": "^2.0.0",
