@@ -1,18 +1,25 @@
 import { ApolloError } from "@apollo/client";
-import { CircularProgress, ComponentsOverrides, Paper, Theme } from "@mui/material";
+import { ComponentsOverrides, Paper, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { Loading } from "../common/Loading";
 import { styles, TableQueryClassKey } from "./TableQuery.styles";
 import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export const parseIdFromIri = (iri: string) => {
     const m = iri.match(/\/(\d+)/);
     if (!m) return null;
     return m[1];
 };
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IDefaultVariables {}
 
@@ -34,7 +41,7 @@ export function Query({ classes, ...otherProps }: TableQueryProps & WithStyles<t
                 <div className={classes.loadingContainer}>
                     {otherProps.loading && (
                         <Paper classes={{ root: classes.loadingPaper }}>
-                            <CircularProgress />
+                            <Loading behavior="fillParent" />
                         </Paper>
                     )}
                 </div>
@@ -56,6 +63,9 @@ export function Query({ classes, ...otherProps }: TableQueryProps & WithStyles<t
     );
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export const TableQuery = withStyles(styles, { name: "CometAdminTableQuery" })(Query);
 
 declare module "@mui/material/styles" {

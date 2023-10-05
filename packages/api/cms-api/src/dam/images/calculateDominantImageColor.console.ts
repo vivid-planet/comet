@@ -4,15 +4,15 @@ import { Injectable } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
 
 import { FileInterface } from "../files/entities/file.entity";
-import { FileImage } from "../files/entities/file-image.entity";
+import { DamFileImage } from "../files/entities/file-image.entity";
 import { FilesService } from "../files/files.service";
 
 @Injectable()
 @Console()
 export class CalculateDominantImageColor {
     constructor(
-        @InjectRepository("File") private readonly filesRepository: EntityRepository<FileInterface>,
-        @InjectRepository(FileImage) private readonly fileImagesRepository: EntityRepository<FileImage>,
+        @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
+        @InjectRepository(DamFileImage) private readonly fileImagesRepository: EntityRepository<DamFileImage>,
         private readonly fileService: FilesService,
     ) {}
 

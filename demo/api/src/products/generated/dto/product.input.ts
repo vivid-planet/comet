@@ -41,7 +41,7 @@ export class ProductInput {
 
     @IsNotEmpty()
     @IsBoolean()
-    @Field()
+    @Field({ defaultValue: true })
     inStock: boolean;
 
     @IsNotEmpty()
@@ -54,12 +54,12 @@ export class ProductInput {
     @IsArray()
     @ValidateNested()
     @Type(() => ProductDiscounts)
-    @Field(() => [ProductDiscounts])
+    @Field(() => [ProductDiscounts], { defaultValue: [] })
     discounts: ProductDiscounts[];
 
     @IsNotEmpty()
     @IsArray()
-    @Field(() => [String])
+    @Field(() => [String], { defaultValue: [] })
     @IsString({ each: true })
     articleNumbers: string[];
 
@@ -69,29 +69,29 @@ export class ProductInput {
     @Field(() => ProductDimensions, { nullable: true })
     dimensions?: ProductDimensions;
 
-    @IsNotEmpty()
+    @IsNullable()
     @ValidateNested()
     @Type(() => ProductPackageDimensions)
-    @Field(() => ProductPackageDimensions)
-    packageDimensions: ProductPackageDimensions;
+    @Field(() => ProductPackageDimensions, { nullable: true })
+    packageDimensions?: ProductPackageDimensions;
 
-    @IsNotEmpty()
-    @Field(() => ProductStatisticsInput)
+    @IsNullable()
+    @Field(() => ProductStatisticsInput, { nullable: true })
     @Type(() => ProductStatisticsInput)
     @ValidateNested()
-    statistics: ProductStatisticsInput;
+    statistics?: ProductStatisticsInput;
 
-    @Field(() => [ProductVariantInput])
+    @Field(() => [ProductVariantInput], { defaultValue: [] })
     @IsArray()
     @Type(() => ProductVariantInput)
     variants: ProductVariantInput[];
 
     @IsNullable()
-    @Field(() => ID, { nullable: true })
+    @Field(() => ID, { nullable: true, defaultValue: null })
     @IsUUID()
     category?: string;
 
-    @Field(() => [ID])
+    @Field(() => [ID], { defaultValue: [] })
     @IsArray()
     @IsUUID(undefined, { each: true })
     tags: string[];

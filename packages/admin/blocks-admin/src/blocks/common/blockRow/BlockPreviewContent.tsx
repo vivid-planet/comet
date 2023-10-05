@@ -1,17 +1,27 @@
 import { Typography } from "@mui/material";
 import * as React from "react";
 
-import { isPreviewContentImageRule, isPreviewContentTextRule, PreviewContent } from "../../types";
-import * as sc from "./BlockPreview.sc";
+import { useBlockContext } from "../../../context/useBlockContext";
+import { BlockInterface, isPreviewContentImageRule, isPreviewContentTextRule } from "../../types";
+import * as sc from "./BlockPreviewContent.sc";
 import { StackedImages } from "./image/StackedImages";
-interface BlockPreviewProps {
-    title: React.ReactNode;
-    content: PreviewContent[];
+
+interface BlockPreviewContentProps {
+    title?: React.ReactNode;
+    block: BlockInterface;
+    state?: unknown;
+    input?: unknown;
 }
 
 const TEXTS_LIMIT = 2;
 
-export function BlockPreview({ content, title }: BlockPreviewProps): JSX.Element {
+export function BlockPreviewContent(props: BlockPreviewContentProps): JSX.Element {
+    const context = useBlockContext();
+    const state = props.state ? props.state : props.block.input2State(props.input);
+    const content = props.block.previewContent(state, context);
+
+    const title = props.title ?? props.block.dynamicDisplayName?.(state) ?? props.block.displayName;
+
     const texts = content
         .filter(isPreviewContentTextRule)
         .filter(({ content }) => {

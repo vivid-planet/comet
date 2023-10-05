@@ -13,6 +13,9 @@ interface IRelayPagingVariables {
     after?: string;
     before?: string;
 }
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export function createRelayPagingActions<TData extends IRelayPagingData>(pagingApi: IPagingApi<IRelayPagingVariables>, data: TData): IPagingInfo {
     return {
         fetchNextPage:

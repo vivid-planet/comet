@@ -93,7 +93,6 @@ export class ProductResolver {
 
             category: categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined,
             image: imageInput.transformToBlockData(),
-            statistics: this.productStatisticsRepository.assign(new ProductStatistics(), statisticsInput),
         });
         if (variantsInput) {
             product.variants.set(
@@ -112,6 +111,14 @@ export class ProductResolver {
             if (tags.length != tagsInput.length) throw new Error("Couldn't find all tags that were passed as input");
             await product.tags.loadItems();
             product.tags.set(tags.map((tag) => Reference.create(tag)));
+        }
+
+        if (statisticsInput) {
+            const statistic = new ProductStatistics();
+
+            this.productStatisticsRepository.assign(statistic, {
+                ...statisticsInput,
+            });
         }
 
         await this.entityManager.flush();
@@ -141,8 +148,6 @@ export class ProductResolver {
         } = input;
         product.assign({
             ...assignInput,
-
-            category: categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined,
         });
         if (variantsInput) {
             product.variants.set(
@@ -164,11 +169,14 @@ export class ProductResolver {
         }
 
         if (statisticsInput) {
-            const statistic = await product.statistics.load();
+            const statistic = product.statistics ? await product.statistics.load() : new ProductStatistics();
 
             this.productStatisticsRepository.assign(statistic, {
                 ...statisticsInput,
             });
+        }
+        if (categoryInput !== undefined) {
+            product.category = categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined;
         }
 
         if (imageInput) {
@@ -220,8 +228,8 @@ export class ProductResolver {
         return product.tags.loadItems();
     }
 
-    @ResolveField(() => ProductStatistics)
-    async statistics(@Parent() product: Product): Promise<ProductStatistics> {
-        return product.statistics.load();
+    @ResolveField(() => ProductStatistics, { nullable: true })
+    async statistics(@Parent() product: Product): Promise<ProductStatistics | undefined> {
+        return product.statistics?.load();
     }
 }

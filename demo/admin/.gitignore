@@ -3,7 +3,6 @@
 /build
 .npm
 .config
-generated
 /schema.*
 fragmentTypes.json
 lang

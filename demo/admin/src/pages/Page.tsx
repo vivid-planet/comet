@@ -1,6 +1,7 @@
 import { messages } from "@comet/admin";
 import { File, FileNotMenu } from "@comet/admin-icons";
-import { DocumentInterface, rewriteInternalLinks } from "@comet/cms-admin";
+import { BlocksBlockOutput } from "@comet/blocks-admin/lib/blocks/factories/createBlocksBlock";
+import { DocumentInterface } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
@@ -46,9 +47,9 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
             }
         }
     `,
-    inputToOutput: (input, { idsMap }) => {
+    inputToOutput: (input) => {
         return {
-            content: rewriteInternalLinks(PageContentBlock.state2Output(PageContentBlock.input2State(input.content)), idsMap),
+            content: PageContentBlock.state2Output(PageContentBlock.input2State(input.content)),
             seo: SeoBlock.state2Output(SeoBlock.input2State(input.seo)),
         };
     },
@@ -61,4 +62,14 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
     menuIcon: File,
     hideInMenuIcon: FileNotMenu,
     anchors: (input) => PageContentBlock.anchors?.(PageContentBlock.input2State(input.content)) ?? [],
+    dependencies: (input) => PageContentBlock.dependencies?.(PageContentBlock.input2State(input.content)) ?? [],
+    replaceDependenciesInOutput: (output, replacements) => {
+        const newOutput = {
+            ...output,
+            content: PageContentBlock.replaceDependenciesInOutput(output.content as BlocksBlockOutput, replacements),
+            seo: SeoBlock.replaceDependenciesInOutput(output.seo, replacements),
+        };
+
+        return newOutput;
+    },
 };

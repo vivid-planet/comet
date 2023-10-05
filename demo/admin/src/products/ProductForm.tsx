@@ -7,6 +7,7 @@ import {
     FinalFormSaveSplitButton,
     FinalFormSelect,
     FinalFormSubmitEvent,
+    Loading,
     MainContent,
     Toolbar,
     ToolbarActions,
@@ -21,7 +22,7 @@ import {
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { CircularProgress, FormControlLabel, IconButton, MenuItem } from "@mui/material";
+import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -38,18 +39,18 @@ import {
     updateProductMutation,
 } from "./ProductForm.gql";
 import {
+    GQLCreateProductMutation,
+    GQLCreateProductMutationVariables,
     GQLProductCategoriesQuery,
     GQLProductCategoriesQueryVariables,
     GQLProductCategorySelectFragment,
-    GQLProductFormCreateProductMutation,
-    GQLProductFormCreateProductMutationVariables,
-    GQLProductFormFragment,
-    GQLProductFormUpdateProductMutation,
-    GQLProductFormUpdateProductMutationVariables,
+    GQLProductFormManualFragment,
     GQLProductQuery,
     GQLProductQueryVariables,
     GQLProductTagsQuery,
     GQLProductTagsSelectFragment,
+    GQLUpdateProductMutation,
+    GQLUpdateProductMutationVariables,
 } from "./ProductForm.gql.generated";
 import { GQLProductTagsListQueryVariables } from "./tags/ProductTagTable.generated";
 
@@ -61,7 +62,7 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormFragment, "price" | "image"> & {
+type FormValues = Omit<GQLProductFormManualFragment, "price" | "image"> & {
     price: string;
     image: BlockState<typeof rootBlocks.image>;
 };
@@ -80,7 +81,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
 
     const initialValues: Partial<FormValues> = data?.product
         ? {
-              ...filter<GQLProductFormFragment>(productFormFragment, data.product),
+              ...filter<GQLProductFormManualFragment>(productFormFragment, data.product),
               price: String(data.product.price),
               image: rootBlocks.image.input2State(data.product.image),
           }
@@ -117,12 +118,12 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         };
         if (mode === "edit") {
             if (!id) throw new Error();
-            await client.mutate<GQLProductFormUpdateProductMutation, GQLProductFormUpdateProductMutationVariables>({
+            await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
                 variables: { id, input: output, lastUpdatedAt: data?.product.updatedAt },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<GQLProductFormCreateProductMutation, GQLProductFormCreateProductMutationVariables>({
+            const { data: mutationReponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
                 variables: { input: output },
             });
@@ -151,7 +152,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     }
 
     if (loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
 
     return (

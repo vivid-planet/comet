@@ -4,6 +4,7 @@ import {
     FinalForm,
     FinalFormInput,
     FinalFormSelect,
+    Loading,
     MainContent,
     messages,
     SaveButton,
@@ -17,7 +18,7 @@ import {
 } from "@comet/admin";
 import { useStackSwitchApi } from "@comet/admin/lib/stack/Switch";
 import { BlockInterface, BlockState, createFinalFormBlock, isValidUrl } from "@comet/blocks-admin";
-import { Card, CardContent, CircularProgress, Grid, MenuItem } from "@mui/material";
+import { Card, CardContent, Grid, MenuItem } from "@mui/material";
 import { FORM_ERROR } from "final-form";
 import isEqual from "lodash.isequal";
 import * as React from "react";
@@ -105,7 +106,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
     const newlyCreatedRedirectId = React.useRef<string>();
 
     if (mode === "edit" && initialValues === undefined) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
 
     const validateSource = async (value: string, allValues: GQLRedirectDetailFragment) => {

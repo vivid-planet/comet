@@ -2,6 +2,21 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Dependency {
+  rootId: String!
+  rootGraphqlObjectType: String!
+  rootColumnName: String!
+  jsonPath: String!
+  visible: Boolean!
+  targetGraphqlObjectType: String!
+  targetId: String!
+}
+
+type PaginatedDependencies {
+  nodes: [Dependency!]!
+  totalCount: Int!
+}
+
 type ImageCropArea {
   focalPoint: FocalPoint!
   width: Float
@@ -60,21 +75,6 @@ enum LicenseType {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
-
-type Dependency {
-  rootId: String!
-  rootGraphqlObjectType: String!
-  rootColumnName: String!
-  jsonPath: String!
-  visible: Boolean!
-  targetGraphqlObjectType: String!
-  targetId: String!
-}
-
-type PaginatedDependencies {
-  nodes: [Dependency!]!
-  totalCount: Int!
-}
 
 type BuildTemplate {
   id: ID!
@@ -149,7 +149,7 @@ type Page implements DocumentInterface {
   seo: SeoBlockData!
   createdAt: DateTime!
   pageTreeNode: PageTreeNode
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 """PageContent root block data"""
@@ -188,7 +188,7 @@ type PageTreeNode {
   path: String!
   parentNodes: [PageTreeNode!]!
   document: PageContentUnion
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 enum PageTreeNodeVisibility {
@@ -247,6 +247,7 @@ type DamFolder {
   numberOfFiles: Int!
   mpath: [ID!]!
   archived: Boolean!
+  isInboxFromOtherScope: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
   scope: DamScope!
@@ -272,7 +273,7 @@ type DamFile {
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 type FooterContentScope {
@@ -286,7 +287,7 @@ type Footer implements DocumentInterface {
   content: FooterContentBlockData!
   scope: FooterContentScope!
   createdAt: DateTime!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 """FooterContent root block data"""
@@ -298,7 +299,7 @@ type MainMenuItem {
   content: RichTextBlockData
   createdAt: DateTime!
   updatedAt: DateTime!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 """RichText root block data"""
@@ -333,8 +334,8 @@ type News implements DocumentInterface {
   content: NewsContentBlockData!
   createdAt: DateTime!
   comments: [NewsComment!]!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter): PaginatedDependencies!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 enum NewsCategory {
@@ -413,12 +414,13 @@ type Product implements DocumentInterface {
   type: ProductType!
   price: Float
   inStock: Boolean!
+  soldCount: Float!
   image: DamImageBlockData!
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
   dimensions: ProductDimensions
-  packageDimensions: ProductPackageDimensions!
-  statistics: ProductStatistics!
+  packageDimensions: ProductPackageDimensions
+  statistics: ProductStatistics
   createdAt: DateTime!
   category: ProductCategory
   variants: [ProductVariant!]!
@@ -466,7 +468,7 @@ type Redirect implements DocumentInterface {
   generationType: RedirectGenerationType!
   createdAt: DateTime!
   scope: RedirectScope!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter): PaginatedDependencies!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 enum RedirectSourceTypeValues {
@@ -489,6 +491,18 @@ type PaginatedDamItems {
 }
 
 union DamItem = DamFile | DamFolder
+
+type CopyFilesResponse {
+  numberNewlyCopiedFiles: Float!
+  numberAlreadyCopiedFiles: Float!
+  inboxFolderId: String
+  mappedFiles: [MappedFile!]!
+}
+
+type MappedFile {
+  rootFile: DamFile!
+  copy: DamFile!
+}
 
 type PaginatedDamFiles {
   nodes: [DamFile!]!
@@ -714,6 +728,7 @@ input ProductFilter {
   type: ProductTypeEnumFilter
   price: NumberFilter
   inStock: BooleanFilter
+  soldCount: NumberFilter
   category: ManyToOneFilter
   createdAt: DateFilter
   updatedAt: DateFilter
@@ -755,6 +770,7 @@ enum ProductSortField {
   type
   price
   inStock
+  soldCount
   category
   createdAt
   updatedAt
@@ -819,6 +835,15 @@ type Mutation {
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
+  copyFilesToScope(
+    fileIds: [ID!]!
+    targetScope: DamScopeInput!
+
+    """
+    You can set this argument to use the same inbox folder for multiple consecutive copy operations. Keep it empty for the first copy operation and use the ID from the response for the following copies.
+    """
+    existingInboxFolderId: ID
+  ): CopyFilesResponse!
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
   restoreDamFile(id: ID!): DamFile!
@@ -969,7 +994,7 @@ input NewsInput {
   slug: String!
   title: String!
   date: DateTime!
-  category: NewsCategory!
+  category: NewsCategory! = Awards
   image: DamImageBlockInput!
   content: NewsContentBlockInput!
 }
@@ -1017,16 +1042,16 @@ input ProductInput {
   description: String!
   type: ProductType!
   price: Float
-  inStock: Boolean!
+  inStock: Boolean! = true
   image: DamImageBlockInput!
-  discounts: [ProductDiscountsInput!]!
-  articleNumbers: [String!]!
+  discounts: [ProductDiscountsInput!]! = []
+  articleNumbers: [String!]! = []
   dimensions: ProductDimensionsInput
-  packageDimensions: ProductPackageDimensionsInput!
-  statistics: ProductStatisticsInput!
-  variants: [ProductVariantInput!]!
-  category: ID
-  tags: [ID!]!
+  packageDimensions: ProductPackageDimensionsInput
+  statistics: ProductStatisticsInput
+  variants: [ProductVariantInput!]! = []
+  category: ID = null
+  tags: [ID!]! = []
 }
 
 input ProductStatisticsInput {
@@ -1059,7 +1084,7 @@ input ProductUpdateInput {
 input ProductCategoryInput {
   title: String!
   slug: String!
-  products: [ID!]!
+  products: [ID!]! = []
 }
 
 input ProductCategoryUpdateInput {
@@ -1070,7 +1095,7 @@ input ProductCategoryUpdateInput {
 
 input ProductTagInput {
   title: String!
-  products: [ID!]!
+  products: [ID!]! = []
 }
 
 input ProductTagUpdateInput {

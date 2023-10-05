@@ -10,11 +10,17 @@ import { safeColumnGet } from "../safeColumnGet";
 import { IRow, ITableColumn, VisibleType } from "../Table";
 import { applyDefaultStyling } from "./applyDefaultStyling";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface IExcelExportOptions {
     fileName?: string;
     worksheetName?: string;
     styling?: (worksheet: Excel.Worksheet) => void;
 }
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export async function createExcelExportDownload<TRow extends IRow>(
     columns: Array<ITableColumn<TRow>>,
     data: TRow[],

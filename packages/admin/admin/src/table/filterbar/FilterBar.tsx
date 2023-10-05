@@ -2,8 +2,14 @@ import { ComponentsOverrides, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export type FilterBarClassKey = "root" | "barWrapper";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface FilterBarProps {
     children?: React.ReactNode;
 }
@@ -30,6 +36,9 @@ function Bar({ children, classes }: FilterBarProps & WithStyles<typeof styles>):
     );
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export const FilterBar = withStyles(styles, { name: "CometAdminFilterBar" })(Bar);
 
 declare module "@mui/material/styles" {

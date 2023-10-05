@@ -38,7 +38,10 @@ interface NormalizedBlockConfiguration extends BlockConfiguration {
 interface CreateCompositeBlockOptionsBase {
     name: string;
     displayName: React.ReactNode;
-    category?: BlockCategory; // @deprecated: use override instead to adapt the factored block
+    /**
+     * @deprecated Use override instead to adapt the factored block
+     */
+    category?: BlockCategory;
     adminLayout?: "stacked";
     blocks: Record<string, BlockConfiguration>;
 }

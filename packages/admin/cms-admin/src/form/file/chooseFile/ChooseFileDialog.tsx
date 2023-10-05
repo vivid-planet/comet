@@ -19,10 +19,16 @@ import { RedirectToPersistedDamLocation } from "./RedirectToPersistedDamLocation
 const FixedHeightDialog = styled(Dialog)`
     & .MuiDialog-paper {
         height: 80vh;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: max-content max-content auto;
     }
 `;
 
 const StyledDialogTitle = styled(DialogTitle)`
+    position: sticky;
+    top: 0;
+    z-index: 10;
     display: flex;
     justify-content: space-between;
     align-items: center;

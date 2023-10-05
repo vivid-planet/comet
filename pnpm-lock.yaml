@@ -18,7 +18,7 @@ importers:
         specifier: ^2.3.2
         version: 2.3.2
       '@comet/eslint-plugin':
-        specifier: workspace:^4.3.0
+        specifier: workspace:^4.4.3
         version: link:packages/eslint-plugin
       '@formatjs/cli':
         specifier: ^4.8.3
@@ -57,25 +57,28 @@ importers:
         specifier: ^7.0.0
         version: 7.20.12
       '@comet/admin':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../packages/admin/admin
+      '@comet/admin-date-time':
+        specifier: workspace:^4.4.3
+        version: link:../../packages/admin/admin-date-time
       '@comet/admin-icons':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../packages/admin/admin-icons
       '@comet/admin-react-select':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../packages/admin/admin-react-select
       '@comet/admin-rte':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../packages/admin/admin-rte
       '@comet/admin-theme':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../packages/admin/admin-theme
       '@comet/blocks-admin':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../packages/admin/blocks-admin
       '@comet/cms-admin':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../packages/admin/cms-admin
       '@emotion/react':
         specifier: ^11.9.3
@@ -244,10 +247,10 @@ importers:
         version: 0.8.15
     devDependencies:
       '@comet/cli':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../packages/cli
       '@comet/eslint-config':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../packages/eslint-config
       '@emotion/babel-plugin':
         specifier: ^11.0.0
@@ -412,10 +415,10 @@ importers:
         specifier: ^12.0.0
         version: 12.12.0
       '@comet/blocks-api':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../packages/api/blocks-api
       '@comet/cms-api':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../packages/api/cms-api
       '@hapi/accept':
         specifier: ^5.0.0
@@ -566,7 +569,7 @@ importers:
         version: 5.75.0(webpack-cli@4.10.0)
     devDependencies:
       '@comet/eslint-config':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../packages/eslint-config
       '@nestjs/cli':
         specifier: ^9.0.0
@@ -644,7 +647,7 @@ importers:
   demo/site:
     dependencies:
       '@comet/cms-site':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../packages/site/cms-site
       '@googlemaps/js-api-loader':
         specifier: ^1.0.0
@@ -729,10 +732,10 @@ importers:
         specifier: ^7.16.0
         version: 7.20.12
       '@comet/cli':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../packages/cli
       '@comet/eslint-config':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../packages/eslint-config
       '@graphql-codegen/add':
         specifier: ^3.0.0
@@ -816,25 +819,25 @@ importers:
         specifier: ^3.7.0
         version: 3.7.4(graphql@15.8.0)(react-dom@17.0.2)(react@17.0.2)
       '@comet/admin':
-        specifier: workspace:^4.3.0
+        specifier: workspace:^4.4.3
         version: link:../packages/admin/admin
       '@comet/admin-color-picker':
-        specifier: workspace:^4.3.0
+        specifier: workspace:^4.4.3
         version: link:../packages/admin/admin-color-picker
       '@comet/admin-date-time':
-        specifier: workspace:^4.3.0
+        specifier: workspace:^4.4.3
         version: link:../packages/admin/admin-date-time
       '@comet/admin-icons':
-        specifier: workspace:^4.3.0
+        specifier: workspace:^4.4.3
         version: link:../packages/admin/admin-icons
       '@comet/admin-react-select':
-        specifier: workspace:^4.3.0
+        specifier: workspace:^4.4.3
         version: link:../packages/admin/admin-react-select
       '@comet/admin-rte':
-        specifier: workspace:^4.3.0
+        specifier: workspace:^4.4.3
         version: link:../packages/admin/admin-rte
       '@comet/admin-theme':
-        specifier: workspace:^4.3.0
+        specifier: workspace:^4.4.3
         version: link:../packages/admin/admin-theme
       '@docusaurus/core':
         specifier: 2.4.1
@@ -928,7 +931,7 @@ importers:
         specifier: ^7.22.8
         version: 7.22.11
       '@comet/eslint-config':
-        specifier: workspace:^4.3.0
+        specifier: workspace:^4.4.3
         version: link:../packages/eslint-config
       '@docusaurus/module-type-aliases':
         specifier: 2.4.1
@@ -961,7 +964,7 @@ importers:
   packages/admin/admin:
     dependencies:
       '@comet/admin-icons':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-icons
       '@mui/private-theming':
         specifier: ^5.0.0
@@ -1004,10 +1007,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
@@ -1034,8 +1037,11 @@ importers:
         specifier: ^5.16.5
         version: 5.16.5
       '@testing-library/react':
-        specifier: ^12.0.0
-        version: 12.0.0(react-dom@17.0.2)(react@17.0.2)
+        specifier: ^12.1.5
+        version: 12.1.5(react-dom@17.0.2)(react@17.0.2)
+      '@testing-library/react-hooks':
+        specifier: ^8.0.0
+        version: 8.0.1(@types/react@17.0.53)(react-dom@17.0.2)(react@17.0.2)
       '@types/debounce':
         specifier: ^1.2.0
         version: 1.2.1
@@ -1166,10 +1172,10 @@ importers:
   packages/admin/admin-color-picker:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin
       '@comet/admin-icons':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-icons
       clsx:
         specifier: ^1.1.1
@@ -1191,10 +1197,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../eslint-config
       '@mui/icons-material':
         specifier: ^5.0.0
@@ -1248,10 +1254,10 @@ importers:
   packages/admin/admin-date-time:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin
       '@comet/admin-icons':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-icons
       '@mui/utils':
         specifier: ^5.4.1
@@ -1273,10 +1279,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1333,10 +1339,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1390,7 +1396,7 @@ importers:
   packages/admin/admin-react-select:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin
       classnames:
         specifier: ^2.2.6
@@ -1403,10 +1409,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../eslint-config
       '@mui/icons-material':
         specifier: ^5.0.0
@@ -1476,10 +1482,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../eslint-config
       '@mui/icons-material':
         specifier: ^5.0.0
@@ -1542,25 +1548,25 @@ importers:
         specifier: ^3.7.0
         version: 3.7.4(graphql@15.8.0)(react-dom@17.0.2)(react@17.0.2)
       '@comet/admin':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin
       '@comet/admin-color-picker':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-color-picker
       '@comet/admin-date-time':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-date-time
       '@comet/admin-icons':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-icons
       '@comet/admin-react-select':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-react-select
       '@comet/admin-rte':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-rte
       '@comet/admin-theme':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-theme
       '@emotion/react':
         specifier: ^11.5.0
@@ -1684,10 +1690,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../eslint-config
       '@faker-js/faker':
         specifier: ^7.6.0
@@ -1789,7 +1795,7 @@ importers:
   packages/admin/admin-theme:
     dependencies:
       '@comet/admin-icons':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-icons
       '@mui/utils':
         specifier: ^5.4.1
@@ -1802,10 +1808,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1850,10 +1856,10 @@ importers:
   packages/admin/blocks-admin:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin
       '@comet/admin-icons':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-icons
       '@mui/lab':
         specifier: ^5.0.0-alpha.76
@@ -1884,13 +1890,13 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-babel-preset
       '@comet/cli':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../cli
       '@comet/eslint-config':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
@@ -1983,23 +1989,29 @@ importers:
   packages/admin/cms-admin:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin
       '@comet/admin-date-time':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-date-time
       '@comet/admin-icons':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-icons
       '@comet/admin-rte':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-rte
       '@comet/admin-theme':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-theme
       '@comet/blocks-admin':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../blocks-admin
+      '@graphql-tools/graphql-file-loader':
+        specifier: ^7.5.17
+        version: 7.5.17(graphql@15.8.0)
+      '@graphql-tools/load':
+        specifier: ^7.8.14
+        version: 7.8.14(graphql@15.8.0)
       '@graphql-typed-document-node/core':
         specifier: ^3.1.1
         version: 3.1.1(graphql@15.8.0)
@@ -2012,6 +2024,9 @@ importers:
       clsx:
         specifier: ^1.1.1
         version: 1.2.1
+      commander:
+        specifier: ^10.0.1
+        version: 10.0.1
       date-fns:
         specifier: ^2.0.0
         version: 2.29.3
@@ -2045,12 +2060,12 @@ importers:
       mime-db:
         specifier: ^1.0.0
         version: 1.52.0
-      object-scan:
-        specifier: ^18.0.0
-        version: 18.5.1
       p-debounce:
         specifier: ^4.0.0
         version: 4.0.0
+      pluralize:
+        specifier: ^8.0.0
+        version: 8.0.0
       prop-types:
         specifier: ^15.7.2
         version: 15.8.1
@@ -2107,13 +2122,13 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../admin-babel-preset
       '@comet/cli':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../cli
       '@comet/eslint-config':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
@@ -2184,6 +2199,9 @@ importers:
       '@types/node':
         specifier: ^18.0.0
         version: 18.15.3
+      '@types/pluralize':
+        specifier: ^0.0.29
+        version: 0.0.29
       '@types/react':
         specifier: ^17.0.0
         version: 17.0.53
@@ -2288,7 +2306,7 @@ importers:
         version: 3.0.2
     devDependencies:
       '@comet/eslint-config':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../eslint-config
       '@nestjs/common':
         specifier: ^9.0.0
@@ -2345,7 +2363,7 @@ importers:
   packages/api/cms-api:
     dependencies:
       '@comet/blocks-api':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../blocks-api
       '@hapi/accept':
         specifier: ^5.0.2
@@ -2472,7 +2490,7 @@ importers:
         specifier: ^12.0.0
         version: 12.12.0
       '@comet/eslint-config':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../eslint-config
       '@kubernetes/client-node':
         specifier: ^0.18.1
@@ -2605,7 +2623,7 @@ importers:
         version: 2.8.3
     devDependencies:
       '@comet/eslint-config':
-        specifier: ^4.4.1
+        specifier: ^4.4.3
         version: link:../eslint-config
       '@types/node':
         specifier: ^18.0.0
@@ -2629,7 +2647,7 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1
       '@comet/eslint-plugin':
-        specifier: workspace:^4.3.0
+        specifier: workspace:^4.4.3
         version: link:../eslint-plugin
       '@next/eslint-plugin-next':
         specifier: ^12.0.0
@@ -2730,10 +2748,10 @@ importers:
         version: 6.0.1(react@17.0.2)
     devDependencies:
       '@comet/cli':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../cli
       '@comet/eslint-config':
-        specifier: workspace:^4.4.1
+        specifier: workspace:^4.4.3
         version: link:../../eslint-config
       '@gitbeaker/node':
         specifier: ^34.0.0
@@ -4220,7 +4238,7 @@ packages:
     resolution: {integrity: sha512-gTXYh3M5wb7FRXQy+FErKFAv90BnlOuNn1QkCK2lREoPAjrQCO49+HVSrFoe5uakFAF5eenS75KbO2vQiLrTMQ==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/code-frame': 7.18.6
+      '@babel/code-frame': 7.22.13
       '@babel/generator': 7.20.7
       '@babel/helper-module-transforms': 7.20.11
       '@babel/helpers': 7.20.13
@@ -8911,6 +8929,18 @@ packages:
       unixify: 1.0.0
     dev: true
 
+  /@graphql-tools/graphql-file-loader@7.5.17(graphql@15.8.0):
+    resolution: {integrity: sha512-hVwwxPf41zOYgm4gdaZILCYnKB9Zap7Ys9OhY1hbwuAuC4MMNY9GpUjoTU3CQc3zUiPoYStyRtUGkHSJZ3HxBw==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      '@graphql-tools/import': 6.7.18(graphql@15.8.0)
+      '@graphql-tools/utils': 9.2.1(graphql@15.8.0)
+      globby: 11.1.0
+      graphql: 15.8.0
+      tslib: 2.4.1
+      unixify: 1.0.0
+
   /@graphql-tools/graphql-tag-pluck@7.4.3(@babel/core@7.20.12)(graphql@15.8.0):
     resolution: {integrity: sha512-w+nrJVQw+NTuaZNQG5AwSh4Qe+urP/s4rUz5s1T007rDnv1kvkiX+XHOCnIfJzXOTuvFmG4GGYw/x0CuSRaGZQ==}
     peerDependencies:
@@ -8938,6 +8968,16 @@ packages:
       resolve-from: 5.0.0
       tslib: 2.4.1
     dev: true
+
+  /@graphql-tools/import@6.7.18(graphql@15.8.0):
+    resolution: {integrity: sha512-XQDdyZTp+FYmT7as3xRWH/x8dx0QZA2WZqfMF5EWb36a0PiH7WwlRQYIdyYXj8YCLpiWkeBXgBRHmMnwEYR8iQ==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      '@graphql-tools/utils': 9.2.1(graphql@15.8.0)
+      graphql: 15.8.0
+      resolve-from: 5.0.0
+      tslib: 2.4.1
 
   /@graphql-tools/json-file-loader@6.2.6(graphql@15.8.0):
     resolution: {integrity: sha512-CnfwBSY5926zyb6fkDBHnlTblHnHI4hoBALFYXnrg0Ev4yWU8B04DZl/pBRUc459VNgO2x8/mxGIZj2hPJG1EA==}
@@ -8990,6 +9030,17 @@ packages:
       tslib: 2.4.1
     dev: true
 
+  /@graphql-tools/load@7.8.14(graphql@15.8.0):
+    resolution: {integrity: sha512-ASQvP+snHMYm+FhIaLxxFgVdRaM0vrN9wW2BKInQpktwWTXVyk+yP5nQUCEGmn0RTdlPKrffBaigxepkEAJPrg==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      '@graphql-tools/schema': 9.0.19(graphql@15.8.0)
+      '@graphql-tools/utils': 9.2.1(graphql@15.8.0)
+      graphql: 15.8.0
+      p-limit: 3.1.0
+      tslib: 2.4.1
+
   /@graphql-tools/merge@6.2.14(graphql@15.8.0):
     resolution: {integrity: sha512-RWT4Td0ROJai2eR66NHejgf8UwnXJqZxXgDWDI+7hua5vNA2OW8Mf9K1Wav1ZkjWnuRp4ztNtkZGie5ISw55ow==}
     peerDependencies:
@@ -9038,6 +9089,15 @@ packages:
       graphql: 15.8.0
       tslib: 2.4.1
     dev: true
+
+  /@graphql-tools/merge@8.4.2(graphql@15.8.0):
+    resolution: {integrity: sha512-XbrHAaj8yDuINph+sAfuq3QCZ/tKblrTLOpirK0+CAgNlZUCHs0Fa+xtMUURgwCVThLle1AF7svJCxFizygLsw==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      '@graphql-tools/utils': 9.2.1(graphql@15.8.0)
+      graphql: 15.8.0
+      tslib: 2.4.1
 
   /@graphql-tools/mock@8.7.15(graphql@15.8.0):
     resolution: {integrity: sha512-0zImG5tuObhowqtijlB6TMAIVtCIBsnGGwNW8gnCOa+xZAqfGdUMsSma17tHC2XuI7xhv7A0O8pika9e3APLUg==}
@@ -9148,6 +9208,17 @@ packages:
     dependencies:
       '@graphql-tools/merge': 8.3.15(graphql@15.8.0)
       '@graphql-tools/utils': 9.1.4(graphql@15.8.0)
+      graphql: 15.8.0
+      tslib: 2.4.1
+      value-or-promise: 1.0.12
+
+  /@graphql-tools/schema@9.0.19(graphql@15.8.0):
+    resolution: {integrity: sha512-oBRPoNBtCkk0zbUsyP4GaIzCt8C0aCI4ycIRUL67KK5pOHljKLBBtGT+Jr6hkzA74C8Gco8bpZPe7aWFjiaK2w==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      '@graphql-tools/merge': 8.4.2(graphql@15.8.0)
+      '@graphql-tools/utils': 9.2.1(graphql@15.8.0)
       graphql: 15.8.0
       tslib: 2.4.1
       value-or-promise: 1.0.12
@@ -9273,6 +9344,15 @@ packages:
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
+      graphql: 15.8.0
+      tslib: 2.4.1
+
+  /@graphql-tools/utils@9.2.1(graphql@15.8.0):
+    resolution: {integrity: sha512-WUw506Ql6xzmOORlriNrD6Ugx+HjVgYxt9KCXD9mHAak+eaXSwuGGPyE60hy9xaDEoXKBsG7SkG69ybitaVl6A==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      '@graphql-typed-document-node/core': 3.1.1(graphql@15.8.0)
       graphql: 15.8.0
       tslib: 2.4.1
 
@@ -13289,7 +13369,7 @@ packages:
     resolution: {integrity: sha512-d9ULIT+a4EXLX3UU8FBjauG9NnsZHkHztXoIcTsOKoOw030fyjheN9svkTULjJxtYag9DZz5Jz5qkWZDPxTFwA==}
     engines: {node: '>=12'}
     dependencies:
-      '@babel/code-frame': 7.18.6
+      '@babel/code-frame': 7.22.13
       '@babel/runtime': 7.20.13
       '@types/aria-query': 5.0.1
       aria-query: 5.1.3
@@ -13337,15 +13417,16 @@ packages:
       react-error-boundary: 3.1.4(react@17.0.2)
     dev: true
 
-  /@testing-library/react@12.0.0(react-dom@17.0.2)(react@17.0.2):
-    resolution: {integrity: sha512-sh3jhFgEshFyJ/0IxGltRhwZv2kFKfJ3fN1vTZ6hhMXzz9ZbbcTgmDYM4e+zJv+oiVKKEWZPyqPAh4MQBI65gA==}
+  /@testing-library/react@12.1.5(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-OfTXCJUFgjd/digLUuPxa0+/3ZxsQmE7ub9kcbW/wi96Bh3o/p5vrETcBGfP17NWPGqeYYl5LTRpwyGoMC4ysg==}
     engines: {node: '>=12'}
     peerDependencies:
-      react: '*'
-      react-dom: '*'
+      react: <18.0.0
+      react-dom: <18.0.0
     dependencies:
       '@babel/runtime': 7.20.13
       '@testing-library/dom': 8.20.0
+      '@types/react-dom': 17.0.18
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
     dev: true
@@ -17360,6 +17441,11 @@ packages:
     resolution: {integrity: sha512-GHuDRO12Sypu2cV70d1dkA2EUmXHgntrzbpvOB+Qy+49ypNfGgFQIC2fhhXbnyrJRynDCAARsT7Ou0M6hirpfw==}
     dev: false
 
+  /commander@10.0.1:
+    resolution: {integrity: sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==}
+    engines: {node: '>=14'}
+    dev: false
+
   /commander@2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
 
@@ -20400,7 +20486,7 @@ packages:
       vue-template-compiler:
         optional: true
     dependencies:
-      '@babel/code-frame': 7.18.6
+      '@babel/code-frame': 7.22.13
       chalk: 2.4.2
       eslint: 8.32.0
       micromatch: 3.1.10
@@ -21140,9 +21226,9 @@ packages:
       cosmiconfig-typescript-loader: ^4.0.0
       graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
-      '@graphql-tools/graphql-file-loader': 7.5.14(graphql@15.8.0)
+      '@graphql-tools/graphql-file-loader': 7.5.17(graphql@15.8.0)
       '@graphql-tools/json-file-loader': 7.4.15(graphql@15.8.0)
-      '@graphql-tools/load': 7.8.0(graphql@15.8.0)
+      '@graphql-tools/load': 7.8.14(graphql@15.8.0)
       '@graphql-tools/merge': 8.3.15(graphql@15.8.0)
       '@graphql-tools/url-loader': 7.17.3(@types/node@18.15.3)(graphql@15.8.0)
       '@graphql-tools/utils': 9.1.4(graphql@15.8.0)
@@ -25196,11 +25282,6 @@ packages:
   /object-keys@1.1.1:
     resolution: {integrity: sha512-NuAESUOUMrlIXOfHKzD6bpPu3tYt3xvjNdRIQ+FeT0lNb4K8WR70CaDxhuNguS2XG+GjkyMwOzsN5ZktImfhLA==}
     engines: {node: '>= 0.4'}
-
-  /object-scan@18.5.1:
-    resolution: {integrity: sha512-PgXlHFVeSVERCqDL1yNXZgNhJ/lzfxltnIHGA22cfuXB2i7HBOqgGr9wBD452LJajsnFHPGFfujtpvd6FUVmPw==}
-    engines: {node: '>= 14'}
-    dev: false
 
   /object-visit@1.0.1:
     resolution: {integrity: sha512-GBaMwwAVK9qbQN3Scdo0OyvgPW7l3lnaVMj84uTOZlswkX0KpF6fyDBJhtTthf7pymztoN36/KEr1DyhF96zEA==}
@@ -30543,7 +30624,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       normalize-path: 2.1.1
-    dev: true
 
   /unpipe@1.0.0:
     resolution: {integrity: sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==}

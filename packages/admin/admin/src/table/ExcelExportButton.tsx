@@ -11,6 +11,9 @@ interface IProps {
     loadingComponent?: React.ReactNode;
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export const ExcelExportButton: React.FunctionComponent<IProps> = ({ onClick, children, exportApi, loadingComponent }) => {
     const onClickButtonPressed = () => {
         if (onClick != null) {
