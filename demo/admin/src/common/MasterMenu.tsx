@@ -37,11 +37,6 @@ const MasterMenu: React.FC = () => {
                     to={`${match.url}/dashboard`}
                 />
                 <MenuCollapsibleItem primary={intl.formatMessage({ id: "menu.pageTree", defaultMessage: "Page tree" })} icon={<PageTree />}>
-                    <MenuCollapsibleItem primary="Whatever" icon={<Snips />}>
-                        <MenuItemRouterLink primary="Products" to={`${match.url}/products`} icon={<Snips />} />
-                        <MenuItemRouterLink primary="Categories" to={`${match.url}/product-categories`} icon={<Snips />} />
-                        <MenuItemRouterLink primary="Tags" to={`${match.url}/product-tags`} icon={<Snips />} />
-                    </MenuCollapsibleItem>
                     <MenuItemRouterLink
                         primary={intl.formatMessage({
                             id: "menu.pageTree.mainNavigation",
@@ -53,6 +48,9 @@ const MasterMenu: React.FC = () => {
                         primary={intl.formatMessage({ id: "menu.pageTree.topMenu", defaultMessage: "Top menu" })}
                         to={`${match.url}/pages/pagetree/top-menu`}
                     />
+                    <MenuCollapsibleItem primary="Some Subpages" icon={<Snips />}>
+                        <MenuItemRouterLink primary="Subpage 1" to={`${match.url}/subsubpage`} icon={<Snips />} />
+                    </MenuCollapsibleItem>
                 </MenuCollapsibleItem>
 
                 <MenuCollapsibleItem

@@ -141,6 +141,7 @@ class App extends React.Component {
                                                                                         path={`${match.path}/project-snips/main-menu`}
                                                                                         component={MainMenu}
                                                                                     />
+                                                                                    <RouteWithErrorBoundary path={`${match.path}/subsubpage`} />
                                                                                     <RouteWithErrorBoundary
                                                                                         path={`${match.path}/pages/pagetree/:category`}
                                                                                         render={({ match: { params } }) => {
