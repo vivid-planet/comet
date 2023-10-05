@@ -34,23 +34,14 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-<<<<<<< HEAD
-        "@comet/admin": "workspace:^4.4.3",
-        "@comet/admin-date-time": "workspace:^4.4.3",
-        "@comet/admin-icons": "workspace:^4.4.3",
-        "@comet/admin-rte": "workspace:^4.4.3",
-        "@comet/admin-theme": "workspace:^4.4.3",
-        "@comet/blocks-admin": "workspace:^4.4.3",
-        "@graphql-tools/graphql-file-loader": "^7.5.17",
-        "@graphql-tools/load": "^7.8.14",
-=======
         "@comet/admin": "workspace:^4.5.0",
         "@comet/admin-date-time": "workspace:^4.5.0",
         "@comet/admin-icons": "workspace:^4.5.0",
         "@comet/admin-rte": "workspace:^4.5.0",
         "@comet/admin-theme": "workspace:^4.5.0",
         "@comet/blocks-admin": "workspace:^4.5.0",
->>>>>>> main
+        "@graphql-tools/graphql-file-loader": "^7.5.17",
+        "@graphql-tools/load": "^7.8.14",
         "@graphql-typed-document-node/core": "^3.1.1",
         "@mui/lab": "^5.0.0-alpha.76",
         "class-validator": "0.13.2",

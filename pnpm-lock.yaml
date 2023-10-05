@@ -18,7 +18,7 @@ importers:
         specifier: ^2.3.2
         version: 2.3.2
       '@comet/eslint-plugin':
-        specifier: workspace:^4.4.3
+        specifier: workspace:^4.5.0
         version: link:packages/eslint-plugin
       '@formatjs/cli':
         specifier: ^4.8.3
@@ -60,7 +60,7 @@ importers:
         specifier: workspace:^4.5.0
         version: link:../../packages/admin/admin
       '@comet/admin-date-time':
-        specifier: workspace:^4.4.3
+        specifier: workspace:^4.5.0
         version: link:../../packages/admin/admin-date-time
       '@comet/admin-icons':
         specifier: workspace:^4.5.0
@@ -819,25 +819,25 @@ importers:
         specifier: ^3.7.0
         version: 3.7.4(graphql@15.8.0)(react-dom@17.0.2)(react@17.0.2)
       '@comet/admin':
-        specifier: workspace:^4.4.3
+        specifier: workspace:^4.5.0
         version: link:../packages/admin/admin
       '@comet/admin-color-picker':
-        specifier: workspace:^4.4.3
+        specifier: workspace:^4.5.0
         version: link:../packages/admin/admin-color-picker
       '@comet/admin-date-time':
-        specifier: workspace:^4.4.3
+        specifier: workspace:^4.5.0
         version: link:../packages/admin/admin-date-time
       '@comet/admin-icons':
-        specifier: workspace:^4.4.3
+        specifier: workspace:^4.5.0
         version: link:../packages/admin/admin-icons
       '@comet/admin-react-select':
-        specifier: workspace:^4.4.3
+        specifier: workspace:^4.5.0
         version: link:../packages/admin/admin-react-select
       '@comet/admin-rte':
-        specifier: workspace:^4.4.3
+        specifier: workspace:^4.5.0
         version: link:../packages/admin/admin-rte
       '@comet/admin-theme':
-        specifier: workspace:^4.4.3
+        specifier: workspace:^4.5.0
         version: link:../packages/admin/admin-theme
       '@docusaurus/core':
         specifier: 2.4.1
@@ -931,7 +931,7 @@ importers:
         specifier: ^7.22.8
         version: 7.22.11
       '@comet/eslint-config':
-        specifier: workspace:^4.4.3
+        specifier: workspace:^4.5.0
         version: link:../packages/eslint-config
       '@docusaurus/module-type-aliases':
         specifier: 2.4.1
@@ -2647,7 +2647,7 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1
       '@comet/eslint-plugin':
-        specifier: workspace:^4.4.3
+        specifier: workspace:^4.5.0
         version: link:../eslint-plugin
       '@next/eslint-plugin-next':
         specifier: ^12.0.0
@@ -4450,11 +4450,7 @@ packages:
     dependencies:
       '@babel/core': 7.20.12
       '@babel/helper-compilation-targets': 7.20.7(@babel/core@7.20.12)
-<<<<<<< HEAD
       '@babel/helper-plugin-utils': 7.22.5
-=======
-      '@babel/helper-plugin-utils': 7.20.2
->>>>>>> main
       debug: 4.3.4(supports-color@9.3.1)
       lodash.debounce: 4.0.8
       resolve: 1.22.1
@@ -4469,11 +4465,7 @@ packages:
     dependencies:
       '@babel/core': 7.22.11
       '@babel/helper-compilation-targets': 7.20.7(@babel/core@7.22.11)
-<<<<<<< HEAD
       '@babel/helper-plugin-utils': 7.22.5
-=======
-      '@babel/helper-plugin-utils': 7.20.2
->>>>>>> main
       debug: 4.3.4(supports-color@9.3.1)
       lodash.debounce: 4.0.8
       resolve: 1.22.1
@@ -8133,11 +8125,7 @@ packages:
     dependencies:
       ajv: 6.12.6
       debug: 4.3.4(supports-color@9.3.1)
-<<<<<<< HEAD
       espree: 9.5.2
-=======
-      espree: 9.4.1
->>>>>>> main
       globals: 13.19.0
       ignore: 5.2.4
       import-fresh: 3.3.0
@@ -21799,21 +21787,6 @@ packages:
   /http-parser-js@0.5.8:
     resolution: {integrity: sha512-SGeBX54F94Wgu5RH3X5jsDtf4eHyRogWX1XGT3b4HuW3tQPM4AaBzoUji/4AAJNXCEOWZ5O0DgZmJw1947gD5Q==}
 
-<<<<<<< HEAD
-=======
-  /http-proxy-agent@4.0.1:
-    resolution: {integrity: sha512-k0zdNgqWTGA6aeIRVpvfVob4fL52dTfaehylg0Y4UvSySvOq/Y+BOyPrgpUrA7HylqvU8vIZGsRuXmspskV0Tg==}
-    engines: {node: '>= 6'}
-    requiresBuild: true
-    dependencies:
-      '@tootallnate/once': 1.1.2
-      agent-base: 6.0.2
-      debug: 4.3.4(supports-color@9.3.1)
-    transitivePeerDependencies:
-      - supports-color
-    optional: true
-
->>>>>>> main
   /http-proxy-agent@5.0.0:
     resolution: {integrity: sha512-n2hY8YdoRE1i7r6M0w9DIw5GgZN0G25P8zLCRQ8rjXtTU3vsNFBI/vWK/UIeE6g5MUUz6avwAPXmL6Fy9D/90w==}
     engines: {node: '>= 6'}
@@ -28853,30 +28826,6 @@ packages:
       uuid: 8.3.2
       websocket-driver: 0.7.4
 
-<<<<<<< HEAD
-=======
-  /socks-proxy-agent@6.2.1:
-    resolution: {integrity: sha512-a6KW9G+6B3nWZ1yB8G7pJwL3ggLy1uTzKAgCb7ttblwqdz9fMGJUuTy3uFzEP48FAs9FLILlmzDlE2JJhVQaXQ==}
-    engines: {node: '>= 10'}
-    requiresBuild: true
-    dependencies:
-      agent-base: 6.0.2
-      debug: 4.3.4(supports-color@9.3.1)
-      socks: 2.7.1
-    transitivePeerDependencies:
-      - supports-color
-    optional: true
-
-  /socks@2.7.1:
-    resolution: {integrity: sha512-7maUZy1N7uo6+WVEX6psASxtNlKaNVMlGQKkG/63nEDdLOWNbiUMoLK7X4uYoLhQstau72mLgfEWcXcwsaHbYQ==}
-    engines: {node: '>= 10.13.0', npm: '>= 3.0.0'}
-    requiresBuild: true
-    dependencies:
-      ip: 2.0.0
-      smart-buffer: 4.2.0
-    optional: true
-
->>>>>>> main
   /sonic-boom@1.4.1:
     resolution: {integrity: sha512-LRHh/A8tpW7ru89lrlkU4AszXt1dbwSjVWguGrmlxE7tawVmDBlI1PILMkXAxJTwqhgsEeTHzj36D5CmHgQmNg==}
     dependencies:
