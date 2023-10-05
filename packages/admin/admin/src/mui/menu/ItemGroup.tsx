@@ -16,7 +16,7 @@ const styles = (theme: Theme) =>
             fontSize: ({ isMenuOpen }) => (isMenuOpen ? 14 : 12),
             border: ({ isMenuOpen }) => (isMenuOpen ? `2px solid ${theme.palette.common.white}` : `2px solid ${theme.palette.grey[100]}`),
             borderRadius: ({ isMenuOpen }) => (isMenuOpen ? "initial" : 20),
-            padding: ({ isMenuOpen }) => (isMenuOpen ? "0" : theme.spacing(2, 4)),
+            padding: ({ isMenuOpen }) => (isMenuOpen ? "0" : theme.spacing(0, 1.5)),
             lineHeight: "20px",
             color: ({ isMenuOpen }) => (isMenuOpen ? `${theme.palette.common.black}` : `${theme.palette.grey[300]}`),
         },
