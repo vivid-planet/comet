@@ -6,7 +6,7 @@ import { TextMatch } from "../../common/MarkedMatches";
 import { GQLPageSearchFragment } from "../../graphql.generated";
 import { PageTreePage } from "../pageTree/usePageTree";
 
-export type PageSearchMatch = TextMatch & { page: { id: string; ancestorIds: string[] } } & { where?: "name" | "path" };
+export type PageSearchMatch = TextMatch & { page: { id: string; ancestorIds: string[] }; where: "name" | "path" };
 
 export const pageSearchFragment = gql`
     fragment PageSearch on PageTreeNode {
@@ -102,7 +102,7 @@ const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pag
 
             if (pageExactMatch) {
                 const { id, name, ancestorIds } = pageExactMatch;
-                matches.push({ page: { id, ancestorIds }, start: 0, end: name.length - 1, focused: true });
+                matches.push({ page: { id, ancestorIds }, start: 0, end: name.length - 1, focused: true, where: "name" });
             }
         } catch {
             const regex = new RegExp(`(${escapeRegExp(query)})`, "gi");
