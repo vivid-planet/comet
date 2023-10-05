@@ -1,5 +1,27 @@
 # @comet/admin
 
+## 4.4.3
+
+### Patch Changes
+
+-   @comet/admin-icons@4.4.3
+
+## 4.4.2
+
+### Patch Changes
+
+-   @comet/admin-icons@4.4.2
+
+## 4.4.1
+
+### Patch Changes
+
+-   662abcc9: Prevent the `MainContent` component from having an invalid height.
+
+    This bug would cause the page tree to have no height when navigating into a page and then navigating back again.
+
+    -   @comet/admin-icons@4.4.1
+
 ## 4.4.0
 
 ### Minor Changes

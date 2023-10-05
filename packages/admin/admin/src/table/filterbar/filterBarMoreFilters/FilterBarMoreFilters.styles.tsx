@@ -3,6 +3,9 @@ import { createStyles } from "@mui/styles";
 
 import { FilterBarMoreFiltersProps } from "./FilterBarMoreFilters";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export type FilterBarMoveFilersClassKey = "root" | "textWrapper";
 
 export const styles = ({ palette, typography }: Theme) => {

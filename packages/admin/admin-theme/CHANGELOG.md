@@ -1,5 +1,23 @@
 # @comet/admin-theme
 
+## 4.4.3
+
+### Patch Changes
+
+-   @comet/admin-icons@4.4.3
+
+## 4.4.2
+
+### Patch Changes
+
+-   @comet/admin-icons@4.4.2
+
+## 4.4.1
+
+### Patch Changes
+
+-   @comet/admin-icons@4.4.1
+
 ## 4.4.0
 
 ### Patch Changes

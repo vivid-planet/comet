@@ -7,6 +7,9 @@ import { ISelectionApi } from "../SelectionApi";
 import { IPagingInfo } from "./paging/IPagingInfo";
 import { ITableQueryApi } from "./TableQueryContext";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface ITableData<TRow extends { id: string | number } = { id: string | number }> {
     data?: TRow[];
     totalCount?: number;
@@ -18,11 +21,17 @@ interface ITableQueryHookOptions<TData, TVariables, TTableData extends ITableDat
     globalErrorHandling?: boolean;
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface ITableQueryHookResult<TData, TVariables, TTableData extends ITableData> extends QueryResult<TData, TVariables> {
     tableData?: TTableData;
     api: ITableQueryApi;
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export function useTableQuery<TInnerData, TInnerVariables>() {
     function useTableQueryInner<TTableData extends ITableData>(
         q: DocumentNode,

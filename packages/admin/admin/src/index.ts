@@ -28,6 +28,7 @@ export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInp
 export { CometLogo } from "./common/CometLogo";
 export { FieldSet, FieldSetClassKey, FieldSetProps } from "./common/FieldSet";
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
+export { Loading, LoadingProps } from "./common/Loading";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
 export {
     ToolbarAutomaticTitleItem,

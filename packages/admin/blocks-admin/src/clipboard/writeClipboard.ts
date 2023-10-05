@@ -1,2 +1,8 @@
-// @deprecated export
-export { writeClipboardText as writeClipboard } from "@comet/admin";
+import { writeClipboardText } from "@comet/admin";
+
+/**
+ * @deprecated Use `writeClipboardText` from `@comet/admin` instead
+ */
+const writeClipboard = writeClipboardText;
+
+export { writeClipboard };

@@ -1,5 +1,41 @@
 # @comet/cms-admin
 
+## 4.4.3
+
+### Patch Changes
+
+-   0d2a2b96: Ignore empty labels for publisher
+    -   @comet/admin@4.4.3
+    -   @comet/admin-date-time@4.4.3
+    -   @comet/admin-icons@4.4.3
+    -   @comet/admin-rte@4.4.3
+    -   @comet/admin-theme@4.4.3
+    -   @comet/blocks-admin@4.4.3
+
+## 4.4.2
+
+### Patch Changes
+
+-   b299375f: Fix the typing of `lastUpdatedAt` in the `createUsePage()` factory
+    -   @comet/admin@4.4.2
+    -   @comet/admin-date-time@4.4.2
+    -   @comet/admin-icons@4.4.2
+    -   @comet/admin-rte@4.4.2
+    -   @comet/admin-theme@4.4.2
+    -   @comet/blocks-admin@4.4.2
+
+## 4.4.1
+
+### Patch Changes
+
+-   Updated dependencies [662abcc9]
+    -   @comet/admin@4.4.1
+    -   @comet/admin-date-time@4.4.1
+    -   @comet/admin-icons@4.4.1
+    -   @comet/admin-rte@4.4.1
+    -   @comet/admin-theme@4.4.1
+    -   @comet/blocks-admin@4.4.1
+
 ## 4.4.0
 
 ### Minor Changes

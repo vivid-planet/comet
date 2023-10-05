@@ -1,7 +1,6 @@
 import { useApolloClient } from "@apollo/client";
-import { IEditDialogApi, RowActionsItem, RowActionsMenu, useStackSwitchApi } from "@comet/admin";
+import { IEditDialogApi, RowActionsItem, RowActionsMenu, useStackSwitchApi, writeClipboardText } from "@comet/admin";
 import { Add, Delete, Domain, Edit, Preview, Settings } from "@comet/admin-icons";
-import { writeClipboard } from "@comet/blocks-admin";
 import { Divider } from "@mui/material";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -114,7 +113,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                             key="copyUrl"
                             icon={<Domain />}
                             onClick={() => {
-                                writeClipboard(`${siteUrl}${page.path}`);
+                                writeClipboardText(`${siteUrl}${page.path}`);
                             }}
                         >
                             <FormattedMessage id="comet.pages.pages.page.copyUrl" defaultMessage="Copy URL" />
