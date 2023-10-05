@@ -109,11 +109,23 @@ const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pag
 
             inorderPages.forEach((page) => {
                 let match;
-                let nameMatch;
 
-                if ((nameMatch = (match = regex.exec(page.name)) !== null) || (match = regex.exec(page.path)) !== null) {
+                while ((match = regex.exec(page.path)) !== null) {
                     const { id, ancestorIds } = page;
-                    const where = nameMatch ? "name" : "path";
+                    const where = "path";
+                    matches.push({
+                        page: { id, ancestorIds },
+                        start: match.index,
+                        end: match.index + query.length - 1,
+                        focused: matches.length === 0,
+                        where,
+                    });
+                }
+                regex.lastIndex = 0;
+
+                while ((match = regex.exec(page.name)) !== null) {
+                    const { id, ancestorIds } = page;
+                    const where = "name";
                     matches.push({
                         page: { id, ancestorIds },
                         start: match.index,

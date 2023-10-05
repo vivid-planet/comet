@@ -17,6 +17,7 @@ interface PageLabelProps {
 const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, onClick }) => {
     const { documentTypes } = usePageTreeContext();
     const documentType = documentTypes[page.documentType];
+    const pathMatches = page.matches.filter((match) => match.where === "path");
 
     return (
         <Root onClick={onClick}>
@@ -25,19 +26,21 @@ const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, on
                 <LinkText color={page.visibility === "Unpublished" || disabled ? "textSecondary" : "textPrimary"}>
                     <MarkedMatches text={page.name} matches={page.matches.filter((match) => match.where === "name")} />
                 </LinkText>
-                <LinkText color={page.visibility === "Unpublished" || disabled ? "textSecondary" : "textPrimary"}>
-                    <MarkedMatches text={page.name} matches={page.matches.filter((match) => match.where === "path")} />
-                </LinkText>
+                {pathMatches.length > 0 && (
+                    <LinkText color={page.visibility === "Unpublished" || disabled ? "textSecondary" : "textPrimary"}>
+                        <MarkedMatches text={page.path} matches={pathMatches} />
+                    </LinkText>
+                )}
+                {page.visibility === "Archived" && (
+                    <ArchivedChip
+                        component="span"
+                        label={<FormattedMessage id="comet.pages.pages.archived" defaultMessage="Archived" />}
+                        color="primary"
+                        clickable={false}
+                        size="small"
+                    />
+                )}
             </LinkContent>
-            {page.visibility === "Archived" && (
-                <ArchivedChip
-                    component="span"
-                    label={<FormattedMessage id="comet.pages.pages.archived" defaultMessage="Archived" />}
-                    color="primary"
-                    clickable={false}
-                    size="small"
-                />
-            )}
             {documentType.InfoTag !== undefined && (
                 <InfoPanel>
                     <documentType.InfoTag page={page} />
