@@ -10,9 +10,9 @@ import {
     ExtractBlockInput,
     inputToData,
 } from "@comet/blocks-api";
+import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { IsOptional, IsString } from "class-validator";
 
-import { LinkListBlock } from "../../common/blocks/link-list.block";
 import { FooterLinkSectionBlock } from "./footer-link-section.block";
 
 export const FooterTopLinksBlock = createListBlock({ block: FooterLinkSectionBlock }, "FooterTopLinks");
