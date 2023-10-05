@@ -1,4 +1,4 @@
-import { IRteOptions, makeRteApi, pasteAndFilterText, Rte } from "@comet/admin-rte";
+import { IRteOptions, makeRteApi, NonBreakingSpaceDecorator, pasteAndFilterText, Rte } from "@comet/admin-rte";
 import { BlockCategory, BlockInterface, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
 import {
     BlockMapBuilder,
@@ -25,7 +25,7 @@ export interface RichTextBlockState {
 }
 
 const [, { createEmptyState, createStateFromRawContent, convertStateToRawContent }] = makeRteApi<RawDraftContentState>({
-    decorators: [CmsLinkDecorator, SoftHyphenDecorator],
+    decorators: [CmsLinkDecorator, SoftHyphenDecorator, NonBreakingSpaceDecorator],
     // @TODO: implement a compound decorator in rte
     // like https://jsfiddle.net/paulyoung85/2unzgt68/
     // https://github.com/facebook/draft-js/issues/542#issuecomment-275996606
@@ -119,6 +119,7 @@ export const createRichTextBlock = (
             "history",
             "link",
             "links-remove",
+            "non-breaking-space",
         ],
         draftJsProps: {
             spellCheck: true,
