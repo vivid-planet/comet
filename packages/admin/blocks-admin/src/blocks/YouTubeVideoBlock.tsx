@@ -49,12 +49,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
 
         return (
             <SelectPreviewComponent>
-                <BlocksFinalForm
-                    onSubmit={(newState) => {
-                        updateState({ ...state, ...newState });
-                    }}
-                    initialValues={state}
-                >
+                <BlocksFinalForm onSubmit={(newState) => updateState({ ...newState })} initialValues={state}>
                     <Field
                         label={intl.formatMessage({
                             id: "comet.blocks.youTubeVideo.youtubeIdentifier",
