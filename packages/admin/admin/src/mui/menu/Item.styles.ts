@@ -38,11 +38,17 @@ export const styles = (theme: Theme) =>
             paddingRight: 20,
             paddingTop: 16,
             paddingBottom: 16,
+            backgroundColor: ({ isCollapsibleOpen, isMenuOpen }) =>
+                !isMenuOpen && isCollapsibleOpen ? theme.palette.primary.main : theme.palette.common.white,
+            "& [class*='MuiListItemIcon-root']": {
+                color: ({ isMenuOpen, isCollapsibleOpen }) =>
+                    !isMenuOpen && isCollapsibleOpen ? `${theme.palette.common.white} !important` : "initial",
+            },
             "&:hover": {
-                backgroundColor: ({ isMenuOpen }) => !isMenuOpen && theme.palette.primary.main,
-                color: ({ isMenuOpen }) => !isMenuOpen && `${theme.palette.common.white} !important`,
+                backgroundColor: ({ isMenuOpen }) => (!isMenuOpen ? theme.palette.primary.main : "initial"),
+                color: ({ isMenuOpen }) => (!isMenuOpen ? `${theme.palette.common.white} !important` : undefined),
                 "& [class*='MuiListItemIcon-root']": {
-                    color: ({ isMenuOpen }) => !isMenuOpen && `${theme.palette.common.white} !important`,
+                    color: ({ isMenuOpen }) => (!isMenuOpen ? `${theme.palette.common.white} !important` : undefined),
                 },
             },
             "&[class*='Mui-selected']": {
@@ -53,6 +59,12 @@ export const styles = (theme: Theme) =>
                 },
                 "& [class*='MuiListItemIcon-root']": {
                     color: theme.palette.primary.main,
+                },
+                "&:hover": {
+                    color: `${theme.palette.primary.main} !important`,
+                    "& [class*='MuiListItemIcon-root']": {
+                        color: `${theme.palette.primary.main} !important`,
+                    },
                 },
             },
             "& [class*='MuiListItemText-primary']": {
@@ -82,7 +94,7 @@ export const styles = (theme: Theme) =>
                 color: theme.palette.primary.main,
                 fontWeight: theme.typography.fontWeightBold,
                 "&:after": {
-                    backgroundColor: ({ isMenuOpen }) => isMenuOpen && theme.palette.primary.main,
+                    backgroundColor: ({ isMenuOpen }) => (isMenuOpen ? theme.palette.primary.main : undefined),
                 },
                 "&:hover": {
                     backgroundColor: theme.palette.grey[50],
@@ -105,7 +117,9 @@ export const styles = (theme: Theme) =>
             paddingTop: 0,
             paddingBottom: 0,
             position: "relative",
-
+            "& [class*='MuiListItemText-inset']": {
+                paddingLeft: 0,
+            },
             "&:last-child": {
                 borderBottom: ({ isMenuOpen, level }) => (isMenuOpen && level !== 3 ? `1px solid ${theme.palette.grey[50]}` : "initial"),
                 boxSizing: "border-box",
@@ -131,7 +145,7 @@ export const styles = (theme: Theme) =>
                 fontWeight: theme.typography.fontWeightRegular,
                 fontSize: 14,
                 lineHeight: "20px",
-                paddingLeft: 14,
+                paddingLeft: ({ isMenuOpen }) => (isMenuOpen ? 14 : 0),
                 paddingTop: 14,
                 paddingBottom: 14,
             },
@@ -192,6 +206,20 @@ export const styles = (theme: Theme) =>
                         top: "50%",
                         transform: "translateY(-50%)",
                         backgroundColor: theme.palette.grey[100],
+                    },
+                },
+                "&[class*='Mui-selected']": {
+                    backgroundColor: theme.palette.common.white,
+                    "&:hover": {
+                        backgroundColor: theme.palette.grey[50],
+                    },
+                    "& [class*='MuiListItemText-root']": {
+                        "&:before": {
+                            backgroundColor: theme.palette.primary.main,
+                        },
+                        "&:after": {
+                            backgroundColor: theme.palette.primary.main,
+                        },
                     },
                 },
             },
