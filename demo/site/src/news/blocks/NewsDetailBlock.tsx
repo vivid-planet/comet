@@ -1,8 +1,14 @@
 import { PropsWithData } from "@comet/cms-site";
+import { registerBlock } from "@src/blockRegistry";
 import { NewsLinkBlockData } from "@src/blocks.generated";
+import { gql } from "graphql-request";
 import * as React from "react";
 
-function NewsDetailBlock({ data: { id } }: React.PropsWithChildren<PropsWithData<NewsLinkBlockData>>): JSX.Element | null {
+interface LoadedData {
+    title: string;
+}
+
+function NewsDetailBlock({ data: { id, title } }: React.PropsWithChildren<PropsWithData<NewsLinkBlockData & LoadedData>>): JSX.Element | null {
     if (id === undefined) {
         return null;
     }
@@ -10,8 +16,20 @@ function NewsDetailBlock({ data: { id } }: React.PropsWithChildren<PropsWithData
     return (
         <div>
             <h1>News #{id}</h1>
+            <p>{title}</p>
         </div>
     );
 }
 
 export { NewsDetailBlock };
+
+registerBlock<NewsLinkBlockData>("NewsDetail", {
+    async loader({ blockData, client }) {
+        const data = await client.request(gql`query NewsBlockDetail {
+            news(id: "${blockData.id}") {
+                title
+            }
+        }`);
+        return { ...blockData, title: data.news.title };
+    },
+});

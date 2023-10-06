@@ -1,4 +1,5 @@
 import { SeoBlock } from "@comet/cms-site";
+import { recursivelyLoadBlockData } from "@src/blockRegistry";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import Breadcrumbs, { breadcrumbsFragment } from "@src/components/Breadcrumbs";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
@@ -47,11 +48,25 @@ export async function loader({
     pageTreeNodeId: string;
     scope: GQLPageTreeNodeScopeInput;
 }): Promise<unknown> {
-    return client.request<GQLPageQuery>(pageQuery, {
+    const data = await client.request<GQLPageQuery>(pageQuery, {
         pageTreeNodeId,
         domain: scope.domain,
         language: scope.language,
     });
+    if (data.pageContent?.document?.__typename !== "Page") throw new Error("document type must be Page");
+
+    //TODO: load in paralell
+    data.pageContent.document.content = await recursivelyLoadBlockData({
+        blockType: "PageContent",
+        blockData: data.pageContent.document.content,
+        client,
+    });
+    data.pageContent.document.seo = await recursivelyLoadBlockData({
+        blockType: "Seo",
+        blockData: data.pageContent.document.seo,
+        client,
+    });
+    return data;
 }
 
 export default function Page(props: GQLPageQuery): JSX.Element {
