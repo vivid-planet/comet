@@ -38,7 +38,7 @@ export default function createGraphQLClient(options: Partial<GraphQLClientOption
         headers["x-preview-dam-urls"] = "1";
     }
 
-    return new GraphQLClient(`${process.env.API_URL_INTERNAL}/graphql`, {
+    return new GraphQLClient(`${typeof window === "undefined" ? process.env.API_URL_INTERNAL : process.env.NEXT_PUBLIC_API_URL}/graphql`, {
         headers,
     });
 }
