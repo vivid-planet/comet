@@ -50,4 +50,12 @@ export const messages = defineMessages({
     filter: { id: "comet.generic.filter", defaultMessage: "Filter" },
     copyUrl: { id: "comet.generic.copyUrl", defaultMessage: "Copy URL" },
     deleteItem: { id: "comet.generic.deleteItem", defaultMessage: "Delete Item" },
+    failedToReadClipboard: {
+        id: "comet.generic.failedToReadClipboard",
+        defaultMessage: "Can't read clipboard content. Please make sure that clipboard access is given",
+    },
+    emptyClipboard: {
+        id: "comet.generic.emptyClipboard",
+        defaultMessage: "Clipboard is empty",
+    },
 });
