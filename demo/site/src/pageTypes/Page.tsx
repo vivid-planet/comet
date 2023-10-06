@@ -1,3 +1,4 @@
+import { recursivelyLoadBlockData } from "@src/blockRegistry";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import SeoBlock from "@src/blocks/seo/SeoBlock";
 import Breadcrumbs, { breadcrumbsFragment } from "@src/components/Breadcrumbs";
@@ -51,6 +52,19 @@ export async function loader({
         pageTreeNodeId,
         domain: scope.domain,
         language: scope.language,
+    });
+    if (data.pageContent?.document?.__typename !== "Page") throw new Error("document type must be Page");
+
+    //TODO: load in paralell
+    data.pageContent.document.content = await recursivelyLoadBlockData({
+        blockType: "PageContent",
+        blockData: data.pageContent.document.content,
+        client,
+    });
+    data.pageContent.document.seo = await recursivelyLoadBlockData({
+        blockType: "Seo",
+        blockData: data.pageContent.document.seo,
+        client,
     });
     return data;
 }
