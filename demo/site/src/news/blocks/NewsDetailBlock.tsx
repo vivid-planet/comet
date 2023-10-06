@@ -25,6 +25,7 @@ export { NewsDetailBlock };
 
 registerBlock<NewsLinkBlockData>("NewsDetail", {
     async loader({ blockData, client }) {
+        if (!blockData.id) return blockData;
         const data = await client.request(gql`query NewsBlockDetail {
             news(id: "${blockData.id}") {
                 title
