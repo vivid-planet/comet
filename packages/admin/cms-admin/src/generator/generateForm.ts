@@ -105,6 +105,10 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         const type = field.type.kind === "NON_NULL" ? field.type.ofType : field.type;
         return type.kind == "SCALAR" && (type.name == "Float" || type.name == "Int");
     });
+    const booleanFields = formFields.filter((field) => {
+        const type = field.type.kind === "NON_NULL" ? field.type.ofType : field.type;
+        return type.kind == "SCALAR" && type.name == "Boolean";
+    });
 
     const out = `
     import { useApolloClient, useQuery } from "@apollo/client";
@@ -201,6 +205,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                       .join("\n")}
               }
             : {
+                ${booleanFields.map((field) => `${field.name}: false,`).join("\n")}
                 ${Object.keys(rootBlocks)
                     .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.defaultValues(),`)
                     .join("\n")}

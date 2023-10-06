@@ -75,6 +75,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {
+                      inStock: false,
                       image: rootBlocks.image.defaultValues(),
                   },
         [data],
