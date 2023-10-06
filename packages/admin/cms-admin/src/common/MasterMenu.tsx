@@ -1,18 +1,39 @@
-import { Menu, MenuCollapsibleItem, MenuContext, MenuItemRouterLink, useWindowSize } from "@comet/admin";
-import { getMenuFromRouteMenu } from "@comet/cms-admin";
+import { Menu, MenuCollapsibleItem, MenuContext, MenuItemRouterLink, MenuItemRouterLinkProps, useWindowSize } from "@comet/admin";
 import * as React from "react";
-import { useRouteMatch } from "react-router";
+import { useRouteMatch } from "react-router-dom";
 
-import { routeMenu } from "./routeMenu";
+import { MasterMenuData, RouteMenuItem } from "./Master";
 
-const permanentMenuMinWidth = 1024;
-const menu = getMenuFromRouteMenu(routeMenu);
+type MenuItem = {
+    menuItem: MenuItemRouterLinkProps;
+    hasSubMenu: boolean;
+    subMenu: Menu;
+};
+type Menu = MenuItem[];
 
-const MasterMenu: React.FC = () => {
+export function getMenuFromMasterMenuData(items: MasterMenuData): Menu {
+    // TODO: Filter for user-permissions once they are available
+    const mapFn = (item: RouteMenuItem): MenuItem => ({
+        menuItem: {
+            ...item,
+            to: item.to ?? item.route?.path?.toString() ?? "",
+        },
+        hasSubMenu: !!item.subMenu,
+        subMenu: item.subMenu ? item.subMenu.map(mapFn) : [],
+    });
+    return items.map(mapFn);
+}
+
+export interface MasterMenuProps {
+    permanentMenuMinWidth?: number;
+    menu: MasterMenuData;
+}
+
+export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWidth = 1024 }) => {
+    const menuItems = getMenuFromMasterMenuData(menu);
     const { open, toggleOpen } = React.useContext(MenuContext);
     const windowSize = useWindowSize();
     const match = useRouteMatch();
-
     const useTemporaryMenu: boolean = windowSize.width < permanentMenuMinWidth;
 
     // Open menu when changing to permanent variant and close when changing to temporary variant.
@@ -26,7 +47,7 @@ const MasterMenu: React.FC = () => {
 
     return (
         <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
-            {menu.map((menuItem, index) =>
+            {menuItems.map((menuItem, index) =>
                 menuItem.hasSubMenu ? (
                     <MenuCollapsibleItem key={index} {...menuItem.menuItem}>
                         {menuItem.subMenu.map((subMenu, index) => (
@@ -40,5 +61,3 @@ const MasterMenu: React.FC = () => {
         </Menu>
     );
 };
-
-export default MasterMenu;

@@ -1,14 +1,5 @@
 import { Assets, Dashboard as DashboardIcon, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
-import {
-    AllCategories,
-    createRedirectsPage,
-    CronJobsPage,
-    DamPage,
-    PagesPage,
-    PublisherPage,
-    RouteMenu,
-    UserPermissionsPage,
-} from "@comet/cms-admin";
+import { AllCategories, createRedirectsPage, CronJobsPage, DamPage, MasterMenuData, PagesPage, PublisherPage } from "@comet/cms-admin";
 import Dashboard from "@src/dashboard/Dashboard";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import { Link } from "@src/links/Link";
@@ -24,7 +15,7 @@ import ProductTagsPage from "@src/products/tags/ProductTagsPage";
 import { categoryToUrlParam, urlParamToCategory } from "@src/utils/pageTreeNodeCategoryMapping";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
-import { Redirect } from "react-router";
+import { Redirect } from "react-router-dom";
 
 import { ComponentDemo } from "./ComponentDemo";
 import { ContentScopeIndicator } from "./ContentScopeIndicator";
@@ -49,7 +40,7 @@ export const pageTreeDocumentTypes = {
 
 const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock }, scopeParts: ["domain"] });
 
-export const routeMenu: RouteMenu<2> = [
+export const masterMenuData: MasterMenuData = [
     {
         primary: <FormattedMessage id="menu.dashboard" defaultMessage="Dashboard" />,
         icon: <DashboardIcon />,

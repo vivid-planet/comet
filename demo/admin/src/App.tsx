@@ -7,10 +7,19 @@ import "typeface-open-sans";
 
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
-import { CmsBlockContextProvider, createHttpClient, DamConfigProvider, LocaleProvider, SiteConfig, SitesConfigProvider } from "@comet/cms-admin";
+import {
+    CmsBlockContextProvider,
+    createHttpClient,
+    DamConfigProvider,
+    LocaleProvider,
+    Master,
+    SiteConfig,
+    SitePreview,
+    SitesConfigProvider,
+} from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
-import { ContentScope } from "@src/common/ContentScopeProvider";
+import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
 import { additionalPageTreeNodeFieldsFragment } from "@src/common/EditPageNode";
 import { createConfig } from "@src/config";
 import theme from "@src/theme";
@@ -19,9 +28,10 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import * as ReactDOM from "react-dom";
 import { IntlProvider } from "react-intl";
+import { Route, Switch } from "react-router-dom";
 
-import { pageTreeCategories, pageTreeDocumentTypes } from "./common/routeMenu";
-import { Routes } from "./common/Routes";
+import MasterHeader from "./common/MasterHeader";
+import { masterMenuData, pageTreeCategories, pageTreeDocumentTypes } from "./common/MasterMenuData";
 import { getMessages } from "./lang";
 
 const GlobalStyle = () => (
@@ -73,7 +83,22 @@ class App extends React.Component {
                                                 >
                                                     <React.Fragment>
                                                         <GlobalStyle />
-                                                        <Routes />
+                                                        <ContentScopeProvider>
+                                                            {({ match }) => (
+                                                                <Switch>
+                                                                    {/* @TODO: add preview to contentScope once site is capable of contentScope */}
+                                                                    <Route
+                                                                        path={`${match.path}/preview`}
+                                                                        render={(props) => <SitePreview {...props} />}
+                                                                    />
+                                                                    <Route
+                                                                        render={() => (
+                                                                            <Master headerComponent={MasterHeader} masterMenuData={masterMenuData} />
+                                                                        )}
+                                                                    />
+                                                                </Switch>
+                                                            )}
+                                                        </ContentScopeProvider>
                                                         <ErrorDialogHandler />
                                                     </React.Fragment>
                                                 </CmsBlockContextProvider>
