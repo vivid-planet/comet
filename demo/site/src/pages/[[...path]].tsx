@@ -1,7 +1,7 @@
 import { defaultLanguage, domain } from "@src/config";
 import { GQLPage } from "@src/graphql.generated";
 import NotFound404 from "@src/pages/404";
-import PageTypePage, { pageQuery as PageTypePageQuery } from "@src/pageTypes/Page";
+import PageTypePage, { loader as pageTypePageLoader } from "@src/pageTypes/Page";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
 import {
@@ -48,8 +48,8 @@ const pageTypeQuery = gql`
 
 const pageTypes = {
     Page: {
-        query: PageTypePageQuery,
         component: PageTypePage,
+        loader: pageTypePageLoader,
     },
 };
 
@@ -76,14 +76,12 @@ export function createGetUniversalProps({
     }: Context): Promise<
         Context extends GetStaticPropsContext ? GetStaticPropsResult<PageUniversalProps> : GetServerSidePropsResult<PageUniversalProps>
     > {
+        const client = createGraphQLClient({ includeInvisiblePages, includeInvisibleBlocks, previewDamUrls });
         const path = params?.path ?? "";
         const contentScope = { domain, language: locale };
 
         //fetch pageType
-        const data = await createGraphQLClient({ includeInvisiblePages, includeInvisibleBlocks, previewDamUrls }).request<
-            GQLPageTypeQuery,
-            GQLPageTypeQueryVariables
-        >(pageTypeQuery, {
+        const data = await client.request<GQLPageTypeQuery, GQLPageTypeQueryVariables>(pageTypeQuery, {
             path: `/${Array.isArray(path) ? path.join("/") : path}`,
             contentScope,
         });
@@ -95,19 +93,10 @@ export function createGetUniversalProps({
         const pageId = data.pageTreeNodeByPath.id;
 
         //pageType dependent query
-        const { query: queryForPageType } = pageTypes[data.pageTreeNodeByPath.documentType];
-        const pageTypeData = await createGraphQLClient({ includeInvisiblePages, includeInvisibleBlocks, previewDamUrls }).request<GQLPage>(
-            queryForPageType,
-            {
-                pageId,
-                domain: contentScope.domain,
-                language: contentScope.language,
-            },
-        );
-
+        const { loader: loaderForPageType } = pageTypes[data.pageTreeNodeByPath.documentType];
         return {
             props: {
-                ...pageTypeData,
+                ...(await loaderForPageType({ client, contentScope, pageId })),
                 documentType: data.pageTreeNodeByPath.documentType,
                 id: pageId,
             },

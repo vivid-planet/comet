@@ -1,9 +1,10 @@
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import SeoBlock from "@src/blocks/seo/SeoBlock";
 import Breadcrumbs, { breadcrumbsFragment } from "@src/components/Breadcrumbs";
+import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { Header, headerFragment } from "@src/header/Header";
 import { topMenuPageTreeNodeFragment, TopNavigation } from "@src/topNavigation/TopNavigation";
-import { gql } from "graphql-request";
+import { gql, GraphQLClient } from "graphql-request";
 import Head from "next/head";
 import * as React from "react";
 
@@ -36,6 +37,23 @@ export const pageQuery = gql`
     ${headerFragment}
     ${topMenuPageTreeNodeFragment}
 `;
+
+export async function loader({
+    client,
+    pageId,
+    contentScope,
+}: {
+    client: GraphQLClient;
+    pageId: string;
+    contentScope: GQLPageTreeNodeScopeInput;
+}): Promise<unknown> {
+    const data = await client.request<GQLPageQuery>(pageQuery, {
+        pageId,
+        domain: contentScope.domain,
+        language: contentScope.language,
+    });
+    return data;
+}
 
 export default function Page(props: GQLPageQuery): JSX.Element {
     const document = props.pageContent?.document;
