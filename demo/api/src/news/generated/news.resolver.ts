@@ -70,7 +70,6 @@ export class NewsResolver {
         const { image: imageInput, content: contentInput, ...assignInput } = input;
         const news = this.repository.create({
             ...assignInput,
-            visible: false,
             scope,
 
             image: imageInput.transformToBlockData(),
@@ -118,22 +117,6 @@ export class NewsResolver {
         await this.entityManager.remove(news);
         await this.entityManager.flush();
         return true;
-    }
-
-    @Mutation(() => News)
-    @SubjectEntity(News)
-    async updateNewsVisibility(
-        @Args("id", { type: () => ID }) id: string,
-        @Args("visible", { type: () => Boolean }) visible: boolean,
-    ): Promise<News> {
-        const news = await this.repository.findOneOrFail(id);
-
-        news.assign({
-            visible,
-        });
-        await this.entityManager.flush();
-
-        return news;
     }
 
     @ResolveField(() => [NewsComment])

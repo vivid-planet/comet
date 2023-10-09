@@ -15,6 +15,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
     const { classNameSingular, classNamePlural, fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
 
     const crudSearchPropNames = metadata.props
+        .filter((prop) => prop.name != "status")
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "search") && !prop.name.startsWith("scope_"))
         .reduce((acc, prop) => {
             if (prop.type === "string") {
@@ -67,7 +68,14 @@ function buildOptions(metadata: EntityMetadata<any>) {
     const hasSortArg = crudSortProps.length > 0;
 
     const hasSlugProp = metadata.props.some((prop) => prop.name == "slug");
-    const hasVisibleProp = metadata.props.some((prop) => prop.name == "visible");
+    let statusProp = metadata.props.find((prop) => prop.name == "status");
+    if (statusProp) {
+        if (!statusProp.enum) {
+            console.warn(`${metadata.className} status prop must be an enum to be supported by crud generator`);
+            statusProp = undefined;
+        }
+    }
+
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
     if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
     const hasUpdatedAt = metadata.props.some((prop) => prop.name == "updatedAt");
@@ -86,7 +94,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
         crudSortProps,
         hasSortArg,
         hasSlugProp,
-        hasVisibleProp,
+        statusProp,
         scopeProp,
         hasUpdatedAt,
         argsClassName,
@@ -377,7 +385,7 @@ function generateInputHandling(
     metadata: EntityMetadata<any>,
 ): string {
     const { instanceNameSingular } = buildNameVariants(metadata);
-    const { blockProps, hasVisibleProp, scopeProp } = buildOptions(metadata);
+    const { blockProps, scopeProp } = buildOptions(metadata);
 
     const props = metadata.props.filter((prop) => !options.excludeFields || !options.excludeFields.includes(prop.name));
 
@@ -437,7 +445,6 @@ function generateInputHandling(
     }
     ${options.assignEntityCode}
     ...${noAssignProps.length ? `assignInput` : options.inputName},
-        ${options.mode == "create" && hasVisibleProp ? `visible: false,` : ""}
         ${options.mode == "create" && scopeProp ? `scope,` : ""}
         ${
             options.mode == "create" || options.mode == "updateNested"
@@ -659,7 +666,7 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
 function generateResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular, instanceNameSingular, classNamePlural, fileNamePlural, instanceNamePlural } =
         buildNameVariants(metadata);
-    const { scopeProp, argsClassName, argsFileName, hasSlugProp, hasSearchArg, hasSortArg, hasFilterArg, hasVisibleProp, hasUpdatedAt } =
+    const { scopeProp, argsClassName, argsFileName, hasSlugProp, hasSearchArg, hasSortArg, hasFilterArg, statusProp, hasUpdatedAt } =
         buildOptions(metadata);
 
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
@@ -694,6 +701,15 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     imports.push(generateEntityImport(metadata, generatorOptions.targetDirectory));
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, generatorOptions.targetDirectory));
+    }
+
+    if (statusProp) {
+        const enumName = findEnumName(statusProp.name, metadata);
+        const importPath = findEnumImportPath(enumName, generatorOptions.targetDirectory, metadata);
+        imports.push({
+            name: enumName,
+            importPath,
+        });
     }
 
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
@@ -857,18 +873,18 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
 
         ${
-            hasVisibleProp && generatorOptions.update
+            statusProp && generatorOptions.update
                 ? `
         @Mutation(() => ${metadata.className})
         @SubjectEntity(${metadata.className})
-        async update${classNameSingular}Visibility(
+        async update${classNameSingular}Status(
             @Args("id", { type: () => ID }) id: string,
-            @Args("visible", { type: () => Boolean }) visible: boolean,
+            @Args("status", { type: () => ${findEnumName(statusProp.name, metadata)} }) status: ${findEnumName(statusProp.name, metadata)},
         ): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
 
             ${instanceNameSingular}.assign({
-                visible,
+                status,
             });
             await this.entityManager.flush();
 

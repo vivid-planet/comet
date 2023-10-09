@@ -7,7 +7,7 @@ import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 
-import { Product } from "../entities/product.entity";
+import { Product, ProductStatus } from "../entities/product.entity";
 import { ProductCategory } from "../entities/product-category.entity";
 import { ProductStatistics } from "../entities/product-statistics.entity";
 import { ProductTag } from "../entities/product-tag.entity";
@@ -89,7 +89,6 @@ export class ProductResolver {
         } = input;
         const product = this.repository.create({
             ...assignInput,
-            visible: false,
 
             category: categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined,
             image: imageInput.transformToBlockData(),
@@ -199,14 +198,14 @@ export class ProductResolver {
 
     @Mutation(() => Product)
     @SubjectEntity(Product)
-    async updateProductVisibility(
+    async updateProductStatus(
         @Args("id", { type: () => ID }) id: string,
-        @Args("visible", { type: () => Boolean }) visible: boolean,
+        @Args("status", { type: () => ProductStatus }) status: ProductStatus,
     ): Promise<Product> {
         const product = await this.repository.findOneOrFail(id);
 
         product.assign({
-            visible,
+            status,
         });
         await this.entityManager.flush();
 

@@ -53,7 +53,7 @@ export async function generateCrudInput(
         } else {
             decorators.push("@IsNullable()");
         }
-        if (["id", "createdAt", "updatedAt", "visible", "scope"].includes(prop.name)) {
+        if (["id", "createdAt", "updatedAt", "status", "scope"].includes(prop.name)) {
             //skip those (TODO find a non-magic solution?)
             continue;
         } else if (prop.enum) {

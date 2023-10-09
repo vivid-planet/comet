@@ -4,7 +4,7 @@ import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
 import { DamImageBlock, IsSlug, PartialType, RootBlockInputScalar } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
-import { IsDate, IsEnum, IsNotEmpty, IsString, ValidateNested } from "class-validator";
+import { IsBoolean, IsDate, IsEnum, IsNotEmpty, IsString, ValidateNested } from "class-validator";
 
 import { NewsContentBlock } from "../../blocks/news-content.block";
 import { NewsCategory } from "../../entities/news.entity";
@@ -31,6 +31,11 @@ export class NewsInput {
     @IsEnum(NewsCategory)
     @Field(() => NewsCategory, { defaultValue: NewsCategory.Awards })
     category: NewsCategory;
+
+    @IsNotEmpty()
+    @IsBoolean()
+    @Field()
+    visible: boolean;
 
     @IsNotEmpty()
     @Field(() => RootBlockInputScalar(DamImageBlock))
