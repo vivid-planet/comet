@@ -1,5 +1,21 @@
 import { Inject, Type } from "@nestjs/common";
-import { Args, ArgsType, createUnionType, ID, Info, Mutation, ObjectType, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
+import {
+    Args,
+    ArgsType,
+    createUnionType,
+    Field,
+    ID,
+    Info,
+    Mutation,
+    ObjectType,
+    Parent,
+    Query,
+    ResolveField,
+    Resolver,
+    Union,
+} from "@nestjs/graphql";
+import { IsNumber, IsString } from "class-validator";
+import { createHmac, randomBytes } from "crypto";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
@@ -36,12 +52,14 @@ export function createPageTreeResolver({
     PageTreeNodeUpdateInput = DefaultPageTreeNodeUpdateInput,
     Documents,
     Scope: PassedScope,
+    sitePreviewSecret = randomBytes(48).toString("hex"),
 }: {
     PageTreeNode: Type<PageTreeNodeInterface>;
     PageTreeNodeCreateInput?: Type<PageTreeNodeCreateInputInterface>;
     PageTreeNodeUpdateInput?: Type<PageTreeNodeUpdateInputInterface>;
     Documents: Type<DocumentInterface>[];
     Scope?: Type<ScopeInterface>;
+    sitePreviewSecret?: string;
 }): Type<unknown> {
     const Scope = PassedScope || EmptyPageTreeNodeScope;
 
@@ -50,6 +68,18 @@ export function createPageTreeResolver({
 
     @ArgsType()
     class PaginatedPageTreeNodesArgs extends PaginatedPageTreeNodesArgsFactory.create({ Scope }) {}
+
+    @ObjectType()
+    @ArgsType()
+    class SitePreviewHash {
+        @Field(() => Number)
+        @IsNumber()
+        timestamp: number;
+
+        @Field(() => String)
+        @IsString()
+        hash: string;
+    }
 
     const hasNonEmptyScope = !!PassedScope;
 
@@ -405,6 +435,31 @@ export function createPageTreeResolver({
             // when a position is passed, update all concerened nodes
             await this.pageTreeService.updateNodePosition(newNode.id, { pos: input.pos as number, parentId: newNode.parentId });
             return this.pageTreeNode(newNode.id); // refetch new version
+        }
+
+        @Query(() => SitePreviewHash)
+        getSitePreviewHash(): SitePreviewHash {
+            const timestamp = Math.floor(Date.now() / 1000);
+            return {
+                timestamp,
+                hash: this.createHash(timestamp),
+            };
+        }
+
+        @Query(() => Boolean)
+        validateSitePreviewHash(@Args() args: SitePreviewHash): boolean {
+            // Timestamp must be within the last 5 minutes
+            if (args.timestamp < Math.floor(Date.now() / 1000) - 60 * 5) {
+                return false;
+            }
+            return this.createHash(args.timestamp) === args.hash;
+        }
+
+        private createHash(timestamp: number): string {
+            if (!timestamp) throw new Error("Timestamp is required");
+            return createHmac("sha256", sitePreviewSecret)
+                .update(timestamp + sitePreviewSecret)
+                .digest("hex");
         }
     }
 

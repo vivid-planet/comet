@@ -16,7 +16,7 @@ import { VisibilityToggle } from "../common/VisibilityToggle";
 import { SitePrevewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 import { useSitePreviewIFrameBridge } from "./iframebridge/useSitePreviewIFrameBridge";
 import { OpenLinkDialog } from "./OpenLinkDialog";
-import { GQLHmacCreateQuery } from "./SitePreview.generated";
+import { GQLGetSitePreviewHashQuery } from "./SitePreview.generated";
 import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLinkWrapper } from "./SitePreview.sc";
 
 //TODO v4 remove RouteComponentProps
@@ -99,10 +99,10 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
         }
     });
 
-    const { data, error, refetch } = useQuery<GQLHmacCreateQuery>(
+    const { data, error, refetch } = useQuery<GQLGetSitePreviewHashQuery>(
         gql`
-            query HmacCreate {
-                hmacCreate {
+            query GetSitePreviewHash {
+                getSitePreviewHash {
                     timestamp
                     hash
                 }
@@ -115,8 +115,8 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     if (error) throw new Error(error.message);
     if (!data) return <></>;
     const params = new URLSearchParams({
-        timestamp: data.hmacCreate.timestamp.toString(),
-        hash: data.hmacCreate.hash,
+        timestamp: data.getSitePreviewHash.timestamp.toString(),
+        hash: data.getSitePreviewHash.hash,
         path: initialPath,
         includeInvisibleBlocks: showOnlyVisible ? "false" : "true",
     });

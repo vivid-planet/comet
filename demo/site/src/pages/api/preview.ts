@@ -1,13 +1,13 @@
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
 
-import { GQLHmacValidateQuery, GQLHmacValidateQueryVariables } from "./preview.generated";
+import { GQLValidateSitePreviewHashQuery, GQLValidateSitePreviewHashQueryVariables } from "./preview.generated";
 
 export default async function handler(req, res) {
-    const data = await createGraphQLClient().request<GQLHmacValidateQuery, GQLHmacValidateQueryVariables>(
+    const data = await createGraphQLClient().request<GQLValidateSitePreviewHashQuery, GQLValidateSitePreviewHashQueryVariables>(
         gql`
-            query HmacValidate($timestamp: Float!, $hash: String!) {
-                hmacValidate(timestamp: $timestamp, hash: $hash)
+            query ValidateSitePreviewHash($timestamp: Float!, $hash: String!) {
+                validateSitePreviewHash(timestamp: $timestamp, hash: $hash)
             }
         `,
         {
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
             hash: req.query.hash,
         },
     );
-    if (!data.hmacValidate) {
+    if (!data.validateSitePreviewHash) {
         return res.status(401).json({ message: "Validation failed" });
     }
 

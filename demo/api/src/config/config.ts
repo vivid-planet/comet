@@ -18,7 +18,6 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         apiUrl: envVars.API_URL,
         apiPort: envVars.API_PORT,
         corsAllowedOrigins: envVars.CORS_ALLOWED_ORIGINS.split(","),
-        hmacSecret: envVars.HMAC_SECRET,
         imgproxy: {
             ...cometConfig.imgproxy,
             salt: envVars.IMGPROXY_SALT,

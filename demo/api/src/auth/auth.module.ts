@@ -24,7 +24,6 @@ export class AuthModule {
                 }),
                 createAuthResolver({
                     currentUser: CurrentUser,
-                    hmacSecret: config.hmacSecret,
                 }),
                 {
                     provide: APP_GUARD,
