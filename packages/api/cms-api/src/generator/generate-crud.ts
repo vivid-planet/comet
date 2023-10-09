@@ -106,7 +106,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
     crudFilterProps.map((prop) => {
         if (prop.enum) {
             const enumName = findEnumName(prop.name, metadata);
-            const importPath = findEnumImportPath(enumName, generatorOptions, metadata);
+            const importPath = findEnumImportPath(enumName, `${generatorOptions.targetDirectory}/dto`, metadata);
             if (!generatedEnumNames.has(enumName)) {
                 generatedEnumNames.add(enumName);
                 enumFiltersOut += `@InputType()
