@@ -2,6 +2,7 @@ import { SitePreviewProvider } from "@comet/cms-site";
 import theme, { Theme } from "@src/theme";
 import { AppProps, NextWebVitalsMetric } from "next/app";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import Script from "next/script";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
@@ -39,6 +40,7 @@ export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric)
 }
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
+    const router = useRouter();
     return (
         // see https://github.com/vercel/next.js/tree/master/examples/with-react-intl
         // for a complete strategy to couple next with react-intl
@@ -66,9 +68,13 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
             </Head>
             <ThemeProvider theme={theme}>
                 <GlobalStyle />
-                <SitePreviewProvider>
+                {router.isPreview ? (
+                    <SitePreviewProvider>
+                        <Component {...pageProps} />
+                    </SitePreviewProvider>
+                ) : (
                     <Component {...pageProps} />
-                </SitePreviewProvider>
+                )}
             </ThemeProvider>
         </IntlProvider>
     );
