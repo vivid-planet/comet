@@ -39,6 +39,7 @@ export class NewsResolver {
     @Query(() => PaginatedNews)
     async newsList(@Args() { scope, search, filter, sort, offset, limit }: NewsListArgs, @Info() info: GraphQLResolveInfo): Promise<PaginatedNews> {
         const where = this.newsService.getFindCondition({ search, filter });
+
         where.scope = scope;
 
         const fields = extractGraphqlFields(info, { root: "nodes" });

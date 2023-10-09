@@ -7,7 +7,7 @@ import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorato
 import { generateCrudInput } from "./generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
 import { generateImportsCode, Imports } from "./utils/generate-imports-code";
-import { findEnumImportPath, findEnumName } from "./utils/ts-morph-helper";
+import { findEnumImportPath, findEnumName, morphTsProperty } from "./utils/ts-morph-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -40,6 +40,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
     const crudFilterProps = metadata.props.filter(
         (prop) =>
             hasFieldFeature(metadata.class, prop.name, "filter") &&
+            prop.name != "status" &&
             !prop.name.startsWith("scope_") &&
             (prop.enum ||
                 prop.type === "string" ||
@@ -55,6 +56,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
     const crudSortProps = metadata.props.filter(
         (prop) =>
             hasFieldFeature(metadata.class, prop.name, "sort") &&
+            prop.name != "status" &&
             !prop.name.startsWith("scope_") &&
             (prop.type === "string" ||
                 prop.type === "DecimalType" ||
@@ -73,7 +75,24 @@ function buildOptions(metadata: EntityMetadata<any>) {
         if (!statusProp.enum) {
             console.warn(`${metadata.className} status prop must be an enum to be supported by crud generator`);
             statusProp = undefined;
+        } else if (statusProp.nullable) {
+            console.warn(`${metadata.className} status prop must not be nullable to be supported by crud generator`);
+            statusProp = undefined;
+        } else if (morphTsProperty(statusProp.name, metadata).getInitializer()?.getText() == "") {
+            console.warn(`${metadata.className} status prop must have a default value to be supported by crud generator`);
+            statusProp = undefined;
         }
+    }
+    let statusActiveItems: Array<string | number> | undefined = undefined;
+    if (statusProp) {
+        if (!statusProp.items) throw new Error("Status enum prop has not items");
+        statusActiveItems = statusProp.items.filter((item) => {
+            if (typeof item == "number") {
+                console.warn(`${metadata.className} status prop must not have numeric items to be supported by crud generator`);
+                return false;
+            }
+            return ["Active", "Visible", "Invisible", "Published", "Unpublished"].includes(item);
+        });
     }
 
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
@@ -95,6 +114,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
         hasSortArg,
         hasSlugProp,
         statusProp,
+        statusActiveItems,
         scopeProp,
         hasUpdatedAt,
         argsClassName,
@@ -255,20 +275,49 @@ function generatePaginatedDto({ generatorOptions, metadata }: { generatorOptions
 
 function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
-    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg } = buildOptions(metadata);
+    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, statusProp, statusActiveItems } = buildOptions(metadata);
     const imports: Imports = [];
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`));
     }
 
-    const argsOut = `import { ArgsType, Field, IntersectionType } from "@nestjs/graphql";
+    let statusFilterClassName;
+    let statusFilterDefaultValue;
+    let statusFilterItems: Array<string | number> | undefined = undefined;
+    if (statusProp) {
+        if (statusActiveItems && statusActiveItems.length > 1) {
+            statusFilterItems = ["Active", ...(statusProp.items?.filter((item) => !statusActiveItems.includes(item)) ?? [])];
+            statusFilterClassName = `${classNameSingular}StatusFilter`;
+            statusFilterDefaultValue = `${statusFilterClassName}.Active`;
+        } else {
+            statusFilterClassName = findEnumName(statusProp.name, metadata);
+            statusFilterDefaultValue = morphTsProperty(statusProp.name, metadata).getInitializer()?.getText();
+            imports.push({
+                name: statusFilterClassName,
+                importPath: findEnumImportPath(statusFilterClassName, `${generatorOptions.targetDirectory}/dto`, metadata),
+            });
+        }
+    }
+
+    const argsOut = `import { ArgsType, Field, IntersectionType, registerEnumType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
-    import { IsOptional, IsString, ValidateNested } from "class-validator";
+    import { IsOptional, IsString, ValidateNested, IsEnum } from "class-validator";
     import { OffsetBasedPaginationArgs } from "@comet/cms-api";
     import { ${classNameSingular}Filter } from "./${fileNameSingular}.filter";
     import { ${classNameSingular}Sort } from "./${fileNameSingular}.sort";
 
     ${generateImportsCode(imports)}
+
+    ${
+        statusFilterItems && statusFilterClassName
+            ? `
+    export enum ${statusFilterClassName} {
+        ${statusFilterItems.map((item) => `${item} = "${item}",`).join("\n")}
+        }
+    registerEnumType(${statusFilterClassName}, { name: "${statusFilterClassName}" });
+    `
+            : ""
+    }
 
     @ArgsType()
     export class ${argsClassName} extends OffsetBasedPaginationArgs {
@@ -279,6 +328,16 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         @ValidateNested()
         @Type(() => ${scopeProp.type})
         scope: ${scopeProp.type};
+        `
+                : ""
+        }
+
+        ${
+            statusProp
+                ? `
+        @Field(() => ${statusFilterClassName}, { defaultValue: ${statusFilterDefaultValue} })
+        @IsEnum(${statusFilterClassName})
+        status: ${statusFilterClassName};
         `
                 : ""
         }
@@ -666,8 +725,18 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
 function generateResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular, instanceNameSingular, classNamePlural, fileNamePlural, instanceNamePlural } =
         buildNameVariants(metadata);
-    const { scopeProp, argsClassName, argsFileName, hasSlugProp, hasSearchArg, hasSortArg, hasFilterArg, statusProp, hasUpdatedAt } =
-        buildOptions(metadata);
+    const {
+        scopeProp,
+        argsClassName,
+        argsFileName,
+        hasSlugProp,
+        hasSearchArg,
+        hasSortArg,
+        hasFilterArg,
+        statusProp,
+        statusActiveItems,
+        hasUpdatedAt,
+    } = buildOptions(metadata);
 
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
     const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
@@ -758,7 +827,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
         @Query(() => Paginated${classNamePlural})
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
-            @Args() { ${scopeProp ? `scope, ` : ""}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${
+            @Args() { ${scopeProp ? `scope, ` : ""}${statusProp ? `status, ` : ""}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${
         hasSortArg ? `sort, ` : ""
     }offset, limit }: ${argsClassName}${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
         ): Promise<Paginated${classNamePlural}> {
@@ -767,6 +836,16 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                     ? `this.${instanceNamePlural}Service.getFindCondition({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} });`
                     : "{}"
             }
+            ${
+                statusProp && statusActiveItems && statusActiveItems.length > 1
+                    ? `if (status == "Active") {
+                where.status = { $in: [${statusActiveItems.map((item) => `"${item}"`).join(", ")}] };
+            } else {
+                where.status = status;
+            }`
+                    : ""
+            }
+            ${statusProp && statusActiveItems && statusActiveItems.length <= 1 ? `where.status = status;` : ""}
             ${scopeProp ? `where.scope = scope;` : ""}
 
             ${

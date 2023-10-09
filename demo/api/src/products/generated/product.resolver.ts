@@ -44,8 +44,13 @@ export class ProductResolver {
     }
 
     @Query(() => PaginatedProducts)
-    async products(@Args() { search, filter, sort, offset, limit }: ProductsArgs, @Info() info: GraphQLResolveInfo): Promise<PaginatedProducts> {
+    async products(
+        @Args() { status, search, filter, sort, offset, limit }: ProductsArgs,
+        @Info() info: GraphQLResolveInfo,
+    ): Promise<PaginatedProducts> {
         const where = this.productsService.getFindCondition({ search, filter });
+
+        where.status = status;
 
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];
