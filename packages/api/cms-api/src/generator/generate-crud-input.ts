@@ -95,11 +95,16 @@ export async function generateCrudInput(
                 decorators.push("@IsSlug()");
             }
             decorators.push(`@Field(${fieldOptions})`);
-        } else if (prop.type === "DecimalType" || prop.type === "number") {
+        } else if (prop.type === "DecimalType" || prop.type == "BigIntType" || prop.type === "number") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
-            decorators.push("@IsNumber()");
+            const integerTypes = ["int", "integer", "tinyint", "smallint", "mediumint", "bigint", "int2", "int4", "int8", "serial"];
+            if (integerTypes.includes(prop.columnTypes[0])) {
+                decorators.push("@IsInt()");
+            } else {
+                decorators.push("@IsNumber()");
+            }
             decorators.push(`@Field(${fieldOptions})`);
             type = "number";
         } else if (prop.type === "DateType" || prop.type === "Date") {
