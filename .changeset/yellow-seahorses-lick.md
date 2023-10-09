@@ -1,0 +1,18 @@
+---
+"@comet/cms-admin": major
+"@comet/cms-api": major
+"@comet/eslint-config": minor
+"@comet/cms-site": minor
+---
+
+Migrate Site-Preview to Next.js Preview Mode
+
+Requires following changes to site:
+
+-   Import useRouter from next/router (not exported from @comet/cms-site anymore)
+-   Remove Preview Pages (Pages under preview/ subdirectory which call createGetUniversalProps with preview parameters)
+-   Remove createGetUniversalProps
+    -   Just implement getStaticProps/getServerSideProps (Preview Mode will SSR automatically)
+    -   Get previewData from context and use it to configure the GraphQL-Client
+-   Add SitePreviewProvider to App when Preview Mode is active
+-   Add /api/preview
