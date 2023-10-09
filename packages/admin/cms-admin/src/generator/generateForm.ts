@@ -119,6 +119,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         FinalFormSaveSplitButton,
         FinalFormSelect,
         FinalFormSubmitEvent,
+        Loading,
         MainContent,
         Toolbar,
         ToolbarActions,
@@ -134,7 +135,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     import { FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
     import { EditPageLayout, resolveHasSaveConflict, useFormSaveConflict, queryUpdatedAt } from "@comet/cms-admin";
-    import { CircularProgress, IconButton, FormControlLabel, MenuItem } from "@mui/material";
+    import { IconButton, FormControlLabel, MenuItem } from "@mui/material";
     import { FormApi } from "final-form";
     import { filter } from "graphql-anywhere";
     import isEqual from "lodash.isequal";
@@ -263,7 +264,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         if (error) throw error;
     
         if (loading) {
-            return <CircularProgress />;
+            return <Loading behavior="fillPageHeight" />;
         }
     
         return (
