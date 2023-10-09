@@ -66,7 +66,7 @@ export async function generateCrudInput(
             decorators.push(`@IsEnum(${enumName})`);
             decorators.push(`@Field(() => ${enumName}, ${fieldOptions})`);
             type = enumName;
-        } else if (prop.type === "string") {
+        } else if (prop.type === "string" || prop.type === "text") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
@@ -210,6 +210,16 @@ export async function generateCrudInput(
                 decorators.push(`@Type(() => ${nestedClassName})`);
                 decorators.push(`@Field(() => ${nestedClassName}${prop.nullable ? ", { nullable: true }" : ""})`);
             }
+        } else if (prop.type == "uuid") {
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const defaultValueNull = prop.nullable && (initializer == "undefined" || initializer == "null");
+            const fieldOptions = tsCodeRecordToString({
+                nullable: prop.nullable ? "true" : undefined,
+                defaultValue: defaultValueNull ? "null" : undefined,
+            });
+            decorators.push(`@Field(() => ID, ${fieldOptions})`);
+            decorators.push("@IsUUID()");
+            type = "string";
         } else {
             console.warn(`${prop.name}: unsupported type ${type}`);
             continue;
