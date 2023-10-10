@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
-import { MainContent, RouterTab, RouterTabs, Toolbar, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
-import { Box, CircularProgress } from "@mui/material";
+import { Loading, MainContent, RouterTab, RouterTabs, Toolbar, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
+import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { useIntl } from "react-intl";
@@ -31,7 +31,7 @@ export const UserPage: React.FC<{ userId: string }> = ({ userId }) => {
     }
 
     if (loading || !data) {
-        return <CircularProgress />;
+        return <Loading />;
     }
 
     return (

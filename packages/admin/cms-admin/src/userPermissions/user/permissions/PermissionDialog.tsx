@@ -1,7 +1,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, SaveButton } from "@comet/admin";
+import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, Loading, SaveButton } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -97,7 +97,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
         throw new Error(availablePermissionsError.message);
     }
     if (!availablePermissionsData || (permissionId !== "add" && !data)) {
-        return <CircularProgress />;
+        return <Loading />;
     }
 
     const initialValues = data

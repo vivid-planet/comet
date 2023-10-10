@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
-import { Field, FinalForm, FinalFormInput, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
-import { Card, CardContent, CircularProgress, Toolbar } from "@mui/material";
+import { Field, FinalForm, FinalFormInput, Loading, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { Card, CardContent, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -31,7 +31,7 @@ export const UserBasicData: React.FC<{
     }
 
     if (loading || !data) {
-        return <CircularProgress />;
+        return <Loading />;
     }
 
     return (

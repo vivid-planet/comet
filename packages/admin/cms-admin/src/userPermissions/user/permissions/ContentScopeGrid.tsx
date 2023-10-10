@@ -1,6 +1,6 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { Field, FinalForm, FinalFormCheckbox, SaveButton, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
-import { Card, CardContent, CircularProgress, Toolbar } from "@mui/material";
+import { Field, FinalForm, FinalFormCheckbox, Loading, SaveButton, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { Card, CardContent, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -59,7 +59,7 @@ export const ContentScopeGrid: React.FC<{
     if (error) throw new Error(error.message);
 
     if (!data) {
-        return <CircularProgress />;
+        return <Loading />;
     }
 
     return (
