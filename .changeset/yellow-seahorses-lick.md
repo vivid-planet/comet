@@ -15,7 +15,7 @@ Requires following changes to site:
 -   Remove createGetUniversalProps
     -   Just implement getStaticProps/getServerSideProps (Preview Mode will SSR automatically)
     -   Get previewData from context and use it to configure the GraphQL-Client
--   Add SitePreviewProvider to App when Preview Mode is active
+-   Add SitePreviewProvider to App
 -   Add /api/preview
 
 Requires following changes to api:

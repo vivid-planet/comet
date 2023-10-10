@@ -5,11 +5,7 @@ import { PreviewContext } from "../preview/PreviewContext";
 import { sendSitePreviewIFrameMessage } from "./iframebridge/sendSitePreviewIFrameMessage";
 import { SitePreviewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 
-interface Props {
-    previewPath?: string;
-}
-
-export const SitePreviewProvider: React.FunctionComponent<Props> = ({ children }) => {
+const SitePreview: React.FunctionComponent = ({ children }) => {
     const router = useRouter();
 
     React.useEffect(() => {
@@ -40,4 +36,9 @@ export const SitePreviewProvider: React.FunctionComponent<Props> = ({ children }
             {children}
         </PreviewContext.Provider>
     );
+};
+
+export const SitePreviewProvider: React.FunctionComponent = ({ children }) => {
+    const router = useRouter();
+    return <>{router.isPreview ? <SitePreview>{children}</SitePreview> : children}</>;
 };

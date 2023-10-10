@@ -108,7 +108,7 @@ SitePreview: state from Url (get params): path, device, showOnlyVisible
 ### Site: States, Contexts and Components
 
 ```
-SitePreviewProvider
+SitePreviewProvider (only active in Preview Mode)
     - messages SitePreviewLocation on location change (sends message directly using sendSitePreviewIFrameMessage helper)
     - creates PreviewContext containing
         - previewType: "SitePreview",
