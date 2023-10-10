@@ -1,6 +1,6 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
+import { DynamicModule, Global, Module, Provider, Type, ValueProvider } from "@nestjs/common";
 
 import { DependentsResolverFactory } from "../dependencies/dependents.resolver.factory";
 import { DocumentInterface } from "../document/dto/document-interface";
@@ -10,10 +10,10 @@ import { DocumentSubscriberFactory } from "./document-subscriber";
 import { PageTreeNodeBaseCreateInput, PageTreeNodeBaseUpdateInput } from "./dto/page-tree-node.input";
 import { AttachedDocument } from "./entities/attached-document.entity";
 import { PageTreeNodeBase } from "./entities/page-tree-node-base.entity";
-import { defaultReservedPaths, PAGE_TREE_CONFIG, PAGE_TREE_ENTITY, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
+import { defaultReservedPaths, PAGE_TREE_CONFIG, PAGE_TREE_ENTITY, PAGE_TREE_REPOSITORY, SITE_PREVIEW_CONFIG } from "./page-tree.constants";
 import { PageTreeService } from "./page-tree.service";
 import { PageTreeReadApiService } from "./page-tree-read-api.service";
-import { createSitePreviewResolver } from "./site-preview.resolver";
+import { SitePreviewConfig, SitePreviewResolver } from "./site-preview.resolver";
 import type { PageTreeNodeInterface, ScopeInterface } from "./types";
 import { PageExistsConstraint } from "./validators/page-exists.validator";
 
@@ -67,6 +67,13 @@ export class PageTreeModule {
 
         const documentSubscriber = DocumentSubscriberFactory.create({ Documents });
 
+        const sitePreviewProvider: Provider<SitePreviewConfig> = {
+            provide: SITE_PREVIEW_CONFIG,
+            useValue: {
+                secret: options.sitePreviewSecret,
+            },
+        };
+
         return {
             module: PageTreeModule,
             imports: [MikroOrmModule.forFeature([AttachedDocument, PageTreeNode, ...(Scope ? [Scope] : [])])],
@@ -86,7 +93,8 @@ export class PageTreeModule {
                     inject: [PageTreeService],
                 },
                 documentSubscriber,
-                createSitePreviewResolver({ secret: options.sitePreviewSecret }),
+                sitePreviewProvider,
+                SitePreviewResolver,
             ],
             exports: [PageTreeService, PageTreeReadApiService, AttachedDocumentLoaderService],
         };
