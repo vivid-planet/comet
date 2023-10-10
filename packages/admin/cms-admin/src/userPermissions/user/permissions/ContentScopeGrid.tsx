@@ -10,8 +10,8 @@ import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import {
     GQLContentScopesQuery,
     GQLContentScopesQueryVariables,
-    GQLUpdateContentScopeMutation,
-    GQLUpdateContentScopeMutationVariables,
+    GQLUpdateContentScopesMutation,
+    GQLUpdateContentScopesMutationVariables,
 } from "./ContentScopeGrid.generated";
 
 type FormValues = {
@@ -27,10 +27,10 @@ export const ContentScopeGrid: React.FC<{
     const client = useApolloClient();
 
     const submit = async (data: FormValues) => {
-        await client.mutate<GQLUpdateContentScopeMutation, GQLUpdateContentScopeMutationVariables>({
+        await client.mutate<GQLUpdateContentScopesMutation, GQLUpdateContentScopesMutationVariables>({
             mutation: gql`
-                mutation UpdateContentScope($userId: String!, $input: UserContentScopesInput!) {
-                    userPermissionsUpdateContentScope(userId: $userId, input: $input)
+                mutation UpdateContentScopes($userId: String!, $input: UserContentScopesInput!) {
+                    userPermissionsUpdateContentScopes(userId: $userId, input: $input)
                 }
             `,
             variables: {
@@ -47,8 +47,8 @@ export const ContentScopeGrid: React.FC<{
         gql`
             query ContentScopes($userId: String!) {
                 availableContentScopes: userPermissionsAvailableContentScopes
-                userContentScopes: userPermissionsContentScope(userId: $userId)
-                userContentScopesSkipManual: userPermissionsContentScope(userId: $userId, skipManual: true)
+                userContentScopes: userPermissionsContentScopes(userId: $userId)
+                userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true)
             }
         `,
         {

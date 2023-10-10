@@ -345,7 +345,7 @@ type Query {
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
   userPermissionsPermission(id: ID!, userId: String): UserPermission!
   userPermissionsAvailablePermissions: [String!]!
-  userPermissionsContentScope(userId: String!, skipManual: Boolean): [JSONObject!]!
+  userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
 }
 
@@ -507,7 +507,7 @@ type Mutation {
   userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!
-  userPermissionsUpdateContentScope(userId: String!, input: UserContentScopesInput!): [JSONObject!]!
+  userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): [JSONObject!]!
 }
 
 input CreateBuildsInput {

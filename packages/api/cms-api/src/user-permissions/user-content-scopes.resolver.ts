@@ -16,7 +16,7 @@ export class UserContentScopesResolver {
     ) {}
 
     @Mutation(() => [GraphQLJSONObject])
-    async userPermissionsUpdateContentScope(
+    async userPermissionsUpdateContentScopes(
         @Args("userId", { type: () => String }) userId: string,
         @Args("input", { type: () => UserContentScopesInput }) { contentScopes }: UserContentScopesInput,
     ): Promise<ContentScope[]> {
@@ -32,7 +32,7 @@ export class UserContentScopesResolver {
     }
 
     @Query(() => [GraphQLJSONObject])
-    async userPermissionsContentScope(
+    async userPermissionsContentScopes(
         @Args("userId", { type: () => String }) userId: string,
         @Args("skipManual", { type: () => Boolean, nullable: true }) skipManual = false,
     ): Promise<ContentScope[]> {

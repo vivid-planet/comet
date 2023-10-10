@@ -593,7 +593,7 @@ type Query {
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
   userPermissionsPermission(id: ID!, userId: String): UserPermission!
   userPermissionsAvailablePermissions: [String!]!
-  userPermissionsContentScope(userId: String!, skipManual: Boolean): [JSONObject!]!
+  userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
@@ -881,7 +881,7 @@ type Mutation {
   userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!
-  userPermissionsUpdateContentScope(userId: String!, input: UserContentScopesInput!): [JSONObject!]!
+  userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): [JSONObject!]!
   createBuilds(input: CreateBuildsInput!): Boolean!
   saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
   savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
