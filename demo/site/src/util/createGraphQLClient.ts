@@ -1,7 +1,10 @@
-import { PreviewData } from "@src/pages/api/preview";
 import { GraphQLClient } from "graphql-request";
 
-type GraphQLClientOptions = PreviewData;
+export type GraphQLClientOptions = {
+    includeInvisiblePages: boolean;
+    includeInvisibleBlocks: boolean;
+    previewDamUrls: boolean;
+};
 
 const defaultOptions: GraphQLClientOptions = {
     includeInvisiblePages: false,

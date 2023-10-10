@@ -1,4 +1,4 @@
-import createGraphQLClient from "@src/util/createGraphQLClient";
+import createGraphQLClient, { GraphQLClientOptions } from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
 
 import { GQLValidateSitePreviewHashQuery, GQLValidateSitePreviewHashQueryVariables } from "./preview.generated";
@@ -28,8 +28,4 @@ export default async function handler(req, res) {
     res.redirect(req.query.path ?? "/");
 }
 
-export interface PreviewData {
-    includeInvisiblePages: boolean;
-    includeInvisibleBlocks: boolean;
-    previewDamUrls: boolean;
-}
+export type PreviewData = GraphQLClientOptions;
