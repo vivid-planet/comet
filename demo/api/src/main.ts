@@ -1,3 +1,5 @@
+import { setContainer } from "@comet/cms-api/lib/dam/files/decorators/dependency-info.decorator";
+
 if (process.env.TRACING_ENABLED) {
     require("./tracing");
 }
@@ -22,6 +24,8 @@ async function bootstrap(): Promise<void> {
     // See https://github.com/nestjs/nest/issues/528,
     //     https://github.com/typestack/class-validator#using-service-container.
     useContainer(app.select(appModule), { fallbackOnErrors: true });
+    setContainer(app.select(appModule));
+    console.log("set container");
 
     app.enableCors({
         credentials: true,

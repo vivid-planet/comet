@@ -5,6 +5,7 @@ import { Injectable } from "@nestjs/common";
 import { subMinutes } from "date-fns";
 import { v4 } from "uuid";
 
+import { DependencyInfoOptions } from "../dam/files/decorators/dependency-info.decorator";
 import { Dependency } from "./dependency";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
@@ -188,6 +189,19 @@ export class DependenciesService {
         );
 
         const results: Dependency[] = await qb;
+
+        for (const result of results) {
+            const repository = this.entityManager.getRepository(result.targetEntityName);
+            const instance = await repository.findOne({ [result.targetPrimaryKey]: result.targetId });
+            if (instance) {
+                const methods = Reflect.getMetadata(`data:dependencyInfo`, instance.constructor) as DependencyInfoOptions<any> | undefined;
+                console.log("instance.constructor ", instance.constructor);
+                console.log("methods ", methods);
+                console.log("getName ", await methods?.getName(instance));
+                console.log("secondaryInformation ", await methods?.getSecondaryInformation(instance));
+                // console.log("getName ", methods?.getName(instance));
+            }
+        }
 
         const countResult = await this.withCount(qb).select("rootId").groupBy(["rootId", "rootEntityName"]);
         const totalCount = countResult[0]?.count ?? 0;

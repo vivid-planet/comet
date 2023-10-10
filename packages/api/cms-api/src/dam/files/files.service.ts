@@ -26,6 +26,7 @@ import { DAM_CONFIG, IMGPROXY_CONFIG } from "../dam.constants";
 import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
 import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
 import { DamScopeInterface } from "../types";
+import { DependencyInfoServiceInterface } from "./decorators/dependency-info.decorator";
 import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
 import { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
@@ -96,7 +97,7 @@ export const withFilesSelect = (
 };
 
 @Injectable()
-export class FilesService {
+export class FilesService implements DependencyInfoServiceInterface<FileInterface> {
     protected readonly logger = new Logger(FilesService.name);
     static readonly UPLOAD_FIELD = "file";
 
@@ -216,6 +217,10 @@ export class FilesService {
 
     async findOneByImageId(imageId: string): Promise<FileInterface | null> {
         return withFilesSelect(this.selectQueryBuilder(), { imageId }).getSingleResult();
+    }
+
+    async getDependencyInfo(file: FileInterface) {
+        return { name: file.name, secondaryInformation: await this.getDamPath(file) };
     }
 
     async create({ folderId, ...data }: CreateFileInput & { copyOf?: FileInterface }): Promise<FileInterface> {
