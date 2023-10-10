@@ -1,7 +1,7 @@
+import Link from "next/Link";
 import * as React from "react";
 
 import { InternalLinkBlockData } from "../blocks.generated";
-import { Link } from "../link/Link";
 import { PropsWithData } from "./PropsWithData";
 
 interface InternalLinkBlockProps extends PropsWithData<InternalLinkBlockData> {

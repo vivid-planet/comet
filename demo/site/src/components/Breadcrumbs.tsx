@@ -1,6 +1,6 @@
-import { Link } from "@comet/cms-site";
 import { GridRoot } from "@src/components/common/GridRoot";
 import { gql } from "graphql-request";
+import Link from "next/link";
 import * as React from "react";
 
 import { GQLBreadcrumbsFragment } from "./Breadcrumbs.generated";
