@@ -2,6 +2,7 @@ import { Inject } from "@nestjs/common";
 import { Args, ArgsType, Field, ObjectType, Query, Resolver } from "@nestjs/graphql";
 import { IsNumber, IsString } from "class-validator";
 import { createHmac } from "crypto";
+import { differenceInMinutes, getTime } from "date-fns";
 
 import { SITE_PREVIEW_CONFIG } from "./page-tree.constants";
 
@@ -27,20 +28,23 @@ export class SitePreviewResolver {
 
     @Query(() => SitePreviewHash)
     getSitePreviewHash(): SitePreviewHash {
-        const timestamp = Math.floor(Date.now() / 1000);
+        const timestamp = this.getTimestamp();
         return {
-            timestamp,
+            timestamp: timestamp,
             hash: this.createHash(timestamp),
         };
     }
 
     @Query(() => Boolean)
     validateSitePreviewHash(@Args() args: SitePreviewHash): boolean {
-        // Timestamp must be within the last 5 minutes
-        if (args.timestamp < Math.floor(Date.now() / 1000) - 60 * 5) {
+        if (differenceInMinutes(this.getTimestamp(), args.timestamp) > 5) {
             return false;
         }
         return this.createHash(args.timestamp) === args.hash;
+    }
+
+    private getTimestamp() {
+        return getTime(Date.now());
     }
 
     private createHash(timestamp: number): string {
