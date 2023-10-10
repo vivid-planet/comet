@@ -11,11 +11,10 @@ import * as React from "react";
 import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTypeQuery, GQLPageTypeQueryVariables } from "./[[...path]].generated";
 import { PreviewData } from "./api/preview";
 
-interface PageProps {
+type PageProps = GQLPage & {
     documentType: string;
     id: string;
-}
-export type PageUniversalProps = PageProps & GQLPage;
+};
 
 export default function Page(props: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
     if (!pageTypes[props.documentType]) {
@@ -48,11 +47,7 @@ const pageTypes = {
     },
 };
 
-export const getStaticProps: GetStaticProps<PageUniversalProps, ParsedUrlQuery, PreviewData> = async ({
-    params,
-    previewData,
-    locale = defaultLanguage,
-}) => {
+export const getStaticProps: GetStaticProps<PageProps, ParsedUrlQuery, PreviewData> = async ({ params, previewData, locale = defaultLanguage }) => {
     const path = params?.path ?? "";
     const contentScope = { domain, language: locale };
     //fetch pageType
