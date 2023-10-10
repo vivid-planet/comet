@@ -17,3 +17,7 @@ Requires following changes to site:
     -   Get previewData from context and use it to configure the GraphQL-Client
 -   Add SitePreviewProvider to App when Preview Mode is active
 -   Add /api/preview
+
+Requires following changes to api:
+
+-   Set sitePreviewSecret in PageTreeModule-options (make sure it's the same for the across multiple api-instances)
