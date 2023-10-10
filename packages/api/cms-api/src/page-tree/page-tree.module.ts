@@ -13,6 +13,7 @@ import { PageTreeNodeBase } from "./entities/page-tree-node-base.entity";
 import { defaultReservedPaths, PAGE_TREE_CONFIG, PAGE_TREE_ENTITY, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
 import { PageTreeService } from "./page-tree.service";
 import { PageTreeReadApiService } from "./page-tree-read-api.service";
+import { SitePreviewResolver } from "./site-preview.resolver";
 import type { PageTreeNodeInterface, ScopeInterface } from "./types";
 import { PageExistsConstraint } from "./validators/page-exists.validator";
 
@@ -84,6 +85,7 @@ export class PageTreeModule {
                     inject: [PageTreeService],
                 },
                 documentSubscriber,
+                SitePreviewResolver,
             ],
             exports: [PageTreeService, PageTreeReadApiService, AttachedDocumentLoaderService],
         };

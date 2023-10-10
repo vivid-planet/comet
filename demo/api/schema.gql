@@ -159,6 +159,11 @@ type PaginatedUserList {
   totalCount: Int!
 }
 
+type SitePreviewHash {
+  timestamp: Float!
+  hash: String!
+}
+
 type Link implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -487,11 +492,6 @@ type RedirectScope {
 type PaginatedPageTreeNodes {
   nodes: [PageTreeNode!]!
   totalCount: Int!
-}
-
-type SitePreviewHash {
-  timestamp: Float!
-  hash: String!
 }
 
 type Redirect implements DocumentInterface {

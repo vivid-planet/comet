@@ -252,11 +252,6 @@ type PaginatedPageTreeNodes {
   totalCount: Int!
 }
 
-type SitePreviewHash {
-  timestamp: Float!
-  hash: String!
-}
-
 type DamFolder {
   id: ID!
   name: String!
@@ -341,8 +336,6 @@ type Query {
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   paginatedPageTreeNodes(scope: PageTreeNodeScopeInput! = {}, category: String, sort: [PageTreeNodeSort!], offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
-  getSitePreviewHash: SitePreviewHash!
-  validateSitePreviewHash(timestamp: Float!, hash: String!): Boolean!
   cronJobs: [CronJob!]!
   currentUser: CurrentUser!
   userPermissionsUserById(id: String!): User!
