@@ -6,9 +6,9 @@ import { UserPermission } from "./entities/user-permission.entity";
 import { UserResolver } from "./user.resolver";
 import { UserContentScopesResolver } from "./user-content-scopes.resolver";
 import { UserPermissionResolver } from "./user-permission.resolver";
-import { USER_PERMISSIONS_OPTIONS } from "./user-permissions.constants";
+import { USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER_SERVICE } from "./user-permissions.constants";
 import { UserPermissionsService } from "./user-permissions.service";
-import { UserPermissionsAsyncOptions, UserPermissionsOptions, UserPermissionsOptionsFactory } from "./user-permissions.types";
+import { AsyncOptions, OptionsFactory, UserPermissionsOptions, UserPermissionsUserService } from "./user-permissions.types";
 
 @Global()
 @Module({
@@ -17,7 +17,7 @@ import { UserPermissionsAsyncOptions, UserPermissionsOptions, UserPermissionsOpt
     exports: [UserPermissionsService],
 })
 export class UserPermissionsModule {
-    static forRoot(options: UserPermissionsOptions): DynamicModule {
+    static forRoot(options: UserPermissionsOptions, userService: UserPermissionsUserService): DynamicModule {
         return {
             module: UserPermissionsModule,
             providers: [
@@ -25,22 +25,29 @@ export class UserPermissionsModule {
                     provide: USER_PERMISSIONS_OPTIONS,
                     useValue: options,
                 },
+                {
+                    provide: USER_PERMISSIONS_USER_SERVICE,
+                    useValue: userService,
+                },
             ],
         };
     }
 
-    static forRootAsync(asyncOptions: UserPermissionsAsyncOptions): DynamicModule {
+    static forRootAsync(options: AsyncOptions<UserPermissionsOptions>, userService: AsyncOptions<UserPermissionsUserService>): DynamicModule {
         return {
             module: UserPermissionsModule,
-            imports: asyncOptions.imports,
-            providers: [this.createProvider(asyncOptions)],
+            imports: [...(options.imports ?? []), ...(userService.imports ?? [])],
+            providers: [
+                this.createProvider<UserPermissionsOptions>(options, USER_PERMISSIONS_OPTIONS),
+                this.createProvider<UserPermissionsUserService>(userService, USER_PERMISSIONS_USER_SERVICE),
+            ],
         };
     }
 
-    private static createProvider(options: UserPermissionsAsyncOptions): Provider {
+    private static createProvider<T>(options: AsyncOptions<T>, provide: string): Provider {
         if (options.useFactory) {
             return {
-                provide: USER_PERMISSIONS_OPTIONS,
+                provide,
                 useFactory: options.useFactory,
                 inject: options.inject || [],
             };
@@ -48,8 +55,8 @@ export class UserPermissionsModule {
 
         // For useClass and useExisting...
         return {
-            provide: USER_PERMISSIONS_OPTIONS,
-            useFactory: async (optionsFactory: UserPermissionsOptionsFactory) => optionsFactory.createUserPermissionsOptions(),
+            provide,
+            useFactory: async (optionsFactory: OptionsFactory<T>) => optionsFactory.createOptions(),
             inject: options.useExisting ? [options.useExisting] : options.useClass ? [options.useClass] : [],
         };
     }

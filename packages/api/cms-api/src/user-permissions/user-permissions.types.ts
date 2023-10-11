@@ -22,7 +22,6 @@ export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentSc
 export interface UserPermissionsOptions {
     availablePermissions?: (keyof Permission)[];
     availableContentScopes?: ContentScope[];
-    userService: UserPermissionsUserService;
 }
 
 export interface UserPermissionsUserService {
@@ -32,15 +31,15 @@ export interface UserPermissionsUserService {
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }
 
-export interface UserPermissionsOptionsFactory {
-    createUserPermissionsOptions(): Promise<UserPermissionsOptions> | UserPermissionsOptions;
+export interface OptionsFactory<T> {
+    createOptions(): Promise<T> | T;
 }
 
-export interface UserPermissionsAsyncOptions extends Pick<ModuleMetadata, "imports"> {
+export interface AsyncOptions<T> extends Pick<ModuleMetadata, "imports"> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     inject?: any[];
-    useExisting?: Type<UserPermissionsOptionsFactory>;
-    useClass?: Type<UserPermissionsOptionsFactory>;
+    useExisting?: Type<T>;
+    useClass?: Type<T>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useFactory?: (...args: any[]) => Promise<UserPermissionsOptions> | UserPermissionsOptions;
+    useFactory?: (...args: any[]) => Promise<T> | T;
 }

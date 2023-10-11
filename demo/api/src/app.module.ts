@@ -81,19 +81,23 @@ export class AppModule {
                         return user.domains.includes(requestScope.domain);
                     },
                 }),
-                UserPermissionsModule.forRootAsync({
-                    useFactory: (userService: UserService) => ({
-                        availablePermissions: ["news", "products"],
-                        availableContentScopes: [
-                            { domain: "main", language: "de" },
-                            { domain: "main", language: "en" },
-                            { domain: "secondary", language: "en" },
-                        ],
-                        userService,
-                    }),
-                    inject: [UserService],
-                    imports: [AuthModule],
-                }),
+                UserPermissionsModule.forRootAsync(
+                    {
+                        useFactory: () => ({
+                            availablePermissions: ["news", "products"],
+                            availableContentScopes: [
+                                { domain: "main", language: "de" },
+                                { domain: "main", language: "en" },
+                                { domain: "secondary", language: "en" },
+                            ],
+                        }),
+                    },
+                    {
+                        useFactory: (userService: UserService) => userService,
+                        inject: [UserService],
+                        imports: [AuthModule],
+                    },
+                ),
                 BlocksModule.forRoot({
                     imports: [PagesModule],
                     useFactory: (pageTreeService: PageTreeService, filesService: FilesService, imagesService: ImagesService) => {
