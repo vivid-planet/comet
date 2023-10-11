@@ -2,7 +2,7 @@ import { RouteWithErrorBoundary } from "@comet/admin";
 import * as React from "react";
 import { Redirect, RouteProps, Switch, useRouteMatch } from "react-router-dom";
 
-import { MasterMenuData, RouteMenuItem } from "./Master";
+import { MasterMenuData, RouteMenuItem } from "./MasterMenu";
 
 export function getRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
     // TODO: Filter for user-permissions once they are available

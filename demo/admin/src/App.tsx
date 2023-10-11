@@ -6,13 +6,13 @@ import "material-design-icons/iconfont/material-icons.css";
 import "typeface-open-sans";
 
 import { ApolloProvider } from "@apollo/client";
-import { ErrorDialogHandler, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
+import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import {
     CmsBlockContextProvider,
     createHttpClient,
     DamConfigProvider,
     LocaleProvider,
-    Master,
+    MasterMenuRoutes,
     SiteConfig,
     SitePreview,
     SitesConfigProvider,
@@ -31,7 +31,7 @@ import { IntlProvider } from "react-intl";
 import { Route, Switch } from "react-router-dom";
 
 import MasterHeader from "./common/MasterHeader";
-import { masterMenuData, pageTreeCategories, pageTreeDocumentTypes } from "./common/MasterMenuData";
+import MasterMenu, { masterMenuData, pageTreeCategories, pageTreeDocumentTypes } from "./common/MasterMenu";
 import { getMessages } from "./lang";
 
 const GlobalStyle = () => (
@@ -93,7 +93,9 @@ class App extends React.Component {
                                                                     />
                                                                     <Route
                                                                         render={() => (
-                                                                            <Master headerComponent={MasterHeader} masterMenuData={masterMenuData} />
+                                                                            <MasterLayout headerComponent={MasterHeader} menuComponent={MasterMenu}>
+                                                                                <MasterMenuRoutes menu={masterMenuData} />
+                                                                            </MasterLayout>
                                                                         )}
                                                                     />
                                                                 </Switch>

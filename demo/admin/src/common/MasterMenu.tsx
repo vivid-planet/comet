@@ -1,5 +1,5 @@
 import { Assets, Dashboard as DashboardIcon, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
-import { AllCategories, createRedirectsPage, CronJobsPage, DamPage, MasterMenuData, PagesPage, PublisherPage } from "@comet/cms-admin";
+import { AllCategories, createRedirectsPage, CronJobsPage, DamPage, MasterMenu, MasterMenuData, PagesPage, PublisherPage } from "@comet/cms-admin";
 import Dashboard from "@src/dashboard/Dashboard";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import { Link } from "@src/links/Link";
@@ -190,3 +190,7 @@ export const masterMenuData: MasterMenuData = [
         },
     },
 ];
+
+export default function () {
+    return <MasterMenu menu={masterMenuData} />;
+}

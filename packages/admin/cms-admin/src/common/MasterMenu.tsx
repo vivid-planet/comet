@@ -1,8 +1,14 @@
 import { Menu, MenuCollapsibleItem, MenuContext, MenuItemRouterLink, MenuItemRouterLinkProps, useWindowSize } from "@comet/admin";
 import * as React from "react";
-import { useRouteMatch } from "react-router-dom";
+import { RouteProps, useRouteMatch } from "react-router-dom";
 
-import { MasterMenuData, RouteMenuItem } from "./Master";
+export type RouteMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
+    route?: RouteProps;
+    to?: string;
+    subMenu?: RouteMenuItem[];
+};
+
+export type MasterMenuData = RouteMenuItem[];
 
 type MenuItem = {
     menuItem: MenuItemRouterLinkProps;
