@@ -2,33 +2,35 @@ import { Menu, MenuCollapsibleItem, MenuContext, MenuItemRouterLink, MenuItemRou
 import * as React from "react";
 import { RouteProps, useRouteMatch } from "react-router-dom";
 
-export type RouteMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
+export type MasterMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
     route?: RouteProps;
     to?: string;
-    subMenu?: RouteMenuItem[];
+    subMenu?: MasterMenuItem[];
 };
 
-export type MasterMenuData = RouteMenuItem[];
+export type MasterMenuData = MasterMenuItem[];
+
+export function getMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
+    // TODO: Filter for user-permissions once they are available
+    const mapFn = (item: MasterMenuItem): MenuItem => {
+        const { route, subMenu, to, ...menuItem } = item;
+        return {
+            menuItem: {
+                ...menuItem,
+                to: to ?? route?.path?.toString() ?? "",
+            },
+            hasSubMenu: !!subMenu,
+            subMenu: subMenu ? subMenu.map(mapFn) : [],
+        };
+    };
+    return items.map(mapFn);
+}
 
 type MenuItem = {
     menuItem: MenuItemRouterLinkProps;
     hasSubMenu: boolean;
-    subMenu: Menu;
+    subMenu: MenuItem[];
 };
-type Menu = MenuItem[];
-
-export function getMenuFromMasterMenuData(items: MasterMenuData): Menu {
-    // TODO: Filter for user-permissions once they are available
-    const mapFn = (item: RouteMenuItem): MenuItem => ({
-        menuItem: {
-            ...item,
-            to: item.to ?? item.route?.path?.toString() ?? "",
-        },
-        hasSubMenu: !!item.subMenu,
-        subMenu: item.subMenu ? item.subMenu.map(mapFn) : [],
-    });
-    return items.map(mapFn);
-}
 
 export interface MasterMenuProps {
     permanentMenuMinWidth?: number;

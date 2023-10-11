@@ -2,11 +2,11 @@ import { RouteWithErrorBoundary } from "@comet/admin";
 import * as React from "react";
 import { Redirect, RouteProps, Switch, useRouteMatch } from "react-router-dom";
 
-import { MasterMenuData, RouteMenuItem } from "./MasterMenu";
+import { MasterMenuData, MasterMenuItem } from "./MasterMenu";
 
 export function getRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
     // TODO: Filter for user-permissions once they are available
-    const flat = (routes: RouteProps[], item: RouteMenuItem): RouteProps[] => {
+    const flat = (routes: RouteProps[], item: MasterMenuItem): RouteProps[] => {
         if (item.route) routes.push(item.route);
         if (item.subMenu) {
             routes.concat(item.subMenu.reduce(flat, routes));
