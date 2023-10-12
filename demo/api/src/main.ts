@@ -2,7 +2,7 @@ if (process.env.TRACING_ENABLED) {
     require("./tracing");
 }
 
-import { ExceptionInterceptor, ValidationExceptionFactory } from "@comet/cms-api";
+import { AccessLoggerInterceptor, ExceptionInterceptor, ValidationExceptionFactory } from "@comet/cms-api";
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
@@ -40,6 +40,7 @@ async function bootstrap(): Promise<void> {
 
     app.use(compression());
     app.use(cookieParser());
+    app.useGlobalInterceptors(new AccessLoggerInterceptor());
 
     const port = config.apiPort;
     await app.listen(port);
