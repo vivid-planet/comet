@@ -3,6 +3,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
 
+import { SkipBuild } from "../builds/skip-build.decorator";
 import { UserContentScopesInput } from "./dto/user-content-scopes.input";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
@@ -16,6 +17,7 @@ export class UserContentScopesResolver {
     ) {}
 
     @Mutation(() => [GraphQLJSONObject])
+    @SkipBuild()
     async userPermissionsUpdateContentScopes(
         @Args("userId", { type: () => String }) userId: string,
         @Args("input", { type: () => UserContentScopesInput }) { contentScopes }: UserContentScopesInput,
