@@ -15,7 +15,7 @@ export class CreateFolderInput {
 
     @Field({ defaultValue: false })
     @IsBoolean()
-    isInboxFromOtherScope?: boolean;
+    isInboxFromOtherScope: boolean;
 }
 
 @InputType("UpdateDamFolderInput")
