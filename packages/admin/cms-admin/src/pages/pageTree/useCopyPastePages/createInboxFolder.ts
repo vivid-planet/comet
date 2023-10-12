@@ -2,9 +2,9 @@ import { ApolloClient, gql } from "@apollo/client";
 import { LocalErrorScopeApolloContext } from "@comet/admin";
 import { format } from "date-fns";
 
-import { GQLCreateIncomingFolderMutation, GQLCreateIncomingFolderMutationVariables } from "./createIncomingFolder.generated";
+import { GQLCreateInboxFolderMutation, GQLCreateInboxFolderMutationVariables } from "./createInboxFolder.generated";
 
-export const createIncomingFolder = async ({
+export const createInboxFolder = async ({
     client,
     targetScope,
     sourceScopes,
@@ -17,9 +17,9 @@ export const createIncomingFolder = async ({
     const date = new Date();
     const name = `Copy from ${scopeString} ${format(date, "dd.MM.yyyy")}, ${format(date, "HH:mm:ss")}`;
 
-    const { data } = await client.mutate<GQLCreateIncomingFolderMutation, GQLCreateIncomingFolderMutationVariables>({
+    const { data } = await client.mutate<GQLCreateInboxFolderMutation, GQLCreateInboxFolderMutationVariables>({
         mutation: gql`
-            mutation CreateIncomingFolder($input: CreateDamFolderInput!, $contentScope: DamScopeInput!) {
+            mutation CreateInboxFolder($input: CreateDamFolderInput!, $contentScope: DamScopeInput!) {
                 createDamFolder(input: $input, scope: $contentScope) {
                     id
                 }

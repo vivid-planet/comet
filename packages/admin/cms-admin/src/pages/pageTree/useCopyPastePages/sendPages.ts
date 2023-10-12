@@ -11,14 +11,14 @@ import { GQLDamFile } from "../../../graphql.generated";
 import { PageTreeContext } from "../PageTreeContext";
 import { arrayToTreeMap } from "../treemap/TreeMapUtils";
 import { PageClipboard, PagesClipboard } from "../useCopyPastePages";
-import { createIncomingFolder } from "./createIncomingFolder";
+import { createInboxFolder } from "./createInboxFolder";
 import {
     GQLCopyFilesToScopeMutation,
     GQLCopyFilesToScopeMutationVariables,
     GQLCreatePageNodeMutation,
     GQLCreatePageNodeMutationVariables,
-    GQLDeleteIncomingFolderMutation,
-    GQLDeleteIncomingFolderMutationVariables,
+    GQLDeleteInboxFolderMutation,
+    GQLDeleteInboxFolderMutationVariables,
     GQLDownloadDamFileMutation,
     GQLDownloadDamFileMutationVariables,
     GQLFindCopiesOfFileInScopeQuery,
@@ -42,8 +42,8 @@ const createPageNodeMutation = gql`
 `;
 
 const copyFilesToScopeMutation = gql`
-    mutation CopyFilesToScope($fileIds: [ID!]!, $targetFolderId: ID!) {
-        copyFilesToScope(fileIds: $fileIds, targetFolderId: $targetFolderId) {
+    mutation CopyFilesToScope($fileIds: [ID!]!, $inboxFolderId: ID!) {
+        copyFilesToScope(fileIds: $fileIds, inboxFolderId: $inboxFolderId) {
             numberNewlyCopiedFiles
             mappedFiles {
                 rootFile {
@@ -233,7 +233,7 @@ export async function sendPages(
                 const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
                     mutation: copyFilesToScopeMutation,
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    variables: { fileIds: fileIdsToCopyDirectly, targetFolderId: inboxFolderIdForCopiedFiles! },
+                    variables: { fileIds: fileIdsToCopyDirectly, inboxFolderId: inboxFolderIdForCopiedFiles! },
                     update: (cache, result) => {
                         if (result.data && result.data.copyFilesToScope.numberNewlyCopiedFiles > 0) {
                             cache.evict({ fieldName: "damItemsList" });
@@ -321,7 +321,7 @@ export async function sendPages(
         await traverse("root");
 
         if (sourceScopes.length > 0) {
-            const { id } = await createIncomingFolder({
+            const { id } = await createInboxFolder({
                 client,
                 targetScope: damScope,
                 sourceScopes,
@@ -346,9 +346,9 @@ export async function sendPages(
 
     // 2. delete inbox folder if it was not used (as files already existed in target scope)
     if (!inboxFolderUsed && inboxFolderIdForCopiedFiles) {
-        await client.mutate<GQLDeleteIncomingFolderMutation, GQLDeleteIncomingFolderMutationVariables>({
+        await client.mutate<GQLDeleteInboxFolderMutation, GQLDeleteInboxFolderMutationVariables>({
             mutation: gql`
-                mutation DeleteIncomingFolder($id: ID!) {
+                mutation DeleteInboxFolder($id: ID!) {
                     deleteDamFolder(id: $id)
                 }
             `,

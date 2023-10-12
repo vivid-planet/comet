@@ -447,8 +447,8 @@ export class FilesService {
         return this.create(fileInput);
     }
 
-    async copyFilesToScope({ user, fileIds, targetFolderId }: { user: CurrentUserInterface; fileIds: string[]; targetFolderId: string }) {
-        const inboxFolder = await this.foldersService.findOneById(targetFolderId);
+    async copyFilesToScope({ user, fileIds, inboxFolderId }: { user: CurrentUserInterface; fileIds: string[]; inboxFolderId: string }) {
+        const inboxFolder = await this.foldersService.findOneById(inboxFolderId);
         if (!inboxFolder) {
             throw new Error("Specified inbox folder doesn't exist.");
         }
@@ -505,7 +505,7 @@ export class FilesService {
                 copiedFile = copyInTargetScope;
                 numberAlreadyCopiedFiles++;
             } else {
-                copiedFile = await this.createCopyOfFile(file, { targetFolder: inboxFolder });
+                copiedFile = await this.createCopyOfFile(file, { inboxFolder });
                 numberNewlyCopiedFiles++;
             }
 
