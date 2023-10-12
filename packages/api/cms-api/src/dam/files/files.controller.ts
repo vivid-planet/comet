@@ -73,8 +73,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
             const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            if (hasNonEmptyScope && !this.contentScopeService.canAccessScope(scope!, user)) {
+            if (scope && !this.contentScopeService.canAccessScope(scope, user)) {
                 throw new ForbiddenException();
             }
 
