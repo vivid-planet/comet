@@ -223,7 +223,7 @@ export async function sendPages(
                         if (!data?.importDamFileByDownload.id) {
                             throw Error("Did not receive new id for imported dam file");
                         }
-                        dependencyReplacements.push({ type: "DamFile", originalId: damFile.id, replaceWithId: data?.importDamFileByDownload.id });
+                        dependencyReplacements.push({ type: "DamFile", originalId: damFile.id, replaceWithId: data.importDamFileByDownload.id });
                         inboxFolderUsed = true;
                     }
                 }
