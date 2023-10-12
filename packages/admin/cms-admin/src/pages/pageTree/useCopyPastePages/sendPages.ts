@@ -188,7 +188,6 @@ export async function sendPages(
                         if (damFile.altText) formData.append("altText", damFile.altText);
                         if (damFile.license) formData.append("license", JSON.stringify(damFile.license));
                         if (damFile.image?.cropArea) formData.append("imageCropArea", JSON.stringify(damFile.image.cropArea));
-                        formData.append("copyOfId", damFile.id);
 
                         const response: { data: { id: string } } = await blockContext.damConfig.apiClient.post(`/dam/files/upload`, formData, {
                             // cancelToken, //TODO support cancel?
@@ -202,8 +201,8 @@ export async function sendPages(
                         //remote source, download server side
                         const { data } = await client.mutate<GQLDownloadDamFileMutation, GQLDownloadDamFileMutationVariables>({
                             mutation: gql`
-                                mutation DownloadDamFile($url: String!, $scope: DamScopeInput!, $copyOfId: ID!, $input: UpdateDamFileInput!) {
-                                    importDamFileByDownload(url: $url, scope: $scope, copyOfId: $copyOfId, input: $input) {
+                                mutation DownloadDamFile($url: String!, $scope: DamScopeInput!, $input: UpdateDamFileInput!) {
+                                    importDamFileByDownload(url: $url, scope: $scope, input: $input) {
                                         id
                                     }
                                 }
@@ -211,7 +210,6 @@ export async function sendPages(
                             variables: {
                                 url: damFile.fileUrl,
                                 scope: damScope,
-                                copyOfId: damFile.id,
                                 input: {
                                     name: damFile.name,
                                     folderId: inboxFolderIdForCopiedFiles,

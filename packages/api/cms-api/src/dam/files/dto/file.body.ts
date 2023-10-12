@@ -13,7 +13,6 @@ export interface UploadFileBodyInterface {
     altText?: string;
     license?: LicenseInput;
     imageCropArea?: ImageCropAreaInput;
-    copyOfId?: string;
 }
 
 export function createUploadFileBody({ Scope }: { Scope: Type<DamScopeInterface> }): Type<UploadFileBodyInterface> {
@@ -45,10 +44,6 @@ export function createUploadFileBody({ Scope }: { Scope: Type<DamScopeInterface>
         @ClassTransformerType(() => ImageCropAreaInput)
         @ValidateNested()
         imageCropArea?: ImageCropAreaInput;
-
-        @IsOptional()
-        @IsString()
-        copyOfId?: string;
     }
 
     return UploadFileBody;

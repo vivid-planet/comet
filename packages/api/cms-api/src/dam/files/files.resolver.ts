@@ -91,7 +91,6 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         async importDamFileByDownload(
             @Args("url", { type: () => String }) url: string,
             @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
-            @Args("copyOfId", { type: () => ID }) copyOfId: string,
             @Args("input", { type: () => UpdateFileInput }) { image: imageInput, ...input }: UpdateFileInput,
         ): Promise<FileInterface> {
             const file = await download(url);
@@ -99,7 +98,6 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
                 ...input,
                 imageCropArea: imageInput?.cropArea,
                 folderId: input.folderId ? input.folderId : undefined,
-                copyOfId,
                 scope,
             });
             return uploadedFile;

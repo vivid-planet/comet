@@ -293,7 +293,7 @@ export class FilesService {
 
     async upload(
         file: FileUploadInterface,
-        { folderId, scope, copyOfId, ...assignData }: Omit<UploadFileBodyInterface, "scope"> & { scope?: DamScopeInterface },
+        { folderId, scope, ...assignData }: Omit<UploadFileBodyInterface, "scope"> & { scope?: DamScopeInterface },
     ): Promise<FileInterface> {
         let result: FileInterface | undefined = undefined;
         try {
@@ -330,12 +330,6 @@ export class FilesService {
                 }
             }
 
-            let copyOf: FileInterface | null = null;
-            if (copyOfId) {
-                copyOf = await this.findOneById(copyOfId);
-                if (!copyOf) throw new Error("Copy of file not found");
-            }
-
             await this.blobStorageBackendService.upload(file, contentHash, this.config.filesDirectory);
 
             const name = await this.findNextAvailableFilename({ filePath: file.originalname, folderId, scope });
@@ -363,7 +357,6 @@ export class FilesService {
                         : undefined,
                 contentHash,
                 scope,
-                copyOf: copyOf ? copyOf : undefined,
                 ...assignData,
             });
 
