@@ -471,15 +471,6 @@ export class FilesService {
             return fileScopes;
         };
 
-        const findCopyWithSameCroppingInTargetScope = async (file: FileInterface) => {
-            const copiesInTargetScope = await this.findCopiesOfFileInScope(file.id, file.image?.cropArea, inboxFolder.scope);
-
-            if (copiesInTargetScope.length === 0) {
-                return undefined;
-            }
-            return copiesInTargetScope[0];
-        };
-
         const files = await this.findMultipleByIds(fileIds);
         if (files.length === 0) {
             throw new Error("No valid file ids provided");
@@ -493,26 +484,13 @@ export class FilesService {
             throw new Error(`User can't access the scope of one or more files`);
         }
 
-        let numberNewlyCopiedFiles = 0;
-        let numberAlreadyCopiedFiles = 0;
-
         const mappedFiles: Array<{ rootFile: FileInterface; copy: FileInterface }> = [];
         for (const file of files) {
-            let copiedFile: FileInterface;
-
-            const copyInTargetScope = await findCopyWithSameCroppingInTargetScope(file);
-            if (copyInTargetScope) {
-                copiedFile = copyInTargetScope;
-                numberAlreadyCopiedFiles++;
-            } else {
-                copiedFile = await this.createCopyOfFile(file, { inboxFolder });
-                numberNewlyCopiedFiles++;
-            }
-
+            const copiedFile = await this.createCopyOfFile(file, { inboxFolder });
             mappedFiles.push({ rootFile: file, copy: copiedFile });
         }
 
-        return { numberNewlyCopiedFiles, numberAlreadyCopiedFiles, mappedFiles };
+        return { mappedFiles };
     }
 
     async findNextAvailableFilename({

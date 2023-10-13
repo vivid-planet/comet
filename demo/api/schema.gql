@@ -493,8 +493,6 @@ type PaginatedDamItems {
 union DamItem = DamFile | DamFolder
 
 type CopyFilesResponse {
-  numberNewlyCopiedFiles: Float!
-  numberAlreadyCopiedFiles: Float!
   mappedFiles: [MappedFile!]!
 }
 

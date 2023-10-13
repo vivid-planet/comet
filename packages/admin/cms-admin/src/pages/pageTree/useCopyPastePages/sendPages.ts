@@ -44,7 +44,6 @@ const createPageNodeMutation = gql`
 const copyFilesToScopeMutation = gql`
     mutation CopyFilesToScope($fileIds: [ID!]!, $inboxFolderId: ID!) {
         copyFilesToScope(fileIds: $fileIds, inboxFolderId: $inboxFolderId) {
-            numberNewlyCopiedFiles
             mappedFiles {
                 rootFile {
                     id
@@ -235,16 +234,12 @@ export async function sendPages(
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     variables: { fileIds: fileIdsToCopyDirectly, inboxFolderId: inboxFolderIdForCopiedFiles! },
                     update: (cache, result) => {
-                        if (result.data && result.data.copyFilesToScope.numberNewlyCopiedFiles > 0) {
-                            cache.evict({ fieldName: "damItemsList" });
-                        }
+                        cache.evict({ fieldName: "damItemsList" });
                     },
                 });
 
                 if (copiedFiles) {
-                    if (copiedFiles.copyFilesToScope.numberNewlyCopiedFiles > 0) {
-                        inboxFolderUsed = true;
-                    }
+                    inboxFolderUsed = true;
                     for (const item of copiedFiles.copyFilesToScope.mappedFiles) {
                         dependencyReplacements.push({ type: "DamFile", originalId: item.rootFile.id, replaceWithId: item.copy.id });
                     }
