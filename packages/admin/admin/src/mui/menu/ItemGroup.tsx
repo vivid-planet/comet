@@ -17,7 +17,7 @@ const styles = (theme: Theme) =>
     });
 
 export interface MenuItemGroupProps {
-    title?: string | React.ReactNode;
+    title?: React.ReactNode;
 }
 
 const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({ title, children, classes }) => {
