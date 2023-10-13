@@ -13,6 +13,9 @@ interface IProps {
     rowName?: string | ((count: number) => string);
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, pagingInfo, rowName }) => {
     if (typeof rowName === "function") {
         rowName = rowName(totalCount);

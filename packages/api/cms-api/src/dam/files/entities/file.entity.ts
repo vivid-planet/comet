@@ -1,4 +1,17 @@
-import { BaseEntity, BigIntType, Cascade, Embedded, Entity, Index, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+    BaseEntity,
+    BigIntType,
+    Cascade,
+    Embedded,
+    Entity,
+    Index,
+    ManyToOne,
+    OneToMany,
+    OneToOne,
+    OptionalProps,
+    PrimaryKey,
+    Property,
+} from "@mikro-orm/core";
 import { Type } from "@nestjs/common";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
@@ -9,7 +22,7 @@ import { FolderInterface } from "./folder.entity";
 import { License } from "./license.embeddable";
 
 export interface FileInterface extends BaseEntity<FileInterface, "id"> {
-    [OptionalProps]?: "createdAt" | "updatedAt" | "archived";
+    [OptionalProps]?: "createdAt" | "updatedAt" | "archived" | "copies";
     id: string;
     folder?: FolderInterface;
     name: string;
@@ -19,6 +32,8 @@ export interface FileInterface extends BaseEntity<FileInterface, "id"> {
     title?: string;
     altText?: string;
     archived: boolean;
+    copyOf?: FileInterface;
+    copies: FileInterface[];
     image?: DamFileImage;
     license?: License;
     createdAt: Date;
@@ -59,6 +74,17 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         @Property({ columnType: "character(32)" })
         @Index()
         contentHash: string;
+
+        @ManyToOne({
+            entity: FILE_ENTITY,
+            inversedBy: (file: FileInterface) => file.copies,
+            joinColumn: "copyOfId",
+            nullable: true,
+        })
+        copyOf?: FileInterface;
+
+        @OneToMany(FILE_ENTITY, (file: FileInterface) => file.copyOf)
+        copies: FileInterface[];
 
         @Field({ nullable: true })
         @Property({

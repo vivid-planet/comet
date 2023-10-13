@@ -5,6 +5,9 @@ interface OffsetLimitPagingData {
     totalCount: number;
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export function createOffsetLimitPagingAction<TData extends OffsetLimitPagingData>(
     pagingApi: IPagingApi<number>,
     { totalCount }: TData,

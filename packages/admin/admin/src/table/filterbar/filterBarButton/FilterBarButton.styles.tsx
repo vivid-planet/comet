@@ -3,6 +3,9 @@ import createStyles from "@mui/styles/createStyles";
 
 import { FilterBarButtonProps } from "./FilterBarButton";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export type FilterBarButtonClassKey = "root" | "open" | "hasDirtyFields" | "filterBadge";
 
 export const styles = (theme: Theme) => {

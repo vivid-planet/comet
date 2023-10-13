@@ -12,6 +12,7 @@ import { PaginatedResponseFactory } from "../../common/pagination/paginated-resp
 import { ContentScopeService } from "../../content-scope/content-scope.service";
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
 import { DamScopeInterface } from "../types";
+import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
@@ -34,6 +35,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
     }
 
     const FileArgs = createFileArgs({ Scope });
+    const CopyFilesResponse = createCopyFilesResponseType({ File });
 
     @ObjectType()
     class PaginatedDamFiles extends PaginatedResponseFactory.create(File) {}
@@ -101,6 +103,23 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             }
 
             return this.filesService.moveBatch(files, targetFolder);
+        }
+
+        @Mutation(() => CopyFilesResponse)
+        @SkipBuild()
+        async copyFilesToScope(
+            @GetCurrentUser() user: CurrentUserInterface,
+            @Args("fileIds", { type: () => [ID] }) fileIds: string[],
+            @Args("targetScope", { type: () => Scope }) targetScope: typeof Scope,
+            @Args("existingInboxFolderId", {
+                type: () => ID,
+                nullable: true,
+                description:
+                    "You can set this argument to use the same inbox folder for multiple consecutive copy operations. Keep it empty for the first copy operation and use the ID from the response for the following copies.",
+            })
+            existingInboxFolderId?: string,
+        ): Promise<CopyFilesResponseInterface> {
+            return this.filesService.copyFilesToScope({ fileIds, targetScope, existingInboxFolderId, user });
         }
 
         @Mutation(() => File)
