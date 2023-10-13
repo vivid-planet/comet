@@ -8,6 +8,7 @@ import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { SubjectEntity } from "../../common/decorators/subject-entity.decorator";
+import { CometValidationException } from "../../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { ContentScopeService } from "../../content-scope/content-scope.service";
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
@@ -20,6 +21,7 @@ import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { FileInterface } from "./entities/file.entity";
 import { FolderInterface } from "./entities/folder.entity";
+import { FileValidationService } from "./file-validation.service";
 import { FilesService } from "./files.service";
 import { download, slugifyFilename } from "./files.utils";
 
@@ -49,6 +51,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
             @InjectRepository("DamFolder") private readonly foldersRepository: EntityRepository<FolderInterface>,
             private readonly contentScopeService: ContentScopeService,
+            private readonly fileValidationService: FileValidationService,
         ) {}
 
         @Query(() => PaginatedDamFiles)
@@ -94,6 +97,11 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             @Args("input", { type: () => UpdateFileInput }) { image: imageInput, ...input }: UpdateFileInput,
         ): Promise<FileInterface> {
             const file = await download(url);
+            const validationResult = await this.fileValidationService.validateFile(file);
+            if (validationResult !== true) {
+                throw new CometValidationException(validationResult);
+            }
+
             const uploadedFile = await this.filesService.upload(file, {
                 ...input,
                 imageCropArea: imageInput?.cropArea,
