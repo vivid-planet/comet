@@ -277,9 +277,12 @@ export async function sendPages(
                 if (node?.document != null) {
                     for (const damFile of fileDependenciesFromDocument(documentType, node.document)) {
                         //TODO use damFile.size; to build a progress bar for uploading/downloading files
-                        if (!hasDamScope || (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl) && isEqual(damFile.scope, damScope))) {
+                        if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
+                            //file already handled (same file used multiple times on page)
+                        } else if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl) && (!hasDamScope || isEqual(damFile.scope, damScope))) {
                             //same scope, same server, no need to copy
                         } else {
+                            // TODO eventually handle multiple files in one request for better performance
                             const { data } = await client.query<GQLFindCopiesOfFileInScopeQuery, GQLFindCopiesOfFileInScopeQueryVariables>({
                                 query: gql`
                                     query FindCopiesOfFileInScope($id: ID!, $scope: DamScopeInput!, $imageCropArea: ImageCropAreaInput) {
