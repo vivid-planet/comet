@@ -7,6 +7,9 @@ interface IPagePagingData {
     totalPages?: number | null;
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export function createPagePagingActions<TData extends IPagePagingData>(pagingApi: IPagingApi<number>, data: TData): IPagingInfo {
     const nextPage = data.nextPage ? data.nextPage : null;
     const previousPage = data.previousPage ? data.previousPage : null;

@@ -16,7 +16,8 @@ import { AdminComponentStickyHeader } from "../common/AdminComponentStickyHeader
 import { BlockPreviewContent } from "../common/blockRow/BlockPreviewContent";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
-import { BlockInterface, BlockState, PreviewContent } from "../types";
+import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
+import { BlockDependency, BlockInterface, BlockState, PreviewContent } from "../types";
 import { createUseAdminComponent } from "./listBlock/createUseAdminComponent";
 
 export interface ListBlockItem<T extends BlockInterface> {
@@ -33,6 +34,16 @@ export interface ListBlockState<T extends BlockInterface> {
 }
 
 export interface ListBlockFragment {
+    blocks: Array<{
+        [key: string]: unknown;
+        key: string;
+        visible: boolean;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        props: any;
+    }>;
+}
+
+export interface ListBlockOutput {
     blocks: Array<{
         [key: string]: unknown;
         key: string;
@@ -74,9 +85,9 @@ export function createListBlock<T extends BlockInterface>({
     additionalItemFields = {},
     AdditionalItemContextMenuItems,
     AdditionalItemContent,
-}: CreateListBlockOptions<T>): BlockInterface<ListBlockFragment, ListBlockState<T>> {
+}: CreateListBlockOptions<T>): BlockInterface<ListBlockFragment, ListBlockState<T>, ListBlockOutput> {
     const useAdminComponent = createUseAdminComponent({ block, maxVisibleBlocks, additionalItemFields });
-    const BlockListBlock: BlockInterface<ListBlockFragment, ListBlockState<T>> = {
+    const BlockListBlock: BlockInterface<ListBlockFragment, ListBlockState<T>, ListBlockOutput> = {
         ...createBlockSkeleton(),
 
         name,
@@ -140,6 +151,7 @@ export function createListBlock<T extends BlockInterface>({
 
             for (const item of output.blocks) {
                 state.blocks.push({
+                    slideIn: false,
                     ...item,
                     props: await block.output2State(item.props, context),
                     selected: false,
@@ -177,6 +189,27 @@ export function createListBlock<T extends BlockInterface>({
             return state.blocks.reduce<string[]>((anchors, child) => {
                 return [...anchors, ...(block.anchors?.(child.props) ?? [])];
             }, []);
+        },
+
+        dependencies: (state) => {
+            const mergedDependencies = state.blocks.reduce<BlockDependency[]>((dependencies, child) => {
+                return [...dependencies, ...(block.dependencies?.(child.props) ?? [])];
+            }, []);
+
+            return deduplicateBlockDependencies(mergedDependencies);
+        },
+
+        replaceDependenciesInOutput: (output, replacements) => {
+            const newOutput: ListBlockOutput = { ...output, blocks: [] };
+
+            for (const c of output.blocks) {
+                newOutput.blocks.push({
+                    ...c,
+                    props: block.replaceDependenciesInOutput(c.props, replacements),
+                });
+            }
+
+            return newOutput;
         },
 
         definesOwnPadding: true,

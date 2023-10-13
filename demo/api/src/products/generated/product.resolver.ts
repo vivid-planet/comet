@@ -148,8 +148,6 @@ export class ProductResolver {
         } = input;
         product.assign({
             ...assignInput,
-
-            category: categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined,
         });
         if (variantsInput) {
             product.variants.set(
@@ -176,6 +174,9 @@ export class ProductResolver {
             this.productStatisticsRepository.assign(statistic, {
                 ...statisticsInput,
             });
+        }
+        if (categoryInput !== undefined) {
+            product.category = categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined;
         }
 
         if (imageInput) {
