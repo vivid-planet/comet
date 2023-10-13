@@ -418,7 +418,7 @@ export class FilesService {
         return Number(result.rows[0].row_number) - 1;
     }
 
-    async createCopyOfFile(file: FileInterface, { targetFolder }: { targetFolder: FolderInterface }) {
+    async createCopyOfFile(file: FileInterface, { inboxFolder }: { inboxFolder: FolderInterface }) {
         let fileImageInput: ImageFileInput | undefined;
         if (file.image) {
             const { id: ignoreId, file: ignoreFile, ...imageProps } = file.image;
@@ -439,9 +439,9 @@ export class FilesService {
         const fileInput: CreateFileInput & { copyOf: FileInterface } = {
             ...Utils.copy(fileProps),
             image: fileImageInput,
-            folderId: targetFolder.id,
+            folderId: inboxFolder.id,
             copyOf: file,
-            scope: targetFolder.scope,
+            scope: inboxFolder.scope,
         };
 
         return this.create(fileInput);

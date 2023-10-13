@@ -138,12 +138,12 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         async copyFilesToScope(
             @GetCurrentUser() user: CurrentUserInterface,
             @Args("fileIds", { type: () => [ID] }) fileIds: string[],
-            @Args("targetFolderId", {
+            @Args("inboxFolderId", {
                 type: () => ID,
             })
-            targetFolderId: string,
+            inboxFolderId: string,
         ): Promise<CopyFilesResponseInterface> {
-            return this.filesService.copyFilesToScope({ fileIds, targetFolderId, user });
+            return this.filesService.copyFilesToScope({ fileIds, inboxFolderId, user });
         }
 
         @Mutation(() => File)
