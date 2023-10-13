@@ -2,4 +2,4 @@
 "@comet/admin": minor
 ---
 
-Add Accordion component
+Add `FieldSet` component with accordion behavior for better structuring of big forms.

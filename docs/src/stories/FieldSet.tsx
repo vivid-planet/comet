@@ -18,7 +18,7 @@ function Story() {
                 }
                 supportText="Support text"
                 endAdornment={<Chip color="default" label="Chip text" />}
-                initialCollapsed
+                initiallyExpanded={false}
             >
                 <div>Content goes here ...</div>
             </FieldSet>

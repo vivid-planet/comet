@@ -1,6 +1,6 @@
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import { Theme } from "@mui/material";
-import MuiAccordion, { AccordionProps as Props } from "@mui/material/Accordion";
+import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionDetails, { AccordionDetailsProps } from "@mui/material/AccordionDetails";
 import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
@@ -11,12 +11,12 @@ interface FieldSetComponentsProps {
     fieldSetSummary?: Partial<AccordionSummaryProps>;
     fieldSetDetails?: Partial<AccordionDetailsProps>;
 }
-export interface FieldSetProps extends Omit<Partial<Props>, "title"> {
+export interface FieldSetProps {
     title: React.ReactNode;
     supportText?: React.ReactNode;
     endAdornment?: React.ReactNode;
     collapsible?: boolean;
-    initialCollapsed?: boolean;
+    initiallyExpanded?: boolean;
     disablePadding?: boolean;
     componentsProps?: FieldSetComponentsProps;
 }
@@ -84,12 +84,12 @@ function FieldSet({
     endAdornment,
     children,
     collapsible = true,
-    initialCollapsed = false,
+    initiallyExpanded = true,
     disablePadding = false,
     componentsProps,
     classes,
-}: FieldSetProps & WithStyles<typeof styles>): React.ReactElement {
-    const [expanded, setExpanded] = React.useState(!initialCollapsed);
+}: React.PropsWithChildren<FieldSetProps> & WithStyles<typeof styles>): React.ReactElement {
+    const [expanded, setExpanded] = React.useState(initiallyExpanded);
 
     const handleChange = (event: React.SyntheticEvent, isExpanded: boolean) => {
         setExpanded(isExpanded);
