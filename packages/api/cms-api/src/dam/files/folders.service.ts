@@ -8,7 +8,7 @@ import { CometEntityNotFoundException } from "../../common/errors/entity-not-fou
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { DamScopeInterface } from "../types";
 import { DamFolderListPositionArgs, FolderArgsInterface } from "./dto/folder.args";
-import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
+import { UpdateFolderInput } from "./dto/folder.input";
 import { FOLDER_TABLE_NAME, FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
 
@@ -153,7 +153,18 @@ export class FoldersService {
         return qb.getSingleResult();
     }
 
-    async create({ parentId, isInboxFromOtherScope, ...data }: CreateFolderInput, scope?: DamScopeInterface): Promise<FolderInterface> {
+    async create(
+        {
+            parentId,
+            isInboxFromOtherScope = false,
+            ...data
+        }: {
+            name: string;
+            parentId?: string;
+            isInboxFromOtherScope?: boolean;
+        },
+        scope?: DamScopeInterface,
+    ): Promise<FolderInterface> {
         let parent = undefined;
         let mpath: string[] = [];
         if (parentId) {
