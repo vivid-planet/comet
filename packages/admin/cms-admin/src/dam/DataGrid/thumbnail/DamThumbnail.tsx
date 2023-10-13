@@ -73,7 +73,7 @@ export const DamThumbnail = ({ asset }: DamThumbnailProps): React.ReactElement =
                     <Popper open={open} anchorEl={anchorEl} placement="auto-end" onResize={undefined} onResizeCapture={undefined} transition>
                         {({ TransitionProps }) => (
                             <Fade {...TransitionProps} timeout={350}>
-                                <ImagePreview src={asset.fileUrl || undefined} id="preview" />
+                                <ImagePreview src={asset.fileUrl || undefined} />
                             </Fade>
                         )}
                     </Popper>
