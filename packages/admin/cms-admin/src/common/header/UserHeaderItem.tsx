@@ -60,7 +60,7 @@ export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
     if (loading || !data)
         return (
             <LoadingWrapper>
-                <Loading behavior="fillParent" color="inherit" />
+                <Loading behavior="fillParent" size={20} color="inherit" />
             </LoadingWrapper>
         );
 

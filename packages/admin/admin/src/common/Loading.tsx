@@ -5,16 +5,17 @@ import React from "react";
 
 export interface LoadingProps extends SvgIconProps {
     behavior?: "auto" | "fillParent" | "fillParentAbsolute" | "fillPageHeight";
+    size?: number;
 }
 
-export const Loading = ({ behavior = "auto", ...svgIconsProps }: LoadingProps) => {
+export const Loading = ({ behavior = "auto", size = 40, ...svgIconsProps }: LoadingProps) => {
     const rootRef = React.useRef<HTMLDivElement>(null);
     const offsetTop = rootRef.current?.offsetTop || 0;
 
     return (
         <Root ref={rootRef} style={{ "--comet-admin-loading-offset-top": `${offsetTop}px` } as React.CSSProperties} behavior={behavior}>
             <LoadingContainer behavior={behavior}>
-                <StyledBallTriangle {...svgIconsProps} />
+                <StyledBallTriangle {...svgIconsProps} size={size} />
             </LoadingContainer>
         </Root>
     );
@@ -60,7 +61,9 @@ const LoadingContainer = styled("div")<Required<Pick<LoadingProps, "behavior">>>
         `}
 `;
 
-const StyledBallTriangle = styled(BallTriangle)`
-    width: 40px;
-    height: 40px;
+const StyledBallTriangle = styled(BallTriangle, {
+    shouldForwardProp: (propName) => propName !== "size",
+})<{ size: number }>`
+    width: ${({ size }) => `${size}px`};
+    height: ${({ size }) => `${size}px`};
 `;
