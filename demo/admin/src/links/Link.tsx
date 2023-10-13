@@ -1,6 +1,6 @@
 import { messages } from "@comet/admin";
 import { Link as LinkIcon } from "@comet/admin-icons";
-import { DocumentInterface, rewriteInternalLinks } from "@comet/cms-admin";
+import { DocumentInterface } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
@@ -43,10 +43,9 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
             }
         }
     `,
-    // @ts-expect-error rewriteInternalLinks is insufficiently typed. As we plan to remove this method anyway, I did not invest more effort into it.
-    inputToOutput: (input, { idsMap }) => {
+    inputToOutput: (input) => {
         return {
-            content: rewriteInternalLinks(LinkBlock.state2Output(LinkBlock.input2State(input.content)), idsMap),
+            content: LinkBlock.state2Output(LinkBlock.input2State(input.content)),
         };
     },
     InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
@@ -57,4 +56,10 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
     },
     menuIcon: LinkIcon,
     anchors: () => [],
+    dependencies: (input) => LinkBlock.dependencies?.(LinkBlock.input2State(input.content)) ?? [],
+    replaceDependenciesInOutput: (output, replacements) => {
+        return {
+            content: LinkBlock.replaceDependenciesInOutput(output.content, replacements),
+        };
+    },
 };

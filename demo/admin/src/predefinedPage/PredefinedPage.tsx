@@ -71,4 +71,8 @@ export const PredefinedPage: DocumentInterface<Pick<GQLPredefinedPage, "type">, 
         }
     },
     anchors: () => [],
+    dependencies: () => [],
+    replaceDependenciesInOutput: (output, replacements) => {
+        return output;
+    },
 };

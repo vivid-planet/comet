@@ -4,6 +4,9 @@ import * as React from "react";
 
 import { FilterBarActiveFilterBadgeClassKey, styles } from "./FilterBarActiveFilterBadge.styles";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface FilterBarActiveFilterBadgeProps {
     countValue: number;
 }
@@ -22,6 +25,9 @@ function FilterBadge({ countValue, classes }: React.PropsWithChildren<FilterBarA
     }
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export const FilterBarActiveFilterBadge = withStyles(styles, { name: "CometAdminFilterBarActiveFilterBadge" })(FilterBadge);
 
 declare module "@mui/material/styles" {

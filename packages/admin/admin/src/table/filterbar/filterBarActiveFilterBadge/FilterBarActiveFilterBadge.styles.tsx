@@ -3,6 +3,9 @@ import { createStyles } from "@mui/styles";
 
 import { FilterBarActiveFilterBadgeProps } from "./FilterBarActiveFilterBadge";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export type FilterBarActiveFilterBadgeClassKey = "hasValueCount";
 
 export const styles = ({ palette }: Theme) => {

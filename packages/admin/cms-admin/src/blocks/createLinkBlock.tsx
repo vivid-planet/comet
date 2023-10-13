@@ -5,7 +5,7 @@ import { FormattedMessage } from "react-intl";
 import { ExternalLinkBlock } from "./ExternalLinkBlock";
 import { InternalLinkBlock } from "./InternalLinkBlock";
 
-interface CreateLinkBlockOptions extends Omit<CreateOneOfBlockOptions, "name" | "supportedBlocks"> {
+interface CreateLinkBlockOptions extends Omit<CreateOneOfBlockOptions<boolean>, "name" | "supportedBlocks"> {
     name?: string;
     supportedBlocks?: Record<string, BlockInterface & LinkBlockInterface>;
 }

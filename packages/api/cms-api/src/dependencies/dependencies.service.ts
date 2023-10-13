@@ -2,7 +2,6 @@ import { AnyEntity, Connection, QueryOrder } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, Knex } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
-import * as console from "console";
 import { subMinutes } from "date-fns";
 import { v4 } from "uuid";
 

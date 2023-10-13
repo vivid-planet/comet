@@ -36,9 +36,10 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
     React.useEffect(() => {
         if (variant === "temporary" && open) {
             toggleOpen();
-            // workaround for issue: https://github.com/mui/material-ui/issues/35793
-            initialRender.current = false;
         }
+        // workaround for issue: https://github.com/mui/material-ui/issues/35793
+        initialRender.current = false;
+
         // useEffect dependencies need to stay empty, because the function should only be called on first render.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

@@ -1,3 +1,18 @@
+type Dependency {
+  rootId: String!
+  rootGraphqlObjectType: String!
+  rootColumnName: String!
+  jsonPath: String!
+  visible: Boolean!
+  targetGraphqlObjectType: String!
+  targetId: String!
+}
+
+type PaginatedDependencies {
+  nodes: [Dependency!]!
+  totalCount: Int!
+}
+
 type ImageCropArea {
   focalPoint: FocalPoint!
   width: Float
@@ -57,21 +72,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Dependency {
-  rootId: String!
-  rootGraphqlObjectType: String!
-  rootColumnName: String!
-  jsonPath: String!
-  visible: Boolean!
-  targetGraphqlObjectType: String!
-  targetId: String!
-}
-
-type PaginatedDependencies {
-  nodes: [Dependency!]!
-  totalCount: Int!
-}
-
 type BuildTemplate {
   id: ID!
   name: String!
@@ -121,6 +121,38 @@ type FilenameResponse {
   name: String!
   folderId: ID
   isOccupied: Boolean!
+}
+
+type CurrentUserPermission {
+  permission: String!
+}
+
+type User {
+  id: String!
+  name: String!
+  email: String!
+  language: String!
+}
+
+type UserPermission {
+  id: ID!
+  source: UserPermissionSource
+  permission: String!
+  validFrom: DateTime
+  validTo: DateTime
+  reason: String
+  requestedBy: String
+  approvedBy: String
+}
+
+enum UserPermissionSource {
+  MANUAL
+  BY_RULE
+}
+
+type PaginatedUserList {
+  nodes: [User!]!
+  totalCount: Int!
 }
 
 type PageTreeNode {
@@ -178,6 +210,8 @@ type CurrentUser {
   language: String!
   role: String!
   rights: [CurrentUserRight!]
+  contentScopes: [JSONObject!]!
+  permissions: [CurrentUserPermission!]!
 }
 
 type Redirect implements DocumentInterface {
@@ -225,6 +259,7 @@ type DamFolder {
   numberOfFiles: Int!
   mpath: [ID!]!
   archived: Boolean!
+  isInboxFromOtherScope: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
   parent: DamFolder
@@ -257,6 +292,18 @@ type PaginatedDamItems {
 }
 
 union DamItem = DamFile | DamFolder
+
+type CopyFilesResponse {
+  numberNewlyCopiedFiles: Float!
+  numberAlreadyCopiedFiles: Float!
+  inboxFolderId: String
+  mappedFiles: [MappedFile!]!
+}
+
+type MappedFile {
+  rootFile: DamFile!
+  copy: DamFile!
+}
 
 type PaginatedDamFiles {
   nodes: [DamFile!]!
@@ -293,6 +340,13 @@ type Query {
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   cronJobs: [CronJob!]!
   currentUser: CurrentUser!
+  userPermissionsUserById(id: String!): User!
+  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
+  userPermissionsPermissionList(userId: String!): [UserPermission!]!
+  userPermissionsPermission(id: ID!, userId: String): UserPermission!
+  userPermissionsAvailablePermissions: [String!]!
+  userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
+  userPermissionsAvailableContentScopes: [JSONObject!]!
 }
 
 input RedirectScopeInput {
@@ -394,6 +448,27 @@ enum SlugAvailability {
   Reserved
 }
 
+input UserFilter {
+  name: StringFilter
+  email: StringFilter
+  status: StringFilter
+  language: StringFilter
+  and: [UserFilter!]
+  or: [UserFilter!]
+}
+
+input UserSort {
+  field: UserSortField!
+  direction: SortDirection! = ASC
+}
+
+enum UserSortField {
+  name
+  email
+  status
+  language
+}
+
 type Mutation {
   createBuilds(input: CreateBuildsInput!): Boolean!
   createRedirect(scope: RedirectScopeInput! = {}, input: RedirectInput!): Redirect!
@@ -402,6 +477,15 @@ type Mutation {
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
+  copyFilesToScope(
+    fileIds: [ID!]!
+    targetScope: DamScopeInput!
+
+    """
+    You can set this argument to use the same inbox folder for multiple consecutive copy operations. Keep it empty for the first copy operation and use the ID from the response for the following copies.
+    """
+    existingInboxFolderId: ID
+  ): CopyFilesResponse!
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
   restoreDamFile(id: ID!): DamFile!
@@ -420,6 +504,10 @@ type Mutation {
   updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
   createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
   currentUserSignOut: String!
+  userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
+  userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
+  userPermissionsDeletePermission(id: ID!): Boolean!
+  userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): [JSONObject!]!
 }
 
 input CreateBuildsInput {
@@ -515,4 +603,17 @@ input PageTreeNodeCreateInput {
   slug: String!
   attachedDocument: AttachedDocumentInput!
   hideInMenu: Boolean
+}
+
+input UserPermissionInput {
+  permission: String!
+  validFrom: DateTime
+  validTo: DateTime
+  reason: String
+  requestedBy: String
+  approvedBy: String
+}
+
+input UserContentScopesInput {
+  contentScopes: [JSONObject!]! = []
 }
