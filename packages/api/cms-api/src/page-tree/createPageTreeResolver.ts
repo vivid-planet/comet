@@ -74,6 +74,7 @@ export function createPageTreeResolver({
             @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
             private readonly attachedDocumentLoaderService: AttachedDocumentLoaderService,
         ) {}
+
         @Query(() => PageTreeNode, { nullable: true })
         @SubjectEntity(PageTreeNode)
         async pageTreeNode(@Args("id", { type: () => ID }) id: string): Promise<PageTreeNodeInterface> {

@@ -16,7 +16,8 @@ import { AdminComponentSection } from "../common/AdminComponentSection";
 import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
-import { BlockCategory, BlockInputApi, BlockInterface, DispatchSetStateAction, PreviewContent } from "../types";
+import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
+import { BlockCategory, BlockDependency, BlockInputApi, BlockInterface, DispatchSetStateAction, PreviewContent } from "../types";
 import { resolveNewState } from "../utils";
 import { FinalFormColumnsSelect } from "./columnsBlock/FinalFormColumnsSelect";
 import { FinalFormLayoutSelect } from "./columnsBlock/FinalFormLayoutSelect";
@@ -177,6 +178,27 @@ export function createColumnsBlock<T extends BlockInterface>({
             return state.columns.reduce<string[]>((anchors, column) => {
                 return [...anchors, ...(contentBlock.anchors?.(column.props) ?? [])];
             }, []);
+        },
+
+        dependencies: (state) => {
+            const mergedDependencies = state.columns.reduce<BlockDependency[]>((dependencies, column) => {
+                return [...dependencies, ...(contentBlock.dependencies?.(column.props) ?? [])];
+            }, []);
+
+            return deduplicateBlockDependencies(mergedDependencies);
+        },
+
+        replaceDependenciesInOutput: (output, replacements) => {
+            const newOutput: ColumnsBlockFragment<T> = { ...output, columns: [] };
+
+            for (const column of output.columns) {
+                newOutput.columns.push({
+                    ...column,
+                    props: contentBlock.replaceDependenciesInOutput(column.props, replacements),
+                });
+            }
+
+            return newOutput;
         },
 
         AdminComponent: ({ state, updateState }) => {

@@ -7,6 +7,9 @@ import { FormattedMessage } from "react-intl";
 import { FilterBarButton } from "../filterBarButton/FilterBarButton";
 import { FilterBarMoveFilersClassKey, styles } from "./FilterBarMoreFilters.styles";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface FilterBarMoreFiltersProps {
     icon?: React.ReactNode;
 }
@@ -31,6 +34,9 @@ export function MoreFilters({
     );
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export const FilterBarMoreFilters = withStyles(styles, { name: "CometAdminFilterBarMoreFilters" })(MoreFilters);
 
 declare module "@mui/material/styles" {

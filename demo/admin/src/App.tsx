@@ -21,6 +21,7 @@ import {
     SiteConfig,
     SitePreview,
     SitesConfigProvider,
+    UserPermissionsPage,
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
@@ -224,6 +225,10 @@ class App extends React.Component {
                                                                                     <RouteWithErrorBoundary
                                                                                         path={`${match.path}/product-tags`}
                                                                                         component={ProductTagsPage}
+                                                                                    />
+                                                                                    <RouteWithErrorBoundary
+                                                                                        path={`${match.path}/user-permissions`}
+                                                                                        component={UserPermissionsPage}
                                                                                     />
 
                                                                                     <Redirect from={`${match.path}`} to={`${match.url}/dashboard`} />

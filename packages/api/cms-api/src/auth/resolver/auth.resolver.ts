@@ -2,6 +2,7 @@ import { Type } from "@nestjs/common";
 import { Context, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { IncomingMessage } from "http";
 
+import { SkipBuild } from "../../builds/skip-build.decorator";
 import { CurrentUserInterface } from "../current-user/current-user";
 import { GetCurrentUser } from "../decorators/get-current-user.decorator";
 
@@ -20,6 +21,7 @@ export function createAuthResolver(config: AuthResolverConfig): Type<unknown> {
         }
 
         @Mutation(() => String)
+        @SkipBuild()
         async currentUserSignOut(@Context("req") req: IncomingMessage): Promise<string | null> {
             let signOutUrl = config.postLogoutRedirectUri || "/";
 

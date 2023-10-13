@@ -101,6 +101,11 @@ const MasterMenu: React.FC = () => {
                     to={`${match.url}/component-demo`}
                     icon={<Snips />}
                 />
+                <MenuItemRouterLink
+                    primary={intl.formatMessage({ id: "menu.userPermissions", defaultMessage: "User Permissions" })}
+                    to={`${match.url}/user-permissions`}
+                    icon={<Snips />}
+                />
             </MenuItemGroup>
         </Menu>
     );

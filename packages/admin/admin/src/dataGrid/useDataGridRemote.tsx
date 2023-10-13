@@ -34,7 +34,7 @@ export function useDataGridRemote({
     };
 
     const sortModel =
-        (!parsedSearch.sort
+        (!parsedSearch[sortParamName]
             ? undefined
             : !Array.isArray(parsedSearch[sortParamName])
             ? parsedSearch[sortParamName] === "none"
@@ -59,7 +59,7 @@ export function useDataGridRemote({
         [history, location, parsedSearch, sortParamName],
     );
 
-    const filterModel = parsedSearch.filter ? JSON.parse(parsedSearch[filterParamName] as string) : { items: [] };
+    const filterModel = parsedSearch[filterParamName] ? JSON.parse(parsedSearch[filterParamName] as string) : { items: [] };
     const handleFilterChange = React.useCallback(
         (filterModel: GridFilterModel) => {
             history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, [filterParamName]: JSON.stringify(filterModel) }) });

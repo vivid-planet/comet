@@ -1,4 +1,4 @@
-import { File, Folder, Pdf } from "@comet/admin-icons";
+import { File, Folder, FolderCopy, Pdf } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 
@@ -7,6 +7,8 @@ import { AudioThumbnail } from "./AudioThumbnail";
 import { GQLDamFileThumbnailFragment } from "./DamThumbnail.gql.generated";
 import { VideoThumbnail } from "./VideoThumbnail";
 export { damFileThumbnailFragment } from "./DamThumbnail.gql";
+
+export const inboxFolderColor = "#952F80";
 
 const ThumbnailWrapper = styled("div")`
     display: flex;
@@ -27,7 +29,7 @@ const ColoredFile = styled(File)`
     color: ${({ theme }) => theme.palette.primary.main};
 `;
 
-type DamThumbnailFolder = Pick<GQLDamFolder, "__typename">;
+type DamThumbnailFolder = Pick<GQLDamFolder, "__typename" | "isInboxFromOtherScope">;
 type DamThumbnailFile = Pick<GQLDamFile, "__typename" | "mimetype" | "fileUrl"> & { image: GQLDamFileThumbnailFragment | null };
 
 interface DamThumbnailProps {
@@ -48,8 +50,12 @@ export const DamThumbnail = ({ asset }: DamThumbnailProps): React.ReactElement =
         } else {
             thumbnail = <ColoredFile />;
         }
-    } else {
-        thumbnail = <Folder />;
+    } else if (asset.__typename === "DamFolder") {
+        if (asset.isInboxFromOtherScope) {
+            thumbnail = <FolderCopy htmlColor={inboxFolderColor} />;
+        } else {
+            thumbnail = <Folder />;
+        }
     }
 
     return <ThumbnailWrapper>{thumbnail}</ThumbnailWrapper>;

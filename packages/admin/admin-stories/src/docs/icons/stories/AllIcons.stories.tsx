@@ -1,4 +1,4 @@
-import { ClearInputButton } from "@comet/admin";
+import { ClearInputAdornment } from "@comet/admin";
 import * as icons from "@comet/admin-icons";
 import { Grid, InputAdornment, InputBase, SvgIconProps, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -84,7 +84,11 @@ storiesOf("stories/Icons", module).add("All Icons", () => {
                     endAdornment={
                         debouncedSearchQuery.length !== 0 && (
                             <InputAdornment position="end">
-                                <ClearInputButton onClick={() => setSearchQuery("")} />
+                                <ClearInputAdornment
+                                    position="end"
+                                    hasClearableContent={Boolean(debouncedSearchQuery.length !== 0)}
+                                    onClick={() => setSearchQuery("")}
+                                />
                             </InputAdornment>
                         )
                     }

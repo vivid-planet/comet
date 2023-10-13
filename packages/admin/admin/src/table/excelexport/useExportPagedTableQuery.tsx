@@ -12,6 +12,9 @@ interface IOptions<IVariables> {
     toPage?: number;
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export function useExportPagedTableQuery<IVariables>(
     api: ITableQueryApi,
     options: IOptions<IVariables>,

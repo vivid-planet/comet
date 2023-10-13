@@ -6,12 +6,12 @@ import { MenuChild, MenuCollapsibleItemProps } from "./CollapsibleItem";
 import { MenuItemProps } from "./Item";
 import { MenuItemRouterLinkProps } from "./ItemRouterLink";
 
-export type MenuItemGroupClassKey = "root" | "groupTitleContainer" | "groupTitle";
+export type MenuItemGroupClassKey = "root" | "title" | "titleContainer";
 
 const styles = (theme: Theme) =>
     createStyles<MenuItemGroupClassKey, MenuItemGroupProps>({
         root: { marginTop: theme.spacing(8) },
-        groupTitle: {
+        title: {
             fontWeight: theme.typography.fontWeightBold,
             fontSize: ({ isMenuOpen }) => (isMenuOpen ? 14 : 12),
             border: ({ isMenuOpen }) => (isMenuOpen ? `2px solid ${theme.palette.common.white}` : `2px solid ${theme.palette.grey[100]}`),
@@ -20,7 +20,8 @@ const styles = (theme: Theme) =>
             lineHeight: "20px",
             color: ({ isMenuOpen }) => (isMenuOpen ? `${theme.palette.common.black}` : `${theme.palette.grey[300]}`),
         },
-        groupTitleContainer: {
+        titleContainer: {
+            borderBottom: `1px solid ${theme.palette.grey[50]}`,
             display: "flex",
             justifyContent: ({ isMenuOpen }) => (isMenuOpen ? "flex-start" : "center"),
             padding: ({ isMenuOpen }) => `${theme.spacing(2)} ${isMenuOpen ? theme.spacing(4) : 0}`,
@@ -58,8 +59,8 @@ const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & Me
                 disableTouchListener={isMenuOpen}
                 title={initialTitle}
             >
-                <Box className={classes.groupTitleContainer}>
-                    <Typography className={classes.groupTitle} variant="h3">
+                <Box className={classes.titleContainer}>
+                    <Typography className={classes.title} variant="h3">
                         {title}
                     </Typography>
                 </Box>
