@@ -17,8 +17,6 @@ import {
     GQLCopyFilesToScopeMutationVariables,
     GQLCreatePageNodeMutation,
     GQLCreatePageNodeMutationVariables,
-    GQLDeleteInboxFolderMutation,
-    GQLDeleteInboxFolderMutationVariables,
     GQLDownloadDamFileMutation,
     GQLDownloadDamFileMutationVariables,
     GQLFindCopiesOfFileInScopeQuery,
@@ -85,8 +83,7 @@ interface SendPagesDependencies {
  *              - with new name "{name} {uniqueNumber}"
  *              - and new parent id
  *              - new document id (created in step 1a)
- *      2. delete inbox folder if it was not used (as files already existed in target scope)
- *      3. Refetch Pages query
+ *      2. Refetch Pages query
  *
  **/
 export async function sendPages(
@@ -98,7 +95,6 @@ export async function sendPages(
     const tree = arrayToTreeMap<PageClipboard>(pages);
     const dependencyReplacements = createPageTreeNodeIdReplacements(pages);
     let inboxFolderIdForCopiedFiles: string | undefined = undefined;
-    let inboxFolderUsed = false;
     const hasDamScope = Object.entries(damScope).length > 0;
 
     const handlePageTreeNode = async (node: PageClipboard, newParentId: string | null, posOffset: number): Promise<string> => {
@@ -173,6 +169,7 @@ export async function sendPages(
                         fileIdsToCopyDirectly.push(damFile.id);
                     }
                 } else {
+                    if (!inboxFolderIdForCopiedFiles) throw new Error("inbox folder must be created in step 0 when files need to be copied");
                     if (damFile.fileUrl.match(/^https?:\/\/(localhost|.*\.dev\.vivid-planet\.cloud|192\.168\.\d{1,3}\.\d{1,3}):\d{2,4}/)) {
                         //source is local dev server, download client side and upload
                         const fileResponse = await fetch(damFile.fileUrl);
@@ -181,8 +178,7 @@ export async function sendPages(
                         const formData = new FormData();
                         formData.append("file", file);
                         if (hasDamScope) formData.append("scope", JSON.stringify(damScope));
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        formData.append("folderId", inboxFolderIdForCopiedFiles!);
+                        formData.append("folderId", inboxFolderIdForCopiedFiles);
                         if (damFile.title) formData.append("title", damFile.title);
                         if (damFile.altText) formData.append("altText", damFile.altText);
                         if (damFile.license) formData.append("license", JSON.stringify(damFile.license));
@@ -195,7 +191,6 @@ export async function sendPages(
                             },
                         });
                         dependencyReplacements.push({ type: "DamFile", originalId: damFile.id, replaceWithId: response.data.id });
-                        inboxFolderUsed = true;
                     } else {
                         //remote source, download server side
                         const { data } = await client.mutate<GQLDownloadDamFileMutation, GQLDownloadDamFileMutationVariables>({
@@ -223,23 +218,21 @@ export async function sendPages(
                             throw Error("Did not receive new id for imported dam file");
                         }
                         dependencyReplacements.push({ type: "DamFile", originalId: damFile.id, replaceWithId: data.importDamFileByDownload.id });
-                        inboxFolderUsed = true;
                     }
                 }
             }
 
             if (fileIdsToCopyDirectly.length > 0) {
+                if (!inboxFolderIdForCopiedFiles) throw new Error("inbox folder must be created in step 0 when files need to be copied");
                 const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
                     mutation: copyFilesToScopeMutation,
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    variables: { fileIds: fileIdsToCopyDirectly, inboxFolderId: inboxFolderIdForCopiedFiles! },
+                    variables: { fileIds: fileIdsToCopyDirectly, inboxFolderId: inboxFolderIdForCopiedFiles },
                     update: (cache, result) => {
                         cache.evict({ fieldName: "damItemsList" });
                     },
                 });
 
                 if (copiedFiles) {
-                    inboxFolderUsed = true;
                     for (const item of copiedFiles.copyFilesToScope.mappedFiles) {
                         dependencyReplacements.push({ type: "DamFile", originalId: item.rootFile.id, replaceWithId: item.copy.id });
                     }
@@ -342,20 +335,7 @@ export async function sendPages(
         await traverse("root", parentId);
     }
 
-    // 2. delete inbox folder if it was not used (as files already existed in target scope)
-    if (!inboxFolderUsed && inboxFolderIdForCopiedFiles) {
-        await client.mutate<GQLDeleteInboxFolderMutation, GQLDeleteInboxFolderMutationVariables>({
-            mutation: gql`
-                mutation DeleteInboxFolder($id: ID!) {
-                    deleteDamFolder(id: $id)
-                }
-            `,
-            variables: { id: inboxFolderIdForCopiedFiles },
-            context: LocalErrorScopeApolloContext,
-        });
-    }
-
-    // 3. Refetch Pages query
+    // 2. Refetch Pages query
     client.refetchQueries({ include: ["Pages"] });
 }
 
