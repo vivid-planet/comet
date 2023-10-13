@@ -5,17 +5,17 @@ import { GqlExecutionContext } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
 
 import { CurrentUserInterface } from "../auth/current-user/current-user";
-import { ContentScope } from "../common/decorators/content-scope.interface";
-import { ScopedEntityMeta } from "../common/decorators/scoped-entity.decorator";
-import { SubjectEntityMeta } from "../common/decorators/subject-entity.decorator";
 import { PageTreeService } from "../page-tree/page-tree.service";
-import { CAN_ACCESS_SCOPE } from "./conent-scope.constants";
-import { CanAccessScope } from "./content-scope.module";
+import { ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { SubjectEntityMeta } from "../user-permissions/decorators/subject-entity.decorator";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { AccessControlService } from "./access-control.service";
+import { ACCESS_CONTROL_SERVICE } from "./user-permissions.constants";
 
 @Injectable()
 export class ContentScopeService {
     constructor(
-        @Inject(CAN_ACCESS_SCOPE) private canAccessScopeConfig: CanAccessScope,
+        @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlService,
         private reflector: Reflector,
         private readonly orm: MikroORM,
         @Optional() private readonly pageTreeService?: PageTreeService,
@@ -30,7 +30,7 @@ export class ContentScopeService {
     }
 
     canAccessScope(requestScope: ContentScope, user: CurrentUserInterface): boolean {
-        return this.canAccessScopeConfig(requestScope, user);
+        return this.accessControlService.canAccessScope(requestScope, user);
     }
 
     async inferScopeFromExecutionContext(context: ExecutionContext): Promise<ContentScope | undefined> {

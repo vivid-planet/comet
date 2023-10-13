@@ -3,9 +3,9 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 
 import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
-import { ContentScopeService } from "../content-scope/content-scope.service";
 import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
+import { ContentScopeService } from "../user-permissions/content-scope.service";
 import { BuildsService } from "./builds.service";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
 import { Build } from "./dto/build.object";

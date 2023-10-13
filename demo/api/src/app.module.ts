@@ -4,10 +4,7 @@ import {
     BlocksModule,
     BlocksTransformerMiddlewareFactory,
     BuildsModule,
-    ContentScope,
-    ContentScopeModule,
     CronJobsModule,
-    CurrentUserInterface,
     DamModule,
     DependenciesModule,
     FilesService,
@@ -75,12 +72,6 @@ export class AppModule {
                     inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
                 }),
                 AuthModule,
-                ContentScopeModule.forRoot({
-                    canAccessScope(requestScope: ContentScope, user: CurrentUserInterface) {
-                        if (!user.domains) return true; //all domains
-                        return user.domains.includes(requestScope.domain);
-                    },
-                }),
                 UserPermissionsModule.forRootAsync({
                     useFactory: (userService: UserService) => ({
                         availablePermissions: ["news", "products"],

@@ -1,5 +1,6 @@
 import { ModuleMetadata, Type } from "@nestjs/common";
 
+import { AccessControlService } from "./access-control.service";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
 import { UserPermission } from "./entities/user-permission.entity";
@@ -23,6 +24,7 @@ export interface UserPermissionsOptions {
     availablePermissions?: (keyof Permission)[];
     availableContentScopes?: ContentScope[];
     userService: UserPermissionsUserService;
+    accessControlService?: AccessControlService;
 }
 
 export interface UserPermissionsUserService {

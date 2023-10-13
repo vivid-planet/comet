@@ -1,7 +1,7 @@
 import { Type } from "@nestjs/common";
 import { Args, createUnionType, Field, Int, ObjectType, Query, Resolver } from "@nestjs/graphql";
 
-import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
+import { ScopeGuardActive } from "../../user-permissions/decorators/scope-guard-active.decorator";
 import { DamScopeInterface } from "../types";
 import { DamItemsService } from "./dam-items.service";
 import { createDamItemArgs, createDamItemPositionArgs, DamItemPositionArgsInterface, DamItemsArgsInterface } from "./dto/dam-items.args";

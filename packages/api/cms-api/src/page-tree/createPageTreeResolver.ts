@@ -2,10 +2,10 @@ import { Inject, Type } from "@nestjs/common";
 import { Args, ArgsType, createUnionType, ID, Info, Mutation, ObjectType, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
-import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { DynamicDtoValidationPipe } from "../common/validation/dynamic-dto-validation.pipe";
 import { DocumentInterface } from "../document/dto/document-interface";
+import { SubjectEntity } from "../user-permissions/decorators/subject-entity.decorator";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
 import {

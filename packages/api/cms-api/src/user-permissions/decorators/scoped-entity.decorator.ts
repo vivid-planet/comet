@@ -1,6 +1,6 @@
 import { CustomDecorator, SetMetadata } from "@nestjs/common";
 
-import { ContentScope } from "./content-scope.interface";
+import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
 
 export interface ScopedEntityMeta {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
