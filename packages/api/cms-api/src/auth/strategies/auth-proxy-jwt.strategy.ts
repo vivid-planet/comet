@@ -1,9 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, Optional } from "@nestjs/common";
 import { PassportStrategy, Type } from "@nestjs/passport";
+import { JwtPayload } from "jsonwebtoken";
 import { passportJwtSecret } from "jwks-rsa";
 import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 
-import { CurrentUserInterface, CurrentUserLoaderInterface } from "../current-user/current-user";
+import { CurrentUserInterface } from "../current-user/current-user";
+import { CURRENT_USER_LOADER, CurrentUserLoaderInterface } from "../current-user/current-user-loader";
 
 interface AuthProxyJwtStrategyConfig {
     jwksUri: string;
@@ -36,7 +38,7 @@ export function createAuthProxyJwtStrategy({
 }: AuthProxyJwtStrategyConfig): Type {
     @Injectable()
     class AuthProxyJwtStrategy extends PassportStrategy(Strategy, strategyName) {
-        constructor() {
+        constructor(@Optional() @Inject(CURRENT_USER_LOADER) private readonly currentUserLoader: CurrentUserLoaderInterface) {
             super({
                 jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
                 secretOrKeyProvider: passportJwtSecret({
@@ -45,12 +47,11 @@ export function createAuthProxyJwtStrategy({
                 audience,
                 ...strategyOptions,
             });
+            if (!this.currentUserLoader) this.currentUserLoader = currentUserLoader ?? new CurrentUserLoader();
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        async validate(data: any): Promise<CurrentUserInterface> {
-            const userLoader = currentUserLoader ? currentUserLoader : new CurrentUserLoader();
-            return userLoader.load(data);
+        async validate(data: JwtPayload): Promise<CurrentUserInterface> {
+            return this.currentUserLoader.load(data);
         }
     }
     return AuthProxyJwtStrategy;

@@ -6,7 +6,7 @@ import { UserPermission } from "./entities/user-permission.entity";
 import { UserResolver } from "./user.resolver";
 import { UserContentScopesResolver } from "./user-content-scopes.resolver";
 import { UserPermissionResolver } from "./user-permission.resolver";
-import { USER_PERMISSIONS_OPTIONS } from "./user-permissions.constants";
+import { USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_SERVICE } from "./user-permissions.constants";
 import { UserPermissionsService } from "./user-permissions.service";
 import { UserPermissionsAsyncOptions, UserPermissionsOptions, UserPermissionsOptionsFactory } from "./user-permissions.types";
 
@@ -25,7 +25,12 @@ export class UserPermissionsModule {
                     provide: USER_PERMISSIONS_OPTIONS,
                     useValue: options,
                 },
+                {
+                    provide: USER_PERMISSIONS_SERVICE,
+                    useClass: UserPermissionsService,
+                },
             ],
+            exports: [USER_PERMISSIONS_SERVICE],
         };
     }
 
@@ -33,7 +38,14 @@ export class UserPermissionsModule {
         return {
             module: UserPermissionsModule,
             imports: asyncOptions.imports,
-            providers: [this.createProvider(asyncOptions)],
+            providers: [
+                this.createProvider(asyncOptions),
+                {
+                    provide: USER_PERMISSIONS_SERVICE,
+                    useClass: UserPermissionsService,
+                },
+            ],
+            exports: [USER_PERMISSIONS_SERVICE],
         };
     }
 

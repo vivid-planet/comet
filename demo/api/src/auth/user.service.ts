@@ -1,20 +1,7 @@
 import { ContentScopesForUser, FindUsersArgs, PermissionsForUser, User, UserPermissions, UserPermissionsUserService, Users } from "@comet/cms-api";
 import { Injectable } from "@nestjs/common";
 
-const staticUsers: User[] = [
-    {
-        id: "1",
-        name: "Admin",
-        email: "demo@comet-dxp.com",
-        language: "en",
-    },
-    {
-        id: "2",
-        name: "Non-Admin",
-        email: "test@test.com",
-        language: "en",
-    },
-];
+import { staticUsers } from "./static-users";
 
 @Injectable()
 export class UserService implements UserPermissionsUserService {

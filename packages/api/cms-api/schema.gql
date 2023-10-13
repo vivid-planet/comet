@@ -127,13 +127,6 @@ type CurrentUserPermission {
   permission: String!
 }
 
-type User {
-  id: String!
-  name: String!
-  email: String!
-  language: String!
-}
-
 type UserPermission {
   id: ID!
   source: UserPermissionSource
@@ -148,6 +141,13 @@ type UserPermission {
 enum UserPermissionSource {
   MANUAL
   BY_RULE
+}
+
+type User {
+  id: String!
+  name: String!
+  email: String!
+  language: String!
 }
 
 type PaginatedUserList {

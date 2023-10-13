@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, Optional } from "@nestjs/common";
 import { PassportStrategy, Type } from "@nestjs/passport";
-import jwt from "jsonwebtoken";
-import { ExtractJwt, Strategy } from "passport-jwt";
+import { Strategy } from "passport-custom";
 
 import { CurrentUserInterface } from "../current-user/current-user";
+import { CURRENT_USER_LOADER, CurrentUserLoader, CurrentUserLoaderInterface } from "../current-user/current-user-loader";
 
 interface StaticAuthedUserStrategyConfig {
     staticAuthedUser: CurrentUserInterface;
@@ -12,16 +12,13 @@ interface StaticAuthedUserStrategyConfig {
 export function createStaticAuthedUserStrategy(config: StaticAuthedUserStrategyConfig): Type {
     @Injectable()
     class StaticAuthedUserStrategy extends PassportStrategy(Strategy, "static-authed-user") {
-        constructor() {
-            const secretOrKey = "static";
-            super({
-                jwtFromRequest: ExtractJwt.fromExtractors([() => jwt.sign(config.staticAuthedUser, secretOrKey)]),
-                secretOrKey,
-            });
+        constructor(@Optional() @Inject(CURRENT_USER_LOADER) private readonly currentUserLoader: CurrentUserLoaderInterface) {
+            super();
+            if (!this.currentUserLoader) this.currentUserLoader = new CurrentUserLoader();
         }
 
-        validate(data: CurrentUserInterface): CurrentUserInterface {
-            return data;
+        validate(): Promise<CurrentUserInterface> {
+            return this.currentUserLoader.load(config.staticAuthedUser);
         }
     }
     return StaticAuthedUserStrategy;
