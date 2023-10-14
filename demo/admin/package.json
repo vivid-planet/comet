@@ -20,7 +20,7 @@
         "lint:tsc": "tsc --project .",
         "lint:generated-files-not-modified": "$npm_execpath admin-generator && git diff --exit-code HEAD --",
         "preview": "npm run build && vite preview",
-        "start": "run-s intl:update intl:compile && run-p gql:types generate-block-types && dotenv -- vite"    
+        "start": "run-s intl:update intl:compile && run-p gql:types generate-block-types && dotenv -- vite"
     },
     "dependencies": {
         "@apollo/client": "^3.7.0",
