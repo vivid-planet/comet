@@ -39,13 +39,17 @@ export default {
 
                 const fileDir = path.dirname(filePath);
 
-                const relative = path.relative(sourceDir, fileDir);
-                const fileIsInSourceDir = relative && !relative.startsWith("..") && !path.isAbsolute(relative);
-                if (!fileIsInSourceDir) return;
+                const relativeFileToSourceDir = path.relative(sourceDir, fileDir);
+                if (!relativeFileToSourceDir || relativeFileToSourceDir.startsWith("..")) {
+                    // file is not in source directory
+                    return;
+                }
 
-                const relativeDirCount = relative.split(path.sep).length;
+                const fileSubdirectoriesCount = relativeFileToSourceDir.split(path.sep).length;
 
-                if (importParentDirCount >= relativeDirCount) {
+                // importParentDirCount is the number of ../ parts in the import path
+                // fileSubdirectoriesCount is the number of subdirectories in the file path relative to the source directory
+                if (importParentDirCount >= fileSubdirectoriesCount) {
                     context.report({
                         node,
                         message: "Avoid relative import from other module",
