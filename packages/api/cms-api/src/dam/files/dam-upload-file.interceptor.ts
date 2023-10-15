@@ -8,8 +8,7 @@ import { Observable } from "rxjs";
 import { v4 as uuid } from "uuid";
 
 import { CometValidationException } from "../../common/errors/validation.exception";
-import { DamConfig } from "../dam.config";
-import { DAM_CONFIG } from "../dam.constants";
+import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
 import { FileValidationService } from "./file-validation.service";
 
 export function DamUploadFileInterceptor(fieldName: string): Type<NestInterceptor> {
@@ -17,7 +16,7 @@ export function DamUploadFileInterceptor(fieldName: string): Type<NestIntercepto
     class Interceptor implements NestInterceptor {
         fileInterceptor: NestInterceptor;
 
-        constructor(@Inject(DAM_CONFIG) private readonly config: DamConfig, private readonly fileValidationService: FileValidationService) {
+        constructor(@Inject(DAM_FILE_VALIDATION_SERVICE) private readonly fileValidationService: FileValidationService) {
             const multerOptions: MulterOptions = {
                 storage: multer.diskStorage({
                     destination: function (req, file, cb) {
@@ -37,7 +36,7 @@ export function DamUploadFileInterceptor(fieldName: string): Type<NestIntercepto
                     },
                 }),
                 limits: {
-                    fileSize: config.maxFileSize * 1024 * 1024,
+                    fileSize: this.fileValidationService.config.maxFileSize * 1024 * 1024,
                 },
                 fileFilter: (req, file, cb) => {
                     this.fileValidationService.validateFile(file).then((result) => {

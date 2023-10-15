@@ -1,16 +1,11 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { readFile } from "fs/promises";
 import * as mimedb from "mime-db";
 
-import { defaultDamAcceptedMimetypes } from "../common/mimeTypes/default-dam-accepted-mimetypes";
-import { DamConfig } from "../dam.config";
-import { DAM_CONFIG } from "../dam.constants";
 import { FileUploadInterface } from "./dto/file-upload.interface";
 import { svgContainsJavaScript } from "./files.utils";
 
-@Injectable()
 export class FileValidationService {
-    constructor(@Inject(DAM_CONFIG) private readonly config: DamConfig) {}
+    constructor(public config: { maxFileSize: number; acceptedMimeTypes: string[] }) {}
 
     async validateFile(file: FileUploadInterface): Promise<true | string> {
         //maximum file size
@@ -19,8 +14,7 @@ export class FileValidationService {
         }
 
         //mime type in an accepted mime type
-        const acceptedMimeTypes = [...defaultDamAcceptedMimetypes, ...(this.config.additionalMimeTypes ?? [])];
-        if (!acceptedMimeTypes.includes(file.mimetype)) {
+        if (!this.config.acceptedMimeTypes.includes(file.mimetype)) {
             return "Unsupported mime type";
         }
 

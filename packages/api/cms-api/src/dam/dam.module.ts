@@ -2,10 +2,10 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
-import { BlobStorageModule, DependentsResolverFactory } from "..";
+import { BlobStorageModule, defaultDamAcceptedMimetypes, DependentsResolverFactory } from "..";
 import { ScaledImagesCacheService } from "./cache/scaled-images-cache.service";
 import { DamConfig } from "./dam.config";
-import { DAM_CONFIG, IMGPROXY_CONFIG } from "./dam.constants";
+import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE, IMGPROXY_CONFIG } from "./dam.constants";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
 import { DamItemsService } from "./files/dam-items.service";
 import { createFileEntity, FILE_ENTITY, FileInterface } from "./files/entities/file.entity";
@@ -61,6 +61,14 @@ export class DamModule {
             useValue: imgproxyConfig,
         };
 
+        const fileValidationServiceProvider = {
+            provide: DAM_FILE_VALIDATION_SERVICE,
+            useValue: new FileValidationService({
+                maxFileSize: damConfig.maxFileSize,
+                acceptedMimeTypes: [...defaultDamAcceptedMimetypes, ...(damConfig.additionalMimeTypes ?? [])],
+            }),
+        };
+
         const DamItemsResolver = createDamItemsResolver({ File, Folder, Scope });
         const FilesResolver = createFilesResolver({ File, Scope });
         const FileDependentsResolver = DependentsResolverFactory.create(File);
@@ -93,6 +101,7 @@ export class DamModule {
                 DamItemsResolver,
                 DamItemsService,
                 imgproxyConfigProvider,
+                fileValidationServiceProvider,
                 ScaledImagesCacheService,
                 ImgproxyService,
                 FilesResolver,
