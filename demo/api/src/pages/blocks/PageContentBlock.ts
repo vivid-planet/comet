@@ -9,6 +9,7 @@ import { ColumnsBlock } from "./columns.block";
 import { FullWidthImageBlock } from "./full-width-image.block";
 import { HeadlineBlock } from "./headline.block";
 import { TextImageBlock } from "./TextImageBlock";
+import { VideoBlock } from "./video.block";
 
 const supportedBlocks = {
     space: SpaceBlock,
@@ -18,6 +19,7 @@ const supportedBlocks = {
     textImage: TextImageBlock,
     damVideo: DamVideoBlock,
     youTubeVideo: YouTubeVideoBlock,
+    video: VideoBlock,
     linkList: LinkListBlock,
     fullWidthImage: FullWidthImageBlock,
     columns: ColumnsBlock,
