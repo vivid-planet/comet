@@ -94,6 +94,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
             return ["Active", "Visible", "Invisible", "Published", "Unpublished"].includes(item);
         });
     }
+    const hasStatusFilter = statusProp && statusActiveItems && statusActiveItems.length != statusProp.items?.length; //if all items are active ones, no need for status filter
 
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
     if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
@@ -115,6 +116,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
         hasSlugProp,
         statusProp,
         statusActiveItems,
+        hasStatusFilter,
         scopeProp,
         hasUpdatedAt,
         argsClassName,
@@ -275,17 +277,19 @@ function generatePaginatedDto({ generatorOptions, metadata }: { generatorOptions
 
 function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
-    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, statusProp, statusActiveItems } = buildOptions(metadata);
+    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, statusProp, statusActiveItems, hasStatusFilter } =
+        buildOptions(metadata);
     const imports: Imports = [];
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`));
     }
 
-    let statusFilterClassName;
+    let statusFilterClassName: string | undefined = undefined;
     let statusFilterDefaultValue;
     let statusFilterItems: Array<string | number> | undefined = undefined;
-    if (statusProp) {
+    if (hasStatusFilter && statusProp) {
         if (statusActiveItems && statusActiveItems.length > 1) {
+            //more than one active status, create enum that compresses them into single "Active"
             statusFilterItems = ["Active", ...(statusProp.items?.filter((item) => !statusActiveItems.includes(item)) ?? [])];
             statusFilterClassName = `${classNameSingular}StatusFilter`;
             statusFilterDefaultValue = `${statusFilterClassName}.Active`;
@@ -333,7 +337,7 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         }
 
         ${
-            statusProp
+            hasStatusFilter
                 ? `
         @Field(() => ${statusFilterClassName}, { defaultValue: ${statusFilterDefaultValue} })
         @IsEnum(${statusFilterClassName})
@@ -735,6 +739,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         hasFilterArg,
         statusProp,
         statusActiveItems,
+        hasStatusFilter,
         hasUpdatedAt,
     } = buildOptions(metadata);
 
@@ -827,9 +832,19 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
         @Query(() => Paginated${classNamePlural})
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
-            @Args() { ${scopeProp ? `scope, ` : ""}${statusProp ? `status, ` : ""}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${
-        hasSortArg ? `sort, ` : ""
-    }offset, limit }: ${argsClassName}${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
+            @Args() {${Object.entries({
+                scope: !!scopeProp,
+                status: !!hasStatusFilter,
+                search: !!hasSearchArg,
+                filter: !!hasFilterArg,
+                sort: !!hasSortArg,
+                offset: true,
+                limit: true,
+            })
+                .filter(([key, use]) => use)
+                .map(([key]) => key)
+                .join(", ")}}: ${argsClassName}
+            ${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
         ): Promise<Paginated${classNamePlural}> {
             const where = ${
                 hasSearchArg || hasFilterArg
@@ -837,7 +852,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                     : "{}"
             }
             ${
-                statusProp && statusActiveItems && statusActiveItems.length > 1
+                hasStatusFilter && statusActiveItems && statusActiveItems.length > 1
                     ? `if (status == "Active") {
                 where.status = { $in: [${statusActiveItems.map((item) => `"${item}"`).join(", ")}] };
             } else {
@@ -845,7 +860,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             }`
                     : ""
             }
-            ${statusProp && statusActiveItems && statusActiveItems.length <= 1 ? `where.status = status;` : ""}
+            ${hasStatusFilter && statusActiveItems && statusActiveItems.length <= 1 ? `where.status = status;` : ""}
             ${scopeProp ? `where.scope = scope;` : ""}
 
             ${

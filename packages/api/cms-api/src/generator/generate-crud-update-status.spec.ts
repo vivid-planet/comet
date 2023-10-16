@@ -169,3 +169,59 @@ describe("GenerateCrud Status with published/unpublished", () => {
         expect(enumNames).not.toContain("Unpublished");
     });
 });
+
+export enum TestEntitiy3Status {
+    Published = "Published",
+    Unpublished = "Unpublished",
+}
+
+registerEnumType(TestEntitiy3Status, { name: "TestEntitiy3Status" });
+
+@Entity()
+class TestEntity3 extends BaseEntity<TestEntity3, "id"> {
+    @PrimaryKey({ type: "uuid" })
+    id: string = uuid();
+
+    @Property()
+    title: string;
+
+    @Enum({ items: () => TestEntitiy3Status })
+    @Field(() => TestEntitiy3Status)
+    status: TestEntitiy3Status = TestEntitiy3Status.Unpublished;
+}
+
+describe("GenerateCrud Status with published/unpublished", () => {
+    let lintedOut: GeneratedFile[];
+    let orm: MikroORM;
+    beforeAll(async () => {
+        LazyMetadataStorage.load();
+        orm = await MikroORM.init({
+            type: "postgresql",
+            dbName: "test-db",
+            entities: [TestEntity3],
+        });
+        const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity3"));
+        lintedOut = await lintGeneratedFiles(out);
+    });
+    afterAll(async () => {
+        orm.close();
+    });
+
+    it("args should not include status filter as all are active ones", async () => {
+        const file = lintedOut.find((file) => file.name === "dto/test-entity3s.args.ts");
+        if (!file) throw new Error("File not found");
+
+        const source = parseSource(file.content);
+
+        const classes = source.getClasses();
+        expect(classes.length).toBe(1);
+
+        const cls = classes[0];
+        expect(cls.getName()).toBe("TestEntity3sArgs");
+        const structure = cls.getStructure();
+
+        const propNames = (structure.properties || []).map((prop) => prop.name);
+
+        expect(propNames).not.toContain("status");
+    });
+});

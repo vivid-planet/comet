@@ -28,9 +28,8 @@ import { ProductType } from "./product-type.enum";
 import { ProductVariant } from "./product-variant.entity";
 
 export enum ProductStatus {
-    Active = "Active",
-    Archived = "Archived",
-    Deleted = "Deleted",
+    Published = "Published",
+    Unpublished = "Unpublished",
 }
 registerEnumType(ProductStatus, { name: "ProductStatus" });
 
@@ -107,7 +106,7 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
 
     @Enum({ items: () => ProductStatus })
     @Field(() => ProductStatus)
-    status: ProductStatus = ProductStatus.Active;
+    status: ProductStatus = ProductStatus.Unpublished;
 
     @Property()
     @Field()
