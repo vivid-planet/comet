@@ -5,10 +5,10 @@ import fs from "fs";
 import * as multer from "multer";
 import os from "os";
 import { Observable } from "rxjs";
-import { FileValidationService } from "src/dam/files/file-validation.service";
 import { v4 as uuid } from "uuid";
 
 import { CometValidationException } from "../common/errors/validation.exception";
+import { FileValidationService } from "../dam/files/file-validation.service";
 import { PUBLIC_UPLOAD_FILE_VALIDATION_SERVICE } from "./public-upload.constants";
 
 export function PublicUploadFileInterceptor(fieldName: string): Type<NestInterceptor> {
