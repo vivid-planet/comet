@@ -35,8 +35,8 @@ import {
     GQLProductsListManualFragment,
     GQLProductsListQuery,
     GQLProductsListQueryVariables,
-    GQLUpdateProductVisibilityMutation,
-    GQLUpdateProductVisibilityMutationVariables,
+    GQLUpdateProductStatusMutation,
+    GQLUpdateProductStatusMutationVariables,
 } from "./ProductsGrid.generated";
 
 function ProductsGridToolbar() {
@@ -111,21 +111,22 @@ function ProductsGrid() {
         },
         { field: "inStock", headerName: "In Stock", width: 50, type: "boolean" },
         {
-            field: "visible",
-            headerName: "Visible",
+            field: "status",
+            headerName: "Status",
             width: 100,
             type: "boolean",
+            valueGetter: (params) => params.row.status == "Published",
             renderCell: (params) => {
                 return (
                     <CrudVisibility
-                        visibility={params.row.visible}
-                        onUpdateVisibility={async (visible) => {
-                            await client.mutate<GQLUpdateProductVisibilityMutation, GQLUpdateProductVisibilityMutationVariables>({
-                                mutation: updateProductVisibilityMutation,
-                                variables: { id: params.row.id, visible },
+                        visibility={params.row.status == "Published"}
+                        onUpdateVisibility={async (status) => {
+                            await client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
+                                mutation: updateProductStatusMutation,
+                                variables: { id: params.row.id, status },
                                 optimisticResponse: {
                                     __typename: "Mutation",
-                                    updateProductVisibility: { __typename: "Product", id: params.row.id, visible },
+                                    updateProductStatus: { __typename: "Product", id: params.row.id, status: status ? "Published" : "Unpublished" },
                                 },
                             });
                         }}
@@ -227,7 +228,7 @@ const productsFragment = gql`
         type
         inStock
         image
-        visible
+        status
         category {
             id
             title
@@ -291,11 +292,11 @@ const createProductMutation = gql`
     }
 `;
 
-const updateProductVisibilityMutation = gql`
-    mutation UpdateProductVisibility($id: ID!, $visible: Boolean!) {
-        updateProductVisibility(id: $id, visible: $visible) {
+const updateProductStatusMutation = gql`
+    mutation UpdateProductStatus($id: ID!, $status: ProductStatus!) {
+        updateProductStatus(id: $id, status: $status) {
             id
-            visible
+            status
         }
     }
 `;
