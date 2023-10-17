@@ -123,7 +123,7 @@ function ProductsGrid() {
                         onUpdateVisibility={async (status) => {
                             await client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
                                 mutation: updateProductStatusMutation,
-                                variables: { id: params.row.id, status },
+                                variables: { id: params.row.id, status: status ? "Published" : "Unpublished" },
                                 optimisticResponse: {
                                     __typename: "Mutation",
                                     updateProductStatus: { __typename: "Product", id: params.row.id, status: status ? "Published" : "Unpublished" },
