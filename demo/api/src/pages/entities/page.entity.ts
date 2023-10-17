@@ -4,7 +4,7 @@ import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-import { PageContentBlock } from "../blocks/PageContentBlock";
+import { PageContentBlock } from "../blocks/page-content.block";
 import { SeoBlock } from "../blocks/seo.block";
 
 @Entity()

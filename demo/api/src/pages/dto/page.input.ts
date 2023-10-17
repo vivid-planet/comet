@@ -4,7 +4,7 @@ import { Field, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
 import { ValidateNested } from "class-validator";
 
-import { PageContentBlock } from "../blocks/PageContentBlock";
+import { PageContentBlock } from "../blocks/page-content.block";
 import { SeoBlock } from "../blocks/seo.block";
 
 @InputType()
