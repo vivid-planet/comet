@@ -9,30 +9,14 @@ import { CURRENT_USER_LOADER, CurrentUserLoaderInterface } from "../current-user
 
 interface AuthProxyJwtStrategyConfig {
     jwksUri: string;
-    currentUserLoader?: CurrentUserLoaderInterface;
     strategyName?: string;
     audience?: string;
     strategyOptions?: Omit<StrategyOptions, "jwtFromRequest">;
 }
 
-class CurrentUserLoader implements CurrentUserLoaderInterface {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async load(data: any): Promise<CurrentUserInterface> {
-        return {
-            id: data.sub,
-            name: data.name,
-            email: data.email,
-            language: data.language,
-            role: data.ext?.role,
-            rights: data.ext?.rights,
-        };
-    }
-}
-
 export function createAuthProxyJwtStrategy({
     jwksUri,
     audience,
-    currentUserLoader,
     strategyOptions,
     strategyName = "auth-proxy-jwt",
 }: AuthProxyJwtStrategyConfig): Type {
@@ -47,11 +31,21 @@ export function createAuthProxyJwtStrategy({
                 audience,
                 ...strategyOptions,
             });
-            if (!this.currentUserLoader) this.currentUserLoader = currentUserLoader ?? new CurrentUserLoader();
         }
 
         async validate(data: JwtPayload): Promise<CurrentUserInterface> {
-            return this.currentUserLoader.load(data);
+            if (!data.sub) throw new Error("JwtPayload does not contain sub.");
+            if (!this.currentUserLoader) {
+                return {
+                    id: data.sub,
+                    name: data.name,
+                    email: data.email,
+                    language: data.language,
+                    role: data.ext?.role,
+                    rights: data.ext?.rights,
+                };
+            }
+            return this.currentUserLoader.load(data.sub, data);
         }
     }
     return AuthProxyJwtStrategy;

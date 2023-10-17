@@ -19,7 +19,8 @@ import { UserService } from "./user.service";
             useClass: UserPermissionsCurrentUserLoader,
         },
         createStaticAuthedUserStrategy({
-            staticAuthedUser: { ...staticUsers[0], role: "admin", domains: ["main", "secondary"] }, // TODO Remove role and domain once they disappear from CurrentUserInterface
+            staticAuthedUserId: staticUsers[0].id,
+            userExtraData: { role: "admin", domains: ["main", "secondary"] }, // TODO Remove once they disappear from CurrentUserInterface
         }),
         createAuthResolver({
             currentUser: CurrentUser,

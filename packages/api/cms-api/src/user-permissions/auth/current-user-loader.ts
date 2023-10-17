@@ -8,8 +8,8 @@ export class UserPermissionsCurrentUserLoader implements CurrentUserLoaderInterf
     constructor(@Inject(USER_PERMISSIONS_SERVICE) private readonly service: UserPermissionsService) {}
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async load(userData: any) {
-        const user = await this.service.getUser(userData.id ?? userData.sub); // TODO Change CurrentUserLoaderInterface to avoid guesses like these
-        return { ...(await this.service.createCurrentUser(user)), ...userData };
+    async load(userId: string, data?: any) {
+        const user = await this.service.getUser(userId);
+        return { ...(await this.service.createCurrentUser(user)), ...data };
     }
 }
