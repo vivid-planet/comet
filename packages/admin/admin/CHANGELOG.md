@@ -1,5 +1,23 @@
 # @comet/admin
 
+## 4.5.0
+
+### Minor Changes
+
+-   6d4ca5bf: Deprecate `Table` component
+
+    The `Table` component has been deprecated in favor of [MUI X Data Grid](https://mui.com/x/react-data-grid/) in combination with `useDataGridRemote`. See [docs](https://storybook.comet-dxp.com/?path=/story/docs-components-table-basics--page) for further information.
+
+-   07d921d2: Add a generic Loading component for use in Admin
+
+    `Loading` handles the positioning of the loading indicator automatically, depending on the set `behaviour` prop.
+
+### Patch Changes
+
+-   46cf5a8b: Fix an issue that caused `useDataGridRemote()` to ignore its URL params when `queryParamsPrefix` was set
+-   8a2c3302: Correctly position loading indicators by centring them using the new `Loading` component
+    -   @comet/admin-icons@4.5.0
+
 ## 4.4.3
 
 ### Patch Changes

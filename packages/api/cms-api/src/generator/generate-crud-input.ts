@@ -25,6 +25,23 @@ function tsCodeRecordToString(object: Record<string, string | undefined>) {
     return `{${filteredEntries.map(([key, value]) => `${key}: ${value},`).join("\n")}}`;
 }
 
+function findReferenceTargetType(
+    targetMeta: EntityMetadata<unknown> | undefined,
+    referencedColumnName: string,
+): "uuid" | "string" | "integer" | null {
+    const referencedColumnProp = targetMeta?.props.find((p) => p.name == referencedColumnName);
+    if (!referencedColumnProp) throw new Error("referencedColumnProp not found");
+    if (referencedColumnProp.type == "uuid") {
+        return "uuid";
+    } else if (referencedColumnProp.type == "string") {
+        return "string";
+    } else if (referencedColumnProp.type == "integer") {
+        return "integer";
+    } else {
+        return null;
+    }
+}
+
 export async function generateCrudInput(
     generatorOptions: { targetDirectory: string },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -66,7 +83,7 @@ export async function generateCrudInput(
             decorators.push(`@IsEnum(${enumName})`);
             decorators.push(`@Field(() => ${enumName}, ${fieldOptions})`);
             type = enumName;
-        } else if (prop.type === "string") {
+        } else if (prop.type === "string" || prop.type === "text") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
@@ -78,11 +95,16 @@ export async function generateCrudInput(
                 decorators.push("@IsSlug()");
             }
             decorators.push(`@Field(${fieldOptions})`);
-        } else if (prop.type === "DecimalType" || prop.type === "number") {
+        } else if (prop.type === "DecimalType" || prop.type == "BigIntType" || prop.type === "number") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
-            decorators.push("@IsNumber()");
+            const integerTypes = ["int", "integer", "tinyint", "smallint", "mediumint", "bigint", "int2", "int4", "int8", "serial"];
+            if (integerTypes.includes(prop.columnTypes[0])) {
+                decorators.push("@IsInt()");
+            } else {
+                decorators.push("@IsNumber()");
+            }
             decorators.push(`@Field(${fieldOptions})`);
             type = "number";
         } else if (prop.type === "DateType" || prop.type === "Date") {
@@ -115,8 +137,25 @@ export async function generateCrudInput(
                 defaultValue: defaultValueNull ? "null" : undefined,
             });
             decorators.push(`@Field(() => ID, ${fieldOptions})`);
-            decorators.push("@IsUUID()");
-            type = "string";
+
+            if (prop.referencedColumnNames.length > 1) {
+                console.warn(`${prop.name}: Composite keys are not supported`);
+                continue;
+            }
+            const refType = findReferenceTargetType(prop.targetMeta, prop.referencedColumnNames[0]);
+            if (refType == "uuid") {
+                type = "string";
+                decorators.push("@IsUUID()");
+            } else if (refType == "string") {
+                type = "string";
+                decorators.push("@IsString()");
+            } else if (refType == "integer") {
+                type = "number";
+                decorators.push("@Transform(({ value }) => parseInt(value))");
+                decorators.push("@IsInt()");
+            } else {
+                console.warn(`${prop.name}: Unsupported referenced type`);
+            }
         } else if (prop.reference == "1:m") {
             if (prop.orphanRemoval) {
                 //if orphanRemoval is enabled, we need to generate a nested input type
@@ -141,15 +180,48 @@ export async function generateCrudInput(
                 decorators.length = 0;
                 decorators.push(`@Field(() => [ID], {${prop.nullable ? "nullable: true" : "defaultValue: []"}})`);
                 decorators.push(`@IsArray()`);
-                decorators.push(`@IsUUID(undefined, { each: true })`);
-                type = "string[]";
+
+                if (prop.referencedColumnNames.length > 1) {
+                    console.warn(`${prop.name}: Composite keys are not supported`);
+                    continue;
+                }
+                const refType = findReferenceTargetType(prop.targetMeta, prop.referencedColumnNames[0]);
+                if (refType == "uuid") {
+                    type = "string[]";
+                    decorators.push("@IsUUID(undefined, { each: true })");
+                } else if (refType == "string") {
+                    type = "string[]";
+                    decorators.push("@IsString({ each: true })");
+                } else if (refType == "integer") {
+                    type = "number[]";
+                    decorators.push("@Transform(({ value }) => value.map(id) => parseInt(id))");
+                    decorators.push("@IsInt({ each: true })");
+                } else {
+                    console.warn(`${prop.name}: Unsupported referenced type`);
+                }
             }
         } else if (prop.reference == "m:n") {
             decorators.length = 0;
             decorators.push(`@Field(() => [ID], {${prop.nullable ? "nullable" : "defaultValue: []"}})`);
             decorators.push(`@IsArray()`);
-            decorators.push(`@IsUUID(undefined, { each: true })`);
-            type = "string[]";
+
+            if (prop.referencedColumnNames.length > 1) {
+                console.warn(`${prop.name}: Composite keys are not supported`);
+                continue;
+            }
+            const refType = findReferenceTargetType(prop.targetMeta, prop.referencedColumnNames[0]);
+            if (refType == "uuid") {
+                type = "string[]";
+                decorators.push("@IsUUID(undefined, { each: true })");
+            } else if (refType == "string") {
+                type = "string[]";
+                decorators.push("@IsString({ each: true })");
+            } else if (refType == "integer") {
+                type = "number[]";
+                decorators.push("@Transform(({ value }) => value.map(id) => parseInt(id))");
+            } else {
+                console.warn(`${prop.name}: Unsupported referenced type`);
+            }
         } else if (prop.reference == "1:1") {
             {
                 if (!prop.targetMeta) throw new Error("No targetMeta");
@@ -210,6 +282,16 @@ export async function generateCrudInput(
                 decorators.push(`@Type(() => ${nestedClassName})`);
                 decorators.push(`@Field(() => ${nestedClassName}${prop.nullable ? ", { nullable: true }" : ""})`);
             }
+        } else if (prop.type == "uuid") {
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const defaultValueNull = prop.nullable && (initializer == "undefined" || initializer == "null");
+            const fieldOptions = tsCodeRecordToString({
+                nullable: prop.nullable ? "true" : undefined,
+                defaultValue: defaultValueNull ? "null" : undefined,
+            });
+            decorators.push(`@Field(() => ID, ${fieldOptions})`);
+            decorators.push("@IsUUID()");
+            type = "string";
         } else {
             console.warn(`${prop.name}: unsupported type ${type}`);
             continue;
@@ -221,7 +303,7 @@ export async function generateCrudInput(
     }
     const inputOut = `import { Field, InputType, ID } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray } from "class-validator";
+import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
 import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";

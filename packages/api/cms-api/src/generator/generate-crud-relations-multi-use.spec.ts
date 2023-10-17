@@ -46,7 +46,6 @@ describe("GenerateCrudRelationsMultiUse", () => {
         const file = lintedOut.find((file) => file.name === "test-entitiy-product.resolver.ts");
         if (!file) throw new Error("File not found");
 
-        console.log(file.content);
         const source = parseSource(file.content);
 
         const imports: string[] = [];

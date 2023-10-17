@@ -652,10 +652,12 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
             !hasFieldFeature(metadata.class, prop.name, "resolveField") &&
             !relationManyToOneProps.includes(prop) &&
             !relationOneToManyProps.includes(prop) &&
-            !outputRelationManyToManyProps.includes(prop) &&
-            !outputRelationOneToOneProps.includes(prop)
+            !relationManyToManyProps.includes(prop) &&
+            !relationOneToOneProps.includes(prop)
         ) {
-            throw new Error("@CrudField resolveField=false is only used for relations, for other props simply remove @Field() to disable its output");
+            throw new Error(
+                `${prop.name}: @CrudField resolveField=false is only used for relations, for other props simply remove @Field() to disable its output`,
+            );
         }
     }
 

@@ -61,7 +61,10 @@ function findImportPath(importName: string, targetDirectory: string, metadata: E
 
 export function findEnumName(propertyName: string, metadata: EntityMetadata<any>): string {
     const tsProp = morphTsProperty(propertyName, metadata);
-    return tsProp.getType().getText(tsProp);
+    return tsProp
+        .getType()
+        .getText(tsProp)
+        .replace(/ ?\| ?undefined$/, "");
 }
 
 export function findEnumImportPath(enumName: string, targetDirectory: string, metadata: EntityMetadata<any>): string {
