@@ -9,6 +9,7 @@ export const newsFormFragment = gql`
         title
         date
         category
+        visible
         image
         content
     }

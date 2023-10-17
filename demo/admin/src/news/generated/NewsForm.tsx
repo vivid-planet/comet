@@ -5,6 +5,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
     FinalForm,
+    FinalFormCheckbox,
     FinalFormInput,
     FinalFormSaveSplitButton,
     FinalFormSelect,
@@ -23,7 +24,7 @@ import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { CircularProgress, IconButton, MenuItem } from "@mui/material";
+import { CircularProgress, FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -201,6 +202,14 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                                         <FormattedMessage id="news.category.awards" defaultMessage="Awards" />
                                     </MenuItem>
                                 </FinalFormSelect>
+                            )}
+                        </Field>
+                        <Field name="visible" label="" type="checkbox" fullWidth>
+                            {(props) => (
+                                <FormControlLabel
+                                    label={<FormattedMessage id="news.visible" defaultMessage="Visible" />}
+                                    control={<FinalFormCheckbox {...props} />}
+                                />
                             )}
                         </Field>
                         <Field name="image" isEqual={isEqual}>

@@ -181,6 +181,7 @@ export function NewsGrid(): React.ReactElement {
                                     title: row.title,
                                     date: row.date,
                                     category: row.category,
+                                    visible: row.visible,
                                     image: DamImageBlock.state2Output(DamImageBlock.input2State(row.image)),
                                     content: NewsContentBlock.state2Output(NewsContentBlock.input2State(row.content)),
                                 };
