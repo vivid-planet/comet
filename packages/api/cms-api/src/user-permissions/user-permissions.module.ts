@@ -13,8 +13,17 @@ import { UserPermissionsAsyncOptions, UserPermissionsOptions, UserPermissionsOpt
 @Global()
 @Module({
     imports: [MikroOrmModule.forFeature([UserPermission, UserContentScopes])],
-    providers: [UserPermissionsService, UserResolver, UserPermissionResolver, UserContentScopesResolver, UserPermissionsService],
-    exports: [UserPermissionsService],
+    providers: [
+        UserPermissionsService,
+        UserResolver,
+        UserPermissionResolver,
+        UserContentScopesResolver,
+        {
+            provide: USER_PERMISSIONS_SERVICE,
+            useClass: UserPermissionsService,
+        },
+    ],
+    exports: [USER_PERMISSIONS_SERVICE],
 })
 export class UserPermissionsModule {
     static forRoot(options: UserPermissionsOptions): DynamicModule {
@@ -25,12 +34,7 @@ export class UserPermissionsModule {
                     provide: USER_PERMISSIONS_OPTIONS,
                     useValue: options,
                 },
-                {
-                    provide: USER_PERMISSIONS_SERVICE,
-                    useClass: UserPermissionsService,
-                },
             ],
-            exports: [USER_PERMISSIONS_SERVICE],
         };
     }
 
@@ -38,14 +42,7 @@ export class UserPermissionsModule {
         return {
             module: UserPermissionsModule,
             imports: asyncOptions.imports,
-            providers: [
-                this.createProvider(asyncOptions),
-                {
-                    provide: USER_PERMISSIONS_SERVICE,
-                    useClass: UserPermissionsService,
-                },
-            ],
-            exports: [USER_PERMISSIONS_SERVICE],
+            providers: [this.createProvider(asyncOptions)],
         };
     }
 
