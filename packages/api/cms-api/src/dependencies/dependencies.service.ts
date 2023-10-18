@@ -6,7 +6,7 @@ import { ModuleRef } from "@nestjs/core";
 import { subMinutes } from "date-fns";
 import { v4 } from "uuid";
 
-import { DependencyInfoOptions } from "../dam/files/decorators/dependency-info.decorator";
+import { GetDependencyInfo } from "../dam/files/decorators/dependency-info.decorator";
 import { Dependency } from "./dependency";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
@@ -196,11 +196,10 @@ export class DependenciesService {
             const repository = this.entityManager.getRepository(result.targetEntityName);
             const instance = await repository.findOne({ [result.targetPrimaryKey]: result.targetId });
             if (instance) {
-                const methods = Reflect.getMetadata(`data:dependencyInfo`, instance.constructor) as DependencyInfoOptions<AnyEntity>;
-                const name = await methods.getName(instance, this.moduleRef);
-                const secondaryInfo = await methods.getSecondaryInformation(instance, this.moduleRef);
+                const getDependencyInfo: GetDependencyInfo<AnyEntity> = Reflect.getMetadata(`data:dependencyInfo`, instance.constructor);
+                const { name, secondaryInformation } = await getDependencyInfo(instance, this.moduleRef);
                 console.log("name ", name);
-                console.log("secondaryInfo ", secondaryInfo);
+                console.log("secondaryInformation ", secondaryInformation);
             }
         }
 
