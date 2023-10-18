@@ -7,11 +7,12 @@ import { subMinutes } from "date-fns";
 import { v4 } from "uuid";
 
 import { GetDependencyInfo } from "../dam/files/decorators/dependency-info.decorator";
-import { Dependency } from "./dependency";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
+import { Dependency } from "./dto/dependency";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
 import { BlockIndexRefresh } from "./entities/block-index-refresh.entity";
+import { DependencyEntity } from "./entities/dependency.entity";
 
 interface PGStatActivity {
     pid: number;
@@ -190,23 +191,28 @@ export class DependenciesService {
             paginationArgs,
         );
 
-        const results: Dependency[] = await qb;
+        const results: DependencyEntity[] = await qb;
+        const ret: Dependency[] = [];
 
         for (const result of results) {
-            const repository = this.entityManager.getRepository(result.targetEntityName);
-            const instance = await repository.findOne({ [result.targetPrimaryKey]: result.targetId });
+            const repository = this.entityManager.getRepository(result.rootEntityName);
+            const instance = await repository.findOne({ [result.rootPrimaryKey]: result.rootId });
+
+            let dependency: Dependency = { ...result };
             if (instance) {
-                const getDependencyInfo: GetDependencyInfo<AnyEntity> = Reflect.getMetadata(`data:dependencyInfo`, instance.constructor);
-                const { name, secondaryInformation } = await getDependencyInfo(instance, this.moduleRef);
-                console.log("name ", name);
-                console.log("secondaryInformation ", secondaryInformation);
+                const getDependencyInfo: GetDependencyInfo<AnyEntity> | undefined = Reflect.getMetadata(`data:dependencyInfo`, instance.constructor);
+                if (getDependencyInfo) {
+                    const { name, secondaryInformation } = await getDependencyInfo(instance, this.moduleRef);
+                    dependency = { ...dependency, name, secondaryInformation };
+                }
             }
+            ret.push(dependency);
         }
 
         const countResult = await this.withCount(qb).select("rootId").groupBy(["rootId", "rootEntityName"]);
         const totalCount = countResult[0]?.count ?? 0;
 
-        return new PaginatedDependencies(results, Number(totalCount));
+        return new PaginatedDependencies(ret, Number(totalCount));
     }
 
     async getDependencies(
@@ -230,7 +236,7 @@ export class DependenciesService {
             paginationArgs,
         );
 
-        const results: Dependency[] = await qb;
+        const results: DependencyEntity[] = await qb;
 
         const countResult: Array<{ count: string | number }> = await this.withCount(qb).select("rootId").groupBy(["rootId", "rootEntityName"]);
         const totalCount = countResult[0]?.count ?? 0;

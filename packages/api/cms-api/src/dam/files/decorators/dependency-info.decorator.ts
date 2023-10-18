@@ -4,7 +4,7 @@ import { ModuleRef } from "@nestjs/core";
 export type GetDependencyInfo<Entity extends AnyEntity> = (
     item: Entity,
     moduleRef: ModuleRef,
-) => Promise<{ name: string; secondaryInformation: string }>;
+) => Promise<{ name: string; secondaryInformation?: string }>;
 
 export function DependencyInfo<Entity extends AnyEntity>(getDependencyInfo: GetDependencyInfo<Entity>): ClassDecorator {
     // eslint-disable-next-line @typescript-eslint/ban-types
