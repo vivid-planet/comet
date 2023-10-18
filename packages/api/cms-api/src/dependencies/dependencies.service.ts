@@ -198,7 +198,7 @@ export class DependenciesService {
             if (instance) {
                 const methods = Reflect.getMetadata(`data:dependencyInfo`, instance.constructor) as DependencyInfoOptions<AnyEntity>;
                 const name = await methods.getName(instance, this.moduleRef);
-                const secondaryInfo = await methods.getName(instance, this.moduleRef);
+                const secondaryInfo = await methods.getSecondaryInformation(instance, this.moduleRef);
                 console.log("name ", name);
                 console.log("secondaryInfo ", secondaryInfo);
             }

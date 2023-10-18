@@ -141,7 +141,8 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
     }
 
     if (Scope) {
-        @DependencyInfo<DamFile>(FilesService)
+        // @DependencyInfo<DamFile>(FilesService)
+        @DependencyInfo<DamFile>({ getName: (entity) => entity.name, getSecondaryInformation: (entity) => entity.id })
         @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
         class DamFile extends FileBase {

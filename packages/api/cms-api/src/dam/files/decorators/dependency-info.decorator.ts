@@ -20,79 +20,38 @@ export interface DependencyInfoOptions<Entity extends AnyEntity> {
 }
 
 export function DependencyInfo<Entity extends AnyEntity>(
-    // args: DependencyInfoOptions<Entity> | DependencyInfoServiceInterface<Entity>,
-    args: Type<DependencyInfoServiceInterface<Entity>>,
+    args: DependencyInfoOptions<Entity> | Type<DependencyInfoServiceInterface<Entity>>,
 ): ClassDecorator {
     // eslint-disable-next-line @typescript-eslint/ban-types
     return (target: Function) => {
         let options = {};
 
-        options = {
-            getName: async (entity, moduleRef) => {
-                const service: DependencyInfoServiceInterface<Entity> = moduleRef.get(args, { strict: false });
-                const info = await service.getDependencyInfo(entity);
-                return info.name;
-            },
-            getSecondaryInformation: async (entity, moduleRef) => {
-                const service: DependencyInfoServiceInterface<Entity> = moduleRef.get(args, { strict: false });
-                const info = await service.getDependencyInfo(entity);
-                return info.secondaryInformation;
-            },
-        } as DependencyInfoOptions<Entity>;
+        if (typeof args === "function") {
+            options = {
+                getName: async (entity, moduleRef) => {
+                    const service: DependencyInfoServiceInterface<Entity> = moduleRef.get(args, { strict: false });
+                    const info = await service.getDependencyInfo(entity);
+                    return info.name;
+                },
+                getSecondaryInformation: async (entity, moduleRef) => {
+                    const service: DependencyInfoServiceInterface<Entity> = moduleRef.get(args, { strict: false });
+                    const info = await service.getDependencyInfo(entity);
+                    return info.secondaryInformation;
+                },
+            } as DependencyInfoOptions<Entity>;
+        } else {
+            options = {
+                getName: async (entity, moduleRef) => {
+                    const name = await args.getName(entity, moduleRef);
+                    return name;
+                },
+                getSecondaryInformation: async (entity, moduleRef) => {
+                    const secondaryInformation = await args.getSecondaryInformation(entity, moduleRef);
+                    return secondaryInformation;
+                },
+            } as DependencyInfoOptions<Entity>;
+        }
 
-        console.log("options ", options);
-
-        // Reflect.defineMetadata(`data:dependencyInfo`, options, target);
         Reflect.defineMetadata(`data:dependencyInfo`, options, target);
-
-        // Reflect.defineMetadata(`data:dependencyInfo`, { abc: "abc" }, target);
-
-        // const originalMethod = descriptor!.value;
-        //
-        // descriptor!.value = async function (...args: any[]) {
-        //     try {
-        //         // @ts-ignore
-        //         const service: FilesService = this.filesService;
-        //         console.log("service ", service);
-        //         return;
-        //     } catch (err) {
-        //         console.error(err);
-        //         return;
-        //     }
-        // };
-        // let options: DependencyInfoOptions<Entity>;
-        // const fs = getFromContainer(FilesService);
-        // console.log("fs ", fs);
-        // console.log("fs ", fs.findAll({}));
-        //
-        // console.log(injectYourService);
-        //
-        // injectYourService(target, "yourservice");
-        // // @ts-ignore
-        // console.log(target.yourservice);
-        // // @ts-ignore
-        // const yourservice: DependencyInfoServiceInterface<Entity> = this?.yourservice;
-        // // @ts-ignore
-        // console.log((this as any)?.yourservice);
-        // console.log(yourservice);
-        // console.log("yourservice ", yourservice);
-        // if ("getDependencyInfo" in args) {
-        //     options = {
-        //         getName: async (entity) => {
-        //             const info = await args.getDependencyInfo(entity);
-        //             return info.name;
-        //         },
-        //         getSecondaryInformation: async (entity) => {
-        //             const info = await args.getDependencyInfo(entity);
-        //             return info.secondaryInformation;
-        //         },
-        //     };
-        // } else {
-        //     options = {
-        //         getName: args.getName,
-        //         getSecondaryInformation: args.getSecondaryInformation,
-        //     };
-        // }
-        // Reflect.defineMetadata(`data:dependencyInfo`, options, target);
     };
 }
