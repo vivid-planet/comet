@@ -21,7 +21,7 @@ import {
 } from "@comet/cms-api";
 import { ApolloDriver } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
-import { GraphQLModule } from "@nestjs/graphql";
+import { Enhancer, GraphQLModule } from "@nestjs/graphql";
 import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
 import { DbModule } from "@src/db/db.module";
@@ -71,6 +71,8 @@ export class AppModule {
                         buildSchemaOptions: {
                             fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(dependencies)],
                         },
+                        // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
+                        fieldResolverEnhancers: ["guards", "interceptors", "filters"] as Enhancer[],
                     }),
                     inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
                 }),
