@@ -252,8 +252,13 @@ export function createListBlock<T extends BlockInterface>({
                                                     </AdminComponentStickyHeader>
                                                     <div>
                                                         {state.blocks.map((data, blockIndex) => {
-                                                            const canChangeVisibility =
-                                                                maxVisibleBlocks && totalVisibleBlocks >= maxVisibleBlocks ? data.visible : true;
+                                                            const isMinVisibleBlocksMet = !!minVisibleBlocks && totalVisibleBlocks > minVisibleBlocks;
+                                                            const isMaxVisibleBlocksMet =
+                                                                !!maxVisibleBlocks && totalVisibleBlocks >= maxVisibleBlocks;
+
+                                                            const canShowBlock = !minVisibleBlocks || (!isMaxVisibleBlocksMet && !data.visible);
+                                                            const canHideBlock = !maxVisibleBlocks || (isMinVisibleBlocksMet && data.visible);
+
                                                             return (
                                                                 <HoverPreviewComponent key={data.key} componentSlug={`${data.key}/edit`}>
                                                                     <BlockRow
@@ -275,35 +280,40 @@ export function createListBlock<T extends BlockInterface>({
                                                                             updateState((prevState) => ({ ...prevState, blocks }));
                                                                         }}
                                                                         visibilityButton={
-                                                                            canChangeVisibility ? (
-                                                                                <IconButton onClick={() => toggleVisible(data.key)} size="small">
-                                                                                    {data.visible ? (
-                                                                                        <Visible color="secondary" />
-                                                                                    ) : (
-                                                                                        <Invisible color="action" />
-                                                                                    )}
-                                                                                </IconButton>
-                                                                            ) : (
-                                                                                <Tooltip
-                                                                                    title={
+                                                                            <Tooltip
+                                                                                disableHoverListener={canShowBlock || canHideBlock}
+                                                                                title={
+                                                                                    isMinVisibleBlocksMet ? (
                                                                                         <FormattedMessage
                                                                                             id="comet.blocks.list.maxVisibleBlocks"
-                                                                                            defaultMessage="Max visible blocks: {maxVisibleBlocks}"
+                                                                                            defaultMessage="Max. visible blocks: {maxVisibleBlocks}"
                                                                                             values={{ maxVisibleBlocks }}
                                                                                         />
-                                                                                    }
-                                                                                >
-                                                                                    <span>
-                                                                                        <IconButton disabled size="small">
-                                                                                            {data.visible ? (
-                                                                                                <Visible color="secondary" />
-                                                                                            ) : (
-                                                                                                <Invisible color="action" />
-                                                                                            )}
-                                                                                        </IconButton>
-                                                                                    </span>
-                                                                                </Tooltip>
-                                                                            )
+                                                                                    ) : (
+                                                                                        <FormattedMessage
+                                                                                            id="comet.blocks.list.minVisibleBlocks"
+                                                                                            defaultMessage="Min. visible blocks required: {minVisibleBlocks}"
+                                                                                            values={{ minVisibleBlocks }}
+                                                                                        />
+                                                                                    )
+                                                                                }
+                                                                            >
+                                                                                <span>
+                                                                                    <IconButton
+                                                                                        onClick={() =>
+                                                                                            (canShowBlock || canHideBlock) && toggleVisible(data.key)
+                                                                                        }
+                                                                                        size="small"
+                                                                                        disabled={!(canShowBlock || canHideBlock)}
+                                                                                    >
+                                                                                        {data.visible ? (
+                                                                                            <Visible color="secondary" />
+                                                                                        ) : (
+                                                                                            <Invisible color="action" />
+                                                                                        )}
+                                                                                    </IconButton>
+                                                                                </span>
+                                                                            </Tooltip>
                                                                         }
                                                                         onAddNewBlock={(beforeIndex) => {
                                                                             const key = addNewBlock(beforeIndex);
