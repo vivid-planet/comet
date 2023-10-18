@@ -4,8 +4,6 @@ import { CurrentUser } from "src/user-permissions/dto/current-user";
 
 /** TODOs
  * Docs are missing
- * Changelog
- * Api password check
  */
 const IGNORED_PATHS = ["/dam/images/:hash/:fileId", "/dam/files/:hash/:fileId", "/dam/images/preview/:fileId", "/dam/files/preview/:fileId"];
 
@@ -16,16 +14,19 @@ export class AccessLogInterceptor implements NestInterceptor {
     intercept(context: ExecutionContext, next: CallHandler) {
         const requestType = context.getType().toString();
 
-        let message = "";
-        const additionalRequestData: string[] = [];
+        const requestData: string[] = [];
         let ignored = false;
 
         if (requestType === "graphql") {
             const graphqlExecutionContext = GqlExecutionContext.create(context);
             const graphqlContext = graphqlExecutionContext.getContext();
 
-            additionalRequestData.push(`ip: ${graphqlContext.req.ip}`);
-            this.pushUserToRequestData(graphqlContext.req.user, additionalRequestData);
+            if (graphqlContext.req.headers["authorization"] || graphqlContext.req.headers["Authorization"]) {
+                ignored = true;
+            }
+
+            requestData.push(`ip: ${graphqlContext.req.ip}`);
+            this.pushUserToRequestData(graphqlContext.req.user, requestData);
 
             const gqlArgs = graphqlExecutionContext.getArgs();
             const gqlInfo = graphqlExecutionContext.getInfo();
@@ -35,32 +36,44 @@ export class AccessLogInterceptor implements NestInterceptor {
                 delete gqlArgs["data"];
             }
 
-            message = `operationType: ${gqlInfo.parentType} - operationName: ${gqlInfo.operation.name.value} - resolver function: ${
-                gqlInfo.fieldName
-            } - args: ${JSON.stringify(gqlArgs)}`;
+            requestData.push(
+                ...[
+                    `operationType: ${gqlInfo.parentType}`,
+                    `operationName: ${gqlInfo.operation.name.value}`,
+                    `resolver function: ${gqlInfo.fieldName}`,
+                    `args: ${JSON.stringify(gqlArgs)}`,
+                ],
+            );
         } else {
             const httpContext = context.switchToHttp();
             const httpRequest = httpContext.getRequest();
 
-            if (IGNORED_PATHS.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath))) {
+            if (
+                IGNORED_PATHS.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
+                httpRequest.headers["authorization"] ||
+                httpRequest.headers["Authorization"]
+            ) {
                 ignored = true;
             }
 
-            additionalRequestData.push(`ip: ${httpRequest.ip}`);
-            this.pushUserToRequestData(httpRequest.user, additionalRequestData);
+            requestData.push(`ip: ${httpRequest.ip}`);
+            this.pushUserToRequestData(httpRequest.user, requestData);
 
-            message = `method: ${httpRequest.method} - route: ${httpRequest.route.path} - params: ${JSON.stringify(httpRequest.params)}`;
+            requestData.push(
+                ...[`method: ${httpRequest.method}`, `route: ${httpRequest.route.path}`, `params: ${JSON.stringify(httpRequest.params)}`],
+            );
         }
+
         if (!ignored) {
-            this.logger.log(`Request type: ${requestType} {${additionalRequestData.join(" - ")}} - ${message}`);
+            this.logger.log(`Request type: ${requestType} | ${requestData.join(" | ")}`);
         }
 
         return next.handle();
     }
 
-    private pushUserToRequestData(user: CurrentUser, additionalRequestData: string[]) {
+    private pushUserToRequestData(user: CurrentUser, requestData: string[]) {
         if (user) {
-            additionalRequestData.push(`user: ${user.id} (${user.name})`);
+            requestData.push(`user: ${user.id} (${user.name})`);
         }
     }
 }
