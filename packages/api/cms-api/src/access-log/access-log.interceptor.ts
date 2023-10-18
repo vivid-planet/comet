@@ -1,13 +1,13 @@
 import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
+import { CurrentUser } from "src/user-permissions/dto/current-user";
 
 /** TODOs
  * Docs are missing
  * Changelog
  * Api password check
  */
-const DAM_IMAGE_PATH = "/dam/images/:hash/:fileId";
-const DAM_FILE_PATH = "/dam/files/:hash/:fileId";
+const IGNORED_PATHS = ["/dam/images/:hash/:fileId", "/dam/files/:hash/:fileId", "/dam/images/preview/:fileId", "/dam/files/preview/:fileId"];
 
 @Injectable()
 export class AccessLogInterceptor implements NestInterceptor {
@@ -17,7 +17,7 @@ export class AccessLogInterceptor implements NestInterceptor {
         const requestType = context.getType().toString();
 
         let message = "";
-        const additionalRequestData = [];
+        const additionalRequestData: string[] = [];
         let ignored = false;
 
         if (requestType === "graphql") {
@@ -25,10 +25,7 @@ export class AccessLogInterceptor implements NestInterceptor {
             const graphqlContext = graphqlExecutionContext.getContext();
 
             additionalRequestData.push(`ip: ${graphqlContext.req.ip}`);
-            const user = graphqlContext.req.user;
-            if (user) {
-                additionalRequestData.push(`user: ${user.id} (${user.name})`);
-            }
+            this.pushUserToRequestData(graphqlContext.req.user, additionalRequestData);
 
             const gqlArgs = graphqlExecutionContext.getArgs();
             const gqlInfo = graphqlExecutionContext.getInfo();
@@ -45,15 +42,12 @@ export class AccessLogInterceptor implements NestInterceptor {
             const httpContext = context.switchToHttp();
             const httpRequest = httpContext.getRequest();
 
-            if (httpRequest.route.path.includes(DAM_IMAGE_PATH) || httpRequest.route.path.includes(DAM_FILE_PATH)) {
+            if (IGNORED_PATHS.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath))) {
                 ignored = true;
             }
 
             additionalRequestData.push(`ip: ${httpRequest.ip}`);
-            const user = httpRequest.user;
-            if (user) {
-                additionalRequestData.push(`user: ${user.id} (${user.name})`);
-            }
+            this.pushUserToRequestData(httpRequest.user, additionalRequestData);
 
             message = `method: ${httpRequest.method} - route: ${httpRequest.route.path} - params: ${JSON.stringify(httpRequest.params)}`;
         }
@@ -62,5 +56,11 @@ export class AccessLogInterceptor implements NestInterceptor {
         }
 
         return next.handle();
+    }
+
+    private pushUserToRequestData(user: CurrentUser, additionalRequestData: string[]) {
+        if (user) {
+            additionalRequestData.push(`user: ${user.id} (${user.name})`);
+        }
     }
 }
