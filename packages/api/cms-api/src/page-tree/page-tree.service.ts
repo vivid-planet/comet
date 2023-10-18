@@ -90,15 +90,11 @@ export class PageTreeService {
         const existingNode = await readApi.getNodeOrFail(id);
         if (!existingNode) throw new Error("Can't find page-tree-node with id");
 
-<<<<<<< HEAD
-        if (input.createAutomaticRedirectsOnSlugChange && existingNode.slug != input.slug) {
-=======
         if (existingNode.slug === "home" && input.slug !== "home") {
             throw new Error(`Slug of page "home" cannot be changed`);
         }
 
-        if (existingNode.slug != input.slug) {
->>>>>>> main
+        if (input.createAutomaticRedirectsOnSlugChange && existingNode.slug != input.slug) {
             await this.redirectsService.createAutomaticRedirects(existingNode);
         }
 
