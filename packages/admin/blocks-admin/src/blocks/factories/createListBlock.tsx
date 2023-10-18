@@ -52,6 +52,7 @@ interface CreateListBlockOptions<T extends BlockInterface> {
     itemName?: React.ReactNode;
     itemsName?: React.ReactNode;
     block: T;
+    minVisibleBlocks?: number;
     maxVisibleBlocks?: number;
     createDefaultListEntry?: boolean;
     additionalItemFields?: Record<string, AdditionalItemField>;
@@ -69,6 +70,7 @@ export function createListBlock<T extends BlockInterface>({
     displayName = <FormattedMessage id="comet.blocks.listBlock.name" defaultMessage="List" />,
     itemName = <FormattedMessage id="comet.blocks.listBlock.itemName" defaultMessage="block" />,
     itemsName = <FormattedMessage id="comet.blocks.listBlock.itemsName" defaultMessage="blocks" />,
+    minVisibleBlocks,
     maxVisibleBlocks,
     createDefaultListEntry,
     additionalItemFields = {},
