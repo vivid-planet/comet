@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-export { AccessLoggerInterceptor } from "./access-log/access-log.interceptor";
+export { AccessLogInterceptor } from "./access-log/access-log.interceptor";
 export { CurrentUserInterface, CurrentUserLoaderInterface, CurrentUserRightInterface } from "./auth/current-user/current-user";
 export { AllowForRole } from "./auth/decorators/allow-for-role.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
