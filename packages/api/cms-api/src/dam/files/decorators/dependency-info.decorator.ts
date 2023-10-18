@@ -1,6 +1,6 @@
 import { AnyEntity } from "@mikro-orm/core";
-
-import { FilesService } from "../files.service";
+import { Type } from "@nestjs/common";
+import { ModuleRef } from "@nestjs/core";
 
 export interface DependencyInfoServiceInterface<Entity extends AnyEntity> {
     getDependencyInfo: (entity: Entity) =>
@@ -15,41 +15,34 @@ export interface DependencyInfoServiceInterface<Entity extends AnyEntity> {
 }
 
 export interface DependencyInfoOptions<Entity extends AnyEntity> {
-    getName: (item: Entity) => Promise<string> | string;
-    getSecondaryInformation: (item: Entity) => Promise<string> | string;
+    getName: (item: Entity, moduleRef: ModuleRef) => Promise<string> | string;
+    getSecondaryInformation: (item: Entity, moduleRef: ModuleRef) => Promise<string> | string;
 }
 
 export function DependencyInfo<Entity extends AnyEntity>(
     // args: DependencyInfoOptions<Entity> | DependencyInfoServiceInterface<Entity>,
-    // args: DependencyInfoServiceInterface<Entity>,
-    args: any,
+    args: Type<DependencyInfoServiceInterface<Entity>>,
 ): ClassDecorator {
-    // const injector = Inject(FilesService);
-
     // eslint-disable-next-line @typescript-eslint/ban-types
-    return (target: Function, _key?: string | symbol) => {
-        console.log("args ", args);
-
+    return (target: Function) => {
         let options = {};
 
-        console.log("class");
         options = {
-            // @ts-ignore
-            getName: async (entity) => {
-                const fs = getFromContainer(args) as FilesService;
-                const info = await fs.getDependencyInfo(entity);
+            getName: async (entity, moduleRef) => {
+                const service: DependencyInfoServiceInterface<Entity> = moduleRef.get(args, { strict: false });
+                const info = await service.getDependencyInfo(entity);
                 return info.name;
             },
-            // @ts-ignore
-            getSecondaryInformation: async (entity) => {
-                const fs = getFromContainer(args) as FilesService;
-                const info = await fs.getDependencyInfo(entity);
+            getSecondaryInformation: async (entity, moduleRef) => {
+                const service: DependencyInfoServiceInterface<Entity> = moduleRef.get(args, { strict: false });
+                const info = await service.getDependencyInfo(entity);
                 return info.secondaryInformation;
             },
-        };
+        } as DependencyInfoOptions<Entity>;
 
         console.log("options ", options);
 
+        // Reflect.defineMetadata(`data:dependencyInfo`, options, target);
         Reflect.defineMetadata(`data:dependencyInfo`, options, target);
 
         // Reflect.defineMetadata(`data:dependencyInfo`, { abc: "abc" }, target);
@@ -102,27 +95,4 @@ export function DependencyInfo<Entity extends AnyEntity>(
         // }
         // Reflect.defineMetadata(`data:dependencyInfo`, options, target);
     };
-}
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-let container: { get<T>(someClass: { new (...args: any[]): T } | Function): T };
-
-export function setContainer(iocContainer: { get(someClass: any): any }) {
-    container = iocContainer;
-}
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-function getFromContainer<T>(someClass: { new (...args: any[]): T } | Function): T | undefined {
-    if (container) {
-        try {
-            const instance = container.get(someClass);
-            if (instance) return instance;
-
-            console.error("Failed in try");
-        } catch (error) {
-            console.error("Failed in catch");
-        }
-    }
-    console.error("No container");
-    return undefined;
 }

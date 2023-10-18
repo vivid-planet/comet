@@ -2,6 +2,7 @@ import { AnyEntity, Connection, QueryOrder } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, Knex } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
+import { ModuleRef } from "@nestjs/core";
 import { subMinutes } from "date-fns";
 import { v4 } from "uuid";
 
@@ -27,6 +28,7 @@ export class DependenciesService {
         @InjectRepository(BlockIndexRefresh) private readonly refreshRepository: EntityRepository<BlockIndexRefresh>,
         private readonly discoverService: DiscoverService,
         entityManager: EntityManager,
+        private readonly moduleRef: ModuleRef,
     ) {
         this.entityManager = entityManager;
         this.connection = entityManager.getConnection();
@@ -194,12 +196,11 @@ export class DependenciesService {
             const repository = this.entityManager.getRepository(result.targetEntityName);
             const instance = await repository.findOne({ [result.targetPrimaryKey]: result.targetId });
             if (instance) {
-                const methods = Reflect.getMetadata(`data:dependencyInfo`, instance.constructor) as DependencyInfoOptions<any> | undefined;
-                console.log("instance.constructor ", instance.constructor);
-                console.log("methods ", methods);
-                console.log("getName ", await methods?.getName(instance));
-                console.log("secondaryInformation ", await methods?.getSecondaryInformation(instance));
-                // console.log("getName ", methods?.getName(instance));
+                const methods = Reflect.getMetadata(`data:dependencyInfo`, instance.constructor) as DependencyInfoOptions<AnyEntity>;
+                const name = await methods.getName(instance, this.moduleRef);
+                const secondaryInfo = await methods.getName(instance, this.moduleRef);
+                console.log("name ", name);
+                console.log("secondaryInfo ", secondaryInfo);
             }
         }
 
