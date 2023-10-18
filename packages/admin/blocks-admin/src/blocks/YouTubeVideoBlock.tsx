@@ -21,7 +21,7 @@ const isValidYouTubeIdentifier = (value: string) => {
     return value.length === EXPECTED_YT_ID_LENGTH || (!!match && match[8].length == EXPECTED_YT_ID_LENGTH);
 };
 
-const validateIdentifier = (value: string | undefined) => {
+const validateIdentifier = (value?: string) => {
     return value && isValidYouTubeIdentifier(value) ? undefined : (
         <FormattedMessage id="comet.blocks.youTubeVideo.validation" defaultMessage="Should be a valid YouTube URL or identifier" />
     );
@@ -42,7 +42,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
         return { ...state, autoplay: false, adminMeta: { route: previewCtx.parentUrl } };
     },
 
-    isValid: (state) => isValidYouTubeIdentifier(state.youtubeIdentifier),
+    isValid: ({ youtubeIdentifier }) => !youtubeIdentifier || isValidYouTubeIdentifier(youtubeIdentifier),
 
     AdminComponent: ({ state, updateState }) => {
         const intl = useIntl();
