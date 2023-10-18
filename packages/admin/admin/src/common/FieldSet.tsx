@@ -1,5 +1,5 @@
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
-import { Theme } from "@mui/material";
+import { ComponentsOverrides, Theme } from "@mui/material";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionDetails, { AccordionDetailsProps } from "@mui/material/AccordionDetails";
 import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary";
@@ -48,12 +48,12 @@ const styles = (theme: Theme) =>
             display: "flex",
             alignItems: "center",
             fontWeight: theme.typography.fontWeightMedium,
-            fontSize: "14pt",
+            fontSize: "16px",
             textTransform: "uppercase",
             color: theme.palette.text.primary,
         },
         supportText: {
-            fontSize: "10pt",
+            fontSize: "12px",
             lineHeight: "18px",
             color: theme.palette.text.secondary,
         },
@@ -112,7 +112,7 @@ function FieldSet({
                 {...componentsProps?.fieldSetSummary}
             >
                 <div className={clsx(classes.headerColumn)}>
-                    <div className={clsx(classes.title, expanded && classes.disablePadding)}>{title}</div>
+                    <div className={clsx(classes.title)}>{title}</div>
                     <div className={clsx(classes.supportText)}>{supportText}</div>
                 </div>
                 <div className={clsx(classes.placeholder)} />
@@ -141,7 +141,7 @@ declare module "@mui/material/styles" {
     interface Components {
         CometAdminFieldSet?: {
             defaultProps?: ComponentsPropsList["CometAdminFieldSet"];
-            styleOverrides?: ComponentNameToClassKey["CometAdminFieldSet"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFieldSet"];
         };
     }
 }
