@@ -4,11 +4,15 @@ import { NewsLinkBlockData } from "@src/blocks.generated";
 import { gql } from "graphql-request";
 import * as React from "react";
 
+import { GQLNewsBlockDetailQuery, GQLNewsBlockDetailQueryVariables } from "./NewsDetailBlock.generated";
+
 interface LoadedData {
     title: string;
 }
 
-function NewsDetailBlock({ data: { id, title } }: React.PropsWithChildren<PropsWithData<NewsLinkBlockData & LoadedData>>): JSX.Element | null {
+function NewsDetailBlock({
+    data: { id, loaded },
+}: React.PropsWithChildren<PropsWithData<NewsLinkBlockData & { loaded: LoadedData }>>): JSX.Element | null {
     if (id === undefined) {
         return null;
     }
@@ -16,7 +20,7 @@ function NewsDetailBlock({ data: { id, title } }: React.PropsWithChildren<PropsW
     return (
         <div>
             <h1>News #{id}</h1>
-            <p>{title}</p>
+            <p>{loaded.title}</p>
         </div>
     );
 }
@@ -24,13 +28,13 @@ function NewsDetailBlock({ data: { id, title } }: React.PropsWithChildren<PropsW
 export { NewsDetailBlock };
 
 registerBlock<NewsLinkBlockData>("NewsDetail", {
-    async loader({ blockData, client }) {
-        if (!blockData.id) return blockData;
-        const data = await client.request(gql`query NewsBlockDetail {
+    async loader({ blockData, client }): Promise<LoadedData | null> {
+        if (!blockData.id) return null;
+        const data = await client.request<GQLNewsBlockDetailQuery, GQLNewsBlockDetailQueryVariables>(gql`query NewsBlockDetail {
             news(id: "${blockData.id}") {
                 title
             }
         }`);
-        return { ...blockData, title: data.news.title };
+        return data.news;
     },
 });
