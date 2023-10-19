@@ -16,6 +16,7 @@ import { FileLicensesResolver } from "./files/file-licenses.resolver";
 import { createFilesController } from "./files/files.controller";
 import { createFilesResolver } from "./files/files.resolver";
 import { FilesService } from "./files/files.service";
+import { FilesEntityInfoService } from "./files/files-entity-info.service";
 import { createFoldersResolver } from "./files/folders.resolver";
 import { FoldersService } from "./files/folders.service";
 import { CalculateDominantImageColor } from "./images/calculateDominantImageColor.console";
@@ -96,6 +97,7 @@ export class DamModule {
                 ImgproxyService,
                 FilesResolver,
                 FileDependentsResolver,
+                FilesEntityInfoService,
                 FilesService,
                 FileLicensesResolver,
                 FoldersResolver,
@@ -108,7 +110,15 @@ export class DamModule {
                 CalculateDominantImageColor,
             ],
             controllers: [createFilesController({ Scope }), ImagesController],
-            exports: [ImgproxyService, FilesService, FoldersService, ImagesService, ScaledImagesCacheService, damConfigProvider],
+            exports: [
+                ImgproxyService,
+                FilesService,
+                FoldersService,
+                ImagesService,
+                ScaledImagesCacheService,
+                damConfigProvider,
+                FilesEntityInfoService,
+            ],
         };
     }
 }

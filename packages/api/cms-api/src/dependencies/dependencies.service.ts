@@ -1,18 +1,24 @@
 import { AnyEntity, Connection, QueryOrder } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, Knex } from "@mikro-orm/postgresql";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Type } from "@nestjs/common";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
 import { ModuleRef } from "@nestjs/core";
 import { subMinutes } from "date-fns";
 import { v4 } from "uuid";
 
-import { GetDependencyInfo } from "../dam/files/decorators/dependency-info.decorator";
+import { EntityInfoGetter, EntityInfoServiceInterface } from "../dam/files/decorators/entity-info.decorator";
 import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { Dependency } from "./dto/dependency";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
 import { BlockIndexRefresh } from "./entities/block-index-refresh.entity";
 import { DependencyEntity } from "./entities/dependency.entity";
+
+const isService = (entityInfoGetter: EntityInfoGetter): entityInfoGetter is Type<EntityInfoServiceInterface> => {
+    // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
+    return Reflect.hasMetadata(INJECTABLE_WATERMARK, entityInfoGetter);
+};
 
 interface PGStatActivity {
     pid: number;
@@ -200,9 +206,14 @@ export class DependenciesService {
 
             let dependency: Dependency = { ...result };
             if (instance) {
-                const getDependencyInfo: GetDependencyInfo<AnyEntity> | undefined = Reflect.getMetadata(`data:dependencyInfo`, instance.constructor);
-                if (getDependencyInfo) {
-                    const { name, secondaryInformation } = await getDependencyInfo(instance, this.moduleRef);
+                const entityInfoGetter: EntityInfoGetter = Reflect.getMetadata(`data:entityInfo`, instance.constructor);
+
+                if (isService(entityInfoGetter)) {
+                    const service = this.moduleRef.get(entityInfoGetter, { strict: false });
+                    const { name, secondaryInformation } = await service.getEntityInfo(instance);
+                    dependency = { ...dependency, name, secondaryInformation };
+                } else {
+                    const { name, secondaryInformation } = await entityInfoGetter(instance);
                     dependency = { ...dependency, name, secondaryInformation };
                 }
             }

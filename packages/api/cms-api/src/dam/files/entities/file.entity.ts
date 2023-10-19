@@ -17,8 +17,8 @@ import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 import { DamScopeInterface } from "../../types";
-import { DependencyInfo, GetDependencyInfo } from "../decorators/dependency-info.decorator";
-import { FilesService } from "../files.service";
+import { EntityInfo } from "../decorators/entity-info.decorator";
+import { FilesEntityInfoService } from "../files-entity-info.service";
 import { DamFileImage } from "./file-image.entity";
 import { FolderInterface } from "./folder.entity";
 import { License } from "./license.embeddable";
@@ -140,13 +140,9 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         // fileUrl: Field is resolved in resolver
     }
 
-    const getDependencyInfo: GetDependencyInfo<FileInterface> = async (file, moduleRef) => {
-        const filesService = moduleRef.get(FilesService, { strict: false });
-        return { name: file.name, secondaryInformation: await filesService.getDamPath(file) };
-    };
-
     if (Scope) {
-        @DependencyInfo<DamFile>(getDependencyInfo)
+        @EntityInfo<DamFile>(FilesEntityInfoService)
+        // @EntityInfo<DamFile>((file) => ({ name: file.name }))
         @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
         class DamFile extends FileBase {
@@ -156,7 +152,7 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         }
         return DamFile;
     } else {
-        @DependencyInfo<DamFile>(getDependencyInfo)
+        @EntityInfo<DamFile>(FilesEntityInfoService)
         @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
         class DamFile extends FileBase {}
