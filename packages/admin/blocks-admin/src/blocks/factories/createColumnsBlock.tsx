@@ -213,8 +213,6 @@ export function createColumnsBlock<T extends BlockInterface>({
 
             const blockContext = useBlockContext();
 
-            layouts.push(layouts[0]);
-
             return (
                 <>
                     <StackSwitch initialPage="list">
