@@ -80,7 +80,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             field: "source",
             headerName: intl.formatMessage({ id: "comet.pages.redirects.redirect.source", defaultMessage: "Source" }),
             sortable: true,
-            flex: 1,
+            minWidth: 600,
         },
         {
             field: "target",
@@ -99,6 +99,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             },
             sortable: false,
             flex: 1,
+            minWidth: 400,
             filterable: false,
         },
         {
@@ -107,6 +108,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             renderCell: (params) => <div>{params.value}</div>,
             sortable: false,
             flex: 1,
+            minWidth: 400,
             filterable: false,
         },
         {
