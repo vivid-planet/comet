@@ -21,10 +21,8 @@ const PreviewPage: React.FunctionComponent = () => {
                 setBlockData(undefined);
                 return;
             }
-            console.log("loading block data", iFrameBridge.block);
             const newData = await recursivelyLoadBlockData({ blockType: "PageContent", blockData: iFrameBridge.block, client: clientRef.current });
             setBlockData(newData);
-            console.log("loaded block data", newData);
         }
         load();
     }, [iFrameBridge.block]);

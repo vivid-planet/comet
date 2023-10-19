@@ -16,7 +16,7 @@ export async function loadBlockData({ blockType, blockData, client }: { blockTyp
     if (blockOptions) {
         return {
             ...blockData,
-            ...(await blockOptions.loader({ blockData, client })),
+            loaded: await blockOptions.loader({ blockData, client }),
         };
     }
     return blockData;
