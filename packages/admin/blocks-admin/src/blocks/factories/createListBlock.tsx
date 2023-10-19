@@ -171,7 +171,11 @@ export function createListBlock<T extends BlockInterface>({
                 adminMeta: { route: previewCtx.parentUrl },
             };
         },
-        isValid: async (state) => parallelAsyncEvery(state.blocks, async (c) => block.isValid(c.props)),
+        isValid: async (state) =>
+            parallelAsyncEvery(
+                state.blocks,
+                async (c) => block.isValid(c.props) && (minVisibleBlocks ? minVisibleBlocks <= state.blocks.length : true),
+            ),
 
         childBlockCount: (state) => state.blocks.length,
 
