@@ -78,6 +78,12 @@ export function createListBlock<T extends BlockInterface>({
     AdditionalItemContent,
 }: CreateListBlockOptions<T>): BlockInterface<ListBlockFragment, ListBlockState<T>> {
     const useAdminComponent = createUseAdminComponent({ block, maxVisibleBlocks, additionalItemFields });
+
+    if (minVisibleBlocks && maxVisibleBlocks && minVisibleBlocks > maxVisibleBlocks)
+        throw new Error(
+            `${name}: The property 'minVisibleBlocks' (value: ${minVisibleBlocks}) must be equal to or smaller than 'maxVisibleBlocks' (value: ${maxVisibleBlocks})`,
+        );
+
     const BlockListBlock: BlockInterface<ListBlockFragment, ListBlockState<T>> = {
         ...createBlockSkeleton(),
 
