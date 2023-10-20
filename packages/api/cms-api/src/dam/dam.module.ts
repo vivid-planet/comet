@@ -110,15 +110,7 @@ export class DamModule {
                 CalculateDominantImageColor,
             ],
             controllers: [createFilesController({ Scope }), ImagesController],
-            exports: [
-                ImgproxyService,
-                FilesService,
-                FoldersService,
-                ImagesService,
-                ScaledImagesCacheService,
-                damConfigProvider,
-                FilesEntityInfoService,
-            ],
+            exports: [ImgproxyService, FilesService, FoldersService, ImagesService, ScaledImagesCacheService, damConfigProvider],
         };
     }
 }

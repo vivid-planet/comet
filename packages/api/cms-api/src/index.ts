@@ -1,5 +1,4 @@
 import "reflect-metadata";
-
 export { CurrentUserInterface, CurrentUserLoaderInterface, CurrentUserRightInterface } from "./auth/current-user/current-user";
 export { AllowForRole } from "./auth/decorators/allow-for-role.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
@@ -74,6 +73,7 @@ export { defaultDamAcceptedMimetypes } from "./dam/common/mimeTypes/default-dam-
 export { DamConfig } from "./dam/dam.config";
 export { DAM_CONFIG, IMGPROXY_CONFIG } from "./dam/dam.constants";
 export { DamModule } from "./dam/dam.module";
+export { EntityInfo, EntityInfoGetter, EntityInfoServiceInterface, GetEntityInfo } from "./dam/files/decorators/entity-info.decorator";
 export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dto/file.input";
 export { FileUploadInterface } from "./dam/files/dto/file-upload.interface";
 export { CreateFolderInput, UpdateFolderInput } from "./dam/files/dto/folder.input";
@@ -100,6 +100,7 @@ export { DependenciesModule } from "./dependencies/dependencies.module";
 export { DependenciesResolverFactory } from "./dependencies/dependencies.resolver.factory";
 export { DependenciesService } from "./dependencies/dependencies.service";
 export { DependentsResolverFactory } from "./dependencies/dependents.resolver.factory";
+export { Dependency } from "./dependencies/dto/dependency";
 export { DependencyEntity } from "./dependencies/entities/dependency.entity";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
