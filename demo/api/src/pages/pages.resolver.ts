@@ -25,6 +25,11 @@ export class PagesArgs extends IntersectionType(OffsetBasedPaginationArgs, SortA
 export class PagesResolver {
     constructor(@InjectRepository(Page) private readonly repository: EntityRepository<Page>, private readonly pageTreeService: PageTreeService) {}
 
+    @Query(() => Page)
+    async page(@Args("id", { type: () => ID }) id: string): Promise<Page> {
+        return this.repository.findOneOrFail({ id });
+    }
+
     // TODO add scope argument (who uses this anyway? probably dashboard)
     @Query(() => PaginatedPages)
     async pages(@Args() { offset, limit, sortColumnName, sortDirection }: PagesArgs): Promise<PaginatedPages> {

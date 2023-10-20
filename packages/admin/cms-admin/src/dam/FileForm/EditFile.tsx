@@ -39,7 +39,6 @@ import {
     GQLUpdateFileMutation,
     GQLUpdateFileMutationVariables,
 } from "./EditFile.gql.generated";
-import { FileDependents } from "./FileDependents";
 import { FilePreview } from "./FilePreview";
 import { FileSettingsFields, LicenseType } from "./FileSettingsFields";
 import { ImageInfos } from "./ImageInfos";
@@ -288,7 +287,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                                     label={intl.formatMessage({ id: "comet.dam.file.dependents", defaultMessage: "Dependents" })}
                                     path="/dependents"
                                 >
-                                    <FileDependents fileId={file.id} />
+                                    <>TODO</>
                                 </RouterTab>
                             </RouterTabs>
                         </ReactSplit>

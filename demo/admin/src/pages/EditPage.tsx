@@ -1,10 +1,11 @@
-import { gql } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { Loading, MainContent, messages, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft, Preview } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
     BlockPreviewWithTabs,
     createUsePage,
+    DependencyList,
     EditPageLayout,
     openSitePreviewWindow,
     PageName,
@@ -16,12 +17,38 @@ import { Button, IconButton } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
-import { PageDependencies } from "@src/pages/PageDependencies";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory, useRouteMatch } from "react-router";
 
-import { GQLEditPageQuery, GQLEditPageQueryVariables, GQLUpdatePageMutation, GQLUpdatePageMutationVariables } from "./EditPage.generated";
+import {
+    GQLEditPageQuery,
+    GQLEditPageQueryVariables,
+    GQLPageDependenciesQuery,
+    GQLPageDependenciesQueryVariables,
+    GQLUpdatePageMutation,
+    GQLUpdatePageMutationVariables,
+} from "./EditPage.generated";
+
+const pageDependenciesQuery = gql`
+    query PageDependencies($id: ID!) {
+        page(id: $id) {
+            id
+            dependencies {
+                nodes {
+                    targetGraphqlObjectType
+                    targetId
+                    rootColumnName
+                    jsonPath
+                    name
+                    secondaryInformation
+                }
+                totalCount
+            }
+        }
+    }
+`;
+
 import { PageContentBlock } from "./PageContentBlock";
 
 interface Props {
@@ -76,6 +103,20 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
         onValidationFailed: () => {
             history.push(`${match}/content`);
         },
+    });
+
+    const {
+        data,
+        loading: dependenciesLoading,
+        error,
+        refetch,
+    } = useQuery<GQLPageDependenciesQuery, GQLPageDependenciesQueryVariables>(pageDependenciesQuery, {
+        variables: {
+            // non-null check is done in skip
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            id: pageState?.document?.id ?? "",
+        },
+        skip: pageState?.document?.id === undefined,
     });
 
     const match = useRouteMatch();
@@ -174,7 +215,20 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                                     <FormattedMessage id="pages.pages.page.edit.dependencies" defaultMessage="Dependencies" />
                                 </AdminTabLabel>
                             ),
-                            content: <PageDependencies pageId={pageState.document?.id} />,
+                            content: (
+                                <DependencyList
+                                    error={error}
+                                    loading={dependenciesLoading}
+                                    refetch={refetch}
+                                    dependencyItems={
+                                        data?.page.dependencies.nodes.map((node) => ({
+                                            ...node,
+                                            graphqlObjectType: node.targetGraphqlObjectType,
+                                            id: node.targetId,
+                                        })) ?? []
+                                    }
+                                />
+                            ),
                         },
                     ]}
                 </BlockPreviewWithTabs>
