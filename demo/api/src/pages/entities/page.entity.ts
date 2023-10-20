@@ -3,21 +3,12 @@ import { DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cm
 import { EntityInfo } from "@comet/cms-api/lib/dam/files/decorators/entity-info.decorator";
 import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { PagesEntityInfoService } from "@src/pages/pages-entity-info.service";
 import { v4 as uuid } from "uuid";
 
 import { PageContentBlock } from "../blocks/PageContentBlock";
 import { SeoBlock } from "../blocks/seo.block";
+import { PagesEntityInfoService } from "../pages-entity-info.service";
 
-// @EntityInfo<Page>(async (page, moduleRef) => {
-//     const pageTreeService: PageTreeService = moduleRef.get(PageTreeService, { strict: false });
-//     const pageTreeNode = await pageTreeService.createReadApi().getFirstNodeByAttachedPageId(page.id);
-//
-//     return {
-//         name: pageTreeNode?.name ?? "Unknown",
-//         secondaryInformation: pageTreeNode ? await pageTreeService.createReadApi().nodePath(pageTreeNode) : undefined,
-//     };
-// })
 @EntityInfo(PagesEntityInfoService)
 @Entity()
 @ObjectType({
