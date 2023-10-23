@@ -5,7 +5,7 @@ import { RouteProps, useRouteMatch } from "react-router-dom";
 export type MasterMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
     route?: RouteProps;
     to?: string;
-    subMenu?: MasterMenuItem[];
+    submenu?: MasterMenuItem[];
 };
 
 export type MasterMenuData = MasterMenuItem[];
@@ -13,14 +13,14 @@ export type MasterMenuData = MasterMenuItem[];
 export function getMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
     // TODO: Filter for user-permissions once they are available
     const mapFn = (item: MasterMenuItem): MenuItem => {
-        const { route, subMenu, to, ...menuItem } = item;
+        const { route, submenu, to, ...menuItem } = item;
         return {
             menuItem: {
                 ...menuItem,
                 to: to ?? route?.path?.toString() ?? "",
             },
-            hasSubMenu: !!subMenu,
-            subMenu: subMenu ? subMenu.map(mapFn) : [],
+            hasSubmenu: !!submenu,
+            submenu: submenu ? submenu.map(mapFn) : [],
         };
     };
     return items.map(mapFn);
@@ -28,8 +28,8 @@ export function getMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
 
 type MenuItem = {
     menuItem: MenuItemRouterLinkProps;
-    hasSubMenu: boolean;
-    subMenu: MenuItem[];
+    hasSubmenu: boolean;
+    submenu: MenuItem[];
 };
 
 export interface MasterMenuProps {
@@ -56,10 +56,10 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
     return (
         <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
             {menuItems.map((menuItem, index) =>
-                menuItem.hasSubMenu ? (
+                menuItem.hasSubmenu ? (
                     <MenuCollapsibleItem key={index} {...menuItem.menuItem}>
-                        {menuItem.subMenu.map((subMenu, index) => (
-                            <MenuItemRouterLink key={index} {...subMenu.menuItem} to={`${match.url}${subMenu.menuItem.to}`} />
+                        {menuItem.submenu.map((submenu, index) => (
+                            <MenuItemRouterLink key={index} {...submenu.menuItem} to={`${match.url}${submenu.menuItem.to}`} />
                         ))}
                     </MenuCollapsibleItem>
                 ) : (

@@ -62,7 +62,7 @@ export const masterMenuData: MasterMenuData = [
     {
         primary: <FormattedMessage id="menu.pageTree" defaultMessage="Page tree" />,
         icon: <PageTree />,
-        subMenu: pageTreeCategories.map((category) => ({
+        submenu: pageTreeCategories.map((category) => ({
             primary: category.label,
             to: `/pages/pagetree/${categoryToUrlParam(category.category as GQLPageTreeNodeCategory)}`,
         })),
@@ -91,7 +91,7 @@ export const masterMenuData: MasterMenuData = [
     {
         primary: <FormattedMessage id="menu.structuredContent" defaultMessage="Structured Content" />,
         icon: <Data />,
-        subMenu: [
+        submenu: [
             {
                 primary: <FormattedMessage id="menu.news" defaultMessage="News" />,
                 route: {
@@ -112,7 +112,7 @@ export const masterMenuData: MasterMenuData = [
     {
         primary: <FormattedMessage id="menu.projectSnips" defaultMessage="Project snips" />,
         icon: <Snips />,
-        subMenu: [
+        submenu: [
             {
                 primary: <FormattedMessage id="menu.mainMenu" defaultMessage="Main menu" />,
                 route: {
@@ -125,7 +125,7 @@ export const masterMenuData: MasterMenuData = [
     {
         primary: <FormattedMessage id="menu.system" defaultMessage="System" />,
         icon: <Wrench />,
-        subMenu: [
+        submenu: [
             {
                 primary: <FormattedMessage id="menu.publisher" defaultMessage="Publisher" />,
                 route: {
@@ -160,7 +160,7 @@ export const masterMenuData: MasterMenuData = [
     {
         primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
         icon: <Snips />,
-        subMenu: [
+        submenu: [
             {
                 primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
                 route: {
