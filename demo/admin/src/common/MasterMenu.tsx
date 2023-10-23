@@ -4,7 +4,7 @@ import {
     createRedirectsPage,
     CronJobsPage,
     DamPage,
-    MasterMenu,
+    MasterMenu as CometMasterMenu,
     MasterMenuData,
     PagesPage,
     PublisherPage,
@@ -201,6 +201,5 @@ export const masterMenuData: MasterMenuData = [
     },
 ];
 
-export default function () {
-    return <MasterMenu menu={masterMenuData} />;
-}
+const MasterMenu = () => <CometMasterMenu menu={masterMenuData} />;
+export default MasterMenu;
