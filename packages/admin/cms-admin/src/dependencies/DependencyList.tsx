@@ -1,8 +1,6 @@
-import { ApolloError, useApolloClient } from "@apollo/client";
-import { OperationVariables } from "@apollo/client/core";
-import { ApolloQueryResult } from "@apollo/client/core/types";
-import { Loading } from "@comet/admin";
-import { ArrowRight, OpenNewTab } from "@comet/admin-icons";
+import { TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
+import { useDataGridRemote } from "@comet/admin";
+import { ArrowRight, OpenNewTab, Reload } from "@comet/admin-icons";
 import { Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { LabelDisplayedRowsArgs } from "@mui/material/TablePagination/TablePagination";
@@ -21,21 +19,61 @@ type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "roo
     graphqlObjectType: string;
 };
 
-interface DependencyListProps {
-    loading: boolean;
-    error: ApolloError | undefined;
-    refetch: (variables?: Partial<OperationVariables>) => Promise<ApolloQueryResult<unknown>>;
-    dependencyItems: Array<DependencyItem> | undefined;
+type Dependency = {
+    targetGraphqlObjectType: string;
+    targetId: string;
+    rootColumnName: string;
+    jsonPath: string;
+    name: string | null;
+    secondaryInformation: string | null;
+};
+
+type Dependent = {
+    rootGraphqlObjectType: string;
+    rootId: string;
+    rootColumnName: string;
+    jsonPath: string;
+    name: string | null;
+    secondaryInformation: string | null;
+};
+
+interface GQLQuery {
+    item: {
+        id: string;
+        dependencies?: { totalCount: number; nodes: Array<Dependency> };
+        dependents?: { totalCount: number; nodes: Array<Dependent> };
+    };
 }
 
-const pageSize = 2;
+type GQLQueryVariables = {
+    offset: number;
+    limit: number;
+    forceRefresh?: boolean;
+};
 
-export const DependencyList = ({ loading, error, refetch, dependencyItems }: DependencyListProps) => {
+interface DependencyListProps {
+    query: TypedDocumentNode<GQLQuery, GQLQueryVariables>;
+    variables: Record<string, unknown>;
+}
+
+const pageSize = 10;
+
+export const DependencyList = ({ query, variables }: DependencyListProps) => {
     const intl = useIntl();
     const entityDependencyMap = useDependenciesConfig();
     const contentScope = useContentScope();
     const apolloClient = useApolloClient();
     const history = useHistory();
+
+    const dataGridProps = useDataGridRemote({ queryParamsPrefix: "dependencies", pageSize: pageSize });
+
+    const { data, loading, error, refetch } = useQuery<GQLQuery, GQLQueryVariables>(query, {
+        variables: {
+            offset: dataGridProps.page * dataGridProps.pageSize,
+            limit: dataGridProps.pageSize,
+            ...variables,
+        },
+    });
 
     const columns: GridColDef<DependencyItem>[] = [
         {
@@ -106,47 +144,60 @@ export const DependencyList = ({ loading, error, refetch, dependencyItems }: Dep
         },
     ];
 
-    if (loading) {
-        return <Loading behavior="fillParent" />;
+    let items: DependencyItem[] = [];
+    let totalCount = 0;
+
+    if (data?.item.dependencies) {
+        items = data.item.dependencies.nodes.map((node) => ({
+            ...node,
+            graphqlObjectType: node.targetGraphqlObjectType,
+            id: node.targetId,
+        }));
+        totalCount = data.item.dependencies.totalCount;
+    } else if (data?.item.dependents) {
+        items = data.item.dependents.nodes.map((node) => ({
+            ...node,
+            graphqlObjectType: node.rootGraphqlObjectType,
+            id: node.rootId,
+        }));
+        totalCount = data.item.dependents.totalCount;
+    } else {
+        console.error("Neither dependencies nor dependents is defined");
     }
 
     return (
-        <StyledDataGrid
-            componentsProps={{
-                pagination: {
-                    labelDisplayedRows: DisplayedRows,
-                },
-            }}
-            rowHeight={60}
-            disableSelectionOnClick
-            pageSize={pageSize}
-            autoHeight={true}
-            columns={columns}
-            rows={dependencyItems ?? []}
-        />
+        <>
+            <Toolbar>
+                <IconButton
+                    onClick={() => {
+                        refetch({
+                            forceRefresh: true,
+                        });
+                    }}
+                >
+                    <Reload />
+                </IconButton>
+            </Toolbar>
+            <StyledDataGrid
+                {...dataGridProps}
+                componentsProps={{
+                    pagination: {
+                        labelDisplayedRows: DisplayedRows,
+                    },
+                }}
+                rowHeight={60}
+                disableSelectionOnClick
+                disableColumnMenu
+                loading={loading}
+                error={error}
+                autoHeight={true}
+                columns={columns}
+                rows={items}
+                rowCount={totalCount}
+            />
+        </>
     );
 };
-
-const StyledChip = styled(Chip)`
-    display: flex;
-    padding: 4px 7px;
-    align-items: center;
-    gap: 6px;
-    height: auto;
-
-    border-radius: 12px;
-    background: ${({ theme }) => theme.palette.grey[100]};
-
-    color: black;
-    font-size: 10px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 10px;
-
-    .MuiChip-label {
-        padding: 0;
-    }
-`;
 
 const DisplayedRows = ({ from, to, count, page }: LabelDisplayedRowsArgs) => {
     const numPages = Math.ceil(count / pageSize) > 0 ? Math.ceil(count / pageSize) : 1;
@@ -170,6 +221,39 @@ const DisplayedRows = ({ from, to, count, page }: LabelDisplayedRowsArgs) => {
         </DisplayedRowsWrapper>
     );
 };
+
+const Toolbar = styled("div")`
+    height: 60px;
+    background: white;
+    display: flex;
+    justify-content: right;
+
+    border-bottom: solid 1px;
+    border-bottom-color: ${({ theme }) => theme.palette.grey[100]};
+
+    padding: 10px;
+`;
+
+const StyledChip = styled(Chip)`
+    display: flex;
+    padding: 4px 7px;
+    align-items: center;
+    gap: 6px;
+    height: auto;
+
+    border-radius: 12px;
+    background: ${({ theme }) => theme.palette.grey[100]};
+
+    color: black;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 10px;
+
+    .MuiChip-label {
+        padding: 0;
+    }
+`;
 
 const NameInfoWrapper = styled("div")`
     display: flex;

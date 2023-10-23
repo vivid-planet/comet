@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { Loading, MainContent, messages, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft, Preview } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
@@ -21,20 +21,13 @@ import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory, useRouteMatch } from "react-router";
 
-import {
-    GQLEditPageQuery,
-    GQLEditPageQueryVariables,
-    GQLPageDependenciesQuery,
-    GQLPageDependenciesQueryVariables,
-    GQLUpdatePageMutation,
-    GQLUpdatePageMutationVariables,
-} from "./EditPage.generated";
+import { GQLEditPageQuery, GQLEditPageQueryVariables, GQLUpdatePageMutation, GQLUpdatePageMutationVariables } from "./EditPage.generated";
 
 const pageDependenciesQuery = gql`
-    query PageDependencies($id: ID!) {
-        page(id: $id) {
+    query PageDependencies($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false) {
+        item: page(id: $id) {
             id
-            dependencies {
+            dependencies(offset: $offset, limit: $limit, forceRefresh: $forceRefresh) {
                 nodes {
                     targetGraphqlObjectType
                     targetId
@@ -103,20 +96,6 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
         onValidationFailed: () => {
             history.push(`${match}/content`);
         },
-    });
-
-    const {
-        data,
-        loading: dependenciesLoading,
-        error,
-        refetch,
-    } = useQuery<GQLPageDependenciesQuery, GQLPageDependenciesQueryVariables>(pageDependenciesQuery, {
-        variables: {
-            // non-null check is done in skip
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            id: pageState?.document?.id ?? "",
-        },
-        skip: pageState?.document?.id === undefined,
     });
 
     const match = useRouteMatch();
@@ -217,16 +196,10 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                             ),
                             content: (
                                 <DependencyList
-                                    error={error}
-                                    loading={dependenciesLoading}
-                                    refetch={refetch}
-                                    dependencyItems={
-                                        data?.page.dependencies.nodes.map((node) => ({
-                                            ...node,
-                                            graphqlObjectType: node.targetGraphqlObjectType,
-                                            id: node.targetId,
-                                        })) ?? []
-                                    }
+                                    query={pageDependenciesQuery}
+                                    variables={{
+                                        id: pageState?.document?.id ?? "",
+                                    }}
                                 />
                             ),
                         },
