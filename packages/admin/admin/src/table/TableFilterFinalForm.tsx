@@ -15,6 +15,9 @@ type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit" 
     filterApi: IFilterApi<FilterValues>;
 };
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Component<Props<FilterValues>> {
     public render() {
         // remove render, children and component from forwardProps as we define render and those would interfere

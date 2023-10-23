@@ -39,8 +39,7 @@ export function lookupPath(): string | undefined {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const stack = new Error().stack!.split("\n");
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    let line = stack.findIndex((line) => line.includes("createBlock"))!;
+    let line = stack.findIndex((line) => line.includes("createBlock") || line.includes("createRichTextBlock"));
 
     if (line === -1) {
         return undefined;

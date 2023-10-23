@@ -23,6 +23,7 @@ import {
     FileSizeError,
     MaxResolutionError,
     MissingFileExtensionError,
+    SvgContainsJavaScriptError,
     UnsupportedTypeError,
 } from "./fileUploadErrorMessages";
 import { ProgressDialog } from "./ProgressDialog";
@@ -408,6 +409,8 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                         } else {
                             addValidationError(file, <UnknownError />);
                         }
+                    } else if (typedErr.response?.data.message === "Rejected File Upload: SVG must not contain JavaScript") {
+                        addValidationError(file, <SvgContainsJavaScriptError />);
                     } else if (typedErr.response === undefined && typedErr.request) {
                         addValidationError(file, <NetworkError />);
                     } else {

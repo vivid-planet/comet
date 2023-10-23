@@ -6,6 +6,9 @@ import { ITableQueryApi } from "../TableQueryContext";
 import { createExcelExportDownload, IExcelExportOptions } from "./createExcelExportDownload";
 import { IExportApi } from "./IExportApi";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export function useExportTableQuery<IVariables>(api: ITableQueryApi, variables: IVariables, options?: IExcelExportOptions): IExportApi<any> {
     let tableRef: Table<any> | undefined;
     const [loading, setLoading] = React.useState(false);

@@ -6,6 +6,9 @@ interface IRestPagingData {
     loadLimit: number;
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export function createRestStartLimitPagingActions<TData extends IRestPagingData>(pagingApi: IPagingApi<number>, data: TData): IPagingInfo {
     const loadLimit = Math.max(1, data.loadLimit); // min value 1 -> avoid division by zero
 

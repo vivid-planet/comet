@@ -1,5 +1,39 @@
 # @comet/admin-theme
 
+## 4.5.0
+
+### Minor Changes
+
+-   01677075: Fix some DataGrid styling issues and style the DataGrid components to match the Comet CI more closely.
+
+### Patch Changes
+
+-   @comet/admin-icons@4.5.0
+
+## 4.4.3
+
+### Patch Changes
+
+-   @comet/admin-icons@4.4.3
+
+## 4.4.2
+
+### Patch Changes
+
+-   @comet/admin-icons@4.4.2
+
+## 4.4.1
+
+### Patch Changes
+
+-   @comet/admin-icons@4.4.1
+
+## 4.4.0
+
+### Patch Changes
+
+-   @comet/admin-icons@4.4.0
+
 ## 4.3.0
 
 ### Patch Changes

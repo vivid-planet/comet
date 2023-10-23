@@ -20,6 +20,9 @@ class YouTubeVideoBlockData extends BlockData {
 
     @BlockField({ nullable: true })
     showControls?: boolean;
+
+    @BlockField({ nullable: true })
+    loop?: boolean;
 }
 
 class YouTubeVideoBlockInput extends BlockInput {
@@ -41,6 +44,11 @@ class YouTubeVideoBlockInput extends BlockInput {
     @IsOptional()
     @BlockField({ nullable: true })
     showControls?: boolean;
+
+    @IsBoolean()
+    @IsOptional()
+    @BlockField({ nullable: true })
+    loop?: boolean;
 
     transformToBlockData(): BlockDataInterface {
         return inputToData(YouTubeVideoBlockData, this);

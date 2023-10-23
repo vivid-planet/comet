@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import {
+    Loading,
     LocalErrorScopeApolloContext,
     MainContent,
     messages,
@@ -13,7 +14,7 @@ import {
     useStoredState,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Box, Button, CircularProgress, FormControlLabel, Paper, Switch } from "@mui/material";
+import { Box, Button, FormControlLabel, Paper, Switch } from "@mui/material";
 import withStyles from "@mui/styles/withStyles";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -178,17 +179,19 @@ export function PagesPage({
                                 />
                             </ActionToolbarBox>
                             <FullHeightPaper variant="outlined">
-                                {loading && <CircularProgress />}
-
-                                <PageTree
-                                    ref={refPageTree}
-                                    pages={pagesToRenderWithMatches}
-                                    editDialogApi={editDialogApi}
-                                    toggleExpand={toggleExpand}
-                                    onSelectChanged={onSelectChanged}
-                                    category={category}
-                                    siteUrl={siteConfig.url}
-                                />
+                                {loading ? (
+                                    <Loading behavior="fillParent" />
+                                ) : (
+                                    <PageTree
+                                        ref={refPageTree}
+                                        pages={pagesToRenderWithMatches}
+                                        editDialogApi={editDialogApi}
+                                        toggleExpand={toggleExpand}
+                                        onSelectChanged={onSelectChanged}
+                                        category={category}
+                                        siteUrl={siteConfig.url}
+                                    />
+                                )}
                             </FullHeightPaper>
                         </PageTreeContent>
                     </PageTreeContext.Provider>

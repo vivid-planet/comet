@@ -3,6 +3,7 @@ import {
     GridFilterButton,
     LocalErrorScopeApolloContext,
     muiGridFilterToGql,
+    muiGridPagingToGql,
     muiGridSortToGql,
     StackLink,
     StackSwitchApiContext,
@@ -175,8 +176,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
         variables: {
             scope,
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            limit: dataGridProps.pageSize,
-            offset: dataGridProps.page * dataGridProps.pageSize,
+            ...muiGridPagingToGql({ page: dataGridProps.page, pageSize: dataGridProps.pageSize }),
             sort: muiGridSortToGql(sortModel),
         },
         context: LocalErrorScopeApolloContext,

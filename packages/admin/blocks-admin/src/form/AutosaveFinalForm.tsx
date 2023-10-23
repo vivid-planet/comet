@@ -17,10 +17,7 @@ function AutosaveSpy() {
     );
 }
 /**
- * @deprecated For BlockAdmins use BlocksFinalForm instead.
- *
- * @TODO: Should we keepo this form, for some use cases its still valuable (AddFile.tsx),
- * BlocksFinalForm is not appropriate when an invalid form should not be submitted
+ * @deprecated Use `BlocksFinalForm` instead
  */
 export function AutosaveFinalForm<FormValues = AnyObject>(props: FormProps<FormValues>): JSX.Element {
     return <Form {...props} render={renderForm} />;

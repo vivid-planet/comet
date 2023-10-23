@@ -83,7 +83,7 @@ export function PublisherPage(): React.ReactElement {
                             headerName: intl.formatMessage({ id: "comet.pages.publisher.name", defaultMessage: "Name" }),
                             flex: 2,
                             renderCell: ({ row }) => {
-                                return row.label ?? row.name;
+                                return row.label && row.label.length > 0 ? row.label : row.name;
                             },
                         },
                         {

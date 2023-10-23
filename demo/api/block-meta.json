@@ -1613,6 +1613,11 @@
                 "name": "showControls",
                 "kind": "Boolean",
                 "nullable": true
+            },
+            {
+                "name": "loop",
+                "kind": "Boolean",
+                "nullable": true
             }
         ],
         "inputFields": [
@@ -1637,6 +1642,11 @@
             },
             {
                 "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "loop",
                 "kind": "Boolean",
                 "nullable": true
             }

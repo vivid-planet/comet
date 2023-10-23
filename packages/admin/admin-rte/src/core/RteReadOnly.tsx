@@ -10,7 +10,9 @@ import createBlockRenderMap from "./utils/createBlockRenderMap";
 
 export interface IRteReadOnlyOptions {
     blocktypeMap: IBlocktypeMap;
-    // @deprecated
+    /**
+     * @deprecated use `blocktypeMap` instead
+     */
     customBlockMap?: ICustomBlockTypeMap_Deprecated;
 }
 

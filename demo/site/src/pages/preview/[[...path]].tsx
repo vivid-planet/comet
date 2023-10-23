@@ -1,4 +1,4 @@
-import { parsePreviewState, SitePreviewPage } from "@comet/cms-site";
+import { parsePreviewParams, SitePreviewPage } from "@comet/cms-site";
 import Page, { createGetUniversalProps, PageUniversalProps } from "@src/pages/[[...path]]";
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import React from "react";
@@ -12,7 +12,7 @@ export default function AuthenticatedPreviewPage(props: InferGetServerSidePropsT
 }
 
 export const getServerSideProps: GetServerSideProps<PageUniversalProps> = async (context: GetServerSidePropsContext) => {
-    const { includeInvisibleBlocks } = parsePreviewState(context.query);
+    const { includeInvisibleBlocks } = parsePreviewParams(context.query);
     const getUniversalProps = createGetUniversalProps({
         includeInvisiblePages: true,
         includeInvisibleBlocks,

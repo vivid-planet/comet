@@ -1,3 +1,4 @@
+import { XMLParser } from "fast-xml-parser";
 import FileType from "file-type";
 import fs from "fs";
 import got from "got";
@@ -65,4 +66,40 @@ export const calculatePartialRanges = (size: number, range: string): { start: nu
         end,
         contentLength: end - start + 1,
     };
+};
+
+type SvgNode =
+    | string
+    | {
+          [key: string]: SvgNode;
+      };
+
+const recursivelyFindJSInSvg = (node: SvgNode): boolean => {
+    if (typeof node === "string") {
+        // is plain text -> can't contain JS
+        return false;
+    }
+
+    for (const tagOrAttr of Object.keys(node)) {
+        if (tagOrAttr.toLowerCase() === "script" || tagOrAttr.toLowerCase().startsWith("on")) {
+            // is script tag or event handler
+            return true;
+        }
+
+        // is node -> children can contain JS
+        const children = node[tagOrAttr];
+        const childrenContainJS = recursivelyFindJSInSvg(children);
+        if (childrenContainJS) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
+export const svgContainsJavaScript = (svg: string) => {
+    const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "" });
+    const jsonObj = parser.parse(svg) as SvgNode;
+
+    return recursivelyFindJSInSvg(jsonObj);
 };

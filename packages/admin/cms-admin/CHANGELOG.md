@@ -1,5 +1,94 @@
 # @comet/cms-admin
 
+## 4.5.0
+
+### Patch Changes
+
+-   8a2c3302: Correctly position loading indicators by centring them using the new `Loading` component
+-   Updated dependencies [46cf5a8b]
+-   Updated dependencies [8a2c3302]
+-   Updated dependencies [6d4ca5bf]
+-   Updated dependencies [07d921d2]
+-   Updated dependencies [01677075]
+    -   @comet/admin@4.5.0
+    -   @comet/admin-theme@4.5.0
+    -   @comet/admin-date-time@4.5.0
+    -   @comet/admin-icons@4.5.0
+    -   @comet/admin-rte@4.5.0
+    -   @comet/blocks-admin@4.5.0
+
+## 4.4.3
+
+### Patch Changes
+
+-   0d2a2b96: Ignore empty labels for publisher
+    -   @comet/admin@4.4.3
+    -   @comet/admin-date-time@4.4.3
+    -   @comet/admin-icons@4.4.3
+    -   @comet/admin-rte@4.4.3
+    -   @comet/admin-theme@4.4.3
+    -   @comet/blocks-admin@4.4.3
+
+## 4.4.2
+
+### Patch Changes
+
+-   b299375f: Fix the typing of `lastUpdatedAt` in the `createUsePage()` factory
+    -   @comet/admin@4.4.2
+    -   @comet/admin-date-time@4.4.2
+    -   @comet/admin-icons@4.4.2
+    -   @comet/admin-rte@4.4.2
+    -   @comet/admin-theme@4.4.2
+    -   @comet/blocks-admin@4.4.2
+
+## 4.4.1
+
+### Patch Changes
+
+-   Updated dependencies [662abcc9]
+    -   @comet/admin@4.4.1
+    -   @comet/admin-date-time@4.4.1
+    -   @comet/admin-icons@4.4.1
+    -   @comet/admin-rte@4.4.1
+    -   @comet/admin-theme@4.4.1
+    -   @comet/blocks-admin@4.4.1
+
+## 4.4.0
+
+### Minor Changes
+
+-   9b1a6507: Silence polling errors in page tree
+
+    Errors during polling (pages query, check for changes query) led to multiple consecutive error dialogs, which were irritating for our users. As these errors occurred randomly and would typically be resolved by the next poll, we decided to silence them altogether.
+
+-   a77da844: Add little helper for mui grid pagination (muiGridPagingToGql)
+
+    Sample usage:
+
+    ```
+    const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
+        variables: {
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+            ...muiGridPagingToGql({ page: dataGridProps.page, pageSize: dataGridProps.pageSize }),
+            sort: muiGridSortToGql(sortModel),
+        },
+    });
+    ```
+
+### Patch Changes
+
+-   11583624: Add content validation for SVG files to prevent the upload of SVGs containing JavaScript
+-   Updated dependencies [e824ffa6]
+-   Updated dependencies [d4960b05]
+-   Updated dependencies [3e15b819]
+-   Updated dependencies [a77da844]
+    -   @comet/admin@4.4.0
+    -   @comet/blocks-admin@4.4.0
+    -   @comet/admin-date-time@4.4.0
+    -   @comet/admin-icons@4.4.0
+    -   @comet/admin-rte@4.4.0
+    -   @comet/admin-theme@4.4.0
+
 ## 4.3.0
 
 ### Minor Changes
