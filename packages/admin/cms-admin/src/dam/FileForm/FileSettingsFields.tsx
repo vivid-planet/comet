@@ -115,6 +115,7 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                         name="license.type"
                         label={<FormattedMessage id="comet.dam.file.type" defaultMessage="Type" />}
                         fullWidth
+                        required={damConfig.requireLicenseFeature}
                     />
                     <Field name="license.type">
                         {({ input: { value } }) => {
@@ -128,6 +129,7 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                         minRows={3}
                                         fullWidth
                                         disabled={value === "NO_LICENSE"}
+                                        required={damConfig.requireLicenseFeature}
                                     />
                                     <Field
                                         label={<FormattedMessage id="comet.dam.file.creatorOrAuthor" defaultMessage="Creator/Author" />}
@@ -135,11 +137,13 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                         component={FinalFormInput}
                                         fullWidth
                                         disabled={value === "NO_LICENSE"}
+                                        required={damConfig.requireLicenseFeature}
                                     />
                                     <FieldContainer
                                         label={<FormattedMessage id="comet.dam.file.licenseDuration" defaultMessage="License duration" />}
                                         fullWidth
                                         disabled={value === "NO_LICENSE"}
+                                        required={damConfig.requireLicenseFeature}
                                     >
                                         <DurationFieldWrapper>
                                             <Field
@@ -154,6 +158,7 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                                     </InputAdornment>
                                                 }
                                                 disabled={value === "NO_LICENSE"}
+                                                required={damConfig.requireLicenseFeature}
                                             />
                                             <Field
                                                 name="license.durationTo"
@@ -177,6 +182,7 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                                     }
                                                 }}
                                                 disabled={value === "NO_LICENSE"}
+                                                required={damConfig.requireLicenseFeature}
                                             />
                                         </DurationFieldWrapper>
                                     </FieldContainer>

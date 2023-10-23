@@ -4,6 +4,7 @@ export interface DamConfig {
     additionalMimeTypes?: string[];
     scopeParts?: string[];
     enableLicenseFeature?: boolean;
+    requireLicenseFeature?: boolean;
 }
 
 export const DamConfigContext = React.createContext<DamConfig | undefined>(undefined);
