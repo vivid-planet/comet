@@ -6,10 +6,15 @@ import * as React from "react";
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
+type FormValues = {
+    name: string;
+};
+
 const RootPage = (): React.ReactElement => {
+    const idRef = React.useRef<string>();
     const stackApi = useStackSwitchApi();
 
-    const [EditDialog, , editDialogApi] = useEditDialog();
+    const [EditDialog, , editDialogApi, selectionApi] = useEditDialog();
 
     return (
         <>
@@ -17,19 +22,40 @@ const RootPage = (): React.ReactElement => {
             <Button variant="contained" onClick={() => editDialogApi.openAddDialog()}>
                 Open Dialog
             </Button>
-            <EditDialog>
-                <FinalForm mode="add" onSubmit={(id: string) => stackApi.activatePage("edit", id)}>
-                    {({ handleSubmit, submitting }) => {
-                        return <Field name="name" label="Company group name" component={FinalFormInput} variant="horizontal" fullWidth required />;
+            <EditDialog disableCloseAfterSave>
+                <FinalForm
+                    mode="add"
+                    onSubmit={(values: FormValues) => {
+                        idRef.current = values.name;
+
+                        // Simulate submitting
+                        return new Promise<void>((resolve) => {
+                            setTimeout(() => {
+                                resolve();
+                            }, 500);
+                        });
                     }}
+                    onAfterSubmit={() => {
+                        selectionApi.handleDeselect();
+
+                        if (idRef.current) {
+                            stackApi.activatePage("edit", idRef.current);
+                        }
+                    }}
+                >
+                    <Field name="name" label="Company group name" component={FinalFormInput} variant="horizontal" fullWidth required />
                 </FinalForm>
             </EditDialog>
         </>
     );
 };
 
-const EditPage = (): React.ReactElement => {
-    return <Typography>Edit Page</Typography>;
+type EditPageProps = {
+    id: string;
+};
+
+const EditPage = ({ id }: EditPageProps): React.ReactElement => {
+    return <Typography>Edit Page: {id}</Typography>;
 };
 
 const StackPages = () => {
@@ -39,7 +65,7 @@ const StackPages = () => {
                 <RootPage />
             </StackPage>
             <StackPage name="edit" title="edit name">
-                <EditPage />
+                {(id) => <EditPage id={id} />}
             </StackPage>
         </StackSwitch>
     );
@@ -53,7 +79,7 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/edit-dialog-bug", module)
+storiesOf("@comet/admin/edit-dialog", module)
     .addDecorator(storyRouterDecorator())
     .addDecorator(apolloRestStoryDecorator())
-    .add("Edit Dialog with Form in Stack - Bug", () => <Story />);
+    .add("Edit Dialog with Stack Navigation", () => <Story />);
