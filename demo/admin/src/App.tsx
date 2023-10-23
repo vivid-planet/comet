@@ -6,53 +6,33 @@ import "material-design-icons/iconfont/material-icons.css";
 import "typeface-open-sans";
 
 import { ApolloProvider } from "@apollo/client";
-import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, RouteWithErrorBoundary, SnackbarProvider } from "@comet/admin";
+import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import {
-    AllCategories,
     CmsBlockContextProvider,
     createHttpClient,
-    createRedirectsPage,
-    CronJobsPage,
     DamConfigProvider,
-    DamPage,
     LocaleProvider,
-    PagesPage,
-    PublisherPage,
+    MasterMenuRoutes,
     SiteConfig,
     SitePreview,
     SitesConfigProvider,
-    UserPermissionsPage,
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
-import { additionalPageTreeNodeFieldsFragment, EditPageNode } from "@src/common/EditPageNode";
-import MasterHeader from "@src/common/MasterHeader";
-import MasterMenu from "@src/common/MasterMenu";
+import { additionalPageTreeNodeFieldsFragment } from "@src/common/EditPageNode";
 import { createConfig } from "@src/config";
-import Dashboard from "@src/dashboard/Dashboard";
-import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import theme from "@src/theme";
 import * as React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import * as ReactDOM from "react-dom";
-import { FormattedMessage, IntlProvider } from "react-intl";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { IntlProvider } from "react-intl";
+import { Route, Switch } from "react-router-dom";
 
-import { ComponentDemo } from "./common/ComponentDemo";
-import { ContentScopeIndicator } from "./common/ContentScopeIndicator";
+import MasterHeader from "./common/MasterHeader";
+import MasterMenu, { masterMenuData, pageTreeCategories, pageTreeDocumentTypes } from "./common/MasterMenu";
 import { getMessages } from "./lang";
-import { Link } from "./links/Link";
-import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
-import News from "./news/News";
-import MainMenu from "./pages/mainMenu/MainMenu";
-import { Page } from "./pages/Page";
-import ProductCategoriesPage from "./products/categories/ProductCategoriesPage";
-import { ProductsPage } from "./products/generated/ProductsPage";
-import ProductsHandmadePage from "./products/ProductsPage";
-import ProductTagsPage from "./products/tags/ProductTagsPage";
-import { urlParamToCategory } from "./utils/pageTreeNodeCategoryMapping";
 
 const GlobalStyle = () => (
     <Global
@@ -67,25 +47,6 @@ const GlobalStyle = () => (
 const config = createConfig();
 const apolloClient = createApolloClient(config.apiUrl);
 const apiClient = createHttpClient(config.apiUrl);
-
-const categories: AllCategories = [
-    {
-        category: "MainNavigation",
-        label: <FormattedMessage id="menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
-    },
-    {
-        category: "TopMenu",
-        label: <FormattedMessage id="menu.pageTree.topMenu" defaultMessage="Top menu" />,
-    },
-];
-
-const pageTreeDocumentTypes = {
-    Page,
-    Link,
-    PredefinedPage,
-};
-
-const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock }, scopeParts: ["domain"] });
 
 class App extends React.Component {
     public static render(baseEl: Element): void {
@@ -116,7 +77,7 @@ class App extends React.Component {
                                                         maxSrcResolution: config.imgproxy.maxSrcResolution,
                                                         allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
                                                     }}
-                                                    pageTreeCategories={categories}
+                                                    pageTreeCategories={pageTreeCategories}
                                                     pageTreeDocumentTypes={pageTreeDocumentTypes}
                                                     additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
                                                 >
@@ -131,107 +92,9 @@ class App extends React.Component {
                                                                         render={(props) => <SitePreview {...props} />}
                                                                     />
                                                                     <Route
-                                                                        render={(props) => (
+                                                                        render={() => (
                                                                             <MasterLayout headerComponent={MasterHeader} menuComponent={MasterMenu}>
-                                                                                <Switch>
-                                                                                    <RouteWithErrorBoundary
-                                                                                        path={`${match.path}/dashboard`}
-                                                                                        component={Dashboard}
-                                                                                    />
-                                                                                    <RouteWithErrorBoundary
-                                                                                        path={`${match.path}/project-snips/main-menu`}
-                                                                                        component={MainMenu}
-                                                                                    />
-                                                                                    <RouteWithErrorBoundary
-                                                                                        path={`${match.path}/pages/pagetree/:category`}
-                                                                                        render={({ match: { params } }) => {
-                                                                                            const category = urlParamToCategory(params.category);
-
-                                                                                            if (category === undefined) {
-                                                                                                return <Redirect to={`${match.url}/dashboard`} />;
-                                                                                            }
-
-                                                                                            return (
-                                                                                                <PagesPage
-                                                                                                    path={`/pages/pagetree/${params.category}`}
-                                                                                                    allCategories={categories}
-                                                                                                    documentTypes={pageTreeDocumentTypes}
-                                                                                                    editPageNode={EditPageNode}
-                                                                                                    category={category}
-                                                                                                    renderContentScopeIndicator={(scope) => (
-                                                                                                        <ContentScopeIndicator
-                                                                                                            scope={scope}
-                                                                                                            variant="toolbar"
-                                                                                                        />
-                                                                                                    )}
-                                                                                                />
-                                                                                            );
-                                                                                        }}
-                                                                                    />
-                                                                                    <RouteWithErrorBoundary
-                                                                                        path={`${match.path}/structured-content/news`}
-                                                                                        component={News}
-                                                                                    />
-                                                                                    <RouteWithErrorBoundary
-                                                                                        path={`${match.path}/assets`}
-                                                                                        render={() => (
-                                                                                            <DamPage
-                                                                                                renderContentScopeIndicator={(scope) => (
-                                                                                                    <ContentScopeIndicator
-                                                                                                        scope={scope}
-                                                                                                        domainOnly
-                                                                                                        variant="toolbar"
-                                                                                                    />
-                                                                                                )}
-                                                                                            />
-                                                                                        )}
-                                                                                    />
-
-                                                                                    <RouteWithErrorBoundary
-                                                                                        path={`${match.path}/system/cron-jobs`}
-                                                                                        component={CronJobsPage}
-                                                                                    />
-                                                                                    <RouteWithErrorBoundary
-                                                                                        path={`${match.path}/system/publisher`}
-                                                                                        component={PublisherPage}
-                                                                                    />
-
-                                                                                    <RouteWithErrorBoundary
-                                                                                        path={`${match.path}/system/redirects`}
-                                                                                        render={() => (
-                                                                                            <RedirectsPage redirectPathAfterChange="/system/redirects" />
-                                                                                        )}
-                                                                                    />
-
-                                                                                    <RouteWithErrorBoundary
-                                                                                        path={`${match.path}/component-demo`}
-                                                                                        component={ComponentDemo}
-                                                                                    />
-
-                                                                                    <RouteWithErrorBoundary
-                                                                                        path={`${match.path}/products-handmade`}
-                                                                                        component={ProductsHandmadePage}
-                                                                                    />
-
-                                                                                    <RouteWithErrorBoundary
-                                                                                        path={`${match.path}/products`}
-                                                                                        component={ProductsPage}
-                                                                                    />
-                                                                                    <RouteWithErrorBoundary
-                                                                                        path={`${match.path}/product-categories`}
-                                                                                        component={ProductCategoriesPage}
-                                                                                    />
-                                                                                    <RouteWithErrorBoundary
-                                                                                        path={`${match.path}/product-tags`}
-                                                                                        component={ProductTagsPage}
-                                                                                    />
-                                                                                    <RouteWithErrorBoundary
-                                                                                        path={`${match.path}/user-permissions`}
-                                                                                        component={UserPermissionsPage}
-                                                                                    />
-
-                                                                                    <Redirect from={`${match.path}`} to={`${match.url}/dashboard`} />
-                                                                                </Switch>
+                                                                                <MasterMenuRoutes menu={masterMenuData} />
                                                                             </MasterLayout>
                                                                         )}
                                                                     />
