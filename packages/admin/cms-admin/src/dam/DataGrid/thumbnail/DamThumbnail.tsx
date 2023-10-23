@@ -61,15 +61,9 @@ export const DamThumbnail = ({ asset }: DamThumbnailProps): React.ReactElement =
     let thumbnail;
     if (asset.__typename === "DamFile") {
         if (asset.mimetype.startsWith("image/") && asset.image && asset.image.thumbnailUrl) {
-            const id = open ? asset.fileUrl : undefined;
             thumbnail = (
                 <>
-                    <ImageThumbnail
-                        aria-describedby={id}
-                        onMouseOver={handleMouseOver}
-                        onMouseLeave={handleMouseLeave}
-                        src={asset.image.thumbnailUrl}
-                    />
+                    <ImageThumbnail onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} src={asset.image.thumbnailUrl} />
                     <Popper open={open} anchorEl={anchorEl} placement="auto-end" onResize={undefined} onResizeCapture={undefined} transition>
                         {({ TransitionProps }) => (
                             <Fade {...TransitionProps} timeout={350}>
