@@ -41,6 +41,7 @@ export const DependencyList = ({ loading, error, refetch, dependencyItems }: Dep
         {
             field: "nameInfo",
             headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.nameAndInfo", defaultMessage: "Name/Info" }),
+            sortable: false,
             flex: 1,
             renderCell: ({ row }) => {
                 return (
@@ -54,11 +55,13 @@ export const DependencyList = ({ loading, error, refetch, dependencyItems }: Dep
         {
             field: "type",
             headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.type", defaultMessage: "Type" }),
+            sortable: false,
             renderCell: ({ row }) => <StyledChip label={entityDependencyMap[row.graphqlObjectType]?.displayName ?? row.graphqlObjectType} />,
         },
         {
             field: "actions",
             headerName: "",
+            sortable: false,
             renderCell: ({ row }) => {
                 const dependencyObject = entityDependencyMap[row.graphqlObjectType] as DependencyInterface | undefined;
 
