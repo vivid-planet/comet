@@ -52,7 +52,8 @@ export {
     LatestContentUpdatesDashboardWidget,
     LatestContentUpdatesDashboardWidgetProps,
 } from "./dashboard/widgets/LatestContentUpdatesDashboardWidget";
-export { createDocumentRootBlocks } from "./documents/createDocumentRootBlocks";
+export type { CreateDocumentSkeletonOptions } from "./documents/createDocumentSkeleton";
+export { createDocumentSkeleton } from "./documents/createDocumentSkeleton";
 export type { DocumentInterface, DocumentType } from "./documents/types";
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
 export { FileField } from "./form/file/FileField";
