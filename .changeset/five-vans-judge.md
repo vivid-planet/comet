@@ -2,4 +2,4 @@
 "@comet/cms-admin": minor
 ---
 
-`requireLicense` property is added to `DamConfig` to allow making DAM license fields required
+Add `requireLicense` option to `DamConfig` to allow making DAM license fields required
