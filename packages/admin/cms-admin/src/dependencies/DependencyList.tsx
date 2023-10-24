@@ -1,5 +1,5 @@
 import { TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
-import { useDataGridRemote } from "@comet/admin";
+import { Tooltip, useDataGridRemote } from "@comet/admin";
 import { ArrowRight, OpenNewTab, Reload } from "@comet/admin-icons";
 import { Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -168,15 +168,17 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
     return (
         <>
             <Toolbar>
-                <IconButton
-                    onClick={() => {
-                        refetch({
-                            forceRefresh: true,
-                        });
-                    }}
-                >
-                    <Reload />
-                </IconButton>
+                <Tooltip trigger="hover" title={<FormattedMessage id="comet.dependencies.dataGrid.reloadTooltip" defaultMessage="Reload" />}>
+                    <IconButton
+                        onClick={() => {
+                            refetch({
+                                forceRefresh: true,
+                            });
+                        }}
+                    >
+                        <Reload />
+                    </IconButton>
+                </Tooltip>
             </Toolbar>
             <StyledDataGrid
                 {...dataGridProps}
