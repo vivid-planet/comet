@@ -1,6 +1,6 @@
 import { messages } from "@comet/admin";
 import { File, FileNotMenu } from "@comet/admin-icons";
-import { createDocumentSkeleton } from "@comet/cms-admin";
+import { createDocumentRootBlocks, DocumentInterface } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
@@ -13,7 +13,7 @@ import { FormattedMessage } from "react-intl";
 import { EditPage } from "./EditPage";
 import { PageContentBlock } from "./PageContentBlock";
 
-export const Page = createDocumentSkeleton<Pick<GQLPage, "content" | "seo">, GQLPageInput>({
+export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageInput> = {
     displayName: <FormattedMessage {...messages.page} />,
     editComponent: EditPage,
     getQuery: gql`
@@ -54,8 +54,8 @@ export const Page = createDocumentSkeleton<Pick<GQLPage, "content" | "seo">, GQL
     },
     menuIcon: File,
     hideInMenuIcon: FileNotMenu,
-    rootBlocks: {
+    ...createDocumentRootBlocks({
         content: PageContentBlock,
         seo: SeoBlock,
-    },
-});
+    }),
+};
