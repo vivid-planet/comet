@@ -7,7 +7,7 @@ export interface EntityDependencyMap {
     [graphqlObjectType: string]: DependencyInterface;
 }
 
-const DependenciesConfigContext = React.createContext<EntityDependencyMap | undefined>(undefined);
+const DependenciesConfigContext = React.createContext<EntityDependencyMap>({});
 
 export const DependenciesConfigProvider: React.FunctionComponent<{ entityDependencyMap: EntityDependencyMap }> = ({
     children,
@@ -26,6 +26,5 @@ export const DependenciesConfigProvider: React.FunctionComponent<{ entityDepende
 };
 
 export const useDependenciesConfig = (): EntityDependencyMap => {
-    const context = React.useContext(DependenciesConfigContext);
-    return context ?? {};
+    return React.useContext(DependenciesConfigContext);
 };
