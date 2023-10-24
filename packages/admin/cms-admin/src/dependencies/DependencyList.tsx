@@ -1,10 +1,9 @@
 import { TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
 import { Tooltip, useDataGridRemote } from "@comet/admin";
 import { ArrowRight, OpenNewTab, Reload } from "@comet/admin-icons";
-import { Chip, IconButton, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { IconButton } from "@mui/material";
 import { LabelDisplayedRowsArgs } from "@mui/material/TablePagination/TablePagination";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
@@ -12,9 +11,10 @@ import { useHistory } from "react-router";
 import { useContentScope } from "../contentScope/Provider";
 import { GQLDependency } from "../graphql.generated";
 import { useDependenciesConfig } from "./DependenciesConfig";
+import * as sc from "./DependencyList.sc";
 import { DependencyInterface } from "./types";
 
-type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "rootColumnName" | "jsonPath"> & {
+export type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "rootColumnName" | "jsonPath"> & {
     id: string;
     graphqlObjectType: string;
 };
@@ -83,10 +83,10 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
             flex: 1,
             renderCell: ({ row }) => {
                 return (
-                    <NameInfoWrapper>
-                        <NameInfoTypography color="text.primary">{row.name}</NameInfoTypography>
-                        <NameInfoTypography color="text.secondary">{row.secondaryInformation}</NameInfoTypography>
-                    </NameInfoWrapper>
+                    <sc.NameInfoWrapper>
+                        <sc.NameInfoTypography color="text.primary">{row.name}</sc.NameInfoTypography>
+                        <sc.NameInfoTypography color="text.secondary">{row.secondaryInformation}</sc.NameInfoTypography>
+                    </sc.NameInfoWrapper>
                 );
             },
         },
@@ -94,7 +94,7 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
             field: "type",
             headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.type", defaultMessage: "Type" }),
             sortable: false,
-            renderCell: ({ row }) => <StyledChip label={entityDependencyMap[row.graphqlObjectType]?.displayName ?? row.graphqlObjectType} />,
+            renderCell: ({ row }) => <sc.StyledChip label={entityDependencyMap[row.graphqlObjectType]?.displayName ?? row.graphqlObjectType} />,
         },
         {
             field: "actions",
@@ -168,7 +168,7 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
 
     return (
         <>
-            <Toolbar>
+            <sc.Toolbar>
                 <Tooltip trigger="hover" title={<FormattedMessage id="comet.dependencies.dataGrid.reloadTooltip" defaultMessage="Reload" />}>
                     <IconButton
                         onClick={() => {
@@ -180,8 +180,8 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                         <Reload />
                     </IconButton>
                 </Tooltip>
-            </Toolbar>
-            <StyledDataGrid
+            </sc.Toolbar>
+            <sc.StyledDataGrid
                 {...dataGridProps}
                 componentsProps={{
                     pagination: {
@@ -209,7 +209,7 @@ const DisplayedRows = ({ from, to, count, page }: LabelDisplayedRowsArgs) => {
     const numPages = Math.ceil(count / pageSize) > 0 ? Math.ceil(count / pageSize) : 1;
 
     return (
-        <DisplayedRowsWrapper>
+        <sc.DisplayedRowsWrapper>
             <div>
                 <FormattedMessage
                     id="comet.dependencies.dataGrid.currentItems"
@@ -217,85 +217,13 @@ const DisplayedRows = ({ from, to, count, page }: LabelDisplayedRowsArgs) => {
                     values={{ from, to, count }}
                 />
             </div>
-            <PageLabel>
+            <sc.PageLabel>
                 <FormattedMessage
                     id="comet.dependencies.dataGrid.currentPage"
                     defaultMessage="Page {page} of {numPages}"
                     values={{ page: page + 1, numPages }}
                 />
-            </PageLabel>
-        </DisplayedRowsWrapper>
+            </sc.PageLabel>
+        </sc.DisplayedRowsWrapper>
     );
 };
-
-const Toolbar = styled("div")`
-    height: 60px;
-    background: white;
-    display: flex;
-    justify-content: right;
-
-    border-bottom: solid 1px;
-    border-bottom-color: ${({ theme }) => theme.palette.grey[100]};
-
-    padding: 10px;
-`;
-
-const StyledChip = styled(Chip)`
-    display: flex;
-    padding: 4px 7px;
-    align-items: center;
-    gap: 6px;
-    height: auto;
-
-    border-radius: 12px;
-    background: ${({ theme }) => theme.palette.grey[100]};
-
-    color: black;
-    font-size: 10px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 10px;
-
-    .MuiChip-label {
-        padding: 0;
-    }
-`;
-
-const NameInfoWrapper = styled("div")`
-    display: flex;
-    flex-direction: column;
-`;
-
-const NameInfoTypography = styled(Typography)`
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 16px;
-`;
-
-const DisplayedRowsWrapper = styled("div")`
-    display: flex;
-`;
-
-const PageLabel = styled("div")`
-    flex-grow: 1;
-    text-align: right;
-`;
-
-const StyledDataGrid = styled(DataGrid<DependencyItem>)`
-    & .MuiTablePagination-root {
-        flex-grow: 1;
-    }
-
-    & .MuiTablePagination-spacer {
-        width: 0;
-        flex: 0;
-    }
-
-    & .MuiTablePagination-displayedRows {
-        flex-grow: 1;
-    }
-
-    & .MuiTablePagination-toolbar .MuiTablePagination-actions {
-        margin-left: 5px;
-    }
-`;
