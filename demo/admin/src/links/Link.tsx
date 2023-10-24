@@ -1,17 +1,19 @@
 import { messages } from "@comet/admin";
 import { Link as LinkIcon } from "@comet/admin-icons";
-import { DocumentInterface } from "@comet/cms-admin";
+import { DependencyInterface, DocumentInterface } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
 import { GQLLink, GQLLinkInput } from "@src/graphql.generated";
 import { EditLink } from "@src/links/EditLink";
+import { GQLLinkDependencyQuery, GQLLinkDependencyQueryVariables } from "@src/links/Link.generated";
+import { categoryToUrlParam } from "@src/utils/pageTreeNodeCategoryMapping";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
+export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & DependencyInterface = {
     displayName: <FormattedMessage {...messages.link} />,
     editComponent: EditLink,
     getQuery: gql`
@@ -62,7 +64,35 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
             content: LinkBlock.replaceDependenciesInOutput(output.content, replacements),
         };
     },
-    // resolveDependencyRoute: (input, { rootColumn, jsonPath }) => {
-    //     return LinkBlock.resolveDependencyRoute(LinkBlock.input2State(input["content"]), jsonPath.substring("root.".length));
-    // },
+    getUrl: async ({ jsonPath, contentScopeUrl, id, apolloClient }) => {
+        const { data, error } = await apolloClient.query<GQLLinkDependencyQuery, GQLLinkDependencyQueryVariables>({
+            query: gql`
+                query LinkDependency($id: ID!) {
+                    link(linkId: $id) {
+                        id
+                        content
+                        pageTreeNode {
+                            id
+                            name
+                            path
+                            category
+                        }
+                    }
+                }
+            `,
+            variables: {
+                id,
+            },
+        });
+
+        if (error || data.link === null || data.link.pageTreeNode === null) {
+            throw new Error(`Link.getUrl: Could not find a Link with id ${id} or a PageTreeNode for this Link`);
+        }
+
+        const dependencyRoute = LinkBlock.resolveDependencyRoute(LinkBlock.input2State(data.link.content), jsonPath.substring("root.".length));
+
+        return `${contentScopeUrl}/pages/pagetree/${categoryToUrlParam(data.link.pageTreeNode.category)}/${
+            data.link.pageTreeNode.id
+        }/edit/${dependencyRoute}`;
+    },
 };

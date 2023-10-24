@@ -75,8 +75,4 @@ export const PredefinedPage: DocumentInterface<Pick<GQLPredefinedPage, "type">, 
     replaceDependenciesInOutput: (output, replacements) => {
         return output;
     },
-    // resolveDependencyRoute: () => {
-    //     // TODO
-    //     return "";
-    // },
 };

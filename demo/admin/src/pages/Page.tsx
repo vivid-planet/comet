@@ -108,7 +108,7 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
                 jsonPath.substring("root.".length),
             );
         } else {
-            dependencyRoute = SeoBlock.resolveDependencyRoute(SeoBlock.input2State(data.page.seo), jsonPath.substring("root.".length));
+            dependencyRoute = `config/${SeoBlock.resolveDependencyRoute(SeoBlock.input2State(data.page.seo), jsonPath.substring("root.".length))}`;
         }
 
         return `${contentScopeUrl}/pages/pagetree/${categoryToUrlParam(data.page.pageTreeNode.category)}/${

@@ -105,6 +105,7 @@ class App extends React.Component {
                         <DependenciesConfigProvider
                             entityDependencyMap={{
                                 Page: Page,
+                                Link: Link,
                             }}
                         >
                             <IntlProvider locale="en" messages={getMessages()}>
