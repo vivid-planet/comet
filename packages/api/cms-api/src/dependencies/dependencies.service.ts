@@ -101,13 +101,16 @@ export class DependenciesService {
     async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
         const refresh = async (options?: { concurrently: boolean }) => {
             const uuid = v4();
+            // Before forking the entity manager, race conditions occurred frequently
+            // when executing the refresh asynchronous
+            const forkedEntityManager = this.entityManager.fork();
             console.time(`refresh materialized block dependency ${uuid}`);
             const blockIndexRefresh = this.refreshRepository.create({ startedAt: new Date() });
-            await this.refreshRepository.getEntityManager().persistAndFlush(blockIndexRefresh);
+            await forkedEntityManager.persistAndFlush(blockIndexRefresh);
 
-            await this.connection.execute(`REFRESH MATERIALIZED VIEW ${options?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
+            await forkedEntityManager.execute(`REFRESH MATERIALIZED VIEW ${options?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
 
-            await this.refreshRepository.getEntityManager().persistAndFlush(Object.assign(blockIndexRefresh, { finishedAt: new Date() }));
+            await forkedEntityManager.persistAndFlush(Object.assign(blockIndexRefresh, { finishedAt: subMinutes(new Date(), 5) }));
             console.timeEnd(`refresh materialized block dependency ${uuid}`);
         };
 
