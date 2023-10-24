@@ -161,7 +161,7 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
             id: node.rootId,
         }));
         totalCount = data.item.dependents.totalCount;
-    } else {
+    } else if (!loading) {
         console.error("Neither dependencies nor dependents is defined");
     }
 

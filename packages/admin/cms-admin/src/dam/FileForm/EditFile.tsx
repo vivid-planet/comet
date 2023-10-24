@@ -27,11 +27,12 @@ import { Link as RouterLink } from "react-router-dom";
 import ReactSplit from "react-split";
 
 import { useContentScope } from "../../contentScope/Provider";
+import { DependencyList } from "../../dependencies/DependencyList";
 import { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
 import { useDamConfig } from "../config/useDamConfig";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
-import { damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
+import { damFileDependentsQuery, damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
 import {
     GQLDamFileDetailFragment,
     GQLDamFileDetailQuery,
@@ -287,7 +288,12 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                                     label={intl.formatMessage({ id: "comet.dam.file.dependents", defaultMessage: "Dependents" })}
                                     path="/dependents"
                                 >
-                                    <>TODO</>
+                                    <DependencyList
+                                        query={damFileDependentsQuery}
+                                        variables={{
+                                            id: id,
+                                        }}
+                                    />
                                 </RouterTab>
                             </RouterTabs>
                         </ReactSplit>
