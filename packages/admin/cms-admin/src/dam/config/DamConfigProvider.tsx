@@ -7,9 +7,5 @@ interface DamConfigProviderProps {
 }
 
 export const DamConfigProvider: React.FunctionComponent<DamConfigProviderProps> = ({ children, value }) => {
-    return (
-        <DamConfigContext.Provider value={{ enableLicenseFeature: false, requireLicenseFeature: false, ...value }}>
-            {children}
-        </DamConfigContext.Provider>
-    );
+    return <DamConfigContext.Provider value={{ enableLicenseFeature: false, requireLicense: false, ...value }}>{children}</DamConfigContext.Provider>;
 };
