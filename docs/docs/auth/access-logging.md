@@ -24,7 +24,7 @@ For HTTP requests, the following is logged:
 -   The route
 -   For GET requests, the parameters
 
-The access log allows you to see who accessed what data and when.
+The access log allows to see who accessed what data and when. This information for example can be used to identify security vulnerabilities.
 
 ## Configure AccessLog in app.module
 
