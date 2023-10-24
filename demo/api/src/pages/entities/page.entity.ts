@@ -27,6 +27,7 @@ export class Page extends BaseEntity<Page, "id"> implements DocumentInterface {
     @Field(() => RootBlockDataScalar(PageContentBlock))
     content: BlockDataInterface;
 
+    @RootBlock(SeoBlock)
     @Property({ customType: new RootBlockType(SeoBlock) })
     @Field(() => RootBlockDataScalar(SeoBlock))
     seo: BlockDataInterface;
