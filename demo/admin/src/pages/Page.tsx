@@ -62,7 +62,12 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
     menuIcon: File,
     hideInMenuIcon: FileNotMenu,
     anchors: (input) => PageContentBlock.anchors?.(PageContentBlock.input2State(input.content)) ?? [],
-    dependencies: (input) => PageContentBlock.dependencies?.(PageContentBlock.input2State(input.content)) ?? [],
+    dependencies: (input) => {
+        const pageContentDependencies = PageContentBlock.dependencies?.(PageContentBlock.input2State(input.content)) ?? [];
+        const seoDependencies = SeoBlock.dependencies?.(SeoBlock.input2State(input.seo)) ?? [];
+
+        return [...pageContentDependencies, ...seoDependencies];
+    },
     replaceDependenciesInOutput: (output, replacements) => {
         const newOutput = {
             ...output,
