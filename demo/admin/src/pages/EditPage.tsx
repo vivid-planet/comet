@@ -24,7 +24,7 @@ import {
 } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { useHistory, useRouteMatch } from "react-router";
+import { useRouteMatch } from "react-router";
 
 import { PageContentBlock } from "./PageContentBlock";
 
@@ -73,13 +73,8 @@ const usePage = createUsePage({
 
 export const EditPage: React.FC<Props> = ({ id, category }) => {
     const intl = useIntl();
-    const history = useHistory();
     const { pageState, rootBlocksApi, hasChanges, loading, dialogs, pageSaveButton, handleSavePage } = usePage({
         pageId: id,
-
-        onValidationFailed: () => {
-            history.push(`${match}/content`);
-        },
     });
 
     const match = useRouteMatch();
