@@ -1469,6 +1469,9 @@ importers:
       '@comet/admin-babel-preset':
         specifier: workspace:^4.5.0
         version: link:../admin-babel-preset
+      '@comet/admin-icons':
+        specifier: workspace:^4.5.0
+        version: link:../admin-icons
       '@comet/eslint-config':
         specifier: workspace:^4.5.0
         version: link:../../eslint-config
@@ -28549,6 +28552,7 @@ packages:
 
   /sinon@9.2.4:
     resolution: {integrity: sha512-zljcULZQsJxVra28qIAL6ow1Z9tpattkCTEJR4RBP3TGc00FcttsP5pK284Nas5WjMZU5Yzy3kAIp3B3KRf5Yg==}
+    deprecated: 16.1.1
     requiresBuild: true
     dependencies:
       '@sinonjs/commons': 1.8.6
