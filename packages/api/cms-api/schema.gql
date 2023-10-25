@@ -260,8 +260,6 @@ type PaginatedDamItems {
 union DamItem = DamFile | DamFolder
 
 type CopyFilesResponse {
-  numberNewlyCopiedFiles: Float!
-  numberAlreadyCopiedFiles: Float!
   mappedFiles: [MappedFile!]!
 }
 
@@ -422,9 +420,9 @@ type Mutation {
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
-  importDamFileByDownload(url: String!, scope: DamScopeInput! = {}, copyOfId: ID!, input: UpdateDamFileInput!): DamFile!
+  importDamFileByDownload(url: String!, scope: DamScopeInput! = {}, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
-  copyFilesToScope(fileIds: [ID!]!, targetFolderId: ID!): CopyFilesResponse!
+  copyFilesToScope(fileIds: [ID!]!, inboxFolderId: ID!): CopyFilesResponse!
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
   restoreDamFile(id: ID!): DamFile!
