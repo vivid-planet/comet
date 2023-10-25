@@ -9,7 +9,7 @@ import { UserService } from "./user.service";
 @Module({
     providers: [
         createStaticAuthedUserStrategy({
-            staticAuthedUserId: staticUsers[0].id,
+            staticAuthedUser: staticUsers[0].id,
             userExtraData: { role: "admin", domains: ["main", "secondary"] }, // TODO Remove once they disappear from CurrentUserInterface
         }),
         createAuthResolver({

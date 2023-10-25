@@ -6,8 +6,7 @@ import { CurrentUserInterface } from "../current-user/current-user";
 import { CURRENT_USER_LOADER, CurrentUserLoaderInterface } from "../current-user/current-user-loader";
 
 interface StaticAuthedUserStrategyConfig {
-    staticAuthedUser?: CurrentUserInterface;
-    staticAuthedUserId?: string;
+    staticAuthedUser: CurrentUserInterface | string;
     userExtraData?: unknown;
 }
 
@@ -19,14 +18,11 @@ export function createStaticAuthedUserStrategy(config: StaticAuthedUserStrategyC
         }
 
         async validate(): Promise<CurrentUserInterface> {
-            if (config.staticAuthedUserId) {
-                if (!this.currentUserLoader) throw new Error("Inject CURRENT_USER_LOADER when setting staticAuthedUserId");
-                return this.currentUserLoader.load(config.staticAuthedUserId, config.userExtraData);
+            if (typeof config.staticAuthedUser === "string") {
+                if (!this.currentUserLoader) throw new Error("You have to provide CURRENT_USER_LOADER when setting staticAuthedUser as string");
+                return this.currentUserLoader.load(config.staticAuthedUser, config.userExtraData);
             }
-            if (config.staticAuthedUser) {
-                return config.staticAuthedUser;
-            }
-            throw new Error("Either set staticAuthedUser or staticAuthedUserId");
+            return config.staticAuthedUser;
         }
     }
     return StaticAuthedUserStrategy;
