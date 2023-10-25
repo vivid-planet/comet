@@ -12,9 +12,14 @@ import { UserPermission } from "./entities/user-permission.entity";
 import { UserResolver } from "./user.resolver";
 import { UserContentScopesResolver } from "./user-content-scopes.resolver";
 import { UserPermissionResolver } from "./user-permission.resolver";
-import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS } from "./user-permissions.constants";
+import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER_SERVICE } from "./user-permissions.constants";
 import { UserPermissionsService } from "./user-permissions.service";
-import { UserPermissionsAsyncOptions, UserPermissionsOptions, UserPermissionsOptionsFactory } from "./user-permissions.types";
+import {
+    UserPermissionsAsyncOptions,
+    UserPermissionsOptions,
+    UserPermissionsOptionsFactory,
+    UserPermissionsSyncOptions,
+} from "./user-permissions.types";
 
 @Global()
 @Module({
@@ -38,7 +43,7 @@ import { UserPermissionsAsyncOptions, UserPermissionsOptions, UserPermissionsOpt
     exports: [CURRENT_USER_LOADER, ContentScopeService, UserPermissionsCurrentUserLoader],
 })
 export class UserPermissionsModule {
-    static forRoot(options: UserPermissionsOptions): DynamicModule {
+    static forRoot(options: UserPermissionsSyncOptions): DynamicModule {
         return {
             module: UserPermissionsModule,
             providers: [
@@ -47,8 +52,12 @@ export class UserPermissionsModule {
                     useValue: options,
                 },
                 {
+                    provide: USER_PERMISSIONS_USER_SERVICE,
+                    useClass: options.UserService,
+                },
+                {
                     provide: ACCESS_CONTROL_SERVICE,
-                    useValue: options.accessControlService ?? new AccessControlService(),
+                    useClass: options.AccessControlService ?? AccessControlService,
                 },
             ],
         };
@@ -60,6 +69,11 @@ export class UserPermissionsModule {
             imports: asyncOptions.imports,
             providers: [
                 this.createProvider(asyncOptions),
+                {
+                    provide: USER_PERMISSIONS_USER_SERVICE,
+                    useFactory: (options: UserPermissionsOptions) => options.userService,
+                    inject: [USER_PERMISSIONS_OPTIONS],
+                },
                 {
                     provide: ACCESS_CONTROL_SERVICE,
                     useFactory: (options: UserPermissionsOptions) => options.accessControlService ?? new AccessControlService(),

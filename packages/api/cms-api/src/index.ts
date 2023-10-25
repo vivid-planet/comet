@@ -153,6 +153,6 @@ export {
     ContentScopesForUser,
     PermissionsForUser,
     UserPermissions,
-    UserPermissionsUserService,
+    UserPermissionsUserServiceInterface,
     Users,
 } from "./user-permissions/user-permissions.types";
