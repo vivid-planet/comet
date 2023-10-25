@@ -12,7 +12,7 @@ import { UserPermission } from "./entities/user-permission.entity";
 import { UserResolver } from "./user.resolver";
 import { UserContentScopesResolver } from "./user-content-scopes.resolver";
 import { UserPermissionResolver } from "./user-permission.resolver";
-import { ACCESS_CONTROL_SERVICE, CONTENT_SCOPE_SERVICE, USER_PERMISSIONS_OPTIONS } from "./user-permissions.constants";
+import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS } from "./user-permissions.constants";
 import { UserPermissionsService } from "./user-permissions.service";
 import { UserPermissionsAsyncOptions, UserPermissionsOptions, UserPermissionsOptionsFactory } from "./user-permissions.types";
 
@@ -29,10 +29,6 @@ import { UserPermissionsAsyncOptions, UserPermissionsOptions, UserPermissionsOpt
             useClass: UserPermissionsCurrentUserLoader,
         },
         ContentScopeService,
-        {
-            provide: CONTENT_SCOPE_SERVICE,
-            useClass: ContentScopeService,
-        },
         UserPermissionsCurrentUserLoader,
         {
             provide: APP_GUARD,

@@ -76,7 +76,7 @@ export class AppModule {
                     useFactory: (userService: UserService) => ({
                         availablePermissions: ["news", "products"],
                         availableContentScopes: [
-                            { domain: "main", language: "de" },
+                            { domain: "main", language: "de1" },
                             { domain: "main", language: "en" },
                             { domain: "secondary", language: "en" },
                         ],
