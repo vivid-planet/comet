@@ -15,5 +15,5 @@ export default function InlineStyleTypeControls({
     if (!features) {
         return null;
     }
-    return <FeaturesButtonGroup features={features} disabled={disabled} editorRef={editorRef} />;
+    return <FeaturesButtonGroup features={features} disabled={disabled} editorRef={editorRef} maxVisible={4} />;
 }
