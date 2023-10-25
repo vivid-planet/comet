@@ -1,12 +1,14 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Provider } from "@nestjs/common";
 
+import { CURRENT_USER_LOADER } from "../auth/current-user/current-user-loader";
+import { UserPermissionsCurrentUserLoader } from "./auth/current-user-loader";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission } from "./entities/user-permission.entity";
 import { UserResolver } from "./user.resolver";
 import { UserContentScopesResolver } from "./user-content-scopes.resolver";
 import { UserPermissionResolver } from "./user-permission.resolver";
-import { USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_SERVICE } from "./user-permissions.constants";
+import { USER_PERMISSIONS_OPTIONS } from "./user-permissions.constants";
 import { UserPermissionsService } from "./user-permissions.service";
 import { UserPermissionsAsyncOptions, UserPermissionsOptions, UserPermissionsOptionsFactory } from "./user-permissions.types";
 
@@ -19,11 +21,11 @@ import { UserPermissionsAsyncOptions, UserPermissionsOptions, UserPermissionsOpt
         UserPermissionResolver,
         UserContentScopesResolver,
         {
-            provide: USER_PERMISSIONS_SERVICE,
-            useClass: UserPermissionsService,
+            provide: CURRENT_USER_LOADER,
+            useClass: UserPermissionsCurrentUserLoader,
         },
     ],
-    exports: [USER_PERMISSIONS_SERVICE],
+    exports: [CURRENT_USER_LOADER],
 })
 export class UserPermissionsModule {
     static forRoot(options: UserPermissionsOptions): DynamicModule {

@@ -1,10 +1,4 @@
-import {
-    createAuthResolver,
-    createCometAuthGuard,
-    createStaticAuthedUserStrategy,
-    CURRENT_USER_LOADER,
-    UserPermissionsCurrentUserLoader,
-} from "@comet/cms-api";
+import { createAuthResolver, createCometAuthGuard, createStaticAuthedUserStrategy } from "@comet/cms-api";
 import { Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 
@@ -14,10 +8,6 @@ import { UserService } from "./user.service";
 
 @Module({
     providers: [
-        {
-            provide: CURRENT_USER_LOADER,
-            useClass: UserPermissionsCurrentUserLoader,
-        },
         createStaticAuthedUserStrategy({
             staticAuthedUserId: staticUsers[0].id,
             userExtraData: { role: "admin", domains: ["main", "secondary"] }, // TODO Remove once they disappear from CurrentUserInterface
