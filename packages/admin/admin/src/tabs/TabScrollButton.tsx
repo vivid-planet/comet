@@ -9,6 +9,8 @@ import {
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
+import { DEVICE_TYPE, useCurrentDeviceType } from "../hooks/useCurrentDeviceType";
+
 export type TabScrollButtonClassKey = MuiTabScrollButtonClassKey;
 
 export interface TabScrollButtonProps extends MuiTabScrollButtonProps {
@@ -25,20 +27,24 @@ const styles = () => {
             width: "100%",
             height: 40,
         },
-        disabled: {},
+        disabled: {
+            opacity: 0.25,
+        },
     });
 };
 
 function ScrollButton({ orientation, direction, disabled, onClick, classes }: TabScrollButtonProps & WithStyles<typeof styles>) {
+    const deviceType = useCurrentDeviceType();
+
     const rootClasses: string[] = [classes.root];
     if (orientation === "vertical") rootClasses.push(classes.vertical);
     if (disabled) rootClasses.push(classes.disabled);
 
-    return (
+    return deviceType === DEVICE_TYPE.DESKTOP ? (
         <ButtonBase classes={{ root: rootClasses.join(" ") }} disabled={disabled} onClick={onClick}>
             <>{direction === "left" ? <ChevronLeft /> : <ChevronRight />}</>
         </ButtonBase>
-    );
+    ) : null;
 }
 
 export const TabScrollButton = withStyles(styles, { name: "TabScrollButton" })(ScrollButton);
