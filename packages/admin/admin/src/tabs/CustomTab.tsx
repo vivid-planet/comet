@@ -3,10 +3,11 @@ import { Box, IconProps, Tooltip, TooltipProps, Typography } from "@mui/material
 import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
 import * as React from "react";
 
-export interface CustomTabProps extends Omit<MuiTabProps, "children" | "icon" | "iconPosition"> {
+export interface TabProps extends Omit<MuiTabProps, "children" | "icon" | "iconPosition"> {
     label: React.ReactNode;
-    currentTab: number;
     forceRender?: boolean;
+    children: React.ReactNode;
+    currentTab: number;
     tabIcon?: React.ReactNode;
     showStatus?: boolean;
     showTooltip?: boolean;
@@ -16,15 +17,10 @@ export interface CustomTabProps extends Omit<MuiTabProps, "children" | "icon" | 
     smallTabText?: boolean;
 }
 
-export interface TabProps extends Omit<MuiTabProps, "children"> {
-    label: React.ReactNode;
-    forceRender?: boolean;
-    children: React.ReactNode;
-}
-
-export const Tab: React.FC<TabProps> = () => null;
+export const Tab: React.FC<Omit<TabProps, "currentTab">> = () => null;
 
 export function CustomTab({
+    children,
     currentTab,
     label,
     showStatus,
@@ -36,7 +32,7 @@ export function CustomTab({
     classes,
     smallTabText,
     ...props
-}: CustomTabProps) {
+}: TabProps) {
     tabIcon =
         tabIcon && React.isValidElement(tabIcon)
             ? React.cloneElement(tabIcon, { color: currentTab === props.value ? "primary" : "inherit" } as IconProps)
