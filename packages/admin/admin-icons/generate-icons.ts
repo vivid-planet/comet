@@ -44,7 +44,7 @@ const getPathData = (fileName: string) => {
     const parsedXml = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "" }).parse(fileContents.toString());
 
     if (parsedXml?.svg?.path?.d === undefined) {
-        throw new Error(`The file ${fileName} doesn't contain a valid SVG`);
+        throw new Error(`The file ${fileName} must contain a path element with a d attribute`);
     }
 
     return parsedXml.svg.path.d;
