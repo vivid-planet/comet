@@ -43,6 +43,10 @@ const getPathData = (fileName: string) => {
     const fileContents = readFileSync(`icons/${fileName}`);
     const parsedXml = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "" }).parse(fileContents.toString());
 
+    if (parsedXml?.svg?.path?.d === undefined) {
+        throw new Error(`The file ${fileName} doesn't contain a valid SVG`);
+    }
+
     return parsedXml.svg.path.d;
 };
 
