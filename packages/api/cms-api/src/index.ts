@@ -1,6 +1,7 @@
 import "reflect-metadata";
 
-export { CurrentUserInterface, CurrentUserLoaderInterface, CurrentUserRightInterface } from "./auth/current-user/current-user";
+export { CurrentUserInterface, CurrentUserRightInterface } from "./auth/current-user/current-user";
+export { CURRENT_USER_LOADER, CurrentUserLoaderInterface } from "./auth/current-user/current-user-loader";
 export { AllowForRole } from "./auth/decorators/allow-for-role.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
 export { DisableGlobalGuard } from "./auth/decorators/global-guard-disable.decorator";
@@ -142,6 +143,7 @@ export { RedirectsModule } from "./redirects/redirects.module";
 export { createRedirectsResolver } from "./redirects/redirects.resolver";
 export { RedirectsService } from "./redirects/redirects.service";
 export { IsValidRedirectSource, IsValidRedirectSourceConstraint } from "./redirects/validators/isValidRedirectSource";
+export { UserPermissionsCurrentUserLoader } from "./user-permissions/auth/current-user-loader";
 export { CurrentUser } from "./user-permissions/dto/current-user";
 export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
 export { User } from "./user-permissions/dto/user";

@@ -1,42 +1,28 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, Optional } from "@nestjs/common";
 import { PassportStrategy, Type } from "@nestjs/passport";
+import { JwtPayload } from "jsonwebtoken";
 import { passportJwtSecret } from "jwks-rsa";
 import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 
-import { CurrentUserInterface, CurrentUserLoaderInterface } from "../current-user/current-user";
+import { CurrentUserInterface } from "../current-user/current-user";
+import { CURRENT_USER_LOADER, CurrentUserLoaderInterface } from "../current-user/current-user-loader";
 
 interface AuthProxyJwtStrategyConfig {
     jwksUri: string;
-    currentUserLoader?: CurrentUserLoaderInterface;
     strategyName?: string;
     audience?: string;
     strategyOptions?: Omit<StrategyOptions, "jwtFromRequest">;
 }
 
-class CurrentUserLoader implements CurrentUserLoaderInterface {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async load(data: any): Promise<CurrentUserInterface> {
-        return {
-            id: data.sub,
-            name: data.name,
-            email: data.email,
-            language: data.language,
-            role: data.ext?.role,
-            rights: data.ext?.rights,
-        };
-    }
-}
-
 export function createAuthProxyJwtStrategy({
     jwksUri,
     audience,
-    currentUserLoader,
     strategyOptions,
     strategyName = "auth-proxy-jwt",
 }: AuthProxyJwtStrategyConfig): Type {
     @Injectable()
     class AuthProxyJwtStrategy extends PassportStrategy(Strategy, strategyName) {
-        constructor() {
+        constructor(@Optional() @Inject(CURRENT_USER_LOADER) private readonly currentUserLoader: CurrentUserLoaderInterface) {
             super({
                 jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
                 secretOrKeyProvider: passportJwtSecret({
@@ -47,10 +33,19 @@ export function createAuthProxyJwtStrategy({
             });
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        async validate(data: any): Promise<CurrentUserInterface> {
-            const userLoader = currentUserLoader ? currentUserLoader : new CurrentUserLoader();
-            return userLoader.load(data);
+        async validate(data: JwtPayload): Promise<CurrentUserInterface> {
+            if (!data.sub) throw new Error("JwtPayload does not contain sub.");
+            if (!this.currentUserLoader) {
+                return {
+                    id: data.sub,
+                    name: data.name,
+                    email: data.email,
+                    language: data.language,
+                    role: data.ext?.role,
+                    rights: data.ext?.rights,
+                };
+            }
+            return this.currentUserLoader.load(data.sub, data);
         }
     }
     return AuthProxyJwtStrategy;

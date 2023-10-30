@@ -3,19 +3,14 @@ import { Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 
 import { CurrentUser } from "./current-user";
+import { staticUsers } from "./static-users";
 import { UserService } from "./user.service";
 
 @Module({
     providers: [
         createStaticAuthedUserStrategy({
-            staticAuthedUser: {
-                id: "1",
-                name: "Test Admin",
-                email: "demo@comet-dxp.com",
-                language: "en",
-                role: "admin",
-                domains: ["main", "secondary"],
-            },
+            staticAuthedUser: staticUsers[0].id,
+            userExtraData: { role: "admin", domains: ["main", "secondary"] }, // TODO Remove once they disappear from CurrentUserInterface
         }),
         createAuthResolver({
             currentUser: CurrentUser,
