@@ -3,10 +3,13 @@ import { ESLint } from "eslint";
 import { XMLParser } from "fast-xml-parser";
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { pascalCase, pascalCaseTransformMerge } from "pascal-case";
+import * as path from "path";
 const eslint = new ESLint({ fix: true });
 
 const main = async () => {
-    const files = readdirSync("icons");
+    const files = readdirSync("icons").filter((file) => {
+        return path.extname(file).toLowerCase() === ".svg";
+    });
 
     const bar = new SingleBar(
         {
@@ -44,7 +47,7 @@ const getPathData = (fileName: string) => {
     const parsedXml = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "" }).parse(fileContents.toString());
 
     if (parsedXml?.svg?.path?.d === undefined) {
-        throw new Error(`The file ${fileName} must contain a path element with a d attribute`);
+        throw new Error(`The file ${fileName} must contain a <path> element with a d attribute`);
     }
 
     return parsedXml.svg.path.d;
