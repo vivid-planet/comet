@@ -1,19 +1,11 @@
 import { ComponentsOverrides, Theme } from "@mui/material";
-import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
 import MuiTabs, { TabsProps as MuiTabsProps } from "@mui/material/Tabs";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
+import { CustomTab, CustomTabProps, Tab, TabProps } from "./CustomTab";
 import { styles, TabsClassKey } from "./Tabs.styles";
 import { TabScrollButton } from "./TabScrollButton";
-
-interface TabProps extends Omit<MuiTabProps, "children"> {
-    label: React.ReactNode;
-    forceRender?: boolean;
-    children: React.ReactNode;
-}
-
-export const Tab: React.SFC<TabProps> = () => null;
 
 interface ITabsState {
     value: number;
@@ -22,14 +14,14 @@ interface ITabsState {
 
 export interface TabsProps extends MuiTabsProps {
     children: Array<React.ReactElement<TabProps> | boolean | null | undefined> | React.ReactElement<TabProps>;
-    tabComponent?: React.ComponentType<MuiTabProps>;
+    tabComponent?: React.ComponentType<CustomTabProps>;
     defaultIndex?: number;
     tabsState?: ITabsState;
 }
 
 function TabsComponent({
     children,
-    tabComponent: TabComponent = MuiTab,
+    tabComponent: TabComponent = CustomTab,
     defaultIndex,
     tabsState,
     ScrollButtonComponent = TabScrollButton,
@@ -80,7 +72,7 @@ function TabsComponent({
                     }
 
                     const { children, label, ...restTabProps } = child.props;
-                    return <TabComponent label={label} {...restTabProps} />;
+                    return <TabComponent label={label} {...restTabProps} currentTab={value} />;
                 })}
             </MuiTabs>
             {React.Children.map(children, (child: React.ReactElement<TabProps>, index) => {

@@ -191,8 +191,9 @@ export { IChangePageOptions, IPagingApi, useTableQueryPaging } from "./table/use
 export { ISortApi, ISortInformation, SortDirection, useTableQuerySort } from "./table/useTableQuerySort";
 export { IWithDirtyHandlerApiProps, withDirtyHandlerApi } from "./table/withDirtyHandlerApi";
 export { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQueryContext";
+export { Tab } from "./tabs/CustomTab";
 export { RouterTab, RouterTabs } from "./tabs/RouterTabs";
 export { RouterTabsClassKey } from "./tabs/RouterTabs.styles";
-export { Tab, Tabs, TabsProps } from "./tabs/Tabs";
+export { Tabs, TabsProps } from "./tabs/Tabs";
 export { TabsClassKey } from "./tabs/Tabs.styles";
 export { TabScrollButton, TabScrollButtonClassKey, TabScrollButtonProps } from "./tabs/TabScrollButton";
