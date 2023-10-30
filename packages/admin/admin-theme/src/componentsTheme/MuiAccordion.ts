@@ -11,7 +11,9 @@ export const getMuiAccordion: GetMuiComponentTheme<"MuiAccordion"> = (component,
     },
     styleOverrides: mergeOverrideStyles<"MuiAccordion">(component?.styleOverrides, {
         root: {
-            border: `solid ${palette.divider}`,
+            border: "none",
+            borderRadius: "4px",
+            boxShadow: "0px 0px 4px 0px rgba(0,0,0,0.08)",
             "&:not(:last-child)": {
                 marginBottom: "20px",
             },

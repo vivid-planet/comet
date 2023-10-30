@@ -66,7 +66,7 @@ const styles = (theme: Theme) =>
         children: {
             display: "flex",
             flexDirection: "column",
-            borderTop: `solid ${theme.palette.divider}`,
+            borderTop: `1px solid ${theme.palette.divider}`,
             padding: "20px",
             [theme.breakpoints.up("sm")]: {
                 padding: "40px",
