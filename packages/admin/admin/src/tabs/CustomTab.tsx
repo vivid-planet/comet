@@ -1,5 +1,5 @@
 import { Info } from "@comet/admin-icons";
-import { Box, IconProps, Tooltip, TooltipProps } from "@mui/material";
+import { Box, IconProps, Tooltip, TooltipProps, Typography } from "@mui/material";
 import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
 import * as React from "react";
 
@@ -13,6 +13,7 @@ export interface CustomTabProps extends Omit<MuiTabProps, "children" | "icon" | 
     tooltipMessage?: string;
     tooltipIcon?: React.ReactNode;
     tooltipPlacement?: TooltipProps["placement"];
+    smallTabText?: boolean;
 }
 
 export interface TabProps extends Omit<MuiTabProps, "children"> {
@@ -33,6 +34,7 @@ export function CustomTab({
     tooltipPlacement = "top",
     tabIcon,
     classes,
+    smallTabText,
     ...props
 }: CustomTabProps) {
     tabIcon =
@@ -53,7 +55,13 @@ export function CustomTab({
                             {tabIcon}
                         </Box>
                     )}
-                    {label}
+                    <Typography
+                        component="h4"
+                        variant={smallTabText ? "button" : "h6"}
+                        sx={{ textTransform: smallTabText ? "capitalize" : "uppercase" }}
+                    >
+                        {label}
+                    </Typography>
                 </Box>
             }
             sx={{ minHeight: "51px", padding: "20px 10px" }}

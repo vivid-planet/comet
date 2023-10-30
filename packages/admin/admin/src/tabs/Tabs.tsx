@@ -17,6 +17,7 @@ export interface TabsProps extends MuiTabsProps {
     tabComponent?: React.ComponentType<CustomTabProps>;
     defaultIndex?: number;
     tabsState?: ITabsState;
+    smallTabText?: boolean;
 }
 
 function TabsComponent({
@@ -26,6 +27,7 @@ function TabsComponent({
     tabsState,
     ScrollButtonComponent = TabScrollButton,
     classes,
+    smallTabText,
     ...restProps
 }: TabsProps & WithStyles<typeof styles>) {
     let value: ITabsState["value"];
@@ -72,7 +74,7 @@ function TabsComponent({
                     }
 
                     const { children, label, ...restTabProps } = child.props;
-                    return <TabComponent label={label} {...restTabProps} currentTab={value} />;
+                    return <TabComponent label={label} {...restTabProps} smallTabText={smallTabText} currentTab={value} />;
                 })}
             </MuiTabs>
             {React.Children.map(children, (child: React.ReactElement<TabProps>, index) => {
