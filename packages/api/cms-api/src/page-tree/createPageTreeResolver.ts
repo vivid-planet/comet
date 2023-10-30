@@ -28,8 +28,6 @@ import {
     ScopeInterface,
 } from "./types";
 
-const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay));
-
 export function createPageTreeResolver({
     PageTreeNode,
     PageTreeNodeCreateInput = DefaultPageTreeNodeCreateInput,
@@ -96,8 +94,6 @@ export function createPageTreeResolver({
             @Args("parentId", { type: () => ID, nullable: true }) parentId: string,
             @Args("slug") slug: string,
         ): Promise<SlugAvailability> {
-            await sleep(3000);
-
             const requestedPath = await this.pageTreeService.pathForParentAndSlug(parentId || null, slug);
 
             if (this.config.reservedPaths.includes(requestedPath)) {
