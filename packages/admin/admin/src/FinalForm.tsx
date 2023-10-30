@@ -173,7 +173,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         if (formRenderProps.hasValidationErrors) {
                             return false;
                         }
-                        const submissionErrors = await formRenderProps.form.submit();
+                        const submissionErrors = await handleSubmit(formRenderProps.values, formRenderProps.form);
                         if (submissionErrors) {
                             return false;
                         }
@@ -204,13 +204,16 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         );
     }
 
-    function handleSubmit(values: FormValues, form: FormApi<FormValues>) {
+    async function handleSubmit(values: FormValues, form: FormApi<FormValues>) {
+        editDialogFormApi?.onFormStatusChange("saving");
+
+        await waitForFormValidationToBeFinished(form);
+
         const submitEvent = (form.mutators.getSubmitEvent ? form.mutators.getSubmitEvent() : undefined) || new FinalFormSubmitEvent("submit");
         const ret = props.onSubmit(values, form, submitEvent);
 
         if (ret === undefined) return ret;
 
-        editDialogFormApi?.onFormStatusChange("saving");
         return Promise.resolve(ret)
             .then((data) => {
                 // setTimeout is required because of https://github.com/final-form/final-form/pull/229
@@ -234,6 +237,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                 (data) => {
                     // for final-form undefined means success, an obj means error
                     editDialogFormApi?.resetFormStatus();
+
                     form.reset(values);
                     return undefined;
                 },
@@ -251,3 +255,23 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             );
     }
 }
+
+const waitForFormValidationToBeFinished = (form: FormApi<any>): Promise<boolean> => {
+    return new Promise((resolve) => {
+        const interval = setInterval(() => {
+            const validating = form.getState().validating;
+            if (!validating) {
+                clearTimeout(timer);
+                clearInterval(interval);
+                resolve(true);
+            }
+        }, 100);
+
+        // Abort checking if validation is finished after 5 seconds
+        // The form is still submitted (resolve())
+        const timer = setTimeout(() => {
+            clearInterval(interval);
+            resolve(false);
+        }, 5000);
+    });
+};
