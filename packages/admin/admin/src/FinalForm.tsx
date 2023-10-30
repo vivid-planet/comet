@@ -100,8 +100,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                                 error: new SubmitError("Form has Validation Errors", formRenderProps.errors),
                             };
                         }
-
-                        const submissionErrors = await formRenderProps.form.submit();
+                        const submissionErrors = await handleSubmit(formRenderProps.values, formRenderProps.form);
                         if (submissionErrors) {
                             return {
                                 error: new SubmitError("Form has Submission Errors", submissionErrors),
@@ -177,12 +176,15 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         );
     }
 
-    function handleSubmit(values: FormValues, form: FormApi<FormValues>) {
+    async function handleSubmit(values: FormValues, form: FormApi<FormValues>) {
+        editDialogFormApi?.onFormStatusChange("saving");
+
+        await waitForFormValidationToBeFinished(form);
+
         const ret = props.onSubmit(values, form);
 
         if (ret === undefined) return ret;
 
-        editDialogFormApi?.onFormStatusChange("saving");
         return Promise.resolve(ret)
             .then((data) => {
                 // setTimeout is required because of https://github.com/final-form/final-form/pull/229
@@ -223,3 +225,23 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             );
     }
 }
+
+const waitForFormValidationToBeFinished = (form: FormApi<any>): Promise<boolean> => {
+    return new Promise((resolve) => {
+        const interval = setInterval(() => {
+            const validating = form.getState().validating;
+            if (!validating) {
+                clearTimeout(timer);
+                clearInterval(interval);
+                resolve(true);
+            }
+        }, 100);
+
+        // Abort checking if validation is finished after 5 seconds
+        // The form is still submitted
+        const timer = setTimeout(() => {
+            clearInterval(interval);
+            resolve(false);
+        }, 5000);
+    });
+};

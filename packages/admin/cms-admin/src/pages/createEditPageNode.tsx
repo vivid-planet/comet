@@ -149,7 +149,7 @@ export function createEditPageNode({
                         slug: newSlug,
                         scope,
                     },
-                    fetchPolicy: "network-only",
+                    fetchPolicy: "cache-first",
                 });
 
                 return data.availability;
@@ -186,7 +186,7 @@ export function createEditPageNode({
         // Use `p-debounce` instead of `use-debounce`
         // because Final Form expects all validate calls to be resolved.
         // `p-debounce` resolves all calls, `use-debounce` doesn't
-        const debouncedValidateSlug = debounce(validateSlug, 200);
+        const debouncedValidateSlug = debounce(validateSlug, 500);
 
         if (mode === "edit" && (loading || !data?.page)) {
             return <Loading />;
@@ -246,6 +246,9 @@ export function createEditPageNode({
                                 refetchQueries: [namedOperations.Query.Pages],
                             });
                         }
+                    }}
+                    onAfterSubmit={() => {
+                        // noop
                     }}
                     initialValues={data?.page ?? { documentType: Object.keys(documentTypes)[0] }}
                     render={({ form }) => {
