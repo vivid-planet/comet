@@ -265,12 +265,13 @@ export function createListBlock<T extends BlockInterface>({
                                                                         onDeleteClick={() => {
                                                                             deleteBlocks([data.key]);
                                                                         }}
-                                                                        moveBlock={(dragIndex: number, hoverIndex: number) => {
-                                                                            const blocks = [...state.blocks];
-                                                                            const dragItem = state.blocks[dragIndex];
-                                                                            blocks[dragIndex] = state.blocks[hoverIndex];
-                                                                            blocks[hoverIndex] = dragItem;
-                                                                            updateState((prevState) => ({ ...prevState, blocks }));
+                                                                        moveBlock={(from, to) => {
+                                                                            updateState((prevState) => {
+                                                                                const blocks = [...prevState.blocks];
+                                                                                const blockToMove = blocks.splice(from, 1)[0];
+                                                                                blocks.splice(to, 0, blockToMove);
+                                                                                return { ...prevState, blocks };
+                                                                            });
                                                                         }}
                                                                         visibilityButton={
                                                                             canChangeVisibility ? (
