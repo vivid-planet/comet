@@ -1450,6 +1450,9 @@ importers:
 
   packages/admin/admin-rte:
     dependencies:
+      '@comet/admin-icons':
+        specifier: workspace:^4.5.0
+        version: link:../admin-icons
       detect-browser:
         specifier: ^5.2.1
         version: 5.3.0
@@ -1469,9 +1472,6 @@ importers:
       '@comet/admin-babel-preset':
         specifier: workspace:^4.5.0
         version: link:../admin-babel-preset
-      '@comet/admin-icons':
-        specifier: workspace:^4.5.0
-        version: link:../admin-icons
       '@comet/eslint-config':
         specifier: workspace:^4.5.0
         version: link:../../eslint-config
