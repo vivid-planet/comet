@@ -1,3 +1,4 @@
+import { RteNonBreakingSpace } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
 import { ContentState } from "draft-js";
 import * as React from "react";
@@ -9,15 +10,22 @@ interface Props {
 }
 
 function EditorComponent({ children }: Props): React.ReactElement {
-    return <VisibleHyphen>{children}</VisibleHyphen>;
+    return (
+        <>
+            <Icon />
+            {children}
+        </>
+    );
 }
 
-const VisibleHyphen = styled("span")`
-    color: #999;
-    &:before {
-        margin-right: -4px; // Compensate for the non-breaking space that is added by the browser
-        content: "[+]";
-    }
+const Icon = styled(RteNonBreakingSpace)`
+    position: relative;
+    // Arbitrary values to make the icon look centered
+    top: 0.19em;
+    left: 0.14em;
+    font-size: inherit;
+    color: currentcolor;
+    opacity: 0.5;
 `;
 
 export default EditorComponent;
