@@ -33,7 +33,7 @@ function ControlButton({
 
     return (
         <button type="button" className={rootClasses.join(" ")} disabled={disabled} onMouseDown={onButtonClick}>
-            {!!Icon && <Icon fontSize="inherit" color="inherit" />}
+            {!!Icon && <Icon sx={{ fontSize: 15 }} color="inherit" />}
             {children}
         </button>
     );

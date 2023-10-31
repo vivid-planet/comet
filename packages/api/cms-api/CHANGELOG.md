@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 4.6.0
+
+### Patch Changes
+
+-   f6f7d4a4: Prevent slug change of home page in `updateNode()` and `updateNodeSlug()` of `PageTreeService`
+    -   @comet/blocks-api@4.6.0
+
 ## 4.5.0
 
 ### Patch Changes
