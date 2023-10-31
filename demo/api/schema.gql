@@ -127,6 +127,38 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
+type CurrentUserPermission {
+  permission: String!
+}
+
+type User {
+  id: String!
+  name: String!
+  email: String!
+  language: String!
+}
+
+type UserPermission {
+  id: ID!
+  source: UserPermissionSource
+  permission: String!
+  validFrom: DateTime
+  validTo: DateTime
+  reason: String
+  requestedBy: String
+  approvedBy: String
+}
+
+enum UserPermissionSource {
+  MANUAL
+  BY_RULE
+}
+
+type PaginatedUserList {
+  nodes: [User!]!
+  totalCount: Int!
+}
+
 type Link implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -553,6 +585,13 @@ input RedirectScopeInput {
 
 type Query {
   currentUser: CurrentUser!
+  userPermissionsUserById(id: String!): User!
+  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
+  userPermissionsPermissionList(userId: String!): [UserPermission!]!
+  userPermissionsPermission(id: ID!, userId: String): UserPermission!
+  userPermissionsAvailablePermissions: [String!]!
+  userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
+  userPermissionsAvailableContentScopes: [JSONObject!]!
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
@@ -598,6 +637,35 @@ type Query {
   productTags(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductTagFilter, sort: [ProductTagSort!]): PaginatedProductTags!
 }
 
+input UserFilter {
+  name: StringFilter
+  email: StringFilter
+  status: StringFilter
+  language: StringFilter
+  and: [UserFilter!]
+  or: [UserFilter!]
+}
+
+input StringFilter {
+  contains: String
+  startsWith: String
+  endsWith: String
+  equal: String
+  notEqual: String
+}
+
+input UserSort {
+  field: UserSortField!
+  direction: SortDirection! = ASC
+}
+
+enum UserSortField {
+  name
+  email
+  status
+  language
+}
+
 enum SortDirection {
   ASC
   DESC
@@ -627,14 +695,6 @@ input RedirectFilter {
   updatedAt: DateFilter
   and: [RedirectFilter!]
   or: [RedirectFilter!]
-}
-
-input StringFilter {
-  contains: String
-  startsWith: String
-  endsWith: String
-  equal: String
-  notEqual: String
 }
 
 input BooleanFilter {
@@ -824,6 +884,10 @@ enum ProductTagSortField {
 
 type Mutation {
   currentUserSignOut: String!
+  userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
+  userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
+  userPermissionsDeletePermission(id: ID!): Boolean!
+  userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): [JSONObject!]!
   createBuilds(input: CreateBuildsInput!): Boolean!
   saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
   savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
@@ -872,6 +936,19 @@ type Mutation {
   createProductTag(input: ProductTagInput!): ProductTag!
   updateProductTag(id: ID!, input: ProductTagUpdateInput!, lastUpdatedAt: DateTime): ProductTag!
   deleteProductTag(id: ID!): Boolean!
+}
+
+input UserPermissionInput {
+  permission: String!
+  validFrom: DateTime
+  validTo: DateTime
+  reason: String
+  requestedBy: String
+  approvedBy: String
+}
+
+input UserContentScopesInput {
+  contentScopes: [JSONObject!]! = []
 }
 
 input CreateBuildsInput {

@@ -105,6 +105,10 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         const type = field.type.kind === "NON_NULL" ? field.type.ofType : field.type;
         return type.kind == "SCALAR" && (type.name == "Float" || type.name == "Int");
     });
+    const booleanFields = formFields.filter((field) => {
+        const type = field.type.kind === "NON_NULL" ? field.type.ofType : field.type;
+        return type.kind == "SCALAR" && type.name == "Boolean";
+    });
 
     const out = `
     import { useApolloClient, useQuery } from "@apollo/client";
@@ -115,6 +119,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         FinalFormSaveSplitButton,
         FinalFormSelect,
         FinalFormSubmitEvent,
+        Loading,
         MainContent,
         Toolbar,
         ToolbarActions,
@@ -130,7 +135,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     import { FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
     import { EditPageLayout, resolveHasSaveConflict, useFormSaveConflict, queryUpdatedAt } from "@comet/cms-admin";
-    import { CircularProgress, IconButton, FormControlLabel, MenuItem } from "@mui/material";
+    import { IconButton, FormControlLabel, MenuItem } from "@mui/material";
     import { FormApi } from "final-form";
     import { filter } from "graphql-anywhere";
     import isEqual from "lodash.isequal";
@@ -201,6 +206,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                       .join("\n")}
               }
             : {
+                ${booleanFields.map((field) => `${field.name}: false,`).join("\n")}
                 ${Object.keys(rootBlocks)
                     .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.defaultValues(),`)
                     .join("\n")}
@@ -258,7 +264,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         if (error) throw error;
     
         if (loading) {
-            return <CircularProgress />;
+            return <Loading behavior="fillPageHeight" />;
         }
     
         return (

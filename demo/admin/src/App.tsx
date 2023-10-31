@@ -21,6 +21,7 @@ import {
     SiteConfig,
     SitePreview,
     SitesConfigProvider,
+    UserPermissionsPage,
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
@@ -44,7 +45,7 @@ import { ContentScopeIndicator } from "./common/ContentScopeIndicator";
 import { getMessages } from "./lang";
 import { Link } from "./links/Link";
 import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
-import News from "./news/News";
+import { NewsPage } from "./news/generated/NewsPage";
 import MainMenu from "./pages/mainMenu/MainMenu";
 import { Page } from "./pages/Page";
 import ProductCategoriesPage from "./products/categories/ProductCategoriesPage";
@@ -169,7 +170,7 @@ class App extends React.Component {
                                                                                     />
                                                                                     <RouteWithErrorBoundary
                                                                                         path={`${match.path}/structured-content/news`}
-                                                                                        component={News}
+                                                                                        component={NewsPage}
                                                                                     />
                                                                                     <RouteWithErrorBoundary
                                                                                         path={`${match.path}/assets`}
@@ -223,6 +224,10 @@ class App extends React.Component {
                                                                                     <RouteWithErrorBoundary
                                                                                         path={`${match.path}/product-tags`}
                                                                                         component={ProductTagsPage}
+                                                                                    />
+                                                                                    <RouteWithErrorBoundary
+                                                                                        path={`${match.path}/user-permissions`}
+                                                                                        component={UserPermissionsPage}
                                                                                     />
 
                                                                                     <Redirect from={`${match.path}`} to={`${match.url}/dashboard`} />
