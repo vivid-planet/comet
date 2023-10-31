@@ -33,6 +33,7 @@
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
         "@comet/admin-babel-preset": "workspace:^4.5.0",
+        "@comet/admin-icons": "workspace:^4.5.0",
         "@comet/eslint-config": "workspace:^4.5.0",
         "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
@@ -54,6 +55,7 @@
         "typescript": "^4.0.0"
     },
     "peerDependencies": {
+        "@comet/admin-icons": "workspace:^4.5.0",
         "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
         "@mui/styles": "^5.0.0",
