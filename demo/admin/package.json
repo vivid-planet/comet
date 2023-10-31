@@ -24,6 +24,7 @@
     "dependencies": {
         "@apollo/client": "^3.7.0",
         "@babel/core": "^7.0.0",
+<<<<<<< HEAD
         "@comet/admin": "workspace:^4.5.0",
         "@comet/admin-date-time": "workspace:^4.5.0",
         "@comet/admin-icons": "workspace:^4.5.0",
@@ -32,6 +33,15 @@
         "@comet/admin-theme": "workspace:^4.5.0",
         "@comet/blocks-admin": "workspace:^4.5.0",
         "@comet/cms-admin": "workspace:^4.5.0",
+=======
+        "@comet/admin": "workspace:^4.6.0",
+        "@comet/admin-icons": "workspace:^4.6.0",
+        "@comet/admin-react-select": "workspace:^4.6.0",
+        "@comet/admin-rte": "workspace:^4.6.0",
+        "@comet/admin-theme": "workspace:^4.6.0",
+        "@comet/blocks-admin": "workspace:^4.6.0",
+        "@comet/cms-admin": "workspace:^4.6.0",
+>>>>>>> main
         "@emotion/react": "^11.9.3",
         "@emotion/styled": "^11.9.3",
         "@fontsource/roboto": "^4.5.5",
@@ -89,8 +99,8 @@
         "zen-observable": "^0.8.0"
     },
     "devDependencies": {
-        "@comet/cli": "workspace:^4.5.0",
-        "@comet/eslint-config": "workspace:^4.5.0",
+        "@comet/cli": "workspace:^4.6.0",
+        "@comet/eslint-config": "workspace:^4.6.0",
         "@emotion/babel-plugin": "^11.0.0",
         "@formatjs/cli": "^2.0.0",
         "@gitbeaker/node": "^25.0.0",

@@ -1,5 +1,4 @@
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
+import { RteOl, RteUl } from "@comet/admin-icons";
 import * as React from "react";
 import { defineMessage, FormattedMessage } from "react-intl";
 
@@ -85,7 +84,7 @@ const defaultBlocktypeMap: IBlocktypeMap = {
         supportedBy: "unordered-list",
         group: "button",
         label: <FormattedMessage id="comet.rte.controls.blockType.unorderedList" defaultMessage="Bulletpoints" />,
-        icon: FormatListBulletedIcon,
+        icon: RteUl,
         renderConfig: {
             wrapper: <BlockElement type="unordered-list" component="ul" />,
             element: "li", // Do not change this to a react component (<Typography {...p}/>) unless you implement the css for nesting lists yourself!
@@ -97,7 +96,7 @@ const defaultBlocktypeMap: IBlocktypeMap = {
         supportedBy: "ordered-list",
         group: "button",
         label: <FormattedMessage id="comet.rte.controls.blockType.orderedList" defaultMessage="Numbering" />,
-        icon: FormatListNumberedIcon,
+        icon: RteOl,
         renderConfig: {
             wrapper: <BlockElement type="ordered-list" component="ol" />,
             element: "li", // same thing that applies to unordered-list-item applies here too!
