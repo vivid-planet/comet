@@ -35,11 +35,11 @@ function defaultFormatContent(v: ContentState): any {
 }
 
 function makeRteApi<T = any>(o?: IMakeRteApiProps<T>) {
-    const {
-        decorators = [LinkDecorator, NonBreakingSpaceDecorator],
-        parse = defaultParseContent,
-        format = defaultFormatContent,
-    }: IMakeRteApiProps<T> = o || {};
+    const { decorators = [LinkDecorator], parse = defaultParseContent, format = defaultFormatContent }: IMakeRteApiProps<T> = o || {};
+
+    // Add default decorators
+    decorators.push(NonBreakingSpaceDecorator);
+
     const decorator = new CompositeDecorator(decorators);
 
     function createEmptyState() {

@@ -1,4 +1,4 @@
-import { IMakeRteApiProps, IRteApiProps, IRteOptions, IRteRef, LinkDecorator, makeRteApi, NonBreakingSpaceDecorator, Rte } from "@comet/admin-rte";
+import { IMakeRteApiProps, IRteApiProps, IRteOptions, IRteRef, LinkDecorator, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import { convertFromRaw, convertToRaw } from "draft-js";
@@ -13,7 +13,7 @@ export type ContentFormat = StringifiedRawDraftContentState;
 export const defaultContent: ContentFormat = JSON.stringify(exampleContent);
 
 export const makeApiOptions: IMakeRteApiProps<ContentFormat> = {
-    decorators: [LinkDecorator, NonBreakingSpaceDecorator], // define additional Draft decorators, https://draftjs.org/docs/advanced-topics-decorators/
+    decorators: [LinkDecorator], // define additional Draft decorators, https://draftjs.org/docs/advanced-topics-decorators/
     parse: (v) => convertFromRaw(JSON.parse(v)), // parse your content-format to draft-js internal ContentState
     format: (v) => JSON.stringify(convertToRaw(v)), // format draft-js internal ContentState to your content-format
 };
