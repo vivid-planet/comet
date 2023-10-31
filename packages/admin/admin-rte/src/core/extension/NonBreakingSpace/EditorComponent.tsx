@@ -11,18 +11,24 @@ interface Props {
 
 function EditorComponent({ children }: Props): React.ReactElement {
     return (
-        <>
+        <Root>
             <Icon />
             {children}
-        </>
+        </Root>
     );
 }
 
-const Icon = styled(RteNonBreakingSpace)`
+const Root = styled("span")`
     position: relative;
+    // Arbitrary value to make the non-breaking space the same width as the icon
+    letter-spacing: 0.9em;
+`;
+
+const Icon = styled(RteNonBreakingSpace)`
+    position: absolute;
     // Arbitrary values to make the icon look centered
-    top: 0.19em;
-    left: 0.14em;
+    top: 0.12em;
+    left: 0.08em;
     font-size: inherit;
     color: currentcolor;
     opacity: 0.5;
