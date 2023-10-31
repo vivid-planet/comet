@@ -18,7 +18,13 @@ function ToolbarButton({ editorState, setEditorState }: IControlProps): React.Re
         // TODO insert \u00a0 in a way that link-entities dont break when inserted in the middle of a link text
         // right now the link is split into 2 link-entities
         // works as expected when \u00ad is copied and pasted: https://unicode.flopp.net/c/00A0
-        const textWithEntity = Modifier.insertText(currentContent, selection, String.fromCharCode(NO_BREAK_SPACE_UNICODE_CHAR));
+        let textWithEntity;
+
+        if (selection.isCollapsed()) {
+            textWithEntity = Modifier.insertText(currentContent, selection, String.fromCharCode(NO_BREAK_SPACE_UNICODE_CHAR));
+        } else {
+            textWithEntity = Modifier.replaceText(currentContent, selection, String.fromCharCode(NO_BREAK_SPACE_UNICODE_CHAR));
+        }
         setEditorState(EditorState.push(editorState, textWithEntity, "insert-characters"));
     }
 
