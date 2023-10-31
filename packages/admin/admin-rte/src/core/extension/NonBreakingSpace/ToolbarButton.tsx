@@ -1,4 +1,4 @@
-import { NonBreakingSpace } from "@comet/admin-icons";
+import { RteNonBreakingSpace } from "@comet/admin-icons";
 import Tooltip from "@mui/material/Tooltip";
 import { EditorState, Modifier } from "draft-js";
 import * as React from "react";
@@ -28,7 +28,7 @@ function ToolbarButton({ editorState, setEditorState }: IControlProps): React.Re
             placement="top"
         >
             <span>
-                <ControlButton icon={NonBreakingSpace} onButtonClick={handleClick} />
+                <ControlButton icon={RteNonBreakingSpace} onButtonClick={handleClick} />
             </span>
         </Tooltip>
     );
