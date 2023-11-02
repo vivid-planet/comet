@@ -10,12 +10,16 @@ export const styles = (theme: Theme) => {
         root: {
             minHeight: 51,
             padding: theme.spacing(4, 2),
+            "&.Mui-disabled": {
+                color: `${theme.palette.grey[200]} !important`,
+            },
         },
         status: {
             height: 16,
             width: 16,
             marginRight: theme.spacing(2),
             borderRadius: "50%",
+            opacity: ({ disabled }) => (disabled ? 0.5 : 1),
         },
         icon: {
             display: "flex",
