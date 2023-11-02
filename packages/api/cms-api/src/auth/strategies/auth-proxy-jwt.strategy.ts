@@ -41,8 +41,6 @@ export function createAuthProxyJwtStrategy({
                     name: data.name,
                     email: data.email,
                     language: data.language,
-                    role: data.ext?.role,
-                    rights: data.ext?.rights,
                 };
             }
             return this.currentUserLoader.load(data.sub, data);

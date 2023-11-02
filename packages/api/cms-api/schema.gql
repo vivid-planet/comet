@@ -199,17 +199,10 @@ input DependentFilter {
   rootColumnName: String
 }
 
-type CurrentUserRight {
-  right: String!
-  values: [String!]!
-}
-
 type CurrentUser {
   name: String!
   email: String!
   language: String!
-  role: String!
-  rights: [CurrentUserRight!]
   contentScopes: [JSONObject!]!
   permissions: [CurrentUserPermission!]!
 }
