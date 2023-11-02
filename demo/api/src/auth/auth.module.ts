@@ -2,6 +2,7 @@ import { createAuthResolver, createCometAuthGuard, createStaticAuthedUserStrateg
 import { Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 
+import { AccessControlService } from "./access-control.service";
 import { CurrentUser } from "./current-user";
 import { staticUsers } from "./static-users";
 import { UserService } from "./user.service";
@@ -20,7 +21,8 @@ import { UserService } from "./user.service";
             useClass: createCometAuthGuard(["static-authed-user"]),
         },
         UserService,
+        AccessControlService,
     ],
-    exports: [UserService],
+    exports: [UserService, AccessControlService],
 })
 export class AuthModule {}

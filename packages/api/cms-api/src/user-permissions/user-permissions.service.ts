@@ -13,12 +13,12 @@ import { UserPermission, UserPermissionSource } from "./entities/user-permission
 import { ContentScope } from "./interfaces/content-scope.interface";
 import { Permission } from "./interfaces/user-permission.interface";
 import { USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER_SERVICE } from "./user-permissions.constants";
-import { UserPermissions, UserPermissionsOptionsBase, UserPermissionsUserServiceInterface } from "./user-permissions.types";
+import { UserPermissions, UserPermissionsOptions, UserPermissionsUserServiceInterface } from "./user-permissions.types";
 
 @Injectable()
 export class UserPermissionsService {
     constructor(
-        @Inject(USER_PERMISSIONS_OPTIONS) private readonly options: UserPermissionsOptionsBase,
+        @Inject(USER_PERMISSIONS_OPTIONS) private readonly options: UserPermissionsOptions,
         @Inject(USER_PERMISSIONS_USER_SERVICE) private readonly userService: UserPermissionsUserServiceInterface,
         @InjectRepository(UserPermission) private readonly permissionRepository: EntityRepository<UserPermission>,
         @InjectRepository(UserContentScopes) private readonly contentScopeRepository: EntityRepository<UserContentScopes>,

@@ -27,6 +27,7 @@ import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { Request } from "express";
 
+import { AccessControlService } from "./auth/access-control.service";
 import { AuthModule } from "./auth/auth.module";
 import { UserService } from "./auth/user.service";
 import { DamScope } from "./dam/dto/dam-scope";
@@ -73,7 +74,7 @@ export class AppModule {
                 }),
                 AuthModule,
                 UserPermissionsModule.forRootAsync({
-                    useFactory: (userService: UserService) => ({
+                    useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
                         availablePermissions: ["news", "products"],
                         availableContentScopes: [
                             { domain: "main", language: "de" },
@@ -81,8 +82,9 @@ export class AppModule {
                             { domain: "secondary", language: "en" },
                         ],
                         userService,
+                        accessControlService,
                     }),
-                    inject: [UserService],
+                    inject: [UserService, AccessControlService],
                     imports: [AuthModule],
                 }),
                 BlocksModule.forRoot({

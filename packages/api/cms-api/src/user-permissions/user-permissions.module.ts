@@ -16,9 +16,9 @@ import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER
 import { UserPermissionsService } from "./user-permissions.service";
 import {
     UserPermissionsAsyncOptions,
-    UserPermissionsOptions,
+    UserPermissionsModuleAsyncOptions,
+    UserPermissionsModuleSyncOptions,
     UserPermissionsOptionsFactory,
-    UserPermissionsSyncOptions,
 } from "./user-permissions.types";
 
 @Global()
@@ -42,7 +42,7 @@ import {
     exports: [CURRENT_USER_LOADER, ContentScopeService],
 })
 export class UserPermissionsModule {
-    static forRoot(options: UserPermissionsSyncOptions): DynamicModule {
+    static forRoot(options: UserPermissionsModuleSyncOptions): DynamicModule {
         return {
             module: UserPermissionsModule,
             providers: [
@@ -62,27 +62,27 @@ export class UserPermissionsModule {
         };
     }
 
-    static forRootAsync(asyncOptions: UserPermissionsAsyncOptions): DynamicModule {
+    static forRootAsync(options: UserPermissionsModuleAsyncOptions): DynamicModule {
         return {
             module: UserPermissionsModule,
-            imports: asyncOptions.imports,
+            imports: options.imports,
             providers: [
-                this.createProvider(asyncOptions),
+                this.createProvider(options),
                 {
                     provide: USER_PERMISSIONS_USER_SERVICE,
-                    useFactory: (options: UserPermissionsOptions) => options.userService,
+                    useFactory: (options: UserPermissionsAsyncOptions) => options.userService,
                     inject: [USER_PERMISSIONS_OPTIONS],
                 },
                 {
                     provide: ACCESS_CONTROL_SERVICE,
-                    useFactory: (options: UserPermissionsOptions) => options.accessControlService ?? new AccessControlService(),
+                    useFactory: (options: UserPermissionsAsyncOptions) => options.accessControlService ?? new AccessControlService(),
                     inject: [USER_PERMISSIONS_OPTIONS],
                 },
             ],
         };
     }
 
-    private static createProvider(options: UserPermissionsAsyncOptions): Provider {
+    private static createProvider(options: UserPermissionsModuleAsyncOptions): Provider {
         if (options.useFactory) {
             return {
                 provide: USER_PERMISSIONS_OPTIONS,
