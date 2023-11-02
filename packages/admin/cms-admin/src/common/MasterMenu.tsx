@@ -2,7 +2,10 @@ import { Menu, MenuCollapsibleItem, MenuContext, MenuItemRouterLink, MenuItemRou
 import * as React from "react";
 import { RouteProps, useRouteMatch } from "react-router-dom";
 
+import { useCurrentUser, UserPermission } from "../userPermissions/hooks/currentUser";
+
 export type MasterMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
+    requiredPermission?: UserPermission;
     route?: RouteProps;
     to?: string;
     submenu?: MasterMenuItem[];
@@ -11,7 +14,8 @@ export type MasterMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
 export type MasterMenuData = MasterMenuItem[];
 
 export function getMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
-    // TODO: Filter for user-permissions once they are available
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const user = useCurrentUser();
     const mapFn = (item: MasterMenuItem): MenuItem => {
         const { route, submenu, to, ...menuItem } = item;
         return {
@@ -20,10 +24,11 @@ export function getMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
                 to: to ?? route?.path?.toString() ?? "",
             },
             hasSubmenu: !!submenu,
-            submenu: submenu ? submenu.map(mapFn) : [],
+            submenu: submenu ? submenu.filter(filterFn).map(mapFn) : [],
         };
     };
-    return items.map(mapFn);
+    const filterFn = (item: MasterMenuItem): boolean => user && user.isAllowed(item.requiredPermission);
+    return items.filter(filterFn).map(mapFn);
 }
 
 type MenuItem = {

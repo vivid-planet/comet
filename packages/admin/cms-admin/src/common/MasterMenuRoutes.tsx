@@ -2,12 +2,14 @@ import { RouteWithErrorBoundary } from "@comet/admin";
 import * as React from "react";
 import { Redirect, RouteProps, Switch, useRouteMatch } from "react-router-dom";
 
+import { useCurrentUser } from "../userPermissions/hooks/currentUser";
 import { MasterMenuData, MasterMenuItem } from "./MasterMenu";
 
 export function getRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
-    // TODO: Filter for user-permissions once they are available
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const user = useCurrentUser();
     const flat = (routes: RouteProps[], item: MasterMenuItem): RouteProps[] => {
-        if (item.route) routes.push(item.route);
+        if (item.route && user.isAllowed(item.requiredPermission)) routes.push(item.route);
         if (item.submenu) {
             routes.concat(item.submenu.reduce(flat, routes));
         }
