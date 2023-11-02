@@ -1,7 +1,10 @@
 import { Info } from "@comet/admin-icons";
-import { Box, IconProps, Tooltip, TooltipProps, Typography } from "@mui/material";
+import { Box, ComponentsOverrides, IconProps, Theme, Tooltip, TooltipProps, Typography } from "@mui/material";
 import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
+import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
+
+import { styles, TabClassKey } from "./CustomTab.styles";
 
 export interface TabProps extends Omit<MuiTabProps, "children" | "icon" | "iconPosition"> {
     label: React.ReactNode;
@@ -17,9 +20,9 @@ export interface TabProps extends Omit<MuiTabProps, "children" | "icon" | "iconP
     smallTabText?: boolean;
 }
 
-export const Tab: React.FC<Omit<TabProps, "currentTab">> = () => null;
+export const Tab: React.FC<Omit<TabProps, "currentTab"> & WithStyles<typeof styles>> = () => null;
 
-export function CustomTab({
+export function TabComponent({
     children,
     currentTab,
     label,
@@ -32,7 +35,7 @@ export function CustomTab({
     classes,
     smallTabText,
     ...props
-}: TabProps) {
+}: TabProps & WithStyles<typeof styles>) {
     tabIcon =
         tabIcon && React.isValidElement(tabIcon)
             ? React.cloneElement(tabIcon, { color: currentTab === props.value ? "primary" : "inherit" } as IconProps)
@@ -43,33 +46,48 @@ export function CustomTab({
 
     return (
         <MuiTab
+            className={classes.root}
+            {...props}
             label={
                 <Box display="flex" alignItems="center">
-                    {showStatus && <Box component="span" mr={2} width="16px" height="16px" bgcolor="#14CC33" borderRadius="1000px" />}
+                    {showStatus && <Box component="span" className={classes.status} bgcolor="#14CC33" />}
                     {tabIcon && (
-                        <Box component="span" display="flex" alignItems="center" mr={2} color={currentTab === props.value ? "primary" : "inherit"}>
+                        <Box component="span" className={classes.icon} color={currentTab === props.value ? "primary" : "inherit"}>
                             {tabIcon}
                         </Box>
                     )}
-                    <Typography
-                        component="h4"
-                        variant={smallTabText ? "button" : "h6"}
-                        sx={{ textTransform: smallTabText ? "capitalize" : "uppercase" }}
-                    >
+                    <Typography component="h4" className={classes.label} variant={smallTabText ? "button" : "h6"}>
                         {label}
                     </Typography>
                 </Box>
             }
-            sx={{ minHeight: "51px", padding: "20px 10px" }}
             icon={
                 showTooltip && React.isValidElement(tooltipIcon) && tooltipMessage ? (
-                    <Tooltip title={tooltipMessage} placement={tooltipPlacement}>
+                    <Tooltip title={tooltipMessage} className={classes.tooltip} placement={tooltipPlacement}>
                         <Box>{tooltipIcon}</Box>
                     </Tooltip>
                 ) : undefined
             }
             iconPosition="end"
-            {...props}
         />
     );
+}
+
+export const CustomTab = withStyles(styles, { name: "CometAdminTab" })(TabComponent);
+
+declare module "@mui/material/styles" {
+    interface ComponentNameToClassKey {
+        CometAdminTab: TabClassKey;
+    }
+
+    interface ComponentsPropsList {
+        CometAdminTab: TabProps;
+    }
+
+    interface Components {
+        CometAdminTab?: {
+            defaultProps?: ComponentsPropsList["CometAdminTab"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTab"];
+        };
+    }
 }
