@@ -140,7 +140,6 @@ export { RedirectsModule } from "./redirects/redirects.module";
 export { createRedirectsResolver } from "./redirects/redirects.resolver";
 export { RedirectsService } from "./redirects/redirects.service";
 export { IsValidRedirectSource, IsValidRedirectSourceConstraint } from "./redirects/validators/isValidRedirectSource";
-export { UserPermissionsCurrentUserLoader } from "./user-permissions/auth/current-user-loader";
 export { ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { SubjectEntity, SubjectEntityMeta, SubjectEntityOptions } from "./user-permissions/decorators/subject-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
