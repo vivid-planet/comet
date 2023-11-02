@@ -41,6 +41,8 @@ export function TabComponent({
             ? React.cloneElement(tabIcon, { color: currentTab === props.value ? "primary" : "inherit" } as IconProps)
             : undefined;
 
+    if (currentTab === props.value && props.disabled) throw new Error("The default selected tab can't be disabled.");
+
     if (showTooltip && !tooltipMessage)
         console.warn("You have to provide a tooltip message (prop: tooltipMessage), if you want the tooltip icon to show.");
 
