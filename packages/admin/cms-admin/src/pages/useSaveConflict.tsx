@@ -15,6 +15,7 @@ export interface SaveConflictOptions {
 export interface SaveConflictHookReturn {
     dialogs: React.ReactNode;
     checkForConflicts: () => Promise<boolean>;
+    hasConflict: boolean;
 }
 
 export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookReturn {
@@ -44,18 +45,20 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
                 );
             } else {
                 // local changes, and server changes available: ask user what to do
-                setShowDialog(true);
+                if (!hasConflict) {
+                    setShowDialog(true);
+                }
                 setHasConflict(true);
             }
         } else {
             setShowDialog(false);
             setHasConflict(false);
         }
-    }, [checkConflict, hasChanges, loadLatestVersion, snackbarApi]);
+    }, [checkConflict, hasChanges, hasConflict, loadLatestVersion, snackbarApi]);
 
     const startPolling = React.useCallback(() => {
         if (!hasConflict) {
-            pollingIntervalId.current = window.setInterval(checkChanges, 1000);
+            pollingIntervalId.current = window.setInterval(checkChanges, 10000);
         }
     }, [checkChanges, hasConflict]);
 
@@ -68,7 +71,9 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
 
     React.useEffect(() => {
         const handleFocus = () => {
-            checkChanges();
+            if (!hasConflict) {
+                checkChanges();
+            }
             startPolling();
         };
 
@@ -89,7 +94,7 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
 
             stopPolling();
         };
-    }, [checkConflict, snackbarApi, loadLatestVersion, hasChanges, checkChanges, startPolling, stopPolling]);
+    }, [checkConflict, snackbarApi, loadLatestVersion, hasChanges, checkChanges, startPolling, stopPolling, hasConflict]);
 
     const checkForConflicts = React.useCallback(async () => {
         const newHasConflict = await checkConflict();
@@ -102,6 +107,7 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
 
     return {
         checkForConflicts,
+        hasConflict,
         dialogs: (
             <>
                 <SaveConflictDialog
@@ -110,10 +116,10 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
                         stopPolling();
                         setShowDialog(false);
                     }}
-                    onDiscardChangesPressed={async () => {
+                    onDiscardChangesPressed={() => {
                         setHasConflict(false);
                         setShowDialog(false);
-                        await onDiscardButtonPressed();
+                        onDiscardButtonPressed();
                     }}
                 />
             </>

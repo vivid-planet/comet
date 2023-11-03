@@ -1,5 +1,6 @@
 import { ApolloError, gql, TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
 import { messages, SaveButton, SaveButtonProps, SplitButton, useStackApi } from "@comet/admin";
+import { Error as ErrorIcon } from "@comet/admin-icons";
 import {
     BindBlockAdminComponent,
     BlockInterface,
@@ -208,10 +209,11 @@ export const createUsePage: CreateUsePage =
                 await refetch();
             };
 
-            const { dialogs, checkForConflicts: checkForSaveConflict } = useSaveConflictQuery<
-                GQLCheckForChangesQuery,
-                GQLCheckForChangesQueryVariables
-            >(
+            const {
+                dialogs,
+                checkForConflicts: checkForSaveConflict,
+                hasConflict,
+            } = useSaveConflictQuery<GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables>(
                 checkForChangesQuery,
                 {
                     variables: {
@@ -395,8 +397,16 @@ export const createUsePage: CreateUsePage =
             }, [pageState, createHandleUpdate, pageId]);
 
             const pageSaveButton = React.useMemo<JSX.Element>(
-                () => <PageSaveButton hasChanges={hasChanges} handleSavePage={handleSavePage} saveError={saveError} saving={saving} />,
-                [hasChanges, handleSavePage, saveError, saving],
+                () => (
+                    <PageSaveButton
+                        hasConflict={hasConflict}
+                        hasChanges={hasChanges}
+                        handleSavePage={handleSavePage}
+                        saveError={saveError}
+                        saving={saving}
+                    />
+                ),
+                [hasConflict, hasChanges, handleSavePage, saveError, saving],
             );
 
             return {
@@ -430,10 +440,11 @@ const checkForChangesQuery = gql`
 interface PageSaveButtonProps {
     handleSavePage: () => Promise<void>;
     hasChanges?: boolean;
+    hasConflict: boolean;
     saving: boolean;
     saveError: "invalid" | "conflict" | "error" | undefined;
 }
-function PageSaveButton({ handleSavePage, hasChanges, saving, saveError }: PageSaveButtonProps): JSX.Element {
+function PageSaveButton({ handleSavePage, hasChanges, hasConflict, saving, saveError }: PageSaveButtonProps): JSX.Element {
     const stackApi = useStackApi();
 
     const saveButtonProps: Omit<SaveButtonProps, "children | onClick"> = {
@@ -448,6 +459,11 @@ function PageSaveButton({ handleSavePage, hasChanges, saving, saveError }: PageS
                 <FormattedMessage {...messages.saveConflict} />
             ) : undefined,
     };
+
+    if (hasConflict) {
+        saveButtonProps.saveIcon = <ErrorIcon />;
+        saveButtonProps.color = "error";
+    }
 
     return (
         <SplitButton localStorageKey="SaveSplitButton" disabled={!hasChanges}>
