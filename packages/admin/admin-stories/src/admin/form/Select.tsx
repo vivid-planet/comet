@@ -29,6 +29,7 @@ function Story() {
                 <Form
                     initialValues={{
                         multipleFlavours: [],
+                        multipleFlavoursClearable: [],
                     }}
                     onSubmit={() => {
                         //
@@ -125,6 +126,18 @@ function Story() {
                                     <Field name="multipleFlavours" label="Multiple Flavours" fullWidth>
                                         {(props) => (
                                             <FinalFormSelect {...props} fullWidth multiple>
+                                                {options.map((option) => (
+                                                    <MenuItem value={option.value} key={option.value}>
+                                                        {option.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </FinalFormSelect>
+                                        )}
+                                    </Field>
+
+                                    <Field name="multipleFlavoursClearable" label="Multiple Flavours Clearable" fullWidth>
+                                        {(props) => (
+                                            <FinalFormSelect {...props} fullWidth multiple clearable>
                                                 {options.map((option) => (
                                                     <MenuItem value={option.value} key={option.value}>
                                                         {option.label}
