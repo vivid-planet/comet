@@ -1,5 +1,6 @@
 import { Field, FinalFormSelect } from "@comet/admin";
-import { Card, CardContent, MenuItem } from "@mui/material";
+import { Account } from "@comet/admin-icons";
+import { Card, CardContent, InputAdornment, MenuItem } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -60,6 +61,18 @@ function Story() {
                                         )}
                                     </Field>
 
+                                    <Field name="flavorClearable" label="Clearble Flavor" fullWidth>
+                                        {(props) => (
+                                            <FinalFormSelect {...props} fullWidth clearable>
+                                                {options.map((option: Option) => (
+                                                    <MenuItem value={option.value} key={option.value}>
+                                                        {option.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </FinalFormSelect>
+                                        )}
+                                    </Field>
+
                                     <Field name="flavorRequired" label="Required Flavor" fullWidth>
                                         {(props) => (
                                             <FinalFormSelect {...props} fullWidth required>
@@ -76,6 +89,31 @@ function Story() {
                                         {(props) => (
                                             <FinalFormSelect {...props} fullWidth disabled>
                                                 {options.map((option) => (
+                                                    <MenuItem value={option.value} key={option.value}>
+                                                        {option.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </FinalFormSelect>
+                                        )}
+                                    </Field>
+
+                                    <Field name="flavorMultipleAdornments" label="Flavor with adornments" fullWidth>
+                                        {(props) => (
+                                            <FinalFormSelect
+                                                {...props}
+                                                fullWidth
+                                                startAdornment={
+                                                    <InputAdornment position="start">
+                                                        <Account />
+                                                    </InputAdornment>
+                                                }
+                                                endAdornment={
+                                                    <InputAdornment position="end" disablePointerEvents sx={{ width: 24 }}>
+                                                        <Account />
+                                                    </InputAdornment>
+                                                }
+                                            >
+                                                {options.map((option: Option) => (
                                                     <MenuItem value={option.value} key={option.value}>
                                                         {option.label}
                                                     </MenuItem>

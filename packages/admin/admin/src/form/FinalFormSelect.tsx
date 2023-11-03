@@ -35,10 +35,7 @@ export const FinalFormSelect = <T,>({
     ...rest
 }: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input">) => {
     const selectEndAdornment = clearable ? (
-        <>
-            <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange(undefined)} />
-            {endAdornment}
-        </>
+        <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange(undefined)} />
     ) : (
         endAdornment
     );
