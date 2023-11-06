@@ -10,7 +10,7 @@ const RichTextBlock = createRichTextBlock({
     link: LinkBlock,
     rte: {
         maxBlocks: 1,
-        supports: ["bold", "italic"],
+        supports: ["bold", "italic", "non-breaking-space"],
         blocktypeMap: {},
     },
     minHeight: 0,
