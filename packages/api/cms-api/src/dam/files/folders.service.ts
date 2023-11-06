@@ -144,7 +144,10 @@ export class FoldersService {
         { name, parentId }: { name: string; parentId?: string },
         scope?: DamScopeInterface,
     ): Promise<FolderInterface | null> {
-        const qb = this.selectQueryBuilder().andWhere({ name, scope });
+        const qb = this.selectQueryBuilder().andWhere({ name });
+        if (scope) {
+            qb.andWhere({ scope });
+        }
         if (parentId) {
             qb.andWhere({ parent: { id: parentId } });
         } else {
