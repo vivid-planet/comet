@@ -90,8 +90,6 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
                         seo
                         pageTreeNode {
                             id
-                            name
-                            path
                             category
                         }
                     }
