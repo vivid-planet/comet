@@ -1,5 +1,15 @@
 # @comet/blocks-admin
 
+## 4.6.0
+
+### Patch Changes
+
+-   031d86eb: Fix drag and drop reordering in collection blocks
+-   Updated dependencies [c3b7f992]
+-   Updated dependencies [c3b7f992]
+    -   @comet/admin-icons@4.6.0
+    -   @comet/admin@4.6.0
+
 ## 4.5.0
 
 ### Patch Changes
