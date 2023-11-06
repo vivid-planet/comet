@@ -67,7 +67,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminStackBreadcrumbs: StackBreadcrumbsProps;
+        CometAdminStackBreadcrumbs: Partial<StackBreadcrumbsProps>;
     }
 
     interface Components {

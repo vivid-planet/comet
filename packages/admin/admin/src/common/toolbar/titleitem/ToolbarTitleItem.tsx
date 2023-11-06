@@ -39,7 +39,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminToolbarTitleItem: ToolbarTitleItemProps;
+        CometAdminToolbarTitleItem: Partial<ToolbarTitleItemProps>;
     }
 
     interface Components {

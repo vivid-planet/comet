@@ -101,7 +101,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminMenuCollapsibleItem: MenuCollapsibleItemProps;
+        CometAdminMenuCollapsibleItem: Partial<MenuCollapsibleItemProps>;
     }
 
     interface Components {

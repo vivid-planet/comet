@@ -7,7 +7,7 @@ import { Meta } from "@storybook/addon-docs";
 MUI supports overriding of styles and default props of components using the theme.
 Using the same method it should also be possible to override all Comet Admin components.
 
-## Example component
+## Example component (TODO: Update this)
 
 _MyComponent: `packages/admin/src/MyComponent.tsx`_
 
@@ -98,7 +98,7 @@ export { MyComponentWithStyles as MyComponent };
  */
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminMyComponent: MyComponentProps;
+        CometAdminMyComponent: Partial<MyComponentProps>;
     }
 
     interface ComponentNameToClassKey {
@@ -108,7 +108,7 @@ declare module "@mui/material/styles" {
     interface Components {
         CometAdminMyComponent?: {
             defaultProps?: ComponentsPropsList["CometAdminMyComponent"];
-            styleOverrides?: ComponentNameToClassKey["CometAdminMyComponent"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMyComponent"];
         };
     }
 }

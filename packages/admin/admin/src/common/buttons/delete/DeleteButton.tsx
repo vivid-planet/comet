@@ -88,7 +88,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminDeleteButton: DeleteButtonProps;
+        CometAdminDeleteButton: Partial<DeleteButtonProps>;
     }
 
     interface Components {

@@ -147,7 +147,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminSaveButton: SaveButtonProps;
+        CometAdminSaveButton: Partial<SaveButtonProps>;
     }
 
     interface Components {

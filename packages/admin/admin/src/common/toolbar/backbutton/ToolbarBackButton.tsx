@@ -53,7 +53,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminToolbarBackButton: ToolbarBackButtonProps;
+        CometAdminToolbarBackButton: Partial<ToolbarBackButtonProps>;
     }
 
     interface Components {

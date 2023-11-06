@@ -135,7 +135,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminErrorBoundary: ErrorBoundaryProps;
+        CometAdminErrorBoundary: Partial<ErrorBoundaryProps>;
     }
 
     interface Components {

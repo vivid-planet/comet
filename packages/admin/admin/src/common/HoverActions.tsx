@@ -63,7 +63,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminHoverActions: HoverActionsProps;
+        CometAdminHoverActions: Partial<HoverActionsProps>;
     }
 
     interface Components {

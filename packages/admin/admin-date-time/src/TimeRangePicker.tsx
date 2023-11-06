@@ -154,7 +154,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminTimeRangePicker: TimeRangePickerProps;
+        CometAdminTimeRangePicker: Partial<TimeRangePickerProps>;
     }
 
     interface Components {

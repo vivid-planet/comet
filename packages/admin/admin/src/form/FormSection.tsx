@@ -55,7 +55,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFormSection: FormSectionProps;
+        CometAdminFormSection: Partial<FormSectionProps>;
     }
 
     interface Components {

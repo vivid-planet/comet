@@ -222,7 +222,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminSelect: SelectProps<any>;
+        CometAdminSelect: Partial<SelectProps<any>>;
     }
 
     interface Components {

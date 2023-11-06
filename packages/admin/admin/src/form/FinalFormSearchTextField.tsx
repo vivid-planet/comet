@@ -52,7 +52,7 @@ export const FinalFormSearchTextField = withStyles({}, { name: "CometAdminFinalF
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminFinalFormSearchTextField: FinalFormSearchTextFieldProps;
+        CometAdminFinalFormSearchTextField: Partial<FinalFormSearchTextFieldProps>;
     }
 
     interface Components {

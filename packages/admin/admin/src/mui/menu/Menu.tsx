@@ -108,7 +108,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminMenu: MenuProps;
+        CometAdminMenu: Partial<MenuProps>;
     }
 
     interface Components {

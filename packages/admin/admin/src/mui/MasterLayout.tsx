@@ -68,7 +68,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminMasterLayout: MasterLayoutProps;
+        CometAdminMasterLayout: Partial<MasterLayoutProps>;
     }
 
     interface Components {
