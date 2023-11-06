@@ -927,6 +927,7 @@
                                 "TextImage",
                                 "DamVideo",
                                 "YouTubeVideo",
+                                "Video",
                                 "LinkList",
                                 "FullWidthImage",
                                 "Columns",
@@ -1584,6 +1585,69 @@
                 "name": "imageAspectRatio",
                 "kind": "String",
                 "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "Video",
+        "fields": [
+            {
+                "name": "attachedBlocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "DamVideo",
+                                "YouTubeVideo"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "block",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "DamVideo",
+                                "YouTubeVideo"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
