@@ -69,7 +69,7 @@ const styles = (theme: Theme) =>
             cursor: "pointer",
         },
         paddingLeft: {
-            paddingLeft: 190,
+            paddingLeft: 180,
             paddingRight: 10,
         },
         severityInfo: {
