@@ -2,6 +2,8 @@ import { ApolloClient, gql } from "@apollo/client";
 import { LocalErrorScopeApolloContext } from "@comet/admin";
 import { ReplaceDependencyObject } from "@comet/blocks-admin";
 import isEqual from "lodash.isequal";
+import * as React from "react";
+import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import { CmsBlockContext } from "../../../blocks/CmsBlockContextProvider";
@@ -261,7 +263,7 @@ export async function sendPages(
     };
 
     // 0. traverses the tree with top-down strategy and find all source scopes of file dependencies
-    updateProgress(0, "analyzing pages");
+    updateProgress(0, <FormattedMessage id="comet.pages.paste.analyzingPages" defaultMessage="analyzing pages" />);
     {
         let progressPages = 0;
         const sourceScopes: Record<string, unknown>[] = [];
@@ -312,7 +314,10 @@ export async function sendPages(
                     }
                 }
                 progressPages++;
-                updateProgress((progressPages / pages.length) * 10, "analyzing pages"); // 10% of progress is used for analyzing pages
+                updateProgress(
+                    (progressPages / pages.length) * 10,
+                    <FormattedMessage id="comet.pages.paste.analyzingPages" defaultMessage="analyzing pages" />,
+                ); // 10% of progress is used for analyzing pages
                 await traverse(node.id);
             }
         };
@@ -329,7 +334,7 @@ export async function sendPages(
     }
 
     // 1. traverses the tree with top-down strategy and do the actual creating of documents and page tree nodes
-    updateProgress(10, "creating pages");
+    updateProgress(10, <FormattedMessage id="comet.pages.paste.creatingPages" defaultMessage="creating pages" />);
     {
         let progressPages = 0;
         const traverse = async (parentId: string, newParentId: string | null): Promise<void> => {
@@ -339,14 +344,17 @@ export async function sendPages(
                 const newPageTreeUUID = await handlePageTreeNode(node, newParentId, posOffset++);
 
                 progressPages++;
-                updateProgress(10 + (progressPages / pages.length) * 90, "creating pages"); // 90% of progress is used for creating pages
+                updateProgress(
+                    10 + (progressPages / pages.length) * 90,
+                    <FormattedMessage id="comet.pages.paste.creatingPages" defaultMessage="creating pages" />,
+                ); // 90% of progress is used for creating pages
                 await traverse(node.id, newPageTreeUUID);
             }
         };
         await traverse("root", parentId);
     }
 
-    updateProgress(100, "reloading pages");
+    updateProgress(100, <FormattedMessage id="comet.pages.paste.reloadingPages" defaultMessage="reloading pages" />);
 
     // 2. Refetch Pages query
     await client.refetchQueries({ include: ["Pages"] });
