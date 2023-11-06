@@ -1,7 +1,6 @@
-import { BlocksModule, DependenciesResolverFactory, RedirectsModule } from "@comet/cms-api";
+import { BlocksModule, DependenciesResolverFactory, PagesEntityInfoService, RedirectsModule } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { forwardRef, Module } from "@nestjs/common";
-import { PagesEntityInfoService } from "@src/pages/pages-entity-info.service";
 
 import { Page } from "./entities/page.entity";
 import { PagesResolver } from "./pages.resolver";
