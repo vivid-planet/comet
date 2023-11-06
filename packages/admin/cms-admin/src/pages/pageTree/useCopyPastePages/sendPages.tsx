@@ -78,16 +78,14 @@ interface SendPagesDependencies {
  * Iterates over passed pages synchronous and creates data with mutations
  *
  * Process:
- *      0. traverses the tree with top-down strategy and find all source scopes of file dependencies
- *      1. traverses the tree with top-down strategy and do the actual creating of documents and page tree nodes
- *          1a. Create new document with new id
- *          1b. Generate unique slug by adding "-{uniqueNumber}" to the slug
- *          1c. If the page is copied from one scope to another, copy the files on this page to the new scope
- *          1d. Create new PageTreeNode
- *              - with new name "{name} {uniqueNumber}"
- *              - and new parent id
- *              - new document id (created in step 1a)
- *      2. Refetch Pages query
+ *      1. traverses the tree with top-down strategy and find all source scopes of file dependencies
+ *      2. traverses the tree with top-down strategy and create page tree nodes
+ *          2a. Generate unique slug by adding "{slug}-{uniqueNumber}" to the slug
+ *          2b. Create new PageTreeNode with new name "{name} {uniqueNumber}" and new parent
+ *      3. create documents (and copy files if required) and attach them to the page tree nodes
+ *          3a. Copy all files used on page to target scope
+ *          3b. Create new document and attach it to new page tree node
+ *      4. Refetch Pages query
  *
  **/
 export async function sendPages(
@@ -108,7 +106,7 @@ export async function sendPages(
             throw new Error(`Unknown document type "${documentType}"`);
         }
 
-        // 1a. Generate unique slug by adding "{slug}-{uniqueNumber}" to the slug
+        // 2a. Generate unique slug by adding "{slug}-{uniqueNumber}" to the slug
         let slug: string = node.slug;
         let name: string = node.name;
         let duplicateNumber = 1;
@@ -134,7 +132,7 @@ export async function sendPages(
             }
         } while (!slugAvailable);
 
-        // 1b. Create new PageTreeNode with new name "{name} {uniqueNumber}" and new parent
+        // 2b. Create new PageTreeNode with new name "{name} {uniqueNumber}" and new parent
         const { data } = await client.mutate<GQLCreatePageNodeMutation, GQLCreatePageNodeMutationVariables>({
             mutation: createPageNodeMutation,
             variables: {
@@ -159,110 +157,10 @@ export async function sendPages(
             throw Error("Did not receive new uuid for page tree node");
         }
 
-        // 1c. Copy all files used on page to target scope
-        const fileIdsToCopyDirectly: string[] = [];
-        if (node?.document != null) {
-            for (const damFile of fileDependenciesFromDocument(documentType, node.document)) {
-                if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
-                    //already copied
-                } else if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl)) {
-                    //our own api, no need to download&upload
-                    if (!hasDamScope || isEqual(damFile.scope, damScope)) {
-                        //same scope, same server, no need to copy
-                    } else {
-                        //batch copy below
-                        fileIdsToCopyDirectly.push(damFile.id);
-                    }
-                } else {
-                    if (!inboxFolderIdForCopiedFiles) throw new Error("inbox folder must be created in step 0 when files need to be copied");
-                    if (damFile.fileUrl.match(/^https?:\/\/(localhost|.*\.dev\.vivid-planet\.cloud|192\.168\.\d{1,3}\.\d{1,3}):\d{2,4}/)) {
-                        //source is local dev server, download client side and upload
-                        const fileResponse = await fetch(damFile.fileUrl);
-                        const fileBlob = await fileResponse.blob();
-                        const file = new File([fileBlob], damFile.name, { type: damFile.mimetype });
-                        const formData = new FormData();
-                        formData.append("file", file);
-                        if (hasDamScope) formData.append("scope", JSON.stringify(damScope));
-                        formData.append("folderId", inboxFolderIdForCopiedFiles);
-                        if (damFile.title) formData.append("title", damFile.title);
-                        if (damFile.altText) formData.append("altText", damFile.altText);
-                        if (damFile.license) formData.append("license", JSON.stringify(damFile.license));
-                        if (damFile.image?.cropArea) formData.append("imageCropArea", JSON.stringify(damFile.image.cropArea));
-
-                        const response: { data: { id: string } } = await blockContext.damConfig.apiClient.post(`/dam/files/upload`, formData, {
-                            // cancelToken, //TODO support cancel?
-                            headers: {
-                                "Content-Type": "multipart/form-data",
-                            },
-                        });
-                        dependencyReplacements.push({ type: "DamFile", originalId: damFile.id, replaceWithId: response.data.id });
-                    } else {
-                        //remote source, download server side
-                        const { data } = await client.mutate<GQLDownloadDamFileMutation, GQLDownloadDamFileMutationVariables>({
-                            mutation: gql`
-                                mutation DownloadDamFile($url: String!, $scope: DamScopeInput!, $input: UpdateDamFileInput!) {
-                                    importDamFileByDownload(url: $url, scope: $scope, input: $input) {
-                                        id
-                                    }
-                                }
-                            `,
-                            variables: {
-                                url: damFile.fileUrl,
-                                scope: damScope,
-                                input: {
-                                    name: damFile.name,
-                                    folderId: inboxFolderIdForCopiedFiles,
-                                    title: damFile.title,
-                                    altText: damFile.altText,
-                                    license: damFile.license,
-                                    image: damFile.image ? { cropArea: damFile.image.cropArea } : undefined,
-                                },
-                            },
-                        });
-                        if (!data?.importDamFileByDownload.id) {
-                            throw Error("Did not receive new id for imported dam file");
-                        }
-                        dependencyReplacements.push({ type: "DamFile", originalId: damFile.id, replaceWithId: data.importDamFileByDownload.id });
-                    }
-                }
-            }
-
-            if (fileIdsToCopyDirectly.length > 0) {
-                if (!inboxFolderIdForCopiedFiles) throw new Error("inbox folder must be created in step 0 when files need to be copied");
-                const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
-                    mutation: copyFilesToScopeMutation,
-                    variables: { fileIds: fileIdsToCopyDirectly, inboxFolderId: inboxFolderIdForCopiedFiles },
-                    update: (cache, result) => {
-                        cache.evict({ fieldName: "damItemsList" });
-                    },
-                });
-
-                if (copiedFiles) {
-                    for (const item of copiedFiles.copyFilesToScope.mappedFiles) {
-                        dependencyReplacements.push({ type: "DamFile", originalId: item.rootFile.id, replaceWithId: item.copy.id });
-                    }
-                }
-            }
-        }
-
-        // 1d. Create new document
-        const newDocumentId = uuid();
-        if (node?.document != null && documentType.updateMutation && documentType.inputToOutput && documentType.replaceDependenciesInOutput) {
-            await client.mutate<unknown, GQLUpdatePageMutationVariables>({
-                mutation: documentType.updateMutation,
-                variables: {
-                    pageId: newDocumentId,
-                    input: documentType.replaceDependenciesInOutput(documentType.inputToOutput(node.document), dependencyReplacements),
-                    attachedPageTreeNodeId: data.createPageTreeNode.id,
-                },
-                context: LocalErrorScopeApolloContext,
-            });
-        }
-
         return data.createPageTreeNode.id;
     };
 
-    // 0. traverses the tree with top-down strategy and find all source scopes of file dependencies
+    // 1. traverses the tree with top-down strategy and find all source scopes of file dependencies
     updateProgress(0, <FormattedMessage id="comet.pages.paste.analyzingPages" defaultMessage="analyzing pages" />);
     {
         let progressPages = 0;
@@ -333,7 +231,7 @@ export async function sendPages(
         }
     }
 
-    // 1. traverses the tree with top-down strategy and do the actual creating of documents and page tree nodes
+    // 2. traverses the tree with top-down strategy and create page tree nodes
     updateProgress(10, <FormattedMessage id="comet.pages.paste.creatingPages" defaultMessage="creating pages" />);
     {
         let progressPages = 0;
@@ -345,18 +243,147 @@ export async function sendPages(
 
                 progressPages++;
                 updateProgress(
-                    10 + (progressPages / pages.length) * 90,
+                    10 + (progressPages / pages.length) * 40,
                     <FormattedMessage id="comet.pages.paste.creatingPages" defaultMessage="creating pages" />,
-                ); // 90% of progress is used for creating pages
+                ); // next 40% of progress is used for creating pages
                 await traverse(node.id, newPageTreeUUID);
             }
         };
         await traverse("root", parentId);
     }
 
+    // 3. create documents (and copy files if required) and attach them to the page tree nodes
+    // no top-down strategy needed
+    {
+        updateProgress(50, <FormattedMessage id="comet.pages.paste.creatingDocuments" defaultMessage="creating documents" />);
+        let progressPages = 0;
+        for (const sourcePage of pages) {
+            const documentType = documentTypes[sourcePage.documentType];
+            if (!documentType) {
+                throw new Error(`Unknown document type "${documentType}"`);
+            }
+            const newPageTreeNodeId = dependencyReplacements.find(
+                (replacement) => replacement.type == "PageTreeNode" && replacement.originalId === sourcePage.id,
+            )?.replaceWithId;
+            if (!newPageTreeNodeId) {
+                throw new Error(`Could not find new page tree node id`);
+            }
+
+            // 3a. Copy all files used on page to target scope
+            const fileIdsToCopyDirectly: string[] = [];
+            if (sourcePage?.document != null) {
+                for (const damFile of fileDependenciesFromDocument(documentType, sourcePage.document)) {
+                    if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
+                        //already copied
+                    } else if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl)) {
+                        //our own api, no need to download&upload
+                        if (!hasDamScope || isEqual(damFile.scope, damScope)) {
+                            //same scope, same server, no need to copy
+                        } else {
+                            //batch copy below
+                            fileIdsToCopyDirectly.push(damFile.id);
+                        }
+                    } else {
+                        if (!inboxFolderIdForCopiedFiles) throw new Error("inbox folder must be created in step 0 when files need to be copied");
+                        if (damFile.fileUrl.match(/^https?:\/\/(localhost|.*\.dev\.vivid-planet\.cloud|192\.168\.\d{1,3}\.\d{1,3}):\d{2,4}/)) {
+                            //source is local dev server, download client side and upload
+                            const fileResponse = await fetch(damFile.fileUrl);
+                            const fileBlob = await fileResponse.blob();
+                            const file = new File([fileBlob], damFile.name, { type: damFile.mimetype });
+                            const formData = new FormData();
+                            formData.append("file", file);
+                            if (hasDamScope) formData.append("scope", JSON.stringify(damScope));
+                            formData.append("folderId", inboxFolderIdForCopiedFiles);
+                            if (damFile.title) formData.append("title", damFile.title);
+                            if (damFile.altText) formData.append("altText", damFile.altText);
+                            if (damFile.license) formData.append("license", JSON.stringify(damFile.license));
+                            if (damFile.image?.cropArea) formData.append("imageCropArea", JSON.stringify(damFile.image.cropArea));
+
+                            const response: { data: { id: string } } = await blockContext.damConfig.apiClient.post(`/dam/files/upload`, formData, {
+                                // cancelToken, //TODO support cancel?
+                                headers: {
+                                    "Content-Type": "multipart/form-data",
+                                },
+                            });
+                            dependencyReplacements.push({ type: "DamFile", originalId: damFile.id, replaceWithId: response.data.id });
+                        } else {
+                            //remote source, download server side
+                            const { data } = await client.mutate<GQLDownloadDamFileMutation, GQLDownloadDamFileMutationVariables>({
+                                mutation: gql`
+                                    mutation DownloadDamFile($url: String!, $scope: DamScopeInput!, $input: UpdateDamFileInput!) {
+                                        importDamFileByDownload(url: $url, scope: $scope, input: $input) {
+                                            id
+                                        }
+                                    }
+                                `,
+                                variables: {
+                                    url: damFile.fileUrl,
+                                    scope: damScope,
+                                    input: {
+                                        name: damFile.name,
+                                        folderId: inboxFolderIdForCopiedFiles,
+                                        title: damFile.title,
+                                        altText: damFile.altText,
+                                        license: damFile.license,
+                                        image: damFile.image ? { cropArea: damFile.image.cropArea } : undefined,
+                                    },
+                                },
+                            });
+                            if (!data?.importDamFileByDownload.id) {
+                                throw Error("Did not receive new id for imported dam file");
+                            }
+                            dependencyReplacements.push({ type: "DamFile", originalId: damFile.id, replaceWithId: data.importDamFileByDownload.id });
+                        }
+                    }
+                }
+
+                if (fileIdsToCopyDirectly.length > 0) {
+                    if (!inboxFolderIdForCopiedFiles) throw new Error("inbox folder must be created in step 0 when files need to be copied");
+                    const { data: copiedFiles } = await client.mutate<GQLCopyFilesToScopeMutation, GQLCopyFilesToScopeMutationVariables>({
+                        mutation: copyFilesToScopeMutation,
+                        variables: { fileIds: fileIdsToCopyDirectly, inboxFolderId: inboxFolderIdForCopiedFiles },
+                        update: (cache, result) => {
+                            cache.evict({ fieldName: "damItemsList" });
+                        },
+                    });
+
+                    if (copiedFiles) {
+                        for (const item of copiedFiles.copyFilesToScope.mappedFiles) {
+                            dependencyReplacements.push({ type: "DamFile", originalId: item.rootFile.id, replaceWithId: item.copy.id });
+                        }
+                    }
+                }
+            }
+
+            // 3b. Create new document and attach it to new page tree node
+            const newDocumentId = uuid();
+            if (
+                sourcePage?.document != null &&
+                documentType.updateMutation &&
+                documentType.inputToOutput &&
+                documentType.replaceDependenciesInOutput
+            ) {
+                await client.mutate<unknown, GQLUpdatePageMutationVariables>({
+                    mutation: documentType.updateMutation,
+                    variables: {
+                        pageId: newDocumentId,
+                        input: documentType.replaceDependenciesInOutput(documentType.inputToOutput(sourcePage.document), dependencyReplacements),
+                        attachedPageTreeNodeId: newPageTreeNodeId,
+                    },
+                    context: LocalErrorScopeApolloContext,
+                });
+            }
+            progressPages++;
+            updateProgress(
+                50 + (progressPages / pages.length) * 50,
+                <FormattedMessage id="comet.pages.paste.creatingDocuments" defaultMessage="creating documents" />,
+            ); // last 50% of progress is used for creating documents
+        }
+    }
+
     updateProgress(100, <FormattedMessage id="comet.pages.paste.reloadingPages" defaultMessage="reloading pages" />);
 
-    // 2. Refetch Pages query
+    // 4. Refetch Pages query
     await client.refetchQueries({ include: ["Pages"] });
 }
 
