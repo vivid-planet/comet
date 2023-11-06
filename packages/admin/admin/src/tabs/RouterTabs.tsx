@@ -22,7 +22,7 @@ interface RouterTabProps extends TabProps {
 
 export const RouterTab: React.FC<Omit<RouterTabProps, "currentTab">> = () => null;
 
-export interface Props extends RouteComponentProps {
+export interface RouterTabsProps extends RouteComponentProps {
     children: Array<React.ReactElement<RouterTabProps | DividerProps> | boolean | null | undefined>;
     tabComponent?: React.ComponentType<RouterTabProps>;
     tabsProps?: Partial<TabsProps>;
@@ -40,7 +40,7 @@ function RouterTabsComponent({
     history,
     match,
     classes,
-}: Props & WithStyles<typeof styles>) {
+}: RouterTabsProps & WithStyles<typeof styles>) {
     const stackApi = useStackApi();
     const stackSwitchApi = useStackSwitchApi();
 
