@@ -28,7 +28,7 @@ The access log allows to see who accessed what data and when. This information f
 
 ## Configure AccessLog in app.module
 
-The optional function `filterRequests` provides the ability to disable logging for various functions. For example, requests executed during a build should not be logged. In this function, you have access to the user and the request object. If the function returns `true`, the log will not be executed for this condition.
+The optional function `filterRequest` provides the ability to disable logging for various functions. For example, requests executed during a build should not be logged. In this function, you have access to the user and the request object. If the function returns `true`, the log will not be executed for this condition.
 
 There are two options for implementing the module:
 
@@ -48,7 +48,7 @@ imports: [
 imports: [
     ...
     AccessLogModule.forRoot({
-        filterRequests: ({user, req}) => {
+        filterRequest: ({user, req}) => {
             // do something
             return true;
         },

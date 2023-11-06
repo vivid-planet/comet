@@ -6,10 +6,10 @@ import { CurrentUser } from "../user-permissions/dto/current-user";
 import { FILTER_AUTHENTICATED_REQUEST } from "./access-log.constants";
 import { AccessLogInterceptor } from "./access-log.interceptor";
 
-export type FilterRequests = ({ user, req }: { user?: CurrentUser | true; req: Request }) => boolean;
+export type FilterRequest = ({ user, req }: { user?: CurrentUser | true; req: Request }) => boolean;
 
 interface AccessLogModuleOptions {
-    filterRequests?: FilterRequests;
+    filterRequest?: FilterRequest;
 }
 
 @Global()
@@ -22,13 +22,13 @@ interface AccessLogModuleOptions {
     ],
 })
 export class AccessLogModule {
-    static forRoot({ filterRequests }: AccessLogModuleOptions): DynamicModule {
+    static forRoot({ filterRequest }: AccessLogModuleOptions): DynamicModule {
         return {
             module: AccessLogModule,
             providers: [
                 {
                     provide: FILTER_AUTHENTICATED_REQUEST,
-                    useValue: filterRequests,
+                    useValue: filterRequest,
                 },
             ],
         };
