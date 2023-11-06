@@ -95,7 +95,6 @@ export async function sendPages(
     { client, scope, documentTypes, blockContext, damScope }: SendPagesDependencies,
     updateProgress: (progress: number, message: React.ReactNode) => void,
 ): Promise<void> {
-    const tree = arrayToTreeMap<PageClipboard>(pages);
     const dependencyReplacements = createPageTreeNodeIdReplacements(pages);
     let inboxFolderIdForCopiedFiles: string | undefined = undefined;
     const hasDamScope = Object.entries(damScope).length > 0;
@@ -229,6 +228,7 @@ export async function sendPages(
         return data.createPageTreeNode.id;
     };
     {
+        const tree = arrayToTreeMap<PageClipboard>(pages);
         let progressPages = 0;
         const traverse = async (parentId: string, newParentId: string | null): Promise<void> => {
             const nodes = tree.get(parentId) || [];
