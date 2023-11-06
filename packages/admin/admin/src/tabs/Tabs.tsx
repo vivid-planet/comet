@@ -67,7 +67,7 @@ function TabsComponent({
                     } else if (React.isValidElement<DividerProps>(child) && child.type === Divider) {
                         return <DividerComponent {...child.props} />;
                     } else {
-                        throw new Error("Tabs may only contain tab or divider components as children.");
+                        throw new Error(`Tabs may only contain tab or divider components as children. Found ${child.type} component/ tag.`);
                     }
                 })}
             </MuiTabs>
