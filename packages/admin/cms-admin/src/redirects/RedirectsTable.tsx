@@ -80,7 +80,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             field: "source",
             headerName: intl.formatMessage({ id: "comet.pages.redirects.redirect.source", defaultMessage: "Source" }),
             sortable: true,
-            minWidth: 600,
+            minWidth: 400,
         },
         {
             field: "target",
@@ -98,8 +98,8 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
                 );
             },
             sortable: false,
-            flex: 1,
-            minWidth: 400,
+            flex: 2,
+            minWidth: 200,
             filterable: false,
         },
         {
@@ -107,8 +107,8 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             headerName: intl.formatMessage({ id: "comet.pages.redirects.redirect.comment", defaultMessage: "Comment" }),
             renderCell: (params) => <div>{params.value}</div>,
             sortable: false,
-            flex: 1,
-            minWidth: 400,
+            flex: 2,
+            minWidth: 200,
             filterable: false,
         },
         {
@@ -127,7 +127,6 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
                 </Typography>
             ),
             sortable: false,
-            flex: 1,
             filterOperators: getGridSingleSelectOperators(),
             type: "singleSelect",
             valueOptions: typeOptions,
@@ -140,7 +139,6 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             }),
             renderCell: (params) => <RedirectActiveness redirect={params.row} />,
             sortable: false,
-            flex: 1,
             type: "boolean",
         },
         {
@@ -165,7 +163,6 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
                 </IconWrapper>
             ),
             sortable: false,
-            flex: 1,
             disableColumnMenu: true,
             filterable: false,
         },
