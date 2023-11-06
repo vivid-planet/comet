@@ -12,6 +12,22 @@ import { BlockCategory, BlockInterface } from "./types";
 
 type State = YouTubeVideoBlockData;
 
+const EXPECTED_YT_ID_LENGTH = 11;
+
+const isValidYouTubeIdentifier = (value: string) => {
+    // regex from https://stackoverflow.com/a/51870158
+    const regExp =
+        /(https?:\/\/)?(((m|www)\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-zA-Z-]+)/;
+    const match = value.match(regExp);
+    return value.length === EXPECTED_YT_ID_LENGTH || (!!match && match[8].length == EXPECTED_YT_ID_LENGTH);
+};
+
+const validateIdentifier = (value?: string) => {
+    return value && isValidYouTubeIdentifier(value) ? undefined : (
+        <FormattedMessage id="comet.blocks.youTubeVideo.validation" defaultMessage="Should be a valid YouTube URL or identifier" />
+    );
+};
+
 export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, YouTubeVideoBlockInput> = {
     ...createBlockSkeleton(),
 
@@ -28,6 +44,8 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
     },
 
     definesOwnPadding: true,
+
+    isValid: ({ youtubeIdentifier }) => !youtubeIdentifier || isValidYouTubeIdentifier(youtubeIdentifier),
 
     AdminComponent: ({ state, updateState }) => {
         const intl = useIntl();
@@ -47,6 +65,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
                                 id: "comet.blocks.youTubeVideo.youtubeIdentifier",
                                 defaultMessage: "YouTube URL or YouTube Video ID",
                             })}
+                            validate={validateIdentifier}
                             name="youtubeIdentifier"
                             component={FinalFormInput}
                             fullWidth
