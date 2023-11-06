@@ -100,66 +100,6 @@ export async function sendPages(
     let inboxFolderIdForCopiedFiles: string | undefined = undefined;
     const hasDamScope = Object.entries(damScope).length > 0;
 
-    const handlePageTreeNode = async (node: PageClipboard, newParentId: string | null, posOffset: number): Promise<string> => {
-        const documentType = documentTypes[node.documentType];
-        if (!documentType) {
-            throw new Error(`Unknown document type "${documentType}"`);
-        }
-
-        // 2a. Generate unique slug by adding "{slug}-{uniqueNumber}" to the slug
-        let slug: string = node.slug;
-        let name: string = node.name;
-        let duplicateNumber = 1;
-        let slugAvailable = false;
-
-        do {
-            const { data } = await client.query<GQLSlugAvailableQuery, GQLSlugAvailableQueryVariables>({
-                query: slugAvailableQuery,
-                variables: {
-                    parentId: newParentId,
-                    slug,
-                    scope,
-                },
-                fetchPolicy: "network-only",
-                context: LocalErrorScopeApolloContext,
-            });
-
-            slugAvailable = data.pageTreeNodeSlugAvailable === "Available";
-            if (!slugAvailable) {
-                ++duplicateNumber;
-                name = `${node.name} ${duplicateNumber}`;
-                slug = `${node.slug}-${duplicateNumber}`;
-            }
-        } while (!slugAvailable);
-
-        // 2b. Create new PageTreeNode with new name "{name} {uniqueNumber}" and new parent
-        const { data } = await client.mutate<GQLCreatePageNodeMutation, GQLCreatePageNodeMutationVariables>({
-            mutation: createPageNodeMutation,
-            variables: {
-                input: {
-                    id: dependencyReplacements.find((replacement) => replacement.type == "PageTreeNode" && replacement.originalId === node.id)
-                        ?.replaceWithId,
-                    name,
-                    slug,
-                    hideInMenu: node.hideInMenu,
-                    attachedDocument: {
-                        type: node.documentType,
-                    },
-                    parentId: newParentId,
-                    pos: options.targetPos ? options.targetPos + posOffset : undefined,
-                },
-                contentScope: scope,
-                category: node.category,
-            },
-            context: LocalErrorScopeApolloContext,
-        });
-        if (!data?.createPageTreeNode.id) {
-            throw Error("Did not receive new uuid for page tree node");
-        }
-
-        return data.createPageTreeNode.id;
-    };
-
     // 1. traverses the tree with top-down strategy and find all source scopes of file dependencies
     updateProgress(0, <FormattedMessage id="comet.pages.paste.analyzingPages" defaultMessage="analyzing pages" />);
     {
@@ -233,6 +173,66 @@ export async function sendPages(
 
     // 2. traverses the tree with top-down strategy and create page tree nodes
     updateProgress(10, <FormattedMessage id="comet.pages.paste.creatingPages" defaultMessage="creating pages" />);
+
+    const handlePageTreeNode = async (node: PageClipboard, newParentId: string | null, posOffset: number): Promise<string> => {
+        const documentType = documentTypes[node.documentType];
+        if (!documentType) {
+            throw new Error(`Unknown document type "${documentType}"`);
+        }
+
+        // 2a. Generate unique slug by adding "{slug}-{uniqueNumber}" to the slug
+        let slug: string = node.slug;
+        let name: string = node.name;
+        let duplicateNumber = 1;
+        let slugAvailable = false;
+
+        do {
+            const { data } = await client.query<GQLSlugAvailableQuery, GQLSlugAvailableQueryVariables>({
+                query: slugAvailableQuery,
+                variables: {
+                    parentId: newParentId,
+                    slug,
+                    scope,
+                },
+                fetchPolicy: "network-only",
+                context: LocalErrorScopeApolloContext,
+            });
+
+            slugAvailable = data.pageTreeNodeSlugAvailable === "Available";
+            if (!slugAvailable) {
+                ++duplicateNumber;
+                name = `${node.name} ${duplicateNumber}`;
+                slug = `${node.slug}-${duplicateNumber}`;
+            }
+        } while (!slugAvailable);
+
+        // 2b. Create new PageTreeNode with new name "{name} {uniqueNumber}" and new parent
+        const { data } = await client.mutate<GQLCreatePageNodeMutation, GQLCreatePageNodeMutationVariables>({
+            mutation: createPageNodeMutation,
+            variables: {
+                input: {
+                    id: dependencyReplacements.find((replacement) => replacement.type == "PageTreeNode" && replacement.originalId === node.id)
+                        ?.replaceWithId,
+                    name,
+                    slug,
+                    hideInMenu: node.hideInMenu,
+                    attachedDocument: {
+                        type: node.documentType,
+                    },
+                    parentId: newParentId,
+                    pos: options.targetPos ? options.targetPos + posOffset : undefined,
+                },
+                contentScope: scope,
+                category: node.category,
+            },
+            context: LocalErrorScopeApolloContext,
+        });
+        if (!data?.createPageTreeNode.id) {
+            throw Error("Did not receive new uuid for page tree node");
+        }
+
+        return data.createPageTreeNode.id;
+    };
     {
         let progressPages = 0;
         const traverse = async (parentId: string, newParentId: string | null): Promise<void> => {
