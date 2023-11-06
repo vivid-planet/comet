@@ -2,6 +2,7 @@ import { messages } from "@comet/admin";
 import { Clear, Delete, OpenNewTab, Warning } from "@comet/admin-icons";
 import { fontWeights } from "@comet/admin-theme";
 import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -67,16 +68,7 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                     <Typography variant="h4" fontWeight="bold">
                         <FormattedMessage id="comet.saveConflictDialog.whatCanIDoNow.heading" defaultMessage="What can I do now?" />
                     </Typography>
-                    <List
-                        sx={{
-                            listStyleType: "disc",
-                            "& .MuiListItem-root": {
-                                display: "list-item",
-                                paddingLeft: 0,
-                            },
-                            paddingInlineStart: (theme) => theme.spacing(6),
-                        }}
-                    >
+                    <StyledList>
                         <ListItem>
                             <Typography>
                                 <FormattedMessage
@@ -93,7 +85,7 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                                 />
                             </Typography>
                         </ListItem>
-                    </List>
+                    </StyledList>
                 </Box>
 
                 <Box py={2}>
@@ -101,16 +93,7 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                         <FormattedMessage id="comet.saveConflictDialog.avoidConflicts.heading" defaultMessage="How can I avoid conflicts?" />
                     </Typography>
 
-                    <List
-                        sx={{
-                            listStyleType: "disc",
-                            "& .MuiListItem-root": {
-                                display: "list-item",
-                                paddingLeft: 0,
-                            },
-                            paddingInlineStart: (theme) => theme.spacing(6),
-                        }}
-                    >
+                    <StyledList>
                         <ListItem>
                             <Typography>
                                 <FormattedMessage
@@ -135,7 +118,7 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                                 />
                             </Typography>
                         </ListItem>
-                    </List>
+                    </StyledList>
                 </Box>
             </DialogContent>
             <DialogActions>
@@ -173,5 +156,14 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
         </Dialog>
     );
 }
+
+const StyledList = styled(List)`
+    list-style-type: disc;
+    & .MuiListItem-root {
+        display: list-item;
+        padding-left: 0;
+    }
+    padding-inline-start: ${({ theme }) => theme.spacing(6)};
+`;
 
 export { SaveConflictDialog };
