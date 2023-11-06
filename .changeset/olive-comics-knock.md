@@ -19,13 +19,13 @@ imports: [
 
 **2 option:**
 
-With the second option, there is the opportunity to add a callback function called `filterAuthenticatedRequest`. This function provides the ability to disable logging for various functionalities.
+With the second option, there is the opportunity to add a callback function called `filterRequests`. This function provides the ability to disable logging for various functionalities.
 
 ```ts
 imports: [
     ...
     AccessLogModule.forRoot({
-        filterAuthenticatedRequest: ({user, authHeader}) => {
+        filterRequests: ({user, req}) => {
             // do something
             return true;
         },

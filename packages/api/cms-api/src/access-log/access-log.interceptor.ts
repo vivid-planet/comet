@@ -3,7 +3,7 @@ import { GqlExecutionContext } from "@nestjs/graphql";
 import { CurrentUser } from "src/user-permissions/dto/current-user";
 
 import { FILTER_AUTHENTICATED_REQUEST } from "./access-log.constants";
-import { FilterAuthenticatedRequest } from "./access-log.module";
+import { FilterRequests } from "./access-log.module";
 
 const IGNORED_PATHS = ["/dam/images/:hash/:fileId", "/dam/files/:hash/:fileId", "/dam/images/preview/:fileId", "/dam/files/preview/:fileId"];
 
@@ -11,7 +11,7 @@ const IGNORED_PATHS = ["/dam/images/:hash/:fileId", "/dam/files/:hash/:fileId", 
 export class AccessLogInterceptor implements NestInterceptor {
     protected readonly logger = new Logger(AccessLogInterceptor.name);
 
-    constructor(@Optional() @Inject(FILTER_AUTHENTICATED_REQUEST) private readonly filterAuthenticatedRequest?: FilterAuthenticatedRequest) {}
+    constructor(@Optional() @Inject(FILTER_AUTHENTICATED_REQUEST) private readonly filterRequests?: FilterRequests) {}
 
     intercept(context: ExecutionContext, next: CallHandler) {
         const requestType = context.getType().toString();
@@ -24,10 +24,10 @@ export class AccessLogInterceptor implements NestInterceptor {
             const graphqlContext = graphqlExecutionContext.getContext();
 
             if (
-                this.filterAuthenticatedRequest &&
-                this.filterAuthenticatedRequest({
+                this.filterRequests &&
+                this.filterRequests({
                     user: graphqlContext.req.user,
-                    authHeader: graphqlContext.req.headers["authorization"] || graphqlContext.req.headers["Authorization"],
+                    req: graphqlContext.req,
                 })
             ) {
                 ignored = true;
@@ -58,10 +58,10 @@ export class AccessLogInterceptor implements NestInterceptor {
 
             if (
                 IGNORED_PATHS.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
-                (this.filterAuthenticatedRequest &&
-                    this.filterAuthenticatedRequest({
+                (this.filterRequests &&
+                    this.filterRequests({
                         user: httpRequest.user,
-                        authHeader: httpRequest.headers["authorization"] || httpRequest.headers["Authorization"],
+                        req: httpRequest,
                     }))
             ) {
                 ignored = true;
