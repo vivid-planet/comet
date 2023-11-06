@@ -60,6 +60,8 @@ export interface SendPagesOptions {
      * If undefined, the page(s) are added at the very end
      * */
     targetPos?: number;
+
+    updateProgress?: (progress: number, message: React.ReactNode) => void;
 }
 
 interface SendPagesDependencies {
@@ -91,6 +93,7 @@ export async function sendPages(
     { pages }: PagesClipboard,
     options: SendPagesOptions,
     { client, scope, documentTypes, blockContext, damScope }: SendPagesDependencies,
+    updateProgress: (progress: number, message: React.ReactNode) => void,
 ): Promise<void> {
     const tree = arrayToTreeMap<PageClipboard>(pages);
     const dependencyReplacements = createPageTreeNodeIdReplacements(pages);
@@ -258,7 +261,9 @@ export async function sendPages(
     };
 
     // 0. traverses the tree with top-down strategy and find all source scopes of file dependencies
+    updateProgress(0, "analyzing pages");
     {
+        let progressPages = 0;
         const sourceScopes: Record<string, unknown>[] = [];
         const traverse = async (parentId: string): Promise<void> => {
             const nodes = tree.get(parentId) || [];
@@ -306,6 +311,8 @@ export async function sendPages(
                         }
                     }
                 }
+                progressPages++;
+                updateProgress((progressPages / pages.length) * 10, "analyzing pages"); // 10% of progress is used for analyzing pages
                 await traverse(node.id);
             }
         };
@@ -322,21 +329,27 @@ export async function sendPages(
     }
 
     // 1. traverses the tree with top-down strategy and do the actual creating of documents and page tree nodes
+    updateProgress(10, "creating pages");
     {
+        let progressPages = 0;
         const traverse = async (parentId: string, newParentId: string | null): Promise<void> => {
             const nodes = tree.get(parentId) || [];
             let posOffset = 0;
             for (const node of nodes) {
                 const newPageTreeUUID = await handlePageTreeNode(node, newParentId, posOffset++);
 
+                progressPages++;
+                updateProgress(10 + (progressPages / pages.length) * 90, "creating pages"); // 90% of progress is used for creating pages
                 await traverse(node.id, newPageTreeUUID);
             }
         };
         await traverse("root", parentId);
     }
 
+    updateProgress(100, "reloading pages");
+
     // 2. Refetch Pages query
-    client.refetchQueries({ include: ["Pages"] });
+    await client.refetchQueries({ include: ["Pages"] });
 }
 
 /**

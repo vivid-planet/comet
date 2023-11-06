@@ -53,7 +53,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
     const [copyLoading, setCopyLoading] = React.useState(false);
     const [pasteLoading, setPasteLoading] = React.useState(false);
     const [deleting, setDeleting] = React.useState(false);
-    const { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages } = useCopyPastePages();
+    const { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages, progressDialog } = useCopyPastePages();
 
     const classes = useStyles();
     const theme = useTheme();
@@ -112,6 +112,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
 
     return (
         <>
+            {progressDialog}
             <Grid container justifyContent="space-between" classes={{ root: classes.root }}>
                 <Grid item>
                     <FormControlLabel
