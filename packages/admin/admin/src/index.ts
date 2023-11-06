@@ -1,3 +1,4 @@
+export { AdminComponentAlerts, AdminComponentAlertsClassKey, AdminComponentAlertsProps } from "./alerts/AdminComponentAlerts";
 export { useFocusAwarePolling } from "./apollo/useFocusAwarePolling";
 export { AppHeader, AppHeaderClassKey } from "./appHeader/AppHeader";
 export { AppHeaderButton, AppHeaderButtonProps } from "./appHeader/button/AppHeaderButton";
