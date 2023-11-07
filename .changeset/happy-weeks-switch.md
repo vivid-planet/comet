@@ -4,4 +4,4 @@
 
 Change blocks-meta.json format: the key (type) for OneOfBlocks is now included
 
-projets that still have a copy of generate-block-types should swtich to @comet/cli
+Projects that still have a copy of generate-block-types should switch to @comet/cli
