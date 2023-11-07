@@ -122,6 +122,7 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                             }
                         }}
                         shouldShowError={() => true}
+                        validateFields={["license.durationTo"]}
                     />
                     <Field name="license.type">
                         {({ input: { value } }) => {
