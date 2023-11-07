@@ -1,6 +1,6 @@
 import { messages } from "@comet/admin";
 import { Link as LinkIcon } from "@comet/admin-icons";
-import { createDocumentRootBlocks, DocumentInterface } from "@comet/cms-admin";
+import { createDocumentRootBlocksMethods, DocumentInterface } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
@@ -50,7 +50,7 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
         return null;
     },
     menuIcon: LinkIcon,
-    ...createDocumentRootBlocks({
+    ...createDocumentRootBlocksMethods({
         content: LinkBlock,
     }),
 };

@@ -1,6 +1,6 @@
 import { messages } from "@comet/admin";
 import { File, FileNotMenu } from "@comet/admin-icons";
-import { createDocumentRootBlocks, DocumentInterface } from "@comet/cms-admin";
+import { createDocumentRootBlocksMethods, DocumentInterface } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
@@ -54,7 +54,7 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
     },
     menuIcon: File,
     hideInMenuIcon: FileNotMenu,
-    ...createDocumentRootBlocks({
+    ...createDocumentRootBlocksMethods({
         content: PageContentBlock,
         seo: SeoBlock,
     }),

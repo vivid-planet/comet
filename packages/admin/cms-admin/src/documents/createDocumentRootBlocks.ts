@@ -2,7 +2,7 @@ import { BlockDependency, BlockInterface } from "@comet/blocks-admin";
 
 import { DocumentInterface } from "./types";
 
-export function createDocumentRootBlocks<
+export function createDocumentRootBlocksMethods<
     DocumentInput extends Record<string, unknown> = Record<string, unknown>,
     DocumentOutput extends Record<string, unknown> = Record<string, unknown>,
 >(
