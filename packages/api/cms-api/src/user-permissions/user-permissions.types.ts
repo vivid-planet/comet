@@ -22,13 +22,13 @@ export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentSc
 
 export interface AccessControlServiceInterface {
     canAccessScope(requestScope: ContentScope, user: CurrentUserInterface): boolean;
+    getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
+    getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }
 
 export interface UserPermissionsUserServiceInterface {
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
-    getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
-    getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }
 
 export interface UserPermissionsOptions {

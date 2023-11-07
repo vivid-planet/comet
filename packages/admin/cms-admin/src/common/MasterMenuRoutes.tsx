@@ -8,8 +8,8 @@ export function getRoutePropsFromMasterMenuData(items: MasterMenuData): RoutePro
     // TODO: Filter for user-permissions once they are available
     const flat = (routes: RouteProps[], item: MasterMenuItem): RouteProps[] => {
         if (item.route) routes.push(item.route);
-        if (item.subMenu) {
-            routes.concat(item.subMenu.reduce(flat, routes));
+        if (item.submenu) {
+            routes.concat(item.submenu.reduce(flat, routes));
         }
         return routes;
     };
