@@ -1,4 +1,5 @@
 import { DragHandle } from "@comet/admin-icons";
+import { ComponentsOverrides, Theme } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import { ClassKeyOfStyles, ClassNameMap, createStyles, WithStyles, withStyles } from "@mui/styles";
@@ -184,7 +185,7 @@ export { TableDndOrderWithStyles as TableDndOrder };
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminTableDndOrder: TableDndOrderProps<IRow>;
+        CometAdminTableDndOrder: Partial<TableDndOrderProps<IRow>>;
     }
 
     interface ComponentNameToClassKey {
@@ -193,8 +194,8 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminTableDndOrder?: {
-            defaultProps?: ComponentsPropsList["CometAdminTableDndOrder"];
-            styleOverrides?: ComponentNameToClassKey["CometAdminTableDndOrder"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminTableDndOrder"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTableDndOrder"];
         };
     }
 }

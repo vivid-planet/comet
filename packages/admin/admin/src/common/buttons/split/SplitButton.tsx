@@ -121,7 +121,7 @@ export const SplitButton = withStyles({}, { name: "CometAdminSplitButton" })(Spl
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminSplitButton: SplitButtonProps;
+        CometAdminSplitButton: Partial<SplitButtonProps>;
     }
 
     interface Components {

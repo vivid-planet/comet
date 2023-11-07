@@ -104,7 +104,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminTabs: TabsProps;
+        CometAdminTabs: Partial<TabsProps>;
     }
 
     interface Components {

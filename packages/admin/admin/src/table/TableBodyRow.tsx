@@ -42,7 +42,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminTableBodyRow: TableBodyRowProps;
+        CometAdminTableBodyRow: Partial<TableBodyRowProps>;
     }
 
     interface Components {

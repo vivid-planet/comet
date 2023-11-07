@@ -349,7 +349,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminRte: RteProps;
+        CometAdminRte: Partial<RteProps>;
     }
 
     interface Components {

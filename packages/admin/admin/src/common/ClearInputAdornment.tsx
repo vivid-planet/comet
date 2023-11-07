@@ -80,7 +80,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminClearInputAdornment: ClearInputAdornmentProps;
+        CometAdminClearInputAdornment: Partial<ClearInputAdornmentProps>;
     }
 
     interface Components {
