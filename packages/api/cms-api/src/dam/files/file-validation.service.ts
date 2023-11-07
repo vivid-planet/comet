@@ -1,8 +1,6 @@
-import { readFile } from "fs/promises";
 import * as mimedb from "mime-db";
 
 import { FileUploadInterface } from "./dto/file-upload.interface";
-import { svgContainsJavaScript } from "./files.utils";
 
 export class FileValidationService {
     constructor(public config: { maxFileSize: number; acceptedMimeTypes: string[] }) {}
@@ -37,14 +35,7 @@ export class FileValidationService {
             return `File type and extension mismatch: .${extension} and ${file.mimetype} are incompatible`;
         }
 
-        //svgContainsJavaScript
-        if (file.mimetype === "image/svg+xml") {
-            const fileContent = await readFile(file.path, { encoding: "utf-8" });
-
-            if (svgContainsJavaScript(fileContent)) {
-                return "SVG must not contain JavaScript";
-            }
-        }
+        // svgContainsJavaScript check happens in the dedicated FileValidationInterceptor for technical reasons
 
         return true;
     }
