@@ -1,12 +1,9 @@
 import { CallHandler, ExecutionContext, HttpException, Injectable, NestInterceptor } from "@nestjs/common";
-import fs from "fs";
+import { readFile, unlink } from "fs/promises";
 import { Observable, throwError } from "rxjs";
-import * as util from "util";
 
 import { svgContainsJavaScript } from "./files.utils";
 
-const readFile = util.promisify(fs.readFile);
-const unlinkFile = util.promisify(fs.unlink);
 @Injectable()
 export class FileValidationInterceptor implements NestInterceptor {
     async intercept(context: ExecutionContext, next: CallHandler<unknown>): Promise<Observable<unknown>> {
@@ -27,7 +24,7 @@ export class FileValidationInterceptor implements NestInterceptor {
                 delete file.filename;
                 delete file.path;
 
-                await unlinkFile(path);
+                await unlink(path);
 
                 return throwError(() => new HttpException("Rejected File Upload: SVG must not contain JavaScript", 422));
             }
