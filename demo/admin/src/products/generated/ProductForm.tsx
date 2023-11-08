@@ -10,6 +10,7 @@ import {
     FinalFormSaveSplitButton,
     FinalFormSelect,
     FinalFormSubmitEvent,
+    FormSection,
     Loading,
     MainContent,
     Toolbar,
@@ -199,6 +200,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             )}
                         </Field>
                         <Field
+                            required
                             fullWidth
                             name="price"
                             component={FinalFormInput}
@@ -216,6 +218,61 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
+                        <FormSection title={<FormattedMessage id="product.dimensions" defaultMessage="Dimensions" />}>
+                            <Field
+                                fullWidth
+                                name="dimensions.width"
+                                component={FinalFormInput}
+                                type="number"
+                                label={<FormattedMessage id="product.width" defaultMessage="Width" />}
+                            />
+                            <Field
+                                fullWidth
+                                name="dimensions.height"
+                                component={FinalFormInput}
+                                type="number"
+                                label={<FormattedMessage id="product.height" defaultMessage="Height" />}
+                            />
+                            <Field
+                                fullWidth
+                                name="dimensions.depth"
+                                component={FinalFormInput}
+                                type="number"
+                                label={<FormattedMessage id="product.depth" defaultMessage="Depth" />}
+                            />
+                        </FormSection>
+                        <FormSection title={<FormattedMessage id="product.packageDimensions" defaultMessage="Package Dimensions" />}>
+                            <Field
+                                fullWidth
+                                name="packageDimensions.width"
+                                component={FinalFormInput}
+                                type="number"
+                                label={<FormattedMessage id="product.width" defaultMessage="Width" />}
+                            />
+                            <Field
+                                fullWidth
+                                name="packageDimensions.height"
+                                component={FinalFormInput}
+                                type="number"
+                                label={<FormattedMessage id="product.height" defaultMessage="Height" />}
+                            />
+                            <Field
+                                fullWidth
+                                name="packageDimensions.depth"
+                                component={FinalFormInput}
+                                type="number"
+                                label={<FormattedMessage id="product.depth" defaultMessage="Depth" />}
+                            />
+                        </FormSection>
+                        <FormSection title={<FormattedMessage id="product.statistics" defaultMessage="Statistics" />}>
+                            <Field
+                                fullWidth
+                                name="statistics.views"
+                                component={FinalFormInput}
+                                type="number"
+                                label={<FormattedMessage id="product.views" defaultMessage="Views" />}
+                            />
+                        </FormSection>
                     </MainContent>
                 </EditPageLayout>
             )}

@@ -1,4 +1,11 @@
-import { IntrospectionEnumType, IntrospectionInputObjectType, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import {
+    IntrospectionEnumType,
+    IntrospectionField,
+    IntrospectionInputObjectType,
+    IntrospectionInputValue,
+    IntrospectionObjectType,
+    IntrospectionQuery,
+} from "graphql";
 
 import { CrudGeneratorConfig } from "./types";
 import { buildNameVariants } from "./utils/buildNameVariants";
@@ -12,42 +19,24 @@ type FormField = {
 } & (
     | { kind: "enum"; values: string[] }
     | { kind: "rootBlock"; rootBlock: RootBlockConfig }
+    | { kind: "nestedObject"; fields: FormField[] }
     | { kind: "boolean" | "dateTime" | "string" | "float" | "int" }
 );
 
-export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema: IntrospectionQuery): Promise<void> {
-    const { target: targetDirectory, entityName } = generatorConfig;
-    const { classNameSingular, instanceNamePlural } = buildNameVariants(entityName);
-    const rootBlocks = findRootBlocks(generatorConfig, schema);
-    const instanceEntityName = entityName[0].toLowerCase() + entityName.substring(1);
-
-    const schemaEntity = schema.__schema.types.find((type) => type.kind === "OBJECT" && type.name === entityName) as
-        | IntrospectionObjectType
-        | undefined;
-    if (!schemaEntity) throw new Error("didn't find entity in schema types");
-
-    const updateSchemaEntity = schema.__schema.types.find((type) => type.kind === "INPUT_OBJECT" && type.name === `${entityName}UpdateInput`) as
-        | IntrospectionInputObjectType
-        | undefined;
-    if (!updateSchemaEntity) throw new Error("didn't find UpdateInput in schema types");
-    const inputFieldNames = updateSchemaEntity.inputFields.map((field) => field.name);
-
-    const formFields = schemaEntity.fields
-        .filter((field) => {
-            if (field.name === "id" || field.name === "updatedAt" || field.name === "createdAt" || field.name === "scope") return false;
-            if (!inputFieldNames.includes(field.name)) return false;
-            return true;
-        })
-        .filter((field) => {
-            let type = field.type;
-            if (type.kind == "NON_NULL") type = type.ofType;
-            if (type.kind == "LIST") return false;
-            if (type.kind == "OBJECT") return false; //TODO support nested objects
-            return true;
-        })
-        .map((field): FormField => {
+function buildFormFieldsFromSchema(
+    fields: readonly IntrospectionField[],
+    inputFields: readonly IntrospectionInputValue[],
+    { rootBlocks, schema }: { rootBlocks: Record<string, RootBlockConfig>; schema: IntrospectionQuery },
+): FormField[] {
+    return fields
+        .map((field): FormField | null => {
             const type = field.type.kind === "NON_NULL" ? field.type.ofType : field.type;
-            const nullable = field.type.kind === "NON_NULL" ? false : true;
+
+            const inputField = inputFields.find((inputField) => inputField.name === field.name);
+            if (!inputField) return null; //input doesn't exist for field, skip
+
+            const inputType = inputField.type.kind === "NON_NULL" ? inputField.type.ofType : inputField.type;
+            const nullable = inputField.type.kind === "NON_NULL" ? true : false;
 
             if (type.kind === "SCALAR" && rootBlocks[field.name]) {
                 return {
@@ -57,9 +46,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                     rootBlock: rootBlocks[field.name],
                 };
             } else if (type.kind === "ENUM") {
-                const enumType = schema.__schema.types.find((t) => t.kind === "ENUM" && t.name === (type as IntrospectionNamedTypeRef).name) as
-                    | IntrospectionEnumType
-                    | undefined;
+                const enumType = schema.__schema.types.find((t) => t.kind === "ENUM" && t.name === type.name) as IntrospectionEnumType | undefined;
                 if (!enumType) throw new Error(`Enum type not found`);
                 const values = enumType.enumValues.map((i) => i.name);
                 return {
@@ -98,21 +85,80 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                     nullable,
                     kind: "int",
                 };
+            } else if (type.kind === "OBJECT" && inputType.kind === "INPUT_OBJECT") {
+                const nestedType = schema.__schema.types.find((t) => t.kind === "OBJECT" && t.name === type.name) as
+                    | IntrospectionObjectType
+                    | undefined;
+                if (!nestedType) throw new Error(`nested object type not found`);
+
+                const nestedInputType = schema.__schema.types.find((t) => t.kind === "INPUT_OBJECT" && t.name === inputType.name) as
+                    | IntrospectionInputObjectType
+                    | undefined;
+                if (!nestedInputType) throw new Error(`nested input object type not found`);
+
+                return {
+                    name: field.name,
+                    nullable,
+                    kind: "nestedObject",
+                    fields: buildFormFieldsFromSchema(nestedType.fields, nestedInputType.inputFields, { rootBlocks, schema }),
+                };
+            } else if (type.kind === "OBJECT" && inputType.kind === "SCALAR" && inputType.name === "ID") {
+                //TODO add support for referenced id (Select)
+                return null;
+            } else if (type.kind === "LIST") {
+                //TODO add support for referenced id (Multi Select)
+                return null;
             } else {
-                throw new Error("Unknown type");
+                return null;
             }
-        });
+        })
+        .filter((field) => field !== null) as FormField[];
+}
+
+export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema: IntrospectionQuery): Promise<void> {
+    const { target: targetDirectory, entityName } = generatorConfig;
+    const { classNameSingular, instanceNamePlural } = buildNameVariants(entityName);
+    const rootBlocks = findRootBlocks(generatorConfig, schema);
+    const instanceEntityName = entityName[0].toLowerCase() + entityName.substring(1);
+
+    const schemaEntity = schema.__schema.types.find((type) => type.kind === "OBJECT" && type.name === entityName) as
+        | IntrospectionObjectType
+        | undefined;
+    if (!schemaEntity) throw new Error("didn't find entity in schema types");
+
+    const updateSchemaEntity = schema.__schema.types.find((type) => type.kind === "INPUT_OBJECT" && type.name === `${entityName}UpdateInput`) as
+        | IntrospectionInputObjectType
+        | undefined;
+    if (!updateSchemaEntity) throw new Error("didn't find UpdateInput in schema types");
+
+    const filteredSchemaFields = schemaEntity.fields.filter((field) => {
+        if (field.name === "id" || field.name === "updatedAt" || field.name === "createdAt" || field.name === "scope") return false;
+        return true;
+    });
+    const formFields = buildFormFieldsFromSchema(filteredSchemaFields, updateSchemaEntity.inputFields, { rootBlocks, schema });
 
     const hasScope = schemaEntity.fields.some((field) => {
         return field.name === "scope";
     });
+
+    function buildFormFragment(formFields: FormField[]): string {
+        return formFields
+            .map((field) => {
+                if (field.kind == "nestedObject") {
+                    return `${field.name} {${buildFormFragment(field.fields)}}`;
+                } else {
+                    return field.name;
+                }
+            })
+            .join("\n");
+    }
 
     const outGql = `
     import { gql } from "@apollo/client";
 
     export const ${instanceEntityName}FormFragment = gql\`
         fragment ${entityName}Form on ${entityName} {
-            ${formFields.map((field) => field.name).join("\n")}
+            ${buildFormFragment(formFields)}
         }
         \`;
     
@@ -187,6 +233,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         useStackApi,
         useStackSwitchApi,
         FinalFormCheckbox,
+        FormSection,
     } from "@comet/admin";
     import { ArrowLeft } from "@comet/admin-icons";
     import { FinalFormDatePicker } from "@comet/admin-date-time";
@@ -354,7 +401,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                             </ToolbarActions>
                         </Toolbar>
                         <MainContent>
-                            ${formFields.map((field) => generateField(generatorConfig, field, schema)).join("\n")}
+                            ${formFields.map((field) => generateField(generatorConfig, field)).join("\n")}
                         </MainContent>
                     </EditPageLayout>
                 )}
@@ -366,18 +413,22 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     writeGenerated(`${targetDirectory}/${entityName}Form.tsx`, out);
 }
 
-function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, field: FormField, schema: IntrospectionQuery) {
+function generateField(
+    { entityName, ...generatorConfig }: CrudGeneratorConfig,
+    field: FormField,
+    { fieldNamePrefix = "" }: { fieldNamePrefix?: string } = {},
+): string {
     const instanceEntityName = entityName[0].toLowerCase() + entityName.substring(1);
 
     const label = camelCaseToHumanReadable(field.name);
     if (field.kind == "rootBlock") {
-        return `<Field name="${field.name}" isEqual={isEqual}>
+        return `<Field name="${fieldNamePrefix}${field.name}" isEqual={isEqual}>
             {createFinalFormBlock(rootBlocks.${field.name})}
         </Field>`;
     } else if (field.kind == "enum") {
         return `<Field
             fullWidth
-            name="${field.name}"
+            name="${fieldNamePrefix}${field.name}"
             label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}" />}>
             {(props) => 
                 <FinalFormSelect {...props}>
@@ -392,7 +443,7 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
             }
         </Field>`;
     } else if (field.kind == "boolean") {
-        return `<Field name="${field.name}" label="" type="checkbox" fullWidth>
+        return `<Field name="${fieldNamePrefix}${field.name}" label="" type="checkbox" fullWidth>
                 {(props) => (
                     <FormControlLabel
                         label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}" />}
@@ -400,6 +451,12 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
                     />
                 )}
             </Field>`;
+    } else if (field.kind == "nestedObject") {
+        return `<FormSection title={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}" />}>
+            ${field.fields
+                .map((innerField) => generateField({ ...generatorConfig, entityName }, innerField, { fieldNamePrefix: `${field.name}.` }))
+                .join("\n")}
+        </FormSection>`;
     } else {
         let component;
         let additionalProps = "";
@@ -422,7 +479,7 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
         }
         return `<Field ${!field.nullable ? "required" : ""}
                     fullWidth
-                    name="${field.name}"
+                    name="${fieldNamePrefix}${field.name}"
                     component={${component}}
                     ${additionalProps}
                     label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}" />}
