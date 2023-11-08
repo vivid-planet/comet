@@ -13,7 +13,7 @@ export function FinalFormLayoutDisplay({ layouts }: Props): React.ReactElement {
     return (
         <LayoutDisplayContainer>
             {layouts[0].preview}
-            <ListItemText primary={layouts[0].label} secondary={layouts[0].name} />
+            <StyledListItemText primary={layouts[0].label} secondary={layouts[0].name} />
         </LayoutDisplayContainer>
     );
 }
@@ -25,6 +25,11 @@ const LayoutDisplayContainer = styled("div")`
     align-items: center;
     background-color: #ffffff;
     border: 1px solid #d9d9d9;
-    padding: 0 9px;
+    padding: 9px;
     box-sizing: border-box;
+`;
+
+const StyledListItemText = styled(ListItemText)`
+    margin-top: 0;
+    margin-bottom: 0;
 `;
