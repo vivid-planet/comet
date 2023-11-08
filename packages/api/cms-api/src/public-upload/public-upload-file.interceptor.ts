@@ -9,6 +9,7 @@ import { v4 as uuid } from "uuid";
 
 import { CometValidationException } from "../common/errors/validation.exception";
 import { FileValidationService } from "../dam/files/file-validation.service";
+import { removeFile } from "../dam/files/files.utils";
 import { PUBLIC_UPLOAD_FILE_VALIDATION_SERVICE } from "./public-upload.constants";
 
 export function PublicUploadFileInterceptor(fieldName: string): Type<NestInterceptor> {
@@ -61,6 +62,7 @@ export function PublicUploadFileInterceptor(fieldName: string): Type<NestInterce
             const error = await this.fileValidationService.validateFileContents(file);
 
             if (error) {
+                await removeFile(file);
                 return throwError(() => new HttpException(`Rejected File Upload: ${error}`, 422));
             }
 

@@ -1,4 +1,4 @@
-import { readFile, unlink } from "fs/promises";
+import { readFile } from "fs/promises";
 import * as mimedb from "mime-db";
 
 import { FileUploadInterface } from "./dto/file-upload.interface";
@@ -55,23 +55,10 @@ export class FileValidationService {
             const fileContent = await readFile(file.path, { encoding: "utf-8" });
 
             if (svgContainsJavaScript(fileContent)) {
-                await this.removeFile(file);
-
                 return "SVG must not contain JavaScript";
             }
         }
 
         return undefined;
-    }
-
-    // https://github.com/expressjs/multer/blob/master/storage/disk.js#L54-L62
-    private async removeFile(file: FileUploadInterface) {
-        const path = file.path;
-
-        delete (file as Partial<FileUploadInterface>).destination;
-        delete (file as Partial<FileUploadInterface>).filename;
-        delete (file as Partial<FileUploadInterface>).path;
-
-        await unlink(path);
     }
 }

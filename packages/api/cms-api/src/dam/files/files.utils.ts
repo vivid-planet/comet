@@ -1,6 +1,7 @@
 import { XMLParser } from "fast-xml-parser";
 import FileType from "file-type";
 import fs from "fs";
+import { unlink } from "fs/promises";
 import got from "got";
 import os from "os";
 import { sep } from "path";
@@ -105,4 +106,15 @@ export const svgContainsJavaScript = (svg: string) => {
     const jsonObj = parser.parse(svg) as SvgNode;
 
     return recursivelyFindJSInSvg(jsonObj);
+};
+
+export const removeFile = async (file: FileUploadInterface) => {
+    // https://github.com/expressjs/multer/blob/master/storage/disk.js#L54-L62
+    const path = file.path;
+
+    delete (file as Partial<FileUploadInterface>).destination;
+    delete (file as Partial<FileUploadInterface>).filename;
+    delete (file as Partial<FileUploadInterface>).path;
+
+    await unlink(path);
 };
