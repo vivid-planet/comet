@@ -1,6 +1,6 @@
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import { ComponentsOverrides, Theme } from "@mui/material";
-import MuiAccordion from "@mui/material/Accordion";
+import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
 import MuiAccordionDetails, { AccordionDetailsProps } from "@mui/material/AccordionDetails";
 import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
@@ -8,8 +8,9 @@ import clsx from "clsx";
 import * as React from "react";
 
 interface FieldSetComponentsProps {
-    fieldSetSummary?: Partial<AccordionSummaryProps>;
-    fieldSetDetails?: Partial<AccordionDetailsProps>;
+    accordion?: Partial<AccordionProps>;
+    summary?: Partial<AccordionSummaryProps>;
+    details?: Partial<AccordionDetailsProps>;
 }
 export interface FieldSetProps {
     title: React.ReactNode;
@@ -105,11 +106,12 @@ function FieldSet({
                           /* do nothing */
                       }
             }
+            {...componentsProps?.accordion}
         >
             <MuiAccordionSummary
                 classes={{ root: classes.header }}
                 expandIcon={collapsible && <ArrowForwardIosSharpIcon />}
-                {...componentsProps?.fieldSetSummary}
+                {...componentsProps?.summary}
             >
                 <div className={clsx(classes.headerColumn)}>
                     <div className={clsx(classes.title)}>{title}</div>
@@ -118,7 +120,7 @@ function FieldSet({
                 <div className={clsx(classes.placeholder)} />
                 <div className={clsx(classes.endAdornment)}>{endAdornment}</div>
             </MuiAccordionSummary>
-            <MuiAccordionDetails className={clsx(classes.children, disablePadding && classes.disablePadding)} {...componentsProps?.fieldSetDetails}>
+            <MuiAccordionDetails className={clsx(classes.children, disablePadding && classes.disablePadding)} {...componentsProps?.details}>
                 {children}
             </MuiAccordionDetails>
         </MuiAccordion>
