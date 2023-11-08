@@ -61,7 +61,7 @@ export function DamUploadFileInterceptor(fieldName: string): Type<NestIntercepto
             const error = await this.fileValidationService.validateFileContents(file);
 
             if (error) {
-                return throwError(() => new HttpException("Rejected File Upload: SVG must not contain JavaScript", 422));
+                return throwError(() => new HttpException(`Rejected File Upload: ${error}`, 422));
             }
 
             return fileInterceptor;
