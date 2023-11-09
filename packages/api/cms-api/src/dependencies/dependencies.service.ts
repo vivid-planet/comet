@@ -12,8 +12,8 @@ import { DiscoverService } from "./discover.service";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { Dependency } from "./dto/dependency";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
+import { BaseDependency } from "./entities/base-dependency";
 import { BlockIndexRefresh } from "./entities/block-index-refresh.entity";
-import { DependencyEntity } from "./entities/dependency.entity";
 
 const isService = (entityInfoGetter: EntityInfoGetter): entityInfoGetter is Type<EntityInfoServiceInterface> => {
     // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
@@ -199,7 +199,7 @@ export class DependenciesService {
             paginationArgs,
         );
 
-        const results: DependencyEntity[] = await qb;
+        const results: BaseDependency[] = await qb;
         const ret: Dependency[] = [];
 
         for (const result of results) {
@@ -241,7 +241,7 @@ export class DependenciesService {
             paginationArgs,
         );
 
-        const results: DependencyEntity[] = await qb;
+        const results: BaseDependency[] = await qb;
         const ret: Dependency[] = [];
 
         for (const result of results) {

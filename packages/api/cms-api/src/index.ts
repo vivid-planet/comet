@@ -100,7 +100,7 @@ export { DependenciesResolverFactory } from "./dependencies/dependencies.resolve
 export { DependenciesService } from "./dependencies/dependencies.service";
 export { DependentsResolverFactory } from "./dependencies/dependents.resolver.factory";
 export { Dependency } from "./dependencies/dto/dependency";
-export { DependencyEntity } from "./dependencies/entities/dependency.entity";
+export { BaseDependency } from "./dependencies/entities/base-dependency";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
