@@ -1,20 +1,8 @@
-import {
-    AccessControlServiceInterface,
-    ContentScope,
-    ContentScopesForUser,
-    CurrentUserInterface,
-    PermissionsForUser,
-    User,
-    UserPermissions,
-} from "@comet/cms-api";
+import { AccessControlService as CometAccessControlService, ContentScopesForUser, PermissionsForUser, User, UserPermissions } from "@comet/cms-api";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
-export class AccessControlService implements AccessControlServiceInterface {
-    canAccessScope(requestScope: ContentScope, user: CurrentUserInterface): boolean {
-        if (!user.domains) return true; //all domains
-        return user.domains.includes(requestScope.domain);
-    }
+export class AccessControlService extends CometAccessControlService {
     getPermissionsForUser(user: User): PermissionsForUser {
         if (user.email.endsWith("@comet-dxp.com")) {
             return UserPermissions.allPermissions;

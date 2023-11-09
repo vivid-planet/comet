@@ -55,7 +55,7 @@ export function useContentScopeConfig(p: ContentScopeConfigProps): void {
 const currentUserQuery = gql`
     query CurrentUserScope {
         currentUser {
-            domains
+            contentScopes
         }
     }
 `;
@@ -66,7 +66,7 @@ const ContentScopeProvider: React.FC<Pick<ContentScopeProviderProps, "children">
 
     if (loading || !data) return <Loading behavior="fillPageHeight" />;
 
-    const allowedUserDomains = data.currentUser.domains;
+    const allowedUserDomains = data.currentUser.contentScopes.map((scope) => scope.domain);
 
     const allowedSiteConfigs = Object.fromEntries(
         Object.entries(sitesConfig.configs).filter(([siteKey, siteConfig]) => allowedUserDomains.includes(siteKey)),
