@@ -1,22 +1,24 @@
 import { ArrowRight, Check, Close, Error, Info, Warning } from "@comet/admin-icons";
-import { Box, Button, Container, Theme, Typography } from "@mui/material";
+import { Button, ButtonProps, IconButton, Theme, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
+
+type Action = Partial<Omit<ButtonProps, "children">> & {
+    text: ButtonProps["children"];
+};
 
 export interface AdminComponentAlertsProps {
     severity?: "info" | "warning" | "error" | "success";
-    startIcon?: React.ReactNode;
     title?: React.ReactNode;
     text: React.ReactNode;
     hideCloseButton?: boolean;
     onCloseClick?: () => void;
+    action?: Action;
 }
 
 export type AdminComponentAlertsClassKey =
     | "root"
-    | "content"
     | "severityInfo"
     | "severityWarning"
     | "severityError"
@@ -25,23 +27,21 @@ export type AdminComponentAlertsClassKey =
     | "text"
     | "button"
     | "container"
-    | "closeIconFull"
-    | "marginBottom"
-    | "paddingLeft"
-    | "cursorPointer";
+    | "closeIcon"
+    | "hasTitle";
 
 const styles = (theme: Theme) =>
     createStyles<AdminComponentAlertsClassKey, AdminComponentAlertsProps>({
         root: {
+            display: "flex",
+            alignItems: "center",
             backgroundColor: theme.palette.background.paper,
             borderRadius: 4,
             width: 400,
             padding: 20,
-            display: "flex",
             boxShadow: "0px 0px 20px 0px rgba(0, 0, 0, 0.10)",
             position: "relative",
         },
-        content: {},
         title: {
             fontWeight: "bold",
         },
@@ -49,61 +49,77 @@ const styles = (theme: Theme) =>
             fontWeight: 300,
             fontSize: 14,
             whiteSpace: "nowrap",
+            flexGrow: 1,
+            marginRight: 20,
         },
-        button: {
-            paddingLeft: 0,
-        },
+        button: {},
         container: {
             display: "flex",
             alignItems: "center",
+            flexGrow: 1,
+            paddingLeft: theme.spacing(2),
         },
-        closeIconFull: {
-            position: "absolute",
-            right: 10,
-            top: 10,
-        },
-        marginBottom: {
-            marginBottom: 10,
-        },
-        cursorPointer: {
-            cursor: "pointer",
-        },
-        paddingLeft: {
-            paddingLeft: 180,
-            paddingRight: 10,
-        },
+        closeIcon: {},
         severityInfo: {
-            border: `1px solid ${theme.palette.primary.main}`,
-            borderLeft: `5px solid ${theme.palette.primary.main}`,
+            border: `1px solid #29B6F6`,
+            borderLeft: `5px solid #29B6F6`,
         },
         severityWarning: {
-            border: `1px solid ${theme.palette.warning.main}`,
-            borderLeft: `5px solid ${theme.palette.warning.main}`,
+            border: `1px solid #FFB31A`,
+            borderLeft: `5px solid #FFB31A`,
         },
         severityError: {
             border: `1px solid #D11700`,
             borderLeft: `5px solid #D11700`,
         },
         severitySuccess: {
-            border: `1px solid ${theme.palette.secondary.main}`,
-            borderLeft: `5px solid ${theme.palette.secondary.main}`,
+            border: `1px solid #14CC33`,
+            borderLeft: `5px solid #14CC33`,
+        },
+        hasTitle: {
+            alignItems: "flex-start",
+
+            "& $button": {
+                marginLeft: -15,
+            },
+
+            "& $closeIcon": {
+                position: "absolute",
+                right: 10,
+                top: 10,
+            },
+            "& $container": {
+                flexDirection: "column",
+                alignItems: "flex-start",
+            },
         },
     });
 
 function AdminComponentAlerts({
     severity = "info",
-    startIcon,
     title,
     text,
     classes,
     hideCloseButton = false,
     onCloseClick,
+    action,
 }: AdminComponentAlertsProps & WithStyles<typeof styles>): React.ReactElement {
+    let button: React.ReactNode = null;
+
+    if (action) {
+        const { text: actionText, ...restActionProps } = action;
+        button = (
+            <Button variant="text" startIcon={<ArrowRight />} className={classes.button} {...restActionProps}>
+                {actionText}
+            </Button>
+        );
+    }
+
     return (
-        <Box
+        <div
             className={clsx(
                 classes.root,
-                !title && classes.container,
+                Boolean(title) && classes.hasTitle,
                 severity === "info" && classes.severityInfo,
                 severity === "warning" && classes.severityWarning,
                 severity === "error" && classes.severityError,
@@ -120,17 +136,21 @@ function AdminComponentAlerts({
                 <Check color={severity} />
             ) : null}
 
-            <Container className={clsx(!title && classes.container)}>
-                <Typography variant="h6" className={classes.title}>
-                    {title}
-                </Typography>
+            <div className={classes.container}>
+                {Boolean(title) && (
+                    <Typography variant="h6" className={classes.title}>
+                        {title}
+                    </Typography>
+                )}
                 <Typography className={classes.text}>{text}</Typography>
-                <Button variant="text" startIcon={<ArrowRight />} className={clsx(classes.button, !title && classes.paddingLeft)}>
-                    <FormattedMessage id="comet.adminComponents.Alerts.ButtonAction" defaultMessage="Undo" />
-                </Button>
-                {!hideCloseButton && <Close className={clsx(classes.cursorPointer, title && classes.closeIconFull)} onClick={onCloseClick} />}
-            </Container>
-        </Box>
+                {button}
+                {!hideCloseButton && (
+                    <IconButton className={classes.closeIcon} onClick={onCloseClick}>
+                        <Close />
+                    </IconButton>
+                )}
+            </div>
+        </div>
     );
 }
 
