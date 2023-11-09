@@ -37,7 +37,7 @@ type Dependent = {
     secondaryInformation: string | null;
 };
 
-interface GQLQuery {
+interface Query {
     item: {
         id: string;
         dependencies?: { totalCount: number; nodes: Array<Dependency> };
@@ -45,14 +45,14 @@ interface GQLQuery {
     };
 }
 
-type GQLQueryVariables = {
+type QueryVariables = {
     offset: number;
     limit: number;
     forceRefresh?: boolean;
 };
 
 interface DependencyListProps {
-    query: TypedDocumentNode<GQLQuery, GQLQueryVariables>;
+    query: TypedDocumentNode<Query, QueryVariables>;
     variables: Record<string, unknown>;
 }
 
@@ -67,7 +67,7 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
 
     const dataGridProps = useDataGridRemote({ queryParamsPrefix: "dependencies", pageSize: pageSize });
 
-    const { data, loading, error, refetch } = useQuery<GQLQuery, GQLQueryVariables>(query, {
+    const { data, loading, error, refetch } = useQuery<Query, QueryVariables>(query, {
         variables: {
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
