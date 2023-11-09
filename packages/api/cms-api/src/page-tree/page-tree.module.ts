@@ -87,7 +87,7 @@ export class PageTreeModule {
                 documentSubscriber,
                 PagesEntityInfoService,
             ],
-            exports: [PageTreeService, PageTreeReadApiService, AttachedDocumentLoaderService, PagesEntityInfoService],
+            exports: [PageTreeService, PageTreeReadApiService, AttachedDocumentLoaderService],
         };
     }
 }
