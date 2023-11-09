@@ -1,8 +1,5 @@
-import { Chip, Typography } from "@mui/material";
+import { Chip, chipClasses, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid } from "@mui/x-data-grid";
-
-import { DependencyItem } from "./DependencyList";
 
 export const Toolbar = styled("div")`
     height: 60px;
@@ -32,7 +29,7 @@ export const StyledChip = styled(Chip)`
     font-weight: 400;
     line-height: 10px;
 
-    .MuiChip-label {
+    .${chipClasses.label} {
         padding: 0;
     }
 `;
@@ -55,23 +52,4 @@ export const DisplayedRowsWrapper = styled("div")`
 export const PageLabel = styled("div")`
     flex-grow: 1;
     text-align: right;
-`;
-
-export const StyledDataGrid = styled(DataGrid<DependencyItem>)`
-    & .MuiTablePagination-root {
-        flex-grow: 1;
-    }
-
-    & .MuiTablePagination-spacer {
-        width: 0;
-        flex: 0;
-    }
-
-    & .MuiTablePagination-displayedRows {
-        flex-grow: 1;
-    }
-
-    & .MuiTablePagination-toolbar .MuiTablePagination-actions {
-        margin-left: 5px;
-    }
 `;
