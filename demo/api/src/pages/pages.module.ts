@@ -1,4 +1,4 @@
-import { BlocksModule, DependenciesResolverFactory, PagesEntityInfoService, RedirectsModule } from "@comet/cms-api";
+import { BlocksModule, DependenciesResolverFactory, RedirectsModule } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { forwardRef, Module } from "@nestjs/common";
 
@@ -7,7 +7,7 @@ import { PagesResolver } from "./pages.resolver";
 
 @Module({
     imports: [MikroOrmModule.forFeature([Page]), forwardRef(() => BlocksModule), RedirectsModule],
-    providers: [PagesResolver, DependenciesResolverFactory.create(Page), PagesEntityInfoService],
+    providers: [PagesResolver, DependenciesResolverFactory.create(Page)],
     exports: [MikroOrmModule],
 })
 export class PagesModule {}
