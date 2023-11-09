@@ -30,6 +30,11 @@ describe("searchToMikroOrmQuery", () => {
             ],
         });
     });
+    it("should ignore leading and trailing spaces", async () => {
+        expect(searchToMikroOrmQuery(" a ", ["title"])).toStrictEqual({
+            $or: [{ title: { $ilike: "%a%" } }],
+        });
+    });
 });
 
 describe("filterToMikroOrmQuery", () => {
