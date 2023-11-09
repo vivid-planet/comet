@@ -5,13 +5,13 @@ import { DocumentInterface } from "../document/dto/document-interface";
 import { PageTreeService } from "./page-tree.service";
 
 @Injectable()
-export class PagesEntityInfoService implements EntityInfoServiceInterface<DocumentInterface> {
+export class PageTreeNodeDocumentEntityInfoService implements EntityInfoServiceInterface<DocumentInterface> {
     constructor(private readonly pageTreeService: PageTreeService) {}
 
-    async getEntityInfo(page: DocumentInterface) {
+    async getEntityInfo(document: DocumentInterface) {
         const pageTreeReadApiService = this.pageTreeService.createReadApi();
 
-        const pageTreeNode = await pageTreeReadApiService.getFirstNodeByAttachedPageId(page.id);
+        const pageTreeNode = await pageTreeReadApiService.getFirstNodeByAttachedPageId(document.id);
 
         return {
             name: pageTreeNode?.name ?? "Unknown",

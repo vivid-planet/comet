@@ -1,5 +1,5 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { DocumentInterface, EntityInfo, PagesEntityInfoService, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
+import { DocumentInterface, EntityInfo, PageTreeNodeDocumentEntityInfoService, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
@@ -7,7 +7,7 @@ import { v4 as uuid } from "uuid";
 import { PageContentBlock } from "../blocks/PageContentBlock";
 import { SeoBlock } from "../blocks/seo.block";
 
-@EntityInfo(PagesEntityInfoService)
+@EntityInfo(PageTreeNodeDocumentEntityInfoService)
 @Entity()
 @ObjectType({
     implements: () => [DocumentInterface],

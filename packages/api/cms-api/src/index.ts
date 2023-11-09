@@ -133,8 +133,8 @@ export { PageTreeNodeBase } from "./page-tree/entities/page-tree-node-base.entit
 export { PAGE_TREE_REPOSITORY } from "./page-tree/page-tree.constants";
 export { PageTreeModule } from "./page-tree/page-tree.module";
 export { PageTreeReadApi, PageTreeService } from "./page-tree/page-tree.service";
+export { PageTreeNodeDocumentEntityInfoService } from "./page-tree/page-tree-node-document-entity-info.service";
 export { PageTreeReadApiService } from "./page-tree/page-tree-read-api.service";
-export { PagesEntityInfoService } from "./page-tree/pages-entity-info.service";
 export { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility, ScopeInterface } from "./page-tree/types";
 export { PageExists, PageExistsConstraint } from "./page-tree/validators/page-exists.validator";
 export { PublicUpload } from "./public-upload/entities/public-upload.entity";
