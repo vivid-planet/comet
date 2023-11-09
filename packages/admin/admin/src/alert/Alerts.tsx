@@ -8,7 +8,7 @@ type Action = Partial<Omit<ButtonProps, "children">> & {
     text: ButtonProps["children"];
 };
 
-export interface AdminComponentAlertsProps {
+export interface AlertProps {
     severity?: "info" | "warning" | "error" | "success";
     title?: React.ReactNode;
     text: React.ReactNode;
@@ -17,7 +17,7 @@ export interface AdminComponentAlertsProps {
     action?: Action;
 }
 
-export type AdminComponentAlertsClassKey =
+export type AlertClassKey =
     | "root"
     | "severityInfo"
     | "severityWarning"
@@ -31,7 +31,7 @@ export type AdminComponentAlertsClassKey =
     | "hasTitle";
 
 const styles = (theme: Theme) =>
-    createStyles<AdminComponentAlertsClassKey, AdminComponentAlertsProps>({
+    createStyles<AlertClassKey, AlertProps>({
         root: {
             display: "flex",
             alignItems: "center",
@@ -95,7 +95,7 @@ const styles = (theme: Theme) =>
         },
     });
 
-function AdminComponentAlerts({
+function Alert({
     severity = "info",
     title,
     text,
@@ -103,7 +103,7 @@ function AdminComponentAlerts({
     hideCloseButton = false,
     onCloseClick,
     action,
-}: AdminComponentAlertsProps & WithStyles<typeof styles>): React.ReactElement {
+}: AlertProps & WithStyles<typeof styles>): React.ReactElement {
     let button: React.ReactNode = null;
 
     if (action) {
@@ -154,23 +154,23 @@ function AdminComponentAlerts({
     );
 }
 
-const AdminComponentWithStyles = withStyles(styles, { name: "CometAdminAdminComponentAlerts" })(AdminComponentAlerts);
+const AdminComponentWithStyles = withStyles(styles, { name: "CometAdminAlert" })(Alert);
 
-export { AdminComponentWithStyles as AdminComponentAlerts };
+export { AdminComponentWithStyles as Alert };
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminAdminComponentAlerts: AdminComponentAlertsProps;
+        CometAdminAlert: AlertProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminAdminComponentAlerts: AdminComponentAlertsClassKey;
+        CometAdminAlert: AlertClassKey;
     }
 
     interface Components {
-        CometAdminAdminComponentAlerts?: {
-            defaultProps?: ComponentsPropsList["CometAdminAdminComponentAlerts"];
-            styleOverrides?: ComponentNameToClassKey["CometAdminAdminComponentAlerts"];
+        CometAdminAlert?: {
+            defaultProps?: ComponentsPropsList["CometAdminAlert"];
+            styleOverrides?: ComponentNameToClassKey["CometAdminAlert"];
         };
     }
 }
