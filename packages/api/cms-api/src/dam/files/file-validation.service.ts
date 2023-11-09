@@ -7,7 +7,17 @@ import { svgContainsJavaScript } from "./files.utils";
 export class FileValidationService {
     constructor(public config: { maxFileSize: number; acceptedMimeTypes: string[] }) {}
 
-    async validateFile(file: FileUploadInterface): Promise<true | string> {
+    async validateFile(file: FileUploadInterface): Promise<undefined | string> {
+        let error = await this.validateFileMetadata(file);
+
+        if (error === undefined) {
+            error = await this.validateFileContents(file);
+        }
+
+        return error;
+    }
+
+    async validateFileMetadata(file: FileUploadInterface): Promise<undefined | string> {
         //maximum file size
         if (file.size > this.config.maxFileSize * 1024 * 1024) {
             return "File is too large";
@@ -37,7 +47,10 @@ export class FileValidationService {
             return `File type and extension mismatch: .${extension} and ${file.mimetype} are incompatible`;
         }
 
-        //svgContainsJavaScript
+        return undefined;
+    }
+
+    async validateFileContents(file: FileUploadInterface): Promise<undefined | string> {
         if (file.mimetype === "image/svg+xml") {
             const fileContent = await readFile(file.path, { encoding: "utf-8" });
 
@@ -46,6 +59,6 @@ export class FileValidationService {
             }
         }
 
-        return true;
+        return undefined;
     }
 }

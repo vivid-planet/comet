@@ -99,7 +99,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         ): Promise<FileInterface> {
             const file = await download(url);
             const validationResult = await this.fileValidationService.validateFile(file);
-            if (validationResult !== true) {
+            if (validationResult !== undefined) {
                 throw new CometValidationException(validationResult);
             }
 
