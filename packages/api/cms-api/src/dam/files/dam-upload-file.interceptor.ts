@@ -10,7 +10,7 @@ import { v4 as uuid } from "uuid";
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
 import { FileValidationService } from "./file-validation.service";
-import { removeFile } from "./files.utils";
+import { removeMulterTempFile } from "./files.utils";
 
 export function DamUploadFileInterceptor(fieldName: string): Type<NestInterceptor> {
     @Injectable()
@@ -62,7 +62,7 @@ export function DamUploadFileInterceptor(fieldName: string): Type<NestIntercepto
             const error = await this.fileValidationService.validateFileContents(file);
 
             if (error) {
-                await removeFile(file);
+                await removeMulterTempFile(file);
                 return throwError(() => new HttpException(`Rejected File Upload: ${error}`, 422));
             }
 

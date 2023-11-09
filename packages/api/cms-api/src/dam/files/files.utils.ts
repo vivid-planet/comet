@@ -108,7 +108,7 @@ export const svgContainsJavaScript = (svg: string) => {
     return recursivelyFindJSInSvg(jsonObj);
 };
 
-export const removeFile = async (file: FileUploadInterface) => {
+export const removeMulterTempFile = async (file: FileUploadInterface) => {
     // https://github.com/expressjs/multer/blob/master/storage/disk.js#L54-L62
     const path = file.path;
 
