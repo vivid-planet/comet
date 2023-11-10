@@ -14,8 +14,6 @@ export const DamFileDependency: DependencyInterface = {
                 query FileDependency($id: ID!) {
                     damFile(id: $id) {
                         id
-                        name
-                        damPath
                         folder {
                             id
                             parents {
