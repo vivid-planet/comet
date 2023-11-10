@@ -17,6 +17,11 @@ export const productFormFragment = gql`
             id
             title
         }
+        packageDimensions {
+            width
+            height
+            depth
+        }
     }
 `;
 

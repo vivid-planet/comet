@@ -7,6 +7,7 @@ import {
     FinalFormSaveSplitButton,
     FinalFormSelect,
     FinalFormSubmitEvent,
+    FormSection,
     Loading,
     MainContent,
     Toolbar,
@@ -29,6 +30,7 @@ import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
+import { MergeDeep } from "type-fest";
 
 import {
     createProductMutation,
@@ -62,10 +64,18 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormManualFragment, "price" | "image"> & {
-    price: string;
-    image: BlockState<typeof rootBlocks.image>;
-};
+type FormValues = MergeDeep<
+    GQLProductFormManualFragment,
+    {
+        price: string;
+        image: BlockState<typeof rootBlocks.image>;
+        packageDimensions: {
+            width: string;
+            height: string;
+            depth: string;
+        };
+    }
+>;
 
 function ProductForm({ id }: FormProps): React.ReactElement {
     const stackApi = useStackApi();
@@ -84,6 +94,12 @@ function ProductForm({ id }: FormProps): React.ReactElement {
               ...filter<GQLProductFormManualFragment>(productFormFragment, data.product),
               price: String(data.product.price),
               image: rootBlocks.image.input2State(data.product.image),
+              packageDimensions: {
+                  ...data.product.packageDimensions,
+                  width: String(data.product.packageDimensions.width),
+                  height: String(data.product.packageDimensions.height),
+                  depth: String(data.product.packageDimensions.depth),
+              },
           }
         : {
               image: rootBlocks.image.defaultValues(),
@@ -113,7 +129,12 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             variants: [],
             articleNumbers: [],
             discounts: [],
-            packageDimensions: { width: 0, height: 0, depth: 0 },
+            packageDimensions: {
+                ...formValues.packageDimensions,
+                width: parseFloat(formValues.packageDimensions.width),
+                height: parseFloat(formValues.packageDimensions.height),
+                depth: parseFloat(formValues.packageDimensions.depth),
+            },
             statistics: { views: 0 },
         };
         if (mode === "edit") {
@@ -262,6 +283,29 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
+                        <FormSection title={<FormattedMessage id="product.packageDimensions" defaultMessage="Package Dimensions" />}>
+                            <Field
+                                fullWidth
+                                name="packageDimensions.width"
+                                component={FinalFormInput}
+                                inputProps={{ type: "number" }}
+                                label={<FormattedMessage id="product.width" defaultMessage="Width" />}
+                            />
+                            <Field
+                                fullWidth
+                                name="packageDimensions.height"
+                                component={FinalFormInput}
+                                inputProps={{ type: "number" }}
+                                label={<FormattedMessage id="product.height" defaultMessage="Height" />}
+                            />
+                            <Field
+                                fullWidth
+                                name="packageDimensions.depth"
+                                component={FinalFormInput}
+                                inputProps={{ type: "number" }}
+                                label={<FormattedMessage id="product.depth" defaultMessage="Depth" />}
+                            />
+                        </FormSection>
                     </MainContent>
                 </EditPageLayout>
             )}

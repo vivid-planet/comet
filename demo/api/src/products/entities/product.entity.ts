@@ -147,9 +147,9 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Field(() => ProductDimensions, { nullable: true })
     dimensions?: ProductDimensions = undefined;
 
-    @Embedded(() => ProductPackageDimensions, { nullable: true })
-    @Field(() => ProductPackageDimensions, { nullable: true })
-    packageDimensions?: ProductPackageDimensions = undefined;
+    @Embedded(() => ProductPackageDimensions)
+    @Field(() => ProductPackageDimensions)
+    packageDimensions: ProductPackageDimensions;
 
     @OneToOne(() => ProductStatistics, { inversedBy: "product", owner: true, ref: true, nullable: true })
     @Field(() => ProductStatistics, { nullable: true })
