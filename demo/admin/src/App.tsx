@@ -32,6 +32,7 @@ import MasterHeader from "@src/common/MasterHeader";
 import MasterMenu from "@src/common/MasterMenu";
 import { createConfig } from "@src/config";
 import Dashboard from "@src/dashboard/Dashboard";
+import { NewsDependency } from "@src/news/dependencies/NewsDependency";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import theme from "@src/theme";
 import * as React from "react";
@@ -107,6 +108,7 @@ class App extends React.Component {
                             entityDependencyMap={{
                                 Page: Page,
                                 Link: Link,
+                                News: NewsDependency,
                             }}
                         >
                             <IntlProvider locale="en" messages={getMessages()}>
