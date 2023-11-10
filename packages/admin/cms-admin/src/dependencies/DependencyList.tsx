@@ -1,7 +1,7 @@
 import { TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
 import { Tooltip, useDataGridRemote } from "@comet/admin";
 import { ArrowRight, OpenNewTab, Reload } from "@comet/admin-icons";
-import { IconButton, tablePaginationClasses } from "@mui/material";
+import { IconButton, LinearProgress, tablePaginationClasses } from "@mui/material";
 import { LabelDisplayedRowsArgs } from "@mui/material/TablePagination/TablePagination";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import * as React from "react";
@@ -183,6 +183,9 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
             </sc.Toolbar>
             <DataGrid
                 {...dataGridProps}
+                components={{
+                    LoadingOverlay: loading && data ? LinearProgress : undefined,
+                }}
                 componentsProps={{
                     pagination: {
                         labelDisplayedRows: DisplayedRows,
