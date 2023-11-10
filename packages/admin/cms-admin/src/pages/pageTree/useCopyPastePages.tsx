@@ -7,6 +7,7 @@ import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { useContentScope } from "../../contentScope/Provider";
 import { useDamScope } from "../../dam/config/useDamScope";
 import { GQLDocument, GQLPageQuery, GQLPageQueryVariables } from "../../documents/types";
+import { useProgressDialog } from "./useCopyPastePages/ProgressDialog";
 import { sendPages, SendPagesOptions } from "./useCopyPastePages/sendPages";
 import { GQLPageTreePageFragment } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
@@ -55,6 +56,8 @@ interface UseCopyPastePagesApi {
      * @param options customize where the pages are pasted
      */
     sendPages: (parentId: string | null, pages: PagesClipboard, options: SendPagesOptions) => Promise<void>;
+
+    progressDialog: React.ReactNode;
 }
 
 /**
@@ -66,6 +69,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     const { scope } = useContentScope();
     const damScope = useDamScope();
     const blockContext = useCmsBlockContext();
+    const progress = useProgressDialog({ title: <FormattedMessage id="comet.pages.insertingPages" defaultMessage="Inserting pages" /> });
 
     const prepareForClipboard = React.useCallback(
         async (pages: GQLPageTreePageFragment[]): Promise<PagesClipboard> => {
@@ -160,14 +164,26 @@ function useCopyPastePages(): UseCopyPastePagesApi {
             };
         }
     };
+
+    const updateProgress = progress.updateProgress;
     const sendPagesCb = React.useCallback(
-        (parentId: string | null, pages: PagesClipboard, options: SendPagesOptions) => {
-            return sendPages(parentId, pages, options, { client, scope, documentTypes, blockContext, damScope });
+        async (parentId: string | null, pages: PagesClipboard, options: SendPagesOptions) => {
+            try {
+                await sendPages(parentId, pages, options, { client, scope, documentTypes, blockContext, damScope }, updateProgress);
+            } finally {
+                updateProgress(undefined);
+            }
         },
-        [client, scope, documentTypes, blockContext, damScope],
+        [client, scope, documentTypes, blockContext, damScope, updateProgress],
     );
 
-    return { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages: sendPagesCb };
+    return {
+        prepareForClipboard,
+        writeToClipboard,
+        getFromClipboard,
+        sendPages: sendPagesCb,
+        progressDialog: progress.dialog,
+    };
 }
 
 export { useCopyPastePages };
