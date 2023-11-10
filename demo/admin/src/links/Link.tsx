@@ -73,8 +73,6 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & D
                         content
                         pageTreeNode {
                             id
-                            name
-                            path
                             category
                         }
                     }
