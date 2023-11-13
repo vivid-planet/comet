@@ -61,7 +61,7 @@ function Story() {
                                         )}
                                     </Field>
 
-                                    <Field name="flavorClearable" label="Clearble Flavor" fullWidth>
+                                    <Field name="flavorClearable" label="Clearable Flavor" fullWidth>
                                         {(props) => (
                                             <FinalFormSelect {...props} fullWidth clearable>
                                                 {options.map((option: Option) => (
