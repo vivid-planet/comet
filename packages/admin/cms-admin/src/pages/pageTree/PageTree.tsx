@@ -1,6 +1,5 @@
 import { ObservableQuery, useApolloClient } from "@apollo/client";
 import { IEditDialogApi, UndoSnackbar, useSnackbarApi } from "@comet/admin";
-import { Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import gql from "graphql-tag";
 import isEqual from "lodash.isequal";
@@ -320,7 +319,6 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
         <>
             <PageTreeDragLayer numberSelectedPages={selectedPages.length} />
             <Root>
-                <Divider />
                 <Table>
                     <AutoSizer>
                         {({ height, width }) => {
