@@ -40,9 +40,8 @@ export const CurrentUserProvider: React.FC = ({ children }) => {
         }
     `);
 
-    if (error) {
-        return <>Error while loading user: {error.message}</>;
-    }
+    if (error) throw error.message;
+
     const currentUser = new CurrentUser();
     if (data?.currentUser) Object.assign(currentUser, data.currentUser);
     return <CurrentUserContext.Provider value={currentUser}>{children}</CurrentUserContext.Provider>;
