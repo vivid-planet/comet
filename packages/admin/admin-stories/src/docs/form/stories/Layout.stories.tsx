@@ -272,8 +272,6 @@ storiesOf("stories/form/Layout", module)
     .add("Horizontal fields", () => {
         const theme = createCometTheme({
             components: {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
                 CometAdminFormFieldContainer: {
                     defaultProps: {
                         variant: "horizontal",
