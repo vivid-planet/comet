@@ -65,7 +65,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFinalFormSaveCancelButtonsLegacy: FinalFormSaveCancelButtonsLegacyProps;
+        CometAdminFinalFormSaveCancelButtonsLegacy: Partial<FinalFormSaveCancelButtonsLegacyProps>;
     }
 
     interface Components {

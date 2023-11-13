@@ -83,7 +83,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminOkayButton: OkayButtonProps;
+        CometAdminOkayButton: Partial<OkayButtonProps>;
     }
 
     interface Components {

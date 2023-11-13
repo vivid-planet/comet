@@ -28,7 +28,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminToolbarFillSpace: ToolbarFillSpaceProps;
+        CometAdminToolbarFillSpace: Partial<ToolbarFillSpaceProps>;
     }
 
     interface Components {

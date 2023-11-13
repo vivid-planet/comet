@@ -37,7 +37,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminStackBackButton: StackBackButtonProps;
+        CometAdminStackBackButton: Partial<StackBackButtonProps>;
     }
 
     interface Components {

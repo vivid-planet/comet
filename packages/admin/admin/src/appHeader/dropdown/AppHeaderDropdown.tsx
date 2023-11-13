@@ -97,7 +97,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminAppHeaderDropdown: AppHeaderDropdownProps;
+        CometAdminAppHeaderDropdown: Partial<AppHeaderDropdownProps>;
     }
 
     interface Components {

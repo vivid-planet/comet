@@ -98,7 +98,7 @@ export { MyComponentWithStyles as MyComponent };
  */
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminMyComponent: MyComponentProps;
+        CometAdminMyComponent: Partial<MyComponentProps>;
     }
 
     interface ComponentNameToClassKey {
@@ -107,8 +107,8 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminMyComponent?: {
-            defaultProps?: ComponentsPropsList["CometAdminMyComponent"];
-            styleOverrides?: ComponentNameToClassKey["CometAdminMyComponent"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminMyComponent"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminMyComponent"];
         };
     }
 }

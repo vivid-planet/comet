@@ -116,7 +116,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminTimePicker: TimePickerProps;
+        CometAdminTimePicker: Partial<TimePickerProps>;
     }
 
     interface Components {

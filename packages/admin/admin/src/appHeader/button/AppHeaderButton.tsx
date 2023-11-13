@@ -53,7 +53,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminAppHeaderButton: AppHeaderButtonProps;
+        CometAdminAppHeaderButton: Partial<AppHeaderButtonProps>;
     }
 
     interface Components {

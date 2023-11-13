@@ -70,7 +70,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminMainContent: MainContentProps;
+        CometAdminMainContent: Partial<MainContentProps>;
     }
 
     interface Components {

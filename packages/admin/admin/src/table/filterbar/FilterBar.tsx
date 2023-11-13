@@ -47,7 +47,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFilterBar: FilterBarProps;
+        CometAdminFilterBar: Partial<FilterBarProps>;
     }
 
     interface Components {

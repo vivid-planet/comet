@@ -49,7 +49,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminTabScrollButton: TabScrollButtonProps;
+        CometAdminTabScrollButton: Partial<TabScrollButtonProps>;
     }
 
     interface Components {

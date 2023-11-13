@@ -94,7 +94,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminRteBlockElement: RteBlockElementProps;
+        CometAdminRteBlockElement: Partial<RteBlockElementProps>;
     }
 
     interface Components {

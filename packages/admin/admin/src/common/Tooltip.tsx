@@ -1,4 +1,4 @@
-import { ClickAwayListener, Theme, Tooltip as MuiTooltip, tooltipClasses, TooltipProps as MuiTooltipProps } from "@mui/material";
+import { ClickAwayListener, ComponentsOverrides, Theme, Tooltip as MuiTooltip, tooltipClasses, TooltipProps as MuiTooltipProps } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import React, { cloneElement } from "react";
 
@@ -96,7 +96,7 @@ export { TooltipWithStyles as Tooltip };
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminTooltip: TooltipProps;
+        CometAdminTooltip: Partial<TooltipProps>;
     }
 
     interface ComponentNameToClassKey {
@@ -106,7 +106,7 @@ declare module "@mui/material/styles" {
     interface Components {
         CometAdminTooltip?: {
             defaultProps?: ComponentsPropsList["CometAdminTooltip"];
-            styleOverrides?: ComponentNameToClassKey["CometAdminTooltip"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTooltip"];
         };
     }
 }
