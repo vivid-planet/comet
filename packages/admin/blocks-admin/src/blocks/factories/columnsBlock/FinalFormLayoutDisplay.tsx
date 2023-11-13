@@ -9,7 +9,9 @@ interface Props extends FieldRenderProps<ColumnsBlockLayout> {
     layouts: ColumnsBlockLayout[];
 }
 
-export function FinalFormLayoutDisplay({ layouts }: Props): React.ReactElement {
+export function FinalFormLayoutDisplay({ layouts }: Props) {
+    if (layouts.length === 0) return null;
+
     return (
         <LayoutDisplayContainer>
             {layouts[0].preview}
