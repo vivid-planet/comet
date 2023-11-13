@@ -310,12 +310,13 @@ export function createColumnsBlock<T extends BlockInterface>({
                                                                             onDeleteClick={() => {
                                                                                 deleteBlocks([column.key]);
                                                                             }}
-                                                                            moveBlock={(dragIndex: number, hoverIndex: number) => {
-                                                                                const columns = [...state.columns];
-                                                                                const dragItem = state.columns[dragIndex];
-                                                                                columns[dragIndex] = state.columns[hoverIndex];
-                                                                                columns[hoverIndex] = dragItem;
-                                                                                updateState((prevState) => ({ ...prevState, columns }));
+                                                                            moveBlock={(from, to) => {
+                                                                                updateState((prevState) => {
+                                                                                    const columns = [...prevState.columns];
+                                                                                    const columnToMove = columns.splice(from, 1)[0];
+                                                                                    columns.splice(to, 0, columnToMove);
+                                                                                    return { ...prevState, columns };
+                                                                                });
                                                                             }}
                                                                             visibilityButton={
                                                                                 <IconButton onClick={() => toggleVisible(column.key)} size="small">

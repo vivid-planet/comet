@@ -47,7 +47,8 @@ export type SupportedThings =
     | "blockquote"
     | "history"
     | "link"
-    | "links-remove";
+    | "links-remove"
+    | "non-breaking-space";
 
 export interface IRteOptions {
     supports: SupportedThings[];

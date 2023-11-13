@@ -36,8 +36,11 @@ function FeaturesButtonGroup({ features, disabled: globallyDisabled, classes, ed
         return null;
     }
 
-    const visibleFeatures = maxVisible === undefined ? features : features.slice(0, maxVisible);
-    const additionalFeatures = maxVisible === undefined ? [] : features.slice(maxVisible);
+    // Ensures that the dropdown never contains only one feature and that maximum {maxVisible} buttons are shown
+    // If maxVisible = 4 and there are four features -> all four features (and no dropdown) are shown
+    // If maxVisible = 4 and there are five features -> three features and the dropdown (containing two features) are shown
+    const visibleFeatures = maxVisible !== undefined && features.length > maxVisible ? features.slice(0, maxVisible - 1) : features;
+    const additionalFeatures = maxVisible !== undefined && features.length > maxVisible ? features.slice(maxVisible - 1) : [];
 
     return (
         <div className={classes.root}>

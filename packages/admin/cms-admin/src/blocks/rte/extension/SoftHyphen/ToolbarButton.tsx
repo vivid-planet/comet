@@ -1,4 +1,4 @@
-import { SoftHyphen } from "@comet/admin-icons";
+import { RteSoftHyphen } from "@comet/admin-icons";
 import { ControlButton } from "@comet/admin-rte";
 import { IControlProps } from "@comet/admin-rte/lib/core/types"; //@TODO export from RTE
 import Tooltip from "@mui/material/Tooltip";
@@ -26,7 +26,7 @@ export function ToolbarButton({ editorState, setEditorState }: IControlProps): R
             placement="top"
         >
             <span>
-                <ControlButton icon={SoftHyphen} onButtonClick={handleClick} />{" "}
+                <ControlButton icon={RteSoftHyphen} onButtonClick={handleClick} />{" "}
             </span>
         </Tooltip>
     );

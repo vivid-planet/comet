@@ -1,5 +1,14 @@
 # @comet/admin-rte
 
+## 4.6.0
+
+### Patch Changes
+
+-   c3b7f992: Replace current icons in the RTE toolbar with new icons from `@comet/admin-icons`
+-   Updated dependencies [c3b7f992]
+-   Updated dependencies [c3b7f992]
+    -   @comet/admin-icons@4.6.0
+
 ## 4.5.0
 
 ## 4.4.3
