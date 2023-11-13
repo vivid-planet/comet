@@ -1,5 +1,5 @@
 import { MainContent, Stack } from "@comet/admin";
-import { DashboardHeader } from "@comet/cms-admin";
+import { DashboardHeader, LatestBuildsDashboardWidget } from "@comet/cms-admin";
 import { Grid } from "@mui/material";
 import { ContentScopeIndicator } from "@src/common/ContentScopeIndicator";
 import * as React from "react";
@@ -7,7 +7,6 @@ import { useIntl } from "react-intl";
 
 import backgroundImage1x from "./dashboard-image@1x.jpg";
 import backgroundImage2x from "./dashboard-image@2x.jpg";
-import { LatestBuilds } from "./LatestBuilds";
 import { LatestContentUpdates } from "./LatestContentUpdates";
 
 const Dashboard: React.FC = () => {
@@ -25,7 +24,7 @@ const Dashboard: React.FC = () => {
                 <ContentScopeIndicator global />
                 <Grid container direction="row" spacing={4}>
                     <LatestContentUpdates />
-                    {process.env.NODE_ENV !== "development" && <LatestBuilds />}
+                    {process.env.NODE_ENV !== "development" && <LatestBuildsDashboardWidget />}
                 </Grid>
             </MainContent>
         </Stack>
