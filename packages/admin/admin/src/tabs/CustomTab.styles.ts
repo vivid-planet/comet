@@ -22,7 +22,7 @@ export const styles = (theme: Theme) => {
             justifyContent: "center",
             color: theme.palette.common.white,
             marginRight: theme.spacing(2),
-            fontSize: 12,
+            fontSize: 10,
             borderRadius: "50%",
             opacity: ({ disabled }) => (disabled ? 0.5 : 1),
         },

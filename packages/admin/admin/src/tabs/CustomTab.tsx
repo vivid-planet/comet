@@ -1,6 +1,5 @@
-import { Info } from "@comet/admin-icons";
+import { CheckRounded, ExclamationmarkRounded, HyphenRounded, Info } from "@comet/admin-icons";
 import { errorPalette, greenPalette, warningPalette } from "@comet/admin-theme";
-import { CheckRounded, HorizontalRuleRounded, PriorityHighRounded } from "@mui/icons-material";
 import { Box, ComponentsOverrides, IconProps, Theme, Tooltip, TooltipProps, Typography } from "@mui/material";
 import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
 import { WithStyles, withStyles } from "@mui/styles";
@@ -18,8 +17,8 @@ const colorMapping: { [K in Status]: any } = {
 
 const defaultIcons: { [K in Status]: React.FunctionComponentElement<IconProps> } = {
     success: <CheckRounded fontSize="inherit" />,
-    error: <PriorityHighRounded fontSize="inherit" />,
-    warning: <HorizontalRuleRounded fontSize="inherit" />,
+    error: <ExclamationmarkRounded fontSize="inherit" />,
+    warning: <HyphenRounded fontSize="inherit" />,
 };
 
 export interface TabProps extends Omit<MuiTabProps, "children" | "icon" | "iconPosition"> {
