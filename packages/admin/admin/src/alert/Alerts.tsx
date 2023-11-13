@@ -43,7 +43,7 @@ const styles = (theme: Theme) =>
             position: "relative",
         },
         title: {
-            fontWeight: "bold",
+            fontWeight: 600,
         },
         text: {
             fontWeight: 300,
