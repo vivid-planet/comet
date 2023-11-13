@@ -1,4 +1,4 @@
-export { Alert, AlertClassKey, AlertProps } from "./alert/Alerts";
+export { Alert, AlertClassKey, AlertProps } from "./alert/Alert";
 export { useFocusAwarePolling } from "./apollo/useFocusAwarePolling";
 export { AppHeader, AppHeaderClassKey } from "./appHeader/AppHeader";
 export { AppHeaderButton, AppHeaderButtonProps } from "./appHeader/button/AppHeaderButton";

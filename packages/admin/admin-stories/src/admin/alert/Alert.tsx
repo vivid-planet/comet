@@ -1,4 +1,4 @@
-import { Alert } from "@comet/admin/lib/alert/Alerts";
+import { Alert } from "@comet/admin/lib/alert/Alert";
 import { Close } from "@comet/admin-icons";
 import { PunchClock } from "@mui/icons-material";
 import { Typography } from "@mui/material";
