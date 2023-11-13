@@ -24,7 +24,7 @@ const LayoutDisplayContainer = styled("div")`
     column-gap: ${({ theme }) => theme.spacing(2)};
     align-items: center;
     background-color: #ffffff;
-    border: 1px solid #d9d9d9;
+    border: 1px solid ${({ theme }) => theme.palette.divider};
     padding: 9px;
     box-sizing: border-box;
 `;
