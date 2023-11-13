@@ -2,7 +2,7 @@ import { Menu, MenuCollapsibleItem, MenuContext, MenuItemRouterLink, MenuItemRou
 import * as React from "react";
 import { RouteProps, useRouteMatch } from "react-router-dom";
 
-import { useCurrentUser, UserPermission } from "../userPermissions/hooks/currentUser";
+import { CurrentUser, useCurrentUser, UserPermission } from "../userPermissions/hooks/currentUser";
 
 export type MasterMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
     requiredPermission?: UserPermission;
@@ -13,9 +13,7 @@ export type MasterMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
 
 export type MasterMenuData = MasterMenuItem[];
 
-export function getMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const user = useCurrentUser();
+export function getMenuFromMasterMenuData(items: MasterMenuData, user: CurrentUser): MenuItem[] {
     const mapFn = (item: MasterMenuItem): MenuItem => {
         const { route, submenu, to, ...menuItem } = item;
         return {
@@ -43,7 +41,8 @@ export interface MasterMenuProps {
 }
 
 export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWidth = 1024 }) => {
-    const menuItems = getMenuFromMasterMenuData(menu);
+    const user = useCurrentUser();
+    const menuItems = getMenuFromMasterMenuData(menu, user);
     const { open, toggleOpen } = React.useContext(MenuContext);
     const windowSize = useWindowSize();
     const match = useRouteMatch();
