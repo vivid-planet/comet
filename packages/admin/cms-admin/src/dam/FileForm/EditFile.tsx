@@ -196,6 +196,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                 // override default onAfterSubmit because default is stackApi.goBack()
                 // https://github.com/vivid-planet/comet/blob/master/packages/admin/src/FinalForm.tsx#L53
             }}
+            validateOnBlur
         >
             {({ pristine, hasValidationErrors, submitting, handleSubmit }) => (
                 <>

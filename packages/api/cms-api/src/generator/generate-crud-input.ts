@@ -2,6 +2,7 @@ import { EntityMetadata } from "@mikro-orm/core";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
 import { buildNameVariants } from "./utils/build-name-variants";
+import { integerTypes } from "./utils/constants";
 import { generateImportsCode, Imports } from "./utils/generate-imports-code";
 import {
     findBlockImportPath,
@@ -99,7 +100,6 @@ export async function generateCrudInput(
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
-            const integerTypes = ["int", "integer", "tinyint", "smallint", "mediumint", "bigint", "int2", "int4", "int8", "serial"];
             if (integerTypes.includes(prop.columnTypes[0])) {
                 decorators.push("@IsInt()");
             } else {

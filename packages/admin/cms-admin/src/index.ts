@@ -55,6 +55,7 @@ export {
 export { DependenciesConfigProvider, useDependenciesConfig } from "./dependencies/DependenciesConfig";
 export { DependencyList } from "./dependencies/DependencyList";
 export { DependencyInterface } from "./dependencies/types";
+export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootBlocksMethods";
 export type { DocumentInterface, DocumentType } from "./documents/types";
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
 export { FileField } from "./form/file/FileField";

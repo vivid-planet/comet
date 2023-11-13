@@ -88,6 +88,9 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
             dependencies.push({
                 targetGraphqlObjectType: "DamFile",
                 id: state.damFile.id,
+                data: {
+                    damFile: state.damFile,
+                },
             });
         }
 

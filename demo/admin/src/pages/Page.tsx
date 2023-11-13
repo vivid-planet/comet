@@ -1,8 +1,6 @@
 import { messages } from "@comet/admin";
 import { File, FileNotMenu } from "@comet/admin-icons";
-import { BlocksBlockOutput } from "@comet/blocks-admin/lib/blocks/factories/createBlocksBlock";
-import { DocumentInterface } from "@comet/cms-admin";
-import { DependencyInterface } from "@comet/cms-admin/lib/dependencies/types";
+import { createDocumentRootBlocksMethods, DependencyInterface, DocumentInterface } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
@@ -50,12 +48,6 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
             }
         }
     `,
-    inputToOutput: (input) => {
-        return {
-            content: PageContentBlock.state2Output(PageContentBlock.input2State(input.content)),
-            seo: SeoBlock.state2Output(SeoBlock.input2State(input.seo)),
-        };
-    },
     InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
         if (page.userGroup !== "All") {
             return <Chip size="small" label={page.userGroup} />;
@@ -64,22 +56,10 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
     },
     menuIcon: File,
     hideInMenuIcon: FileNotMenu,
-    anchors: (input) => PageContentBlock.anchors?.(PageContentBlock.input2State(input.content)) ?? [],
-    dependencies: (input) => {
-        const pageContentDependencies = PageContentBlock.dependencies?.(PageContentBlock.input2State(input.content)) ?? [];
-        const seoDependencies = SeoBlock.dependencies?.(SeoBlock.input2State(input.seo)) ?? [];
-
-        return [...pageContentDependencies, ...seoDependencies];
-    },
-    replaceDependenciesInOutput: (output, replacements) => {
-        const newOutput = {
-            ...output,
-            content: PageContentBlock.replaceDependenciesInOutput(output.content as BlocksBlockOutput, replacements),
-            seo: SeoBlock.replaceDependenciesInOutput(output.seo, replacements),
-        };
-
-        return newOutput;
-    },
+    ...createDocumentRootBlocksMethods({
+        content: PageContentBlock,
+        seo: SeoBlock,
+    }),
     getUrl: async ({ rootColumnName, jsonPath, contentScopeUrl, apolloClient, id }) => {
         const { data, error } = await apolloClient.query<GQLPageDependencyQuery, GQLPageDependencyQueryVariables>({
             query: gql`

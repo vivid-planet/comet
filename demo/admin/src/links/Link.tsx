@@ -1,6 +1,6 @@
 import { messages } from "@comet/admin";
 import { Link as LinkIcon } from "@comet/admin-icons";
-import { DependencyInterface, DocumentInterface } from "@comet/cms-admin";
+import { createDocumentRootBlocksMethods, DependencyInterface, DocumentInterface } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
@@ -45,11 +45,6 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & D
             }
         }
     `,
-    inputToOutput: (input) => {
-        return {
-            content: LinkBlock.state2Output(LinkBlock.input2State(input.content)),
-        };
-    },
     InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
         if (page.userGroup !== "All") {
             return <Chip size="small" label={page.userGroup} />;
@@ -57,13 +52,9 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & D
         return null;
     },
     menuIcon: LinkIcon,
-    anchors: () => [],
-    dependencies: (input) => LinkBlock.dependencies?.(LinkBlock.input2State(input.content)) ?? [],
-    replaceDependenciesInOutput: (output, replacements) => {
-        return {
-            content: LinkBlock.replaceDependenciesInOutput(output.content, replacements),
-        };
-    },
+    ...createDocumentRootBlocksMethods({
+        content: LinkBlock,
+    }),
     getUrl: async ({ jsonPath, contentScopeUrl, id, apolloClient }) => {
         const { data, error } = await apolloClient.query<GQLLinkDependencyQuery, GQLLinkDependencyQueryVariables>({
             query: gql`
