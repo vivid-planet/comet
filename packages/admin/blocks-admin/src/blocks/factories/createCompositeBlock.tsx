@@ -287,6 +287,18 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                 </StackSwitch>
             );
         },
+        resolveDependencyRoute: (state, jsonPath) => {
+            const key = jsonPath.split(".")[0];
+
+            const route = [];
+            if (blockConfigNormalized[key].nested) {
+                route.push(key);
+            }
+
+            route.push(block.resolveDependencyRoute(state, jsonPath));
+
+            return route.join("/");
+        },
     };
     // allows to "fine-tune" the block with the product of the factory as argument
     // @TODO: this override-fn should be the 2nd argument (1st argument are factory-options) in every block factory!

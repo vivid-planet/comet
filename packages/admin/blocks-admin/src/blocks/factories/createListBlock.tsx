@@ -469,7 +469,7 @@ export function createListBlock<T extends BlockInterface>({
         },
         resolveDependencyRoute: (state, jsonPath) => {
             if (!/^blocks.\d+.props/.test(jsonPath)) {
-                throw new Error("ColumnsBlock: Invalid jsonPath");
+                throw new Error("ListBlock: Invalid jsonPath");
             }
 
             const pathArr = jsonPath.split(".");
