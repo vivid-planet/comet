@@ -47,7 +47,7 @@ export { useDamConfig } from "./dam/config/useDamConfig";
 export { DamPage } from "./dam/DamPage";
 export { DashboardHeader, DashboardHeaderProps } from "./dashboard/DashboardHeader";
 export { DashboardWidgetRoot, DashboardWidgetRootProps } from "./dashboard/widgets/DashboardWidgetRoot";
-export { LatestBuildsDashboardWidget, LatestBuildsDashboardWidgetProps } from "./dashboard/widgets/LatestBuildsDashboardWidget";
+export { LatestBuildsDashboardWidget } from "./dashboard/widgets/LatestBuildsDashboardWidget";
 export {
     LatestContentUpdatesDashboardWidget,
     LatestContentUpdatesDashboardWidgetProps,
