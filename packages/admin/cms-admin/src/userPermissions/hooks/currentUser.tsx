@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import React from "react";
 
+import { ContentScopeInterface } from "../../contentScope/Provider";
 import { GQLCurrentUserPermission } from "../../graphql.generated";
 import { GQLCurrentUserQuery } from "./currentUser.generated";
 
@@ -8,16 +9,12 @@ const CurrentUserContext = React.createContext<CurrentUser | undefined>(undefine
 
 export type UserPermission = string;
 
-export type ContentScope = {
-    [key: string]: string;
-};
-
 export class CurrentUser {
     name = undefined;
     email = undefined;
     language = undefined;
     permissions: GQLCurrentUserPermission[] = [];
-    contentScopes: ContentScope[] = [];
+    contentScopes: ContentScopeInterface[] = [];
     isAllowed(permission?: UserPermission): boolean {
         if (this.email === undefined) return false;
         if (!permission) return true;
