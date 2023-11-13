@@ -44,7 +44,7 @@ export class PagesResolver {
 
     @ResolveField(() => PageTreeNode, { nullable: true })
     async pageTreeNode(@Parent() page: Page): Promise<PageTreeNodeInterface | null> {
-        return this.pageTreeService.createReadApi().getFirstNodeByAttachedPageId(page.id);
+        return this.pageTreeService.createReadApi({ visibility: "all" }).getFirstNodeByAttachedPageId(page.id);
     }
 
     @Mutation(() => Page)

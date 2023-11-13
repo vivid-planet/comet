@@ -9,7 +9,7 @@ export class PageTreeNodeDocumentEntityInfoService implements EntityInfoServiceI
     constructor(private readonly pageTreeService: PageTreeService) {}
 
     async getEntityInfo(document: DocumentInterface) {
-        const pageTreeReadApiService = this.pageTreeService.createReadApi();
+        const pageTreeReadApiService = this.pageTreeService.createReadApi({ visibility: "all" });
 
         const pageTreeNode = await pageTreeReadApiService.getFirstNodeByAttachedPageId(document.id);
 
