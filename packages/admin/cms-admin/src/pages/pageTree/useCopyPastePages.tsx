@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import { LocalErrorScopeApolloContext, readClipboardText, writeClipboardText } from "@comet/admin";
+import { LocalErrorScopeApolloContext, messages, readClipboardText, useErrorDialog, writeClipboardText } from "@comet/admin";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -70,6 +70,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     const damScope = useDamScope();
     const blockContext = useCmsBlockContext();
     const progress = useProgressDialog({ title: <FormattedMessage id="comet.pages.insertingPages" defaultMessage="Inserting pages" /> });
+    const errorDialog = useErrorDialog();
 
     const prepareForClipboard = React.useCallback(
         async (pages: GQLPageTreePageFragment[]): Promise<PagesClipboard> => {
@@ -170,11 +171,19 @@ function useCopyPastePages(): UseCopyPastePagesApi {
         async (parentId: string | null, pages: PagesClipboard, options: SendPagesOptions) => {
             try {
                 await sendPages(parentId, pages, options, { client, scope, documentTypes, blockContext, damScope }, updateProgress);
+            } catch (e) {
+                errorDialog?.showError({
+                    title: <FormattedMessage {...messages.error} />,
+                    userMessage: (
+                        <FormattedMessage id="comet.pages.cannotPastePage" defaultMessage="An unexpected error occured when pasting pages." />
+                    ),
+                    error: String(e),
+                });
             } finally {
-                updateProgress(undefined);
+                updateProgress(undefined); //hides progress dialog
             }
         },
-        [client, scope, documentTypes, blockContext, damScope, updateProgress],
+        [client, scope, documentTypes, blockContext, damScope, updateProgress, errorDialog],
     );
 
     return {
