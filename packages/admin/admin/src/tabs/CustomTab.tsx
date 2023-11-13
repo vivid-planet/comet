@@ -16,10 +16,10 @@ const colorMapping: { [K in Status]: any } = {
     warning: warningPalette.main,
 };
 
-const defaultIcons: { [K in Status]: React.ReactNode } = {
-    success: <CheckRounded />,
-    error: <PriorityHighRounded />,
-    warning: <HorizontalRuleRounded />,
+const defaultIcons: { [K in Status]: React.FunctionComponentElement<IconProps> } = {
+    success: <CheckRounded fontSize="inherit" />,
+    error: <PriorityHighRounded fontSize="inherit" />,
+    warning: <HorizontalRuleRounded fontSize="inherit" />,
 };
 
 export interface TabProps extends Omit<MuiTabProps, "children" | "icon" | "iconPosition"> {
@@ -27,18 +27,18 @@ export interface TabProps extends Omit<MuiTabProps, "children" | "icon" | "iconP
     forceRender?: boolean;
     children: React.ReactNode;
     currentTab: number;
-    tabIcon?: React.ReactNode;
+    tabIcon?: React.FunctionComponentElement<IconProps>;
     status?: Status;
     showStatusIcon?: boolean;
-    statusIcon?: React.ReactNode;
+    statusIcon?: React.FunctionComponentElement<IconProps>;
     showTooltip?: boolean;
     tooltipMessage?: string;
-    tooltipIcon?: React.ReactNode;
+    tooltipIcon?: React.FunctionComponentElement<IconProps>;
     tooltipPlacement?: TooltipProps["placement"];
     smallTabText?: boolean;
 }
 
-export const Tab: React.FC<Omit<TabProps, "currentTab"> & WithStyles<typeof styles>> = () => null;
+export const Tab: React.FC<Omit<TabProps, "currentTab">> = () => null;
 
 export function TabComponent({
     children,
@@ -87,7 +87,9 @@ export function TabComponent({
                 <Box display="flex" alignItems="center">
                     {status && (
                         <Box component="span" className={classes.status} bgcolor={statusColor}>
-                            {showStatusIcon ? statusIcon : null}
+                            {showStatusIcon && React.isValidElement(statusIcon)
+                                ? React.cloneElement<IconProps>(statusIcon, { fontSize: "inherit" }) // overwrite fontSize prop to always have the same inherited size
+                                : null}
                         </Box>
                     )}
                     {tabIcon && (
