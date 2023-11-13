@@ -109,12 +109,12 @@
                         {
                             "name": "props",
                             "kind": "OneOfBlocks",
-                            "blocks": [
-                                "Space",
-                                "RichText",
-                                "Headline",
-                                "DamImage"
-                            ],
+                            "blocks": {
+                                "space": "Space",
+                                "richtext": "RichText",
+                                "headline": "Headline",
+                                "image": "DamImage"
+                            },
                             "nullable": false
                         }
                     ]
@@ -140,10 +140,10 @@
                         {
                             "name": "props",
                             "kind": "OneOfBlocks",
-                            "blocks": [
-                                "PixelImage",
-                                "SvgImage"
-                            ],
+                            "blocks": {
+                                "pixelImage": "PixelImage",
+                                "svgImage": "SvgImage"
+                            },
                             "nullable": false
                         }
                     ]
@@ -168,10 +168,10 @@
                         {
                             "name": "props",
                             "kind": "OneOfBlocks",
-                            "blocks": [
-                                "PixelImage",
-                                "SvgImage"
-                            ],
+                            "blocks": {
+                                "pixelImage": "PixelImage",
+                                "svgImage": "SvgImage"
+                            },
                             "nullable": false
                         }
                     ]
@@ -656,11 +656,11 @@
                         {
                             "name": "props",
                             "kind": "OneOfBlocks",
-                            "blocks": [
-                                "InternalLink",
-                                "ExternalLink",
-                                "NewsLink"
-                            ],
+                            "blocks": {
+                                "internal": "InternalLink",
+                                "external": "ExternalLink",
+                                "news": "NewsLink"
+                            },
                             "nullable": false
                         }
                     ]
@@ -685,11 +685,11 @@
                         {
                             "name": "props",
                             "kind": "OneOfBlocks",
-                            "blocks": [
-                                "InternalLink",
-                                "ExternalLink",
-                                "NewsLink"
-                            ],
+                            "blocks": {
+                                "internal": "InternalLink",
+                                "external": "ExternalLink",
+                                "news": "NewsLink"
+                            },
                             "nullable": false
                         }
                     ]
@@ -798,10 +798,10 @@
                         {
                             "name": "props",
                             "kind": "OneOfBlocks",
-                            "blocks": [
-                                "DamImage",
-                                "DamVideo"
-                            ],
+                            "blocks": {
+                                "image": "DamImage",
+                                "video": "DamVideo"
+                            },
                             "nullable": false
                         }
                     ]
@@ -826,10 +826,10 @@
                         {
                             "name": "props",
                             "kind": "OneOfBlocks",
-                            "blocks": [
-                                "DamImage",
-                                "DamVideo"
-                            ],
+                            "blocks": {
+                                "image": "DamImage",
+                                "video": "DamVideo"
+                            },
                             "nullable": false
                         }
                     ]
@@ -871,12 +871,12 @@
                         {
                             "name": "props",
                             "kind": "OneOfBlocks",
-                            "blocks": [
-                                "Headline",
-                                "RichText",
-                                "DamImage",
-                                "TextImage"
-                            ],
+                            "blocks": {
+                                "heading": "Headline",
+                                "richtext": "RichText",
+                                "image": "DamImage",
+                                "textImage": "TextImage"
+                            },
                             "nullable": false
                         }
                     ]
@@ -987,21 +987,21 @@
                         {
                             "name": "props",
                             "kind": "OneOfBlocks",
-                            "blocks": [
-                                "Space",
-                                "RichText",
-                                "Headline",
-                                "DamImage",
-                                "TextImage",
-                                "DamVideo",
-                                "YouTubeVideo",
-                                "LinkList",
-                                "FullWidthImage",
-                                "Columns",
-                                "Anchor",
-                                "TwoLists",
-                                "Media"
-                            ],
+                            "blocks": {
+                                "space": "Space",
+                                "richtext": "RichText",
+                                "headline": "Headline",
+                                "image": "DamImage",
+                                "textImage": "TextImage",
+                                "damVideo": "DamVideo",
+                                "youTubeVideo": "YouTubeVideo",
+                                "linkList": "LinkList",
+                                "fullWidthImage": "FullWidthImage",
+                                "columns": "Columns",
+                                "anchor": "Anchor",
+                                "twoLists": "TwoLists",
+                                "media": "Media"
+                            },
                             "nullable": false
                         },
                         {
@@ -1263,11 +1263,11 @@
                         {
                             "name": "props",
                             "kind": "OneOfBlocks",
-                            "blocks": [
-                                "InternalLink",
-                                "ExternalLink",
-                                "NewsLink"
-                            ],
+                            "blocks": {
+                                "internal": "InternalLink",
+                                "external": "ExternalLink",
+                                "news": "NewsLink"
+                            },
                             "nullable": false
                         }
                     ]
@@ -1292,11 +1292,11 @@
                         {
                             "name": "props",
                             "kind": "OneOfBlocks",
-                            "blocks": [
-                                "InternalLink",
-                                "ExternalLink",
-                                "NewsLink"
-                            ],
+                            "blocks": {
+                                "internal": "InternalLink",
+                                "external": "ExternalLink",
+                                "news": "NewsLink"
+                            },
                             "nullable": false
                         }
                     ]
