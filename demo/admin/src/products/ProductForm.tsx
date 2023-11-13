@@ -88,6 +88,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         : {
               image: rootBlocks.image.defaultValues(),
               inStock: false,
+              tags: [],
           };
 
     const saveConflict = useFormSaveConflict({
