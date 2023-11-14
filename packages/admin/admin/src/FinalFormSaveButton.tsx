@@ -13,15 +13,17 @@ export const FinalFormSaveButton = ({ message = <FormattedMessage {...messages.s
     const form = useForm();
     const { pristine, hasValidationErrors, submitting, hasSubmitErrors } = useFormState();
 
+    const isDisabled = pristine || hasValidationErrors || submitting;
+
     return (
         <SaveButton
-            disabled={pristine || hasValidationErrors || submitting}
+            disabled={isDisabled}
             color="primary"
             variant="contained"
             saving={submitting}
             hasErrors={hasSubmitErrors}
             onClick={() => {
-                !pristine && !hasValidationErrors && !submitting && form.submit();
+                if (!isDisabled) form.submit();
             }}
         >
             {message}
