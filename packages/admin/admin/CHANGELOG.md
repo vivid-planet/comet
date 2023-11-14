@@ -1,5 +1,22 @@
 # @comet/admin
 
+## 4.7.0
+
+### Minor Changes
+
+-   fde8e42b: Add tab scrolling to make tabs responsive
+
+### Patch Changes
+
+-   eac9990b: Fix the clear-button in `FinalFormSelect` when using it with the `multiple` prop.
+
+    -   The clear button is now only shown when at least one value is selected.
+    -   Clearing the value now sets it to an empty array instead of `undefined`, which would cause an error when trying to render the select.
+
+-   fe310df8: Prevent the clear-button and the select-arrow from overlapping when using `FinalFormSelect` with the `clearable` prop.
+-   Updated dependencies [dbdc0f55]
+    -   @comet/admin-icons@4.7.0
+
 ## 4.6.0
 
 ### Patch Changes
