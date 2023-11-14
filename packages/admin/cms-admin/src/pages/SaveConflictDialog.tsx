@@ -69,22 +69,22 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                         <FormattedMessage id="comet.saveConflictDialog.whatCanIDoNow.heading" defaultMessage="What can I do now?" />
                     </Typography>
                     <StyledList>
-                        <ListItem>
+                        <StyledListItem>
                             <Typography>
                                 <FormattedMessage
                                     id="comet.saveConflictDialog.whatCanIDoNow.option2"
                                     defaultMessage="View the other changes in a new tab: You must make your changes again in the new tab."
                                 />
                             </Typography>
-                        </ListItem>
-                        <ListItem>
+                        </StyledListItem>
+                        <StyledListItem>
                             <Typography>
                                 <FormattedMessage
                                     id="comet.saveConflictDialog.whatCanIDoNow.option1"
                                     defaultMessage="Discard your unsaved changes: All your changes will be lost."
                                 />
                             </Typography>
-                        </ListItem>
+                        </StyledListItem>
                     </StyledList>
                 </Box>
 
@@ -94,30 +94,30 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                     </Typography>
 
                     <StyledList>
-                        <ListItem>
+                        <StyledListItem>
                             <Typography>
                                 <FormattedMessage
                                     id="comet.saveConflictDialog.avoidConflicts.tip1"
                                     defaultMessage="Avoid opening the same page in multiple tabs."
                                 />
                             </Typography>
-                        </ListItem>
-                        <ListItem>
+                        </StyledListItem>
+                        <StyledListItem>
                             <Typography>
                                 <FormattedMessage
                                     id="comet.saveConflictDialog.avoidConflicts.tip3"
                                     defaultMessage="Save your changes regularly. Don't leave a page open for a long time with unsaved changes."
                                 />
                             </Typography>
-                        </ListItem>
-                        <ListItem>
+                        </StyledListItem>
+                        <StyledListItem>
                             <Typography>
                                 <FormattedMessage
                                     id="comet.saveConflictDialog.avoidConflicts.tip2"
                                     defaultMessage="Avoid editing a page while another user is also editing it."
                                 />
                             </Typography>
-                        </ListItem>
+                        </StyledListItem>
                     </StyledList>
                 </Box>
             </DialogContent>
@@ -159,11 +159,12 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
 
 const StyledList = styled(List)`
     list-style-type: disc;
-    & .MuiListItem-root {
-        display: list-item;
-        padding-left: 0;
-    }
     padding-inline-start: ${({ theme }) => theme.spacing(6)};
+`;
+
+const StyledListItem = styled(ListItem)`
+    display: list-item;
+    padding-left: 0;
 `;
 
 export { SaveConflictDialog };
