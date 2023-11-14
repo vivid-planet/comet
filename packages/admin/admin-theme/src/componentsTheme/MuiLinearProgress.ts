@@ -1,12 +1,15 @@
+import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
 export const getMuiLinearProgress: GetMuiComponentTheme<"MuiLinearProgress"> = (component) => ({
     ...component,
     defaultProps: {
         color: "primary",
-        sx: {
+    },
+    styleOverrides: mergeOverrideStyles<"MuiLinearProgress">(component?.styleOverrides, {
+        root: {
             height: "2px",
             zIndex: 1, // for use in LoadingOverlay of DataGrid, otherwise the LinearProgress is behind the border
         },
-    },
+    }),
 });
