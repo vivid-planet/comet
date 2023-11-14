@@ -987,6 +987,7 @@
                         {
                             "name": "props",
                             "kind": "OneOfBlocks",
+<<<<<<< HEAD
                             "blocks": {
                                 "space": "Space",
                                 "richtext": "RichText",
@@ -1002,6 +1003,22 @@
                                 "twoLists": "TwoLists",
                                 "media": "Media"
                             },
+=======
+                            "blocks": [
+                                "Space",
+                                "RichText",
+                                "Headline",
+                                "DamImage",
+                                "TextImage",
+                                "DamVideo",
+                                "YouTubeVideo",
+                                "Video",
+                                "LinkList",
+                                "FullWidthImage",
+                                "Columns",
+                                "Anchor"
+                            ],
+>>>>>>> main
                             "nullable": false
                         },
                         {
@@ -1668,6 +1685,7 @@
         ]
     },
     {
+<<<<<<< HEAD
         "name": "TwoLists",
         "fields": [
             {
@@ -1703,15 +1721,26 @@
         "fields": [
             {
                 "name": "blocks",
+=======
+        "name": "Video",
+        "fields": [
+            {
+                "name": "attachedBlocks",
+>>>>>>> main
                 "kind": "NestedObjectList",
                 "object": {
                     "fields": [
                         {
+<<<<<<< HEAD
                             "name": "key",
+=======
+                            "name": "type",
+>>>>>>> main
                             "kind": "String",
                             "nullable": false
                         },
                         {
+<<<<<<< HEAD
                             "name": "visible",
                             "kind": "Boolean",
                             "nullable": false
@@ -1720,11 +1749,20 @@
                             "name": "props",
                             "kind": "Block",
                             "block": "Headline",
+=======
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "DamVideo",
+                                "YouTubeVideo"
+                            ],
+>>>>>>> main
                             "nullable": false
                         }
                     ]
                 },
                 "nullable": false
+<<<<<<< HEAD
             }
         ],
         "inputFields": [
@@ -1735,10 +1773,26 @@
                     "fields": [
                         {
                             "name": "key",
+=======
+            },
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "block",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+>>>>>>> main
                             "kind": "String",
                             "nullable": false
                         },
                         {
+<<<<<<< HEAD
                             "name": "visible",
                             "kind": "Boolean",
                             "nullable": false
@@ -1747,11 +1801,30 @@
                             "name": "props",
                             "kind": "Block",
                             "block": "Headline",
+=======
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": [
+                                "DamVideo",
+                                "YouTubeVideo"
+                            ],
+>>>>>>> main
                             "nullable": false
                         }
                     ]
                 },
+<<<<<<< HEAD
                 "nullable": false
+=======
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": true
+>>>>>>> main
             }
         ]
     },

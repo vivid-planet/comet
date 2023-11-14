@@ -5,10 +5,17 @@ import {
     AdminComponentButton,
     AdminComponentPaper,
     BlockCategory,
+<<<<<<< HEAD
     BlockDependency,
     BlockInterface,
     BlocksFinalForm,
     createBlockSkeleton,
+=======
+    BlockInterface,
+    BlocksFinalForm,
+    createBlockSkeleton,
+    useAdminComponentPaper,
+>>>>>>> main
 } from "@comet/blocks-admin";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
@@ -111,73 +118,77 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
+        const isInPaper = useAdminComponentPaper();
+
         return (
-            <BlocksFinalForm
-                onSubmit={(values) => {
-                    updateState((prevState) => {
-                        // case: autoplay = false and showControls = false is not allowed
-                        if (!values.autoplay && prevState.autoplay) {
-                            return { ...prevState, ...values, showControls: true };
-                        }
-                        if (!values.showControls && prevState.showControls) {
-                            return { ...prevState, ...values, autoplay: true };
-                        }
-                        return { ...prevState, ...values };
-                    });
-                }}
-                initialValues={state}
-            >
-                {state.damFile ? (
-                    <FieldContainer label={<FormattedMessage {...messages.file} />} fullWidth>
-                        <AdminComponentPaper disablePadding>
-                            <Box padding={3}>
-                                <Grid container alignItems="center" spacing={3}>
-                                    <Grid item>
-                                        {/* TODO show thumbnail of video */}
-                                        <Video fontSize="large" color="primary" />
+            <Box padding={isInPaper ? 3 : 0} pb={0}>
+                <BlocksFinalForm
+                    onSubmit={(values) => {
+                        updateState((prevState) => {
+                            // case: autoplay = false and showControls = false is not allowed
+                            if (!values.autoplay && prevState.autoplay) {
+                                return { ...prevState, ...values, showControls: true };
+                            }
+                            if (!values.showControls && prevState.showControls) {
+                                return { ...prevState, ...values, autoplay: true };
+                            }
+                            return { ...prevState, ...values };
+                        });
+                    }}
+                    initialValues={state}
+                >
+                    {state.damFile ? (
+                        <FieldContainer label={<FormattedMessage {...messages.file} />} fullWidth>
+                            <AdminComponentPaper disablePadding>
+                                <Box padding={3}>
+                                    <Grid container alignItems="center" spacing={3}>
+                                        <Grid item>
+                                            {/* TODO show thumbnail of video */}
+                                            <Video fontSize="large" color="primary" />
+                                        </Grid>
+                                        <Grid item xs>
+                                            <Typography variant="subtitle1">{state.damFile.name}</Typography>
+                                            <Typography variant="body1" color="textSecondary">
+                                                <DamPathLazy fileId={state.damFile.id} />
+                                            </Typography>
+                                        </Grid>
                                     </Grid>
-                                    <Grid item xs>
-                                        <Typography variant="subtitle1">{state.damFile.name}</Typography>
-                                        <Typography variant="body1" color="textSecondary">
-                                            <DamPathLazy fileId={state.damFile.id} />
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                            </Box>
-                            <Divider />
-                            <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined })}>
-                                <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
-                            </AdminComponentButton>
-                        </AdminComponentPaper>
-                    </FieldContainer>
-                ) : (
+                                </Box>
+                                <Divider />
+                                <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined })}>
+                                    <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
+                                </AdminComponentButton>
+                            </AdminComponentPaper>
+                        </FieldContainer>
+                    ) : (
+                        <Field
+                            name="damFile"
+                            label={<FormattedMessage {...messages.file} />}
+                            component={FileField}
+                            fullWidth
+                            allowedMimetypes={["video/mp4"]}
+                        />
+                    )}
                     <Field
-                        name="damFile"
-                        label={<FormattedMessage {...messages.file} />}
-                        component={FileField}
-                        fullWidth
-                        allowedMimetypes={["video/mp4"]}
+                        type="checkbox"
+                        name="autoplay"
+                        label={<FormattedMessage id="comet.blocks.video.autoplay" defaultMessage="Autoplay" />}
+                        component={FinalFormSwitch}
                     />
-                )}
-                <Field
-                    type="checkbox"
-                    name="autoplay"
-                    label={<FormattedMessage id="comet.blocks.video.autoplay" defaultMessage="Autoplay" />}
-                    component={FinalFormSwitch}
-                />
-                <Field
-                    type="checkbox"
-                    name="loop"
-                    label={<FormattedMessage id="comet.blocks.video.loop" defaultMessage="Loop" />}
-                    component={FinalFormSwitch}
-                />
-                <Field
-                    type="checkbox"
-                    name="showControls"
-                    label={<FormattedMessage id="comet.blocks.video.showControls" defaultMessage="Show controls" />}
-                    component={FinalFormSwitch}
-                />
-            </BlocksFinalForm>
+                    <Field
+                        type="checkbox"
+                        name="loop"
+                        label={<FormattedMessage id="comet.blocks.video.loop" defaultMessage="Loop" />}
+                        component={FinalFormSwitch}
+                    />
+                    <Field
+                        type="checkbox"
+                        name="showControls"
+                        label={<FormattedMessage id="comet.blocks.video.showControls" defaultMessage="Show controls" />}
+                        component={FinalFormSwitch}
+                    />
+                </BlocksFinalForm>
+            </Box>
         );
     },
 
