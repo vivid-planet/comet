@@ -78,7 +78,7 @@ interface SendPagesDependencies {
  * Iterates over passed pages synchronous and creates data with mutations
  *
  * Process:
- *      1. traverses the tree with top-down strategy and find all source scopes of file dependencies
+ *      1. find all source scopes of file dependencies, to create an dam inbox folder if needed
  *      2. traverses the tree with top-down strategy and create page tree nodes
  *          2a. Generate unique slug by adding "{slug}-{uniqueNumber}" to the slug
  *          2b. Create new PageTreeNode with new name "{name} {uniqueNumber}" and new parent
@@ -95,10 +95,78 @@ export async function sendPages(
     { client, scope, documentTypes, blockContext, damScope }: SendPagesDependencies,
     updateProgress: (progress: number, message: React.ReactNode) => void,
 ): Promise<void> {
-    const tree = arrayToTreeMap<PageClipboard>(pages);
     const dependencyReplacements = createPageTreeNodeIdReplacements(pages);
     let inboxFolderIdForCopiedFiles: string | undefined = undefined;
     const hasDamScope = Object.entries(damScope).length > 0;
+
+    // 1. find all source scopes of file dependencies, to create an dam inbox folder if needed
+    updateProgress(0, <FormattedMessage id="comet.pages.paste.analyzingPages" defaultMessage="analyzing pages" />);
+    {
+        let progressPages = 0;
+        const sourceScopes: Record<string, unknown>[] = [];
+        for (const sourcePage of pages) {
+            const documentType = documentTypes[sourcePage.documentType];
+            if (!documentType) {
+                throw new Error(`Unknown document type "${documentType}"`);
+            }
+            if (sourcePage?.document != null) {
+                for (const damFile of fileDependenciesFromDocument(documentType, sourcePage.document)) {
+                    //TODO use damFile.size; to build a progress bar for uploading/downloading files
+                    if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
+                        //file already handled (same file used multiple times on page)
+                    } else if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl) && (!hasDamScope || isEqual(damFile.scope, damScope))) {
+                        //same scope, same server, no need to copy
+                    } else {
+                        // TODO eventually handle multiple files in one request for better performance
+                        const { data } = await client.query<GQLFindCopiesOfFileInScopeQuery, GQLFindCopiesOfFileInScopeQueryVariables>({
+                            query: gql`
+                                query FindCopiesOfFileInScope($id: ID!, $scope: DamScopeInput!, $imageCropArea: ImageCropAreaInput) {
+                                    findCopiesOfFileInScope(id: $id, scope: $scope, imageCropArea: $imageCropArea) {
+                                        id
+                                    }
+                                }
+                            `,
+                            variables: {
+                                id: damFile.id,
+                                scope: damScope,
+                                imageCropArea: damFile.image?.cropArea,
+                            },
+                        });
+                        if (data.findCopiesOfFileInScope.length > 0) {
+                            // use already existing file
+                            dependencyReplacements.push({
+                                type: "DamFile",
+                                originalId: damFile.id,
+                                replaceWithId: data.findCopiesOfFileInScope[0].id,
+                            });
+                        } else {
+                            // copying is required
+                            if (damFile.scope && !sourceScopes.some((scope) => isEqual(scope, damFile.scope))) {
+                                sourceScopes.push(damFile.scope);
+                            }
+                        }
+                    }
+                }
+            }
+            progressPages++;
+            updateProgress(
+                (progressPages / pages.length) * 10,
+                <FormattedMessage id="comet.pages.paste.analyzingPages" defaultMessage="analyzing pages" />,
+            ); // 10% of progress is used for analyzing pages
+        }
+
+        if (sourceScopes.length > 0) {
+            const { id } = await createInboxFolder({
+                client,
+                targetScope: damScope,
+                sourceScopes,
+            });
+            inboxFolderIdForCopiedFiles = id;
+        }
+    }
+
+    // 2. traverses the tree with top-down strategy and create page tree nodes
+    updateProgress(10, <FormattedMessage id="comet.pages.paste.creatingPages" defaultMessage="creating pages" />);
 
     const handlePageTreeNode = async (node: PageClipboard, newParentId: string | null, posOffset: number): Promise<string> => {
         const documentType = documentTypes[node.documentType];
@@ -159,81 +227,8 @@ export async function sendPages(
 
         return data.createPageTreeNode.id;
     };
-
-    // 1. traverses the tree with top-down strategy and find all source scopes of file dependencies
-    updateProgress(0, <FormattedMessage id="comet.pages.paste.analyzingPages" defaultMessage="analyzing pages" />);
     {
-        let progressPages = 0;
-        const sourceScopes: Record<string, unknown>[] = [];
-        const traverse = async (parentId: string): Promise<void> => {
-            const nodes = tree.get(parentId) || [];
-            for (const node of nodes) {
-                const documentType = documentTypes[node.documentType];
-                if (!documentType) {
-                    throw new Error(`Unknown document type "${documentType}"`);
-                }
-                if (node?.document != null) {
-                    for (const damFile of fileDependenciesFromDocument(documentType, node.document)) {
-                        //TODO use damFile.size; to build a progress bar for uploading/downloading files
-                        if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
-                            //file already handled (same file used multiple times on page)
-                        } else if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl) && (!hasDamScope || isEqual(damFile.scope, damScope))) {
-                            //same scope, same server, no need to copy
-                        } else {
-                            // TODO eventually handle multiple files in one request for better performance
-                            const { data } = await client.query<GQLFindCopiesOfFileInScopeQuery, GQLFindCopiesOfFileInScopeQueryVariables>({
-                                query: gql`
-                                    query FindCopiesOfFileInScope($id: ID!, $scope: DamScopeInput!, $imageCropArea: ImageCropAreaInput) {
-                                        findCopiesOfFileInScope(id: $id, scope: $scope, imageCropArea: $imageCropArea) {
-                                            id
-                                        }
-                                    }
-                                `,
-                                variables: {
-                                    id: damFile.id,
-                                    scope: damScope,
-                                    imageCropArea: damFile.image?.cropArea,
-                                },
-                            });
-                            if (data.findCopiesOfFileInScope.length > 0) {
-                                // use already existing file
-                                dependencyReplacements.push({
-                                    type: "DamFile",
-                                    originalId: damFile.id,
-                                    replaceWithId: data.findCopiesOfFileInScope[0].id,
-                                });
-                            } else {
-                                // copying is required
-                                if (damFile.scope && !sourceScopes.some((scope) => isEqual(scope, damFile.scope))) {
-                                    sourceScopes.push(damFile.scope);
-                                }
-                            }
-                        }
-                    }
-                }
-                progressPages++;
-                updateProgress(
-                    (progressPages / pages.length) * 10,
-                    <FormattedMessage id="comet.pages.paste.analyzingPages" defaultMessage="analyzing pages" />,
-                ); // 10% of progress is used for analyzing pages
-                await traverse(node.id);
-            }
-        };
-        await traverse("root");
-
-        if (sourceScopes.length > 0) {
-            const { id } = await createInboxFolder({
-                client,
-                targetScope: damScope,
-                sourceScopes,
-            });
-            inboxFolderIdForCopiedFiles = id;
-        }
-    }
-
-    // 2. traverses the tree with top-down strategy and create page tree nodes
-    updateProgress(10, <FormattedMessage id="comet.pages.paste.creatingPages" defaultMessage="creating pages" />);
-    {
+        const tree = arrayToTreeMap<PageClipboard>(pages);
         let progressPages = 0;
         const traverse = async (parentId: string, newParentId: string | null): Promise<void> => {
             const nodes = tree.get(parentId) || [];
