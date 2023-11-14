@@ -34,7 +34,6 @@ export const FinalFormSelect = <T,>({
     children,
     endAdornment,
     clearable,
-    multiple,
     ...rest
 }: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input">) => {
     const selectEndAdornment = clearable ? (
@@ -59,29 +58,15 @@ export const FinalFormSelect = <T,>({
 
     if (children) {
         return (
-<<<<<<< HEAD
-            <Select
-                {...rest}
-                endAdornment={selectEndAdornment}
-                name={name}
-                onChange={onChange}
-                value={value}
-                onFocus={onFocus}
-                onBlur={onBlur}
-                multiple={multiple}
-            >
-=======
             <Select {...selectProps} value={value}>
->>>>>>> main
                 {children}
             </Select>
         );
     }
 
     return (
-<<<<<<< HEAD
         <Select
-            {...rest}
+            {...selectProps}
             endAdornment={
                 <>
                     {loading && (
@@ -92,7 +77,6 @@ export const FinalFormSelect = <T,>({
                     {selectEndAdornment}
                 </>
             }
-            name={name}
             onChange={(event) => {
                 const value = event.target.value;
                 onChange(
@@ -102,19 +86,10 @@ export const FinalFormSelect = <T,>({
                 );
             }}
             value={Array.isArray(value) ? value.map((i) => getOptionValue(i)) : getOptionValue(value)}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            multiple={multiple}
         >
             {loading && (
                 <MenuItem value="" disabled>
                     <FormattedMessage id="common.loading" defaultMessage="Loading ..." />
-=======
-        <Select {...selectProps} value={value}>
-            {options.length === 0 && (loading || value) && (
-                <MenuItem value={value as any} key={JSON.stringify(value)}>
-                    {loading ? <CircularProgress size={20} /> : getOptionLabel(value)}
->>>>>>> main
                 </MenuItem>
             )}
 

@@ -5,17 +5,11 @@ import {
     AdminComponentButton,
     AdminComponentPaper,
     BlockCategory,
-<<<<<<< HEAD
     BlockDependency,
     BlockInterface,
     BlocksFinalForm,
     createBlockSkeleton,
-=======
-    BlockInterface,
-    BlocksFinalForm,
-    createBlockSkeleton,
     useAdminComponentPaper,
->>>>>>> main
 } from "@comet/blocks-admin";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";

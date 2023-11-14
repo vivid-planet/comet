@@ -29,18 +29,12 @@ export interface Props {
     tabsProps?: Partial<TabsProps>;
 }
 
-<<<<<<< HEAD
-function RouterTabsComponent({ children, tabComponent: TabComponent = MuiTab, tabsProps, classes }: Props & WithStyles<typeof styles>) {
-=======
 function RouterTabsComponent({
     children,
     tabComponent: TabComponent = MuiTab,
     tabsProps: { ScrollButtonComponent = TabScrollButton, ...tabsProps } = {},
-    history,
-    match,
     classes,
 }: Props & WithStyles<typeof styles>) {
->>>>>>> main
     const stackApi = useStackApi();
     const stackSwitchApi = useStackSwitchApi();
     const history = useHistory();

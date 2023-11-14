@@ -18,7 +18,7 @@ importers:
         specifier: ^2.3.2
         version: 2.3.2
       '@comet/eslint-plugin':
-        specifier: workspace:^4.6.0
+        specifier: workspace:^4.7.0
         version: link:packages/eslint-plugin
       '@formatjs/cli':
         specifier: ^4.8.3
@@ -60,7 +60,7 @@ importers:
         specifier: workspace:^4.7.0
         version: link:../../packages/admin/admin
       '@comet/admin-date-time':
-        specifier: workspace:^4.6.0
+        specifier: workspace:^4.7.0
         version: link:../../packages/admin/admin-date-time
       '@comet/admin-icons':
         specifier: workspace:^4.7.0
@@ -2656,7 +2656,7 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1
       '@comet/eslint-plugin':
-        specifier: workspace:^4.6.0
+        specifier: workspace:^4.7.0
         version: link:../eslint-plugin
       '@next/eslint-plugin-next':
         specifier: ^12.0.0

@@ -11,14 +11,9 @@ import { HeadlineBlock } from "../common/blocks/HeadlineBlock";
 import { TextImageBlock } from "../common/blocks/TextImageBlock";
 import { ColumnsBlock } from "./blocks/ColumnsBlock";
 import { FullWidthImageBlock } from "./blocks/FullWidthImageBlock";
-<<<<<<< HEAD
 import { MediaBlock } from "./blocks/MediaBlock";
 import { TwoListsBlock } from "./blocks/TwoListsBlock";
-=======
-import { HeadlineBlock } from "./blocks/HeadlineBlock";
-import { TextImageBlock } from "./blocks/TextImageBlock";
 import { VideoBlock } from "./blocks/VideoBlock";
->>>>>>> main
 
 export const PageContentBlock = createBlocksBlock({
     name: "PageContent",

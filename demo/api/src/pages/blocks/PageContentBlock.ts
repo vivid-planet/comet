@@ -10,11 +10,8 @@ import { FullWidthImageBlock } from "./full-width-image.block";
 import { HeadlineBlock } from "./headline.block";
 import { MediaBlock } from "./media.block";
 import { TextImageBlock } from "./TextImageBlock";
-<<<<<<< HEAD
 import { TwoListsBlock } from "./two-lists.block";
-=======
 import { VideoBlock } from "./video.block";
->>>>>>> main
 
 const supportedBlocks = {
     space: SpaceBlock,
