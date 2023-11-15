@@ -1,8 +1,8 @@
-import { AccessControlService as CometAccessControlService, ContentScopesForUser, PermissionsForUser, User, UserPermissions } from "@comet/cms-api";
+import { AbstractAccessControlService, ContentScopesForUser, PermissionsForUser, User, UserPermissions } from "@comet/cms-api";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
-export class AccessControlService extends CometAccessControlService {
+export class AccessControlService extends AbstractAccessControlService {
     getPermissionsForUser(user: User): PermissionsForUser {
         if (user.email.endsWith("@comet-dxp.com")) {
             return UserPermissions.allPermissions;

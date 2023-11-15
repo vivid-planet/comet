@@ -37,12 +37,12 @@ export interface UserPermissionsOptions {
 }
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {
     UserService: Type<UserPermissionsUserServiceInterface>;
-    AccessControlService?: Type<AccessControlServiceInterface>;
+    AccessControlService: Type<AccessControlServiceInterface>;
 }
 
 export interface UserPermissionsAsyncOptions extends UserPermissionsOptions {
     userService: UserPermissionsUserServiceInterface;
-    accessControlService?: AccessControlServiceInterface;
+    accessControlService: AccessControlServiceInterface;
 }
 
 export interface UserPermissionsOptionsFactory {

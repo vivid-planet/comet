@@ -9,13 +9,13 @@ import { PageTreeService } from "../page-tree/page-tree.service";
 import { ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { SubjectEntityMeta } from "../user-permissions/decorators/subject-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
-import { AccessControlService } from "./access-control.service";
 import { ACCESS_CONTROL_SERVICE } from "./user-permissions.constants";
+import { AccessControlServiceInterface } from "./user-permissions.types";
 
 @Injectable()
 export class ContentScopeService {
     constructor(
-        @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlService,
+        @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
         private reflector: Reflector,
         private readonly orm: MikroORM,
         @Optional() private readonly pageTreeService?: PageTreeService,
