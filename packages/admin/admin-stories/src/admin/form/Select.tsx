@@ -123,9 +123,9 @@ function Story() {
                                         )}
                                     </Field>
 
-                                    <Field name="multipleFlavours" label="Multiple Flavours" fullWidth multiple>
+                                    <Field name="multipleFlavours" label="Multiple Flavours" fullWidth>
                                         {(props) => (
-                                            <FinalFormSelect {...props}>
+                                            <FinalFormSelect {...props} multiple>
                                                 {options.map((option) => (
                                                     <MenuItem value={option.value} key={option.value}>
                                                         {option.label}
@@ -135,9 +135,9 @@ function Story() {
                                         )}
                                     </Field>
 
-                                    <Field name="multipleFlavoursClearable" label="Multiple Flavours Clearable" fullWidth multiple clearable>
+                                    <Field name="multipleFlavoursClearable" label="Multiple Flavours Clearable" fullWidth>
                                         {(props) => (
-                                            <FinalFormSelect {...props}>
+                                            <FinalFormSelect {...props} multiple clearable>
                                                 {options.map((option) => (
                                                     <MenuItem value={option.value} key={option.value}>
                                                         {option.label}

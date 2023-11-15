@@ -14,7 +14,7 @@ export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputEl
 }
 
 export const FinalFormSelect = <T,>({
-    input: { checked, value, name, onChange, onFocus, onBlur, multiple, ...restInput },
+    input: { checked, value, name, onChange, onFocus, onBlur, ...restInput },
     meta,
     isAsync = false,
     options = [],
@@ -36,6 +36,11 @@ export const FinalFormSelect = <T,>({
     clearable,
     ...rest
 }: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input">) => {
+    // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
+    // 1. <Field component={FinalFormSelect} multiple /> -> multiple is in restInput
+    // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
+    const multiple = restInput.multiple ?? rest.multiple;
+
     const selectEndAdornment = clearable ? (
         <ClearInputAdornment
             position="end"
