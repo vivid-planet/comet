@@ -13,6 +13,7 @@ import { ColumnsBlock } from "./blocks/ColumnsBlock";
 import { FullWidthImageBlock } from "./blocks/FullWidthImageBlock";
 import { MediaBlock } from "./blocks/MediaBlock";
 import { TwoListsBlock } from "./blocks/TwoListsBlock";
+import { VideoBlock } from "./blocks/VideoBlock";
 
 export const PageContentBlock = createBlocksBlock({
     name: "PageContent",
@@ -24,6 +25,7 @@ export const PageContentBlock = createBlocksBlock({
         textImage: TextImageBlock,
         damVideo: DamVideoBlock,
         youTubeVideo: YouTubeVideoBlock,
+        video: VideoBlock,
         linkList: LinkListBlock,
         fullWidthImage: FullWidthImageBlock,
         columns: ColumnsBlock,
