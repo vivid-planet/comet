@@ -2,4 +2,4 @@
 "@comet/blocks-admin": minor
 ---
 
-UI improvements in admin of ColumnsBlock
+Improvements to the layout selection UX in createColumnsBlock
