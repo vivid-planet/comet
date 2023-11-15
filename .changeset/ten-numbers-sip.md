@@ -18,6 +18,10 @@ In the API:
 In the Admin:
 
 -   Set `scopeParts` in the `DamConfigProvider` (e.g. `<DamConfigProvider value={{ scopeParts: ["domain"] }}>`)
+-   Render the content scope indicator in the `DamPage`
+    ```tsx
+    <DamPage renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} />} />
+    ```
 
 You can access the current DAM scope in the Admin using the `useDamScope()` hook.
 
