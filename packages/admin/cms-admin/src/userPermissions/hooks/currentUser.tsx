@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
+import { Loading } from "@comet/admin";
 import React from "react";
 
 import { ContentScopeInterface } from "../../contentScope/Provider";
@@ -39,9 +40,9 @@ export const CurrentUserProvider: React.FC = ({ children }) => {
 
     if (error) throw error.message;
 
-    const currentUser = new CurrentUser();
-    if (data?.currentUser) Object.assign(currentUser, data.currentUser);
-    return <CurrentUserContext.Provider value={currentUser}>{children}</CurrentUserContext.Provider>;
+    if (!data) return <Loading behavior="fillPageHeight" />;
+
+    return <CurrentUserContext.Provider value={Object.assign(new CurrentUser(), data.currentUser)}>{children}</CurrentUserContext.Provider>;
 };
 
 export function useCurrentUser(): CurrentUser {
