@@ -11,7 +11,7 @@ import { UserService } from "./user.service";
     providers: [
         createStaticAuthedUserStrategy({
             staticAuthedUser: staticUsers[0].id,
-            userExtraData: { role: "admin", domains: ["main", "secondary"] }, // TODO Remove once they disappear from CurrentUserInterface
+            userExtraData: { domains: ["main", "secondary"] },
         }),
         createAuthResolver({
             currentUser: CurrentUser,

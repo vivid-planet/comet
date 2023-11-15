@@ -55,7 +55,6 @@ export function useContentScopeConfig(p: ContentScopeConfigProps): void {
 const currentUserQuery = gql`
     query CurrentUserScope {
         currentUser {
-            role
             domains
         }
     }
