@@ -44,7 +44,6 @@ class DamFileDownloadLinkBlockData extends BlockData {
             ret.file = {
                 id: file.id,
                 name: file.name,
-                damPath: await filesService.getDamPath(file),
                 fileUrl: await filesService.createFileUrl(file, previewDamUrls),
             };
         }

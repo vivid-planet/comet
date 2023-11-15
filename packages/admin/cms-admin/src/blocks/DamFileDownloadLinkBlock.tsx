@@ -7,6 +7,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput } from "../blocks.generated";
+import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { GQLDamFileDownloadLinkFileQuery, GQLDamFileDownloadLinkFileQueryVariables } from "./DamFileDownloadLinkBlock.generated";
@@ -96,7 +97,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                             <Box padding={3}>
                                 <Typography variant="subtitle1">{state.file.name}</Typography>
                                 <Typography variant="body1" color="textSecondary">
-                                    {state.file.damPath}
+                                    <DamPathLazy fileId={state.file.id} />
                                 </Typography>
                             </Box>
                             <Divider />
