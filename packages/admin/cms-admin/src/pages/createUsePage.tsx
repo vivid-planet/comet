@@ -469,7 +469,7 @@ function PageSaveButton({ handleSavePage, hasChanges, hasConflict, saving, saveE
         saveButtonProps.sx = {
             color: (theme) => theme.palette.error.contrastText,
             [`&.${buttonGroupClasses.grouped}:not(:last-child)`]: {
-                borderRightColor: (theme) => theme.palette.error.contrastText,
+                borderRightColor: (theme) => theme.palette.error.dark,
             },
         };
         splitButtonProps.selectIcon = <ChevronDown sx={{ color: (theme) => theme.palette.error.contrastText }} />;
