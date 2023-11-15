@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Field, FinalFormSelect } from "@comet/admin";
+import { Field, FinalFormSelect, messages } from "@comet/admin";
 import { Delete } from "@comet/admin-icons";
 import { AdminComponentButton, AdminComponentPaper, BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/blocks-admin";
 import { Box, Divider, MenuItem, Typography } from "@mui/material";
@@ -105,7 +105,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                                 startIcon={<Delete />}
                                 onClick={() => updateState({ file: undefined, openFileType: OpenFileTypeMethod.NEW_TAB })}
                             >
-                                <FormattedMessage id="generic.empty" defaultMessage="Empty" />
+                                <FormattedMessage {...messages.empty} />
                             </AdminComponentButton>
                         </AdminComponentPaper>
                     ) : (
