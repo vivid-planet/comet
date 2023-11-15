@@ -133,7 +133,6 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                         </Field>
                     </AdminComponentPaper>
                 </BlocksFinalForm>
-                <Divider />
             </>
         );
     },
