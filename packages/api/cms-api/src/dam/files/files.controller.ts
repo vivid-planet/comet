@@ -23,7 +23,7 @@ import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator
 import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometValidationException } from "../../common/errors/validation.exception";
-import { ContentScopeService } from "../../content-scope/content-scope.service";
+import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { CDN_ORIGIN_CHECK_HEADER, DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { DamScopeInterface } from "../types";

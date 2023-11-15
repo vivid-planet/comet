@@ -2,9 +2,9 @@ import { NotFoundException, Type } from "@nestjs/common";
 import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
-import { SubjectEntity } from "../../common/decorators/subject-entity.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
-import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
+import { ScopeGuardActive } from "../../user-permissions/decorators/scope-guard-active.decorator";
+import { SubjectEntity } from "../../user-permissions/decorators/subject-entity.decorator";
 import { DamScopeInterface } from "../types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFolderArgs, createFolderByNameAndParentIdArgs, FolderArgsInterface, FolderByNameAndParentIdArgsInterface } from "./dto/folder.args";

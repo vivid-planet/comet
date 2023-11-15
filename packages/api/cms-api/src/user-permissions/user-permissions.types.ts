@@ -1,4 +1,5 @@
 import { ModuleMetadata, Type } from "@nestjs/common";
+import { CurrentUserInterface } from "src/auth/current-user/current-user";
 
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
@@ -19,28 +20,40 @@ export type PermissionsForUser =
 
 export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentScopes;
 
-export interface UserPermissionsOptions {
-    availablePermissions?: (keyof Permission)[];
-    availableContentScopes?: ContentScope[];
-    userService: UserPermissionsUserService;
+export interface AccessControlServiceInterface {
+    canAccessScope(requestScope: ContentScope, user: CurrentUserInterface): boolean;
 }
 
-export interface UserPermissionsUserService {
+export interface UserPermissionsUserServiceInterface {
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
     getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }
 
-export interface UserPermissionsOptionsFactory {
-    createUserPermissionsOptions(): Promise<UserPermissionsOptions> | UserPermissionsOptions;
+export interface UserPermissionsOptions {
+    availablePermissions?: (keyof Permission)[];
+    availableContentScopes?: ContentScope[];
+}
+export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {
+    UserService: Type<UserPermissionsUserServiceInterface>;
+    AccessControlService?: Type<AccessControlServiceInterface>;
 }
 
-export interface UserPermissionsAsyncOptions extends Pick<ModuleMetadata, "imports"> {
+export interface UserPermissionsAsyncOptions extends UserPermissionsOptions {
+    userService: UserPermissionsUserServiceInterface;
+    accessControlService?: AccessControlServiceInterface;
+}
+
+export interface UserPermissionsOptionsFactory {
+    createUserPermissionsOptions(): Promise<UserPermissionsAsyncOptions> | UserPermissionsAsyncOptions;
+}
+
+export interface UserPermissionsModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     inject?: any[];
     useExisting?: Type<UserPermissionsOptionsFactory>;
     useClass?: Type<UserPermissionsOptionsFactory>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useFactory?: (...args: any[]) => Promise<UserPermissionsOptions> | UserPermissionsOptions;
+    useFactory?: (...args: any[]) => Promise<UserPermissionsAsyncOptions> | UserPermissionsAsyncOptions;
 }

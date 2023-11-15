@@ -2,13 +2,13 @@ import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 
-import { CurrentUserInterface } from "../auth/current-user/current-user";
-import { ContentScopeService } from "./content-scope.service";
-import { SCOPE_GUARD_ACTIVE_METADATA_KEY, ScopeGuardActiveMetadataValue } from "./decorators/scope-guard-active.decorator";
+import { CurrentUserInterface } from "../../auth/current-user/current-user";
+import { ContentScopeService } from "../content-scope.service";
+import { SCOPE_GUARD_ACTIVE_METADATA_KEY, ScopeGuardActiveMetadataValue } from "../decorators/scope-guard-active.decorator";
 
 @Injectable()
-export class ScopeGuard implements CanActivate {
-    constructor(private reflector: Reflector, private readonly contentScopeService: ContentScopeService) {}
+export class UserPermissionsGuard implements CanActivate {
+    constructor(protected reflector: Reflector, private readonly contentScopeService: ContentScopeService) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const isPublicApi = this.reflector.getAllAndOverride("publicApi", [context.getHandler(), context.getClass()]);

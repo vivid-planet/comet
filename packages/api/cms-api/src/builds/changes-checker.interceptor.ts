@@ -3,7 +3,7 @@ import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { Observable } from "rxjs";
 
-import { ContentScopeService } from "../content-scope/content-scope.service";
+import { ContentScopeService } from "../user-permissions/content-scope.service";
 import { BuildsService } from "./builds.service";
 import { SKIP_BUILD_METADATA_KEY } from "./skip-build.decorator";
 

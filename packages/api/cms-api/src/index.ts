@@ -40,8 +40,6 @@ export { AutoBuildStatus } from "./builds/dto/auto-build-status.object";
 export { ChangesSinceLastBuild } from "./builds/entities/changes-since-last-build.entity";
 export { SKIP_BUILD_METADATA_KEY, SkipBuild } from "./builds/skip-build.decorator";
 export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInterface } from "./common/decorators/request-context.decorator";
-export { ScopedEntity, ScopedEntityMeta } from "./common/decorators/scoped-entity.decorator";
-export { SubjectEntity, SubjectEntityMeta, SubjectEntityOptions } from "./common/decorators/subject-entity.decorator";
 export { getRequestFromExecutionContext } from "./common/decorators/utils";
 export { CometException } from "./common/errors/comet.exception";
 export { CometEntityNotFoundException } from "./common/errors/entity-not-found.exception";
@@ -64,7 +62,6 @@ export { SortDirection } from "./common/sorting/sort-direction.enum";
 export { IsNullable } from "./common/validators/is-nullable";
 export { IsSlug } from "./common/validators/is-slug";
 export { IsUndefinable } from "./common/validators/is-undefinable";
-export { ContentScopeModule } from "./content-scope/content-scope.module";
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";
 export { ScaledImagesCacheService } from "./dam/cache/scaled-images-cache.service";
@@ -143,20 +140,19 @@ export { RedirectsModule } from "./redirects/redirects.module";
 export { createRedirectsResolver } from "./redirects/redirects.resolver";
 export { RedirectsService } from "./redirects/redirects.service";
 export { IsValidRedirectSource, IsValidRedirectSourceConstraint } from "./redirects/validators/isValidRedirectSource";
-export { UserPermissionsCurrentUserLoader } from "./user-permissions/auth/current-user-loader";
+export { ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
+export { SubjectEntity, SubjectEntityMeta, SubjectEntityOptions } from "./user-permissions/decorators/subject-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
 export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
 export { User } from "./user-permissions/dto/user";
 export { ContentScope } from "./user-permissions/interfaces/content-scope.interface";
 export { Permission } from "./user-permissions/interfaces/user-permission.interface";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
-export { UserPermissionsService } from "./user-permissions/user-permissions.service";
 export {
+    AccessControlServiceInterface,
     ContentScopesForUser,
     PermissionsForUser,
     UserPermissions,
-    UserPermissionsOptions,
-    UserPermissionsOptionsFactory,
-    UserPermissionsUserService,
+    UserPermissionsUserServiceInterface,
     Users,
 } from "./user-permissions/user-permissions.types";

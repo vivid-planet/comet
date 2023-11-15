@@ -1,10 +1,18 @@
-import { ContentScopesForUser, FindUsersArgs, PermissionsForUser, User, UserPermissions, UserPermissionsUserService, Users } from "@comet/cms-api";
+import {
+    ContentScopesForUser,
+    FindUsersArgs,
+    PermissionsForUser,
+    User,
+    UserPermissions,
+    UserPermissionsUserServiceInterface,
+    Users,
+} from "@comet/cms-api";
 import { Injectable } from "@nestjs/common";
 
 import { staticUsers } from "./static-users";
 
 @Injectable()
-export class UserService implements UserPermissionsUserService {
+export class UserService implements UserPermissionsUserServiceInterface {
     getUser(id: string): User {
         const index = parseInt(id) - 1;
         if (staticUsers[index]) return staticUsers[index];

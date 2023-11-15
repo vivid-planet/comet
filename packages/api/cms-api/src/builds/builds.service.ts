@@ -6,11 +6,11 @@ import parser from "cron-parser";
 import { format } from "date-fns";
 
 import { CurrentUserInterface } from "../auth/current-user/current-user";
-import { ContentScope } from "../common/decorators/content-scope.interface";
-import { ContentScopeService } from "../content-scope/content-scope.service";
 import { JobStatus } from "../kubernetes/job-status.enum";
 import { INSTANCE_LABEL, PARENT_CRON_JOB_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
+import { ContentScopeService } from "../user-permissions/content-scope.service";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { BuildTemplatesService } from "./build-templates.service";
 import { BUILDER_LABEL, LABEL_ANNOTATION, TRIGGER_ANNOTATION } from "./builds.constants";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
