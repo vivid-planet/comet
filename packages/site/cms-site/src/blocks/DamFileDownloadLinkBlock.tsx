@@ -21,21 +21,22 @@ export const DamFileDownloadLinkBlock = withPreview(
             return children;
         }
 
-        const handleClick = (event: React.MouseEvent) => {
-            event.preventDefault();
+        if (openFileType === OpenFileTypeMethod.DOWNLOAD) {
+            return React.cloneElement(children, {
+                href: "#",
+                onClick: () => saveAs(file.fileUrl, file.name),
+                title,
+            });
+        } else if (openFileType === OpenFileTypeMethod.NEW_TAB) {
+            return React.cloneElement(
+                <a href={file.fileUrl} target="_blank" rel="noreferrer">
+                    {children}
+                </a>,
+                { title },
+            );
+        }
 
-            if (openFileType === OpenFileTypeMethod.DOWNLOAD) {
-                saveAs(file.fileUrl, file.name);
-            } else if (openFileType === OpenFileTypeMethod.NEW_TAB) {
-                window.open(file.fileUrl);
-            }
-        };
-
-        return React.cloneElement(children, {
-            href: "#",
-            onClick: handleClick,
-            title,
-        });
+        return children;
     },
     { label: "DamFileDownloadLink" },
 );
