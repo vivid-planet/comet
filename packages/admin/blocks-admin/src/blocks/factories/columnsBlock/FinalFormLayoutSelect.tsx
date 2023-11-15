@@ -21,9 +21,10 @@ interface Section {
 
 interface Props extends FieldRenderProps<ColumnsBlockLayout> {
     layouts: ColumnsBlockLayout[];
+    numberOfMatchingColumns: number;
 }
 
-export function FinalFormLayoutSelect({ input: { value, onChange }, layouts }: Props): React.ReactElement {
+export function FinalFormLayoutSelect({ input: { value, onChange }, layouts, numberOfMatchingColumns }: Props) {
     const sections = React.useMemo(() => {
         const sections: Section[] = [];
 
@@ -56,6 +57,19 @@ export function FinalFormLayoutSelect({ input: { value, onChange }, layouts }: P
 
         onChange(layouts.find((layout) => layout.name === event.target.value));
     };
+
+    if (numberOfMatchingColumns === 0) {
+        return null;
+    }
+
+    if (numberOfMatchingColumns === 1 && layouts.length >= 1) {
+        return (
+            <LayoutDisplayContainer>
+                {layouts[0].preview}
+                <StyledListItemText primary={layouts[0].label} secondary={layouts[0].name} />
+            </LayoutDisplayContainer>
+        );
+    }
 
     return (
         <Select value={value.name} onChange={handleChange} fullWidth>
@@ -109,6 +123,22 @@ const MenuItemContent = styled("div")`
 `;
 
 const ListItemText = styled(MuiListItemText)`
+    margin-top: 0;
+    margin-bottom: 0;
+`;
+
+const LayoutDisplayContainer = styled("div")`
+    display: grid;
+    grid-template-columns: minmax(80px, 1fr) 2fr;
+    column-gap: ${({ theme }) => theme.spacing(2)};
+    align-items: center;
+    background-color: #ffffff;
+    border: 1px solid ${({ theme }) => theme.palette.divider};
+    padding: 9px;
+    box-sizing: border-box;
+`;
+
+const StyledListItemText = styled(ListItemText)`
     margin-top: 0;
     margin-bottom: 0;
 `;

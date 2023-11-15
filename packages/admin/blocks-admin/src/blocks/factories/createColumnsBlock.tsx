@@ -20,7 +20,6 @@ import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { BlockCategory, BlockInputApi, BlockInterface, DispatchSetStateAction, PreviewContent } from "../types";
 import { resolveNewState } from "../utils";
 import { FinalFormColumnsSelect } from "./columnsBlock/FinalFormColumnsSelect";
-import { FinalFormLayoutDisplay } from "./columnsBlock/FinalFormLayoutDisplay";
 import { FinalFormLayoutSelect } from "./columnsBlock/FinalFormLayoutSelect";
 import { ListBlockItem, ListBlockState } from "./createListBlock";
 import { createUseAdminComponent as createUseListBlockAdminComponent } from "./listBlock/createUseAdminComponent";
@@ -244,15 +243,10 @@ export function createColumnsBlock<T extends BlockInterface>({
                                 <Field
                                     name="layout"
                                     label={<FormattedMessage id="comet.blocks.columns.layout" defaultMessage="Layout" />}
-                                    component={
-                                        layouts.filter((layout) => {
-                                            return layout.columns === state.layout.columns;
-                                        }).length <= 1
-                                            ? FinalFormLayoutDisplay
-                                            : FinalFormLayoutSelect
-                                    }
+                                    component={FinalFormLayoutSelect}
                                     layouts={groupLayoutsByColumnsApi.getLayouts(state.layout.columns)}
                                     fullWidth
+                                    numberOfMatchingColumns={layouts.filter((layout) => layout.columns === state.layout.columns).length}
                                 />
                             </BlocksFinalForm>
                             <AdminComponentSection title={<FormattedMessage id="comet.blocks.columns.items" defaultMessage="Items" />}>
