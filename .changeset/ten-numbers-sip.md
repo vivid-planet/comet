@@ -10,6 +10,6 @@ The DAM scoping can be enabled optionally. You can still use the DAM without sco
 To enable DAM scoping, you must
 
 - In the API: Pass a `Scope` class to the `DamModule`
-- In the admin app: Add a `DamConfigProvider` with `scopeParts` (e.g. `<DamConfigProvider value={{ scopeParts: ["domain"] }}>`)
+- In the admin app: Set `scopeParts` in the `DamConfigProvider` (e.g. `<DamConfigProvider value={{ scopeParts: ["domain"] }}>`)
 
 You can access the current DAM scope in the admin app using the `useDamScope()` hook.
