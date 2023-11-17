@@ -4,48 +4,6 @@
 
 ### Major Changes
 
--   dc130d16: Remove deprecated `SkipBuildInterceptor`
-
-    The `SkipBuildInterceptor` was never intended to be part of the public API. If you want to skip a build for an operation, use the `@SkipBuild()` decorator instead.
-
--   c19c9271: Rename dam entitiy class to match commonly used alias (File -> DamFile, Folder -> DamFolder)
--   9d3e8555: Remove `File` entity export
-
-    Depending on your use case, you may either use the created file entity in the application code, or the `FileInterface` export instead.
-
--   c91906d2: The `PageTreeModule` now requires the passed `PageTreeNode` entity to be named "PageTreeNode"
--   c91906d2: Move the `DiscoverService` from the `BlocksModule` to the new `DependenciesModule`
-
-    The `discoverRootBlocks()` method now also returns the `graphqlObjectType` of an entity. Furthermore, a `discoverTargetEntities()` method was added that returns information about all potential dependency targets.
-
--   a987e17c: Api Crud Generator now supports relations in entities
--   c91906d2: Rename `BlockIndexService` to `DependenciesService` and move it from the `BlocksModule` to the new `DependenciesModule`.
-
-    Following changes were made to the `DependenciesService`:
-
-    -   A stale-while-revalidate approach for refreshing the view was added to `refreshViews()`. If you need the view to be updated unconditionally, you must call the method with the new `force: true` option.
-    -   `getDependents()` and `getDependencies()` were added to fetch the dependents or dependencies of an entity instance from the view.
-
--   9d3e8555: Change `FilesService.upload` method signature
-
-    The method now accepts an options object as first argument, and a second `scope` argument.
-
-    **Before**
-
-    ```ts
-    await filesService.upload(file, folderId);
-    ```
-
-    **After**
-
-    ```ts
-    await filesService.upload({ file, folderId }, scope);
-    ```
-
--   9d3e8555: Remove `Folder` entity export
-
-    Depending on your use case, you may either use the created folder entity in the application code, or the `FolderInterface` export instead.
-
 -   9d3e8555: Add scoping to the DAM
 
     The DAM scoping can be enabled optionally. You can still use the DAM without scoping.
@@ -68,63 +26,66 @@
 
     You can access the current DAM scope in the Admin using the `useDamScope()` hook.
 
-    See Demo for an example on how to enable DAM scoping.
+    See the [Demo project](https://github.com/vivid-planet/comet/pull/976) for an example on how to enable DAM scoping.
+
+-   9d3e8555: Remove `File` entity export
+
+    Depending on your use case, you may either use the file entity created by `createFileEntity()` in the application code, or the `FileInterface` export instead.
+
+-   9d3e8555: Remove `Folder` entity export
+
+    Depending on your use case, you may either use the folder entity created by `createFolderEntity()` in the application code, or the `FolderInterface` export instead.
+
+-   c19c9271: Rename the DAM entity classes to match their commonly used aliases (`File` -> `DamFile`, `Folder` -> `DamFolder`)
+
+-   9d3e8555: Change `FilesService.upload()` method signature
+
+    The method now accepts an options object with a `scope` field as second argument.
+
+    **Before**
+
+    ```ts
+    await filesService.upload(file, folderId);
+    ```
+
+    **After**
+
+    ```ts
+    await filesService.upload(file, { folderId, scope });
+    ```
+
+-   c91906d2: Move the `DiscoverService` from the `BlocksModule` to the new `DependenciesModule`
+
+    The `discoverRootBlocks()` method now also returns the `graphqlObjectType` of an entity. Furthermore, a `discoverTargetEntities()` method was added that returns information about all potential dependency targets.
+
+-   c91906d2: Rename `BlockIndexService` to `DependenciesService` and move it from the `BlocksModule` to the new `DependenciesModule`.
+
+    Following changes were made to the `DependenciesService`:
+
+    -   A stale-while-revalidate approach for refreshing the view was added to `refreshViews()`. If you need the view to be updated unconditionally, you must call the method with the new `force: true` option.
+    -   `getDependents()` and `getDependencies()` were added to fetch the dependents or dependencies of an entity instance from the view.
+
+-   dc130d16: Remove deprecated `SkipBuildInterceptor`
+
+    The `SkipBuildInterceptor` was never intended to be part of the public API. If you want to skip a build for an operation, use the `@SkipBuild()` decorator instead.
+
+-   c91906d2: The `PageTreeModule` now requires the passed `PageTreeNode` entity to be named "PageTreeNode"
+-   API CRUD Generator:
+    -   a987e17c: Support relations in entities
 
 ### Minor Changes
 
--   f2aa78c8: Improve undefined/null handling for updates
+-   f2aa78c8: Improve undefined/null handling for update mutations
 
-    -   Add IsUndefinable and IsNull (similar, but more specific than IsOptional from class-validator)
-    -   Add custom PartialType (similar to @nestjs/mapped-types but uses IsUndefinable instead of IsOptional)
+    -   Add `@IsUndefinable()` and `@IsNull()` validators intended to be used in input types (similar, but more specific than `@IsOptional()` from `class-validator`)
+    -   Add custom `PartialType` intended to be used for update input types (similar to `@nestjs/mapped-types` but uses `@IsUndefinable()` instead of `@IsOptional()`)
 
-    Update api crud generator to allow partial update in update mutation:
-
-    -   null: set to null (eg. a relation or a Date)
-    -   undefined: do not touch this field
-
--   6b9787e6: It's now possible to opt-out of creating a redirect when changing the slug of a page
-
-    Previously, a redirect was always created.
-
--   6acd2d0a: api generator: support default values
-
-    Usage: set a default value in the entitiy, it will be used as default in the input. Null for relations
-    is also supported, set undefined as default value in entity.
-
--   1278e6d9: api generator: generation of create/update/delete mutations is now optional
-
-    set create/update/delete boolean of CrudGenerator decorator to false to skip those mutations
-
--   17165e96: API Generator: Support IDs of type string and integer (previously only UUID was supported"
--   e26bd900: Add various DAM UI/UX improvements
-
-    -   Replace underlying `Table` with `DataGrid`
-    -   Add paging to improve performance
-    -   Add a dialog to move files to another folder (instead of Drag and Drop)
-    -   Highlight newly uploaded files
-    -   Add a new footer to execute bulk actions
-    -   Add a "More Actions" dropdown above the `DataGrid` to execute bulk actions
-
--   8ed96981: Support Copy-Paste with DAM files across server instances by downloading the copied file
--   c49472c3: Add `calculateHashForFile()` method to `FilesService`
 -   9875e7d4: Support automatically importing DAM files into another scope when copying documents from one scope to another
-
-    The copy process was reworked:
-
-    -   The `DocumentInterface` now requires a `dependencies()` and a `replaceDependenciesInOutput()` method
-    -   The `BlockInterface` now has an optional `dependencies()` and a required `replaceDependenciesInOutput()` method
-    -   `rewriteInternalLinks()` was removed from `@comet/cms-admin`. Its functionality is replaced by `replaceDependenciesInOutput()`.
-
-    `dependencies()` returns information about dependencies of a document or block (e.g. a used `DamFile` or linked `PageTreeNode`). `replaceDependenciesInOutput()` replaces the IDs of all dependencies of a document or block with new IDs (necessary for copying documents or blocks to another scope).
-
-    You can use the new `createDocumentRootBlocksMethods()` to generate the methods for documents.
-
--   3a6dab1c: searchToMikroOrmQuery (used by api generator): split search string by spaces for a better search experience
--   621c9bd2: Extend configuration options for `createAuthProxyJwtStrategy()`
-
-    It's now possible to override the strategy and strategy options.
-
--   31c4779e: Api Generator: Add support for nested json and embedded properties
+-   8ed96981: Support copy/pasting DAM files across server instances by downloading the copied file
+-   6b9787e6: Offer possibility to opt-out of creating a redirect when changing the slug of a page (previously, a redirect was always created)
+-   c49472c3: Add `calculateHashForFile()` method to `FilesService`
+-   3a6dab1c: `searchToMikroOrmQuery()` now splits search string by spaces for a better search experience
+-   621c9bd2: Extend configuration options for `createAuthProxyJwtStrategy()`. It's now possible to override the strategy and strategy options.
 -   c91906d2: Add `DependenciesResolverFactory` and `DependentsResolverFactory` to easily add field resolvers for the `dependencies` or `dependents` of an entity
 
     You can use the factories as follows:
@@ -138,26 +99,45 @@
     export class ExampleModule {}
     ```
 
--   74e4fb6a: API Generator: Support OneToOne relations
--   c6e47a3f: Add updatedAt timestamp to page tree
+-   c6e47a3f: Add `updatedAt` timestamp to `PageTreeNode`
 
-    Adds an updatedAt timestamp to the page tree node that is infered from the attached documents. This timestamp can be used to sort the page tree. One common use case is the "Latest Content Updates" widget, which can now be limited to the current content scope.
+    Adds an `updatedAt` timestamp to the`PageTreeNode` that is inferred from the attached documents. This timestamp can be used to sort the PageTree. One common use case is the `LatestContentUpdatesDashboardWidget`, which can now be limited to the current content scope.
 
-    Note: The updatedAt timestamp is set to the current time when the migration is executed. You will need to write an additional migration if you want the timestamp to reflect the updatedAt timestamp of the active attached document.
+    Note: The `updatedAt` timestamp is set to the current time when the migration is executed. You will need to write an additional migration if you want the timestamp to reflect the `updatedAt` timestamp of the active attached document.
+
+-   API CRUD Generator:
+
+    -   f2aa78c8: Update API CRUD Generator to allow partial update in update mutations:
+
+        -   passing `null` for a field means: set this field to null (e.g. a relation or a Date)
+        -   passing `undefined` for a field means: do not change this field (keep the previous value)
+
+    -   6acd2d0a: Support default values
+
+        Usage: Set a default value in the entity and it will be used as default in the generated input type. `null` for relations is also supported by setting the default value in the entity to `undefined`.
+
+    -   1278e6d9: Generation of create/update/delete mutations is now optional
+
+        Setting create/update/delete boolean of `@CrudGenerator()` decorator to false will skip the generation of these mutations
+
+    -   17165e96: Support IDs of type string and integer (previously only UUID was supported)
+    -   31c4779e: Add support for nested json and embedded properties
 
 ### Patch Changes
 
--   9f11ac1d: api generator: support number fields (additional to DecimalType) in filter and sort generation
--   da73c0c3: API Generator: Prevent duplicate imports in generated files
 -   564f66d3: Allow `:`, `?`, `=` and `&` in redirect source paths
 -   b8e040ca: API Generator: Add support for TypeScript paths (e.g., `@src/`) by using the project's TSConfig
 -   1a95f4cc: Add `@SkipBuild()` decorator to mutations without content changes
--   ed13b68d: API Generator: Enums don't need to be exported from the entity file
 -   c1502d14: Ignore field resolvers in `ChangesCheckerInterceptor`
--   11ec1bbf: Fix GQL Type for damItemListPosition (before Float, now Int)
+-   11ec1bbf: Fix GQL Type for `damItemListPosition` query (before Float, now Int)
 -   49e85432: Expiration of JWT will be checked now. If you use this strategy, please make sure that the JWT will be refreshed (e.g. set refresh in Auth-Proxy or use updated charts).
 -   1cae2388: The `updatePageTreeNode` query no longer requires an `attachedDocument` argument
 -   cf49f3b9: `searchToMikroOrmQuery()` now ignores leading and trailing spaces. This fixes a bug where all rows were matched if there was a space before or after the search string.
+-   API CRUD Generator:
+-   9f11ac1d: Support number fields (additional to DecimalType) in filter and sort generation
+-   da73c0c3: Prevent duplicate imports in generated files
+-   ed13b68d: Enums don't need to be exported from the entity file anymore
+-   b8e040ca: Add support for TypeScript paths (e.g., `@src/`) by using the project's TSConfig
 -   Updated dependencies [c10a86c6]
 -   Updated dependencies [c91906d2]
     -   @comet/blocks-api@5.0.0

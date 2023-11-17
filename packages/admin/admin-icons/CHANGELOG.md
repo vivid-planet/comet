@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
--   ed692f50: Add new open and close hamburger icons and use them in the app header menu button
+-   ed692f50: Add new open and close hamburger icons and use them in the `AppHeaderMenuButton`
 
 ## 4.7.0
 

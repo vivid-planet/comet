@@ -4,9 +4,9 @@
 
 ### Minor Changes
 
--   b6f8cc0a: Add a new eslint rule that makes sure no private sibling imports are used
+-   b6f8cc0a: Add a new eslint rule that bans private sibling imports
 
-    Sibling File is eg a Foo.gql.ts file that should be considered as private sibling of Foo.ts and not used (imported) by any other file
+    A sibling file is, for example, a `Foo.gql.ts` file next to a `Foo.ts` file. `Foo.gql.ts` is considered a private sibling of `Foo.ts` and must not be used (imported) by any other file.
 
 ### Patch Changes
 

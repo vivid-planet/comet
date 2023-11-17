@@ -4,7 +4,6 @@
 
 ### Major Changes
 
--   4fe08312: BlockPreview Component removed, use higher level BlockPreviewContent instead
 -   9875e7d4: Support automatically importing DAM files into another scope when copying documents from one scope to another
 
     The copy process was reworked:
@@ -15,11 +14,34 @@
 
     `dependencies()` returns information about dependencies of a document or block (e.g. a used `DamFile` or linked `PageTreeNode`). `replaceDependenciesInOutput()` replaces the IDs of all dependencies of a document or block with new IDs (necessary for copying documents or blocks to another scope).
 
-    You can use the new `createDocumentRootBlocksMethods()` to generate the methods for documents.
+    You can use the new `createDocumentRootBlocksMethods()` to generate the methods for documents (see section @comet/cms-admin).
+
+-   4fe08312: Remove `BlockPreview` component, use higher level `BlockPreviewContent` instead
+
+    **Before:**
+
+    ```tsx
+    const state = linkBlock.input2State(params.value);
+    
+    return (
+        <BlockPreview
+            title={linkBlock.dynamicDisplayName?.(state) ?? linkBlock.displayName}
+            content={linkBlock.previewContent(state)}
+        />
+    );
+    ```
+    
+    **After:**
+    
+    ```tsx
+    return (
+        <BlockPreviewContent block={linkBlock} input={params.value} />
+    );
+    ```
 
 ### Minor Changes
 
--   a7116784: Allow Composite block with multiple sub blocks that have their own subroutes (eg a list)
+-   a7116784: Allow composite blocks with multiple sub blocks that have their own subroutes (e.g. a list)
 
 ### Patch Changes
 

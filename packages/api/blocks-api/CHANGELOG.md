@@ -6,7 +6,22 @@
 
 -   c10a86c6: Change blocks-meta.json format: the key (type) for OneOfBlocks is now included
 
-    Projects that still have a copy of generate-block-types should switch to @comet/cli
+    Projects that still have a copy of `generate-block-types.ts` should switch to `@comet/cli`:
+
+    -   Install `@comet/cli` as a dev dependency
+    -   Replace the scripts in the package.json of your admin:
+        
+        ```json
+            "generate-block-types": "comet generate-block-types --inputs",
+            "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"npm run generate-block-types\""
+        ```
+
+    -   Replace the scripts in the package.json of your site:
+
+        ```json
+            "generate-block-types": "comet generate-block-types",
+            "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"npm run generate-block-types\"",
+        ```
 
 -   c91906d2: Change the structure of `BlockIndexData` to make it generic
 
