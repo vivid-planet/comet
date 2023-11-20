@@ -14,7 +14,7 @@ import {
     useStoredState,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Box, Button, FormControlLabel, Paper, Switch } from "@mui/material";
+import { Box, Button, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
 import withStyles from "@mui/styles/withStyles";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -171,6 +171,7 @@ export function PagesPage({
                                                 // Unselect all
                                                 setSelectedIds([]);
                                             }
+<<<<<<< HEAD
                                         }}
                                         selectedTree={selectedTree}
                                         collapseAllDisabled={!expandedIds.length}
@@ -183,6 +184,32 @@ export function PagesPage({
                                     {loading ? (
                                         <Loading behavior="fillParent" />
                                     ) : (
+=======
+                                        } else if (selectState === "all_selected") {
+                                            // Unselect all
+                                            setSelectedIds([]);
+                                        }
+                                    }}
+                                    selectedTree={selectedTree}
+                                    collapseAllDisabled={!expandedIds.length}
+                                    onCollapseAllPressed={() => {
+                                        setExpandedIds([]);
+                                    }}
+                                />
+                            </ActionToolbarBox>
+                            <FullHeightPaper variant="outlined">
+                                {loading && isInitialLoad.current ? (
+                                    <Loading behavior="fillParent" />
+                                ) : (
+                                    <>
+                                        <Divider />
+                                        {loading && !isInitialLoad.current ? (
+                                            <LinearProgress />
+                                        ) : (
+                                            /* Placeholder to avoid content jumping when the loading bar appears */
+                                            <Box sx={{ backgroundColor: "white", width: "100%", height: 2 }} />
+                                        )}
+>>>>>>> main
                                         <PageTree
                                             ref={refPageTree}
                                             pages={pagesToRenderWithMatches}
@@ -192,10 +219,18 @@ export function PagesPage({
                                             category={category}
                                             siteUrl={siteConfig.url}
                                         />
+<<<<<<< HEAD
                                     )}
                                 </FullHeightPaper>
                             </PageTreeContent>
                         </PageTreeContext.Provider>
+=======
+                                    </>
+                                )}
+                            </FullHeightPaper>
+                        </PageTreeContent>
+                    </PageTreeContext.Provider>
+>>>>>>> main
 
                         <EditDialog>
                             <EditPageNode
