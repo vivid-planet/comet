@@ -3,7 +3,6 @@ import { DynamicModule, Global, Module, Provider } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 
 import { CURRENT_USER_LOADER } from "../auth/current-user/current-user-loader";
-import { AccessControlService } from "./access-control.service";
 import { UserPermissionsCurrentUserLoader } from "./auth/current-user-loader";
 import { UserPermissionsGuard } from "./auth/user-permissions.guard";
 import { ContentScopeService } from "./content-scope.service";
@@ -56,7 +55,7 @@ export class UserPermissionsModule {
                 },
                 {
                     provide: ACCESS_CONTROL_SERVICE,
-                    useClass: options.AccessControlService ?? AccessControlService,
+                    useClass: options.AccessControlService,
                 },
             ],
         };
@@ -75,7 +74,7 @@ export class UserPermissionsModule {
                 },
                 {
                     provide: ACCESS_CONTROL_SERVICE,
-                    useFactory: (options: UserPermissionsAsyncOptions) => options.accessControlService ?? new AccessControlService(),
+                    useFactory: (options: UserPermissionsAsyncOptions) => options.accessControlService,
                     inject: [USER_PERMISSIONS_OPTIONS],
                 },
             ],
