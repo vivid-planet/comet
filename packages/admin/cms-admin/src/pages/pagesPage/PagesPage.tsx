@@ -171,7 +171,6 @@ export function PagesPage({
                                                 // Unselect all
                                                 setSelectedIds([]);
                                             }
-<<<<<<< HEAD
                                         }}
                                         selectedTree={selectedTree}
                                         collapseAllDisabled={!expandedIds.length}
@@ -181,56 +180,31 @@ export function PagesPage({
                                     />
                                 </ActionToolbarBox>
                                 <FullHeightPaper variant="outlined">
-                                    {loading ? (
+                                    {loading && isInitialLoad.current ? (
                                         <Loading behavior="fillParent" />
                                     ) : (
-=======
-                                        } else if (selectState === "all_selected") {
-                                            // Unselect all
-                                            setSelectedIds([]);
-                                        }
-                                    }}
-                                    selectedTree={selectedTree}
-                                    collapseAllDisabled={!expandedIds.length}
-                                    onCollapseAllPressed={() => {
-                                        setExpandedIds([]);
-                                    }}
-                                />
-                            </ActionToolbarBox>
-                            <FullHeightPaper variant="outlined">
-                                {loading && isInitialLoad.current ? (
-                                    <Loading behavior="fillParent" />
-                                ) : (
-                                    <>
-                                        <Divider />
-                                        {loading && !isInitialLoad.current ? (
-                                            <LinearProgress />
-                                        ) : (
-                                            /* Placeholder to avoid content jumping when the loading bar appears */
-                                            <Box sx={{ backgroundColor: "white", width: "100%", height: 2 }} />
-                                        )}
->>>>>>> main
-                                        <PageTree
-                                            ref={refPageTree}
-                                            pages={pagesToRenderWithMatches}
-                                            editDialogApi={editDialogApi}
-                                            toggleExpand={toggleExpand}
-                                            onSelectChanged={onSelectChanged}
-                                            category={category}
-                                            siteUrl={siteConfig.url}
-                                        />
-<<<<<<< HEAD
+                                        <>
+                                            <Divider />
+                                            {loading && !isInitialLoad.current ? (
+                                                <LinearProgress />
+                                            ) : (
+                                                /* Placeholder to avoid content jumping when the loading bar appears */
+                                                <Box sx={{ backgroundColor: "white", width: "100%", height: 2 }} />
+                                            )}
+                                            <PageTree
+                                                ref={refPageTree}
+                                                pages={pagesToRenderWithMatches}
+                                                editDialogApi={editDialogApi}
+                                                toggleExpand={toggleExpand}
+                                                onSelectChanged={onSelectChanged}
+                                                category={category}
+                                                siteUrl={siteConfig.url}
+                                            />
+                                        </>
                                     )}
                                 </FullHeightPaper>
                             </PageTreeContent>
                         </PageTreeContext.Provider>
-=======
-                                    </>
-                                )}
-                            </FullHeightPaper>
-                        </PageTreeContent>
-                    </PageTreeContext.Provider>
->>>>>>> main
 
                         <EditDialog>
                             <EditPageNode
