@@ -1,25 +1,11 @@
-import { CheckRounded, ExclamationmarkRounded, HyphenRounded, Info } from "@comet/admin-icons";
-import { errorPalette, greenPalette, warningPalette } from "@comet/admin-theme";
+import { Info } from "@comet/admin-icons";
 import { Box, ComponentsOverrides, IconProps, Theme, Tooltip, TooltipProps, Typography } from "@mui/material";
 import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
+import { Status, StatusBadge } from "../statusBadge/StatusBadge";
 import { styles, TabClassKey } from "./CustomTab.styles";
-
-type Status = "success" | "error" | "warning";
-
-const colorMapping: { [K in Status]: any } = {
-    success: greenPalette.main,
-    error: errorPalette.main,
-    warning: warningPalette.main,
-};
-
-const defaultIcons: { [K in Status]: React.FunctionComponentElement<IconProps> } = {
-    success: <CheckRounded fontSize="inherit" />,
-    error: <ExclamationmarkRounded fontSize="inherit" />,
-    warning: <HyphenRounded fontSize="inherit" />,
-};
 
 export interface TabProps extends Omit<MuiTabProps, "children" | "icon" | "iconPosition"> {
     label: React.ReactNode;
@@ -62,21 +48,7 @@ export function TabComponent({
 
     if (currentTab === props.value && props.disabled) throw new Error("The default selected tab can't be disabled.");
 
-    if (!status && (showStatusIcon || statusIcon)) console.warn("A status (prop: status) has to be provided, if the status icon should show.");
-
-    if (status && statusIcon && !showStatusIcon) console.warn("The status icon will only be shown, if the showStatusIcon prop is set to true.");
-
     if (showTooltip && !tooltipMessage) console.warn("A tooltip message (prop: tooltipMessage) has to be provided, if the tooltip icon should show.");
-
-    let statusColor: string | undefined;
-
-    if (status) {
-        statusColor = colorMapping[status];
-
-        if (showStatusIcon && !statusIcon) {
-            statusIcon = defaultIcons[status];
-        }
-    }
 
     return (
         <MuiTab
@@ -84,13 +56,7 @@ export function TabComponent({
             {...props}
             label={
                 <Box display="flex" alignItems="center">
-                    {status && (
-                        <Box component="span" className={classes.status} bgcolor={statusColor}>
-                            {showStatusIcon && React.isValidElement(statusIcon)
-                                ? React.cloneElement<IconProps>(statusIcon, { fontSize: "inherit" }) // overwrite fontSize prop to always have the same inherited size
-                                : null}
-                        </Box>
-                    )}
+                    {status && <StatusBadge className={classes.status} status={status} showStatusIcon={showStatusIcon} statusIcon={statusIcon} />}
                     {tabIcon && (
                         <Box component="span" className={classes.icon} color={currentTab === props.value ? "primary" : "inherit"}>
                             {tabIcon}

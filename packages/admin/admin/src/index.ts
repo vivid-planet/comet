@@ -137,6 +137,7 @@ export { StackLink } from "./stack/StackLink";
 export { StackPageTitle } from "./stack/StackPageTitle";
 export { IStackSwitchApi, StackSwitch, StackSwitchApiContext, useStackSwitch, useStackSwitchApi } from "./stack/Switch";
 export { StackSwitchMeta } from "./stack/SwitchMeta";
+export { StatusBadge, StatusBadgeProps } from "./statusBadge/StatusBadge";
 export { TableAddButton } from "./table/AddButton";
 export { TableDeleteButton } from "./table/DeleteButton";
 export { createExcelExportDownload, IExcelExportOptions } from "./table/excelexport/createExcelExportDownload";

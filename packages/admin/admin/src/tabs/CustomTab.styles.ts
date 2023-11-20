@@ -15,15 +15,6 @@ export const styles = (theme: Theme) => {
             },
         },
         status: {
-            height: 16,
-            width: 16,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: theme.palette.common.white,
-            marginRight: theme.spacing(2),
-            fontSize: 10,
-            borderRadius: "50%",
             opacity: ({ disabled }) => (disabled ? 0.5 : 1),
         },
         icon: {
