@@ -35,9 +35,9 @@ Note: Currently, the library doesn't offer a way to display the dependencies in 
 
 More information in section @comet/cms-api.
 
-### No "Discard unsaved Changes" Dialog in Tabs
+### No "Discard unsaved Changes" Dialog in RouterTabs in Forms
 
-Switching tabs in `RouterTabs` no longer triggers a "Discard unsaved changes" dialog.
+Switching tabs in `RouterTabs` inside a `FinalForm` no longer triggers a "Discard unsaved changes" dialog.
 
 More information in section @comet/admin.
 
