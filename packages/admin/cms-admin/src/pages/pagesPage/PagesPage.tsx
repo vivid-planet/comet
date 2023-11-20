@@ -185,7 +185,7 @@ export function PagesPage({
                                     <>
                                         <Divider />
                                         {loading && !isInitialLoad.current ? (
-                                            <LinearProgress sx={{ height: 2 }} />
+                                            <LinearProgress />
                                         ) : (
                                             /* Placeholder to avoid content jumping when the loading bar appears */
                                             <Box sx={{ backgroundColor: "white", width: "100%", height: 2 }} />
