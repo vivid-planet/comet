@@ -1,9 +1,9 @@
 ---
-title: Migration from v4 to v5
+title: Migrating from v4 to v5
 sidebar_position: 1
 ---
 
-# Migration Guide
+# Migrating from v4 to v5
 
 ## API
 
@@ -177,11 +177,7 @@ If you had a custom implementation of `getOptionSelected()`, you may need to rep
 
 The `textWrapper` class of `FilterBarMoreFilters` was removed. Use the new `button` class instead.
 
-## Site
-
-There were no breaking changes to `@comet/cms-site`. It should work out of the box.
-
-## Eslint
+## ESLint
 
 ### no-private-sibling-import
 
