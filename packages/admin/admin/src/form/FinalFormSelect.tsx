@@ -32,20 +32,32 @@ export const FinalFormSelect = <T,>({
     children,
     endAdornment,
     clearable,
+    multiple,
     ...rest
 }: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input">) => {
     const selectEndAdornment = clearable ? (
-        <>
-            <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange(undefined)} />
-            {endAdornment}
-        </>
+        <ClearInputAdornment
+            position="end"
+            hasClearableContent={Boolean(multiple ? (Array.isArray(value) ? value.length : value) : value)}
+            onClick={() => onChange(multiple ? [] : undefined)}
+        />
     ) : (
         endAdornment
     );
 
+    const selectProps = {
+        ...rest,
+        multiple,
+        endAdornment: selectEndAdornment,
+        name,
+        onChange,
+        onFocus,
+        onBlur,
+    };
+
     if (children) {
         return (
-            <Select {...rest} endAdornment={selectEndAdornment} name={name} onChange={onChange} value={value} onFocus={onFocus} onBlur={onBlur}>
+            <Select {...selectProps} value={value}>
                 {children}
             </Select>
         );
@@ -56,7 +68,7 @@ export const FinalFormSelect = <T,>({
     }
 
     return (
-        <Select {...rest} endAdornment={selectEndAdornment} name={name} onChange={onChange} value={value} onFocus={onFocus} onBlur={onBlur}>
+        <Select {...selectProps} value={value}>
             {options.length === 0 && (loading || value) && (
                 <MenuItem value={value as any} key={JSON.stringify(value)}>
                     {loading ? <CircularProgress size={20} /> : getOptionLabel(value)}
