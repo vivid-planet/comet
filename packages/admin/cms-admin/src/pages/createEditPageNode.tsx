@@ -192,6 +192,7 @@ export function createEditPageNode({
         if (mode === "edit" && (loading || !data?.page)) {
             return <Loading />;
         }
+
         return (
             <div>
                 <FinalForm<FormValues>
@@ -313,7 +314,19 @@ export function createEditPageNode({
                                         }
 
                                         if (values.slug === "home") {
-                                            return <Typography>/</Typography>;
+                                            return (
+                                                <>
+                                                    <FieldContainer
+                                                        label={intl.formatMessage({
+                                                            id: "comet.pages.pages.page.path",
+                                                            defaultMessage: "Complete Path",
+                                                        })}
+                                                        variant="horizontal"
+                                                    >
+                                                        <Typography>/</Typography>
+                                                    </FieldContainer>
+                                                </>
+                                            );
                                         }
 
                                         const numberOfDescendants = data?.page?.numberOfDescendants ?? 0;
