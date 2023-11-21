@@ -2,12 +2,14 @@ import { RouteWithErrorBoundary } from "@comet/admin";
 import * as React from "react";
 import { Redirect, RouteProps, Switch, useRouteMatch } from "react-router-dom";
 
-import { CurrentUser, useCurrentUser } from "../userPermissions/hooks/currentUser";
+import { CurrentUserContext } from "../userPermissions/hooks/currentUser";
 import { MasterMenuData, MasterMenuItem } from "./MasterMenu";
 
-export function getRoutePropsFromMasterMenuData(items: MasterMenuData, user: CurrentUser): RouteProps[] {
+export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
+    const context = React.useContext<CurrentUserContext>(CurrentUserContext);
+
     const flat = (routes: RouteProps[], item: MasterMenuItem): RouteProps[] => {
-        if (item.route && user.isAllowed(item.requiredPermission)) routes.push(item.route);
+        if (item.route && context !== undefined && context.isAllowed(context.currentUser, item.requiredPermission)) routes.push(item.route);
         if (item.submenu) {
             routes.concat(item.submenu.reduce(flat, routes));
         }
@@ -21,8 +23,7 @@ export interface MasterMenuRoutesProps {
 }
 
 export const MasterMenuRoutes: React.FC<MasterMenuRoutesProps> = ({ menu }) => {
-    const user = useCurrentUser();
-    const routes = getRoutePropsFromMasterMenuData(menu, user);
+    const routes = useRoutePropsFromMasterMenuData(menu);
     const match = useRouteMatch();
 
     return (

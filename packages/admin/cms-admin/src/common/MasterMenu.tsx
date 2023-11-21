@@ -2,10 +2,10 @@ import { Menu, MenuCollapsibleItem, MenuContext, MenuItemRouterLink, MenuItemRou
 import * as React from "react";
 import { RouteProps, useRouteMatch } from "react-router-dom";
 
-import { CurrentUser, useCurrentUser, UserPermission } from "../userPermissions/hooks/currentUser";
+import { CurrentUserContext } from "../userPermissions/hooks/currentUser";
 
 export type MasterMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
-    requiredPermission?: UserPermission;
+    requiredPermission?: string;
     route?: RouteProps;
     to?: string;
     submenu?: MasterMenuItem[];
@@ -13,7 +13,9 @@ export type MasterMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
 
 export type MasterMenuData = MasterMenuItem[];
 
-export function getMenuFromMasterMenuData(items: MasterMenuData, user: CurrentUser): MenuItem[] {
+export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
+    const context = React.useContext<CurrentUserContext>(CurrentUserContext);
+
     const mapFn = (item: MasterMenuItem): MenuItem => {
         const { route, submenu, to, ...menuItem } = item;
         return {
@@ -25,7 +27,7 @@ export function getMenuFromMasterMenuData(items: MasterMenuData, user: CurrentUs
             submenu: submenu ? submenu.filter(filterFn).map(mapFn) : [],
         };
     };
-    const filterFn = (item: MasterMenuItem): boolean => user && user.isAllowed(item.requiredPermission);
+    const filterFn = (item: MasterMenuItem): boolean => context !== undefined && context.isAllowed(context.currentUser, item.requiredPermission);
     return items.filter(filterFn).map(mapFn);
 }
 
@@ -41,8 +43,7 @@ export interface MasterMenuProps {
 }
 
 export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWidth = 1024 }) => {
-    const user = useCurrentUser();
-    const menuItems = getMenuFromMasterMenuData(menu, user);
+    const menuItems = useMenuFromMasterMenuData(menu);
     const { open, toggleOpen } = React.useContext(MenuContext);
     const windowSize = useWindowSize();
     const match = useRouteMatch();

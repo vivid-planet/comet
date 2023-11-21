@@ -6,21 +6,17 @@ import { ContentScopeInterface } from "../../contentScope/Provider";
 import { GQLCurrentUserPermission } from "../../graphql.generated";
 import { GQLCurrentUserQuery } from "./currentUser.generated";
 
-const CurrentUserContext = React.createContext<CurrentUser | undefined>(undefined);
+export type CurrentUserContext =
+    | { currentUser: CurrentUserInterface; isAllowed: (user: CurrentUserInterface, permission?: string) => boolean }
+    | undefined;
+export const CurrentUserContext = React.createContext<CurrentUserContext>(undefined);
 
-export type UserPermission = string;
-
-export class CurrentUser {
-    name = undefined;
-    email = undefined;
-    language = undefined;
-    permissions: GQLCurrentUserPermission[] = [];
-    contentScopes: ContentScopeInterface[] = [];
-    isAllowed(permission?: UserPermission): boolean {
-        if (this.email === undefined) return false;
-        if (!permission) return true;
-        return this.permissions.some((p) => p.permission === permission);
-    }
+export interface CurrentUserInterface {
+    name?: string;
+    email?: string;
+    language?: string;
+    permissions: GQLCurrentUserPermission[];
+    contentScopes: ContentScopeInterface[];
 }
 
 export const CurrentUserProvider: React.FC = ({ children }) => {
@@ -42,11 +38,20 @@ export const CurrentUserProvider: React.FC = ({ children }) => {
 
     if (!data) return <Loading behavior="fillPageHeight" />;
 
-    return <CurrentUserContext.Provider value={Object.assign(new CurrentUser(), data.currentUser)}>{children}</CurrentUserContext.Provider>;
+    const context: CurrentUserContext = {
+        currentUser: data.currentUser,
+        isAllowed: (user: CurrentUserInterface, permission?: string) => {
+            if (user.email === undefined) return false;
+            if (!permission) return true;
+            return user.permissions.some((p) => p.permission === permission);
+        },
+    };
+
+    return <CurrentUserContext.Provider value={context}>{children}</CurrentUserContext.Provider>;
 };
 
-export function useCurrentUser(): CurrentUser {
-    const ret = React.useContext<CurrentUser | undefined>(CurrentUserContext);
-    if (!ret) throw new Error("CurrentUser not found. Make sure CurrentUserContext exists.");
-    return ret;
+export function useCurrentUser(): CurrentUserInterface {
+    const ret = React.useContext<CurrentUserContext>(CurrentUserContext);
+    if (!ret || !ret.currentUser) throw new Error("CurrentUser not found. Make sure CurrentUserContext exists.");
+    return ret.currentUser;
 }
