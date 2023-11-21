@@ -6,10 +6,8 @@ import { ContentScopeInterface } from "../../contentScope/Provider";
 import { GQLCurrentUserPermission } from "../../graphql.generated";
 import { GQLCurrentUserQuery } from "./currentUser.generated";
 
-export type CurrentUserContext =
-    | { currentUser: CurrentUserInterface; isAllowed: (user: CurrentUserInterface, permission?: string) => boolean }
-    | undefined;
-export const CurrentUserContext = React.createContext<CurrentUserContext>(undefined);
+export type CurrentUserContext = { currentUser: CurrentUserInterface; isAllowed: (user: CurrentUserInterface, permission: string) => boolean };
+export const CurrentUserContext = React.createContext<CurrentUserContext | undefined>(undefined);
 
 export interface CurrentUserInterface {
     name?: string;
@@ -40,9 +38,8 @@ export const CurrentUserProvider: React.FC = ({ children }) => {
 
     const context: CurrentUserContext = {
         currentUser: data.currentUser,
-        isAllowed: (user: CurrentUserInterface, permission?: string) => {
+        isAllowed: (user: CurrentUserInterface, permission: string) => {
             if (user.email === undefined) return false;
-            if (!permission) return true;
             return user.permissions.some((p) => p.permission === permission);
         },
     };
@@ -51,7 +48,7 @@ export const CurrentUserProvider: React.FC = ({ children }) => {
 };
 
 export function useCurrentUser(): CurrentUserInterface {
-    const ret = React.useContext<CurrentUserContext>(CurrentUserContext);
+    const ret = React.useContext<CurrentUserContext | undefined>(CurrentUserContext);
     if (!ret || !ret.currentUser) throw new Error("CurrentUser not found. Make sure CurrentUserContext exists.");
     return ret.currentUser;
 }

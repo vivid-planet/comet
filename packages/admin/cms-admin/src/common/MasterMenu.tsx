@@ -14,7 +14,7 @@ export type MasterMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
 export type MasterMenuData = MasterMenuItem[];
 
 export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
-    const context = React.useContext<CurrentUserContext>(CurrentUserContext);
+    const context = React.useContext<CurrentUserContext | undefined>(CurrentUserContext);
 
     const mapFn = (item: MasterMenuItem): MenuItem => {
         const { route, submenu, to, ...menuItem } = item;
@@ -27,7 +27,8 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
             submenu: submenu ? submenu.filter(filterFn).map(mapFn) : [],
         };
     };
-    const filterFn = (item: MasterMenuItem): boolean => context !== undefined && context.isAllowed(context.currentUser, item.requiredPermission);
+    const filterFn = (item: MasterMenuItem): boolean =>
+        !item.requiredPermission || (context !== undefined && context.isAllowed(context.currentUser, item.requiredPermission));
     return items.filter(filterFn).map(mapFn);
 }
 
