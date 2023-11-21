@@ -3,6 +3,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { Args, ArgsType, Field, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 
+import { SkipBuild } from "../builds/skip-build.decorator";
 import { UserPermissionInput } from "./dto/user-permission.input";
 import { UserPermission } from "./entities/user-permission.entity";
 import { UserPermissionsService } from "./user-permissions.service";
@@ -35,6 +36,7 @@ export class UserPermissionResolver {
     }
 
     @Mutation(() => UserPermission)
+    @SkipBuild()
     async userPermissionsCreatePermission(
         @Args("userId", { type: () => String }) userId: string,
         @Args("input", { type: () => UserPermissionInput }) input: UserPermissionInput,
@@ -53,6 +55,7 @@ export class UserPermissionResolver {
     }
 
     @Mutation(() => UserPermission)
+    @SkipBuild()
     async userPermissionsUpdatePermission(
         @Args("id", { type: () => String }) id: string,
         @Args("input", { type: () => UserPermissionInput }) input: UserPermissionInput,
@@ -64,6 +67,7 @@ export class UserPermissionResolver {
     }
 
     @Mutation(() => Boolean)
+    @SkipBuild()
     async userPermissionsDeletePermission(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         this.permissionRepository.removeAndFlush(await this.getPermission(id));
         return true;

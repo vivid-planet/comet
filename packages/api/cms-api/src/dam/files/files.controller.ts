@@ -33,7 +33,6 @@ import { createUploadFileBody, UploadFileBodyInterface } from "./dto/file.body";
 import { FileParams, HashFileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
 import { FileInterface } from "./entities/file.entity";
-import { FileValidationInterceptor } from "./file-validation-interceptor.service";
 import { FilesService } from "./files.service";
 import { calculatePartialRanges, createHashedPath } from "./files.utils";
 
@@ -59,7 +58,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         ) {}
 
         @Post("upload")
-        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD), FileValidationInterceptor)
+        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
         async upload(
             @UploadedFile() file: FileUploadInterface,
             @Body() body: UploadFileBodyInterface,
@@ -71,14 +70,13 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             if (errors.length > 0) {
                 throw new CometValidationException("Validation failed", errors);
             }
+            const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
-            const { scope, folderId } = transformedBody;
-
-            if (hasNonEmptyScope && !this.contentScopeService.canAccessScope(scope, user)) {
+            if (scope && !this.contentScopeService.canAccessScope(scope, user)) {
                 throw new ForbiddenException();
             }
 
-            const uploadedFile = await this.filesService.upload({ file, folderId }, nonEmptyScopeOrNothing(scope));
+            const uploadedFile = await this.filesService.upload(file, { ...transformedBody, scope });
             return Object.assign(uploadedFile, { fileUrl: await this.filesService.createFileUrl(uploadedFile) });
         }
 

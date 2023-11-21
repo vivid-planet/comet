@@ -8,7 +8,7 @@ import { CometEntityNotFoundException } from "../../common/errors/entity-not-fou
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { DamScopeInterface } from "../types";
 import { DamFolderListPositionArgs, FolderArgsInterface } from "./dto/folder.args";
-import { CreateFolderInput, UpdateFolderInput } from "./dto/folder.input";
+import { UpdateFolderInput } from "./dto/folder.input";
 import { FOLDER_TABLE_NAME, FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
 
@@ -144,7 +144,10 @@ export class FoldersService {
         { name, parentId }: { name: string; parentId?: string },
         scope?: DamScopeInterface,
     ): Promise<FolderInterface | null> {
-        const qb = this.selectQueryBuilder().andWhere({ name, scope });
+        const qb = this.selectQueryBuilder().andWhere({ name });
+        if (scope) {
+            qb.andWhere({ scope });
+        }
         if (parentId) {
             qb.andWhere({ parent: { id: parentId } });
         } else {
@@ -154,7 +157,15 @@ export class FoldersService {
     }
 
     async create(
-        { parentId, isInboxFromOtherScope = false, ...data }: CreateFolderInput & { isInboxFromOtherScope?: boolean },
+        {
+            parentId,
+            isInboxFromOtherScope = false,
+            ...data
+        }: {
+            name: string;
+            parentId?: string;
+            isInboxFromOtherScope?: boolean;
+        },
         scope?: DamScopeInterface,
     ): Promise<FolderInterface> {
         let parent = undefined;

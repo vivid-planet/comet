@@ -8,6 +8,7 @@ import { useStackApi } from "../stack/Api";
 import { StackBreadcrumb } from "../stack/Breadcrumb";
 import { useStackSwitchApi } from "../stack/Switch";
 import { RouterTabsClassKey, styles } from "./RouterTabs.styles";
+import { TabScrollButton } from "./TabScrollButton";
 
 function deduplicateSlashesInUrl(url: string) {
     return url.replace(/\/+/g, "/");
@@ -28,7 +29,12 @@ export interface Props {
     tabsProps?: Partial<TabsProps>;
 }
 
-function RouterTabsComponent({ children, tabComponent: TabComponent = MuiTab, tabsProps, classes }: Props & WithStyles<typeof styles>) {
+function RouterTabsComponent({
+    children,
+    tabComponent: TabComponent = MuiTab,
+    tabsProps: { ScrollButtonComponent = TabScrollButton, ...tabsProps } = {},
+    classes,
+}: Props & WithStyles<typeof styles>) {
     const stackApi = useStackApi();
     const stackSwitchApi = useStackSwitchApi();
     const history = useHistory();
@@ -89,7 +95,15 @@ function RouterTabsComponent({ children, tabComponent: TabComponent = MuiTab, ta
                         const routePath = match ? `/${match.params.tab}` : "";
                         const value = paths.includes(routePath) ? paths.indexOf(routePath) : defaultPathIndex;
                         return (
-                            <Tabs classes={{ root: classes.tabs }} value={value} onChange={handleChange} {...tabsProps}>
+                            <Tabs
+                                classes={{ root: classes.tabs }}
+                                value={value}
+                                onChange={handleChange}
+                                ScrollButtonComponent={ScrollButtonComponent}
+                                scrollButtons="auto"
+                                variant="scrollable"
+                                {...tabsProps}
+                            >
                                 {React.Children.map(children, (child) => {
                                     if (!React.isValidElement<TabProps>(child)) {
                                         return null;

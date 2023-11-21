@@ -1,4 +1,5 @@
 import { File, Folder, FolderCopy, Pdf } from "@comet/admin-icons";
+import { Fade, Popper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 
@@ -25,6 +26,15 @@ const ImageThumbnail = styled("img")`
     border-radius: inherit;
 `;
 
+const ImagePreview = styled("img")`
+    max-width: 300px;
+    max-height: 300px;
+    padding: ${({ theme }) => theme.spacing(1.25)};
+    margin-left: ${({ theme }) => theme.spacing(1)};
+    background-color: ${({ theme }) => theme.palette.background.paper};
+    box-shadow: ${({ theme }) => theme.shadows[1]};
+`;
+
 const ColoredFile = styled(File)`
     color: ${({ theme }) => theme.palette.primary.main};
 `;
@@ -37,10 +47,40 @@ interface DamThumbnailProps {
 }
 
 export const DamThumbnail = ({ asset }: DamThumbnailProps): React.ReactElement => {
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+    const open = Boolean(anchorEl);
+
+    const handleMouseOver = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleMouseLeave = () => {
+        setAnchorEl(null);
+    };
+
     let thumbnail;
     if (asset.__typename === "DamFile") {
         if (asset.mimetype.startsWith("image/") && asset.image && asset.image.thumbnailUrl) {
-            thumbnail = <ImageThumbnail src={asset.image.thumbnailUrl} />;
+            thumbnail = (
+                <>
+                    <ImageThumbnail onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} src={asset.image.thumbnailUrl} />
+                    <Popper
+                        sx={{ zIndex: 1301 }}
+                        open={open}
+                        anchorEl={anchorEl}
+                        placement="auto-end"
+                        onResize={undefined}
+                        onResizeCapture={undefined}
+                        transition
+                    >
+                        {({ TransitionProps }) => (
+                            <Fade {...TransitionProps} timeout={350}>
+                                <ImagePreview src={asset.fileUrl || undefined} />
+                            </Fade>
+                        )}
+                    </Popper>
+                </>
+            );
         } else if (asset.mimetype.startsWith("audio/")) {
             thumbnail = <AudioThumbnail />;
         } else if (asset.mimetype.startsWith("video/")) {

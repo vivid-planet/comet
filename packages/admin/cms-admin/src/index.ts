@@ -51,11 +51,12 @@ export { useDamConfig } from "./dam/config/useDamConfig";
 export { DamPage } from "./dam/DamPage";
 export { DashboardHeader, DashboardHeaderProps } from "./dashboard/DashboardHeader";
 export { DashboardWidgetRoot, DashboardWidgetRootProps } from "./dashboard/widgets/DashboardWidgetRoot";
-export { LatestBuildsDashboardWidget, LatestBuildsDashboardWidgetProps } from "./dashboard/widgets/LatestBuildsDashboardWidget";
+export { LatestBuildsDashboardWidget } from "./dashboard/widgets/LatestBuildsDashboardWidget";
 export {
     LatestContentUpdatesDashboardWidget,
     LatestContentUpdatesDashboardWidgetProps,
 } from "./dashboard/widgets/LatestContentUpdatesDashboardWidget";
+export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootBlocksMethods";
 export type { DocumentInterface, DocumentType } from "./documents/types";
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
 export { FileField } from "./form/file/FileField";
