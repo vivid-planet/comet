@@ -2,9 +2,10 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module } from "@nestjs/common";
 
 import { BlobStorageModule } from "../blob-storage/blob-storage.module";
+import { FileValidationService } from "../dam/files/file-validation.service";
 import { PublicUpload } from "./entities/public-upload.entity";
 import { PublicUploadConfig } from "./public-upload.config";
-import { PUBLIC_UPLOAD_CONFIG } from "./public-upload.constants";
+import { PUBLIC_UPLOAD_CONFIG, PUBLIC_UPLOAD_FILE_VALIDATION_SERVICE } from "./public-upload.constants";
 import { PublicUploadsController } from "./public-uploads.controller";
 import { PublicUploadsService } from "./public-uploads.service";
 
@@ -17,10 +18,17 @@ export class PublicUploadModule {
             useValue: options,
         };
 
+        const publicUploadFileValidatorProvider = {
+            provide: PUBLIC_UPLOAD_FILE_VALIDATION_SERVICE,
+            useValue: new FileValidationService({
+                maxFileSize: options.maxFileSize,
+                acceptedMimeTypes: options.acceptedMimeTypes,
+            }),
+        };
         return {
             module: PublicUploadModule,
             imports: [MikroOrmModule.forFeature([PublicUpload]), BlobStorageModule],
-            providers: [publicUploadConfigProvider, PublicUploadsService],
+            providers: [publicUploadConfigProvider, PublicUploadsService, publicUploadFileValidatorProvider],
             controllers: [PublicUploadsController],
             exports: [PublicUploadsService],
         };

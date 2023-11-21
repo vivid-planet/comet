@@ -24,7 +24,7 @@ type BlockMetaField =
           name: string;
           kind: "OneOfBlocks";
           nullable: boolean;
-          blocks: string[];
+          blocks: Record<string, string>;
       }
     | {
           name: string;
@@ -59,10 +59,10 @@ function writeFieldType(field: BlockMetaField, blockNamePostfix: string) {
     } else if (field.kind === "Block") {
         content += `${field.block}${blockNamePostfix}`;
     } else if (field.kind === "OneOfBlocks") {
-        if (field.blocks.length < 1) {
+        if (Object.values(field.blocks).length < 1) {
             content += "{}";
         } else {
-            content += field.blocks
+            content += Object.values(field.blocks)
                 .map((i) => {
                     return `${i}${blockNamePostfix}`;
                 })

@@ -130,6 +130,9 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
             dependencies.push({
                 targetGraphqlObjectType: "DamFile",
                 id: state.damFile.id,
+                data: {
+                    damFile: state.damFile,
+                },
             });
         }
 
