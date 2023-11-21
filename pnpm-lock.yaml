@@ -18,7 +18,7 @@ importers:
         specifier: ^2.3.2
         version: 2.3.2
       '@comet/eslint-plugin':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:packages/eslint-plugin
       '@formatjs/cli':
         specifier: ^4.8.3
@@ -57,28 +57,28 @@ importers:
         specifier: ^7.0.0
         version: 7.20.12
       '@comet/admin':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../packages/admin/admin
       '@comet/admin-date-time':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../packages/admin/admin-date-time
       '@comet/admin-icons':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../packages/admin/admin-icons
       '@comet/admin-react-select':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../packages/admin/admin-react-select
       '@comet/admin-rte':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../packages/admin/admin-rte
       '@comet/admin-theme':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../packages/admin/admin-theme
       '@comet/blocks-admin':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../packages/admin/blocks-admin
       '@comet/cms-admin':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../packages/admin/cms-admin
       '@emotion/react':
         specifier: ^11.9.3
@@ -247,10 +247,10 @@ importers:
         version: 0.8.15
     devDependencies:
       '@comet/cli':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../packages/cli
       '@comet/eslint-config':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../packages/eslint-config
       '@emotion/babel-plugin':
         specifier: ^11.0.0
@@ -415,10 +415,10 @@ importers:
         specifier: ^12.0.0
         version: 12.12.0
       '@comet/blocks-api':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../packages/api/blocks-api
       '@comet/cms-api':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../packages/api/cms-api
       '@hapi/accept':
         specifier: ^5.0.0
@@ -569,7 +569,7 @@ importers:
         version: 5.75.0(webpack-cli@4.10.0)
     devDependencies:
       '@comet/eslint-config':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../packages/eslint-config
       '@nestjs/cli':
         specifier: ^9.0.0
@@ -647,7 +647,7 @@ importers:
   demo/site:
     dependencies:
       '@comet/cms-site':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../packages/site/cms-site
       '@googlemaps/js-api-loader':
         specifier: ^1.0.0
@@ -732,10 +732,10 @@ importers:
         specifier: ^7.16.0
         version: 7.20.12
       '@comet/cli':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../packages/cli
       '@comet/eslint-config':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../packages/eslint-config
       '@graphql-codegen/add':
         specifier: ^3.0.0
@@ -819,25 +819,25 @@ importers:
         specifier: ^3.7.0
         version: 3.7.4(graphql@15.8.0)(react-dom@17.0.2)(react@17.0.2)
       '@comet/admin':
-        specifier: workspace:^4.5.0
+        specifier: '*'
         version: link:../packages/admin/admin
       '@comet/admin-color-picker':
-        specifier: workspace:^4.5.0
+        specifier: '*'
         version: link:../packages/admin/admin-color-picker
       '@comet/admin-date-time':
-        specifier: workspace:^4.5.0
+        specifier: '*'
         version: link:../packages/admin/admin-date-time
       '@comet/admin-icons':
-        specifier: workspace:^4.5.0
+        specifier: '*'
         version: link:../packages/admin/admin-icons
       '@comet/admin-react-select':
-        specifier: workspace:^4.5.0
+        specifier: '*'
         version: link:../packages/admin/admin-react-select
       '@comet/admin-rte':
-        specifier: workspace:^4.5.0
+        specifier: '*'
         version: link:../packages/admin/admin-rte
       '@comet/admin-theme':
-        specifier: workspace:^4.5.0
+        specifier: '*'
         version: link:../packages/admin/admin-theme
       '@docusaurus/core':
         specifier: 2.4.1
@@ -931,7 +931,7 @@ importers:
         specifier: ^7.22.8
         version: 7.22.11
       '@comet/eslint-config':
-        specifier: workspace:^4.5.0
+        specifier: workspace:*
         version: link:../packages/eslint-config
       '@docusaurus/module-type-aliases':
         specifier: 2.4.1
@@ -1554,25 +1554,25 @@ importers:
         specifier: ^3.7.0
         version: 3.7.4(graphql@15.8.0)(react-dom@17.0.2)(react@17.0.2)
       '@comet/admin':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../admin
       '@comet/admin-color-picker':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../admin-color-picker
       '@comet/admin-date-time':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../admin-date-time
       '@comet/admin-icons':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../admin-icons
       '@comet/admin-react-select':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../admin-react-select
       '@comet/admin-rte':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../admin-rte
       '@comet/admin-theme':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../admin-theme
       '@emotion/react':
         specifier: ^11.5.0
@@ -1696,10 +1696,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^4.7.0
+        specifier: workspace:*
         version: link:../../eslint-config
       '@faker-js/faker':
         specifier: ^7.6.0
