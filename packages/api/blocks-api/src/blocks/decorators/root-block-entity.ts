@@ -1,6 +1,5 @@
 export interface RootBlockEntityOptions {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    isVisible?: (entity: any) => boolean;
+    isVisible?: (entity: unknown) => boolean;
 }
 export function RootBlockEntity(options: RootBlockEntityOptions = {}): ClassDecorator {
     // eslint-disable-next-line @typescript-eslint/ban-types

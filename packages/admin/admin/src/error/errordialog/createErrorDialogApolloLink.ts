@@ -1,5 +1,7 @@
+import { ServerError } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 
+import { ErrorDialogLoginMessage } from "./ErrorDialog";
 import { errorDialogVar } from "./errorDialogVar";
 import { ErrorScope, errorScopeForOperationContext } from "./ErrorScope";
 
@@ -15,7 +17,11 @@ export const createErrorDialogApolloLink = () => {
             });
         } else if (networkError) {
             if (errorScope === ErrorScope.Global) {
-                errorDialogVar({ error: networkError.message });
+                if (networkError.name === "ServerError" && (networkError as ServerError).statusCode === 401) {
+                    errorDialogVar({ userMessage: ErrorDialogLoginMessage, error: networkError.message });
+                } else {
+                    errorDialogVar({ error: networkError.message });
+                }
             }
         }
     });

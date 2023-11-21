@@ -57,6 +57,10 @@ export function isPreviewContentImageRule(content: PreviewContent): content is P
 
 export type PreviewContent = PreviewContentImage | PreviewContentText;
 
+export type BlockDependency = { targetGraphqlObjectType: string; id: string; data?: unknown };
+
+export type ReplaceDependencyObject = { originalId: string; replaceWithId: string; type: string };
+
 export interface BlockMethods<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     InputApi = any,
@@ -77,6 +81,8 @@ export interface BlockMethods<
     previewContent: (state: State, context?: BlockContext) => PreviewContent[];
     dynamicDisplayName?: (state: State) => React.ReactNode;
     anchors?: (state: State) => string[];
+    dependencies?: (state: State) => BlockDependency[];
+    replaceDependenciesInOutput: (output: OutputApi, replacements: ReplaceDependencyObject[]) => OutputApi;
 }
 
 export interface AnonymousBlockInterface<

@@ -8,8 +8,17 @@ class ImageBlockData extends BlockData {
     damFileId?: string;
 
     indexData(): BlockIndexData {
+        if (this.damFileId === undefined) {
+            return {};
+        }
+
         return {
-            damFileIds: this.damFileId ? [this.damFileId] : [],
+            dependencies: [
+                {
+                    targetEntityName: "DamFile",
+                    id: this.damFileId,
+                },
+            ],
         };
     }
 }

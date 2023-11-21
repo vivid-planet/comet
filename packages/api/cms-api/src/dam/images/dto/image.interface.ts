@@ -1,8 +1,8 @@
-import { File } from "../../files/entities/file.entity";
+import { FileInterface } from "../../files/entities/file.entity";
 import { ImageCropArea } from "../entities/image-crop-area.entity";
 
 export interface ImageInterface {
-    file: File;
+    file: FileInterface;
 
     cropArea?: ImageCropArea;
 }

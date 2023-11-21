@@ -18,7 +18,6 @@ export { BlobStorageFileConfig } from "./blob-storage/backends/file/blob-storage
 export { BlobStorageFileStorage } from "./blob-storage/backends/file/blob-storage-file.storage";
 export { BlobStorageConfig } from "./blob-storage/blob-storage.config";
 export { BlobStorageModule } from "./blob-storage/blob-storage.module";
-export { BlockIndexService } from "./blocks/block-index.service";
 export { BLOCKS_MODULE_OPTIONS, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES } from "./blocks/blocks.constants";
 export { BlocksModule, BlocksModuleOptions } from "./blocks/blocks.module";
 export { BlocksTransformerService } from "./blocks/blocks-transformer.service";
@@ -36,16 +35,9 @@ export { BUILDS_CONFIG, BUILDS_MODULE_OPTIONS } from "./builds/builds.constants"
 export { BuildsModule } from "./builds/builds.module";
 export { BuildsResolver } from "./builds/builds.resolver";
 export { BuildsService } from "./builds/builds.service";
-/**
- * @deprecated Do not use.
- *
- * TODO Remove this export in the next major version.
- */
-export { ChangesCheckerInterceptor as SkipBuildInterceptor } from "./builds/changes-checker.interceptor";
 export { AutoBuildStatus } from "./builds/dto/auto-build-status.object";
 export { ChangesSinceLastBuild } from "./builds/entities/changes-since-last-build.entity";
 export { SKIP_BUILD_METADATA_KEY, SkipBuild } from "./builds/skip-build.decorator";
-export { ContentScope } from "./common/decorators/content-scope.interface";
 export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInterface } from "./common/decorators/request-context.decorator";
 export { ScopedEntity, ScopedEntityMeta } from "./common/decorators/scoped-entity.decorator";
 export { SubjectEntity, SubjectEntityMeta, SubjectEntityOptions } from "./common/decorators/subject-entity.decorator";
@@ -58,15 +50,19 @@ export { ValidationExceptionFactory } from "./common/errors/validation.exception
 export { BooleanFilter } from "./common/filter/boolean.filter";
 export { DateFilter } from "./common/filter/date.filter";
 export { createEnumFilter } from "./common/filter/enum.filter.factory";
+export { ManyToOneFilter } from "./common/filter/many-to-one.filter";
 export { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
 export { NumberFilter } from "./common/filter/number.filter";
 export { StringFilter } from "./common/filter/string.filter";
 export { extractGraphqlFields } from "./common/graphql/extract-graphql-fields";
+export { PartialType } from "./common/helper/partial-type.helper";
 export { OffsetBasedPaginationArgs } from "./common/pagination/offset-based.args";
 export { PaginatedResponseFactory } from "./common/pagination/paginated-response.factory";
 export { SortArgs } from "./common/sorting/sort.args";
 export { SortDirection } from "./common/sorting/sort-direction.enum";
+export { IsNullable } from "./common/validators/is-nullable";
 export { IsSlug } from "./common/validators/is-slug";
+export { IsUndefinable } from "./common/validators/is-undefinable";
 export { ContentScopeModule } from "./content-scope/content-scope.module";
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";
@@ -77,20 +73,15 @@ export { defaultDamAcceptedMimetypes } from "./dam/common/mimeTypes/default-dam-
 export { DamConfig } from "./dam/dam.config";
 export { DAM_CONFIG, IMGPROXY_CONFIG } from "./dam/dam.constants";
 export { DamModule } from "./dam/dam.module";
-export { FileArgs } from "./dam/files/dto/file.args";
 export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dto/file.input";
 export { FileUploadInterface } from "./dam/files/dto/file-upload.interface";
-export { FolderArgs } from "./dam/files/dto/folder.args";
 export { CreateFolderInput, UpdateFolderInput } from "./dam/files/dto/folder.input";
-export { File } from "./dam/files/entities/file.entity";
-export { FileImage } from "./dam/files/entities/file-image.entity";
-export { Folder } from "./dam/files/entities/folder.entity";
+export { createFileEntity, FileInterface } from "./dam/files/entities/file.entity";
+export { DamFileImage } from "./dam/files/entities/file-image.entity";
+export { createFolderEntity, FolderInterface } from "./dam/files/entities/folder.entity";
 export { FileImagesResolver } from "./dam/files/file-image.resolver";
-export { FilesController } from "./dam/files/files.controller";
-export { FilesResolver } from "./dam/files/files.resolver";
 export { FilesService } from "./dam/files/files.service";
 export { download, slugifyFilename } from "./dam/files/files.utils";
-export { FoldersResolver } from "./dam/files/folders.resolver";
 export { FoldersService } from "./dam/files/folders.service";
 export { ImageInterface } from "./dam/images/dto/image.interface";
 export { HashImageParams, ImageParams } from "./dam/images/dto/image.params";
@@ -104,6 +95,11 @@ export { IsAllowedImageSize, IsAllowedImageSizeConstraint } from "./dam/images/v
 export { IsValidImageAspectRatio, IsValidImageAspectRatioConstraint } from "./dam/images/validators/is-valid-aspect-ratio.validator";
 export { Extension, Gravity, ResizingType } from "./dam/imgproxy/imgproxy.enum";
 export { ImgproxyConfig, ImgproxyService } from "./dam/imgproxy/imgproxy.service";
+export { DependenciesModule } from "./dependencies/dependencies.module";
+export { DependenciesResolverFactory } from "./dependencies/dependencies.resolver.factory";
+export { DependenciesService } from "./dependencies/dependencies.service";
+export { Dependency } from "./dependencies/dependency";
+export { DependentsResolverFactory } from "./dependencies/dependents.resolver.factory";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
@@ -146,3 +142,19 @@ export { RedirectsModule } from "./redirects/redirects.module";
 export { createRedirectsResolver } from "./redirects/redirects.resolver";
 export { RedirectsService } from "./redirects/redirects.service";
 export { IsValidRedirectSource, IsValidRedirectSourceConstraint } from "./redirects/validators/isValidRedirectSource";
+export { CurrentUser } from "./user-permissions/dto/current-user";
+export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
+export { User } from "./user-permissions/dto/user";
+export { ContentScope } from "./user-permissions/interfaces/content-scope.interface";
+export { Permission } from "./user-permissions/interfaces/user-permission.interface";
+export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
+export { UserPermissionsService } from "./user-permissions/user-permissions.service";
+export {
+    ContentScopesForUser,
+    PermissionsForUser,
+    UserPermissions,
+    UserPermissionsOptions,
+    UserPermissionsOptionsFactory,
+    UserPermissionsUserService,
+    Users,
+} from "./user-permissions/user-permissions.types";

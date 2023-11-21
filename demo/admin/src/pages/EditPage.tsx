@@ -15,17 +15,12 @@ import {
 import { Button, IconButton } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import {
-    GQLEditPageQuery,
-    GQLEditPageQueryVariables,
-    GQLPageTreeNodeCategory,
-    GQLUpdatePageMutation,
-    GQLUpdatePageMutationVariables,
-} from "@src/graphql.generated";
+import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router";
 
+import { GQLEditPageQuery, GQLEditPageQueryVariables, GQLUpdatePageMutation, GQLUpdatePageMutationVariables } from "./EditPage.generated";
 import { PageContentBlock } from "./PageContentBlock";
 
 interface Props {

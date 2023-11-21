@@ -5,6 +5,7 @@ import { FormattedMessage } from "react-intl";
 
 import { SaveButton } from "./common/buttons/save/SaveButton";
 import { SplitButton } from "./common/buttons/split/SplitButton";
+import { FinalFormSubmitEvent } from "./FinalForm";
 import { messages } from "./messages";
 import { useStackApi } from "./stack/Api";
 
@@ -17,6 +18,13 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton" }
     const form = useForm();
     const { pristine, hasValidationErrors, submitting, hasSubmitErrors } = useFormState();
 
+    const setSubmitEvent = form.mutators.setSubmitEvent
+        ? form.mutators.setSubmitEvent
+        : () => {
+              // eslint-disable-next-line no-console
+              console.warn(`Can't set submitEvent, as the setSubmitEvent mutator is missing. Did you forget to add the mutator to the form?`);
+          };
+
     return (
         <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey={localStorageKey}>
             <SaveButton
@@ -24,8 +32,12 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton" }
                 variant="contained"
                 saving={submitting}
                 hasErrors={hasSubmitErrors}
-                onClick={() => {
-                    form.submit();
+                onClick={async (clickEvent) => {
+                    const event = new FinalFormSubmitEvent("submit");
+                    event.navigatingBack = false;
+                    setSubmitEvent(event);
+                    await form.submit();
+                    setSubmitEvent(undefined);
                 }}
             >
                 <FormattedMessage {...messages.save} />
@@ -36,9 +48,13 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton" }
                 saving={submitting}
                 hasErrors={hasSubmitErrors}
                 onClick={async () => {
-                    const submitResult = await form.submit();
-                    const error = submitResult !== undefined;
-                    if (!error) {
+                    const event = new FinalFormSubmitEvent("submit");
+                    event.navigatingBack = true;
+                    setSubmitEvent(event);
+                    const submitReturn = await form.submit();
+                    setSubmitEvent(undefined);
+                    const successful = submitReturn === undefined || Object.keys(submitReturn).length == 0;
+                    if (successful) {
                         stackApi?.goBack();
                     }
                 }}

@@ -94,7 +94,7 @@ export class PageTreeService {
             throw new Error(`Slug of page "home" cannot be changed`);
         }
 
-        if (existingNode.slug != input.slug) {
+        if (input.createAutomaticRedirectsOnSlugChange && existingNode.slug != input.slug) {
             await this.redirectsService.createAutomaticRedirects(existingNode);
         }
 
@@ -113,32 +113,33 @@ export class PageTreeService {
 
         const { attachedDocument: attachedDocumentInput, ...restInput } = input;
 
-        // check if attached document exists
-        if (attachedDocumentInput.id) {
-            const document = await this.resolveDocument(attachedDocumentInput.type, attachedDocumentInput.id);
-            if (!document) {
-                throw new Error(`The assigned document does not exist or is not of type ${attachedDocumentInput.type}`);
-            }
+        existingNode.assign(restInput);
 
-            // check if document is already attached and attach if not
-            const attachedDocument = await this.attachedDocumentsRepository.findOne({ pageTreeNodeId: id, documentId: attachedDocumentInput.id });
-            if (!attachedDocument) {
-                await this.attachedDocumentsRepository.persistAndFlush(
-                    this.attachedDocumentsRepository.create({
-                        pageTreeNodeId: id,
-                        type: attachedDocumentInput.type,
-                        documentId: attachedDocumentInput.id,
-                    }),
-                );
+        if (attachedDocumentInput) {
+            existingNode.assign({ documentType: attachedDocumentInput.type });
+
+            // check if attached document exists
+            if (attachedDocumentInput.id) {
+                const document = await this.resolveDocument(attachedDocumentInput.type, attachedDocumentInput.id);
+                if (!document) {
+                    throw new Error(`The assigned document does not exist or is not of type ${attachedDocumentInput.type}`);
+                }
+
+                // check if document is already attached and attach if not
+                const attachedDocument = await this.attachedDocumentsRepository.findOne({ pageTreeNodeId: id, documentId: attachedDocumentInput.id });
+                if (!attachedDocument) {
+                    this.em.persist(
+                        this.attachedDocumentsRepository.create({
+                            pageTreeNodeId: id,
+                            type: attachedDocumentInput.type,
+                            documentId: attachedDocumentInput.id,
+                        }),
+                    );
+                }
             }
         }
 
-        await this.pageTreeRepository.persistAndFlush(
-            existingNode.assign({
-                ...restInput,
-                documentType: attachedDocumentInput.type,
-            }),
-        );
+        await this.em.flush();
 
         return readApi.getNodeOrFail(id); // refresh data
     }

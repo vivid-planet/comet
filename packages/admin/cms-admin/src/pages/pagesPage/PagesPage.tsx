@@ -22,8 +22,8 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { ContentScopeInterface, createEditPageNode, useCmsBlockContext } from "../..";
 import { useContentScope } from "../../contentScope/Provider";
 import { useContentScopeConfig } from "../../contentScope/useContentScopeConfig";
+import { DamScopeProvider } from "../../dam/config/DamScopeProvider";
 import { DocumentInterface, DocumentType } from "../../documents/types";
-import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "../../graphql.generated";
 import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
 import { EditPageNodeProps } from "../createEditPageNode";
 import { PageSearch } from "../pageSearch/PageSearch";
@@ -31,7 +31,7 @@ import { usePageSearch } from "../pageSearch/usePageSearch";
 import { PageTree, PageTreeRefApi } from "../pageTree/PageTree";
 import { AllCategories, PageTreeContext } from "../pageTree/PageTreeContext";
 import { usePageTree } from "../pageTree/usePageTree";
-import { createPagesQuery } from "./createPagesQuery";
+import { createPagesQuery, GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "./createPagesQuery";
 import { PagesPageActionToolbar } from "./PagesPageActionToolbar";
 
 interface Props {
@@ -132,113 +132,115 @@ export function PagesPage({
     }
 
     return (
-        <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.pages", defaultMessage: "Pages" })}>
-            <StackSwitch>
-                <StackPage name="table">
-                    {renderContentScopeIndicator(scope)}
-                    <Toolbar>
-                        <PageSearch query={query} onQueryChange={setQuery} pageSearchApi={pageSearchApi} />
-                        <FormControlLabel
-                            control={<Switch checked={showArchive} color="primary" onChange={handleArchiveToggleClick} />}
-                            label={<FormattedMessage id="comet.pages.pages.archivedItems" defaultMessage="Archived items" />}
-                        />
-                        <ToolbarActions>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                startIcon={<Add />}
-                                onClick={() => {
-                                    editDialogApi.openAddDialog();
-                                }}
-                            >
-                                <FormattedMessage {...messages.add} />
-                            </Button>
-                        </ToolbarActions>
-                    </Toolbar>
-                    <PageTreeContext.Provider value={{ allCategories, documentTypes, tree, query: pagesQuery }}>
-                        <PageTreeContent fullHeight>
-                            <ActionToolbarBox>
-                                <PagesPageActionToolbar
-                                    selectedState={selectState}
-                                    onSelectAllPressed={() => {
-                                        if (selectState === "nothing_selected" || selectState === "some_selected") {
-                                            // select all pages
-                                            if (data) {
-                                                setSelectedIds(data.pages.map((page) => page.id));
+        <DamScopeProvider>
+            <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.pages", defaultMessage: "Pages" })}>
+                <StackSwitch>
+                    <StackPage name="table">
+                        {renderContentScopeIndicator(scope)}
+                        <Toolbar>
+                            <PageSearch query={query} onQueryChange={setQuery} pageSearchApi={pageSearchApi} />
+                            <FormControlLabel
+                                control={<Switch checked={showArchive} color="primary" onChange={handleArchiveToggleClick} />}
+                                label={<FormattedMessage id="comet.pages.pages.archivedItems" defaultMessage="Archived items" />}
+                            />
+                            <ToolbarActions>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    startIcon={<Add />}
+                                    onClick={() => {
+                                        editDialogApi.openAddDialog();
+                                    }}
+                                >
+                                    <FormattedMessage {...messages.add} />
+                                </Button>
+                            </ToolbarActions>
+                        </Toolbar>
+                        <PageTreeContext.Provider value={{ allCategories, documentTypes, tree, query: pagesQuery }}>
+                            <PageTreeContent fullHeight>
+                                <ActionToolbarBox>
+                                    <PagesPageActionToolbar
+                                        selectedState={selectState}
+                                        onSelectAllPressed={() => {
+                                            if (selectState === "nothing_selected" || selectState === "some_selected") {
+                                                // select all pages
+                                                if (data) {
+                                                    setSelectedIds(data.pages.map((page) => page.id));
+                                                }
+                                            } else if (selectState === "all_selected") {
+                                                // Unselect all
+                                                setSelectedIds([]);
                                             }
-                                        } else if (selectState === "all_selected") {
-                                            // Unselect all
-                                            setSelectedIds([]);
-                                        }
-                                    }}
-                                    selectedTree={selectedTree}
-                                    collapseAllDisabled={!expandedIds.length}
-                                    onCollapseAllPressed={() => {
-                                        setExpandedIds([]);
-                                    }}
-                                />
-                            </ActionToolbarBox>
-                            <FullHeightPaper variant="outlined">
-                                {loading && isInitialLoad.current ? (
-                                    <Loading behavior="fillParent" />
-                                ) : (
-                                    <>
-                                        <Divider />
-                                        {loading && !isInitialLoad.current ? (
-                                            <LinearProgress />
-                                        ) : (
-                                            /* Placeholder to avoid content jumping when the loading bar appears */
-                                            <Box sx={{ backgroundColor: "white", width: "100%", height: 2 }} />
-                                        )}
-                                        <PageTree
-                                            ref={refPageTree}
-                                            pages={pagesToRenderWithMatches}
-                                            editDialogApi={editDialogApi}
-                                            toggleExpand={toggleExpand}
-                                            onSelectChanged={onSelectChanged}
-                                            category={category}
-                                            siteUrl={siteConfig.url}
-                                        />
-                                    </>
-                                )}
-                            </FullHeightPaper>
-                        </PageTreeContent>
-                    </PageTreeContext.Provider>
+                                        }}
+                                        selectedTree={selectedTree}
+                                        collapseAllDisabled={!expandedIds.length}
+                                        onCollapseAllPressed={() => {
+                                            setExpandedIds([]);
+                                        }}
+                                    />
+                                </ActionToolbarBox>
+                                <FullHeightPaper variant="outlined">
+                                    {loading && isInitialLoad.current ? (
+                                        <Loading behavior="fillParent" />
+                                    ) : (
+                                        <>
+                                            <Divider />
+                                            {loading && !isInitialLoad.current ? (
+                                                <LinearProgress />
+                                            ) : (
+                                                /* Placeholder to avoid content jumping when the loading bar appears */
+                                                <Box sx={{ backgroundColor: "white", width: "100%", height: 2 }} />
+                                            )}
+                                            <PageTree
+                                                ref={refPageTree}
+                                                pages={pagesToRenderWithMatches}
+                                                editDialogApi={editDialogApi}
+                                                toggleExpand={toggleExpand}
+                                                onSelectChanged={onSelectChanged}
+                                                category={category}
+                                                siteUrl={siteConfig.url}
+                                            />
+                                        </>
+                                    )}
+                                </FullHeightPaper>
+                            </PageTreeContent>
+                        </PageTreeContext.Provider>
 
-                    <EditDialog>
-                        <EditPageNode
-                            id={editDialogSelection.id || null}
-                            mode={editDialogSelection.mode ?? "add"}
-                            category={category}
-                            documentTypes={documentTypes}
-                        />
-                    </EditDialog>
-                </StackPage>
-                <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.pages.editContent", defaultMessage: "Edit content" })}>
-                    {(selectedId) => {
-                        const page = data?.pages.find((page) => page.id == selectedId);
+                        <EditDialog>
+                            <EditPageNode
+                                id={editDialogSelection.id || null}
+                                mode={editDialogSelection.mode ?? "add"}
+                                category={category}
+                                documentTypes={documentTypes}
+                            />
+                        </EditDialog>
+                    </StackPage>
+                    <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.pages.editContent", defaultMessage: "Edit content" })}>
+                        {(selectedId) => {
+                            const page = data?.pages.find((page) => page.id == selectedId);
 
-                        if (!page) {
-                            return null;
-                        }
+                            if (!page) {
+                                return null;
+                            }
 
-                        if (page.visibility === "Archived") {
-                            return <>403, not allowed</>;
-                        }
+                            if (page.visibility === "Archived") {
+                                return <>403, not allowed</>;
+                            }
 
-                        const documentType = documentTypes[page.documentType];
+                            const documentType = documentTypes[page.documentType];
 
-                        if (!documentType) {
-                            return null;
-                        }
+                            if (!documentType) {
+                                return null;
+                            }
 
-                        const EditComponent = documentType.editComponent;
+                            const EditComponent = documentType.editComponent;
 
-                        return EditComponent ? <EditComponent id={selectedId} category={category} /> : null;
-                    }}
-                </StackPage>
-            </StackSwitch>
-        </Stack>
+                            return EditComponent ? <EditComponent id={selectedId} category={category} /> : null;
+                        }}
+                    </StackPage>
+                </StackSwitch>
+            </Stack>
+        </DamScopeProvider>
     );
 }
 

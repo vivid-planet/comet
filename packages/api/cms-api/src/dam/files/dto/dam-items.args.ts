@@ -1,9 +1,20 @@
-import { ArgsType, Field, ID, InputType, IntersectionType } from "@nestjs/graphql";
-import { Type } from "class-transformer";
-import { IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { Type } from "@nestjs/common";
+import { ArgsType, Field, ID, InputType, IntersectionType, registerEnumType } from "@nestjs/graphql";
+import { Type as TransformerType } from "class-transformer";
+import { IsBoolean, IsEnum, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 
 import { OffsetBasedPaginationArgs } from "../../../common/pagination/offset-based.args";
 import { SortArgs } from "../../../common/sorting/sort.args";
+import { DamScopeInterface } from "../../types";
+import { EmptyDamScope } from "./empty-dam-scope";
+
+export enum DamItemType {
+    File = "File",
+    Folder = "Folder",
+}
+registerEnumType(DamItemType, {
+    name: "DamItemType",
+});
 
 @InputType()
 export class DamItemFilterInput {
@@ -18,21 +29,82 @@ export class DamItemFilterInput {
     mimetypes?: string[];
 }
 
-@ArgsType()
-export class DamItemsArgs extends IntersectionType(OffsetBasedPaginationArgs, SortArgs) {
-    @Field(() => ID, { nullable: true })
-    @IsOptional()
-    @IsUUID()
+export interface DamItemsArgsInterface extends OffsetBasedPaginationArgs, SortArgs {
+    scope: DamScopeInterface;
     folderId?: string;
-
-    @Field({ nullable: true })
-    @IsOptional()
-    @IsBoolean()
     includeArchived?: boolean;
-
-    @Field(() => DamItemFilterInput, { nullable: true })
-    @Type(() => DamItemFilterInput)
-    @IsOptional()
-    @ValidateNested()
     filter?: DamItemFilterInput;
+}
+
+export function createDamItemArgs({ Scope }: { Scope: Type<DamScopeInterface> }): Type<DamItemsArgsInterface> {
+    @ArgsType()
+    class DamItemsArgs extends IntersectionType(OffsetBasedPaginationArgs, SortArgs) implements DamItemsArgsInterface {
+        @Field(() => Scope, { defaultValue: Scope === EmptyDamScope ? {} : undefined })
+        @TransformerType(() => Scope)
+        @ValidateNested()
+        scope: DamScopeInterface;
+
+        @Field(() => ID, { nullable: true })
+        @IsOptional()
+        @IsUUID()
+        folderId?: string;
+
+        @Field({ nullable: true })
+        @IsOptional()
+        @IsBoolean()
+        includeArchived?: boolean;
+
+        @Field(() => DamItemFilterInput, { nullable: true })
+        @TransformerType(() => DamItemFilterInput)
+        @IsOptional()
+        @ValidateNested()
+        filter?: DamItemFilterInput;
+    }
+
+    return DamItemsArgs;
+}
+
+export interface DamItemPositionArgsInterface extends SortArgs {
+    scope: DamScopeInterface;
+    id: string;
+    type: DamItemType;
+    folderId?: string;
+    includeArchived?: boolean;
+    filter?: DamItemFilterInput;
+}
+
+export function createDamItemPositionArgs({ Scope }: { Scope: Type<DamScopeInterface> }): Type<DamItemPositionArgsInterface> {
+    @ArgsType()
+    class DamItemPositionArgs extends SortArgs implements DamItemPositionArgsInterface {
+        @Field(() => Scope, { defaultValue: Scope === EmptyDamScope ? {} : undefined })
+        @TransformerType(() => Scope)
+        @ValidateNested()
+        scope: DamScopeInterface;
+
+        @Field(() => ID)
+        @IsUUID()
+        id: string;
+
+        @Field(() => DamItemType)
+        @IsEnum(DamItemType)
+        type: DamItemType;
+
+        @Field(() => ID, { nullable: true })
+        @IsOptional()
+        @IsUUID()
+        folderId?: string;
+
+        @Field({ nullable: true })
+        @IsOptional()
+        @IsBoolean()
+        includeArchived?: boolean;
+
+        @Field(() => DamItemFilterInput, { nullable: true })
+        @TransformerType(() => DamItemFilterInput)
+        @IsOptional()
+        @ValidateNested()
+        filter?: DamItemFilterInput;
+    }
+
+    return DamItemPositionArgs;
 }

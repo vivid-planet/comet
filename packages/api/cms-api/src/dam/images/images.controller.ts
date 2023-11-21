@@ -6,12 +6,16 @@ import mime from "mime";
 import fetch from "node-fetch";
 import { PassThrough } from "stream";
 
-import { BlobStorageBackendService } from "../..";
+import { CurrentUserInterface } from "../../auth/current-user/current-user";
+import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
+import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
+import { ContentScopeService } from "../../content-scope/content-scope.service";
 import { ScaledImagesCacheService } from "../cache/scaled-images-cache.service";
 import { FocalPoint } from "../common/enums/focal-point.enum";
 import { CDN_ORIGIN_CHECK_HEADER, DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
+import { FileInterface } from "../files/entities/file.entity";
 import { FilesService } from "../files/files.service";
 import { createHashedPath } from "../files/files.utils";
 import { Extension, Gravity, ResizingType } from "../imgproxy/imgproxy.enum";
@@ -44,26 +48,57 @@ export class ImagesController {
         private readonly imagesService: ImagesService,
         private readonly cacheService: ScaledImagesCacheService,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
+        private readonly contentScopeService: ContentScopeService,
     ) {}
 
     @Get(`/preview/${smartImageUrl}`)
-    async previewSmartCroppedImage(@Param() params: ImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
+    async previewSmartCroppedImage(
+        @Param() params: ImageParams,
+        @Headers("Accept") accept: string,
+        @Res() res: Response,
+        @GetCurrentUser() user: CurrentUserInterface,
+    ): Promise<void> {
         if (params.cropArea.focalPoint !== FocalPoint.SMART) {
             throw new NotFoundException();
         }
 
-        return this.getCroppedImage(params, accept, res, {
+        const file = await this.filesService.findOneById(params.fileId);
+
+        if (file === null) {
+            throw new NotFoundException();
+        }
+
+        if (file.scope !== undefined && !this.contentScopeService.canAccessScope(file.scope, user)) {
+            throw new ForbiddenException();
+        }
+
+        return this.getCroppedImage(file, params, accept, res, {
             "cache-control": "private",
         });
     }
 
     @Get(`/preview/${focusImageUrl}`)
-    async previewFocusCroppedImage(@Param() params: ImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
+    async previewFocusCroppedImage(
+        @Param() params: ImageParams,
+        @Headers("Accept") accept: string,
+        @Res() res: Response,
+        @GetCurrentUser() user: CurrentUserInterface,
+    ): Promise<void> {
         if (params.cropArea.focalPoint === FocalPoint.SMART) {
             throw new NotFoundException();
         }
 
-        return this.getCroppedImage(params, accept, res, {
+        const file = await this.filesService.findOneById(params.fileId);
+
+        if (file === null) {
+            throw new NotFoundException();
+        }
+
+        if (file.scope !== undefined && !this.contentScopeService.canAccessScope(file.scope, user)) {
+            throw new ForbiddenException();
+        }
+
+        return this.getCroppedImage(file, params, accept, res, {
             "cache-control": "private",
         });
     }
@@ -82,7 +117,13 @@ export class ImagesController {
             throw new NotFoundException();
         }
 
-        return this.getCroppedImage(params, accept, res);
+        const file = await this.filesService.findOneById(params.fileId);
+
+        if (file === null) {
+            throw new NotFoundException();
+        }
+
+        return this.getCroppedImage(file, params, accept, res);
     }
 
     @DisableGlobalGuard()
@@ -99,7 +140,13 @@ export class ImagesController {
             throw new NotFoundException();
         }
 
-        return this.getCroppedImage(params, accept, res);
+        const file = await this.filesService.findOneById(params.fileId);
+
+        if (file === null) {
+            throw new NotFoundException();
+        }
+
+        return this.getCroppedImage(file, params, accept, res);
     }
 
     private isValidHash({ hash, ...imageParams }: HashImageParams): boolean {
@@ -115,13 +162,15 @@ export class ImagesController {
     }
 
     private async getCroppedImage(
-        { fileId, cropArea, resizeWidth, resizeHeight, focalPoint }: ImageParams,
+        file: FileInterface,
+        { cropArea, resizeWidth, resizeHeight, focalPoint }: ImageParams,
         accept: string,
         res: Response,
         overrideHeaders?: OutgoingHttpHeaders,
     ): Promise<void> {
-        const file = await this.filesService.findOneById(fileId);
-        if (!file || !file.image) throw new NotFoundException();
+        if (!file.image) {
+            throw new NotFoundException();
+        }
 
         let cropWidth: number;
         let cropHeight: number;

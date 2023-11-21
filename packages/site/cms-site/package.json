@@ -13,9 +13,9 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "$npm_execpath run clean && npm run generate-block-types && tsc",
+        "build": "$npm_execpath run clean && npm run generate-block-types && tsc --project tsconfig.build.json",
         "clean": "rimraf lib",
-        "dev": "$npm_execpath generate-block-types && tsc --watch --preserveWatchOutput",
+        "dev": "$npm_execpath generate-block-types && tsc --watch --preserveWatchOutput --project tsconfig.build.json",
         "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"$npm_execpath generate-block-types\"",
         "lint": "$npm_execpath generate-block-types && run-p lint:eslint lint:tsc",

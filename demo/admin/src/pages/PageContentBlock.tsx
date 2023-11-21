@@ -7,10 +7,12 @@ import { UserGroupChip } from "@src/userGroups/UserGroupChip";
 import { UserGroupContextMenuItem } from "@src/userGroups/UserGroupContextMenuItem";
 import * as React from "react";
 
+import { HeadlineBlock } from "../common/blocks/HeadlineBlock";
+import { TextImageBlock } from "../common/blocks/TextImageBlock";
 import { ColumnsBlock } from "./blocks/ColumnsBlock";
 import { FullWidthImageBlock } from "./blocks/FullWidthImageBlock";
-import { HeadlineBlock } from "./blocks/HeadlineBlock";
-import { TextImageBlock } from "./blocks/TextImageBlock";
+import { MediaBlock } from "./blocks/MediaBlock";
+import { TwoListsBlock } from "./blocks/TwoListsBlock";
 import { VideoBlock } from "./blocks/VideoBlock";
 
 export const PageContentBlock = createBlocksBlock({
@@ -28,6 +30,8 @@ export const PageContentBlock = createBlocksBlock({
         fullWidthImage: FullWidthImageBlock,
         columns: ColumnsBlock,
         anchor: AnchorBlock,
+        twoLists: TwoListsBlock,
+        media: MediaBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,

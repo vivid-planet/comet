@@ -3,6 +3,8 @@ import { DocumentNode } from "graphql";
 
 import { pageSearchFragment } from "../pageSearch/usePageSearch";
 import { pageTreePageFragment } from "../pageTree/usePageTree";
+export { GQLPageTreePageFragment } from "../pageTree/usePageTree";
+export { GQLPagesQuery, GQLPagesQueryVariables } from "./createPagesQuery.generated";
 
 interface CreatePagesQueryOptions {
     additionalPageTreeNodeFragment?: { name: string; fragment: DocumentNode };

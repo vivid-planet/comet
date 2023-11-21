@@ -5,8 +5,8 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLCurrentUserQuery, GQLSignOutMutation } from "../../graphql.generated";
 import { AboutModal } from "./about/AboutModal";
+import { GQLCurrentUserQuery, GQLSignOutMutation } from "./UserHeaderItem.generated";
 
 const DropdownContent = styled(Box)`
     width: 250px;
@@ -60,7 +60,7 @@ export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
     if (loading || !data)
         return (
             <LoadingWrapper>
-                <Loading behavior="fillParent" size={20} color="inherit" />
+                <Loading behavior="fillParent" sx={{ fontSize: 20 }} color="inherit" />
             </LoadingWrapper>
         );
 

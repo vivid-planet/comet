@@ -1,10 +1,10 @@
 import { Args, Int, Parent, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { ImagesService } from "../images/images.service";
-import { FileImage } from "./entities/file-image.entity";
+import { DamFileImage } from "./entities/file-image.entity";
 import { FilesService } from "./files.service";
 
-@Resolver(() => FileImage)
+@Resolver(() => DamFileImage)
 export class FileImagesResolver {
     constructor(private readonly imagesService: ImagesService, private readonly filesService: FilesService) {}
 
@@ -12,7 +12,7 @@ export class FileImagesResolver {
     async url(
         @Args("width", { type: () => Int }) width: number,
         @Args("height", { type: () => Int }) height: number,
-        @Parent() fileImage: FileImage,
+        @Parent() fileImage: DamFileImage,
     ): Promise<string | undefined> {
         const file = await this.filesService.findOneByImageId(fileImage.id);
         if (file) {

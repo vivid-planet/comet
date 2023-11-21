@@ -2,7 +2,7 @@ import { Music } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
 import React from "react";
 
-import { GQLDamFileDetailFragment } from "../../../graphql.generated";
+import { DamFileDetails } from "../EditFile";
 
 const AudioPreviewWrapper = styled("div")`
     width: 100%;
@@ -45,7 +45,7 @@ const StyledAudio = styled("audio")`
 `;
 
 interface AudioPreviewProps {
-    file: GQLDamFileDetailFragment;
+    file: DamFileDetails;
 }
 
 export const AudioPreview = ({ file }: AudioPreviewProps): React.ReactElement => {

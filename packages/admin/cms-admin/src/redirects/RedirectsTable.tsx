@@ -17,16 +17,16 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
-import { BlockInterface, BlockPreview } from "@comet/blocks-admin";
+import { BlockInterface, BlockPreviewContent } from "@comet/blocks-admin";
 import { Button, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, getGridSingleSelectOperators, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables, namedOperations } from "../graphql.generated";
 import RedirectActiveness from "./RedirectActiveness";
 import { deleteRedirectMutation, paginatedRedirectsQuery } from "./RedirectsTable.gql";
+import { GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables, namedOperations } from "./RedirectsTable.gql.generated";
 
 interface Props {
     linkBlock: BlockInterface;
@@ -86,14 +86,9 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             field: "target",
             headerName: intl.formatMessage({ id: "comet.pages.redirects.redirect.target", defaultMessage: "Target" }),
             renderCell: (params) => {
-                const state = linkBlock.input2State(params.value);
-
                 return (
                     <TargetWrapper>
-                        <BlockPreview
-                            title={linkBlock.dynamicDisplayName?.(state) ?? linkBlock.displayName}
-                            content={linkBlock.previewContent(state)}
-                        />
+                        <BlockPreviewContent block={linkBlock} input={params.value} />
                     </TargetWrapper>
                 );
             },

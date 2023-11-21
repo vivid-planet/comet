@@ -9,6 +9,7 @@ import {
     CronJobsModule,
     CurrentUserInterface,
     DamModule,
+    DependenciesModule,
     FilesService,
     ImagesService,
     KubernetesModule,
@@ -16,10 +17,11 @@ import {
     PageTreeService,
     PublicUploadModule,
     RedirectsModule,
+    UserPermissionsModule,
 } from "@comet/cms-api";
 import { ApolloDriver } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
-import { GraphQLModule } from "@nestjs/graphql";
+import { Enhancer, GraphQLModule } from "@nestjs/graphql";
 import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
 import { DbModule } from "@src/db/db.module";
@@ -29,6 +31,10 @@ import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.en
 import { Request } from "express";
 
 import { AuthModule } from "./auth/auth.module";
+import { UserService } from "./auth/user.service";
+import { DamScope } from "./dam/dto/dam-scope";
+import { DamFile } from "./dam/entities/dam-file.entity";
+import { DamFolder } from "./dam/entities/dam-folder.entity";
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
@@ -65,6 +71,8 @@ export class AppModule {
                         buildSchemaOptions: {
                             fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(dependencies)],
                         },
+                        // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
+                        fieldResolverEnhancers: ["guards", "interceptors", "filters"] as Enhancer[],
                     }),
                     inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
                 }),
@@ -74,6 +82,19 @@ export class AppModule {
                         if (!user.domains) return true; //all domains
                         return user.domains.includes(requestScope.domain);
                     },
+                }),
+                UserPermissionsModule.forRootAsync({
+                    useFactory: (userService: UserService) => ({
+                        availablePermissions: ["news", "products"],
+                        availableContentScopes: [
+                            { domain: "main", language: "de" },
+                            { domain: "main", language: "en" },
+                            { domain: "secondary", language: "en" },
+                        ],
+                        userService,
+                    }),
+                    inject: [UserService],
+                    imports: [AuthModule],
                 }),
                 BlocksModule.forRoot({
                     imports: [PagesModule],
@@ -88,6 +109,7 @@ export class AppModule {
                     },
                     inject: [PageTreeService, FilesService, ImagesService],
                 }),
+                DependenciesModule,
                 KubernetesModule.register({
                     helmRelease: config.helmRelease,
                 }),
@@ -119,6 +141,9 @@ export class AppModule {
                         maxFileSize: config.dam.uploadsMaxFileSize,
                     },
                     imgproxyConfig: config.imgproxy,
+                    Scope: DamScope,
+                    File: DamFile,
+                    Folder: DamFolder,
                 }),
                 PublicUploadModule.register({
                     maxFileSize: config.publicUploads.maxFileSize,

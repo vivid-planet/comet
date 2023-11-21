@@ -1,13 +1,14 @@
-import { CircularProgress, MenuItem, Select, SelectProps } from "@mui/material";
+import { CircularProgress, InputAdornment, MenuItem, Select, SelectProps } from "@mui/material";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
+import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
-    getOptionSelected?: (option: T, value: T) => boolean;
     getOptionLabel?: (option: T) => string;
+    getOptionValue?: (option: T) => string;
     children?: React.ReactNode;
     clearable?: boolean;
 }
@@ -25,16 +26,25 @@ export const FinalFormSelect = <T,>({
         }
         return "";
     },
-    getOptionSelected = (option: T, value: T) => {
-        if (!value) return false;
-        return option === value;
+    getOptionValue = (option: T) => {
+        if (typeof option === "object" && option !== null) {
+            if ((option as any).id) return String((option as any).id);
+            if ((option as any).value) return String((option as any).value);
+            return JSON.stringify(option);
+        } else {
+            return String(option);
+        }
     },
     children,
     endAdornment,
     clearable,
-    multiple,
     ...rest
 }: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input">) => {
+    // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
+    // 1. <Field component={FinalFormSelect} multiple /> -> multiple is in restInput
+    // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
+    const multiple = restInput.multiple ?? rest.multiple;
+
     const selectEndAdornment = clearable ? (
         <ClearInputAdornment
             position="end"
@@ -63,19 +73,50 @@ export const FinalFormSelect = <T,>({
         );
     }
 
-    if (value && options) {
-        value = options.reduce((previousOption, option) => (getOptionSelected(option, value) ? option : previousOption), value);
-    }
-
     return (
-        <Select {...selectProps} value={value}>
-            {options.length === 0 && (loading || value) && (
-                <MenuItem value={value as any} key={JSON.stringify(value)}>
-                    {loading ? <CircularProgress size={20} /> : getOptionLabel(value)}
+        <Select
+            {...selectProps}
+            endAdornment={
+                <>
+                    {loading && (
+                        <InputAdornment position="end">
+                            <CircularProgress size={16} color="inherit" />
+                        </InputAdornment>
+                    )}
+                    {selectEndAdornment}
+                </>
+            }
+            onChange={(event) => {
+                const value = event.target.value;
+                onChange(
+                    Array.isArray(value)
+                        ? value.map((v) => options.find((i) => getOptionValue(i) == v))
+                        : options.find((i) => getOptionValue(i) == value),
+                );
+            }}
+            value={Array.isArray(value) ? value.map((i) => getOptionValue(i)) : getOptionValue(value)}
+        >
+            {loading && (
+                <MenuItem value="" disabled>
+                    <FormattedMessage id="common.loading" defaultMessage="Loading ..." />
                 </MenuItem>
             )}
+
+            {options.length === 0 &&
+                value &&
+                (Array.isArray(value) ? (
+                    value.map((v) => (
+                        <MenuItem value={getOptionValue(v)} key={getOptionValue(v)} sx={{ display: "none" }}>
+                            {getOptionLabel(v)}
+                        </MenuItem>
+                    ))
+                ) : (
+                    <MenuItem value={getOptionValue(value)} key={getOptionValue(value)} sx={{ display: "none" }}>
+                        {getOptionLabel(value)}
+                    </MenuItem>
+                ))}
             {options.map((option: T) => (
-                <MenuItem value={option as any} key={JSON.stringify(option)}>
+                <MenuItem value={getOptionValue(option)} key={getOptionValue(option)}>
                     {getOptionLabel(option)}
                 </MenuItem>
             ))}

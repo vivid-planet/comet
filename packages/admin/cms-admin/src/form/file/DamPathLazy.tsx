@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import React from "react";
 
-import { GQLDamPathLazyQuery, GQLDamPathLazyQueryVariables } from "../../graphql.generated";
+import { GQLDamPathLazyQuery, GQLDamPathLazyQueryVariables } from "./DamPathLazy.generated";
 
 const damPathLazyQuery = gql`
     query DamPathLazy($id: ID!) {

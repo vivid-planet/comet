@@ -1,8 +1,11 @@
 import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
-import { DamImageBlock, File, FocalPoint, ImageCropAreaInput } from "@comet/cms-api";
+import { DamImageBlock, FileInterface, FocalPoint, ImageCropAreaInput } from "@comet/cms-api";
 import faker from "faker";
 
-export const generateImageBlock = (imageFiles: File[] | File, cropArea?: ImageCropAreaInput): ExtractBlockInputFactoryProps<typeof DamImageBlock> => {
+export const generateImageBlock = (
+    imageFiles: FileInterface[] | FileInterface,
+    cropArea?: ImageCropAreaInput,
+): ExtractBlockInputFactoryProps<typeof DamImageBlock> => {
     const imageFile = Array.isArray(imageFiles) ? faker.random.arrayElement(imageFiles) : imageFiles;
     const type = imageFile.mimetype == "image/svg+xml" ? "svgImage" : "pixelImage";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -24,7 +27,7 @@ export const generateImageBlock = (imageFiles: File[] | File, cropArea?: ImageCr
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const calculateDefaultCropInput = ({ image }: File): ImageCropAreaInput => {
+export const calculateDefaultCropInput = ({ image }: FileInterface): ImageCropAreaInput => {
     const focalPoint = faker.random.arrayElement([
         FocalPoint.SMART,
         FocalPoint.CENTER,
