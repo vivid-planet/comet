@@ -7,6 +7,34 @@ sidebar_position: 1
 
 ## API
 
+### DependenciesModule
+
+Add the `DependenciesModule` to `AppModule`:
+
+```diff
+import {
+    ...
++   DependenciesModule,
+} from "@comet/cms-api";
+
+...
+
+@Module({})
+export class AppModule {
+    static forRoot(config: Config): DynamicModule {
+        return {
+            module: AppModule,
+            imports: [
+                ConfigModule.forRoot(config),
+                DbModule,
+                ...
++               DependenciesModule,
+            ],
+        };
+    }
+}
+```
+
 ### blocks-meta.json
 
 The key (type) of OneOfBlocks is now included in the `blocks-meta.json`.
