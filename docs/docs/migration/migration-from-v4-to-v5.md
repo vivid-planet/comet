@@ -173,6 +173,11 @@ replaceDependenciesInOutput: (output, replacements) => {
 };
 ```
 
+### Dashboard
+
+New components `DashboardHeader`, `LatestBuildsDashboardWidget`, and `LatestContentUpdatesDashboardWidget` have been added to replace existing components defined in application code.
+See [this PR](https://github.com/vivid-planet/comet-starter/pull/40) for an example on how to migrate.
+
 ### BlockPreview
 
 The `BlockPreview` component was removed. Instead, use `BlockPreviewContent`:
