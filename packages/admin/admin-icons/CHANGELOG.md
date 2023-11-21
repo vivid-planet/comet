@@ -1,5 +1,11 @@
 # @comet/admin-icons
 
+## 5.0.0
+
+### Minor Changes
+
+-   ed692f50: Add new open and close hamburger icons and use them in the app header menu button
+
 ## 4.7.0
 
 ### Minor Changes

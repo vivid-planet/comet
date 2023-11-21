@@ -1,5 +1,43 @@
 # @comet/admin
 
+## 5.0.0
+
+### Major Changes
+
+-   692c8555: Breaking: DirtyHandler removed, replace with <Prompt> (no change needed if DirtyHandler was used indirectly eg. in Form)
+
+    Routes (eg. Tabs) in a Component with dirty handling (eg. Form) is now supported
+
+-   fe5e0735: Add support for FinalFormSelect multiple
+
+    Add a new getOptionValue prop that must be used to extract a unique string representation for a given option. Default implementation should work in most cases.
+
+    Remove getOptionSelected prop that is not needed anymore.
+
+-   d0773a1a: Change styling of FilterBar components to be more consistent with other form components. The classes of `FilterBarMoreFilters` have changed, which may cause custom styling of this component to break.
+-   0f2794e7: Change the icon used in the `Loading` component from MUI's `CircularProgress` to our `BallTriangle`
+
+### Minor Changes
+
+-   2559ff74: Add CrudVisibility component for implementing visibility column in a Crud Grid
+-   ed692f50: Add new open and close hamburger icons and use them in the app header menu button
+-   7c6eb68e: Add new `event` parameter to `FinalForm`'s `onSubmit()` method. The `navigatingBack` field of `event` simplifies implementing different navigation patterns after saving.
+-   80b007ae: Add a FinalFormSaveButton component
+-   a7116784: Add support for multiple StackSwitch on one StackPage
+
+    Add a SubRoute wrapper for this case that needs to be added in front of the tested StckSwitch and do that
+    for all composite blocks
+
+### Patch Changes
+
+-   0453c36a: Router: Fix Switch inside a SubRouteIndexRoute to allow a Stack in a Stack initial page
+-   987f08b3: Select: Fix default getOptionValue implementation for values not being an object
+-   5f0f8e6e: Correctly support RouterTabs in SubRoute by including the subRoutePrefix in tab paths
+-   d4bcab04: Fix useSubRoutePrefix if used inside a Route
+-   e57c6c66: Add dashboard components to cms-admin (header, latest-builds widget, latest-content-updates widget)
+-   Updated dependencies [ed692f50]
+    -   @comet/admin-icons@5.0.0
+
 ## 4.7.0
 
 ### Minor Changes

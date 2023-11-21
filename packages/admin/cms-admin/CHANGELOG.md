@@ -1,5 +1,102 @@
 # @comet/cms-admin
 
+## 5.0.0
+
+### Major Changes
+
+-   9875e7d4: Support automatically importing DAM files into another scope when copying documents from one scope to another
+
+    The copy process was reworked:
+
+    -   The `DocumentInterface` now requires a `dependencies()` and a `replaceDependenciesInOutput()` method
+    -   The `BlockInterface` now has an optional `dependencies()` and a required `replaceDependenciesInOutput()` method
+    -   `rewriteInternalLinks()` was removed from `@comet/cms-admin`. Its functionality is replaced by `replaceDependenciesInOutput()`.
+
+    `dependencies()` returns information about dependencies of a document or block (e.g. a used `DamFile` or linked `PageTreeNode`). `replaceDependenciesInOutput()` replaces the IDs of all dependencies of a document or block with new IDs (necessary for copying documents or blocks to another scope).
+
+    You can use the new `createDocumentRootBlocksMethods()` to generate the methods for documents.
+
+-   9d3e8555: Add scoping to the DAM
+
+    The DAM scoping can be enabled optionally. You can still use the DAM without scoping.
+
+    To enable DAM scoping, you must
+
+    In the API:
+
+    -   Create a DAM folder entity using `createFolderEntity({ Scope: DamScope });`
+    -   Create a DAM file entity using `createFileEntity({ Scope: DamScope, Folder: DamFolder });`
+    -   Pass the `Scope` DTO and the `File` and `Folder` entities when intializing the `DamModule`
+
+    In the Admin:
+
+    -   Set `scopeParts` in the `DamConfigProvider` (e.g. `<DamConfigProvider value={{ scopeParts: ["domain"] }}>`)
+    -   Render the content scope indicator in the `DamPage`
+        ```tsx
+        <DamPage renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} />} />
+        ```
+
+    You can access the current DAM scope in the Admin using the `useDamScope()` hook.
+
+    See Demo for an example on how to enable DAM scoping.
+
+-   c3f96d7d: Don't remember the last folder or file the user opened in the DAM. The `ChooseFileDialog` still remembers the last folder opened.
+
+### Minor Changes
+
+-   adb5bc34: Add queryUpdatedAt helper that can be used in checkConflict without having the write an addtional query
+-   6b9787e6: It's now possible to opt-out of creating a redirect when changing the slug of a page
+
+    Previously, a redirect was always created.
+
+-   e6b8ec60: Show a bigger version of an image when hovering over an image thumbnail in the DAM and asset picker dialog
+-   47a7272c: Add `requireLicense` option to `DamConfig` to allow making DAM license fields required
+-   5bae9ab3: Show LinearProgress instead of CircularProgress when polling after initially loading the page tree
+-   e26bd900: Add various DAM UI/UX improvements
+
+    -   Replace underlying `Table` with `DataGrid`
+    -   Add paging to improve performance
+    -   Add a dialog to move files to another folder (instead of Drag and Drop)
+    -   Highlight newly uploaded files
+    -   Add a new footer to execute bulk actions
+    -   Add a "More Actions" dropdown above the `DataGrid` to execute bulk actions
+
+-   8ed96981: Support Copy-Paste with DAM files across server instances by downloading the copied file
+-   168380d9: Add Admin CRUD generator that creates a simple CRUD admin view for a entity
+-   a6734760: Add new createDocumentRootBlocksMethods helper for creating methods needed by DocumentInterface
+-   f25eccf0: Add a hover preview for images to the DAM
+-   7c6eb68e: Add `useFormSaveConflict()` hook to check for save conflicts in forms
+-   e57c6c66: Add dashboard components to cms-admin (header, latest-builds widget, latest-content-updates widget)
+
+### Patch Changes
+
+-   564f66d3: Allow `:`, `?`, `=` and `&` in redirect source paths
+-   c0e03edc: Page Tree: add progress Dialog when pasting pages
+-   49e85432: When API responses with Not Authenticated the Admin now shows a button to re-login instead of a plain error message.
+-   Updated dependencies [0453c36a]
+-   Updated dependencies [692c8555]
+-   Updated dependencies [2559ff74]
+-   Updated dependencies [fe5e0735]
+-   Updated dependencies [ed692f50]
+-   Updated dependencies [987f08b3]
+-   Updated dependencies [d0773a1a]
+-   Updated dependencies [4fe08312]
+-   Updated dependencies [5f0f8e6e]
+-   Updated dependencies [7c6eb68e]
+-   Updated dependencies [9875e7d4]
+-   Updated dependencies [d4bcab04]
+-   Updated dependencies [0f2794e7]
+-   Updated dependencies [80b007ae]
+-   Updated dependencies [a7116784]
+-   Updated dependencies [a7116784]
+-   Updated dependencies [e57c6c66]
+    -   @comet/admin@5.0.0
+    -   @comet/admin-icons@5.0.0
+    -   @comet/blocks-admin@5.0.0
+    -   @comet/admin-date-time@5.0.0
+    -   @comet/admin-rte@5.0.0
+    -   @comet/admin-theme@5.0.0
+
 ## 4.7.0
 
 ### Minor Changes

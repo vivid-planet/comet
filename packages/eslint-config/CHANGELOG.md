@@ -1,5 +1,17 @@
 # @comet/eslint-config
 
+## 5.0.0
+
+### Minor Changes
+
+-   b6f8cc0a: Add a new eslint rule that makes sure no private sibling imports are used
+
+    Sibling File is eg a Foo.gql.ts file that should be considered as private sibling of Foo.ts and not used (imported) by any other file
+
+### Patch Changes
+
+-   @comet/eslint-plugin@5.0.0
+
 ## 4.7.0
 
 ## 4.6.0
