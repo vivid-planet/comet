@@ -7,6 +7,34 @@ sidebar_position: 1
 
 ## API
 
+### DependenciesModule
+
+Add the `DependenciesModule` to `AppModule`:
+
+```diff
+import {
+    ...
++   DependenciesModule,
+} from "@comet/cms-api";
+
+...
+
+@Module({})
+export class AppModule {
+    static forRoot(config: Config): DynamicModule {
+        return {
+            module: AppModule,
+            imports: [
+                ConfigModule.forRoot(config),
+                DbModule,
+                ...
++               DependenciesModule,
+            ],
+        };
+    }
+}
+```
+
 ### blocks-meta.json
 
 The key (type) of OneOfBlocks is now included in the `blocks-meta.json`.
@@ -56,8 +84,8 @@ indexData(): BlockIndexData {
 
 ### FilesService.upload()
 
-The method signature changed. 
-The second argument is now an options object. 
+The method signature changed.
+The second argument is now an options object.
 You may have to adjust this in your fixtures.
 
 ```diff
@@ -144,6 +172,11 @@ replaceDependenciesInOutput: (output, replacements) => {
     return clonedOutput;
 };
 ```
+
+### Dashboard
+
+New components `DashboardHeader`, `LatestBuildsDashboardWidget`, and `LatestContentUpdatesDashboardWidget` have been added to replace existing components defined in application code.
+See [this PR](https://github.com/vivid-planet/comet-starter/pull/40) for an example on how to migrate.
 
 ### BlockPreview
 
