@@ -84,8 +84,8 @@ indexData(): BlockIndexData {
 
 ### FilesService.upload()
 
-The method signature changed. 
-The second argument is now an options object. 
+The method signature changed.
+The second argument is now an options object.
 You may have to adjust this in your fixtures.
 
 ```diff
