@@ -1,20 +1,16 @@
-import { ArrowRight, Check, Close, Error, Info, Warning } from "@comet/admin-icons";
-import { Button, ButtonProps, IconButton, Theme, Typography } from "@mui/material";
+import { Check, Close, Error, Info, Warning } from "@comet/admin-icons";
+import { IconButton, Theme, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
 
-type Action = Partial<Omit<ButtonProps, "children">> & {
-    text: ButtonProps["children"];
-};
-
 export interface AlertProps {
     severity?: "info" | "warning" | "error" | "success";
     title?: React.ReactNode;
-    text: React.ReactNode;
-    hideCloseButton?: boolean;
-    onCloseClick?: () => void;
-    action?: Action;
+    children?: React.ReactNode;
+    disableCloseButton?: boolean;
+    onClose?: () => void;
+    action?: React.ReactNode;
 }
 
 export type AlertClassKey =
@@ -98,22 +94,22 @@ const styles = (theme: Theme) =>
 function Alert({
     severity = "info",
     title,
-    text,
+    children,
     classes,
-    hideCloseButton = false,
-    onCloseClick,
+    disableCloseButton = false,
+    onClose,
     action,
 }: AlertProps & WithStyles<typeof styles>): React.ReactElement {
-    let button: React.ReactNode = null;
+    // const button: React.ReactNode = null;
 
-    if (action) {
-        const { text: actionText, ...restActionProps } = action;
-        button = (
-            <Button variant="text" startIcon={<ArrowRight />} className={classes.button} {...restActionProps}>
-                {actionText}
-            </Button>
-        );
-    }
+    // if (action) {
+    //     const { text: actionText, ...restActionProps } = action;
+    //     button = (
+    //         <Button variant="text" startIcon={<ArrowRight />} className={classes.button} {...restActionProps}>
+    //             {actionText}
+    //         </Button>
+    //     );
+    // }
 
     return (
         <div
@@ -142,10 +138,10 @@ function Alert({
                         {title}
                     </Typography>
                 )}
-                <Typography className={classes.text}>{text}</Typography>
-                {button}
-                {!hideCloseButton && (
-                    <IconButton className={classes.closeIcon} onClick={onCloseClick}>
+                {children}
+                {action}
+                {!disableCloseButton && (
+                    <IconButton className={classes.closeIcon} onClick={onClose}>
                         <Close />
                     </IconButton>
                 )}
