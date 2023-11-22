@@ -92,7 +92,7 @@ type RootProps = Pick<MyComponentProps, "shadow">;
  */
 const Root = styled("div", {
     name: "CometAdminMyComponent",
-    slot: "Root",
+    slot: "root",
     overridesResolver({ shadow }: RootProps, styles) {
         return [styles.root, shadow && styles.hasShadow];
     },
@@ -109,7 +109,7 @@ const Root = styled("div", {
 
 const Header = styled("div", {
     name: "CometAdminMyComponent",
-    slot: "Header",
+    slot: "header",
     overridesResolver(_, styles) {
         return [styles.header];
     },
@@ -124,7 +124,7 @@ const Header = styled("div", {
 
 const Title = styled(Typography, {
     name: "CometAdminMyComponent",
-    slot: "Title",
+    slot: "title",
     overridesResolver(_, styles) {
         return [styles.title];
     },
@@ -132,7 +132,7 @@ const Title = styled(Typography, {
 
 const Icon = styled(CometColor, {
     name: "CometAdminMyComponent",
-    slot: "Icon",
+    slot: "icon",
     overridesResolver(_, styles) {
         return [styles.icon];
     },
@@ -140,7 +140,7 @@ const Icon = styled(CometColor, {
 
 const Children = styled("div", {
     name: "CometAdminMyComponent",
-    slot: "Children",
+    slot: "children",
     overridesResolver(_, styles) {
         return [styles.children];
     },

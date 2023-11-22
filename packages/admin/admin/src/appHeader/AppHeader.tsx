@@ -16,7 +16,7 @@ export type AppHeaderClassKey = AppBarClassKey;
 
 const AppHeaderRoot = styled(MuiAppBar, {
     name: "CometAdminAppHeader",
-    slot: "Root",
+    slot: "root",
     overridesResolver({ position, color }, styles) {
         return [styles.root, styles[`position${capitalize(position)}`], styles[`color${capitalize(color)}`]];
     },
