@@ -1,7 +1,7 @@
 import { messages } from "@comet/admin";
 import { Clear, Delete, OpenNewTab, Warning } from "@comet/admin-icons";
 import { fontWeights } from "@comet/admin-theme";
-import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, Typography } from "@mui/material";
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
@@ -40,7 +40,7 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
     const styles = useStyles();
 
     return (
-        <Dialog open={open} onClose={onClosePressed} maxWidth="md">
+        <Dialog open={open || true} onClose={onClosePressed} maxWidth="md">
             <DialogTitle>
                 <Typography>
                     <FormattedMessage id="comet.saveConflictDialog.title" defaultMessage="Save Conflict" />
@@ -51,75 +51,77 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                     <FormattedMessage id="comet.saveConflictDialog.description1" defaultMessage="There was a conflict while saving" />
                 </Alert>
 
-                <Box py={2}>
-                    <Typography variant="h4" fontWeight="bold">
-                        <FormattedMessage id="comet.saveConflictDialog.whatHappened.heading" defaultMessage="What happened?" />
-                    </Typography>
-                    <Typography py={2}>
-                        <FormattedMessage
-                            id="comet.saveConflictDialog.whatHappened.description"
-                            defaultMessage="Someone else made changes to this page while you were editing it. <strong>You can't save this page.</strong> Otherwise, your changes would overwrite the other changes."
-                            values={{ strong: (chunks: string) => <strong>{chunks}</strong> }}
-                        />
-                    </Typography>
-                </Box>
+                <Stack spacing={2} pt={2}>
+                    <Box>
+                        <Typography variant="h4" fontWeight="bold">
+                            <FormattedMessage id="comet.saveConflictDialog.whatHappened.heading" defaultMessage="What happened?" />
+                        </Typography>
+                        <Typography py={2}>
+                            <FormattedMessage
+                                id="comet.saveConflictDialog.whatHappened.description"
+                                defaultMessage="Someone else made changes to this page while you were editing it. <strong>You can't save this page.</strong> Otherwise, your changes would overwrite the other changes."
+                                values={{ strong: (chunks: string) => <strong>{chunks}</strong> }}
+                            />
+                        </Typography>
+                    </Box>
 
-                <Box py={2}>
-                    <Typography variant="h4" fontWeight="bold">
-                        <FormattedMessage id="comet.saveConflictDialog.whatCanIDoNow.heading" defaultMessage="What can I do now?" />
-                    </Typography>
-                    <StyledList>
-                        <StyledListItem>
-                            <Typography>
-                                <FormattedMessage
-                                    id="comet.saveConflictDialog.whatCanIDoNow.option2"
-                                    defaultMessage="View the other changes in a new tab: You must make your changes again in the new tab."
-                                />
-                            </Typography>
-                        </StyledListItem>
-                        <StyledListItem>
-                            <Typography>
-                                <FormattedMessage
-                                    id="comet.saveConflictDialog.whatCanIDoNow.option1"
-                                    defaultMessage="Discard your unsaved changes: All your changes will be lost."
-                                />
-                            </Typography>
-                        </StyledListItem>
-                    </StyledList>
-                </Box>
+                    <Box>
+                        <Typography variant="h4" fontWeight="bold">
+                            <FormattedMessage id="comet.saveConflictDialog.whatCanIDoNow.heading" defaultMessage="What can I do now?" />
+                        </Typography>
+                        <StyledList>
+                            <StyledListItem>
+                                <Typography>
+                                    <FormattedMessage
+                                        id="comet.saveConflictDialog.whatCanIDoNow.option2"
+                                        defaultMessage="View the other changes in a new tab: You must make your changes again in the new tab."
+                                    />
+                                </Typography>
+                            </StyledListItem>
+                            <StyledListItem>
+                                <Typography>
+                                    <FormattedMessage
+                                        id="comet.saveConflictDialog.whatCanIDoNow.option1"
+                                        defaultMessage="Discard your unsaved changes: All your changes will be lost."
+                                    />
+                                </Typography>
+                            </StyledListItem>
+                        </StyledList>
+                    </Box>
 
-                <Box py={2}>
-                    <Typography variant="h4" fontWeight="bold">
-                        <FormattedMessage id="comet.saveConflictDialog.avoidConflicts.heading" defaultMessage="How can I avoid conflicts?" />
-                    </Typography>
+                    <Box>
+                        <Typography variant="h4" fontWeight="bold">
+                            <FormattedMessage id="comet.saveConflictDialog.avoidConflicts.heading" defaultMessage="How can I avoid conflicts?" />
+                        </Typography>
 
-                    <StyledList>
-                        <StyledListItem>
-                            <Typography>
-                                <FormattedMessage
-                                    id="comet.saveConflictDialog.avoidConflicts.tip1"
-                                    defaultMessage="Avoid opening the same page in multiple tabs."
-                                />
-                            </Typography>
-                        </StyledListItem>
-                        <StyledListItem>
-                            <Typography>
-                                <FormattedMessage
-                                    id="comet.saveConflictDialog.avoidConflicts.tip3"
-                                    defaultMessage="Save your changes regularly. Don't leave a page open for a long time with unsaved changes."
-                                />
-                            </Typography>
-                        </StyledListItem>
-                        <StyledListItem>
-                            <Typography>
-                                <FormattedMessage
-                                    id="comet.saveConflictDialog.avoidConflicts.tip2"
-                                    defaultMessage="Avoid editing a page while another user is also editing it."
-                                />
-                            </Typography>
-                        </StyledListItem>
-                    </StyledList>
-                </Box>
+                        <StyledList>
+                            <StyledListItem>
+                                <Typography>
+                                    <FormattedMessage
+                                        id="comet.saveConflictDialog.avoidConflicts.tip1"
+                                        defaultMessage="Avoid opening the same page in multiple tabs."
+                                    />
+                                </Typography>
+                            </StyledListItem>
+                            <StyledListItem>
+                                <Typography>
+                                    <FormattedMessage
+                                        id="comet.saveConflictDialog.avoidConflicts.tip3"
+                                        defaultMessage="Save your changes regularly. Don't leave a page open for a long time with unsaved changes."
+                                    />
+                                </Typography>
+                            </StyledListItem>
+                            <StyledListItem>
+                                <Typography>
+                                    <FormattedMessage
+                                        id="comet.saveConflictDialog.avoidConflicts.tip2"
+                                        defaultMessage="Avoid editing a page while another user is also editing it."
+                                    />
+                                </Typography>
+                            </StyledListItem>
+                        </StyledList>
+                    </Box>
+                </Stack>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClosePressed} startIcon={<Clear />} color="info">
