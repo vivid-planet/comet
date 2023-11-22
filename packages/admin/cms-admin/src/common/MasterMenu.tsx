@@ -15,6 +15,12 @@ export type MasterMenuData = MasterMenuItem[];
 
 export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
     const context = React.useContext(CurrentUserContext);
+    const checkPermission = (item: MasterMenuItem): boolean => {
+        if (!item.requiredPermission) return true;
+        if (context === undefined)
+            throw new Error("MasterMenu: requiredPermission is set but CurrentUserContext not found. Make sure CurrentUserProvider exists.");
+        return context.isAllowed(context.currentUser, item.requiredPermission);
+    };
 
     const mapFn = (item: MasterMenuItem): MenuItem => {
         const { route, submenu, to, ...menuItem } = item;
@@ -24,12 +30,10 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
                 to: to ?? route?.path?.toString() ?? "",
             },
             hasSubmenu: !!submenu,
-            submenu: submenu ? submenu.filter(filterFn).map(mapFn) : [],
+            submenu: submenu ? submenu.filter(checkPermission).map(mapFn) : [],
         };
     };
-    const filterFn = (item: MasterMenuItem): boolean =>
-        !item.requiredPermission || (context !== undefined && context.isAllowed(context.currentUser, item.requiredPermission));
-    return items.filter(filterFn).map(mapFn);
+    return items.filter(checkPermission).map(mapFn);
 }
 
 type MenuItem = {

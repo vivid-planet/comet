@@ -7,9 +7,15 @@ import { MasterMenuData, MasterMenuItem } from "./MasterMenu";
 
 export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
     const context = React.useContext(CurrentUserContext);
+    const checkPermission = (item: MasterMenuItem): boolean => {
+        if (!item.requiredPermission) return true;
+        if (context === undefined)
+            throw new Error("MasterMenuRoutes: requiredPermission is set but CurrentUserContext not found. Make sure CurrentUserProvider exists.");
+        return context.isAllowed(context.currentUser, item.requiredPermission);
+    };
 
     const flat = (routes: RouteProps[], item: MasterMenuItem): RouteProps[] => {
-        if (item.route && (!item.requiredPermission || (context !== undefined && context.isAllowed(context.currentUser, item.requiredPermission)))) {
+        if (item.route && checkPermission(item)) {
             routes.push(item.route);
         }
         if (item.submenu) {
