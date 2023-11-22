@@ -1,10 +1,10 @@
 import {
+    AffectedEntity,
     OffsetBasedPaginationArgs,
     PageTreeNodeInterface,
     PageTreeNodeVisibility,
     PageTreeService,
     SortArgs,
-    SubjectEntity,
     validateNotModified,
 } from "@comet/cms-api";
 import { FindOptions } from "@mikro-orm/core";
@@ -43,7 +43,7 @@ export class PagesResolver {
     }
 
     @Mutation(() => Page)
-    @SubjectEntity(Page, { pageTreeNodeIdArg: "attachedPageTreeNodeId" })
+    @AffectedEntity(Page, { pageTreeNodeIdArg: "attachedPageTreeNodeId" })
     async savePage(
         @Args("pageId", { type: () => ID }) pageId: string,
         @Args("input", { type: () => PageInput }) input: PageInput,

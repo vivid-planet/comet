@@ -10,5 +10,6 @@ Breaking changes:
 -   canAccessScope has been moved to AccessControlService
 -   role- and rights-fields has been removed from CurrentUser-Object
 -   AllowForRole-decorator has been removed
+-   Rename decorator SubjectEntity to AffectedEntity
 
 Upgrade-Guide: tbd
