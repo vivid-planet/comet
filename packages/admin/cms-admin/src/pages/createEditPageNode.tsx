@@ -313,22 +313,6 @@ export function createEditPageNode({
                                             return null;
                                         }
 
-                                        if (values.slug === "home") {
-                                            return (
-                                                <>
-                                                    <FieldContainer
-                                                        label={intl.formatMessage({
-                                                            id: "comet.pages.pages.page.path",
-                                                            defaultMessage: "Complete Path",
-                                                        })}
-                                                        variant="horizontal"
-                                                    >
-                                                        <Typography>/</Typography>
-                                                    </FieldContainer>
-                                                </>
-                                            );
-                                        }
-
                                         const numberOfDescendants = data?.page?.numberOfDescendants ?? 0;
 
                                         return (
@@ -341,7 +325,11 @@ export function createEditPageNode({
                                                     variant="horizontal"
                                                 >
                                                     <Typography>
-                                                        {parentPath}/{values.slug}
+                                                        {values.slug === "home"
+                                                            ? "/"
+                                                            : parentPath === null
+                                                            ? `/${values.slug}`
+                                                            : `${parentPath}/${values.slug}`}
                                                     </Typography>
                                                 </FieldContainer>
                                                 {mode === "edit" && dirtyFields.slug && (
