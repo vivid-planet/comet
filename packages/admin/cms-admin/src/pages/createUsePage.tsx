@@ -1,6 +1,6 @@
 import { ApolloError, gql, TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
 import { messages, SaveButton, SaveButtonProps, SplitButton, SplitButtonProps, useStackApi } from "@comet/admin";
-import { ChevronDown, Error as ErrorIcon } from "@comet/admin-icons";
+import { ChevronDown } from "@comet/admin-icons";
 import {
     BindBlockAdminComponent,
     BlockInterface,
@@ -453,6 +453,7 @@ function PageSaveButton({ handleSavePage, hasChanges, hasConflict, saving, saveE
         variant: "contained",
         saving,
         hasErrors: !!saveError,
+        hasConflict,
         errorItem:
             saveError == "invalid" ? (
                 <FormattedMessage {...messages.invalidData} />
@@ -464,11 +465,9 @@ function PageSaveButton({ handleSavePage, hasChanges, hasConflict, saving, saveE
     const splitButtonProps: Partial<SplitButtonProps> = {};
 
     if (hasConflict) {
-        saveButtonProps.saveIcon = <ErrorIcon />;
         saveButtonProps.color = "error";
-        saveButtonProps.sx = {
-            color: (theme) => theme.palette.error.contrastText,
-            [`&.${buttonGroupClasses.grouped}:not(:last-child)`]: {
+        splitButtonProps.sx = {
+            [`& .${buttonGroupClasses.grouped}:not(:last-child)`]: {
                 borderRightColor: (theme) => theme.palette.error.dark,
             },
         };

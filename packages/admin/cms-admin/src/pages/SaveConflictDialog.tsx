@@ -40,7 +40,7 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
     const styles = useStyles();
 
     return (
-        <Dialog open={open || true} onClose={onClosePressed} maxWidth="md">
+        <Dialog open={open} onClose={onClosePressed} maxWidth="md">
             <DialogTitle>
                 <Typography>
                     <FormattedMessage id="comet.saveConflictDialog.title" defaultMessage="Save Conflict" />

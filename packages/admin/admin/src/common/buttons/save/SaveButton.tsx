@@ -1,4 +1,4 @@
-import { Check, Error, Save, ThreeDotSaving } from "@comet/admin-icons";
+import { Check, Error, Error as ErrorIcon, Save, ThreeDotSaving } from "@comet/admin-icons";
 import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import { ClassKeyOfStyles } from "@mui/styles/withStyles";
@@ -13,30 +13,38 @@ import { SaveButtonClassKey, styles } from "./SaveButton.styles";
 export interface SaveButtonProps extends ButtonProps {
     saving?: boolean;
     hasErrors?: boolean;
+    hasConflict?: boolean;
     savingItem?: React.ReactNode;
     successItem?: React.ReactNode;
     errorItem?: React.ReactNode;
+    conflictItem?: React.ReactNode;
     saveIcon?: React.ReactNode;
     savingIcon?: React.ReactNode;
     successIcon?: React.ReactNode;
     errorIcon?: React.ReactNode;
+    conflictIcon?: React.ReactNode;
+    conflictColor?: "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning";
 }
 
-export type SaveButtonDisplayState = "idle" | "saving" | "success" | "error";
+export type SaveButtonDisplayState = "idle" | "saving" | "success" | "error" | "conflict";
 
 const SaveBtn = ({
     saving = false,
     hasErrors = false,
+    hasConflict = false,
     children = <FormattedMessage {...messages.save} />,
     savingItem = <FormattedMessage id="comet.saveButton.savingItem.title" defaultMessage="Saving" />,
     successItem = <FormattedMessage id="comet.saveButton.successItem.title" defaultMessage="Successfully Saved" />,
     errorItem = <FormattedMessage id="comet.saveButton.errorItem.title" defaultMessage="Save Error" />,
+    conflictItem = <FormattedMessage {...messages.saveConflict} />,
     saveIcon = <Save />,
     savingIcon = <ThreeDotSaving />,
     successIcon = <Check />,
     errorIcon = <Error />,
+    conflictIcon = <ErrorIcon />,
     variant = "contained",
     color = "primary",
+    conflictColor = "error",
     classes,
     disabled,
     ...restProps
@@ -51,6 +59,8 @@ const SaveBtn = ({
             return successIcon;
         } else if (displayState === "error") {
             return errorIcon;
+        } else if (displayState === "conflict") {
+            return conflictIcon;
         }
         return saveIcon;
     };
@@ -58,8 +68,12 @@ const SaveBtn = ({
     React.useEffect(() => {
         let timeoutId: number | undefined;
 
-        if (displayState === "idle" && saving) {
+        if ((displayState === "idle" || displayState === "conflict") && saving) {
             setDisplayState("saving");
+        }
+        // Display Conflict
+        else if (displayState === "idle" && hasConflict) {
+            setDisplayState("conflict");
         }
         // Display Error
         else if (displayState === "saving" && hasErrors === true) {
@@ -91,7 +105,7 @@ const SaveBtn = ({
                 window.clearTimeout(timeoutId);
             }
         };
-    }, [displayState, saving, hasErrors]);
+    }, [displayState, saving, hasErrors, hasConflict]);
 
     React.useEffect(() => {
         if (displayState === "idle") {
@@ -102,6 +116,8 @@ const SaveBtn = ({
             saveSplitButton?.setShowSelectButton(false);
         } else if (displayState === "error") {
             saveSplitButton?.setShowSelectButton(false);
+        } else if (displayState === "conflict") {
+            saveSplitButton?.setShowSelectButton(undefined);
         }
     }, [displayState, saveSplitButton]);
 
@@ -111,13 +127,14 @@ const SaveBtn = ({
             classes={resolveClassForDisplayState(displayState, classes)}
             startIcon={resolveIconForDisplayState(displayState)}
             variant={variant}
-            color={color}
-            disabled={disabled || displayState != "idle"}
+            color={displayState === "conflict" ? conflictColor : color}
+            disabled={disabled || (displayState != "idle" && displayState != "conflict")}
         >
             {displayState === "idle" && children}
             {displayState === "saving" && savingItem}
             {displayState === "success" && successItem}
             {displayState === "error" && errorItem}
+            {displayState === "conflict" && conflictItem}
         </Button>
     );
 };
@@ -134,6 +151,8 @@ const resolveClassForDisplayState = (
         buttonClasses.root += ` ${classes.saving}`;
     } else if (displayState === "error") {
         buttonClasses.root += ` ${classes.error}`;
+    } else if (displayState === "conflict") {
+        buttonClasses.root += ` ${classes.conflict}`;
     }
 
     return buttonClasses;

@@ -4,7 +4,7 @@ import { createStyles } from "@mui/styles";
 
 import { SaveButtonProps } from "./SaveButton";
 
-export type SaveButtonClassKey = "saving" | "error" | "success" | ButtonClassKey;
+export type SaveButtonClassKey = "saving" | "error" | "success" | "conflict" | ButtonClassKey;
 
 export const styles = (theme: Theme) => {
     return createStyles<SaveButtonClassKey, SaveButtonProps>({
@@ -64,6 +64,10 @@ export const styles = (theme: Theme) => {
                 color: theme.palette.success.contrastText,
                 backgroundColor: theme.palette.success.light,
             },
+        },
+        conflict: {
+            color: theme.palette.error.contrastText,
+            backgroundColor: theme.palette.error.main,
         },
         textError: {},
         textInfo: {},
