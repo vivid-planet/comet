@@ -14,7 +14,7 @@ export type MasterMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
 export type MasterMenuData = MasterMenuItem[];
 
 export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
-    const context = React.useContext<CurrentUserContext | undefined>(CurrentUserContext);
+    const context = React.useContext(CurrentUserContext);
 
     const mapFn = (item: MasterMenuItem): MenuItem => {
         const { route, submenu, to, ...menuItem } = item;

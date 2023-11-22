@@ -6,7 +6,7 @@ import { CurrentUserContext } from "../userPermissions/hooks/currentUser";
 import { MasterMenuData, MasterMenuItem } from "./MasterMenu";
 
 export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
-    const context = React.useContext<CurrentUserContext | undefined>(CurrentUserContext);
+    const context = React.useContext(CurrentUserContext);
 
     const flat = (routes: RouteProps[], item: MasterMenuItem): RouteProps[] => {
         if (item.route && (!item.requiredPermission || (context !== undefined && context.isAllowed(context.currentUser, item.requiredPermission)))) {
