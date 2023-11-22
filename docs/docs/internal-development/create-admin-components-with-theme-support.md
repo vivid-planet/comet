@@ -62,12 +62,11 @@ E.g.: in this instance of `MyComponent`, the root should have a red border, and 
 ## Example component
 
 ```tsx
+import { SlotProps } from "@comet/admin";
 import { CometColor } from "@comet/admin-icons";
 import { ComponentsOverrides, Typography } from "@mui/material";
 import { css, styled, SxProps, Theme, useThemeProps } from "@mui/material/styles";
 import React from "react";
-
-import { SlotProps } from "./helpers/SlotProps";
 
 /**
  * The `{ComponentName}ClassKey` type defines all the individual elements (or slots) of a component or a modifier or alternative style of a component.
@@ -77,7 +76,12 @@ import { SlotProps } from "./helpers/SlotProps";
  */
 export type MyComponentClassKey = "root" | "header" | "typography" | "icon" | "children" | "hasShadow";
 
-type RootProps = Pick<MyComponentProps, "shadow">;
+/**
+ * The `OwnerState` is an object that includes all values that should impact the component's styling.
+ * In this case, the `shadow` prop is the only thing that changes the component's styling, so it is the only value included in the `OwnerState`.
+ * It is passed into every slot that requires any of these values for its styling, in this case, the `root` and `title` slots.
+ */
+type OwnerState = Pick<MyComponentProps, "shadow">;
 
 /**
  * Each element or sub-component of a Comet Admin component should be created as a "slot".
@@ -93,16 +97,16 @@ type RootProps = Pick<MyComponentProps, "shadow">;
 const Root = styled("div", {
     name: "CometAdminMyComponent",
     slot: "root",
-    overridesResolver({ shadow }: RootProps, styles) {
-        return [styles.root, shadow && styles.hasShadow];
+    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+        return [styles.root, ownerState.shadow && styles.hasShadow];
     },
-})<RootProps>(
-    ({ theme, shadow }) => css`
+})<{ ownerState: OwnerState }>(
+    ({ theme, ownerState }) => css`
         background-color: ${theme.palette.background.paper};
 
-        ${shadow &&
+        ${ownerState.shadow &&
         css`
-            box-shadow: 2px 2px 0 5px rgba(0, 0, 0, 0.25);
+            box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.5);
         `}
     `,
 );
@@ -128,7 +132,14 @@ const Title = styled(Typography, {
     overridesResolver(_, styles) {
         return [styles.title];
     },
-})();
+})<{ ownerState: OwnerState }>(
+    ({ ownerState }) => css`
+        ${ownerState.shadow &&
+        css`
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        `}
+    `,
+);
 
 const Icon = styled(CometColor, {
     name: "CometAdminMyComponent",
@@ -177,10 +188,14 @@ export function MyComponent(inProps: MyComponentProps) {
      */
     const { title, children, shadow, slotProps = {}, sx } = useThemeProps({ props: inProps, name: "CometAdminMyComponent" });
 
+    const ownerState: OwnerState = {
+        shadow,
+    };
+
     return (
-        <Root shadow={shadow} sx={sx} {...slotProps?.root}>
+        <Root ownerState={ownerState} sx={sx} {...slotProps?.root}>
             <Header {...slotProps?.header}>
-                <Title variant="h4" {...slotProps?.title}>
+                <Title ownerState={ownerState} variant="h4" {...slotProps?.title}>
                     {title}
                 </Title>
                 <Icon {...slotProps?.icon} />
