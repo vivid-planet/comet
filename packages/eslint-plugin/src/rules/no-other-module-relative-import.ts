@@ -31,7 +31,10 @@ export default {
                 const options = context.options[0] ?? { sourceRoot: "./src", sourceRootAlias: "@src" };
 
                 const importParentDirCount = parentDirCount(node.source.value.toString());
-                if (!importParentDirCount) return;
+                if (!importParentDirCount) {
+                    // import is not relative
+                    return;
+                }
 
                 const filePath = context.getPhysicalFilename ? context.getPhysicalFilename() : context.getFilename();
                 if (filePath == "<text>") return; // If the input is from stdin, this test can't fail
