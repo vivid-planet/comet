@@ -23,6 +23,7 @@ export const CurrentUserProvider: React.FC<{
     const { data, error } = useQuery<GQLCurrentUserQuery>(gql`
         query CurrentUser {
             currentUser {
+                id
                 name
                 email
                 contentScopes
