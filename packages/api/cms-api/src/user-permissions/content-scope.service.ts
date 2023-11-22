@@ -7,8 +7,8 @@ import isEqual from "lodash.isequal";
 import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { PageTreeService } from "../page-tree/page-tree.service";
 import { ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
-import { SubjectEntityMeta } from "../user-permissions/decorators/subject-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { AffectedEntityMeta } from "./decorators/affected-entity.decorator";
 import { ACCESS_CONTROL_SERVICE } from "./user-permissions.constants";
 import { AccessControlServiceInterface } from "./user-permissions.types";
 
@@ -38,47 +38,49 @@ export class ContentScopeService {
             const gqlContext = GqlExecutionContext.create(context);
             const args = gqlContext.getArgs();
 
-            const subjectEntity = this.reflector.getAllAndOverride<SubjectEntityMeta>("subjectEntity", [context.getHandler(), context.getClass()]);
-            if (subjectEntity) {
+            const affectedEntity = this.reflector.getAllAndOverride<AffectedEntityMeta>("affectedEntity", [context.getHandler(), context.getClass()]);
+            if (affectedEntity) {
                 let subjectScope: ContentScope | undefined;
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const repo = this.orm.em.getRepository<any>(subjectEntity.entity);
-                if (subjectEntity.options.idArg) {
-                    if (!args[subjectEntity.options.idArg]) {
-                        throw new Error(`${subjectEntity.options.idArg} arg not found`);
+                const repo = this.orm.em.getRepository<any>(affectedEntity.entity);
+                if (affectedEntity.options.idArg) {
+                    if (!args[affectedEntity.options.idArg]) {
+                        throw new Error(`${affectedEntity.options.idArg} arg not found`);
                     }
-                    const row = await repo.findOneOrFail(args[subjectEntity.options.idArg]);
+                    const row = await repo.findOneOrFail(args[affectedEntity.options.idArg]);
                     if (row.scope) {
                         subjectScope = row.scope;
                     } else {
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [subjectEntity.entity as EntityClass<any>]);
+                        const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [
+                            affectedEntity.entity as EntityClass<unknown>,
+                        ]);
                         if (!scoped) {
                             return undefined;
                         }
                         subjectScope = await scoped.fn(row);
                     }
-                } else if (subjectEntity.options.pageTreeNodeIdArg && args[subjectEntity.options.pageTreeNodeIdArg]) {
-                    if (!args[subjectEntity.options.pageTreeNodeIdArg]) {
-                        throw new Error(`${subjectEntity.options.pageTreeNodeIdArg} arg not found`);
+                } else if (affectedEntity.options.pageTreeNodeIdArg && args[affectedEntity.options.pageTreeNodeIdArg]) {
+                    if (!args[affectedEntity.options.pageTreeNodeIdArg]) {
+                        throw new Error(`${affectedEntity.options.pageTreeNodeIdArg} arg not found`);
                     }
                     if (this.pageTreeService === undefined) {
                         throw new Error("pageTreeNodeIdArg was given but no PageTreeModule is registered");
                     }
                     const node = await this.pageTreeService
                         .createReadApi({ visibility: "all" })
-                        .getNode(args[subjectEntity.options.pageTreeNodeIdArg]);
+                        .getNode(args[affectedEntity.options.pageTreeNodeIdArg]);
                     if (!node) throw new Error("Can't find pageTreeNode");
                     subjectScope = node.scope;
                 } else {
-                    // TODO implement something more flexible that supports something like that: @SubjectEntity(Product, ProductEntityLoader)
+                    // TODO implement something more flexible that supports something like that: @AffectedEntity(Product, ProductEntityLoader)
                     throw new Error("idArg or pageTreeNodeIdArg is required");
                 }
                 if (subjectScope === undefined) throw new Error("Scope not found");
                 if (args.scope) {
                     // args.scope also exists, check if they match
                     if (!isEqual(args.scope, subjectScope)) {
-                        throw new Error("Content Scope from arg doesn't match subjectEntity scope, usually you only need one of them");
+                        throw new Error("Content Scope from arg doesn't match affectedEntity scope, usually you only need one of them");
                     }
                 }
                 return subjectScope;

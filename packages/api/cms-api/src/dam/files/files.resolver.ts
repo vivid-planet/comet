@@ -10,8 +10,8 @@ import { SkipBuild } from "../../builds/skip-build.decorator";
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
+import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
 import { ScopeGuardActive } from "../../user-permissions/decorators/scope-guard-active.decorator";
-import { SubjectEntity } from "../../user-permissions/decorators/subject-entity.decorator";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
 import { DamScopeInterface } from "../types";
 import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
@@ -63,7 +63,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Query(() => File)
-        @SubjectEntity(File)
+        @AffectedEntity(File)
         async damFile(@Args("id", { type: () => ID }) id: string): Promise<FileInterface> {
             const file = await this.filesService.findOneById(id);
             if (!file) {
@@ -73,7 +73,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Query(() => [File])
-        //@ SubjectEntity is not required here
+        //@ AffectedEntity is not required here
         async findCopiesOfFileInScope(
             @Args({ type: () => FindCopiesOfFileInScopeArgs }) { id, scope, imageCropArea }: FindCopiesOfFileInScopeArgsInterface,
         ): Promise<FileInterface[]> {
@@ -81,7 +81,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => File)
-        @SubjectEntity(File)
+        @AffectedEntity(File)
         async updateDamFile(
             @Args("id", { type: () => ID }) id: string,
             @Args("input", { type: () => UpdateFileInput }) input: UpdateFileInput,
@@ -155,7 +155,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => File)
-        @SubjectEntity(File)
+        @AffectedEntity(File)
         @SkipBuild()
         async archiveDamFile(@Args("id", { type: () => ID }) id: string): Promise<FileInterface> {
             const entity = await this.filesRepository.findOneOrFail(id);
@@ -179,7 +179,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => File)
-        @SubjectEntity(File)
+        @AffectedEntity(File)
         @SkipBuild()
         async restoreDamFile(@Args("id", { type: () => ID }) id: string): Promise<FileInterface> {
             const entity = await this.filesRepository.findOneOrFail(id);
@@ -203,7 +203,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => Boolean)
-        @SubjectEntity(File)
+        @AffectedEntity(File)
         @SkipBuild()
         async deleteDamFile(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
             return this.filesService.delete(id);

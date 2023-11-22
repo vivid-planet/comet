@@ -3,8 +3,8 @@ import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver }
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
+import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
 import { ScopeGuardActive } from "../../user-permissions/decorators/scope-guard-active.decorator";
-import { SubjectEntity } from "../../user-permissions/decorators/subject-entity.decorator";
 import { DamScopeInterface } from "../types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFolderArgs, createFolderByNameAndParentIdArgs, FolderArgsInterface, FolderByNameAndParentIdArgsInterface } from "./dto/folder.args";
@@ -55,7 +55,7 @@ export function createFoldersResolver({
         }
 
         @Query(() => Folder)
-        @SubjectEntity(Folder)
+        @AffectedEntity(Folder)
         async damFolder(@Args("id", { type: () => ID }) id: string): Promise<FolderInterface> {
             const folder = await this.foldersService.findOneById(id);
             if (!folder) {
@@ -81,7 +81,7 @@ export function createFoldersResolver({
         }
 
         @Mutation(() => Folder)
-        @SubjectEntity(Folder)
+        @AffectedEntity(Folder)
         @SkipBuild()
         async updateDamFolder(
             @Args("id", { type: () => ID }) id: string,
@@ -101,7 +101,7 @@ export function createFoldersResolver({
         }
 
         @Mutation(() => Boolean)
-        @SubjectEntity(Folder)
+        @AffectedEntity(Folder)
         @SkipBuild()
         async deleteDamFolder(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
             return this.foldersService.delete(id);

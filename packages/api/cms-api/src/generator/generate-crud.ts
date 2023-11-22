@@ -705,7 +705,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { FindOptions, Reference } from "@mikro-orm/core";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
-    import { extractGraphqlFields, SortDirection, SubjectEntity, validateNotModified } from "@comet/cms-api";
+    import { extractGraphqlFields, SortDirection, AffectedEntity, validateNotModified } from "@comet/cms-api";
     import { GraphQLResolveInfo } from "graphql";
 
     import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
@@ -726,7 +726,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         ) {}
 
         @Query(() => ${metadata.className})
-        @SubjectEntity(${metadata.className})
+        @AffectedEntity(${metadata.className})
         async ${instanceNameSingular}(${
         integerTypes.includes(metadata.properties.id.type)
             ? `@Args("id", { type: () => ID }, { transform: (value) => parseInt(value) }) id: number`
@@ -826,7 +826,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             generatorOptions.update
                 ? `
         @Mutation(() => ${metadata.className})
-        @SubjectEntity(${metadata.className})
+        @AffectedEntity(${metadata.className})
         async update${classNameSingular}(
             ${
                 integerTypes.includes(metadata.properties.id.type)
@@ -858,7 +858,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             generatorOptions.delete
                 ? `
         @Mutation(() => Boolean)
-        @SubjectEntity(${metadata.className})
+        @AffectedEntity(${metadata.className})
         async delete${metadata.className}(${
                       integerTypes.includes(metadata.properties.id.type)
                           ? `@Args("id", { type: () => ID }, { transform: (value) => parseInt(value) }) id: number`
@@ -877,7 +877,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             hasVisibleProp && generatorOptions.update
                 ? `
         @Mutation(() => ${metadata.className})
-        @SubjectEntity(${metadata.className})
+        @AffectedEntity(${metadata.className})
         async update${classNameSingular}Visibility(
             @Args("id", { type: () => ID }) id: string,
             @Args("visible", { type: () => Boolean }) visible: boolean,
