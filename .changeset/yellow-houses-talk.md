@@ -9,7 +9,7 @@
 "@comet/admin": major
 ---
 
-Change the method of overriding the styling of admin components
+Change the method of overriding the styling of Admin components
 
 -   Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
 -   Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
@@ -41,7 +41,7 @@ Change the method of overriding the styling of admin components
  });
 ```
 
--   Overriding a component's styles with `withStyles` is no longer supported. Use the `sx` and `slotProps` props instead:
+-   Overriding a component's styles using `withStyles` is no longer supported. Use the `sx` and `slotProps` props instead:
 
 ```diff
 -import { withStyles } from "@mui/styles";

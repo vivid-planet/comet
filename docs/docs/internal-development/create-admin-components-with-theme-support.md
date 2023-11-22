@@ -1,8 +1,8 @@
 ---
-title: Create admin-components with theme support
+title: Create Admin components with theme support
 ---
 
-MUI components allow their styles & default props to be overridden using the theme.
+MUI components allow their styles and default props to be overridden using the theme.
 They also allow overriding of the styles of individual components using the `sx` prop.
 
 All Comet Admin components should support the same features.
