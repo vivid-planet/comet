@@ -155,6 +155,11 @@ type PaginatedUserList {
   totalCount: Int!
 }
 
+type SitePreviewHash {
+  timestamp: Float!
+  hash: String!
+}
+
 type PageTreeNode {
   id: ID!
   parentId: String
@@ -345,6 +350,8 @@ type Query {
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
+  getSitePreviewHash: SitePreviewHash!
+  validateSitePreviewHash(timestamp: Float!, hash: String!): Boolean!
 }
 
 input RedirectScopeInput {
