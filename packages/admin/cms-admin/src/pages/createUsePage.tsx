@@ -1,6 +1,5 @@
 import { ApolloError, gql, TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
-import { messages, SaveButton, SaveButtonProps, SplitButton, SplitButtonProps, useStackApi } from "@comet/admin";
-import { ChevronDown } from "@comet/admin-icons";
+import { messages, SaveButton, SaveButtonProps, SplitButton, useStackApi } from "@comet/admin";
 import {
     BindBlockAdminComponent,
     BlockInterface,
@@ -9,7 +8,6 @@ import {
     parallelAsyncEvery,
     resolveNewState,
 } from "@comet/blocks-admin";
-import { buttonGroupClasses } from "@mui/material";
 import isEqual from "lodash.isequal";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -462,20 +460,8 @@ function PageSaveButton({ handleSavePage, hasChanges, hasConflict, saving, saveE
             ) : undefined,
     };
 
-    const splitButtonProps: Partial<SplitButtonProps> = {};
-
-    if (hasConflict) {
-        saveButtonProps.color = "error";
-        splitButtonProps.sx = {
-            [`& .${buttonGroupClasses.grouped}:not(:last-child)`]: {
-                borderRightColor: (theme) => theme.palette.error.dark,
-            },
-        };
-        splitButtonProps.selectIcon = <ChevronDown sx={{ color: (theme) => theme.palette.error.contrastText }} />;
-    }
-
     return (
-        <SplitButton {...splitButtonProps} localStorageKey="SaveSplitButton" disabled={!hasChanges}>
+        <SplitButton localStorageKey="SaveSplitButton" disabled={!hasChanges}>
             <SaveButton onClick={handleSavePage} {...saveButtonProps}>
                 <FormattedMessage {...messages.save} />
             </SaveButton>
