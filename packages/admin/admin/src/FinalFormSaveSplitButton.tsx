@@ -11,9 +11,10 @@ import { useStackApi } from "./stack/Api";
 
 export interface FormSaveButtonProps {
     localStorageKey?: string;
+    hasConflict?: boolean;
 }
 
-export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton" }: PropsWithChildren<FormSaveButtonProps>) => {
+export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton", hasConflict = false }: PropsWithChildren<FormSaveButtonProps>) => {
     const stackApi = useStackApi();
     const form = useForm();
     const { pristine, hasValidationErrors, submitting, hasSubmitErrors } = useFormState();
@@ -32,6 +33,7 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton" }
                 variant="contained"
                 saving={submitting}
                 hasErrors={hasSubmitErrors}
+                hasConflict={hasConflict}
                 onClick={async (clickEvent) => {
                     const event = new FinalFormSubmitEvent("submit");
                     event.navigatingBack = false;
