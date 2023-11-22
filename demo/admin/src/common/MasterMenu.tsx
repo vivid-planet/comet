@@ -7,6 +7,7 @@ import {
     MasterMenu as CometMasterMenu,
     MasterMenuData,
     PagesPage,
+    Permission,
     PublisherPage,
     UserPermissionsPage,
 } from "@comet/cms-admin";
@@ -87,7 +88,7 @@ export const masterMenuData: MasterMenuData = [
                 );
             },
         },
-        requiredPermission: "pageTree",
+        requiredPermission: Permission.PageTree,
     },
     {
         primary: <FormattedMessage id="menu.structuredContent" defaultMessage="Structured Content" />,
@@ -110,7 +111,7 @@ export const masterMenuData: MasterMenuData = [
             path: "/assets",
             render: () => <DamPage renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} domainOnly variant="toolbar" />} />,
         },
-        requiredPermission: "dam",
+        requiredPermission: Permission.Dam,
     },
     {
         primary: <FormattedMessage id="menu.projectSnips" defaultMessage="Project snips" />,
@@ -124,7 +125,7 @@ export const masterMenuData: MasterMenuData = [
                 },
             },
         ],
-        requiredPermission: "pageTree",
+        requiredPermission: Permission.PageTree,
     },
     {
         primary: <FormattedMessage id="menu.system" defaultMessage="System" />,
@@ -152,7 +153,7 @@ export const masterMenuData: MasterMenuData = [
                 },
             },
         ],
-        requiredPermission: "system",
+        requiredPermission: Permission.System,
     },
     {
         primary: <FormattedMessage id="menu.componentDemo" defaultMessage="Component demo" />,
@@ -161,7 +162,7 @@ export const masterMenuData: MasterMenuData = [
             path: "/component-demo",
             component: ComponentDemo,
         },
-        requiredPermission: "pageTree",
+        requiredPermission: Permission.PageTree,
     },
     {
         primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
@@ -205,7 +206,7 @@ export const masterMenuData: MasterMenuData = [
             path: "/user-permissions",
             component: UserPermissionsPage,
         },
-        requiredPermission: "userPermissions",
+        requiredPermission: Permission.UserPermissions,
     },
 ];
 
