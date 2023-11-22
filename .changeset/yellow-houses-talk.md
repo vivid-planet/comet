@@ -14,7 +14,7 @@ Change the method of overriding the styling of Admin components
 -   Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
 -   Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
 -   Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
--   The `$` syntax in the theme's `styleOverrides` is no longer supported, see: https://v5-0-6.mui.com/guides/migration-v4/#migrate-themes-styleoverrides-to-emotion
+-   The `$` syntax in the theme's `styleOverrides` is no longer supported, see: https://mui.com/material-ui/migration/v5-style-changes/#migrate-theme-styleoverrides-to-emotion
 
 ```diff
  const theme = createCometTheme({
@@ -74,4 +74,4 @@ Change the method of overriding the styling of Admin components
 ```
 
 -   The required changes we made to the theming method of admin components may cause missing or broken styles when using `styleOverrides` in `createCometTheme()`.
--   For more details, see MUI's migration guide: https://v5-0-6.mui.com/guides/migration-v4/#mui-styles
+-   For more details, see MUI's migration guide: https://mui.com/material-ui/migration/v5-style-changes/#mui-styles
