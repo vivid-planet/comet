@@ -1,5 +1,5 @@
 ---
-title: Internal Development
+title: COMET Core Development
 sidebar_position: 14
 ---
 
