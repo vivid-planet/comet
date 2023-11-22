@@ -12,6 +12,10 @@ export class CreateFolderInput {
     @IsUUID()
     @IsOptional()
     parentId?: string;
+
+    @Field({ defaultValue: false })
+    @IsBoolean()
+    isInboxFromOtherScope: boolean;
 }
 
 @InputType("UpdateDamFolderInput")

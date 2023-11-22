@@ -1,5 +1,173 @@
 # @comet/cms-admin
 
+## 5.0.0
+
+### Major Changes
+
+-   9d3e8555: Add scoping to the DAM
+
+    The DAM scoping can be enabled optionally. You can still use the DAM without scoping.
+
+    To enable DAM scoping, you must
+
+    In the API:
+
+    -   Create a DAM folder entity using `createFolderEntity({ Scope: DamScope });`
+    -   Create a DAM file entity using `createFileEntity({ Scope: DamScope, Folder: DamFolder });`
+    -   Pass the `Scope` DTO and the `File` and `Folder` entities when intializing the `DamModule`
+
+    In the Admin:
+
+    -   Set `scopeParts` in the `DamConfigProvider` (e.g. `<DamConfigProvider value={{ scopeParts: ["domain"] }}>`)
+    -   Render the content scope indicator in the `DamPage`
+        ```tsx
+        <DamPage renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} />} />
+        ```
+
+    You can access the current DAM scope in the Admin using the `useDamScope()` hook.
+
+    See the [Demo project](https://github.com/vivid-planet/comet/pull/976) for an example on how to enable DAM scoping.
+
+-   9875e7d4: Support automatically importing DAM files into another scope when copying documents from one scope to another
+
+    The copy process was reworked:
+
+    -   The `DocumentInterface` now requires a `dependencies()` and a `replaceDependenciesInOutput()` method
+    -   The `BlockInterface` now has an optional `dependencies()` and a required `replaceDependenciesInOutput()` method
+    -   `rewriteInternalLinks()` was removed from `@comet/cms-admin`. Its functionality is replaced by `replaceDependenciesInOutput()`.
+
+    `dependencies()` returns information about dependencies of a document or block (e.g. a used `DamFile` or linked `PageTreeNode`). `replaceDependenciesInOutput()` replaces the IDs of all dependencies of a document or block with new IDs (necessary for copying documents or blocks to another scope).
+
+    You can use the new `createDocumentRootBlocksMethods()` to generate the methods for documents.
+
+-   c3f96d7d: Don't remember the last folder or file the user opened in the DAM. The `ChooseFileDialog` still remembers the last folder opened.
+
+### Minor Changes
+
+-   168380d9: Add Admin CRUD Generator that creates a simple CRUD admin view for an entity
+
+    It automatically generates an admin page, grid and form based on the GraphQL schema definition of an object type.
+    It's meant to be used together with the existing API CRUD Generator.
+    Go through [the commits of this PR](https://github.com/vivid-planet/comet/pull/1294/files) for a step-by-step example of how to use the API and Admin Generators.
+
+-   8ed96981: Support copy/pasting DAM files across server instances by downloading the copied file
+-   adb5bc34: Add `queryUpdatedAt()` helper that can be used to check conflicts without having to write an additional query
+-   6b9787e6: It's now possible to opt-out of creating a redirect when changing the slug of a page. Previously, a redirect was always created.
+-   e6b8ec60: Show a bigger version of an image when hovering over an image thumbnail in the DAM and `ChooseFileDialog`
+-   5bae9ab3: Show `LinearProgress` instead of `CircularProgress` when polling after initially loading the PageTree
+-   47a7272c: Add `requireLicense` option to `DamConfig` to allow making DAM license fields required (when updating a file)
+-   e26bd900: Add various UI/UX improvements to the DAM
+
+    -   Replace underlying `Table` with `DataGrid`
+    -   Add paging to improve performance
+    -   Add a dialog to move files to another folder (instead of drag and drop)
+    -   Highlight newly uploaded files
+    -   Add a new footer to execute bulk actions
+    -   Add a "More Actions" dropdown above the `DataGrid` to execute bulk actions
+
+-   a6734760: Add new `createDocumentRootBlocksMethods()` helper for creating methods needed by DocumentInterface
+
+    It automatically adds `inputToOutput()`, `anchors()`, `dependencies()` and `replaceDependenciesInOutput()` to a document.
+
+    You can see how it can be used [in the COMET Demo project](https://github.com/vivid-planet/comet/blob/a673476017fa35efb6361877d0fcf2b0c8231439/demo/admin/src/pages/Page.tsx#L57-L60).
+
+-   f25eccf0: Add a hover preview for images to the DAM
+-   e57c6c66: Move dashboard components from the COMET Starter to the library (`DashboardHeader`, `LatestBuildsDashboardWidget`, `LatestContentUpdatesDashboardWidget`)
+-   2d0f320c: Add `useFormSaveConflict()` hook to check for save conflicts in forms
+
+### Patch Changes
+
+-   564f66d3: Allow `:`, `?`, `=` and `&` in redirect source paths
+-   c0e03edc: Add a progress dialog to the `PageTree` when pasting pages
+-   49e85432: Show a button to re-login when API responses with 401 - Not Authenticated instead of a plain error message.
+-   Updated dependencies [0453c36a]
+-   Updated dependencies [692c8555]
+-   Updated dependencies [2559ff74]
+-   Updated dependencies [fe5e0735]
+-   Updated dependencies [ed692f50]
+-   Updated dependencies [987f08b3]
+-   Updated dependencies [d0773a1a]
+-   Updated dependencies [4fe08312]
+-   Updated dependencies [5f0f8e6e]
+-   Updated dependencies [7c6eb68e]
+-   Updated dependencies [9875e7d4]
+-   Updated dependencies [d4bcab04]
+-   Updated dependencies [0f2794e7]
+-   Updated dependencies [80b007ae]
+-   Updated dependencies [a7116784]
+-   Updated dependencies [a7116784]
+-   Updated dependencies [e57c6c66]
+    -   @comet/admin@5.0.0
+    -   @comet/admin-icons@5.0.0
+    -   @comet/blocks-admin@5.0.0
+    -   @comet/admin-date-time@5.0.0
+    -   @comet/admin-rte@5.0.0
+    -   @comet/admin-theme@5.0.0
+
+## 4.7.0
+
+### Minor Changes
+
+-   dbdc0f55: Add support for non-breaking spaces to RTE
+
+    Add `"non-breaking-space"` to `supports` when creating an RTE:
+
+    ```tsx
+    const [useRteApi] = makeRteApi();
+
+    export default function MyRte() {
+        const { editorState, setEditorState } = useRteApi();
+        return (
+            <Rte
+                value={editorState}
+                onChange={setEditorState}
+                options={{
+                    supports: [
+                        // Non-breaking space
+                        "non-breaking-space",
+                        // Other options you may wish to support
+                        "bold",
+                        "italic",
+                    ],
+                }}
+            />
+        );
+    }
+    ```
+
+-   17f977aa: Add the possibility to search for a path in PageSearch
+
+### Patch Changes
+
+-   Updated dependencies [d1c7a1c5]
+-   Updated dependencies [dbdc0f55]
+-   Updated dependencies [eac9990b]
+-   Updated dependencies [fe310df8]
+-   Updated dependencies [fde8e42b]
+-   Updated dependencies [f48a768c]
+    -   @comet/admin-theme@4.7.0
+    -   @comet/admin-icons@4.7.0
+    -   @comet/admin-rte@4.7.0
+    -   @comet/admin@4.7.0
+    -   @comet/blocks-admin@4.7.0
+    -   @comet/admin-date-time@4.7.0
+
+## 4.6.0
+
+### Patch Changes
+
+-   c3b7f992: Replace current icons in the RTE toolbar with new icons from `@comet/admin-icons`
+-   Updated dependencies [c3b7f992]
+-   Updated dependencies [c3b7f992]
+-   Updated dependencies [031d86eb]
+-   Updated dependencies [c3b7f992]
+    -   @comet/admin-rte@4.6.0
+    -   @comet/admin-icons@4.6.0
+    -   @comet/blocks-admin@4.6.0
+    -   @comet/admin@4.6.0
+    -   @comet/admin-date-time@4.6.0
+    -   @comet/admin-theme@4.6.0
+
 ## 4.5.0
 
 ### Patch Changes

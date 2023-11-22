@@ -119,6 +119,7 @@ export const createRichTextBlock = (
             "history",
             "link",
             "links-remove",
+            "non-breaking-space",
         ],
         draftJsProps: {
             spellCheck: true,

@@ -14,7 +14,7 @@ export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputEl
 }
 
 export const FinalFormSelect = <T,>({
-    input: { checked, value, name, onChange, onFocus, onBlur, multiple, ...restInput },
+    input: { checked, value, name, onChange, onFocus, onBlur, ...restInput },
     meta,
     isAsync = false,
     options = [],
@@ -27,36 +27,47 @@ export const FinalFormSelect = <T,>({
         return "";
     },
     getOptionValue = (option: T) => {
-        if ((option as any).id) return String((option as any).id);
-        if ((option as any).value) return String((option as any).value);
-        return JSON.stringify(option);
+        if (typeof option === "object" && option !== null) {
+            if ((option as any).id) return String((option as any).id);
+            if ((option as any).value) return String((option as any).value);
+            return JSON.stringify(option);
+        } else {
+            return String(option);
+        }
     },
     children,
     endAdornment,
     clearable,
     ...rest
 }: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input">) => {
+    // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
+    // 1. <Field component={FinalFormSelect} multiple /> -> multiple is in restInput
+    // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
+    const multiple = restInput.multiple ?? rest.multiple;
+
     const selectEndAdornment = clearable ? (
-        <>
-            <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange(undefined)} />
-            {endAdornment}
-        </>
+        <ClearInputAdornment
+            position="end"
+            hasClearableContent={Boolean(multiple ? (Array.isArray(value) ? value.length : value) : value)}
+            onClick={() => onChange(multiple ? [] : undefined)}
+        />
     ) : (
         endAdornment
     );
 
+    const selectProps = {
+        ...rest,
+        multiple,
+        endAdornment: selectEndAdornment,
+        name,
+        onChange,
+        onFocus,
+        onBlur,
+    };
+
     if (children) {
         return (
-            <Select
-                {...rest}
-                endAdornment={selectEndAdornment}
-                name={name}
-                onChange={onChange}
-                value={value}
-                onFocus={onFocus}
-                onBlur={onBlur}
-                multiple={multiple}
-            >
+            <Select {...selectProps} value={value}>
                 {children}
             </Select>
         );
@@ -64,7 +75,7 @@ export const FinalFormSelect = <T,>({
 
     return (
         <Select
-            {...rest}
+            {...selectProps}
             endAdornment={
                 <>
                     {loading && (
@@ -75,7 +86,6 @@ export const FinalFormSelect = <T,>({
                     {selectEndAdornment}
                 </>
             }
-            name={name}
             onChange={(event) => {
                 const value = event.target.value;
                 onChange(
@@ -85,9 +95,6 @@ export const FinalFormSelect = <T,>({
                 );
             }}
             value={Array.isArray(value) ? value.map((i) => getOptionValue(i)) : getOptionValue(value)}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            multiple={multiple}
         >
             {loading && (
                 <MenuItem value="" disabled>

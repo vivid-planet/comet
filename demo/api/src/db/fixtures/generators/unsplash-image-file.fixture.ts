@@ -19,7 +19,7 @@ export class UnsplashImageFileFixture {
         const downloadedImage = await download(imageUrl);
         console.log(`Downloading ${imageUrl} done.`);
         console.log(`Uploading ${downloadedImage.originalname}.`);
-        const file = await this.filesService.upload({ file: downloadedImage }, scope);
+        const file = await this.filesService.upload(downloadedImage, { scope });
         console.log(`Uploading ${downloadedImage.originalname} done.`);
         return file;
     }

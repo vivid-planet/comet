@@ -6,6 +6,7 @@ import { singular } from "pluralize";
 import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { generateCrudInput } from "./generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
+import { integerTypes } from "./utils/constants";
 import { generateImportsCode, Imports } from "./utils/generate-imports-code";
 import { findEnumImportPath, findEnumName } from "./utils/ts-morph-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
@@ -44,6 +45,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
                 prop.type === "string" ||
                 prop.type === "DecimalType" ||
                 prop.type === "number" ||
+                integerTypes.includes(prop.type) ||
                 prop.type === "BooleanType" ||
                 prop.type === "boolean" ||
                 prop.type === "DateType" ||
@@ -58,6 +60,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
             (prop.type === "string" ||
                 prop.type === "DecimalType" ||
                 prop.type === "number" ||
+                integerTypes.includes(prop.type) ||
                 prop.type === "BooleanType" ||
                 prop.type === "boolean" ||
                 prop.type === "DateType" ||
@@ -144,7 +147,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     @Type(() => StringFilter)
                     ${prop.name}?: StringFilter;
                     `;
-                } else if (prop.type === "DecimalType" || prop.type == "number") {
+                } else if (prop.type === "DecimalType" || prop.type == "number" || integerTypes.includes(prop.type)) {
                     return `@Field(() => NumberFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -724,7 +727,11 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
         @Query(() => ${metadata.className})
         @SubjectEntity(${metadata.className})
-        async ${instanceNameSingular}(@Args("id", { type: () => ID }) id: string): Promise<${metadata.className}> {
+        async ${instanceNameSingular}(${
+        integerTypes.includes(metadata.properties.id.type)
+            ? `@Args("id", { type: () => ID }, { transform: (value) => parseInt(value) }) id: number`
+            : `@Args("id", { type: () => ID }) id: string`
+    }): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
             return ${instanceNameSingular};
         }
@@ -821,7 +828,11 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         @Mutation(() => ${metadata.className})
         @SubjectEntity(${metadata.className})
         async update${classNameSingular}(
-            @Args("id", { type: () => ID }) id: string,
+            ${
+                integerTypes.includes(metadata.properties.id.type)
+                    ? `@Args("id", { type: () => ID }, { transform: (value) => parseInt(value) }) id: number,`
+                    : `@Args("id", { type: () => ID }) id: string,`
+            }
             @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput,
             ${hasUpdatedAt ? `@Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,` : ""}
         ): Promise<${metadata.className}> {
@@ -848,7 +859,11 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
         @Mutation(() => Boolean)
         @SubjectEntity(${metadata.className})
-        async delete${metadata.className}(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
+        async delete${metadata.className}(${
+                      integerTypes.includes(metadata.properties.id.type)
+                          ? `@Args("id", { type: () => ID }, { transform: (value) => parseInt(value) }) id: number`
+                          : `@Args("id", { type: () => ID }) id: string`
+                  }): Promise<boolean> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
             await this.entityManager.remove(${instanceNameSingular});
             await this.entityManager.flush();

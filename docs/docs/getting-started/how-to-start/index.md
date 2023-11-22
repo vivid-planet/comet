@@ -7,13 +7,7 @@ sidebar_position: 2
 
 To create a new COMET DXP application, execute the following command in your OS command line:
 
-`npx create-comet-app`
-
-:::info
-
-Further configuration options, such as the application's name, are requested in the command line.
-
-:::
+`npx @comet/create-app <project-name>`
 
 ## Installation
 

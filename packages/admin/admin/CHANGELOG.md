@@ -1,5 +1,71 @@
 # @comet/admin
 
+## 5.0.0
+
+### Major Changes
+
+-   692c8555: Replaced the `DirtyHandler` with `Prompt` (no change needed if `DirtyHandler` was only used indirectly, e.g. in Form)
+
+    Using routes (e.g. `Tabs`) in a component with dirty handling (e.g. a `FinalForm`) is now supported
+
+-   0f2794e7: Change the icon used in the `Loading` component from MUI's `CircularProgress` to our `BallTriangle`
+-   fe5e0735: Add support for multi-select to `FinalFormSelect` (via the `multiple` prop)
+
+    Add a new `getOptionValue()` prop that can be used to extract a unique string representation for a given option. The default implementation should work in most cases.
+    Remove the `getOptionSelected()` prop that is not needed anymore.
+
+    You can find an example in [our storybook](https://storybook.comet-dxp.com/?path=/story/stories-form-finalform-fields--finalformselect)
+
+-   d0773a1a: Change styling of `FilterBar` components to be more consistent with other form components. The classes of `FilterBarMoreFilters` have changed, which may cause custom styling of this component to break.
+
+### Minor Changes
+
+-   2559ff74: Add CrudVisibility component for implementing visibility column in a Crud Grid
+-   ed692f50: Add new open and close hamburger icons and use them in the `AppHeaderMenuButton`
+-   7c6eb68e: Add new `event` parameter to `FinalForm`'s `onSubmit()` method. The `navigatingBack` field of `event` simplifies implementing different navigation patterns after saving
+-   4cd35441: Add a `FinalFormSaveButton` component
+-   a7116784: Add support for multiple `StackSwitch` on one `StackPage`
+
+    Add a `SubRoute` wrapper for this case that needs to be added in front of the tested `StackSwitch` and do that for all composite blocks
+
+    You can find an example in [our storybook](https://storybook.comet-dxp.com/?path=/story/comet-admin-stack--stack-nested-one-stack)
+
+-   e57c6c66: Move dashboard components from the COMET Starter to the library (`DashboardHeader`, `LatestBuildsDashboardWidget`, `LatestContentUpdatesDashboardWidget`)
+
+### Patch Changes
+
+-   0453c36a: Router: Fix `Switch` inside a `SubRouteIndexRoute` to allow a `Stack` inside a `Stack`'s initial page
+-   987f08b3: Select: Fix default `getOptionValue()` implementation for values not being an object
+-   5f0f8e6e: Correctly support `RouterTabs` in `SubRoute` by including the `subRoutePrefix` in tab paths
+-   d4bcab04: Fix `useSubRoutePrefix()` if used inside a `Route`
+-   Updated dependencies [ed692f50]
+    -   @comet/admin-icons@5.0.0
+
+## 4.7.0
+
+### Minor Changes
+
+-   fde8e42b: Add tab scrolling to make tabs responsive
+
+### Patch Changes
+
+-   eac9990b: Fix the clear-button in `FinalFormSelect` when using it with the `multiple` prop.
+
+    -   The clear button is now only shown when at least one value is selected.
+    -   Clearing the value now sets it to an empty array instead of `undefined`, which would cause an error when trying to render the select.
+
+-   fe310df8: Prevent the clear-button and the select-arrow from overlapping when using `FinalFormSelect` with the `clearable` prop.
+-   Updated dependencies [dbdc0f55]
+    -   @comet/admin-icons@4.7.0
+
+## 4.6.0
+
+### Patch Changes
+
+-   Updated dependencies [c3b7f992]
+-   Updated dependencies [c3b7f992]
+    -   @comet/admin-icons@4.6.0
+
 ## 4.5.0
 
 ### Minor Changes

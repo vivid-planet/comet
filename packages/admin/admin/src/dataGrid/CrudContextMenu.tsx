@@ -29,11 +29,11 @@ const DeleteDialog: React.FC<DeleteDialogProps> = (props) => {
                 <FormattedMessage id="comet.table.deleteDialog.content" defaultMessage="WARNING: This cannot be undone!" />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onCancel} color="primary" variant="contained">
-                    <FormattedMessage {...messages.yes} />
-                </Button>
                 <Button onClick={onDelete} color="primary">
                     <FormattedMessage {...messages.no} />
+                </Button>
+                <Button onClick={onCancel} color="primary" variant="contained">
+                    <FormattedMessage {...messages.yes} />
                 </Button>
             </DialogActions>
         </Dialog>

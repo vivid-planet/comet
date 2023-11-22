@@ -57,7 +57,7 @@ export function isPreviewContentImageRule(content: PreviewContent): content is P
 
 export type PreviewContent = PreviewContentImage | PreviewContentText;
 
-export type BlockDependency = { targetGraphqlObjectType: string; id: string };
+export type BlockDependency = { targetGraphqlObjectType: string; id: string; data?: unknown };
 
 export type ReplaceDependencyObject = { originalId: string; replaceWithId: string; type: string };
 
