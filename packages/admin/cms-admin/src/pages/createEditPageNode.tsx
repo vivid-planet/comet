@@ -139,9 +139,7 @@ export function createEditPageNode({
 
         React.useEffect(() => {
             apollo.cache.evict({ fieldName: "pageTreeNodeSlugAvailable" });
-            // should only be executed on initial render
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, []);
+        }, [apollo.cache]);
 
         const isPathAvailable = React.useCallback(
             async (newSlug: string): Promise<GQLSlugAvailability> => {
