@@ -260,10 +260,15 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 }
 
 const waitForFormValidationToBeFinished = (form: FormApi<any>): Promise<boolean> => {
+    if (!form.getState().validating) {
+        return Promise.resolve(false);
+    }
+
     return new Promise((resolve) => {
-        form.subscribe(
+        const unsubscribe = form.subscribe(
             (state) => {
                 if (!state.validating) {
+                    unsubscribe();
                     resolve(state.hasValidationErrors);
                 }
             },
