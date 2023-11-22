@@ -9,8 +9,7 @@ module.exports = {
         "unused-imports/no-unused-imports": "error",
         "no-console": ["error", { allow: ["warn", "error"] }],
         "no-return-await": "error",
-        "json-files/sort-package-json": "error",
-        "@comet/no-other-module-relative-import": ["warn"]
+        "json-files/sort-package-json": "error"
     },
     overrides: [
         {
