@@ -170,15 +170,17 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         return true;
                     }}
                     saveAction={async () => {
-                        if (formRenderProps.hasValidationErrors) {
+                        editDialogFormApi?.onFormStatusChange("saving");
+                        const hasValidationErrors = await waitForValidationToFinish(formRenderProps.form);
+
+                        if (hasValidationErrors) {
+                            editDialogFormApi?.onFormStatusChange("error");
                             return false;
                         }
 
-                        editDialogFormApi?.onFormStatusChange("saving");
-                        const validationErrors = await waitForFormValidationToBeFinished(formRenderProps.form);
                         const submissionErrors = await formRenderProps.form.submit();
 
-                        if (submissionErrors || validationErrors) {
+                        if (submissionErrors) {
                             editDialogFormApi?.onFormStatusChange("error");
                             return false;
                         }
@@ -259,9 +261,10 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     }
 }
 
-const waitForFormValidationToBeFinished = (form: FormApi<any>): Promise<boolean> => {
-    if (!form.getState().validating) {
-        return Promise.resolve(false);
+const waitForValidationToFinish = (form: FormApi<any>): Promise<boolean> | boolean => {
+    const formState = form.getState();
+    if (!formState.validating) {
+        return formState.hasValidationErrors;
     }
 
     return new Promise((resolve) => {
