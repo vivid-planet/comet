@@ -38,7 +38,7 @@ import {
             useClass: UserPermissionsGuard,
         },
     ],
-    exports: [CURRENT_USER_LOADER, ContentScopeService],
+    exports: [CURRENT_USER_LOADER, ContentScopeService, ACCESS_CONTROL_SERVICE],
 })
 export class UserPermissionsModule {
     static forRoot(options: UserPermissionsModuleSyncOptions): DynamicModule {

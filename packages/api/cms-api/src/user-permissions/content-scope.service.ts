@@ -1,25 +1,17 @@
 import { EntityClass, MikroORM } from "@mikro-orm/core";
-import { ExecutionContext, Inject, Injectable, Optional } from "@nestjs/common";
+import { ExecutionContext, Injectable, Optional } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
 
-import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { PageTreeService } from "../page-tree/page-tree.service";
 import { ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { AffectedEntityMeta } from "./decorators/affected-entity.decorator";
-import { ACCESS_CONTROL_SERVICE } from "./user-permissions.constants";
-import { AccessControlServiceInterface } from "./user-permissions.types";
 
 @Injectable()
 export class ContentScopeService {
-    constructor(
-        @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
-        private reflector: Reflector,
-        private readonly orm: MikroORM,
-        @Optional() private readonly pageTreeService?: PageTreeService,
-    ) {}
+    constructor(private reflector: Reflector, private readonly orm: MikroORM, @Optional() private readonly pageTreeService?: PageTreeService) {}
 
     scopesAreEqual(scope1: ContentScope | undefined, scope2: ContentScope | undefined): boolean {
         // The scopes are cloned because they could be
@@ -29,10 +21,6 @@ export class ContentScopeService {
         return isEqual({ ...scope1 }, { ...scope2 });
     }
 
-    canAccessScope(requestScope: ContentScope, user: CurrentUserInterface): boolean {
-        return this.accessControlService.canAccessScope(requestScope, user);
-    }
-
     async inferScopeFromExecutionContext(context: ExecutionContext): Promise<ContentScope | undefined> {
         if (context.getType().toString() === "graphql") {
             const gqlContext = GqlExecutionContext.create(context);
@@ -40,7 +28,7 @@ export class ContentScopeService {
 
             const affectedEntity = this.reflector.getAllAndOverride<AffectedEntityMeta>("affectedEntity", [context.getHandler(), context.getClass()]);
             if (affectedEntity) {
-                let subjectScope: ContentScope | undefined;
+                let contentScope: ContentScope | undefined;
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const repo = this.orm.em.getRepository<any>(affectedEntity.entity);
                 if (affectedEntity.options.idArg) {
@@ -49,7 +37,7 @@ export class ContentScopeService {
                     }
                     const row = await repo.findOneOrFail(args[affectedEntity.options.idArg]);
                     if (row.scope) {
-                        subjectScope = row.scope;
+                        contentScope = row.scope;
                     } else {
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [
@@ -58,7 +46,7 @@ export class ContentScopeService {
                         if (!scoped) {
                             return undefined;
                         }
-                        subjectScope = await scoped.fn(row);
+                        contentScope = await scoped.fn(row);
                     }
                 } else if (affectedEntity.options.pageTreeNodeIdArg && args[affectedEntity.options.pageTreeNodeIdArg]) {
                     if (!args[affectedEntity.options.pageTreeNodeIdArg]) {
@@ -71,19 +59,19 @@ export class ContentScopeService {
                         .createReadApi({ visibility: "all" })
                         .getNode(args[affectedEntity.options.pageTreeNodeIdArg]);
                     if (!node) throw new Error("Can't find pageTreeNode");
-                    subjectScope = node.scope;
+                    contentScope = node.scope;
                 } else {
                     // TODO implement something more flexible that supports something like that: @AffectedEntity(Product, ProductEntityLoader)
                     throw new Error("idArg or pageTreeNodeIdArg is required");
                 }
-                if (subjectScope === undefined) throw new Error("Scope not found");
+                if (contentScope === undefined) throw new Error("Scope not found");
                 if (args.scope) {
                     // args.scope also exists, check if they match
-                    if (!isEqual(args.scope, subjectScope)) {
+                    if (!isEqual(args.scope, contentScope)) {
                         throw new Error("Content Scope from arg doesn't match affectedEntity scope, usually you only need one of them");
                     }
                 }
-                return subjectScope;
+                return contentScope;
             }
             if (args.scope) {
                 return args.scope;
