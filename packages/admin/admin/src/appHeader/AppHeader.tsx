@@ -14,13 +14,22 @@ interface AppHeaderProps extends AppBarProps {
 
 export type AppHeaderClassKey = AppBarClassKey;
 
+type OwnerState = {
+    position: AppBarProps["position"];
+    color: AppBarProps["color"];
+};
+
 const AppHeaderRoot = styled(MuiAppBar, {
     name: "CometAdminAppHeader",
     slot: "root",
-    overridesResolver({ position, color }, styles) {
-        return [styles.root, styles[`position${capitalize(position)}`], styles[`color${capitalize(color)}`]];
+    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+        return [
+            styles.root,
+            ownerState.position && styles[`position${capitalize(ownerState.position)}`],
+            ownerState.color && styles[`color${capitalize(ownerState.color)}`],
+        ];
     },
-})(({ theme }) => {
+})<{ ownerState: OwnerState }>(({ theme }) => {
     return {
         backgroundColor: theme.palette.grey["A400"],
         height: "var(--header-height)",
@@ -36,8 +45,19 @@ export function AppHeader(inProps: AppHeaderProps): React.ReactElement {
     const { headerHeight: masterLayoutHeaderHeight } = React.useContext(MasterLayoutContext);
     const headerHeight = passedHeaderHeight === undefined ? masterLayoutHeaderHeight : passedHeaderHeight;
 
+    const ownerState: OwnerState = {
+        position,
+        color,
+    };
+
     return (
-        <AppHeaderRoot position={position} color={color} {...restProps} style={{ "--header-height": `${headerHeight}px` } as React.CSSProperties}>
+        <AppHeaderRoot
+            position={position}
+            color={color}
+            ownerState={ownerState}
+            {...restProps}
+            style={{ "--header-height": `${headerHeight}px` } as React.CSSProperties}
+        >
             {children}
         </AppHeaderRoot>
     );
