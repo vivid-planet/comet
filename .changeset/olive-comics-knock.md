@@ -3,11 +3,11 @@
 "comet-docs": minor
 ---
 
-Add AccessLog Interceptor where request data is logged in the standard console. The access log allows to see who accessed what data and when. This information for example can be used to identify security vulnerabilities.
+Add access logging to log information about the request to standard output. The log contains information about the requester and the request itself. This can be useful for fulfilling legal requirements regarding data integrity or for forensics.
 
-There are two options for implementing the module in the app:
+There are two ways to integrate logging into an application:
 
-**1 option:**
+**First option: Use the default implementation**
 
 ```ts
 imports: [
@@ -17,9 +17,9 @@ imports: [
 ]
 ```
 
-**2 option:**
+**Second option: Configure logging**
 
-With the second option, there is the opportunity to add a callback function called `filterRequest`. This function provides the ability to disable logging for various functionalities.
+Use the `filterRequest` to prevent logging for specific requests. For instance, one may filter requests for system users.
 
 ```ts
 imports: [
