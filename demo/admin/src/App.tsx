@@ -10,6 +10,7 @@ import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter
 import {
     CmsBlockContextProvider,
     createHttpClient,
+    CurrentUserProvider,
     DamConfigProvider,
     LocaleProvider,
     MasterMenuRoutes,
@@ -56,62 +57,67 @@ class App extends React.Component {
     public render(): JSX.Element {
         return (
             <ApolloProvider client={apolloClient}>
-                <SitesConfigProvider
-                    value={{
-                        configs: config.sitesConfig,
-                        resolveSiteConfigForScope: (configs: Record<string, SiteConfig>, scope: ContentScope) => configs[scope.domain],
-                    }}
-                >
-                    <DamConfigProvider value={{ scopeParts: ["domain"] }}>
-                        <IntlProvider locale="en" messages={getMessages()}>
-                            <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
-                                <MuiThemeProvider theme={theme}>
-                                    <RouterBrowserRouter>
-                                        <DndProvider backend={HTML5Backend}>
-                                            <SnackbarProvider>
-                                                <CmsBlockContextProvider
-                                                    damConfig={{
-                                                        apiUrl: config.apiUrl,
-                                                        apiClient,
-                                                        maxFileSize: config.dam.uploadsMaxFileSize,
-                                                        maxSrcResolution: config.imgproxy.maxSrcResolution,
-                                                        allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
-                                                    }}
-                                                    pageTreeCategories={pageTreeCategories}
-                                                    pageTreeDocumentTypes={pageTreeDocumentTypes}
-                                                    additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
-                                                >
-                                                    <React.Fragment>
-                                                        <GlobalStyle />
-                                                        <ContentScopeProvider>
-                                                            {({ match }) => (
-                                                                <Switch>
-                                                                    {/* @TODO: add preview to contentScope once site is capable of contentScope */}
-                                                                    <Route
-                                                                        path={`${match.path}/preview`}
-                                                                        render={(props) => <SitePreview {...props} />}
-                                                                    />
-                                                                    <Route
-                                                                        render={() => (
-                                                                            <MasterLayout headerComponent={MasterHeader} menuComponent={MasterMenu}>
-                                                                                <MasterMenuRoutes menu={masterMenuData} />
-                                                                            </MasterLayout>
-                                                                        )}
-                                                                    />
-                                                                </Switch>
-                                                            )}
-                                                        </ContentScopeProvider>
-                                                        <ErrorDialogHandler />
-                                                    </React.Fragment>
-                                                </CmsBlockContextProvider>
-                                            </SnackbarProvider>
-                                        </DndProvider>
-                                    </RouterBrowserRouter>
-                                </MuiThemeProvider>
-                            </LocaleProvider>
-                        </IntlProvider>
-                    </DamConfigProvider>
-                </SitesConfigProvider>
+                <CurrentUserProvider>
+                    <SitesConfigProvider
+                        value={{
+                            configs: config.sitesConfig,
+                            resolveSiteConfigForScope: (configs: Record<string, SiteConfig>, scope: ContentScope) => configs[scope.domain],
+                        }}
+                    >
+                        <DamConfigProvider value={{ scopeParts: ["domain"] }}>
+                            <IntlProvider locale="en" messages={getMessages()}>
+                                <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
+                                    <MuiThemeProvider theme={theme}>
+                                        <RouterBrowserRouter>
+                                            <DndProvider backend={HTML5Backend}>
+                                                <SnackbarProvider>
+                                                    <CmsBlockContextProvider
+                                                        damConfig={{
+                                                            apiUrl: config.apiUrl,
+                                                            apiClient,
+                                                            maxFileSize: config.dam.uploadsMaxFileSize,
+                                                            maxSrcResolution: config.imgproxy.maxSrcResolution,
+                                                            allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
+                                                        }}
+                                                        pageTreeCategories={pageTreeCategories}
+                                                        pageTreeDocumentTypes={pageTreeDocumentTypes}
+                                                        additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
+                                                    >
+                                                        <React.Fragment>
+                                                            <GlobalStyle />
+                                                            <ContentScopeProvider>
+                                                                {({ match }) => (
+                                                                    <Switch>
+                                                                        {/* @TODO: add preview to contentScope once site is capable of contentScope */}
+                                                                        <Route
+                                                                            path={`${match.path}/preview`}
+                                                                            render={(props) => <SitePreview {...props} />}
+                                                                        />
+                                                                        <Route
+                                                                            render={() => (
+                                                                                <MasterLayout
+                                                                                    headerComponent={MasterHeader}
+                                                                                    menuComponent={MasterMenu}
+                                                                                >
+                                                                                    <MasterMenuRoutes menu={masterMenuData} />
+                                                                                </MasterLayout>
+                                                                            )}
+                                                                        />
+                                                                    </Switch>
+                                                                )}
+                                                            </ContentScopeProvider>
+                                                            <ErrorDialogHandler />
+                                                        </React.Fragment>
+                                                    </CmsBlockContextProvider>
+                                                </SnackbarProvider>
+                                            </DndProvider>
+                                        </RouterBrowserRouter>
+                                    </MuiThemeProvider>
+                                </LocaleProvider>
+                            </IntlProvider>
+                        </DamConfigProvider>
+                    </SitesConfigProvider>
+                </CurrentUserProvider>
             </ApolloProvider>
         );
     }

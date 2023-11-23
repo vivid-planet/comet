@@ -87,6 +87,7 @@ export const masterMenuData: MasterMenuData = [
                 );
             },
         },
+        requiredPermission: "pageTree",
     },
     {
         primary: <FormattedMessage id="menu.structuredContent" defaultMessage="Structured Content" />,
@@ -100,6 +101,7 @@ export const masterMenuData: MasterMenuData = [
                 },
             },
         ],
+        requiredPermission: "news",
     },
     {
         primary: <FormattedMessage id="menu.dam" defaultMessage="Assets" />,
@@ -108,6 +110,7 @@ export const masterMenuData: MasterMenuData = [
             path: "/assets",
             render: () => <DamPage renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} domainOnly variant="toolbar" />} />,
         },
+        requiredPermission: "dam",
     },
     {
         primary: <FormattedMessage id="menu.projectSnips" defaultMessage="Project snips" />,
@@ -121,6 +124,7 @@ export const masterMenuData: MasterMenuData = [
                 },
             },
         ],
+        requiredPermission: "pageTree",
     },
     {
         primary: <FormattedMessage id="menu.system" defaultMessage="System" />,
@@ -148,6 +152,7 @@ export const masterMenuData: MasterMenuData = [
                 },
             },
         ],
+        requiredPermission: "system",
     },
     {
         primary: <FormattedMessage id="menu.componentDemo" defaultMessage="Component demo" />,
@@ -156,6 +161,7 @@ export const masterMenuData: MasterMenuData = [
             path: "/component-demo",
             component: ComponentDemo,
         },
+        requiredPermission: "pageTree",
     },
     {
         primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
@@ -190,6 +196,7 @@ export const masterMenuData: MasterMenuData = [
                 },
             },
         ],
+        requiredPermission: "products",
     },
     {
         primary: <FormattedMessage id="menu.userPermissions" defaultMessage="User Permissions" />,
@@ -198,6 +205,7 @@ export const masterMenuData: MasterMenuData = [
             path: "/user-permissions",
             component: UserPermissionsPage,
         },
+        requiredPermission: "userPermissions",
     },
 ];
 

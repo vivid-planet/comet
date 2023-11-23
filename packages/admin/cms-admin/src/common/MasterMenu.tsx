@@ -2,7 +2,10 @@ import { Menu, MenuCollapsibleItem, MenuContext, MenuItemRouterLink, MenuItemRou
 import * as React from "react";
 import { RouteProps, useRouteMatch } from "react-router-dom";
 
+import { CurrentUserContext } from "../userPermissions/hooks/currentUser";
+
 export type MasterMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
+    requiredPermission?: string;
     route?: RouteProps;
     to?: string;
     submenu?: MasterMenuItem[];
@@ -10,8 +13,15 @@ export type MasterMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
 
 export type MasterMenuData = MasterMenuItem[];
 
-export function getMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
-    // TODO: Filter for user-permissions once they are available
+export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
+    const context = React.useContext(CurrentUserContext);
+    const checkPermission = (item: MasterMenuItem): boolean => {
+        if (!item.requiredPermission) return true;
+        if (context === undefined)
+            throw new Error("MasterMenu: requiredPermission is set but CurrentUserContext not found. Make sure CurrentUserProvider exists.");
+        return context.isAllowed(context.currentUser, item.requiredPermission);
+    };
+
     const mapFn = (item: MasterMenuItem): MenuItem => {
         const { route, submenu, to, ...menuItem } = item;
         return {
@@ -20,10 +30,10 @@ export function getMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
                 to: to ?? route?.path?.toString() ?? "",
             },
             hasSubmenu: !!submenu,
-            submenu: submenu ? submenu.map(mapFn) : [],
+            submenu: submenu ? submenu.filter(checkPermission).map(mapFn) : [],
         };
     };
-    return items.map(mapFn);
+    return items.filter(checkPermission).map(mapFn);
 }
 
 type MenuItem = {
@@ -38,7 +48,7 @@ export interface MasterMenuProps {
 }
 
 export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWidth = 1024 }) => {
-    const menuItems = getMenuFromMasterMenuData(menu);
+    const menuItems = useMenuFromMasterMenuData(menu);
     const { open, toggleOpen } = React.useContext(MenuContext);
     const windowSize = useWindowSize();
     const match = useRouteMatch();
