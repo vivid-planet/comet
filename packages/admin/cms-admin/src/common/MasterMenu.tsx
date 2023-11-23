@@ -4,16 +4,8 @@ import { RouteProps, useRouteMatch } from "react-router-dom";
 
 import { CurrentUserContext } from "../userPermissions/hooks/currentUser";
 
-// See UserPermissionsService.getAvailablePermissions in cms-api
-export enum Permission {
-    "Dam" = "dam",
-    "PageTree" = "pageTree",
-    "UserPermissions" = "userPermissions",
-    "System" = "system",
-}
-
 export type MasterMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
-    requiredPermission?: Permission | string;
+    requiredPermission?: string;
     route?: RouteProps;
     to?: string;
     submenu?: MasterMenuItem[];
