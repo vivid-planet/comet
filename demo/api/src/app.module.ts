@@ -70,7 +70,7 @@ export class AppModule {
                             fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(dependencies)],
                         },
                         // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
-                        fieldResolverEnhancers: ["guards", "interceptors", "filters"] as Enhancer[],
+                        fieldResolverEnhancers: ["interceptors", "filters"] as Enhancer[],
                     }),
                     inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
                 }),
