@@ -31,7 +31,6 @@ export const CurrentUserProvider: React.FC<{
                     permission
                 }
             }
-            userPermissionsAvailablePermissions
         }
     `);
 
