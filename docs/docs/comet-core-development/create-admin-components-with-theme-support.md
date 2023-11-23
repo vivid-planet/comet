@@ -74,7 +74,7 @@ import React from "react";
  * - `header` in this case would be the header element of the component.
  * - `hasShadow` would be a modifier class added to the root element when the `shadow` prop is set to `true`.
  */
-export type MyComponentClassKey = "root" | "header" | "typography" | "icon" | "children" | "hasShadow";
+export type MyComponentClassKey = "root" | "header" | "title" | "typography" | "icon" | "children" | "hasShadow";
 
 /**
  * The `OwnerState` is an object that includes all values that should impact the component's styling.
