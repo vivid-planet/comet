@@ -51,6 +51,7 @@ class Page implements DocumentInterface {
 
 @ObjectType()
 class CurrentUser implements CurrentUserInterface {
+    @Field()
     id: string;
     @Field()
     name: string;

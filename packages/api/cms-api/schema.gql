@@ -200,6 +200,7 @@ input DependentFilter {
 }
 
 type CurrentUser {
+  id: String!
   name: String!
   email: String!
   language: String!
