@@ -41,7 +41,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { FindOptions } from "@mikro-orm/core";
     import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
-    import { SortDirection, validateNotModified } from "@comet/cms-api";
+    import { RequiredPermission, SortDirection, validateNotModified } from "@comet/cms-api";
     
     import { ${metadata.className} } from "${path.relative(generatorOptions.targetDirectory, metadata.path).replace(/\.ts$/, "")}";
     ${
@@ -56,6 +56,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
 
     @Resolver(() => ${metadata.className})
+    @RequiredPermission(["${generatorOptions.requiredPermission ?? instanceNamePlural}"]${!scopeProp ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
