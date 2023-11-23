@@ -192,6 +192,7 @@ export function createEditPageNode({
         if (mode === "edit" && (loading || !data?.page)) {
             return <Loading />;
         }
+
         return (
             <div>
                 <FinalForm<FormValues>
@@ -312,10 +313,6 @@ export function createEditPageNode({
                                             return null;
                                         }
 
-                                        if (values.slug === "home") {
-                                            return <Typography>/</Typography>;
-                                        }
-
                                         const numberOfDescendants = data?.page?.numberOfDescendants ?? 0;
 
                                         return (
@@ -328,7 +325,11 @@ export function createEditPageNode({
                                                     variant="horizontal"
                                                 >
                                                     <Typography>
-                                                        {parentPath}/{values.slug}
+                                                        {values.slug === "home"
+                                                            ? "/"
+                                                            : parentPath === null
+                                                            ? `/${values.slug}`
+                                                            : `${parentPath}/${values.slug}`}
                                                     </Typography>
                                                 </FieldContainer>
                                                 {mode === "edit" && dirtyFields.slug && (
