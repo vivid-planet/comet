@@ -68,6 +68,9 @@ export const styles = (theme: Theme) => {
         conflict: {
             color: theme.palette.error.contrastText,
             backgroundColor: theme.palette.error.main,
+            "&:hover": {
+                backgroundColor: theme.palette.error.dark,
+            },
         },
         textError: {},
         textInfo: {},

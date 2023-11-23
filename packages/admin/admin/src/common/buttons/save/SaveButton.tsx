@@ -44,7 +44,6 @@ const SaveBtn = ({
     conflictIcon = <ErrorIcon />,
     variant = "contained",
     color = "primary",
-    conflictColor = "error",
     classes,
     disabled,
     ...restProps
@@ -127,7 +126,7 @@ const SaveBtn = ({
             classes={resolveClassForDisplayState(displayState, classes)}
             startIcon={resolveIconForDisplayState(displayState)}
             variant={variant}
-            color={displayState === "conflict" ? conflictColor : color}
+            color={color}
             disabled={disabled || (displayState != "idle" && displayState != "conflict")}
         >
             {displayState === "idle" && children}
