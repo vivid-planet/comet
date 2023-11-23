@@ -1,32 +1,35 @@
-import { ComponentsOverrides, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides } from "@mui/material";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
+
+import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 
 export type ToolbarItemClassKey = "root";
 
-export interface ToolbarItemProps {
+const Root = styled("div", {
+    name: "CometAdminToolbarItem",
+    slot: "root",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})(
+    ({ theme }) => css`
+        padding: 15px;
+        display: flex;
+        justify-items: center;
+        align-items: center;
+        border-right: 1px solid ${theme.palette.grey[50]};
+    `,
+);
+
+export interface ToolbarItemProps extends ThemedComponentBaseProps {
     children: React.ReactNode;
 }
 
-const styles = ({ palette }: Theme) => {
-    return createStyles<ToolbarItemClassKey, ToolbarItemProps>({
-        root: {
-            padding: 15,
-            display: "flex",
-            justifyItems: "center",
-            alignItems: "center",
-            borderRight: 1,
-            borderRightStyle: "solid",
-            borderRightColor: palette.grey[50],
-        },
-    });
+export const ToolbarItem = (inProps: ToolbarItemProps) => {
+    const { children, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarItem" });
+    return <Root {...restProps}>{children}</Root>;
 };
-
-function Item({ children, classes }: ToolbarItemProps & WithStyles<typeof styles>): React.ReactElement {
-    return <div className={classes.root}>{children}</div>;
-}
-
-export const ToolbarItem = withStyles(styles, { name: "CometAdminToolbarItem" })(Item);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

@@ -1,20 +1,96 @@
-import { ComponentsOverrides, Link, Theme, Typography, TypographyTypeMap } from "@mui/material";
-import { WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides, Link, Typography as MuiTypography, TypographyTypeMap } from "@mui/material";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
 
+import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { StackApiContext } from "../../../stack/Api";
-import { styles, ToolbarBreadcrumbsClassKey } from "./ToolbarBreadcrumbs.styles";
+
+export type ToolbarBreadcrumbsClassKey = "item" | "typographyRoot" | "typographyActiveRoot" | "separatorContainer" | "separator";
+
+type OwnerState = {
+    active: boolean;
+};
+
+const Item = styled("div", {
+    name: "CometAdminToolbarBreadcrumbs",
+    slot: "item",
+    overridesResolver(_, styles) {
+        return [styles.item];
+    },
+})(css`
+    display: flex;
+    align-items: center;
+    padding: 15px;
+`);
+
+const TypographyRoot = styled(MuiTypography, {
+    name: "CometAdminToolbarBreadcrumbs",
+    slot: "typographyRoot",
+    overridesResolver(ownerState: OwnerState, styles) {
+        return [styles.typographyRoot, ownerState.active && styles.typographyActiveRoot];
+    },
+})<{ ownerState: OwnerState }>(
+    ({ ownerState }) => css`
+        font-size: 18px;
+
+        ${ownerState.active &&
+        css`
+            color: ${ownerState.active};
+        `}
+    `,
+);
+
+const SeparatorContainer = styled("div", {
+    name: "CometAdminToolbarBreadcrumbs",
+    slot: "separatorContainer",
+    overridesResolver(_, styles) {
+        return [styles.separatorContainer];
+    },
+})(css`
+    height: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`);
+
+const Separator = styled("div", {
+    name: "CometAdminToolbarBreadcrumbs",
+    slot: "separator",
+    overridesResolver(_, styles) {
+        return [styles.separator];
+    },
+})(
+    ({ theme }) => css`
+        height: 30px;
+        width: 1px;
+        background-color: ${theme.palette.divider};
+        transform: rotate(20deg);
+    `,
+);
 
 const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(({ href, to, ...rest }, ref) => (
     <RouterLink innerRef={ref} to={to ?? href} {...rest} />
 ));
 
-export interface ToolbarBreadcrumbsProps {
+export interface ToolbarBreadcrumbsProps
+    extends ThemedComponentBaseProps<{
+        item: "div";
+        typographyRoot: typeof MuiTypography;
+        separatorContainer: "div";
+        separator: "div";
+    }> {
+    /**
+     * @deprecated Use `slotProps` instead.
+     */
     typographyProps?: TypographyTypeMap["props"];
 }
 
-function Breadcrumbs({ typographyProps, classes }: ToolbarBreadcrumbsProps & WithStyles<typeof styles>): React.ReactElement {
+export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
+    const { typographyProps, slotProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarBreadcrumbs" });
+
     return (
         <StackApiContext.Consumer>
             {(stackApi) => {
@@ -22,23 +98,24 @@ function Breadcrumbs({ typographyProps, classes }: ToolbarBreadcrumbsProps & Wit
                     <>
                         {stackApi?.breadCrumbs.map(({ id, url, title }, index) => {
                             const showSeparator = index < stackApi?.breadCrumbs.length - 1;
-                            const isActive = index === stackApi?.breadCrumbs.length - 1;
+
+                            const ownerState: OwnerState = {
+                                active: index === stackApi?.breadCrumbs.length - 1,
+                            };
+
                             return (
                                 <React.Fragment key={id}>
-                                    <div className={classes.item}>
-                                        <Typography
-                                            {...typographyProps}
-                                            classes={{ root: `${classes.typographyRoot} ${isActive ? classes.typographyActiveRoot : ""}` }}
-                                        >
+                                    <Item {...slotProps?.item}>
+                                        <TypographyRoot ownerState={ownerState} {...typographyProps} {...slotProps?.typographyRoot}>
                                             <Link to={url} component={BreadcrumbLink} color="inherit">
                                                 {title}
                                             </Link>
-                                        </Typography>
-                                    </div>
+                                        </TypographyRoot>
+                                    </Item>
                                     {showSeparator && (
-                                        <div className={classes.separatorContainer}>
-                                            <div className={classes.separator} />
-                                        </div>
+                                        <SeparatorContainer {...slotProps?.separatorContainer}>
+                                            <Separator {...slotProps?.separator} />
+                                        </SeparatorContainer>
                                     )}
                                 </React.Fragment>
                             );
@@ -48,8 +125,7 @@ function Breadcrumbs({ typographyProps, classes }: ToolbarBreadcrumbsProps & Wit
             }}
         </StackApiContext.Consumer>
     );
-}
-export const ToolbarBreadcrumbs = withStyles(styles, { name: "CometAdminToolbarBreadcrumbs" })(Breadcrumbs);
+};
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

@@ -1,37 +1,51 @@
-import { ComponentsOverrides, Theme, Typography, TypographyTypeMap } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides, Typography as MuiTypography, TypographyTypeMap } from "@mui/material";
+import { styled, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { ToolbarItem } from "../item/ToolbarItem";
 
 export type ToolbarTitleItemClassKey = "root" | "typography";
 
-export interface ToolbarTitleItemProps {
+export interface ToolbarTitleItemProps
+    extends ThemedComponentBaseProps<{
+        root: typeof ToolbarItem;
+        typography: typeof MuiTypography;
+    }> {
+    /**
+     * @deprecated Use `slotProps` instead.
+     */
     typographyProps?: TypographyTypeMap["props"];
+    children?: React.ReactNode;
 }
 
-const styles = () => {
-    return createStyles<ToolbarTitleItemClassKey, React.PropsWithChildren<ToolbarTitleItemProps>>({
-        root: {},
-        typography: {},
-    });
-};
+const Root = styled(ToolbarItem, {
+    name: "CometAdminToolbarTitleItem",
+    slot: "root",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})();
 
-function TitleItem({
-    children,
-    typographyProps = {},
-    classes,
-}: React.PropsWithChildren<ToolbarTitleItemProps> & WithStyles<typeof styles>): React.ReactElement {
+const Typography = styled(MuiTypography, {
+    name: "CometAdminToolbarTitleItem",
+    slot: "typography",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})();
+
+export const ToolbarTitleItem = (inProps: ToolbarTitleItemProps) => {
+    const { children, typographyProps = {}, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarTitleItem" });
+
     return (
-        <ToolbarItem classes={{ root: classes.root }}>
-            <Typography variant="h4" classes={{ root: classes.typography }} {...typographyProps}>
+        <Root {...restProps} {...slotProps?.root}>
+            <Typography variant="h4" {...typographyProps} {...slotProps?.typography}>
                 {children}
             </Typography>
-        </ToolbarItem>
+        </Root>
     );
-}
-
-export const ToolbarTitleItem = withStyles(styles, { name: "CometAdminToolbarTitleItem" })(TitleItem);
+};
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
