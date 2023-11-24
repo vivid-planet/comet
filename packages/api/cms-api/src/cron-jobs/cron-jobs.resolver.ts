@@ -3,9 +3,11 @@ import { Query, Resolver } from "@nestjs/graphql";
 import { BUILDER_LABEL } from "../builds/builds.constants";
 import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CronJob } from "./dto/cron-job.object";
 
 @Resolver(() => CronJob)
+@RequiredPermission(["system"], { skipScopeCheck: true })
 export class CronJobsResolver {
     constructor(private readonly kubernetesService: KubernetesService) {}
 

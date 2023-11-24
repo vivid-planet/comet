@@ -4,6 +4,7 @@ import {
     PageTreeNodeInterface,
     PageTreeNodeVisibility,
     PageTreeService,
+    RequiredPermission,
     SortArgs,
     validateNotModified,
 } from "@comet/cms-api";
@@ -22,11 +23,13 @@ import { Page } from "./entities/page.entity";
 export class PagesArgs extends IntersectionType(OffsetBasedPaginationArgs, SortArgs) {}
 
 @Resolver(() => Page)
+@RequiredPermission(["pageTree"])
 export class PagesResolver {
     constructor(@InjectRepository(Page) private readonly repository: EntityRepository<Page>, private readonly pageTreeService: PageTreeService) {}
 
     // TODO add scope argument (who uses this anyway? probably dashboard)
     @Query(() => PaginatedPages)
+    @RequiredPermission(["pageTree"], { skipScopeCheck: true })
     async pages(@Args() { offset, limit, sortColumnName, sortDirection }: PagesArgs): Promise<PaginatedPages> {
         const options: FindOptions<Page> = { offset, limit };
         if (sortColumnName) {

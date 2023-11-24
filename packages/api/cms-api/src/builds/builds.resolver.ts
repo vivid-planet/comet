@@ -6,6 +6,7 @@ import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
 import { BuildsService } from "./builds.service";
@@ -15,6 +16,7 @@ import { CreateBuildsInput } from "./dto/create-builds.input";
 import { SkipBuild } from "./skip-build.decorator";
 
 @Resolver(() => Build)
+@RequiredPermission(["system"], { skipScopeCheck: true }) // Scopes are checked in code
 export class BuildsResolver {
     constructor(
         private readonly kubernetesService: KubernetesService,

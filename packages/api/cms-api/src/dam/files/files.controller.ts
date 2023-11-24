@@ -23,6 +23,7 @@ import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator
 import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometValidationException } from "../../common/errors/validation.exception";
+import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { CDN_ORIGIN_CHECK_HEADER, DamConfig } from "../dam.config";
@@ -50,6 +51,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
     const UploadFileBody = createUploadFileBody({ Scope });
 
     @Controller("dam/files")
+    @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scope is checked in actions
     class FilesController {
         constructor(
             @Inject(DAM_CONFIG) private readonly damConfig: DamConfig,
