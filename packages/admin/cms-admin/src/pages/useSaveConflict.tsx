@@ -53,14 +53,13 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
         let intervalId: number | undefined;
 
         const startPolling = () => {
+            window.clearInterval(intervalId);
             intervalId = window.setInterval(checkChanges, 10000);
         };
 
         const stopPolling = () => {
-            if (intervalId !== undefined) {
-                window.clearInterval(intervalId);
-                intervalId = undefined;
-            }
+            window.clearInterval(intervalId);
+            intervalId = undefined;
         };
 
         const handleFocus = () => {
