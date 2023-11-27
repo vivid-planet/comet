@@ -25,7 +25,7 @@ const styles = (theme: Theme) =>
             boxShadow: "0px 0px 20px 0px rgba(0, 0, 0, 0.10)",
             position: "relative",
             padding: "10px 12px 10px 20px",
-            minHeight: 40,
+            minHeight: 40, // to ensure consistent height for the content, regardless of the presence of a button or close icon, in order to set the outer padding correctly
         },
         message: {
             display: "flex",
