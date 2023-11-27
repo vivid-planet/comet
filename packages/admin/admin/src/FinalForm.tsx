@@ -208,8 +208,6 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         const submitEvent = (form.mutators.getSubmitEvent ? form.mutators.getSubmitEvent() : undefined) || new FinalFormSubmitEvent("submit");
         const ret = props.onSubmit(values, form, submitEvent);
 
-        if (ret === undefined) return ret;
-
         editDialogFormApi?.onFormStatusChange("saving");
         return Promise.resolve(ret)
             .then((data) => {
