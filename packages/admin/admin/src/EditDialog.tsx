@@ -9,15 +9,13 @@ import {
     DialogTitleProps,
 } from "@mui/material";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
-import { SaveButton } from "./common/buttons/save/SaveButton";
-import { CloseDialogOptions, EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
-import { EditDialogFormApiProvider, useEditDialogFormApi } from "./EditDialogFormApiContext";
+import { CloseDialogOptions, IEditDialogApi } from "./EditDialogApiContext";
 import { messages } from "./messages";
-import { RouterContext } from "./router/Context";
-import { SaveAction } from "./router/PromptHandler";
+import { SaveBoundary } from "./saveBoundary/SaveBoundary";
+import { SaveBoundarySaveButton } from "./saveBoundary/SaveBoundarySaveButton";
 import { ISelectionApi } from "./SelectionApi";
 import { useSelectionRoute } from "./SelectionRoute";
 
@@ -85,9 +83,7 @@ export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: s
         return (props: EditDialogProps) => {
             return (
                 <Selection>
-                    <EditDialogFormApiProvider onAfterSave={props.onAfterSave}>
-                        <EditDialogInner {...props} selection={selection} selectionApi={selectionApi} api={api} />
-                    </EditDialogFormApiProvider>
+                    <EditDialogInner {...props} selection={selection} selectionApi={selectionApi} api={api} />
                 </Selection>
             );
         };
@@ -116,30 +112,10 @@ const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = (
     componentsProps,
 }) => {
     const intl = useIntl();
-    const editDialogFormApi = useEditDialogFormApi();
-    const parentRouterContext = React.useContext(RouterContext);
-    const saveActionRef = React.useRef<SaveAction>();
 
     const title = maybeTitle ?? {
         edit: intl.formatMessage(messages.edit),
         add: intl.formatMessage(messages.add),
-    };
-
-    const handleSaveClick = async () => {
-        if (!saveActionRef.current) {
-            console.error("Can't save, no RouterPrompt registered with saveAction");
-            return;
-        }
-        const saveResult = await saveActionRef.current();
-
-        if (saveResult) {
-            setTimeout(() => {
-                // TODO DirtyHandler removal: do we need a onReset functionality here?
-                if (!disableCloseAfterSave) {
-                    api.closeDialog({ delay: true });
-                }
-            });
-        }
     };
 
     const handleCancelClick = () => {
@@ -151,38 +127,33 @@ const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = (
         api.closeDialog();
     };
 
+    const handleAfterSave = React.useCallback(() => {
+        setTimeout(() => {
+            // TODO DirtyHandler removal: do we need a onReset functionality here?
+            if (!disableCloseAfterSave) {
+                api.closeDialog({ delay: true });
+            }
+            onAfterSave?.();
+        });
+    }, [api, disableCloseAfterSave, onAfterSave]);
+
     const isOpen = !!selection.mode;
 
     return (
-        <RouterContext.Provider
-            value={{
-                register: ({ saveAction, ...args }) => {
-                    saveActionRef.current = saveAction;
-                    parentRouterContext?.register({ saveAction, ...args });
-                },
-                unregister: (id) => {
-                    saveActionRef.current = undefined;
-                    parentRouterContext?.unregister(id);
-                },
-            }}
-        >
-            <EditDialogApiContext.Provider value={api}>
-                <Dialog open={isOpen} onClose={handleCloseClick} {...componentsProps?.dialog}>
-                    <div>
-                        <DialogTitle {...componentsProps?.dialogTitle}>
-                            {typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}
-                        </DialogTitle>
-                        <DialogContent {...componentsProps?.dialogContent}>{children}</DialogContent>
-                        <DialogActions {...componentsProps?.dialogActions}>
-                            <CancelButton onClick={handleCancelClick} />
-                            <SaveButton saving={editDialogFormApi?.saving} hasErrors={editDialogFormApi?.hasErrors} onClick={handleSaveClick}>
-                                <FormattedMessage {...messages.save} />
-                            </SaveButton>
-                        </DialogActions>
-                    </div>
-                </Dialog>
-            </EditDialogApiContext.Provider>
-        </RouterContext.Provider>
+        <SaveBoundary onAfterSave={handleAfterSave}>
+            <Dialog open={isOpen} onClose={handleCloseClick} {...componentsProps?.dialog}>
+                <div>
+                    <DialogTitle {...componentsProps?.dialogTitle}>
+                        {typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}
+                    </DialogTitle>
+                    <DialogContent {...componentsProps?.dialogContent}>{children}</DialogContent>
+                    <DialogActions {...componentsProps?.dialogActions}>
+                        <CancelButton onClick={handleCancelClick} />
+                        <SaveBoundarySaveButton disabled={false} />
+                    </DialogActions>
+                </div>
+            </Dialog>
+        </SaveBoundary>
     );
 };
 
