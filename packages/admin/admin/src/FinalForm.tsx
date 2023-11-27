@@ -5,8 +5,6 @@ import * as React from "react";
 import { AnyObject, Form, FormRenderProps, RenderableProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
-import { Loading } from "./common/Loading";
-import { EditDialogApiContext } from "./EditDialogApiContext";
 import { useEditDialogFormApi } from "./EditDialogFormApiContext";
 import { renderComponent } from "./finalFormRenderComponent";
 import { FinalFormContext, FinalFormContextProvider } from "./form/FinalFormContextProvider";
@@ -68,7 +66,6 @@ export class FinalFormSubmitEvent extends Event {
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     const { client } = React.useContext(getApolloContext());
-    const editDialog = React.useContext(EditDialogApiContext);
     const tableQuery = React.useContext(TableQueryContext);
     const editDialogFormApi = useEditDialogFormApi();
 
@@ -195,7 +192,6 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         {(formRenderProps.submitError || formRenderProps.error) && (
                             <div className="error">{formRenderProps.submitError || formRenderProps.error}</div>
                         )}
-                        {!editDialog && <>{formRenderProps.submitting && <Loading behavior="fillParent" />}</>}
                     </form>
                 </RouterPrompt>
             </FinalFormContextProvider>
