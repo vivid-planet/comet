@@ -1,4 +1,5 @@
 import { ServerError } from "@apollo/client";
+import { NetworkError } from "@apollo/client/errors";
 import { onError } from "@apollo/client/link/error";
 import { Button, Typography } from "@mui/material";
 import { getReasonPhrase, StatusCodes } from "http-status-codes";
@@ -37,8 +38,8 @@ export const createErrorDialogApolloLink = () => {
                 title = <FormattedMessage id="comet.errorDialog.networkError.title" defaultMessage="Network error" />;
             }
 
-            if (networkError.name === "ServerError") {
-                const statusCode = (networkError as ServerError).statusCode;
+            if (isServerError(networkError)) {
+                const { statusCode } = networkError;
                 httpStatus = `${statusCode} ${getReasonPhrase(statusCode)}`;
 
                 if (statusCode === StatusCodes.UNAUTHORIZED) {
@@ -70,3 +71,7 @@ export const createErrorDialogApolloLink = () => {
         });
     });
 };
+
+function isServerError(error: NetworkError): error is ServerError {
+    return error !== null && error.name === "ServerError";
+}
