@@ -1,6 +1,6 @@
 import * as History from "history";
 import * as React from "react";
-import { Prompt } from "react-router";
+import { matchPath, Prompt } from "react-router";
 
 import { PromptAction, RouterConfirmationDialog } from "./ConfirmationDialog";
 import { RouterContext } from "./Context";
@@ -43,7 +43,11 @@ function InnerPromptHandler({
             const path = registeredMessages.current[id].path;
             const subRoutePath = registeredMessages.current[id].subRoutePath;
             // allow transition if location is below path where prompt was rendered
-            if (!((subRoutePath && location.pathname.startsWith(subRoutePath)) || location.pathname == path)) {
+            if (subRoutePath && location.pathname.startsWith(subRoutePath)) {
+                //subRoutePath matches with loaciton, allow transition
+            } else if (matchPath(location.pathname, { path, exact: true })) {
+                // path matches with location, allow transition
+            } else {
                 const message = registeredMessages.current[id].message(location, action);
                 if (message !== true) {
                     return message;
