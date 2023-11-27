@@ -1,9 +1,24 @@
-import { Stack, StackPage, StackSwitch } from "@comet/admin";
+import {
+    RouterTab,
+    RouterTabs,
+    SaveRange,
+    SaveRangeSaveButton,
+    Stack,
+    StackPage,
+    StackSwitch,
+    Toolbar,
+    ToolbarActions,
+    ToolbarAutomaticTitleItem,
+    ToolbarBackButton,
+    ToolbarFillSpace,
+} from "@comet/admin";
 import React from "react";
 import { useIntl } from "react-intl";
 
 import ProductForm from "./ProductForm";
+import ProductPriceForm from "./ProductPriceForm";
 import ProductsGrid from "./ProductsGrid";
+import ProductVariantsGrid from "./ProductVariantsGrid";
 
 const ProductsPage: React.FC = () => {
     const intl = useIntl();
@@ -15,7 +30,53 @@ const ProductsPage: React.FC = () => {
                     <ProductsGrid />
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit product" })}>
-                    {(selectedId) => <ProductForm id={selectedId} />}
+                    {(selectedId) => (
+                        <SaveRange>
+                            <Toolbar>
+                                <ToolbarBackButton />
+                                <ToolbarAutomaticTitleItem />
+                                <ToolbarFillSpace />
+                                <ToolbarActions>
+                                    <SaveRangeSaveButton />
+                                </ToolbarActions>
+                            </Toolbar>
+                            <RouterTabs>
+                                <RouterTab
+                                    forceRender={true}
+                                    path=""
+                                    label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
+                                >
+                                    <ProductForm id={selectedId} />
+                                </RouterTab>
+                                <RouterTab
+                                    forceRender={true}
+                                    path="/price"
+                                    label={intl.formatMessage({ id: "products.price", defaultMessage: "Price" })}
+                                >
+                                    <ProductPriceForm id={selectedId} />
+                                </RouterTab>
+                                <RouterTab path="/variants" label={intl.formatMessage({ id: "products.variants", defaultMessage: "Variants" })}>
+                                    <StackSwitch initialPage="table">
+                                        <StackPage name="table">
+                                            <ProductVariantsGrid productId={selectedId} />
+                                        </StackPage>
+                                        <StackPage
+                                            name="edit"
+                                            title={intl.formatMessage({ id: "products.editProductVariant", defaultMessage: "Edit Product Variant" })}
+                                        >
+                                            {(selectedId) => <>TODO: edit variant {selectedId}</>}
+                                        </StackPage>
+                                        <StackPage
+                                            name="add"
+                                            title={intl.formatMessage({ id: "products.addProductVariant", defaultMessage: "Add Product Variant" })}
+                                        >
+                                            TODO: add variant
+                                        </StackPage>
+                                    </StackSwitch>
+                                </RouterTab>
+                            </RouterTabs>
+                        </SaveRange>
+                    )}
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add product" })}>
                     <ProductForm />

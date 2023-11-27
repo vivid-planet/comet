@@ -119,6 +119,16 @@ export { RouterPromptHandler, SaveAction } from "./router/PromptHandler";
 export { SubRoute, SubRouteIndexRoute, useSubRoutePrefix } from "./router/SubRoute";
 export { RowActionsItem, RowActionsItemProps } from "./rowActions/RowActionsItem";
 export { RowActionsMenu, RowActionsMenuProps } from "./rowActions/RowActionsMenu";
+export {
+    SaveRange,
+    SaveRangeApi,
+    SaveRangeApiContext,
+    SaveRangeState,
+    SaveRangeStateProps,
+    useSaveRangeApi,
+    useSaveRangeState,
+} from "./saveRange/SaveRange";
+export { SaveRangeSaveButton } from "./saveRange/SaveRangeSaveButton";
 export { Selected } from "./Selected";
 export { ISelectionRenderPropArgs, Selection, useSelection } from "./Selection";
 export { ISelectionApi } from "./SelectionApi";

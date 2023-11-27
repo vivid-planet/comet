@@ -2,10 +2,9 @@ import { getApolloContext } from "@apollo/client";
 import { Config, Decorator, FORM_ERROR, FormApi, FormSubscription, MutableState, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
 import setFieldData from "final-form-set-field-data";
 import * as React from "react";
-import { AnyObject, Form, FormRenderProps, RenderableProps } from "react-final-form";
+import { AnyObject, Form, FormRenderProps, FormSpy, RenderableProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
-import { Loading } from "./common/Loading";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import { useEditDialogFormApi } from "./EditDialogFormApiContext";
 import { renderComponent } from "./finalFormRenderComponent";
@@ -13,6 +12,7 @@ import { FinalFormContext, FinalFormContextProvider } from "./form/FinalFormCont
 import { messages } from "./messages";
 import { RouterPrompt } from "./router/Prompt";
 import { useSubRoutePrefix } from "./router/SubRoute";
+import { SaveRangeState, useSaveRangeApi } from "./saveRange/SaveRange";
 import { StackApiContext } from "./stack/Api";
 import { TableQueryContext } from "./table/TableQueryContext";
 
@@ -64,6 +64,40 @@ const getSubmitEvent: Mutator<any, any> = (args: any[], state: MutableState<any,
     return state.formState.submitEvent;
 };
 
+function RouterPromptIf({
+    children,
+    doSave,
+    subRoutePath,
+    formApi,
+}: {
+    children: React.ReactNode;
+    doSave: () => Promise<boolean>;
+    subRoutePath: string;
+    formApi: FormApi<any>;
+}) {
+    const saveRangeApi = useSaveRangeApi();
+    const intl = useIntl();
+
+    if (saveRangeApi) {
+        //render no RouterPrompt if we are inside a SaveRange
+        return <>{children}</>;
+    }
+    return (
+        <RouterPrompt
+            message={() => {
+                if (formApi.getState().dirty) {
+                    return intl.formatMessage(messages.saveUnsavedChanges);
+                }
+                return true;
+            }}
+            saveAction={doSave}
+            subRoutePath={subRoutePath}
+        >
+            {children}
+        </RouterPrompt>
+    );
+}
+
 export class FinalFormSubmitEvent extends Event {
     navigatingBack?: boolean;
 }
@@ -98,8 +132,8 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     );
 
     function RenderForm({ formContext = {}, ...formRenderProps }: FormRenderProps<FormValues> & { formContext: Partial<FinalFormContext> }) {
-        const intl = useIntl();
         const subRoutePrefix = useSubRoutePrefix();
+        const saveRangeApi = useSaveRangeApi();
         if (props.apiRef) props.apiRef.current = formRenderProps.form;
         const { mutators } = formRenderProps.form;
         const setFieldData = mutators.setFieldData as (...args: any[]) => any;
@@ -160,36 +194,35 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             }
         }, [formRenderProps.values, setFieldData, registeredFields]);
 
+        const doSave = React.useCallback(async () => {
+            editDialogFormApi?.onFormStatusChange("saving");
+            const hasValidationErrors = await waitForValidationToFinish(formRenderProps.form);
+            if (hasValidationErrors) {
+                editDialogFormApi?.onFormStatusChange("error");
+                return false;
+            }
+
+            const submissionErrors = await formRenderProps.form.submit();
+            if (submissionErrors) {
+                editDialogFormApi?.onFormStatusChange("error");
+                return false;
+            }
+
+            return true;
+        }, [formRenderProps.form]);
+
         return (
             <FinalFormContextProvider {...formContext}>
-                <RouterPrompt
-                    message={() => {
-                        if (formRenderProps.form.getState().dirty) {
-                            return intl.formatMessage(messages.saveUnsavedChanges);
-                        }
-                        return true;
-                    }}
-                    saveAction={async () => {
-                        editDialogFormApi?.onFormStatusChange("saving");
-                        const hasValidationErrors = await waitForValidationToFinish(formRenderProps.form);
-
-                        if (hasValidationErrors) {
-                            editDialogFormApi?.onFormStatusChange("error");
-                            return false;
-                        }
-
-                        const submissionErrors = await formRenderProps.form.submit();
-
-                        if (submissionErrors) {
-                            editDialogFormApi?.onFormStatusChange("error");
-                            return false;
-                        }
-
-                        return true;
-                    }}
-                    // TODO DirtyHandler removal: do we need a resetAction functionality here?
-                    subRoutePath={subRoutePath}
-                >
+                {saveRangeApi && (
+                    <FormSpy subscription={{ dirty: true }}>
+                        {(props) => (
+                            <>
+                                <SaveRangeState hasChanges={props.dirty} doSave={doSave} />
+                            </>
+                        )}
+                    </FormSpy>
+                )}
+                <RouterPromptIf formApi={formRenderProps.form} doSave={doSave} subRoutePath={subRoutePath}>
                     <form onSubmit={submit}>
                         <div>
                             {renderComponent<FormValues>(
@@ -204,9 +237,8 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         {(formRenderProps.submitError || formRenderProps.error) && (
                             <div className="error">{formRenderProps.submitError || formRenderProps.error}</div>
                         )}
-                        {!editDialog && <>{formRenderProps.submitting && <Loading behavior="fillParent" />}</>}
                     </form>
-                </RouterPrompt>
+                </RouterPromptIf>
             </FinalFormContextProvider>
         );
     }
