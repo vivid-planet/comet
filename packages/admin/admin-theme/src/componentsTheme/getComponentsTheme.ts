@@ -5,6 +5,7 @@ import { Shadows } from "@mui/material/styles/shadows";
 import { ZIndex } from "@mui/material/styles/zIndex";
 import { Spacing } from "@mui/system";
 
+import { getMuiAlert } from "./MuiAlert";
 import { getMuiAppBar } from "./MuiAppBar";
 import { getMuiAutocomplete } from "./MuiAutocomplete";
 import { getMuiButton } from "./MuiButton";
@@ -97,4 +98,5 @@ export const getComponentsTheme = (components: Components, themeData: ThemeData)
     MuiToggleButtonGroup: getMuiToggleButtonGroup(components.MuiToggleButtonGroup, themeData),
     MuiTooltip: getMuiTooltip(components.MuiTooltip, themeData),
     MuiTypography: getMuiTypography(components.MuiTypography, themeData),
+    MuiAlert: getMuiAlert(components.MuiAlert, themeData),
 });

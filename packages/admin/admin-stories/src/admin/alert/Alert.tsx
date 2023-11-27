@@ -1,7 +1,6 @@
 import { OkayButton, SaveButton } from "@comet/admin";
 import { Alert } from "@comet/admin/lib/alert/Alert";
-import { ArrowRight, Close } from "@comet/admin-icons";
-import { PunchClock } from "@mui/icons-material";
+import { ArrowRight } from "@comet/admin-icons";
 import { Button, Card, CardContent, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { storiesOf } from "@storybook/react";
@@ -9,62 +8,59 @@ import React from "react";
 
 function Story() {
     return (
-        <>
-            <Typography variant="h3">Alert</Typography>
-            <Typography>The default severity for alerts is info</Typography>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 50 }}>
             <Card variant="outlined">
                 <CardContent>
                     <Typography variant="h4" marginBottom={4}>
-                        Default Versions? with Title
+                        With Title
                     </Typography>
-                    <Stack spacing={4} direction="row">
-                        <div>
-                            <Typography>Info</Typography>
-                            <Alert
-                                severity="info"
-                                title="Title"
-                                action={
-                                    <Button variant="text" startIcon={<ArrowRight />}>
-                                        Action Text
-                                    </Button>
-                                }
-                            >
-                                <Typography>Notification Text</Typography>
-                            </Alert>
-                        </div>
+                    <Stack spacing={4} direction="column">
+                        <Alert
+                            severity="info"
+                            title="Title"
+                            button={
+                                <Button variant="text" startIcon={<ArrowRight />}>
+                                    Action Text
+                                </Button>
+                            }
+                        >
+                            Notification Text
+                        </Alert>
 
                         <Alert
                             severity="warning"
                             title="Title"
-                            action={
+                            button={
                                 <Button variant="text" startIcon={<ArrowRight />}>
                                     Action Text
                                 </Button>
                             }
                         >
-                            <Typography>Notification Text</Typography>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vel vehicula est. Nunc congue velit sem, ac porttitor
+                            massa semper nec. Proin quis volutpat magna. Mauris eget libero et mi imperdiet ultrices. Donec eget interdum odio.
+                            Maecenas blandit ipsum et eros tempus porttitor. Aliquam erat volutpat.
                         </Alert>
                         <Alert
                             severity="error"
                             title="Title"
-                            action={
+                            button={
                                 <Button variant="text" startIcon={<ArrowRight />}>
                                     Action Text
                                 </Button>
                             }
                         >
-                            <Typography>Notification Text</Typography>
+                            Notification Text
                         </Alert>
                         <Alert
                             severity="success"
                             title="Title"
-                            action={
+                            button={
                                 <Button variant="text" startIcon={<ArrowRight />}>
                                     Action Text
                                 </Button>
                             }
                         >
-                            <Typography>Notification Text</Typography>
+                            Notification Text
                         </Alert>
                     </Stack>
                 </CardContent>
@@ -73,41 +69,56 @@ function Story() {
             <Card>
                 <CardContent>
                     <Typography variant="h4" marginBottom={4}>
-                        Default Versions? without Title
+                        Without Title
                     </Typography>
-                    <Stack spacing={4} direction="row" marginBottom={6}>
-                        <Alert>
-                            <Typography>Notification Text</Typography>
-                        </Alert>
-                        <Alert severity="warning">
-                            <Typography>Notification Text</Typography>
-                        </Alert>
-                        <Alert severity="error">
-                            <Typography>Notification Text</Typography>
-                        </Alert>
-                        <Alert severity="success">
-                            <Typography>Notification Text</Typography>
+                    <Stack spacing={4} marginBottom={6}>
+                        <Alert>Notification Text</Alert>
+                        <Alert severity="warning">Notification Text</Alert>
+                        <Alert severity="error">Notification Text</Alert>
+                        <Alert
+                            severity="success"
+                            button={
+                                <Button variant="text" startIcon={<ArrowRight />}>
+                                    Action Text
+                                </Button>
+                            }
+                        >
+                            Notification Text
                         </Alert>
                     </Stack>
                 </CardContent>
             </Card>
 
-            <Stack spacing={4}>
-                <Typography variant="h4">Without Close Button</Typography>
-                <Alert title="Title" disableCloseButton>
-                    <Typography>Notification Text</Typography>
-                </Alert>
-                <Alert severity="warning" disableCloseButton>
-                    <Typography>Notification Text</Typography>
-                </Alert>
-                <Typography variant="h4">With Custom Actions</Typography>
-                <Alert title="Title" action={<SaveButton />} />
-                <Alert severity="warning" action={<OkayButton />} />
-                <Typography variant="h4">Headline</Typography>
-                <Alert severity="error" title="Title" action={<Close />} />
-                <Alert severity="success" action={<PunchClock />} />
-            </Stack>
-        </>
+            <Card>
+                <CardContent>
+                    <Stack spacing={4}>
+                        <Typography variant="h4">Without Close Button</Typography>
+                        <Alert title="Title" disableCloseButton>
+                            <Typography>Notification Text</Typography>
+                        </Alert>
+                        <Alert severity="warning" disableCloseButton>
+                            <Typography>Notification Text</Typography>
+                        </Alert>
+                        <Alert
+                            severity="warning"
+                            button={
+                                <Button variant="text" startIcon={<ArrowRight />}>
+                                    Action Text
+                                </Button>
+                            }
+                            disableCloseButton
+                        >
+                            <Typography>Notification Text</Typography>
+                        </Alert>
+                        <Typography variant="h4">Other Actions</Typography>
+                        <Alert title="Title" button={<SaveButton />}>
+                            Text
+                        </Alert>
+                        <Alert severity="warning" button={<OkayButton />} />
+                    </Stack>
+                </CardContent>
+            </Card>
+        </div>
     );
 }
 

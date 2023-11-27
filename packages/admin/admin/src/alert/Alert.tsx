@@ -1,5 +1,5 @@
-import { Check, Close, Error, Info, Warning } from "@comet/admin-icons";
-import { IconButton, Theme, Typography } from "@mui/material";
+import { Close } from "@comet/admin-icons";
+import { Alert as MuiAlert, AlertTitle, buttonClasses, IconButton, Theme, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
@@ -10,21 +10,10 @@ export interface AlertProps {
     children?: React.ReactNode;
     disableCloseButton?: boolean;
     onClose?: () => void;
-    action?: React.ReactNode;
+    button?: React.ReactNode;
 }
 
-export type AlertClassKey =
-    | "root"
-    | "severityInfo"
-    | "severityWarning"
-    | "severityError"
-    | "severitySuccess"
-    | "title"
-    | "text"
-    | "button"
-    | "container"
-    | "closeIcon"
-    | "hasTitle";
+export type AlertClassKey = "root" | "message" | "title" | "text" | "button" | "closeIcon" | "hasTitle";
 
 const styles = (theme: Theme) =>
     createStyles<AlertClassKey, AlertProps>({
@@ -33,50 +22,38 @@ const styles = (theme: Theme) =>
             alignItems: "center",
             backgroundColor: theme.palette.background.paper,
             borderRadius: 4,
-            width: 400,
-            padding: 20,
             boxShadow: "0px 0px 20px 0px rgba(0, 0, 0, 0.10)",
             position: "relative",
+            padding: "10px 20px",
+            minHeight: 40,
         },
-        title: {
-            fontWeight: 600,
-        },
-        text: {
-            fontWeight: 300,
-            fontSize: 14,
-            whiteSpace: "nowrap",
-            flexGrow: 1,
-            marginRight: 20,
-        },
-        button: {},
-        container: {
+        message: {
             display: "flex",
             alignItems: "center",
             flexGrow: 1,
+            padding: 0,
             paddingLeft: theme.spacing(2),
+            marginBottom: 0,
         },
+        title: {
+            fontWeight: 600,
+            marginBottom: theme.spacing(1),
+        },
+        text: {
+            flexGrow: 1,
+            marginRight: theme.spacing(4),
+        },
+        button: {},
         closeIcon: {},
-        severityInfo: {
-            border: `1px solid #29B6F6`,
-            borderLeft: `5px solid #29B6F6`,
-        },
-        severityWarning: {
-            border: `1px solid #FFB31A`,
-            borderLeft: `5px solid #FFB31A`,
-        },
-        severityError: {
-            border: `1px solid #D11700`,
-            borderLeft: `5px solid #D11700`,
-        },
-        severitySuccess: {
-            border: `1px solid #14CC33`,
-            borderLeft: `5px solid #14CC33`,
-        },
         hasTitle: {
             alignItems: "flex-start",
 
-            "& $button": {
+            [`& .${buttonClasses.text}`]: {
                 marginLeft: -15,
+            },
+
+            "& $button": {
+                marginTop: theme.spacing(2),
             },
 
             "& $closeIcon": {
@@ -84,9 +61,13 @@ const styles = (theme: Theme) =>
                 right: 10,
                 top: 10,
             },
-            "& $container": {
+            "& $message": {
                 flexDirection: "column",
                 alignItems: "flex-start",
+            },
+            "&$root": {
+                paddingBottom: "6px",
+                paddingTop: theme.spacing(4),
             },
         },
     });
@@ -98,55 +79,27 @@ function Alert({
     classes,
     disableCloseButton = false,
     onClose,
-    action,
+    button,
 }: AlertProps & WithStyles<typeof styles>): React.ReactElement {
-    // const button: React.ReactNode = null;
-
-    // if (action) {
-    //     const { text: actionText, ...restActionProps } = action;
-    //     button = (
-    //         <Button variant="text" startIcon={<ArrowRight />} className={classes.button} {...restActionProps}>
-    //             {actionText}
-    //         </Button>
-    //     );
-    // }
-
     return (
-        <div
-            className={clsx(
-                classes.root,
-                Boolean(title) && classes.hasTitle,
-                severity === "info" && classes.severityInfo,
-                severity === "warning" && classes.severityWarning,
-                severity === "error" && classes.severityError,
-                severity === "success" && classes.severitySuccess,
-            )}
+        <MuiAlert
+            classes={{
+                root: clsx(classes.root, Boolean(title) && classes.hasTitle),
+                message: classes.message,
+            }}
+            severity={severity}
         >
-            {severity === "info" ? (
-                <Info color={severity} />
-            ) : severity === "warning" ? (
-                <Warning color={severity} />
-            ) : severity === "error" ? (
-                <Error color={severity} />
-            ) : severity === "success" ? (
-                <Check color={severity} />
-            ) : null}
-
-            <div className={classes.container}>
-                {Boolean(title) && (
-                    <Typography variant="h6" className={classes.title}>
-                        {title}
-                    </Typography>
-                )}
+            {Boolean(title) && <AlertTitle className={classes.title}>{title}</AlertTitle>}
+            <Typography className={classes.text} variant="body2">
                 {children}
-                {action}
-                {!disableCloseButton && (
-                    <IconButton className={classes.closeIcon} onClick={onClose}>
-                        <Close />
-                    </IconButton>
-                )}
-            </div>
-        </div>
+            </Typography>
+            <div className={classes.button}>{button}</div>
+            {!disableCloseButton && (
+                <IconButton className={classes.closeIcon} onClick={onClose}>
+                    <Close />
+                </IconButton>
+            )}
+        </MuiAlert>
     );
 }
 
