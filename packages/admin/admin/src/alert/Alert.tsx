@@ -24,7 +24,7 @@ const styles = (theme: Theme) =>
             borderRadius: 4,
             boxShadow: "0px 0px 20px 0px rgba(0, 0, 0, 0.10)",
             position: "relative",
-            padding: "10px 20px",
+            padding: "10px 12px 10px 20px",
             minHeight: 40,
         },
         message: {
