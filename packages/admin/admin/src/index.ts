@@ -90,7 +90,7 @@ export { FinalFormRadio, FinalFormRadioProps } from "./form/Radio";
 export { FinalFormSwitch, FinalFormSwitchProps } from "./form/Switch";
 export { FormMutation } from "./FormMutation";
 export { PrettyBytes } from "./helpers/PrettyBytes";
-export { SlotProps } from "./helpers/SlotProps";
+export { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 export { IWindowSize, useWindowSize } from "./helpers/useWindowSize";
 export { AsyncOptionsProps, useAsyncOptionsProps } from "./hooks/useAsyncOptionsProps";
 export { useStoredState } from "./hooks/useStoredState";
