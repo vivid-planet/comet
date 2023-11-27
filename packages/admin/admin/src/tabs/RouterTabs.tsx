@@ -124,20 +124,23 @@ function RouterTabsComponent({
                 return (
                     <Route path={path}>
                         {({ match }) => {
-                            if (match && stackApi && stackSwitchApi && !foundFirstMatch) {
+                            let ret = null;
+                            if (match && !foundFirstMatch) {
                                 foundFirstMatch = true;
-                                return (
-                                    <StackBreadcrumb url={path} title={child.props.label} invisible={true}>
-                                        <div className={classes.content}>{child.props.children}</div>
-                                    </StackBreadcrumb>
-                                );
-                            } else if (match && !foundFirstMatch) {
-                                foundFirstMatch = true;
-                                return <div className={classes.content}>{child.props.children}</div>;
+                                ret = <div className={classes.content}>{child.props.children}</div>;
                             } else if (child.props.forceRender) {
-                                return <div className={`${classes.content} ${classes.contentHidden}`}>{child.props.children}</div>;
+                                ret = <div className={`${classes.content} ${classes.contentHidden}`}>{child.props.children}</div>;
                             } else {
                                 return null;
+                            }
+                            if (stackApi && stackSwitchApi) {
+                                return (
+                                    <StackBreadcrumb url={path} title={child.props.label} invisible={true}>
+                                        {ret}
+                                    </StackBreadcrumb>
+                                );
+                            } else {
+                                return ret;
                             }
                         }}
                     </Route>
