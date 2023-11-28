@@ -8,7 +8,7 @@ import clsx from "clsx";
 import * as React from "react";
 
 interface FieldSetComponentsProps {
-    accordion?: Partial<AccordionProps>;
+    root?: Partial<AccordionProps>;
     summary?: Partial<AccordionSummaryProps>;
     details?: Partial<AccordionDetailsProps>;
 }
@@ -106,7 +106,7 @@ function FieldSet({
                           /* do nothing */
                       }
             }
-            {...componentsProps?.accordion}
+            {...componentsProps?.root}
         >
             <MuiAccordionSummary
                 classes={{ root: classes.header }}
