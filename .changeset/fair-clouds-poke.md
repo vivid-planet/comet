@@ -2,4 +2,4 @@
 "@comet/cms-api": patch
 ---
 
-api generator: use correct type for where when findCondition is not used
+API Generator: Use correct type for `where` when `getFindCondition` service method is not used
