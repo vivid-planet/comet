@@ -964,7 +964,7 @@ importers:
   packages/admin/admin:
     dependencies:
       '@comet/admin-icons':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-icons
       '@mui/private-theming':
         specifier: ^5.0.0
@@ -1013,10 +1013,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
@@ -1184,10 +1184,10 @@ importers:
   packages/admin/admin-color-picker:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin
       '@comet/admin-icons':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-icons
       clsx:
         specifier: ^1.1.1
@@ -1209,10 +1209,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../../eslint-config
       '@mui/icons-material':
         specifier: ^5.0.0
@@ -1266,10 +1266,10 @@ importers:
   packages/admin/admin-date-time:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin
       '@comet/admin-icons':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-icons
       '@mui/utils':
         specifier: ^5.4.1
@@ -1291,10 +1291,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1351,10 +1351,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1408,7 +1408,7 @@ importers:
   packages/admin/admin-react-select:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin
       classnames:
         specifier: ^2.2.6
@@ -1421,10 +1421,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../../eslint-config
       '@mui/icons-material':
         specifier: ^5.0.0
@@ -1478,7 +1478,7 @@ importers:
   packages/admin/admin-rte:
     dependencies:
       '@comet/admin-icons':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-icons
       detect-browser:
         specifier: ^5.2.1
@@ -1497,10 +1497,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../../eslint-config
       '@mui/icons-material':
         specifier: ^5.0.0
@@ -1810,7 +1810,7 @@ importers:
   packages/admin/admin-theme:
     dependencies:
       '@comet/admin-icons':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-icons
       '@mui/utils':
         specifier: ^5.4.1
@@ -1823,10 +1823,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1871,10 +1871,10 @@ importers:
   packages/admin/blocks-admin:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin
       '@comet/admin-icons':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-icons
       '@mui/lab':
         specifier: ^5.0.0-alpha.76
@@ -1905,13 +1905,13 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-babel-preset
       '@comet/cli':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../../cli
       '@comet/eslint-config':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
@@ -2004,22 +2004,22 @@ importers:
   packages/admin/cms-admin:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin
       '@comet/admin-date-time':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-date-time
       '@comet/admin-icons':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-icons
       '@comet/admin-rte':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-rte
       '@comet/admin-theme':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-theme
       '@comet/blocks-admin':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../blocks-admin
       '@graphql-tools/graphql-file-loader':
         specifier: ^7.5.17
@@ -2137,13 +2137,13 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../admin-babel-preset
       '@comet/cli':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../../cli
       '@comet/eslint-config':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
@@ -2321,7 +2321,7 @@ importers:
         version: 3.0.2
     devDependencies:
       '@comet/eslint-config':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../../eslint-config
       '@nestjs/common':
         specifier: ^9.0.0
@@ -2378,7 +2378,7 @@ importers:
   packages/api/cms-api:
     dependencies:
       '@comet/blocks-api':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../blocks-api
       '@hapi/accept':
         specifier: ^5.0.2
@@ -2508,7 +2508,7 @@ importers:
         specifier: ^12.0.0
         version: 12.12.0
       '@comet/eslint-config':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../../eslint-config
       '@kubernetes/client-node':
         specifier: ^0.18.1
@@ -2641,7 +2641,7 @@ importers:
         version: 2.8.3
     devDependencies:
       '@comet/eslint-config':
-        specifier: ^5.0.0
+        specifier: ^5.1.0
         version: link:../eslint-config
       '@types/node':
         specifier: ^18.0.0
@@ -2665,7 +2665,7 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1
       '@comet/eslint-plugin':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../eslint-plugin
       '@next/eslint-plugin-next':
         specifier: ^12.0.0
@@ -2766,10 +2766,10 @@ importers:
         version: 6.0.1(react@17.0.2)
     devDependencies:
       '@comet/cli':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../../cli
       '@comet/eslint-config':
-        specifier: workspace:^5.0.0
+        specifier: workspace:^5.1.0
         version: link:../../eslint-config
       '@gitbeaker/node':
         specifier: ^34.0.0
@@ -3212,7 +3212,7 @@ packages:
       '@babel/generator': 7.20.7
       '@babel/parser': 7.20.13
       '@babel/runtime': 7.20.13
-      '@babel/traverse': 7.20.13(supports-color@5.5.0)
+      '@babel/traverse': 7.20.13
       '@babel/types': 7.20.7
       babel-preset-fbjs: 3.4.0(@babel/core@7.22.11)
       chalk: 4.1.2
@@ -4262,10 +4262,10 @@ packages:
       '@babel/helpers': 7.20.13
       '@babel/parser': 7.20.13
       '@babel/template': 7.20.7
-      '@babel/traverse': 7.20.13(supports-color@5.5.0)
+      '@babel/traverse': 7.20.13
       '@babel/types': 7.20.7
       convert-source-map: 1.9.0
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       lodash: 4.17.21
@@ -4288,10 +4288,10 @@ packages:
       '@babel/helpers': 7.20.13
       '@babel/parser': 7.20.13
       '@babel/template': 7.20.7
-      '@babel/traverse': 7.20.13(supports-color@5.5.0)
+      '@babel/traverse': 7.20.13
       '@babel/types': 7.20.7
       convert-source-map: 1.9.0
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.0
@@ -4313,7 +4313,7 @@ packages:
       '@babel/traverse': 7.22.11
       '@babel/types': 7.22.11
       convert-source-map: 1.9.0
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -4452,8 +4452,8 @@ packages:
       '@babel/helper-compilation-targets': 7.20.7(@babel/core@7.22.11)
       '@babel/helper-module-imports': 7.18.6
       '@babel/helper-plugin-utils': 7.22.5
-      '@babel/traverse': 7.20.13(supports-color@5.5.0)
-      debug: 4.3.4(supports-color@5.5.0)
+      '@babel/traverse': 7.20.13
+      debug: 4.3.4(supports-color@9.3.1)
       lodash.debounce: 4.0.8
       resolve: 1.22.1
       semver: 6.3.0
@@ -4469,7 +4469,7 @@ packages:
       '@babel/core': 7.20.12
       '@babel/helper-compilation-targets': 7.20.7(@babel/core@7.20.12)
       '@babel/helper-plugin-utils': 7.22.5
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       lodash.debounce: 4.0.8
       resolve: 1.22.1
       semver: 6.3.0
@@ -4484,7 +4484,7 @@ packages:
       '@babel/core': 7.22.11
       '@babel/helper-compilation-targets': 7.20.7(@babel/core@7.22.11)
       '@babel/helper-plugin-utils': 7.22.5
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       lodash.debounce: 4.0.8
       resolve: 1.22.1
       semver: 6.3.0
@@ -4560,7 +4560,7 @@ packages:
       '@babel/helper-split-export-declaration': 7.18.6
       '@babel/helper-validator-identifier': 7.19.1
       '@babel/template': 7.20.7
-      '@babel/traverse': 7.20.13(supports-color@5.5.0)
+      '@babel/traverse': 7.20.13
       '@babel/types': 7.20.7
     transitivePeerDependencies:
       - supports-color
@@ -4633,7 +4633,7 @@ packages:
       '@babel/helper-member-expression-to-functions': 7.20.7
       '@babel/helper-optimise-call-expression': 7.18.6
       '@babel/template': 7.20.7
-      '@babel/traverse': 7.20.13(supports-color@5.5.0)
+      '@babel/traverse': 7.20.13
       '@babel/types': 7.20.7
     transitivePeerDependencies:
       - supports-color
@@ -4698,7 +4698,7 @@ packages:
     dependencies:
       '@babel/helper-function-name': 7.19.0
       '@babel/template': 7.20.7
-      '@babel/traverse': 7.20.13(supports-color@5.5.0)
+      '@babel/traverse': 7.20.13
       '@babel/types': 7.20.7
     transitivePeerDependencies:
       - supports-color
@@ -4708,7 +4708,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/template': 7.20.7
-      '@babel/traverse': 7.20.13(supports-color@5.5.0)
+      '@babel/traverse': 7.20.13
       '@babel/types': 7.20.7
     transitivePeerDependencies:
       - supports-color
@@ -6741,6 +6741,23 @@ packages:
       '@babel/parser': 7.22.14
       '@babel/types': 7.22.11
 
+  /@babel/traverse@7.20.13:
+    resolution: {integrity: sha512-kMJXfF0T6DIS9E8cgdLCSAL+cuCK+YEZHWiLK0SXpTo8YRj5lpJu3CDNKiIBCne4m9hhTIqUg6SYTAI39tAiVQ==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      '@babel/code-frame': 7.18.6
+      '@babel/generator': 7.20.7
+      '@babel/helper-environment-visitor': 7.18.9
+      '@babel/helper-function-name': 7.19.0
+      '@babel/helper-hoist-variables': 7.18.6
+      '@babel/helper-split-export-declaration': 7.18.6
+      '@babel/parser': 7.20.13
+      '@babel/types': 7.20.7
+      debug: 4.3.4(supports-color@9.3.1)
+      globals: 11.12.0
+    transitivePeerDependencies:
+      - supports-color
+
   /@babel/traverse@7.20.13(supports-color@5.5.0):
     resolution: {integrity: sha512-kMJXfF0T6DIS9E8cgdLCSAL+cuCK+YEZHWiLK0SXpTo8YRj5lpJu3CDNKiIBCne4m9hhTIqUg6SYTAI39tAiVQ==}
     engines: {node: '>=6.9.0'}
@@ -6770,7 +6787,7 @@ packages:
       '@babel/helper-split-export-declaration': 7.22.6
       '@babel/parser': 7.22.14
       '@babel/types': 7.22.11
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -7063,7 +7080,7 @@ packages:
       '@babel/preset-typescript': 7.18.6(@babel/core@7.22.11)
       '@babel/runtime': 7.20.13
       '@babel/runtime-corejs3': 7.22.6
-      '@babel/traverse': 7.20.13(supports-color@5.5.0)
+      '@babel/traverse': 7.20.13
       '@docusaurus/cssnano-preset': 2.4.1
       '@docusaurus/logger': 2.4.1
       '@docusaurus/mdx-loader': 2.4.1(@docusaurus/types@2.4.1)(react-dom@17.0.2)(react@17.0.2)
@@ -7172,7 +7189,7 @@ packages:
       react-dom: ^16.8.4 || ^17.0.0
     dependencies:
       '@babel/parser': 7.20.13
-      '@babel/traverse': 7.20.13(supports-color@5.5.0)
+      '@babel/traverse': 7.20.13
       '@docusaurus/logger': 2.4.1
       '@docusaurus/utils': 2.4.1(@docusaurus/types@2.4.1)
       '@mdx-js/mdx': 1.6.22
@@ -8125,7 +8142,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       espree: 9.5.2
       globals: 13.19.0
       ignore: 5.2.4
@@ -8141,7 +8158,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       espree: 9.5.2
       globals: 13.19.0
       ignore: 5.2.4
@@ -8949,7 +8966,7 @@ packages:
     dependencies:
       '@babel/parser': 7.20.13
       '@babel/plugin-syntax-import-assertions': 7.20.0(@babel/core@7.20.12)
-      '@babel/traverse': 7.20.13(supports-color@5.5.0)
+      '@babel/traverse': 7.20.13
       '@babel/types': 7.20.7
       '@graphql-tools/utils': 9.1.4(graphql@15.8.0)
       graphql: 15.8.0
@@ -9132,7 +9149,7 @@ packages:
       '@types/json-stable-stringify': 1.0.34
       '@types/jsonwebtoken': 9.0.1
       chalk: 4.1.2
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       dotenv: 16.0.3
       graphql: 15.8.0
       graphql-request: 5.1.0(graphql@15.8.0)
@@ -9483,7 +9500,7 @@ packages:
     engines: {node: '>=10.10.0'}
     dependencies:
       '@humanwhocodes/object-schema': 1.2.1
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -10141,7 +10158,7 @@ packages:
     dependencies:
       '@open-draft/until': 1.0.3
       '@xmldom/xmldom': 0.7.10
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       headers-utils: 3.0.2
       outvariant: 1.4.0
       strict-event-emitter: 0.2.8
@@ -12720,7 +12737,7 @@ packages:
       '@babel/parser': 7.20.13
       '@babel/plugin-transform-react-jsx': 7.20.13(@babel/core@7.22.11)
       '@babel/preset-env': 7.20.2(@babel/core@7.22.11)
-      '@babel/traverse': 7.20.13(supports-color@5.5.0)
+      '@babel/traverse': 7.20.13
       '@babel/types': 7.20.7
       '@storybook/csf': 0.0.2--canary.4566f4d.1
       '@storybook/mdx1-csf': 0.0.1(@babel/core@7.22.11)
@@ -12956,7 +12973,7 @@ packages:
       typescript: '>= 3.x'
       webpack: '>= 4'
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       endent: 2.1.0
       find-cache-dir: 3.3.2
       flat-cache: 3.0.4
@@ -14523,7 +14540,7 @@ packages:
       '@typescript-eslint/scope-manager': 5.49.0
       '@typescript-eslint/type-utils': 5.49.0(eslint@8.32.0)(typescript@4.9.4)
       '@typescript-eslint/utils': 5.49.0(eslint@8.32.0)(typescript@4.9.4)
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       eslint: 8.32.0
       ignore: 5.2.4
       natural-compare-lite: 1.4.0
@@ -14548,7 +14565,7 @@ packages:
       '@typescript-eslint/scope-manager': 5.49.0
       '@typescript-eslint/types': 5.49.0
       '@typescript-eslint/typescript-estree': 5.49.0(typescript@4.9.4)
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       eslint: 8.32.0
       typescript: 4.9.4
     transitivePeerDependencies:
@@ -14575,7 +14592,7 @@ packages:
     dependencies:
       '@typescript-eslint/typescript-estree': 5.49.0(typescript@4.9.4)
       '@typescript-eslint/utils': 5.49.0(eslint@8.32.0)(typescript@4.9.4)
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       eslint: 8.32.0
       tsutils: 3.21.0(typescript@4.9.4)
       typescript: 4.9.4
@@ -14599,7 +14616,7 @@ packages:
     dependencies:
       '@typescript-eslint/types': 5.49.0
       '@typescript-eslint/visitor-keys': 5.49.0
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       globby: 11.1.0
       is-glob: 4.0.3
       semver: 7.3.8
@@ -15234,7 +15251,7 @@ packages:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
     engines: {node: '>= 6.0.0'}
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -15243,7 +15260,7 @@ packages:
     resolution: {integrity: sha512-Zn4cw2NEqd+9fiSVWMscnjyQ1a8Yfoc5oBajLeo5w+YBHgDUcEBY2hS4YpTz6iN5f/2zQiktcuM6tS8x1p9dpA==}
     engines: {node: '>= 8.0.0'}
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       depd: 1.1.2
       humanize-ms: 1.2.1
     transitivePeerDependencies:
@@ -18363,7 +18380,6 @@ packages:
     dependencies:
       ms: 2.1.2
       supports-color: 9.3.1
-    dev: true
 
   /decamelize-keys@1.1.1:
     resolution: {integrity: sha512-WiPxgEirIV0/eIOMcnFBA3/IJZAZqKnwAwWyvvdi4lsr1WCN22nhdf/3db3DoZcUjTV2SqfzIwNyp6y2xs3nmg==}
@@ -18601,7 +18617,7 @@ packages:
     hasBin: true
     dependencies:
       address: 1.2.2
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -19017,7 +19033,7 @@ packages:
       basic-auth: 2.0.1
       cookie: 0.5.0
       core-util-is: 1.0.3
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       elastic-apm-http-client: 11.2.0
       end-of-stream: 1.4.4
       error-callsites: 2.0.4
@@ -19371,7 +19387,7 @@ packages:
       eslint: '*'
       eslint-plugin-import: '*'
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       enhanced-resolve: 5.12.0
       eslint: 8.32.0
       eslint-plugin-import: 2.27.5(@typescript-eslint/parser@5.49.0)(eslint-import-resolver-typescript@3.5.3)(eslint@8.32.0)
@@ -19658,7 +19674,7 @@ packages:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.1.1
@@ -19708,7 +19724,7 @@ packages:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.1.1
@@ -19798,7 +19814,7 @@ packages:
     resolution: {integrity: sha512-YNF+mZ/Wu2FU/gvmzuWtYc8rloubL7wfXCTgouFrnjGVXPA/EeYYA7pupXWrb3Iv1cTBeSSxxJIbK23l4MRNqg==}
     engines: {node: '>=8.3.0'}
     dependencies:
-      '@babel/traverse': 7.20.13(supports-color@5.5.0)
+      '@babel/traverse': 7.20.13
       '@babel/types': 7.20.7
       c8: 7.12.0
     transitivePeerDependencies:
@@ -21290,7 +21306,7 @@ packages:
     peerDependencies:
       graphql: '>=0.9 <0.14 || ^14.0.2 || ^15.4.0 || ^16.3.0'
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       graphql: 15.8.0
       tslib: 2.4.1
     transitivePeerDependencies:
@@ -21819,7 +21835,7 @@ packages:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -21880,7 +21896,7 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -22799,7 +22815,7 @@ packages:
     resolution: {integrity: sha512-n3s8EwkdFIJCG3BPKBYvskgXGoy88ARzvegkitk60NxRdwltLOTaH7CUiMRXvwYorl0Q712iEjcWB+fK/MrWVw==}
     engines: {node: '>=10'}
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       istanbul-lib-coverage: 3.2.0
       source-map: 0.6.1
     transitivePeerDependencies:
@@ -23245,7 +23261,7 @@ packages:
       '@babel/generator': 7.20.7
       '@babel/plugin-syntax-jsx': 7.18.6(@babel/core@7.22.11)
       '@babel/plugin-syntax-typescript': 7.20.0(@babel/core@7.22.11)
-      '@babel/traverse': 7.20.13(supports-color@5.5.0)
+      '@babel/traverse': 7.20.13
       '@babel/types': 7.20.7
       '@jest/expect-utils': 29.5.0
       '@jest/transform': 29.5.0
@@ -23687,7 +23703,7 @@ packages:
     dependencies:
       '@types/express': 4.17.16
       '@types/jsonwebtoken': 9.0.1
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       jose: 4.11.2
       limiter: 1.1.5
       lru-memoizer: 2.1.4
@@ -23778,7 +23794,7 @@ packages:
     dependencies:
       colorette: 2.0.19
       commander: 9.5.0
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       escalade: 3.1.1
       esm: 3.2.25
       get-package-type: 0.1.0
@@ -28160,7 +28176,7 @@ packages:
     resolution: {integrity: sha512-efCx3b+0Z69/LGJmm9Yvi4cqEdxnoGnxYxGxBghkkTTFeXRtTCmmhO0AnAfHz59k957uTSuy8WaHqOs8wbYUWg==}
     engines: {node: '>=6'}
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       module-details-from-path: 1.0.3
       resolve: 1.22.1
     transitivePeerDependencies:
@@ -28989,7 +29005,7 @@ packages:
   /spdy-transport@3.0.0:
     resolution: {integrity: sha512-hsLVFE5SjA6TCisWeJXFKniGGOpBgMLmerfO2aCyCU5s7nJ/rpAepqmFifv/GCbSbueEeAJJnmSQ2rKC/g8Fcw==}
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       detect-node: 2.1.0
       hpack.js: 2.1.6
       obuf: 1.1.2
@@ -29002,7 +29018,7 @@ packages:
     resolution: {integrity: sha512-r46gZQZQV+Kl9oItvl1JZZqJKGr+oEkB08A6BzkiR7593/7IbtuncXHd2YoYeTsG4157ZssMu9KYvUHLcjcDoA==}
     engines: {node: '>=6.0.0'}
     dependencies:
-      debug: 4.3.4(supports-color@5.5.0)
+      debug: 4.3.4(supports-color@9.3.1)
       handle-thing: 2.0.1
       http-deceiver: 1.2.7
       select-hose: 2.0.0
@@ -29594,7 +29610,6 @@ packages:
   /supports-color@9.3.1:
     resolution: {integrity: sha512-knBY82pjmnIzK3NifMo3RxEIRD9E0kIzV4BKcyTZ9+9kWgLMxd4PrsTSMoFQUabgRBbF8KOLRDCyKgNV+iK44Q==}
     engines: {node: '>=12'}
-    dev: true
 
   /supports-preserve-symlinks-flag@1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
