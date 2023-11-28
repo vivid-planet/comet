@@ -163,9 +163,6 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             mode={mode}
             initialValues={initialValues}
             initialValuesEqual={isEqual} //required to compare block data correctly
-            onAfterSubmit={(values, form) => {
-                //don't go back automatically TODO remove this automatismn
-            }}
             subscription={{}}
         >
             {() => (
