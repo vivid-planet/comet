@@ -13,6 +13,8 @@ const jestConfig: JestConfigWithTsJest = {
             },
         ],
     },
+    // See https://testing-library.com/docs/react-testing-library/setup/#configuring-jest-with-test-utils
+    moduleDirectories: ["node_modules", "utils", __dirname],
 };
 
 module.exports = jestConfig;

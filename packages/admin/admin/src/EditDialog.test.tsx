@@ -1,15 +1,12 @@
-import { Button, createTheme } from "@mui/material";
-import { render, screen, waitFor } from "@testing-library/react";
+import { Button } from "@mui/material";
 import userEvent from "@testing-library/user-event";
 import * as React from "react";
-import { IntlProvider } from "react-intl";
+import { render, screen, waitFor } from "test-utils";
 
 import { useEditDialog } from "./EditDialog";
 import { FinalForm } from "./FinalForm";
 import { Field } from "./form/Field";
 import { FinalFormInput } from "./form/FinalFormInput";
-import { MuiThemeProvider } from "./mui/ThemeProvider";
-import { RouterMemoryRouter } from "./router/MemoryRouter";
 
 describe("EditDialog", () => {
     describe("onAfterSave", () => {
@@ -37,15 +34,7 @@ describe("EditDialog", () => {
                 );
             }
 
-            const rendered = render(
-                <IntlProvider locale="en" messages={{}}>
-                    <MuiThemeProvider theme={createTheme()}>
-                        <RouterMemoryRouter>
-                            <Story />
-                        </RouterMemoryRouter>
-                    </MuiThemeProvider>
-                </IntlProvider>,
-            );
+            const rendered = render(<Story />);
 
             user.click(rendered.getByText("Open dialog"));
 
@@ -83,15 +72,7 @@ describe("EditDialog", () => {
                 );
             }
 
-            const rendered = render(
-                <IntlProvider locale="en" messages={{}}>
-                    <MuiThemeProvider theme={createTheme()}>
-                        <RouterMemoryRouter>
-                            <Story />
-                        </RouterMemoryRouter>
-                    </MuiThemeProvider>
-                </IntlProvider>,
-            );
+            const rendered = render(<Story />);
 
             user.click(rendered.getByText("Open dialog"));
 
