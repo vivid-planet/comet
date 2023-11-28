@@ -82,6 +82,21 @@ indexData(): BlockIndexData {
 }
 ```
 
+### File and Folder Entities
+
+`File` and `Folder` are no longer exported by `@comet/cms-api`. Instead, use the exported `FileInterface` and `FolderInterface` for typing. 
+
+If you need classes (e.g. as return type of a GraphQL field), you can create them using the `createFileEntity()` and `createFolderEntity()` factories.
+You will then need to pass your classes to the `DamModule` during initialization:
+
+```diff
+DamModule.register({
+   // ...
++  File: DamFile,
++  Folder: DamFolder,
+})
+```
+
 ### FilesService.upload()
 
 The method signature changed.
@@ -209,6 +224,24 @@ If you had a custom implementation of `getOptionSelected()`, you may need to rep
 #### FilterBarMoreFilters
 
 The `textWrapper` class of `FilterBarMoreFilters` was removed. Use the new `button` class instead.
+
+## Site
+
+### Restricted imports
+
+The imports for `Link`, `useRouter`, and `Image` from `next` have been restricted.
+Please use `Link`, `useRouter` and `Image` from `@comet/cms-site` instead.
+
+```diff
+- import Link from "next/link";
++ import { Link } from "@comet/cms-site";
+
+- import { useRouter } from "next/router";
++ import { useRouter } from "@comet/cms-site";
+
+- import Image from "next/image";
++ import { Image } from "@comet/cms-site";
+```
 
 ## ESLint
 

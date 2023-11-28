@@ -1,5 +1,30 @@
 # @comet/cms-admin
 
+## 5.1.0
+
+### Patch Changes
+
+-   e1d3f007: Prevent false positive save conflicts while editing documents (e.g. `Page`):
+
+    -   Stop checking for conflicts while saving is in progress
+    -   Ensure that all "CheckForChanges" polls are cleared
+
+-   6d69dfac: Fix issue in PixelImageBlock that caused the preview URLs for files without a file extension in their filename to be invalid
+-   21c30931: Improved the EditPageNode dialog ("Page Properties" dialog):
+
+    -   Execute the asynchronous slug validation less often (increased the debounce wait time from 200ms to 500ms)
+    -   Cache the slug validation results. Evict the cache on the initial render of the dialog
+
+-   Updated dependencies [21c30931]
+-   Updated dependencies [93b3d971]
+-   Updated dependencies [e33cd652]
+    -   @comet/admin@5.1.0
+    -   @comet/admin-date-time@5.1.0
+    -   @comet/admin-icons@5.1.0
+    -   @comet/admin-rte@5.1.0
+    -   @comet/admin-theme@5.1.0
+    -   @comet/blocks-admin@5.1.0
+
 ## 5.0.0
 
 ### Major Changes

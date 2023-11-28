@@ -1,5 +1,15 @@
 # @comet/blocks-admin
 
+## 5.1.0
+
+### Patch Changes
+
+-   Updated dependencies [21c30931]
+-   Updated dependencies [93b3d971]
+-   Updated dependencies [e33cd652]
+    -   @comet/admin@5.1.0
+    -   @comet/admin-icons@5.1.0
+
 ## 5.0.0
 
 ### Major Changes
@@ -22,21 +32,14 @@
 
     ```tsx
     const state = linkBlock.input2State(params.value);
-    
-    return (
-        <BlockPreview
-            title={linkBlock.dynamicDisplayName?.(state) ?? linkBlock.displayName}
-            content={linkBlock.previewContent(state)}
-        />
-    );
+
+    return <BlockPreview title={linkBlock.dynamicDisplayName?.(state) ?? linkBlock.displayName} content={linkBlock.previewContent(state)} />;
     ```
-    
+
     **After:**
-    
+
     ```tsx
-    return (
-        <BlockPreviewContent block={linkBlock} input={params.value} />
-    );
+    return <BlockPreviewContent block={linkBlock} input={params.value} />;
     ```
 
 ### Minor Changes

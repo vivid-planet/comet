@@ -7,10 +7,9 @@ import {
     SpaceBlock,
 } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
+import { HeadlineBlock } from "@src/common/blocks/HeadlineBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import * as React from "react";
-
-import { HeadlineBlock } from "../../common/blocks/HeadlineBlock";
 
 const ColumnsContentBlock = createBlocksBlock({
     name: "ColumnsContent",
