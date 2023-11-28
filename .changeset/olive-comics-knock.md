@@ -19,15 +19,15 @@ imports: [
 
 **Second option: Configure logging**
 
-Use the `filterRequest` to prevent logging for specific requests. For instance, one may filter requests for system users.
+Use the `shouldLogRequest` to prevent logging for specific requests. For instance, one may filter requests for system users.
 
 ```ts
 imports: [
     ...
     AccessLogModule.forRoot({
-        filterRequest: ({user, req}) => {
+        shouldLogRequest: ({user, req}) => {
             // do something
-            return true;
+            return true; //or false
         },
     }),
     ...

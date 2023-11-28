@@ -28,7 +28,7 @@ The access log allows to see who accessed what data and when. This can be useful
 
 ## Configure access logging in the application
 
-The `filterRequest` callback can be used to prevent logging for specific requests. For example, requests executed during a build should not be logged. In this function, you have access to the user and the request object. If the function returns `true`, no log will be emitted for this request.
+The `shouldLogRequest` callback can be used to prevent logging for specific requests. For example, requests executed during a build should not be logged. In this function, you have access to the user and the request object. If the function returns `false`, no log will be emitted for this request.
 
 There are two ways to integrate logging into an application:
 
@@ -48,9 +48,9 @@ imports: [
 imports: [
     ...
     AccessLogModule.forRoot({
-        filterRequest: ({user, req}) => {
+        shouldLogRequest: ({user, req}) => {
             // do something
-            return true;
+            return true; //or false
         },
     }),
     ...

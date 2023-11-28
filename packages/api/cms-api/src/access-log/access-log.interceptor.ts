@@ -11,7 +11,7 @@ const IGNORED_PATHS = ["/dam/images/:hash/:fileId", "/dam/files/:hash/:fileId", 
 export class AccessLogInterceptor implements NestInterceptor {
     protected readonly logger = new Logger(AccessLogInterceptor.name);
 
-    constructor(@Optional() @Inject(FILTER_AUTHENTICATED_REQUEST) private readonly filterRequest?: FilterRequest) {}
+    constructor(@Optional() @Inject(FILTER_AUTHENTICATED_REQUEST) private readonly shouldLogRequest?: FilterRequest) {}
 
     intercept(context: ExecutionContext, next: CallHandler) {
         const requestType = context.getType().toString();
@@ -24,8 +24,8 @@ export class AccessLogInterceptor implements NestInterceptor {
             const graphqlContext = graphqlExecutionContext.getContext();
 
             if (
-                this.filterRequest &&
-                this.filterRequest({
+                this.shouldLogRequest &&
+                !this.shouldLogRequest({
                     user: graphqlContext.req.user,
                     req: graphqlContext.req,
                 })
@@ -58,8 +58,8 @@ export class AccessLogInterceptor implements NestInterceptor {
 
             if (
                 IGNORED_PATHS.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
-                (this.filterRequest &&
-                    this.filterRequest({
+                (this.shouldLogRequest &&
+                    !this.shouldLogRequest({
                         user: httpRequest.user,
                         req: httpRequest,
                     }))

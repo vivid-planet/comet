@@ -9,7 +9,7 @@ import { AccessLogInterceptor } from "./access-log.interceptor";
 export type FilterRequest = ({ user, req }: { user?: CurrentUser | true; req: Request }) => boolean;
 
 interface AccessLogModuleOptions {
-    filterRequest?: FilterRequest;
+    shouldLogRequest?: FilterRequest;
 }
 
 @Global()
@@ -22,13 +22,13 @@ interface AccessLogModuleOptions {
     ],
 })
 export class AccessLogModule {
-    static forRoot({ filterRequest }: AccessLogModuleOptions): DynamicModule {
+    static forRoot({ shouldLogRequest }: AccessLogModuleOptions): DynamicModule {
         return {
             module: AccessLogModule,
             providers: [
                 {
                     provide: FILTER_AUTHENTICATED_REQUEST,
-                    useValue: filterRequest,
+                    useValue: shouldLogRequest,
                 },
             ],
         };
