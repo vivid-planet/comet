@@ -41,7 +41,7 @@ test("Nested route in Prompt", async () => {
 });
 
 test("Nested dynamic route in Prompt", async () => {
-    function Aasdf() {
+    function FooPage() {
         const subRoutePrefix = useSubRoutePrefix();
         return (
             <RouterPrompt
@@ -62,7 +62,7 @@ test("Nested dynamic route in Prompt", async () => {
         return (
             <Switch>
                 <Route path="/foo/:param">
-                    <Aasdf />
+                    <FooPage />
                 </Route>
                 <Redirect to="/foo/paramvalue" />
             </Switch>
