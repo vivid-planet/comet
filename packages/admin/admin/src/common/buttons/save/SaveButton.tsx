@@ -23,7 +23,6 @@ export interface SaveButtonProps extends ButtonProps {
     successIcon?: React.ReactNode;
     errorIcon?: React.ReactNode;
     conflictIcon?: React.ReactNode;
-    conflictColor?: "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning";
 }
 
 export type SaveButtonDisplayState = "idle" | "saving" | "success" | "error" | "conflict";
