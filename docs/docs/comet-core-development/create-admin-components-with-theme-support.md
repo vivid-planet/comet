@@ -62,10 +62,10 @@ E.g.: in this instance of `MyComponent`, the root should have a red border, and 
 ## Example component
 
 ```tsx
-import { SlotProps } from "@comet/admin";
+import { ThemedComponentBaseProps } from "@comet/admin";
 import { CometColor } from "@comet/admin-icons";
 import { ComponentsOverrides, Typography } from "@mui/material";
-import { css, styled, SxProps, Theme, useThemeProps } from "@mui/material/styles";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import React from "react";
 
 /**
@@ -162,23 +162,21 @@ const Children = styled("div", {
 );
 
 /**
- * The `{ComponentName}Props` type defines all of the component's props.
- * The following props are required by all Comet Admin components:
- * - `sx`: Used to override the styles of the root slot of a component.
- * - `slotProps`: Used to override the props and the styling (through the slot's `sx` prop) of each slot of a component.
+ * The `{ComponentName}Props` type defines all of the component's props and should extend `ThemedComponentBaseProps`.
+ * `ThemedComponentBaseProps` adds the props necessary for overriding the component's styles by adding the `sx`, `className` and `slotProps` props.
+ * If the component has multiple slots, pass in a generic/object with the slots as keys and their types as values.
  */
-export interface MyComponentProps {
+export interface MyComponentProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        header: "div";
+        title: typeof Typography;
+        icon: typeof CometColor;
+        children: "div";
+    }> {
     title: React.ReactNode;
     children?: React.ReactNode;
     shadow?: boolean;
-    sx?: SxProps<Theme>;
-    slotProps?: {
-        root?: SlotProps<"div">;
-        header?: SlotProps<"div">;
-        title?: SlotProps<typeof Typography>;
-        icon?: SlotProps<typeof CometColor>;
-        children?: SlotProps<"div">;
-    };
 }
 
 export function MyComponent(inProps: MyComponentProps) {
@@ -186,14 +184,18 @@ export function MyComponent(inProps: MyComponentProps) {
      * A component should never use the passed-in props directly but get them through the `useThemeProps` hook.
      * This merges the components `defaultProps` from the theme with the passed-in props.
      */
-    const { title, children, shadow, slotProps = {}, sx } = useThemeProps({ props: inProps, name: "CometAdminMyComponent" });
+    const { title, children, shadow, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminMyComponent" });
 
     const ownerState: OwnerState = {
         shadow,
     };
 
+    /**
+     * Ensure the `sx` and `className` props are passed into the root slot.
+     * In this case, this is done with `...restProps`.
+     */
     return (
-        <Root ownerState={ownerState} sx={sx} {...slotProps?.root}>
+        <Root ownerState={ownerState} {...restProps} {...slotProps?.root}>
             <Header {...slotProps?.header}>
                 <Title ownerState={ownerState} variant="h4" {...slotProps?.title}>
                     {title}
