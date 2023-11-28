@@ -82,6 +82,21 @@ indexData(): BlockIndexData {
 }
 ```
 
+### File and Folder Entities
+
+`File` and `Folder` are no longer exported by `@comet/cms-api`. Instead, use the exported `FileInterface` and `FolderInterface` for typing. 
+
+If you need classes (e.g. as return type of a GraphQL field), you can create them using the `createFileEntity()` and `createFolderEntity()` factories.
+You will then need to pass your classes to the `DamModule` during initialization:
+
+```diff
+DamModule.register({
+   // ...
++  File: DamFile,
++  Folder: DamFolder,
+})
+```
+
 ### FilesService.upload()
 
 The method signature changed.
