@@ -2,8 +2,8 @@ import { CallHandler, ExecutionContext, Inject, Injectable, Logger, NestIntercep
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { CurrentUser } from "src/user-permissions/dto/current-user";
 
-import { FILTER_AUTHENTICATED_REQUEST } from "./access-log.constants";
-import { FilterRequest } from "./access-log.module";
+import { SHOULD_LOG_REQUEST } from "./access-log.constants";
+import { ShouldLogRequest } from "./access-log.module";
 
 const IGNORED_PATHS = ["/dam/images/:hash/:fileId", "/dam/files/:hash/:fileId", "/dam/images/preview/:fileId", "/dam/files/preview/:fileId"];
 
@@ -11,7 +11,7 @@ const IGNORED_PATHS = ["/dam/images/:hash/:fileId", "/dam/files/:hash/:fileId", 
 export class AccessLogInterceptor implements NestInterceptor {
     protected readonly logger = new Logger(AccessLogInterceptor.name);
 
-    constructor(@Optional() @Inject(FILTER_AUTHENTICATED_REQUEST) private readonly shouldLogRequest?: FilterRequest) {}
+    constructor(@Optional() @Inject(SHOULD_LOG_REQUEST) private readonly shouldLogRequest?: ShouldLogRequest) {}
 
     intercept(context: ExecutionContext, next: CallHandler) {
         const requestType = context.getType().toString();

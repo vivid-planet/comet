@@ -1,1 +1,1 @@
-export const FILTER_AUTHENTICATED_REQUEST = "filter-authenticated-request";
+export const SHOULD_LOG_REQUEST = "should-log-request";

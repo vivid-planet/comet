@@ -3,13 +3,13 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
 import { Request } from "express";
 
 import { CurrentUser } from "../user-permissions/dto/current-user";
-import { FILTER_AUTHENTICATED_REQUEST } from "./access-log.constants";
+import { SHOULD_LOG_REQUEST } from "./access-log.constants";
 import { AccessLogInterceptor } from "./access-log.interceptor";
 
-export type FilterRequest = ({ user, req }: { user?: CurrentUser | true; req: Request }) => boolean;
+export type ShouldLogRequest = ({ user, req }: { user?: CurrentUser | true; req: Request }) => boolean;
 
 interface AccessLogModuleOptions {
-    shouldLogRequest?: FilterRequest;
+    shouldLogRequest?: ShouldLogRequest;
 }
 
 @Global()
@@ -27,7 +27,7 @@ export class AccessLogModule {
             module: AccessLogModule,
             providers: [
                 {
-                    provide: FILTER_AUTHENTICATED_REQUEST,
+                    provide: SHOULD_LOG_REQUEST,
                     useValue: shouldLogRequest,
                 },
             ],
