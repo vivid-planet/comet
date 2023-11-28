@@ -9,9 +9,10 @@ import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
-import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
 import { ScopeGuardActive } from "../../user-permissions/decorators/scope-guard-active.decorator";
+import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
+import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
 import { DamScopeInterface } from "../types";
 import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
@@ -52,7 +53,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             private readonly filesService: FilesService,
             @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
             @InjectRepository("DamFolder") private readonly foldersRepository: EntityRepository<FolderInterface>,
-            private readonly contentScopeService: ContentScopeService,
+            @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
             @Inject(DAM_FILE_VALIDATION_SERVICE) private readonly fileValidationService: FileValidationService,
         ) {}
 
@@ -121,7 +122,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             if (targetFolderId !== null) {
                 targetFolder = await this.foldersRepository.findOneOrFail(targetFolderId);
 
-                if (targetFolder.scope !== undefined && !this.contentScopeService.canAccessScope(targetFolder.scope, user)) {
+                if (targetFolder.scope !== undefined && !this.accessControlService.isAllowedContentScope(user, targetFolder.scope)) {
                     throw new Error("Can't access parent folder");
                 }
             }
@@ -131,7 +132,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             for (const id of fileIds) {
                 const file = await this.filesRepository.findOneOrFail(id);
 
-                if (file.scope !== undefined && !this.contentScopeService.canAccessScope(file.scope, user)) {
+                if (file.scope !== undefined && !this.accessControlService.isAllowedContentScope(user, file.scope)) {
                     throw new Error("Can't access file");
                 }
 

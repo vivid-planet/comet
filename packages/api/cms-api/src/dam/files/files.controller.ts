@@ -23,7 +23,8 @@ import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator
 import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometValidationException } from "../../common/errors/validation.exception";
-import { ContentScopeService } from "../../user-permissions/content-scope.service";
+import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
+import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { CDN_ORIGIN_CHECK_HEADER, DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { DamScopeInterface } from "../types";
@@ -54,7 +55,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             @Inject(DAM_CONFIG) private readonly damConfig: DamConfig,
             private readonly filesService: FilesService,
             private readonly blobStorageBackendService: BlobStorageBackendService,
-            private readonly contentScopeService: ContentScopeService,
+            @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
         ) {}
 
         @Post("upload")
@@ -72,7 +73,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
             const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
-            if (scope && !this.contentScopeService.canAccessScope(scope, user)) {
+            if (scope && !this.accessControlService.isAllowedContentScope(user, scope)) {
                 throw new ForbiddenException();
             }
 
@@ -93,7 +94,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 throw new NotFoundException();
             }
 
-            if (file.scope !== undefined && !this.contentScopeService.canAccessScope(file.scope, user)) {
+            if (file.scope !== undefined && !this.accessControlService.isAllowedContentScope(user, file.scope)) {
                 throw new ForbiddenException();
             }
 

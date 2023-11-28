@@ -21,7 +21,8 @@ export type PermissionsForUser =
 export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentScopes;
 
 export interface AccessControlServiceInterface {
-    canAccessScope(requestScope: ContentScope, user: CurrentUserInterface): boolean;
+    isAllowedPermission(user: CurrentUserInterface, permission: keyof Permission): boolean;
+    isAllowedContentScope(user: CurrentUserInterface, contentScope: ContentScope): boolean;
     getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }
