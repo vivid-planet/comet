@@ -18,7 +18,7 @@ function Story() {
                             <Grid item xs={6}>
                                 <Card variant="outlined">
                                     <CardContent>
-                                        <Field name="upload" label="File upload (default)" value="bar1" component={FinalFormFileUpload} />
+                                        <Field name="upload" label="File upload (default)" component={FinalFormFileUpload} />
                                     </CardContent>
                                 </Card>
                             </Grid>
@@ -27,10 +27,10 @@ function Story() {
                                     <CardContent>
                                         <Field
                                             name="upload"
-                                            label="File upload (dropzone only)"
+                                            label="File upload (dropzone only, multiple disabled)"
                                             dropzoneVariant="dropzoneOnly"
-                                            value="bar1"
                                             component={FinalFormFileUpload}
+                                            multipleFiles={false}
                                             caption={
                                                 <FormattedMessage
                                                     id="comet.finalformfileupload.maximumfilesize"
@@ -46,9 +46,9 @@ function Story() {
                                     <CardContent>
                                         <Field
                                             name="upload"
-                                            label="File upload (button only)"
+                                            label="File upload (button only, accept only images)"
+                                            accept={{ "image/*": [] }}
                                             dropzoneVariant="buttonOnly"
-                                            value="bar1"
                                             component={FinalFormFileUpload}
                                         />
                                     </CardContent>
@@ -57,7 +57,7 @@ function Story() {
                             <Grid item xs={6}>
                                 <Card variant="outlined">
                                     <CardContent>
-                                        <Field name="upload" label="File upload (disabled)" disabled value="bar1" component={FinalFormFileUpload} />
+                                        <Field name="upload" label="File upload (disabled)" disabled component={FinalFormFileUpload} />
                                     </CardContent>
                                 </Card>
                             </Grid>

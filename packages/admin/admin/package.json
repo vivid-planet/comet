@@ -36,8 +36,8 @@
         "is-mobile": "^4.0.0",
         "lodash.debounce": "^4.0.8",
         "lodash.isequal": "^4.5.0",
-        "react-dropzone": "^14.0.0",
         "query-string": "^6.8.1",
+        "react-dropzone": "^14.0.0",
         "use-constant": "^1.0.0",
         "uuid": "^9.0.0"
     },
