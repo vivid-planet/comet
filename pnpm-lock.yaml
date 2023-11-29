@@ -960,9 +960,6 @@ importers:
       '@comet/admin-icons':
         specifier: workspace:^4.7.0
         version: link:../admin-icons
-      '@comet/admin-theme':
-        specifier: workspace:^4.7.0
-        version: link:../admin-theme
       '@mui/private-theming':
         specifier: ^5.0.0
         version: 5.11.2(@types/react@17.0.53)(react@17.0.2)

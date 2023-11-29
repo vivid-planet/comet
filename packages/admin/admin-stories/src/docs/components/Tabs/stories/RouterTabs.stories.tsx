@@ -19,7 +19,7 @@ storiesOf("stories/components/Tabs/RouterTabs", module)
                     <RouterTab path="" label="Label One">
                         Content One
                     </RouterTab>
-                    <RouterTab path="/tab2" label="Label Two" status="success" disabled>
+                    <RouterTab path="/tab2" label="Label Two" status="success">
                         Content Two
                     </RouterTab>
                     <RouterTab path="/tab3" label="Label Three" status="error" showStatusIcon showTooltip tooltipMessage="Tooltip message">

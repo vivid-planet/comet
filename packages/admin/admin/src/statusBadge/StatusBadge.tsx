@@ -1,18 +1,12 @@
 import { CheckRounded, ExclamationmarkRounded, HyphenRounded } from "@comet/admin-icons";
-import { errorPalette, greenPalette, warningPalette } from "@comet/admin-theme";
 import { Box, ComponentsOverrides, IconProps, Theme } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { StatusBadgeClassKey, styles } from "./StatusBadge.styles";
 
 export type Status = "success" | "error" | "warning";
-
-const colorMapping: { [K in Status]: string } = {
-    success: greenPalette.main,
-    error: errorPalette.main,
-    warning: warningPalette.main,
-};
 
 const defaultIcons: { [K in Status]: React.FunctionComponentElement<IconProps> } = {
     success: <CheckRounded fontSize="inherit" />,
@@ -31,6 +25,14 @@ export function StatusBadgeComponent({ status, className, statusIcon, showStatus
     if (!status && (showStatusIcon || statusIcon)) console.warn("A status (prop: status) has to be provided, if the status icon should show.");
 
     if (status && statusIcon && !showStatusIcon) console.warn("The status icon will only be shown, if the showStatusIcon prop is set to true.");
+
+    // TODO remove admin theme package
+    const { palette } = useTheme();
+    const colorMapping: { [K in Status]: string } = {
+        success: palette.success.main,
+        error: palette.error.main,
+        warning: palette.warning.main,
+    };
 
     const statusColor = colorMapping[status];
 

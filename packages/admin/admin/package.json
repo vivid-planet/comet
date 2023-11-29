@@ -28,7 +28,6 @@
     },
     "dependencies": {
         "@comet/admin-icons": "workspace:^4.7.0",
-        "@comet/admin-theme": "workspace:^4.7.0",
         "@mui/private-theming": "^5.0.0",
         "clsx": "^1.1.1",
         "exceljs": "^3.4.0",
