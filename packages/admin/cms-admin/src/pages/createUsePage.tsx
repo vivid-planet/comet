@@ -221,6 +221,7 @@ export const createUsePage: CreateUsePage =
                     resolveHasConflict: (data) => {
                         return resolveHasSaveConflict(pageState?.document?.updatedAt, data?.page?.document?.updatedAt);
                     },
+                    skip: saving,
                 },
                 {
                     hasChanges: hasChanges ?? false,
@@ -300,6 +301,8 @@ export const createUsePage: CreateUsePage =
                                 },
                                 attachedPageTreeNodeId: pageId,
                             } as GQLUpdatePageMutationVariables,
+                            refetchQueries: [getQuery],
+                            awaitRefetchQueries: true,
                             update(cache) {
                                 // update reference to pageTreeNode
                                 // needed for newly created pageTreeNodes

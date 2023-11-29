@@ -1,15 +1,16 @@
-import { Inject, Injectable, mixin, NestInterceptor, Type } from "@nestjs/common";
+import { CallHandler, ExecutionContext, HttpException, Inject, Injectable, mixin, NestInterceptor, Type } from "@nestjs/common";
 import { FileInterceptor as NestFileInterceptor } from "@nestjs/platform-express";
 import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 import fs from "fs";
 import * as multer from "multer";
 import os from "os";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import { v4 as uuid } from "uuid";
 
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
 import { FileValidationService } from "./file-validation.service";
+import { removeMulterTempFile } from "./files.utils";
 
 export function DamUploadFileInterceptor(fieldName: string): Type<NestInterceptor> {
     @Injectable()
@@ -39,8 +40,8 @@ export function DamUploadFileInterceptor(fieldName: string): Type<NestIntercepto
                     fileSize: this.fileValidationService.config.maxFileSize * 1024 * 1024,
                 },
                 fileFilter: (req, file, cb) => {
-                    this.fileValidationService.validateFile(file).then((result) => {
-                        if (result === true) {
+                    this.fileValidationService.validateFileMetadata(file).then((result) => {
+                        if (result === undefined) {
                             return cb(null, true);
                         } else {
                             return cb(new CometValidationException(result), false);
@@ -52,8 +53,20 @@ export function DamUploadFileInterceptor(fieldName: string): Type<NestIntercepto
             this.fileInterceptor = new (NestFileInterceptor(fieldName, multerOptions))();
         }
 
-        intercept(...args: Parameters<NestInterceptor["intercept"]>): Observable<unknown> | Promise<Observable<unknown>> {
-            return this.fileInterceptor.intercept(...args);
+        async intercept(context: ExecutionContext, next: CallHandler<unknown>): Promise<Observable<unknown>> {
+            const fileInterceptor = await this.fileInterceptor.intercept(context, next);
+
+            const ctx = context.switchToHttp();
+            const file = ctx.getRequest().file;
+
+            const error = await this.fileValidationService.validateFileContents(file);
+
+            if (error) {
+                await removeMulterTempFile(file);
+                return throwError(() => new HttpException(`Rejected File Upload: ${error}`, 422));
+            }
+
+            return fileInterceptor;
         }
     }
     return mixin(Interceptor);

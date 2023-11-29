@@ -64,6 +64,7 @@ export { useErrorDialog, UseErrorDialogReturn } from "./error/errordialog/useErr
 export { createFetch, FetchContext, FetchProvider, useFetch } from "./fetchProvider/fetch";
 export { FileIcon } from "./fileIcons/FileIcon";
 export { FinalForm, FinalFormSubmitEvent, useFormApiRef } from "./FinalForm";
+export { FinalFormSaveButton } from "./FinalFormSaveButton";
 export {
     FinalFormSaveCancelButtonsLegacy,
     FinalFormSaveCancelButtonsLegacyClassKey,

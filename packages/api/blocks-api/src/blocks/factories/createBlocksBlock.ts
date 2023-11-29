@@ -54,7 +54,7 @@ export function BaseBlocksBlockItemData<BlockMap extends BaseBlockMap>(supported
             },
             { toClassOnly: true },
         )
-        @BlockField(Object.values(supportedBlocks))
+        @BlockField({ kind: "oneOfBlocks", blocks: supportedBlocks })
         props: BlockDataInterface;
 
         async transformToPlain(deps: TransformDependencies, { includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {

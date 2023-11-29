@@ -70,6 +70,8 @@ function TabsComponent({
                 value={value}
                 onChange={handleChange}
                 ScrollButtonComponent={ScrollButtonComponent}
+                scrollButtons="auto"
+                variant="scrollable"
                 {...restProps}
             >
                 {React.Children.map(children, (child: React.ReactElement<TabProps>) => {

@@ -58,15 +58,14 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
 
     const startPolling = React.useCallback(() => {
         if (!hasConflict) {
+            window.clearInterval(pollingIntervalId.current);
             pollingIntervalId.current = window.setInterval(checkChanges, 10000);
         }
     }, [checkChanges, hasConflict]);
 
     const stopPolling = React.useCallback(() => {
-        if (pollingIntervalId !== undefined) {
-            window.clearInterval(pollingIntervalId.current);
-            pollingIntervalId.current = undefined;
-        }
+        window.clearInterval(pollingIntervalId.current);
+        pollingIntervalId.current = undefined;
     }, []);
 
     React.useEffect(() => {
