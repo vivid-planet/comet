@@ -1,11 +1,27 @@
-import { gql } from "@apollo/client";
-import { useTableQuery } from "@comet/admin";
+import { gql, useQuery } from "@apollo/client";
 import { LatestContentUpdatesDashboardWidget } from "@comet/cms-admin";
 import { useContentScope } from "@src/common/ContentScopeProvider";
+import { GQLLatestContentUpdatesQueryVariables } from "@src/dashboard/LatestContentUpdates.generated";
 import { categoryToUrlParam } from "@src/utils/pageTreeNodeCategoryMapping";
 import React from "react";
 
-import { GQLLatestContentUpdatesQuery, GQLLatestContentUpdatesQueryVariables } from "./LatestContentUpdates.generated";
+import { GQLLatestContentUpdatesQuery } from "./LatestContentUpdates.generated";
+
+export const LatestContentUpdates = () => {
+    const contentScope = useContentScope();
+    const { data, loading, error } = useQuery<GQLLatestContentUpdatesQuery, GQLLatestContentUpdatesQueryVariables>(LATEST_CONTENT_UPDATES_QUERY, {
+        variables: {
+            scope: contentScope.scope,
+        },
+    });
+
+    const rows = data?.paginatedPageTreeNodes.nodes.map((node) => ({
+        ...node,
+        editUrl: `${contentScope.match.url}/pages/pagetree/${categoryToUrlParam(node.category)}/${node.id}/edit`,
+    }));
+
+    return <LatestContentUpdatesDashboardWidget rows={rows} loading={loading} error={error} />;
+};
 
 const LATEST_CONTENT_UPDATES_QUERY = gql`
     query LatestContentUpdates($scope: PageTreeNodeScopeInput!) {
@@ -25,28 +41,3 @@ const LATEST_CONTENT_UPDATES_QUERY = gql`
         }
     }
 `;
-
-export const LatestContentUpdates = () => {
-    const { scope } = useContentScope();
-
-    const tableQuery = useTableQuery<GQLLatestContentUpdatesQuery, GQLLatestContentUpdatesQueryVariables>()(LATEST_CONTENT_UPDATES_QUERY, {
-        resolveTableData: (data) => {
-            return {
-                data: data.paginatedPageTreeNodes.nodes,
-                totalCount: data.paginatedPageTreeNodes.totalCount,
-            };
-        },
-        variables: {
-            scope,
-        },
-    });
-
-    return (
-        <LatestContentUpdatesDashboardWidget
-            tableQuery={tableQuery}
-            getUrlFromPageTreeNode={(node) => {
-                return `/${node.scope.domain}/${node.scope.language}/pages/pagetree/${categoryToUrlParam(node.category)}/${node.id}/edit`;
-            }}
-        />
-    );
-};

@@ -74,7 +74,15 @@ export function createOrmConfig({ migrations, ...defaults }: MikroOrmNestjsOptio
                 { name: "Migration20230821090303", class: Migration20230821090303 },
                 { name: "Migration20230831110518", class: Migration20230831110518 },
                 ...(migrations?.migrationsList || []),
-            ],
+            ].sort((migrationA, migrationB) => {
+                if (migrationA.name < migrationB.name) {
+                    return -1;
+                } else if (migrationA.name > migrationB.name) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }),
         },
     };
 }

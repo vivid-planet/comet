@@ -6,6 +6,7 @@
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
-        "no-console": "off"
+        "no-console": "off",
+        "@comet/no-other-module-relative-import": "off"
     }
 }

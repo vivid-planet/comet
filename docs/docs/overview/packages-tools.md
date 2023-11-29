@@ -111,10 +111,6 @@ Provides a component for selecting colors in forms, built with react-final-form.
 
 - [ ] @Manuel Blum add Tools Overview
 
-### @comet/create-comet-app
-
-- [ ] @Manuel Blum add create-comet-app docs
-
 ---
 
 ## Deployment from Packages

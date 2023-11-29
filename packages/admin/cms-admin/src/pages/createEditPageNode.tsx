@@ -137,6 +137,10 @@ export function createEditPageNode({
             label: documentTypes[type].displayName,
         }));
 
+        React.useEffect(() => {
+            apollo.cache.evict({ fieldName: "pageTreeNodeSlugAvailable" });
+        }, [apollo.cache]);
+
         const isPathAvailable = React.useCallback(
             async (newSlug: string): Promise<GQLSlugAvailability> => {
                 if (slug === newSlug) {
@@ -150,7 +154,7 @@ export function createEditPageNode({
                         slug: newSlug,
                         scope,
                     },
-                    fetchPolicy: "network-only",
+                    fetchPolicy: "cache-first",
                 });
 
                 return data.availability;
@@ -187,15 +191,19 @@ export function createEditPageNode({
         // Use `p-debounce` instead of `use-debounce`
         // because Final Form expects all validate calls to be resolved.
         // `p-debounce` resolves all calls, `use-debounce` doesn't
-        const debouncedValidateSlug = debounce(validateSlug, 200);
+        const debouncedValidateSlug = debounce(validateSlug, 500);
 
         if (mode === "edit" && (loading || !data?.page)) {
             return <Loading />;
         }
+
         return (
             <div>
                 <FinalForm<FormValues>
                     mode={mode}
+                    onAfterSubmit={() => {
+                        // noop
+                    }}
                     mutators={{
                         setFieldTouched: setFieldTouched as Mutator<FormValues>,
                     }}
@@ -312,10 +320,6 @@ export function createEditPageNode({
                                             return null;
                                         }
 
-                                        if (values.slug === "home") {
-                                            return <Typography>/</Typography>;
-                                        }
-
                                         const numberOfDescendants = data?.page?.numberOfDescendants ?? 0;
 
                                         return (
@@ -328,7 +332,11 @@ export function createEditPageNode({
                                                     variant="horizontal"
                                                 >
                                                     <Typography>
-                                                        {parentPath}/{values.slug}
+                                                        {values.slug === "home"
+                                                            ? "/"
+                                                            : parentPath === null
+                                                            ? `/${values.slug}`
+                                                            : `${parentPath}/${values.slug}`}
                                                     </Typography>
                                                 </FieldContainer>
                                                 {mode === "edit" && dirtyFields.slug && (

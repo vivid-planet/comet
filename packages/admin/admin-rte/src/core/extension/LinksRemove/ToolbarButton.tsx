@@ -1,4 +1,4 @@
-import LinkOffIcon from "@mui/icons-material/LinkOff";
+import { RteClearLink } from "@comet/admin-icons";
 import { RichUtils } from "draft-js";
 import * as React from "react";
 
@@ -16,5 +16,5 @@ export default function ToolbarButton(props: IControlProps) {
         }
     }
 
-    return <ControlButton icon={LinkOffIcon} disabled={globallyDisabled || !buttonEnabled} onButtonClick={handleClick} />;
+    return <ControlButton icon={RteClearLink} disabled={globallyDisabled || !buttonEnabled} onButtonClick={handleClick} />;
 }

@@ -99,6 +99,9 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
             dependencies.push({
                 targetGraphqlObjectType: "DamFile",
                 id: state.damFile.id,
+                data: {
+                    damFile: state.damFile,
+                },
             });
         }
 

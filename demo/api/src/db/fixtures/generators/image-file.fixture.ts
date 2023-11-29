@@ -9,7 +9,7 @@ export const generateImageFiles = async (filesService: FilesService, scope: DamS
 
     for (const image of images) {
         const file = await download(path.resolve(`./src/db/fixtures/generators/images/${image}`));
-        files.push(await filesService.upload({ file }, scope));
+        files.push(await filesService.upload(file, { scope }));
     }
 
     return files;
