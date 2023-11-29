@@ -14,6 +14,7 @@ const renameMap = {
     ColorPicker: "FinalFormColorPicker",
     DatePicker: "FinalFormDatePicker",
     DateRangePicker: "FinalFormDateRangePicker",
+    FileUpload: "FinalFormFileUpload",
 };
 
 const transform: Transform = (file, api, options) => {
