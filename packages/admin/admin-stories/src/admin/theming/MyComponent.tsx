@@ -1,69 +1,4 @@
----
-title: Create Admin components with theme support
----
-
-MUI components allow their styles and default props to be overridden using the theme.
-They also allow overriding of the styles of individual components using the `sx` prop.
-
-All Comet Admin components should support the same features.
-
-The basics of how to implement this can be found in the MUI docs: https://mui.com/material-ui/guides/creating-themed-components/
-
-## Examples of how you should be able to override components
-
-### Setting a component's default props
-
-E.g.: every instance of `MyComponent` should have a shadow by default.
-
-```ts
-const theme = createCometTheme({
-    components: {
-        CometAdminMyComponent: {
-            defaultProps: {
-                shadow: true,
-            },
-        },
-    },
-});
-```
-
-### Overriding the styles of a component
-
-E.g.: in every instance of `MyComponent`, the root should have a red border, and the header should be lime.
-
-```ts
-const theme = createCometTheme({
-    components: {
-        CometAdminMyComponent: {
-            styleOverrides: {
-                root: {
-                    borderColor: "red",
-                },
-                header: {
-                    backgroundColor: "lime",
-                },
-            },
-        },
-    },
-});
-```
-
-### Overriding the styles of a single instance of a component
-
-E.g.: in this instance of `MyComponent`, the root should have a red border, and the header should be lime.
-
-```tsx
-<MyComponent
-    sx={{ borderColor: "red" }}
-    slotProps={{ header: { sx: { backgroundColor: "lime" } } }}
-/>
-```
-
-## Example component
-
-See this as a working example in our [Storybook](https://storybook.comet-dxp.com/?path=/story/comet-admin-theming--themable-mycomponent).
-
-```tsx
+// NOTE: Everything below this line should be copied into the docs file when something is changed: internal-development/create-admin-components-with-theme-support.md
 import { ThemedComponentBaseProps } from "@comet/admin";
 import { CometColor } from "@comet/admin-icons";
 import { ComponentsOverrides, Typography } from "@mui/material";
@@ -228,4 +163,3 @@ declare module "@mui/material/styles" {
         };
     }
 }
-```
