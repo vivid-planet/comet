@@ -61,7 +61,7 @@ E.g.: in this instance of `MyComponent`, the root should have a red border, and 
 
 ## Example component
 
-See this as a working example in our [Storybook](https://comet-admin.netlify.app/?path=/story/comet-admin-theming--themable-mycomponent).
+See this as a working example in our [Storybook](https://storybook.comet-dxp.com/?path=/story/comet-admin-theming--themable-mycomponent).
 
 ```tsx
 import { ThemedComponentBaseProps } from "@comet/admin";
