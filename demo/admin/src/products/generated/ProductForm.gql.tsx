@@ -12,6 +12,19 @@ export const productFormFragment = gql`
         price
         inStock
         image
+        dimensions {
+            width
+            height
+            depth
+        }
+        packageDimensions {
+            width
+            height
+            depth
+        }
+        statistics {
+            views
+        }
     }
 `;
 

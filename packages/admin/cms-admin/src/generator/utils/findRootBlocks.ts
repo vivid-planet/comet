@@ -15,7 +15,14 @@ const fallbackLibraryBlocks: { [key: string]: string } = {
     YouTubeVideoBlock: "@comet/blocks-admin",
 };
 
-export function findRootBlocks({ entityName, ...generatorOptions }: CrudGeneratorConfig, schema: IntrospectionQuery) {
+export interface RootBlockConfig {
+    import: string;
+    name: string;
+}
+export function findRootBlocks(
+    { entityName, ...generatorOptions }: CrudGeneratorConfig,
+    schema: IntrospectionQuery,
+): Record<string, RootBlockConfig> {
     const ret = generatorOptions.rootBlocks || {};
 
     const schemaEntity = schema.__schema.types.find((type) => type.kind === "OBJECT" && type.name === entityName) as
