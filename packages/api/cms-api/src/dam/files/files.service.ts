@@ -225,7 +225,15 @@ export class FilesService {
 
     async create({ folderId, ...data }: CreateFileInput & { copyOf?: FileInterface }): Promise<FileInterface> {
         const folder = folderId ? await this.foldersService.findOneById(folderId) : undefined;
-        return this.save(this.filesRepository.create({ ...data, license: { ...data.license }, folder: folder?.id }));
+        return this.save(
+            this.filesRepository.create({
+                ...data,
+                license: { ...data.license },
+                folder: folder?.id,
+                importSourceId: data.importSourceId,
+                importSourceType: data.importSourceType,
+            }),
+        );
     }
 
     async updateById(id: string, data: UpdateFileInput): Promise<FileInterface> {

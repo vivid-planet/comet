@@ -37,7 +37,7 @@ export const UploadFilesButton = ({ folderId, filter }: UploadSplitButtonProps):
     const { getInputProps } = useDropzone({
         ...dropzoneConfig,
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-            await uploadFiles({ acceptedFiles, fileRejections }, folderId);
+            await uploadFiles({ acceptedFiles, fileRejections }, { folderId: folderId });
         },
     });
 

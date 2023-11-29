@@ -1,6 +1,19 @@
 import { Field, ID, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsDate, IsEnum, IsHash, IsInt, IsMimeType, IsNotEmpty, IsObject, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import {
+    IsDate,
+    IsEnum,
+    IsHash,
+    IsInt,
+    IsMimeType,
+    IsNotEmpty,
+    IsObject,
+    IsOptional,
+    IsString,
+    IsUUID,
+    ValidateIf,
+    ValidateNested,
+} from "class-validator";
 
 import { IsNullable } from "../../../common/validators/is-nullable";
 import { IsUndefinable } from "../../../common/validators/is-undefinable";
@@ -89,6 +102,14 @@ export class CreateFileInput {
     // TODO is this validation even used?
     @IsObject()
     scope?: DamScopeInterface;
+
+    @IsString()
+    @IsNotEmpty()
+    @ValidateIf((input) => input.importSourceType !== undefined)
+    importSourceId?: string;
+
+    @IsUndefinable()
+    importSourceType?: string;
 }
 
 @InputType({ isAbstract: true })

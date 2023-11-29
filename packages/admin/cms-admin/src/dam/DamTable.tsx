@@ -39,6 +39,7 @@ import EditFile from "./FileForm/EditFile";
 
 interface FolderProps extends DamConfig {
     filterApi: IFilterApi<DamFilter>;
+    additionalToolbarItems?: React.ReactNode;
     id?: string;
 }
 
@@ -80,6 +81,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                         </ToolbarItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
+                            {props.additionalToolbarItems}
                             <DamMoreActions
                                 button={
                                     <Button variant="text" color="inherit" endIcon={<MoreVertical />} sx={{ mx: 2 }}>
@@ -127,6 +129,7 @@ export interface DamConfig {
     contentScopeIndicator?: React.ReactNode;
     hideMultiselect?: boolean;
     hideDamActions?: boolean;
+    additionalToolbarItems?: React.ReactNode;
 }
 
 type DamTableProps = DamConfig;
@@ -161,7 +164,7 @@ export const DamTable = ({ ...props }: DamTableProps): React.ReactElement => {
             <FileUploadContextProvider>
                 <ManualDuplicatedFilenamesHandlerContextProvider>
                     <DamSelectionProvider>
-                        <Folder filterApi={filterApi} {...propsWithDefaultValues} />
+                        <Folder filterApi={filterApi} {...propsWithDefaultValues} additionalToolbarItems={props.additionalToolbarItems} />
                     </DamSelectionProvider>
                 </ManualDuplicatedFilenamesHandlerContextProvider>
             </FileUploadContextProvider>

@@ -95,7 +95,7 @@ export const DamItemLabelColumn: React.VoidFunctionComponent<DamItemLabelColumnP
             hoverApi.hideHoverStyles();
             footerApi.hide();
 
-            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, item.id);
+            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, { folderId: item.id });
         },
     });
 

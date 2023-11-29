@@ -115,7 +115,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
     const { getInputProps } = useDropzone({
         ...dropzoneConfig,
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-            await uploadFiles({ acceptedFiles, fileRejections }, folderId);
+            await uploadFiles({ acceptedFiles, fileRejections }, { folderId: folderId });
         },
     });
 

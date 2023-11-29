@@ -246,6 +246,8 @@ type DamFile {
   license: DamFileLicense
   createdAt: DateTime!
   updatedAt: DateTime!
+  importSourceId: String!
+  importSourceType: String!
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!

@@ -280,7 +280,7 @@ const FolderDataGrid = ({
             hideHoverStyles();
             hideUploadFooter();
 
-            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, currentFolderId);
+            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, { folderId: currentFolderId });
 
             // react-dropzone doesn't support folder drops natively
             // the only way to find out if an empty folder was dropped is if there are no rejected files and no accepted files
