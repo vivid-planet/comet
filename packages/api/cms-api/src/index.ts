@@ -1,5 +1,6 @@
 import "reflect-metadata";
 
+export { AccessLogModule } from "./access-log/access-log.module";
 export { CurrentUserInterface, CurrentUserLoaderInterface, CurrentUserRightInterface } from "./auth/current-user/current-user";
 export { AllowForRole } from "./auth/decorators/allow-for-role.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";

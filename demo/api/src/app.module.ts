@@ -1,4 +1,5 @@
 import {
+    AccessLogModule,
     BlobStorageModule,
     BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
     BlocksModule,
@@ -156,6 +157,7 @@ export class AppModule {
                 PredefinedPageModule,
                 CronJobsModule,
                 ProductsModule,
+                AccessLogModule,
             ],
         };
     }
