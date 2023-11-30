@@ -1,7 +1,7 @@
 import { Field, FieldProps } from "@comet/admin";
 import * as React from "react";
 
-import { FinalFormTimePicker } from "../FinalFormTimePicker";
+import { FinalFormTimePicker } from "./FinalFormTimePicker";
 
 export type TimeFieldProps = FieldProps<string, HTMLInputElement>;
 

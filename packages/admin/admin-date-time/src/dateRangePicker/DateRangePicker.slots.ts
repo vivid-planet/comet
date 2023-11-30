@@ -5,7 +5,7 @@ import { CSSProperties } from "@mui/styles";
 import { deepmerge } from "@mui/utils";
 import { DateRange as ReactDateRange } from "react-date-range";
 
-import { getReactDateRangeStyles } from "./getReactDateRangeStyles";
+import { getReactDateRangeStyles } from "../utils/getReactDateRangeStyles";
 
 export type DateRangePickerClassKey = InputWithPopperClassKey | "dateRange" | "startAdornment";
 

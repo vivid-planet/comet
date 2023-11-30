@@ -4,7 +4,7 @@ import clsx from "clsx";
 import * as React from "react";
 import { FormatDateOptions, FormattedMessage, useIntl } from "react-intl";
 
-import { TimePicker, TimePickerProps } from "./TimePicker";
+import { TimePicker, TimePickerProps } from "../timePicker/TimePicker";
 
 export type TimeRange = {
     start: string;

@@ -7,8 +7,8 @@ import { format } from "date-fns";
 import * as React from "react";
 import { FormatDateOptions, FormattedTime, useIntl } from "react-intl";
 
-import { getClosestDateToDate, getDateFromTimeValue, getDateRangeListByMinuteStep } from "./helpers/timePickerHelpers";
-import { styles, TimePickerClassKey } from "./TimePicker.styles";
+import { styles, TimePickerClassKey } from "../timePicker/TimePicker.styles";
+import { getClosestDateToDate, getDateFromTimeValue, getDateRangeListByMinuteStep } from "../utils/timePickerHelpers";
 
 export interface TimePickerProps extends Omit<InputWithPopperProps, "children" | "value" | "onChange"> {
     onChange?: (time?: string) => void;

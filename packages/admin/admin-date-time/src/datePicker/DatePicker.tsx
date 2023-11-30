@@ -8,10 +8,10 @@ import { Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormatDateOptions, useIntl } from "react-intl";
 
+import { DatePickerNavigation } from "../DatePickerNavigation";
+import { useDateFnsLocale } from "../utils/DateFnsLocaleProvider";
+import { defaultMaxDate, defaultMinDate } from "../utils/datePickerHelpers";
 import { Calendar, DatePickerClassKey, Root, SlotProps, StartAdornment } from "./DatePicker.slots";
-import { DatePickerNavigation } from "./DatePickerNavigation";
-import { useDateFnsLocale } from "./helpers/DateFnsLocaleProvider";
-import { defaultMaxDate, defaultMinDate } from "./helpers/datePickerHelpers";
 
 export interface DatePickerProps extends Omit<InputWithPopperProps, "children" | "value" | "onChange" | "slotProps"> {
     onChange?: (date?: Date) => void;

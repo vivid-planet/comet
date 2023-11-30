@@ -4,9 +4,9 @@ import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
-import { DatePicker, DatePickerProps } from "./DatePicker";
-import { getDateWithNewTime, getTimeStringFromDate } from "./helpers/timePickerHelpers";
-import { TimePicker, TimePickerProps } from "./TimePicker";
+import { DatePicker, DatePickerProps } from "../datePicker/DatePicker";
+import { TimePicker, TimePickerProps } from "../timePicker/TimePicker";
+import { getDateWithNewTime, getTimeStringFromDate } from "../utils/timePickerHelpers";
 
 export interface DateTimePickerComponentsProps {
     datePicker?: Omit<DatePickerProps, "onChange" | "onBlur" | "value" | "className" | "inputRef" | "fullWidth">;

@@ -9,10 +9,10 @@ import * as React from "react";
 import { Range } from "react-date-range";
 import { FormatDateOptions, useIntl } from "react-intl";
 
-import { DatePickerNavigation } from "./DatePickerNavigation";
+import { DatePickerNavigation } from "../DatePickerNavigation";
+import { useDateFnsLocale } from "../utils/DateFnsLocaleProvider";
+import { defaultMaxDate, defaultMinDate } from "../utils/datePickerHelpers";
 import { DateRange, DateRangePickerClassKey, Root, SlotProps, StartAdornment } from "./DateRangePicker.slots";
-import { useDateFnsLocale } from "./helpers/DateFnsLocaleProvider";
-import { defaultMaxDate, defaultMinDate } from "./helpers/datePickerHelpers";
 
 export type DateRange = {
     start: Date;

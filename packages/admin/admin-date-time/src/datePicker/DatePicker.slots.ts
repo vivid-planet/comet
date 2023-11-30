@@ -5,7 +5,7 @@ import { CSSProperties } from "@mui/material/styles/createMixins";
 import { deepmerge } from "@mui/utils";
 import { Calendar as CalendarBase } from "react-date-range";
 
-import { getReactDateRangeStyles } from "./getReactDateRangeStyles";
+import { getReactDateRangeStyles } from "../utils/getReactDateRangeStyles";
 
 export type DatePickerClassKey = InputWithPopperClassKey | "calendar" | "startAdornment";
 
