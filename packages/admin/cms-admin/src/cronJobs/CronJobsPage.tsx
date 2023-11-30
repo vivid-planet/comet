@@ -8,7 +8,7 @@ import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
-import { GQLCronJobsQuery } from "../graphql.generated";
+import { GQLCronJobsQuery } from "./CronJobsPage.generated";
 
 const ScopeIndicatorLabelBold = styled(Typography)`
     && {

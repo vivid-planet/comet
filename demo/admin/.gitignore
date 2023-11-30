@@ -3,7 +3,6 @@
 /build
 .npm
 .config
-generated
 /schema.*
 fragmentTypes.json
 lang
@@ -14,3 +13,4 @@ graphql.generated.ts
 block-meta.json
 src/blocks.generated.ts
 comet-config.json
+src/**/*.generated.ts

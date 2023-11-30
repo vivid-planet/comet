@@ -1,7 +1,7 @@
+import cometConfig from "@src/../comet-config.json";
 import { plainToClass } from "class-transformer";
 import { validateSync } from "class-validator";
 
-import cometConfig from "../../comet-config.json";
 import { EnvironmentVariables } from "./environment-variables";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

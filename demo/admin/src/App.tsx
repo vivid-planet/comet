@@ -7,11 +7,9 @@ import "typeface-open-sans";
 
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, RouteWithErrorBoundary, SnackbarProvider } from "@comet/admin";
-import { Domain } from "@comet/admin-icons";
 import {
     AllCategories,
     CmsBlockContextProvider,
-    ContentScopeIndicator,
     createHttpClient,
     createRedirectsPage,
     CronJobsPage,
@@ -23,10 +21,10 @@ import {
     SiteConfig,
     SitePreview,
     SitesConfigProvider,
+    UserPermissionsPage,
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
-import { ScopeIndicatorContent, ScopeIndicatorLabel, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
 import { additionalPageTreeNodeFieldsFragment, EditPageNode } from "@src/common/EditPageNode";
 import MasterHeader from "@src/common/MasterHeader";
@@ -43,13 +41,17 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import { Redirect, Route, Switch } from "react-router-dom";
 
 import { ComponentDemo } from "./common/ComponentDemo";
+import { ContentScopeIndicator } from "./common/ContentScopeIndicator";
 import { getMessages } from "./lang";
 import { Link } from "./links/Link";
 import { NewsLinkBlock } from "./news/blocks/NewsLinkBlock";
-import News from "./news/News";
+import { NewsPage } from "./news/generated/NewsPage";
 import MainMenu from "./pages/mainMenu/MainMenu";
 import { Page } from "./pages/Page";
-import ProductsPage from "./products/ProductsPage";
+import ProductCategoriesPage from "./products/categories/ProductCategoriesPage";
+import { ProductsPage } from "./products/generated/ProductsPage";
+import ProductsHandmadePage from "./products/ProductsPage";
+import ProductTagsPage from "./products/tags/ProductTagsPage";
 import { urlParamToCategory } from "./utils/pageTreeNodeCategoryMapping";
 
 const GlobalStyle = () => (
@@ -99,7 +101,7 @@ class App extends React.Component {
                         resolveSiteConfigForScope: (configs: Record<string, SiteConfig>, scope: ContentScope) => configs[scope.domain],
                     }}
                 >
-                    <DamConfigProvider value={{}}>
+                    <DamConfigProvider value={{ scopeParts: ["domain"] }}>
                         <IntlProvider locale="en" messages={getMessages()}>
                             <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
                                 <MuiThemeProvider theme={theme}>
@@ -156,33 +158,33 @@ class App extends React.Component {
                                                                                                     documentTypes={pageTreeDocumentTypes}
                                                                                                     editPageNode={EditPageNode}
                                                                                                     category={category}
-                                                                                                    renderContentScopeIndicator={(scope) => {
-                                                                                                        return (
-                                                                                                            <ContentScopeIndicator variant="toolbar">
-                                                                                                                <ScopeIndicatorContent>
-                                                                                                                    <Domain fontSize="small" />
-                                                                                                                    <ScopeIndicatorLabelBold variant="body2">
-                                                                                                                        {scope.domain}
-                                                                                                                    </ScopeIndicatorLabelBold>
-                                                                                                                </ScopeIndicatorContent>
-                                                                                                                {` | `}
-                                                                                                                <ScopeIndicatorLabel variant="body2">
-                                                                                                                    {scope.language}
-                                                                                                                </ScopeIndicatorLabel>
-                                                                                                            </ContentScopeIndicator>
-                                                                                                        );
-                                                                                                    }}
+                                                                                                    renderContentScopeIndicator={(scope) => (
+                                                                                                        <ContentScopeIndicator
+                                                                                                            scope={scope}
+                                                                                                            variant="toolbar"
+                                                                                                        />
+                                                                                                    )}
                                                                                                 />
                                                                                             );
                                                                                         }}
                                                                                     />
                                                                                     <RouteWithErrorBoundary
                                                                                         path={`${match.path}/structured-content/news`}
-                                                                                        component={News}
+                                                                                        component={NewsPage}
                                                                                     />
                                                                                     <RouteWithErrorBoundary
                                                                                         path={`${match.path}/assets`}
-                                                                                        component={DamPage}
+                                                                                        render={() => (
+                                                                                            <DamPage
+                                                                                                renderContentScopeIndicator={(scope) => (
+                                                                                                    <ContentScopeIndicator
+                                                                                                        scope={scope}
+                                                                                                        domainOnly
+                                                                                                        variant="toolbar"
+                                                                                                    />
+                                                                                                )}
+                                                                                            />
+                                                                                        )}
                                                                                     />
 
                                                                                     <RouteWithErrorBoundary
@@ -207,8 +209,25 @@ class App extends React.Component {
                                                                                     />
 
                                                                                     <RouteWithErrorBoundary
+                                                                                        path={`${match.path}/products-handmade`}
+                                                                                        component={ProductsHandmadePage}
+                                                                                    />
+
+                                                                                    <RouteWithErrorBoundary
                                                                                         path={`${match.path}/products`}
                                                                                         component={ProductsPage}
+                                                                                    />
+                                                                                    <RouteWithErrorBoundary
+                                                                                        path={`${match.path}/product-categories`}
+                                                                                        component={ProductCategoriesPage}
+                                                                                    />
+                                                                                    <RouteWithErrorBoundary
+                                                                                        path={`${match.path}/product-tags`}
+                                                                                        component={ProductTagsPage}
+                                                                                    />
+                                                                                    <RouteWithErrorBoundary
+                                                                                        path={`${match.path}/user-permissions`}
+                                                                                        component={UserPermissionsPage}
                                                                                     />
 
                                                                                     <Redirect from={`${match.path}`} to={`${match.url}/dashboard`} />

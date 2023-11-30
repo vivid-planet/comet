@@ -1,6 +1,6 @@
 {
     "name": "@comet/blocks-api",
-    "version": "4.7.0",
+    "version": "5.1.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -13,9 +13,9 @@
         "lib/*"
     ],
     "scripts": {
-        "build": "$npm_execpath run clean && tsc",
+        "build": "$npm_execpath run clean && tsc -p tsconfig.build.json",
         "clean": "rimraf lib",
-        "dev": "tsc --watch --preserveWatchOutput",
+        "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
         "generate-block-meta": "ts-node generate-block-meta.ts",
         "generate-block-meta:watch": "chokidar \"src/\" -c \"npm run generate-block-meta\"",
         "lint": "run-p lint:eslint lint:tsc",
@@ -29,7 +29,7 @@
         "rimraf": "^3.0.0"
     },
     "devDependencies": {
-        "@comet/eslint-config": "workspace:^4.7.0",
+        "@comet/eslint-config": "workspace:^5.1.0",
         "@nestjs/common": "^9.0.0",
         "@types/draft-js": "^0.11.10",
         "@types/jest": "^29.5.0",

@@ -1,18 +1,21 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { ErrorScope, Field, FieldContainer, FinalForm, FinalFormCheckbox, FinalFormInput, FinalFormSelect, Loading } from "@comet/admin";
-import { FormControlLabel, MenuItem, Typography } from "@mui/material";
+import { ErrorScope, Field, FieldContainer, FinalForm, FinalFormCheckbox, FinalFormInput, FinalFormSelect, Loading, Tooltip } from "@comet/admin";
+import { Info } from "@comet/admin-icons";
+import { Box, Divider, FormControlLabel, IconButton, MenuItem, Typography } from "@mui/material";
 import { Mutator } from "final-form";
 import setFieldTouched from "final-form-set-field-touched";
 import { DocumentNode } from "graphql";
 import debounce from "p-debounce";
 import React from "react";
 import { FormSpy } from "react-final-form";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import slugify from "slugify";
 
 import { useContentScope } from "../contentScope/Provider";
 import { DocumentInterface, DocumentType } from "../documents/types";
 import { SyncFields } from "../form/SyncFields";
+import { GQLSlugAvailability } from "../graphql.generated";
+import { useLocale } from "../locale/useLocale";
 import {
     GQLCreatePageNodeMutation,
     GQLCreatePageNodeMutationVariables,
@@ -22,12 +25,9 @@ import {
     GQLEditPageParentNodeQueryVariables,
     GQLIsPathAvailableQuery,
     GQLIsPathAvailableQueryVariables,
-    GQLSlugAvailability,
     GQLUpdatePageNodeMutation,
     GQLUpdatePageNodeMutationVariables,
-    namedOperations,
-} from "../graphql.generated";
-import { useLocale } from "../locale/useLocale";
+} from "./createEditPageNode.generated";
 
 type SerializedInitialValues = string;
 
@@ -63,6 +63,7 @@ export function createEditPageNode({
                 documentType
                 hideInMenu
                 parentId
+                numberOfDescendants
                 document {
                     ... on DocumentInterface {
                         id
@@ -136,6 +137,10 @@ export function createEditPageNode({
             label: documentTypes[type].displayName,
         }));
 
+        React.useEffect(() => {
+            apollo.cache.evict({ fieldName: "pageTreeNodeSlugAvailable" });
+        }, [apollo.cache]);
+
         const isPathAvailable = React.useCallback(
             async (newSlug: string): Promise<GQLSlugAvailability> => {
                 if (slug === newSlug) {
@@ -149,7 +154,7 @@ export function createEditPageNode({
                         slug: newSlug,
                         scope,
                     },
-                    fetchPolicy: "network-only",
+                    fetchPolicy: "cache-first",
                 });
 
                 return data.availability;
@@ -186,15 +191,19 @@ export function createEditPageNode({
         // Use `p-debounce` instead of `use-debounce`
         // because Final Form expects all validate calls to be resolved.
         // `p-debounce` resolves all calls, `use-debounce` doesn't
-        const debouncedValidateSlug = debounce(validateSlug, 200);
+        const debouncedValidateSlug = debounce(validateSlug, 500);
 
         if (mode === "edit" && (loading || !data?.page)) {
             return <Loading />;
         }
+
         return (
             <div>
                 <FinalForm<FormValues>
                     mode={mode}
+                    onAfterSubmit={() => {
+                        // noop
+                    }}
                     mutators={{
                         setFieldTouched: setFieldTouched as Mutator<FormValues>,
                     }}
@@ -203,6 +212,7 @@ export function createEditPageNode({
                             name: values.name,
                             slug: values.slug,
                             hideInMenu: values.hideInMenu,
+                            createAutomaticRedirectsOnSlugChange: values.createAutomaticRedirectsOnSlugChange,
                             attachedDocument: {
                                 id: values.documentType === data?.page?.documentType ? data?.page?.document?.id : undefined,
                                 type: values.documentType,
@@ -243,7 +253,7 @@ export function createEditPageNode({
                                 context: {
                                     errorScope: ErrorScope.Local,
                                 },
-                                refetchQueries: [namedOperations.Query.Pages],
+                                refetchQueries: ["Pages"],
                             });
                         }
                     }}
@@ -275,6 +285,7 @@ export function createEditPageNode({
                                     component={FinalFormInput}
                                     autoFocus
                                     fullWidth
+                                    variant="horizontal"
                                 />
                                 {slug !== "home" && (
                                     <Field
@@ -286,6 +297,7 @@ export function createEditPageNode({
                                         required
                                         fullWidth
                                         validate={debouncedValidateSlug}
+                                        variant="horizontal"
                                     >
                                         {(fieldRenderProps) => {
                                             return (
@@ -301,36 +313,125 @@ export function createEditPageNode({
                                         }}
                                     </Field>
                                 )}
-                                <FieldContainer
-                                    label={intl.formatMessage({
-                                        id: "comet.pages.pages.page.path",
-                                        defaultMessage: "Complete Path",
-                                    })}
-                                >
-                                    <FormSpy subscription={{ values: true }}>
-                                        {({ values }) => {
-                                            if (!values.slug) {
-                                                return null;
-                                            }
 
-                                            if (values.slug === "home") {
-                                                return <Typography>/</Typography>;
-                                            }
+                                <FormSpy subscription={{ values: true, dirtyFields: true }}>
+                                    {({ values, dirtyFields }) => {
+                                        if (!values.slug) {
+                                            return null;
+                                        }
 
-                                            return (
-                                                <Typography>
-                                                    {parentPath}/{values.slug}
-                                                </Typography>
-                                            );
-                                        }}
-                                    </FormSpy>
-                                </FieldContainer>
+                                        const numberOfDescendants = data?.page?.numberOfDescendants ?? 0;
+
+                                        return (
+                                            <>
+                                                <FieldContainer
+                                                    label={intl.formatMessage({
+                                                        id: "comet.pages.pages.page.path",
+                                                        defaultMessage: "Complete Path",
+                                                    })}
+                                                    variant="horizontal"
+                                                >
+                                                    <Typography>
+                                                        {values.slug === "home"
+                                                            ? "/"
+                                                            : parentPath === null
+                                                            ? `/${values.slug}`
+                                                            : `${parentPath}/${values.slug}`}
+                                                    </Typography>
+                                                </FieldContainer>
+                                                {mode === "edit" && dirtyFields.slug && (
+                                                    <Box mt={3}>
+                                                        <FieldContainer
+                                                            variant="horizontal"
+                                                            label={
+                                                                <>
+                                                                    <FormattedMessage
+                                                                        id="comet.pages.pages.page.createAutomaticRedirects.headline"
+                                                                        defaultMessage="Redirects"
+                                                                    />
+                                                                    <Tooltip
+                                                                        title={
+                                                                            <>
+                                                                                <Typography variant="body2">
+                                                                                    <strong>
+                                                                                        <FormattedMessage
+                                                                                            id="comet.pages.pages.page.createAutomaticRedirects.tooltip.title"
+                                                                                            defaultMessage="Generate redirects"
+                                                                                        />
+                                                                                    </strong>
+                                                                                </Typography>
+                                                                                <Typography variant="body2">
+                                                                                    <FormattedMessage
+                                                                                        id="comet.pages.pages.page.createAutomaticRedirects.tooltip.text"
+                                                                                        defaultMessage="You have changed the slug. Therefore redirects should be created, so that users and search engines automatically land at the correct page, even if they visit the old path. Check this box, if you already have published or shared {numberOfDescendants, plural, =0 {this page} other {these pages}}."
+                                                                                        values={{
+                                                                                            numberOfDescendants,
+                                                                                        }}
+                                                                                    />
+                                                                                </Typography>
+                                                                            </>
+                                                                        }
+                                                                    >
+                                                                        <Box component="span" marginLeft={1}>
+                                                                            <IconButton>
+                                                                                <Info />
+                                                                            </IconButton>
+                                                                        </Box>
+                                                                    </Tooltip>
+                                                                </>
+                                                            }
+                                                        >
+                                                            <Field name="createAutomaticRedirectsOnSlugChange" type="checkbox" initialValue={true}>
+                                                                {(props) => (
+                                                                    <FormControlLabel
+                                                                        label={
+                                                                            <Typography display="flex" alignItems="center">
+                                                                                <div>
+                                                                                    <Typography variant="body1">
+                                                                                        <FormattedMessage
+                                                                                            tagName="span"
+                                                                                            id="comet.pages.pages.page.createAutomaticRedirects.label"
+                                                                                            defaultMessage="Create {numberOfDescendants, plural, =0 {a redirect} other {redirects}}"
+                                                                                            values={{
+                                                                                                numberOfDescendants,
+                                                                                            }}
+                                                                                        />
+                                                                                    </Typography>
+                                                                                    {numberOfDescendants > 0 && (
+                                                                                        <Typography variant="body2" color="rgba(0, 0, 0, 0.6)">
+                                                                                            <FormattedMessage
+                                                                                                tagName="span"
+                                                                                                id="comet.pages.pages.page.createAutomaticRedirects.labelSubline"
+                                                                                                defaultMessage="for this page and all its child pages"
+                                                                                            />
+                                                                                        </Typography>
+                                                                                    )}
+                                                                                </div>
+                                                                            </Typography>
+                                                                        }
+                                                                        control={<FinalFormCheckbox {...props} />}
+                                                                    />
+                                                                )}
+                                                            </Field>
+                                                        </FieldContainer>
+                                                    </Box>
+                                                )}
+                                            </>
+                                        );
+                                    }}
+                                </FormSpy>
+
+                                <Box marginY={6}>
+                                    <Divider />
+                                </Box>
+
                                 <Field
                                     label={intl.formatMessage({
                                         id: "comet.pages.pages.page.documentType",
                                         defaultMessage: "Document Type",
                                     })}
                                     name="documentType"
+                                    variant="horizontal"
                                     required
                                     fullWidth
                                 >
@@ -344,7 +445,15 @@ export function createEditPageNode({
                                         </FinalFormSelect>
                                     )}
                                 </Field>
-                                <Field name="hideInMenu" type="checkbox">
+                                <Field
+                                    label={intl.formatMessage({
+                                        id: "comet.pages.pages.page.menuVisibility",
+                                        defaultMessage: "Menu Visibility",
+                                    })}
+                                    name="hideInMenu"
+                                    type="checkbox"
+                                    variant="horizontal"
+                                >
                                     {(props) => (
                                         <FormControlLabel
                                             label={intl.formatMessage({
@@ -355,6 +464,7 @@ export function createEditPageNode({
                                         />
                                     )}
                                 </Field>
+
                                 {additionalFormFields}
                             </>
                         );
@@ -397,6 +507,7 @@ interface FormValues {
     path: string;
     documentType: string;
     hideInMenu: boolean;
+    createAutomaticRedirectsOnSlugChange?: boolean;
 }
 
 const transformToSlug = (name: string, locale: string) => {

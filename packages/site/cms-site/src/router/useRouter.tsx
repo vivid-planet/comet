@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { NextRouter, useRouter as useNextRouter } from "next/router";
 
 import { usePreview } from "../preview/usePreview";

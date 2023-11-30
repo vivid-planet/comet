@@ -13,8 +13,9 @@ import {
     useContentScopeConfig as useContentScopeConfigLibrary,
     useSitesConfig,
 } from "@comet/cms-admin";
-import { GQLCurrentUserScopeQuery } from "@src/graphql.generated";
 import React from "react";
+
+import { GQLCurrentUserScopeQuery } from "./ContentScopeProvider.generated";
 
 type Domain = "main" | "secondary" | string;
 type Language = "en" | string;

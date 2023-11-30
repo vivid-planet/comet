@@ -2,13 +2,15 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 
+import { DependentsResolverFactory } from "../dependencies/dependents.resolver.factory";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { createPageTreeResolver } from "./createPageTreeResolver";
+import { DocumentSubscriberFactory } from "./document-subscriber";
 import { PageTreeNodeBaseCreateInput, PageTreeNodeBaseUpdateInput } from "./dto/page-tree-node.input";
 import { AttachedDocument } from "./entities/attached-document.entity";
 import { PageTreeNodeBase } from "./entities/page-tree-node-base.entity";
-import { defaultReservedPaths, PAGE_TREE_CONFIG, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
+import { defaultReservedPaths, PAGE_TREE_CONFIG, PAGE_TREE_ENTITY, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
 import { PageTreeService } from "./page-tree.service";
 import { PageTreeReadApiService } from "./page-tree-read-api.service";
 import type { PageTreeNodeInterface, ScopeInterface } from "./types";
@@ -32,13 +34,19 @@ interface PageTreeModuleOptions {
 export class PageTreeModule {
     static forRoot(options: PageTreeModuleOptions): DynamicModule {
         const { Documents, Scope, PageTreeNode, PageTreeNodeCreateInput, PageTreeNodeUpdateInput, reservedPaths } = options;
-        const pageTreeResolver = createPageTreeResolver({
+
+        if (PageTreeNode.name !== PAGE_TREE_ENTITY) {
+            throw new Error(`PageTreeModule: Your PageTreeNode entity must be named ${PAGE_TREE_ENTITY}`);
+        }
+
+        const PageTreeResolver = createPageTreeResolver({
             PageTreeNode,
             Documents,
             Scope,
             PageTreeNodeCreateInput,
             PageTreeNodeUpdateInput,
         });
+        const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
 
         const repositoryProvider = {
             provide: PAGE_TREE_REPOSITORY,
@@ -55,6 +63,8 @@ export class PageTreeModule {
             },
         };
 
+        const documentSubscriber = DocumentSubscriberFactory.create({ Documents });
+
         return {
             module: PageTreeModule,
             imports: [MikroOrmModule.forFeature([AttachedDocument, PageTreeNode, ...(Scope ? [Scope] : [])])],
@@ -62,7 +72,8 @@ export class PageTreeModule {
                 PageTreeService,
                 PageTreeReadApiService,
                 AttachedDocumentLoaderService,
-                pageTreeResolver,
+                PageTreeResolver,
+                PageTreeDependentsResolver,
                 repositoryProvider,
                 pageTreeConfigProvider,
                 {
@@ -72,6 +83,7 @@ export class PageTreeModule {
                     },
                     inject: [PageTreeService],
                 },
+                documentSubscriber,
             ],
             exports: [PageTreeService, PageTreeReadApiService, AttachedDocumentLoaderService],
         };

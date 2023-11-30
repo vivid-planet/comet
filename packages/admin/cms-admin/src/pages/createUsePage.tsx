@@ -13,7 +13,8 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables, GQLDocumentInterface } from "../graphql.generated";
+import { GQLDocumentInterface } from "../graphql.generated";
+import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables } from "./createUsePage.generated";
 import { LocalPageTreeNodeDocumentAnchorsProvider } from "./LocalPageTreeNodeDocumentAnchors";
 import { resolveHasSaveConflict } from "./resolveHasSaveConflict";
 import { useSaveConflictQuery } from "./useSaveConflictQuery";
@@ -219,6 +220,7 @@ export const createUsePage: CreateUsePage =
                     resolveHasConflict: (data) => {
                         return resolveHasSaveConflict(pageState?.document?.updatedAt, data?.page?.document?.updatedAt);
                     },
+                    skip: saving,
                 },
                 {
                     hasChanges: hasChanges ?? false,
@@ -298,6 +300,8 @@ export const createUsePage: CreateUsePage =
                                 },
                                 attachedPageTreeNodeId: pageId,
                             } as GQLUpdatePageMutationVariables,
+                            refetchQueries: [getQuery],
+                            awaitRefetchQueries: true,
                             update(cache) {
                                 // update reference to pageTreeNode
                                 // needed for newly created pageTreeNodes

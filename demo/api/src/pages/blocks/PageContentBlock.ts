@@ -8,7 +8,9 @@ import { IsEnum } from "class-validator";
 import { ColumnsBlock } from "./columns.block";
 import { FullWidthImageBlock } from "./full-width-image.block";
 import { HeadlineBlock } from "./headline.block";
+import { MediaBlock } from "./media.block";
 import { TextImageBlock } from "./TextImageBlock";
+import { TwoListsBlock } from "./two-lists.block";
 import { VideoBlock } from "./video.block";
 
 const supportedBlocks = {
@@ -24,6 +26,8 @@ const supportedBlocks = {
     fullWidthImage: FullWidthImageBlock,
     columns: ColumnsBlock,
     anchor: AnchorBlock,
+    twoLists: TwoListsBlock,
+    media: MediaBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {
