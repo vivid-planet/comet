@@ -3,6 +3,7 @@ import {
     Field,
     FinalForm,
     FinalFormInput,
+    Loading,
     MainContent,
     Stack,
     StackPage,
@@ -19,7 +20,7 @@ import {
     useTableQueryFilter,
 } from "@comet/admin";
 import { Edit as EditIcon } from "@mui/icons-material";
-import { Card, CardContent, CircularProgress, Grid, IconButton, Typography } from "@mui/material";
+import { Card, CardContent, Grid, IconButton, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -138,9 +139,6 @@ function ExampleForm(props: IExampleFormProps) {
 
     const { loading, data, error } = useQuery(detailQuery, { variables: { id: props.id } });
 
-    if (loading || !data) {
-        return <CircularProgress />;
-    }
     if (error) return <p>Error :( {error.toString()}</p>;
 
     return (
@@ -151,20 +149,24 @@ function ExampleForm(props: IExampleFormProps) {
                     <Typography variant="h3">Stack Table Form Query In Table - Detail</Typography>
                 </ToolbarItem>
             </Toolbar>
-            <MainContent>
-                <Card variant="outlined">
-                    <CardContent>
-                        <FinalForm
-                            mode="edit"
-                            onSubmit={(values) => {
-                                // submit here
-                            }}
-                            initialValues={data.user}
-                        >
-                            <Field label="Name" name="name" defaultOptions required component={FinalFormInput} />
-                        </FinalForm>
-                    </CardContent>
-                </Card>
+            <MainContent fullHeight>
+                {loading || !data ? (
+                    <Loading behavior="fillParent" />
+                ) : (
+                    <Card variant="outlined">
+                        <CardContent>
+                            <FinalForm
+                                mode="edit"
+                                onSubmit={(values) => {
+                                    // submit here
+                                }}
+                                initialValues={data.user}
+                            >
+                                <Field label="Name" name="name" defaultOptions required component={FinalFormInput} />
+                            </FinalForm>
+                        </CardContent>
+                    </Card>
+                )}
             </MainContent>
         </>
     );

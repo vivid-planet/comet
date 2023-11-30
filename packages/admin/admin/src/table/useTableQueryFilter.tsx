@@ -6,10 +6,16 @@ import * as React from "react";
 import { usePersistedState } from "./usePersistedState";
 import { IPagingApi } from "./useTableQueryPaging";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface IFilterApi<FilterValues> {
     current: FilterValues;
     formApi: FormApi<FilterValues>;
 }
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export function useTableQueryFilter<FilterValues>(
     defaultValues: FilterValues,
     options: {

@@ -1,15 +1,14 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { FinalForm, ISelectionApi } from "@comet/admin";
-import { CircularProgress } from "@mui/material";
+import { FinalForm, ISelectionApi, Loading } from "@comet/admin";
 import React from "react";
 
+import { editFolderQuery, updateDamFolderMutation } from "./EditFolder.gql";
 import {
     GQLEditFolderQuery,
     GQLEditFolderQueryVariables,
     GQLUpdateDamFolderMutation,
     GQLUpdateDamFolderMutationVariables,
-} from "../../graphql.generated";
-import { editFolderQuery, updateDamFolderMutation } from "./EditFolder.gql";
+} from "./EditFolder.gql.generated";
 import { FolderFormFields, FolderFormValues } from "./FolderFormFields";
 
 interface EditFolderProps {
@@ -27,7 +26,7 @@ const EditFolder = ({ id, selectionApi }: EditFolderProps): React.ReactElement =
     const [updateDamFolder] = useMutation<GQLUpdateDamFolderMutation, GQLUpdateDamFolderMutationVariables>(updateDamFolderMutation);
 
     if (loading || !data?.damFolder) {
-        return <CircularProgress />;
+        return <Loading />;
     }
 
     return (

@@ -5,7 +5,7 @@ import { DataGrid, GridSelectionModel } from "@mui/x-data-grid";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLBuildTemplatesQuery, GQLCreateBuildsMutation, GQLCreateBuildsMutationVariables, namedOperations } from "../graphql.generated";
+import { GQLBuildTemplatesQuery, GQLCreateBuildsMutation, GQLCreateBuildsMutationVariables } from "./StartBuildsDialog.generated";
 
 const buildTemplatesQuery = gql`
     query BuildTemplates {
@@ -37,7 +37,7 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
         context: LocalErrorScopeApolloContext,
     });
     const [startBuilds, { loading }] = useMutation<GQLCreateBuildsMutation, GQLCreateBuildsMutationVariables>(createBuildsMutation, {
-        refetchQueries: [namedOperations.Query.Builds],
+        refetchQueries: ["Builds"],
     });
 
     const [selectionModel, setSelectionModel] = React.useState<GridSelectionModel>([]);
@@ -68,7 +68,7 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                             }),
                             flex: 1,
                             renderCell: ({ row }) => {
-                                return row.label ?? row.name;
+                                return row.label && row.label.length > 0 ? row.label : row.name;
                             },
                         },
                     ]}
@@ -88,6 +88,7 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                     variant="contained"
                     color="primary"
                     disabled={loading || selectionModel.length < 1}
+                    startIcon={loading ? <CircularProgress size={20} /> : undefined}
                     onClick={async () => {
                         await startBuilds({
                             variables: { input: { names: rows.filter((row) => selectionModel.includes(row.id)).map((row) => row.name) } },
@@ -96,7 +97,6 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                     }}
                 >
                     <FormattedMessage id="comet.pages.publisher.startBuildsDialog.button" defaultMessage="Start builds" />
-                    {loading && <CircularProgress size={16} />}
                 </Button>
             </DialogActions>
         </Dialog>

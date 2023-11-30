@@ -1,10 +1,10 @@
-import { download, File, FilesService } from "@comet/cms-api";
+import { download, FileInterface, FilesService } from "@comet/cms-api";
 import { Injectable } from "@nestjs/common";
 import faker from "faker";
 
 @Injectable()
 export class ImageFixtureService {
-    private imageFiles: File[] = [];
+    private imageFiles: FileInterface[] = [];
     constructor(private readonly filesService: FilesService) {}
 
     public getRandomImage() {
@@ -23,7 +23,7 @@ export class ImageFixtureService {
         }
     }
 
-    private async generateImage(): Promise<File> {
+    private async generateImage(): Promise<FileInterface> {
         const width = faker.datatype.number({
             min: 1000,
             max: 3000,
@@ -36,6 +36,6 @@ export class ImageFixtureService {
         const imageUrl = `https://source.unsplash.com/random/${width}x${height}`;
         const downloadedImage = await download(imageUrl);
 
-        return this.filesService.upload(downloadedImage);
+        return this.filesService.upload(downloadedImage, { scope: { domain: "main" } });
     }
 }

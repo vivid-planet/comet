@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { MainContent, messages, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
+import { Loading, MainContent, messages, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft, Preview } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
@@ -12,20 +12,15 @@ import {
     useCmsBlockContext,
     useSiteConfig,
 } from "@comet/cms-admin";
-import { Button, CircularProgress, IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import {
-    GQLEditPageQuery,
-    GQLEditPageQueryVariables,
-    GQLPageTreeNodeCategory,
-    GQLUpdatePageMutation,
-    GQLUpdatePageMutationVariables,
-} from "@src/graphql.generated";
+import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { useHistory, useRouteMatch } from "react-router";
+import { useRouteMatch } from "react-router";
 
+import { GQLEditPageQuery, GQLEditPageQueryVariables, GQLUpdatePageMutation, GQLUpdatePageMutationVariables } from "./EditPage.generated";
 import { PageContentBlock } from "./PageContentBlock";
 
 interface Props {
@@ -73,13 +68,8 @@ const usePage = createUsePage({
 
 export const EditPage: React.FC<Props> = ({ id, category }) => {
     const intl = useIntl();
-    const history = useHistory();
     const { pageState, rootBlocksApi, hasChanges, loading, dialogs, pageSaveButton, handleSavePage } = usePage({
         pageId: id,
-
-        onValidationFailed: () => {
-            history.push(`${match}/content`);
-        },
     });
 
     const match = useRouteMatch();
@@ -112,7 +102,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
     if (!pageState) return <></>;
 
     if (loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
 
     return (

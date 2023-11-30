@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import {
     FinalForm,
+    Loading,
     LocalErrorScopeApolloContext,
     MainContent,
     messages,
@@ -16,7 +17,7 @@ import {
     ToolbarTitleItem,
     useStackApi,
 } from "@comet/admin";
-import { Card, CardContent, CircularProgress, Link, Typography } from "@mui/material";
+import { Card, CardContent, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FORM_ERROR } from "final-form";
 import isEqual from "lodash.isequal";
@@ -26,21 +27,18 @@ import { Link as RouterLink } from "react-router-dom";
 import ReactSplit from "react-split";
 
 import { useContentScope } from "../../contentScope/Provider";
+import { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
+import { useDamConfig } from "../config/useDamConfig";
+import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
+import Duplicates from "./Duplicates";
+import { damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
 import {
     GQLDamFileDetailFragment,
     GQLDamFileDetailQuery,
     GQLDamFileDetailQueryVariables,
-    GQLFocalPoint,
-    GQLImageCropAreaInput,
-    GQLLicenseInput,
     GQLUpdateFileMutation,
     GQLUpdateFileMutationVariables,
-} from "../../graphql.generated";
-import { useDamConfig } from "../config/useDamConfig";
-import { usePersistedDamLocation } from "../Table/RedirectToPersistedDamLocation";
-import { LicenseValidityTags } from "../Table/tags/LicenseValidityTags";
-import Duplicates from "./Duplicates";
-import { damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
+} from "./EditFile.gql.generated";
 import { FilePreview } from "./FilePreview";
 import { FileSettingsFields, LicenseType } from "./FileSettingsFields";
 import { ImageInfos } from "./ImageInfos";
@@ -80,16 +78,12 @@ const useInitialValues = (id: string) => {
 
 const EditFile = ({ id }: EditFormProps): React.ReactElement => {
     const { match: scopeMatch } = useContentScope();
-    const persistedDamLocationApi = usePersistedDamLocation();
     const initialValues = useInitialValues(id);
     const file = initialValues.data?.damFile;
 
     if (initialValues.loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     } else if (initialValues.error || file === undefined) {
-        // otherwise, the user always gets redirected to the broken file and is stuck there
-        persistedDamLocationApi?.reset();
-
         return (
             <Card>
                 <CardContent>
@@ -114,8 +108,10 @@ const EditFile = ({ id }: EditFormProps): React.ReactElement => {
     return <EditFileInner file={file} id={id} />;
 };
 
+export type DamFileDetails = GQLDamFileDetailFragment;
+
 interface EditFileInnerProps {
-    file: GQLDamFileDetailFragment;
+    file: DamFileDetails;
     id: string;
 }
 
@@ -199,6 +195,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                 // override default onAfterSubmit because default is stackApi.goBack()
                 // https://github.com/vivid-planet/comet/blob/master/packages/admin/src/FinalForm.tsx#L53
             }}
+            validateOnBlur
         >
             {({ pristine, hasValidationErrors, submitting, handleSubmit }) => (
                 <>

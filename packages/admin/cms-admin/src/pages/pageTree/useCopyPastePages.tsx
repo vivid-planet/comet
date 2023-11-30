@@ -1,49 +1,21 @@
-import { gql, useApolloClient } from "@apollo/client";
-import { LocalErrorScopeApolloContext } from "@comet/admin";
-import { readClipboard, writeClipboard } from "@comet/blocks-admin";
+import { useApolloClient } from "@apollo/client";
+import { LocalErrorScopeApolloContext, messages, readClipboardText, useErrorDialog, writeClipboardText } from "@comet/admin";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
-import { v4 as uuid } from "uuid";
 
+import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { useContentScope } from "../../contentScope/Provider";
-import { GQLDocument, GQLPageQuery, GQLPageQueryVariables, GQLUpdatePageMutationVariables, IdsMap } from "../../documents/types";
-import {
-    GQLCreatePageNodeMutation,
-    GQLCreatePageNodeMutationVariables,
-    GQLPageTreePageFragment,
-    GQLSlugAvailableQuery,
-    GQLSlugAvailableQueryVariables,
-    namedOperations,
-} from "../../graphql.generated";
-import { arrayToTreeMap } from "./treemap/TreeMapUtils";
+import { useDamScope } from "../../dam/config/useDamScope";
+import { GQLDocument, GQLPageQuery, GQLPageQueryVariables } from "../../documents/types";
+import { useProgressDialog } from "./useCopyPastePages/ProgressDialog";
+import { sendPages, SendPagesOptions } from "./useCopyPastePages/sendPages";
+import { GQLPageTreePageFragment } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
-const slugAvailableQuery = gql`
-    query SlugAvailable($parentId: ID, $slug: String!, $scope: PageTreeNodeScopeInput!) {
-        pageTreeNodeSlugAvailable(parentId: $parentId, slug: $slug, scope: $scope)
-    }
-`;
-
-const createPageNodeMutation = gql`
-    mutation CreatePageNode($input: PageTreeNodeCreateInput!, $contentScope: PageTreeNodeScopeInput!, $category: String!) {
-        createPageTreeNode(input: $input, scope: $contentScope, category: $category) {
-            id
-        }
-    }
-`;
-
-type PageClipboard = GQLPageTreePageFragment & { document?: GQLDocument | null };
+export type PageClipboard = GQLPageTreePageFragment & { document?: GQLDocument | null };
 
 export interface PagesClipboard {
     pages: PageClipboard[];
-}
-
-interface SendPagesOptions {
-    /**
-     * The position where the new page(s) should be pasted.
-     * If undefined, the page(s) are added at the very end
-     * */
-    targetPos?: number;
 }
 
 /**
@@ -79,23 +51,13 @@ interface UseCopyPastePagesApi {
     getFromClipboard: () => Promise<GetFromClipboardResponse>;
 
     /**
-     * Iterates over passed pages synchronous and creates data with mutations
-     *
-     * Process:
-     *      1. traverses the tree with top-down strategy
-     *          1a. Create new document with new id
-     *          1b. Generate unique slug by adding "-{uniqueNumber}" to the slug
-     *          1c. Create new PageTreeNode
-     *              - with new name "{name} {uniqueNumber}"
-     *              - and new parent id
-     *              - new document id (created in step 1a)
-     *      2. Refetch Pages query
-     *
      * @param parentId Parent Id where the paste should be attached to
      * @param pages all pages which should be pasted
      * @param options customize where the pages are pasted
      */
-    sendPages: (parentId: string | null, pages: PagesClipboard, options?: SendPagesOptions) => Promise<void>;
+    sendPages: (parentId: string | null, pages: PagesClipboard, options: SendPagesOptions) => Promise<void>;
+
+    progressDialog: React.ReactNode;
 }
 
 /**
@@ -105,6 +67,10 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     const { documentTypes } = usePageTreeContext();
     const client = useApolloClient();
     const { scope } = useContentScope();
+    const damScope = useDamScope();
+    const blockContext = useCmsBlockContext();
+    const progress = useProgressDialog({ title: <FormattedMessage id="comet.pages.insertingPages" defaultMessage="Inserting pages" /> });
+    const errorDialog = useErrorDialog();
 
     const prepareForClipboard = React.useCallback(
         async (pages: GQLPageTreePageFragment[]): Promise<PagesClipboard> => {
@@ -147,11 +113,11 @@ function useCopyPastePages(): UseCopyPastePagesApi {
         [client, documentTypes],
     );
     const writeToClipboard = React.useCallback(async (pages: PagesClipboard) => {
-        return writeClipboard(JSON.stringify(pages));
+        return writeClipboardText(JSON.stringify(pages));
     }, []);
 
     const getFromClipboard = async (): Promise<GetFromClipboardResponse> => {
-        const text = await readClipboard();
+        const text = await readClipboardText();
 
         if (text === undefined) {
             return {
@@ -199,118 +165,34 @@ function useCopyPastePages(): UseCopyPastePagesApi {
             };
         }
     };
-    const sendPages = React.useCallback(
-        async (parentId: string | null, { pages }: PagesClipboard, options?: SendPagesOptions): Promise<void> => {
-            const tree = arrayToTreeMap<PageClipboard>(pages);
-            const idsMap = createIdsMap(pages);
 
-            const handlePageTreeNode = async (node: PageClipboard, newParentId: string | null, posOffset: number): Promise<string> => {
-                const documentType = documentTypes[node.documentType];
-                if (!documentType) {
-                    throw new Error(`Unknown document type "${documentType}"`);
-                }
-
-                // 1a. Generate unique slug by adding "{slug}-{uniqueNumber}" to the slug
-                let slug: string = node.slug;
-                let name: string = node.name;
-                let duplicateNumber = 1;
-                let slugAvailable = false;
-
-                do {
-                    const { data } = await client.query<GQLSlugAvailableQuery, GQLSlugAvailableQueryVariables>({
-                        query: slugAvailableQuery,
-                        variables: {
-                            parentId: newParentId,
-                            slug,
-                            scope,
-                        },
-                        fetchPolicy: "network-only",
-                        context: LocalErrorScopeApolloContext,
-                    });
-
-                    slugAvailable = data.pageTreeNodeSlugAvailable === "Available";
-                    if (!slugAvailable) {
-                        ++duplicateNumber;
-                        name = `${node.name} ${duplicateNumber}`;
-                        slug = `${node.slug}-${duplicateNumber}`;
-                    }
-                } while (!slugAvailable);
-
-                // 1b. Create new PageTreeNode with new name "{name} {uniqueNumber}" and new parent
-                const { data } = await client.mutate<GQLCreatePageNodeMutation, GQLCreatePageNodeMutationVariables>({
-                    mutation: createPageNodeMutation,
-                    variables: {
-                        input: {
-                            id: idsMap.get(node.id),
-                            name,
-                            slug,
-                            hideInMenu: node.hideInMenu,
-                            attachedDocument: {
-                                type: node.documentType,
-                            },
-                            parentId: newParentId,
-                            pos: options?.targetPos ? options.targetPos + posOffset : undefined,
-                        },
-                        contentScope: scope,
-                        category: node.category,
-                    },
-                    context: LocalErrorScopeApolloContext,
+    const updateProgress = progress.updateProgress;
+    const sendPagesCb = React.useCallback(
+        async (parentId: string | null, pages: PagesClipboard, options: SendPagesOptions) => {
+            try {
+                await sendPages(parentId, pages, options, { client, scope, documentTypes, blockContext, damScope }, updateProgress);
+            } catch (e) {
+                errorDialog?.showError({
+                    title: <FormattedMessage {...messages.error} />,
+                    userMessage: (
+                        <FormattedMessage id="comet.pages.cannotPastePage" defaultMessage="An unexpected error occured when pasting pages." />
+                    ),
+                    error: String(e),
                 });
-                if (!data?.createPageTreeNode.id) {
-                    throw Error("Did not receive new uuid for page tree node");
-                }
-
-                // 1c. Create new document
-                const newDocumentId = uuid();
-                if (node?.document != null && documentType.updateMutation && documentType.inputToOutput) {
-                    await client.mutate<unknown, GQLUpdatePageMutationVariables>({
-                        mutation: documentType.updateMutation,
-                        variables: {
-                            pageId: newDocumentId,
-                            input: documentType.inputToOutput(node.document, { idsMap }),
-                            attachedPageTreeNodeId: data.createPageTreeNode.id,
-                        },
-                        context: LocalErrorScopeApolloContext,
-                    });
-                }
-
-                return data.createPageTreeNode.id;
-            };
-
-            const traverse = async (parentId = "root", newParentId: string | null = null): Promise<void> => {
-                const nodes = tree.get(parentId) || [];
-                let posOffset = 0;
-                for (const node of nodes) {
-                    const newPageTreeUUID = await handlePageTreeNode(node, newParentId, posOffset++);
-
-                    await traverse(node.id, newPageTreeUUID);
-                }
-            };
-
-            // 1. traverses the tree with top-down strategy
-            await traverse("root", parentId);
-
-            // 2. Refetch Pages query
-            client.refetchQueries({ include: [namedOperations.Query.Pages] });
+            } finally {
+                updateProgress(undefined); //hides progress dialog
+            }
         },
-        [client, documentTypes, scope],
+        [client, scope, documentTypes, blockContext, damScope, updateProgress, errorDialog],
     );
 
-    return { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages };
-}
-
-/**
- * Creates a mapping between the old page tree node ID and a new page tree ID. Used for rewriting links to internal pages.
- * @param nodes
- */
-function createIdsMap(nodes: PageClipboard[]): IdsMap {
-    const idsMap = new Map<string, string>();
-
-    nodes.forEach((node) => {
-        idsMap.set(node.id, uuid());
-    });
-
-    return idsMap;
+    return {
+        prepareForClipboard,
+        writeToClipboard,
+        getFromClipboard,
+        sendPages: sendPagesCb,
+        progressDialog: progress.dialog,
+    };
 }
 
 export { useCopyPastePages };

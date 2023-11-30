@@ -9,9 +9,11 @@ import DamVideoBlock from "./DamVideoBlock";
 import { FullWidthImageBlock } from "./FullWidthImageBlock";
 import { HeadlineBlock } from "./HeadlineBlock";
 import { LinkListBlock } from "./LinkListBlock";
+import { MediaBlock } from "./MediaBlock";
 import RichTextBlock from "./RichTextBlock";
 import SpaceBlock from "./SpaceBlock";
 import { TextImageBlock } from "./TextImageBlock";
+import { TwoListsBlock } from "./TwoListsBlock";
 import YouTubeVideoBlock from "./YouTubeVideoBlock";
 
 const supportedBlocks: SupportedBlocks = {
@@ -26,6 +28,8 @@ const supportedBlocks: SupportedBlocks = {
     fullWidthImage: (props) => <FullWidthImageBlock data={props} />,
     columns: (props) => <ColumnsBlock data={props} />,
     anchor: (props) => <AnchorBlock data={props} />,
+    media: (props) => <MediaBlock data={props} />,
+    twoLists: (props) => <TwoListsBlock data={props} />,
 };
 
 export const PageContentBlock: React.FC<PropsWithData<PageContentBlockData>> = ({ data }) => {

@@ -4,97 +4,173 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
+    FinalFormSaveSplitButton,
     FinalFormSelect,
+    FinalFormSubmitEvent,
+    Loading,
     MainContent,
-    messages,
-    SaveButton,
-    SplitButton,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
     ToolbarTitleItem,
+    useAsyncOptionsProps,
+    useFormApiRef,
     useStackApi,
+    useStackSwitchApi,
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
-import { EditPageLayout } from "@comet/cms-admin";
-import { CircularProgress, FormControlLabel, IconButton, MenuItem } from "@mui/material";
+import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
+import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
+import { GQLProductType } from "@src/graphql.generated";
+import { FormApi } from "final-form";
+import { filter } from "graphql-anywhere";
+import isEqual from "lodash.isequal";
+import React from "react";
+import { FormattedMessage } from "react-intl";
+
 import {
-    GQLProductFormCreateProductMutation,
-    GQLProductFormCreateProductMutationVariables,
-    GQLProductFormFragment,
-    GQLProductFormUpdateProductMutation,
-    GQLProductFormUpdateProductMutationVariables,
+    createProductMutation,
+    productCategoriesQuery,
+    productFormFragment,
+    productQuery,
+    productTagsQuery,
+    updateProductMutation,
+} from "./ProductForm.gql";
+import {
+    GQLCreateProductMutation,
+    GQLCreateProductMutationVariables,
+    GQLProductCategoriesQuery,
+    GQLProductCategoriesQueryVariables,
+    GQLProductCategorySelectFragment,
+    GQLProductFormManualFragment,
     GQLProductQuery,
     GQLProductQueryVariables,
-    GQLProductType,
-} from "@src/graphql.generated";
-import { FORM_ERROR } from "final-form";
-import { filter } from "graphql-anywhere";
-import React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
-
-import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
+    GQLProductTagsQuery,
+    GQLProductTagsSelectFragment,
+    GQLUpdateProductMutation,
+    GQLUpdateProductMutationVariables,
+} from "./ProductForm.gql.generated";
+import { GQLProductTagsListQueryVariables } from "./tags/ProductTagTable.generated";
 
 interface FormProps {
     id?: string;
 }
 
-type FormState = Omit<GQLProductFormFragment, "price"> & {
+const rootBlocks = {
+    image: DamImageBlock,
+};
+
+type FormValues = Omit<GQLProductFormManualFragment, "price" | "image"> & {
     price: string;
+    image: BlockState<typeof rootBlocks.image>;
 };
 
 function ProductForm({ id }: FormProps): React.ReactElement {
-    const intl = useIntl();
     const stackApi = useStackApi();
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
+    const formApiRef = useFormApiRef<FormValues>();
+    const stackSwitchApi = useStackSwitchApi();
 
-    const handleSubmit = async (formState: FormState) => {
-        const input = {
-            ...formState,
-            price: parseFloat(formState.price),
-            type: formState.type as GQLProductType,
+    const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
+        productQuery,
+        id ? { variables: { id } } : { skip: true },
+    );
+
+    const initialValues: Partial<FormValues> = data?.product
+        ? {
+              ...filter<GQLProductFormManualFragment>(productFormFragment, data.product),
+              price: String(data.product.price),
+              image: rootBlocks.image.input2State(data.product.image),
+          }
+        : {
+              image: rootBlocks.image.defaultValues(),
+              inStock: false,
+              tags: [],
+          };
+
+    const saveConflict = useFormSaveConflict({
+        checkConflict: async () => {
+            const updatedAt = await queryUpdatedAt(client, "product", id);
+            return resolveHasSaveConflict(data?.product.updatedAt, updatedAt);
+        },
+        formApiRef,
+        loadLatestVersion: async () => {
+            await refetch();
+        },
+    });
+
+    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+        if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        const output = {
+            ...formValues,
+            price: parseFloat(formValues.price),
+            image: rootBlocks.image.state2Output(formValues.image),
+            type: formValues.type as GQLProductType,
+            category: formValues.category?.id,
+            tags: formValues.tags.map((i) => i.id),
+            variants: [],
+            articleNumbers: [],
+            discounts: [],
+            packageDimensions: { width: 0, height: 0, depth: 0 },
+            statistics: { views: 0 },
         };
         if (mode === "edit") {
             if (!id) throw new Error();
-            await client.mutate<GQLProductFormUpdateProductMutation, GQLProductFormUpdateProductMutationVariables>({
+            await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
-                variables: { id, input },
+                variables: { id, input: output, lastUpdatedAt: data?.product.updatedAt },
             });
         } else {
-            await client.mutate<GQLProductFormCreateProductMutation, GQLProductFormCreateProductMutationVariables>({
+            const { data: mutationReponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
-                variables: { input },
+                variables: { input: output },
             });
+            if (!event.navigatingBack) {
+                const id = mutationReponse?.createProduct.id;
+                if (id) {
+                    setTimeout(() => {
+                        stackSwitchApi.activatePage(`edit`, id);
+                    });
+                }
+            }
         }
     };
 
-    const { data, error, loading } = useQuery<GQLProductQuery, GQLProductQueryVariables>(productQuery, id ? { variables: { id } } : { skip: true });
-
-    const initialValues = data?.product ? filter(productFormFragment, data.product) : { inStock: false };
+    const categorySelectAsyncProps = useAsyncOptionsProps(async () => {
+        const categories = await client.query<GQLProductCategoriesQuery, GQLProductCategoriesQueryVariables>({ query: productCategoriesQuery });
+        return categories.data.productCategories.nodes;
+    });
+    const tagsSelectAsyncProps = useAsyncOptionsProps(async () => {
+        const tags = await client.query<GQLProductTagsQuery, GQLProductTagsListQueryVariables>({ query: productTagsQuery });
+        return tags.data.productTags.nodes;
+    });
 
     if (error) {
         return <FormattedMessage id="common.error" defaultMessage="An error has occurred. Please try again at later" />;
     }
 
     if (loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
 
     return (
-        <FinalForm<FormState>
+        <FinalForm<FormValues>
+            apiRef={formApiRef}
             onSubmit={handleSubmit}
             mode={mode}
             initialValues={initialValues}
-            renderButtons={() => null}
+            initialValuesEqual={isEqual} //required to compare block data correctly
             onAfterSubmit={(values, form) => {
-                //don't go back automatically
+                //don't go back automatically TODO remove this automatismn
             }}
             subscription={{}}
         >
-            {({ pristine, hasValidationErrors, submitting, handleSubmit, hasSubmitErrors }) => (
+            {() => (
                 <EditPageLayout>
+                    {saveConflict.dialogs}
                     <Toolbar>
                         <ToolbarItem>
                             <IconButton onClick={stackApi?.goBack}>
@@ -110,26 +186,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="editInspirationSave">
-                                <SaveButton color="primary" variant="contained" hasErrors={hasSubmitErrors} type="submit">
-                                    <FormattedMessage {...messages.save} />
-                                </SaveButton>
-                                <SaveButton
-                                    color="primary"
-                                    variant="contained"
-                                    saving={submitting}
-                                    hasErrors={hasSubmitErrors}
-                                    onClick={async () => {
-                                        const submitResult = await handleSubmit();
-                                        const error = submitResult?.[FORM_ERROR];
-                                        if (!error) {
-                                            stackApi?.goBack();
-                                        }
-                                    }}
-                                >
-                                    <FormattedMessage {...messages.saveAndGoBack} />
-                                </SaveButton>
-                            </SplitButton>
+                            <FinalFormSaveSplitButton />
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
@@ -138,14 +195,14 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             fullWidth
                             name="title"
                             component={FinalFormInput}
-                            label={intl.formatMessage({ id: "product.title", defaultMessage: "Title" })}
+                            label={<FormattedMessage id="product.title" defaultMessage="Title" />}
                         />
                         <Field
                             required
                             fullWidth
                             name="slug"
                             component={FinalFormInput}
-                            label={intl.formatMessage({ id: "product.slug", defaultMessage: "Slug" })}
+                            label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
                         />
                         <Field
                             required
@@ -154,7 +211,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             rows={5}
                             name="description"
                             component={FinalFormInput}
-                            label={intl.formatMessage({ id: "product.description", defaultMessage: "Description" })}
+                            label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
                         <Field name="type" label="Type" required fullWidth>
                             {(props) => (
@@ -167,18 +224,38 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                         </Field>
                         <Field
                             fullWidth
+                            name="category"
+                            label="Category"
+                            component={FinalFormSelect}
+                            {...categorySelectAsyncProps}
+                            getOptionLabel={(option: GQLProductCategorySelectFragment) => option.title}
+                        />
+                        <Field
+                            fullWidth
+                            name="tags"
+                            label="Tags"
+                            component={FinalFormSelect}
+                            multiple
+                            {...tagsSelectAsyncProps}
+                            getOptionLabel={(option: GQLProductTagsSelectFragment) => option.title}
+                        />
+                        <Field
+                            fullWidth
                             name="price"
                             component={FinalFormInput}
                             inputProps={{ type: "number" }}
-                            label={intl.formatMessage({ id: "product.price", defaultMessage: "Price" })}
+                            label={<FormattedMessage id="product.price" defaultMessage="Price" />}
                         />
                         <Field name="inStock" label="" type="checkbox" fullWidth>
                             {(props) => (
                                 <FormControlLabel
-                                    label={intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" })}
+                                    label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />}
                                     control={<FinalFormCheckbox {...props} />}
                                 />
                             )}
+                        </Field>
+                        <Field name="image" isEqual={isEqual}>
+                            {createFinalFormBlock(rootBlocks.image)}
                         </Field>
                     </MainContent>
                 </EditPageLayout>

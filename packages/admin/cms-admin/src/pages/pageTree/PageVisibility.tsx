@@ -4,16 +4,13 @@ import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import {
-    GQLPageTreeNodeVisibility,
-    GQLPageTreePageFragment,
-    GQLUpdatePageVisibilityMutation,
-    GQLUpdatePageVisibilityMutationVariables,
-} from "../../graphql.generated";
+import { GQLPageTreeNodeVisibility } from "../../graphql.generated";
+import { GQLUpdatePageVisibilityMutation, GQLUpdatePageVisibilityMutationVariables } from "./PageVisibility.generated";
 import { PageVisibilityIcon } from "./PageVisibilityIcon";
 import { subTreeFromNode, treeMapToArray } from "./treemap/TreeMapUtils";
-import { PageTreePage } from "./usePageTree";
+import { GQLPageTreePageFragment, PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
+export { GQLUpdatePageVisibilityMutation, GQLUpdatePageVisibilityMutationVariables } from "./PageVisibility.generated";
 
 export const updatePageVisibilityMutation = gql`
     mutation UpdatePageVisibility($id: ID!, $input: PageTreeNodeUpdateVisibilityInput!) {

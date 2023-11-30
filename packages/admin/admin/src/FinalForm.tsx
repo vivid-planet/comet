@@ -1,28 +1,43 @@
-import { useApolloClient } from "@apollo/client";
-import { CircularProgress } from "@mui/material";
-import { FORM_ERROR, FormApi, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
+import { getApolloContext } from "@apollo/client";
+import { Config, Decorator, FORM_ERROR, FormApi, FormSubscription, MutableState, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
 import setFieldData from "final-form-set-field-data";
 import * as React from "react";
-import { AnyObject, Form, FormProps, FormRenderProps } from "react-final-form";
+import { AnyObject, Form, FormRenderProps, RenderableProps } from "react-final-form";
+import { useIntl } from "react-intl";
 
-import { DirtyHandlerApiContext } from "./DirtyHandlerApiContext";
+import { Loading } from "./common/Loading";
 import { EditDialogApiContext } from "./EditDialogApiContext";
 import { useEditDialogFormApi } from "./EditDialogFormApiContext";
 import { renderComponent } from "./finalFormRenderComponent";
 import { FinalFormContext, FinalFormContextProvider } from "./form/FinalFormContextProvider";
-import { SubmitError, SubmitResult } from "./form/SubmitResult";
+import { messages } from "./messages";
+import { RouterPrompt } from "./router/Prompt";
+import { useSubRoutePrefix } from "./router/SubRoute";
 import { StackApiContext } from "./stack/Api";
 import { TableQueryContext } from "./table/TableQueryContext";
 
 export const useFormApiRef = <FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>() =>
     React.useRef<FormApi<FormValues, InitialFormValues>>();
 
-interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
+// copy of FormProps from final-form, because Omit doen't work on it
+interface IProps<FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>
+    extends Omit<Config<FormValues, InitialFormValues>, "onSubmit">,
+        RenderableProps<FormRenderProps<FormValues, InitialFormValues>> {
+    subscription?: FormSubscription;
+    decorators?: Array<Decorator<FormValues, InitialFormValues>>;
+    form?: FormApi<FormValues, InitialFormValues>;
+    initialValuesEqual?: (a?: AnyObject, b?: AnyObject) => boolean;
+    [otherProp: string]: any;
+
     mode: "edit" | "add";
     resolveSubmitErrors?: (error: SubmissionErrors) => SubmissionErrors;
 
     // override final-form onSubmit and remove callback as we don't support that (return promise instead)
-    onSubmit: (values: FormValues, form: FormApi<FormValues>) => SubmissionErrors | Promise<SubmissionErrors | undefined> | undefined | void;
+    onSubmit: (
+        values: FormValues,
+        form: FormApi<FormValues>,
+        event: FinalFormSubmitEvent,
+    ) => SubmissionErrors | Promise<SubmissionErrors | undefined> | undefined | void;
 
     /* override onAfterSubmit. This method will be called at the end of a submit process.
      *
@@ -32,11 +47,29 @@ interface IProps<FormValues = AnyObject> extends FormProps<FormValues> {
     validateWarning?: (values: FormValues) => ValidationErrors | Promise<ValidationErrors> | undefined;
     formContext?: Partial<FinalFormContext>;
     apiRef?: React.MutableRefObject<FormApi<FormValues> | undefined>;
+    subRoutePath?: string;
+}
+
+declare module "final-form" {
+    interface InternalFormState {
+        submitEvent: any;
+    }
+}
+
+const setSubmitEvent: Mutator<any, any> = (args: any[], state: MutableState<any, any>) => {
+    const [event] = args;
+    state.formState.submitEvent = event;
+};
+const getSubmitEvent: Mutator<any, any> = (args: any[], state: MutableState<any, any>) => {
+    return state.formState.submitEvent;
+};
+
+export class FinalFormSubmitEvent extends Event {
+    navigatingBack?: boolean;
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
-    const client = useApolloClient();
-    const dirtyHandler = React.useContext(DirtyHandlerApiContext);
+    const { client } = React.useContext(getApolloContext());
     const stackApi = React.useContext(StackApiContext);
     const editDialog = React.useContext(EditDialogApiContext);
     const tableQuery = React.useContext(TableQueryContext);
@@ -50,21 +83,27 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         validateWarning,
     } = props;
 
-    const ref = React.useRef();
-
     return (
         <Form
             {...props}
-            mutators={{ ...props.mutators, setFieldData: setFieldData as unknown as Mutator<FormValues, object> }}
+            mutators={{
+                ...props.mutators,
+                setFieldData: setFieldData as unknown as Mutator<FormValues, object>,
+                setSubmitEvent: setSubmitEvent as unknown as Mutator<FormValues, object>,
+                getSubmitEvent: getSubmitEvent as unknown as Mutator<FormValues, object>,
+            }}
             onSubmit={handleSubmit}
             render={RenderForm}
         />
     );
 
     function RenderForm({ formContext = {}, ...formRenderProps }: FormRenderProps<FormValues> & { formContext: Partial<FinalFormContext> }) {
+        const intl = useIntl();
+        const subRoutePrefix = useSubRoutePrefix();
         if (props.apiRef) props.apiRef.current = formRenderProps.form;
         const { mutators } = formRenderProps.form;
         const setFieldData = mutators.setFieldData as (...args: any[]) => any;
+        const subRoutePath = props.subRoutePath ?? `${subRoutePrefix}/form`;
 
         const submit = React.useCallback(
             (event: any) => {
@@ -87,40 +126,6 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             },
             [formRenderProps],
         );
-
-        React.useEffect(() => {
-            if (dirtyHandler) {
-                dirtyHandler.registerBinding(ref, {
-                    isDirty: () => {
-                        return formRenderProps.form.getState().dirty;
-                    },
-                    submit: async (): Promise<SubmitResult> => {
-                        if (formRenderProps.hasValidationErrors) {
-                            return {
-                                error: new SubmitError("Form has Validation Errors", formRenderProps.errors),
-                            };
-                        }
-
-                        const submissionErrors = await formRenderProps.form.submit();
-                        if (submissionErrors) {
-                            return {
-                                error: new SubmitError("Form has Submission Errors", submissionErrors),
-                            };
-                        }
-
-                        return {};
-                    },
-                    reset: () => {
-                        formRenderProps.form.reset();
-                    },
-                });
-            }
-            return () => {
-                if (dirtyHandler) {
-                    dirtyHandler.unregisterBinding(ref);
-                }
-            };
-        }, [formRenderProps, submit]);
 
         const currentWarningValidationRound = React.useRef(0);
 
@@ -157,32 +162,63 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
         return (
             <FinalFormContextProvider {...formContext}>
-                <form onSubmit={submit}>
-                    <div>
-                        {renderComponent<FormValues>(
-                            {
-                                children: props.children,
-                                component: props.component,
-                                render: props.render,
-                            },
-                            formRenderProps,
+                <RouterPrompt
+                    message={() => {
+                        if (formRenderProps.form.getState().dirty) {
+                            return intl.formatMessage(messages.saveUnsavedChanges);
+                        }
+                        return true;
+                    }}
+                    saveAction={async () => {
+                        editDialogFormApi?.onFormStatusChange("saving");
+                        const hasValidationErrors = await waitForValidationToFinish(formRenderProps.form);
+
+                        if (hasValidationErrors) {
+                            editDialogFormApi?.onFormStatusChange("error");
+                            return false;
+                        }
+
+                        const submissionErrors = await formRenderProps.form.submit();
+
+                        if (submissionErrors) {
+                            editDialogFormApi?.onFormStatusChange("error");
+                            return false;
+                        }
+
+                        return true;
+                    }}
+                    // TODO DirtyHandler removal: do we need a resetAction functionality here?
+                    subRoutePath={subRoutePath}
+                >
+                    <form onSubmit={submit}>
+                        <div>
+                            {renderComponent<FormValues>(
+                                {
+                                    children: props.children,
+                                    component: props.component,
+                                    render: props.render,
+                                },
+                                formRenderProps,
+                            )}
+                        </div>
+                        {(formRenderProps.submitError || formRenderProps.error) && (
+                            <div className="error">{formRenderProps.submitError || formRenderProps.error}</div>
                         )}
-                    </div>
-                    {(formRenderProps.submitError || formRenderProps.error) && (
-                        <div className="error">{formRenderProps.submitError || formRenderProps.error}</div>
-                    )}
-                    {!editDialog && <>{formRenderProps.submitting && <CircularProgress />}</>}
-                </form>
+                        {!editDialog && <>{formRenderProps.submitting && <Loading behavior="fillParent" />}</>}
+                    </form>
+                </RouterPrompt>
             </FinalFormContextProvider>
         );
     }
 
-    function handleSubmit(values: FormValues, form: FormApi<FormValues>) {
-        const ret = props.onSubmit(values, form);
+    async function handleSubmit(values: FormValues, form: FormApi<FormValues>) {
+        const submitEvent = (form.mutators.getSubmitEvent ? form.mutators.getSubmitEvent() : undefined) || new FinalFormSubmitEvent("submit");
+        const ret = props.onSubmit(values, form, submitEvent);
 
         if (ret === undefined) return ret;
 
         editDialogFormApi?.onFormStatusChange("saving");
+
         return Promise.resolve(ret)
             .then((data) => {
                 // setTimeout is required because of https://github.com/final-form/final-form/pull/229
@@ -190,7 +226,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     if (props.mode === "add") {
                         if (tableQuery) {
                             // refetch TableQuery after adding
-                            client.query({
+                            client?.query({
                                 query: tableQuery.api.getQuery(),
                                 variables: tableQuery.api.getVariables(),
                                 fetchPolicy: "network-only",
@@ -199,6 +235,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     }
 
                     onAfterSubmit(values, form);
+                    editDialogFormApi?.onAfterSave?.();
                 });
                 return data;
             })
@@ -206,6 +243,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                 (data) => {
                     // for final-form undefined means success, an obj means error
                     editDialogFormApi?.resetFormStatus();
+
                     form.reset(values);
                     return undefined;
                 },
@@ -223,3 +261,22 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             );
     }
 }
+
+const waitForValidationToFinish = (form: FormApi<any>): Promise<boolean> | boolean => {
+    const formState = form.getState();
+    if (!formState.validating) {
+        return formState.hasValidationErrors;
+    }
+
+    return new Promise((resolve) => {
+        const unsubscribe = form.subscribe(
+            (state) => {
+                if (!state.validating) {
+                    unsubscribe();
+                    resolve(state.hasValidationErrors);
+                }
+            },
+            { validating: true, hasValidationErrors: true },
+        );
+    });
+};

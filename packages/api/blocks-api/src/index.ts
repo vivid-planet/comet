@@ -36,7 +36,7 @@ export { ChildBlock } from "./blocks/decorators/child-block";
 export { ChildBlockInput } from "./blocks/decorators/child-block-input";
 export { AnnotationBlockMeta, BlockField, getFieldKeys } from "./blocks/decorators/field";
 export { RootBlock } from "./blocks/decorators/root-block";
-export { RootBlockEntity, RootBlockEntityOptions } from "./blocks/decorators/root-block-entity";
+export { RootBlockEntity } from "./blocks/decorators/root-block-entity";
 export { TransformDependencies } from "./blocks/dependencies";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { ColumnsBlockFactory } from "./blocks/factories/columns-block.factory";

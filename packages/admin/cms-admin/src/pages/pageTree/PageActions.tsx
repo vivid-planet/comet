@@ -1,26 +1,19 @@
 import { useApolloClient } from "@apollo/client";
-import { IEditDialogApi, RowActionsItem, RowActionsMenu, useStackSwitchApi } from "@comet/admin";
+import { IEditDialogApi, RowActionsItem, RowActionsMenu, useStackSwitchApi, writeClipboardText } from "@comet/admin";
 import { Add, Delete, Domain, Edit, Preview, Settings } from "@comet/admin-icons";
-import { writeClipboard } from "@comet/blocks-admin";
 import { Divider } from "@mui/material";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useContentScope } from "../../contentScope/Provider";
 import { serializeInitialValues } from "../../form/serializeInitialValues";
-import {
-    GQLDeletePageTreeNodeMutation,
-    GQLDeletePageTreeNodeMutationVariables,
-    GQLPageTreePageFragment,
-    namedOperations,
-} from "../../graphql.generated";
 import { openSitePreviewWindow } from "../../preview/openSitePreviewWindow";
 import { CopyPasteMenuItem } from "./CopyPasteMenuItem";
 import { MovePageMenuItem } from "./MovePageMenuItem";
-import { deletePageMutation } from "./Page.gql";
+import { deletePageMutation, GQLDeletePageTreeNodeMutation, GQLDeletePageTreeNodeMutationVariables } from "./Page";
 import { PageDeleteDialog } from "./PageDeleteDialog";
 import { subTreeFromNode, traverse } from "./treemap/TreeMapUtils";
-import { PageTreePage } from "./usePageTree";
+import { GQLPageTreePageFragment, PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 interface Props {
@@ -54,7 +47,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
             await client.mutate<GQLDeletePageTreeNodeMutation, GQLDeletePageTreeNodeMutationVariables>({
                 mutation: deletePageMutation,
                 variables: { id: node.id },
-                refetchQueries: [namedOperations.Query.Pages],
+                refetchQueries: ["Pages"],
             });
         }
         setDeleteDialogOpen(false);
@@ -114,7 +107,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                             key="copyUrl"
                             icon={<Domain />}
                             onClick={() => {
-                                writeClipboard(`${siteUrl}${page.path}`);
+                                writeClipboardText(`${siteUrl}${page.path}`);
                             }}
                         >
                             <FormattedMessage id="comet.pages.pages.page.copyUrl" defaultMessage="Copy URL" />

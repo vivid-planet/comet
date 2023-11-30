@@ -5,17 +5,11 @@ import { Button, Checkbox, FormControlLabel, Grid, IconButton, Tooltip, useTheme
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import {
-    GQLDeletePageTreeNodeMutation,
-    GQLDeletePageTreeNodeMutationVariables,
-    GQLPageTreePageFragment,
-    namedOperations,
-} from "../../graphql.generated";
-import { deletePageMutation } from "../pageTree/Page.gql";
+import { deletePageMutation, GQLDeletePageTreeNodeMutation, GQLDeletePageTreeNodeMutationVariables } from "../pageTree/Page";
 import { PageDeleteDialog } from "../pageTree/PageDeleteDialog";
 import { traverse, TreeMap, treeMapToArray } from "../pageTree/treemap/TreeMapUtils";
 import { useCopyPastePages } from "../pageTree/useCopyPastePages";
-import { PageTreeSelectionState } from "../pageTree/usePageTree";
+import { GQLPageTreePageFragment, PageTreeSelectionState } from "../pageTree/usePageTree";
 import { usePageTreeContext } from "../pageTree/usePageTreeContext";
 import { areAllSubTreesFullSelected } from "./areAllSubTreesFullSelected";
 import { ConfirmPageActionDialog } from "./ConfirmPageActionDialog";
@@ -59,7 +53,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
     const [copyLoading, setCopyLoading] = React.useState(false);
     const [pasteLoading, setPasteLoading] = React.useState(false);
     const [deleting, setDeleting] = React.useState(false);
-    const { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages } = useCopyPastePages();
+    const { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages, progressDialog } = useCopyPastePages();
 
     const classes = useStyles();
     const theme = useTheme();
@@ -118,6 +112,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
 
     return (
         <>
+            {progressDialog}
             <Grid container justifyContent="space-between" classes={{ root: classes.root }}>
                 <Grid item>
                     <FormControlLabel
@@ -201,7 +196,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                                     setPasteLoading(true);
                                     const pages = await getFromClipboard();
                                     if (pages.canPaste) {
-                                        await sendPages(null, pages.content);
+                                        await sendPages(null, pages.content, { targetPos: undefined });
                                     }
                                     setPasteLoading(false);
                                 }}
@@ -284,7 +279,7 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                             // eslint-disable-next-line no-console
                             console.error("Error deleting pages");
                         } finally {
-                            client.refetchQueries({ include: [namedOperations.Query.Pages] });
+                            client.refetchQueries({ include: ["Pages"] });
                         }
                     } else {
                         setShowCanNotDeleteDialog(true);

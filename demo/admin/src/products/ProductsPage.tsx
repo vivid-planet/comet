@@ -3,16 +3,16 @@ import React from "react";
 import { useIntl } from "react-intl";
 
 import ProductForm from "./ProductForm";
-import ProductsTable from "./ProductsTable";
+import ProductsGrid from "./ProductsGrid";
 
 const ProductsPage: React.FC = () => {
     const intl = useIntl();
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
-            <StackSwitch initialPage="table">
-                <StackPage name="table">
-                    <ProductsTable />
+            <StackSwitch initialPage="grid">
+                <StackPage name="grid">
+                    <ProductsGrid />
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit product" })}>
                     {(selectedId) => <ProductForm id={selectedId} />}

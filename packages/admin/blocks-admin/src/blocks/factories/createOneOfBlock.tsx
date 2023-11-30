@@ -22,7 +22,7 @@ interface OneOfBlockItem<T extends BlockInterface = BlockInterface> {
 
 export interface OneOfBlockState {
     attachedBlocks: OneOfBlockItem[];
-    activeType: string | null;
+    activeType?: string;
 }
 
 export interface OneOfBlockFragment {
@@ -31,7 +31,7 @@ export interface OneOfBlockFragment {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         props: any;
     }[];
-    activeType: string | null;
+    activeType?: string;
 }
 
 export interface OneOfBlockPreviewState extends PreviewStateInterface {
@@ -42,25 +42,37 @@ export interface OneOfBlockPreviewState extends PreviewStateInterface {
     };
 }
 
+type ActiveType<Config extends boolean> = Config extends false ? { activeType: string } : { activeType?: string };
+
+export type OneOfBlockOutput<Config extends boolean> = {
+    attachedBlocks: {
+        type: string;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        props: any;
+    }[];
+} & ActiveType<Config>;
+
 type BlockType = string;
-export interface CreateOneOfBlockOptions {
+export interface CreateOneOfBlockOptions<T extends boolean> {
     name: string;
     displayName?: React.ReactNode;
     supportedBlocks: Record<BlockType, BlockInterface>;
     category?: BlockCategory;
     variant?: "select" | "radio" | "toggle";
-    allowEmpty?: boolean;
+    allowEmpty?: T;
 }
 
-export const createOneOfBlock = ({
+export const createOneOfBlock = <T extends boolean = boolean>({
     supportedBlocks,
     name,
     displayName = "Switch",
     category = BlockCategory.Other,
     variant = "select",
-    allowEmpty = true,
-}: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, any, OneOfBlockPreviewState> => {
+    allowEmpty: passedAllowEmpty,
+}: CreateOneOfBlockOptions<T>): BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState> => {
+    // allowEmpty can't have a default type because it's typed by a generic
+    const allowEmpty = (passedAllowEmpty ?? true) satisfies boolean;
+
     function blockForType(type: string): BlockInterface | null {
         return supportedBlocks[type] ?? null;
     }
@@ -97,8 +109,7 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
         });
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const OneOfBlock: BlockInterface<OneOfBlockFragment, OneOfBlockState, any, OneOfBlockPreviewState> = {
+    const OneOfBlock: BlockInterface<OneOfBlockFragment, OneOfBlockState, OneOfBlockOutput<T>, OneOfBlockPreviewState> = {
         ...createBlockSkeleton(),
 
         name,
@@ -111,7 +122,7 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
             if (allowEmpty) {
                 return {
                     attachedBlocks: [],
-                    activeType: null,
+                    activeType: undefined,
                 };
             } else {
                 const [blockType, block] = Object.entries(supportedBlocks)[0];
@@ -124,7 +135,7 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
         },
 
         input2State: (input) => {
-            const activeType = input.activeType && supportedBlocks[input.activeType] ? input.activeType : null;
+            const activeType = input.activeType && supportedBlocks[input.activeType] ? input.activeType : undefined;
 
             const attachedBlocks: OneOfBlockItem[] = [];
 
@@ -158,7 +169,7 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
                     };
                 }),
                 activeType: s.activeType,
-            };
+            } as OneOfBlockOutput<T>;
         },
 
         output2State: async (output, context) => {
@@ -218,6 +229,34 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
             return block?.anchors?.(blockState.props) ?? [];
         },
 
+        dependencies: (state) => {
+            const { state: blockState, block } = getActiveBlock(state);
+
+            if (blockState === undefined) {
+                return [];
+            }
+
+            return block?.dependencies?.(blockState.props) ?? [];
+        },
+
+        replaceDependenciesInOutput: (output, replacements) => {
+            const newOutput: OneOfBlockOutput<T> = { ...output, attachedBlocks: [] };
+
+            for (const c of output.attachedBlocks) {
+                const block = blockForType(c.type);
+                if (!block) {
+                    throw new Error(`No Block found for type ${c.type}`); // for TS
+                }
+
+                newOutput.attachedBlocks.push({
+                    ...c,
+                    props: block.replaceDependenciesInOutput(c.props, replacements),
+                });
+            }
+
+            return newOutput;
+        },
+
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {
@@ -229,7 +268,7 @@ CreateOneOfBlockOptions): BlockInterface<OneOfBlockFragment, OneOfBlockState, an
                         let newState: OneOfBlockState = prevState;
                         if (blockType === "none") {
                             // unselect, no block selected
-                            newState = { ...prevState, activeType: null };
+                            newState = { ...prevState, activeType: undefined };
                         } else {
                             // check if we have a block of the same type already
                             const match = prevState.attachedBlocks.find((c) => c.type === blockType);

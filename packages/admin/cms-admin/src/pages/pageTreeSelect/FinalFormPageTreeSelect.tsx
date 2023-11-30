@@ -1,8 +1,8 @@
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
-import { GQLSelectedPageFragment } from "../../graphql.generated";
 import PageTreeSelect from "./PageTreeSelect";
+import { GQLSelectedPageFragment } from "./PageTreeSelectDialog";
 
 type Props = FieldRenderProps<GQLSelectedPageFragment | undefined | null, HTMLDivElement>;
 

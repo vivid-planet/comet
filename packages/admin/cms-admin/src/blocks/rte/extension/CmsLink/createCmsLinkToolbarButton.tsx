@@ -42,7 +42,7 @@ export function createCmsLinkToolbarButton({ link: LinkBlock }: CreateCmsLinkToo
             setOpen(true);
         }
         return (
-            <ControlButton disabled={linkEditCreateDisabled} onButtonClick={handleClick} Icon={Link}>
+            <ControlButton disabled={linkEditCreateDisabled} onButtonClick={handleClick} icon={Link}>
                 {open && (
                     <LinkDialog
                         editorState={editorState}

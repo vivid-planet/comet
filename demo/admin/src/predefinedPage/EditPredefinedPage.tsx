@@ -3,6 +3,7 @@ import {
     Field,
     FinalForm,
     FinalFormSelect,
+    Loading,
     MainContent,
     messages,
     SaveButton,
@@ -14,16 +15,17 @@ import {
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout, PageName } from "@comet/cms-admin";
-import { CircularProgress, IconButton, MenuItem } from "@mui/material";
+import { IconButton, MenuItem } from "@mui/material";
+import { FORM_ERROR } from "final-form";
+import * as React from "react";
+import { FormattedMessage } from "react-intl";
+
 import {
     GQLPredefinedPageQuery,
     GQLPredefinedPageQueryVariables,
     GQLUpdatePredefinedPageMutation,
     GQLUpdatePredefinedPageMutationVariables,
-} from "@src/graphql.generated";
-import { FORM_ERROR } from "final-form";
-import * as React from "react";
-import { FormattedMessage } from "react-intl";
+} from "./EditPredefinedPage.generated";
 
 const getQuery = gql`
     query PredefinedPage($id: ID!) {
@@ -72,7 +74,7 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
     });
 
     if (loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
 
     return (

@@ -1,12 +1,12 @@
-import { AppHeaderDropdown } from "@comet/admin";
+import { AppHeaderDropdown, Loading } from "@comet/admin";
 import { Account, Info, Logout } from "@comet/admin-icons";
-import { Box, Button as MUIButton, CircularProgress } from "@mui/material";
+import { Box, Button as MUIButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLCurrentUserQuery, GQLSignOutMutation } from "../../graphql.generated";
 import { AboutModal } from "./about/AboutModal";
+import { GQLCurrentUserQuery, GQLSignOutMutation } from "./UserHeaderItem.generated";
 
 const DropdownContent = styled(Box)`
     width: 250px;
@@ -22,6 +22,12 @@ const Separator = styled(Box)`
     width: 100%;
     margin-top: 20px;
     margin-bottom: 20px;
+`;
+
+const LoadingWrapper = styled("div")`
+    width: 60px;
+    height: 100%;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
 `;
 
 import { gql, useMutation, useQuery } from "@apollo/client";
@@ -51,7 +57,12 @@ export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
     const { loading, data } = useQuery<GQLCurrentUserQuery>(currentUserQuery);
     const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
 
-    if (loading || !data) return <CircularProgress />;
+    if (loading || !data)
+        return (
+            <LoadingWrapper>
+                <Loading behavior="fillParent" sx={{ fontSize: 20 }} color="inherit" />
+            </LoadingWrapper>
+        );
 
     return (
         <AppHeaderDropdown buttonChildren={data.currentUser.name} startIcon={<Account />}>
@@ -67,8 +78,9 @@ export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
                     <FormattedMessage id="comet.about" defaultMessage="About" />
                 </Button>
                 <Separator />
-                {isSigningOut && <CircularProgress />}
-                {!isSigningOut && (
+                {isSigningOut ? (
+                    <Loading />
+                ) : (
                     <Button
                         fullWidth
                         variant="contained"

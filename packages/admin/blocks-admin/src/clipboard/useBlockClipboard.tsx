@@ -1,10 +1,9 @@
+import { readClipboardText, writeClipboardText } from "@comet/admin";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { BlockInterface, BlockOutputApi, BlockState } from "../blocks/types";
 import { useBlockContext } from "../context/useBlockContext";
-import { readClipboard } from "./readClipboard";
-import { writeClipboard } from "./writeClipboard";
 
 interface ClipboardBlock {
     name: string;
@@ -66,11 +65,11 @@ function useBlockClipboard({ supports }: UseBlockClipboardOptions): BlockClipboa
             };
         });
 
-        return writeClipboard(JSON.stringify(blocks));
+        return writeClipboardText(JSON.stringify(blocks));
     };
 
     const getClipboardContent = async (): Promise<GetClipboardContentResponse> => {
-        const text = await readClipboard();
+        const text = await readClipboardText();
 
         if (text === undefined) {
             return {

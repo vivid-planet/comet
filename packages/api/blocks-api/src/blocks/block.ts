@@ -7,7 +7,6 @@ import { BlockMigrationInterface } from "../migrations/types";
 import { SearchText } from "../search/get-search-text";
 import { AnnotationBlockMeta, getBlockFieldData, getFieldKeys } from "./decorators/field";
 import { TransformDependencies } from "./dependencies";
-import { lookupPath } from "./helpers/lookupPath";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
 
@@ -37,16 +36,18 @@ export interface ChildBlockInfo {
     name: string;
 }
 export interface BlockIndexData {
-    damFileIds?: string[];
+    dependencies?: Array<{
+        targetEntityName: string;
+        id: string;
+    }>;
 }
-export declare type BlockIndex = Array<
-    {
-        [key: string]: any; // For compatibility with TraversableTransformResponse
-        blockname: string;
-        jsonPath: string;
-        visible: boolean;
-    } & BlockIndexData
->;
+export declare type BlockIndexItem = {
+    [key: string]: any; // For compatibility with TraversableTransformResponse
+    blockname: string;
+    jsonPath: string;
+    visible: boolean;
+} & BlockIndexData;
+export declare type BlockIndex = Array<BlockIndexItem>;
 
 export interface BlockDataInterface {
     transformToPlain(deps: TransformDependencies, ctx: BlockContext): Promise<TraversableTransformResponse>;
@@ -199,7 +200,7 @@ export type BlockMetaField =
     | { name: string; kind: BlockMetaFieldKind.Block; block: Block; nullable: boolean }
     | { name: string; kind: BlockMetaFieldKind.NestedObject; object: BlockMetaInterface; nullable: boolean }
     | { name: string; kind: BlockMetaFieldKind.NestedObjectList; object: BlockMetaInterface; nullable: boolean }
-    | { name: string; kind: BlockMetaFieldKind.OneOfBlocks; blocks: Block[]; nullable: boolean };
+    | { name: string; kind: BlockMetaFieldKind.OneOfBlocks; blocks: Record<string, Block>; nullable: boolean };
 
 export interface BlockMetaInterface {
     fields: BlockMetaField[];
@@ -211,7 +212,6 @@ export type Block<BlockType extends BlockDataInterface = BlockDataInterface, Blo
     blockInputFactory: BlockInputFactory<BlockInputType>;
     blockMeta: BlockMetaInterface;
     blockInputMeta: BlockMetaInterface;
-    path: string | undefined;
 };
 
 const blocks: Block[] = [];
@@ -273,7 +273,6 @@ export function createBlock<BlockType extends BlockDataInterface, BlockInputType
         blockInputFactory: decorateBlockInputFactory,
         blockMeta: options.blockMeta ? options.blockMeta : new AnnotationBlockMeta(BlockData),
         blockInputMeta: options.blockInputMeta ? options.blockInputMeta : new AnnotationBlockMeta(BlockInput),
-        path: lookupPath(),
     };
 
     const finalBlock = overwrite(block);
@@ -303,9 +302,11 @@ export function transformToSave(block: BlockDataInterface): TraversableTransform
             return jsonObj.map((c) => traverse(c));
         } else if (jsonObj !== null && typeof jsonObj === "object") {
             const entries = Object.entries(isBlockDataInterface(jsonObj) ? jsonObj.transformToSave() : jsonObj);
-            const mappedEntries = entries.map(([k, i]) => {
-                return [k, traverse(i)];
-            });
+            const mappedEntries = entries
+                .map(([k, i]) => {
+                    return [k, traverse(i)];
+                })
+                .filter(([, value]) => value !== undefined);
             return Object.fromEntries(mappedEntries);
         } else {
             // keep literal as it is

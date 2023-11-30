@@ -1,6 +1,5 @@
 import { ObservableQuery, useApolloClient } from "@apollo/client";
 import { IEditDialogApi, UndoSnackbar, useSnackbarApi } from "@comet/admin";
-import { Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import gql from "graphql-tag";
 import isEqual from "lodash.isequal";
@@ -11,17 +10,15 @@ import { Align, FixedSizeList as List } from "react-window";
 import { useDebouncedCallback } from "use-debounce";
 
 import { useContentScope } from "../../contentScope/Provider";
+import { GQLPagesQuery, GQLPagesQueryVariables } from "../pagesPage/createPagesQuery";
 import {
     GQLMovePageTreeNodesByPosMutation,
     GQLPagesCacheQuery,
     GQLPagesCacheQueryVariables,
     GQLPageSlugPathFragment,
-    GQLPagesQuery,
-    GQLPagesQueryVariables,
     GQLResetSlugMutation,
     GQLResetSlugMutationVariables,
-    namedOperations,
-} from "../../graphql.generated";
+} from "./PageTree.generated";
 import PageTreeDragLayer from "./PageTreeDragLayer";
 import PageTreeRow, { DropTarget, PageTreeDragObject } from "./PageTreeRow";
 import PageTreeService, { DropInfo } from "./PageTreeService";
@@ -93,7 +90,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
     const newPageIds = React.useRef<string[]>([]);
 
     const queries = client.getObservableQueries();
-    const pagesQuery = Array.from(queries.values()).find((query) => query.queryName === namedOperations.Query.Pages) as
+    const pagesQuery = Array.from(queries.values()).find((query) => query.queryName === "Pages") as
         | ObservableQuery<GQLPagesQuery, GQLPagesQueryVariables>
         | undefined;
 
@@ -297,7 +294,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
                                 disallowedReferences = disallowedReferences.filter((page) => page.id !== pageToUndo.id);
                             }
 
-                            client.refetchQueries({ include: [namedOperations.Query.Pages] });
+                            client.refetchQueries({ include: ["Pages"] });
                         }
                     }}
                 />,
@@ -320,7 +317,6 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
         <>
             <PageTreeDragLayer numberSelectedPages={selectedPages.length} />
             <Root>
-                <Divider />
                 <Table>
                     <AutoSizer>
                         {({ height, width }) => {

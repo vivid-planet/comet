@@ -6,7 +6,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typogra
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLPageTreePageFragment } from "../../graphql.generated";
+import { GQLPageTreePageFragment } from "../pageTree/usePageTree";
 import { DeleteContentInformation, PageCount, PageVisibility, WarningIcon, WarningIconWrapper } from "./PageDeleteDialog.sc";
 import { PageVisibilityIcon } from "./PageVisibilityIcon";
 

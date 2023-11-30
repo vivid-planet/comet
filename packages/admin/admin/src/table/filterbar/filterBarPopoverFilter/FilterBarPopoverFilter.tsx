@@ -11,6 +11,9 @@ import { FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/F
 import { FilterBarButton, FilterBarButtonProps } from "../filterBarButton/FilterBarButton";
 import { FilterBarPopoverFilterClassKey, styles } from "./FilterBarPopoverFilter.styles";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface FilterBarPopoverFilterProps {
     label: string;
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
@@ -124,6 +127,9 @@ function PopoverFilter({
     );
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export const FilterBarPopoverFilter = withStyles(styles, { name: "CometAdminFilterBarPopoverFilter" })(PopoverFilter);
 
 declare module "@mui/material/styles" {

@@ -1,8 +1,10 @@
 import { Inject, Type } from "@nestjs/common";
-import { Args, createUnionType, ID, Info, Mutation, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
+import { Args, ArgsType, createUnionType, ID, Info, Mutation, ObjectType, Parent, Query, ResolveField, Resolver, Union } from "@nestjs/graphql";
 import { GraphQLError, GraphQLResolveInfo } from "graphql";
 
 import { SubjectEntity } from "../common/decorators/subject-entity.decorator";
+import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
+import { DynamicDtoValidationPipe } from "../common/validation/dynamic-dto-validation.pipe";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
@@ -13,6 +15,7 @@ import {
     MovePageTreeNodesByPosInput,
     PageTreeNodeUpdateVisibilityInput,
 } from "./dto/page-tree-node.input";
+import { PaginatedPageTreeNodesArgsFactory } from "./dto/paginated-page-tree-nodes-args.factory";
 import { SlugAvailability } from "./dto/slug-availability.enum";
 import { PAGE_TREE_CONFIG } from "./page-tree.constants";
 import { PageTreeConfig } from "./page-tree.module";
@@ -42,6 +45,12 @@ export function createPageTreeResolver({
 }): Type<unknown> {
     const Scope = PassedScope || EmptyPageTreeNodeScope;
 
+    @ObjectType()
+    class PaginatedPageTreeNodes extends PaginatedResponseFactory.create(PageTreeNode) {}
+
+    @ArgsType()
+    class PaginatedPageTreeNodesArgs extends PaginatedPageTreeNodesArgsFactory.create({ Scope }) {}
+
     const hasNonEmptyScope = !!PassedScope;
 
     function nonEmptyScopeOrNothing(scope: ScopeInterface): ScopeInterface | undefined {
@@ -65,6 +74,7 @@ export function createPageTreeResolver({
             @Inject(PAGE_TREE_CONFIG) private readonly config: PageTreeConfig,
             private readonly attachedDocumentLoaderService: AttachedDocumentLoaderService,
         ) {}
+
         @Query(() => PageTreeNode, { nullable: true })
         @SubjectEntity(PageTreeNode)
         async pageTreeNode(@Args("id", { type: () => ID }) id: string): Promise<PageTreeNodeInterface> {
@@ -85,6 +95,15 @@ export function createPageTreeResolver({
         ): Promise<PageTreeNodeInterface[]> {
             await this.pageTreeReadApi.preloadNodes(scope);
             return this.pageTreeReadApi.getNodes({ scope: nonEmptyScopeOrNothing(scope), category });
+        }
+
+        @Query(() => PaginatedPageTreeNodes)
+        async paginatedPageTreeNodes(@Args() { scope, category, sort, offset, limit }: PaginatedPageTreeNodesArgs): Promise<PaginatedPageTreeNodes> {
+            await this.pageTreeReadApi.preloadNodes(scope);
+            const nodes = await this.pageTreeReadApi.getNodes({ scope: nonEmptyScopeOrNothing(scope), category, offset, limit, sort });
+            const count = await this.pageTreeReadApi.getNodesCount({ scope: nonEmptyScopeOrNothing(scope), category });
+
+            return new PaginatedPageTreeNodes(nodes, count);
         }
 
         @Query(() => SlugAvailability)
@@ -110,6 +129,18 @@ export function createPageTreeResolver({
         @ResolveField(() => [PageTreeNode])
         async childNodes(@Parent() node: PageTreeNodeInterface): Promise<PageTreeNodeInterface[]> {
             return this.pageTreeReadApi.getChildNodes(node);
+        }
+
+        @ResolveField(() => Number)
+        async numberOfDescendants(@Parent() node: PageTreeNodeInterface): Promise<number> {
+            const childNodes = await this.pageTreeReadApi.getChildNodes(node);
+            let numberOfDescendants = childNodes.length;
+
+            for (const childNode of childNodes) {
+                numberOfDescendants += await this.numberOfDescendants(childNode);
+            }
+
+            return numberOfDescendants;
         }
 
         @ResolveField(() => PageTreeNode, { nullable: true })
@@ -193,7 +224,8 @@ export function createPageTreeResolver({
         @SubjectEntity(PageTreeNode)
         async updatePageTreeNode(
             @Args("id", { type: () => ID }) id: string,
-            @Args("input", { type: () => PageTreeNodeUpdateInput }) input: PageTreeNodeUpdateInputInterface,
+            @Args("input", { type: () => PageTreeNodeUpdateInput }, new DynamicDtoValidationPipe(PageTreeNodeUpdateInput))
+            input: PageTreeNodeUpdateInputInterface,
         ): Promise<PageTreeNodeInterface> {
             // Archived pages cannot be updated
             const pageTreeReadApi = this.pageTreeService.createReadApi({
@@ -348,8 +380,9 @@ export function createPageTreeResolver({
 
         @Mutation(() => PageTreeNode)
         async createPageTreeNode(
-            @Args("input", { type: () => PageTreeNodeCreateInput }) input: PageTreeNodeCreateInputInterface,
-            @Args("scope", { type: () => Scope }) scope: ScopeInterface,
+            @Args("input", { type: () => PageTreeNodeCreateInput }, new DynamicDtoValidationPipe(PageTreeNodeCreateInput))
+            input: PageTreeNodeCreateInputInterface,
+            @Args("scope", { type: () => Scope }, new DynamicDtoValidationPipe(Scope)) scope: ScopeInterface,
             @Args("category", { type: () => String }) category: PageTreeNodeCategory,
         ): Promise<PageTreeNodeInterface> {
             // Can not add a subpage under an archived page
