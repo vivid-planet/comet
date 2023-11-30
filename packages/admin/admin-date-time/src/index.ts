@@ -5,7 +5,7 @@ export { DateRangeField, DateRangeFieldProps } from "./dateRangePicker/DateRange
 export { DateRange, DateRangePicker, DateRangePickerProps } from "./dateRangePicker/DateRangePicker";
 export { FinalFormDateRangePicker, FinalFormDateRangePickerProps } from "./dateRangePicker/FinalFormDateRangePicker";
 export { DateTimeField, DateTimeFieldProps } from "./dateTimePicker/DateTimeField";
-export { DateTimePicker, DateTimePickerComponentsProps, DateTimePickerProps } from "./dateTimePicker/DateTimePicker";
+export { DateTimePicker, DateTimePickerProps } from "./dateTimePicker/DateTimePicker";
 export { FinalFormDateTimePicker, FinalFormDateTimePickerProps } from "./dateTimePicker/FinalFormDateTimePicker";
 export { FinalFormTimePicker } from "./timePicker/FinalFormTimePicker";
 export { TimeField, TimeFieldProps } from "./timePicker/TimeField";
