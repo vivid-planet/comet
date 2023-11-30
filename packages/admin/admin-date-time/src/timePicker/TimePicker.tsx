@@ -1,16 +1,59 @@
-import { ClearInputAdornment, InputWithPopper, InputWithPopperProps } from "@comet/admin";
+import { ClearInputAdornment, InputWithPopper, InputWithPopperClassKey, InputWithPopperProps, ThemedComponentBaseProps } from "@comet/admin";
 import { Time } from "@comet/admin-icons";
 import { ComponentsOverrides, InputAdornment, ListItemText, MenuItem, MenuList } from "@mui/material";
-import { Theme } from "@mui/material/styles";
-import { WithStyles, withStyles } from "@mui/styles";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import { format } from "date-fns";
 import * as React from "react";
 import { FormatDateOptions, FormattedTime, useIntl } from "react-intl";
 
-import { styles, TimePickerClassKey } from "../timePicker/TimePicker.styles";
 import { getClosestDateToDate, getDateFromTimeValue, getDateRangeListByMinuteStep } from "../utils/timePickerHelpers";
 
-export interface TimePickerProps extends Omit<InputWithPopperProps, "children" | "value" | "onChange"> {
+export type TimePickerClassKey = InputWithPopperClassKey | "startAdornment" | "timeOptionsList" | "timeOptionItem";
+
+export type SlotProps = ThemedComponentBaseProps<{
+    root: typeof InputWithPopper;
+    startAdornment: typeof InputAdornment;
+    timeOptionsList: typeof MenuList;
+    timeOptionItem: typeof MenuItem;
+}>["slotProps"];
+
+export const Root = styled(InputWithPopper, {
+    name: "CometAdminTimePicker",
+    slot: "root",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})();
+
+const StartAdornment = styled(InputAdornment, {
+    name: "CometAdminTimePicker",
+    slot: "startAdornment",
+    overridesResolver(_, styles) {
+        return [styles.startAdornment];
+    },
+})();
+
+const TimeOptionsList = styled(MenuList, {
+    name: "CometAdminTimePicker",
+    slot: "timeOptionsList",
+    overridesResolver(_, styles) {
+        return [styles.timeOptionsList];
+    },
+})();
+
+const TimeOptionItem = styled(MenuItem, {
+    name: "CometAdminTimePicker",
+    slot: "timeOptionItem",
+    overridesResolver(_, styles) {
+        return [styles.timeOptionItem];
+    },
+})(
+    ({ theme }) => css`
+        padding: ${theme.spacing(2)} ${theme.spacing(3)};
+    `,
+);
+
+export interface TimePickerProps extends Omit<InputWithPopperProps, "children" | "value" | "onChange" | "slotProps"> {
     onChange?: (time?: string) => void;
     value?: string;
     formatOptions?: FormatDateOptions;
@@ -18,20 +61,23 @@ export interface TimePickerProps extends Omit<InputWithPopperProps, "children" |
     min?: string;
     max?: string;
     clearable?: boolean;
+    slotProps?: SlotProps;
 }
 
-function TimePicker({
-    onChange,
-    value,
-    formatOptions,
-    endAdornment,
-    clearable,
-    minuteStep = 15,
-    placeholder,
-    min = "00:00",
-    max = "23:59",
-    ...inputWithPopperProps
-}: TimePickerProps & WithStyles<typeof styles>): React.ReactElement {
+export const TimePicker = (inProps: TimePickerProps) => {
+    const {
+        onChange,
+        value,
+        formatOptions,
+        endAdornment,
+        clearable,
+        minuteStep = 15,
+        placeholder,
+        min = "00:00",
+        max = "23:59",
+        slotProps,
+        ...inputWithPopperProps
+    } = useThemeProps({ props: inProps, name: "CometAdminTimePicker" });
     const intl = useIntl();
     const focusedItemRef = React.useRef<HTMLLIElement>(null);
 
@@ -51,15 +97,27 @@ function TimePicker({
     };
 
     return (
-        <InputWithPopper
+        <Root
             value={dateValue ? intl.formatTime(dateValue, formatOptions) : ""}
             placeholder={placeholder ?? intl.formatMessage({ id: "comet.timePicker.select", defaultMessage: "Select" })}
             startAdornment={
-                <InputAdornment position="start" disablePointerEvents>
+                <StartAdornment position="start" disablePointerEvents {...slotProps?.startAdornment}>
                     <Time />
-                </InputAdornment>
+                </StartAdornment>
             }
             {...inputWithPopperProps}
+            slotProps={{
+                ...slotProps?.root,
+                paper: {
+                    ...slotProps?.root?.slotProps?.paper,
+                    sx: {
+                        ...(slotProps?.root?.slotProps?.paper?.sx ?? {}),
+                        minWidth: 110,
+                        height: 280,
+                        overflowY: "auto",
+                    },
+                },
+            }}
             onOpenPopper={() => {
                 onOpenPopper();
                 inputWithPopperProps.onOpenPopper?.();
@@ -77,7 +135,7 @@ function TimePicker({
             }
         >
             {(closePopper) => (
-                <MenuList>
+                <TimeOptionsList {...slotProps?.timeOptionsList}>
                     {timeOptions.map((timeOptionValue, index) => {
                         const selected = (dateValue && format(dateValue, "HH:mm")) === format(timeOptionValue, "HH:mm");
                         const isFocusedItem =
@@ -85,7 +143,7 @@ function TimePicker({
                             (closestDateToCurrentValue ? closestDateToCurrentValue === timeOptionValue : closestDateToNow === timeOptionValue);
 
                         return (
-                            <MenuItem
+                            <TimeOptionItem
                                 key={index}
                                 selected={selected}
                                 ref={isFocusedItem ? focusedItemRef : null}
@@ -93,22 +151,19 @@ function TimePicker({
                                     onChange?.(format(timeOptionValue, "HH:mm"));
                                     closePopper(true);
                                 }}
+                                {...slotProps?.timeOptionItem}
                             >
                                 <ListItemText>
                                     <FormattedTime value={timeOptionValue} {...formatOptions} />
                                 </ListItemText>
-                            </MenuItem>
+                            </TimeOptionItem>
                         );
                     })}
-                </MenuList>
+                </TimeOptionsList>
             )}
-        </InputWithPopper>
+        </Root>
     );
-}
-
-const TimePickerWithStyles = withStyles(styles, { name: "CometAdminTimePicker" })(TimePicker);
-
-export { TimePickerWithStyles as TimePicker };
+};
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
