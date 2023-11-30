@@ -123,11 +123,6 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
-type SitePreviewHash {
-  timestamp: Float!
-  hash: String!
-}
-
 type PageTreeNode {
   id: ID!
   parentId: String
@@ -309,8 +304,7 @@ type Query {
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   cronJobs: [CronJob!]!
   currentUser: CurrentUser!
-  getSitePreviewHash: SitePreviewHash!
-  validateSitePreviewHash(timestamp: Float!, hash: String!): Boolean!
+  getSitePreviewJwt(path: String!, previewData: JSONObject!): String!
 }
 
 input RedirectScopeInput {

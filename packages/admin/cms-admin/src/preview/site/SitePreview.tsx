@@ -16,7 +16,7 @@ import { VisibilityToggle } from "../common/VisibilityToggle";
 import { SitePrevewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 import { useSitePreviewIFrameBridge } from "./iframebridge/useSitePreviewIFrameBridge";
 import { OpenLinkDialog } from "./OpenLinkDialog";
-import { GQLGetSitePreviewHashQuery } from "./SitePreview.generated";
+import { GQLGetSitePreviewJwtQuery } from "./SitePreview.generated";
 import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLinkWrapper } from "./SitePreview.sc";
 
 //TODO v4 remove RouteComponentProps
@@ -99,28 +99,25 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
         }
     });
 
-    const { data, error, refetch } = useQuery<GQLGetSitePreviewHashQuery>(
+    const { data, error, refetch } = useQuery<GQLGetSitePreviewJwtQuery>(
         gql`
-            query GetSitePreviewHash {
-                getSitePreviewHash {
-                    timestamp
-                    hash
-                }
+            query GetSitePreviewJwt($path: String!, $previewData: JSONObject!) {
+                getSitePreviewJwt(path: $path, previewData: $previewData)
             }
         `,
         {
             fetchPolicy: "network-only",
+            variables: {
+                path: initialPath,
+                previewData: {
+                    includeInvisible: showOnlyVisible ? false : true,
+                },
+            },
         },
     );
     if (error) throw new Error(error.message);
     if (!data) return <></>;
-    const params = new URLSearchParams({
-        timestamp: data.getSitePreviewHash.timestamp.toString(),
-        hash: data.getSitePreviewHash.hash,
-        path: initialPath,
-        includeInvisibleBlocks: showOnlyVisible ? "false" : "true",
-    });
-    const initialPageUrl = `${siteConfig.url}/api/preview?${params.toString()}`;
+    const initialPageUrl = `${siteConfig.previewUrl}/api/preview?jwt=${data.getSitePreviewJwt}`;
 
     return (
         <Root>

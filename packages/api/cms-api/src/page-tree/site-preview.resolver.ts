@@ -1,56 +1,32 @@
 import { Inject } from "@nestjs/common";
-import { Args, ArgsType, Field, ObjectType, Query, Resolver } from "@nestjs/graphql";
-import { IsNumber, IsString } from "class-validator";
-import { createHmac } from "crypto";
-import { differenceInMinutes, getTime } from "date-fns";
+import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
+import { IsObject, IsString } from "class-validator";
+import { GraphQLJSONObject } from "graphql-type-json";
+import jsonwebtoken from "jsonwebtoken";
 
 import { SITE_PREVIEW_CONFIG } from "./page-tree.constants";
 
-@ObjectType()
 @ArgsType()
-class SitePreviewHash {
-    @Field(() => Number)
-    @IsNumber()
-    timestamp: number;
-
+class SitePreviewArgs {
     @Field(() => String)
     @IsString()
-    hash: string;
+    path: string;
+
+    @Field(() => GraphQLJSONObject)
+    @IsObject()
+    previewData: JSON;
 }
 
 export type SitePreviewConfig = {
     secret: string;
 };
 
-@Resolver(() => SitePreviewHash)
+@Resolver()
 export class SitePreviewResolver {
     constructor(@Inject(SITE_PREVIEW_CONFIG) private readonly config: SitePreviewConfig) {}
 
-    @Query(() => SitePreviewHash)
-    getSitePreviewHash(): SitePreviewHash {
-        const timestamp = this.getTimestamp();
-        return {
-            timestamp: timestamp,
-            hash: this.createHash(timestamp),
-        };
-    }
-
-    @Query(() => Boolean)
-    validateSitePreviewHash(@Args() args: SitePreviewHash): boolean {
-        if (differenceInMinutes(this.getTimestamp(), args.timestamp) > 5) {
-            return false;
-        }
-        return this.createHash(args.timestamp) === args.hash;
-    }
-
-    private getTimestamp() {
-        return getTime(Date.now());
-    }
-
-    private createHash(timestamp: number): string {
-        if (!timestamp) throw new Error("Timestamp is required");
-        return createHmac("sha256", this.config.secret)
-            .update(timestamp + this.config.secret)
-            .digest("hex");
+    @Query(() => String)
+    getSitePreviewJwt(@Args() args: SitePreviewArgs): string {
+        return jsonwebtoken.sign({ ...args }, this.config.secret, { expiresIn: 10 });
     }
 }
