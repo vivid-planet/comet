@@ -12,11 +12,5 @@ export { TimeField, TimeFieldProps } from "./timePicker/TimeField";
 export { TimePicker, TimePickerProps } from "./timePicker/TimePicker";
 export { FinalFormTimeRangePicker, FinalFormTimeRangePickerProps } from "./timeRangePicker/FinalFormTimeRangePicker";
 export { TimeRangeField, TimeRangeFieldProps } from "./timeRangePicker/TimeRangeField";
-export {
-    TimeRange,
-    TimeRangePicker,
-    TimeRangePickerComponentsProps,
-    TimeRangePickerIndividualPickerProps,
-    TimeRangePickerProps,
-} from "./timeRangePicker/TimeRangePicker";
+export { TimeRange, TimeRangePicker, TimeRangePickerProps } from "./timeRangePicker/TimeRangePicker";
 export { DateFnsLocaleContext, DateFnsLocaleProvider, useDateFnsLocale } from "./utils/DateFnsLocaleProvider";

@@ -1,24 +1,94 @@
+import { ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides, FormControl, Theme, Typography } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
-import clsx from "clsx";
+import { css, styled, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormatDateOptions, FormattedMessage, useIntl } from "react-intl";
 
-import { TimePicker, TimePickerProps } from "../timePicker/TimePicker";
+import { TimePicker as TimePickerBase } from "../timePicker/TimePicker";
+
+export type TimeRangePickerClassKey =
+    | "root"
+    | "startFormControl"
+    | "endFormControl"
+    | "timePicker"
+    | "startTimePicker"
+    | "endTimePicker"
+    | "separator";
+
+const Root = styled("div", {
+    name: "CometAdminTimeRangePicker",
+    slot: "root",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})(css`
+    display: flex;
+    align-items: center;
+`);
+
+const StartFormControl = styled(FormControl, {
+    name: "CometAdminTimeRangePicker",
+    slot: "startFormControl",
+    overridesResolver(_, styles) {
+        return [styles.startFormControl];
+    },
+})(css`
+    flex-grow: 1;
+`);
+
+const EndFormControl = styled(FormControl, {
+    name: "CometAdminTimeRangePicker",
+    slot: "endFormControl",
+    overridesResolver(_, styles) {
+        return [styles.endFormControl];
+    },
+})(css`
+    flex-grow: 1;
+`);
+
+const StartTimePicker = styled(TimePickerBase, {
+    name: "CometAdminTimeRangePicker",
+    slot: "startTimePicker",
+    overridesResolver(_, styles) {
+        return [styles.startTimePicker];
+    },
+})();
+
+const EndTimePicker = styled(TimePickerBase, {
+    name: "CometAdminTimeRangePicker",
+    slot: "endTimePicker",
+    overridesResolver(_, styles) {
+        return [styles.endTimePicker];
+    },
+})();
+
+const Separator = styled(Typography, {
+    name: "CometAdminTimeRangePicker",
+    slot: "separator",
+    overridesResolver(_, styles) {
+        return [styles.separator];
+    },
+})(
+    ({ theme }) => css`
+        margin-left: ${theme.spacing(2)};
+        margin-right: ${theme.spacing(2)};
+    `,
+);
 
 export type TimeRange = {
     start: string;
     end: string;
 };
 
-export type TimeRangePickerIndividualPickerProps = Omit<TimePickerProps, "onChange" | "onBlur" | "value" | "className" | "inputRef">;
-
-export interface TimeRangePickerComponentsProps {
-    startPicker?: TimeRangePickerIndividualPickerProps;
-    endPicker?: TimeRangePickerIndividualPickerProps;
-}
-
-export interface TimeRangePickerProps {
+export interface TimeRangePickerProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        startFormControl: typeof FormControl;
+        endFormControl: typeof FormControl;
+        startTimePicker: typeof TimePickerBase;
+        endTimePicker: typeof TimePickerBase;
+        separator: typeof Typography;
+    }> {
     onChange?: (timeRange?: TimeRange) => void;
     value?: TimeRange;
     formatOptions?: FormatDateOptions;
@@ -27,19 +97,20 @@ export interface TimeRangePickerProps {
     max?: string;
     clearable?: boolean;
     separatorText?: React.ReactNode;
-    componentsProps?: TimeRangePickerComponentsProps;
 }
 
 type IndividualTimeValue = string | undefined;
 
-function TimeRangePicker({
-    classes,
-    onChange,
-    value,
-    separatorText = <FormattedMessage id="comet.dateTime.fromToSeparatorText" defaultMessage="to" />,
-    componentsProps = {},
-    ...propsForBothTimePickers
-}: TimeRangePickerProps & WithStyles<typeof styles>) {
+export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
+    const {
+        onChange,
+        value,
+        separatorText = <FormattedMessage id="comet.dateTime.fromToSeparatorText" defaultMessage="to" />,
+        className,
+        sx,
+        slotProps,
+        ...propsForBothTimePickers
+    } = useThemeProps({ props: inProps, name: "CometAdminTimeRangePicker" });
     const intl = useIntl();
 
     const [startTime, setStartTime] = React.useState<IndividualTimeValue>(value?.start);
@@ -90,63 +161,37 @@ function TimeRangePicker({
     }, [onChangeTimeValue, startPickerIsOpen, endPickerIsOpen, startTime, endTime]);
 
     return (
-        <div className={classes.root}>
-            <FormControl className={classes.formControl}>
-                <TimePicker
+        <Root sx={sx} className={className} {...slotProps?.root}>
+            <StartFormControl {...slotProps?.startFormControl}>
+                <StartTimePicker
                     inputRef={startPickerRef}
                     value={startTime}
                     placeholder={intl.formatMessage({ id: "comet.timeRangePicker.start", defaultMessage: "Start" })}
-                    className={clsx(classes.timePicker, classes.startTimePicker)}
                     onChange={(time) => onChangeTimeValue(time, "start")}
                     onOpenPopper={() => setStartPickerIsOpen(true)}
                     onClosePopper={() => setStartPickerIsOpen(false)}
                     fullWidth
                     {...propsForBothTimePickers}
-                    {...componentsProps.startPicker}
+                    {...slotProps?.startTimePicker}
                 />
-            </FormControl>
-            <Typography className={classes.separator}>{separatorText}</Typography>
-            <FormControl className={classes.formControl}>
-                <TimePicker
+            </StartFormControl>
+            <Separator {...slotProps?.separator}>{separatorText}</Separator>
+            <EndFormControl {...slotProps?.endFormControl}>
+                <EndTimePicker
                     inputRef={endPickerRef}
                     value={endTime}
                     placeholder={intl.formatMessage({ id: "comet.timeRangePicker.end", defaultMessage: "End" })}
-                    className={clsx(classes.timePicker, classes.endTimePicker)}
                     onChange={(time) => onChangeTimeValue(time, "end")}
                     onOpenPopper={() => setEndPickerIsOpen(true)}
                     onClosePopper={() => setEndPickerIsOpen(false)}
                     fullWidth
                     {...propsForBothTimePickers}
-                    {...componentsProps.endPicker}
+                    {...slotProps?.endTimePicker}
                 />
-            </FormControl>
-        </div>
+            </EndFormControl>
+        </Root>
     );
-}
-
-export type TimeRangePickerClassKey = "root" | "formControl" | "timePicker" | "startTimePicker" | "endTimePicker" | "separator";
-
-export const styles = ({ spacing }: Theme) =>
-    createStyles<TimeRangePickerClassKey, TimeRangePickerProps>({
-        root: {
-            display: "flex",
-            alignItems: "center",
-        },
-        formControl: {
-            flexGrow: 1,
-        },
-        timePicker: {},
-        startTimePicker: {},
-        endTimePicker: {},
-        separator: {
-            marginLeft: spacing(2),
-            marginRight: spacing(2),
-        },
-    });
-
-const TimeRangePickerWithStyles = withStyles(styles, { name: "CometAdminTimeRangePicker" })(TimeRangePicker);
-
-export { TimeRangePickerWithStyles as TimeRangePicker };
+};
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
