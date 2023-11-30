@@ -1,4 +1,4 @@
-import { Hamburger } from "@comet/admin-icons";
+import { HamburgerClose, HamburgerOpen } from "@comet/admin-icons";
 import { ComponentsOverrides, IconButton, IconButtonClassKey, IconButtonProps, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
@@ -32,15 +32,14 @@ const styles = ({ spacing }: Theme) => {
     });
 };
 
-function MenuButton({
-    children = <Hamburger fontSize="large" />,
-    classes,
-    ...restProps
-}: AppHeaderMenuButtonProps & WithStyles<typeof styles>): React.ReactElement {
-    const { toggleOpen } = React.useContext(MenuContext);
+function MenuButton({ children, classes, ...restProps }: AppHeaderMenuButtonProps & WithStyles<typeof styles>): React.ReactElement {
+    const { toggleOpen, open } = React.useContext(MenuContext);
+    if (!children) {
+        children = open ? <HamburgerClose fontSize="large" /> : <HamburgerOpen fontSize="large" />;
+    }
 
     return (
-        <IconButton classes={classes} onClick={() => toggleOpen()} {...restProps} size="large">
+        <IconButton classes={classes} onClick={toggleOpen} {...restProps} size="large">
             {children}
         </IconButton>
     );

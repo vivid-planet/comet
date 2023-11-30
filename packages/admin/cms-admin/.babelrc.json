@@ -1,4 +1,6 @@
 {
     "presets": ["@comet/admin-babel-preset"],
-    "ignore": ["src/**/*.spec.ts", "src/**/*.test.ts"]
+    "ignore": [
+        "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "**/__tests__/**"
+    ]
 }

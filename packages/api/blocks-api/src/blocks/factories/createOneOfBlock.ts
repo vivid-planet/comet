@@ -63,10 +63,6 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
 ): OneOfBlock<BlockMap> {
     const supportedBlockTypes: Array<keyof BlockMap | null> = Object.keys(supportedBlocks);
 
-    if (allowEmpty) {
-        supportedBlockTypes.push(null);
-    }
-
     class BlockOneOfItem extends BlockData {
         @BlockField()
         type: string;
@@ -84,7 +80,7 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
             },
             { toClassOnly: true },
         )
-        @BlockField(Object.values(supportedBlocks))
+        @BlockField({ kind: "oneOfBlocks", blocks: supportedBlocks })
         props: BlockData;
 
         async transformToPlain(): Promise<TraversableTransformResponse> {
@@ -117,8 +113,8 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
             const block = this.attachedBlocks.find((c) => c.type === this.activeType);
             return {
                 attachedBlocks: includeInvisibleContent ? this.attachedBlocks : [], // only admin must see inactive blocks
-                block: block ?? null,
-                activeType: this.activeType && supportedBlocks[this.activeType] ? this.activeType : null,
+                block: block,
+                activeType: this.activeType && supportedBlocks[this.activeType] ? this.activeType : undefined,
             };
         }
 
@@ -163,7 +159,7 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
 
             return plainToInstance(BlockOneOf, {
                 attachedBlocks,
-                activeType: this.activeType && supportedBlocks[this.activeType] ? this.activeType : null,
+                activeType: this.activeType && supportedBlocks[this.activeType] ? this.activeType : undefined,
             });
         }
     }
@@ -214,7 +210,7 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
                         {
                             name: "props",
                             kind: BlockMetaFieldKind.OneOfBlocks,
-                            blocks: Object.values(supportedBlocks),
+                            blocks: supportedBlocks,
                             nullable: false,
                         },
                     ],

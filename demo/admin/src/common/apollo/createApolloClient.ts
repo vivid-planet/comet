@@ -18,5 +18,11 @@ export const createApolloClient = (apiUrl: string) => {
     return new ApolloClient({
         link,
         cache,
+        defaultOptions: {
+            // useQuery uses watchQuery while client.query uses query
+            watchQuery: {
+                fetchPolicy: "cache-and-network",
+            },
+        },
     });
 };

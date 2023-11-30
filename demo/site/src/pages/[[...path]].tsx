@@ -1,5 +1,5 @@
 import { defaultLanguage, domain } from "@src/config";
-import { GQLPage, GQLPagesQuery, GQLPagesQueryVariables, GQLPageTypeQuery, GQLPageTypeQueryVariables } from "@src/graphql.generated";
+import { GQLPage } from "@src/graphql.generated";
 import NotFound404 from "@src/pages/404";
 import PageTypePage, { pageQuery as PageTypePageQuery } from "@src/pageTypes/Page";
 import createGraphQLClient from "@src/util/createGraphQLClient";
@@ -14,6 +14,8 @@ import {
     InferGetStaticPropsType,
 } from "next";
 import * as React from "react";
+
+import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTypeQuery, GQLPageTypeQueryVariables } from "./[[...path]].generated";
 
 interface PageProps {
     documentType: string;

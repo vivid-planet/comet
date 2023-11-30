@@ -13,11 +13,12 @@ interface Props {
 }
 
 export const CopyPasteMenuItem = ({ page }: Props): React.ReactElement => {
-    const { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages } = useCopyPastePages();
+    const { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages, progressDialog } = useCopyPastePages();
     const { tree } = usePageTreeContext();
 
     return (
         <>
+            {progressDialog}
             <RowActionsItem
                 icon={<Copy />}
                 onClick={async () => {

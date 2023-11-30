@@ -8,15 +8,26 @@ const rootBlocks = Object.keys(schema.getTypeMap()).filter((type) => type.endsWi
 
 const config: CodegenConfig = {
     schema: "schema.gql",
-    documents: ["src/**/*.{ts,tsx}", "preBuild/src/**/*.{ts,tsx}"],
     generates: {
         "./src/graphql.generated.ts": {
-            plugins: [
-                { add: { content: `import { ${rootBlocks.sort().join(", ")} } from "./blocks.generated";` } },
-                "named-operations-object",
-                "typescript",
-                "typescript-operations",
-            ],
+            plugins: [{ add: { content: `import { ${rootBlocks.sort().join(", ")} } from "./blocks.generated";` } }, "typescript"],
+            config: {
+                avoidOptionals: {
+                    field: true,
+                },
+                enumsAsTypes: true,
+                namingConvention: "keep",
+                scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), { DateTime: "string" }),
+                typesPrefix: "GQL",
+            },
+        },
+        "./src/": {
+            documents: ["./src/**/!(*.generated).{tsx,ts}", "preBuild/src/**/!(*.generated).{ts,tsx}"],
+            preset: "near-operation-file",
+            presetConfig: {
+                extension: ".generated.ts",
+                baseTypesPath: "graphql.generated.ts",
+            },
             config: {
                 avoidOptionals: {
                     field: true,
@@ -26,6 +37,11 @@ const config: CodegenConfig = {
                 scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), {}),
                 typesPrefix: "GQL",
             },
+            plugins: [
+                { add: { content: `import { ${rootBlocks.sort().join(", ")} } from "@src/blocks.generated";` } },
+                "named-operations-object",
+                "typescript-operations",
+            ],
         },
     },
 };

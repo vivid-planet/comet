@@ -14,6 +14,7 @@ import { Type } from "class-transformer";
 import { IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
 
 import { FocalPoint } from "../dam/common/enums/focal-point.enum";
+import { FILE_ENTITY } from "../dam/files/entities/file.entity";
 import { FilesService } from "../dam/files/files.service";
 import { ImageCropAreaInput } from "../dam/images/dto/image-crop-area.input";
 import { ImageCropArea } from "../dam/images/entities/image-crop-area.entity";
@@ -28,7 +29,7 @@ class PixelImageBlockData extends BlockData {
 
     async transformToPlain(
         { filesService, imagesService }: { filesService: FilesService; imagesService: ImagesService },
-        { previewDamUrls }: BlockContext,
+        { previewDamUrls, includeInvisibleContent }: BlockContext,
     ): Promise<TraversableTransformResponse> {
         if (!this.damFileId) {
             return {};
@@ -41,7 +42,9 @@ class PixelImageBlockData extends BlockData {
         }
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { createdAt, updatedAt, folder, license, ...data } = file;
+        const { createdAt, updatedAt, folder, license, copyOf, copies, ...data } = file;
+
+        const fileUrl = includeInvisibleContent ? await filesService.createFileUrl(file, previewDamUrls) : undefined;
 
         return {
             damFile: {
@@ -54,7 +57,7 @@ class PixelImageBlockData extends BlockData {
                           dominantColor: file.image.dominantColor,
                       }
                     : undefined,
-                fileUrl: await filesService.createFileUrl(file, previewDamUrls),
+                fileUrl,
             },
             cropArea: this.cropArea ? { ...this.cropArea } : undefined,
             urlTemplate: imagesService.createUrlTemplate({ file, cropArea: this.cropArea }, previewDamUrls),
@@ -79,8 +82,17 @@ class PixelImageBlockData extends BlockData {
     }
 
     indexData(): BlockIndexData {
+        if (this.damFileId === undefined) {
+            return {};
+        }
+
         return {
-            damFileIds: this.damFileId ? [this.damFileId] : [],
+            dependencies: [
+                {
+                    targetEntityName: FILE_ENTITY,
+                    id: this.damFileId,
+                },
+            ],
         };
     }
 }
@@ -150,6 +162,11 @@ class Meta extends AnnotationBlockMeta {
                             name: "archived",
                             kind: BlockMetaFieldKind.Boolean,
                             nullable: false,
+                        },
+                        {
+                            name: "scope",
+                            kind: BlockMetaFieldKind.Json,
+                            nullable: true,
                         },
                         {
                             name: "image",

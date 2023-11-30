@@ -27,6 +27,7 @@ export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonCont
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
+export { Loading, LoadingProps } from "./common/Loading";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
 export {
     ToolbarAutomaticTitleItem,
@@ -42,6 +43,7 @@ export { ToolbarTitleItem, ToolbarTitleItemClassKey, ToolbarTitleItemProps } fro
 export { Toolbar, ToolbarClassKey, ToolbarProps } from "./common/toolbar/Toolbar";
 export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";
 export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
+export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
@@ -50,8 +52,6 @@ export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
 export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
 export { usePersistentColumnState } from "./dataGrid/usePersistentColumnState";
 export { DeleteMutation } from "./DeleteMutation";
-export { DirtyHandler } from "./DirtyHandler";
-export { DirtyHandlerApiContext, IDirtyHandlerApi, IDirtyHandlerApiBinding, useDirtyHandlerApi } from "./DirtyHandlerApiContext";
 export { EditDialog, useEditDialog } from "./EditDialog";
 export { EditDialogApiContext, IEditDialogApi, useEditDialogApi } from "./EditDialogApiContext";
 export { ErrorBoundary, ErrorBoundaryClassKey, ErrorBoundaryProps } from "./error/errorboundary/ErrorBoundary";
@@ -63,7 +63,8 @@ export { ErrorScope, errorScopeForOperationContext, LocalErrorScopeApolloContext
 export { useErrorDialog, UseErrorDialogReturn } from "./error/errordialog/useErrorDialog";
 export { createFetch, FetchContext, FetchProvider, useFetch } from "./fetchProvider/fetch";
 export { FileIcon } from "./fileIcons/FileIcon";
-export { FinalForm, useFormApiRef } from "./FinalForm";
+export { FinalForm, FinalFormSubmitEvent, useFormApiRef } from "./FinalForm";
+export { FinalFormSaveButton } from "./FinalFormSaveButton";
 export {
     FinalFormSaveCancelButtonsLegacy,
     FinalFormSaveCancelButtonsLegacyClassKey,
@@ -115,6 +116,7 @@ export { RouterContext } from "./router/Context";
 export { RouterMemoryRouter } from "./router/MemoryRouter";
 export { RouterPrompt } from "./router/Prompt";
 export { RouterPromptHandler, SaveAction } from "./router/PromptHandler";
+export { SubRoute, SubRouteIndexRoute, useSubRoutePrefix } from "./router/SubRoute";
 export { RowActionsItem, RowActionsItemProps } from "./rowActions/RowActionsItem";
 export { RowActionsMenu, RowActionsMenuProps } from "./rowActions/RowActionsMenu";
 export { Selected } from "./Selected";
@@ -179,7 +181,7 @@ export { TableBodyRow, TableBodyRowClassKey, TableBodyRowProps } from "./table/T
 export { TableDndOrder } from "./table/TableDndOrder";
 export { TableFilterFinalForm } from "./table/TableFilterFinalForm";
 export { ITableLocalChangesApi, submitChangesWithMutation, TableLocalChanges } from "./table/TableLocalChanges";
-export { IDefaultVariables, parseIdFromIri, TableQuery } from "./table/TableQuery";
+export { IDefaultVariables, parseIdFromIri, TableQuery, TableQueryProps } from "./table/TableQuery";
 export { TableQueryClassKey } from "./table/TableQuery.styles";
 export { ITableQueryApi, ITableQueryContext, TableQueryContext } from "./table/TableQueryContext";
 export { usePersistedState } from "./table/usePersistedState";
@@ -188,7 +190,6 @@ export { ITableData, ITableQueryHookResult, useTableQuery } from "./table/useTab
 export { IFilterApi, useTableQueryFilter } from "./table/useTableQueryFilter";
 export { IChangePageOptions, IPagingApi, useTableQueryPaging } from "./table/useTableQueryPaging";
 export { ISortApi, ISortInformation, SortDirection, useTableQuerySort } from "./table/useTableQuerySort";
-export { IWithDirtyHandlerApiProps, withDirtyHandlerApi } from "./table/withDirtyHandlerApi";
 export { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQueryContext";
 export { RouterTab, RouterTabs } from "./tabs/RouterTabs";
 export { RouterTabsClassKey } from "./tabs/RouterTabs.styles";

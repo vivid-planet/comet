@@ -6,8 +6,7 @@ import * as React from "react";
 import { FormattedMessage, IntlShape, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { AdminComponentButton } from "../..";
-import { useBlockContext } from "../../context/useBlockContext";
+import { AdminComponentButton, BlockPreviewContent } from "../..";
 import { BlocksFinalForm } from "../../form/BlocksFinalForm";
 import { HoverPreviewComponent } from "../../iframebridge/HoverPreviewComponent";
 import { SelectPreviewComponent } from "../../iframebridge/SelectPreviewComponent";
@@ -17,7 +16,8 @@ import { AdminComponentSection } from "../common/AdminComponentSection";
 import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
-import { BlockCategory, BlockInputApi, BlockInterface, DispatchSetStateAction, PreviewContent } from "../types";
+import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
+import { BlockCategory, BlockDependency, BlockInputApi, BlockInterface, DispatchSetStateAction, PreviewContent } from "../types";
 import { resolveNewState } from "../utils";
 import { FinalFormColumnsSelect } from "./columnsBlock/FinalFormColumnsSelect";
 import { FinalFormLayoutSelect } from "./columnsBlock/FinalFormLayoutSelect";
@@ -180,6 +180,27 @@ export function createColumnsBlock<T extends BlockInterface>({
             }, []);
         },
 
+        dependencies: (state) => {
+            const mergedDependencies = state.columns.reduce<BlockDependency[]>((dependencies, column) => {
+                return [...dependencies, ...(contentBlock.dependencies?.(column.props) ?? [])];
+            }, []);
+
+            return deduplicateBlockDependencies(mergedDependencies);
+        },
+
+        replaceDependenciesInOutput: (output, replacements) => {
+            const newOutput: ColumnsBlockFragment<T> = { ...output, columns: [] };
+
+            for (const column of output.columns) {
+                newOutput.columns.push({
+                    ...column,
+                    props: contentBlock.replaceDependenciesInOutput(column.props, replacements),
+                });
+            }
+
+            return newOutput;
+        },
+
         AdminComponent: ({ state, updateState }) => {
             const intl = useIntl();
             const groupLayoutsByColumnsApi = createGroupLayoutsByColumnsApi(layouts);
@@ -209,8 +230,6 @@ export function createColumnsBlock<T extends BlockInterface>({
                 deleteBlocks,
                 toggleVisible,
             } = useListBlockAdminComponent({ state: { blocks: state.columns }, updateState: handleListBlockAdminChange });
-
-            const blockContext = useBlockContext();
 
             return (
                 <>
@@ -300,9 +319,10 @@ export function createColumnsBlock<T extends BlockInterface>({
                                                                 return (
                                                                     <HoverPreviewComponent key={column.key} componentSlug={`${column.key}/content`}>
                                                                         <BlockRow
-                                                                            name={columnCountLabel(intl, columnIndex + 1)}
                                                                             id={column.key}
-                                                                            previewContent={contentBlock.previewContent(column.props, blockContext)}
+                                                                            renderPreviewContent={() => (
+                                                                                <BlockPreviewContent block={contentBlock} state={column.props} />
+                                                                            )}
                                                                             index={columnIndex}
                                                                             onContentClick={() => {
                                                                                 stackApi.activatePage("edit", column.key);
@@ -310,12 +330,13 @@ export function createColumnsBlock<T extends BlockInterface>({
                                                                             onDeleteClick={() => {
                                                                                 deleteBlocks([column.key]);
                                                                             }}
-                                                                            moveBlock={(dragIndex: number, hoverIndex: number) => {
-                                                                                const columns = [...state.columns];
-                                                                                const dragItem = state.columns[dragIndex];
-                                                                                columns[dragIndex] = state.columns[hoverIndex];
-                                                                                columns[hoverIndex] = dragItem;
-                                                                                updateState((prevState) => ({ ...prevState, columns }));
+                                                                            moveBlock={(from, to) => {
+                                                                                updateState((prevState) => {
+                                                                                    const columns = [...prevState.columns];
+                                                                                    const columnToMove = columns.splice(from, 1)[0];
+                                                                                    columns.splice(to, 0, columnToMove);
+                                                                                    return { ...prevState, columns };
+                                                                                });
                                                                             }}
                                                                             visibilityButton={
                                                                                 <IconButton onClick={() => toggleVisible(column.key)} size="small">

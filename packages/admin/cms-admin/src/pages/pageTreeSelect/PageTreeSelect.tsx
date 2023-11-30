@@ -4,8 +4,8 @@ import { AdminComponentButton, AdminComponentNestedButton } from "@comet/blocks-
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLPageTreeSelectDetailQuery, GQLPageTreeSelectDetailQueryVariables, GQLSelectedPageFragment } from "../../graphql.generated";
-import PageTreeSelectDialog from "./PageTreeSelectDialog";
+import { GQLPageTreeSelectDetailQuery, GQLPageTreeSelectDetailQueryVariables } from "./PageTreeSelect.generated";
+import PageTreeSelectDialog, { GQLSelectedPageFragment } from "./PageTreeSelectDialog";
 
 interface PageTreeSelectProps {
     value: GQLSelectedPageFragment | undefined | null;

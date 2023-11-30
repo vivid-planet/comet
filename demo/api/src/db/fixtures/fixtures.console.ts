@@ -20,6 +20,7 @@ export class FixturesConsole {
         private readonly pageFixtureService: PageFixtureService,
         private readonly linkFixtureService: LinkFixtureService,
         private readonly imageFixtureService: ImageFixtureService,
+
         private readonly orm: MikroORM,
     ) {}
 

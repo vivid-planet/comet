@@ -34,6 +34,7 @@ export const messages = defineMessages({
     invalidData: { id: "comet.generic.invalidData", defaultMessage: "Invalid Data" },
     saveConflict: { id: "comet.generic.saveConflict", defaultMessage: "Save Conflict" },
     retry: { id: "comet.generic.retry", defaultMessage: "Retry" },
+    error: { id: "comet.generic.error", defaultMessage: "Error" },
     networkError: {
         id: "comet.generic.errors.networkError",
         defaultMessage: "<strong>Could not connect to server.</strong> Please check your internet connection.",

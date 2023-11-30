@@ -11,9 +11,11 @@ import {
     IPreviewContext,
     SelectPreviewComponent,
 } from "@comet/blocks-admin";
+import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { ButtonBase, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
+import { deepClone } from "@mui/x-data-grid/utils/utils";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -21,9 +23,9 @@ import { FileField } from "..";
 import { PixelImageBlockData, PixelImageBlockInput } from "../blocks.generated";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { DamPathLazy } from "../form/file/DamPathLazy";
-import { GQLImageBlockDamFileQuery, GQLImageBlockDamFileQueryVariables } from "../graphql.generated";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { EditImageDialog } from "./image/EditImageDialog";
+import { GQLImageBlockDamFileQuery, GQLImageBlockDamFileQueryVariables } from "./PixelImageBlock.generated";
 import { useCmsBlockContext } from "./useCmsBlockContext";
 
 export type ImageBlockState = Omit<PixelImageBlockData, "urlTemplate">;
@@ -37,7 +39,9 @@ export function createPreviewUrl({ damFile, cropArea }: ImageBlockState, apiUrl:
         imageCropArea.focalPoint === "SMART"
             ? [imageCropArea.focalPoint]
             : [imageCropArea.width, imageCropArea.height, imageCropArea.focalPoint, imageCropArea.x, imageCropArea.y];
-    const filename = damFile.name.substr(0, damFile.name.lastIndexOf("."));
+
+    const filenameContainsExtension = damFile.name.lastIndexOf(".") >= 0;
+    const filename = filenameContainsExtension ? damFile.name.substr(0, damFile.name.lastIndexOf(".")) : damFile.name;
 
     let urlTemplate = apiUrl + urlTemplateRoute;
     if (resize) {
@@ -119,6 +123,33 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
         const damFile = data.damFile as unknown as PixelImageBlockData["damFile"];
 
         return { damFile, cropArea: output.cropArea };
+    },
+
+    dependencies: (state) => {
+        const dependencies: BlockDependency[] = [];
+
+        if (state.damFile?.id) {
+            dependencies.push({
+                targetGraphqlObjectType: "DamFile",
+                id: state.damFile.id,
+                data: {
+                    damFile: state.damFile,
+                },
+            });
+        }
+
+        return dependencies;
+    },
+
+    replaceDependenciesInOutput: (output, replacements) => {
+        const clonedOutput: PixelImageBlockInput = deepClone(output);
+        const replacement = replacements.find((replacement) => replacement.type === "DamFile" && replacement.originalId === output.damFileId);
+
+        if (replacement) {
+            clonedOutput.damFileId = replacement.replaceWithId;
+        }
+
+        return clonedOutput;
     },
 
     definesOwnPadding: true,

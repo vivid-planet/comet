@@ -1,17 +1,29 @@
 import { usePersistedState } from "./usePersistedState";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export enum SortDirection {
     ASC = "ASC",
     DESC = "DESC",
 }
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface ISortInformation {
     columnName: string;
     direction: SortDirection;
 }
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface ISortApi {
     current: ISortInformation;
     changeSort: (columnName: string) => void;
 }
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export function useTableQuerySort(
     defaultSort: ISortInformation,
     options: {

@@ -5,6 +5,7 @@ import { Command } from "commander";
 import { CrudGeneratorOptions, CrudSingleGeneratorOptions } from "./crud-generator.decorator";
 import { generateCrud } from "./generate-crud";
 import { generateCrudSingle } from "./generate-crud-single";
+import { writeGeneratedFiles } from "./utils/write-generated-files";
 
 const generate = new Command("generate").action(async (options) => {
     const orm = await getORM(false);
@@ -21,13 +22,15 @@ const generate = new Command("generate").action(async (options) => {
         {
             const generatorOptions = Reflect.getMetadata(`data:crudGeneratorOptions`, entity.class) as CrudGeneratorOptions | undefined;
             if (generatorOptions) {
-                await generateCrud(generatorOptions, entity);
+                const files = await generateCrud(generatorOptions, entity);
+                await writeGeneratedFiles(files, { targetDirectory: generatorOptions.targetDirectory });
             }
         }
         {
             const generatorOptions = Reflect.getMetadata(`data:crudSingleGeneratorOptions`, entity.class) as CrudSingleGeneratorOptions | undefined;
             if (generatorOptions) {
-                await generateCrudSingle(generatorOptions, entity);
+                const files = await generateCrudSingle(generatorOptions, entity);
+                await writeGeneratedFiles(files, { targetDirectory: generatorOptions.targetDirectory });
             }
         }
     }

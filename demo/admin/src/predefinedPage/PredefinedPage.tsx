@@ -1,16 +1,13 @@
 import { useQuery } from "@apollo/client";
 import { FileData, FileDataNotMenu } from "@comet/admin-icons";
 import { DocumentInterface } from "@comet/cms-admin";
-import {
-    GQLPredefinedPage,
-    GQLPredefinedPageInfoTagQuery,
-    GQLPredefinedPageInfoTagQueryVariables,
-    GQLPredefinedPageInput,
-} from "@src/graphql.generated";
+import { GQLPredefinedPage, GQLPredefinedPageInput } from "@src/graphql.generated";
 import { EditPredefinedPage } from "@src/predefinedPage/EditPredefinedPage";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
+
+import { GQLPredefinedPageInfoTagQuery, GQLPredefinedPageInfoTagQueryVariables } from "./PredefinedPage.generated";
 
 const predefinedPageInfoTagQuery = gql`
     query PredefinedPageInfoTag($id: ID!) {
@@ -74,4 +71,8 @@ export const PredefinedPage: DocumentInterface<Pick<GQLPredefinedPage, "type">, 
         }
     },
     anchors: () => [],
+    dependencies: () => [],
+    replaceDependenciesInOutput: (output, replacements) => {
+        return output;
+    },
 };
