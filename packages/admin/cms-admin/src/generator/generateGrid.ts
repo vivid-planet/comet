@@ -11,6 +11,8 @@ import { CrudGeneratorConfig } from "./types";
 import { buildNameVariants } from "./utils/buildNameVariants";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
+import { screamingSnakeCaseToCamelCase } from "./utils/screamingSnakeCaseToCamelCase";
+import { screamingSnakeCaseToHumanReadable } from "./utils/screamingSnakeCaseToHumanReadable";
 import { writeGenerated } from "./utils/writeGenerated";
 
 function tsCodeRecordToString(object: Record<string, string | undefined>) {
@@ -163,8 +165,8 @@ export async function writeCrudGrid(
                 const values = enumType.enumValues.map((i) => i.name);
                 const valueOptions = `[${values
                     .map((i) => {
-                        const id = `${instanceEntityName}.${field.name}.${i.charAt(0).toLowerCase() + i.slice(1)}`;
-                        const label = `intl.formatMessage({ id: "${id}", defaultMessage: "${camelCaseToHumanReadable(i)}" })`;
+                        const id = `${instanceEntityName}.${field.name}.${screamingSnakeCaseToCamelCase(i)}`;
+                        const label = `intl.formatMessage({ id: "${id}", defaultMessage: "${screamingSnakeCaseToHumanReadable(i)}" })`;
                         return `{value: ${JSON.stringify(i)}, label: ${label}}, `;
                     })
                     .join(" ")}]`;

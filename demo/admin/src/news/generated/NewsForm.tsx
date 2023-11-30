@@ -192,14 +192,20 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                         <Field fullWidth name="category" label={<FormattedMessage id="news.category" defaultMessage="Category" />}>
                             {(props) => (
                                 <FinalFormSelect {...props}>
-                                    <MenuItem value="Events">
+                                    <MenuItem value="EVENTS">
                                         <FormattedMessage id="news.category.events" defaultMessage="Events" />
                                     </MenuItem>
-                                    <MenuItem value="Company">
+                                    <MenuItem value="COMPANY">
                                         <FormattedMessage id="news.category.company" defaultMessage="Company" />
                                     </MenuItem>
-                                    <MenuItem value="Awards">
+                                    <MenuItem value="AWARDS">
                                         <FormattedMessage id="news.category.awards" defaultMessage="Awards" />
+                                    </MenuItem>
+                                    <MenuItem value="PRODUCT_LAUNCH">
+                                        <FormattedMessage id="news.category.productLaunch" defaultMessage="Product Launch" />
+                                    </MenuItem>
+                                    <MenuItem value="NEW_MARKET_STRATEGY">
+                                        <FormattedMessage id="news.category.newMarketStrategy" defaultMessage="New Market Strategy" />
                                     </MenuItem>
                                 </FinalFormSelect>
                             )}

@@ -9,9 +9,11 @@ import { NewsContentBlock } from "../blocks/news-content.block";
 import { NewsComment } from "./news-comment.entity";
 
 export enum NewsCategory {
-    Events = "Events",
-    Company = "Company",
-    Awards = "Awards",
+    EVENTS = "EVENTS",
+    COMPANY = "COMPANY",
+    AWARDS = "AWARDS",
+    PRODUCT_LAUNCH = "PRODUCT_LAUNCH",
+    NEW_MARKET_STRATEGY = "NEW_MARKET_STRATEGY",
 }
 registerEnumType(NewsCategory, {
     name: "NewsCategory",
@@ -63,7 +65,7 @@ export class News extends BaseEntity<News, "id"> implements DocumentInterface {
 
     @Enum({ items: () => NewsCategory })
     @Field(() => NewsCategory)
-    category: NewsCategory = NewsCategory.Awards; // TODO remove default value once CRUD generator supports enums
+    category: NewsCategory = NewsCategory.AWARDS; // TODO remove default value once CRUD generator supports enums
 
     @Property({ default: false })
     @Field()

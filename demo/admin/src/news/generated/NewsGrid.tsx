@@ -126,9 +126,14 @@ export function NewsGrid(): React.ReactElement {
             headerName: intl.formatMessage({ id: "news.category", defaultMessage: "Category" }),
             type: "singleSelect",
             valueOptions: [
-                { value: "Events", label: intl.formatMessage({ id: "news.category.events", defaultMessage: "Events" }) },
-                { value: "Company", label: intl.formatMessage({ id: "news.category.company", defaultMessage: "Company" }) },
-                { value: "Awards", label: intl.formatMessage({ id: "news.category.awards", defaultMessage: "Awards" }) },
+                { value: "EVENTS", label: intl.formatMessage({ id: "news.category.events", defaultMessage: "Events" }) },
+                { value: "COMPANY", label: intl.formatMessage({ id: "news.category.company", defaultMessage: "Company" }) },
+                { value: "AWARDS", label: intl.formatMessage({ id: "news.category.awards", defaultMessage: "Awards" }) },
+                { value: "PRODUCT_LAUNCH", label: intl.formatMessage({ id: "news.category.productLaunch", defaultMessage: "Product Launch" }) },
+                {
+                    value: "NEW_MARKET_STRATEGY",
+                    label: intl.formatMessage({ id: "news.category.newMarketStrategy", defaultMessage: "New Market Strategy" }),
+                },
             ],
             width: 150,
         },

@@ -11,6 +11,8 @@ import { CrudGeneratorConfig } from "./types";
 import { buildNameVariants } from "./utils/buildNameVariants";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
+import { screamingSnakeCaseToCamelCase } from "./utils/screamingSnakeCaseToCamelCase";
+import { screamingSnakeCaseToHumanReadable } from "./utils/screamingSnakeCaseToHumanReadable";
 import { writeGenerated } from "./utils/writeGenerated";
 
 export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema: IntrospectionQuery): Promise<void> {
@@ -335,8 +337,8 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
                 <FinalFormSelect {...props}>
                 ${values
                     .map((value) => {
-                        const id = `${instanceEntityName}.${field.name}.${value.charAt(0).toLowerCase() + value.slice(1)}`;
-                        const label = `<FormattedMessage id="${id}" defaultMessage="${camelCaseToHumanReadable(value)}" />`;
+                        const id = `${instanceEntityName}.${field.name}.${screamingSnakeCaseToCamelCase(value)}`;
+                        const label = `<FormattedMessage id="${id}" defaultMessage="${screamingSnakeCaseToHumanReadable(value)}" />`;
                         return `<MenuItem value="${value}">${label}</MenuItem>`;
                     })
                     .join("\n")}
