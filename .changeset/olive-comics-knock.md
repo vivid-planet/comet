@@ -1,6 +1,5 @@
 ---
 "@comet/cms-api": minor
-"comet-docs": minor
 ---
 
 Add access logging to log information about the request to standard output. The log contains information about the requester and the request itself. This can be useful for fulfilling legal requirements regarding data integrity or for forensics.
