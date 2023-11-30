@@ -1,28 +1,44 @@
-import { ClearInputAdornment, InputWithPopper, InputWithPopperComponents, InputWithPopperComponentsProps, InputWithPopperProps } from "@comet/admin";
+import { ClearInputAdornment, InputWithPopperComponents, InputWithPopperProps } from "@comet/admin";
 import { Close } from "@comet/admin-icons";
-import { Box, ButtonBase, ComponentsOverrides, IconButton, InputAdornment, InputBaseProps, Theme, Typography } from "@mui/material";
-import { WithStyles, withStyles } from "@mui/styles";
-import clsx from "clsx";
+import { ComponentsOverrides, InputBaseProps, Typography } from "@mui/material";
+import { Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
-import { HexColorPicker, RgbaStringColorPicker } from "react-colorful";
-import { ColorPickerBaseProps } from "react-colorful/dist/types";
 import { FormattedMessage } from "react-intl";
 import tinycolor from "tinycolor2";
 import { useDebouncedCallback } from "use-debounce";
 
-import { ColorPickerClassKey, styles } from "./ColorPicker.styles";
+import {
+    ColorPalette,
+    ColorPaletteItem,
+    ColorPickerClassKey,
+    ColorPickerWrapper,
+    Footer,
+    FooterClearButton,
+    Header,
+    HeaderCloseButton,
+    HeaderTitleText,
+    HexColorPicker,
+    InputAdornment,
+    PopperRoot,
+    Preview,
+    PreviewIndicator,
+    PreviewIndicatorEmptyOrInvalidProps,
+    RgbaStringColorPicker,
+    Root,
+    SlotProps,
+} from "./ColorPicker.slots";
+import { PreviewIndicatorColorProps } from "./PreviewIndicatorColorProps";
+
+export interface ColorPickerColorPreviewProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "color">, PreviewIndicatorColorProps {}
+export interface ColorPickerNoColorPreviewProps extends React.HTMLAttributes<HTMLDivElement>, PreviewIndicatorEmptyOrInvalidProps {}
+
 export interface ColorPickerPropsComponents extends InputWithPopperComponents {
-    ColorPickerColorPreview?: React.ElementType<ColorPickerColorPreviewProps>;
-    ColorPickerInvalidPreview?: React.ElementType<React.HTMLAttributes<HTMLDivElement>>;
-    ColorPickerEmptyPreview?: React.ElementType<React.HTMLAttributes<HTMLDivElement>>;
+    ColorPickerColorPreview?: React.ComponentType<ColorPickerColorPreviewProps>;
+    ColorPickerInvalidPreview?: React.ComponentType<ColorPickerNoColorPreviewProps>;
+    ColorPickerEmptyPreview?: React.ComponentType<ColorPickerNoColorPreviewProps>;
 }
 
-export interface ColorPickerPropsComponentsProps extends InputWithPopperComponentsProps {
-    hexColorPicker?: Partial<ColorPickerBaseProps<string>>;
-    rgbaStringColorPicker?: Partial<ColorPickerBaseProps<string>>;
-}
-
-export interface ColorPickerProps extends Omit<InputWithPopperProps, "children" | "onChange" | "value" | "componentsProps" | "components"> {
+export interface ColorPickerProps extends Omit<InputWithPopperProps, "children" | "onChange" | "value" | "components" | "slotProps"> {
     value?: string | null;
     onChange?: (color?: string) => void;
     colorFormat?: "hex" | "rgba";
@@ -38,48 +54,35 @@ export interface ColorPickerProps extends Omit<InputWithPopperProps, "children" 
     titleText?: React.ReactNode;
     clearButtonText?: React.ReactNode;
     components?: ColorPickerPropsComponents;
-    componentsProps?: ColorPickerPropsComponentsProps;
+    slotProps?: SlotProps;
 }
 
-export interface ColorPickerColorPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
-    color: string;
-}
-
-const ColorPickerPreviewColor = ({ color, ...restProps }: ColorPickerColorPreviewProps): React.ReactElement => {
-    return <div {...restProps} style={{ backgroundColor: color }} />;
-};
-
-const ColorPicker = ({
-    classes,
-    value,
-    colorFormat = "hex",
-    hidePicker,
-    hideHeader,
-    hideFooter,
-    colorPalette,
-    onChange,
-    startAdornment,
-    endAdornment,
-    onBlur,
-    clearable,
-    titleText = <FormattedMessage id="comet.colorPicker.title" defaultMessage="Choose a color" />,
-    clearButtonText = <FormattedMessage id="comet.colorPicker.clearButton" defaultMessage="clear color" />,
-    componentsProps = {},
-    components = {},
-    ...rest
-}: ColorPickerProps & WithStyles<typeof styles>): React.ReactElement => {
+export const ColorPicker = (inProps: ColorPickerProps) => {
     const {
-        ColorPickerColorPreview: ColorPreview = ColorPickerPreviewColor,
-        ColorPickerInvalidPreview: InvalidPreview = "div",
-        ColorPickerEmptyPreview: EmptyPreview = "div",
+        classes,
+        value,
+        colorFormat = "hex",
+        hidePicker,
+        hideHeader,
+        hideFooter,
+        colorPalette,
+        onChange,
+        startAdornment,
+        endAdornment,
+        onBlur,
+        clearable,
+        titleText = <FormattedMessage id="comet.colorPicker.title" defaultMessage="Choose a color" />,
+        clearButtonText = <FormattedMessage id="comet.colorPicker.clearButton" defaultMessage="clear color" />,
+        components = {},
+        slotProps,
+        ...rest
+    } = useThemeProps({ props: inProps, name: "CometAdminColorPicker" });
+    const {
+        ColorPickerColorPreview: ColorPreview = PreviewIndicator,
+        ColorPickerInvalidPreview: InvalidPreview = PreviewIndicator,
+        ColorPickerEmptyPreview: EmptyPreview = PreviewIndicator,
         ...inputWithPopperComponents
     } = components;
-
-    const {
-        hexColorPicker: hexColorPickerProps,
-        rgbaStringColorPicker: rgbaStringColorPickerProps,
-        ...inputWithPopperComponentsProps
-    } = componentsProps;
 
     const [displayValue, setDisplayValue] = React.useState<string>(value ?? "");
     const previewColor = displayValue ? tinycolor(displayValue) : null;
@@ -110,33 +113,37 @@ const ColorPicker = ({
     };
 
     return (
-        <InputWithPopper
+        <Root
             startAdornment={
                 startAdornment ? (
                     startAdornment
                 ) : (
-                    <InputAdornment position="start" disablePointerEvents>
-                        <div className={classes.preview}>
+                    <InputAdornment position="start" disablePointerEvents {...slotProps?.inputAdornment}>
+                        <Preview>
                             {previewColor ? (
                                 previewColor.isValid() ? (
                                     <ColorPreview
-                                        className={`${classes.previewIndicator} ${classes.previewIndicatorColor}`}
                                         color={previewColor.toRgbString()}
+                                        type="color"
+                                        {...slotProps?.previewIndicator}
+                                        {...slotProps?.previewIndicatorColor}
                                     />
                                 ) : (
-                                    <InvalidPreview className={`${classes.previewIndicator} ${classes.previewIndicatorInvalid}`}>?</InvalidPreview>
+                                    <InvalidPreview type="invalid" {...slotProps?.previewIndicator} {...slotProps?.previewIndicatorInvalid}>
+                                        ?
+                                    </InvalidPreview>
                                 )
                             ) : (
-                                <EmptyPreview className={`${classes.previewIndicator} ${classes.previewIndicatorEmpty}`} />
+                                <EmptyPreview type="empty" {...slotProps?.previewIndicator} {...slotProps?.previewIndicatorEmpty} />
                             )}
-                        </div>
+                        </Preview>
                     </InputAdornment>
                 )
             }
             endAdornment={
                 clearable ? (
                     <>
-                        <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange && onChange(undefined)} />
+                        <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange?.(undefined)} />
                         {endAdornment}
                     </>
                 ) : (
@@ -152,69 +159,68 @@ const ColorPicker = ({
                 onChangeColor(displayValue);
             }}
             components={inputWithPopperComponents}
-            componentsProps={inputWithPopperComponentsProps}
             {...rest}
+            {...slotProps?.root}
         >
             {(closePopper) => {
                 return (
-                    <div className={classes.popperRoot}>
+                    <PopperRoot {...slotProps?.popperRoot}>
                         {!hideHeader && (
-                            <div className={clsx(classes.popperSection, classes.header)}>
-                                <Typography className={classes.headerTitleText}>{titleText}</Typography>
-                                <IconButton className={classes.headerCloseButton} onClick={() => closePopper(true)}>
+                            <Header {...slotProps?.header}>
+                                <HeaderTitleText {...slotProps?.headerTitleText}>{titleText}</HeaderTitleText>
+                                <HeaderCloseButton onClick={() => closePopper(true)} {...slotProps?.headerCloseButton}>
                                     <Close />
-                                </IconButton>
-                            </div>
+                                </HeaderCloseButton>
+                            </Header>
                         )}
 
                         {!hidePicker && (
-                            <div className={clsx(classes.popperSection, classes.colorPickerWrapper)}>
-                                {colorFormat === "hex" && <HexColorPicker color={value ?? ""} onChange={onChangeColor} {...hexColorPickerProps} />}
-                                {colorFormat === "rgba" && (
-                                    <RgbaStringColorPicker color={value ?? ""} onChange={onChangeColor} {...rgbaStringColorPickerProps} />
+                            <ColorPickerWrapper {...slotProps?.colorPickerWrapper}>
+                                {colorFormat === "hex" && (
+                                    <HexColorPicker color={value ?? ""} onChange={onChangeColor} {...slotProps?.hexColorPicker} />
                                 )}
-                            </div>
+                                {colorFormat === "rgba" && (
+                                    <RgbaStringColorPicker color={value ?? ""} onChange={onChangeColor} {...slotProps?.rgbaStringColorPicker} />
+                                )}
+                            </ColorPickerWrapper>
                         )}
                         {colorPalette?.length && (
-                            <div className={clsx(classes.popperSection, classes.colorPalette)}>
+                            <ColorPalette {...slotProps?.colorPalette}>
                                 {colorPalette.map((color, index) => (
-                                    <Box
-                                        className={classes.colorPaletteItem}
+                                    <ColorPaletteItem
                                         key={`${index}_${color}`}
                                         onClick={() => {
                                             onChangeColor(color);
                                             closePopper(true);
                                         }}
-                                        sx={{ backgroundColor: color }}
+                                        colorValue={color}
+                                        {...slotProps?.colorPaletteItem}
                                     />
                                 ))}
-                            </div>
+                            </ColorPalette>
                         )}
                         {!hideFooter && (
-                            <div className={clsx(classes.popperSection, classes.footer)}>
-                                <ButtonBase
-                                    className={classes.footerClearButton}
+                            <Footer {...slotProps?.footer}>
+                                <FooterClearButton
+                                    {...slotProps?.footerClearButton}
                                     onClick={() => {
                                         onChangeColor("");
                                         closePopper(true);
                                     }}
                                 >
-                                    <div className={classes.preview}>
-                                        <EmptyPreview className={`${classes.previewIndicator} ${classes.previewIndicatorEmpty}`} />
-                                    </div>
+                                    <Preview {...slotProps?.preview}>
+                                        <EmptyPreview type="empty" {...slotProps?.previewIndicator} {...slotProps?.previewIndicatorEmpty} />
+                                    </Preview>
                                     <Typography>{clearButtonText}</Typography>
-                                </ButtonBase>
-                            </div>
+                                </FooterClearButton>
+                            </Footer>
                         )}
-                    </div>
+                    </PopperRoot>
                 );
             }}
-        </InputWithPopper>
+        </Root>
     );
 };
-
-const ColorPickerWithStyles = withStyles(styles, { name: "CometAdminColorPicker" })(ColorPicker);
-export { ColorPickerWithStyles as ColorPicker };
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
