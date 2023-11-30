@@ -9,6 +9,7 @@ import {
     createBlock,
     ExtractBlockInput,
     inputToData,
+    NameOrOptions,
     SimpleBlockInputInterface,
 } from "@comet/blocks-api";
 
@@ -27,6 +28,7 @@ interface ImageLinkBlockInputInterface<LinkBlockInput extends BlockInputInterfac
 
 export function createImageLinkBlock<LinkBlock extends Block, ImageBlock extends Block = typeof PixelImageBlock>(
     options: CreateImageLinkBlockOptions<LinkBlock, ImageBlock>,
+    nameOrOptions: NameOrOptions = "ImageLink",
 ): Block<BlockDataInterface, ImageLinkBlockInputInterface<ExtractBlockInput<LinkBlock>, ExtractBlockInput<ImageBlock>>> {
     const image = options.image || PixelImageBlock;
     const link = options.link;
@@ -51,5 +53,5 @@ export function createImageLinkBlock<LinkBlock extends Block, ImageBlock extends
         }
     }
 
-    return createBlock(ImageLinkBlockData, ImageLinkBlockInput, "ImageLink");
+    return createBlock(ImageLinkBlockData, ImageLinkBlockInput, nameOrOptions);
 }
