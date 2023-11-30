@@ -365,6 +365,7 @@ type News implements DocumentInterface {
   image: DamImageBlockData!
   content: NewsContentBlockData!
   createdAt: DateTime!
+  tags: [String!]!
   comments: [NewsComment!]!
   dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!

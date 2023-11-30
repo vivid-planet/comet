@@ -1,6 +1,18 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
 import { CrudField, CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
-import { BaseEntity, Collection, Embeddable, Embedded, Entity, Enum, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+    ArrayType,
+    BaseEntity,
+    Collection,
+    Embeddable,
+    Embedded,
+    Entity,
+    Enum,
+    OneToMany,
+    OptionalProps,
+    PrimaryKey,
+    Property,
+} from "@mikro-orm/core";
 import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 import { v4 as uuid } from "uuid";
@@ -94,4 +106,8 @@ export class News extends BaseEntity<News, "id"> implements DocumentInterface {
     @Property({ onUpdate: () => new Date(), columnType: "timestamp with time zone" })
     @Field()
     updatedAt: Date = new Date();
+
+    @Property({ type: ArrayType })
+    @Field(() => [String])
+    tags: string[];
 }
