@@ -99,7 +99,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     \`;
     
     `;
-    writeGenerated(`${targetDirectory}/${entityName}Form.gql.tsx`, outGql);
+    writeGenerated(`${targetDirectory}/${entityName}Form.gql.ts`, outGql);
 
     const numberFields = formFields.filter((field) => {
         const type = field.type.kind === "NON_NULL" ? field.type.ofType : field.type;
