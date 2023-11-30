@@ -238,7 +238,7 @@ export async function generateCrudInput(
             decorators.push(`@Type(() => ${inputName})`);
             decorators.push("@ValidateNested()");
             type = `${inputName}`;
-        } else if (prop.type == "JsonType" || prop.embeddable) {
+        } else if (prop.type == "JsonType" || prop.embeddable || prop.type == "ArrayType") {
             const tsProp = morphTsProperty(prop.name, metadata);
 
             let tsType = tsProp.getType();
