@@ -704,10 +704,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         imports.push(generateEntityImport(scopeProp.targetMeta, generatorOptions.targetDirectory));
     }
 
-    if (instanceNamePlural === "productCategories") {
-        console.log(generatorOptions);
-    }
-
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { FindOptions, Reference } from "@mikro-orm/core";
