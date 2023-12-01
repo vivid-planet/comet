@@ -13,6 +13,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     const instanceNamePlural = classNamePlural[0].toLocaleLowerCase() + classNamePlural.slice(1);
     const fileNameSingular = instanceNameSingular.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
     const fileNamePlural = instanceNamePlural.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
+    if (!generatorOptions.requiredPermission) generatorOptions.requiredPermission = [instanceNamePlural];
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {
         const generatedFiles: GeneratedFile[] = [];
@@ -56,7 +57,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(["${generatorOptions.requiredPermission ?? instanceNamePlural}"]${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,

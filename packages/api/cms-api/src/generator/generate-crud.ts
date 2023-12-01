@@ -565,7 +565,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(["${generatorOptions.requiredPermission}"]${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         ${code}
     }
@@ -718,7 +718,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(["${generatorOptions.requiredPermission}"]${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
@@ -916,7 +916,7 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
 
     const { fileNameSingular, fileNamePlural, instanceNamePlural } = buildNameVariants(metadata);
     const { hasFilterArg, hasSortArg, argsFileName } = buildOptions(metadata);
-    generatorOptions.requiredPermission = generatorOptions.requiredPermission ?? instanceNamePlural;
+    if (!generatorOptions.requiredPermission) generatorOptions.requiredPermission = [instanceNamePlural];
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {
         if (hasFilterArg) {

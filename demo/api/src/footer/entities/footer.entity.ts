@@ -12,7 +12,7 @@ import { FooterContentScope } from "./footer-content-scope.entity";
     implements: () => [DocumentInterface],
 })
 @RootBlockEntity()
-@CrudSingleGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: "pageTree" })
+@CrudSingleGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["pageTree"] })
 export class Footer extends BaseEntity<Footer, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
