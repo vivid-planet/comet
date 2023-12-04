@@ -21,6 +21,7 @@ import {
     SiteConfig,
     SitePreview,
     SitesConfigProvider,
+    urlParamToCategory,
     UserPermissionsPage,
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
@@ -52,7 +53,6 @@ import ProductCategoriesPage from "./products/categories/ProductCategoriesPage";
 import { ProductsPage } from "./products/generated/ProductsPage";
 import ProductsHandmadePage from "./products/ProductsPage";
 import ProductTagsPage from "./products/tags/ProductTagsPage";
-import { urlParamToCategory } from "./utils/pageTreeNodeCategoryMapping";
 
 const GlobalStyle = () => (
     <Global
@@ -147,7 +147,10 @@ class App extends React.Component {
                                                                                         render={({ match: { params } }) => {
                                                                                             const category = urlParamToCategory(params.category);
 
-                                                                                            if (category === undefined) {
+                                                                                            if (
+                                                                                                !category ||
+                                                                                                !categories.find((c) => c.category === category)
+                                                                                            ) {
                                                                                                 return <Redirect to={`${match.url}/dashboard`} />;
                                                                                             }
 

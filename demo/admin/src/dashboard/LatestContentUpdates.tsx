@@ -1,8 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
-import { LatestContentUpdatesDashboardWidget } from "@comet/cms-admin";
+import { categoryToUrlParam, LatestContentUpdatesDashboardWidget } from "@comet/cms-admin";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { GQLLatestContentUpdatesQueryVariables } from "@src/dashboard/LatestContentUpdates.generated";
-import { categoryToUrlParam } from "@src/utils/pageTreeNodeCategoryMapping";
 import React from "react";
 
 import { GQLLatestContentUpdatesQuery } from "./LatestContentUpdates.generated";
