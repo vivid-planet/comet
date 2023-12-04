@@ -111,7 +111,7 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                 }
 
                 const loadUrl = () => {
-                    return dependencyObject.getUrl({
+                    return dependencyObject.resolveUrl({
                         rootColumnName: row.rootColumnName,
                         jsonPath: row.jsonPath,
                         contentScopeUrl: contentScope.match.url,

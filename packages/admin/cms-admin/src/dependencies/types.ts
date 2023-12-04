@@ -3,15 +3,15 @@ import * as React from "react";
 
 export interface DependencyInterface {
     displayName: React.ReactNode;
-    getUrl: ({
+    resolveUrl: ({
         rootColumnName,
         jsonPath,
         contentScopeUrl,
         apolloClient,
         id,
     }: {
-        rootColumnName: string;
-        jsonPath: string;
+        rootColumnName?: string;
+        jsonPath?: string;
         contentScopeUrl: string;
         apolloClient: ApolloClient<unknown>;
         id: string;

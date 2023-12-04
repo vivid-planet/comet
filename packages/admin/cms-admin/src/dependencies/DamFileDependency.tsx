@@ -8,7 +8,7 @@ import { DependencyInterface } from "./types";
 
 export const DamFileDependency: DependencyInterface = {
     displayName: <FormattedMessage {...messages.file} />,
-    getUrl: async ({ contentScopeUrl, apolloClient, id }) => {
+    resolveUrl: async ({ contentScopeUrl, apolloClient, id }) => {
         const { data, error } = await apolloClient.query<GQLFileDependencyQuery, GQLFileDependencyQueryVariables>({
             query: gql`
                 query FileDependency($id: ID!) {
