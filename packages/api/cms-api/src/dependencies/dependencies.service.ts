@@ -9,10 +9,10 @@ import { v4 } from "uuid";
 
 import { EntityInfoGetter, EntityInfoServiceInterface } from "../dam/files/decorators/entity-info.decorator";
 import { DiscoverService } from "./discover.service";
+import { BaseDependencyInterface } from "./dto/base-dependency.interface";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
 import { Dependency } from "./dto/dependency";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
-import { BaseDependency } from "./entities/base-dependency";
 import { BlockIndexRefresh } from "./entities/block-index-refresh.entity";
 
 const isService = (entityInfoGetter: EntityInfoGetter): entityInfoGetter is Type<EntityInfoServiceInterface> => {
@@ -199,7 +199,7 @@ export class DependenciesService {
             paginationArgs,
         );
 
-        const results: BaseDependency[] = await qb;
+        const results: BaseDependencyInterface[] = await qb;
         const ret: Dependency[] = [];
 
         for (const result of results) {
@@ -241,7 +241,7 @@ export class DependenciesService {
             paginationArgs,
         );
 
-        const results: BaseDependency[] = await qb;
+        const results: BaseDependencyInterface[] = await qb;
         const ret: Dependency[] = [];
 
         for (const result of results) {
