@@ -44,14 +44,10 @@ export class AccessLogInterceptor implements NestInterceptor {
                 delete gqlArgs["data"];
             }
 
-            requestData.push(
-                ...[
-                    `operationType: ${gqlInfo.parentType}`,
-                    `operationName: ${gqlInfo.operation.name.value}`,
-                    `resolver function: ${gqlInfo.fieldName}`,
-                    `args: ${JSON.stringify(gqlArgs)}`,
-                ],
-            );
+            requestData.push(`operationType: ${gqlInfo.parentType}`);
+            if (gqlInfo.operation.name?.value) requestData.push(`operationName: ${gqlInfo.operation.name.value}`);
+            requestData.push(`resolver function: ${gqlInfo.fieldName}`);
+            requestData.push(`args: ${JSON.stringify(gqlArgs)}`);
         } else {
             const httpContext = context.switchToHttp();
             const httpRequest = httpContext.getRequest();
