@@ -65,7 +65,7 @@ export class News extends BaseEntity<News, "id"> implements DocumentInterface {
     @Field(() => NewsCategory)
     category: NewsCategory = NewsCategory.Awards; // TODO remove default value once CRUD generator supports enums
 
-    @Property({ default: false })
+    @Property()
     @Field()
     visible: boolean;
 
