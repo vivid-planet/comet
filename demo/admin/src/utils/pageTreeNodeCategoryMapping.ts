@@ -1,22 +1,28 @@
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 
+interface Category {
+    category: GQLPageTreeNodeCategory;
+    urlParam: string;
+}
+
+const categories: Array<Category> = [
+    {
+        category: "MainNavigation",
+        urlParam: "main-navigation",
+    },
+    {
+        category: "TopMenu",
+        urlParam: "top-menu",
+    },
+];
+
 function categoryToUrlParam(category: GQLPageTreeNodeCategory): string {
-    switch (category) {
-        case "TopMenu":
-            return "top-menu";
-        case "MainNavigation":
-        default:
-            return "main-navigation";
-    }
+    const urlParam = categories.find((c) => c.category === category)?.urlParam;
+    return urlParam ?? categories[0].urlParam;
 }
 
 function urlParamToCategory(param: string | undefined): GQLPageTreeNodeCategory | undefined {
-    switch (param) {
-        case "top-menu":
-            return "TopMenu";
-        case "main-navigation":
-            return "MainNavigation";
-    }
+    return categories.find((c) => c.urlParam === param)?.category;
 }
 
 export { categoryToUrlParam, urlParamToCategory };
