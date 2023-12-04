@@ -36,7 +36,7 @@ export abstract class PageTreeNodeBase extends BaseEntity<PageTreeNodeBase, "id"
     @Field()
     slug: string;
 
-    @Enum({ items: () => PageTreeNodeVisibility, default: PageTreeNodeVisibility.Unpublished })
+    @Enum({ items: () => PageTreeNodeVisibility })
     @Field(() => PageTreeNodeVisibility)
     visibility: PageTreeNodeVisibility;
 
@@ -47,7 +47,7 @@ export abstract class PageTreeNodeBase extends BaseEntity<PageTreeNodeBase, "id"
     // @Column({ type: "json" })
     // scope?: Record<string, unknown>;
 
-    @Property({ default: false })
+    @Property()
     @Field()
     hideInMenu: boolean;
 

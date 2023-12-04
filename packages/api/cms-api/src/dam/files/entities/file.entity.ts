@@ -103,7 +103,6 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         @Field()
         @Property({
             columnType: "boolean",
-            default: false,
         })
         archived: boolean;
 
