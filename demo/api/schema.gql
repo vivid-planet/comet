@@ -401,6 +401,14 @@ type ProductCategory implements DocumentInterface {
   products: [Product!]!
 }
 
+type ProductColor implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  name: String!
+  colorHexCode: String!
+  createdAt: DateTime!
+}
+
 type ProductStatistics {
   id: ID!
   views: Float!
@@ -422,6 +430,7 @@ type ProductVariant implements DocumentInterface {
   name: String!
   image: DamImageBlockData!
   createdAt: DateTime!
+  product: Product!
 }
 
 type ProductDiscounts {
@@ -460,6 +469,7 @@ type Product implements DocumentInterface {
   statistics: ProductStatistics
   createdAt: DateTime!
   category: ProductCategory
+  colors: [ProductColor!]!
   variants: [ProductVariant!]!
   tags: [ProductTag!]!
 }
@@ -482,6 +492,11 @@ type PaginatedProductCategories {
 
 type PaginatedProductTags {
   nodes: [ProductTag!]!
+  totalCount: Int!
+}
+
+type PaginatedProductVariants {
+  nodes: [ProductVariant!]!
   totalCount: Int!
 }
 
@@ -642,6 +657,8 @@ type Query {
   productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
   productTag(id: ID!): ProductTag!
   productTags(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductTagFilter, sort: [ProductTagSort!]): PaginatedProductTags!
+  productVariant(id: ID!): ProductVariant!
+  productVariants(offset: Int! = 0, limit: Int! = 25, product: ID!, search: String, filter: ProductVariantFilter, sort: [ProductVariantSort!]): PaginatedProductVariants!
 }
 
 input UserFilter {
@@ -889,6 +906,27 @@ enum ProductTagSortField {
   updatedAt
 }
 
+input ProductVariantFilter {
+  name: StringFilter
+  product: ManyToOneFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  and: [ProductVariantFilter!]
+  or: [ProductVariantFilter!]
+}
+
+input ProductVariantSort {
+  field: ProductVariantSortField!
+  direction: SortDirection! = ASC
+}
+
+enum ProductVariantSortField {
+  name
+  product
+  createdAt
+  updatedAt
+}
+
 type Mutation {
   currentUserSignOut: String!
   userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
@@ -943,6 +981,9 @@ type Mutation {
   createProductTag(input: ProductTagInput!): ProductTag!
   updateProductTag(id: ID!, input: ProductTagUpdateInput!, lastUpdatedAt: DateTime): ProductTag!
   deleteProductTag(id: ID!): Boolean!
+  createProductVariant(product: ID!, input: ProductVariantInput!): ProductVariant!
+  updateProductVariant(id: ID!, input: ProductVariantUpdateInput!, lastUpdatedAt: DateTime): ProductVariant!
+  deleteProductVariant(id: ID!): Boolean!
 }
 
 input UserPermissionInput {
@@ -1125,7 +1166,7 @@ input ProductInput {
   dimensions: ProductDimensionsInput
   packageDimensions: ProductPackageDimensionsInput
   statistics: ProductStatisticsInput
-  variants: [ProductVariantInput!]! = []
+  colors: [ProductColorInput!]! = []
   category: ID = null
   tags: [ID!]! = []
 }
@@ -1134,9 +1175,9 @@ input ProductStatisticsInput {
   views: Float!
 }
 
-input ProductVariantInput {
+input ProductColorInput {
   name: String!
-  image: DamImageBlockInput!
+  colorHexCode: String!
 }
 
 input ProductUpdateInput {
@@ -1152,7 +1193,7 @@ input ProductUpdateInput {
   dimensions: ProductDimensionsInput
   packageDimensions: ProductPackageDimensionsInput
   statistics: ProductStatisticsInput
-  variants: [ProductVariantInput!]
+  colors: [ProductColorInput!]
   category: ID
   tags: [ID!]
 }
@@ -1177,4 +1218,14 @@ input ProductTagInput {
 input ProductTagUpdateInput {
   title: String
   products: [ID!]
+}
+
+input ProductVariantInput {
+  name: String!
+  image: DamImageBlockInput!
+}
+
+input ProductVariantUpdateInput {
+  name: String
+  image: DamImageBlockInput
 }

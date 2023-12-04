@@ -9,6 +9,7 @@ import { GraphQLResolveInfo } from "graphql";
 
 import { Product } from "../entities/product.entity";
 import { ProductCategory } from "../entities/product-category.entity";
+import { ProductColor } from "../entities/product-color.entity";
 import { ProductStatistics } from "../entities/product-statistics.entity";
 import { ProductTag } from "../entities/product-tag.entity";
 import { ProductVariant } from "../entities/product-variant.entity";
@@ -25,7 +26,7 @@ export class ProductResolver {
         @InjectRepository(Product) private readonly repository: EntityRepository<Product>,
         @InjectRepository(ProductCategory) private readonly productCategoryRepository: EntityRepository<ProductCategory>,
         @InjectRepository(ProductStatistics) private readonly productStatisticsRepository: EntityRepository<ProductStatistics>,
-        @InjectRepository(ProductVariant) private readonly productVariantRepository: EntityRepository<ProductVariant>,
+        @InjectRepository(ProductColor) private readonly productColorRepository: EntityRepository<ProductColor>,
         @InjectRepository(ProductTag) private readonly productTagRepository: EntityRepository<ProductTag>,
     ) {}
 
@@ -51,6 +52,9 @@ export class ProductResolver {
         const populate: string[] = [];
         if (fields.includes("category")) {
             populate.push("category");
+        }
+        if (fields.includes("colors")) {
+            populate.push("colors");
         }
         if (fields.includes("variants")) {
             populate.push("variants");
@@ -80,7 +84,7 @@ export class ProductResolver {
     @Mutation(() => Product)
     async createProduct(@Args("input", { type: () => ProductInput }) input: ProductInput): Promise<Product> {
         const {
-            variants: variantsInput,
+            colors: colorsInput,
             tags: tagsInput,
             category: categoryInput,
             statistics: statisticsInput,
@@ -94,14 +98,11 @@ export class ProductResolver {
             category: categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined,
             image: imageInput.transformToBlockData(),
         });
-        if (variantsInput) {
-            product.variants.set(
-                variantsInput.map((variantInput) => {
-                    const { image: imageInput, ...assignInput } = variantInput;
-                    return this.productVariantRepository.assign(new ProductVariant(), {
-                        ...assignInput,
-
-                        image: imageInput.transformToBlockData(),
+        if (colorsInput) {
+            product.colors.set(
+                colorsInput.map((colorInput) => {
+                    return this.productColorRepository.assign(new ProductColor(), {
+                        ...colorInput,
                     });
                 }),
             );
@@ -139,7 +140,7 @@ export class ProductResolver {
         }
 
         const {
-            variants: variantsInput,
+            colors: colorsInput,
             tags: tagsInput,
             category: categoryInput,
             statistics: statisticsInput,
@@ -149,14 +150,11 @@ export class ProductResolver {
         product.assign({
             ...assignInput,
         });
-        if (variantsInput) {
-            product.variants.set(
-                variantsInput.map((variantInput) => {
-                    const { image: imageInput, ...assignInput } = variantInput;
-                    return this.productVariantRepository.assign(new ProductVariant(), {
-                        ...assignInput,
-
-                        image: imageInput.transformToBlockData(),
+        if (colorsInput) {
+            product.colors.set(
+                colorsInput.map((colorInput) => {
+                    return this.productColorRepository.assign(new ProductColor(), {
+                        ...colorInput,
                     });
                 }),
             );
@@ -216,6 +214,11 @@ export class ProductResolver {
     @ResolveField(() => ProductCategory, { nullable: true })
     async category(@Parent() product: Product): Promise<ProductCategory | undefined> {
         return product.category?.load();
+    }
+
+    @ResolveField(() => [ProductColor])
+    async colors(@Parent() product: Product): Promise<ProductColor[]> {
+        return product.colors.loadItems();
     }
 
     @ResolveField(() => [ProductVariant])

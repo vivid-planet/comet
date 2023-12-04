@@ -159,10 +159,7 @@ function ProductsGrid() {
                                             type: input.type,
                                             category: input.category?.id,
                                             tags: input.tags.map((tag) => tag.id),
-                                            variants: input.variants.map((variant) => ({
-                                                name: variant.name,
-                                                image: DamImageBlock.state2Output(DamImageBlock.input2State(variant.image)),
-                                            })),
+                                            colors: input.colors,
                                             articleNumbers: input.articleNumbers,
                                             discounts: input.discounts,
                                             packageDimensions: input.packageDimensions,
@@ -236,9 +233,12 @@ const productsFragment = gql`
             id
             title
         }
-        variants {
-            image
+        colors {
             name
+            colorHexCode
+        }
+        variants {
+            id
         }
         articleNumbers
         discounts {

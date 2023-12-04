@@ -22,6 +22,7 @@ import { IsNumber } from "class-validator";
 import { v4 as uuid } from "uuid";
 
 import { ProductCategory } from "./product-category.entity";
+import { ProductColor } from "./product-color.entity";
 import { ProductStatistics } from "./product-statistics.entity";
 import { ProductTag } from "./product-tag.entity";
 import { ProductType } from "./product-type.enum";
@@ -155,13 +156,23 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Field(() => ProductStatistics, { nullable: true })
     statistics?: Ref<ProductStatistics> = undefined;
 
-    @OneToMany(() => ProductVariant, (variant) => variant.product, { orphanRemoval: true })
+    @OneToMany(() => ProductColor, (variant) => variant.product, { orphanRemoval: true })
     @CrudField({
         resolveField: true, //default is true
         //search: true, //not yet implemented
         //filter: true, //not yet implemented
         //sort: true, //not yet implemented
         input: true, //default is true
+    })
+    colors = new Collection<ProductColor>(this);
+
+    @OneToMany(() => ProductVariant, (variant) => variant.product)
+    @CrudField({
+        resolveField: true, //default is true
+        //search: true, //not yet implemented
+        //filter: true, //not yet implemented
+        //sort: true, //not yet implemented
+        input: false, //default is true, disabled here because it is edited using it's own crud api
     })
     variants = new Collection<ProductVariant>(this);
 
