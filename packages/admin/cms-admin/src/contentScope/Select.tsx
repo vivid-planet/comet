@@ -34,7 +34,11 @@ export default function ContentScopeSelect({
 
     const [searchValue, setSearchValue] = React.useState<string>("");
 
-    const filteredValues = searchable ? values.filter((item) => item.value.toLowerCase().includes(searchValue.toLowerCase())) : values;
+    const filteredValues = searchable
+        ? values.filter(
+              (item) => item.value.toLowerCase().includes(searchValue.toLowerCase()) || item.label?.toLowerCase().includes(searchValue.toLowerCase()),
+          )
+        : values;
 
     return (
         <AppHeaderDropdown buttonChildren={value ? value.label || value.value.toUpperCase() : defaultLabel} startIcon={Icon ? <Icon /> : undefined}>

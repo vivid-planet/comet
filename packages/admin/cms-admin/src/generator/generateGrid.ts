@@ -201,7 +201,7 @@ export async function writeCrudGrid(
         }
     }
 
-    const out = `import { useApolloClient, useQuery } from "@apollo/client";
+    const out = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
         CrudContextMenu,
         GridFilterButton,
@@ -232,7 +232,6 @@ export async function writeCrudGrid(
         GQLDelete${entityName}Mutation,
         GQLDelete${entityName}MutationVariables 
     } from "./${classNamePlural}Grid.generated";
-    import gql from "graphql-tag";
     import * as React from "react";
     import { FormattedMessage, useIntl } from "react-intl";
     ${Object.entries(rootBlocks)

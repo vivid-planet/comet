@@ -6,7 +6,7 @@ import { TextMatch } from "../../common/MarkedMatches";
 import { PageTreePage } from "../pageTree/usePageTree";
 import { GQLPageSearchFragment } from "./usePageSearch.generated";
 
-export type PageSearchMatch = TextMatch & { page: { id: string; ancestorIds: string[] } };
+export type PageSearchMatch = TextMatch & { page: { id: string; ancestorIds: string[] }; where: "name" | "path" };
 
 export const pageSearchFragment = gql`
     fragment PageSearch on PageTreeNode {
@@ -102,7 +102,7 @@ const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pag
 
             if (pageExactMatch) {
                 const { id, name, ancestorIds } = pageExactMatch;
-                matches.push({ page: { id, ancestorIds }, start: 0, end: name.length - 1, focused: true });
+                matches.push({ page: { id, ancestorIds }, start: 0, end: name.length - 1, focused: true, where: "name" });
             }
         } catch {
             const regex = new RegExp(`(${escapeRegExp(query)})`, "gi");
@@ -110,13 +110,28 @@ const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pag
             inorderPages.forEach((page) => {
                 let match;
 
-                while ((match = regex.exec(page.name)) !== null) {
+                while ((match = regex.exec(page.path)) !== null) {
                     const { id, ancestorIds } = page;
+                    const where = "path";
                     matches.push({
                         page: { id, ancestorIds },
                         start: match.index,
                         end: match.index + query.length - 1,
                         focused: matches.length === 0,
+                        where,
+                    });
+                }
+                regex.lastIndex = 0;
+
+                while ((match = regex.exec(page.name)) !== null) {
+                    const { id, ancestorIds } = page;
+                    const where = "name";
+                    matches.push({
+                        page: { id, ancestorIds },
+                        start: match.index,
+                        end: match.index + query.length - 1,
+                        focused: matches.length === 0,
+                        where,
                     });
                 }
             });

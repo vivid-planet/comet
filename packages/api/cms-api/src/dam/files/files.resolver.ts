@@ -13,13 +13,13 @@ import { PaginatedResponseFactory } from "../../common/pagination/paginated-resp
 import { ContentScopeService } from "../../content-scope/content-scope.service";
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
-import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
 import { DamScopeInterface } from "../types";
 import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
+import { createFindCopiesOfFileInScopeArgs, FindCopiesOfFileInScopeArgsInterface } from "./dto/find-copies-of-file-in-scope.args";
 import { FileInterface } from "./entities/file.entity";
 import { FolderInterface } from "./entities/folder.entity";
 import { FileValidationService } from "./file-validation.service";
@@ -40,6 +40,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
 
     const FileArgs = createFileArgs({ Scope });
     const CopyFilesResponse = createCopyFilesResponseType({ File });
+    const FindCopiesOfFileInScopeArgs = createFindCopiesOfFileInScopeArgs({ Scope, hasNonEmptyScope });
 
     @ObjectType()
     class PaginatedDamFiles extends PaginatedResponseFactory.create(File) {}
@@ -74,9 +75,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         @Query(() => [File])
         //@ SubjectEntity is not required here
         async findCopiesOfFileInScope(
-            @Args("id", { type: () => ID }) id: string,
-            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
-            @Args("imageCropArea", { type: () => ImageCropAreaInput, nullable: true }) imageCropArea?: ImageCropAreaInput,
+            @Args({ type: () => FindCopiesOfFileInScopeArgs }) { id, scope, imageCropArea }: FindCopiesOfFileInScopeArgsInterface,
         ): Promise<FileInterface[]> {
             return this.filesService.findCopiesOfFileInScope(id, imageCropArea, scope);
         }
