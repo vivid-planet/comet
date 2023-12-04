@@ -1,15 +1,13 @@
 import { messages } from "@comet/admin";
 import { Link as LinkIcon } from "@comet/admin-icons";
 import { createDocumentRootBlocksMethods, DependencyInterface, DocumentInterface } from "@comet/cms-admin";
-import { createDependencyMethods } from "@comet/cms-admin/lib/dependencies/createDependencyMethods";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
 import { GQLLink, GQLLinkInput } from "@src/graphql.generated";
 import { EditLink } from "@src/links/EditLink";
-import { GQLLinkDependencyQuery } from "@src/links/Link.generated";
-import { categoryToUrlParam } from "@src/utils/pageTreeNodeCategoryMapping";
+import { createDocumentDependencyMethods } from "@src/utils/createDocumentDependencyMethods";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -58,7 +56,7 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & D
     },
     menuIcon: LinkIcon,
     ...createDocumentRootBlocksMethods(rootBlocks),
-    ...createDependencyMethods({
+    ...createDocumentDependencyMethods({
         rootBlocks,
         query: gql`
             query LinkDependency($id: ID!) {
@@ -72,14 +70,5 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & D
                 }
             }
         `,
-        buildUrl: (id, data: GQLLinkDependencyQuery, { contentScopeUrl, blockUrl }) => {
-            if (data.node === null || data.node.pageTreeNode === null) {
-                throw new Error(`Could not find PageTreeNode for link ${id}`);
-            }
-
-            return `${contentScopeUrl}/pages/pagetree/${categoryToUrlParam(data.node.pageTreeNode.category)}/${
-                data.node.pageTreeNode.id
-            }/edit/${blockUrl}`;
-        },
     }),
 };

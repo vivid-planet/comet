@@ -1,14 +1,12 @@
 import { messages } from "@comet/admin";
 import { File, FileNotMenu } from "@comet/admin-icons";
 import { createDocumentRootBlocksMethods, DependencyInterface, DocumentInterface } from "@comet/cms-admin";
-import { createDependencyMethods } from "@comet/cms-admin/lib/dependencies/createDependencyMethods";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode.generated";
 import { GQLPage, GQLPageInput } from "@src/graphql.generated";
-import { GQLPageDependencyQuery } from "@src/pages/Page.generated";
-import { categoryToUrlParam } from "@src/utils/pageTreeNodeCategoryMapping";
+import { createDocumentDependencyMethods } from "@src/utils/createDocumentDependencyMethods";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -63,7 +61,7 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
     menuIcon: File,
     hideInMenuIcon: FileNotMenu,
     ...createDocumentRootBlocksMethods(rootBlocks),
-    ...createDependencyMethods({
+    ...createDocumentDependencyMethods({
         rootBlocks,
         prefixes: { seo: "config/" },
         query: gql`
@@ -79,14 +77,5 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
                 }
             }
         `,
-        buildUrl: (id, data: GQLPageDependencyQuery, { contentScopeUrl, blockUrl }) => {
-            if (data.node.pageTreeNode === null) {
-                throw new Error(`Could not find PageTreeNode for page ${id}`);
-            }
-
-            return `${contentScopeUrl}/pages/pagetree/${categoryToUrlParam(data.node.pageTreeNode.category)}/${
-                data.node.pageTreeNode.id
-            }/edit/${blockUrl}`;
-        },
     }),
 };
