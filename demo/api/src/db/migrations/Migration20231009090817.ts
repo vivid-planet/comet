@@ -3,7 +3,8 @@ import { Migration } from '@mikro-orm/migrations';
 export class Migration20231009090817 extends Migration {
 
   async up(): Promise<void> {
-    this.addSql('alter table "Product" add column "status" text check ("status" in (\'Active\', \'Archived\', \'Deleted\')) not null default \'Active\';');
+    this.addSql('alter table "Product" add column "status" text check ("status" in (\'Published\', \'Unpublished\')) not null default \'Published\';');
+    this.addSql('alter table "Product" alter colulmn status drop default;');
     this.addSql('alter table "Product" drop column "visible";');
   }
 
