@@ -1,5 +1,6 @@
 import { ApolloError, gql, TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
-import { messages, SaveButton, SaveButtonProps, SplitButton, useStackApi } from "@comet/admin";
+import { messages, SaveButton, SaveButtonProps, SplitButton, SplitButtonProps, useStackApi } from "@comet/admin";
+import { ChevronDown } from "@comet/admin-icons";
 import {
     BindBlockAdminComponent,
     BlockInterface,
@@ -463,8 +464,14 @@ function PageSaveButton({ handleSavePage, hasChanges, hasConflict, saving, saveE
             ) : undefined,
     };
 
+    const splitButtonProps: Partial<SplitButtonProps> = {};
+    if (hasConflict) {
+        saveButtonProps.color = "error";
+        splitButtonProps.selectIcon = <ChevronDown sx={{ color: (theme) => theme.palette.error.contrastText }} />;
+    }
+
     return (
-        <SplitButton localStorageKey="SaveSplitButton" disabled={!hasChanges}>
+        <SplitButton {...splitButtonProps} localStorageKey="SaveSplitButton" disabled={!hasChanges}>
             <SaveButton onClick={handleSavePage} {...saveButtonProps}>
                 <FormattedMessage {...messages.save} />
             </SaveButton>

@@ -1,4 +1,4 @@
-import { ButtonClassKey } from "@mui/material";
+import { ButtonClassKey, buttonGroupClasses } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import { createStyles } from "@mui/styles";
 
@@ -70,6 +70,9 @@ export const styles = (theme: Theme) => {
             backgroundColor: theme.palette.error.main,
             "&:hover": {
                 backgroundColor: theme.palette.error.dark,
+            },
+            [`&.${buttonGroupClasses.grouped}:not(:last-child)`]: {
+                borderRightColor: theme.palette.error.dark,
             },
         },
         textError: {},

@@ -1,8 +1,6 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Button, ButtonGroup, buttonGroupClasses, ButtonGroupProps, MenuItem, MenuList, Popover, PopoverProps } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { Button, ButtonGroup, ButtonGroupProps, MenuItem, MenuList, Popover, PopoverProps } from "@mui/material";
 import { withStyles } from "@mui/styles";
-import { SxProps } from "@mui/system";
 import * as React from "react";
 import { PropsWithChildren } from "react";
 
@@ -73,36 +71,22 @@ const SplitBtn = ({
 
     const ActiveChild = childrenArray[_selectedIndex] as React.ReactElement;
 
-    const { variant: activeChildVariant, color: activeChildColor, hasConflict: activeChildHasConflict } = ActiveChild.props;
-
-    const color = activeChildHasConflict ? "error" : activeChildColor;
+    const { variant: activeChildVariant, color: activeChildColor } = ActiveChild.props;
 
     const showSelect = showSelectButtonState != null ? showSelectButtonState : showSelectButton;
     return (
         <SplitButtonContext.Provider value={{ setShowSelectButton: setShowSelectButtonState }}>
-            <ButtonGroup
-                variant={activeChildVariant}
-                color={color}
-                sx={
-                    activeChildHasConflict
-                        ? {
-                              [`& .${buttonGroupClasses.grouped}:not(:last-child)`]: {
-                                  borderRightColor: (theme) => theme.palette.error.dark,
-                              },
-                          }
-                        : {}
-                }
-                {...restProps}
-                ref={anchorRef}
-            >
+            <ButtonGroup variant={activeChildVariant} color={activeChildColor} {...restProps} ref={anchorRef}>
                 {ActiveChild}
                 {(showSelect ?? childrenArray.length > 1) && (
-                    <Button variant={activeChildVariant} color={color} size="small" classes={ActiveChild.props.classes} onClick={handleToggle}>
-                        {React.isValidElement(selectIcon) && activeChildHasConflict
-                            ? React.cloneElement<{ sx?: SxProps<Theme> }>(selectIcon as React.ReactElement, {
-                                  sx: { color: (theme) => theme.palette.error.contrastText },
-                              })
-                            : selectIcon}
+                    <Button
+                        variant={activeChildVariant}
+                        color={activeChildColor}
+                        size="small"
+                        classes={ActiveChild.props.classes}
+                        onClick={handleToggle}
+                    >
+                        {selectIcon}
                     </Button>
                 )}
             </ButtonGroup>
