@@ -1,4 +1,4 @@
-import { SaveRange, SaveRangeSaveButton, SaveRangeState } from "@comet/admin";
+import { SubmissionBoundary, SubmissionBoundarySaveButton, SubmissionBoundaryState } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -39,7 +39,7 @@ function DemoForm() {
     */
     return (
         <div>
-            DemoForm <SaveRangeState hasChanges={input != ""} doSave={doSave} />
+            DemoForm <SubmissionBoundaryState hasChanges={input != ""} doSave={doSave} />
             <input value={input} onChange={(e) => setInput(e.target.value)} />
             {saving && <>Saving...</>}
         </div>
@@ -52,20 +52,20 @@ function UnrelatedChild() {
 
 function SaveButtonContainer() {
     console.log("Render SaveButtonContainer");
-    return <SaveRangeSaveButton />;
+    return <SubmissionBoundarySaveButton />;
 }
 
 function Story() {
     return (
-        <SaveRange>
+        <SubmissionBoundary>
             <DemoForm />
             <DemoForm />
             <UnrelatedChild />
             <SaveButtonContainer />
-        </SaveRange>
+        </SubmissionBoundary>
     );
 }
 
 storiesOf("@comet/admin/save-range", module)
     .addDecorator(storyRouterDecorator())
-    .add("SaveRange", () => <Story />);
+    .add("SubmissionBoundary", () => <Story />);

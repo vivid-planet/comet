@@ -7,38 +7,38 @@ import { messages } from "../messages";
 import { RouterPrompt } from "../router/Prompt";
 
 export type SaveActionSuccess = boolean;
-export interface SaveRangeApi {
+export interface SubmissionBoundaryApi {
     save: () => Promise<SaveActionSuccess>;
-    register: (id: string, props: SaveRangeStateProps) => void;
+    register: (id: string, props: SubmissionBoundaryStateProps) => void;
     unregister: (id: string) => void;
 }
-export interface SaveRangeState {
+export interface SubmissionBoundaryState {
     hasErrors: boolean;
     hasChanges: boolean;
     saving: boolean;
 }
 
-export const SaveRangeApiContext = React.createContext<SaveRangeApi | undefined>(undefined);
-export function useSaveRangeApi() {
-    return React.useContext(SaveRangeApiContext);
+export const SubmissionBoundaryApiContext = React.createContext<SubmissionBoundaryApi | undefined>(undefined);
+export function useSubmissionBoundaryApi() {
+    return React.useContext(SubmissionBoundaryApiContext);
 }
 
-export const SaveRangeStateContext = React.createContext<SaveRangeState | undefined>(undefined);
-export function useSaveRangeState() {
-    return React.useContext(SaveRangeStateContext);
+export const SubmissionBoundaryStateContext = React.createContext<SubmissionBoundaryState | undefined>(undefined);
+export function useSubmissionBoundaryState() {
+    return React.useContext(SubmissionBoundaryStateContext);
 }
 
-interface SaveRangeProps {
+interface SubmissionBoundaryProps {
     children: React.ReactNode;
     subRoutePath?: string;
     onAfterSave?: () => void;
 }
 
-export function SaveRange({ onAfterSave, ...props }: SaveRangeProps) {
+export function SubmissionBoundary({ onAfterSave, ...props }: SubmissionBoundaryProps) {
     const [saving, setSaving] = React.useState(false);
     const [hasErrors, setHasErrors] = React.useState(false);
     const [hasChanges, setHasChanges] = React.useState(false);
-    const saveStates = React.useRef<Record<string, SaveRangeStateProps>>({});
+    const saveStates = React.useRef<Record<string, SubmissionBoundaryStateProps>>({});
     const intl = useIntl();
 
     const save = React.useCallback(async (): Promise<SaveActionSuccess> => {
@@ -72,7 +72,7 @@ export function SaveRange({ onAfterSave, ...props }: SaveRangeProps) {
     }, []);
 
     const register = React.useCallback(
-        (id: string, props: SaveRangeStateProps) => {
+        (id: string, props: SubmissionBoundaryStateProps) => {
             saveStates.current[id] = props;
             onSaveStatesChanged();
         },
@@ -97,14 +97,14 @@ export function SaveRange({ onAfterSave, ...props }: SaveRangeProps) {
             saveAction={save}
             subRoutePath={props.subRoutePath}
         >
-            <SaveRangeStateContext.Provider
+            <SubmissionBoundaryStateContext.Provider
                 value={{
                     hasErrors,
                     hasChanges,
                     saving,
                 }}
             >
-                <SaveRangeApiContext.Provider
+                <SubmissionBoundaryApiContext.Provider
                     value={{
                         save,
                         register,
@@ -112,26 +112,26 @@ export function SaveRange({ onAfterSave, ...props }: SaveRangeProps) {
                     }}
                 >
                     {props.children}
-                </SaveRangeApiContext.Provider>
-            </SaveRangeStateContext.Provider>
+                </SubmissionBoundaryApiContext.Provider>
+            </SubmissionBoundaryStateContext.Provider>
         </RouterPrompt>
     );
 }
 
-export interface SaveRangeStateProps {
+export interface SubmissionBoundaryStateProps {
     hasChanges: boolean;
     doSave: () => Promise<SaveActionSuccess> | SaveActionSuccess;
 }
 
-export function SaveRangeState({ doSave, hasChanges }: SaveRangeStateProps) {
+export function SubmissionBoundaryState({ doSave, hasChanges }: SubmissionBoundaryStateProps) {
     const id = useConstant<string>(() => uuid());
-    const saveRangeApi = useSaveRangeApi();
-    if (!saveRangeApi) throw new Error("SaveRangeState must be inside SaveRange");
+    const submissionBoundaryApi = useSubmissionBoundaryApi();
+    if (!submissionBoundaryApi) throw new Error("SubmissionBoundaryState must be inside SubmissionBoundary");
     React.useEffect(() => {
-        saveRangeApi.register(id, { doSave, hasChanges });
+        submissionBoundaryApi.register(id, { doSave, hasChanges });
         return function cleanup() {
-            saveRangeApi.unregister(id);
+            submissionBoundaryApi.unregister(id);
         };
-    }, [id, doSave, hasChanges, saveRangeApi]);
+    }, [id, doSave, hasChanges, submissionBoundaryApi]);
     return null;
 }
