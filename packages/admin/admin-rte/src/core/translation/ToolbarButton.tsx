@@ -13,7 +13,7 @@ import { translateAndTransformXmlToState } from "./xml/translateAndTransformToSt
 function ToolbarButton({ editorState, setEditorState }: IControlProps): React.ReactElement {
     const { translate } = useTranslationConfig();
 
-    function handleClick(event: React.MouseEvent) {
+    async function handleClick(event: React.MouseEvent) {
         event.preventDefault();
 
         const contentState = editorState.getCurrentContent();
@@ -21,9 +21,10 @@ function ToolbarButton({ editorState, setEditorState }: IControlProps): React.Re
         const xml = transformStateToXml(contentState);
 
         if (translate) {
-            const translation = xml.map((item) => ({ original: item, replaceWith: translate(item) }));
+            const translationPromises = xml.map(async (item) => ({ original: item, replaceWith: await translate(item) }));
+            const translations = await Promise.all(translationPromises);
 
-            const translatedState = translateAndTransformXmlToState(contentState, convertToRaw(contentState), translation);
+            const translatedState = translateAndTransformXmlToState(contentState, convertToRaw(contentState), translations);
 
             setEditorState(translatedState);
         }
