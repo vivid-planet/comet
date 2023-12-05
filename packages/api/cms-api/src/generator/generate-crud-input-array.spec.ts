@@ -43,7 +43,6 @@ describe("GenerateCrudInputArray", () => {
 
         const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityArrayString"));
         const lintedOutput = await lintSource(out[0].content);
-        console.log(lintedOutput);
         const source = parseSource(lintedOutput);
 
         const classes = source.getClasses();
