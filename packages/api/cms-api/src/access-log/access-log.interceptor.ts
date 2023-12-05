@@ -1,5 +1,6 @@
 import { CallHandler, ExecutionContext, Inject, Injectable, Logger, NestInterceptor, Optional } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
+import { GraphQLResolveInfo } from "graphql";
 import { CurrentUser } from "src/user-permissions/dto/current-user";
 
 import { SHOULD_LOG_REQUEST } from "./access-log.constants";
@@ -37,7 +38,7 @@ export class AccessLogInterceptor implements NestInterceptor {
             this.pushUserToRequestData(graphqlContext.req.user, requestData);
 
             const gqlArgs = { ...graphqlExecutionContext.getArgs() };
-            const gqlInfo = graphqlExecutionContext.getInfo();
+            const gqlInfo = graphqlExecutionContext.getInfo<GraphQLResolveInfo>();
 
             if (gqlInfo.operation.operation === "mutation") {
                 delete gqlArgs["input"];
