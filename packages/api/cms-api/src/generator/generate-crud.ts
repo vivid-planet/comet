@@ -37,39 +37,6 @@ function buildOptions(metadata: EntityMetadata<any>) {
         }, [] as string[]);
     const hasSearchArg = crudSearchPropNames.length > 0;
 
-    const crudFilterProps = metadata.props.filter(
-        (prop) =>
-            hasFieldFeature(metadata.class, prop.name, "filter") &&
-            prop.name != "status" &&
-            !prop.name.startsWith("scope_") &&
-            (prop.enum ||
-                prop.type === "string" ||
-                prop.type === "DecimalType" ||
-                prop.type === "number" ||
-                prop.type === "BooleanType" ||
-                prop.type === "boolean" ||
-                prop.type === "DateType" ||
-                prop.type === "Date" ||
-                prop.reference === "m:1"),
-    );
-    const hasFilterArg = crudFilterProps.length > 0;
-    const crudSortProps = metadata.props.filter(
-        (prop) =>
-            hasFieldFeature(metadata.class, prop.name, "sort") &&
-            prop.name != "status" &&
-            !prop.name.startsWith("scope_") &&
-            (prop.type === "string" ||
-                prop.type === "DecimalType" ||
-                prop.type === "number" ||
-                prop.type === "BooleanType" ||
-                prop.type === "boolean" ||
-                prop.type === "DateType" ||
-                prop.type === "Date" ||
-                prop.reference === "m:1"),
-    );
-    const hasSortArg = crudSortProps.length > 0;
-
-    const hasSlugProp = metadata.props.some((prop) => prop.name == "slug");
     let statusProp = metadata.props.find((prop) => prop.name == "status");
     if (statusProp) {
         if (!statusProp.enum) {
@@ -95,6 +62,38 @@ function buildOptions(metadata: EntityMetadata<any>) {
         });
     }
     const hasStatusFilter = statusProp && statusActiveItems && statusActiveItems.length != statusProp.items?.length; //if all items are active ones, no need for status filter
+
+    const crudFilterProps = metadata.props.filter(
+        (prop) =>
+            hasFieldFeature(metadata.class, prop.name, "filter") &&
+            !prop.name.startsWith("scope_") &&
+            (prop.enum ||
+                prop.type === "string" ||
+                prop.type === "DecimalType" ||
+                prop.type === "number" ||
+                prop.type === "BooleanType" ||
+                prop.type === "boolean" ||
+                prop.type === "DateType" ||
+                prop.type === "Date" ||
+                prop.reference === "m:1"),
+    );
+    const hasFilterArg = crudFilterProps.length > 0;
+    const crudSortProps = metadata.props.filter(
+        (prop) =>
+            hasFieldFeature(metadata.class, prop.name, "sort") &&
+            !prop.name.startsWith("scope_") &&
+            (prop.type === "string" ||
+                prop.type === "DecimalType" ||
+                prop.type === "number" ||
+                prop.type === "BooleanType" ||
+                prop.type === "boolean" ||
+                prop.type === "DateType" ||
+                prop.type === "Date" ||
+                prop.reference === "m:1"),
+    );
+    const hasSortArg = crudSortProps.length > 0;
+
+    const hasSlugProp = metadata.props.some((prop) => prop.name == "slug");
 
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
     if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");

@@ -5,8 +5,11 @@ import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
 
+import { ProductStatus } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
 
+@InputType()
+class ProductStatusEnumFilter extends createEnumFilter(ProductStatus) {}
 @InputType()
 class ProductTypeEnumFilter extends createEnumFilter(ProductType) {}
 
@@ -17,6 +20,12 @@ export class ProductFilter {
     @IsOptional()
     @Type(() => StringFilter)
     title?: StringFilter;
+
+    @Field(() => ProductStatusEnumFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => ProductStatusEnumFilter)
+    status?: ProductStatusEnumFilter;
 
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
