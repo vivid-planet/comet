@@ -8,7 +8,6 @@ import "typeface-open-sans";
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, RouteWithErrorBoundary, SnackbarProvider } from "@comet/admin";
 import {
-    AllCategories,
     CmsBlockContextProvider,
     createHttpClient,
     createRedirectsPage,
@@ -31,6 +30,7 @@ import MasterHeader from "@src/common/MasterHeader";
 import MasterMenu from "@src/common/MasterMenu";
 import { createConfig } from "@src/config";
 import Dashboard from "@src/dashboard/Dashboard";
+import { pageTreeCategories } from "@src/pages/pageTreeCategories";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import theme from "@src/theme";
 import { urlParamToCategory } from "@src/utils/pageTreeNodeCategoryMapping";
@@ -38,7 +38,7 @@ import * as React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import * as ReactDOM from "react-dom";
-import { FormattedMessage, IntlProvider } from "react-intl";
+import { IntlProvider } from "react-intl";
 import { Redirect, Route, Switch } from "react-router-dom";
 
 import { ComponentDemo } from "./common/ComponentDemo";
@@ -67,17 +67,6 @@ const GlobalStyle = () => (
 const config = createConfig();
 const apolloClient = createApolloClient(config.apiUrl);
 const apiClient = createHttpClient(config.apiUrl);
-
-const categories: AllCategories = [
-    {
-        category: "MainNavigation",
-        label: <FormattedMessage id="menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
-    },
-    {
-        category: "TopMenu",
-        label: <FormattedMessage id="menu.pageTree.topMenu" defaultMessage="Top menu" />,
-    },
-];
 
 const pageTreeDocumentTypes = {
     Page,
@@ -116,7 +105,7 @@ class App extends React.Component {
                                                         maxSrcResolution: config.imgproxy.maxSrcResolution,
                                                         allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
                                                     }}
-                                                    pageTreeCategories={categories}
+                                                    pageTreeCategories={pageTreeCategories}
                                                     pageTreeDocumentTypes={pageTreeDocumentTypes}
                                                     additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
                                                 >
@@ -147,17 +136,14 @@ class App extends React.Component {
                                                                                         render={({ match: { params } }) => {
                                                                                             const category = urlParamToCategory(params.category);
 
-                                                                                            if (
-                                                                                                category === undefined ||
-                                                                                                !categories.find((c) => c.category === category)
-                                                                                            ) {
+                                                                                            if (category === undefined) {
                                                                                                 return <Redirect to={`${match.url}/dashboard`} />;
                                                                                             }
 
                                                                                             return (
                                                                                                 <PagesPage
                                                                                                     path={`/pages/pagetree/${params.category}`}
-                                                                                                    allCategories={categories}
+                                                                                                    allCategories={pageTreeCategories}
                                                                                                     documentTypes={pageTreeDocumentTypes}
                                                                                                     editPageNode={EditPageNode}
                                                                                                     category={category}
