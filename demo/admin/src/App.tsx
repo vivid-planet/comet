@@ -21,7 +21,6 @@ import {
     SiteConfig,
     SitePreview,
     SitesConfigProvider,
-    urlParamToCategory,
     UserPermissionsPage,
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
@@ -34,6 +33,7 @@ import { createConfig } from "@src/config";
 import Dashboard from "@src/dashboard/Dashboard";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import theme from "@src/theme";
+import { urlParamToCategory } from "@src/utils/pageTreeNodeCategoryMapping";
 import * as React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -148,7 +148,7 @@ class App extends React.Component {
                                                                                             const category = urlParamToCategory(params.category);
 
                                                                                             if (
-                                                                                                !category ||
+                                                                                                category === undefined ||
                                                                                                 !categories.find((c) => c.category === category)
                                                                                             ) {
                                                                                                 return <Redirect to={`${match.url}/dashboard`} />;

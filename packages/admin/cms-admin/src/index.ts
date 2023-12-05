@@ -71,7 +71,6 @@ export { EditPageLayout } from "./pages/EditPageLayout";
 export { PagesPage } from "./pages/pagesPage/PagesPage";
 export type { AllCategories } from "./pages/pageTree/PageTreeContext";
 export { useCopyPastePages } from "./pages/pageTree/useCopyPastePages";
-export { categoryToUrlParam, urlParamToCategory } from "./pages/pageTreeNodeCategoryConversion";
 export { resolveHasSaveConflict } from "./pages/resolveHasSaveConflict";
 export { useSaveConflict } from "./pages/useSaveConflict";
 export { useSaveConflictQuery } from "./pages/useSaveConflictQuery";
