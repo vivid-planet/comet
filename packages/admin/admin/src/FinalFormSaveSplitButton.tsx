@@ -35,6 +35,7 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton", 
     return (
         <SplitButton {...splitButtonProps} disabled={pristine || hasValidationErrors || submitting} localStorageKey={localStorageKey}>
             <SaveButton
+                // setting the color to "error" is only necessary for the SplitButton and doesn't affect the SaveButton
                 color={hasConflict ? "error" : "primary"}
                 variant="contained"
                 saving={submitting}

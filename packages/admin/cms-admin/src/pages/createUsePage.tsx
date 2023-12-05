@@ -466,6 +466,7 @@ function PageSaveButton({ handleSavePage, hasChanges, hasConflict, saving, saveE
 
     const splitButtonProps: Partial<SplitButtonProps> = {};
     if (hasConflict) {
+        // setting the color to "error" is only necessary for the SplitButton and doesn't affect the SaveButton
         saveButtonProps.color = "error";
         splitButtonProps.selectIcon = <ChevronDown sx={{ color: (theme) => theme.palette.error.contrastText }} />;
     }
