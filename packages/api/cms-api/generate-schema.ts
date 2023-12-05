@@ -23,6 +23,7 @@ import {
 } from "./src";
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
 import { CronJobsResolver } from "./src/cron-jobs/cron-jobs.resolver";
+import { JobsResolver } from "./src/cron-jobs/jobs.resolver";
 import { createDamItemsResolver } from "./src/dam/files/dam-items.resolver";
 import { createFileEntity } from "./src/dam/files/entities/file.entity";
 import { createFolderEntity } from "./src/dam/files/entities/folder.entity";
@@ -119,6 +120,7 @@ async function generateSchema(): Promise<void> {
         createFoldersResolver({ Folder }),
         pageTreeResolver,
         CronJobsResolver,
+        JobsResolver,
         AuthResolver,
         RedirectsDependenciesResolver,
         PageTreeDependentsResolver,

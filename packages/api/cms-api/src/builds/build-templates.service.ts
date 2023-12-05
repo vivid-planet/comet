@@ -13,7 +13,7 @@ export class BuildTemplatesService {
 
     async getAllowedBuilderCronJobs(user: CurrentUserInterface): Promise<V1CronJob[]> {
         return (await this.getAllBuilderCronJobs()).filter((cronJob) => {
-            return this.contentScopeService.canAccessScope(this.kubernetesService.getContentScope(cronJob), user);
+            return this.contentScopeService.canAccessScope(this.kubernetesService.getContentScope(cronJob) ?? {}, user);
         });
     }
 

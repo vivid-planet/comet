@@ -7,9 +7,6 @@ export const BUILD_CHECKER_LABEL = "comet-dxp.com/build-checker";
 /** Annotation for the build Job: defines who triggered the build (CronJob, Manual, ChangesDetected) */
 export const TRIGGER_ANNOTATION = "comet-dxp.com/trigger";
 
-/** Annotation for the builder cron jobs and build jobs to provide a human readable name */
-export const LABEL_ANNOTATION = "comet-dxp.com/label";
-
 /** Label which identifies a build job */
 export const BUILDER_LABEL = "comet-dxp.com/builder";
 
