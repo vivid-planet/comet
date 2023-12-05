@@ -1,11 +1,11 @@
 import { gql, useQuery } from "@apollo/client";
-import { styled } from "@mui/material/styles";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { BuildRuntime } from "../../builds/BuildRuntime";
+import { JobRuntime } from "../../cronJobs/JobRuntime";
+import { JobStatus } from "../../cronJobs/JobStatus";
 import { DashboardWidgetRoot } from "./DashboardWidgetRoot";
 import { GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables } from "./LatestBuildsDashboardWidget.generated";
 
@@ -20,7 +20,7 @@ export const LatestBuildsDashboardWidget = () => {
             headerName: intl.formatMessage({ id: "dashboard.latestBuildsWidget.runtime", defaultMessage: "Runtime" }),
             flex: 1,
             renderCell: ({ row }) => (
-                <BuildRuntime
+                <JobRuntime
                     startTime={row.startTime ? parseISO(row.startTime) : undefined}
                     completionTime={row.completionTime ? parseISO(row.completionTime) : undefined}
                 />
@@ -31,7 +31,7 @@ export const LatestBuildsDashboardWidget = () => {
             field: "status",
             headerName: intl.formatMessage({ id: "dashboard.latestBuildsWidget.status", defaultMessage: "Status" }),
             width: 150,
-            renderCell: ({ row }) => <BuildStatus status={row.status}>{row.status}</BuildStatus>,
+            renderCell: ({ row }) => <JobStatus status={row.status}>{row.status}</JobStatus>,
         },
     ];
 
@@ -50,18 +50,6 @@ export const LatestBuildsDashboardWidget = () => {
         </DashboardWidgetRoot>
     );
 };
-
-const BuildStatus = styled("div")<{ status: string }>`
-    color: ${({ theme, status }) => {
-        if (status === "succeeded") {
-            return theme.palette.success.main;
-        } else if (status === "failed") {
-            return theme.palette.error.main;
-        }
-
-        return theme.palette.primary.main;
-    }};
-`;
 
 const disableFieldOptions = {
     filterable: false,

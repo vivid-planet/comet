@@ -7,7 +7,7 @@ interface RuntimeProps {
     completionTime?: Date;
 }
 
-export function BuildRuntime(props: RuntimeProps): React.ReactElement | null {
+export function JobRuntime(props: RuntimeProps) {
     const { startTime, completionTime } = props;
 
     if (startTime && completionTime) {

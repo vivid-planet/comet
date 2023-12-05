@@ -9,7 +9,7 @@ import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
-import { BuildRuntime } from "./BuildRuntime";
+import { JobRuntime } from "../cronJobs/JobRuntime";
 import { PublishButton } from "./PublishButton";
 import { GQLBuildsQuery } from "./PublisherPage.generated";
 
@@ -97,7 +97,7 @@ export function PublisherPage(): React.ReactElement {
                             },
                             renderCell: (params) => {
                                 return (
-                                    <BuildRuntime
+                                    <JobRuntime
                                         startTime={params.value.startTime ? parseISO(params.value.startTime) : undefined}
                                         completionTime={params.value.completionTime ? parseISO(params.value.completionTime) : undefined}
                                     />
