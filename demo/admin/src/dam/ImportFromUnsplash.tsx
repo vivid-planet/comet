@@ -63,7 +63,7 @@ export const ImportFromUnsplash: React.FC = () => {
                 <div>
                     <DialogTitle>Import from unsplash</DialogTitle>
                     <DialogContent>
-                        <StyledUnsplashImage src={unsplashImage?.url} alt="image" />
+                        <ImagePreview src={unsplashImage?.url} alt="image" />
                     </DialogContent>
                     <DialogActions>
                         <CancelButton onClick={handleCloseDialog} />
@@ -80,6 +80,6 @@ export const ImportFromUnsplash: React.FC = () => {
     );
 };
 
-const StyledUnsplashImage = styled("img")`
+const ImagePreview = styled("img")`
     max-width: 100%;
 `;
