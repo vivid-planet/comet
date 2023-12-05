@@ -1,7 +1,8 @@
 import { Type } from "@nestjs/common";
 import { plainToInstance, Transform, Type as ClassTransformerType } from "class-transformer";
-import { IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, ValidateIf, ValidateNested } from "class-validator";
 
+import { IsUndefinable } from "../../../common/validators/is-undefinable";
 import { ImageCropAreaInput } from "../../images/dto/image-crop-area.input";
 import { DamScopeInterface } from "../../types";
 import { LicenseInput } from "./file.input";
@@ -47,12 +48,12 @@ export function createUploadFileBody({ Scope }: { Scope: Type<DamScopeInterface>
         @ValidateNested()
         imageCropArea?: ImageCropAreaInput;
 
-        @IsOptional()
         @IsString()
+        @IsNotEmpty()
+        @ValidateIf((input) => input.importSourceType !== undefined)
         importSourceId?: string;
 
-        @IsOptional()
-        @IsString()
+        @IsUndefinable()
         importSourceType?: string;
     }
 
