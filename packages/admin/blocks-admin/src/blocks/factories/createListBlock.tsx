@@ -20,44 +20,52 @@ import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDepende
 import { BlockDependency, BlockInterface, BlockState, PreviewContent } from "../types";
 import { createUseAdminComponent } from "./listBlock/createUseAdminComponent";
 
-export interface ListBlockItem<T extends BlockInterface> {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type ListBlockItem<T extends BlockInterface, AdditionalItemFields = {}> = {
     [key: string]: unknown;
     key: string;
     visible: boolean;
     props: BlockState<T>;
     selected: boolean;
     slideIn: boolean;
+} & AdditionalItemFields;
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export interface ListBlockState<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = {}> {
+    blocks: ListBlockItem<T, AdditionalItemFields>[];
 }
 
-export interface ListBlockState<T extends BlockInterface> {
-    blocks: ListBlockItem<T>[];
+// eslint-disable-next-line @typescript-eslint/ban-types
+export interface ListBlockFragment<AdditionalItemFields extends Record<string, unknown> = {}> {
+    blocks: Array<
+        {
+            [key: string]: unknown;
+            key: string;
+            visible: boolean;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            props: any;
+        } & AdditionalItemFields
+    >;
 }
 
-export interface ListBlockFragment {
-    blocks: Array<{
-        [key: string]: unknown;
-        key: string;
-        visible: boolean;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        props: any;
-    }>;
+// eslint-disable-next-line @typescript-eslint/ban-types
+export interface ListBlockOutput<AdditionalItemFields extends Record<string, unknown> = {}> {
+    blocks: Array<
+        {
+            [key: string]: unknown;
+            key: string;
+            visible: boolean;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            props: any;
+        } & AdditionalItemFields
+    >;
 }
 
-export interface ListBlockOutput {
-    blocks: Array<{
-        [key: string]: unknown;
-        key: string;
-        visible: boolean;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        props: any;
-    }>;
-}
-
-export interface AdditionalItemField<Value = unknown> {
+export interface ListBlockAdditionalItemField<Value = unknown> {
     defaultValue: Value;
 }
 
-interface CreateListBlockOptions<T extends BlockInterface> {
+interface CreateListBlockOptions<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown>> {
     name: string;
     displayName?: React.ReactNode;
     itemName?: React.ReactNode;
@@ -65,16 +73,19 @@ interface CreateListBlockOptions<T extends BlockInterface> {
     block: T;
     maxVisibleBlocks?: number;
     createDefaultListEntry?: boolean;
-    additionalItemFields?: Record<string, AdditionalItemField>;
+    additionalItemFields?: {
+        [Key in keyof AdditionalItemFields]: ListBlockAdditionalItemField<AdditionalItemFields[Key]>;
+    };
     AdditionalItemContextMenuItems?: React.FunctionComponent<{
-        item: ListBlockItem<T>;
-        onChange: (item: ListBlockItem<T>) => void;
+        item: ListBlockItem<T, AdditionalItemFields>;
+        onChange: (item: ListBlockItem<T, AdditionalItemFields>) => void;
         onMenuClose: () => void;
     }>;
-    AdditionalItemContent?: React.FunctionComponent<{ item: ListBlockItem<T> }>;
+    AdditionalItemContent?: React.FunctionComponent<{ item: ListBlockItem<T, AdditionalItemFields> }>;
 }
 
-export function createListBlock<T extends BlockInterface>({
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function createListBlock<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = {}>({
     name,
     block,
     displayName = <FormattedMessage id="comet.blocks.listBlock.name" defaultMessage="List" />,
@@ -82,12 +93,20 @@ export function createListBlock<T extends BlockInterface>({
     itemsName = <FormattedMessage id="comet.blocks.listBlock.itemsName" defaultMessage="blocks" />,
     maxVisibleBlocks,
     createDefaultListEntry,
-    additionalItemFields = {},
+    additionalItemFields,
     AdditionalItemContextMenuItems,
     AdditionalItemContent,
-}: CreateListBlockOptions<T>): BlockInterface<ListBlockFragment, ListBlockState<T>, ListBlockOutput> {
+}: CreateListBlockOptions<T, AdditionalItemFields>): BlockInterface<
+    ListBlockFragment<AdditionalItemFields>,
+    ListBlockState<T, AdditionalItemFields>,
+    ListBlockOutput<AdditionalItemFields>
+> {
     const useAdminComponent = createUseAdminComponent({ block, maxVisibleBlocks, additionalItemFields });
-    const BlockListBlock: BlockInterface<ListBlockFragment, ListBlockState<T>, ListBlockOutput> = {
+    const BlockListBlock: BlockInterface<
+        ListBlockFragment<AdditionalItemFields>,
+        ListBlockState<T, AdditionalItemFields>,
+        ListBlockOutput<AdditionalItemFields>
+    > = {
         ...createBlockSkeleton(),
 
         name,
@@ -95,6 +114,7 @@ export function createListBlock<T extends BlockInterface>({
         displayName,
 
         defaultValues: () => ({
+            // @ts-expect-error 🤷🏼‍♂️
             blocks: createDefaultListEntry
                 ? [
                       {
@@ -103,7 +123,7 @@ export function createListBlock<T extends BlockInterface>({
                           props: block.defaultValues(),
                           selected: false,
                           slideIn: false,
-                          ...Object.entries(additionalItemFields).reduce(
+                          ...Object.entries(additionalItemFields ?? {}).reduce(
                               (fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }),
                               {},
                           ),
@@ -123,7 +143,7 @@ export function createListBlock<T extends BlockInterface>({
                         key: c.key,
                         visible: c.visible,
                         props: block.input2State(c.props),
-                        ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
+                        ...Object.keys(additionalItemFields ?? {}).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
                         selected: false,
                         slideIn: false,
                     };
@@ -131,6 +151,7 @@ export function createListBlock<T extends BlockInterface>({
             };
         },
 
+        // @ts-expect-error 🤷🏼‍♂️
         state2Output: (s) => {
             return {
                 blocks: s.blocks.map((c) => {
@@ -138,12 +159,13 @@ export function createListBlock<T extends BlockInterface>({
                         key: c.key,
                         visible: c.visible,
                         props: block.state2Output(c.props),
-                        ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
+                        ...Object.keys(additionalItemFields ?? {}).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
                     };
                 }),
             };
         },
 
+        // @ts-expect-error 🤷🏼‍♂️
         output2State: async (output, context) => {
             const state: ListBlockState<T> = {
                 blocks: [],
@@ -161,6 +183,7 @@ export function createListBlock<T extends BlockInterface>({
             return state;
         },
 
+        // @ts-expect-error 🤷🏼‍♂️
         createPreviewState: (state, previewCtx) => {
             return {
                 adminRoute: previewCtx.parentUrl,
@@ -173,7 +196,7 @@ export function createListBlock<T extends BlockInterface>({
                             key: c.key,
                             visible: c.visible,
                             props: block.createPreviewState(c.props, { ...previewCtx, parentUrl: blockAdminRoute }),
-                            ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
+                            ...Object.keys(additionalItemFields ?? {}).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
                             adminRoute: blockAdminRoute,
                             adminMeta: { route: blockAdminRoute },
                         };
@@ -199,6 +222,7 @@ export function createListBlock<T extends BlockInterface>({
             return deduplicateBlockDependencies(mergedDependencies);
         },
 
+        // @ts-expect-error 🤷🏼‍♂️
         replaceDependenciesInOutput: (output, replacements) => {
             const newOutput: ListBlockOutput = { ...output, blocks: [] };
 
@@ -346,7 +370,7 @@ export function createListBlock<T extends BlockInterface>({
                                                                                     name: block.name,
                                                                                     visible: data.visible,
                                                                                     state: data.props,
-                                                                                    additionalFields: Object.keys(additionalItemFields).reduce(
+                                                                                    additionalFields: Object.keys(additionalItemFields ?? {}).reduce(
                                                                                         (fields, field) => ({ ...fields, [field]: data[field] }),
                                                                                         {},
                                                                                     ),

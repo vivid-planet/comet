@@ -21,7 +21,8 @@ import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDepende
 import { BlockDependency, BlockInterface, BlockState, DispatchSetStateAction, PreviewContent } from "../types";
 import { resolveNewState } from "../utils";
 
-interface BlocksBlockItem<T extends BlockInterface = BlockInterface> {
+// eslint-disable-next-line @typescript-eslint/ban-types
+type BlocksBlockItem<T extends BlockInterface = BlockInterface, AdditionalItemFields = {}> = {
     [key: string]: unknown;
     key: string;
     type: string;
@@ -29,63 +30,79 @@ interface BlocksBlockItem<T extends BlockInterface = BlockInterface> {
     selected: boolean;
     props: BlockState<T>;
     slideIn: boolean;
-}
+} & AdditionalItemFields;
 
 type RemovedBlocksBlockItem = BlocksBlockItem & { removedAt: number };
 
-export interface BlocksBlockState {
-    blocks: BlocksBlockItem[];
+// eslint-disable-next-line @typescript-eslint/ban-types
+export interface BlocksBlockState<AdditionalItemFields extends Record<string, unknown> = {}> {
+    blocks: BlocksBlockItem<BlockInterface, AdditionalItemFields>[];
 }
 
-export interface BlocksBlockFragment {
-    blocks: {
-        [key: string]: unknown;
-        key: string;
-        type: string;
-        visible: boolean;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        props: any;
-    }[];
+// eslint-disable-next-line @typescript-eslint/ban-types
+export interface BlocksBlockFragment<AdditionalItemFields extends Record<string, unknown> = {}> {
+    blocks: Array<
+        {
+            [key: string]: unknown;
+            key: string;
+            type: string;
+            visible: boolean;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            props: any;
+        } & AdditionalItemFields
+    >;
 }
 
-export interface BlocksBlockOutput {
-    blocks: {
-        [key: string]: unknown;
-        key: string;
-        type: string;
-        visible: boolean;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        props: any;
-    }[];
+// eslint-disable-next-line @typescript-eslint/ban-types
+export interface BlocksBlockOutput<AdditionalItemFields extends Record<string, unknown> = {}> {
+    blocks: Array<
+        {
+            [key: string]: unknown;
+            key: string;
+            type: string;
+            visible: boolean;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            props: any;
+        } & AdditionalItemFields
+    >;
 }
 
 type BlockType = string;
 
-interface AdditionalItemField<Value = unknown> {
+export interface BlocksBlockAdditionalItemField<Value = unknown> {
     defaultValue: Value;
 }
 
-interface CreateBlocksBlockOptions {
+interface CreateBlocksBlockOptions<AdditionalItemFields extends Record<string, unknown>> {
     name: string;
     displayName?: React.ReactNode;
     supportedBlocks: Record<BlockType, BlockInterface>;
-    additionalItemFields?: Record<string, AdditionalItemField>;
+    additionalItemFields?: {
+        [Key in keyof AdditionalItemFields]: BlocksBlockAdditionalItemField<AdditionalItemFields[Key]>;
+    };
+
+    //Record<keyof AdditionalItemFields, AdditionalItemField>;
     AdditionalItemContextMenuItems?: React.FunctionComponent<{
-        item: BlocksBlockItem;
-        onChange: (item: BlocksBlockItem) => void;
+        item: BlocksBlockItem<BlockInterface, AdditionalItemFields>;
+        onChange: (item: BlocksBlockItem<BlockInterface, AdditionalItemFields>) => void;
         onMenuClose: () => void;
     }>;
-    AdditionalItemContent?: React.FunctionComponent<{ item: BlocksBlockItem }>;
+    AdditionalItemContent?: React.FunctionComponent<{ item: BlocksBlockItem<BlockInterface, AdditionalItemFields> }>;
 }
 
-export function createBlocksBlock({
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function createBlocksBlock<AdditionalItemFields extends Record<string, unknown> = {}>({
     supportedBlocks,
     name,
     displayName = <FormattedMessage id="comet.blocks.blocks.name" defaultMessage="Blocks" />,
-    additionalItemFields = {},
+    additionalItemFields,
     AdditionalItemContextMenuItems,
     AdditionalItemContent,
-}: CreateBlocksBlockOptions): BlockInterface<BlocksBlockFragment, BlocksBlockState, BlocksBlockOutput> {
+}: CreateBlocksBlockOptions<AdditionalItemFields>): BlockInterface<
+    BlocksBlockFragment<AdditionalItemFields>,
+    BlocksBlockState<AdditionalItemFields>,
+    BlocksBlockOutput<AdditionalItemFields>
+> {
     if (Object.keys(supportedBlocks).length === 0) {
         throw new Error("Blocks block with no supported block is not allowed. Please specify at least two supported blocks.");
     }
@@ -102,7 +119,11 @@ export function createBlocksBlock({
         return Object.entries(supportedBlocks).find(([, block]) => block.name === targetBlock.name)?.[0] ?? null;
     }
 
-    const BlocksBlock: BlockInterface<BlocksBlockFragment, BlocksBlockState, BlocksBlockOutput> = {
+    const BlocksBlock: BlockInterface<
+        BlocksBlockFragment<AdditionalItemFields>,
+        BlocksBlockState<AdditionalItemFields>,
+        BlocksBlockOutput<AdditionalItemFields>
+    > = {
         ...createBlockSkeleton(),
 
         name,
@@ -111,6 +132,7 @@ export function createBlocksBlock({
 
         defaultValues: () => ({ blocks: [] }),
 
+        // @ts-expect-error 🤷🏼‍♂️
         input2State: (input) => {
             const blocks: BlocksBlockItem[] = [];
 
@@ -126,7 +148,7 @@ export function createBlocksBlock({
                 blocks.push({
                     ...item,
                     props: block.input2State(item.props),
-                    ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: item[field] }), {}),
+                    ...Object.keys(additionalItemFields ?? {}).reduce((fields, field) => ({ ...fields, [field]: item[field] }), {}),
                     selected: false,
                     slideIn: false,
                 });
@@ -136,6 +158,7 @@ export function createBlocksBlock({
                 blocks,
             };
         },
+        // @ts-expect-error 🤷🏼‍♂️
         state2Output: (s) => {
             return {
                 blocks: s.blocks.map((c) => {
@@ -148,12 +171,13 @@ export function createBlocksBlock({
                         visible: c.visible,
                         type: c.type,
                         props: block.state2Output(c.props),
-                        ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
+                        ...Object.keys(additionalItemFields ?? {}).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
                     };
                 }),
             };
         },
 
+        // @ts-expect-error 🤷🏼‍♂️
         output2State: async (output, context) => {
             const state: BlocksBlockState = {
                 blocks: [],
@@ -177,6 +201,7 @@ export function createBlocksBlock({
             return state;
         },
 
+        // @ts-expect-error 🤷🏼‍♂️
         createPreviewState: (state, previewCtx) => {
             return {
                 adminRoute: previewCtx.parentUrl,
@@ -194,7 +219,7 @@ export function createBlocksBlock({
                             type: c.type,
                             adminRoute: blockAdminRoute,
                             props: block.createPreviewState(c.props, { ...previewCtx, parentUrl: blockAdminRoute }),
-                            ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
+                            ...Object.keys(additionalItemFields ?? {}).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
                         };
                     }),
                 adminMeta: { route: previewCtx.parentUrl },
@@ -232,6 +257,7 @@ export function createBlocksBlock({
             return deduplicateBlockDependencies(mergedDependencies);
         },
 
+        // @ts-expect-error 🤷🏼‍♂️
         replaceDependenciesInOutput: (output, replacements) => {
             const newOutput: BlocksBlockOutput = { blocks: [] };
 
@@ -288,6 +314,7 @@ export function createBlocksBlock({
                         const blocks = [...prevState.blocks];
                         removedBlocks?.forEach((removedBlock) => {
                             const { removedAt, ...block } = removedBlock;
+                            // @ts-expect-error 🤷🏼‍♂️
                             blocks.splice(removedAt, 0, block);
                         });
 
@@ -369,14 +396,19 @@ export function createBlocksBlock({
                     selected: false,
                     props: block.defaultValues(),
                     slideIn: true,
-                    ...Object.entries(additionalItemFields).reduce((fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }), {}),
+                    ...Object.entries(additionalItemFields ?? {}).reduce(
+                        (fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }),
+                        {},
+                    ),
                 };
 
                 const newBlocks = [...state.blocks];
 
                 if (beforeIndex !== undefined) {
+                    // @ts-expect-error 🤷🏼‍♂️
                     newBlocks.splice(beforeIndex, 0, newItem);
                 } else {
+                    // @ts-expect-error 🤷🏼‍♂️
                     newBlocks.push(newItem);
                 }
 
@@ -415,6 +447,7 @@ export function createBlocksBlock({
 
                 const { content } = response;
 
+                // @ts-expect-error 🤷🏼‍♂️
                 updateState((prevState) => {
                     const newBlocks: BlocksBlockItem[] = content.map((block) => {
                         const type = typeForBlock(block);
@@ -491,7 +524,10 @@ export function createBlocksBlock({
                             name: blockInterface.name,
                             visible: block.visible,
                             state: block.props,
-                            additionalFields: Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: block[field] }), {}),
+                            additionalFields: Object.keys(additionalItemFields ?? {}).reduce(
+                                (fields, field) => ({ ...fields, [field]: block[field] }),
+                                {},
+                            ),
                         };
                     });
 
@@ -588,13 +624,12 @@ export function createBlocksBlock({
                                                                     onDeleteClick={() => {
                                                                         deleteBlocks([data.key]);
                                                                     }}
-                                                                    moveBlock={(from, to) => {
-                                                                        updateState((prevState) => {
-                                                                            const blocks = [...prevState.blocks];
-                                                                            const blockToMove = blocks.splice(from, 1)[0];
-                                                                            blocks.splice(to, 0, blockToMove);
-                                                                            return { ...prevState, blocks };
-                                                                        });
+                                                                    moveBlock={(dragIndex: number, hoverIndex: number) => {
+                                                                        const blocks = [...state.blocks];
+                                                                        const dragItem = state.blocks[dragIndex];
+                                                                        blocks[dragIndex] = state.blocks[hoverIndex];
+                                                                        blocks[hoverIndex] = dragItem;
+                                                                        updateState((prevState) => ({ ...prevState, blocks }));
                                                                     }}
                                                                     visibilityButton={
                                                                         <IconButton onClick={() => toggleVisible(data.key)} size="small">
@@ -613,7 +648,7 @@ export function createBlocksBlock({
                                                                                 name: block.name,
                                                                                 visible: data.visible,
                                                                                 state: data.props,
-                                                                                additionalFields: Object.keys(additionalItemFields).reduce(
+                                                                                additionalFields: Object.keys(additionalItemFields ?? {}).reduce(
                                                                                     (fields, field) => ({ ...fields, [field]: data[field] }),
                                                                                     {},
                                                                                 ),
