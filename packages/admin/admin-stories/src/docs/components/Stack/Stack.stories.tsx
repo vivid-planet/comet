@@ -9,10 +9,12 @@ import {
     Toolbar,
     ToolbarBackButton,
     ToolbarBreadcrumbs,
+    Tooltip,
     useStackSwitch,
     useStackSwitchApi,
 } from "@comet/admin";
-import { Button, Link } from "@mui/material";
+import { ArrowLeft, ArrowRight } from "@comet/admin-icons";
+import { Button, IconButton, Link } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -319,12 +321,22 @@ storiesOf("stories/components/Stack", module)
                         <Button component={StackLink} pageName="page2" payload="test">
                             StackLink-based Button to page2
                         </Button>
+                        <Tooltip trigger="hover" title="StackLink-based IconButton to page2">
+                            <IconButton component={StackLink} pageName="page2" payload="test">
+                                <ArrowRight />
+                            </IconButton>
+                        </Tooltip>
                     </StackPage>
                     <StackPage name="page2">
                         <h3>Page 2</h3>
                         <Button component={StackLink} pageName="page1" payload="test">
                             StackLink-based Button to page1
                         </Button>
+                        <Tooltip trigger="hover" title="StackLink-based IconButton to page1">
+                            <IconButton component={StackLink} pageName="page1" payload="test">
+                                <ArrowLeft />
+                            </IconButton>
+                        </Tooltip>
                     </StackPage>
                 </StackSwitch>
             </Stack>
