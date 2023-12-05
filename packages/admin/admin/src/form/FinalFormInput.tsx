@@ -26,9 +26,9 @@ export function FinalFormInput({ meta, input, innerRef, endAdornment, clearable,
                     )}
                     {enableTranslation && !hideTranslate && (
                         <Button
-                            onClick={() => {
+                            onClick={async () => {
                                 if (translate) {
-                                    input.onChange(translate(input.value));
+                                    input.onChange(await translate(input.value));
                                 }
                             }}
                         >
