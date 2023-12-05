@@ -4,4 +4,4 @@
 
 CRUD Generator: Remove support for `visible` boolean, use `status` enum instead.
 
-Recommended enum values: Published/Unpublished or Visible/Invisible or Active and Deleted or Archived
+Recommended enum values: Published/Unpublished or Visible/Invisible or Active/Deleted or Active/Archived
