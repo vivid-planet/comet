@@ -131,6 +131,7 @@ function RouterTabsComponent({
                             } else if (child.props.forceRender) {
                                 ret = <div className={`${classes.content} ${classes.contentHidden}`}>{child.props.children}</div>;
                             } else {
+                                // don't render tab contents, return early as we don't need StackBreadcrumb either
                                 return null;
                             }
                             if (stackApi && stackSwitchApi) {
