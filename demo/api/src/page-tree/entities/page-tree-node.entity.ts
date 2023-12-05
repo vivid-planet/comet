@@ -19,11 +19,11 @@ export class PageTreeNode extends PageTreeNodeBase {
     @Index()
     parent?: PageTreeNode;
 
-    @Enum({ items: () => PageTreeNodeCategory, default: PageTreeNodeCategory.MainNavigation })
+    @Enum({ items: () => PageTreeNodeCategory })
     @Field(() => PageTreeNodeCategory)
     category: PageTreeNodeCategory;
 
-    @Enum({ items: () => UserGroup, default: UserGroup.All })
+    @Enum({ items: () => UserGroup })
     @Field(() => UserGroup, { defaultValue: UserGroup.All })
     userGroup: UserGroup;
 }
