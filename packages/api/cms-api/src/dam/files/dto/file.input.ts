@@ -108,6 +108,7 @@ export class CreateFileInput {
     @ValidateIf((input) => input.importSourceType !== undefined)
     importSourceId?: string;
 
+    @IsString()
     @IsUndefinable()
     importSourceType?: string;
 }

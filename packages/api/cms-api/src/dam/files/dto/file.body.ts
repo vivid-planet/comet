@@ -53,6 +53,7 @@ export function createUploadFileBody({ Scope }: { Scope: Type<DamScopeInterface>
         @ValidateIf((input) => input.importSourceType !== undefined)
         importSourceId?: string;
 
+        @IsString()
         @IsUndefinable()
         importSourceType?: string;
     }
