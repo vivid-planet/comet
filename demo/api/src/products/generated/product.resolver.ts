@@ -7,7 +7,7 @@ import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 
-import { Product, ProductStatus } from "../entities/product.entity";
+import { Product } from "../entities/product.entity";
 import { ProductCategory } from "../entities/product-category.entity";
 import { ProductStatistics } from "../entities/product-statistics.entity";
 import { ProductTag } from "../entities/product-tag.entity";
@@ -194,22 +194,6 @@ export class ProductResolver {
         await this.entityManager.remove(product);
         await this.entityManager.flush();
         return true;
-    }
-
-    @Mutation(() => Product)
-    @SubjectEntity(Product)
-    async updateProductStatus(
-        @Args("id", { type: () => ID }) id: string,
-        @Args("status", { type: () => ProductStatus }) status: ProductStatus,
-    ): Promise<Product> {
-        const product = await this.repository.findOneOrFail(id);
-
-        product.assign({
-            status,
-        });
-        await this.entityManager.flush();
-
-        return product;
     }
 
     @ResolveField(() => ProductCategory, { nullable: true })

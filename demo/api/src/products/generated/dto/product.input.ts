@@ -6,7 +6,7 @@ import { Field, ID, InputType } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
 
-import { ProductDimensions, ProductDiscounts, ProductPackageDimensions } from "../../entities/product.entity";
+import { ProductDimensions, ProductDiscounts, ProductPackageDimensions, ProductStatus } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
 import { ProductStatisticsInput } from "./product-statistics.nested.input";
 import { ProductVariantInput } from "./product-variant.nested.input";
@@ -17,6 +17,11 @@ export class ProductInput {
     @IsString()
     @Field()
     title: string;
+
+    @IsNotEmpty()
+    @IsEnum(ProductStatus)
+    @Field(() => ProductStatus, { defaultValue: ProductStatus.Unpublished })
+    status: ProductStatus;
 
     @IsNotEmpty()
     @IsString()

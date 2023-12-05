@@ -46,10 +46,9 @@ describe("GenerateCrud Status with active", () => {
         orm.close();
     });
 
-    it("input should not contain status", async () => {
+    it("input should contain status", async () => {
         const file = lintedOut.find((file) => file.name === "dto/test-entity1.input.ts");
         if (!file) throw new Error("File not found");
-
         const source = parseSource(file.content);
 
         const classes = source.getClasses();
@@ -61,10 +60,10 @@ describe("GenerateCrud Status with active", () => {
 
         const propNames = (structure.properties || []).map((prop) => prop.name);
 
-        expect(propNames).toEqual(["title"]); //status is not part of input dto
+        expect(propNames).toEqual(["title", "status"]);
     });
 
-    it("resolver should include update status mutation", async () => {
+    it("resolver should not include update status mutation", async () => {
         const file = lintedOut.find((file) => file.name === "test-entity1.resolver.ts");
         if (!file) throw new Error("File not found");
 
@@ -79,13 +78,12 @@ describe("GenerateCrud Status with active", () => {
 
         const mathodNames = (structure.methods || []).map((method) => method.name);
 
-        expect(mathodNames).toContain("updateTestEntity1Status");
+        expect(mathodNames).not.toContain("updateTestEntity1Status");
     });
 
     it("args should use status enum as defined for enitity", async () => {
         const file = lintedOut.find((file) => file.name === "dto/test-entity1s.args.ts");
         if (!file) throw new Error("File not found");
-
         const source = parseSource(file.content);
 
         const classes = source.getClasses();

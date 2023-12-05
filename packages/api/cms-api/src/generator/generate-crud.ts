@@ -967,28 +967,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 : ""
         }
 
-        ${
-            statusProp && generatorOptions.update
-                ? `
-        @Mutation(() => ${metadata.className})
-        @SubjectEntity(${metadata.className})
-        async update${classNameSingular}Status(
-            @Args("id", { type: () => ID }) id: string,
-            @Args("status", { type: () => ${findEnumName(statusProp.name, metadata)} }) status: ${findEnumName(statusProp.name, metadata)},
-        ): Promise<${metadata.className}> {
-            const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
-
-            ${instanceNameSingular}.assign({
-                status,
-            });
-            await this.entityManager.flush();
-
-            return ${instanceNameSingular};
-        }
-        `
-                : ""
-        }
-
         ${relationsFieldResolverCode}
 
     }
