@@ -33,6 +33,7 @@
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
+        "@comet/admin": "5.1.0",
         "@comet/admin-babel-preset": "workspace:^5.1.0",
         "@comet/eslint-config": "workspace:^5.1.0",
         "@mui/icons-material": "^5.0.0",

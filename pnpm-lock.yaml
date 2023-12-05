@@ -1496,6 +1496,9 @@ importers:
       '@babel/core':
         specifier: ^7.20.12
         version: 7.20.12
+      '@comet/admin':
+        specifier: 5.1.0
+        version: link:../admin
       '@comet/admin-babel-preset':
         specifier: workspace:^5.1.0
         version: link:../admin-babel-preset
