@@ -2,8 +2,6 @@ import * as history from "history";
 import * as React from "react";
 import { Route, RouteComponentProps } from "react-router";
 
-import { DirtyHandler } from "../DirtyHandler";
-import { IDirtyHandlerApi } from "../DirtyHandlerApiContext";
 import { StackApiContext } from "./Api";
 import { StackBreadcrumb } from "./Breadcrumb";
 
@@ -75,7 +73,6 @@ interface IState {
 }
 
 export class Stack extends React.Component<StackProps, IState> {
-    private dirtyHandlerApi?: IDirtyHandlerApi;
     private history: history.History;
     constructor(props: StackProps) {
         super(props);
@@ -107,16 +104,13 @@ export class Stack extends React.Component<StackProps, IState> {
                     {(routerProps: RouteComponentProps<any>) => {
                         const { topLevelTitle, children } = this.props;
                         this.history = routerProps.history;
+                        if (!routerProps.match) {
+                            return children;
+                        }
                         return (
                             <>
                                 <StackBreadcrumb title={topLevelTitle} url={routerProps.match.url} ignoreParentId={true}>
-                                    <DirtyHandler
-                                        ref={(ref) => {
-                                            this.dirtyHandlerApi = ref ? ref.dirtyHandlerApi : undefined;
-                                        }}
-                                    >
-                                        {children}
-                                    </DirtyHandler>
+                                    {children}
                                 </StackBreadcrumb>
                             </>
                         );

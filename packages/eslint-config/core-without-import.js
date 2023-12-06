@@ -1,7 +1,6 @@
 module.exports = {
     extends: ["eslint:recommended", "plugin:prettier/recommended"],
-    plugins: ["simple-import-sort", "unused-imports", "json-files"],
-
+    plugins: ["simple-import-sort", "unused-imports", "json-files", "@comet"],
     rules: {
         "no-unused-vars": "off",
         "prefer-template": "error",
@@ -10,7 +9,7 @@ module.exports = {
         "unused-imports/no-unused-imports": "error",
         "no-console": ["error", { allow: ["warn", "error"] }],
         "no-return-await": "error",
-        "json-files/sort-package-json": "error",
+        "json-files/sort-package-json": "error"
     },
     overrides: [
         {
@@ -20,6 +19,7 @@ module.exports = {
             plugins: ["@typescript-eslint"],
             rules: {
                 "@typescript-eslint/no-unused-vars": ["error", { args: "none", ignoreRestSiblings: true }],
+                "@typescript-eslint/no-inferrable-types": ["error", { "ignoreProperties":  true }],
             },
         },
     ],

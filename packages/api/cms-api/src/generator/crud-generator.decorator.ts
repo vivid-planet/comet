@@ -1,11 +1,19 @@
 export interface CrudGeneratorOptions {
     targetDirectory: string;
+    create?: boolean;
+    update?: boolean;
+    delete?: boolean;
 }
 
-export function CrudGenerator(options: CrudGeneratorOptions): ClassDecorator {
+export function CrudGenerator({
+    targetDirectory,
+    create = true,
+    update = true,
+    delete: deleteMutation = true,
+}: CrudGeneratorOptions): ClassDecorator {
     // eslint-disable-next-line @typescript-eslint/ban-types
     return function (target: Function) {
-        Reflect.defineMetadata(`data:crudGeneratorOptions`, options, target);
+        Reflect.defineMetadata(`data:crudGeneratorOptions`, { targetDirectory, create, update, delete: deleteMutation }, target);
     };
 }
 
@@ -21,16 +29,23 @@ export function CrudSingleGenerator(options: CrudSingleGeneratorOptions): ClassD
 }
 
 export interface CrudFieldOptions {
+    resolveField?: boolean; //only for relations, for others customize using @Field
     search?: boolean;
     filter?: boolean;
     sort?: boolean;
     input?: boolean;
 }
 
-export function CrudField({ search = true, filter = true, sort = true, input = true }: CrudFieldOptions = {}): PropertyDecorator {
+export function CrudField({
+    resolveField = true,
+    search = true,
+    filter = true,
+    sort = true,
+    input = true,
+}: CrudFieldOptions = {}): PropertyDecorator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (target: any, propertyKey: string | symbol) {
-        Reflect.defineMetadata(`data:crudField`, { search, filter, sort, input }, target.constructor, propertyKey);
+        Reflect.defineMetadata(`data:crudField`, { resolveField, search, filter, sort, input }, target.constructor, propertyKey);
     };
 }
 

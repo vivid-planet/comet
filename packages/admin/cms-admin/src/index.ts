@@ -45,13 +45,23 @@ export { damDefaultAcceptedMimeTypes } from "./dam/config/damDefaultAcceptedMime
 export { useDamAcceptedMimeTypes } from "./dam/config/useDamAcceptedMimeTypes";
 export { useDamConfig } from "./dam/config/useDamConfig";
 export { DamPage } from "./dam/DamPage";
-export { rewriteInternalLinks } from "./documents/rewriteInternalLinks";
-export type { DocumentInterface, DocumentType, IdsMap } from "./documents/types";
+export { DashboardHeader, DashboardHeaderProps } from "./dashboard/DashboardHeader";
+export { DashboardWidgetRoot, DashboardWidgetRootProps } from "./dashboard/widgets/DashboardWidgetRoot";
+export { LatestBuildsDashboardWidget } from "./dashboard/widgets/LatestBuildsDashboardWidget";
+export {
+    LatestContentUpdatesDashboardWidget,
+    LatestContentUpdatesDashboardWidgetProps,
+} from "./dashboard/widgets/LatestContentUpdatesDashboardWidget";
+export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootBlocksMethods";
+export type { DocumentInterface, DocumentType } from "./documents/types";
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
 export { FileField } from "./form/file/FileField";
 export { FinalFormToggleButtonGroup } from "./form/FinalFormToggleButtonGroup";
+export { queryUpdatedAt } from "./form/queryUpdatedAt";
 export { serializeInitialValues } from "./form/serializeInitialValues";
 export { SyncFields } from "./form/SyncFields";
+export { useFormSaveConflict } from "./form/useFormSaveConflict";
+export { CrudGeneratorConfig } from "./generator/types";
 export { createHttpClient } from "./http/createHttpClient";
 export { LocaleProvider } from "./locale/LocaleProvider";
 export { useLocale } from "./locale/useLocale";
@@ -76,6 +86,7 @@ export type { SiteConfig } from "./sitesConfig/SitesConfigContext";
 export { SitesConfigProvider } from "./sitesConfig/SitesConfigProvider";
 export { useSiteConfig } from "./sitesConfig/useSiteConfig";
 export { useSitesConfig } from "./sitesConfig/useSitesConfig";
+export { UserPermissionsPage } from "./userPermissions/UserPermissionsPage";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
 import emotionStyled from "@emotion/styled";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports

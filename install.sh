@@ -30,16 +30,14 @@ ln -sf ../api/schema.gql ./demo/admin/schema.gql
 ln -sf ../api/block-meta.json ./demo/admin/block-meta.json
 ln -sf ../api/comet-config.json ./demo/admin/comet-config.json
 
-rm -rf demo/admin/lang
-mkdir -p demo/admin/lang
-git clone https://github.com/vivid-planet/comet-lang.git demo/admin/lang/comet-lang
-git clone https://github.com/vivid-planet/comet-demo-lang demo/admin/lang/comet-demo-lang
-
 # site DEMO
 ln -sf ../../.env ./demo/site/.env
 ln -sf ../api/schema.gql ./demo/site/schema.gql
 ln -sf ../api/block-meta.json ./demo/site/block-meta.json
 ln -sf ../api/comet-config.json ./demo/site/comet-config.json
 
-# Build CLI package to be used for dev startup
-cd packages/cli && pnpm run build
+# Lang install
+sh ./demo/admin/intl-update.sh
+
+# Build the packages CLI and eslint-plugin to be used for dev startup
+pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build

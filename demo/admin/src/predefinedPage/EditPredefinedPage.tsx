@@ -16,15 +16,16 @@ import {
 import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout, PageName } from "@comet/cms-admin";
 import { IconButton, MenuItem } from "@mui/material";
+import { FORM_ERROR } from "final-form";
+import * as React from "react";
+import { FormattedMessage } from "react-intl";
+
 import {
     GQLPredefinedPageQuery,
     GQLPredefinedPageQueryVariables,
     GQLUpdatePredefinedPageMutation,
     GQLUpdatePredefinedPageMutationVariables,
-} from "@src/graphql.generated";
-import { FORM_ERROR } from "final-form";
-import * as React from "react";
-import { FormattedMessage } from "react-intl";
+} from "./EditPredefinedPage.generated";
 
 const getQuery = gql`
     query PredefinedPage($id: ID!) {

@@ -6,7 +6,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { AdminComponentButton, AdminComponentPaper, useBlockContext } from "../..";
+import { AdminComponentButton, AdminComponentPaper, BlockPreviewContent } from "../..";
 import { CannotPasteBlockDialog } from "../../clipboard/CannotPasteBlockDialog";
 import { useBlockClipboard } from "../../clipboard/useBlockClipboard";
 import { HoverPreviewComponent } from "../../iframebridge/HoverPreviewComponent";
@@ -17,7 +17,8 @@ import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter
 import { AdminComponentStickyHeader } from "../common/AdminComponentStickyHeader";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
-import { BlockInterface, BlockState, DispatchSetStateAction, PreviewContent } from "../types";
+import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
+import { BlockDependency, BlockInterface, BlockState, DispatchSetStateAction, PreviewContent } from "../types";
 import { resolveNewState } from "../utils";
 
 interface BlocksBlockItem<T extends BlockInterface = BlockInterface> {
@@ -37,6 +38,17 @@ export interface BlocksBlockState {
 }
 
 export interface BlocksBlockFragment {
+    blocks: {
+        [key: string]: unknown;
+        key: string;
+        type: string;
+        visible: boolean;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        props: any;
+    }[];
+}
+
+export interface BlocksBlockOutput {
     blocks: {
         [key: string]: unknown;
         key: string;
@@ -73,7 +85,7 @@ export function createBlocksBlock({
     additionalItemFields = {},
     AdditionalItemContextMenuItems,
     AdditionalItemContent,
-}: CreateBlocksBlockOptions): BlockInterface<BlocksBlockFragment, BlocksBlockState> {
+}: CreateBlocksBlockOptions): BlockInterface<BlocksBlockFragment, BlocksBlockState, BlocksBlockOutput> {
     if (Object.keys(supportedBlocks).length === 0) {
         throw new Error("Blocks block with no supported block is not allowed. Please specify at least two supported blocks.");
     }
@@ -90,7 +102,7 @@ export function createBlocksBlock({
         return Object.entries(supportedBlocks).find(([, block]) => block.name === targetBlock.name)?.[0] ?? null;
     }
 
-    const BlocksBlock: BlockInterface<BlocksBlockFragment, BlocksBlockState> = {
+    const BlocksBlock: BlockInterface<BlocksBlockFragment, BlocksBlockState, BlocksBlockOutput> = {
         ...createBlockSkeleton(),
 
         name,
@@ -155,6 +167,7 @@ export function createBlocksBlock({
                 }
 
                 state.blocks.push({
+                    slideIn: false,
                     ...item,
                     props: await block.output2State(item.props, context),
                     selected: false,
@@ -207,6 +220,33 @@ export function createBlocksBlock({
             }, []);
         },
 
+        dependencies: (state) => {
+            const mergedDependencies = state.blocks.reduce<BlockDependency[]>((dependencies, child) => {
+                const block = blockForType(child.type);
+                if (!block) {
+                    throw new Error(`No Block found for type ${child.type}`); // for TS
+                }
+                return [...dependencies, ...(block.dependencies?.(child.props) ?? [])];
+            }, []);
+
+            return deduplicateBlockDependencies(mergedDependencies);
+        },
+
+        replaceDependenciesInOutput: (output, replacements) => {
+            const newOutput: BlocksBlockOutput = { blocks: [] };
+
+            for (const c of output.blocks) {
+                const block = blockForType(c.type);
+                if (!block) {
+                    throw new Error(`No Block found for type ${c.type}`);
+                }
+
+                newOutput.blocks.push({ ...c, props: block.replaceDependenciesInOutput(c.props, replacements) });
+            }
+
+            return newOutput;
+        },
+
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {
@@ -223,7 +263,6 @@ export function createBlocksBlock({
             const [showAddBlockDrawer, setShowAddBlockDrawer] = React.useState(false);
             const [beforeIndex, setBeforeIndex] = React.useState<number>();
             const [cannotPasteBlockError, setCannotPasteBlockError] = React.useState<React.ReactNode>();
-            const blockContext = useBlockContext();
 
             const snackbarApi = useSnackbarApi();
 
@@ -538,9 +577,10 @@ export function createBlocksBlock({
                                                         return (
                                                             <HoverPreviewComponent key={data.key} componentSlug={`${data.key}/blocks`}>
                                                                 <BlockRow
-                                                                    name={block.dynamicDisplayName?.(data.props) ?? block.displayName}
                                                                     id={data.key}
-                                                                    previewContent={block.previewContent(data.props, blockContext)}
+                                                                    renderPreviewContent={() => (
+                                                                        <BlockPreviewContent block={block} state={data.props} />
+                                                                    )}
                                                                     index={blockIndex}
                                                                     onContentClick={() => {
                                                                         stackApi.activatePage("blocks", data.key);
@@ -548,12 +588,13 @@ export function createBlocksBlock({
                                                                     onDeleteClick={() => {
                                                                         deleteBlocks([data.key]);
                                                                     }}
-                                                                    moveBlock={(dragIndex: number, hoverIndex: number) => {
-                                                                        const blocks = [...state.blocks];
-                                                                        const dragItem = state.blocks[dragIndex];
-                                                                        blocks[dragIndex] = state.blocks[hoverIndex];
-                                                                        blocks[hoverIndex] = dragItem;
-                                                                        updateState((prevState) => ({ ...prevState, blocks }));
+                                                                    moveBlock={(from, to) => {
+                                                                        updateState((prevState) => {
+                                                                            const blocks = [...prevState.blocks];
+                                                                            const blockToMove = blocks.splice(from, 1)[0];
+                                                                            blocks.splice(to, 0, blockToMove);
+                                                                            return { ...prevState, blocks };
+                                                                        });
                                                                     }}
                                                                     visibilityButton={
                                                                         <IconButton onClick={() => toggleVisible(data.key)} size="small">

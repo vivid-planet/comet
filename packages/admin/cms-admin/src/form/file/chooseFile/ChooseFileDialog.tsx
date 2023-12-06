@@ -1,25 +1,34 @@
-import { StackLink } from "@comet/admin";
+import { StackLink, SubRoute } from "@comet/admin";
 import { Close } from "@comet/admin-icons";
-import { Button, Dialog, DialogContent, DialogTitle, IconButton, Link } from "@mui/material";
+import { Button, Dialog, DialogTitle, IconButton, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
 
-import { TextMatch } from "../../../common/MarkedMatches";
+import { DamScopeProvider } from "../../../dam/config/DamScopeProvider";
 import { useDamConfig } from "../../../dam/config/useDamConfig";
+import { useDamScope } from "../../../dam/config/useDamScope";
 import { DamTable } from "../../../dam/DamTable";
-import DamLabel from "../../../dam/Table/DamLabel";
-import { isFile } from "../../../dam/Table/FolderTableRow";
-import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../graphql.generated";
+import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../../../dam/DataGrid/FolderDataGrid";
+import DamItemLabel from "../../../dam/DataGrid/label/DamItemLabel";
+import { RenderDamLabelOptions } from "../../../dam/DataGrid/label/DamItemLabelColumn";
+import { isFile } from "../../../dam/helpers/isFile";
+import { RedirectToPersistedDamLocation } from "./RedirectToPersistedDamLocation";
 
 const FixedHeightDialog = styled(Dialog)`
     & .MuiDialog-paper {
         height: 80vh;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: max-content max-content auto;
     }
 `;
 
 const StyledDialogTitle = styled(DialogTitle)`
+    position: sticky;
+    top: 0;
+    z-index: 10;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -44,17 +53,27 @@ const TableRowButton = styled(Button)`
 const renderDamLabel = (
     row: GQLDamFileTableFragment | GQLDamFolderTableFragment,
     onChooseFile: (fileId: string) => void,
-    { matches, showLicenseWarnings = false }: { matches?: TextMatch[]; showLicenseWarnings?: boolean },
+    { matches, filterApi, showLicenseWarnings = false }: RenderDamLabelOptions,
 ) => {
     return isFile(row) ? (
-        <div>
-            <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
-                <DamLabel asset={row} matches={matches} showLicenseWarnings={showLicenseWarnings} />
-            </TableRowButton>
-        </div>
+        <TableRowButton disableRipple={true} variant="text" onClick={() => onChooseFile(row.id)} fullWidth>
+            <DamItemLabel asset={row} matches={matches} showLicenseWarnings={showLicenseWarnings} />
+        </TableRowButton>
     ) : (
-        <Link underline="none" component={StackLink} pageName="folder" payload={row.id}>
-            <DamLabel asset={row} matches={matches} />
+        <Link
+            underline="none"
+            component={StackLink}
+            pageName="folder"
+            payload={row.id}
+            sx={{
+                width: "100%",
+                height: "100%",
+            }}
+            onClick={() => {
+                filterApi.formApi.change("searchText", undefined);
+            }}
+        >
+            <DamItemLabel asset={row} matches={matches} />
         </Link>
     );
 };
@@ -68,6 +87,12 @@ interface ChooseFileDialogProps {
 
 export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes }: ChooseFileDialogProps): React.ReactElement => {
     const damConfig = useDamConfig();
+    let stateKey = "choose-file-dam-location";
+    const scope = useDamScope();
+
+    if (Object.keys(scope).length > 0) {
+        stateKey = `${Object.values(scope).join("-")}-${stateKey}`;
+    }
 
     return (
         <FixedHeightDialog open={open} onClose={onClose} fullWidth maxWidth="xl">
@@ -77,21 +102,22 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
                     <Close />
                 </CloseButton>
             </StyledDialogTitle>
-            <MemoryRouter>
-                <DamTable
-                    renderDamLabel={(row, { matches }) =>
-                        renderDamLabel(row, onChooseFile, { matches, showLicenseWarnings: damConfig.enableLicenseFeature })
-                    }
-                    TableContainer={DialogContent}
-                    allowedMimetypes={allowedMimetypes}
-                    damLocationStorageKey="choose-file-dam-location"
-                    hideContextMenu={true}
-                    disableScopeIndicator={true}
-                    hideMultiselect={true}
-                    hideDamActions={true}
-                    hideArchiveFilter={true}
-                />
-            </MemoryRouter>
+            <DamScopeProvider>
+                <MemoryRouter>
+                    <SubRoute path="">
+                        <RedirectToPersistedDamLocation stateKey={stateKey} />
+                        <DamTable
+                            renderDamLabel={(row, { matches, filterApi }: RenderDamLabelOptions) =>
+                                renderDamLabel(row, onChooseFile, { matches, filterApi, showLicenseWarnings: damConfig.enableLicenseFeature })
+                            }
+                            allowedMimetypes={allowedMimetypes}
+                            hideContextMenu={true}
+                            hideMultiselect={true}
+                            hideArchiveFilter={true}
+                        />
+                    </SubRoute>
+                </MemoryRouter>
+            </DamScopeProvider>
         </FixedHeightDialog>
     );
 };

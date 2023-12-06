@@ -216,7 +216,7 @@ describe("transform to save index", () => {
             },
         ]);
     });
-    it("extract damFileId", () => {
+    it("extract id of DamFile", () => {
         const TestBlock = createBlocksBlock({ supportedBlocks: { image: ImageBlock, image2: ImageBlock } }, "TestBlock");
 
         const testBlock = TestBlock.blockInputFactory({
@@ -231,7 +231,12 @@ describe("transform to save index", () => {
                 blockname: "ImageBlock",
                 jsonPath: "root.blocks.0.props",
                 visible: true,
-                damFileIds: ["abc"],
+                dependencies: [
+                    {
+                        targetEntityName: "DamFile",
+                        id: "abc",
+                    },
+                ],
             },
         ]);
     });

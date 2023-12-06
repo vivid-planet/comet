@@ -1,10 +1,11 @@
 import { messages } from "@comet/admin";
 import { Link as LinkIcon } from "@comet/admin-icons";
-import { DocumentInterface, rewriteInternalLinks } from "@comet/cms-admin";
+import { createDocumentRootBlocksMethods, DocumentInterface } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
-import { GQLLink, GQLLinkInput, GQLPageTreeNodeAdditionalFieldsFragment } from "@src/graphql.generated";
+import { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
+import { GQLLink, GQLLinkInput } from "@src/graphql.generated";
 import { EditLink } from "@src/links/EditLink";
 import gql from "graphql-tag";
 import * as React from "react";
@@ -42,12 +43,6 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
             }
         }
     `,
-    // @ts-expect-error rewriteInternalLinks is insufficiently typed. As we plan to remove this method anyway, I did not invest more effort into it.
-    inputToOutput: (input, { idsMap }) => {
-        return {
-            content: rewriteInternalLinks(LinkBlock.state2Output(LinkBlock.input2State(input.content)), idsMap),
-        };
-    },
     InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
         if (page.userGroup !== "All") {
             return <Chip size="small" label={page.userGroup} />;
@@ -55,5 +50,7 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
         return null;
     },
     menuIcon: LinkIcon,
-    anchors: () => [],
+    ...createDocumentRootBlocksMethods({
+        content: LinkBlock,
+    }),
 };

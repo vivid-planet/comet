@@ -7,9 +7,6 @@ on:
             - synchronize
             - reopened
             - closed
-        branches:
-            - main
-            - next
     push:
         branches:
             - main

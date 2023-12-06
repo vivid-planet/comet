@@ -84,7 +84,7 @@ function UserGroupContextMenuItem({ item, onChange, onMenuClose }: Props): JSX.E
                                 >
                                     <FormattedMessage {...messages.cancel} />
                                 </Button>
-                                <Button type="submit">
+                                <Button type="submit" variant="contained">
                                     <FormattedMessage {...messages.ok} />
                                 </Button>
                             </DialogActions>

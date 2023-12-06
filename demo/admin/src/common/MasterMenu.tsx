@@ -77,7 +77,17 @@ const MasterMenu: React.FC = () => {
                 to={`${match.url}/component-demo`}
                 icon={<Snips />}
             />
-            <MenuItemRouterLink primary="Products" to={`${match.url}/products`} icon={<Snips />} />
+            <MenuCollapsibleItem primary="Products" icon={<Snips />}>
+                <MenuItemRouterLink primary="Products" to={`${match.url}/products`} icon={<Snips />} />
+                <MenuItemRouterLink primary="Categories" to={`${match.url}/product-categories`} icon={<Snips />} />
+                <MenuItemRouterLink primary="Tags" to={`${match.url}/product-tags`} icon={<Snips />} />
+                <MenuItemRouterLink primary="Products Handmade" to={`${match.url}/products-handmade`} icon={<Snips />} />
+            </MenuCollapsibleItem>
+            <MenuItemRouterLink
+                primary={intl.formatMessage({ id: "menu.userPermissions", defaultMessage: "User Permissions" })}
+                to={`${match.url}/user-permissions`}
+                icon={<Snips />}
+            />
         </Menu>
     );
 };

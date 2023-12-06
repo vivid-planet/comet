@@ -1,16 +1,5 @@
 import { gql } from "@apollo/client";
-import {
-    DirtyHandler,
-    Field,
-    FinalForm,
-    FinalFormInput,
-    ISelectionApi,
-    Selected,
-    Table,
-    TableQuery,
-    useSelectionRoute,
-    useTableQuery,
-} from "@comet/admin";
+import { Field, FinalForm, FinalFormInput, ISelectionApi, Selected, Table, TableQuery, useSelectionRoute, useTableQuery } from "@comet/admin";
 import { Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -101,29 +90,27 @@ function Story() {
     if (!tableData) return null;
 
     return (
-        <DirtyHandler>
-            <Selection>
-                <div>URL: {location.pathname}</div>
-                <TableQuery api={api} loading={loading} error={error}>
-                    <Grid container spacing={4}>
-                        <Grid item xs={2}>
-                            <ExampleTable tableData={tableData} selectedId={selection.id} selectionApi={selectionApi} />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <Selected selectionMode={selection.mode} selectedId={selection.id} rows={tableData.data}>
-                                {(user, { selectionMode: selectedSelectionMode }) => {
-                                    if (user === undefined) {
-                                        return null;
-                                    }
-
-                                    return <ExampleForm mode={selectedSelectionMode} user={user} />;
-                                }}
-                            </Selected>
-                        </Grid>
+        <Selection>
+            <div>URL: {location.pathname}</div>
+            <TableQuery api={api} loading={loading} error={error}>
+                <Grid container spacing={4}>
+                    <Grid item xs={2}>
+                        <ExampleTable tableData={tableData} selectedId={selection.id} selectionApi={selectionApi} />
                     </Grid>
-                </TableQuery>
-            </Selection>
-        </DirtyHandler>
+                    <Grid item xs={2}>
+                        <Selected selectionMode={selection.mode} selectedId={selection.id} rows={tableData.data}>
+                            {(user, { selectionMode: selectedSelectionMode }) => {
+                                if (user === undefined) {
+                                    return null;
+                                }
+
+                                return <ExampleForm mode={selectedSelectionMode} user={user} />;
+                            }}
+                        </Selected>
+                    </Grid>
+                </Grid>
+            </TableQuery>
+        </Selection>
     );
 }
 

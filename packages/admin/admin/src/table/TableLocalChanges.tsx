@@ -2,7 +2,7 @@ import { ApolloClient } from "@apollo/client";
 import { DocumentNode } from "graphql";
 import * as React from "react";
 
-import { DirtyHandlerApiContext } from "../DirtyHandlerApiContext";
+import { RouterPrompt } from "../router/Prompt";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
@@ -55,7 +55,6 @@ interface IState<TData> {
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
 export class TableLocalChanges<TData extends { id: string; [key: string]: any }> extends React.Component<IProps<TData>, IState<TData>> {
-    public static contextType = DirtyHandlerApiContext;
     protected static defaultProps = {
         orderColumn: "pos",
     };
@@ -75,37 +74,6 @@ export class TableLocalChanges<TData extends { id: string; [key: string]: any }>
         };
     }
 
-    public componentDidMount() {
-        // register with the parent DirtyHandler
-        // probably this needs to be configurable?
-        const dirtyApi = this.context ? this.context.getParent() : undefined;
-        if (dirtyApi) {
-            dirtyApi.registerBinding(this, {
-                isDirty: () => {
-                    if (Object.keys(this.state.changes).length > 0) return true;
-                    if (this.state.changedOrder) return true;
-                    return false;
-                },
-                submit: () => {
-                    return this.submitLocalDataChanges();
-                },
-                reset: () => {
-                    this.setState({
-                        changes: {},
-                        changedOrder: null,
-                    });
-                },
-            });
-        }
-    }
-
-    public componentWillUnmount() {
-        const dirtyApi = this.context ? this.context.getParent() : undefined;
-        if (dirtyApi) {
-            dirtyApi.unregisterBinding(this);
-        }
-    }
-
     public render() {
         let patchedData = this.patchedData();
         if (this.state.changedOrder) {
@@ -115,12 +83,36 @@ export class TableLocalChanges<TData extends { id: string; [key: string]: any }>
         }
         return (
             <>
-                {this.props.children({
-                    tableLocalChangesApi: this.tableLocalChangesApi,
-                    localChangesCount: Object.keys(this.state.changes).length,
-                    data: patchedData,
-                    loading: this.state.loading,
-                })}
+                <RouterPrompt
+                    message={() => {
+                        const isDirty = Object.keys(this.state.changes).length > 0 || this.state.changedOrder;
+                        if (isDirty) {
+                            return true;
+                        }
+                        return "Do you want to save your changes?"; //TODO translate, we need intl context
+                        //return intl.formatMessage(messages.saveUnsavedChanges);
+                    }}
+                    saveAction={async () => {
+                        await this.submitLocalDataChanges();
+                        return true;
+                    }}
+                    /*
+                    // TODO DirtyHandler removal: do we need a resetAction functionality here?
+                    resetAction={() => {
+                        this.setState({
+                            changes: {},
+                            changedOrder: null,
+                        });
+                    }}
+                    */
+                >
+                    {this.props.children({
+                        tableLocalChangesApi: this.tableLocalChangesApi,
+                        localChangesCount: Object.keys(this.state.changes).length,
+                        data: patchedData,
+                        loading: this.state.loading,
+                    })}
+                </RouterPrompt>
             </>
         );
     }

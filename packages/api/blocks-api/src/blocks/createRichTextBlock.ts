@@ -17,7 +17,6 @@ import {
     registerBlock,
 } from "./block";
 import { AnnotationBlockMeta, BlockField } from "./decorators/field";
-import { lookupPath } from "./helpers/lookupPath";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
 
@@ -190,7 +189,6 @@ export function createRichTextBlock<LinkBlock extends Block>({
         blockInputFactory: decorateBlockInputFactory,
         blockMeta: new AnnotationBlockMeta(RichTextBlockData),
         blockInputMeta: new AnnotationBlockMeta(RichTextBlockInput),
-        path: lookupPath(),
     };
 
     registerBlock(RichTextBlock);
