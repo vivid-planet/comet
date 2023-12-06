@@ -549,6 +549,7 @@ ${
 
 function generateNestedEntityResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
     const { classNameSingular } = buildNameVariants(metadata);
+    const { scopeProp } = buildOptions(metadata);
 
     const imports: Imports = [];
 
@@ -559,10 +560,12 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     imports.push(generateEntityImport(metadata, generatorOptions.targetDirectory));
 
     return `
+    import { RequiredPermission } from "@comet/cms-api";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
+    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         ${code}
     }
@@ -705,7 +708,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { FindOptions, Reference } from "@mikro-orm/core";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
-    import { extractGraphqlFields, SortDirection, AffectedEntity, validateNotModified } from "@comet/cms-api";
+    import { extractGraphqlFields, SortDirection, RequiredPermission, AffectedEntity, validateNotModified } from "@comet/cms-api";
     import { GraphQLResolveInfo } from "graphql";
 
     import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
@@ -715,6 +718,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
+    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
@@ -910,8 +914,9 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
 
     const generatedFiles: GeneratedFile[] = [];
 
-    const { fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
+    const { fileNameSingular, fileNamePlural, instanceNamePlural } = buildNameVariants(metadata);
     const { hasFilterArg, hasSortArg, argsFileName } = buildOptions(metadata);
+    if (!generatorOptions.requiredPermission) generatorOptions.requiredPermission = [instanceNamePlural];
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {
         if (hasFilterArg) {
