@@ -90,15 +90,15 @@ export function createGetUniversalProps({
             console.log("got no data from api", data, path);
             return { notFound: true };
         }
-        const pageId = data.pageTreeNodeByPath.id;
+        const pageTreeNodeId = data.pageTreeNodeByPath.id;
 
         //pageType dependent query
         const { loader: loaderForPageType } = pageTypes[data.pageTreeNodeByPath.documentType];
         return {
             props: {
-                ...(await loaderForPageType({ client, contentScope, pageId })),
+                ...(await loaderForPageType({ client, contentScope, pageTreeNodeId })),
                 documentType: data.pageTreeNodeByPath.documentType,
-                id: pageId,
+                id: pageTreeNodeId,
             },
         };
     };

@@ -12,8 +12,8 @@ import { GQLPageQuery } from "./Page.generated";
 
 // @TODO: Scope for menu should also be of type PageTreeNodeScopeInput
 export const pageQuery = gql`
-    query Page($pageId: ID!, $domain: String!, $language: String!) {
-        pageContent: pageTreeNode(id: $pageId) {
+    query Page($pageTreeNodeId: ID!, $domain: String!, $language: String!) {
+        pageContent: pageTreeNode(id: $pageTreeNodeId) {
             document {
                 __typename
                 ... on Page {
@@ -40,15 +40,15 @@ export const pageQuery = gql`
 
 export async function loader({
     client,
-    pageId,
+    pageTreeNodeId,
     contentScope,
 }: {
     client: GraphQLClient;
-    pageId: string;
+    pageTreeNodeId: string;
     contentScope: GQLPageTreeNodeScopeInput;
 }): Promise<unknown> {
     const data = await client.request<GQLPageQuery>(pageQuery, {
-        pageId,
+        pageTreeNodeId,
         domain: contentScope.domain,
         language: contentScope.language,
     });
