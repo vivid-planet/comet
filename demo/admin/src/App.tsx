@@ -30,7 +30,7 @@ import MasterHeader from "@src/common/MasterHeader";
 import MasterMenu from "@src/common/MasterMenu";
 import { createConfig } from "@src/config";
 import Dashboard from "@src/dashboard/Dashboard";
-import { pageTreeCategories, urlParamToCategory } from "@src/pages/pageTreeCategories";
+import { pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import theme from "@src/theme";
 import * as React from "react";
