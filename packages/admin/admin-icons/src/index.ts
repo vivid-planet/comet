@@ -1,16 +1,10 @@
 export { default as BallTriangle } from "./BallTriangle";
-export { default as Betrieb } from "./Betrieb";
 export { default as CheckboxChecked } from "./CheckboxChecked";
 export { default as CheckboxUnchecked } from "./CheckboxUnchecked";
 export { default as CometColor } from "./CometColor";
 export * from "./generated";
 export { default as Html } from "./Html";
-export { default as LogischeFilter } from "./LogischeFilter";
 export { default as MovePage } from "./MovePage";
-export { default as Pool } from "./Pool";
-export { default as Pool2 } from "./Pool2";
 export { default as RadioChecked } from "./RadioChecked";
 export { default as RadioUnchecked } from "./RadioUnchecked";
 export { default as ThreeDotSaving } from "./ThreeDotSaving";
-export { default as Vignette1 } from "./Vignette1";
-export { default as Vignette2 } from "./Vignette2";
