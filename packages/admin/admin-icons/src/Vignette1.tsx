@@ -2,7 +2,7 @@ import { SvgIcon, SvgIconProps } from "@mui/material";
 import * as React from "react";
 
 /**
- * @deprecated The 'Vignette1' icon will be removed in the next release.
+ * @deprecated The 'Vignette1' icon will be removed in v6.
  */
 export default function Vignette1(props: SvgIconProps): JSX.Element {
     return (

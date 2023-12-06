@@ -2,7 +2,7 @@ import { SvgIcon, SvgIconProps } from "@mui/material";
 import * as React from "react";
 
 /**
- * @deprecated The 'Betrieb' icon will be removed in the next release.
+ * @deprecated The 'Betrieb' icon will be removed in v6.
  */
 export default function Betrieb(props: SvgIconProps): JSX.Element {
     return (
