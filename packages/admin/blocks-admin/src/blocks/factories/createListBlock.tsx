@@ -121,7 +121,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                           props: block.defaultValues(),
                           selected: false,
                           slideIn: false,
-                          // Type cast to suppress 'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>' error
+                          // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
                           ...(Object.entries(additionalItemFields ?? {}).reduce(
                               (fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }),
                               {},
@@ -157,7 +157,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                         key: child.key,
                         visible: child.visible,
                         props: block.state2Output(child.props),
-                        // Type cast to suppress 'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>' error
+                        // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
                         ...(Object.keys(additionalItemFields ?? {}).reduce(
                             (fields, field) => ({ ...fields, [field]: child[field] }),
                             {},
@@ -196,7 +196,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                             key: child.key,
                             visible: child.visible,
                             props: block.createPreviewState(child.props, { ...previewCtx, parentUrl: blockAdminRoute }),
-                            // Type cast to suppress 'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>' error
+                            // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
                             ...(Object.keys(additionalItemFields ?? {}).reduce(
                                 (fields, field) => ({ ...fields, [field]: child[field] }),
                                 {},
