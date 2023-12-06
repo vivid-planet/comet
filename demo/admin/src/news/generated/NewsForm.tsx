@@ -9,6 +9,7 @@ import {
     FinalFormSaveSplitButton,
     FinalFormSelect,
     FinalFormSubmitEvent,
+    Loading,
     MainContent,
     Toolbar,
     ToolbarActions,
@@ -23,7 +24,7 @@ import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { CircularProgress, IconButton, MenuItem } from "@mui/material";
+import { IconButton, MenuItem } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -136,7 +137,7 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
     if (error) throw error;
 
     if (loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
 
     return (

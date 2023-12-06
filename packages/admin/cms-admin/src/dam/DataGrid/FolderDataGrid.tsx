@@ -444,7 +444,7 @@ const FolderDataGrid = ({
     ];
 
     return (
-        <div style={{ padding: "20px" }}>
+        <sc.FolderWrapper>
             <FolderHead
                 isSearching={isSearching}
                 numberItems={dataGridData?.damItemsList.totalCount ?? 0}
@@ -494,7 +494,7 @@ const FolderDataGrid = ({
                     closeMoveDialog();
                 }}
             />
-        </div>
+        </sc.FolderWrapper>
     );
 };
 

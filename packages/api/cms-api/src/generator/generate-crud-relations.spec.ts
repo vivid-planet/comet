@@ -103,5 +103,36 @@ describe("GenerateCrudRelations", () => {
 
             orm.close();
         });
+
+        it("input type to category relation should be string with uuid validator", async () => {
+            LazyMetadataStorage.load();
+            const orm = await MikroORM.init({
+                type: "postgresql",
+                dbName: "test-db",
+                entities: [TestEntityProduct, TestEntityCategory],
+            });
+
+            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProduct"));
+            const lintedOut = await lintGeneratedFiles(out);
+            const file = lintedOut.find((file) => file.name === "dto/test-entity-product.input.ts");
+            if (!file) throw new Error("File not found");
+
+            const source = parseSource(file.content);
+            const classes = source.getClasses();
+            expect(classes.length).toBe(2);
+
+            const cls = classes[0];
+            const structure = cls.getStructure();
+            expect(structure.properties?.length).toBe(2);
+            expect(structure.properties?.[1].name).toBe("category");
+            expect(structure.properties?.[1].type).toBe("string");
+            expect(structure.properties?.[1].decorators?.length).toBe(3);
+            const decorators = structure.properties?.[1].decorators?.map((dec) => dec.name);
+            expect(decorators).toContain("IsUUID");
+            expect(decorators).not.toContain("IsInt");
+            expect(decorators).not.toContain("IsString");
+
+            orm.close();
+        });
     });
 });

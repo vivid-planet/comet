@@ -3,9 +3,11 @@ import { NestFactory } from "@nestjs/core";
 import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType } from "@nestjs/graphql";
 import { writeFile } from "fs/promises";
 import { printSchema } from "graphql";
+import { GraphQLJSONObject } from "graphql-type-json";
 
 import {
     BuildsResolver,
+    ContentScope,
     createAuthResolver,
     createPageTreeResolver,
     createRedirectsResolver,
@@ -27,8 +29,13 @@ import { createFolderEntity } from "./src/dam/files/entities/folder.entity";
 import { FileLicensesResolver } from "./src/dam/files/file-licenses.resolver";
 import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
+import { SitePreviewResolver } from "./src/page-tree/site-preview.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
+import { CurrentUserPermission } from "./src/user-permissions/dto/current-user";
+import { UserResolver } from "./src/user-permissions/user.resolver";
+import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
+import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
 
 @ObjectType()
 class PageTreeNode extends PageTreeNodeBase {
@@ -66,6 +73,10 @@ class CurrentUser implements CurrentUserInterface {
     role: string;
     @Field(() => [CurrentUserRight], { nullable: true })
     rights: CurrentUserRightInterface[];
+    @Field(() => [GraphQLJSONObject])
+    contentScopes: ContentScope[];
+    @Field(() => [CurrentUserPermission])
+    permissions: CurrentUserPermission[];
 }
 
 async function generateSchema(): Promise<void> {
@@ -112,6 +123,10 @@ async function generateSchema(): Promise<void> {
         RedirectsDependenciesResolver,
         PageTreeDependentsResolver,
         FileDependentsResolver,
+        UserResolver,
+        UserPermissionResolver,
+        UserContentScopesResolver,
+        SitePreviewResolver,
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

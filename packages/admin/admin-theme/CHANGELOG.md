@@ -1,5 +1,50 @@
 # @comet/admin-theme
 
+## 5.1.0
+
+### Patch Changes
+
+-   @comet/admin-icons@5.1.0
+
+## 5.0.0
+
+### Patch Changes
+
+-   Updated dependencies [ed692f50]
+    -   @comet/admin-icons@5.0.0
+
+## 4.7.0
+
+### Minor Changes
+
+-   d1c7a1c5: Add custom default styling for LinearProgress
+
+    The LinearProgress is intended to be used as a LoadingOverlay in the DataGrid. This styling change adjusts it for this purpose.
+
+### Patch Changes
+
+-   fe310df8: Prevent the clear-button and the select-arrow from overlapping when using `FinalFormSelect` with the `clearable` prop.
+-   Updated dependencies [dbdc0f55]
+    -   @comet/admin-icons@4.7.0
+
+## 4.6.0
+
+### Patch Changes
+
+-   Updated dependencies [c3b7f992]
+-   Updated dependencies [c3b7f992]
+    -   @comet/admin-icons@4.6.0
+
+## 4.5.0
+
+### Minor Changes
+
+-   01677075: Fix some DataGrid styling issues and style the DataGrid components to match the Comet CI more closely.
+
+### Patch Changes
+
+-   @comet/admin-icons@4.5.0
+
 ## 4.4.3
 
 ### Patch Changes

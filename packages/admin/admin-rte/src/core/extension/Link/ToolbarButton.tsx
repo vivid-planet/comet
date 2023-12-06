@@ -1,4 +1,5 @@
-import { Check, Clear, Delete, Link as LinkIcon } from "@mui/icons-material";
+import { RteLink } from "@comet/admin-icons";
+import { Check, Clear, Delete } from "@mui/icons-material";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormLabel, Grid, InputBase } from "@mui/material";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
@@ -34,7 +35,7 @@ export default function ToolbarButton(props: IControlProps) {
     }
 
     return (
-        <ControlButton selected={!!linkData} disabled={linkEditCreateDisabled || globallyDisabled} icon={LinkIcon} onButtonClick={handleClick}>
+        <ControlButton selected={!!linkData} disabled={linkEditCreateDisabled || globallyDisabled} icon={RteLink} onButtonClick={handleClick}>
             <LinkDialog
                 editorState={props.editorState}
                 onChange={props.setEditorState}

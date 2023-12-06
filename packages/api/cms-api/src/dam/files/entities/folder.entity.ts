@@ -82,7 +82,7 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
         @Field()
         archived: boolean;
 
-        @Property({ columnType: "boolean" })
+        @Property({ columnType: "boolean", default: false })
         @Field()
         isInboxFromOtherScope: boolean = false;
 

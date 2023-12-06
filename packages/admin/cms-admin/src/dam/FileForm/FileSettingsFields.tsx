@@ -115,6 +115,14 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                         name="license.type"
                         label={<FormattedMessage id="comet.dam.file.type" defaultMessage="Type" />}
                         fullWidth
+                        required={damConfig.requireLicense}
+                        validate={(value: string) => {
+                            if (damConfig.requireLicense && value === "NO_LICENSE") {
+                                return <FormattedMessage id="comet.dam.file.error.license.type" defaultMessage="License type is required" />;
+                            }
+                        }}
+                        shouldShowError={() => true}
+                        validateFields={["license.durationTo"]}
                     />
                     <Field name="license.type">
                         {({ input: { value } }) => {
@@ -128,6 +136,8 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                         minRows={3}
                                         fullWidth
                                         disabled={value === "NO_LICENSE"}
+                                        required={damConfig.requireLicense}
+                                        shouldShowError={() => true}
                                     />
                                     <Field
                                         label={<FormattedMessage id="comet.dam.file.creatorOrAuthor" defaultMessage="Creator/Author" />}
@@ -135,11 +145,14 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                         component={FinalFormInput}
                                         fullWidth
                                         disabled={value === "NO_LICENSE"}
+                                        required={damConfig.requireLicense}
+                                        shouldShowError={() => true}
                                     />
                                     <FieldContainer
                                         label={<FormattedMessage id="comet.dam.file.licenseDuration" defaultMessage="License duration" />}
                                         fullWidth
                                         disabled={value === "NO_LICENSE"}
+                                        required={damConfig.requireLicense}
                                     >
                                         <DurationFieldWrapper>
                                             <Field
@@ -154,6 +167,8 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                                     </InputAdornment>
                                                 }
                                                 disabled={value === "NO_LICENSE"}
+                                                required={damConfig.requireLicense}
+                                                shouldShowError={() => true}
                                             />
                                             <Field
                                                 name="license.durationTo"
@@ -177,6 +192,8 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                                     }
                                                 }}
                                                 disabled={value === "NO_LICENSE"}
+                                                required={value === "ROYALTY_FREE" ? false : damConfig.requireLicense}
+                                                shouldShowError={() => true}
                                             />
                                         </DurationFieldWrapper>
                                     </FieldContainer>

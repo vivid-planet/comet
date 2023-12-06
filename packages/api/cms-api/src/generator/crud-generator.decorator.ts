@@ -37,7 +37,7 @@ export interface CrudFieldOptions {
 }
 
 export function CrudField({
-    resolveField: output = true,
+    resolveField = true,
     search = true,
     filter = true,
     sort = true,
@@ -45,7 +45,7 @@ export function CrudField({
 }: CrudFieldOptions = {}): PropertyDecorator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (target: any, propertyKey: string | symbol) {
-        Reflect.defineMetadata(`data:crudField`, { output, search, filter, sort, input }, target.constructor, propertyKey);
+        Reflect.defineMetadata(`data:crudField`, { resolveField, search, filter, sort, input }, target.constructor, propertyKey);
     };
 }
 

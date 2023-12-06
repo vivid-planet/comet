@@ -90,6 +90,10 @@ export class PageTreeService {
         const existingNode = await readApi.getNodeOrFail(id);
         if (!existingNode) throw new Error("Can't find page-tree-node with id");
 
+        if (existingNode.slug === "home" && input.slug !== "home") {
+            throw new Error(`Slug of page "home" cannot be changed`);
+        }
+
         if (input.createAutomaticRedirectsOnSlugChange && existingNode.slug != input.slug) {
             await this.redirectsService.createAutomaticRedirects(existingNode);
         }
@@ -227,6 +231,10 @@ export class PageTreeService {
         });
 
         const node = await pageTreeReadApi.getNodeOrFail(id);
+
+        if (node.slug === "home" && slug !== "home") {
+            throw new Error(`Slug of page "home" cannot be changed`);
+        }
 
         const requestedPath = await this.pathForParentAndSlug(node.parentId, slug);
         const nodeWithSamePath = await this.nodeWithSamePath(requestedPath, node.scope);
