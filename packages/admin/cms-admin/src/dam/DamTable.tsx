@@ -50,6 +50,20 @@ export interface DamFilter {
     sort?: ISortInformation;
 }
 
+type FolderContextType = {
+    folderId: string | undefined;
+};
+
+const FolderContext = React.createContext<FolderContextType>({ folderId: undefined });
+
+export function useFolderContext(): FolderContextType {
+    const context = React.useContext(FolderContext);
+    if (!context) {
+        throw new Error("useFolderContext must be used within a FolderContextProvider");
+    }
+    return context;
+}
+
 const Folder = ({ id, filterApi, ...props }: FolderProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
@@ -81,7 +95,13 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                         </ToolbarItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            {props.additionalToolbarItems}
+                            <FolderContext.Provider
+                                value={{
+                                    folderId: id,
+                                }}
+                            >
+                                {props.additionalToolbarItems}
+                            </FolderContext.Provider>
                             <DamMoreActions
                                 button={
                                     <Button variant="text" color="inherit" endIcon={<MoreVertical />} sx={{ mx: 2 }}>
