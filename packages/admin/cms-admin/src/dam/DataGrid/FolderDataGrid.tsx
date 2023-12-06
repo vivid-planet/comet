@@ -23,7 +23,6 @@ import { useDamScope } from "../config/useDamScope";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
-import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { isFile } from "../helpers/isFile";
 import { isFolder } from "../helpers/isFolder";
 import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
@@ -137,10 +136,6 @@ const FolderDataGrid = ({
 
     const fileUploadApi = useFileUpload({
         acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
-        onAfterUpload: () => {
-            apolloClient.reFetchObservableQueries();
-            clearDamItemCache(apolloClient.cache);
-        },
     });
 
     React.useEffect(() => {

@@ -9,6 +9,7 @@ import { NetworkError, UnknownError } from "../../../common/errors/errorMessages
 import { upload } from "../../../form/file/upload";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../../config/useDamScope";
+import { clearDamItemCache } from "../../helpers/clearDamItemCache";
 import { FilenameData, useManualDuplicatedFilenamesHandler } from "../duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { NewlyUploadedItem, useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
@@ -39,7 +40,6 @@ interface FileWithFolderPath extends FileWithPath {
 
 interface UploadFileOptions {
     acceptedMimetypes?: string[];
-    onAfterUpload?: (errorOccurred: boolean) => void;
 }
 
 interface Files {
@@ -109,6 +109,10 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithPath[]): Promise<File
 };
 
 export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
+    const onAfterUpload = () => {
+        client.reFetchObservableQueries();
+        clearDamItemCache(client.cache);
+    };
     const context = useCmsBlockContext(); // TODO create separate CmsContext?
     const client = useApolloClient();
     const manualDuplicatedFilenamesHandler = useManualDuplicatedFilenamesHandler();
@@ -455,7 +459,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         }
         setTotalSizes({});
         setUploadedSizes({});
-        options.onAfterUpload?.(errorOccurred);
+        onAfterUpload();
 
         addNewlyUploadedItems([...uploadedFolders, ...uploadedFiles]);
     };

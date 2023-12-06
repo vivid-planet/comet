@@ -1,9 +1,7 @@
-import { useApolloClient } from "@apollo/client";
 import { CancelButton, messages, SaveButton } from "@comet/admin";
 import { useDamAcceptedMimeTypes } from "@comet/cms-admin";
 import { useCurrentDamFolder } from "@comet/cms-admin/lib/dam/CurrentDamFolderContext";
 import { useFileUpload } from "@comet/cms-admin/lib/dam/DataGrid/fileUpload/useFileUpload";
-import { clearDamItemCache } from "@comet/cms-admin/lib/dam/helpers/clearDamItemCache";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
@@ -13,7 +11,6 @@ import { getRandomUnsplashImage, UnsplashImage } from "../dam/getRandomUnsplashI
 import UnsplashIcon from "./UnsplashIcon";
 
 export const ImportFromUnsplash: React.FC = () => {
-    const client = useApolloClient();
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
     const { folderId } = useCurrentDamFolder();
     const [isOpen, setIsOpen] = React.useState(false);
@@ -21,10 +18,6 @@ export const ImportFromUnsplash: React.FC = () => {
 
     const { uploadFiles } = useFileUpload({
         acceptedMimetypes: allAcceptedMimeTypes,
-        onAfterUpload: () => {
-            client.reFetchObservableQueries();
-            clearDamItemCache(client.cache);
-        },
     });
 
     const handleOpenDialog = async () => {

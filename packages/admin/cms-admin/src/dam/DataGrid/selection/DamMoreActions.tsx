@@ -1,4 +1,3 @@
-import { useApolloClient } from "@apollo/client";
 import { useEditDialog, useSnackbarApi } from "@comet/admin";
 import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, Upload } from "@comet/admin-icons";
 import { Box, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Slide, Snackbar, Typography } from "@mui/material";
@@ -10,7 +9,6 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
-import { clearDamItemCache } from "../../helpers/clearDamItemCache";
 import { useFileUpload } from "../fileUpload/useFileUpload";
 import { useDamSelectionApi } from "./DamSelectionContext";
 
@@ -30,7 +28,6 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
     const snackbarApi = useSnackbarApi();
     const [, , editDialogApi] = useEditDialog();
     const intl = useIntl();
-    const client = useApolloClient();
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
     const folderInputRef = React.useRef<HTMLInputElement>(null);
@@ -106,10 +103,6 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
         dropzoneConfig,
     } = useFileUpload({
         acceptedMimetypes: filter?.allowedMimetypes ?? allAcceptedMimeTypes,
-        onAfterUpload: () => {
-            client.reFetchObservableQueries();
-            clearDamItemCache(client.cache);
-        },
     });
 
     const { getInputProps } = useDropzone({
