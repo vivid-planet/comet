@@ -9,7 +9,7 @@ import { useDamConfig } from "../../config/useDamConfig";
 import { DamFilter } from "../../DamTable";
 import { isFile } from "../../helpers/isFile";
 import { isFolder } from "../../helpers/isFolder";
-import { FileUploadApi } from "../fileUpload/useFileUpload";
+import { FileUploadApi } from "../fileUpload/useDamFileUpload";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../FolderDataGrid";
 import { DamItemMatches } from "../useDamSearchHighlighting";
 import DamItemLabel from "./DamItemLabel";

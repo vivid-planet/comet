@@ -22,13 +22,13 @@ import {
     UnsupportedTypeError,
 } from "./fileUploadErrorMessages";
 import { ProgressDialog } from "./ProgressDialog";
-import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./useFileUpload.gql";
+import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./useDamFileUpload.gql";
 import {
     GQLDamFolderByNameAndParentIdQuery,
     GQLDamFolderByNameAndParentIdQueryVariables,
     GQLDamFolderForFolderUploadMutation,
     GQLDamFolderForFolderUploadMutationVariables,
-} from "./useFileUpload.gql.generated";
+} from "./useDamFileUpload.gql.generated";
 
 interface FileWithPath extends File {
     path?: string;
@@ -47,18 +47,15 @@ interface Files {
     fileRejections: FileRejection[];
 }
 
-interface ImportedSource {
-    sourceId: string;
-    sourceType: string;
-}
+type ImportSource = { importSourceType: never; importSourceId: never } | { importSourceType: string; importSourceId: string };
 
 interface UploadFileOptions {
     folderId?: string;
-    importedFile?: ImportedSource;
+    importSource?: ImportSource;
 }
 
 export interface FileUploadApi {
-    uploadFiles: ({ acceptedFiles, fileRejections }: Files, { folderId, importedFile }: UploadFileOptions) => Promise<void>;
+    uploadFiles: ({ acceptedFiles, fileRejections }: Files, { folderId, importSource }: UploadFileOptions) => Promise<void>;
     validationErrors?: FileUploadValidationError[];
     maxFileSizeInBytes: number;
     dialogs: React.ReactNode;
@@ -108,7 +105,7 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithPath[]): Promise<File
     return newFiles;
 };
 
-export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
+export const useDamFileUpload = (options: UploadFileOptions): FileUploadApi => {
     const onAfterUpload = () => {
         client.reFetchObservableQueries();
         clearDamItemCache(client.cache);
@@ -365,7 +362,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         [manualDuplicatedFilenamesHandler],
     );
 
-    const uploadFiles = async ({ acceptedFiles, fileRejections }: Files, { folderId, importedFile }: UploadFileOptions): Promise<void> => {
+    const uploadFiles = async ({ acceptedFiles, fileRejections }: Files, { folderId, importSource }: UploadFileOptions): Promise<void> => {
         setProgressDialogOpen(true);
         setValidationErrors(undefined);
 
@@ -411,8 +408,8 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                             file,
                             folderId: targetFolderId,
                             scope,
-                            importSourceId: importedFile?.sourceId,
-                            importSourceType: importedFile?.sourceType,
+                            importSourceId: importSource?.importSourceId,
+                            importSourceType: importSource?.importSourceType,
                         },
                         cancelUpload.current.token,
                         {

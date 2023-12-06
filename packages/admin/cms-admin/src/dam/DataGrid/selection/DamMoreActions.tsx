@@ -9,7 +9,7 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
-import { useFileUpload } from "../fileUpload/useFileUpload";
+import { useDamFileUpload } from "../fileUpload/useDamFileUpload";
 import { useDamSelectionApi } from "./DamSelectionContext";
 
 interface DamMoreActionsProps {
@@ -101,7 +101,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
         uploadFiles,
         dialogs: fileUploadDialogs,
         dropzoneConfig,
-    } = useFileUpload({
+    } = useDamFileUpload({
         acceptedMimetypes: filter?.allowedMimetypes ?? allAcceptedMimeTypes,
     });
 

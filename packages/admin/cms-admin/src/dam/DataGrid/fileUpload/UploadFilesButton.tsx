@@ -5,7 +5,7 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
-import { useFileUpload } from "./useFileUpload";
+import { useDamFileUpload } from "./useDamFileUpload";
 
 interface UploadSplitButtonProps {
     folderId?: string;
@@ -23,7 +23,7 @@ export const UploadFilesButton = ({ folderId, filter }: UploadSplitButtonProps):
         uploadFiles,
         dialogs: fileUploadDialogs,
         dropzoneConfig,
-    } = useFileUpload({
+    } = useDamFileUpload({
         acceptedMimetypes: filter?.allowedMimetypes ?? allAcceptedMimeTypes,
     });
 

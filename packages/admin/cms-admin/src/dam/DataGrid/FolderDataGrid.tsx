@@ -27,7 +27,7 @@ import { isFile } from "../helpers/isFile";
 import { isFolder } from "../helpers/isFolder";
 import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
 import DamContextMenu from "./DamContextMenu";
-import { useFileUpload } from "./fileUpload/useFileUpload";
+import { useDamFileUpload } from "./fileUpload/useDamFileUpload";
 import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
 import {
     GQLDamFolderQuery,
@@ -134,7 +134,7 @@ const FolderDataGrid = ({
 
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
-    const fileUploadApi = useFileUpload({
+    const fileUploadApi = useDamFileUpload({
         acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
     });
 
