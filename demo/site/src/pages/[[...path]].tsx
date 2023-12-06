@@ -38,8 +38,8 @@ export default function Page(props: InferGetStaticPropsType<typeof getStaticProp
 }
 
 const pageTypeQuery = gql`
-    query PageType($path: String!, $contentScope: PageTreeNodeScopeInput!) {
-        pageTreeNodeByPath(path: $path, scope: $contentScope) {
+    query PageType($path: String!, $scope: PageTreeNodeScopeInput!) {
+        pageTreeNodeByPath(path: $path, scope: $scope) {
             id
             documentType
         }
@@ -78,12 +78,12 @@ export function createGetUniversalProps({
     > {
         const client = createGraphQLClient({ includeInvisiblePages, includeInvisibleBlocks, previewDamUrls });
         const path = params?.path ?? "";
-        const contentScope = { domain, language: locale };
+        const scope = { domain, language: locale };
 
         //fetch pageType
         const data = await client.request<GQLPageTypeQuery, GQLPageTypeQueryVariables>(pageTypeQuery, {
             path: `/${Array.isArray(path) ? path.join("/") : path}`,
-            contentScope,
+            scope,
         });
         if (!data.pageTreeNodeByPath?.documentType) {
             // eslint-disable-next-line no-console
@@ -96,7 +96,7 @@ export function createGetUniversalProps({
         const { loader: loaderForPageType } = pageTypes[data.pageTreeNodeByPath.documentType];
         return {
             props: {
-                ...(await loaderForPageType({ client, contentScope, pageTreeNodeId })),
+                ...(await loaderForPageType({ client, scope, pageTreeNodeId })),
                 documentType: data.pageTreeNodeByPath.documentType,
                 id: pageTreeNodeId,
             },
@@ -105,8 +105,8 @@ export function createGetUniversalProps({
 }
 
 const pagesQuery = gql`
-    query Pages($contentScope: PageTreeNodeScopeInput!) {
-        pageTreeNodeList(scope: $contentScope) {
+    query Pages($scope: PageTreeNodeScopeInput!) {
+        pageTreeNodeList(scope: $scope) {
             id
             path
             documentType
@@ -119,7 +119,7 @@ export const getStaticPaths: GetStaticPaths = async ({ locales = [] }) => {
 
     for (const locale of locales) {
         const data = await createGraphQLClient().request<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
-            contentScope: { domain, language: locale },
+            scope: { domain, language: locale },
         });
 
         paths.push(

@@ -41,16 +41,16 @@ export const pageQuery = gql`
 export async function loader({
     client,
     pageTreeNodeId,
-    contentScope,
+    scope,
 }: {
     client: GraphQLClient;
     pageTreeNodeId: string;
-    contentScope: GQLPageTreeNodeScopeInput;
+    scope: GQLPageTreeNodeScopeInput;
 }): Promise<unknown> {
     const data = await client.request<GQLPageQuery>(pageQuery, {
         pageTreeNodeId,
-        domain: contentScope.domain,
-        language: contentScope.language,
+        domain: scope.domain,
+        language: scope.language,
     });
     return data;
 }
