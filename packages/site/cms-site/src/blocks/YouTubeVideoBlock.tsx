@@ -1,8 +1,28 @@
-import { PropsWithData, withPreview } from "@comet/cms-site";
-import { YouTubeVideoBlockData } from "@src/blocks.generated";
 import * as React from "react";
+import styled from "styled-components";
 
-import * as sc from "./YouTubeVideoBlock.sc";
+import { YouTubeVideoBlockData } from "../blocks.generated";
+import { withPreview } from "../iframebridge/withPreview";
+import { PropsWithData } from "./PropsWithData";
+
+interface VideoContainerProps {
+    heightInPercent: number;
+}
+
+const VideoContainer = styled.div<VideoContainerProps>`
+    height: 0;
+    overflow: hidden;
+    padding-top: ${({ heightInPercent }) => heightInPercent}%;
+    position: relative;
+
+    iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+`;
 
 const getHeightInPercentForAspectRatio = (aspectRatio: YouTubeVideoBlockData["aspectRatio"]) => {
     switch (aspectRatio) {
@@ -47,9 +67,9 @@ const YouTubeVideoBlock: React.FunctionComponent<PropsWithData<YouTubeVideoBlock
     youtubeUrl.search = searchParams.toString();
 
     return (
-        <sc.VideoContainer heightInPercent={getHeightInPercentForAspectRatio(aspectRatio)}>
+        <VideoContainer heightInPercent={getHeightInPercentForAspectRatio(aspectRatio)}>
             <iframe src={youtubeUrl.toString()} style={{ border: 0 }} />
-        </sc.VideoContainer>
+        </VideoContainer>
     );
 };
 

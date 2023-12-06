@@ -8,6 +8,7 @@ export { InternalLinkBlock } from "./blocks/InternalLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export type { PropsWithData } from "./blocks/PropsWithData";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
+export { default as YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
 export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
 export { IFrameMessageType } from "./iframebridge/IFrameMessage";
 export { Preview } from "./iframebridge/Preview";
