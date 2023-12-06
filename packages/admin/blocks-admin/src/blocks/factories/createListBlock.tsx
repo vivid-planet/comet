@@ -20,8 +20,11 @@ import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDepende
 import { BlockDependency, BlockInterface, BlockState, PreviewContent } from "../types";
 import { createUseAdminComponent } from "./listBlock/createUseAdminComponent";
 
+// Using {} instead of Record<string, never> because never and unknown are incompatible.
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type ListBlockItem<T extends BlockInterface, AdditionalItemFields = {}> = {
+type DefaultAdditionalItemFields = {};
+
+export type ListBlockItem<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields> = {
     [key: string]: unknown;
     key: string;
     visible: boolean;
@@ -30,13 +33,11 @@ export type ListBlockItem<T extends BlockInterface, AdditionalItemFields = {}> =
     slideIn: boolean;
 } & AdditionalItemFields;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export interface ListBlockState<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = {}> {
+export interface ListBlockState<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields> {
     blocks: ListBlockItem<T, AdditionalItemFields>[];
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export interface ListBlockFragment<AdditionalItemFields extends Record<string, unknown> = {}> {
+export interface ListBlockFragment<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields> {
     blocks: Array<
         {
             [key: string]: unknown;
@@ -48,8 +49,7 @@ export interface ListBlockFragment<AdditionalItemFields extends Record<string, u
     >;
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export interface ListBlockOutput<AdditionalItemFields extends Record<string, unknown> = {}> {
+export interface ListBlockOutput<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields> {
     blocks: Array<
         {
             [key: string]: unknown;
@@ -84,8 +84,7 @@ interface CreateListBlockOptions<T extends BlockInterface, AdditionalItemFields 
     AdditionalItemContent?: React.FunctionComponent<{ item: ListBlockItem<T, AdditionalItemFields> }>;
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function createListBlock<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = {}>({
+export function createListBlock<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>({
     name,
     block,
     displayName = <FormattedMessage id="comet.blocks.listBlock.name" defaultMessage="List" />,
@@ -114,7 +113,6 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
         displayName,
 
         defaultValues: () => ({
-            // @ts-expect-error 🤷🏼‍♂️
             blocks: createDefaultListEntry
                 ? [
                       {
@@ -123,10 +121,11 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                           props: block.defaultValues(),
                           selected: false,
                           slideIn: false,
-                          ...Object.entries(additionalItemFields ?? {}).reduce(
+                          // Type cast to suppress 'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>' error
+                          ...(Object.entries(additionalItemFields ?? {}).reduce(
                               (fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }),
                               {},
-                          ),
+                          ) as AdditionalItemFields),
                       },
                   ]
                 : [],
@@ -134,16 +133,16 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
 
         category: block.category,
 
-        input2State: (s) => {
+        input2State: (input) => {
             return {
-                ...s,
-                blocks: s.blocks.map((c) => {
+                ...input,
+                blocks: input.blocks.map((child) => {
                     return {
-                        ...c,
-                        key: c.key,
-                        visible: c.visible,
-                        props: block.input2State(c.props),
-                        ...Object.keys(additionalItemFields ?? {}).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
+                        ...child,
+                        key: child.key,
+                        visible: child.visible,
+                        props: block.input2State(child.props),
+                        ...Object.keys(additionalItemFields ?? {}).reduce((fields, field) => ({ ...fields, [field]: child[field] }), {}),
                         selected: false,
                         slideIn: false,
                     };
@@ -151,31 +150,33 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
             };
         },
 
-        // @ts-expect-error 🤷🏼‍♂️
-        state2Output: (s) => {
+        state2Output: (state) => {
             return {
-                blocks: s.blocks.map((c) => {
+                blocks: state.blocks.map((child) => {
                     return {
-                        key: c.key,
-                        visible: c.visible,
-                        props: block.state2Output(c.props),
-                        ...Object.keys(additionalItemFields ?? {}).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
+                        key: child.key,
+                        visible: child.visible,
+                        props: block.state2Output(child.props),
+                        // Type cast to suppress 'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>' error
+                        ...(Object.keys(additionalItemFields ?? {}).reduce(
+                            (fields, field) => ({ ...fields, [field]: child[field] }),
+                            {},
+                        ) as AdditionalItemFields),
                     };
                 }),
             };
         },
 
-        // @ts-expect-error 🤷🏼‍♂️
         output2State: async (output, context) => {
-            const state: ListBlockState<T> = {
+            const state: ListBlockState<T, AdditionalItemFields> = {
                 blocks: [],
             };
 
-            for (const item of output.blocks) {
+            for (const child of output.blocks) {
                 state.blocks.push({
                     slideIn: false,
-                    ...item,
-                    props: await block.output2State(item.props, context),
+                    ...child,
+                    props: await block.output2State(child.props, context),
                     selected: false,
                 });
             }
@@ -183,20 +184,23 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
             return state;
         },
 
-        // @ts-expect-error 🤷🏼‍♂️
         createPreviewState: (state, previewCtx) => {
             return {
                 adminRoute: previewCtx.parentUrl,
                 blocks: state.blocks
-                    .filter((c) => (previewCtx.showVisibleOnly ? c.visible : true)) // depending on context show all blocks or only visible blocks
-                    .map((c) => {
-                        const blockAdminRoute = `${previewCtx.parentUrl}/${c.key}/edit`;
+                    .filter((child) => (previewCtx.showVisibleOnly ? child.visible : true)) // depending on context show all blocks or only visible blocks
+                    .map((child) => {
+                        const blockAdminRoute = `${previewCtx.parentUrl}/${child.key}/edit`;
 
                         return {
-                            key: c.key,
-                            visible: c.visible,
-                            props: block.createPreviewState(c.props, { ...previewCtx, parentUrl: blockAdminRoute }),
-                            ...Object.keys(additionalItemFields ?? {}).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
+                            key: child.key,
+                            visible: child.visible,
+                            props: block.createPreviewState(child.props, { ...previewCtx, parentUrl: blockAdminRoute }),
+                            // Type cast to suppress 'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>' error
+                            ...(Object.keys(additionalItemFields ?? {}).reduce(
+                                (fields, field) => ({ ...fields, [field]: child[field] }),
+                                {},
+                            ) as AdditionalItemFields),
                             adminRoute: blockAdminRoute,
                             adminMeta: { route: blockAdminRoute },
                         };
@@ -222,14 +226,13 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
             return deduplicateBlockDependencies(mergedDependencies);
         },
 
-        // @ts-expect-error 🤷🏼‍♂️
         replaceDependenciesInOutput: (output, replacements) => {
-            const newOutput: ListBlockOutput = { ...output, blocks: [] };
+            const newOutput: ListBlockOutput<AdditionalItemFields> = { ...output, blocks: [] };
 
-            for (const c of output.blocks) {
+            for (const child of output.blocks) {
                 newOutput.blocks.push({
-                    ...c,
-                    props: block.replaceDependenciesInOutput(c.props, replacements),
+                    ...child,
+                    props: block.replaceDependenciesInOutput(child.props, replacements),
                 });
             }
 
