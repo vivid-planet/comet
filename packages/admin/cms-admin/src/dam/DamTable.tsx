@@ -21,6 +21,7 @@ import { Button } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { CurrentDamFolderContext } from "./CurrentDamFolderContext";
 import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
 import { UploadFilesButton } from "./DataGrid/fileUpload/UploadFilesButton";
@@ -48,20 +49,6 @@ export interface DamFilter {
     archived?: boolean;
     searchText?: string;
     sort?: ISortInformation;
-}
-
-type FolderContextType = {
-    folderId: string | undefined;
-};
-
-const FolderContext = React.createContext<FolderContextType>({ folderId: undefined });
-
-export function useFolderContext(): FolderContextType {
-    const context = React.useContext(FolderContext);
-    if (!context) {
-        throw new Error("useFolderContext must be used within a FolderContextProvider");
-    }
-    return context;
 }
 
 const Folder = ({ id, filterApi, ...props }: FolderProps) => {
@@ -95,13 +82,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                         </ToolbarItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <FolderContext.Provider
-                                value={{
-                                    folderId: id,
-                                }}
-                            >
-                                {props.additionalToolbarItems}
-                            </FolderContext.Provider>
+                            <CurrentDamFolderContext folderId={id}>{props.additionalToolbarItems}</CurrentDamFolderContext>
                             <DamMoreActions
                                 button={
                                     <Button variant="text" color="inherit" endIcon={<MoreVertical />} sx={{ mx: 2 }}>
