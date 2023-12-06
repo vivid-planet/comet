@@ -130,6 +130,10 @@ export async function generateCrudInput(
             decorators.push("@ValidateNested()");
             type = "BlockInputInterface";
         } else if (prop.reference == "m:1") {
+            if (!prop.nullable) {
+                //don't include non-nullable fields in input dto as they are a root arg of the create mutation
+                continue;
+            }
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValueNull = prop.nullable && (initializer == "undefined" || initializer == "null");
             const fieldOptions = tsCodeRecordToString({

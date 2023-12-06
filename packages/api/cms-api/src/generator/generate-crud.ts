@@ -81,19 +81,6 @@ function buildOptions(metadata: EntityMetadata<any>) {
         return hasFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
     });
 
-    const mainProps = metadata.props.filter((prop) => {
-        if (hasFieldFeature(metadata.class, prop.name, "mainProperty")) {
-            if (prop.reference != "m:1") {
-                console.warn(`${prop.name} mainProperty=true is only supported for 1:m relations`);
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return false;
-        }
-    });
-
     return {
         crudSearchPropNames,
         hasSearchArg,
@@ -108,7 +95,6 @@ function buildOptions(metadata: EntityMetadata<any>) {
         argsClassName,
         argsFileName,
         blockProps,
-        mainProps,
     };
 }
 
@@ -264,11 +250,13 @@ function generatePaginatedDto({ generatorOptions, metadata }: { generatorOptions
 
 function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
-    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, mainProps } = buildOptions(metadata);
+    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg } = buildOptions(metadata);
     const imports: Imports = [];
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`));
     }
+    const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
+    const nonNullableRelationManyToOneProps = relationManyToOneProps.filter((prop) => !prop.nullable);
 
     const argsOut = `import { ArgsType, Field, IntersectionType, ID } from "@nestjs/graphql";
     import { Type } from "class-transformer";
@@ -292,17 +280,17 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
                 : ""
         }
 
-        ${mainProps
-            .map((mainProp) => {
-                if (integerTypes.includes(mainProp.type)) {
+        ${nonNullableRelationManyToOneProps
+            .map((prop) => {
+                if (integerTypes.includes(prop.type)) {
                     return `@Field(() => ID)
                     @Transform(({ value }) => value.map((id: string) => parseInt(id)))
                     @IsInt()
-                    ${mainProp.name}: number;`;
+                    ${prop.name}: number;`;
                 } else {
                     return `@Field(() => ID)
                     @IsUUID()
-                    ${mainProp.name}: string;`;
+                    ${prop.name}: string;`;
                 }
             })
             .join("")}
@@ -409,7 +397,7 @@ function generateInputHandling(
     metadata: EntityMetadata<any>,
 ): string {
     const { instanceNameSingular } = buildNameVariants(metadata);
-    const { blockProps, hasVisibleProp, scopeProp, mainProps } = buildOptions(metadata);
+    const { blockProps, hasVisibleProp, scopeProp } = buildOptions(metadata);
 
     const props = metadata.props.filter((prop) => !options.excludeFields || !options.excludeFields.includes(prop.name));
 
@@ -429,6 +417,8 @@ function generateInputHandling(
                 repositoryName: `${classNameToInstanceName(prop.type)}Repository`,
             };
         });
+    const inputNullableRelationManyToOneProps = inputRelationManyToOneProps.filter((prop) => prop.nullable);
+    const inputNonNullableRelationManyToOneProps = inputRelationManyToOneProps.filter((prop) => !prop.nullable);
 
     const inputRelationOneToOneProps = relationOneToOneProps
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
@@ -460,7 +450,7 @@ function generateInputHandling(
             };
         });
 
-    const noAssignProps = [...inputRelationToManyProps, ...inputRelationManyToOneProps, ...inputRelationOneToOneProps, ...blockProps];
+    const noAssignProps = [...inputRelationToManyProps, ...inputNullableRelationManyToOneProps, ...inputRelationOneToOneProps, ...blockProps];
     return `
     ${
         noAssignProps.length
@@ -473,18 +463,16 @@ function generateInputHandling(
         ${options.mode == "create" && scopeProp ? `scope,` : ""}
         ${
             options.mode == "create"
-                ? mainProps
-                      .map((mainProp) => {
-                          return `${mainProp.name}: Reference.create(await this.${classNameToInstanceName(mainProp.type)}Repository.findOneOrFail(${
-                              mainProp.name
-                          })), `;
+                ? inputNonNullableRelationManyToOneProps
+                      .map((prop) => {
+                          return `${prop.name}: Reference.create(await this.${prop.repositoryName}.findOneOrFail(${prop.name})), `;
                       })
                       .join("")
                 : ""
         }
         ${
             options.mode == "create" || options.mode == "updateNested"
-                ? inputRelationManyToOneProps
+                ? inputNullableRelationManyToOneProps
                       .map(
                           (prop) =>
                               `${prop.name}: ${prop.nullable ? `${prop.name}Input ? ` : ""}Reference.create(await this.${
@@ -560,7 +548,7 @@ ${inputRelationOneToOneProps
     .join("")}
 ${
     options.mode == "update"
-        ? inputRelationManyToOneProps
+        ? inputNullableRelationManyToOneProps
               .map(
                   (prop) => `if (${prop.name}Input !== undefined) {
                         ${instanceNameSingular}.${prop.name} =
@@ -704,7 +692,7 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
 function generateResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular, instanceNameSingular, classNamePlural, fileNamePlural, instanceNamePlural } =
         buildNameVariants(metadata);
-    const { scopeProp, argsClassName, argsFileName, hasSlugProp, hasSearchArg, hasSortArg, hasFilterArg, hasVisibleProp, hasUpdatedAt, mainProps } =
+    const { scopeProp, argsClassName, argsFileName, hasSlugProp, hasSearchArg, hasSortArg, hasFilterArg, hasVisibleProp, hasUpdatedAt } =
         buildOptions(metadata);
 
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
@@ -725,9 +713,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         .forEach((prop) => {
             injectRepositories.add(prop.type);
         });
-    mainProps.forEach((prop) => {
-        injectRepositories.add(prop.type);
-    });
+    const nonNullableRelationManyToOneProps = relationManyToOneProps.filter((prop) => !prop.nullable);
+    const inputNonNullableRelationManyToOneProps = nonNullableRelationManyToOneProps.filter((prop) =>
+        hasFieldFeature(metadata.class, prop.name, "input"),
+    );
 
     const {
         imports: relationsFieldResolverImports,
@@ -798,9 +787,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
         @Query(() => Paginated${classNamePlural})
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
-            @Args() { ${scopeProp ? `scope, ` : ""}${mainProps
-        .map((mainProp) => {
-            return `${mainProp.name}, `;
+            @Args() { ${scopeProp ? `scope, ` : ""}${nonNullableRelationManyToOneProps
+        .map((prop) => {
+            return `${prop.name}, `;
         })
         .join("")}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${hasSortArg ? `sort, ` : ""}offset, limit }: ${argsClassName}${
         hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""
@@ -812,9 +801,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                     : `: ObjectQuery<${metadata.className}> = {}`
             }
             ${scopeProp ? `where.scope = scope;` : ""}
-            ${mainProps
-                .map((mainProp) => {
-                    return `where.${mainProp.name} = ${mainProp.name};`;
+            ${nonNullableRelationManyToOneProps
+                .map((prop) => {
+                    return `where.${prop.name} = ${prop.name};`;
                 })
                 .join("\n")}
 
@@ -861,9 +850,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
         @Mutation(() => ${metadata.className})
         async create${classNameSingular}(
-            ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}${mainProps
-                      .map((mainProp) => {
-                          return `${generateIdArg(mainProp.name, metadata)}, `;
+            ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}${inputNonNullableRelationManyToOneProps
+                      .map((prop) => {
+                          return `${generateIdArg(prop.name, metadata)}, `;
                       })
                       .join("")}@Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {

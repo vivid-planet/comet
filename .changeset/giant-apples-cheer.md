@@ -1,5 +1,10 @@
 ---
-"@comet/cms-api": minor
+"@comet/cms-api": major
 ---
 
-CRUD Generator: Add the concept of mainProperty that can be set in @CrudField for a ManyToOne relation
+CRUD Generator: Generate better Api for non nullable ManyToOne relations
+
+- don't include in input dto anymore
+- add as arg to create mutation
+- add as arg to list query
+
