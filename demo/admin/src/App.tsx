@@ -38,7 +38,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import * as ReactDOM from "react-dom";
 import { IntlProvider } from "react-intl";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Route, RouteComponentProps, Switch } from "react-router-dom";
 
 import { ComponentDemo } from "./common/ComponentDemo";
 import { ContentScopeIndicator } from "./common/ContentScopeIndicator";
@@ -132,7 +132,9 @@ class App extends React.Component {
                                                                                     />
                                                                                     <RouteWithErrorBoundary
                                                                                         path={`${match.path}/pages/pagetree/:category`}
-                                                                                        render={({ match: { params } }) => {
+                                                                                        render={({
+                                                                                            match: { params },
+                                                                                        }: RouteComponentProps<{ category: string }>) => {
                                                                                             const category = urlParamToCategory(params.category);
 
                                                                                             if (category === undefined) {

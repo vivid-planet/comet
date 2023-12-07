@@ -16,18 +16,14 @@ export const pageTreeCategories: AllCategories = [
 ];
 
 const isCategory = (category: string): category is GQLPageTreeNodeCategory => {
-    return !!pageTreeCategories.find((c) => c.category === category);
+    return pageTreeCategories.some((c) => c.category === category);
 };
 
 export function categoryToUrlParam(category: GQLPageTreeNodeCategory): string {
     return kebabCase(category);
 }
 
-export function urlParamToCategory(param: string | undefined): GQLPageTreeNodeCategory | undefined {
-    if (param === undefined) {
-        return;
-    }
-
+export function urlParamToCategory(param: string): GQLPageTreeNodeCategory | undefined {
     const category = pascalCase(param);
     return isCategory(category) ? category : undefined;
 }
