@@ -62,13 +62,13 @@ export const DateRange = styled(ReactDateRange, {
             },
             "& .rdrStartEdge": {
                 right: 0,
-                borderTopLeftRadius: 12,
-                borderBottomLeftRadius: 12,
+                borderTopLeftRadius: 4,
+                borderBottomLeftRadius: 4,
             },
             "& .rdrEndEdge": {
                 left: 0,
-                borderTopRightRadius: 12,
-                borderBottomRightRadius: 12,
+                borderTopRightRadius: 4,
+                borderBottomRightRadius: 4,
             },
             "& .rdrInRange": {
                 borderRadius: 0,
@@ -90,12 +90,12 @@ export const DateRange = styled(ReactDateRange, {
                 },
             },
             "& .rdrDayStartPreview": {
-                borderTopLeftRadius: 12,
-                borderBottomLeftRadius: 12,
+                borderTopLeftRadius: 4,
+                borderBottomLeftRadius: 4,
             },
             "& .rdrDayEndPreview": {
-                borderTopRightRadius: 12,
-                borderBottomRightRadius: 12,
+                borderTopRightRadius: 4,
+                borderBottomRightRadius: 4,
             },
             "& .rdrDayEndPreview.rdrDayStartPreview": {
                 backgroundColor: theme.palette.grey[50],

@@ -31,7 +31,6 @@ export const StartAdornment = styled(InputAdornment, {
     },
 })();
 
-// TODO: Fix hover of first and last day of month
 export const Calendar = styled(CalendarBase, {
     name: "CometAdminDatePicker",
     slot: "calendar",
@@ -101,6 +100,22 @@ export const Calendar = styled(CalendarBase, {
                     fontWeight: theme.typography.fontWeightBold,
                 },
             },
+        },
+
+        "& .rdrDayStartOfMonth .rdrDayInPreview, & .rdrDayStartOfMonth .rdrDayEndPreview, & .rdrDayStartOfWeek .rdrDayInPreview, & .rdrDayStartOfWeek .rdrDayEndPreview":
+            {
+                borderTopLeftRadius: 4,
+                borderBottomLeftRadius: 4,
+            },
+        "& .rdrDayEndOfMonth .rdrDayInPreview, & .rdrDayEndOfMonth .rdrDayStartPreview, & .rdrDayEndOfWeek .rdrDayInPreview, & .rdrDayEndOfWeek .rdrDayStartPreview":
+            {
+                borderTopRightRadius: 4,
+                borderBottomRightRadius: 4,
+            },
+
+        "& .rdrDayStartPreview.rdrDayEndPreview": {
+            right: 4,
+            left: 4,
         },
     }),
 );
