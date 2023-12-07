@@ -41,4 +41,8 @@ export class Page extends BaseEntity<Page, "id"> implements DocumentInterface {
     })
     @Field()
     updatedAt: Date = new Date();
+
+    @Property({ nullable: true })
+    @Field({ nullable: true })
+    lastUpdatedUserLabel?: string;
 }

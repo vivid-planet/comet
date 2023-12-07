@@ -1,12 +1,16 @@
-import { messages } from "@comet/admin";
-import { Clear, Delete, OpenNewTab, Warning } from "@comet/admin-icons";
+import { gql, useQuery } from "@apollo/client";
+import { LocalErrorScopeApolloContext, messages } from "@comet/admin";
+import { Clear, Delete, OpenNewTab, ThreeDotSaving, Warning } from "@comet/admin-icons";
 import { fontWeights } from "@comet/admin-theme";
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedDate, FormattedMessage } from "react-intl";
+
+import { GQLSaveConflictDialogInfoQuery, GQLSaveConflictDialogInfoQueryVariables } from "./SaveConflictDialog.generated";
 
 interface SaveConflictDialogProps {
+    pageTreeNodeId?: string;
     open: boolean;
     onClosePressed: () => void;
     onDiscardChangesPressed: () => void;
@@ -35,8 +39,32 @@ export const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: SaveConflictDialogProps): React.ReactElement {
+const saveConflictDialogInfoQuery = gql`
+    query SaveConflictDialogInfo($id: ID!) {
+        pageTreeNode(id: $id) {
+            id
+            document {
+                ... on DocumentInterface {
+                    updatedAt
+                    lastUpdatedUserLabel
+                }
+            }
+        }
+    }
+`;
+
+function SaveConflictDialog({ pageTreeNodeId, open, onClosePressed, onDiscardChangesPressed }: SaveConflictDialogProps): React.ReactElement {
     const styles = useStyles();
+
+    const { data, loading } = useQuery<GQLSaveConflictDialogInfoQuery, GQLSaveConflictDialogInfoQueryVariables>(saveConflictDialogInfoQuery, {
+        variables: { id: pageTreeNodeId as string },
+        skip: !open || !pageTreeNodeId,
+        // ! Cache policy must be no-cache !
+        // Otherwise, this request (for some reason) triggers an EditPage request
+        // that updates the page -> local changes are lost!
+        fetchPolicy: "no-cache",
+        context: LocalErrorScopeApolloContext,
+    });
 
     return (
         <Dialog open={open} onClose={onClosePressed} maxWidth="sm">
@@ -55,6 +83,41 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                         defaultMessage="Someone else saved a new version. Therefore this page cannot be saved now. You can open the changed page in a new tab to compare the changes."
                     />
                 </Typography>
+
+                {pageTreeNodeId && (
+                    <Typography pt={2}>
+                        <FormattedMessage
+                            id="comet.saveConflictDialog.conflictingChangeInfo"
+                            defaultMessage="The conflicting change was made by {user} at {datetime}"
+                            values={{
+                                user: (
+                                    <strong>
+                                        {loading ? <ThreeDotSaving /> : data?.pageTreeNode?.document?.lastUpdatedUserLabel ?? "unknown user"}
+                                    </strong>
+                                ),
+                                datetime: (
+                                    <strong>
+                                        {loading ? (
+                                            <ThreeDotSaving />
+                                        ) : data?.pageTreeNode?.document?.updatedAt ? (
+                                            <FormattedDate
+                                                value={data.pageTreeNode.document.updatedAt}
+                                                year="numeric"
+                                                month="2-digit"
+                                                day="2-digit"
+                                                hour="2-digit"
+                                                minute="2-digit"
+                                                second="2-digit"
+                                            />
+                                        ) : (
+                                            "unknown time"
+                                        )}
+                                    </strong>
+                                ),
+                            }}
+                        />
+                    </Typography>
+                )}
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClosePressed} startIcon={<Clear />} color="info">

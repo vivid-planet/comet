@@ -162,6 +162,7 @@ type PaginatedUserList {
 type Link implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+  lastUpdatedUserLabel: String
   content: LinkBlockData!
   createdAt: DateTime!
 }
@@ -169,6 +170,7 @@ type Link implements DocumentInterface {
 interface DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+  lastUpdatedUserLabel: String
 }
 
 """Link root block data"""
@@ -177,6 +179,7 @@ scalar LinkBlockData @specifiedBy(url: "http://www.ecma-international.org/public
 type Page implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+  lastUpdatedUserLabel: String
   content: PageContentBlockData!
   seo: SeoBlockData!
   createdAt: DateTime!
@@ -256,6 +259,7 @@ type PaginatedPages {
 type PredefinedPage implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+  lastUpdatedUserLabel: String
   createdAt: DateTime!
   type: String
 }
@@ -316,6 +320,7 @@ type FooterContentScope {
 type Footer implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+  lastUpdatedUserLabel: String
   content: FooterContentBlockData!
   scope: FooterContentScope!
   createdAt: DateTime!
@@ -344,6 +349,7 @@ type MainMenu {
 type NewsComment implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+  lastUpdatedUserLabel: String
   comment: String!
   createdAt: DateTime!
 }
@@ -356,6 +362,7 @@ type NewsContentScope {
 type News implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+  lastUpdatedUserLabel: String
   scope: NewsContentScope!
   slug: String!
   title: String!
@@ -390,6 +397,7 @@ type PaginatedNews {
 type ProductCategory implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+  lastUpdatedUserLabel: String
   title: String!
   slug: String!
   createdAt: DateTime!
@@ -406,6 +414,7 @@ type ProductStatistics {
 type ProductTag implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+  lastUpdatedUserLabel: String
   title: String!
   createdAt: DateTime!
   products: [Product!]!
@@ -414,6 +423,7 @@ type ProductTag implements DocumentInterface {
 type ProductVariant implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+  lastUpdatedUserLabel: String
   name: String!
   image: DamImageBlockData!
   createdAt: DateTime!
@@ -439,6 +449,7 @@ type ProductPackageDimensions {
 type Product implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+  lastUpdatedUserLabel: String
   title: String!
   visible: Boolean!
   slug: String!
@@ -492,6 +503,7 @@ type PaginatedPageTreeNodes {
 type Redirect implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
+  lastUpdatedUserLabel: String
   sourceType: RedirectSourceTypeValues!
   source: String!
   target: JSONObject!

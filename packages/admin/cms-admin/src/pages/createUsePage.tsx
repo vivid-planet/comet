@@ -230,6 +230,7 @@ export const createUsePage: CreateUsePage =
                     onDiscardButtonPressed: async () => {
                         await resetPageStateToLatest();
                     },
+                    pageTreeNodeId: pageId,
                 },
             );
 

@@ -7,4 +7,7 @@ export abstract class DocumentInterface {
 
     @Field()
     updatedAt: Date;
+
+    @Field({ nullable: true })
+    lastUpdatedUserLabel?: string;
 }

@@ -11,6 +11,7 @@ interface SaveConflictDialogOptions {
     hasChanges: boolean;
     loadLatestVersion: () => Promise<void>;
     onDiscardButtonPressed: () => Promise<void>;
+    pageTreeNodeId?: string;
 }
 export function useSaveConflictQuery<TData, TVariables>(
     query: DocumentNode | TypedDocumentNode<TData, TVariables>,

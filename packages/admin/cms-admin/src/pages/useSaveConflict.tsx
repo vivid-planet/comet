@@ -10,6 +10,7 @@ export interface SaveConflictOptions {
     hasChanges: () => boolean;
     loadLatestVersion: () => Promise<void>;
     onDiscardButtonPressed: () => Promise<void>;
+    pageTreeNodeId?: string;
 }
 
 export interface SaveConflictHookReturn {
@@ -18,7 +19,7 @@ export interface SaveConflictHookReturn {
 }
 
 export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookReturn {
-    const { checkConflict, hasChanges, loadLatestVersion, onDiscardButtonPressed } = options;
+    const { checkConflict, hasChanges, loadLatestVersion, onDiscardButtonPressed, pageTreeNodeId } = options;
     const snackbarApi = useSnackbarApi();
 
     const [showDialog, setShowDialog] = React.useState(false);
@@ -98,6 +99,7 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
         dialogs: (
             <>
                 <SaveConflictDialog
+                    pageTreeNodeId={pageTreeNodeId}
                     open={showDialog}
                     onClosePressed={() => {
                         setShowDialog(false);

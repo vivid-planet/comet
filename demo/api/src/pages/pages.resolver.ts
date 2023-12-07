@@ -1,4 +1,6 @@
 import {
+    CurrentUserInterface,
+    GetCurrentUser,
     OffsetBasedPaginationArgs,
     PageTreeNodeInterface,
     PageTreeNodeVisibility,
@@ -45,6 +47,7 @@ export class PagesResolver {
     @Mutation(() => Page)
     @SubjectEntity(Page, { pageTreeNodeIdArg: "attachedPageTreeNodeId" })
     async savePage(
+        @GetCurrentUser() user: CurrentUserInterface,
         @Args("pageId", { type: () => ID }) pageId: string,
         @Args("input", { type: () => PageInput }) input: PageInput,
         @Args("attachedPageTreeNodeId", { type: () => ID }) attachedPageTreeNodeId: string,
@@ -67,12 +70,14 @@ export class PagesResolver {
             page.assign({
                 content: input.content.transformToBlockData(),
                 seo: input.seo.transformToBlockData(),
+                lastUpdatedUserLabel: `${user.name} (${user.email})`,
             });
         } else {
             page = this.repository.create({
                 id: pageId,
                 content: input.content.transformToBlockData(),
                 seo: input.seo.transformToBlockData(),
+                lastUpdatedUserLabel: `${user.name} (${user.email})`,
             });
 
             this.repository.persist(page);
