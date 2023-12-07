@@ -96,6 +96,7 @@ export async function generateCrudInput(
                 decorators.push("@IsSlug()");
             }
             decorators.push(`@Field(${fieldOptions})`);
+            type = "string";
         } else if (prop.type === "DecimalType" || prop.type == "BigIntType" || prop.type === "number") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
