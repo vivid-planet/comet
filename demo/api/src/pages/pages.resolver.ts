@@ -2,6 +2,7 @@ import {
     OffsetBasedPaginationArgs,
     PageTreeNodeInterface,
     PageTreeNodeVisibility,
+    PageTreeReadApiService,
     PageTreeService,
     SortArgs,
     SubjectEntity,
@@ -23,7 +24,11 @@ export class PagesArgs extends IntersectionType(OffsetBasedPaginationArgs, SortA
 
 @Resolver(() => Page)
 export class PagesResolver {
-    constructor(@InjectRepository(Page) private readonly repository: EntityRepository<Page>, private readonly pageTreeService: PageTreeService) {}
+    constructor(
+        @InjectRepository(Page) private readonly repository: EntityRepository<Page>,
+        private readonly pageTreeService: PageTreeService,
+        private readonly pageTreeReadApiService: PageTreeReadApiService,
+    ) {}
 
     @Query(() => Page)
     async page(@Args("id", { type: () => ID }) id: string): Promise<Page> {
@@ -44,7 +49,7 @@ export class PagesResolver {
 
     @ResolveField(() => PageTreeNode, { nullable: true })
     async pageTreeNode(@Parent() page: Page): Promise<PageTreeNodeInterface | null> {
-        return this.pageTreeService.createReadApi({ visibility: "all" }).getFirstNodeByAttachedPageId(page.id);
+        return this.pageTreeReadApiService.getFirstNodeByAttachedPageId(page.id);
     }
 
     @Mutation(() => Page)
@@ -57,7 +62,7 @@ export class PagesResolver {
     ): Promise<Page | null> {
         // all pageTypes need this is-archived-page-check
         // TODO: maybe implemented in a base-(document|page)-service which lives in @comet/cms-api
-        const pageTreeNode = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(attachedPageTreeNodeId);
+        const pageTreeNode = await this.pageTreeReadApiService.getNodeOrFail(attachedPageTreeNodeId);
         if (pageTreeNode.visibility === PageTreeNodeVisibility.Archived) {
             throw new UnauthorizedException("Archived pages cannot be updated");
         }
