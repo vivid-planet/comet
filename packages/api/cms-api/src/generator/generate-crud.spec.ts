@@ -23,7 +23,33 @@ export class TestEntityWithNumber extends BaseEntity<TestEntityWithNumber, "id">
     foo: number;
 }
 
+@Entity()
+export class TestEntityWithTextRuntimeType extends BaseEntity<TestEntityWithTextRuntimeType, "id"> {
+    @PrimaryKey({ type: "uuid" })
+    id: string = uuid();
+
+    @Property({ type: "text" })
+    title: string;
+}
+
 describe("GenerateCrud", () => {
+    describe("metadata validation", () => {
+        it("should throw an error for runtime type 'text'", async () => {
+            LazyMetadataStorage.load();
+            const orm = await MikroORM.init({
+                type: "postgresql",
+                dbName: "test-db",
+                entities: [TestEntityWithTextRuntimeType],
+            });
+
+            expect(async () => {
+                await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithTextRuntimeType"));
+            }).rejects.toThrow("Runtime type 'text' of property 'title' is not supported. Maybe you wanted to use 'columnType' instead?");
+
+            orm.close();
+        });
+    });
+
     describe("resolver class", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
