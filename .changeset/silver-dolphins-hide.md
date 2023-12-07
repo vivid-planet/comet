@@ -2,4 +2,4 @@
 "@comet/cms-api": minor
 ---
 
-crud generator: add support for enum arrays in input
+CRUD Generator: Add support for enum arrays in input
