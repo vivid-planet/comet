@@ -33,23 +33,6 @@ export class TestEntityWithTextRuntimeType extends BaseEntity<TestEntityWithText
 }
 
 describe("GenerateCrud", () => {
-    describe("metadata validation", () => {
-        it("should throw an error for runtime type 'text'", async () => {
-            LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithTextRuntimeType],
-            });
-
-            expect(async () => {
-                await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithTextRuntimeType"));
-            }).rejects.toThrow("Runtime type 'text' of property 'title' is not supported. Maybe you wanted to use 'columnType' instead?");
-
-            orm.close();
-        });
-    });
-
     describe("resolver class", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
@@ -110,6 +93,39 @@ describe("GenerateCrud", () => {
             const filterProp = structure.properties[0];
             expect(filterProp.name).toBe("foo");
             expect(filterProp.type).toBe("NumberFilter");
+
+            orm.close();
+        });
+    });
+
+    describe("text type filter", () => {
+        it("should be a valid generated ts file", async () => {
+            LazyMetadataStorage.load();
+            const orm = await MikroORM.init({
+                type: "postgresql",
+                dbName: "test-db",
+                entities: [TestEntityWithTextRuntimeType],
+            });
+
+            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithTextRuntimeType"));
+            const lintedOut = await lintGeneratedFiles(out);
+            const file = lintedOut.find((file) => file.name === "dto/test-entity-with-text-runtime-type.filter.ts");
+            if (!file) throw new Error("File not found");
+
+            const source = parseSource(file.content);
+
+            const classes = source.getClasses();
+            expect(classes.length).toBe(1);
+
+            const cls = classes[0];
+            expect(cls.getName()).toBe("TestEntityWithTextRuntimeTypeFilter");
+            const structure = cls.getStructure();
+
+            expect(structure.properties?.length).toBe(3);
+            if (!structure.properties || !structure.properties[0]) throw new Error("property not found");
+            const filterProp = structure.properties[0];
+            expect(filterProp.name).toBe("title");
+            expect(filterProp.type).toBe("StringFilter");
 
             orm.close();
         });
