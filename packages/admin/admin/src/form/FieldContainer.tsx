@@ -1,8 +1,16 @@
-import { ComponentsOverrides, FormControl, FormHelperText, FormLabel, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { FormControl, FormHelperText, FormLabel, formLabelClasses, inputBaseClasses, useThemeProps } from "@mui/material";
+import { ComponentsOverrides, css, styled } from "@mui/material/styles";
 import * as React from "react";
 
-export interface FieldContainerProps {
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+
+export type FieldContainerProps = ThemedComponentBaseProps<{
+    root: typeof FormControl;
+    label: typeof FormLabel;
+    inputContainer: "div";
+    error: typeof FormHelperText;
+    warning: typeof FormHelperText;
+}> & {
     variant?: "vertical" | "horizontal";
     fullWidth?: boolean;
     requiredSymbol?: React.ReactNode;
@@ -13,7 +21,7 @@ export interface FieldContainerProps {
     warning?: string;
     scrollTo?: boolean;
     fieldMargin?: "always" | "never" | "onlyIfNotLast";
-}
+};
 
 export type FieldContainerClassKey =
     | "root"
@@ -32,104 +40,171 @@ export type FieldContainerClassKey =
     | "hasWarning"
     | "warning";
 
-const styles = (theme: Theme) => {
-    return createStyles<FieldContainerClassKey, FieldContainerProps>({
-        root: {
-            "&:not($fieldMarginNever)": {
-                marginBottom: theme.spacing(4),
-                "&:not($fullWidth)": {
-                    marginRight: theme.spacing(4),
-                },
-            },
-            "& [class*='MuiInputBase-root']": {
-                width: "100%",
-            },
-        },
-        vertical: {},
-        horizontal: {
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            "& $label": {
-                width: 220,
-                flexShrink: 0,
-                flexGrow: 0,
-                marginBottom: 0,
-            },
-            "&$fullWidth $inputContainer": {
-                flexGrow: 1,
-            },
-        },
-        fullWidth: {},
-        required: {},
-        disabled: {
-            "& $label": {
-                color: theme.palette.text.disabled,
-            },
-        },
-        fieldMarginAlways: {},
-        fieldMarginNever: {},
-        fieldMarginOnlyIfNotLast: {
-            "&:last-child": {
-                marginBottom: 0,
-                "&:not($fullWidth)": {
-                    marginRight: 0,
-                },
-            },
-        },
-        label: {},
-        inputContainer: {},
-        hasError: {
-            "& $label:not([class*='Mui-focused'])": {
-                color: theme.palette.error.main,
-            },
-            "& [class*='MuiInputBase-root']:not([class*='Mui-focused'])": {
-                borderColor: theme.palette.error.main,
-            },
-        },
-        error: {},
-        hasWarning: {
-            "& $label:not([class*='Mui-focused'])": {
-                color: theme.palette.warning.main,
-            },
-            "& [class*='MuiInputBase-root']:not([class*='Mui-focused'])": {
-                borderColor: theme.palette.warning.main,
-            },
-        },
-        warning: {
-            color: theme.palette.warning.main,
-        },
-    });
+type OwnerState = Pick<FieldContainerProps, "fullWidth" | "disabled" | "required" | "fieldMargin" | "variant"> & {
+    hasError: boolean;
+    hasWarning: boolean;
 };
 
-export const FieldContainerComponent: React.FC<WithStyles<typeof styles> & FieldContainerProps> = ({
-    classes,
-    variant = "vertical",
-    fullWidth,
-    label,
-    error,
-    disabled,
-    required,
-    requiredSymbol = "*",
-    children,
-    warning,
-    scrollTo = false,
-    fieldMargin = "onlyIfNotLast",
-}) => {
-    const hasError = !!error;
-    const hasWarning = !!warning;
+const Root = styled(FormControl, {
+    name: "CometAdminFormFieldContainer",
+    slot: "root",
+    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+        return [
+            styles.root,
+            ownerState.variant === "vertical" && styles.vertical,
+            ownerState.variant === "horizontal" && styles.horizontal,
+            ownerState.fullWidth && styles.fullWidth,
+            ownerState.hasError && styles.hasError,
+            ownerState.hasWarning && styles.hasWarning,
+            ownerState.disabled && styles.disabled,
+            ownerState.required && styles.required,
+            ownerState.fieldMargin === "always" && styles.fieldMarginAlways,
+            ownerState.fieldMargin === "never" && styles.fieldMarginNever,
+            ownerState.fieldMargin === "onlyIfNotLast" && styles.fieldMarginOnlyIfNotLast,
+        ];
+    },
+})<{ ownerState: OwnerState }>(
+    ({ theme, ownerState }) => css`
+        ${ownerState.fieldMargin !== "never" &&
+        css`
+            margin-bottom: ${theme.spacing(4)};
+            ${!ownerState.fullWidth &&
+            css`
+                margin-right: ${theme.spacing(4)};
+            `}
+        `}
 
-    const formControlClasses: string[] = [classes.root];
-    if (variant === "vertical") formControlClasses.push(classes.vertical);
-    if (variant === "horizontal") formControlClasses.push(classes.horizontal);
-    if (fullWidth) formControlClasses.push(classes.fullWidth);
-    if (hasError) formControlClasses.push(classes.hasError);
-    if (hasWarning && !hasError) formControlClasses.push(classes.hasWarning);
-    if (disabled) formControlClasses.push(classes.disabled);
-    if (required) formControlClasses.push(classes.required);
-    if (fieldMargin === "always") formControlClasses.push(classes.fieldMarginAlways);
-    if (fieldMargin === "never") formControlClasses.push(classes.fieldMarginNever);
-    if (fieldMargin === "onlyIfNotLast") formControlClasses.push(classes.fieldMarginOnlyIfNotLast);
+        & [class*="${inputBaseClasses.root}"] {
+            width: 100%;
+        }
+
+        ${ownerState.variant === "horizontal" &&
+        css`
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        `}
+
+        ${ownerState.fieldMargin === "onlyIfNotLast" &&
+        css`
+            &:last-child {
+                margin-bottom: 0;
+
+                ${!ownerState.fullWidth &&
+                css`
+                    margin-right: 0;
+                `}
+            }
+        `}
+
+        ${ownerState.hasError &&
+        css`
+            [class*="${inputBaseClasses.root}"]:not([class*="${inputBaseClasses.focused}"]) {
+                border-color: ${theme.palette.error.main};
+            }
+        `}
+
+        ${ownerState.hasWarning &&
+        css`
+            [class*="${inputBaseClasses.root}"]:not([class*="${inputBaseClasses.focused}"]) {
+                border-color: ${theme.palette.warning.main};
+            }
+        `}
+    `,
+);
+
+const Label = styled(FormLabel, {
+    name: "CometAdminFormFieldContainer",
+    slot: "label",
+    overridesResolver(_, styles) {
+        return [styles.label];
+    },
+})<{ ownerState: OwnerState }>(
+    ({ theme, ownerState }) => css`
+        ${ownerState.variant === "horizontal" &&
+        css`
+            width: 220px;
+            flex-shrink: 0;
+            flex-grow: 0;
+            margin-bottom: 0;
+        `}
+
+        ${ownerState.disabled &&
+        css`
+            color: ${theme.palette.text.disabled};
+        `}
+
+        ${ownerState.hasError &&
+        css`
+            &:not([class*="${formLabelClasses.focused}"]) {
+                color: ${theme.palette.error.main};
+            }
+        `}
+
+        ${ownerState.hasWarning &&
+        css`
+            &:not([class*="${formLabelClasses.focused}"]) {
+                color: ${theme.palette.warning.main};
+            }
+        `}
+    `,
+);
+
+const InputContainer = styled("div", {
+    name: "CometAdminFormFieldContainer",
+    slot: "inputContainer",
+    overridesResolver(_, styles) {
+        return [styles.inputContainer];
+    },
+})<{ ownerState: OwnerState }>(
+    ({ ownerState }) => css`
+        ${ownerState.variant === "horizontal" &&
+        ownerState.fullWidth &&
+        css`
+            flex-grow: 1;
+        `}
+    `,
+);
+
+const Error = styled(FormHelperText, {
+    name: "CometAdminFormFieldContainer",
+    slot: "error",
+    overridesResolver(_, styles) {
+        return [styles.error];
+    },
+})();
+
+const Warning = styled(FormHelperText, {
+    name: "CometAdminFormFieldContainer",
+    slot: "warning",
+    overridesResolver(_, styles) {
+        return [styles.warning];
+    },
+})(
+    ({ theme }) => css`
+        color: ${theme.palette.warning.main};
+    `,
+);
+
+export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerProps>) => {
+    const {
+        variant = "vertical",
+        fullWidth,
+        label,
+        error,
+        disabled,
+        required,
+        requiredSymbol = "*",
+        children,
+        warning,
+        scrollTo = false,
+        fieldMargin = "onlyIfNotLast",
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminFormFieldContainer" });
+
+    const hasError = !!error;
+    const hasWarning = !hasError && !!warning;
 
     const ref = React.useRef<HTMLDivElement>(null);
 
@@ -139,30 +214,38 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles> & Field
         }
     }, [scrollTo]);
 
+    const ownerState: OwnerState = {
+        fullWidth,
+        disabled,
+        required,
+        fieldMargin,
+        variant,
+        hasError,
+        hasWarning,
+    };
+
     return (
-        <FormControl fullWidth={fullWidth} classes={{ root: formControlClasses.join(" ") }} ref={ref}>
+        <Root ownerState={ownerState} fullWidth={fullWidth} disabled={disabled} required={required} ref={ref} {...restProps} {...slotProps?.root}>
             <>
                 {label && (
-                    <FormLabel classes={{ root: classes.label }}>
+                    <Label ownerState={ownerState} disabled={disabled} {...slotProps?.label}>
                         {label}
                         {required && requiredSymbol}
-                    </FormLabel>
+                    </Label>
                 )}
-                <div className={classes.inputContainer}>
+                <InputContainer ownerState={ownerState} {...slotProps?.inputContainer}>
                     {children}
                     {hasError && (
-                        <FormHelperText error classes={{ root: classes.error }}>
+                        <Error error {...slotProps?.error}>
                             {error}
-                        </FormHelperText>
+                        </Error>
                     )}
-                    {hasWarning && !hasError && <FormHelperText classes={{ root: classes.warning }}>{warning}</FormHelperText>}
-                </div>
+                    {hasWarning && !hasError && <Warning {...slotProps?.warning}>{warning}</Warning>}
+                </InputContainer>
             </>
-        </FormControl>
+        </Root>
     );
 };
-
-export const FieldContainer = withStyles(styles, { name: "CometAdminFormFieldContainer" })(FieldContainerComponent);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
