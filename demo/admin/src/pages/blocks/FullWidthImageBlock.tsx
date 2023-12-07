@@ -12,7 +12,7 @@ const FullWidthImageContentBlock = createOptionalBlock(RichTextBlock, {
 export const FullWidthImageBlock = createCompositeBlock({
     name: "FullWidthImage",
     displayName: <FormattedMessage id="blocks.fullWidthImage" defaultMessage="Full Width Image" />,
-    category: BlockCategory.Media,
+    category: BlockCategory.Custom,
     blocks: {
         image: {
             block: DamImageBlock,

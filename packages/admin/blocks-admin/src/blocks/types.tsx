@@ -139,16 +139,29 @@ export type BlockState<B extends BlockMethods> = ExtractGenericTypesFromBlockInt
 export type BlockInputApi<B extends BlockMethods> = ExtractGenericTypesFromBlockInterface<B, 0>; // InputApi is the 1. generic
 export type BlockOutputApi<B extends BlockMethods> = ExtractGenericTypesFromBlockInterface<B, 2>; // OutputApi is the 3. generic
 
-export enum BlockCategory {
-    TextAndContent = "TextAndContent",
-    Media = "Media",
-    Navigation = "Navigation",
-    Teaser = "Teaser",
-    StructuredContent = "StructuredContent",
-    Layout = "Layout",
-    Form = "Form",
-    Other = "Other",
+export interface AllBlockCategories {
+    TextAndContent: "TextAndContent";
+    Media: "Media";
+    Navigation: "Navigation";
+    Teaser: "Teaser";
+    StructuredContent: "StructuredContent";
+    Layout: "Layout";
+    Form: "Form";
+    Other: "Other";
 }
+
+export type BlockCategory = keyof AllBlockCategories;
+
+export const BlockCategory: Record<BlockCategory, BlockCategory> = {
+    TextAndContent: "TextAndContent",
+    Media: "Media",
+    Navigation: "Navigation",
+    Teaser: "Teaser",
+    StructuredContent: "StructuredContent",
+    Layout: "Layout",
+    Form: "Form",
+    Other: "Other",
+};
 
 export const blockCategoryLabels = {
     [BlockCategory.TextAndContent]: <FormattedMessage id="comet.blocks.category.textAndContent" defaultMessage="Text & Content" />,
