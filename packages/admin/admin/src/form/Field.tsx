@@ -23,9 +23,9 @@ export interface FieldProps<FieldValue = any, T extends HTMLElement = HTMLElemen
     validate?: FieldValidator<FieldValue>;
     validateWarning?: FieldValidator<FieldValue>;
     variant?: FieldContainerProps["variant"];
-    shouldScrollTo?: (meta: FieldMetaState<FieldValue>) => boolean;
-    shouldShowError?: (meta: FieldMetaState<FieldValue>) => boolean;
-    shouldShowWarning?: (meta: FieldMetaState<FieldValue>) => boolean;
+    shouldScrollTo?: ({ fieldMeta }: { fieldMeta: FieldMetaState<FieldValue> }) => boolean;
+    shouldShowError?: ({ fieldMeta }: { fieldMeta: FieldMetaState<FieldValue> }) => boolean;
+    shouldShowWarning?: ({ fieldMeta }: { fieldMeta: FieldMetaState<FieldValue> }) => boolean;
     [otherProp: string]: any;
 }
 
