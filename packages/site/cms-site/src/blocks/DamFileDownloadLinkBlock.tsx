@@ -10,29 +10,23 @@ interface Props extends PropsWithData<DamFileDownloadLinkBlockData> {
     title?: string;
 }
 
-enum OpenFileTypeMethod {
-    NEW_TAB = "NEW_TAB",
-    DOWNLOAD = "DOWNLOAD",
-}
-
 export const DamFileDownloadLinkBlock = withPreview(
     ({ data: { file, openFileType }, children, title }: Props) => {
         if (file === undefined) {
             return children;
         }
 
-        if (openFileType === OpenFileTypeMethod.DOWNLOAD) {
+        if (openFileType === "DOWNLOAD") {
             return React.cloneElement(children, {
                 href: "#",
                 onClick: () => saveAs(file.fileUrl, file.name),
                 title,
             });
-        } else if (openFileType === OpenFileTypeMethod.NEW_TAB) {
-            return React.cloneElement(
+        } else if (openFileType === "NEW_TAB") {
+            return (
                 <a href={file.fileUrl} target="_blank" rel="noreferrer">
                     {children}
-                </a>,
-                { title },
+                </a>
             );
         }
 
