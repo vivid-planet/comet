@@ -12,11 +12,6 @@ import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { GQLDamFileDownloadLinkFileQuery, GQLDamFileDownloadLinkFileQueryVariables } from "./DamFileDownloadLinkBlock.generated";
 
-enum OpenFileTypeMethod {
-    NEW_TAB = "NEW_TAB",
-    DOWNLOAD = "DOWNLOAD",
-}
-
 export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput> = {
     ...createBlockSkeleton(),
 
@@ -29,7 +24,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
     category: BlockCategory.Navigation,
 
     defaultValues: () => ({
-        openFileType: OpenFileTypeMethod.DOWNLOAD,
+        openFileType: "DOWNLOAD",
     }),
 
     state2Output: (state) => ({
@@ -89,7 +84,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                     }}
                     initialValues={{
                         file: state.file,
-                        openFileType: state.openFileType ?? OpenFileTypeMethod.DOWNLOAD,
+                        openFileType: state.openFileType ?? "DOWNLOAD",
                     }}
                 >
                     {state.file !== undefined ? (
@@ -101,10 +96,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                                 </Typography>
                             </Box>
                             <Divider />
-                            <AdminComponentButton
-                                startIcon={<Delete />}
-                                onClick={() => updateState({ file: undefined, openFileType: OpenFileTypeMethod.NEW_TAB })}
-                            >
+                            <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ file: undefined, openFileType: "NEW_TAB" })}>
                                 <FormattedMessage {...messages.empty} />
                             </AdminComponentButton>
                         </AdminComponentPaper>
@@ -144,11 +136,11 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
 
 const openFileTypeOptions = [
     {
-        value: OpenFileTypeMethod.DOWNLOAD,
+        value: "DOWNLOAD",
         name: <FormattedMessage id="blocks.damFileDownloadLink.openFileType.download" defaultMessage="Download" />,
     },
     {
-        value: OpenFileTypeMethod.NEW_TAB,
+        value: "NEW_TAB",
         name: <FormattedMessage id="blocks.damFileDownloadLink.openFileType.newTab" defaultMessage="Open in a new tab" />,
     },
 ];
