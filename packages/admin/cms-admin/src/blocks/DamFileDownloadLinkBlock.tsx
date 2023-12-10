@@ -19,9 +19,9 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
 
     displayName: <FormattedMessage id="blocks.damFileDownloadLink" defaultMessage="CMS Asset" />,
 
-    previewContent: (state) => [{ type: "text", content: state.file?.name }],
+    previewContent: (state) => (state.file ? [{ type: "text", content: state.file?.name }] : []),
 
-    category: BlockCategory.Navigation,
+    category: BlockCategory.Media,
 
     defaultValues: () => ({
         openFileType: "DOWNLOAD",
