@@ -10,7 +10,7 @@ type Icon = {
     name: string;
     path: string;
     componentName: string;
-    deprecated: boolean;
+    deprecated?: boolean;
 };
 
 const main = async () => {
@@ -20,7 +20,7 @@ const main = async () => {
     const deprecatedIconFiles = readdirSync("icons/deprecated").filter(isSvg);
 
     const icons: Icon[] = [
-        ...iconFiles.map((file) => ({ name: file, path: `icons/${file}`, componentName: getComponentName(file), deprecated: false })),
+        ...iconFiles.map((file) => ({ name: file, path: `icons/${file}`, componentName: getComponentName(file) })),
         ...deprecatedIconFiles.map((file) => ({
             name: file,
             path: `icons/deprecated/${file}`,
