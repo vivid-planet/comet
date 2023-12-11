@@ -5,6 +5,7 @@ import { PagesModule } from "@src/pages/pages.module";
 
 import { Link } from "./entities/link.entity";
 import { LinksResolver } from "./links.resolver";
+
 @Module({
     imports: [PagesModule, BlocksModule, MikroOrmModule.forFeature([Link])],
     providers: [LinksResolver],
