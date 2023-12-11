@@ -8,7 +8,6 @@ export interface AlertProps {
     severity?: "info" | "warning" | "error" | "success";
     title?: React.ReactNode;
     children?: React.ReactNode;
-    disableCloseButton?: boolean;
     onClose?: () => void;
     action?: React.ReactNode;
 }
@@ -72,15 +71,7 @@ const styles = (theme: Theme) =>
         },
     });
 
-function Alert({
-    severity = "info",
-    title,
-    children,
-    classes,
-    disableCloseButton = false,
-    onClose,
-    action,
-}: AlertProps & WithStyles<typeof styles>): React.ReactElement {
+function Alert({ severity = "info", title, children, classes, onClose, action }: AlertProps & WithStyles<typeof styles>): React.ReactElement {
     return (
         <MuiAlert
             classes={{
@@ -94,7 +85,7 @@ function Alert({
                 {children}
             </Typography>
             <div className={classes.action}>{action}</div>
-            {!disableCloseButton && (
+            {onClose && (
                 <IconButton className={classes.closeIcon} onClick={onClose}>
                     <Close />
                 </IconButton>
