@@ -291,11 +291,15 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
             const key = jsonPath.split(".")[0];
 
             const route = [];
+
+            const childRoute = block.resolveDependencyRoute(state, jsonPath);
             if (blockConfigNormalized[key].nested) {
+                route.push(key, key);
+            } else if (childRoute.length > 0) {
                 route.push(key);
             }
 
-            route.push(block.resolveDependencyRoute(state, jsonPath));
+            route.push(childRoute);
 
             return route.join("/");
         },

@@ -208,7 +208,7 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
                     throw new Error(`CompositeBlock: Can't find block with key "${key}"`);
                 }
 
-                return `${key}/${dependencyRoute}`;
+                return dependencyRoute;
             },
         },
         api: {
