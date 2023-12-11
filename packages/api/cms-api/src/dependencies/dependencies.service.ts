@@ -15,11 +15,6 @@ import { Dependency } from "./dto/dependency";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
 import { BlockIndexRefresh } from "./entities/block-index-refresh.entity";
 
-const isService = (entityInfoGetter: EntityInfoGetter): entityInfoGetter is Type<EntityInfoServiceInterface> => {
-    // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
-    return Reflect.hasMetadata(INJECTABLE_WATERMARK, entityInfoGetter);
-};
-
 interface PGStatActivity {
     pid: number;
     state: string;
@@ -272,7 +267,7 @@ export class DependenciesService {
             return {};
         }
 
-        if (isService(entityInfoGetter)) {
+        if (this.isService(entityInfoGetter)) {
             const service = this.moduleRef.get(entityInfoGetter, { strict: false });
             const { name, secondaryInformation } = await service.getEntityInfo(instance);
             return { name, secondaryInformation };
@@ -280,6 +275,11 @@ export class DependenciesService {
             const { name, secondaryInformation } = await entityInfoGetter(instance);
             return { name, secondaryInformation };
         }
+    }
+
+    private isService(entityInfoGetter: EntityInfoGetter): entityInfoGetter is Type<EntityInfoServiceInterface> {
+        // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
+        return Reflect.hasMetadata(INJECTABLE_WATERMARK, entityInfoGetter);
     }
 
     private getQueryBuilderWithFilters(
