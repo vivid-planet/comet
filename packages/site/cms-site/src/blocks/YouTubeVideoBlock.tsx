@@ -45,32 +45,31 @@ const parseYoutubeIdentifier = (value: string): string | undefined => {
     return youtubeId ?? undefined;
 };
 
-const YouTubeVideoBlock: React.FunctionComponent<PropsWithData<YouTubeVideoBlockData>> = ({
-    data: { youtubeIdentifier, autoplay, loop, showControls, aspectRatio },
-}) => {
-    const identifier = parseYoutubeIdentifier(youtubeIdentifier);
+export const YouTubeVideoBlock = withPreview(
+    ({ data: { youtubeIdentifier, autoplay, loop, showControls, aspectRatio } }: PropsWithData<YouTubeVideoBlockData>) => {
+        const identifier = parseYoutubeIdentifier(youtubeIdentifier);
 
-    const searchParams = new URLSearchParams();
-    searchParams.append("modestbranding", "1");
+        const searchParams = new URLSearchParams();
+        searchParams.append("modestbranding", "1");
 
-    searchParams.append("autoplay", Number(autoplay).toString());
-    autoplay && searchParams.append("mute", "1");
+        searchParams.append("autoplay", Number(autoplay).toString());
+        autoplay && searchParams.append("mute", "1");
 
-    searchParams.append("controls", Number(showControls).toString());
+        searchParams.append("controls", Number(showControls).toString());
 
-    searchParams.append("loop", Number(loop).toString());
-    // the playlist parameter is needed so that the video loops. See https://developers.google.com/youtube/player_parameters#loop
-    loop && identifier && searchParams.append("playlist", identifier);
+        searchParams.append("loop", Number(loop).toString());
+        // the playlist parameter is needed so that the video loops. See https://developers.google.com/youtube/player_parameters#loop
+        loop && identifier && searchParams.append("playlist", identifier);
 
-    const youtubeBaseUrl = "https://www.youtube-nocookie.com/embed/";
-    const youtubeUrl = new URL(`${youtubeBaseUrl}${identifier ?? ""}`);
-    youtubeUrl.search = searchParams.toString();
+        const youtubeBaseUrl = "https://www.youtube-nocookie.com/embed/";
+        const youtubeUrl = new URL(`${youtubeBaseUrl}${identifier ?? ""}`);
+        youtubeUrl.search = searchParams.toString();
 
-    return (
-        <VideoContainer heightInPercent={getHeightInPercentForAspectRatio(aspectRatio)}>
-            <iframe src={youtubeUrl.toString()} style={{ border: 0 }} />
-        </VideoContainer>
-    );
-};
-
-export default withPreview(YouTubeVideoBlock, { label: "Video" });
+        return (
+            <VideoContainer heightInPercent={getHeightInPercentForAspectRatio(aspectRatio)}>
+                <iframe src={youtubeUrl.toString()} style={{ border: 0 }} />
+            </VideoContainer>
+        );
+    },
+    { label: "Video" },
+);
