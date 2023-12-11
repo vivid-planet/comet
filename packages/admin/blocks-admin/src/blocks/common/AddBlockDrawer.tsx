@@ -24,7 +24,7 @@ import { BlockCategory, blockCategoryLabels, BlockInterface } from "../types";
 type BlockType = string;
 
 interface Category {
-    blockCategory: BlockCategory;
+    id: string;
     label: React.ReactNode;
     blocks: Array<[BlockType, BlockInterface]>;
 }
@@ -38,27 +38,66 @@ interface Props {
 
 export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props): React.ReactElement {
     const intl = useIntl();
-    const [categories, setCategories] = React.useState<Category[]>([]);
     const [searchValue, setSearchValue] = React.useState("");
     const [addAndEdit, setAddAndEdit] = useStoredState<boolean>("addAndEdit", true);
 
-    React.useEffect(() => {
-        setCategories(
-            (Object.keys(BlockCategory) as BlockCategory[]).map((currentBlockCategory) => {
-                const blocksForCategory = Object.entries(blocks).filter(([, block]) => {
-                    const formattedDisplayName =
-                        typeof block.displayName === "string"
-                            ? (block.displayName as string)
-                            : intl.formatMessage((block.displayName as React.ReactElement<MessageDescriptor>).props);
+    const categories = React.useMemo(() => {
+        const categories: Category[] = [];
+        const categoriesOrder = Object.keys(BlockCategory);
 
-                    return (
-                        block.category === currentBlockCategory && formattedDisplayName.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())
-                    );
-                });
+        for (const [type, block] of Object.entries(blocks)) {
+            let blockName: string;
 
-                return { blockCategory: currentBlockCategory, label: blockCategoryLabels[currentBlockCategory], blocks: blocksForCategory };
-            }),
-        );
+            if (typeof block.displayName === "string") {
+                blockName = block.displayName;
+            } else if (isFormattedMessage(block.displayName)) {
+                blockName = intl.formatMessage(block.displayName.props);
+            } else {
+                throw new TypeError("Block displayName must be either a string or a FormattedMessage");
+            }
+
+            if (!blockName.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())) {
+                continue;
+            }
+
+            let id: string;
+            let label: React.ReactNode;
+
+            if (typeof block.category === "object") {
+                if (typeof block.category.label === "string") {
+                    id = block.category.label;
+                    label = block.category.label;
+                } else if (isFormattedMessage(block.category.label)) {
+                    id = intl.formatMessage(block.category.label.props);
+                    label = block.category.label;
+                } else {
+                    throw new TypeError("Custom category label must be either a string or a FormattedMessage");
+                }
+
+                if (block.category.insertBefore) {
+                    const insertBeforeIndex = categoriesOrder.indexOf(block.category.insertBefore);
+                    categoriesOrder.splice(insertBeforeIndex, 0, id);
+                } else {
+                    categoriesOrder.push(id);
+                }
+            } else {
+                id = block.category;
+                label = blockCategoryLabels[block.category];
+            }
+
+            let category = categories.find((category) => category.id === id);
+
+            if (!category) {
+                category = { id, label, blocks: [] };
+                categories.push(category);
+            }
+
+            category.blocks.push([type, block]);
+        }
+
+        categories.sort((a, b) => categoriesOrder.indexOf(a.id) - categoriesOrder.indexOf(b.id));
+
+        return categories;
     }, [intl, blocks, searchValue]);
 
     const handleListItemClick = (type: string) => {
@@ -122,7 +161,7 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props):
                     }
 
                     return (
-                        <ContentItem key={category.blockCategory}>
+                        <ContentItem key={category.id}>
                             <Typography variant="h4" gutterBottom>
                                 {category.label}
                             </Typography>
@@ -144,6 +183,10 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props):
             </Content>
         </Drawer>
     );
+}
+
+function isFormattedMessage(node: React.ReactNode): node is React.ReactElement<MessageDescriptor> {
+    return React.isValidElement(node) && node.type === FormattedMessage;
 }
 
 const Content = styled(DialogContent)`

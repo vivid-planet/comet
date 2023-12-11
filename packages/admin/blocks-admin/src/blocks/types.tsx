@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, MessageDescriptor } from "react-intl";
 
 export type SetStateFn<S> = (prevState: S) => S;
 export type SetStateAction<S> = S | SetStateFn<S>;
@@ -110,7 +110,7 @@ export interface BlockInterface<
 > extends AnonymousBlockInterface<InputApi, State, OutputApi, PreviewState> {
     name: string;
     displayName: React.ReactNode;
-    category: BlockCategory;
+    category: BlockCategory | CustomBlockCategory;
 }
 
 export interface RootBlockInterface<
@@ -149,6 +149,8 @@ export enum BlockCategory {
     Form = "Form",
     Other = "Other",
 }
+
+export type CustomBlockCategory = { label: string | React.ReactElement<MessageDescriptor>; insertBefore?: BlockCategory };
 
 export const blockCategoryLabels = {
     [BlockCategory.TextAndContent]: <FormattedMessage id="comet.blocks.category.textAndContent" defaultMessage="Text & Content" />,
