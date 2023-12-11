@@ -19,7 +19,7 @@ const main = async () => {
     const iconFiles = readdirSync("icons").filter(isSvg);
     const deprecatedIconFiles = readdirSync("icons/deprecated").filter(isSvg);
 
-    const icons = [
+    const icons: Icon[] = [
         ...iconFiles.map((file) => ({ name: file, path: `icons/${file}`, componentName: getComponentName(file), deprecated: false })),
         ...deprecatedIconFiles.map((file) => ({
             name: file,
