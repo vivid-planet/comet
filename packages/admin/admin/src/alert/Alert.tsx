@@ -10,10 +10,10 @@ export interface AlertProps {
     children?: React.ReactNode;
     disableCloseButton?: boolean;
     onClose?: () => void;
-    button?: React.ReactNode;
+    action?: React.ReactNode;
 }
 
-export type AlertClassKey = "root" | "message" | "title" | "text" | "button" | "closeIcon" | "hasTitle";
+export type AlertClassKey = "root" | "message" | "title" | "text" | "action" | "closeIcon" | "hasTitle";
 
 const styles = (theme: Theme) =>
     createStyles<AlertClassKey, AlertProps>({
@@ -43,7 +43,7 @@ const styles = (theme: Theme) =>
             flexGrow: 1,
             marginRight: theme.spacing(4),
         },
-        button: {},
+        action: {},
         closeIcon: {},
         hasTitle: {
             alignItems: "flex-start",
@@ -52,7 +52,7 @@ const styles = (theme: Theme) =>
                 marginLeft: -15,
             },
 
-            "& $button": {
+            "& $action": {
                 marginTop: theme.spacing(2),
             },
 
@@ -79,7 +79,7 @@ function Alert({
     classes,
     disableCloseButton = false,
     onClose,
-    button,
+    action,
 }: AlertProps & WithStyles<typeof styles>): React.ReactElement {
     return (
         <MuiAlert
@@ -93,7 +93,7 @@ function Alert({
             <Typography className={classes.text} variant="body2">
                 {children}
             </Typography>
-            <div className={classes.button}>{button}</div>
+            <div className={classes.action}>{action}</div>
             {!disableCloseButton && (
                 <IconButton className={classes.closeIcon} onClick={onClose}>
                     <Close />
