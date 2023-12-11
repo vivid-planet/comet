@@ -31,7 +31,6 @@ function Story() {
                         >
                             Notification Text
                         </Alert>
-
                         <Alert
                             severity="warning"
                             title="Title"
@@ -58,16 +57,7 @@ function Story() {
                         >
                             Notification Text
                         </Alert>
-                        <Alert
-                            severity="success"
-                            title="Title"
-                            action={
-                                <Button variant="text" startIcon={<ArrowRight />}>
-                                    Action Text
-                                </Button>
-                            }
-                            onClose={dummyOnClose}
-                        >
+                        <Alert severity="success" title="Title" onClose={dummyOnClose}>
                             Notification Text
                         </Alert>
                     </Stack>
