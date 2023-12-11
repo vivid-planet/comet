@@ -75,7 +75,7 @@ export interface BlocksBlockOutput<AdditionalItemFields extends Record<string, u
 
 type BlockType = string;
 
-export interface BlocksBlockAdditionalItemField<Value = unknown> {
+interface BlocksBlockAdditionalItemField<Value = unknown> {
     defaultValue: Value;
 }
 
