@@ -1,9 +1,9 @@
-import { recursivelyLoadBlockData } from "@src/blockRegistry";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import SeoBlock from "@src/blocks/seo/SeoBlock";
 import Breadcrumbs, { breadcrumbsFragment } from "@src/components/Breadcrumbs";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { Header, headerFragment } from "@src/header/Header";
+import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
 import { topMenuPageTreeNodeFragment, TopNavigation } from "@src/topNavigation/TopNavigation";
 import { gql, GraphQLClient } from "graphql-request";
 import Head from "next/head";

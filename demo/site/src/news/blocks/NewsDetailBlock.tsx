@@ -1,5 +1,4 @@
-import { PropsWithData } from "@comet/cms-site";
-import { registerBlock } from "@src/blockRegistry";
+import { PropsWithData, registerBlock } from "@comet/cms-site";
 import { NewsLinkBlockData } from "@src/blocks.generated";
 import { gql } from "graphql-request";
 import * as React from "react";

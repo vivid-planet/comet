@@ -2554,6 +2554,12 @@ importers:
       eslint:
         specifier: ^8.0.0
         version: 8.32.0
+      graphql:
+        specifier: ^15.0.0
+        version: 15.8.0
+      graphql-request:
+        specifier: ^3.0.0
+        version: 3.7.0(graphql@15.8.0)
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.15.3)(ts-node@10.9.1)
