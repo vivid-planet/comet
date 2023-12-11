@@ -1,9 +1,8 @@
-import { BlocksBlockAdditionalItemField, ListBlockAdditionalItemField } from "@comet/blocks-admin";
 import { GQLUserGroup } from "@src/graphql.generated";
 
-const userGroupAdditionalItemFields: { userGroup: ListBlockAdditionalItemField<GQLUserGroup> | BlocksBlockAdditionalItemField<GQLUserGroup> } = {
+const userGroupAdditionalItemFields = {
     userGroup: {
-        defaultValue: "All",
+        defaultValue: "All" as GQLUserGroup,
     },
 };
 
