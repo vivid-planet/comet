@@ -3,4 +3,4 @@
 "@comet/cms-api": minor
 ---
 
-Add support for external dams
+Add support for external DAMs
