@@ -32,20 +32,27 @@ import { gql, useApolloClient } from "@apollo/client";
 ...
 
 const client = useApolloClient();
+const scope = useContentScope();
+
+const translationFeature = new Map([
+  ['scope1', 'targetLanguage1'],
+  ['scope2', 'targetLanguage2'],
+  ['scope3', 'targetLanguage3'],
+]);
 
 ...
 
  <TranslationConfigProvider
     value={{
-        enableTranslation: true,
-        translate: async (value: string, language?: string) => {
+        enableTranslation: translationFeature.has(scope),
+        translate: async (value: string) => {
             const translation = await client.query<GQLTranslateQuery, GQLTranslateQueryVariables>({
                 query: gql`
-                    query Translate($value: String!, $language: String) {
+                    query Translate($value: String!, $language: String!) {
                         translate(value: $value, language: $language)
                     }
                 `,
-                variables: { value },
+                variables: { value, language: translationFeature.get(scope) },
             });
             return translation.data.translate;
         },
