@@ -2,4 +2,6 @@
 "@comet/blocks-admin": minor
 ---
 
-Improvements to the layout selection UX in createColumnsBlock
+Improve layout selection UX in `createColumnsBlock`
+
+Hide select when there's only one layout for a specific number of columns
