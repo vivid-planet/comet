@@ -246,7 +246,6 @@ export function createColumnsBlock<T extends BlockInterface>({
                                     component={FinalFormLayoutSelect}
                                     layouts={groupLayoutsByColumnsApi.getLayouts(state.layout.columns)}
                                     fullWidth
-                                    numberOfMatchingColumns={layouts.filter((layout) => layout.columns === state.layout.columns).length}
                                 />
                             </BlocksFinalForm>
                             <AdminComponentSection title={<FormattedMessage id="comet.blocks.columns.items" defaultMessage="Items" />}>
