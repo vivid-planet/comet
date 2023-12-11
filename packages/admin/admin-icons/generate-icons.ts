@@ -88,7 +88,7 @@ const writeComponent = async (icon: Icon, pathData: string) => {
         ${
             icon.deprecated
                 ? `/**
-                    * @deprecated Do not use.
+                    * @deprecated Will be removed in a future major release.
                     */`
                 : ""
         };
