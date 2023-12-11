@@ -26,3 +26,4 @@ export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSit
 export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePreviewIFrameMessage";
 export { PreviewPage, SitePreviewPage } from "./sitePreview/SitePreviewPage";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
+export { ClickAwayListener } from "./util/ClickAwayListener";
