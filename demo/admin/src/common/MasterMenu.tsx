@@ -28,18 +28,13 @@ const MasterMenu: React.FC = () => {
 
     return (
         <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
-            <MenuItemGroup title={sectionScopeTitle} drawerOpen={open}>
+            <MenuItemGroup title={sectionScopeTitle}>
                 <MenuItemRouterLink
-                    showText={open}
                     primary={intl.formatMessage({ id: "menu.dashboard", defaultMessage: "Dashboard" })}
                     icon={<Dashboard />}
                     to={`${match.url}/dashboard`}
                 />
-                <MenuCollapsibleItem
-                    showText={open}
-                    primary={intl.formatMessage({ id: "menu.pageTree", defaultMessage: "Page tree" })}
-                    icon={<PageTree />}
-                >
+                <MenuCollapsibleItem primary={intl.formatMessage({ id: "menu.pageTree", defaultMessage: "Page tree" })} icon={<PageTree />}>
                     <MenuItemRouterLink
                         primary={intl.formatMessage({
                             id: "menu.pageTree.mainNavigation",
@@ -54,7 +49,6 @@ const MasterMenu: React.FC = () => {
                 </MenuCollapsibleItem>
 
                 <MenuCollapsibleItem
-                    showText={open}
                     primary={intl.formatMessage({ id: "menu.structuredContent", defaultMessage: "Structured Content" })}
                     icon={<Data />}
                 >
@@ -64,31 +58,26 @@ const MasterMenu: React.FC = () => {
                     />
                 </MenuCollapsibleItem>
 
-                <MenuCollapsibleItem
-                    showText={open}
-                    primary={intl.formatMessage({ id: "menu.projectSnips", defaultMessage: "Project snips" })}
-                    icon={<Snips />}
-                >
+                <MenuCollapsibleItem primary={intl.formatMessage({ id: "menu.projectSnips", defaultMessage: "Project snips" })} icon={<Snips />}>
                     <MenuItemRouterLink
                         primary={intl.formatMessage({ id: "menu.mainMenu", defaultMessage: "Main menu" })}
                         to={`${match.url}/project-snips/main-menu`}
                     />
                 </MenuCollapsibleItem>
-                <MenuCollapsibleItem showText={open} primary="Products" icon={<Snips />}>
+                <MenuCollapsibleItem primary="Products" icon={<Snips />}>
                     <MenuItemRouterLink primary="Products" to={`${match.url}/products`} icon={<Snips />} />
                     <MenuItemRouterLink primary="Categories" to={`${match.url}/product-categories`} icon={<Snips />} />
                     <MenuItemRouterLink primary="Tags" to={`${match.url}/product-tags`} icon={<Snips />} />
                     <MenuItemRouterLink primary="Products Handmade" to={`${match.url}/products-handmade`} icon={<Snips />} />
                 </MenuCollapsibleItem>
             </MenuItemGroup>
-            <MenuItemGroup title={intl.formatMessage({ id: "menu.section.furtherLayers", defaultMessage: "Further layers" })} drawerOpen={open}>
+            <MenuItemGroup title={intl.formatMessage({ id: "menu.section.furtherLayers", defaultMessage: "Further layers" })}>
                 <MenuItemRouterLink
-                    showText={open}
                     primary={intl.formatMessage({ id: "menu.dam", defaultMessage: "Assets" })}
                     icon={<Assets />}
                     to={`${match.url}/assets`}
                 />
-                <MenuCollapsibleItem showText={open} primary={intl.formatMessage({ id: "menu.system", defaultMessage: "System" })} icon={<Wrench />}>
+                <MenuCollapsibleItem primary={intl.formatMessage({ id: "menu.system", defaultMessage: "System" })} icon={<Wrench />}>
                     <MenuItemRouterLink
                         primary={intl.formatMessage({ id: "menu.publisher", defaultMessage: "Publisher" })}
                         to={`${match.url}/system/publisher`}
@@ -103,7 +92,6 @@ const MasterMenu: React.FC = () => {
                     />
                 </MenuCollapsibleItem>
                 <MenuItemRouterLink
-                    showText={open}
                     primary={intl.formatMessage({ id: "menu.componentDemo", defaultMessage: "Component demo" })}
                     to={`${match.url}/component-demo`}
                     icon={<Snips />}
