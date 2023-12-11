@@ -92,13 +92,13 @@ const writeComponent = async (icon: Icon, pathData: string) => {
                     */`
                 : ""
         };
-        export default function ${icon.componentName}(props: SvgIconProps): JSX.Element {
+        export function ${icon.componentName}(props: SvgIconProps): JSX.Element {
             return (
                 <SvgIcon {...props} viewBox="0 0 16 16">
                     <path d="${pathData}" />
                 </SvgIcon>
             );
-        }  
+        }
     `);
 
     if (icon.componentName != null && component != null) {
@@ -108,7 +108,7 @@ const writeComponent = async (icon: Icon, pathData: string) => {
 
 const writeIndexFile = async (icons: Icon[]) => {
     const exports = icons.map((icon) => {
-        return `export { default as ${icon.componentName} } from "./${icon.componentName}";`;
+        return `export { ${icon.componentName} } from "./${icon.componentName}";`;
     });
 
     const indexFile = await getFormattedText(exports.join("\n"));
