@@ -104,9 +104,11 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                 const dependencyObject = entityDependencyMap[row.graphqlObjectType] as DependencyInterface | undefined;
 
                 if (dependencyObject === undefined) {
-                    console.warn(
-                        `Cannot log URL because no implementation of DependencyInterface for ${row.graphqlObjectType} was provided via the DependenciesConfig`,
-                    );
+                    if (process.env.NODE_ENV === "development") {
+                        console.warn(
+                            `Cannot load URL because no implementation of DependencyInterface for ${row.graphqlObjectType} was provided via the DependenciesConfig`,
+                        );
+                    }
                     return <FormattedMessage id="comet.dependencies.dataGrid.cannotLoadUrl" defaultMessage="Cannot determine URL" />;
                 }
 
