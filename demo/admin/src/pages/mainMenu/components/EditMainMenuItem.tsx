@@ -24,6 +24,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router-dom";
 
 import { GQLEditMainMenuItemFragment, GQLUpdateMainMenuItemMutation, GQLUpdateMainMenuItemMutationVariables } from "./EditMainMenuItem.generated";
+
 export type { GQLEditMainMenuItemFragment } from "./EditMainMenuItem.generated"; // re-export
 
 export const editMainMenuItemFragment = gql`

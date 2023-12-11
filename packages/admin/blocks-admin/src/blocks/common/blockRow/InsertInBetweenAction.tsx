@@ -1,6 +1,7 @@
 import React from "react";
 
 import * as sc from "./InsertInBetweenAction.sc";
+
 interface Props {
     top?: React.ReactNode;
     bottom?: React.ReactNode;

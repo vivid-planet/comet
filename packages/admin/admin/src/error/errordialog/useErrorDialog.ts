@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { ErrorDialogOptions } from "./ErrorDialog";
 import { errorDialogVar } from "./errorDialogVar";
+
 export interface UseErrorDialogReturn {
     showError: (options: ErrorDialogOptions) => void;
 }

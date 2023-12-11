@@ -4,6 +4,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Tag } from "./Tag";
+
 export const LicenseNotValidYetTag: React.VoidFunctionComponent = () => {
     return (
         <Tag type="error">
