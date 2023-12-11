@@ -267,7 +267,7 @@ export function createColumnsBlock<T extends BlockInterface>({
                                     fullWidth
                                 />
                             </BlocksFinalForm>
-                            <AdminComponentSection title={<FormattedMessage id="comet.blocks.columns.columns" defaultMessage="Columns" />}>
+                            <AdminComponentSection title={<FormattedMessage id="comet.blocks.columns.items" defaultMessage="Items" />}>
                                 <AdminComponentPaper disablePadding>
                                     <StackSwitchApiContext.Consumer>
                                         {(stackApi) => {
