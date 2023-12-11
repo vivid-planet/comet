@@ -21,10 +21,9 @@ interface Section {
 
 interface Props extends FieldRenderProps<ColumnsBlockLayout> {
     layouts: ColumnsBlockLayout[];
-    numberOfMatchingColumns: number;
 }
 
-export function FinalFormLayoutSelect({ input: { value, onChange }, layouts, numberOfMatchingColumns }: Props) {
+export function FinalFormLayoutSelect({ input: { value, onChange }, layouts }: Props) {
     const sections = React.useMemo(() => {
         const sections: Section[] = [];
 
@@ -58,16 +57,15 @@ export function FinalFormLayoutSelect({ input: { value, onChange }, layouts, num
         onChange(layouts.find((layout) => layout.name === event.target.value));
     };
 
-    if (numberOfMatchingColumns === 0) {
-        return null;
-    }
-
-    if (numberOfMatchingColumns === 1 && layouts.length >= 1) {
+    if (layouts.length === 1) {
+        const layout = layouts[0];
         return (
-            <LayoutDisplayContainer>
-                {layouts[0].preview}
-                <ListItemText primary={layouts[0].label} secondary={layouts[0].name} />
-            </LayoutDisplayContainer>
+            <SingleLayoutPreview>
+                <MenuItemContent>
+                    {layout.preview}
+                    <ListItemText primary={layout.label} secondary={layout.name} />
+                </MenuItemContent>
+            </SingleLayoutPreview>
         );
     }
 
@@ -127,13 +125,8 @@ const ListItemText = styled(MuiListItemText)`
     margin-bottom: 0;
 `;
 
-const LayoutDisplayContainer = styled("div")`
-    display: grid;
-    grid-template-columns: minmax(80px, 1fr) 2fr;
-    column-gap: ${({ theme }) => theme.spacing(2)};
-    align-items: center;
-    background-color: #ffffff;
+const SingleLayoutPreview = styled("div")`
+    background-color: ${({ theme }) => theme.palette.background.paper};
     border: 1px solid ${({ theme }) => theme.palette.divider};
     padding: 9px;
-    box-sizing: border-box;
 `;
