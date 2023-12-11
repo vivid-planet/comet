@@ -44,7 +44,7 @@ export { DamConfigProvider } from "./dam/config/DamConfigProvider";
 export { damDefaultAcceptedMimeTypes } from "./dam/config/damDefaultAcceptedMimeTypes";
 export { useDamAcceptedMimeTypes } from "./dam/config/useDamAcceptedMimeTypes";
 export { useDamConfig } from "./dam/config/useDamConfig";
-export { useCurrentDamFolder } from "./dam/CurrentDamFolderContext";
+export { useCurrentDamFolder } from "./dam/CurrentDamFolderProvider";
 export { DamPage } from "./dam/DamPage";
 export { useDamFileUpload } from "./dam/DataGrid/fileUpload/useDamFileUpload";
 export { DashboardHeader, DashboardHeaderProps } from "./dashboard/DashboardHeader";

@@ -21,7 +21,7 @@ import { Button } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { CurrentDamFolderContext } from "./CurrentDamFolderContext";
+import { CurrentDamFolderProvider } from "./CurrentDamFolderProvider";
 import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
 import { UploadFilesButton } from "./DataGrid/fileUpload/UploadFilesButton";
@@ -82,7 +82,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                         </ToolbarItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <CurrentDamFolderContext folderId={id}>{props.additionalToolbarItems}</CurrentDamFolderContext>
+                            <CurrentDamFolderProvider folderId={id}>{props.additionalToolbarItems}</CurrentDamFolderProvider>
                             <DamMoreActions
                                 button={
                                     <Button variant="text" color="inherit" endIcon={<MoreVertical />} sx={{ mx: 2 }}>

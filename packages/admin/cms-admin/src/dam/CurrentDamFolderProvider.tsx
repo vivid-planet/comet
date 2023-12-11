@@ -14,7 +14,7 @@ export function useCurrentDamFolder(): FolderContextType {
     return context;
 }
 
-export function CurrentDamFolderContext({
+export function CurrentDamFolderProvider({
     folderId,
     children,
 }: {

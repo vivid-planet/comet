@@ -1,6 +1,5 @@
 import { CancelButton, messages, SaveButton } from "@comet/admin";
-import { useDamAcceptedMimeTypes, useDamFileUpload } from "@comet/cms-admin";
-import { useCurrentDamFolder } from "@comet/cms-admin/lib/dam/CurrentDamFolderContext";
+import { useCurrentDamFolder, useDamAcceptedMimeTypes, useDamFileUpload } from "@comet/cms-admin";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
