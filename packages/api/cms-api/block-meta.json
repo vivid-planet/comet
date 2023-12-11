@@ -56,40 +56,11 @@
                     "DOWNLOAD"
                 ],
                 "nullable": false
-            },
-            {
-                "name": "tracking",
-                "kind": "NestedObject",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "gtmElementType",
-                            "kind": "String",
-                            "nullable": true
-                        },
-                        {
-                            "name": "gtmElementName",
-                            "kind": "String",
-                            "nullable": true
-                        }
-                    ]
-                },
-                "nullable": true
             }
         ],
         "inputFields": [
             {
                 "name": "fileId",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "gtmElementType",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "gtmElementName",
                 "kind": "String",
                 "nullable": true
             },
