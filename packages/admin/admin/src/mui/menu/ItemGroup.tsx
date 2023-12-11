@@ -40,32 +40,27 @@ const styles = (theme: Theme) =>
 
 export interface MenuItemGroupProps {
     title: string;
+    shortTitle?: string;
 }
 
-const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({ title, children, classes }) => {
+const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({ title, shortTitle, children, classes }) => {
     const { open: menuOpen } = React.useContext(MenuContext);
-    const initialTitle = title;
+    let displayedTitle = title;
     function getInitials(title: string) {
         const words = title.split(/\s+/).filter((word) => word.match(/[A-Za-z]/));
         return words.map((word) => word[0].toUpperCase()).join("");
     }
 
     if (!menuOpen) {
-        title = getInitials(title);
+        displayedTitle = shortTitle || getInitials(title);
     }
 
     return (
         <Box className={classes.root}>
-            <Tooltip
-                placement="right"
-                disableHoverListener={menuOpen}
-                disableFocusListener={menuOpen}
-                disableTouchListener={menuOpen}
-                title={initialTitle}
-            >
+            <Tooltip placement="right" disableHoverListener={menuOpen} disableFocusListener={menuOpen} disableTouchListener={menuOpen} title={title}>
                 <Box className={clsx(classes.titleContainer, menuOpen && classes.titleContainerMenuOpen)}>
                     <Typography className={clsx(classes.title, menuOpen && classes.titleMenuOpen)} variant="h3">
-                        {title}
+                        {displayedTitle}
                     </Typography>
                 </Box>
             </Tooltip>
