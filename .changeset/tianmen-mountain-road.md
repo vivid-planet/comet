@@ -46,15 +46,17 @@ const translationFeature = new Map([
     value={{
         enableTranslation: translationFeature.has(scope),
         translate: async (value: string) => {
-            const translation = await client.query<GQLTranslateQuery, GQLTranslateQueryVariables>({
-                query: gql`
-                    query Translate($value: String!, $language: String!) {
+            if (translationFeature.has(scope)) {
+                const translation = await client.query<GQLTranslateQuery, GQLTranslateQueryVariables>({
+                    query: gql`
+                        query Translate($value: String!, $language: String!) {
                         translate(value: $value, language: $language)
-                    }
-                `,
-                variables: { value, language: translationFeature.get(scope) },
-            });
-            return translation.data.translate;
+                        }
+                    `,
+                    variables: { value, language: translationFeature.get(scope) },
+                });
+                return translation.data.translate;
+            }
         },
     }}
 >
