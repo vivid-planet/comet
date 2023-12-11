@@ -4,10 +4,10 @@ type CurrentDamFolderContext = {
     folderId: string | undefined;
 };
 
-const FolderContext = React.createContext<CurrentDamFolderContext>({ folderId: undefined });
+const CurrentDamFolderContext = React.createContext<CurrentDamFolderContext>({ folderId: undefined });
 
 export function useCurrentDamFolder(): CurrentDamFolderContext {
-    const context = React.useContext(FolderContext);
+    const context = React.useContext(CurrentDamFolderContext);
     if (!context) {
         throw new Error("useFolderContext must be used within a FolderContextProvider");
     }
@@ -21,5 +21,5 @@ export function CurrentDamFolderProvider({
     folderId: CurrentDamFolderContext["folderId"];
     children: React.ReactNode;
 }): React.ReactElement {
-    return <FolderContext.Provider value={{ folderId }}>{children}</FolderContext.Provider>;
+    return <CurrentDamFolderContext.Provider value={{ folderId }}>{children}</CurrentDamFolderContext.Provider>;
 }
