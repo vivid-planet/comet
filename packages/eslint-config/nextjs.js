@@ -5,6 +5,7 @@ module.exports = {
         "react/prop-types": "off",
         "react/self-closing-comp": "error",
         "import/no-extraneous-dependencies": "error",
+        "import/newline-after-import": "error",
         "@comet/no-private-sibling-import": ["error", ["gql", "sc", "gql.generated"]],
         "no-restricted-imports": [
             "error",
