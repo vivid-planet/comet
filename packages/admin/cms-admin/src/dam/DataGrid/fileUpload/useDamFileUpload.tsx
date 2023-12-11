@@ -38,7 +38,7 @@ interface FileWithFolderPath extends FileWithPath {
     folderPath?: string;
 }
 
-interface UploadFileOptions {
+interface UploadDamFileOptions {
     acceptedMimetypes?: string[];
 }
 
@@ -49,13 +49,13 @@ interface Files {
 
 type ImportSource = { importSourceType: never; importSourceId: never } | { importSourceType: string; importSourceId: string };
 
-interface UploadFileOptions {
+interface UploadFilesOptions {
     folderId?: string;
     importSource?: ImportSource;
 }
 
 export interface FileUploadApi {
-    uploadFiles: ({ acceptedFiles, fileRejections }: Files, { folderId, importSource }: UploadFileOptions) => Promise<void>;
+    uploadFiles: ({ acceptedFiles, fileRejections }: Files, { folderId, importSource }: UploadFilesOptions) => Promise<void>;
     validationErrors?: FileUploadValidationError[];
     maxFileSizeInBytes: number;
     dialogs: React.ReactNode;
@@ -105,7 +105,7 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithPath[]): Promise<File
     return newFiles;
 };
 
-export const useDamFileUpload = (options: UploadFileOptions): FileUploadApi => {
+export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi => {
     const onAfterUpload = () => {
         client.reFetchObservableQueries();
         clearDamItemCache(client.cache);
@@ -362,7 +362,7 @@ export const useDamFileUpload = (options: UploadFileOptions): FileUploadApi => {
         [manualDuplicatedFilenamesHandler],
     );
 
-    const uploadFiles = async ({ acceptedFiles, fileRejections }: Files, { folderId, importSource }: UploadFileOptions): Promise<void> => {
+    const uploadFiles = async ({ acceptedFiles, fileRejections }: Files, { folderId, importSource }: UploadFilesOptions): Promise<void> => {
         setProgressDialogOpen(true);
         setValidationErrors(undefined);
 
