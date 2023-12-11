@@ -42,6 +42,7 @@
         "@mui/x-data-grid": "^5.15.2",
         "@mui/x-data-grid-pro": "^5.15.2",
         "axios": "^0.21.0",
+        "change-case": "^5.2.0",
         "date-fns": "^2.0.0",
         "dnd-core": "^10.0.2",
         "draft-js": "^0.11.0",
