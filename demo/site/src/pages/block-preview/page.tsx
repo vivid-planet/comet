@@ -1,7 +1,7 @@
 import { BlockPreviewProvider, IFrameBridgeProvider, useIFrameBridge } from "@comet/cms-site";
-import { recursivelyLoadBlockData } from "@src/blockRegistry";
 import { PageContentBlockData } from "@src/blocks.generated";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
+import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import * as React from "react";
 
