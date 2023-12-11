@@ -6,22 +6,22 @@ import { withPreview } from "../iframebridge/withPreview";
 import { PropsWithData } from "./PropsWithData";
 
 interface Props extends PropsWithData<DamFileDownloadLinkBlockData> {
-    children: React.ReactElement;
+    children: React.ReactNode;
     title?: string;
 }
 
 export const DamFileDownloadLinkBlock = withPreview(
     ({ data: { file, openFileType }, children, title }: Props) => {
         if (file === undefined) {
-            return children;
+            return <>{children}</>;
         }
 
         if (openFileType === "DOWNLOAD") {
-            return React.cloneElement(children, {
-                href: "#",
-                onClick: () => saveAs(file.fileUrl, file.name),
-                title,
-            });
+            return (
+                <a href="#" onClick={() => saveAs(file.fileUrl, file.name)}>
+                    {children}
+                </a>
+            );
         } else if (openFileType === "NEW_TAB") {
             return (
                 <a href={file.fileUrl} target="_blank" rel="noreferrer">
@@ -30,7 +30,7 @@ export const DamFileDownloadLinkBlock = withPreview(
             );
         }
 
-        return children;
+        return <>{children}</>;
     },
     { label: "DamFileDownloadLink" },
 );
