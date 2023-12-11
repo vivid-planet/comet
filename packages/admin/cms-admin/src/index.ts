@@ -97,4 +97,5 @@ import csstype from "csstype";
 // import can not be used here as this file is outside of rootDir
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const version: string = require("../package.json").version;
+
 export { version };
