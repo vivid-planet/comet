@@ -16,7 +16,7 @@ import { CreateBuildsInput } from "./dto/create-builds.input";
 import { SkipBuild } from "./skip-build.decorator";
 
 @Resolver(() => Build)
-@RequiredPermission(["system"], { skipScopeCheck: true }) // Scopes are checked in code
+@RequiredPermission(["builds"], { skipScopeCheck: true }) // Scopes are checked in code
 export class BuildsResolver {
     constructor(
         private readonly kubernetesService: KubernetesService,

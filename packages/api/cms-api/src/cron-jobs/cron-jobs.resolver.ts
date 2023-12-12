@@ -7,7 +7,7 @@ import { RequiredPermission } from "../user-permissions/decorators/required-perm
 import { CronJob } from "./dto/cron-job.object";
 
 @Resolver(() => CronJob)
-@RequiredPermission(["system"], { skipScopeCheck: true })
+@RequiredPermission(["cronJobs"], { skipScopeCheck: true })
 export class CronJobsResolver {
     constructor(private readonly kubernetesService: KubernetesService) {}
 
