@@ -49,7 +49,10 @@ export class UserPermissionsGuard implements CanActivate {
             }
         }
 
-        return requiredPermission.requiredPermission.some((permission) => this.accessControlService.isAllowedPermission(user, permission));
+        const requiredPermissions = Array.isArray(requiredPermission.requiredPermission)
+            ? requiredPermission.requiredPermission
+            : [requiredPermission.requiredPermission];
+        return requiredPermissions.some((permission) => this.accessControlService.isAllowedPermission(user, permission));
     }
 
     // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
