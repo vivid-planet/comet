@@ -69,18 +69,6 @@ export function registerBlock<BlockData = unknown>(blockName: string, options: R
     blocks[blockName] = options;
 }
 
-export async function loadBlockData({ blockType, blockData, client }: { blockType: string; blockData: any; client: GraphQLClient }) {
-    const blockOptions = blocks[blockType];
-    if (blockOptions) {
-        return {
-            ...blockData,
-            loaded: await blockOptions.loader({ blockData, client }),
-        };
-    }
-    return blockData;
-}
-
-// TODO avoid waterfall loading, instead collect promises and await them all at once
 export async function recursivelyLoadBlockData({
     blockType,
     blockData,
@@ -91,45 +79,58 @@ export async function recursivelyLoadBlockData({
     blockData: unknown;
     client: GraphQLClient;
     blocksMeta: BlockMeta[];
-}): Promise<any> {
-    const block = blocksMeta.find((block) => block.name === blockType) as BetterBlockMeta;
-    if (!block) throw new Error("invalid blockType");
-
-    async function iterate(block: BetterBlockMeta | BetterBlockMetaNestedObject, passedBlockData: any) {
+}) {
+    function iterateField(block: BetterBlockMeta | BetterBlockMetaNestedObject, passedBlockData: any) {
         const blockData = { ...passedBlockData };
         for (const field of block.fields) {
             if (!blockData[field.name]) {
                 //null
                 continue;
             } else if (field.kind == "NestedObjectList") {
-                blockData[field.name] = await Promise.all(
-                    blockData[field.name].map(async (i: any) => {
-                        return iterate(field.object, i);
-                    }),
-                );
+                blockData[field.name] = blockData[field.name].map((i: any) => {
+                    return iterateField(field.object, i);
+                });
             } else if (field.kind == "NestedObject") {
-                blockData[field.name] = await iterate(field.object, blockData[field.name]);
+                blockData[field.name] = iterateField(field.object, blockData[field.name]);
             } else if (field.kind == "OneOfBlocks") {
                 const oneOfBlockType = field.blocks[blockData.type];
                 if (!oneOfBlockType) throw new Error("invalid blockType");
-                blockData[field.name] = await recursivelyLoadBlockData({
+                blockData[field.name] = iterateBlock({
                     blockType: oneOfBlockType,
                     blockData: blockData[field.name],
-                    client,
-                    blocksMeta,
                 });
             } else if (field.kind == "Block") {
-                blockData[field.name] = await recursivelyLoadBlockData({
+                blockData[field.name] = iterateBlock({
                     blockType: field.block,
                     blockData: blockData[field.name],
-                    client,
-                    blocksMeta,
                 });
             }
         }
         return blockData;
     }
-    let newBlockData = await iterate(block, blockData);
-    newBlockData = await loadBlockData({ blockType, blockData: newBlockData, client });
-    return newBlockData;
+    const loadedBlockData: any[] = [];
+    function iterateBlock({ blockType, blockData }: { blockType: string; blockData: unknown }) {
+        const block = blocksMeta.find((block) => block.name === blockType) as BetterBlockMeta;
+        if (!block) throw new Error("invalid blockType");
+
+        const newBlockData = iterateField(block, blockData);
+        if (blocks[blockType]) {
+            newBlockData.loaded = blocks[blockType].loader({ blockData, client }); // return unresolved promise
+            loadedBlockData.push(newBlockData);
+        }
+        return newBlockData;
+    }
+
+    // phase 1: iterate (recursively) over all blocks and call loader (and set loaded to unresolved promise)
+    // also populates loadedBlockData with contains all blocks with loaders
+    const ret = iterateBlock({ blockType, blockData });
+
+    // phase 2: wait for all loaders to finish
+    await Promise.all(loadedBlockData.map((blockData) => blockData.loaded));
+
+    // phase 3: patch loaded with resolved promise
+    for (const blockData of loadedBlockData) {
+        blockData.loaded = await blockData.loaded;
+    }
+    return ret;
 }
