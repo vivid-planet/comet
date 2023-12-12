@@ -21,7 +21,7 @@ function ToolbarButton({ editorState, setEditorState }: IControlProps): React.Re
         const xml = transformStateToXml(contentState);
 
         if (translate) {
-            const translationPromises = xml.map(async (item) => ({ original: item, replaceWith: await translate(item) }));
+            const translationPromises = xml.map(async (item) => ({ original: item, replaceWith: (await translate(item)) ?? item }));
             const translations = await Promise.all(translationPromises);
 
             const translatedState = translateAndTransformXmlToState(contentState, convertToRaw(contentState), translations);

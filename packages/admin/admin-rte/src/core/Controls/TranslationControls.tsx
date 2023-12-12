@@ -6,9 +6,9 @@ import TranslationToolbarButton from "../translation/ToolbarButton";
 import { IControlProps } from "../types";
 
 function TranslationControls(props: IControlProps) {
-    const { enableTranslation } = useTranslationConfig();
+    const { enabled } = useTranslationConfig();
 
-    return <ButtonGroup>{enableTranslation && <TranslationToolbarButton {...props} />}</ButtonGroup>;
+    return <ButtonGroup>{enabled && <TranslationToolbarButton {...props} />}</ButtonGroup>;
 }
 
 export default TranslationControls;
