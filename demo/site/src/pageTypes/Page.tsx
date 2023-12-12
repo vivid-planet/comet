@@ -55,17 +55,18 @@ export async function loader({
     });
     if (data.pageContent?.document?.__typename !== "Page") throw new Error("document type must be Page");
 
-    //TODO: load in paralell
-    data.pageContent.document.content = await recursivelyLoadBlockData({
-        blockType: "PageContent",
-        blockData: data.pageContent.document.content,
-        client,
-    });
-    data.pageContent.document.seo = await recursivelyLoadBlockData({
-        blockType: "Seo",
-        blockData: data.pageContent.document.seo,
-        client,
-    });
+    [data.pageContent.document.content, data.pageContent.document.seo] = await Promise.all([
+        recursivelyLoadBlockData({
+            blockType: "PageContent",
+            blockData: data.pageContent.document.content,
+            client,
+        }),
+        recursivelyLoadBlockData({
+            blockType: "Seo",
+            blockData: data.pageContent.document.seo,
+            client,
+        }),
+    ]);
     return data;
 }
 
