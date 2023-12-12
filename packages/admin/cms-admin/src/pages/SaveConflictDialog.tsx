@@ -151,7 +151,7 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                 >
                     <FormattedMessage
                         id="comet.saveConflictDialog.actionButtons.openCurrentVersionInNewTab"
-                        defaultMessage="View the other changes in a new Tab"
+                        defaultMessage="View the other changes in a new tab"
                     />
                 </Button>
             </DialogActions>
