@@ -9,7 +9,7 @@ import { LABEL_ANNOTATION } from "./builds.constants";
 import { BuildTemplateObject } from "./dto/build-template.object";
 
 @Resolver(() => BuildTemplateObject)
-@RequiredPermission(["pageTree"], { skipScopeCheck: true }) // Scopes are checked in Code
+@RequiredPermission(["system"], { skipScopeCheck: true }) // Scopes are checked in Code
 export class BuildTemplatesResolver {
     constructor(private readonly kubernetesService: KubernetesService, private readonly buildTemplatesService: BuildTemplatesService) {}
 
