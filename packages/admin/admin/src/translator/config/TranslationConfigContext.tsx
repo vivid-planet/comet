@@ -1,8 +1,13 @@
 import * as React from "react";
 
 export interface TranslationConfig {
-    enableTranslation?: boolean;
-    translate?: (input: string) => Promise<string>;
+    enabled: boolean;
+    translate: (input: string) => Promise<string | void>;
 }
 
-export const TranslationConfigContext = React.createContext<TranslationConfig | undefined>(undefined);
+export const TranslationConfigContext = React.createContext<TranslationConfig>({
+    enabled: false,
+    translate: async () => {
+        /* Noop */
+    },
+});

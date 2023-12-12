@@ -9,11 +9,19 @@ import { useTranslationConfig } from "../translator/config/useTranslationConfig"
 export type FinalFormInputProps = InputBaseProps &
     FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement> & {
         clearable?: boolean;
-        hideTranslate?: boolean;
+        disableTranslation?: boolean;
     };
 
-export function FinalFormInput({ meta, input, innerRef, endAdornment, clearable, hideTranslate, ...props }: FinalFormInputProps): React.ReactElement {
-    const { enableTranslation, translate } = useTranslationConfig();
+export function FinalFormInput({
+    meta,
+    input,
+    innerRef,
+    endAdornment,
+    clearable,
+    disableTranslation,
+    ...props
+}: FinalFormInputProps): React.ReactElement {
+    const { enabled, translate } = useTranslationConfig();
 
     return (
         <InputBase
@@ -24,7 +32,7 @@ export function FinalFormInput({ meta, input, innerRef, endAdornment, clearable,
                     {clearable && (
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
                     )}
-                    {enableTranslation && !hideTranslate && (
+                    {enabled && !disableTranslation && (
                         <Button
                             onClick={async () => {
                                 if (translate) {
