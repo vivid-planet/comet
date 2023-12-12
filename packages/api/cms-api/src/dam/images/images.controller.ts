@@ -42,7 +42,7 @@ const smartImageUrl = `:fileId/crop::focalPoint([A-Z]{5,9})/resize::resizeWidth:
 const focusImageUrl = `:fileId/crop::cropWidth::cropHeight::focalPoint::cropX::cropY/resize::resizeWidth::resizeHeight/:filename`;
 
 @Controller("dam/images")
-@RequiredPermission(["dam"], { skipScopeCheck: true })
+@RequiredPermission(["dam"], { skipScopeCheck: true }) // Scopes are checked in Code
 export class ImagesController {
     constructor(
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
