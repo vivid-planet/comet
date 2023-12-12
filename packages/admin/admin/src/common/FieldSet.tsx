@@ -22,11 +22,11 @@ export interface FieldSetProps {
     componentsProps?: FieldSetComponentsProps;
 }
 
-export type FieldSetClassKey = "header" | "headerColumn" | "title" | "supportText" | "endAdornment" | "placeholder" | "children" | "disablePadding";
+export type FieldSetClassKey = "root" | "headerColumn" | "title" | "supportText" | "endAdornment" | "placeholder" | "children" | "disablePadding";
 
 const styles = (theme: Theme) =>
     createStyles<FieldSetClassKey, FieldSetProps>({
-        header: {
+        root: {
             display: "flex",
             flexDirection: "row-reverse",
             padding: "0 10px",
@@ -109,7 +109,7 @@ function FieldSet({
             {...componentsProps?.root}
         >
             <MuiAccordionSummary
-                classes={{ root: classes.header }}
+                classes={{ root: classes.root }}
                 expandIcon={collapsible && <ArrowForwardIosSharpIcon />}
                 {...componentsProps?.summary}
             >
