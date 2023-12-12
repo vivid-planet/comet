@@ -25,7 +25,7 @@ imports: [
 ]
 ```
 
-```ts
+```tsx
 
 import { gql, useApolloClient } from "@apollo/client";
 
@@ -42,22 +42,20 @@ const translationFeature = new Map([
 
 ...
 
- <TranslationConfigProvider
-    value={{
-        enableTranslation: translationFeature.has(scope),
-        translate: async (value: string) => {
-            if (translationFeature.has(scope)) {
-                const translation = await client.query<GQLTranslateQuery, GQLTranslateQueryVariables>({
-                    query: gql`
-                        query Translate($value: String!, $language: String!) {
+<TranslationConfigProvider
+    enabled={translationFeature.has(scope)}
+    translate={async function (value: string): Promise<string | void> {
+        if (translationFeature.has(scope)) {
+            const translation = await client.query<GQLTranslateQuery, GQLTranslateQueryVariables>({
+                query: gql`
+                    query Translate($value: String!, $language: String!) {
                         translate(value: $value, language: $language)
-                        }
-                    `,
-                    variables: { value, language: translationFeature.get(scope) },
-                });
-                return translation.data.translate;
-            }
-        },
+                    }
+                `,
+                variables: { value, language: translationFeature.get(scope) },
+            });
+            return translation.data.translate;
+        }
     }}
 >
 ```
