@@ -50,7 +50,7 @@ export function createRedirectsResolver({
     class PaginatedRedirectsArgs extends PaginatedRedirectsArgsFactory.create({ Scope }) {}
 
     @Resolver(() => Redirect)
-    @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
+    @RequiredPermission(["pageTree"], { skipScopeCheck: !hasNonEmptyScope })
     class RedirectsResolver {
         constructor(
             private readonly redirectService: RedirectsService,
