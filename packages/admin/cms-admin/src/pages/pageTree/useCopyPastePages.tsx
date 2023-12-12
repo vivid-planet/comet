@@ -93,7 +93,12 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                                 variables: {
                                     id: page.id,
                                 },
-                                context: LocalErrorScopeApolloContext,
+                                context: {
+                                    headers: {
+                                        "x-preview-dam-urls": "1",
+                                    },
+                                    LocalErrorScopeApolloContext,
+                                },
                             });
 
                             const clipboardPage: PageClipboard = { ...page, document: data?.page?.document };

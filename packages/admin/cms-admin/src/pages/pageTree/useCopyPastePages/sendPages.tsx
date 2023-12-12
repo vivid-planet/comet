@@ -98,7 +98,6 @@ export async function sendPages(
     const dependencyReplacements = createPageTreeNodeIdReplacements(pages);
     let inboxFolderIdForCopiedFiles: string | undefined = undefined;
     const hasDamScope = Object.entries(damScope).length > 0;
-    const apiUrlOrigin = new URL(blockContext.damConfig.apiUrl).origin;
 
     // 1. find all source scopes of file dependencies, to create an dam inbox folder if needed
     updateProgress(0, <FormattedMessage id="comet.pages.paste.analyzingPages" defaultMessage="analyzing pages" />);
@@ -115,7 +114,7 @@ export async function sendPages(
                     //TODO use damFile.size; to build a progress bar for uploading/downloading files
                     if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
                         //file already handled (same file used multiple times on page)
-                    } else if (damFile.fileUrl.startsWith(apiUrlOrigin) && (!hasDamScope || isEqual(damFile.scope, damScope))) {
+                    } else if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl) && (!hasDamScope || isEqual(damFile.scope, damScope))) {
                         //same scope, same server, no need to copy
                     } else {
                         // TODO eventually handle multiple files in one request for better performance
@@ -271,7 +270,7 @@ export async function sendPages(
                 for (const damFile of fileDependenciesFromDocument(documentType, sourcePage.document)) {
                     if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
                         //already copied
-                    } else if (damFile.fileUrl.startsWith(apiUrlOrigin)) {
+                    } else if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl)) {
                         //our own api, no need to download&upload
                         if (!hasDamScope || isEqual(damFile.scope, damScope)) {
                             //same scope, same server, no need to copy
