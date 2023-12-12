@@ -293,7 +293,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                             </ToolbarTitleItem>
                             <ToolbarFillSpace />
                             <ToolbarActions>
-                                <FinalFormSaveSplitButton />
+                                <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
                             </ToolbarActions>
                         </Toolbar>
                         <MainContent>
