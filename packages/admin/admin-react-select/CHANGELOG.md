@@ -1,5 +1,13 @@
 # @comet/admin-react-select
 
+## 5.2.0
+
+### Patch Changes
+
+-   Updated dependencies [25daac07]
+-   Updated dependencies [0bed4e7c]
+    -   @comet/admin@5.2.0
+
 ## 5.1.0
 
 ### Patch Changes
