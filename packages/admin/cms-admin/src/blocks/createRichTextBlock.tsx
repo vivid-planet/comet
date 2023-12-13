@@ -120,6 +120,7 @@ export const createRichTextBlock = (
             "link",
             "links-remove",
             "non-breaking-space",
+            "soft-hyphen",
         ],
         draftJsProps: {
             spellCheck: true,
