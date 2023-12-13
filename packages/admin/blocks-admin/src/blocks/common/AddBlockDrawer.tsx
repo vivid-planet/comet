@@ -64,6 +64,12 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props):
             let label: React.ReactNode;
 
             if (isCustomBlockCategory(block.category)) {
+                if (block.category.id in BlockCategory) {
+                    throw new Error(
+                        `Custom block category "${block.category.id}" cannot override default block category BlockCategory.${block.category.id}`,
+                    );
+                }
+
                 id = block.category.id;
                 label = block.category.label;
 
