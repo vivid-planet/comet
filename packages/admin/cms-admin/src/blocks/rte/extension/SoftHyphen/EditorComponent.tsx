@@ -18,6 +18,9 @@ const VisibleHyphen = styled("span")`
 // children must be rendered, although &shy; is invisible
 // https://github.com/facebook/draft-js/issues/1558
 
+/**
+ * @deprecated Use SoftHyphen `EditorComponent` from `@comet/admin-rte` instead
+ */
 export function EditorComponent(props: IProps): React.ReactElement {
     return <VisibleHyphen>{props.children}</VisibleHyphen>;
 }

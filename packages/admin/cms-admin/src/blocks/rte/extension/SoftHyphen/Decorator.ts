@@ -4,6 +4,9 @@ import { EditorComponent } from "./EditorComponent";
 
 const SHY_UNICHAR_REGEX = /\u00ad/g;
 
+/**
+ * @deprecated Use SoftHyphen `Decorator` from `@comet/admin-rte` instead
+ */
 export const Decorator: DraftDecorator = {
     strategy: (contentBlock, callback) => {
         findWithRegex(SHY_UNICHAR_REGEX, contentBlock, callback);

@@ -8,6 +8,9 @@ import { FormattedMessage } from "react-intl";
 
 const SHY_UNICODE_CHAR = 0x00ad;
 
+/**
+ * @deprecated Use SoftHyphen `ToolbarButton` from `@comet/admin-rte` instead
+ */
 export function ToolbarButton({ editorState, setEditorState }: IControlProps): React.ReactElement {
     function handleClick(e: React.MouseEvent) {
         e.preventDefault(); // important to preserve focus
