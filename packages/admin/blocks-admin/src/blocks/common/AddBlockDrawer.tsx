@@ -19,7 +19,7 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage, MessageDescriptor, useIntl } from "react-intl";
 
-import { BlockCategory, blockCategoryLabels, BlockInterface } from "../types";
+import { BlockCategory, blockCategoryLabels, BlockInterface, CustomBlockCategory } from "../types";
 
 type BlockType = string;
 
@@ -63,16 +63,9 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props):
             let id: string;
             let label: React.ReactNode;
 
-            if (typeof block.category === "object") {
-                if (typeof block.category.label === "string") {
-                    id = block.category.label;
-                    label = block.category.label;
-                } else if (isFormattedMessage(block.category.label)) {
-                    id = intl.formatMessage(block.category.label.props);
-                    label = block.category.label;
-                } else {
-                    throw new TypeError("Custom category label must be either a string or a FormattedMessage");
-                }
+            if (isCustomBlockCategory(block.category)) {
+                id = block.category.id;
+                label = block.category.label;
 
                 if (block.category.insertBefore) {
                     const insertBeforeIndex = categoriesOrder.indexOf(block.category.insertBefore);
@@ -183,6 +176,10 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props):
             </Content>
         </Drawer>
     );
+}
+
+function isCustomBlockCategory(category: BlockCategory | CustomBlockCategory): category is CustomBlockCategory {
+    return typeof category === "object";
 }
 
 function isFormattedMessage(node: React.ReactNode): node is React.ReactElement<MessageDescriptor> {

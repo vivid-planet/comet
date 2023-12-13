@@ -150,7 +150,7 @@ export enum BlockCategory {
     Other = "Other",
 }
 
-export type CustomBlockCategory = { label: string | React.ReactElement<MessageDescriptor>; insertBefore?: BlockCategory };
+export type CustomBlockCategory = { id: string; label: string | React.ReactElement<MessageDescriptor>; insertBefore?: BlockCategory };
 
 export const blockCategoryLabels = {
     [BlockCategory.TextAndContent]: <FormattedMessage id="comet.blocks.category.textAndContent" defaultMessage="Text & Content" />,
