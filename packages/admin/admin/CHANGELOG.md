@@ -1,5 +1,20 @@
 # @comet/admin
 
+## 5.2.0
+
+### Minor Changes
+
+-   0bed4e7c: Add optional `hasConflict` prop to `SaveButton`, `FinalFormSaveButton` and `FinalFormSaveSplitButton`
+
+    If set to `true`, a new "conflict" display state is triggered.
+    You should pass the `hasConflict` prop returned by `useSaveConflict()`, `useSaveConflictQuery()` and `useFormSaveConflict()`.
+
+### Patch Changes
+
+-   25daac07: Avoid remount of `RouterTab` with `forceRender={true}` when `RouterTabs` are used inside a `Stack`
+-   Updated dependencies [9fc7d474]
+    -   @comet/admin-icons@5.2.0
+
 ## 5.1.0
 
 ### Minor Changes
