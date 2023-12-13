@@ -75,9 +75,14 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props):
 
                 if (block.category.insertBefore) {
                     const insertBeforeIndex = categoriesOrder.indexOf(block.category.insertBefore);
-                    categoriesOrder.splice(insertBeforeIndex, 0, id);
+
+                    if (!categoriesOrder.includes(id)) {
+                        categoriesOrder.splice(insertBeforeIndex, 0, id);
+                    }
                 } else {
-                    categoriesOrder.push(id);
+                    if (!categoriesOrder.includes(id)) {
+                        categoriesOrder.push(id);
+                    }
                 }
             } else {
                 id = block.category;
