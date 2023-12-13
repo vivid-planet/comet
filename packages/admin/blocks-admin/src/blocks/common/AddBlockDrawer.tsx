@@ -76,7 +76,13 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props):
                 if (block.category.insertBefore) {
                     const insertBeforeIndex = categoriesOrder.indexOf(block.category.insertBefore);
 
-                    if (!categoriesOrder.includes(id)) {
+                    if (categoriesOrder.includes(id)) {
+                        const hasDifferentInsertBefore = insertBeforeIndex - 1 !== categoriesOrder.indexOf(id);
+
+                        if (hasDifferentInsertBefore) {
+                            throw new Error(`Custom block category "${id}" has different "insertBefore" values`);
+                        }
+                    } else {
                         categoriesOrder.splice(insertBeforeIndex, 0, id);
                     }
                 } else {
