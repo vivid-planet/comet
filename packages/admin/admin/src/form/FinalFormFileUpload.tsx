@@ -119,7 +119,7 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
     // list of the accepted files
     const files = myFiles.map((file) => (
         <div key={file.name} className={classes.fileListItem}>
-            {file.name}
+            {`${file.name.substring(0, 20)}...`}
             <div>
                 <Chip label={formatBytes(file.size)} />
                 <IconButton onClick={removeFile(file)}>
