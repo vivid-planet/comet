@@ -2,10 +2,9 @@
 "@comet/cms-admin": patch
 ---
 
-// TODO: update
 
-Only use the origin (`http://localhost:4000`) of a URL to check if files must be downloaded when copying a page
+Always use the `/preview` file URLs in the admin application
 
-This makes the check resistant against prefixes in the URL, e.g. `/api` in `http://localhost:4000/api`.
+This is achieved by setting the `x-preview-dam-urls` in the `includeInvisibleContentContext`.
 
-Previously, all files were downloaded and uploaded again even when copying within the same environment.
+This fixes a page copy bug where all files were downloaded and uploaded again, even when copying within the same environment.
