@@ -18,9 +18,6 @@ export const createApolloClient = (apiUrl: string) => {
     return new ApolloClient({
         link,
         cache,
-        headers: {
-            "x-preview-dam-urls": "1",
-        },
         defaultOptions: {
             // useQuery uses watchQuery while client.query uses query
             watchQuery: {
