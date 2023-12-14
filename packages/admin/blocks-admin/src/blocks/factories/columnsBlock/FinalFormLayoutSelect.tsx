@@ -23,7 +23,7 @@ interface Props extends FieldRenderProps<ColumnsBlockLayout> {
     layouts: ColumnsBlockLayout[];
 }
 
-export function FinalFormLayoutSelect({ input: { value, onChange }, layouts }: Props): React.ReactElement {
+export function FinalFormLayoutSelect({ input: { value, onChange }, layouts }: Props) {
     const sections = React.useMemo(() => {
         const sections: Section[] = [];
 
@@ -56,6 +56,18 @@ export function FinalFormLayoutSelect({ input: { value, onChange }, layouts }: P
 
         onChange(layouts.find((layout) => layout.name === event.target.value));
     };
+
+    if (layouts.length === 1) {
+        const layout = layouts[0];
+        return (
+            <SingleLayoutPreview>
+                <MenuItemContent>
+                    {layout.preview}
+                    <ListItemText primary={layout.label} secondary={layout.name} />
+                </MenuItemContent>
+            </SingleLayoutPreview>
+        );
+    }
 
     return (
         <Select value={value.name} onChange={handleChange} fullWidth>
@@ -111,4 +123,10 @@ const MenuItemContent = styled("div")`
 const ListItemText = styled(MuiListItemText)`
     margin-top: 0;
     margin-bottom: 0;
+`;
+
+const SingleLayoutPreview = styled("div")`
+    background-color: ${({ theme }) => theme.palette.background.paper};
+    border: 1px solid ${({ theme }) => theme.palette.divider};
+    padding: 9px;
 `;

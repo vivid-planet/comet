@@ -3,7 +3,6 @@ import { Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 
 import { CurrentUser } from "./current-user";
-import { UserService } from "./user.service";
 
 @Module({
     providers: [
@@ -24,8 +23,6 @@ import { UserService } from "./user.service";
             provide: APP_GUARD,
             useClass: createCometAuthGuard(["static-authed-user"]),
         },
-        UserService,
     ],
-    exports: [UserService],
 })
 export class AuthModule {}

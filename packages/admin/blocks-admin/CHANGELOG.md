@@ -1,5 +1,25 @@
 # @comet/blocks-admin
 
+## 5.2.0
+
+### Minor Changes
+
+-   824ea66a: Improve layout selection UX in `createColumnsBlock`
+
+    Hide select when there's only one layout for a specific number of columns
+
+### Patch Changes
+
+-   3702bb23: Infer additional item fields in `BlocksBlock` and `ListBlock`
+
+    Additional fields in the `item` prop of `AdditionalItemContextMenuItems` and `AdditionalItemContent` will be typed correctly if the `additionalItemFields` option is strongly typed.
+
+-   Updated dependencies [25daac07]
+-   Updated dependencies [0bed4e7c]
+-   Updated dependencies [9fc7d474]
+    -   @comet/admin@5.2.0
+    -   @comet/admin-icons@5.2.0
+
 ## 5.1.0
 
 ### Patch Changes
