@@ -4,22 +4,9 @@
 
 Add support for custom block categories
 
-Minimal example:
+Allows specifying custom block categories in application code.
 
-```tsx
-const MyBlock: BlockInterface = {
-    category: {
-        id: "Products",
-        label: <FormattedMessage id="blocks.category.products" defaultMessage="Products" />,
-        insertBefore: BlockCategory.Teaser,
-    },
-    ...
-};
-```
-
-Use `insertBefore` to specify where the custom block category will be shown in the `AddBlockDrawer`.
-
-Although it is possible to define a custom block category at the block level, we recommend to define it in a central place for better reusability instead.
+**Example:**
 
 In `src/common/blocks/customBlockCategories.tsx`:
 
@@ -31,6 +18,7 @@ import { FormattedMessage } from "react-intl";
 const productsBlockCategory: CustomBlockCategory = {
     id: "Products",
     label: <FormattedMessage id="blocks.category.products" defaultMessage="Products" />,
+    // Specify where category will be shown in drawer
     insertBefore: BlockCategory.Teaser,
 };
 
