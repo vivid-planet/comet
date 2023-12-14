@@ -2749,6 +2749,9 @@ importers:
       '@types/jsonwebtoken':
         specifier: ^8.5.9
         version: 8.5.9
+      file-saver:
+        specifier: 2.0.5
+        version: 2.0.5
       jsonwebtoken:
         specifier: ^8.5.1
         version: 8.5.1
@@ -2777,6 +2780,9 @@ importers:
       '@testing-library/react-hooks':
         specifier: ^8.0.0
         version: 8.0.1(@types/react@17.0.53)(react-dom@17.0.2)(react@17.0.2)
+      '@types/file-saver':
+        specifier: ^2.0.5
+        version: 2.0.5
       '@types/jest':
         specifier: ^29.5.0
         version: 29.5.0

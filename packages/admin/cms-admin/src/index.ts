@@ -8,6 +8,7 @@ export { createSeoBlock } from "./blocks/createSeoBlock";
 export type { TextImageBlockFactoryOptions } from "./blocks/createTextImageBlock";
 export { createTextImageBlock } from "./blocks/createTextImageBlock";
 export { createTextLinkBlock } from "./blocks/createTextLinkBlock";
+export { DamFileDownloadLinkBlock } from "./blocks/DamFileDownloadLinkBlock";
 export { DamVideoBlock } from "./blocks/DamVideoBlock";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { EditImageDialog } from "./blocks/image/EditImageDialog";
