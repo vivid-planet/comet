@@ -17,8 +17,11 @@ export class UserPermissionsGuard implements CanActivate {
     ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        const isPublicApi = this.reflector.getAllAndOverride("publicApi", [context.getHandler(), context.getClass()]);
-        if (isPublicApi) {
+        if (this.reflector.getAllAndOverride("disableGlobalGuard", [context.getHandler(), context.getClass()])) {
+            return true;
+        }
+
+        if (this.reflector.getAllAndOverride("publicApi", [context.getHandler(), context.getClass()])) {
             return true;
         }
 

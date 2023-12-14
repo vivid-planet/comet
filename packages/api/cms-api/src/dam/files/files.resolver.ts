@@ -10,7 +10,7 @@ import { SkipBuild } from "../../builds/skip-build.decorator";
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
-import { ScopeGuardActive } from "../../user-permissions/decorators/scope-guard-active.decorator";
+import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
@@ -46,7 +46,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
     @ObjectType()
     class PaginatedDamFiles extends PaginatedResponseFactory.create(File) {}
 
-    @ScopeGuardActive(hasNonEmptyScope)
+    @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
     @Resolver(() => File)
     class FilesResolver {
         constructor(

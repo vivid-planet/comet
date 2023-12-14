@@ -35,7 +35,9 @@ export class UserPermissionsService {
     }
 
     async getAvailablePermissions(): Promise<(keyof Permission)[]> {
-        return [...new Set<keyof Permission>(["dam", "pageTree", "userPermissions", "system", ...(this.options.availablePermissions ?? [])])];
+        return [
+            ...new Set<keyof Permission>(["dam", "pageTree", "userPermissions", "cronJobs", "builds", ...(this.options.availablePermissions ?? [])]),
+        ];
     }
 
     async getUser(id: string): Promise<User> {

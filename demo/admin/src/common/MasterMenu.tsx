@@ -136,6 +136,7 @@ export const masterMenuData: MasterMenuData = [
                     path: "/system/publisher",
                     component: PublisherPage,
                 },
+                requiredPermission: "builds",
             },
             {
                 primary: <FormattedMessage id="menu.cronJobs" defaultMessage="Cron Jobs" />,
@@ -143,6 +144,7 @@ export const masterMenuData: MasterMenuData = [
                     path: "/system/cron-jobs",
                     component: CronJobsPage,
                 },
+                requiredPermission: "cronJobs",
             },
             {
                 primary: <FormattedMessage id="menu.redirects" defaultMessage="Redirects" />,
@@ -150,9 +152,9 @@ export const masterMenuData: MasterMenuData = [
                     path: "/system/redirects",
                     render: () => <RedirectsPage redirectPathAfterChange="/system/redirects" />,
                 },
+                requiredPermission: "pageTree",
             },
         ],
-        requiredPermission: "system",
     },
     {
         primary: <FormattedMessage id="menu.componentDemo" defaultMessage="Component demo" />,

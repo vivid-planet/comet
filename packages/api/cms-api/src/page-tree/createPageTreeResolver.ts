@@ -6,6 +6,7 @@ import { PaginatedResponseFactory } from "../common/pagination/paginated-respons
 import { DynamicDtoValidationPipe } from "../common/validation/dynamic-dto-validation.pipe";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
 import { EmptyPageTreeNodeScope } from "./dto/empty-page-tree-node-scope";
 import {
@@ -67,6 +68,7 @@ export function createPageTreeResolver({
     });
 
     @Resolver(() => PageTreeNode)
+    @RequiredPermission(["pageTree"], { skipScopeCheck: !hasNonEmptyScope })
     class PageTreeResolver {
         constructor(
             protected readonly pageTreeService: PageTreeService,

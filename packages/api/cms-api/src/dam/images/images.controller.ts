@@ -10,6 +10,7 @@ import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
+import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { ScaledImagesCacheService } from "../cache/scaled-images-cache.service";
@@ -41,6 +42,7 @@ const smartImageUrl = `:fileId/crop::focalPoint([A-Z]{5,9})/resize::resizeWidth:
 const focusImageUrl = `:fileId/crop::cropWidth::cropHeight::focalPoint::cropX::cropY/resize::resizeWidth::resizeHeight/:filename`;
 
 @Controller("dam/images")
+@RequiredPermission(["dam"], { skipScopeCheck: true }) // Scopes are checked in Code
 export class ImagesController {
     constructor(
         @Inject(DAM_CONFIG) private readonly config: DamConfig,

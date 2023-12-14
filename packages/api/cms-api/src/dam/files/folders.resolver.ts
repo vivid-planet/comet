@@ -4,7 +4,7 @@ import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver }
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
-import { ScopeGuardActive } from "../../user-permissions/decorators/scope-guard-active.decorator";
+import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { DamScopeInterface } from "../types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFolderArgs, createFolderByNameAndParentIdArgs, FolderArgsInterface, FolderByNameAndParentIdArgsInterface } from "./dto/folder.args";
@@ -36,7 +36,7 @@ export function createFoldersResolver({
     @ObjectType()
     class PaginatedDamFolders extends PaginatedResponseFactory.create(Folder) {}
 
-    @ScopeGuardActive(hasNonEmptyScope)
+    @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
     @Resolver(() => Folder)
     class FoldersResolver {
         constructor(private readonly foldersService: FoldersService) {}

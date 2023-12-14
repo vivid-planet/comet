@@ -9,7 +9,7 @@ import { PaginatedResponseFactory } from "../common/pagination/paginated-respons
 import { DynamicDtoValidationPipe } from "../common/validation/dynamic-dto-validation.pipe";
 import { validateNotModified } from "../document/validateNotModified";
 import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
-import { ScopeGuardActive } from "../user-permissions/decorators/scope-guard-active.decorator";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { EmptyRedirectScope } from "./dto/empty-redirect-scope";
 import { PaginatedRedirectsArgsFactory } from "./dto/paginated-redirects-args.factory";
 import { RedirectInputInterface } from "./dto/redirect-input.factory";
@@ -50,7 +50,7 @@ export function createRedirectsResolver({
     class PaginatedRedirectsArgs extends PaginatedRedirectsArgsFactory.create({ Scope }) {}
 
     @Resolver(() => Redirect)
-    @ScopeGuardActive(hasNonEmptyScope)
+    @RequiredPermission(["pageTree"], { skipScopeCheck: !hasNonEmptyScope })
     class RedirectsResolver {
         constructor(
             private readonly redirectService: RedirectsService,
