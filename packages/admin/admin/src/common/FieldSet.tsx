@@ -22,11 +22,21 @@ export interface FieldSetProps {
     componentsProps?: FieldSetComponentsProps;
 }
 
-export type FieldSetClassKey = "root" | "headerColumn" | "title" | "supportText" | "endAdornment" | "placeholder" | "children" | "disablePadding";
+export type FieldSetClassKey =
+    | "root"
+    | "summary"
+    | "headerColumn"
+    | "title"
+    | "supportText"
+    | "endAdornment"
+    | "placeholder"
+    | "children"
+    | "disablePadding";
 
 const styles = (theme: Theme) =>
     createStyles<FieldSetClassKey, FieldSetProps>({
-        root: {
+        root: {},
+        summary: {
             display: "flex",
             flexDirection: "row-reverse",
             padding: "0 10px",
@@ -106,19 +116,20 @@ function FieldSet({
                           /* do nothing */
                       }
             }
+            className={classes.root}
             {...componentsProps?.root}
         >
             <MuiAccordionSummary
-                classes={{ root: classes.root }}
+                classes={{ root: classes.summary }}
                 expandIcon={collapsible && <ArrowForwardIosSharpIcon />}
                 {...componentsProps?.summary}
             >
-                <div className={clsx(classes.headerColumn)}>
-                    <div className={clsx(classes.title)}>{title}</div>
-                    <div className={clsx(classes.supportText)}>{supportText}</div>
+                <div className={classes.headerColumn}>
+                    <div className={classes.title}>{title}</div>
+                    <div className={classes.supportText}>{supportText}</div>
                 </div>
-                <div className={clsx(classes.placeholder)} />
-                <div className={clsx(classes.endAdornment)}>{endAdornment}</div>
+                <div className={classes.placeholder} />
+                <div className={classes.endAdornment}>{endAdornment}</div>
             </MuiAccordionSummary>
             <MuiAccordionDetails className={clsx(classes.children, disablePadding && classes.disablePadding)} {...componentsProps?.details}>
                 {children}
