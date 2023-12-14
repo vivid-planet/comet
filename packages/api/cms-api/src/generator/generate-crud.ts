@@ -18,7 +18,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
     const crudSearchPropNames = metadata.props
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "search") && !prop.name.startsWith("scope_"))
         .reduce((acc, prop) => {
-            if (prop.type === "string") {
+            if (prop.type === "string" || prop.type === "text") {
                 acc.push(prop.name);
             } else if (prop.reference == "m:1") {
                 if (!prop.targetMeta) {
@@ -28,7 +28,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     .filter((innerProp) => hasFieldFeature(prop.targetMeta!.class, innerProp.name, "search") && !innerProp.name.startsWith("scope_"))
                     .forEach((innerProp) => {
-                        if (innerProp.type === "string") {
+                        if (innerProp.type === "string" || innerProp.type === "text") {
                             acc.push(`${prop.name}.${innerProp.name}`);
                         }
                     });
@@ -43,6 +43,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
             !prop.name.startsWith("scope_") &&
             (prop.enum ||
                 prop.type === "string" ||
+                prop.type === "text" ||
                 prop.type === "DecimalType" ||
                 prop.type === "number" ||
                 integerTypes.includes(prop.type) ||
@@ -58,6 +59,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
             hasFieldFeature(metadata.class, prop.name, "sort") &&
             !prop.name.startsWith("scope_") &&
             (prop.type === "string" ||
+                prop.type === "text" ||
                 prop.type === "DecimalType" ||
                 prop.type === "number" ||
                 integerTypes.includes(prop.type) ||
@@ -140,7 +142,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     @Type(() => ${enumName}EnumFilter)
                     ${prop.name}?: ${enumName}EnumFilter;
                     `;
-                } else if (prop.type === "string") {
+                } else if (prop.type === "string" || prop.type === "text") {
                     return `@Field(() => StringFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
