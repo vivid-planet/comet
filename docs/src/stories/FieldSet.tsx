@@ -6,7 +6,7 @@ import * as React from "react";
 function Story() {
     return (
         <>
-            <Typography variant="h4">Collapsible FieldSet initial collapsed</Typography>
+            <Typography variant="h4">Collapsible FieldSet initially collapsed</Typography>
             <FieldSet
                 title={
                     <>
