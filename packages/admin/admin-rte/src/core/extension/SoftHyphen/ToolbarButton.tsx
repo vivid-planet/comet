@@ -32,5 +32,3 @@ export function ToolbarButton({ editorState, setEditorState }: IControlProps): R
         </Tooltip>
     );
 }
-
-export default ToolbarButton;
