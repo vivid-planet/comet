@@ -5,6 +5,7 @@ import { Shadows } from "@mui/material/styles/shadows";
 import { ZIndex } from "@mui/material/styles/zIndex";
 import { Spacing } from "@mui/system";
 
+import { getMuiAccordion } from "./MuiAccordion";
 import { getMuiAppBar } from "./MuiAppBar";
 import { getMuiAutocomplete } from "./MuiAutocomplete";
 import { getMuiButton } from "./MuiButton";
@@ -60,6 +61,7 @@ export type GetMuiComponentTheme<ClassesName extends keyof ComponentNameToClassK
 
 export const getComponentsTheme = (components: Components, themeData: ThemeData): ThemeOptions["components"] => ({
     ...components,
+    MuiAccordion: getMuiAccordion(components.MuiAccordion, themeData),
     MuiAppBar: getMuiAppBar(components.MuiAppBar, themeData),
     MuiAutocomplete: getMuiAutocomplete(components.MuiAutocomplete, themeData),
     MuiButton: getMuiButton(components.MuiButton, themeData),
