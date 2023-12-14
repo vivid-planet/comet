@@ -113,13 +113,7 @@ async function generateSchema(): Promise<void> {
         RedirectsDependenciesResolver,
         PageTreeDependentsResolver,
         FileDependentsResolver,
-<<<<<<< HEAD
-        UserResolver,
-        UserPermissionResolver,
-        UserContentScopesResolver,
         SitePreviewResolver,
-=======
->>>>>>> main
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

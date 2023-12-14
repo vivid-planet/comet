@@ -123,46 +123,11 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
-<<<<<<< HEAD
-type CurrentUserPermission {
-  permission: String!
-}
-
-type User {
-  id: String!
-  name: String!
-  email: String!
-  language: String!
-}
-
-type UserPermission {
-  id: ID!
-  source: UserPermissionSource
-  permission: String!
-  validFrom: DateTime
-  validTo: DateTime
-  reason: String
-  requestedBy: String
-  approvedBy: String
-}
-
-enum UserPermissionSource {
-  MANUAL
-  BY_RULE
-}
-
-type PaginatedUserList {
-  nodes: [User!]!
-  totalCount: Int!
-}
-
 type SitePreviewHash {
   timestamp: Float!
   hash: String!
 }
 
-=======
->>>>>>> main
 type PageTreeNode {
   id: ID!
   parentId: String
@@ -344,18 +309,8 @@ type Query {
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   cronJobs: [CronJob!]!
   currentUser: CurrentUser!
-<<<<<<< HEAD
-  userPermissionsUserById(id: String!): User!
-  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
-  userPermissionsPermissionList(userId: String!): [UserPermission!]!
-  userPermissionsPermission(id: ID!, userId: String): UserPermission!
-  userPermissionsAvailablePermissions: [String!]!
-  userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
-  userPermissionsAvailableContentScopes: [JSONObject!]!
   getSitePreviewHash: SitePreviewHash!
   validateSitePreviewHash(timestamp: Float!, hash: String!): Boolean!
-=======
->>>>>>> main
 }
 
 input RedirectScopeInput {

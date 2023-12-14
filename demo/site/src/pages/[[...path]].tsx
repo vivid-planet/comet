@@ -48,74 +48,29 @@ const pageTypes = {
 };
 
 export const getStaticProps: GetStaticProps<PageProps, ParsedUrlQuery, PreviewData> = async ({ params, previewData, locale = defaultLanguage }) => {
+    const client = createGraphQLClient(previewData);
     const path = params?.path ?? "";
-    const contentScope = { domain, language: locale };
+    const scope = { domain, language: locale };
     //fetch pageType
-    const data = await createGraphQLClient(previewData).request<GQLPageTypeQuery, GQLPageTypeQueryVariables>(pageTypeQuery, {
+    const data = await client.request<GQLPageTypeQuery, GQLPageTypeQueryVariables>(pageTypeQuery, {
         path: `/${Array.isArray(path) ? path.join("/") : path}`,
-        contentScope,
+        scope,
     });
     if (!data.pageTreeNodeByPath?.documentType) {
         // eslint-disable-next-line no-console
         console.log("got no data from api", data, path);
         return { notFound: true };
     }
-    const pageId = data.pageTreeNodeByPath.id;
+    const pageTreeNodeId = data.pageTreeNodeByPath.id;
 
     //pageType dependent query
-    const { query: queryForPageType } = pageTypes[data.pageTreeNodeByPath.documentType];
-    const pageTypeData = await createGraphQLClient(previewData).request<GQLPage>(queryForPageType, {
-        pageId,
-        domain: contentScope.domain,
-        language: contentScope.language,
-    });
-
-<<<<<<< HEAD
+    const { loader: loaderForPageType } = pageTypes[data.pageTreeNodeByPath.documentType];
     return {
         props: {
-            ...pageTypeData,
+            ...(await loaderForPageType({ client, scope, pageTreeNodeId })),
             documentType: data.pageTreeNodeByPath.documentType,
-            id: pageId,
+            id: pageTreeNodeId,
         },
-=======
-// a function to create a universal function which can be used as getStaticProps or getServerSideProps (preview)
-export function createGetUniversalProps({
-    includeInvisiblePages = false,
-    includeInvisibleBlocks = false,
-    previewDamUrls = false,
-}: CreateGetUniversalPropsOptions = {}) {
-    return async function getUniversalProps<Context extends GetStaticPropsContext | GetServerSidePropsContext>({
-        params,
-        locale = defaultLanguage,
-    }: Context): Promise<
-        Context extends GetStaticPropsContext ? GetStaticPropsResult<PageUniversalProps> : GetServerSidePropsResult<PageUniversalProps>
-    > {
-        const client = createGraphQLClient({ includeInvisiblePages, includeInvisibleBlocks, previewDamUrls });
-        const path = params?.path ?? "";
-        const scope = { domain, language: locale };
-
-        //fetch pageType
-        const data = await client.request<GQLPageTypeQuery, GQLPageTypeQueryVariables>(pageTypeQuery, {
-            path: `/${Array.isArray(path) ? path.join("/") : path}`,
-            scope,
-        });
-        if (!data.pageTreeNodeByPath?.documentType) {
-            // eslint-disable-next-line no-console
-            console.log("got no data from api", data, path);
-            return { notFound: true };
-        }
-        const pageTreeNodeId = data.pageTreeNodeByPath.id;
-
-        //pageType dependent query
-        const { loader: loaderForPageType } = pageTypes[data.pageTreeNodeByPath.documentType];
-        return {
-            props: {
-                ...(await loaderForPageType({ client, scope, pageTreeNodeId })),
-                documentType: data.pageTreeNodeByPath.documentType,
-                id: pageTreeNodeId,
-            },
-        };
->>>>>>> main
     };
 };
 

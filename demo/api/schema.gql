@@ -127,46 +127,11 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
-<<<<<<< HEAD
 type SitePreviewHash {
   timestamp: Float!
   hash: String!
 }
 
-type CurrentUserPermission {
-  permission: String!
-}
-
-type User {
-  id: String!
-  name: String!
-  email: String!
-  language: String!
-}
-
-type UserPermission {
-  id: ID!
-  source: UserPermissionSource
-  permission: String!
-  validFrom: DateTime
-  validTo: DateTime
-  reason: String
-  requestedBy: String
-  approvedBy: String
-}
-
-enum UserPermissionSource {
-  MANUAL
-  BY_RULE
-}
-
-type PaginatedUserList {
-  nodes: [User!]!
-  totalCount: Int!
-}
-
-=======
->>>>>>> main
 type Link implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
