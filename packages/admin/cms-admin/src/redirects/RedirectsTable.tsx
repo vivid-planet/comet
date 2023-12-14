@@ -6,7 +6,6 @@ import {
     muiGridPagingToGql,
     muiGridSortToGql,
     StackLink,
-    StackSwitchApiContext,
     TableDeleteButton,
     Toolbar,
     ToolbarAutomaticTitleItem,
@@ -73,8 +72,6 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
         },
     ];
 
-    const stackApi = React.useContext(StackSwitchApiContext);
-
     const columns: GridColDef[] = [
         {
             field: "source",
@@ -139,11 +136,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             headerName: "",
             renderCell: (params) => (
                 <IconWrapper>
-                    <IconButton
-                        onClick={() => {
-                            stackApi.activatePage("edit", params.id.toString());
-                        }}
-                    >
+                    <IconButton component={StackLink} pageName="edit" payload={params.id.toString()}>
                         <Edit color="primary" />
                     </IconButton>
                     <TableDeleteButton

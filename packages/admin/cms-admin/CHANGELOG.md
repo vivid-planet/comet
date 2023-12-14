@@ -1,5 +1,45 @@
 # @comet/cms-admin
 
+## 5.2.0
+
+### Minor Changes
+
+-   0bed4e7c: Improve the `SaveConflictDialog`
+
+    -   extend the text in the dialog to explain
+        -   what happened
+        -   what the next steps are
+        -   what can be done to avoid conflicts
+    -   make the button labels more precise
+    -   once the save dialog is closed
+        -   stop polling
+        -   mark the save button red and with an error icon
+
+-   0bed4e7c: `useSaveConflict()`, `useSaveConflictQuery()` and `useFormSaveConflict()` now return a `hasConflict` prop
+
+    If `hasConflict` is true, a save conflict has been detected.
+    You should pass `hasConflict` on to `SaveButton`, `FinalFormSaveButton` or `FinalFormSaveSplitButton`. The button will then display a "conflict" state.
+
+-   0bed4e7c: Admin Generator: In the generated form, the `hasConflict` prop is passed from the `useFormSaveConflict()` hook to the `FinalFormSaveSplitButton`
+-   6fda5a53: CRUD Generator: Change the file ending of the private sibling GraphQL files from `.gql.tsx` to `.gql.ts`
+
+    The GraphQL files do not contain JSX.
+    Regenerate the files to apply this change to a project.
+
+### Patch Changes
+
+-   Updated dependencies [25daac07]
+-   Updated dependencies [0bed4e7c]
+-   Updated dependencies [9fc7d474]
+-   Updated dependencies [3702bb23]
+-   Updated dependencies [824ea66a]
+    -   @comet/admin@5.2.0
+    -   @comet/admin-icons@5.2.0
+    -   @comet/blocks-admin@5.2.0
+    -   @comet/admin-date-time@5.2.0
+    -   @comet/admin-rte@5.2.0
+    -   @comet/admin-theme@5.2.0
+
 ## 5.1.0
 
 ### Patch Changes

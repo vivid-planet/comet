@@ -126,6 +126,11 @@ export class ChangeEyebrowMigration extends BlockMigration<(from: From) => To> i
 }
 ```
 
+:::caution
+Avoid using application code in the migration.
+Doing so prevents the need to adapt old migrations if the code changes at a later time.
+:::
+
 Finally, we add the migration to the block using the `migrate` option in `createBlock`.
 
 ```ts

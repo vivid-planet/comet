@@ -1,5 +1,11 @@
 # @comet/admin-icons
 
+## 5.2.0
+
+### Minor Changes
+
+-   9fc7d474: Add new icons from the Comet UX library. Replace existing icons with new versions. Mark icons Pool, Pool2, Vignette1, Vignette2, Betrieb, LogischeFilter as deprecated.
+
 ## 5.1.0
 
 ## 5.0.0

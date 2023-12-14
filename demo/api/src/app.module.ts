@@ -1,4 +1,5 @@
 import {
+    AccessLogModule,
     BlobStorageModule,
     BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
     BlocksModule,
@@ -17,7 +18,6 @@ import {
     PageTreeService,
     PublicUploadModule,
     RedirectsModule,
-    UserPermissionsModule,
 } from "@comet/cms-api";
 import { ApolloDriver } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
@@ -32,7 +32,6 @@ import { randomBytes } from "crypto";
 import { Request } from "express";
 
 import { AuthModule } from "./auth/auth.module";
-import { UserService } from "./auth/user.service";
 import { DamScope } from "./dam/dto/dam-scope";
 import { DamFile } from "./dam/entities/dam-file.entity";
 import { DamFolder } from "./dam/entities/dam-folder.entity";
@@ -83,19 +82,6 @@ export class AppModule {
                         if (!user.domains) return true; //all domains
                         return user.domains.includes(requestScope.domain);
                     },
-                }),
-                UserPermissionsModule.forRootAsync({
-                    useFactory: (userService: UserService) => ({
-                        availablePermissions: ["news", "products"],
-                        availableContentScopes: [
-                            { domain: "main", language: "de" },
-                            { domain: "main", language: "en" },
-                            { domain: "secondary", language: "en" },
-                        ],
-                        userService,
-                    }),
-                    inject: [UserService],
-                    imports: [AuthModule],
                 }),
                 BlocksModule.forRoot({
                     imports: [PagesModule],
@@ -158,6 +144,7 @@ export class AppModule {
                 PredefinedPageModule,
                 CronJobsModule,
                 ProductsModule,
+                AccessLogModule,
             ],
         };
     }
