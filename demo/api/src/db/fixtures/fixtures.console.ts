@@ -19,6 +19,7 @@ import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
 import { PageContentBlock } from "@src/pages/blocks/PageContentBlock";
 import { PageInput } from "@src/pages/dto/page.input";
 import { Page } from "@src/pages/entities/page.entity";
+import { UserGroup } from "@src/user-groups/user-group";
 import faker from "faker";
 import { Command, Console } from "nestjs-console";
 import slugify from "slugify";
@@ -102,6 +103,9 @@ export class FixturesConsole {
                     id: attachedDocumentIds[0],
                     type: "Page",
                 },
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
             scope,
@@ -111,7 +115,15 @@ export class FixturesConsole {
         await this.pageTreeService.updateNodeVisibility(node.id, PageTreeNodeVisibility.Published);
 
         node = await this.pageTreeService.createNode(
-            { name: "Sub", slug: "sub", parentId: node.id, attachedDocument: { id: attachedDocumentIds[1], type: "Page" } },
+            {
+                name: "Sub",
+                slug: "sub",
+                parentId: node.id,
+                attachedDocument: { id: attachedDocumentIds[1], type: "Page" },
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                userGroup: UserGroup.All,
+            },
             PageTreeNodeCategory.MainNavigation,
             scope,
         );
@@ -127,6 +139,9 @@ export class FixturesConsole {
                     id: attachedDocumentIds[2],
                     type: "Page",
                 },
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
             scope,
@@ -142,6 +157,9 @@ export class FixturesConsole {
                 attachedDocument: {
                     type: "Page",
                 },
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
             scope,
@@ -158,6 +176,9 @@ export class FixturesConsole {
                     id: attachedDocumentIds[3],
                     type: "Link",
                 },
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
             scope,
@@ -174,6 +195,9 @@ export class FixturesConsole {
                     id: attachedDocumentIds[4],
                     type: "Page",
                 },
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
             scope,
@@ -224,6 +248,9 @@ export class FixturesConsole {
                             slug: slugify(name),
                             parentId: level > 0 ? faker.random.arrayElement(pages[level - 1]).id : undefined,
                             attachedDocument: { type: "Page" },
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            userGroup: UserGroup.All,
                         },
                         PageTreeNodeCategory.MainNavigation,
                         {
