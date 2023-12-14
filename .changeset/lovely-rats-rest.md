@@ -2,4 +2,4 @@
 "@comet/cms-api": patch
 ---
 
-CRUD Generator: correctly support type="text" fields in filter and sort
+CRUD Generator: Correctly support `type: "text"` fields in filter and sort
