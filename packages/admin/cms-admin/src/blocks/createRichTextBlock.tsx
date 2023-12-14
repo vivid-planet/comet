@@ -1,4 +1,4 @@
-import { IRteOptions, makeRteApi, pasteAndFilterText, Rte } from "@comet/admin-rte";
+import { IRteOptions, makeRteApi, pasteAndFilterText, Rte, SoftHyphen as SoftHyphenDecorator, SoftHyphenToolbarButton } from "@comet/admin-rte";
 import { BlockCategory, BlockInterface, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
 import {
     BlockMapBuilder,
@@ -17,8 +17,6 @@ import { FormattedMessage } from "react-intl";
 import { RichTextBlockData, RichTextBlockInput } from "../blocks.generated";
 import { createCmsLinkToolbarButton } from "./rte/extension/CmsLink/createCmsLinkToolbarButton";
 import { Decorator as CmsLinkDecorator } from "./rte/extension/CmsLink/Decorator";
-import { Decorator as SoftHyphenDecorator } from "./rte/extension/SoftHyphen/Decorator";
-import { ToolbarButton as SoftHyphenToolbarButton } from "./rte/extension/SoftHyphen/ToolbarButton";
 
 export interface RichTextBlockState {
     editorState: EditorState;
