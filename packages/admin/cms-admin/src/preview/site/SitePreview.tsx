@@ -117,7 +117,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     );
     if (error) throw new Error(error.message);
     if (!data) return <></>;
-    const initialPageUrl = `${siteConfig.previewUrl}/api/preview?jwt=${data.getSitePreviewJwt}`;
+    const initialPageUrl = `${siteConfig.url}/api/preview?jwt=${data.getSitePreviewJwt}`;
 
     return (
         <Root>
