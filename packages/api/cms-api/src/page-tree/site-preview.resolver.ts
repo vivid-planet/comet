@@ -1,10 +1,17 @@
 import { Inject } from "@nestjs/common";
-import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { IsObject, IsString } from "class-validator";
-import { GraphQLJSONObject } from "graphql-type-json";
+import { Args, ArgsType, Field, InputType, Query, Resolver } from "@nestjs/graphql";
+import { Type } from "class-transformer";
+import { IsBoolean, IsString, ValidateNested } from "class-validator";
 import jsonwebtoken from "jsonwebtoken";
 
 import { SITE_PREVIEW_CONFIG } from "./page-tree.constants";
+
+@InputType()
+export class PreviewData {
+    @Field(() => Boolean)
+    @IsBoolean()
+    includeInvisible: boolean;
+}
 
 @ArgsType()
 class SitePreviewArgs {
@@ -12,9 +19,10 @@ class SitePreviewArgs {
     @IsString()
     path: string;
 
-    @Field(() => GraphQLJSONObject)
-    @IsObject()
-    previewData: JSON;
+    @Field(() => PreviewData)
+    @ValidateNested()
+    @Type(() => PreviewData)
+    previewData: PreviewData;
 }
 
 export type SitePreviewConfig = {

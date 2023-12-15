@@ -101,7 +101,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
 
     const { data, error, refetch } = useQuery<GQLGetSitePreviewJwtQuery>(
         gql`
-            query GetSitePreviewJwt($path: String!, $previewData: JSONObject!) {
+            query GetSitePreviewJwt($path: String!, $previewData: PreviewData!) {
                 getSitePreviewJwt(path: $path, previewData: $previewData)
             }
         `,

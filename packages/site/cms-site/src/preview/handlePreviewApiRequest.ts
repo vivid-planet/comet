@@ -13,6 +13,7 @@ export function handlePreviewApiRequest(req: NextApiRequest, res: NextApiRespons
     res.redirect(data.path);
 }
 
+// See packages/api/cms-api/src/page-tree/site-preview.resolver.ts
 export type PreviewData = {
     includeInvisible: boolean;
 };
