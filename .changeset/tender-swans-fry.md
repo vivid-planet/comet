@@ -2,16 +2,6 @@
 "@comet/admin": patch
 ---
 
-Fix typing of `Field`'s `shouldScrollTo()`, `shouldShowError()` and `shouldShowWarning()` props.
+Fix `shouldScrollTo()`, `shouldShowError()` and `shouldShowWarning()` in `Field`
 
-Previously, all methods were incorrectly typed as 
-
-```ts
-(meta: FieldMetaState<FieldValue>) => boolean;
-```
-
-when in fact an object containing the `FieldMetaState` is passed. The typing is now correct:
-
-```ts
-({ fieldMeta }: { fieldMeta: FieldMetaState<FieldValue> }) => boolean;
-```
+Previously, the `meta` argument was passed to these methods incorrectly. Now, the argument is passed as defined by the typing.
