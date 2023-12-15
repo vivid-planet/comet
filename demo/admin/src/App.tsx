@@ -32,8 +32,9 @@ import { IntlProvider } from "react-intl";
 import { Route, Switch } from "react-router-dom";
 
 import MasterHeader from "./common/MasterHeader";
-import MasterMenu, { masterMenuData, pageTreeCategories, pageTreeDocumentTypes } from "./common/MasterMenu";
+import MasterMenu, { masterMenuData, pageTreeDocumentTypes } from "./common/MasterMenu";
 import { getMessages } from "./lang";
+import { pageTreeCategories } from "./pageTree/pageTreeCategories";
 
 const GlobalStyle = () => (
     <Global

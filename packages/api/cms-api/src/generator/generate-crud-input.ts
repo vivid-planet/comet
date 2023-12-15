@@ -84,6 +84,19 @@ export async function generateCrudInput(
             decorators.push(`@IsEnum(${enumName})`);
             decorators.push(`@Field(() => ${enumName}, ${fieldOptions})`);
             type = enumName;
+        } else if (prop.type === "EnumArrayType") {
+            if (prop.nullable) {
+                console.warn(`${prop.name}: Nullable enum arrays are not supported`);
+            }
+            decorators.length = 0; //remove @IsNotEmpty
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const fieldOptions = tsCodeRecordToString({ defaultValue: initializer });
+            const enumName = findEnumName(prop.name, metadata);
+            const importPath = findEnumImportPath(enumName, generatorOptions, metadata);
+            imports.push({ name: enumName, importPath });
+            decorators.push(`@IsEnum(${enumName}, { each: true })`);
+            decorators.push(`@Field(() => [${enumName}], ${fieldOptions})`);
+            type = `${enumName}[]`;
         } else if (prop.type === "string" || prop.type === "text") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
@@ -96,6 +109,7 @@ export async function generateCrudInput(
                 decorators.push("@IsSlug()");
             }
             decorators.push(`@Field(${fieldOptions})`);
+            type = "string";
         } else if (prop.type === "DecimalType" || prop.type == "BigIntType" || prop.type === "number") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
@@ -238,7 +252,7 @@ export async function generateCrudInput(
             decorators.push(`@Type(() => ${inputName})`);
             decorators.push("@ValidateNested()");
             type = `${inputName}`;
-        } else if (prop.type == "JsonType" || prop.embeddable) {
+        } else if (prop.type == "JsonType" || prop.embeddable || prop.type == "ArrayType") {
             const tsProp = morphTsProperty(prop.name, metadata);
 
             let tsType = tsProp.getType();

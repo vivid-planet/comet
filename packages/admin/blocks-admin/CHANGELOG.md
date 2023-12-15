@@ -1,5 +1,35 @@
 # @comet/blocks-admin
 
+## 5.2.0
+
+### Minor Changes
+
+-   824ea66a: Improve layout selection UX in `createColumnsBlock`
+
+    Hide select when there's only one layout for a specific number of columns
+
+### Patch Changes
+
+-   3702bb23: Infer additional item fields in `BlocksBlock` and `ListBlock`
+
+    Additional fields in the `item` prop of `AdditionalItemContextMenuItems` and `AdditionalItemContent` will be typed correctly if the `additionalItemFields` option is strongly typed.
+
+-   Updated dependencies [25daac07]
+-   Updated dependencies [0bed4e7c]
+-   Updated dependencies [9fc7d474]
+    -   @comet/admin@5.2.0
+    -   @comet/admin-icons@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+-   Updated dependencies [21c30931]
+-   Updated dependencies [93b3d971]
+-   Updated dependencies [e33cd652]
+    -   @comet/admin@5.1.0
+    -   @comet/admin-icons@5.1.0
+
 ## 5.0.0
 
 ### Major Changes
@@ -22,21 +52,14 @@
 
     ```tsx
     const state = linkBlock.input2State(params.value);
-    
-    return (
-        <BlockPreview
-            title={linkBlock.dynamicDisplayName?.(state) ?? linkBlock.displayName}
-            content={linkBlock.previewContent(state)}
-        />
-    );
+
+    return <BlockPreview title={linkBlock.dynamicDisplayName?.(state) ?? linkBlock.displayName} content={linkBlock.previewContent(state)} />;
     ```
-    
+
     **After:**
-    
+
     ```tsx
-    return (
-        <BlockPreviewContent block={linkBlock} input={params.value} />
-    );
+    return <BlockPreviewContent block={linkBlock} input={params.value} />;
     ```
 
 ### Minor Changes

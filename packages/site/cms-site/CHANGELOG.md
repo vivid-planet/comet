@@ -1,5 +1,13 @@
 # @comet/cms-site
 
+## 5.2.0
+
+### Minor Changes
+
+-   6244d6cd: Add the `YouTubeVideoBlock` to the `@comet/cms-site` package.
+
+## 5.1.0
+
 ## 5.0.0
 
 ## 4.7.0

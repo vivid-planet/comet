@@ -1,4 +1,5 @@
 import {
+    AccessLogModule,
     BlobStorageModule,
     BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
     BlocksModule,
@@ -25,6 +26,7 @@ import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
+import { randomBytes } from "crypto";
 import { Request } from "express";
 
 import { AccessControlService } from "./auth/access-control.service";
@@ -116,6 +118,7 @@ export class AppModule {
                     Documents: [Page, Link, PredefinedPage],
                     Scope: PageTreeNodeScope,
                     reservedPaths: ["/events"],
+                    sitePreviewSecret: randomBytes(32).toString("hex"),
                 }),
                 RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
                 BlobStorageModule.register({
@@ -149,6 +152,7 @@ export class AppModule {
                 PredefinedPageModule,
                 CronJobsModule,
                 ProductsModule,
+                AccessLogModule,
             ],
         };
     }

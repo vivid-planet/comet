@@ -123,6 +123,11 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
+type SitePreviewHash {
+  timestamp: Float!
+  hash: String!
+}
+
 type CurrentUserPermission {
   permission: String!
 }
@@ -332,6 +337,8 @@ type Query {
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   cronJobs: [CronJob!]!
   currentUser: CurrentUser!
+  getSitePreviewHash: SitePreviewHash!
+  validateSitePreviewHash(timestamp: Float!, hash: String!): Boolean!
   userPermissionsUserById(id: String!): User!
   userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!

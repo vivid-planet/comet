@@ -1,6 +1,5 @@
 import { Assets, Dashboard as DashboardIcon, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
 import {
-    AllCategories,
     createRedirectsPage,
     CronJobsPage,
     DamPage,
@@ -17,30 +16,19 @@ import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import { NewsPage } from "@src/news/generated/NewsPage";
 import MainMenu from "@src/pages/mainMenu/MainMenu";
 import { Page } from "@src/pages/Page";
+import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
 import { ProductsPage } from "@src/products/generated/ProductsPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
-import { categoryToUrlParam, urlParamToCategory } from "@src/utils/pageTreeNodeCategoryMapping";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
-import { Redirect } from "react-router-dom";
+import { Redirect, RouteComponentProps } from "react-router-dom";
 
 import { ComponentDemo } from "./ComponentDemo";
 import { ContentScopeIndicator } from "./ContentScopeIndicator";
 import { EditPageNode } from "./EditPageNode";
-
-export const pageTreeCategories: AllCategories = [
-    {
-        category: "MainNavigation",
-        label: <FormattedMessage id="menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
-    },
-    {
-        category: "TopMenu",
-        label: <FormattedMessage id="menu.pageTree.topMenu" defaultMessage="Top menu" />,
-    },
-];
 
 export const pageTreeDocumentTypes = {
     Page,
@@ -68,7 +56,7 @@ export const masterMenuData: MasterMenuData = [
         })),
         route: {
             path: "/pages/pagetree/:category",
-            render: ({ match }) => {
+            render: ({ match }: RouteComponentProps<{ category: string }>) => {
                 const category = urlParamToCategory(match.params.category);
 
                 if (category === undefined) {

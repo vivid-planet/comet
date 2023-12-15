@@ -5,6 +5,7 @@ import * as React from "react";
 import { PageSearchMatch } from "../pageSearch/usePageSearch";
 import { arrayToTreeMap, subTreeFromNodes, TreeMap } from "./treemap/TreeMapUtils";
 import { GQLPageTreePageFragment } from "./usePageTree.generated";
+
 export { GQLPageTreePageFragment } from "./usePageTree.generated";
 
 export const pageTreePageFragment = gql`

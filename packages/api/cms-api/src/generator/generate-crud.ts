@@ -759,10 +759,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         hasSortArg ? `sort, ` : ""
     }offset, limit }: ${argsClassName}${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
         ): Promise<Paginated${classNamePlural}> {
-            const where = ${
+            const where${
                 hasSearchArg || hasFilterArg
-                    ? `this.${instanceNamePlural}Service.getFindCondition({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} });`
-                    : "{}"
+                    ? ` = this.${instanceNamePlural}Service.getFindCondition({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} });`
+                    : `: ObjectQuery<${metadata.className}> = {}`
             }
             ${scopeProp ? `where.scope = scope;` : ""}
 

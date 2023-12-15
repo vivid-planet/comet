@@ -39,7 +39,9 @@ export function createPreviewUrl({ damFile, cropArea }: ImageBlockState, apiUrl:
         imageCropArea.focalPoint === "SMART"
             ? [imageCropArea.focalPoint]
             : [imageCropArea.width, imageCropArea.height, imageCropArea.focalPoint, imageCropArea.x, imageCropArea.y];
-    const filename = damFile.name.substr(0, damFile.name.lastIndexOf("."));
+
+    const filenameContainsExtension = damFile.name.lastIndexOf(".") >= 0;
+    const filename = filenameContainsExtension ? damFile.name.substr(0, damFile.name.lastIndexOf(".")) : damFile.name;
 
     let urlTemplate = apiUrl + urlTemplateRoute;
     if (resize) {
