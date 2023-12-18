@@ -1,5 +1,53 @@
 # @comet/blocks-admin
 
+## 5.3.0
+
+### Minor Changes
+
+-   a2273887: Add support for custom block categories
+
+    Allows specifying custom block categories in application code.
+
+    **Example:**
+
+    In `src/common/blocks/customBlockCategories.tsx`:
+
+    ```tsx
+    import { BlockCategory, CustomBlockCategory } from "@comet/blocks-admin";
+    import React from "react";
+    import { FormattedMessage } from "react-intl";
+
+    const productsBlockCategory: CustomBlockCategory = {
+        id: "Products",
+        label: <FormattedMessage id="blocks.category.products" defaultMessage="Products" />,
+        // Specify where category will be shown in drawer
+        insertBefore: BlockCategory.Teaser,
+    };
+
+    export { productsBlockCategory };
+    ```
+
+    In `src/documents/pages/blocks/MyBlock.tsx`:
+
+    ```tsx
+    import { productsBlockCategory } from "@src/common/blocks/customBlockCategories";
+
+    const MyBlock: BlockInterface = {
+        category: productsBlockCategory,
+        ...
+    };
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [0ff9b9ba]
+-   Updated dependencies [0ff9b9ba]
+-   Updated dependencies [a677a162]
+-   Updated dependencies [60cc1b2a]
+-   Updated dependencies [5435b278]
+    -   @comet/admin-icons@5.3.0
+    -   @comet/admin@5.3.0
+
 ## 5.2.0
 
 ### Minor Changes
