@@ -9,6 +9,7 @@ import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
+import { OverrideContentScopesDialog } from "./OverrideContentScopesDialog";
 import { PermissionDialog } from "./PermissionDialog";
 import { GQLPermissionForGridFragment, GQLPermissionsQuery, GQLPermissionsQueryVariables, namedOperations } from "./PermissionGrid.generated";
 
@@ -17,6 +18,7 @@ export const PermissionGrid: React.FC<{
 }> = ({ userId }) => {
     const intl = useIntl();
     const [permissionId, setPermissionId] = React.useState<string | "add" | null>(null);
+    const [overrideContentScopesId, setOverrideContentScopesId] = React.useState<string | null>(null);
 
     const { data, loading, error } = useQuery<GQLPermissionsQuery, GQLPermissionsQueryVariables>(
         gql`
@@ -101,6 +103,20 @@ export const PermissionGrid: React.FC<{
             ),
         },
         {
+            field: "overrideContentScopes",
+            headerName: "",
+            width: 175,
+            sortable: false,
+            pinnable: false,
+            filterable: false,
+            renderCell: ({ row }) =>
+                row.source !== "BY_RULE" && (
+                    <Button onClick={() => setOverrideContentScopesId(row.id)}>
+                        <FormattedMessage id="comet.userPermissions.overrideContentScopes" defaultMessage="Override Content-Scopes" />
+                    </Button>
+                ),
+        },
+        {
             field: "edit",
             width: 60,
             headerName: "",
@@ -176,6 +192,13 @@ export const PermissionGrid: React.FC<{
                     ),
                 }}
             />
+            {overrideContentScopesId && (
+                <OverrideContentScopesDialog
+                    userId={userId}
+                    permissionId={overrideContentScopesId}
+                    handleDialogClose={() => setOverrideContentScopesId(null)}
+                />
+            )}
             {permissionId && <PermissionDialog userId={userId} permissionId={permissionId} handleDialogClose={() => setPermissionId(null)} />}
         </Card>
     );

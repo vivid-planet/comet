@@ -5,7 +5,7 @@ import { IsString } from "class-validator";
 
 import { SkipBuild } from "../builds/skip-build.decorator";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
-import { UserPermissionInput } from "./dto/user-permission.input";
+import { UserPermissionInput, UserPermissionOverrideContentScopesInput } from "./dto/user-permission.input";
 import { UserPermission } from "./entities/user-permission.entity";
 import { UserPermissionsService } from "./user-permissions.service";
 
@@ -73,6 +73,17 @@ export class UserPermissionResolver {
     async userPermissionsDeletePermission(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         this.permissionRepository.removeAndFlush(await this.getPermission(id));
         return true;
+    }
+
+    @Mutation(() => UserPermission)
+    async userPermissionsUpdateOverrideContentScopes(
+        @Args("input", { type: () => UserPermissionOverrideContentScopesInput }) data: UserPermissionOverrideContentScopesInput,
+    ): Promise<UserPermission> {
+        const permission = await this.getPermission(data.permissionId);
+        permission.overrideContentScopes = data.overrideContentScopes;
+        permission.contentScopes = data.contentScopes;
+        await this.permissionRepository.persistAndFlush(permission);
+        return permission;
     }
 
     async getPermission(id: string, userId?: string): Promise<UserPermission> {
