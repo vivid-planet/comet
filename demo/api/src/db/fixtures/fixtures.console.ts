@@ -103,8 +103,7 @@ export class FixturesConsole {
                     id: attachedDocumentIds[0],
                     type: "Page",
                 },
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
+                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
                 userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
@@ -120,8 +119,7 @@ export class FixturesConsole {
                 slug: "sub",
                 parentId: node.id,
                 attachedDocument: { id: attachedDocumentIds[1], type: "Page" },
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
+                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
                 userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
@@ -139,8 +137,7 @@ export class FixturesConsole {
                     id: attachedDocumentIds[2],
                     type: "Page",
                 },
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
+                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
                 userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
@@ -157,8 +154,7 @@ export class FixturesConsole {
                 attachedDocument: {
                     type: "Page",
                 },
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
+                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
                 userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
@@ -176,8 +172,7 @@ export class FixturesConsole {
                     id: attachedDocumentIds[3],
                     type: "Link",
                 },
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
+                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
                 userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
@@ -195,8 +190,7 @@ export class FixturesConsole {
                     id: attachedDocumentIds[4],
                     type: "Page",
                 },
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
+                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
                 userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
@@ -248,8 +242,7 @@ export class FixturesConsole {
                             slug: slugify(name),
                             parentId: level > 0 ? faker.random.arrayElement(pages[level - 1]).id : undefined,
                             attachedDocument: { type: "Page" },
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-ignore
+                            // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
                             userGroup: UserGroup.All,
                         },
                         PageTreeNodeCategory.MainNavigation,

@@ -49,8 +49,7 @@ export class ManyImagesTestPageGenerator {
                     id: uuidDocument,
                     type: "Page",
                 },
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
+                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
                 userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
