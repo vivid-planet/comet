@@ -72,6 +72,7 @@ interface SendPagesDependencies {
     documentTypes: PageTreeContext["documentTypes"];
     blockContext: CmsBlockContext;
     damScope: Record<string, unknown>;
+    activeCategory: string;
 }
 
 /**
@@ -92,7 +93,7 @@ export async function sendPages(
     parentId: string | null,
     { pages }: PagesClipboard,
     options: SendPagesOptions,
-    { client, scope, documentTypes, blockContext, damScope }: SendPagesDependencies,
+    { client, scope, documentTypes, blockContext, damScope, activeCategory }: SendPagesDependencies,
     updateProgress: (progress: number, message: React.ReactNode) => void,
 ): Promise<void> {
     const dependencyReplacements = createPageTreeNodeIdReplacements(pages);
@@ -217,7 +218,7 @@ export async function sendPages(
                     pos: options.targetPos ? options.targetPos + posOffset : undefined,
                 },
                 contentScope: scope,
-                category: node.category,
+                category: activeCategory,
             },
             context: LocalErrorScopeApolloContext,
         });
