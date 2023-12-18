@@ -1,5 +1,13 @@
 # @comet/admin-theme
 
+## 5.3.0
+
+### Patch Changes
+
+-   Updated dependencies [0ff9b9ba]
+-   Updated dependencies [0ff9b9ba]
+    -   @comet/admin-icons@5.3.0
+
 ## 5.2.0
 
 ### Patch Changes

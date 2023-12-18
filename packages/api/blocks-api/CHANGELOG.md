@@ -1,5 +1,14 @@
 # @comet/blocks-api
 
+## 5.3.0
+
+### Minor Changes
+
+-   920f2b85: Deprecate `nullable: true` for child blocks
+
+    Nullable child blocks are not correctly supported in the Admin, for instance, in `createCompositeBlock`.
+    Save a block's default values instead.
+
 ## 5.2.0
 
 ## 5.1.0
