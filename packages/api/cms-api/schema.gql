@@ -160,6 +160,8 @@ type UserPermission {
   reason: String
   requestedBy: String
   approvedBy: String
+  overrideContentScopes: Boolean!
+  contentScopes: [JSONObject!]!
 }
 
 enum UserPermissionSource {
@@ -527,6 +529,7 @@ type Mutation {
   userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!
+  userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
   userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): [JSONObject!]!
 }
 
@@ -625,6 +628,12 @@ input UserPermissionInput {
   reason: String
   requestedBy: String
   approvedBy: String
+}
+
+input UserPermissionOverrideContentScopesInput {
+  permissionId: ID!
+  overrideContentScopes: Boolean!
+  contentScopes: [JSONObject!]! = []
 }
 
 input UserContentScopesInput {
