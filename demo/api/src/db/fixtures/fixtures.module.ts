@@ -5,8 +5,10 @@ import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
 import { ConsoleModule } from "nestjs-console";
 
+import { PublicUploadsFixtureService } from "./generators/public-uploads-fixture.service";
+
 @Module({
     imports: [ConfigModule, ConsoleModule, PagesModule, LinksModule],
-    providers: [FixturesConsole],
+    providers: [FixturesConsole, PublicUploadsFixtureService],
 })
 export class FixturesModule {}
