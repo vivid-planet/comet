@@ -35,8 +35,7 @@ export {
     ToolbarAutomaticTitleItemProps,
 } from "./common/toolbar/automatictitleitem/ToolbarAutomaticTitleItem";
 export { ToolbarBackButton, ToolbarBackButtonClassKey, ToolbarBackButtonProps } from "./common/toolbar/backbutton/ToolbarBackButton";
-export { ToolbarBreadcrumbs, ToolbarBreadcrumbsProps } from "./common/toolbar/breadcrumb/ToolbarBreadcrumbs";
-export { ToolbarBreadcrumbsClassKey } from "./common/toolbar/breadcrumb/ToolbarBreadcrumbs.styles";
+export { ToolbarBreadcrumbs, ToolbarBreadcrumbsClassKey, ToolbarBreadcrumbsProps } from "./common/toolbar/breadcrumb/ToolbarBreadcrumbs";
 export { ToolbarFillSpace, ToolbarFillSpaceClassKey, ToolbarFillSpaceProps } from "./common/toolbar/fillspace/ToolbarFillSpace";
 export { ToolbarItem, ToolbarItemClassKey, ToolbarItemProps } from "./common/toolbar/item/ToolbarItem";
 export { ToolbarTitleItem, ToolbarTitleItemClassKey, ToolbarTitleItemProps } from "./common/toolbar/titleitem/ToolbarTitleItem";
