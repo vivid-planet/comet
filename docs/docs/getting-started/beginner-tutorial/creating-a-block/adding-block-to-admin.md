@@ -1,33 +1,39 @@
 ---
 title: Adding Block to Admin
-sidebar_position: 5
+sidebar_position: 2
 ---
 
 # Step One: Creating the block in admin
 
-We will use the method **createCompositeBlock** to create our hero block in the admin.
+We will use the method `createCompositeBlock` to create our hero block in the **admin**.
 
-1. Go to the **admin/src/common/blocks** directory and create a file called **HeroBlock.tsx**
+1. Go into the `admin/src/common/blocks` directory and create a file called `HeroBlock.tsx`
 
-2. Add the following code to your file
+2. Add the following code to your file:
 
-```javascript
+```ts title="HeroBlock.tsx"
 import { BlockCategory, createCompositeBlock } from "@comet/blocks-admin";
 
 export const HeroBlock = createCompositeBlock({
-    name: "Hero", // where is this name used?
-    displayName: "Hero", // the name that will be displayed in the admin?
-    category: BlockCategory.TextAndContent, // The category the block belongs to 
-    blocks: {}, // Inside here, we will list all blocks we previously defined
+    name: "Hero",
+    displayName: "Hero",
+    category: BlockCategory.TextAndContent, // Categories shown in 'Navigating the Admin'
+    blocks: {}, // In here, we will list all blocks we previously defined
 });
 ```
 
+3. Let's add our blocks to the `blocks` object:
 
-3. Let's fill in the content for **blocks{}** // Rephrase
+<!-- In the code block below, something is wrong with the formatting -->
 
-```javascript
+```ts title="HeroBlock.tsx"
 import { FinalFormInput } from "@comet/admin";
-import { BlockCategory, BlocksFinalForm, createCompositeBlock, createCompositeSetting } from "@comet/blocks-admin";
+import {
+    BlockCategory,
+    BlocksFinalForm,
+    createCompositeBlock,
+    createCompositeSetting,
+} from "@comet/blocks-admin";
 import { HeroBlockData } from "@src/blocks.generated";
 import React from "react";
 import { Field } from "react-final-form";
@@ -43,13 +49,18 @@ export const HeroBlock = createCompositeBlock({
         // this name must be the exact same as the fields in the api
         eyebrow: {
             block: createCompositeSetting<HeroBlockData["eyebrow"]>({
-                defaultValue: "eyebrow",
+                defaultValue: undefined,
                 AdminComponent: ({ state, updateState }) => (
                     <BlocksFinalForm<Pick<HeroBlockData, "eyebrow">>
                         onSubmit={({ eyebrow }) => updateState(eyebrow)}
                         initialValues={{ eyebrow: state }}
                     >
-                        <Field name="eyebrow" label="Eyebrow" component={FinalFormInput} fullWidth />
+                        <Field
+                            name="eyebrow"
+                            label="Eyebrow"
+                            component={FinalFormInput}
+                            fullWidth
+                        />
                     </BlocksFinalForm>
                 ),
             }),
@@ -64,20 +75,72 @@ export const HeroBlock = createCompositeBlock({
         },
     },
 });
-
-// which options are there instead of createCompositeBlock and createCompositeSetting, when to use
-// Does AdminComponent always need to be used when creating a new block?
-// FinalFormInput Doku verlinken?
 ```
 
-# Step Two: Registering the block in admin/PageContentBlock.tsx
+<!-- which options are there instead of createCompositeBlock and createCompositeSetting, when to use
+Does AdminComponent always need to be used when creating a new block?
+FinalFormInput Docs link? -->
+
+4. Try to add the **button** and **images** on your own!
+
+<details>
+    <summary>Solution</summary>
+
+```ts title="HeroBlock.tsx"
+export const HeroBlock = createCompositeBlock({
+    name: "Hero",
+    displayName: "Hero",
+    category: BlockCategory.TextAndContent,
+    blocks: {
+        eyebrow: {
+            block: createCompositeSetting<HeroBlockData["eyebrow"]>({
+                defaultValue: undefined,
+                AdminComponent: ({ state, updateState }) => (
+                    <BlocksFinalForm<Pick<HeroBlockData, "eyebrow">>
+                        onSubmit={({ eyebrow }) => updateState(eyebrow)}
+                        initialValues={{ eyebrow: state }}
+                    >
+                        <Field
+                            name="eyebrow"
+                            label="Eyebrow"
+                            component={FinalFormInput}
+                            fullWidth
+                        />
+                    </BlocksFinalForm>
+                ),
+            }),
+        },
+        headline: {
+            block: HeadlineBlock,
+        },
+        text: {
+            block: RichTextBlock,
+        },
+        textLink: {
+            block: TextLinkBlock,
+        },
+        image: {
+            block: DamImageBlock,
+        },
+        imageSecondary: {
+            block: DamImageBlock,
+        },
+    },
+});
+```
+
+</details>
+
+# Step Two: Registering the block in `PageContentBlock.tsx`
+
 Like we have done with the API, we need to register the block in the page document in admin this time.
 
-1. Open the file **PageContentBlock.tsx** inside **admin/src/documents/pages/blocks** and register the hero block.
+1. Open the file `PageContentBlock.tsx` located at `admin/src/documents/pages/blocks` and register the `hero` block.
 
-(TOGGLE SOLUTION)
+<details>
+    <summary>Solution</summary>
 
-```javascript
+```ts title="PageContentBlock.tsx"
 import { createBlocksBlock, SpaceBlock, YouTubeVideoBlock } from "@comet/blocks-admin";
 import { DamImageBlock, DamVideoBlock } from "@comet/cms-admin";
 import { HeadlineBlock } from "@src/common/blocks/HeadlineBlock";
@@ -102,5 +165,8 @@ export const PageContentBlock = createBlocksBlock({
 });
 ```
 
+</details>
 
 After this step, you will already be able to see the Hero Block in the admin. Go try it out!
+
+Once you are done, it is time to move on to the **site**.

@@ -1,53 +1,67 @@
 ---
 title: Adding Block to Site
-sidebar_position: 6
+sidebar_position: 3
 ---
 
 # Step One: Creating the block in the site
 
-Now, we will make sure our block and its content get rendered! 
+Now, we will make sure our block and its content get rendered!
 
-1. Let's add the block to the site as well, like this:
+1. Let's add the hero block to the **site** as well, like this:
 
-Inside site/src/common/blocks, create the file HeroBlock.tsx and enter the following code
+Inside `site/src/common/blocks`, create the file `HeroBlock.tsx` and insert the following code:
 
-```javascript
+```ts title="HeroBlock.tsx"
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { HeroBlockData } from "@src/blocks.generated";
 
 export const HeroBlock = withPreview(
-    ({ data: { eyebrow, headline, text } }: PropsWithData<HeroBlockData>) => { 
+    ({ data: { eyebrow, headline, text, textLink, image, imageSecondary } }: PropsWithData<HeroBlockData>) => {
         return (
-          // What we are returning is still missing
+          // Here we will output the individual blocks that we created earlier
         );
     },
     { label: "Hero" },
 );
 ```
 
-2. We want to return the blocks we created earlier. Let's do this now!
+2. We want to return the blocks we created previously. Let's do this now!
 
-```javascript
+<!-- In the following code block is an issue regarding syntax highlighting -->
+
+```ts title="HeroBlock.tsx"
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { HeroBlockData } from "@src/blocks.generated";
 
+import { DamImageBlock } from "./DamImageBlock";
+import { HeadlineBlock } from "./HeadlineBlock";
+import { RichTextBlock } from "./RichTextBlock";
+import { TextLinkBlock } from "./TextLinkBlock";
+
 export const HeroBlock = withPreview(
-    ({ data: { eyebrow, headline, text } }: PropsWithData<HeroBlockData>) => {
+    ({
+        data: { eyebrow, headline, text, textLink, image, imageSecondary },
+    }: PropsWithData<HeroBlockData>) => {
         return (
-          <>
-            {eyebrow}
-            <HeadlineBlock data={headline} />
-             <RichTextBlock data={text} />
-         </>
+            <>
+                {eyebrow}
+                <HeadlineBlock data={headline} />
+                <RichTextBlock data={text} />
+                <TextLinkBlock data={textLink} />
+                <DamImageBlock data={image} />
+                <DamImageBlock data={imageSecondary} />
+            </>
         );
     },
     { label: "Hero" },
 );
 ```
 
-# Step Two: Registering in Page content block (adjust name)
+# Step Two: Registering in `PageContentBlock.tsx`
 
-```javascript
+1. Open `site/src/documents/pages/blocks/PageContentBlock.tsx` and add the hero block to the supported blocks.
+
+```ts title="PageContentBlock.tsx"
 import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
@@ -76,8 +90,7 @@ const supportedBlocks: SupportedBlocks = {
 export const PageContentBlock: React.FC<PropsWithData<PageContentBlockData>> = ({ data }) => {
     return <BlocksBlock data={data} supportedBlocks={supportedBlocks} />;
 };
-
 ```
 
 And that's it! Everything should work correctly now.
-However, our block still looks quite basic and boring, don't you think? Let's get to the styling!
+However, our block still looks quite basic and boring, don't you think? <br/>Let's get to the **styling**!
