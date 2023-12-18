@@ -1,5 +1,17 @@
 # @comet/admin-icons
 
+## 5.3.0
+
+### Minor Changes
+
+-   0ff9b9ba: Deprecate icons `StateGreen`, `StateGreenRing`, `StateOrange`, `StateOrangeRing`, `StateRed`, and `StateRedRing`,
+
+### Patch Changes
+
+-   0ff9b9ba: Fix various icons
+
+    Since version 5.2.0 several icons were not displayed correctly. This problem has been fixed.
+
 ## 5.2.0
 
 ### Minor Changes

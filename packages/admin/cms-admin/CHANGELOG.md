@@ -1,5 +1,28 @@
 # @comet/cms-admin
 
+## 5.3.0
+
+### Patch Changes
+
+-   0fdf4eaf: Always use the `/preview` file URLs in the admin application
+
+    This is achieved by setting the `x-preview-dam-urls` in the `includeInvisibleContentContext`.
+
+    This fixes a page copy bug where all files were downloaded and uploaded again, even when copying within the same environment.
+
+-   Updated dependencies [0ff9b9ba]
+-   Updated dependencies [0ff9b9ba]
+-   Updated dependencies [a677a162]
+-   Updated dependencies [60cc1b2a]
+-   Updated dependencies [5435b278]
+-   Updated dependencies [a2273887]
+    -   @comet/admin-icons@5.3.0
+    -   @comet/admin@5.3.0
+    -   @comet/blocks-admin@5.3.0
+    -   @comet/admin-date-time@5.3.0
+    -   @comet/admin-rte@5.3.0
+    -   @comet/admin-theme@5.3.0
+
 ## 5.2.0
 
 ### Minor Changes
