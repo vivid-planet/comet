@@ -12,16 +12,13 @@ interface IProps {
 export function EditorComponent(props: IProps): React.ReactElement {
     return (
         <Root>
-            <VisibleHyphen> {props.children}</VisibleHyphen>
+            <VisibleHyphen>{props.children}</VisibleHyphen>
         </Root>
     );
 }
 
-const Root = styled("span")`
-    position: relative;
-`;
+const Root = styled("span")``;
 
 const VisibleHyphen = styled(RteSoftHyphen)`
-    position: absolute;
     color: #999;
 `;
