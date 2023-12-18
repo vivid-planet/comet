@@ -26,17 +26,6 @@ function DemoForm() {
         }
         return true;
     }, [input]);
-    /*
-    const doSave = async () => {
-        setSaving(true);
-        await delay(1000);
-        setSaving(false);
-        if (input == "err") {
-            return false;
-        }
-        return true;
-    };
-    */
     return (
         <div>
             DemoForm <SubmissionBoundaryState hasChanges={input != ""} doSave={doSave} />
