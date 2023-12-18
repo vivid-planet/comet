@@ -28,7 +28,6 @@ import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
-import { randomBytes } from "crypto";
 import { Request } from "express";
 
 import { AuthModule } from "./auth/auth.module";
@@ -110,7 +109,7 @@ export class AppModule {
                     Documents: [Page, Link, PredefinedPage],
                     Scope: PageTreeNodeScope,
                     reservedPaths: ["/events"],
-                    sitePreviewSecret: randomBytes(32).toString("hex"),
+                    sitePreviewSecret: config.sitePreviewSecret,
                 }),
                 RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
                 BlobStorageModule.register({
