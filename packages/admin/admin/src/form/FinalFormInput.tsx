@@ -4,7 +4,7 @@ import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { useTranslationConfig } from "../translator/config/useTranslationConfig";
+import { useContentTranslationServiceProvider } from "../translator/config/useContentTranslationServiceProvider";
 
 export type FinalFormInputProps = InputBaseProps &
     FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement> & {
@@ -21,7 +21,7 @@ export function FinalFormInput({
     disableTranslation,
     ...props
 }: FinalFormInputProps): React.ReactElement {
-    const { enabled, translate } = useTranslationConfig();
+    const { enabled, translate } = useContentTranslationServiceProvider();
 
     return (
         <InputBase

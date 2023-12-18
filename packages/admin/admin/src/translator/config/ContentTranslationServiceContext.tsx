@@ -5,7 +5,7 @@ export interface TranslationConfig {
     translate: (input: string) => Promise<string | void>;
 }
 
-export const TranslationConfigContext = React.createContext<TranslationConfig>({
+export const ContentTranslationServiceContext = React.createContext<TranslationConfig>({
     enabled: false,
     translate: async () => {
         /* Noop */
