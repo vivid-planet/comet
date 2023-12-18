@@ -6,7 +6,7 @@ import { useSubmissionBoundaryApi, useSubmissionBoundaryState } from "./Submissi
 export function SubmissionBoundarySaveButton(props: SaveButtonProps) {
     const submissionBoundaryState = useSubmissionBoundaryState();
     const submissionBoundaryApi = useSubmissionBoundaryApi();
-    if (!submissionBoundaryState || !submissionBoundaryApi) throw new Error("SaveButton must be inside SubmissionBoundary");
+    if (!submissionBoundaryState || !submissionBoundaryApi) throw new Error("SubmissionBoundarySaveButton must be inside SubmissionBoundary");
     return (
         <SaveButton
             disabled={!submissionBoundaryState.hasChanges}
