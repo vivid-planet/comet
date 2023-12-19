@@ -32,7 +32,7 @@ export class BuildsService {
     private async getAllowedBuildJobs(user: CurrentUserInterface): Promise<V1Job[]> {
         const allJobs = await this.kubernetesService.getAllJobs(`${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`);
         return allJobs.filter((job) => {
-            return this.accessControlService.isAllowedContentScope(user, this.kubernetesService.getContentScope(job));
+            return this.accessControlService.isAllowed(user, "builds", this.kubernetesService.getContentScope(job));
         });
     }
 

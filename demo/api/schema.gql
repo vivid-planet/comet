@@ -134,6 +134,7 @@ type SitePreviewHash {
 
 type CurrentUserPermission {
   permission: String!
+  contentScopes: [JSONObject!]!
 }
 
 type CurrentUser {

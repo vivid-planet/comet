@@ -2,7 +2,7 @@ import { Menu, MenuCollapsibleItem, MenuContext, MenuItemRouterLink, MenuItemRou
 import * as React from "react";
 import { RouteProps, useRouteMatch } from "react-router-dom";
 
-import { CurrentUserContext } from "../userPermissions/hooks/currentUser";
+import { useIsAllowed } from "../userPermissions/hooks/currentUser";
 
 export type MasterMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
     requiredPermission?: string;
@@ -14,13 +14,8 @@ export type MasterMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
 export type MasterMenuData = MasterMenuItem[];
 
 export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
-    const context = React.useContext(CurrentUserContext);
-    const checkPermission = (item: MasterMenuItem): boolean => {
-        if (!item.requiredPermission) return true;
-        if (context === undefined)
-            throw new Error("MasterMenu: requiredPermission is set but CurrentUserContext not found. Make sure CurrentUserProvider exists.");
-        return context.isAllowed(context.currentUser, item.requiredPermission);
-    };
+    const isAllowed = useIsAllowed();
+    const checkPermission = (item: MasterMenuItem): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
 
     const mapFn = (item: MasterMenuItem): MenuItem => {
         const { route, submenu, to, ...menuItem } = item;

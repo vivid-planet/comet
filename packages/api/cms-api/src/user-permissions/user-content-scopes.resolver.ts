@@ -32,7 +32,11 @@ export class UserContentScopesResolver {
             entity = this.repository.create({ userId, contentScopes });
         }
         await this.repository.persistAndFlush(entity);
-        return this.userService.getContentScopes(userId);
+        return this.userService.getContentScopes(userId, {
+            includeContentScopesByRule: false,
+            includeContentScopesManual: true,
+            includeContentScopesFromPermissions: true,
+        });
     }
 
     @Query(() => [GraphQLJSONObject])
@@ -40,7 +44,11 @@ export class UserContentScopesResolver {
         @Args("userId", { type: () => String }) userId: string,
         @Args("skipManual", { type: () => Boolean, nullable: true }) skipManual = false,
     ): Promise<ContentScope[]> {
-        return this.userService.getContentScopes(userId, skipManual);
+        return this.userService.getContentScopes(userId, {
+            includeContentScopesByRule: true,
+            includeContentScopesManual: !skipManual,
+            includeContentScopesFromPermissions: false,
+        });
     }
 
     @Query(() => [GraphQLJSONObject])

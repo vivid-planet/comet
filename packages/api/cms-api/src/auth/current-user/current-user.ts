@@ -7,6 +7,7 @@ export interface CurrentUserInterface {
     language: string;
     permissions?: {
         permission: string;
+        contentScopes: ContentScope[];
     }[];
     contentScopes?: ContentScope[];
 }

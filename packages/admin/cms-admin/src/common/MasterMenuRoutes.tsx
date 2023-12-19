@@ -2,17 +2,12 @@ import { RouteWithErrorBoundary } from "@comet/admin";
 import * as React from "react";
 import { Redirect, RouteProps, Switch, useRouteMatch } from "react-router-dom";
 
-import { CurrentUserContext } from "../userPermissions/hooks/currentUser";
+import { useIsAllowed } from "../userPermissions/hooks/currentUser";
 import { MasterMenuData, MasterMenuItem } from "./MasterMenu";
 
 export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
-    const context = React.useContext(CurrentUserContext);
-    const checkPermission = (item: MasterMenuItem): boolean => {
-        if (!item.requiredPermission) return true;
-        if (context === undefined)
-            throw new Error("MasterMenuRoutes: requiredPermission is set but CurrentUserContext not found. Make sure CurrentUserProvider exists.");
-        return context.isAllowed(context.currentUser, item.requiredPermission);
-    };
+    const isAllowed = useIsAllowed();
+    const checkPermission = (item: MasterMenuItem): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
 
     const flat = (routes: RouteProps[], item: MasterMenuItem): RouteProps[] => {
         if (item.route && checkPermission(item)) {
