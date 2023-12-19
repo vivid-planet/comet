@@ -676,9 +676,6 @@ importers:
       babel-plugin-styled-components:
         specifier: ^1.0.0
         version: 1.13.3(styled-components@5.3.6)
-      draft-js:
-        specifier: ^0.11.7
-        version: 0.11.7(react-dom@17.0.2)(react@17.0.2)
       express:
         specifier: ^4.0.0
         version: 4.18.2
@@ -758,9 +755,6 @@ importers:
       '@graphql-codegen/typescript-operations':
         specifier: ^2.0.0
         version: 2.5.12(graphql@15.8.0)
-      '@types/draft-js':
-        specifier: ^0.11.10
-        version: 0.11.10
       '@types/fs-extra':
         specifier: ^9.0.0
         version: 9.0.13
@@ -2777,6 +2771,9 @@ importers:
       '@testing-library/react-hooks':
         specifier: ^8.0.0
         version: 8.0.1(@types/react@17.0.53)(react-dom@17.0.2)(react@17.0.2)
+      '@types/draft-js':
+        specifier: ^0.11.10
+        version: 0.11.10
       '@types/jest':
         specifier: ^29.5.0
         version: 29.5.0
@@ -3215,7 +3212,7 @@ packages:
       '@babel/generator': 7.20.7
       '@babel/parser': 7.20.13
       '@babel/runtime': 7.20.13
-      '@babel/traverse': 7.20.13
+      '@babel/traverse': 7.20.13(supports-color@5.5.0)
       '@babel/types': 7.20.7
       babel-preset-fbjs: 3.4.0(@babel/core@7.22.11)
       chalk: 4.1.2
@@ -4291,10 +4288,10 @@ packages:
       '@babel/helpers': 7.20.13
       '@babel/parser': 7.20.13
       '@babel/template': 7.20.7
-      '@babel/traverse': 7.20.13
+      '@babel/traverse': 7.20.13(supports-color@5.5.0)
       '@babel/types': 7.20.7
       convert-source-map: 1.9.0
-      debug: 4.3.4(supports-color@9.3.1)
+      debug: 4.3.4(supports-color@5.5.0)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.0
@@ -4316,7 +4313,7 @@ packages:
       '@babel/traverse': 7.22.11
       '@babel/types': 7.22.11
       convert-source-map: 1.9.0
-      debug: 4.3.4(supports-color@9.3.1)
+      debug: 4.3.4(supports-color@5.5.0)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -4563,7 +4560,7 @@ packages:
       '@babel/helper-split-export-declaration': 7.18.6
       '@babel/helper-validator-identifier': 7.19.1
       '@babel/template': 7.20.7
-      '@babel/traverse': 7.20.13
+      '@babel/traverse': 7.20.13(supports-color@5.5.0)
       '@babel/types': 7.20.7
     transitivePeerDependencies:
       - supports-color
@@ -4636,7 +4633,7 @@ packages:
       '@babel/helper-member-expression-to-functions': 7.20.7
       '@babel/helper-optimise-call-expression': 7.18.6
       '@babel/template': 7.20.7
-      '@babel/traverse': 7.20.13
+      '@babel/traverse': 7.20.13(supports-color@5.5.0)
       '@babel/types': 7.20.7
     transitivePeerDependencies:
       - supports-color
@@ -4711,7 +4708,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/template': 7.20.7
-      '@babel/traverse': 7.20.13
+      '@babel/traverse': 7.20.13(supports-color@5.5.0)
       '@babel/types': 7.20.7
     transitivePeerDependencies:
       - supports-color
@@ -6756,7 +6753,7 @@ packages:
       '@babel/helper-split-export-declaration': 7.18.6
       '@babel/parser': 7.20.13
       '@babel/types': 7.20.7
-      debug: 4.3.4(supports-color@9.3.1)
+      debug: 4.3.4(supports-color@5.5.0)
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -6790,7 +6787,7 @@ packages:
       '@babel/helper-split-export-declaration': 7.22.6
       '@babel/parser': 7.22.14
       '@babel/types': 7.22.11
-      debug: 4.3.4(supports-color@9.3.1)
+      debug: 4.3.4(supports-color@5.5.0)
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -8145,7 +8142,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.4(supports-color@9.3.1)
+      debug: 4.3.4(supports-color@5.5.0)
       espree: 9.5.2
       globals: 13.19.0
       ignore: 5.2.4
@@ -8969,7 +8966,7 @@ packages:
     dependencies:
       '@babel/parser': 7.20.13
       '@babel/plugin-syntax-import-assertions': 7.20.0(@babel/core@7.20.12)
-      '@babel/traverse': 7.20.13
+      '@babel/traverse': 7.20.13(supports-color@5.5.0)
       '@babel/types': 7.20.7
       '@graphql-tools/utils': 9.1.4(graphql@15.8.0)
       graphql: 15.8.0
@@ -9152,7 +9149,7 @@ packages:
       '@types/json-stable-stringify': 1.0.34
       '@types/jsonwebtoken': 9.0.1
       chalk: 4.1.2
-      debug: 4.3.4(supports-color@9.3.1)
+      debug: 4.3.4(supports-color@5.5.0)
       dotenv: 16.0.3
       graphql: 15.8.0
       graphql-request: 5.1.0(graphql@15.8.0)
@@ -9503,7 +9500,7 @@ packages:
     engines: {node: '>=10.10.0'}
     dependencies:
       '@humanwhocodes/object-schema': 1.2.1
-      debug: 4.3.4(supports-color@9.3.1)
+      debug: 4.3.4(supports-color@5.5.0)
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -15259,7 +15256,7 @@ packages:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
     engines: {node: '>= 6.0.0'}
     dependencies:
-      debug: 4.3.4(supports-color@9.3.1)
+      debug: 4.3.4(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -19686,7 +19683,7 @@ packages:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.3.4(supports-color@9.3.1)
+      debug: 4.3.4(supports-color@5.5.0)
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.1.1
@@ -21846,7 +21843,7 @@ packages:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@9.3.1)
+      debug: 4.3.4(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -21907,7 +21904,7 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@9.3.1)
+      debug: 4.3.4(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -28186,7 +28183,7 @@ packages:
     resolution: {integrity: sha512-efCx3b+0Z69/LGJmm9Yvi4cqEdxnoGnxYxGxBghkkTTFeXRtTCmmhO0AnAfHz59k957uTSuy8WaHqOs8wbYUWg==}
     engines: {node: '>=6'}
     dependencies:
-      debug: 4.3.4(supports-color@9.3.1)
+      debug: 4.3.4(supports-color@5.5.0)
       module-details-from-path: 1.0.3
       resolve: 1.22.1
     transitivePeerDependencies:
