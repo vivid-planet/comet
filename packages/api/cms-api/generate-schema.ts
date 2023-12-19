@@ -12,7 +12,6 @@ import {
     createPageTreeResolver,
     createRedirectsResolver,
     CurrentUserInterface,
-    CurrentUserRightInterface,
     DependenciesResolverFactory,
     DependentsResolverFactory,
     DocumentInterface,
@@ -52,16 +51,8 @@ class Page implements DocumentInterface {
 }
 
 @ObjectType()
-class CurrentUserRight implements CurrentUserRightInterface {
-    @Field()
-    right: string;
-
-    @Field(() => [String])
-    values: string[];
-}
-
-@ObjectType()
 class CurrentUser implements CurrentUserInterface {
+    @Field()
     id: string;
     @Field()
     name: string;
@@ -69,10 +60,6 @@ class CurrentUser implements CurrentUserInterface {
     email: string;
     @Field()
     language: string;
-    @Field()
-    role: string;
-    @Field(() => [CurrentUserRight], { nullable: true })
-    rights: CurrentUserRightInterface[];
     @Field(() => [GraphQLJSONObject])
     contentScopes: ContentScope[];
     @Field(() => [CurrentUserPermission])

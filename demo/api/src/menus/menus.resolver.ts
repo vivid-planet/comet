@@ -10,6 +10,7 @@ import { MainMenuObject } from "./dto/main-menu.object";
 import { MainMenuItem } from "./entities/main-menu-item.entity";
 
 @Resolver(() => MainMenuObject)
+@PublicApi()
 export class MenusResolver {
     constructor(
         private readonly pageTreeReadApi: PageTreeReadApiService,
@@ -17,7 +18,6 @@ export class MenusResolver {
     ) {}
 
     @Query(() => MainMenuObject)
-    @PublicApi()
     async mainMenu(@Args("scope", { type: () => PageTreeNodeScope }) scope: PageTreeNodeScope): Promise<MainMenuObject> {
         await this.pageTreeReadApi.preloadNodes(scope);
         const rootNodes = await this.pageTreeReadApi.pageTreeRootNodeList({

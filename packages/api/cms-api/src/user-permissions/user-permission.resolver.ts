@@ -4,6 +4,7 @@ import { Args, ArgsType, Field, ID, Mutation, Query, Resolver } from "@nestjs/gr
 import { IsString } from "class-validator";
 
 import { SkipBuild } from "../builds/skip-build.decorator";
+import { RequiredPermission } from "./decorators/required-permission.decorator";
 import { UserPermissionInput } from "./dto/user-permission.input";
 import { UserPermission } from "./entities/user-permission.entity";
 import { UserPermissionsService } from "./user-permissions.service";
@@ -16,6 +17,7 @@ export class UserPermissionListArgs {
 }
 
 @Resolver(() => UserPermission)
+@RequiredPermission(["userPermissions"], { skipScopeCheck: true })
 export class UserPermissionResolver {
     constructor(
         private readonly userService: UserPermissionsService,

@@ -26,6 +26,10 @@ export { Header } from "./common/header/Header";
 export { UserHeaderItem } from "./common/header/UserHeaderItem";
 export type { TextMatch } from "./common/MarkedMatches";
 export { MarkedMatches } from "./common/MarkedMatches";
+export type { MasterMenuData, MasterMenuProps } from "./common/MasterMenu";
+export { MasterMenu, useMenuFromMasterMenuData } from "./common/MasterMenu";
+export type { MasterMenuRoutesProps } from "./common/MasterMenuRoutes";
+export { MasterMenuRoutes, useRoutePropsFromMasterMenuData } from "./common/MasterMenuRoutes";
 export type { PageListItem } from "./common/PageList";
 export { PageList } from "./common/PageList";
 export { PageName } from "./common/PageName";
@@ -86,6 +90,7 @@ export type { SiteConfig } from "./sitesConfig/SitesConfigContext";
 export { SitesConfigProvider } from "./sitesConfig/SitesConfigProvider";
 export { useSiteConfig } from "./sitesConfig/useSiteConfig";
 export { useSitesConfig } from "./sitesConfig/useSitesConfig";
+export { CurrentUserInterface, CurrentUserProvider, useCurrentUser } from "./userPermissions/hooks/currentUser";
 export { UserPermissionsPage } from "./userPermissions/UserPermissionsPage";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
 import emotionStyled from "@emotion/styled";

@@ -23,7 +23,6 @@
 
     -   Install `@comet/cli` as a dev dependency
     -   Replace the scripts in the package.json of your admin:
-
         ```json
             "generate-block-types": "comet generate-block-types --inputs",
             "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"npm run generate-block-types\""

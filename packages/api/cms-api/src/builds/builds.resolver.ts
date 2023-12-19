@@ -1,11 +1,14 @@
 import { V1CronJob } from "@kubernetes/client-node";
+import { Inject } from "@nestjs/common";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 
 import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
-import { ContentScopeService } from "../content-scope/content-scope.service";
 import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
+import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
+import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
 import { BuildsService } from "./builds.service";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
 import { Build } from "./dto/build.object";
@@ -13,11 +16,12 @@ import { CreateBuildsInput } from "./dto/create-builds.input";
 import { SkipBuild } from "./skip-build.decorator";
 
 @Resolver(() => Build)
+@RequiredPermission(["builds"], { skipScopeCheck: true }) // Scopes are checked in code
 export class BuildsResolver {
     constructor(
         private readonly kubernetesService: KubernetesService,
         private readonly buildsService: BuildsService,
-        private readonly contentScopeService: ContentScopeService,
+        @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
     ) {}
 
     @Mutation(() => Boolean)
@@ -33,7 +37,7 @@ export class BuildsResolver {
                 throw new Error("Triggering build from different instance is not allowed");
             }
 
-            if (!this.contentScopeService.canAccessScope(this.kubernetesService.getContentScope(cronJob), user)) {
+            if (!this.accessControlService.isAllowedContentScope(user, this.kubernetesService.getContentScope(cronJob))) {
                 throw new Error("Triggering build not allowed");
             }
 

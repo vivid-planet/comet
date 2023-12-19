@@ -131,6 +131,15 @@ type CurrentUserPermission {
   permission: String!
 }
 
+type CurrentUser {
+  id: String!
+  name: String!
+  email: String!
+  language: String!
+  contentScopes: [JSONObject!]!
+  permissions: [CurrentUserPermission!]!
+}
+
 type User {
   id: String!
   name: String!
@@ -258,14 +267,6 @@ type PredefinedPage implements DocumentInterface {
   updatedAt: DateTime!
   createdAt: DateTime!
   type: String
-}
-
-type CurrentUser {
-  name: String!
-  email: String!
-  language: String!
-  role: String!
-  domains: [String!]!
 }
 
 type DamScope {

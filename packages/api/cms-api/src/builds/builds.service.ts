@@ -1,16 +1,17 @@
 import { V1CronJob, V1Job } from "@kubernetes/client-node";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import parser from "cron-parser";
 import { format } from "date-fns";
 
 import { CurrentUserInterface } from "../auth/current-user/current-user";
-import { ContentScope } from "../common/decorators/content-scope.interface";
-import { ContentScopeService } from "../content-scope/content-scope.service";
 import { JobStatus } from "../kubernetes/job-status.enum";
 import { INSTANCE_LABEL, PARENT_CRON_JOB_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
+import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
 import { BuildTemplatesService } from "./build-templates.service";
 import { BUILDER_LABEL, LABEL_ANNOTATION, TRIGGER_ANNOTATION } from "./builds.constants";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
@@ -25,13 +26,13 @@ export class BuildsService {
         @InjectRepository(ChangesSinceLastBuild) private readonly changesRepository: EntityRepository<ChangesSinceLastBuild>,
         private readonly buildTemplatesService: BuildTemplatesService,
         private readonly kubernetesService: KubernetesService,
-        private readonly contentScopeService: ContentScopeService,
+        @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
     ) {}
 
     private async getAllowedBuildJobs(user: CurrentUserInterface): Promise<V1Job[]> {
         const allJobs = await this.kubernetesService.getAllJobs(`${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`);
         return allJobs.filter((job) => {
-            return this.contentScopeService.canAccessScope(this.kubernetesService.getContentScope(job), user);
+            return this.accessControlService.isAllowedContentScope(user, this.kubernetesService.getContentScope(job));
         });
     }
 
