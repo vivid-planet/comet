@@ -10,11 +10,7 @@ function SpecialCharactersControls(props: IControlProps) {
         options: { supports: supportedThings },
     } = props;
 
-    if (!supportedThings.includes("non-breaking-space")) {
-        return null;
-    }
-
-    if (!supportedThings.includes("soft-hyphen")) {
+    if (!supportedThings.includes("non-breaking-space") && !supportedThings.includes("soft-hyphen")) {
         return null;
     }
 
