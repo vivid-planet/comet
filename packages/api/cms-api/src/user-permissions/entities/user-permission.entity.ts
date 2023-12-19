@@ -1,6 +1,5 @@
 import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
-/* eslint-disable @typescript-eslint/naming-convention */
 import { v4 } from "uuid";
 
 export enum UserPermissionSource {
