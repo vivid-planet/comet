@@ -3,8 +3,8 @@ import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { v4 } from "uuid";
 
 export enum UserPermissionSource {
-    MANUAL = "manual",
-    BY_RULE = "by rule",
+    MANUAL = "MANUAL",
+    BY_RULE = "BY_RULE",
 }
 registerEnumType(UserPermissionSource, {
     name: "UserPermissionSource",
