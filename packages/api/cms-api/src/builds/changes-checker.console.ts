@@ -39,7 +39,7 @@ export class ChangesCheckerConsole {
                         // Check if scopes match partially. For instance, a job's scope may be { "domain": "main" }, but the change was in
                         // { "domain": "main", "language": "en" }. Or the job's scope may be { "domain": "main", "language": "en" }, but the change
                         // was in { "domain": "main" }. In both cases, the job should still be started.
-                        if (Object.entries(cronJobScope).some(([key, value]) => (scope as Record<string, unknown>)[key] === value)) {
+                        if (Object.entries(cronJobScope ?? {}).some(([key, value]) => (scope as Record<string, unknown>)[key] === value)) {
                             return cronJob;
                         }
                     }

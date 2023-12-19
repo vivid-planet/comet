@@ -6,14 +6,14 @@ import parser from "cron-parser";
 import { format } from "date-fns";
 
 import { CurrentUserInterface } from "../auth/current-user/current-user";
-import { JobStatus } from "../kubernetes/job-status.enum";
-import { INSTANCE_LABEL, PARENT_CRON_JOB_LABEL } from "../kubernetes/kubernetes.constants";
+import { KubernetesJobStatus } from "../kubernetes/job-status.enum";
+import { INSTANCE_LABEL, LABEL_ANNOTATION, PARENT_CRON_JOB_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
 import { BuildTemplatesService } from "./build-templates.service";
-import { BUILDER_LABEL, LABEL_ANNOTATION, TRIGGER_ANNOTATION } from "./builds.constants";
+import { BUILDER_LABEL, TRIGGER_ANNOTATION } from "./builds.constants";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
 import { Build } from "./dto/build.object";
 import { ChangesSinceLastBuild } from "./entities/changes-since-last-build.entity";
@@ -32,7 +32,7 @@ export class BuildsService {
     private async getAllowedBuildJobs(user: CurrentUserInterface): Promise<V1Job[]> {
         const allJobs = await this.kubernetesService.getAllJobs(`${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`);
         return allJobs.filter((job) => {
-            return this.accessControlService.isAllowedContentScope(user, this.kubernetesService.getContentScope(job));
+            return this.accessControlService.isAllowedContentScope(user, this.kubernetesService.getContentScope(job) ?? {});
         });
     }
 
@@ -64,7 +64,7 @@ export class BuildsService {
             if (mostRecentJob) {
                 // check if another build is already running and skip if so, to prevent overwhelming the cluster
                 const status = this.kubernetesService.getStatusForKubernetesJob(mostRecentJob);
-                if (status === JobStatus.active || status === JobStatus.pending) {
+                if (status === KubernetesJobStatus.active || status === KubernetesJobStatus.pending) {
                     console.warn(`Job for ${cronJob.metadata?.name} already running; skipping this run`);
                     continue;
                 }

@@ -109,7 +109,7 @@ export {
     CrudSingleGenerator,
     CrudSingleGeneratorOptions,
 } from "./generator/crud-generator.decorator";
-export { JobStatus } from "./kubernetes/job-status.enum";
+export { KubernetesJobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
 export { AttachedDocumentLoaderService } from "./page-tree/attached-document-loader.service";

@@ -94,7 +94,7 @@ type AutoBuildStatus {
 
 type Build {
   id: ID!
-  status: JobStatus!
+  status: KubernetesJobStatus!
   name: String
 
   """
@@ -107,18 +107,37 @@ type Build {
   estimatedCompletionTime: DateTime
 }
 
-enum JobStatus {
+enum KubernetesJobStatus {
   pending
   active
   succeeded
   failed
 }
 
-type CronJob {
+type KubernetesCronJob {
   id: ID!
   name: String!
+
+  """
+  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+  """
+  label: String
   schedule: String!
   lastScheduledAt: DateTime
+  lastJobRun: KubernetesJob
+}
+
+type KubernetesJob {
+  id: ID!
+  name: String!
+
+  """
+  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+  """
+  label: String
+  status: KubernetesJobStatus!
+  startTime: DateTime
+  completionTime: DateTime
 }
 
 type FilenameResponse {
@@ -628,7 +647,9 @@ type Query {
   footer(scope: FooterContentScopeInput!): Footer
   predefinedPage(id: ID!): PredefinedPage
   pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
-  cronJobs: [CronJob!]!
+  kubernetesCronJobs: [KubernetesCronJob!]!
+  kubernetesCronJob(name: String!): KubernetesCronJob!
+  kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
   products(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
@@ -932,6 +953,7 @@ type Mutation {
   updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
   saveFooter(scope: FooterContentScopeInput!, input: FooterInput!, lastUpdatedAt: DateTime): Footer!
   savePredefinedPage(id: ID!, input: PredefinedPageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): PredefinedPage!
+  triggerKubernetesCronJob(name: String!): KubernetesJob!
   createProduct(input: ProductInput!): Product!
   updateProduct(id: ID!, input: ProductUpdateInput!, lastUpdatedAt: DateTime): Product!
   deleteProduct(id: ID!): Boolean!
