@@ -55,7 +55,7 @@ export const ImportFromUnsplash: React.FC = () => {
             </Button>
             <Dialog open={isOpen} onClose={handleCloseDialog}>
                 <div>
-                    <DialogTitle>Import from unsplash</DialogTitle>
+                    <DialogTitle>Import from Unsplash</DialogTitle>
                     <DialogContent>
                         <ImagePreview src={unsplashImage?.url} alt="image" />
                     </DialogContent>
