@@ -12,7 +12,7 @@ import { parallelAsyncEvery } from "../../utils/parallelAsyncEvery";
 import { useAdminComponentPaper } from "../common/AdminComponentPaper";
 import { HiddenInSubroute } from "../common/HiddenInSubroute";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
-import { BlockCategory, BlockInterface, BlockState, DispatchSetStateAction, PreviewStateInterface } from "../types";
+import { BlockCategory, BlockInterface, BlockState, CustomBlockCategory, DispatchSetStateAction, PreviewStateInterface } from "../types";
 import { resolveNewState } from "../utils";
 
 interface OneOfBlockItem<T extends BlockInterface = BlockInterface> {
@@ -57,7 +57,7 @@ export interface CreateOneOfBlockOptions<T extends boolean> {
     name: string;
     displayName?: React.ReactNode;
     supportedBlocks: Record<BlockType, BlockInterface>;
-    category?: BlockCategory;
+    category?: BlockCategory | CustomBlockCategory;
     variant?: "select" | "radio" | "toggle";
     allowEmpty?: T;
 }

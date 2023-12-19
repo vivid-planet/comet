@@ -7,6 +7,34 @@ sidebar_position: 1
 
 ## API
 
+### DependenciesModule
+
+Add the `DependenciesModule` to `AppModule`:
+
+```diff
+import {
+    ...
++   DependenciesModule,
+} from "@comet/cms-api";
+
+...
+
+@Module({})
+export class AppModule {
+    static forRoot(config: Config): DynamicModule {
+        return {
+            module: AppModule,
+            imports: [
+                ConfigModule.forRoot(config),
+                DbModule,
+                ...
++               DependenciesModule,
+            ],
+        };
+    }
+}
+```
+
 ### blocks-meta.json
 
 The key (type) of OneOfBlocks is now included in the `blocks-meta.json`.
@@ -54,10 +82,25 @@ indexData(): BlockIndexData {
 }
 ```
 
+### File and Folder Entities
+
+`File` and `Folder` are no longer exported by `@comet/cms-api`. Instead, use the exported `FileInterface` and `FolderInterface` for typing.
+
+If you need classes (e.g. as return type of a GraphQL field), you can create them using the `createFileEntity()` and `createFolderEntity()` factories.
+You will then need to pass your classes to the `DamModule` during initialization:
+
+```diff
+DamModule.register({
+   // ...
++  File: DamFile,
++  Folder: DamFolder,
+})
+```
+
 ### FilesService.upload()
 
-The method signature changed. 
-The second argument is now an options object. 
+The method signature changed.
+The second argument is now an options object.
 You may have to adjust this in your fixtures.
 
 ```diff
@@ -135,7 +178,10 @@ dependencies: (state) => {
 ```tsx
 replaceDependenciesInOutput: (output, replacements) => {
     const clonedOutput: PixelImageBlockInput = deepClone(output);
-    const replacement = replacements.find((replacement) => replacement.type === "DamFile" && replacement.originalId === output.damFileId);
+    const replacement = replacements.find(
+        (replacement) =>
+            replacement.type === "DamFile" && replacement.originalId === output.damFileId,
+    );
 
     if (replacement) {
         clonedOutput.damFileId = replacement.replaceWithId;
@@ -144,6 +190,11 @@ replaceDependenciesInOutput: (output, replacements) => {
     return clonedOutput;
 };
 ```
+
+### Dashboard
+
+New components `DashboardHeader`, `LatestBuildsDashboardWidget`, and `LatestContentUpdatesDashboardWidget` have been added to replace existing components defined in application code.
+See [this PR](https://github.com/vivid-planet/comet-starter/pull/40) for an example on how to migrate.
 
 ### BlockPreview
 
@@ -176,6 +227,24 @@ If you had a custom implementation of `getOptionSelected()`, you may need to rep
 #### FilterBarMoreFilters
 
 The `textWrapper` class of `FilterBarMoreFilters` was removed. Use the new `button` class instead.
+
+## Site
+
+### Restricted imports
+
+The imports for `Link`, `useRouter`, and `Image` from `next` have been restricted.
+Please use `Link`, `useRouter` and `Image` from `@comet/cms-site` instead.
+
+```diff
+- import Link from "next/link";
++ import { Link } from "@comet/cms-site";
+
+- import { useRouter } from "next/router";
++ import { useRouter } from "@comet/cms-site";
+
+- import Image from "next/image";
++ import { Image } from "@comet/cms-site";
+```
 
 ## ESLint
 

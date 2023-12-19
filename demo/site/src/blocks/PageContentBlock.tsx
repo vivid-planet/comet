@@ -1,4 +1,4 @@
-import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
+import { BlocksBlock, PropsWithData, SupportedBlocks, YouTubeVideoBlock } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
 import * as React from "react";
 
@@ -14,7 +14,6 @@ import RichTextBlock from "./RichTextBlock";
 import SpaceBlock from "./SpaceBlock";
 import { TextImageBlock } from "./TextImageBlock";
 import { TwoListsBlock } from "./TwoListsBlock";
-import YouTubeVideoBlock from "./YouTubeVideoBlock";
 
 const supportedBlocks: SupportedBlocks = {
     space: (props) => <SpaceBlock data={props} />,

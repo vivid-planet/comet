@@ -1,5 +1,18 @@
 # @comet/blocks-api
 
+## 5.3.0
+
+### Minor Changes
+
+-   920f2b85: Deprecate `nullable: true` for child blocks
+
+    Nullable child blocks are not correctly supported in the Admin, for instance, in `createCompositeBlock`.
+    Save a block's default values instead.
+
+## 5.2.0
+
+## 5.1.0
+
 ## 5.0.0
 
 ### Major Changes
@@ -10,7 +23,6 @@
 
     -   Install `@comet/cli` as a dev dependency
     -   Replace the scripts in the package.json of your admin:
-        
         ```json
             "generate-block-types": "comet generate-block-types --inputs",
             "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"npm run generate-block-types\""

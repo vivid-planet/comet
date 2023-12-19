@@ -3,9 +3,9 @@ import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 import { Observable } from "rxjs";
-import { ContentScope } from "src/user-permissions/interfaces/content-scope.interface";
 
 import { ContentScopeService } from "../user-permissions/content-scope.service";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { BuildsService } from "./builds.service";
 import { SKIP_BUILD_METADATA_KEY } from "./skip-build.decorator";
 

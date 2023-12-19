@@ -1,5 +1,93 @@
 # @comet/cms-admin
 
+## 5.3.0
+
+### Patch Changes
+
+-   0fdf4eaf: Always use the `/preview` file URLs in the admin application
+
+    This is achieved by setting the `x-preview-dam-urls` in the `includeInvisibleContentContext`.
+
+    This fixes a page copy bug where all files were downloaded and uploaded again, even when copying within the same environment.
+
+-   Updated dependencies [0ff9b9ba]
+-   Updated dependencies [0ff9b9ba]
+-   Updated dependencies [a677a162]
+-   Updated dependencies [60cc1b2a]
+-   Updated dependencies [5435b278]
+-   Updated dependencies [a2273887]
+    -   @comet/admin-icons@5.3.0
+    -   @comet/admin@5.3.0
+    -   @comet/blocks-admin@5.3.0
+    -   @comet/admin-date-time@5.3.0
+    -   @comet/admin-rte@5.3.0
+    -   @comet/admin-theme@5.3.0
+
+## 5.2.0
+
+### Minor Changes
+
+-   0bed4e7c: Improve the `SaveConflictDialog`
+
+    -   extend the text in the dialog to explain
+        -   what happened
+        -   what the next steps are
+        -   what can be done to avoid conflicts
+    -   make the button labels more precise
+    -   once the save dialog is closed
+        -   stop polling
+        -   mark the save button red and with an error icon
+
+-   0bed4e7c: `useSaveConflict()`, `useSaveConflictQuery()` and `useFormSaveConflict()` now return a `hasConflict` prop
+
+    If `hasConflict` is true, a save conflict has been detected.
+    You should pass `hasConflict` on to `SaveButton`, `FinalFormSaveButton` or `FinalFormSaveSplitButton`. The button will then display a "conflict" state.
+
+-   0bed4e7c: Admin Generator: In the generated form, the `hasConflict` prop is passed from the `useFormSaveConflict()` hook to the `FinalFormSaveSplitButton`
+-   6fda5a53: CRUD Generator: Change the file ending of the private sibling GraphQL files from `.gql.tsx` to `.gql.ts`
+
+    The GraphQL files do not contain JSX.
+    Regenerate the files to apply this change to a project.
+
+### Patch Changes
+
+-   Updated dependencies [25daac07]
+-   Updated dependencies [0bed4e7c]
+-   Updated dependencies [9fc7d474]
+-   Updated dependencies [3702bb23]
+-   Updated dependencies [824ea66a]
+    -   @comet/admin@5.2.0
+    -   @comet/admin-icons@5.2.0
+    -   @comet/blocks-admin@5.2.0
+    -   @comet/admin-date-time@5.2.0
+    -   @comet/admin-rte@5.2.0
+    -   @comet/admin-theme@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+-   e1d3f007: Prevent false positive save conflicts while editing documents (e.g. `Page`):
+
+    -   Stop checking for conflicts while saving is in progress
+    -   Ensure that all "CheckForChanges" polls are cleared
+
+-   6d69dfac: Fix issue in PixelImageBlock that caused the preview URLs for files without a file extension in their filename to be invalid
+-   21c30931: Improved the EditPageNode dialog ("Page Properties" dialog):
+
+    -   Execute the asynchronous slug validation less often (increased the debounce wait time from 200ms to 500ms)
+    -   Cache the slug validation results. Evict the cache on the initial render of the dialog
+
+-   Updated dependencies [21c30931]
+-   Updated dependencies [93b3d971]
+-   Updated dependencies [e33cd652]
+    -   @comet/admin@5.1.0
+    -   @comet/admin-date-time@5.1.0
+    -   @comet/admin-icons@5.1.0
+    -   @comet/admin-rte@5.1.0
+    -   @comet/admin-theme@5.1.0
+    -   @comet/blocks-admin@5.1.0
+
 ## 5.0.0
 
 ### Major Changes

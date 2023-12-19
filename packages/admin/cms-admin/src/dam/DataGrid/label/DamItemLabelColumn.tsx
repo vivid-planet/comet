@@ -124,7 +124,6 @@ export const DamItemLabelColumn: React.VoidFunctionComponent<DamItemLabelColumnP
                         showPath={isSearching}
                         matches={matches.get(item.id)}
                         showLicenseWarnings={damConfig.enableLicenseFeature}
-                        isInboxFromOtherScope={isFolder(item) ? item.isInboxFromOtherScope : false}
                     />
                 </Link>
             )}

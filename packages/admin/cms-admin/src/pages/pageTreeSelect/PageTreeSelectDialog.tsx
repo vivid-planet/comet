@@ -23,6 +23,7 @@ import { PageVisibilityIcon } from "../pageTree/PageVisibilityIcon";
 import { PageTreePage, usePageTree } from "../pageTree/usePageTree";
 import { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
 import * as sc from "./PageTreeSelectDialog.sc";
+
 export { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
 
 export const selectedPageFragment = gql`

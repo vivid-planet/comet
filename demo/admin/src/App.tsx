@@ -23,6 +23,7 @@ import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
 import { additionalPageTreeNodeFieldsFragment } from "@src/common/EditPageNode";
 import { createConfig } from "@src/config";
+import { pageTreeCategories } from "@src/pageTree/pageTreeCategories";
 import theme from "@src/theme";
 import * as React from "react";
 import { DndProvider } from "react-dnd";
@@ -32,7 +33,7 @@ import { IntlProvider } from "react-intl";
 import { Route, Switch } from "react-router-dom";
 
 import MasterHeader from "./common/MasterHeader";
-import MasterMenu, { masterMenuData, pageTreeCategories, pageTreeDocumentTypes } from "./common/MasterMenu";
+import MasterMenu, { masterMenuData, pageTreeDocumentTypes } from "./common/MasterMenu";
 import { getMessages } from "./lang";
 
 const GlobalStyle = () => (

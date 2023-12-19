@@ -7,9 +7,9 @@ import {
     createBlock,
     createListBlock,
     ExtractBlockData,
+    ExtractBlockInput,
     inputToData,
 } from "@comet/blocks-api";
-import { ValidateNested } from "class-validator";
 
 import { HeadlineBlock } from "./headline.block";
 
@@ -25,12 +25,10 @@ class TwoListsBlockData extends BlockData {
 
 class TwoListsBlockInput extends BlockInput {
     @ChildBlockInput(TwoListsList)
-    @ValidateNested()
-    list1: ExtractBlockData<typeof TwoListsList>;
+    list1: ExtractBlockInput<typeof TwoListsList>;
 
     @ChildBlockInput(TwoListsList)
-    @ValidateNested()
-    list2: ExtractBlockData<typeof TwoListsList>;
+    list2: ExtractBlockInput<typeof TwoListsList>;
 
     transformToBlockData(): BlockDataInterface {
         return inputToData(TwoListsBlockData, this);
