@@ -1,5 +1,7 @@
-import { FilesService, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
+import { Injectable } from "@nestjs/common";
 import { DamScope } from "@src/dam/dto/dam-scope";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
@@ -11,23 +13,19 @@ import faker from "faker";
 
 import { generateImageBlock } from "./blocks/image.generator";
 import { generateSeoBlock } from "./blocks/seo.generator";
-import { SvgImageFileFixture } from "./svg-image-file.fixture";
-import { UnsplashImageFileFixture } from "./unsplash-image-file.fixture";
+import { SvgImageFileFixtureService } from "./svg-image-file-fixture.service";
+import { UnsplashImageFileFixtureService } from "./unsplash-image-file-fixture.service";
 
 const IMAGES_NUMBER = 10;
 
-export class ManyImagesTestPageGenerator {
-    private readonly unsplashImageFileFixture: UnsplashImageFileFixture;
-    private readonly svgImageFileFixture: SvgImageFileFixture;
-
+@Injectable()
+export class ManyImagesTestPageFixtureService {
     constructor(
         private readonly pageTreeService: PageTreeService,
-        filesService: FilesService,
-        private readonly pagesRespository: EntityRepository<Page>,
-    ) {
-        this.unsplashImageFileFixture = new UnsplashImageFileFixture(filesService);
-        this.svgImageFileFixture = new SvgImageFileFixture(filesService);
-    }
+        @InjectRepository(Page) private readonly pagesRespository: EntityRepository<Page>,
+        private readonly unsplashImageFileFixtureService: UnsplashImageFileFixtureService,
+        private readonly svgImageFileFixtureService: SvgImageFileFixtureService,
+    ) {}
 
     async execute(): Promise<void> {
         const uuidDocument = "c66ebddd-ecd1-430c-9ea2-8a482c62ad70";
@@ -58,10 +56,10 @@ export class ManyImagesTestPageGenerator {
 
         const imageBlocks: ReturnType<typeof generateImageBlock>[] = [];
         for (let index = 0; index < IMAGES_NUMBER; index++) {
-            const imageFile = await this.unsplashImageFileFixture.generateImage(damScope);
+            const imageFile = await this.unsplashImageFileFixtureService.generateImage(damScope);
             imageBlocks.push(generateImageBlock(imageFile));
         }
-        const svgFile = await this.svgImageFileFixture.generateImage(damScope);
+        const svgFile = await this.svgImageFileFixtureService.generateImage(damScope);
         imageBlocks.push(generateImageBlock(svgFile));
 
         const pageInput = new PageInput();
