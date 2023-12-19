@@ -1,5 +1,6 @@
-import { Link, PropsWithData } from "@comet/cms-site";
+import { PropsWithData } from "@comet/cms-site";
 import { NewsLinkBlockData } from "@src/blocks.generated";
+import Link from "next/link";
 import * as React from "react";
 
 function NewsLinkBlock({ data: { id }, children }: React.PropsWithChildren<PropsWithData<NewsLinkBlockData>>): JSX.Element | null {

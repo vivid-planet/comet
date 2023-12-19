@@ -170,11 +170,18 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         return true;
                     }}
                     saveAction={async () => {
-                        if (formRenderProps.hasValidationErrors) {
+                        editDialogFormApi?.onFormStatusChange("saving");
+                        const hasValidationErrors = await waitForValidationToFinish(formRenderProps.form);
+
+                        if (hasValidationErrors) {
+                            editDialogFormApi?.onFormStatusChange("error");
                             return false;
                         }
+
                         const submissionErrors = await formRenderProps.form.submit();
+
                         if (submissionErrors) {
+                            editDialogFormApi?.onFormStatusChange("error");
                             return false;
                         }
 
@@ -204,13 +211,12 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         );
     }
 
-    function handleSubmit(values: FormValues, form: FormApi<FormValues>) {
+    async function handleSubmit(values: FormValues, form: FormApi<FormValues>) {
         const submitEvent = (form.mutators.getSubmitEvent ? form.mutators.getSubmitEvent() : undefined) || new FinalFormSubmitEvent("submit");
         const ret = props.onSubmit(values, form, submitEvent);
 
-        if (ret === undefined) return ret;
-
         editDialogFormApi?.onFormStatusChange("saving");
+
         return Promise.resolve(ret)
             .then((data) => {
                 // setTimeout is required because of https://github.com/final-form/final-form/pull/229
@@ -227,6 +233,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     }
 
                     onAfterSubmit(values, form);
+                    editDialogFormApi?.onAfterSave?.();
                 });
                 return data;
             })
@@ -234,6 +241,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                 (data) => {
                     // for final-form undefined means success, an obj means error
                     editDialogFormApi?.resetFormStatus();
+
                     form.reset(values);
                     return undefined;
                 },
@@ -251,3 +259,22 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             );
     }
 }
+
+const waitForValidationToFinish = (form: FormApi<any>): Promise<boolean> | boolean => {
+    const formState = form.getState();
+    if (!formState.validating) {
+        return formState.hasValidationErrors;
+    }
+
+    return new Promise((resolve) => {
+        const unsubscribe = form.subscribe(
+            (state) => {
+                if (!state.validating) {
+                    unsubscribe();
+                    resolve(state.hasValidationErrors);
+                }
+            },
+            { validating: true, hasValidationErrors: true },
+        );
+    });
+};

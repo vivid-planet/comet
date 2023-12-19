@@ -136,7 +136,7 @@ type User {
 
 type UserPermission {
   id: ID!
-  source: UserPermissionSource
+  source: UserPermissionSource!
   permission: String!
   validFrom: DateTime
   validTo: DateTime
@@ -332,6 +332,7 @@ type Query {
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   cronJobs: [CronJob!]!
   currentUser: CurrentUser!
+  getSitePreviewJwt(path: String!, previewData: PreviewData!): String!
   userPermissionsUserById(id: String!): User!
   userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
@@ -446,6 +447,10 @@ enum SlugAvailability {
   Available
   Taken
   Reserved
+}
+
+input PreviewData {
+  includeInvisible: Boolean!
 }
 
 input UserFilter {

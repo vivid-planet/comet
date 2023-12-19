@@ -8,6 +8,7 @@ import { FormattedMessage } from "react-intl";
 import { ChooseFileDialog } from "./chooseFile/ChooseFileDialog";
 import { damFileFieldFileQuery } from "./FileField.gql";
 import { GQLDamFileFieldFileFragment, GQLDamFileFieldFileQuery, GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";
+
 export { GQLDamFileFieldFileFragment } from "./FileField.gql.generated";
 
 interface FileFieldProps extends FieldRenderProps<GQLDamFileFieldFileFragment, HTMLInputElement> {

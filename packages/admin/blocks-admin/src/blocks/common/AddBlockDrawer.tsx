@@ -19,12 +19,12 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage, MessageDescriptor, useIntl } from "react-intl";
 
-import { BlockCategory, blockCategoryLabels, BlockInterface } from "../types";
+import { BlockCategory, blockCategoryLabels, BlockInterface, CustomBlockCategory } from "../types";
 
 type BlockType = string;
 
 interface Category {
-    blockCategory: BlockCategory;
+    id: string;
     label: React.ReactNode;
     blocks: Array<[BlockType, BlockInterface]>;
 }
@@ -38,27 +38,76 @@ interface Props {
 
 export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props): React.ReactElement {
     const intl = useIntl();
-    const [categories, setCategories] = React.useState<Category[]>([]);
     const [searchValue, setSearchValue] = React.useState("");
     const [addAndEdit, setAddAndEdit] = useStoredState<boolean>("addAndEdit", true);
 
-    React.useEffect(() => {
-        setCategories(
-            (Object.keys(BlockCategory) as BlockCategory[]).map((currentBlockCategory) => {
-                const blocksForCategory = Object.entries(blocks).filter(([, block]) => {
-                    const formattedDisplayName =
-                        typeof block.displayName === "string"
-                            ? (block.displayName as string)
-                            : intl.formatMessage((block.displayName as React.ReactElement<MessageDescriptor>).props);
+    const categories = React.useMemo(() => {
+        const categories: Category[] = [];
+        const categoriesOrder = Object.keys(BlockCategory);
 
-                    return (
-                        block.category === currentBlockCategory && formattedDisplayName.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())
+        for (const [type, block] of Object.entries(blocks)) {
+            let blockName: string;
+
+            if (typeof block.displayName === "string") {
+                blockName = block.displayName;
+            } else if (isFormattedMessage(block.displayName)) {
+                blockName = intl.formatMessage(block.displayName.props);
+            } else {
+                throw new TypeError("Block displayName must be either a string or a FormattedMessage");
+            }
+
+            if (!blockName.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())) {
+                continue;
+            }
+
+            let id: string;
+            let label: React.ReactNode;
+
+            if (isCustomBlockCategory(block.category)) {
+                if (block.category.id in BlockCategory) {
+                    throw new Error(
+                        `Custom block category "${block.category.id}" cannot override default block category BlockCategory.${block.category.id}`,
                     );
-                });
+                }
 
-                return { blockCategory: currentBlockCategory, label: blockCategoryLabels[currentBlockCategory], blocks: blocksForCategory };
-            }),
-        );
+                id = block.category.id;
+                label = block.category.label;
+
+                if (block.category.insertBefore) {
+                    const insertBeforeIndex = categoriesOrder.indexOf(block.category.insertBefore);
+
+                    if (categoriesOrder.includes(id)) {
+                        const hasDifferentInsertBefore = insertBeforeIndex - 1 !== categoriesOrder.indexOf(id);
+
+                        if (hasDifferentInsertBefore) {
+                            throw new Error(`Custom block category "${id}" has different "insertBefore" values`);
+                        }
+                    } else {
+                        categoriesOrder.splice(insertBeforeIndex, 0, id);
+                    }
+                } else {
+                    if (!categoriesOrder.includes(id)) {
+                        categoriesOrder.push(id);
+                    }
+                }
+            } else {
+                id = block.category;
+                label = blockCategoryLabels[block.category];
+            }
+
+            let category = categories.find((category) => category.id === id);
+
+            if (!category) {
+                category = { id, label, blocks: [] };
+                categories.push(category);
+            }
+
+            category.blocks.push([type, block]);
+        }
+
+        categories.sort((a, b) => categoriesOrder.indexOf(a.id) - categoriesOrder.indexOf(b.id));
+
+        return categories;
     }, [intl, blocks, searchValue]);
 
     const handleListItemClick = (type: string) => {
@@ -122,7 +171,7 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props):
                     }
 
                     return (
-                        <ContentItem key={category.blockCategory}>
+                        <ContentItem key={category.id}>
                             <Typography variant="h4" gutterBottom>
                                 {category.label}
                             </Typography>
@@ -144,6 +193,14 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props):
             </Content>
         </Drawer>
     );
+}
+
+function isCustomBlockCategory(category: BlockCategory | CustomBlockCategory): category is CustomBlockCategory {
+    return typeof category === "object";
+}
+
+function isFormattedMessage(node: React.ReactNode): node is React.ReactElement<MessageDescriptor> {
+    return React.isValidElement(node) && node.type === FormattedMessage;
 }
 
 const Content = styled(DialogContent)`

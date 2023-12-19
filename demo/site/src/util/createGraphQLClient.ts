@@ -1,17 +1,12 @@
+import { PreviewData } from "@comet/cms-site";
 import { GraphQLClient } from "graphql-request";
 
-interface GraphQLClientOptions {
-    includeInvisiblePages: boolean;
-    includeInvisibleBlocks: boolean;
-    previewDamUrls: boolean;
-}
-const defaultOptions: GraphQLClientOptions = {
-    includeInvisiblePages: false,
-    includeInvisibleBlocks: false,
-    previewDamUrls: false,
-};
-export default function createGraphQLClient(options: Partial<GraphQLClientOptions> = {}): GraphQLClient {
-    const { includeInvisibleBlocks, includeInvisiblePages, previewDamUrls } = { ...defaultOptions, ...options };
+export default function createGraphQLClient(previewData?: PreviewData): GraphQLClient {
+    const { includeInvisibleBlocks, includeInvisiblePages, previewDamUrls } = {
+        includeInvisiblePages: !!previewData,
+        includeInvisibleBlocks: previewData && previewData.includeInvisible,
+        previewDamUrls: !!previewData,
+    };
 
     const headers: Record<string, string> = {};
 
