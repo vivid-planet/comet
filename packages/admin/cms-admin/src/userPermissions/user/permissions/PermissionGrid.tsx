@@ -36,6 +36,7 @@ export const PermissionGrid: React.FC<{
                 reason
                 requestedBy
                 approvedBy
+                overrideContentScopes
             }
         `,
         {
@@ -110,7 +111,7 @@ export const PermissionGrid: React.FC<{
             pinnable: false,
             filterable: false,
             renderCell: ({ row }) =>
-                row.source !== "BY_RULE" && (
+                (row.source === "MANUAL" || row.overrideContentScopes) && (
                     <Button onClick={() => setOverrideContentScopesId(row.id)}>
                         <FormattedMessage id="comet.userPermissions.overrideContentScopes" defaultMessage="Override Content-Scopes" />
                     </Button>

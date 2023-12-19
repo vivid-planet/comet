@@ -8,6 +8,8 @@ import { ContentScope } from "../interfaces/content-scope.interface";
 export class CurrentUserPermission {
     @Field()
     permission: string;
+    @Field(() => [GraphQLJSONObject])
+    contentScopes: ContentScope[];
 }
 
 @ObjectType()

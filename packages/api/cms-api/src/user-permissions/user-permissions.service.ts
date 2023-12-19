@@ -79,14 +79,8 @@ export class UserPermissionsService {
                     permission.id = getUuid(JSON.stringify(p));
                     permission.source = UserPermissionSource.BY_RULE;
                     permission.userId = userId;
-                    permission.assign({
-                        permission: p.permission,
-                        validFrom: p.validFrom,
-                        validTo: p.validTo,
-                        reason: p.reason,
-                        requestedBy: p.requestedBy,
-                        approvedBy: p.approvedBy,
-                    });
+                    permission.overrideContentScopes = !!p.contentScopes;
+                    permission.assign(p);
                     permissions.push(permission);
                 }
             }
@@ -97,10 +91,15 @@ export class UserPermissionsService {
         );
     }
 
-    async getContentScopes(userId: string, skipManual = false): Promise<ContentScope[]> {
+    async getContentScopes(
+        userId: string,
+        options: { includeContentScopesByRule: boolean; includeContentScopesManual: boolean; includeContentScopesFromPermissions: boolean },
+    ): Promise<ContentScope[]> {
         const availableContentScopes = await this.getAvailableContentScopes();
+
         const contentScopes: ContentScope[] = [];
-        if (this.accessControlService.getContentScopesForUser) {
+
+        if (options.includeContentScopesByRule && this.accessControlService.getContentScopesForUser) {
             const user = await this.getUser(userId);
             if (user) {
                 const userContentScopes = await this.accessControlService.getContentScopesForUser(user);
@@ -111,12 +110,21 @@ export class UserPermissionsService {
                 }
             }
         }
-        if (!skipManual) {
+
+        if (options.includeContentScopesManual) {
             const entity = await this.contentScopeRepository.findOne({ userId });
             if (entity) {
                 contentScopes.push(...entity.contentScopes);
             }
         }
+
+        if (options.includeContentScopesFromPermissions) {
+            const permissions = await this.getPermissions(userId);
+            permissions.forEach((p) => {
+                contentScopes.push(...p.contentScopes);
+            });
+        }
+
         return [...new Set(contentScopes)] // Make values unique
             .filter((value) => availableContentScopes.some((cs) => isEqual(cs, value))) // Allow only values that are defined in availableContentScopes
             .sort((a, b) => availableContentScopes.indexOf(a) - availableContentScopes.indexOf(b)); // Order by availableContentScopes
@@ -124,12 +132,17 @@ export class UserPermissionsService {
 
     async createCurrentUser(user: User): Promise<CurrentUser> {
         const currentUser = new CurrentUser();
+        const contentScopes = await this.getContentScopes(user.id, {
+            includeContentScopesByRule: true,
+            includeContentScopesManual: true,
+            includeContentScopesFromPermissions: true,
+        });
         Object.assign(currentUser, {
             id: user.id,
             name: user.name,
             email: user.email ?? "",
             language: user.language,
-            contentScopes: await this.getContentScopes(user.id),
+            contentScopes,
             permissions: (await this.getPermissions(user.id))
                 .filter(
                     (p) =>
@@ -138,6 +151,7 @@ export class UserPermissionsService {
                 )
                 .map((p) => ({
                     permission: p.permission,
+                    contentScopes: p.overrideContentScopes ? p.contentScopes : contentScopes,
                 })),
         });
         return currentUser;

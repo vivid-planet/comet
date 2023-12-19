@@ -142,6 +142,7 @@ type FilenameResponse {
 
 type CurrentUserPermission {
   permission: String!
+  contentScopes: [JSONObject!]!
 }
 
 type User {

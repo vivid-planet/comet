@@ -124,7 +124,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             if (targetFolderId !== null) {
                 targetFolder = await this.foldersRepository.findOneOrFail(targetFolderId);
 
-                if (targetFolder.scope !== undefined && !this.accessControlService.isAllowedContentScope(user, targetFolder.scope)) {
+                if (targetFolder.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", targetFolder.scope)) {
                     throw new Error("Can't access parent folder");
                 }
             }
@@ -134,7 +134,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             for (const id of fileIds) {
                 const file = await this.filesRepository.findOneOrFail(id);
 
-                if (file.scope !== undefined && !this.accessControlService.isAllowedContentScope(user, file.scope)) {
+                if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
                     throw new Error("Can't access file");
                 }
 
