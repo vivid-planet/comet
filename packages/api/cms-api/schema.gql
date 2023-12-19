@@ -351,7 +351,7 @@ type Query {
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesCronJob(name: String!): KubernetesCronJob!
-  kubernetesJobs(cronJob: String!): [KubernetesJob!]!
+  kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
   currentUser: CurrentUser!
   getSitePreviewJwt(path: String!, previewData: PreviewData!): String!
   userPermissionsUserById(id: String!): User!

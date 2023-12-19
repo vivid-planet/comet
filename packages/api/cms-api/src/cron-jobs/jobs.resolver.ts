@@ -20,7 +20,7 @@ export class JobsResolver {
     ) {}
 
     @Query(() => [Job])
-    async kubernetesJobs(@Args("cronJob") cronJobName: string, @GetCurrentUser() user: CurrentUserInterface): Promise<Job[]> {
+    async kubernetesJobs(@Args("cronJobName") cronJobName: string, @GetCurrentUser() user: CurrentUserInterface): Promise<Job[]> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }

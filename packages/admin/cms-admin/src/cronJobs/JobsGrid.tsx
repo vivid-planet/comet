@@ -31,8 +31,8 @@ const cronJobQuery = gql`
 `;
 
 const jobsQuery = gql`
-    query KubernetesJobs($cronJob: String!) {
-        kubernetesJobs(cronJob: $cronJob) {
+    query KubernetesJobs($cronJobName: String!) {
+        kubernetesJobs(cronJobName: $cronJobName) {
             id
             name
             startTime
@@ -76,7 +76,7 @@ export function JobsGrid(props: JobsGridProps) {
     const intl = useIntl();
 
     const { data, loading, error } = useQuery<GQLKubernetesJobsQuery, GQLKubernetesJobsQueryVariables>(jobsQuery, {
-        variables: { cronJob: cronJob },
+        variables: { cronJobName: cronJob },
         pollInterval: 10 * 1000,
     });
 
