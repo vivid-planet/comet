@@ -1,51 +1,12 @@
 import { XMLParser } from "fast-xml-parser";
-import FileType from "file-type";
-import fs from "fs";
 import { unlink } from "fs/promises";
-import got from "got";
-import os from "os";
 import { sep } from "path";
 import slugify from "slugify";
-import stream from "stream";
-import { promisify } from "util";
-import { v4 as uuid } from "uuid";
 
 import { FileUploadInterface } from "./dto/file-upload.interface";
-import { FilesService } from "./files.service";
 
 export function slugifyFilename(filename: string, extension: string): string {
     return `${slugify(filename, { locale: "de", lower: true, strict: true })}${extension}`;
-}
-
-const pipeline = promisify(stream.pipeline);
-
-// TODO find a better name for this function
-export async function download(url: string): Promise<FileUploadInterface> {
-    const tempDir = fs.mkdtempSync(`${os.tmpdir()}/download`);
-    const fakeName = uuid();
-    const tempFile = `${tempDir}/${fakeName}`;
-
-    if (url.substr(0, 4) === "http") {
-        await pipeline(got.stream(url), fs.createWriteStream(tempFile));
-        //TODO when downloading the file from http use mime type from reponse header
-    } else {
-        fs.copyFileSync(url, tempFile);
-    }
-
-    const fileType = await FileType.fromFile(tempFile);
-    const stats = fs.statSync(tempFile); // TODO don't use sync
-    const filename = url.substring(url.lastIndexOf("/") + 1);
-
-    return {
-        fieldname: FilesService.UPLOAD_FIELD,
-        originalname: `${filename}.${fileType?.ext}`,
-        encoding: "utf8",
-        mimetype: fileType?.mime as string,
-        size: stats.size,
-        destination: tempDir,
-        filename: fakeName,
-        path: tempFile,
-    };
 }
 
 export const createHashedPath = (contentHash: string): string => [contentHash.substr(0, 2), contentHash.substr(2, 2), contentHash].join(sep);

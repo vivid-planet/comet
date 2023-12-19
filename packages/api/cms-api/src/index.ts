@@ -82,8 +82,9 @@ export { createFileEntity, FileInterface } from "./dam/files/entities/file.entit
 export { DamFileImage } from "./dam/files/entities/file-image.entity";
 export { createFolderEntity, FolderInterface } from "./dam/files/entities/folder.entity";
 export { FileImagesResolver } from "./dam/files/file-image.resolver";
+export { download, FileUploadService } from "./dam/files/file-upload.service";
 export { FilesService } from "./dam/files/files.service";
-export { download, slugifyFilename } from "./dam/files/files.utils";
+export { slugifyFilename } from "./dam/files/files.utils";
 export { FoldersService } from "./dam/files/folders.service";
 export { ImageInterface } from "./dam/images/dto/image.interface";
 export { HashImageParams, ImageParams } from "./dam/images/dto/image.params";
