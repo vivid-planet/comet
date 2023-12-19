@@ -140,7 +140,7 @@ type User {
 
 type UserPermission {
   id: ID!
-  source: UserPermissionSource
+  source: UserPermissionSource!
   permission: String!
   validFrom: DateTime
   validTo: DateTime

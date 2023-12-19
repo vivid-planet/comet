@@ -20,7 +20,7 @@ export class UserPermission extends BaseEntity<UserPermission, "id"> {
     @Property()
     userId: string;
 
-    @Field(() => UserPermissionSource, { nullable: true })
+    @Field(() => UserPermissionSource)
     source: UserPermissionSource;
 
     @Field()
