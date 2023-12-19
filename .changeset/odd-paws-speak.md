@@ -7,7 +7,7 @@ FinalForm: remove default `onAfterSubmit` implementation
 In most cases the default implementation is not needed anymore. When upgrading, an empty
 function override of `onAfterSubmit` can be removed as it is not necessary any longer.
 
-To get back the old behaviour use the following in application code:
+To get back the old behavior use the following in application code:
 
 ```
 const stackApi = React.useContext(StackApiContext);
