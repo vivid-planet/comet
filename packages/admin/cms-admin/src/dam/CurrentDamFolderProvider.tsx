@@ -9,7 +9,7 @@ const CurrentDamFolderContext = React.createContext<CurrentDamFolderContext>({ f
 export function useCurrentDamFolder(): CurrentDamFolderContext {
     const context = React.useContext(CurrentDamFolderContext);
     if (!context) {
-        throw new Error("useFolderContext must be used within a FolderContextProvider");
+        throw new Error("useCurrentDamFolder() must be used within a CurrentDamFolderProvider");
     }
     return context;
 }
