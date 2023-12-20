@@ -4,12 +4,12 @@ import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { useContentTranslationServiceProvider } from "../translator/config/useContentTranslationServiceProvider";
+import { useContentTranslationService } from "../translator/useContentTranslationService";
 
 export type FinalFormInputProps = InputBaseProps &
     FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement> & {
         clearable?: boolean;
-        disableTranslation?: boolean;
+        disableContentTranslation?: boolean;
     };
 
 export function FinalFormInput({
@@ -18,10 +18,10 @@ export function FinalFormInput({
     innerRef,
     endAdornment,
     clearable,
-    disableTranslation,
+    disableContentTranslation,
     ...props
 }: FinalFormInputProps): React.ReactElement {
-    const { enabled, translate } = useContentTranslationServiceProvider();
+    const { enabled, translate } = useContentTranslationService();
 
     return (
         <InputBase
@@ -32,14 +32,8 @@ export function FinalFormInput({
                     {clearable && (
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
                     )}
-                    {enabled && !disableTranslation && (
-                        <Button
-                            onClick={async () => {
-                                if (translate) {
-                                    input.onChange(await translate(input.value));
-                                }
-                            }}
-                        >
+                    {enabled && !disableContentTranslation && (
+                        <Button onClick={async () => input.onChange(await translate(input.value))}>
                             <FormattedMessage id="comet.translate" defaultMessage="Translate" />
                         </Button>
                     )}
