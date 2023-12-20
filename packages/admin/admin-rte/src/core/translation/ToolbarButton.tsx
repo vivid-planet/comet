@@ -1,4 +1,4 @@
-import { useContentTranslationServiceProvider } from "@comet/admin";
+import { useContentTranslationService } from "@comet/admin";
 import TranslateIcon from "@mui/icons-material/Translate";
 import Tooltip from "@mui/material/Tooltip";
 import { convertToRaw } from "draft-js";
@@ -11,7 +11,7 @@ import { transformStateToXml } from "./xml/transformStateToXml";
 import { translateAndTransformXmlToState } from "./xml/translateAndTransformToState";
 
 function ToolbarButton({ editorState, setEditorState }: IControlProps): React.ReactElement {
-    const translationContext = useContentTranslationServiceProvider();
+    const translationContext = useContentTranslationService();
 
     async function handleClick(event: React.MouseEvent) {
         if (translationContext) {
