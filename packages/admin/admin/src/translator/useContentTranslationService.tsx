@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { ContentTranslationServiceContext, ContentTranslationServiceContextProps } from "./ContentTranslationServiceContext";
+import { ContentTranslationServiceContext } from "./ContentTranslationServiceContext";
 
-export function useContentTranslationService(): ContentTranslationServiceContextProps {
+export function useContentTranslationService(): ContentTranslationServiceContext {
     return React.useContext(ContentTranslationServiceContext);
 }
