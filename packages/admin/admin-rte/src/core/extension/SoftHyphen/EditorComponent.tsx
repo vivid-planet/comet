@@ -9,14 +9,21 @@ interface IProps {
     children?: React.ReactNode;
 }
 
-export function EditorComponent(props: IProps): React.ReactElement {
+//TODO: Allow text selection for SoftHyphen
+export function EditorComponent({ children }: IProps): React.ReactElement {
     return (
         <span>
-            <VisibleHyphen>{props.children}</VisibleHyphen>
+            <VisibleHyphen />
+            {children}
         </span>
     );
 }
 
 const VisibleHyphen = styled(RteSoftHyphen)`
-    color: #999;
+    font-size: inherit;
+    color: currentcolor;
+    opacity: 0.5;
+
+    // Arbitrary value to make the icon look centered
+    padding-top: 0.2em;
 `;
