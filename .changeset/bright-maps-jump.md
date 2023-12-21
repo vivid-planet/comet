@@ -3,12 +3,16 @@
 "@comet/cms-api": minor
 ---
 
-# Add Support for external DAMs
+# Support the import of files from external DAMs
 
-To implement an external DAM, add a Button-Component with the 
-necessary logic (asset-picker, upload-functionality) to the 
-/admin/src/dam folder. Next, include the new Component in the 
-additionalToolbarItems-Prop of DamPage, in App.tsx.
+To connect an external DAM, implement a component with the necessary logic (asset picker, upload functionality, ...). Pass this component to the DamPage via the additionalToolbarItems prop.
 
-An example can be found in the Demo-Project.
+```tsx
+<DamPage
+    // ...
+    additionalToolbarItems={<ImportFromExternalDam />}
+/>
+```
+
+You can find an [example](https://github.com/vivid-planet/comet/blob/028aba5e267a698af3b036697964600cdb5889cb/demo/admin/src/dam/ImportFromUnsplash.tsx) in the demo project.
 
