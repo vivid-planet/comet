@@ -1,5 +1,4 @@
-import { OkayButton, SaveButton } from "@comet/admin";
-import { Alert } from "@comet/admin/lib/alert/Alert";
+import { Alert, OkayButton, SaveButton } from "@comet/admin";
 import { ArrowRight } from "@comet/admin-icons";
 import { Button, Card, CardContent, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
