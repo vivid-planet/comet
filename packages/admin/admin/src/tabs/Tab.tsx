@@ -5,7 +5,7 @@ import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { Status, StatusBadge } from "../statusBadge/StatusBadge";
-import { styles, TabClassKey } from "./CustomTab.styles";
+import { styles, TabClassKey } from "./Tab.styles";
 
 export interface TabProps extends Omit<MuiTabProps, "children" | "icon" | "iconPosition"> {
     label: React.ReactNode;

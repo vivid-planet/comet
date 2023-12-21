@@ -8,8 +8,8 @@ import { useStackApi } from "../stack/Api";
 import { StackBreadcrumb } from "../stack/Breadcrumb";
 import { useStackSwitchApi } from "../stack/Switch";
 import { CustomDivider, Divider, DividerProps } from "./CustomDivider";
-import { CustomTab, TabProps } from "./CustomTab";
 import { RouterTabsClassKey, styles } from "./RouterTabs.styles";
+import { CustomTab, TabProps } from "./Tab";
 import { TabsProps } from "./Tabs";
 import { TabScrollButton } from "./TabScrollButton";
 

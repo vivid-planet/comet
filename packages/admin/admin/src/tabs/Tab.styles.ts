@@ -1,7 +1,7 @@
 import { Theme } from "@mui/material";
 import { createStyles } from "@mui/styles";
 
-import { TabProps } from "./CustomTab";
+import { TabProps } from "./Tab";
 
 export type TabClassKey = "root" | "status" | "icon" | "tooltip" | "label";
 

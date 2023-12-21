@@ -4,7 +4,7 @@ import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { CustomDivider, Divider, DividerProps } from "./CustomDivider";
-import { CustomTab, Tab, TabProps } from "./CustomTab";
+import { CustomTab, Tab, TabProps } from "./Tab";
 import { styles, TabsClassKey } from "./Tabs.styles";
 import { TabScrollButton } from "./TabScrollButton";
 
