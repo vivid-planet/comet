@@ -25,6 +25,7 @@ import slugify from "slugify";
 
 import { generateLinks } from "./generators/links.generator";
 import { ManyImagesTestPageGenerator } from "./generators/many-images-test-page.generator";
+import { PublicUploadsFixtureService } from "./generators/public-uploads-fixture.service";
 
 export interface PageTreeNodesFixtures {
     home?: PageTreeNodeInterface;
@@ -54,6 +55,7 @@ export class FixturesConsole {
         private readonly orm: MikroORM,
         @InjectRepository(Page) private readonly pagesRepository: EntityRepository<Page>,
         @InjectRepository(Link) private readonly linksRepository: EntityRepository<Link>,
+        private readonly publicUploadsFixtureService: PublicUploadsFixtureService,
     ) {}
 
     @Command({
@@ -261,5 +263,9 @@ export class FixturesConsole {
             }
             console.log(`Generated ${pagesCount} lorem ipsum pages for ${domain}`);
         }
+
+        await this.publicUploadsFixtureService.generatePublicUploads();
+
+        await this.orm.em.flush();
     }
 }

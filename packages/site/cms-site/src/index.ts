@@ -7,6 +7,7 @@ export type { SupportedBlocks } from "./blocks/factories/types";
 export { InternalLinkBlock } from "./blocks/InternalLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export type { PropsWithData } from "./blocks/PropsWithData";
+export { hasRichTextBlockContent } from "./blocks/RichTextBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
 export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
