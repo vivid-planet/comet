@@ -16,7 +16,6 @@ interface ITabsState {
 export interface TabsProps extends MuiTabsProps {
     children: Array<React.ReactElement<TabProps | DividerProps> | boolean | null | undefined>;
     tabComponent?: React.ComponentType<TabProps>;
-    dividerComponent?: React.ComponentType<DividerProps>;
     defaultIndex?: number;
     tabsState?: ITabsState;
     smallTabText?: boolean;
@@ -25,7 +24,6 @@ export interface TabsProps extends MuiTabsProps {
 function TabsComponent({
     children,
     tabComponent: TabComponent = CustomTab,
-    dividerComponent: DividerComponent = CustomDivider,
     defaultIndex,
     tabsState,
     ScrollButtonComponent = TabScrollButton,
@@ -65,7 +63,7 @@ function TabsComponent({
                         const { children, ...restChildProps } = child.props;
                         return <TabComponent {...(restChildProps as TabProps)} smallTabText={smallTabText} currentTab={value} />;
                     } else if (React.isValidElement<DividerProps>(child) && child.type === Divider) {
-                        return <DividerComponent {...child.props} />;
+                        return <CustomDivider {...child.props} />;
                     } else {
                         throw new Error(`Tabs may only contain tab or divider components as children. Found ${child.type} component/ tag.`);
                     }

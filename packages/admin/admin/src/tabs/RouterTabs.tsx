@@ -31,13 +31,7 @@ export interface RouterTabsProps extends Partial<RouteComponentProps> {
 
 function RouterTabsComponent({
     children,
-    tabsProps: {
-        ScrollButtonComponent = TabScrollButton,
-        tabComponent: TabComponent = CustomTab,
-        dividerComponent: DividerComponent = CustomDivider,
-        smallTabText,
-        ...tabsProps
-    } = {},
+    tabsProps: { ScrollButtonComponent = TabScrollButton, tabComponent: TabComponent = CustomTab, smallTabText, ...tabsProps } = {},
     classes,
 }: RouterTabsProps & WithStyles<typeof styles>) {
     const stackApi = useStackApi();
@@ -111,7 +105,7 @@ function RouterTabsComponent({
                                         const { path, forceRender, children, ...restChildProps } = child.props;
                                         return <TabComponent {...(restChildProps as TabProps)} smallTabText={smallTabText} currentTab={value} />;
                                     } else if (React.isValidElement<DividerProps>(child) && child.type === Divider) {
-                                        return <DividerComponent {...child.props} />;
+                                        return <CustomDivider {...child.props} />;
                                     } else {
                                         if (!React.isValidElement<RouterTabProps>(child) && !React.isValidElement<DividerProps>(child)) {
                                             return null;
