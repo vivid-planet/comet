@@ -137,11 +137,11 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         @Field()
         updatedAt: Date = new Date();
 
-        @Field()
+        @Field({ nullable: true })
         @Property({ columnType: "text", nullable: true })
         importSourceId?: string;
 
-        @Field()
+        @Field({ nullable: true })
         @Property({ columnType: "text", nullable: true })
         importSourceType?: string;
 
