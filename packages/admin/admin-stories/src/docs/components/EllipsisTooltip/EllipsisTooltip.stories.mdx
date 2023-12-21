@@ -1,0 +1,44 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs";
+
+<Meta title="Docs/Components/EllipsisTooltip" />
+
+# EllipsisTooltip
+
+`EllipsisTooltip` is used to automatically add a tooltip to text that is too long to fit in its container.<br />
+This is useful for displaying text in a table or data grid when the text might be too long to fit in the column.
+
+## Simple Example
+
+<Canvas>
+    <Story id="stories-components-ellipsistooltip--simple" />
+</Canvas>
+
+## Noteworthy
+
+Some noteworthy things to keep in mind when using `EllipsisTooltip`.
+
+### Usage inside a table
+
+When used inside a table (standard HTML table or MuiTable), the width of the individual cells must be limited.<br />
+This can be done by setting a fixed width on the cell or setting `table-layout: fixed` on the table.
+
+### Usage with text styling
+
+When used in combination with text styling, e.g., `MuiTypography` the `EllipsisTooltip` must be contained by the element that styles the text.<br/>
+This will make sure only the normal text is styled, and the text inside the tooltip looks the same as in any other tooltip.
+
+<Canvas>
+    <Story id="stories-components-ellipsistooltip--textstyling" />
+</Canvas>
+
+## Example with `MuiTable`
+
+<Canvas>
+    <Story id="stories-components-ellipsistooltip--table" />
+</Canvas>
+
+## Example with `MuiDataGrid`
+
+<Canvas>
+    <Story id="stories-components-ellipsistooltip--datagrid" />
+</Canvas>
