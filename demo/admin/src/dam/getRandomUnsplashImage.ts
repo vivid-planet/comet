@@ -28,8 +28,12 @@ export async function getRandomUnsplashImage(): Promise<UnsplashImage> {
     try {
         const image = await fetchUnsplashImage(imageUrl);
         const fileName = extractFileNameFromUrl(image.origin);
-        const mimeType = image.blob.type || "application/octet-stream";
+        const mimeType = image.blob.type;
         const acceptedFile = new File([image.blob], fileName, { type: mimeType });
+
+        if (mimeType !== "image/jpeg") {
+            return getRandomUnsplashImage();
+        }
 
         return {
             file: acceptedFile,
