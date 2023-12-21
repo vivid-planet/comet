@@ -111,6 +111,7 @@ export { MenuItemRouterLink, MenuItemRouterLinkProps } from "./mui/menu/ItemRout
 export { Menu, MenuProps } from "./mui/menu/Menu";
 export { MenuClassKey, styles } from "./mui/menu/Menu.styles";
 export { MuiThemeProvider } from "./mui/ThemeProvider";
+export { OverflowDialog, OverflowDialogProps } from "./OverflowDialog";
 export { RouterBrowserRouter } from "./router/BrowserRouter";
 export { RouterConfirmationDialog } from "./router/ConfirmationDialog";
 export { RouterConfirmationDialogClassKey } from "./router/ConfirmationDialog.styles";
