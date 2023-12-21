@@ -106,10 +106,6 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithPath[]): Promise<File
 };
 
 export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi => {
-    const onAfterUpload = () => {
-        client.reFetchObservableQueries();
-        clearDamItemCache(client.cache);
-    };
     const context = useCmsBlockContext(); // TODO create separate CmsContext?
     const client = useApolloClient();
     const manualDuplicatedFilenamesHandler = useManualDuplicatedFilenamesHandler();
@@ -448,6 +444,9 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                     }
                 }
             }
+
+            await client.reFetchObservableQueries();
+            clearDamItemCache(client.cache);
         }
 
         setProgressDialogOpen(false);
@@ -456,7 +455,6 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         }
         setTotalSizes({});
         setUploadedSizes({});
-        onAfterUpload();
 
         addNewlyUploadedItems([...uploadedFolders, ...uploadedFiles]);
     };
