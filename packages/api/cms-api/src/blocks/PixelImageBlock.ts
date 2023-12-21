@@ -164,6 +164,11 @@ class Meta extends AnnotationBlockMeta {
                             nullable: false,
                         },
                         {
+                            name: "scope",
+                            kind: BlockMetaFieldKind.Json,
+                            nullable: true,
+                        },
+                        {
                             name: "image",
                             kind: BlockMetaFieldKind.NestedObject,
                             object: {

@@ -14,7 +14,7 @@ import { BlockInterfaceWithOptions } from "../helpers/composeBlocks/types";
 import { normalizedBlockConfig } from "../helpers/composeBlocks/utils";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { isBlockInterface } from "../helpers/isBlockInterface";
-import { BlockCategory, BlockInputApi, BlockInterface, BlockOutputApi, BlockState } from "../types";
+import { BlockCategory, BlockInputApi, BlockInterface, BlockOutputApi, BlockState, CustomBlockCategory } from "../types";
 
 interface BlockConfiguration {
     title?: React.ReactNode;
@@ -41,7 +41,7 @@ interface CreateCompositeBlockOptionsBase {
     /**
      * @deprecated Use override instead to adapt the factored block
      */
-    category?: BlockCategory;
+    category?: BlockCategory | CustomBlockCategory;
     adminLayout?: "stacked";
     blocks: Record<string, BlockConfiguration>;
 }

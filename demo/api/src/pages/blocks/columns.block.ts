@@ -19,7 +19,7 @@ const ColumnsContentBlock = createBlocksBlock(
 const ColumnsBlock = ColumnsBlockFactory.create(
     {
         contentBlock: ColumnsContentBlock,
-        layouts: [{ name: "one-column" }, { name: "two-columns" }],
+        layouts: [{ name: "one-column" }, { name: "two-columns" }, { name: "two-columns-12-6" }],
     },
     "Columns",
 );

@@ -1,9 +1,10 @@
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import SeoBlock from "@src/blocks/seo/SeoBlock";
 import Breadcrumbs, { breadcrumbsFragment } from "@src/components/Breadcrumbs";
+import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { Header, headerFragment } from "@src/header/Header";
 import { topMenuPageTreeNodeFragment, TopNavigation } from "@src/topNavigation/TopNavigation";
-import { gql } from "graphql-request";
+import { gql, GraphQLClient } from "graphql-request";
 import Head from "next/head";
 import * as React from "react";
 
@@ -11,8 +12,8 @@ import { GQLPageQuery } from "./Page.generated";
 
 // @TODO: Scope for menu should also be of type PageTreeNodeScopeInput
 export const pageQuery = gql`
-    query Page($pageId: ID!, $domain: String!, $language: String!) {
-        pageContent: pageTreeNode(id: $pageId) {
+    query Page($pageTreeNodeId: ID!, $domain: String!, $language: String!) {
+        pageContent: pageTreeNode(id: $pageTreeNodeId) {
             document {
                 __typename
                 ... on Page {
@@ -36,6 +37,23 @@ export const pageQuery = gql`
     ${headerFragment}
     ${topMenuPageTreeNodeFragment}
 `;
+
+export async function loader({
+    client,
+    pageTreeNodeId,
+    scope,
+}: {
+    client: GraphQLClient;
+    pageTreeNodeId: string;
+    scope: GQLPageTreeNodeScopeInput;
+}): Promise<unknown> {
+    const data = await client.request<GQLPageQuery>(pageQuery, {
+        pageTreeNodeId,
+        domain: scope.domain,
+        language: scope.language,
+    });
+    return data;
+}
 
 export default function Page(props: GQLPageQuery): JSX.Element {
     const document = props.pageContent?.document;

@@ -88,6 +88,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         : {
               image: rootBlocks.image.defaultValues(),
               inStock: false,
+              tags: [],
           };
 
     const saveConflict = useFormSaveConflict({
@@ -185,7 +186,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <FinalFormSaveSplitButton />
+                            <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
@@ -228,9 +229,6 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormSelect}
                             {...categorySelectAsyncProps}
                             getOptionLabel={(option: GQLProductCategorySelectFragment) => option.title}
-                            getOptionSelected={(option: GQLProductCategorySelectFragment, value: GQLProductCategorySelectFragment) => {
-                                return option.id === value.id;
-                            }}
                         />
                         <Field
                             fullWidth
@@ -240,9 +238,6 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             multiple
                             {...tagsSelectAsyncProps}
                             getOptionLabel={(option: GQLProductTagsSelectFragment) => option.title}
-                            getOptionSelected={(option: GQLProductTagsSelectFragment, value: GQLProductTagsSelectFragment) => {
-                                return option.id === value.id;
-                            }}
                         />
                         <Field
                             fullWidth

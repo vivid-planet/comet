@@ -5,6 +5,7 @@ import { Shadows } from "@mui/material/styles/shadows";
 import { ZIndex } from "@mui/material/styles/zIndex";
 import { Spacing } from "@mui/system";
 
+import { getMuiAccordion } from "./MuiAccordion";
 import { getMuiAlert } from "./MuiAlert";
 import { getMuiAppBar } from "./MuiAppBar";
 import { getMuiAutocomplete } from "./MuiAutocomplete";
@@ -27,6 +28,7 @@ import { getMuiIconButton } from "./MuiIconButton";
 import { getMuiInput } from "./MuiInput";
 import { getMuiInputAdornment } from "./MuiInputAdornment";
 import { getMuiInputBase } from "./MuiInputBase";
+import { getMuiLinearProgress } from "./MuiLinearProgress";
 import { getMuiLink } from "./MuiLink";
 import { getMuiListItem } from "./MuiListItem";
 import { getMuiNativeSelect } from "./MuiNativeSelect";
@@ -60,6 +62,7 @@ export type GetMuiComponentTheme<ClassesName extends keyof ComponentNameToClassK
 
 export const getComponentsTheme = (components: Components, themeData: ThemeData): ThemeOptions["components"] => ({
     ...components,
+    MuiAccordion: getMuiAccordion(components.MuiAccordion, themeData),
     MuiAppBar: getMuiAppBar(components.MuiAppBar, themeData),
     MuiAutocomplete: getMuiAutocomplete(components.MuiAutocomplete, themeData),
     MuiButton: getMuiButton(components.MuiButton, themeData),
@@ -81,6 +84,7 @@ export const getComponentsTheme = (components: Components, themeData: ThemeData)
     MuiInputAdornment: getMuiInputAdornment(components.MuiInputAdornment, themeData),
     MuiInputBase: getMuiInputBase(components.MuiInputBase, themeData),
     MuiInput: getMuiInput(components.MuiInput, themeData),
+    MuiLinearProgress: getMuiLinearProgress(components.MuiLinearProgress, themeData),
     MuiLink: getMuiLink(components.MuiLink, themeData),
     MuiListItem: getMuiListItem(components.MuiListItem, themeData),
     MuiPaper: getMuiPaper(components.MuiPaper, themeData),

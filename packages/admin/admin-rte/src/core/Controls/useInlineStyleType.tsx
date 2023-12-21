@@ -1,14 +1,9 @@
-import FormatBoldIcon from "@mui/icons-material/FormatBold";
-import FormatItalicIcon from "@mui/icons-material/FormatItalic";
-import FormatUnderlinedIcon from "@mui/icons-material/FormatUnderlined";
-import StrikethroughSIcon from "@mui/icons-material/StrikethroughS";
+import { RteBold, RteItalic, RteStrikethrough, RteSub, RteSup, RteUnderlined } from "@comet/admin-icons";
 import * as detectBrowser from "detect-browser";
 import { Editor, EditorState, RichUtils } from "draft-js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import TextFormatSub from "../../icons/TextFormatSub";
-import TextFormatSup from "../../icons/TextFormatSup";
 import { SupportedThings } from "../Rte";
 import { CustomInlineStyles, IFeatureConfig, InlineStyleType } from "../types";
 
@@ -26,7 +21,7 @@ const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
     {
         name: "BOLD",
         label: <FormattedMessage id="comet.rte.controls.blockType.bold.label" defaultMessage="Bold" />,
-        icon: FormatBoldIcon,
+        icon: RteBold,
         tooltipText:
             browser?.os === "Mac OS" ? (
                 <FormattedMessage id="comet.rte.controls.blockType.bold.tooltipMac" defaultMessage="Cmd+B" />
@@ -37,7 +32,7 @@ const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
     {
         name: "ITALIC",
         label: <FormattedMessage id="comet.rte.controls.blockType.italic.label" defaultMessage="Italic" />,
-        icon: FormatItalicIcon,
+        icon: RteItalic,
         tooltipText:
             browser?.os === "Mac OS" ? (
                 <FormattedMessage id="comet.rte.controls.blockType.italic.tooltipMac" defaultMessage="Cmd+I" />
@@ -48,7 +43,7 @@ const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
     {
         name: "UNDERLINE",
         label: <FormattedMessage id="comet.rte.controls.blockType.underlined.label" defaultMessage="underlined" />,
-        icon: FormatUnderlinedIcon,
+        icon: RteUnderlined,
         tooltipText:
             browser?.os === "Mac OS" ? (
                 <FormattedMessage id="comet.rte.controls.blockType.underlined.tooltipMac" defaultMessage="Cmd+U" />
@@ -59,17 +54,17 @@ const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
     {
         name: "STRIKETHROUGH",
         label: <FormattedMessage id="comet.rte.controls.blockType.strikethrough.label" defaultMessage="Strikethrough" />,
-        icon: StrikethroughSIcon,
+        icon: RteStrikethrough,
     },
     {
         name: "SUP",
         label: <FormattedMessage id="comet.rte.controls.blockType.super.label" defaultMessage="Superscript" />,
-        icon: TextFormatSup,
+        icon: RteSup,
     },
     {
         name: "SUB",
         label: <FormattedMessage id="comet.rte.controls.blockType.sub.label" defaultMessage="Subscript" />,
-        icon: TextFormatSub,
+        icon: RteSub,
     },
 ];
 
