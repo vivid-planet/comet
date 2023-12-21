@@ -1,14 +1,11 @@
 /* eslint-disable @calm/react-intl/missing-formatted-message */
-import { createTheme } from "@mui/material/styles";
-import { fireEvent, render, waitFor } from "@testing-library/react";
 import React from "react";
-import { IntlProvider } from "react-intl";
 import { Redirect, Route, Switch } from "react-router";
 import { Link } from "react-router-dom";
+import { fireEvent, render, waitFor } from "test-utils";
 
-import { MuiThemeProvider } from "../mui/ThemeProvider";
-import { RouterMemoryRouter } from "./MemoryRouter";
 import { RouterPrompt } from "./Prompt";
+import { useSubRoutePrefix } from "./SubRoute";
 
 test("Nested route in Prompt", async () => {
     function Story() {
@@ -32,15 +29,7 @@ test("Nested route in Prompt", async () => {
         );
     }
 
-    const rendered = render(
-        <IntlProvider locale="en" messages={{}}>
-            <MuiThemeProvider theme={createTheme()}>
-                <RouterMemoryRouter>
-                    <Story />
-                </RouterMemoryRouter>
-            </MuiThemeProvider>
-        </IntlProvider>,
-    );
+    const rendered = render(<Story />);
 
     fireEvent.click(rendered.getByText("subLink"));
 
@@ -48,6 +37,54 @@ test("Nested route in Prompt", async () => {
     await waitFor(() => {
         const sub = rendered.queryAllByText("sub");
         expect(sub.length).toBe(1);
+    });
+});
+
+test("Nested dynamic route in Prompt", async () => {
+    function FooPage() {
+        const subRoutePrefix = useSubRoutePrefix();
+        return (
+            <RouterPrompt
+                message={() => {
+                    return "sure?";
+                }}
+                subRoutePath={`${subRoutePrefix}/s`}
+            >
+                <Link to={`${subRoutePrefix}/s/sub`}>subLink</Link>
+                <Link to={`${subRoutePrefix}`}>back</Link>
+                <Route path={`${subRoutePrefix}/s/sub`}>
+                    <div>sub</div>
+                </Route>
+            </RouterPrompt>
+        );
+    }
+    function Story() {
+        return (
+            <Switch>
+                <Route path="/foo/:param">
+                    <FooPage />
+                </Route>
+                <Redirect to="/foo/paramvalue" />
+            </Switch>
+        );
+    }
+
+    const rendered = render(<Story />);
+
+    fireEvent.click(rendered.getByText("subLink"));
+
+    // verify navigation to sub didn't get blocked
+    await waitFor(() => {
+        const sub = rendered.queryAllByText("sub");
+        expect(sub.length).toBe(1);
+    });
+
+    fireEvent.click(rendered.getByText("back")); //go back again, navigating to /foo/:param
+
+    // verify navigation to sub didn't get blocked
+    await waitFor(() => {
+        const sub = rendered.queryAllByText("sub");
+        expect(sub.length).toBe(0);
     });
 });
 
@@ -77,15 +114,7 @@ test("Nested route with non-sub-path route in Prompt", async () => {
         );
     }
 
-    const rendered = render(
-        <IntlProvider locale="en" messages={{}}>
-            <MuiThemeProvider theme={createTheme()}>
-                <RouterMemoryRouter>
-                    <Story />
-                </RouterMemoryRouter>
-            </MuiThemeProvider>
-        </IntlProvider>,
-    );
+    const rendered = render(<Story />);
 
     fireEvent.click(rendered.getByText("subLink"));
 
@@ -123,15 +152,7 @@ test("route outside Prompt", async () => {
         );
     }
 
-    const rendered = render(
-        <IntlProvider locale="en" messages={{}}>
-            <MuiThemeProvider theme={createTheme()}>
-                <RouterMemoryRouter>
-                    <Story />
-                </RouterMemoryRouter>
-            </MuiThemeProvider>
-        </IntlProvider>,
-    );
+    const rendered = render(<Story />);
 
     fireEvent.click(rendered.getByText("barLink"));
 

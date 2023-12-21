@@ -7,6 +7,9 @@ import { Router, useRouteMatch } from "react-router";
 
 import { MuiThemeProvider } from "../mui/ThemeProvider";
 import { SubRoute, useSubRoutePrefix } from "../router/SubRoute";
+import { StackPage } from "../stack/Page";
+import { Stack } from "../stack/Stack";
+import { StackSwitch } from "../stack/Switch";
 import { RouterTab, RouterTabs } from "./RouterTabs";
 
 test("RouterTabs in SubRoute", async () => {
@@ -47,4 +50,67 @@ test("RouterTabs in SubRoute", async () => {
 
     expect(rendered.getByText("bar tab content")).toBeInTheDocument();
     expect(rendered.getByText("matchUrl=/sub/bar")).toBeInTheDocument();
+});
+
+test("RouterTabs must not remount content", async () => {
+    let mountCountFoo = 0;
+    function MountCountFoo() {
+        React.useEffect(() => {
+            mountCountFoo++;
+        });
+        return null;
+    }
+
+    let mountCountBar = 0;
+    function MountCountBar() {
+        React.useEffect(() => {
+            mountCountBar++;
+        });
+        return null;
+    }
+
+    function Story() {
+        return (
+            <Stack topLevelTitle="Nested Stack">
+                <StackSwitch>
+                    <StackPage name="xxx">
+                        <RouterTabs>
+                            <RouterTab label="FooTab" path="" forceRender={true}>
+                                FooContent
+                                <MountCountFoo />
+                            </RouterTab>
+                            <RouterTab label="BarTab" path="/bar" forceRender={true}>
+                                BarContent
+                                <MountCountBar />
+                            </RouterTab>
+                        </RouterTabs>
+                    </StackPage>
+                    <StackPage name="yyy">yyy</StackPage>
+                </StackSwitch>
+            </Stack>
+        );
+    }
+
+    const history = createMemoryHistory();
+
+    const rendered = render(
+        <MuiThemeProvider theme={createTheme()}>
+            <Router history={history}>
+                <Story />
+            </Router>
+        </MuiThemeProvider>,
+    );
+    expect(rendered.getByText("FooContent")).toBeInTheDocument();
+    expect(mountCountFoo).toBe(1);
+    expect(mountCountBar).toBe(1);
+
+    fireEvent.click(rendered.getByText("BarTab"));
+    expect(rendered.getByText("BarContent")).toBeInTheDocument();
+    expect(mountCountFoo).toBe(1);
+    expect(mountCountBar).toBe(1);
+
+    fireEvent.click(rendered.getByText("FooTab"));
+    expect(rendered.getByText("FooContent")).toBeInTheDocument();
+    expect(mountCountFoo).toBe(1);
+    expect(mountCountBar).toBe(1);
 });
