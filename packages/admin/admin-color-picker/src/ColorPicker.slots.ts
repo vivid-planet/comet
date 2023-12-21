@@ -3,8 +3,6 @@ import { Box, ButtonBase, IconButton, InputAdornment as MuiInputAdornment, Typog
 import { css, styled, Theme } from "@mui/material/styles";
 import { HexColorPicker as HexColorPickerBase, RgbaStringColorPicker as RgbaStringColorPickerBase } from "react-colorful";
 
-import { PreviewIndicatorColorProps } from "./PreviewIndicatorColorProps";
-
 export type ColorPickerClassKey =
     | "root"
     | "inputAdornment"
@@ -250,6 +248,11 @@ type PreviewIndicatorProps = PreviewIndicatorEmptyOrInvalidProps | PreviewIndica
 
 export type PreviewIndicatorEmptyOrInvalidProps = {
     type: "empty" | "invalid";
+};
+
+export type PreviewIndicatorColorProps = {
+    type: "color";
+    color: string;
 };
 
 export const PreviewIndicator = styled("div", {

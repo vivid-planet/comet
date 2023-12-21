@@ -22,12 +22,12 @@ import {
     PopperRoot,
     Preview,
     PreviewIndicator,
+    PreviewIndicatorColorProps,
     PreviewIndicatorEmptyOrInvalidProps,
     RgbaStringColorPicker,
     Root,
     SlotProps,
 } from "./ColorPicker.slots";
-import { PreviewIndicatorColorProps } from "./PreviewIndicatorColorProps";
 
 export interface ColorPickerColorPreviewProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "color">, PreviewIndicatorColorProps {}
 export interface ColorPickerNoColorPreviewProps extends React.HTMLAttributes<HTMLDivElement>, PreviewIndicatorEmptyOrInvalidProps {}
