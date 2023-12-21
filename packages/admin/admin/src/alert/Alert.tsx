@@ -21,9 +21,9 @@ const styles = (theme: Theme) =>
             alignItems: "center",
             backgroundColor: theme.palette.background.paper,
             borderRadius: 4,
-            boxShadow: "0px 0px 20px 0px rgba(0, 0, 0, 0.10)",
+            boxShadow: theme.shadows[2],
             position: "relative",
-            padding: "10px 12px 10px 20px",
+            padding: theme.spacing(2, "12px", 2, 4),
             minHeight: 40, // to ensure consistent height for the content, regardless of the presence of a button or close icon, in order to set the outer padding correctly
         },
         message: {

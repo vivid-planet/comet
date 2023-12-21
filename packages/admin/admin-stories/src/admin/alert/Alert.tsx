@@ -5,10 +5,6 @@ import { Stack } from "@mui/system";
 import { storiesOf } from "@storybook/react";
 import React from "react";
 
-function dummyOnClose(): string {
-    return "";
-}
-
 function Story() {
     return (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 50 }}>
@@ -26,7 +22,9 @@ function Story() {
                                     Action Text
                                 </Button>
                             }
-                            onClose={dummyOnClose}
+                            onClose={() => {
+                                // noop
+                            }}
                         >
                             Notification Text
                         </Alert>
@@ -38,7 +36,9 @@ function Story() {
                                     Action Text
                                 </Button>
                             }
-                            onClose={dummyOnClose}
+                            onClose={() => {
+                                // noop
+                            }}
                         >
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vel vehicula est. Nunc congue velit sem, ac porttitor
                             massa semper nec. Proin quis volutpat magna. Mauris eget libero et mi imperdiet ultrices. Donec eget interdum odio.
@@ -52,11 +52,19 @@ function Story() {
                                     Action Text
                                 </Button>
                             }
-                            onClose={dummyOnClose}
+                            onClose={() => {
+                                // noop
+                            }}
                         >
                             Notification Text
                         </Alert>
-                        <Alert severity="success" title="Title" onClose={dummyOnClose}>
+                        <Alert
+                            severity="success"
+                            title="Title"
+                            onClose={() => {
+                                // noop
+                            }}
+                        >
                             Notification Text
                         </Alert>
                     </Stack>
@@ -69,11 +77,27 @@ function Story() {
                         Without Title
                     </Typography>
                     <Stack spacing={4} marginBottom={6}>
-                        <Alert onClose={dummyOnClose}>Notification Text</Alert>
-                        <Alert severity="warning" onClose={dummyOnClose}>
+                        <Alert
+                            onClose={() => {
+                                // noop
+                            }}
+                        >
                             Notification Text
                         </Alert>
-                        <Alert severity="error" onClose={dummyOnClose}>
+                        <Alert
+                            severity="warning"
+                            onClose={() => {
+                                // noop
+                            }}
+                        >
+                            Notification Text
+                        </Alert>
+                        <Alert
+                            severity="error"
+                            onClose={() => {
+                                // noop
+                            }}
+                        >
                             Notification Text
                         </Alert>
                         <Alert
@@ -83,7 +107,9 @@ function Story() {
                                     Action Text
                                 </Button>
                             }
-                            onClose={dummyOnClose}
+                            onClose={() => {
+                                // noop
+                            }}
                         >
                             Notification Text
                         </Alert>

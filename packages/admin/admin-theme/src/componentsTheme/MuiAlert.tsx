@@ -18,9 +18,7 @@ export const getMuiAlert: GetMuiComponentTheme<"MuiAlert"> = (component, { palet
         ...component?.defaultProps,
     },
     styleOverrides: mergeOverrideStyles<"MuiAlert">(component?.styleOverrides, {
-        root: {
-            maxWidth: 400,
-        },
+        root: {},
         outlined: {
             borderLeftWidth: 5,
             backgroundColor: "#fff",
