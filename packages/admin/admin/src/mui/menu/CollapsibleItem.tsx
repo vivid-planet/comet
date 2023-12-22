@@ -19,8 +19,8 @@ export type MenuChild = React.ReactElement<MenuCollapsibleItemProps | MenuItemRo
 export interface MenuCollapsibleItemProps extends MenuItemProps {
     children: MenuChild | MenuChild[];
     openByDefault?: boolean;
-    OpenedIcon?: React.JSXElementConstructor<SvgIconProps>;
-    ClosedIcon?: React.JSXElementConstructor<SvgIconProps>;
+    openedIcon?: React.JSXElementConstructor<SvgIconProps>;
+    closedIcon?: React.JSXElementConstructor<SvgIconProps>;
     isMenuOpen?: boolean;
     collapsedMenuTransitionComponent?: MenuProps["TransitionComponent"];
 }
@@ -34,8 +34,8 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
     isMenuOpen,
     icon,
     openByDefault = false,
-    OpenedIcon,
-    ClosedIcon,
+    openedIcon: OpenedIcon,
+    closedIcon: ClosedIcon,
     children,
     collapsedMenuTransitionComponent = Fade,
     ...otherProps
