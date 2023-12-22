@@ -44,12 +44,12 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
     let hasSelectedChild = false;
     const location = useLocation();
 
-    const [isCollapsibleOpen, setIsCollapsibleOpen] = React.useState<boolean>(openByDefault || hasSelectedChild);
+    const [isSubmenuOpen, setIsSubmenuOpen] = React.useState<boolean>(openByDefault || hasSelectedChild);
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
     React.useEffect(() => {
         // set open state manually to false to avoid a menu opening when isMenuOpen state changes
-        if (!isMenuOpen) setIsCollapsibleOpen(false);
+        if (!isMenuOpen) setIsSubmenuOpen(false);
     }, [isMenuOpen]);
 
     function checkIfPathInLocation(child: React.ReactElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>) {
@@ -79,14 +79,14 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
 
     const closeMenu = () => {
         setAnchorEl(null);
-        setIsCollapsibleOpen(false);
+        setIsSubmenuOpen(false);
     };
 
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
         if (isMenuOpen) return;
         if (anchorEl !== event.currentTarget) {
             setAnchorEl(event.currentTarget);
-            setIsCollapsibleOpen(true);
+            setIsSubmenuOpen(true);
         }
     };
 
@@ -103,7 +103,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
 
     const listClasses = [];
     if (hasSelectedChild) listClasses.push(classes.childSelected);
-    if (isCollapsibleOpen) listClasses.push(classes.open);
+    if (isSubmenuOpen) listClasses.push(classes.open);
 
     return (
         <div {...otherProps}>
@@ -111,8 +111,8 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
                 id="menu-item"
                 className={classes.listItem}
                 aria-haspopup="true"
-                aria-controls={isCollapsibleOpen ? "mouse-over-menu" : undefined}
-                aria-expanded={isCollapsibleOpen ? "true" : undefined}
+                aria-controls={isSubmenuOpen ? "mouse-over-menu" : undefined}
+                aria-expanded={isSubmenuOpen ? "true" : undefined}
                 onMouseOver={handlePopoverOpen}
                 onMouseLeave={handlePopoverClose}
             >
@@ -121,22 +121,22 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
                     showText={isMenuOpen ? showText : itemLevel > 1}
                     secondary={secondary}
                     hasChildElements={!!childElements?.length}
-                    isCollapsibleOpen={isCollapsibleOpen}
+                    isCollapsibleOpen={isSubmenuOpen}
                     isMenuOpen={isMenuOpen}
                     icon={icon}
                     level={level}
-                    onClick={() => setIsCollapsibleOpen(!isCollapsibleOpen)}
+                    onClick={() => setIsSubmenuOpen(!isSubmenuOpen)}
                     secondaryAction={
-                        itemLevel === 1 && isCollapsibleOpen ? (
+                        itemLevel === 1 && isSubmenuOpen ? (
                             <OpenedIcon
                                 className={`${classes.collapsibleIcon} ${
-                                    !isMenuOpen && isCollapsibleOpen && itemLevel === 1 ? classes.colorWhite : classes.colorGrey
+                                    !isMenuOpen && isSubmenuOpen && itemLevel === 1 ? classes.colorWhite : classes.colorGrey
                                 }`}
                             />
                         ) : (
                             <ClosedIcon
                                 className={`${classes.collapsibleIcon} ${
-                                    !isMenuOpen && isCollapsibleOpen && itemLevel === 1 ? classes.colorWhite : classes.colorGrey
+                                    !isMenuOpen && isSubmenuOpen && itemLevel === 1 ? classes.colorWhite : classes.colorGrey
                                 }`}
                             />
                         )
@@ -145,7 +145,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
                 />
             </div>
             {isMenuOpen ? (
-                <Collapse in={isCollapsibleOpen} timeout="auto" unmountOnExit>
+                <Collapse in={isSubmenuOpen} timeout="auto" unmountOnExit>
                     <List disablePadding>{childElements}</List>
                 </Collapse>
             ) : (
@@ -159,7 +159,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
                     sx={{
                         pointerEvents: "none",
                     }}
-                    open={isCollapsibleOpen}
+                    open={isSubmenuOpen}
                     anchorEl={anchorEl}
                     TransitionComponent={Fade}
                     anchorOrigin={{
