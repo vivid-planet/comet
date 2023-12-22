@@ -1,11 +1,11 @@
 ---
-"@comet/cms-admin": minor
 "@comet/admin": minor
 ---
 
-Add group section component for usage in menu.
+Add `MenuItemGroup` component to group menu items
 
-### Example usage
+**Example:**
+
 ```tsx
 <MenuItemGroup title="Some item group title">
     <MenuItemRouterLink primary="Menu item 1" icon={<Settings />} to="/menu-item-1" />
