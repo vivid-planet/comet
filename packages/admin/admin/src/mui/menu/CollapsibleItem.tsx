@@ -82,7 +82,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
                     primary={primary}
                     showText={showText}
                     secondary={secondary}
-                    hasChildElements={!!childElements?.length}
+                    hasSubitems={!!childElements?.length}
                     isCollapsibleOpen={open}
                     icon={icon}
                     level={level}

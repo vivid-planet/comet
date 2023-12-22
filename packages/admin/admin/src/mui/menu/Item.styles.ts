@@ -64,8 +64,8 @@ export const styles = (theme: Theme) => {
             paddingTop: 10,
             paddingBottom: 10,
             "&:last-child": {
-                borderBottom: ({ level, hasChildElements, isCollapsibleOpen }) =>
-                    level === 2 && (!hasChildElements || !isCollapsibleOpen) ? `1px solid ${theme.palette.grey[50]}` : "initial",
+                borderBottom: ({ level, hasSubitems, isCollapsibleOpen }) =>
+                    level === 2 && (!hasSubitems || !isCollapsibleOpen) ? `1px solid ${theme.palette.grey[50]}` : "initial",
                 boxSizing: "border-box",
             },
             "&[class*='Mui-selected']": {

@@ -13,7 +13,7 @@ export interface MenuItemProps extends MenuLevel {
     secondaryAction?: React.ReactNode;
     showText?: boolean;
     isCollapsibleOpen?: boolean;
-    hasChildElements?: boolean;
+    hasSubitems?: boolean;
 }
 
 export type MuiListItemProps = Pick<ListItemProps, Exclude<keyof ListItemProps, "innerRef" | "button">> & { component?: React.ElementType };
