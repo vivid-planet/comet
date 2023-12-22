@@ -5,13 +5,13 @@ import { MenuItemProps, MuiListItemProps } from "./Item";
 
 export type MenuItemClassKey = "root" | "level1" | "level2" | "level3" | "hasIcon" | "hasSecondaryText" | "hasSecondaryAction";
 
-const colors = {
-    textLevel1: "#242424",
-    textLevel2: "#17181A",
-};
+export const styles = (theme: Theme) => {
+    const colors = {
+        textLevel1: theme.palette.grey[800],
+        textLevel2: theme.palette.grey[900],
+    };
 
-export const styles = (theme: Theme) =>
-    createStyles<MenuItemClassKey, MenuItemProps & MuiListItemProps>({
+    return createStyles<MenuItemClassKey, MenuItemProps & MuiListItemProps>({
         root: {
             flexShrink: 0,
             "&:after": {
@@ -175,3 +175,4 @@ export const styles = (theme: Theme) =>
             paddingRight: 18,
         },
     });
+};
