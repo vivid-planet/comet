@@ -1,57 +1,66 @@
 import { Box, ComponentsOverrides, Theme, Tooltip, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import clsx from "clsx";
 import * as React from "react";
 
-export type MenuItemGroupClassKey = "root" | "title" | "titleContainer";
+import { MenuContext } from "./Context";
+
+export type MenuItemGroupClassKey = "root" | "title" | "titleMenuOpen" | "titleContainer" | "titleContainerMenuOpen";
 
 const styles = (theme: Theme) =>
     createStyles<MenuItemGroupClassKey, MenuItemGroupProps>({
         root: { marginTop: theme.spacing(8) },
         title: {
             fontWeight: theme.typography.fontWeightBold,
-            fontSize: ({ drawerOpen }) => (drawerOpen ? 14 : 12),
-            border: ({ drawerOpen }) => (drawerOpen ? `2px solid ${theme.palette.common.white}` : `2px solid ${theme.palette.grey[100]}`),
-            borderRadius: ({ drawerOpen }) => (drawerOpen ? "initial" : 20),
-            padding: ({ drawerOpen }) => (drawerOpen ? "0" : theme.spacing(2, 4)),
+            fontSize: 12,
+            border: `2px solid ${theme.palette.grey[100]}`,
+            borderRadius: 20,
+            padding: theme.spacing(0.5, 2),
             lineHeight: "20px",
-            color: ({ drawerOpen }) => (drawerOpen ? `${theme.palette.common.black}` : `${theme.palette.grey[300]}`),
+            color: `${theme.palette.grey[300]}`,
+        },
+        titleMenuOpen: {
+            fontSize: 14,
+            border: `2px solid ${theme.palette.common.white}`,
+            borderRadius: "initial",
+            padding: 0,
+            color: theme.palette.common.black,
         },
         titleContainer: {
             borderBottom: `1px solid ${theme.palette.grey[50]}`,
             display: "flex",
-            justifyContent: ({ drawerOpen }) => (drawerOpen ? "flex-start" : "center"),
-            padding: ({ drawerOpen }) => `${theme.spacing(2)} ${drawerOpen ? theme.spacing(4) : 0}`,
+            justifyContent: "center",
+            padding: `${theme.spacing(2)} 0`,
+        },
+        titleContainerMenuOpen: {
+            justifyContent: "flex-start",
+            padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
         },
     });
 
 export interface MenuItemGroupProps {
     title: string;
-    drawerOpen?: boolean;
+    shortTitle?: string;
 }
 
-const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({ title, children, classes, drawerOpen }) => {
-    const initialTitle = title;
+const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({ title, shortTitle, children, classes }) => {
+    const { open: menuOpen } = React.useContext(MenuContext);
+    let displayedTitle = title;
     function getInitials(title: string) {
         const words = title.split(/\s+/).filter((word) => word.match(/[A-Za-z]/));
         return words.map((word) => word[0].toUpperCase()).join("");
     }
 
-    if (drawerOpen === false) {
-        title = getInitials(title);
+    if (!menuOpen) {
+        displayedTitle = shortTitle || getInitials(title);
     }
 
     return (
         <Box className={classes.root}>
-            <Tooltip
-                placement="right"
-                disableHoverListener={drawerOpen}
-                disableFocusListener={drawerOpen}
-                disableTouchListener={drawerOpen}
-                title={initialTitle}
-            >
-                <Box className={classes.titleContainer}>
-                    <Typography className={classes.title} variant="h3">
-                        {title}
+            <Tooltip placement="right" disableHoverListener={menuOpen} disableFocusListener={menuOpen} disableTouchListener={menuOpen} title={title}>
+                <Box className={clsx(classes.titleContainer, menuOpen && classes.titleContainerMenuOpen)}>
+                    <Typography className={clsx(classes.title, menuOpen && classes.titleMenuOpen)} variant="h3">
+                        {displayedTitle}
                     </Typography>
                 </Box>
             </Tooltip>

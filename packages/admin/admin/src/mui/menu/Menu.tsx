@@ -6,8 +6,8 @@ import { useHistory } from "react-router";
 import { MenuContext } from "./Context";
 import { Drawer, MenuClassKey, styles } from "./Menu.styles";
 
-export const DRAWER_WIDTH = 300;
-export const DRAWER_WIDTH_COLLAPSED = 60;
+export const DEFAULT_DRAWER_WIDTH = 300;
+export const DEFAULT_DRAWER_WIDTH_COLLAPSED = 60;
 
 export interface MenuProps {
     children: React.ReactNode;
@@ -23,8 +23,8 @@ export interface MenuProps {
 const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
     classes,
     children,
-    drawerWidth = DRAWER_WIDTH,
-    drawerWidthCollapsed = DRAWER_WIDTH_COLLAPSED,
+    drawerWidth = DEFAULT_DRAWER_WIDTH,
+    drawerWidthCollapsed = DEFAULT_DRAWER_WIDTH_COLLAPSED,
     variant = "permanent",
     temporaryDrawerProps = {},
     permanentDrawerProps = {},
