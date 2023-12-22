@@ -191,7 +191,6 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                 },
             }}
             initialValuesEqual={(prevValues, newValues) => isEqual(prevValues, newValues)}
-            validateOnBlur
         >
             {({ pristine, hasValidationErrors, submitting, handleSubmit }) => (
                 <>
