@@ -1,6 +1,5 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
 import { Collapse, ComponentsOverrides, Fade, List, Menu, Theme, Typography } from "@mui/material";
-import { MenuProps } from "@mui/material/Menu/Menu";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
@@ -22,7 +21,6 @@ export interface MenuCollapsibleItemProps extends MenuItemProps {
     openedIcon?: React.JSXElementConstructor<SvgIconProps>;
     closedIcon?: React.JSXElementConstructor<SvgIconProps>;
     isMenuOpen?: boolean;
-    collapsedMenuTransitionComponent?: MenuProps["TransitionComponent"];
 }
 
 const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemProps> = ({
@@ -37,7 +35,6 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
     openedIcon: OpenedIcon,
     closedIcon: ClosedIcon,
     children,
-    collapsedMenuTransitionComponent = Fade,
     ...otherProps
 }) => {
     OpenedIcon = OpenedIcon || (isMenuOpen ? ChevronUp : ChevronRight);
@@ -164,7 +161,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
                     }}
                     open={isCollapsibleOpen}
                     anchorEl={anchorEl}
-                    TransitionComponent={collapsedMenuTransitionComponent}
+                    TransitionComponent={Fade}
                     anchorOrigin={{
                         vertical: "center",
                         horizontal: "right",
