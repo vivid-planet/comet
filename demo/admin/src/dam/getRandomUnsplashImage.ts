@@ -27,13 +27,14 @@ export async function getRandomUnsplashImage(): Promise<UnsplashImage> {
 
     try {
         const image = await fetchUnsplashImage(imageUrl);
-        const fileName = extractFileNameFromUrl(image.origin);
         const mimeType = image.blob.type;
-        const acceptedFile = new File([image.blob], fileName, { type: mimeType });
 
         if (mimeType !== "image/jpeg") {
             return getRandomUnsplashImage();
         }
+
+        const fileName = extractFileNameFromUrl(image.origin);
+        const acceptedFile = new File([image.blob], fileName, { type: mimeType });
 
         return {
             file: acceptedFile,
