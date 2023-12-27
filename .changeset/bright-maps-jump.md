@@ -3,7 +3,7 @@
 "@comet/cms-api": minor
 ---
 
-# Support the import of files from external DAMs
+Support the import of files from external DAMs
 
 To connect an external DAM, implement a component with the necessary logic (asset picker, upload functionality, ...). Pass this component to the DamPage via the additionalToolbarItems prop.
 
