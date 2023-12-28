@@ -12,19 +12,19 @@ export class PixelImageBlockFixtureService {
     async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof PixelImageBlock>> {
         return {
             damFileId: this.imageFixtureService.getRandomPixelImage().id,
-            cropArea: calculateDefaultCropInput(),
+            cropArea: this.calculateDefaultCropInput(),
+        };
+    }
+
+    private calculateDefaultCropInput(): ImageCropAreaInput {
+        const focalPoint = random.arrayElement(Object.values(Object.keys(FocalPoint))) as FocalPoint;
+
+        return {
+            focalPoint,
+            x: focalPoint !== FocalPoint.SMART ? 0 : undefined,
+            y: focalPoint !== FocalPoint.SMART ? 0 : undefined,
+            height: focalPoint !== FocalPoint.SMART ? datatype.number({ min: 20, max: 100 }) : undefined,
+            width: focalPoint !== FocalPoint.SMART ? datatype.number({ min: 20, max: 100 }) : undefined,
         };
     }
 }
-
-export const calculateDefaultCropInput = (): ImageCropAreaInput => {
-    const focalPoint = random.arrayElement(Object.values(Object.keys(FocalPoint))) as FocalPoint;
-
-    return {
-        focalPoint,
-        x: focalPoint !== FocalPoint.SMART ? 0 : undefined,
-        y: focalPoint !== FocalPoint.SMART ? 0 : undefined,
-        height: focalPoint !== FocalPoint.SMART ? datatype.number({ min: 20, max: 100 }) : undefined,
-        width: focalPoint !== FocalPoint.SMART ? datatype.number({ min: 20, max: 100 }) : undefined,
-    };
-};
