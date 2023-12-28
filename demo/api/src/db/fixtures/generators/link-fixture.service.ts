@@ -9,7 +9,7 @@ import { UserGroup } from "@src/user-groups/user-group";
 import faker from "faker";
 import slugify from "slugify";
 
-import { LinkBlockFixtureService } from "./blocks/link.fixture";
+import { LinkBlockFixtureService } from "./blocks/link-block-fixture.service";
 
 interface GenerateLinkInput {
     name: string;
@@ -22,7 +22,7 @@ export class LinkFixtureService {
     constructor(
         private readonly pageTreeService: PageTreeService,
         @InjectRepository(Link) private readonly linkRepository: EntityRepository<Link>,
-        private readonly linkBlockFixture: LinkBlockFixtureService,
+        private readonly linkBlockFixtureService: LinkBlockFixtureService,
     ) {}
 
     async generateLink({ name, scope, parentId }: GenerateLinkInput): Promise<{ node: PageTreeNodeInterface; link: Link }> {
@@ -48,7 +48,7 @@ export class LinkFixtureService {
 
         const link = this.linkRepository.create({
             id,
-            content: (await this.linkBlockFixture.generateBlock()).transformToBlockData(),
+            content: (await this.linkBlockFixtureService.generateBlock()).transformToBlockData(),
         });
         await this.linkRepository.persistAndFlush(link);
 

@@ -4,19 +4,19 @@ import { ColumnsBlock, supportedBlocks } from "@src/pages/blocks/columns.block";
 import { datatype, random } from "faker";
 
 import { ColumnsContentBlock } from "../../../../pages/blocks/columns.block";
-import { DamImageBlockFixtureService } from "./dam-image.fixture";
-import { HeadlineBlockFixtureService } from "./headline.fixture";
-import { BlockFixture } from "./page-content.fixture";
-import { RichTextBlockFixtureService } from "./richtext.fixture";
-import { SpaceBlockFixtureService } from "./space.fixture";
+import { DamImageBlockFixtureService } from "./dam-image-block-fixture.service";
+import { HeadlineBlockFixtureService } from "./headline-block-fixture.service";
+import { BlockFixture } from "./page-content-block-fixture.service";
+import { RichTextBlockFixtureService } from "./richtext-block-fixture.service";
+import { SpaceBlockFixtureService } from "./space-block-fixture.service";
 
 @Injectable()
 export class ColumnsBlockFixtureService {
     constructor(
         private readonly richtextBlockFixtureService: RichTextBlockFixtureService,
-        private readonly damImageBlockFixture: DamImageBlockFixtureService,
-        private readonly spaceBlockFixture: SpaceBlockFixtureService,
-        private readonly headlineBlockFixture: HeadlineBlockFixtureService,
+        private readonly damImageBlockFixtureService: DamImageBlockFixtureService,
+        private readonly spaceBlockFixtureService: SpaceBlockFixtureService,
+        private readonly headlineBlockFixtureService: HeadlineBlockFixtureService,
     ) {}
 
     async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof ColumnsBlock>> {
@@ -29,10 +29,10 @@ export class ColumnsBlockFixtureService {
             const blocks: ExtractBlockInputFactoryProps<typeof ColumnsContentBlock>["blocks"] = [];
 
             const blockCfg: Record<keyof typeof supportedBlocks, BlockFixture> = {
-                space: this.spaceBlockFixture,
+                space: this.spaceBlockFixtureService,
                 richtext: this.richtextBlockFixtureService,
-                headline: this.headlineBlockFixture,
-                image: this.damImageBlockFixture,
+                headline: this.headlineBlockFixtureService,
+                image: this.damImageBlockFixtureService,
             };
 
             for (let i = 0; i < datatype.number(20); i++) {

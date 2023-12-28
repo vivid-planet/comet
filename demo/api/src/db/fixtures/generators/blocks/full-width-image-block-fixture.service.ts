@@ -3,8 +3,8 @@ import { Injectable } from "@nestjs/common";
 import { FullWidthImageBlock, FullWidthImageContentBlock } from "@src/pages/blocks/full-width-image.block";
 import { datatype } from "faker";
 
-import { DamImageBlockFixtureService } from "./dam-image.fixture";
-import { RichTextBlockFixtureService } from "./richtext.fixture";
+import { DamImageBlockFixtureService } from "./dam-image-block-fixture.service";
+import { RichTextBlockFixtureService } from "./richtext-block-fixture.service";
 
 @Injectable()
 export class FullWidthImageBlockFixtureService {

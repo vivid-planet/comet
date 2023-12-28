@@ -4,7 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { SeoBlock } from "@src/pages/blocks/seo.block";
 import * as faker from "faker";
 
-import { PixelImageBlockFixtureService } from "./pixel-image.fixture";
+import { PixelImageBlockFixtureService } from "./pixel-image-block-fixture.service";
 
 @Injectable()
 export class SeoBlockFixtureService {

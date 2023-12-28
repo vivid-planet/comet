@@ -3,8 +3,8 @@ import { Injectable } from "@nestjs/common";
 import { VideoBlock } from "@src/pages/blocks/video.block";
 import { random } from "faker";
 
-import { DamVideoBlockFixtureService } from "./dam-video.fixture";
-import { YouTubeVideoBlockFixtureService } from "./you-tube-video.fixture";
+import { DamVideoBlockFixtureService } from "./dam-video-block-fixture.service";
+import { YouTubeVideoBlockFixtureService } from "./you-tube-video-block-fixture.service";
 
 @Injectable()
 export class VideoBlockFixtureService {

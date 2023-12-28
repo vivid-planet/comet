@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { TwoListsBlock, TwoListsList } from "@src/pages/blocks/two-lists.block";
 import { datatype } from "faker";
 
-import { HeadlineBlockFixtureService } from "./headline.fixture";
+import { HeadlineBlockFixtureService } from "./headline-block-fixture.service";
 
 @Injectable()
 export class TwoListsBlockFixtureService {

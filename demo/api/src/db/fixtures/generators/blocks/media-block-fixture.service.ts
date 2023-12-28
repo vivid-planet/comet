@@ -3,8 +3,8 @@ import { Injectable } from "@nestjs/common";
 import { MediaBlock } from "@src/pages/blocks/media.block";
 import { random } from "faker";
 
-import { DamImageBlockFixtureService } from "./dam-image.fixture";
-import { DamVideoBlockFixtureService } from "./dam-video.fixture";
+import { DamImageBlockFixtureService } from "./dam-image-block-fixture.service";
+import { DamVideoBlockFixtureService } from "./dam-video-block-fixture.service";
 
 @Injectable()
 export class MediaBlockFixtureService {

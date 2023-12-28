@@ -4,7 +4,7 @@ import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { HeadlineBlock, HeadlineLevel } from "@src/pages/blocks/headline.block";
 import { datatype, random } from "faker";
 
-import { RichTextBlockFixtureService } from "./richtext.fixture";
+import { RichTextBlockFixtureService } from "./richtext-block-fixture.service";
 
 @Injectable()
 export class HeadlineBlockFixtureService {

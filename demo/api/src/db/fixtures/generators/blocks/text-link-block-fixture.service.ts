@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { TextLinkBlock } from "@src/common/blocks/text-link.block";
 import { datatype, random } from "faker";
 
-import { LinkBlockFixtureService } from "./link.fixture";
+import { LinkBlockFixtureService } from "./link-block-fixture.service";
 
 @Injectable()
 export class TextLinkBlockFixtureService {

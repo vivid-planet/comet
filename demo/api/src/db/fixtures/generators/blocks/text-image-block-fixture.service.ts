@@ -6,8 +6,8 @@ import { CONFIG } from "@src/config/config.module";
 import { TextImageBlock } from "@src/pages/blocks/TextImageBlock";
 import faker from "faker";
 
-import { DamImageBlockFixtureService } from "./dam-image.fixture";
-import { RichTextBlockFixtureService } from "./richtext.fixture";
+import { DamImageBlockFixtureService } from "./dam-image-block-fixture.service";
+import { RichTextBlockFixtureService } from "./richtext-block-fixture.service";
 
 @Injectable()
 export class TextImageBlockFixtureService {

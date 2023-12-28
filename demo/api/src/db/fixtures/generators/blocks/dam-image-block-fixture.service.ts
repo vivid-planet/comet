@@ -3,23 +3,23 @@ import { DamImageBlock, FocalPoint, ImageCropAreaInput } from "@comet/cms-api";
 import { Injectable } from "@nestjs/common";
 import { datatype, random } from "faker";
 
-import { PixelImageBlockFixtureService } from "./pixel-image.fixture";
-import { SvgImageBlockFixtureService } from "./svg-image.fixture";
+import { PixelImageBlockFixtureService } from "./pixel-image-block-fixture.service";
+import { SvgImageBlockFixtureService } from "./svg-image-block-fixture.service";
 
 @Injectable()
 export class DamImageBlockFixtureService {
     constructor(
-        private readonly svgImageBlockFixture: SvgImageBlockFixtureService,
-        private readonly pixelImageBlockFixture: PixelImageBlockFixtureService,
+        private readonly svgImageBlockFixtureService: SvgImageBlockFixtureService,
+        private readonly pixelImageBlockFixtureService: PixelImageBlockFixtureService,
     ) {}
 
     async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof DamImageBlock>> {
         let type: "svgImage" | "pixelImage" = "pixelImage";
-        let props = await this.pixelImageBlockFixture.generateBlock();
+        let props = await this.pixelImageBlockFixtureService.generateBlock();
 
         if (datatype.boolean()) {
             type = "svgImage";
-            props = await this.svgImageBlockFixture.generateBlock();
+            props = await this.svgImageBlockFixtureService.generateBlock();
         }
 
         return {

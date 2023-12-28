@@ -9,8 +9,8 @@ import { UserGroup } from "@src/user-groups/user-group";
 import faker from "faker";
 import slugify from "slugify";
 
-import { PageContentBlockFixtureService } from "./blocks/page-content.fixture";
-import { SeoBlockFixtureService } from "./blocks/seo.fixture";
+import { PageContentBlockFixtureService } from "./blocks/page-content-block-fixture.service";
+import { SeoBlockFixtureService } from "./blocks/seo-block-fixture.service";
 
 interface GeneratePageInput {
     name: string;
