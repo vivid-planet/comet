@@ -1,14 +1,14 @@
+import { Delete, Select } from "@comet/admin-icons";
 import { Button, Chip, ComponentsOverrides, FormHelperText, IconButton, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
+import { PrettyBytes } from "helpers/PrettyBytes";
 import * as React from "react";
 import { Accept, useDropzone } from "react-dropzone";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { Delete, Select } from "../../../admin-icons/lib";
-
-export type FinalFormFileUploadClassKey = "root" | "dropableArea" | "dropableAreaCaption" | "fileList" | "fileListItem" | "disabled" | "error";
+export type FinalFormFileUploadClassKey = "root" | "droppableArea" | "droppableAreaCaption" | "fileList" | "fileListItem" | "disabled" | "error";
 
 const styles = ({ palette }: Theme) => {
     return createStyles<FinalFormFileUploadClassKey, FinalFormFileUploadProps>({
@@ -20,7 +20,7 @@ const styles = ({ palette }: Theme) => {
             alignSelf: "stretch",
             minWidth: "350px",
         },
-        dropableArea: {
+        droppableArea: {
             display: "flex",
             height: "80px",
             padding: "10px",
@@ -38,7 +38,7 @@ const styles = ({ palette }: Theme) => {
                 border: `1px dashed ${palette.error.main}`,
             },
         },
-        dropableAreaCaption: {
+        droppableAreaCaption: {
             color: palette.text.secondary,
             fontSize: "14px",
             fontStyle: "normal",
@@ -69,11 +69,12 @@ const styles = ({ palette }: Theme) => {
     });
 };
 
-export interface FinalFormFileUploadProps extends FieldRenderProps<HTMLInputElement> {
+export interface FinalFormFileUploadProps extends FieldRenderProps<File[], HTMLInputElement> {
     dropzoneVariant: "dropzoneOnly" | "buttonOnly" | "default";
     caption: React.ReactNode;
     multipleFiles: boolean;
     accept: Accept;
+    maxSize: number;
 }
 
 const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof styles> & FinalFormFileUploadProps> = ({
@@ -85,43 +86,27 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
     accept,
     input: { name, onChange, value: fieldValue },
 }) => {
-    // convert bytes for the file size chip
-    function formatBytes(bytes: number, decimals = 2) {
-        if (!+bytes) return "0 Bytes";
-
-        const k = 1024;
-        const dm = decimals < 0 ? 0 : decimals;
-        const sizes = ["Bytes", "KB", "MB", "GB"];
-
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-    }
-
-    // add myFiles state to be able to remove accepted files
-    const [myFiles, setMyFiles] = React.useState<File[]>([]);
-
     const onDrop = React.useCallback(
         (acceptedFiles: File[]) => {
-            setMyFiles([...myFiles, ...acceptedFiles]);
+            onChange([...fieldValue, ...acceptedFiles]);
         },
-        [myFiles],
+        [fieldValue, onChange],
     );
 
     const removeFile = (file: File) => () => {
-        const newFiles = [...myFiles];
+        const newFiles = [...fieldValue];
         newFiles.splice(newFiles.indexOf(file), 1);
-        setMyFiles(newFiles);
+        onChange(newFiles);
     };
 
     const { acceptedFiles, getRootProps, getInputProps, isDragReject } = useDropzone({ onDrop, accept, disabled, multiple: multipleFiles });
 
     // list of the accepted files
-    const files = myFiles.map((file) => (
+    const files = fieldValue.map((file) => (
         <div key={file.name} className={classes.fileListItem}>
             {`${file.name.substring(0, 20)}...`}
             <div>
-                <Chip label={formatBytes(file.size)} />
+                <Chip label={<PrettyBytes value={file.size} />} />
                 <IconButton onClick={removeFile(file)}>
                     <Delete />
                 </IconButton>
@@ -134,8 +119,8 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
             <div {...getRootProps()} className={classes.root}>
                 <input {...getInputProps()} />
                 {dropzoneVariant !== "buttonOnly" && (
-                    <div className={clsx(classes.dropableArea, disabled && classes.disabled, isDragReject && classes.error)}>
-                        <div className={classes.dropableAreaCaption}>
+                    <div className={clsx(classes.droppableArea, disabled && classes.disabled, isDragReject && classes.error)}>
+                        <div className={classes.droppableAreaCaption}>
                             <FormattedMessage id="comet.finalformfileupload.dropfiles" defaultMessage="Drop files here to upload" />
                         </div>
                     </div>
