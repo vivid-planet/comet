@@ -15,11 +15,14 @@ export class DamImageBlockFixtureService {
 
     async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof DamImageBlock>> {
         let type: "svgImage" | "pixelImage" = "pixelImage";
-        let props = await this.pixelImageBlockFixtureService.generateBlock();
+        let props;
 
         if (datatype.boolean()) {
             type = "svgImage";
             props = await this.svgImageBlockFixtureService.generateBlock();
+        } else {
+            type = "pixelImage";
+            props = await this.pixelImageBlockFixtureService.generateBlock();
         }
 
         return {
