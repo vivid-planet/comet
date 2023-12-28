@@ -1,5 +1,37 @@
 # @comet/admin
 
+## 5.3.0
+
+### Minor Changes
+
+-   60cc1b2a: Add `FieldSet` component with accordion behavior for better structuring of big forms.
+
+### Patch Changes
+
+-   a677a162: Fix `RouterPromptHandler` to not show a prompt when navigating to a path with params that is not a sub route
+-   5435b278: Fix `shouldScrollTo()`, `shouldShowError()` and `shouldShowWarning()` in `Field`
+
+    Previously, the `meta` argument was passed to these methods incorrectly. Now, the argument is passed as defined by the typing.
+
+-   Updated dependencies [0ff9b9ba]
+-   Updated dependencies [0ff9b9ba]
+    -   @comet/admin-icons@5.3.0
+
+## 5.2.0
+
+### Minor Changes
+
+-   0bed4e7c: Add optional `hasConflict` prop to `SaveButton`, `FinalFormSaveButton` and `FinalFormSaveSplitButton`
+
+    If set to `true`, a new "conflict" display state is triggered.
+    You should pass the `hasConflict` prop returned by `useSaveConflict()`, `useSaveConflictQuery()` and `useFormSaveConflict()`.
+
+### Patch Changes
+
+-   25daac07: Avoid remount of `RouterTab` with `forceRender={true}` when `RouterTabs` are used inside a `Stack`
+-   Updated dependencies [9fc7d474]
+    -   @comet/admin-icons@5.2.0
+
 ## 5.1.0
 
 ### Minor Changes

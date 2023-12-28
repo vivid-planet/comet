@@ -7,9 +7,10 @@ import { messages } from "./messages";
 
 interface FinalFormSaveButtonProps {
     message?: React.ReactNode;
+    hasConflict?: boolean;
 }
 
-export const FinalFormSaveButton = ({ message = <FormattedMessage {...messages.save} /> }: FinalFormSaveButtonProps) => {
+export const FinalFormSaveButton = ({ message = <FormattedMessage {...messages.save} />, hasConflict }: FinalFormSaveButtonProps) => {
     const form = useForm();
     const { pristine, hasValidationErrors, submitting, hasSubmitErrors } = useFormState();
 
@@ -17,6 +18,7 @@ export const FinalFormSaveButton = ({ message = <FormattedMessage {...messages.s
 
     return (
         <SaveButton
+            hasConflict={hasConflict}
             disabled={isDisabled}
             color="primary"
             variant="contained"

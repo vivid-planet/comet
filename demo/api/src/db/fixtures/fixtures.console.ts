@@ -10,6 +10,7 @@ import { Command, Console } from "nestjs-console";
 
 import { LinkFixtureService } from "./generators/link-fixture.service";
 import { PageFixtureService } from "./generators/page-fixture.service";
+import { PublicUploadsFixtureService } from "./generators/public-uploads-fixture.service";
 
 @Injectable()
 @Console()
@@ -22,6 +23,7 @@ export class FixturesConsole {
         private readonly imageFixtureService: ImageFixtureService,
 
         private readonly orm: MikroORM,
+        private readonly publicUploadsFixtureService: PublicUploadsFixtureService,
     ) {}
 
     @Command({
@@ -104,5 +106,9 @@ export class FixturesConsole {
             }
             console.log(`Generated ${pagesCount} lorem ipsum pages for ${domain}`);
         }
+
+        await this.publicUploadsFixtureService.generatePublicUploads();
+
+        await this.orm.em.flush();
     }
 }
