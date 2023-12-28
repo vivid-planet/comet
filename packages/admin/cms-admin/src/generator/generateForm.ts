@@ -1,3 +1,4 @@
+import { sentenceCase } from "change-case";
 import {
     IntrospectionEnumType,
     IntrospectionField,
@@ -287,7 +288,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                                 </IconButton>
                             </ToolbarItem>
                             <ToolbarTitleItem>
-                                <FormattedMessage id="${instanceNamePlural}.${classNameSingular}" defaultMessage="${camelCaseToHumanReadable(
+                                <FormattedMessage id="${instanceNamePlural}.${classNameSingular}" defaultMessage="${sentenceCase(
         classNameSingular,
     )}" />
                             </ToolbarTitleItem>
