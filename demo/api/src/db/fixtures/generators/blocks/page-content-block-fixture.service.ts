@@ -43,7 +43,7 @@ export class PageContentBlockFixtureService {
     async generateBlock(): Promise<ExtractBlockInput<typeof PageContentBlock>> {
         const blocks: ExtractBlockInputFactoryProps<typeof PageContentBlock>["blocks"] = [];
 
-        const blockCfg: Record<keyof typeof supportedBlocks, BlockFixture> = {
+        const supportedBlocksFixtureGenerators: Record<keyof typeof supportedBlocks, BlockFixture> = {
             richtext: this.richtextBlockFixtureService,
             image: this.damImageBlockFixtureService,
             textImage: this.textImageBlockFixtureService,
@@ -61,7 +61,7 @@ export class PageContentBlockFixtureService {
         };
 
         for (let i = 0; i < 10; i++) {
-            const [type, generator] = random.arrayElement(Object.entries(blockCfg));
+            const [type, generator] = random.arrayElement(Object.entries(supportedBlocksFixtureGenerators));
             if (generator) {
                 const props = await generator.generateBlock();
                 const userGroup = random.arrayElement(Object.values(UserGroup));

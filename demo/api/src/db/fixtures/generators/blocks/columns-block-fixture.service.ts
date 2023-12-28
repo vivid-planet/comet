@@ -28,7 +28,7 @@ export class ColumnsBlockFixtureService {
         for (let i = 0; i < columnCount; i++) {
             const blocks: ExtractBlockInputFactoryProps<typeof ColumnsContentBlock>["blocks"] = [];
 
-            const blockCfg: Record<keyof typeof supportedBlocks, BlockFixture> = {
+            const supportedBlocksFixtureGenerators: Record<keyof typeof supportedBlocks, BlockFixture> = {
                 space: this.spaceBlockFixtureService,
                 richtext: this.richtextBlockFixtureService,
                 headline: this.headlineBlockFixtureService,
@@ -36,7 +36,7 @@ export class ColumnsBlockFixtureService {
             };
 
             for (let i = 0; i < datatype.number(20); i++) {
-                const [type, generator] = random.arrayElement(Object.entries(blockCfg));
+                const [type, generator] = random.arrayElement(Object.entries(supportedBlocksFixtureGenerators));
                 if (generator) {
                     const props = await generator.generateBlock();
 
