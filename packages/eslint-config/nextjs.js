@@ -6,6 +6,7 @@ module.exports = {
         "react/self-closing-comp": "error",
         "import/no-extraneous-dependencies": "error",
         "@comet/no-private-sibling-import": ["error", ["gql", "sc", "gql.generated"]],
+        "no-duplicate-imports": "error",
         "no-restricted-imports": [
             "error",
             {
