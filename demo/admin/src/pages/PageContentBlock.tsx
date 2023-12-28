@@ -37,13 +37,9 @@ export const PageContentBlock = createBlocksBlock({
         ...userGroupAdditionalItemFields,
     },
     AdditionalItemContextMenuItems: ({ item, onChange, onMenuClose }) => {
-        // TODO fix typing: infer additional fields somehow
-        // @ts-expect-error missing additional field
         return <UserGroupContextMenuItem item={item} onChange={onChange} onMenuClose={onMenuClose} />;
     },
     AdditionalItemContent: ({ item }) => {
-        // TODO fix typing: infer additional fields somehow
-        // @ts-expect-error missing additional field
         return <UserGroupChip item={item} />;
     },
 });
