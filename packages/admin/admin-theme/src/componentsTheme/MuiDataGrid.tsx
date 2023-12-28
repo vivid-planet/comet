@@ -34,6 +34,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             ColumnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
             ...component?.defaultProps?.components,
         },
+        localeText: {
+            noRowsLabel: "No results found",
+        },
         ...component?.defaultProps,
     },
     styleOverrides: mergeOverrideStyles<"MuiDataGrid">(component?.styleOverrides, {
