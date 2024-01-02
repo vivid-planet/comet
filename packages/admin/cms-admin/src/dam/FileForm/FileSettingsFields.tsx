@@ -29,7 +29,7 @@ export type LicenseType = GQLLicenseType | "NO_LICENSE";
 
 const licenseTypeArray: readonly LicenseType[] = ["NO_LICENSE", "ROYALTY_FREE", "RIGHTS_MANAGED"];
 
-const licenseTypeLabels: { [key in LicenseType]?: React.ReactNode } = {
+const licenseTypeLabels: { [key in LicenseType]: React.ReactNode } = {
     NO_LICENSE: "-",
     ROYALTY_FREE: <FormattedMessage id="comet.dam.file.licenseType.royaltyFree" defaultMessage="Royalty free" />,
     RIGHTS_MANAGED: <FormattedMessage id="comet.dam.file.licenseType.rightsManaged" defaultMessage="Rights managed" />,
