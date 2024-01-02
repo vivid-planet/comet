@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import { useEditDialog, useSnackbarApi } from "@comet/admin";
-import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, Upload } from "@comet/admin-icons";
+import { AddFolder as AddFolderIcon, Archive, Copy, Delete, Download, Move, Restore, Upload } from "@comet/admin-icons";
 import { Box, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Slide, Snackbar, Typography } from "@mui/material";
 import { PopoverOrigin } from "@mui/material/Popover/Popover";
 import { SlideProps } from "@mui/material/Slide/Slide";
@@ -26,7 +26,7 @@ interface DamMoreActionsProps {
 
 export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId, filter }: DamMoreActionsProps): React.ReactElement => {
     const damSelectionActionsApi = useDamSelectionApi();
-    const { selectionMap, archiveSelected, deleteSelected, downloadSelected, restoreSelected, moveSelected } = damSelectionActionsApi;
+    const { selectionMap, archiveSelected, deleteSelected, downloadSelected, restoreSelected, moveSelected, copySelected } = damSelectionActionsApi;
     const snackbarApi = useSnackbarApi();
     const [, , editDialogApi] = useEditDialog();
     const intl = useIntl();
@@ -97,6 +97,11 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
 
     const handleDeleteClick = () => {
         deleteSelected();
+        handleClose();
+    };
+
+    const handleCopyClick = () => {
+        copySelected();
         handleClose();
     };
 
@@ -194,6 +199,13 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
                                 <Delete />
                             </ListItemIcon>
                             <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.deleteItems" defaultMessage="Delete" />} />
+                            {itemsSelected && <NumberSelectedChip>{selectionSize}</NumberSelectedChip>}
+                        </MenuItem>
+                        <MenuItem disabled={!itemsSelected} onClick={handleCopyClick}>
+                            <ListItemIcon>
+                                <Copy />
+                            </ListItemIcon>
+                            <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.copyItems" defaultMessage="Copy" />} />
                             {itemsSelected && <NumberSelectedChip>{selectionSize}</NumberSelectedChip>}
                         </MenuItem>
                     </MenuList>

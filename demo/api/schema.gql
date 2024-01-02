@@ -842,7 +842,14 @@ type Mutation {
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   importDamFileByDownload(url: String!, scope: DamScopeInput!, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
-  copyFilesToScope(fileIds: [ID!]!, inboxFolderId: ID!): CopyFilesResponse!
+  copyFilesToScope(fileIds: [ID!]!, inboxFolderId: ID!): CopyFilesResponse! @deprecated(reason: "Use copyFiles instead")
+  copyFiles(
+    fileIds: [ID!]!
+    targetFolderId: ID
+
+    """Must only be set if targetFolderId is empty"""
+    targetScope: DamScopeInput
+  ): CopyFilesResponse!
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
   restoreDamFile(id: ID!): DamFile!

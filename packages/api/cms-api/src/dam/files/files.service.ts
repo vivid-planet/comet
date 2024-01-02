@@ -418,7 +418,21 @@ export class FilesService {
         return Number(result.rows[0].row_number) - 1;
     }
 
-    async createCopyOfFile(file: FileInterface, { inboxFolder }: { inboxFolder: FolderInterface }) {
+    async createCopyOfFile(
+        file: FileInterface,
+        {
+            inboxFolder,
+            scope: inputScope,
+        }: {
+            inboxFolder: FolderInterface | null;
+            scope?: DamScopeInterface;
+        },
+    ) {
+        if (inputScope && inboxFolder?.scope && !this.contentScopeService.scopesAreEqual(inputScope, inboxFolder.scope)) {
+            throw new Error("Passed scope and scope of inbox folder don't match");
+        }
+        const scope = inputScope ?? inboxFolder?.scope;
+
         let fileImageInput: ImageFileInput | undefined;
         if (file.image) {
             const { id: ignoreId, file: ignoreFile, ...imageProps } = file.image;
@@ -439,14 +453,17 @@ export class FilesService {
         const fileInput: CreateFileInput & { copyOf: FileInterface } = {
             ...Utils.copy(fileProps),
             image: fileImageInput,
-            folderId: inboxFolder.id,
+            folderId: inboxFolder?.id,
             copyOf: file,
-            scope: inboxFolder.scope,
+            scope: scope,
         };
 
         return this.create(fileInput);
     }
 
+    /**
+     *  @deprecated Loop over FilesService.createCopyOfFile() instead
+     */
     async copyFilesToScope({ user, fileIds, inboxFolderId }: { user: CurrentUserInterface; fileIds: string[]; inboxFolderId: string }) {
         const inboxFolder = await this.foldersService.findOneById(inboxFolderId);
         if (!inboxFolder) {
