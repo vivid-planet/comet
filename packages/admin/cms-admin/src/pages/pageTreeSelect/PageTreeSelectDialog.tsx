@@ -224,7 +224,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
                 <PageTreeContext.Provider
                     value={{
                         allCategories: pageTreeCategories,
-                        activeCategory: category,
+                        currentCategory: category,
                         documentTypes: pageTreeDocumentTypes,
                         tree,
                         query: pagesQuery,

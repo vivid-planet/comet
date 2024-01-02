@@ -9,7 +9,7 @@ export type AllCategories = Array<{ category: string; label: React.ReactNode }>;
 
 export interface PageTreeContext {
     allCategories: AllCategories;
-    activeCategory: string;
+    currentCategory: string;
     documentTypes: Record<DocumentType, DocumentInterface>;
     tree: TreeMap<GQLPageTreePageFragment>;
     query: DocumentNode;

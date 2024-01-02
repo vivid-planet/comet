@@ -64,7 +64,7 @@ interface UseCopyPastePagesApi {
  * This hooks provides some helper functions to copy / paste Pages and PageTreeNodes
  */
 function useCopyPastePages(): UseCopyPastePagesApi {
-    const { documentTypes, activeCategory } = usePageTreeContext();
+    const { documentTypes, currentCategory } = usePageTreeContext();
     const client = useApolloClient();
     const { scope } = useContentScope();
     const damScope = useDamScope();
@@ -170,7 +170,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     const sendPagesCb = React.useCallback(
         async (parentId: string | null, pages: PagesClipboard, options: SendPagesOptions) => {
             try {
-                await sendPages(parentId, pages, options, { client, scope, documentTypes, blockContext, damScope, activeCategory }, updateProgress);
+                await sendPages(parentId, pages, options, { client, scope, documentTypes, blockContext, damScope, currentCategory }, updateProgress);
             } catch (e) {
                 errorDialog?.showError({
                     title: <FormattedMessage {...messages.error} />,
@@ -183,7 +183,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                 updateProgress(undefined); //hides progress dialog
             }
         },
-        [client, scope, documentTypes, blockContext, damScope, activeCategory, updateProgress, errorDialog],
+        [client, scope, documentTypes, blockContext, damScope, currentCategory, updateProgress, errorDialog],
     );
 
     return {
