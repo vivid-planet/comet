@@ -11,9 +11,7 @@ export class TwoListsBlockFixtureService {
 
     async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof TwoListsBlock>> {
         return {
-            // @ts-expect-error wrong typing, remove expect error after: https://github.com/vivid-planet/comet/pull/1496
             list1: await this.generateHeadlineListBlock(),
-            // @ts-expect-error wrong typing, remove expect error after: https://github.com/vivid-planet/comet/pull/1496
             list2: await this.generateHeadlineListBlock(),
         };
     }
