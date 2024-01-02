@@ -105,6 +105,7 @@ export { MenuCollapsibleItem, MenuCollapsibleItemClassKey, MenuCollapsibleItemPr
 export { IMenuContext, IWithMenu, MenuContext, withMenu } from "./mui/menu/Context";
 export { MenuItem, MenuItemClassKey, MenuItemProps } from "./mui/menu/Item";
 export { MenuItemAnchorLink } from "./mui/menu/ItemAnchorLink";
+export { MenuItemGroup, MenuItemGroupClassKey, MenuItemGroupProps } from "./mui/menu/ItemGroup";
 export { MenuItemRouterLink, MenuItemRouterLinkProps } from "./mui/menu/ItemRouterLink";
 export { Menu, MenuProps } from "./mui/menu/Menu";
 export { MenuClassKey, styles } from "./mui/menu/Menu.styles";

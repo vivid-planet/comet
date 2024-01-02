@@ -112,7 +112,7 @@ declare module "@mui/material/styles" {
     }
 
     interface Components {
-        CometAdminenu?: {
+        CometAdminMenu?: {
             defaultProps?: ComponentsPropsList["CometAdminMenu"];
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenu"];
         };
