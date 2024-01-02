@@ -3,9 +3,9 @@
 "@comet/cms-admin": minor
 ---
 
-SoftHyphen Decorator is moved from `cms-admin` to `admin-rte`.
+Move soft-hyphen functionality to `@comet/admin-rte`
 
-Usage of the option does not change.
+This allows using the soft-hyphen functionality in plain RTEs, and not only in `RichTextBlock`
 
 ```tsx
 const [useRteApi] = makeRteApi();
