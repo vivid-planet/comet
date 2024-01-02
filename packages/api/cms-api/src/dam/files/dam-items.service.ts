@@ -88,7 +88,7 @@ export class DamItemsService {
             {
                 folderId: args.folderId,
                 includeArchived: args.includeArchived,
-                filter: { searchText: args.filter?.searchText },
+                filter: args.filter,
                 sortDirection: args.sortDirection,
                 sortColumnName: args.sortColumnName,
             },

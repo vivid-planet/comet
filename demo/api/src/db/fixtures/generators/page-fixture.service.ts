@@ -8,6 +8,7 @@ import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generat
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
 import { Page } from "@src/pages/entities/page.entity";
+import { UserGroup } from "@src/user-groups/user-group";
 import faker from "faker";
 import slugify from "slugify";
 
@@ -43,6 +44,8 @@ export class PageFixtureService {
                     type: "Page",
                 },
                 parentId,
+                // @ts-expect-error Typing of PageTreeService is wrong https://github.com/vivid-planet/comet/pull/1515#issue-2042001589
+                userGroup: UserGroup.All,
             },
             PageTreeNodeCategory.MainNavigation,
             scope,

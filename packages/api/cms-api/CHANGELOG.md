@@ -1,5 +1,65 @@
 # @comet/cms-api
 
+## 5.3.0
+
+### Minor Changes
+
+-   570fdbc8: CRUD Generator: Add support for `ArrayType` fields in generated input
+-   8d0e3ee1: CRUD Generator: Add support for enum arrays in input
+
+### Patch Changes
+
+-   dfb3c840: CRUD Generator: Correctly support `type: "text"` fields in filter and sort
+-   c883d351: Consider filtered mimetypes when calculating the position of a DAM item in `DamItemsService`'s `getDamItemPosition()`
+
+    Previously, the mimetypes were ignored, sometimes resulting in an incorrect position.
+
+-   Updated dependencies [920f2b85]
+    -   @comet/blocks-api@5.3.0
+
+## 5.2.0
+
+### Minor Changes
+
+-   bbc0a0a5: Add access logging to log information about the request to standard output. The log contains information about the requester and the request itself. This can be useful for fulfilling legal requirements regarding data integrity or for forensics.
+
+    There are two ways to integrate logging into an application:
+
+    **First option: Use the default implementation**
+
+    ```ts
+    imports: [
+        ...
+        AccessLogModule,
+        ...
+    ]
+    ```
+
+    **Second option: Configure logging**
+
+    Use the `shouldLogRequest` to prevent logging for specific requests. For instance, one may filter requests for system users.
+
+    ```ts
+    imports: [
+        ...
+        AccessLogModule.forRoot({
+            shouldLogRequest: ({user, req}) => {
+                // do something
+                return true; //or false
+            },
+        }),
+        ...
+    ]
+    ```
+
+    More information can be found in the documentation under 'Authentication > Access Logging'.
+
+### Patch Changes
+
+-   1a170b9b: API Generator: Use correct type for `where` when `getFindCondition` service method is not used
+-   6b240a01: CRUD Generator: Correctly support `type: "text"` fields in input
+    -   @comet/blocks-api@5.2.0
+
 ## 5.1.0
 
 ### Patch Changes
