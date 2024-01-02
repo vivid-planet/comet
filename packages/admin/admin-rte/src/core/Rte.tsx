@@ -48,7 +48,8 @@ export type SupportedThings =
     | "history"
     | "link"
     | "links-remove"
-    | "non-breaking-space";
+    | "non-breaking-space"
+    | "soft-hyphen";
 
 export interface IRteOptions {
     supports: SupportedThings[];
