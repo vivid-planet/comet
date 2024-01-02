@@ -4,6 +4,7 @@ import { XMLParser } from "fast-xml-parser";
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { pascalCase, pascalCaseTransformMerge } from "pascal-case";
 import * as path from "path";
+
 const eslint = new ESLint({ fix: true });
 
 type Icon = {
@@ -17,7 +18,7 @@ const main = async () => {
     const isSvg = (file: string) => path.extname(file).toLowerCase() === ".svg";
 
     const iconFiles = readdirSync("icons").filter(isSvg);
-    const deprecatedIconFiles = readdirSync("icons/deprecated").filter(isSvg);
+    const deprecatedIconFiles = existsSync("icons/deprecated") ? readdirSync("icons/deprecated").filter(isSvg) : [];
 
     const icons: Icon[] = [
         ...iconFiles.map((file) => ({ name: file, path: `icons/${file}`, componentName: getComponentName(file) })),
