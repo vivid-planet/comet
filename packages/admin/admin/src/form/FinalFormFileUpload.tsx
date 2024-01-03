@@ -1,8 +1,8 @@
+import { PrettyBytes } from "@comet/admin";
 import { Delete, Select } from "@comet/admin-icons";
 import { Button, Chip, ComponentsOverrides, FormHelperText, IconButton, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
-import { PrettyBytes } from "helpers/PrettyBytes";
 import * as React from "react";
 import { Accept, useDropzone } from "react-dropzone";
 import { FieldRenderProps } from "react-final-form";
@@ -84,6 +84,7 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
     caption,
     multipleFiles = true,
     accept,
+    maxSize,
     input: { name, onChange, value: fieldValue },
 }) => {
     const onDrop = React.useCallback(
@@ -102,17 +103,19 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
     const { acceptedFiles, getRootProps, getInputProps, isDragReject } = useDropzone({ onDrop, accept, disabled, multiple: multipleFiles });
 
     // list of the accepted files
-    const files = fieldValue.map((file) => (
-        <div key={file.name} className={classes.fileListItem}>
-            {`${file.name.substring(0, 20)}...`}
-            <div>
-                <Chip label={<PrettyBytes value={file.size} />} />
-                <IconButton onClick={removeFile(file)}>
-                    <Delete />
-                </IconButton>
+    const files =
+        fieldValue.length > 0 &&
+        fieldValue.map((file) => (
+            <div key={file.name} className={classes.fileListItem}>
+                {file.name.length < 20 ? file.name : `${file.name.substring(0, 20)}...`}
+                <div>
+                    <Chip label={<PrettyBytes value={file.size} />} />
+                    <IconButton onClick={removeFile(file)}>
+                        <Delete />
+                    </IconButton>
+                </div>
             </div>
-        </div>
-    ));
+        ));
 
     return (
         <div className={classes.root}>
