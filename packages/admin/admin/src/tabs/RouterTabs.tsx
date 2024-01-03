@@ -26,12 +26,13 @@ export const RouterTab: React.FC<Omit<RouterTabProps, "currentTab">> = () => nul
 export interface RouterTabsProps extends Partial<RouteComponentProps> {
     children: Array<React.ReactElement<RouterTabProps | DividerProps> | boolean | null | undefined> | React.ReactElement<RouterTabProps>;
     tabComponent?: React.ComponentType<RouterTabProps>;
-    tabsProps?: Partial<TabsProps>;
+    tabsProps?: Partial<Omit<TabsProps, "tabComponent">>;
 }
 
 function RouterTabsComponent({
     children,
-    tabsProps: { ScrollButtonComponent = TabScrollButton, tabComponent: TabComponent = CustomTab, smallTabText, ...tabsProps } = {},
+    tabComponent: TabComponent = CustomTab,
+    tabsProps: { ScrollButtonComponent = TabScrollButton, smallTabText, ...tabsProps } = {},
     classes,
 }: RouterTabsProps & WithStyles<typeof styles>) {
     const stackApi = useStackApi();
@@ -103,7 +104,9 @@ function RouterTabsComponent({
                                 {React.Children.map(children, (child: React.ReactElement<RouterTabProps | DividerProps>) => {
                                     if (React.isValidElement<RouterTabProps>(child) && child.type === RouterTab) {
                                         const { path, forceRender, children, ...restChildProps } = child.props;
-                                        return <TabComponent {...(restChildProps as TabProps)} smallTabText={smallTabText} currentTab={value} />;
+                                        return (
+                                            <TabComponent {...(restChildProps as RouterTabProps)} smallTabText={smallTabText} currentTab={value} />
+                                        );
                                     } else if (React.isValidElement<DividerProps>(child) && child.type === Divider) {
                                         return <CustomDivider {...child.props} />;
                                     } else {
