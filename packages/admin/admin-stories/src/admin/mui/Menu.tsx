@@ -36,6 +36,10 @@ const AppMenu: React.FC = () => {
                 <MenuCollapsibleItem primary="Even More Items" icon={<Sort />}>
                     <MenuItemRouterLink primary="Foo3" to="/foo3" />
                     <MenuItemRouterLink primary="Foo4" to="/foo4" />
+                    <MenuCollapsibleItem primary="Wow there can be even more">
+                        <MenuItemRouterLink primary="Foo5" to="/foo5" />
+                        <MenuItemRouterLink primary="Foo6" to="/foo6" />
+                    </MenuCollapsibleItem>
                 </MenuCollapsibleItem>
             </MenuItemGroup>
             <MenuItemGroup title="Further Layers">
@@ -84,6 +88,8 @@ export const Story: React.FC = () => (
             <Route path="/foo2" render={() => <Content>Foo 2</Content>} />
             <Route path="/foo3" render={() => <Content>Foo 3</Content>} />
             <Route path="/foo4" render={() => <Content>Foo 4</Content>} />
+            <Route path="/foo5" render={() => <Content>Foo 5</Content>} />
+            <Route path="/foo6" render={() => <Content>Foo 6</Content>} />
         </Switch>
     </MasterLayout>
 );
