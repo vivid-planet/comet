@@ -4,11 +4,10 @@ import * as React from "react";
 import { useHistory } from "react-router";
 
 import { MenuContext } from "./Context";
-import { MenuItemGroupProps } from "./ItemGroup";
 import { Drawer, MenuClassKey, styles } from "./Menu.styles";
 
-export const DRAWER_WIDTH = 300;
-export const DRAWER_WIDTH_COLLAPSED = 60;
+export const DEFAULT_DRAWER_WIDTH = 300;
+export const DEFAULT_DRAWER_WIDTH_COLLAPSED = 60;
 
 export interface MenuProps {
     children: React.ReactNode;
@@ -24,8 +23,8 @@ export interface MenuProps {
 const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
     classes,
     children,
-    drawerWidth = DRAWER_WIDTH,
-    drawerWidthCollapsed = DRAWER_WIDTH_COLLAPSED,
+    drawerWidth = DEFAULT_DRAWER_WIDTH,
+    drawerWidthCollapsed = DEFAULT_DRAWER_WIDTH_COLLAPSED,
     variant = "permanent",
     temporaryDrawerProps = {},
     permanentDrawerProps = {},
@@ -66,11 +65,11 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
     const temporaryOpen = variant === "temporary" && open;
     const permanentOpen = variant === "permanent" && open;
 
-    const childElements = React.Children.map(children, (child: React.ReactElement<MenuItemGroupProps>) => {
+    /*const childElements = React.Children.map(children, (child: React.ReactElement<MenuItemGroupProps>) => {
         return React.cloneElement<MenuItemGroupProps>(child, {
             isMenuOpen: open,
         });
-    });
+    });*/
 
     // Always render both temporary and permanent drawers to make sure, the opening and closing animations run fully when switching between variants.
     return (
@@ -85,7 +84,7 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
                 onClose={toggleOpen}
                 {...temporaryDrawerProps}
             >
-                {childElements}
+                {children}
             </Drawer>
 
             <Drawer
@@ -101,7 +100,7 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
                 }}
                 {...permanentDrawerProps}
             >
-                {childElements}
+                {children}
             </Drawer>
         </>
     );

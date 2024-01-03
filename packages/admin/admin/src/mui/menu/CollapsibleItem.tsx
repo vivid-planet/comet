@@ -28,7 +28,6 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
     level,
     primary,
     secondary,
-    showText = true,
     isMenuOpen,
     icon,
     openByDefault = false,
@@ -40,7 +39,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
     OpenedIcon = OpenedIcon || (isMenuOpen ? ChevronUp : ChevronRight);
     ClosedIcon = ClosedIcon || (isMenuOpen ? ChevronDown : ChevronRight);
 
-    const itemLevel: MenuLevel["level"] = level ? level : 1;
+    const itemLevel: MenuLevel["level"] = level ?? 1;
     let hasSelectedChild = false;
     const location = useLocation();
 
@@ -74,6 +73,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
         return React.cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
             level: newItemLevel === 1 || newItemLevel === 2 || newItemLevel === 3 ? newItemLevel : undefined,
             isMenuOpen,
+            isCollapsibleOpen: isSubmenuOpen,
         });
     });
 
@@ -118,9 +118,8 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
             >
                 <MenuItem
                     primary={primary}
-                    showText={isMenuOpen ? showText : itemLevel > 1}
                     secondary={secondary}
-                    hasChildElements={!!childElements?.length}
+                    hasSubitems={!!childElements?.length}
                     isCollapsibleOpen={isSubmenuOpen}
                     isMenuOpen={isMenuOpen}
                     icon={icon}

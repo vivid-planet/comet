@@ -5,13 +5,13 @@ import { MenuItemProps, MuiListItemProps } from "./Item";
 
 export type MenuItemClassKey = "root" | "level1" | "level2" | "level3" | "hasIcon" | "hasSecondaryText" | "hasSecondaryAction" | "level3Enumeration";
 
-const colors = {
-    textLevel1: "#242424",
-    textLevel2: "#17181A",
-};
+export const styles = (theme: Theme) => {
+    const colors = {
+        textLevel1: theme.palette.grey[800],
+        textLevel2: theme.palette.grey[900],
+    };
 
-export const styles = (theme: Theme) =>
-    createStyles<MenuItemClassKey, MenuItemProps & MuiListItemProps>({
+    return createStyles<MenuItemClassKey, MenuItemProps & MuiListItemProps>({
         root: {
             flexShrink: 0,
             "&:after": {
@@ -27,7 +27,7 @@ export const styles = (theme: Theme) =>
                 minWidth: 28,
             },
             "& [class*='MuiListItemText-inset']": {
-                paddingLeft: 28,
+                paddingLeft: ({ icon, level }) => (!!icon && level === 1 ? 28 : 0),
             },
         },
         level1: {
@@ -39,16 +39,15 @@ export const styles = (theme: Theme) =>
             paddingTop: 16,
             paddingBottom: 16,
             backgroundColor: ({ isCollapsibleOpen, isMenuOpen }) =>
-                !isMenuOpen && isCollapsibleOpen ? theme.palette.primary.main : theme.palette.common.white,
+                !isMenuOpen && isCollapsibleOpen ? `${theme.palette.primary.main} !important` : `white !important`,
             "& [class*='MuiListItemIcon-root']": {
-                color: ({ isMenuOpen, isCollapsibleOpen }) =>
-                    !isMenuOpen && isCollapsibleOpen ? `${theme.palette.common.white} !important` : "initial",
+                color: ({ isMenuOpen, isCollapsibleOpen }) => (!isMenuOpen && isCollapsibleOpen ? `${theme.palette.common.white} !important` : ""),
             },
             "&:hover": {
-                backgroundColor: ({ isMenuOpen }) => (!isMenuOpen ? theme.palette.primary.main : "initial"),
-                color: ({ isMenuOpen }) => (!isMenuOpen ? `${theme.palette.common.white} !important` : undefined),
+                backgroundColor: ({ isMenuOpen }) => (!isMenuOpen ? `${theme.palette.primary.main} !important` : ""),
+                color: ({ isMenuOpen }) => (!isMenuOpen ? `${theme.palette.common.white} !important` : ""),
                 "& [class*='MuiListItemIcon-root']": {
-                    color: ({ isMenuOpen }) => (!isMenuOpen ? `${theme.palette.common.white} !important` : undefined),
+                    color: ({ isMenuOpen }) => (!isMenuOpen ? `${theme.palette.common.white} !important` : ""),
                 },
             },
             "&[class*='Mui-selected']": {
@@ -61,9 +60,9 @@ export const styles = (theme: Theme) =>
                     color: theme.palette.primary.main,
                 },
                 "&:hover": {
-                    color: `${theme.palette.primary.main} !important`,
+                    color: ({ isMenuOpen }) => (!isMenuOpen ? theme.palette.common.white : theme.palette.primary.main),
                     "& [class*='MuiListItemIcon-root']": {
-                        color: `${theme.palette.primary.main} !important`,
+                        color: ({ isMenuOpen }) => (!isMenuOpen ? theme.palette.common.white : theme.palette.primary.main),
                     },
                 },
             },
@@ -75,7 +74,7 @@ export const styles = (theme: Theme) =>
         },
         level2: {
             color: colors.textLevel2,
-            paddingLeft: ({ isMenuOpen }) => (isMenuOpen ? 35 : 20),
+            paddingLeft: ({ isMenuOpen }) => (isMenuOpen ? 48 : 20),
             paddingRight: 20,
             paddingTop: 10,
             paddingBottom: 10,
@@ -85,8 +84,8 @@ export const styles = (theme: Theme) =>
                 lineHeight: "20px",
             },
             "&:last-child": {
-                borderBottom: ({ level, hasChildElements, isMenuOpen, isCollapsibleOpen }) =>
-                    level === 2 && isMenuOpen && !hasChildElements && !isCollapsibleOpen ? `1px solid ${theme.palette.grey[50]}` : "initial",
+                borderBottom: ({ level, hasSubitems, isMenuOpen, isCollapsibleOpen }) =>
+                    level === 2 && isMenuOpen && (!hasSubitems || !isCollapsibleOpen) ? `1px solid ${theme.palette.grey[50]}` : "initial",
                 boxSizing: "border-box",
             },
             "&[class*='Mui-selected']": {
@@ -224,10 +223,10 @@ export const styles = (theme: Theme) =>
                 },
             },
         },
-
         hasIcon: {},
         hasSecondaryText: {},
         hasSecondaryAction: {
             paddingRight: 18,
         },
     });
+};

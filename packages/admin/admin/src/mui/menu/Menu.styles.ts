@@ -5,10 +5,10 @@ import { MUIStyledCommonProps } from "@mui/system";
 import * as React from "react";
 
 import { MasterLayoutContext } from "../MasterLayoutContext";
-import { DRAWER_WIDTH, DRAWER_WIDTH_COLLAPSED, MenuProps } from "./Menu";
+import { DEFAULT_DRAWER_WIDTH, DEFAULT_DRAWER_WIDTH_COLLAPSED, MenuProps } from "./Menu";
 
 const openedMixin = (theme: Theme, drawerWidth?: number): CSSObject => ({
-    width: drawerWidth ?? DRAWER_WIDTH,
+    width: drawerWidth ?? DEFAULT_DRAWER_WIDTH,
     transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
@@ -16,7 +16,7 @@ const openedMixin = (theme: Theme, drawerWidth?: number): CSSObject => ({
     overflowX: "hidden",
 });
 const closedMixin = (theme: Theme, drawerVariant: DrawerProps["variant"], drawerWidth?: number, drawerWidthCollapsed?: number): CSSObject => ({
-    width: drawerVariant === "temporary" ? drawerWidth ?? DRAWER_WIDTH : drawerWidthCollapsed ?? DRAWER_WIDTH_COLLAPSED,
+    width: drawerVariant === "temporary" ? drawerWidth ?? DEFAULT_DRAWER_WIDTH : drawerWidthCollapsed ?? DEFAULT_DRAWER_WIDTH_COLLAPSED,
     transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,

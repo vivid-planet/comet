@@ -1,67 +1,75 @@
 import { Box, ComponentsOverrides, Theme, Tooltip, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import clsx from "clsx";
 import * as React from "react";
 
 import { MenuChild, MenuCollapsibleItemProps } from "./CollapsibleItem";
+import { MenuContext } from "./Context";
 import { MenuItemProps } from "./Item";
 import { MenuItemRouterLinkProps } from "./ItemRouterLink";
 
-export type MenuItemGroupClassKey = "root" | "title" | "titleContainer";
+export type MenuItemGroupClassKey = "root" | "title" | "titleMenuOpen" | "titleContainer" | "titleContainerMenuOpen";
 
 const styles = (theme: Theme) =>
     createStyles<MenuItemGroupClassKey, MenuItemGroupProps>({
         root: { marginTop: theme.spacing(8) },
         title: {
             fontWeight: theme.typography.fontWeightBold,
-            fontSize: ({ isMenuOpen }) => (isMenuOpen ? 14 : 12),
-            border: ({ isMenuOpen }) => (isMenuOpen ? `2px solid ${theme.palette.common.white}` : `2px solid ${theme.palette.grey[100]}`),
-            borderRadius: ({ isMenuOpen }) => (isMenuOpen ? "initial" : 20),
-            padding: ({ isMenuOpen }) => (isMenuOpen ? "0" : theme.spacing(0, 1.5)),
+            fontSize: 12,
+            border: `2px solid ${theme.palette.grey[100]}`,
+            borderRadius: 20,
+            padding: theme.spacing(0.5, 2),
             lineHeight: "20px",
-            color: ({ isMenuOpen }) => (isMenuOpen ? `${theme.palette.common.black}` : `${theme.palette.grey[300]}`),
+            color: `${theme.palette.grey[300]}`,
+        },
+        titleMenuOpen: {
+            fontSize: 14,
+            border: `2px solid ${theme.palette.common.white}`,
+            borderRadius: "initial",
+            padding: 0,
+            color: theme.palette.common.black,
         },
         titleContainer: {
             borderBottom: `1px solid ${theme.palette.grey[50]}`,
             display: "flex",
-            justifyContent: ({ isMenuOpen }) => (isMenuOpen ? "flex-start" : "center"),
-            padding: ({ isMenuOpen }) => `${theme.spacing(2)} ${isMenuOpen ? theme.spacing(4) : 0}`,
+            justifyContent: "center",
+            padding: `${theme.spacing(2)} 0`,
+        },
+        titleContainerMenuOpen: {
+            justifyContent: "flex-start",
+            padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
         },
     });
 
 export interface MenuItemGroupProps {
     title: string;
-    isMenuOpen?: boolean;
+    shortTitle?: string;
 }
 
-const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({ title, children, classes, isMenuOpen }) => {
-    const initialTitle = title;
+const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({ title, shortTitle, children, classes }) => {
+    const { open: menuOpen } = React.useContext(MenuContext);
+    let displayedTitle = title;
     function getInitials(title: string) {
         const words = title.split(/\s+/).filter((word) => word.match(/[A-Za-z]/));
         return words.map((word) => word[0].toUpperCase()).join("");
     }
 
-    if (isMenuOpen === false) {
-        title = getInitials(title);
+    if (!menuOpen) {
+        displayedTitle = shortTitle || getInitials(title);
     }
 
     const childElements = React.Children.map(children, (child: MenuChild) => {
         return React.cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
-            isMenuOpen,
+            isMenuOpen: menuOpen,
         });
     });
 
     return (
         <Box className={classes.root}>
-            <Tooltip
-                placement="right"
-                disableHoverListener={isMenuOpen}
-                disableFocusListener={isMenuOpen}
-                disableTouchListener={isMenuOpen}
-                title={initialTitle}
-            >
-                <Box className={classes.titleContainer}>
-                    <Typography className={classes.title} variant="h3">
-                        {title}
+            <Tooltip placement="right" disableHoverListener={menuOpen} disableFocusListener={menuOpen} disableTouchListener={menuOpen} title={title}>
+                <Box className={clsx(classes.titleContainer, menuOpen && classes.titleContainerMenuOpen)}>
+                    <Typography className={clsx(classes.title, menuOpen && classes.titleMenuOpen)} variant="h3">
+                        {displayedTitle}
                     </Typography>
                 </Box>
             </Tooltip>

@@ -11,10 +11,9 @@ export interface MenuItemProps extends MenuLevel {
     secondary?: React.ReactNode;
     icon?: React.ReactElement;
     secondaryAction?: React.ReactNode;
-    showText?: boolean;
     isMenuOpen?: boolean;
     isCollapsibleOpen?: boolean;
-    hasChildElements?: boolean;
+    hasSubitems?: boolean;
 }
 
 export type MuiListItemProps = Pick<ListItemProps, Exclude<keyof ListItemProps, "innerRef" | "button">> & { component?: React.ElementType };
@@ -26,16 +25,15 @@ const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProp
     icon,
     level = 1,
     secondaryAction,
-    showText,
     isMenuOpen,
     ...otherProps
 }) => {
-    showText = isMenuOpen ? showText || true : level === 2 || level === 3 ? showText || true : false;
     const context = React.useContext(MenuContext);
     if (!context) throw new Error("Could not find context for menu");
     if (level > 3) throw new Error("Maximum nesting level of 2 exceeded.");
 
-    const showIcon = Boolean(icon) && (level === 1 || isMenuOpen);
+    const showIcon = !!icon && level === 1;
+    const showText = context.open || level !== 1;
 
     const listItemClasses = [classes.root];
     if (level === 1) listItemClasses.push(classes.level1);
@@ -49,7 +47,7 @@ const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProp
     return (
         <ListItem component="div" button classes={{ root: listItemClasses.join(" ") }} {...otherProps}>
             {showIcon && <ListItemIcon sx={{ my: 1.25 }}>{icon}</ListItemIcon>}
-            {showText && <ListItemText primary={primary} secondary={secondary} inset={!showIcon} />}
+            {showText && <ListItemText primary={primary} secondary={secondary} inset={!icon} />}
             {!!secondaryAction && secondaryAction}
         </ListItem>
     );
