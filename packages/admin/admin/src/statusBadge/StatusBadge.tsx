@@ -26,7 +26,6 @@ export function StatusBadgeComponent({ status, className, statusIcon, showStatus
 
     if (status && statusIcon && !showStatusIcon) console.warn("The status icon will only be shown, if the showStatusIcon prop is set to true.");
 
-    // TODO remove admin theme package
     const { palette } = useTheme();
     const colorMapping: { [K in Status]: string } = {
         success: palette.success.main,
