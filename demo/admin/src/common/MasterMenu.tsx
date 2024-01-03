@@ -48,9 +48,6 @@ const MasterMenu: React.FC = () => {
                         primary={intl.formatMessage({ id: "menu.pageTree.topMenu", defaultMessage: "Top menu" })}
                         to={`${match.url}/pages/pagetree/top-menu`}
                     />
-                    <MenuCollapsibleItem primary="Some Subpages" icon={<Snips />}>
-                        <MenuItemRouterLink primary="Subpage 1" to={`${match.url}/subsubpage`} icon={<Snips />} />
-                    </MenuCollapsibleItem>
                 </MenuCollapsibleItem>
 
                 <MenuCollapsibleItem
