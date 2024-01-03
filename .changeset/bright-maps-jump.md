@@ -14,5 +14,5 @@ To connect an external DAM, implement a component with the necessary logic (asse
 />
 ```
 
-You can find an [example](https://github.com/vivid-planet/comet/blob/028aba5e267a698af3b036697964600cdb5889cb/demo/admin/src/dam/ImportFromUnsplash.tsx) in the demo project.
+You can find an [example](demo/admin/src/dam/ImportFromUnsplash.tsx) in the demo project.
 
