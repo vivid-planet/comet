@@ -65,12 +65,6 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
     const temporaryOpen = variant === "temporary" && open;
     const permanentOpen = variant === "permanent" && open;
 
-    /*const childElements = React.Children.map(children, (child: React.ReactElement<MenuItemGroupProps>) => {
-        return React.cloneElement<MenuItemGroupProps>(child, {
-            isMenuOpen: open,
-        });
-    });*/
-
     // Always render both temporary and permanent drawers to make sure, the opening and closing animations run fully when switching between variants.
     return (
         <>

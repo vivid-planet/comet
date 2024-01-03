@@ -57,7 +57,15 @@ export type MenuClassKey = "drawer" | "permanent" | "temporary" | "open" | "clos
 
 export const styles = () => {
     return createStyles<MenuClassKey, MenuProps>({
-        drawer: {},
+        drawer: {
+            "& > div": {
+                "&::-webkit-scrollbar": {
+                    display: "none",
+                },
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+            },
+        },
         permanent: {},
         temporary: {},
         open: {},
