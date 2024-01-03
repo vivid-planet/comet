@@ -1,40 +1,40 @@
-import { ComponentsOverrides, Tab as MuiTab, TabProps as MuiTabProps, Tabs, TabsProps, Theme } from "@mui/material";
+import { ComponentsOverrides, Tabs as MuiTabs, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
-import { Route, useHistory, useRouteMatch } from "react-router-dom";
+import { Route, RouteComponentProps, useHistory, useRouteMatch } from "react-router-dom";
 
 import { useSubRoutePrefix } from "../router/SubRoute";
 import { useStackApi } from "../stack/Api";
 import { StackBreadcrumb } from "../stack/Breadcrumb";
 import { useStackSwitchApi } from "../stack/Switch";
+import { CustomDivider, Divider, DividerProps } from "./CustomDivider";
 import { RouterTabsClassKey, styles } from "./RouterTabs.styles";
+import { CustomTab, TabProps } from "./Tab";
+import { TabsProps } from "./Tabs";
 import { TabScrollButton } from "./TabScrollButton";
 
 function deduplicateSlashesInUrl(url: string) {
     return url.replace(/\/+/g, "/");
 }
 
-interface TabProps extends Omit<MuiTabProps, "children"> {
+interface RouterTabProps extends TabProps {
     path: string;
-    label: React.ReactNode;
-    forceRender?: boolean;
-    children: React.ReactNode;
 }
 
-export const RouterTab: React.FunctionComponent<TabProps> = () => null;
+export const RouterTab: React.FC<Omit<RouterTabProps, "currentTab">> = () => null;
 
-export interface Props {
-    children: Array<React.ReactElement<TabProps> | boolean | null | undefined> | React.ReactElement<TabProps>;
-    tabComponent?: React.ComponentType<MuiTabProps>;
-    tabsProps?: Partial<TabsProps>;
+export interface RouterTabsProps extends Partial<RouteComponentProps> {
+    children: Array<React.ReactElement<RouterTabProps | DividerProps> | boolean | null | undefined> | React.ReactElement<RouterTabProps>;
+    tabComponent?: React.ComponentType<RouterTabProps>;
+    tabsProps?: Partial<Omit<TabsProps, "tabComponent">>;
 }
 
 function RouterTabsComponent({
     children,
-    tabComponent: TabComponent = MuiTab,
-    tabsProps: { ScrollButtonComponent = TabScrollButton, ...tabsProps } = {},
+    tabComponent: TabComponent = CustomTab,
+    tabsProps: { ScrollButtonComponent = TabScrollButton, smallTabText, ...tabsProps } = {},
     classes,
-}: Props & WithStyles<typeof styles>) {
+}: RouterTabsProps & WithStyles<typeof styles>) {
     const stackApi = useStackApi();
     const stackSwitchApi = useStackSwitchApi();
     const history = useHistory();
@@ -45,20 +45,17 @@ function RouterTabsComponent({
 
     const handleChange = (event: React.SyntheticEvent, value: number) => {
         const paths = childrenArr.map((child) => {
-            return React.isValidElement<TabProps>(child) ? child.props.path : null;
+            return React.isValidElement<RouterTabProps>(child) ? child.props.path : null;
         });
         history.push(deduplicateSlashesInUrl(subRoutePrefix + paths[value]));
     };
 
     const paths = childrenArr.map((child) => {
         // as seen in https://github.com/mui-org/material-ui/blob/v4.11.0/packages/material-ui/src/Tabs/Tabs.js#L390
-        if (!React.isValidElement<TabProps>(child)) {
+        if (!React.isValidElement<RouterTabProps>(child)) {
             return null;
         }
 
-        if (child.type !== RouterTab) {
-            throw new Error("RouterTabs must contain only Tab children");
-        }
         return child.props.path;
     });
 
@@ -95,7 +92,7 @@ function RouterTabsComponent({
                         const routePath = match ? `/${match.params.tab}` : "";
                         const value = paths.includes(routePath) ? paths.indexOf(routePath) : defaultPathIndex;
                         return (
-                            <Tabs
+                            <MuiTabs
                                 classes={{ root: classes.tabs }}
                                 value={value}
                                 onChange={handleChange}
@@ -104,20 +101,33 @@ function RouterTabsComponent({
                                 variant="scrollable"
                                 {...tabsProps}
                             >
-                                {React.Children.map(children, (child) => {
-                                    if (!React.isValidElement<TabProps>(child)) {
-                                        return null;
+                                {React.Children.map(children, (child: React.ReactElement<RouterTabProps | DividerProps>) => {
+                                    if (React.isValidElement<RouterTabProps>(child) && child.type === RouterTab) {
+                                        const { path, forceRender, children, ...restChildProps } = child.props;
+                                        return (
+                                            <TabComponent {...(restChildProps as RouterTabProps)} smallTabText={smallTabText} currentTab={value} />
+                                        );
+                                    } else if (React.isValidElement<DividerProps>(child) && child.type === Divider) {
+                                        return <CustomDivider {...child.props} />;
+                                    } else {
+                                        if (!React.isValidElement<RouterTabProps>(child) && !React.isValidElement<DividerProps>(child)) {
+                                            return null;
+                                        }
+
+                                        if (child.type !== RouterTab || child.type !== Divider) {
+                                            throw new Error(
+                                                `RouterTabs may only contain router tab or divider components as children. Found ${child.type} component/ tag.`,
+                                            );
+                                        }
                                     }
-                                    const { path, forceRender, children, label, ...restTabProps } = child.props;
-                                    return <TabComponent label={label} {...restTabProps} />;
                                 })}
-                            </Tabs>
+                            </MuiTabs>
                         );
                     }}
                 </Route>
             )}
             {React.Children.map(rearrangedChildren, (child) => {
-                if (!React.isValidElement<TabProps>(child)) {
+                if (!React.isValidElement<RouterTabProps>(child)) {
                     return null;
                 }
                 const path = child.props.path != "" ? deduplicateSlashesInUrl(`${subRoutePrefix}/${child.props.path}`) : routeMatch.path;

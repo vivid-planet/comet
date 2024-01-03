@@ -1,11 +1,11 @@
 import { createStyles } from "@mui/styles";
 
-import { Props } from "./RouterTabs";
+import { RouterTabsProps } from "./RouterTabs";
 
 export type RouterTabsClassKey = "root" | "tabs" | "content" | "contentHidden";
 
 export const styles = () => {
-    return createStyles<RouterTabsClassKey, Props>({
+    return createStyles<RouterTabsClassKey, RouterTabsProps>({
         root: {},
         tabs: {},
         content: {},

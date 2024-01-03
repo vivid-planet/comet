@@ -1,19 +1,12 @@
 import { ComponentsOverrides, Theme } from "@mui/material";
-import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
 import MuiTabs, { TabsProps as MuiTabsProps } from "@mui/material/Tabs";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
+import { CustomDivider, Divider, DividerProps } from "./CustomDivider";
+import { CustomTab, Tab, TabProps } from "./Tab";
 import { styles, TabsClassKey } from "./Tabs.styles";
 import { TabScrollButton } from "./TabScrollButton";
-
-interface TabProps extends Omit<MuiTabProps, "children"> {
-    label: React.ReactNode;
-    forceRender?: boolean;
-    children: React.ReactNode;
-}
-
-export const Tab: React.SFC<TabProps> = () => null;
 
 interface ITabsState {
     value: number;
@@ -21,19 +14,21 @@ interface ITabsState {
 }
 
 export interface TabsProps extends MuiTabsProps {
-    children: Array<React.ReactElement<TabProps> | boolean | null | undefined> | React.ReactElement<TabProps>;
-    tabComponent?: React.ComponentType<MuiTabProps>;
+    children: Array<React.ReactElement<TabProps | DividerProps> | boolean | null | undefined>;
+    tabComponent?: React.ComponentType<TabProps>;
     defaultIndex?: number;
     tabsState?: ITabsState;
+    smallTabText?: boolean;
 }
 
 function TabsComponent({
     children,
-    tabComponent: TabComponent = MuiTab,
+    tabComponent: TabComponent = CustomTab,
     defaultIndex,
     tabsState,
     ScrollButtonComponent = TabScrollButton,
     classes,
+    smallTabText,
     ...restProps
 }: TabsProps & WithStyles<typeof styles>) {
     let value: ITabsState["value"];
@@ -52,17 +47,6 @@ function TabsComponent({
         setValue(newValue);
     };
 
-    React.Children.forEach(children, (child: React.ReactElement<TabProps>) => {
-        // as seen in https://github.com/mui-org/material-ui/blob/v4.11.0/packages/material-ui/src/Tabs/Tabs.js#L390
-        if (!React.isValidElement<TabProps>(child)) {
-            return null;
-        }
-
-        if (child.type !== Tab) {
-            throw new Error("RouterTabs must contain only Tab children");
-        }
-    });
-
     return (
         <div className={classes.root}>
             <MuiTabs
@@ -74,13 +58,15 @@ function TabsComponent({
                 variant="scrollable"
                 {...restProps}
             >
-                {React.Children.map(children, (child: React.ReactElement<TabProps>) => {
-                    if (!React.isValidElement<TabProps>(child)) {
-                        return null;
+                {React.Children.map(children, (child: React.ReactElement<TabProps | DividerProps>) => {
+                    if (React.isValidElement<TabProps>(child) && child.type === Tab) {
+                        const { children, ...restChildProps } = child.props;
+                        return <TabComponent {...(restChildProps as TabProps)} smallTabText={smallTabText} currentTab={value} />;
+                    } else if (React.isValidElement<DividerProps>(child) && child.type === Divider) {
+                        return <CustomDivider {...child.props} />;
+                    } else {
+                        throw new Error(`Tabs may only contain tab or divider components as children. Found ${child.type} component/ tag.`);
                     }
-
-                    const { children, label, ...restTabProps } = child.props;
-                    return <TabComponent label={label} {...restTabProps} />;
                 })}
             </MuiTabs>
             {React.Children.map(children, (child: React.ReactElement<TabProps>, index) => {
