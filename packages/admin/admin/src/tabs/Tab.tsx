@@ -7,12 +7,12 @@ import * as React from "react";
 import { Status, StatusBadge } from "../statusBadge/StatusBadge";
 import { styles, TabClassKey } from "./Tab.styles";
 
-export interface TabProps extends Omit<MuiTabProps, "children" | "icon" | "iconPosition"> {
+export interface TabProps extends Omit<MuiTabProps, "children" | "iconPosition"> {
     label: React.ReactNode;
     forceRender?: boolean;
     children: React.ReactNode;
     currentTab: number;
-    tabIcon?: React.FunctionComponentElement<IconProps>;
+    icon?: React.FunctionComponentElement<IconProps>;
     status?: Status;
     showStatusIcon?: boolean;
     statusIcon?: React.FunctionComponentElement<IconProps>;
@@ -33,7 +33,7 @@ export function TabComponent({
     tooltipIcon = <Info />,
     tooltipMessage,
     tooltipPlacement = "top",
-    tabIcon,
+    icon,
     classes,
     smallTabText,
     status,
@@ -41,9 +41,9 @@ export function TabComponent({
     statusIcon,
     ...props
 }: TabProps & WithStyles<typeof styles>) {
-    tabIcon =
-        tabIcon && React.isValidElement(tabIcon)
-            ? React.cloneElement(tabIcon, { color: currentTab === props.value ? "primary" : "inherit" } as IconProps)
+    icon =
+        icon && React.isValidElement(icon)
+            ? React.cloneElement(icon, { color: currentTab === props.value ? "primary" : "inherit" } as IconProps)
             : undefined;
 
     if (currentTab === props.value && props.disabled) throw new Error("The default selected tab can't be disabled.");
@@ -57,9 +57,9 @@ export function TabComponent({
             label={
                 <Box display="flex" alignItems="center">
                     {status && <StatusBadge className={classes.status} status={status} showStatusIcon={showStatusIcon} statusIcon={statusIcon} />}
-                    {tabIcon && (
+                    {icon && (
                         <Box component="span" className={classes.icon} color={currentTab === props.value ? "primary" : "inherit"}>
-                            {tabIcon}
+                            {icon}
                         </Box>
                     )}
                     <Typography component="h4" className={classes.label} variant={smallTabText ? "button" : "h6"}>

@@ -26,13 +26,13 @@ storiesOf("stories/components/Tabs/RouterTabs", module)
                         Content Three
                     </RouterTab>
                     <Divider />
-                    <RouterTab path="/tab4" label="Label Four" status="error" tabIcon={<Account />} statusIcon={<Favorite />} showStatusIcon>
+                    <RouterTab path="/tab4" label="Label Four" status="error" icon={<Account />} statusIcon={<Favorite />} showStatusIcon>
                         Content Four
                     </RouterTab>
                     <RouterTab
                         path="/tab5"
                         label="Label Five"
-                        tabIcon={<Domain />}
+                        icon={<Domain />}
                         status="warning"
                         showStatusIcon
                         showTooltip

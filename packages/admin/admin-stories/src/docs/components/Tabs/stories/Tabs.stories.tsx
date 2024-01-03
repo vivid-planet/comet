@@ -19,12 +19,12 @@ storiesOf("stories/components/Tabs/Tabs", module)
                     Content Three
                 </Tab>
                 <Divider />
-                <Tab label="Label Four" status="error" tabIcon={<Account />} statusIcon={<Favorite />} showStatusIcon>
+                <Tab label="Label Four" status="error" icon={<Account />} statusIcon={<Favorite />} showStatusIcon>
                     Content Four
                 </Tab>
                 <Tab
                     label="Label Five"
-                    tabIcon={<Domain />}
+                    icon={<Domain />}
                     status="warning"
                     showStatusIcon
                     showTooltip
