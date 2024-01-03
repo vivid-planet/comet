@@ -19,14 +19,13 @@ Wrap a component with a `ContentTranslationServiceProvider` to add support for c
 
 You can disable translation for a specific `FinalFormInput` by using the `disableContentTranslation` prop.
 
-```tsx
+```diff
 <Field
     required
     fullWidth
     name="myField"
     component={FinalFormInput}    
     label={<FormattedMessage id="myField" defaultMessage="My Field" />}
-
-    disableContentTranslation
++   disableContentTranslation
 />
 ```
