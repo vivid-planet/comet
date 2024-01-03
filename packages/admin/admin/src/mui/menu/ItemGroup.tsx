@@ -34,7 +34,7 @@ const styles = (theme: Theme) =>
         },
         titleContainerMenuOpen: {
             justifyContent: "flex-start",
-            padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
+            padding: theme.spacing(2, 4),
         },
     });
 

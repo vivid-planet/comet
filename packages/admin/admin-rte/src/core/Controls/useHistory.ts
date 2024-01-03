@@ -1,5 +1,4 @@
-import RedoIcon from "@mui/icons-material/Redo";
-import UndoIcon from "@mui/icons-material/Undo";
+import { RteRedo, RteUndo } from "@comet/admin-icons";
 import { EditorState } from "draft-js";
 import * as React from "react";
 import { useIntl } from "react-intl";
@@ -48,7 +47,7 @@ export default function useHistory({ editorState, setEditorState, supportedThing
                           label: intl.formatMessage({ id: "comet.rte.controls.undo.label", defaultMessage: "Undo" }),
                           disabled: !canUndo,
                           onButtonClick: handleUndoClick,
-                          icon: UndoIcon,
+                          icon: RteUndo,
                           tooltipText: intl.formatMessage({ id: "comet.rte.controls.undo.tooltip", defaultMessage: "Ctrl+Z" }),
                       },
                       {
@@ -56,7 +55,7 @@ export default function useHistory({ editorState, setEditorState, supportedThing
                           label: intl.formatMessage({ id: "comet.rte.controls.redo.label", defaultMessage: "Redo" }),
                           disabled: !canRedo,
                           onButtonClick: handleRedoClick,
-                          icon: RedoIcon,
+                          icon: RteRedo,
                           tooltipText: intl.formatMessage({ id: "comet.rte.controls.redo.tooltip", defaultMessage: "Ctrl+Y" }),
                       },
                   ]

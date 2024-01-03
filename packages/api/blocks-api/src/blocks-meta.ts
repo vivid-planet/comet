@@ -22,7 +22,7 @@ type BlockMetaField =
           name: string;
           kind: "OneOfBlocks";
           nullable: boolean;
-          blocks: string[];
+          blocks: Record<string, string>;
       }
     | {
           name: string;
@@ -82,7 +82,7 @@ function extractFromBlockMeta(blockMeta: BlockMetaInterface): BlockMetaField[] {
             return {
                 name: field.name,
                 kind: field.kind,
-                blocks: field.blocks.map((i) => i.name),
+                blocks: Object.fromEntries(Object.entries(field.blocks).map(([key, block]) => [key, block.name])),
                 nullable: field.nullable,
             };
         } else {

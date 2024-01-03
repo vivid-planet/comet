@@ -85,7 +85,7 @@ export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: s
         return (props: EditDialogProps) => {
             return (
                 <Selection>
-                    <EditDialogFormApiProvider>
+                    <EditDialogFormApiProvider onAfterSave={props.onAfterSave}>
                         <EditDialogInner {...props} selection={selection} selectionApi={selectionApi} api={api} />
                     </EditDialogFormApiProvider>
                 </Selection>
@@ -138,7 +138,6 @@ const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = (
                 if (!disableCloseAfterSave) {
                     api.closeDialog({ delay: true });
                 }
-                onAfterSave?.();
             });
         }
     };

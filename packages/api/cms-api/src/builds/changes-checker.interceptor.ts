@@ -21,9 +21,9 @@ export class ChangesCheckerInterceptor implements NestInterceptor {
     async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
         if (context.getType().toString() === "graphql") {
             const gqlContext = GqlExecutionContext.create(context);
-            const operation = gqlContext.getInfo<GraphQLResolveInfo>().operation;
+            const { operation, parentType } = gqlContext.getInfo<GraphQLResolveInfo>();
 
-            if (operation.operation === "mutation") {
+            if (parentType.name === "Mutation") {
                 const skipBuild =
                     this.reflector.get<string[]>(SKIP_BUILD_METADATA_KEY, context.getHandler()) ||
                     this.reflector.get<string[]>(SKIP_BUILD_METADATA_KEY, context.getClass());

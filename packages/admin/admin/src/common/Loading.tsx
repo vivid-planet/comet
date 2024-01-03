@@ -1,19 +1,20 @@
-import { CircularProgress, CircularProgressProps } from "@mui/material";
+import { BallTriangle } from "@comet/admin-icons";
+import { SvgIconProps } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
 import React from "react";
 
-export interface LoadingProps extends CircularProgressProps {
+export interface LoadingProps extends SvgIconProps {
     behavior?: "auto" | "fillParent" | "fillParentAbsolute" | "fillPageHeight";
 }
 
-export const Loading = ({ behavior = "auto", ...circularProgressProps }: LoadingProps) => {
+export const Loading = ({ behavior = "auto", fontSize, sx, ...svgIconsProps }: LoadingProps) => {
     const rootRef = React.useRef<HTMLDivElement>(null);
     const offsetTop = rootRef.current?.offsetTop || 0;
 
     return (
         <Root ref={rootRef} style={{ "--comet-admin-loading-offset-top": `${offsetTop}px` } as React.CSSProperties} behavior={behavior}>
             <LoadingContainer behavior={behavior}>
-                <CircularProgress {...circularProgressProps} />
+                <BallTriangle sx={{ fontSize: fontSize ?? 40, ...sx }} {...svgIconsProps} />
             </LoadingContainer>
         </Root>
     );

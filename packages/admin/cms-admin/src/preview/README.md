@@ -74,7 +74,7 @@ IFrameBridgePreviewPage (src/pages/preview/admin/page.tsx)
 
 ## Site Preview
 
-Similar to real site but live rendered (SSR) and optionally with invisible blocks shown.
+Uses Next.js Preview Mode to live render pages (SSR), optionally with invisible blocks shown.
 
 ### iframe messages: admin -> site
 
@@ -82,8 +82,11 @@ Similar to real site but live rendered (SSR) and optionally with invisible block
 
 ### URL: admin -> site
 
-    - page url (real site url prefixed with /preview)
-    - __preview parameter:  { includeInvisibleBlocks: boolean } (JSON encoded)
+Admin opens I-Frame with {previewSiteUrl}/api/preview to enter Next.js Preview Mode and passes the following parameters:
+
+-   path: which pathname to be shown
+-   includeInvisibleBlocks
+-   timestamp & hash: is validated to activate Preview Mode -
 
 ### iframe messages: site -> admin
 
@@ -96,7 +99,6 @@ Similar to real site but live rendered (SSR) and optionally with invisible block
 SitePreview: state from Url (get params): path, device, showOnlyVisible
     - has controls for managing path, device, showOnlyVisible
     - handles messages coming from iframe (OpenLink, SitePreviewLocation)
-    - appends authProvider to iframeUrl
     - handles incoming messages (with useSitePreviewIFrameBridge)
   IFrameViewer[common] (prop drilling: device)
     - does scale the iframe according to device (+the device around the iframe)
@@ -106,16 +108,11 @@ SitePreview: state from Url (get params): path, device, showOnlyVisible
 ### Site: States, Contexts and Components
 
 ```
-AuthenticatedPreviewPage (src/pages/preview/[...path]].tsx)
-  SitePreviewPage
-      - checks login and registers serviceworker
-    SitePreviewProvider
-        - messages SitePreviewLocation on location change (sends message directly using sendSitePreviewIFrameMessage helper)
-        - creates PreviewContext containing
-            - previewType: "SitePreview",
-            - showPreviewSkeletons: false,
-            - pathToPreviewPath: implementation that adds baseUrl (/preview) and __preview params
-            - previewPathToPath: implementation that removes them
-      Page (src/pages/[...path]].tsx)
-          - ExternalLinkBlock messages OpenLink (sends message directly using sendSitePreviewIFrameMessage helper)
+SitePreviewProvider (only active in Preview Mode)
+    - messages SitePreviewLocation on location change (sends message directly using sendSitePreviewIFrameMessage helper)
+    - creates PreviewContext containing
+        - previewType: "SitePreview",
+        - showPreviewSkeletons: false,
+    Page (src/pages/[...path]].tsx)
+        - ExternalLinkBlock messages OpenLink (sends message directly using sendSitePreviewIFrameMessage helper)
 ```

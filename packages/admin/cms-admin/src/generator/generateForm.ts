@@ -168,7 +168,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     
     type FormValues = ${
         numberFields.length > 0
-            ? `Omit<GQL${entityName}FormFragment, ${numberFields.map((field) => `"${field.name}"`).join(", ")}>`
+            ? `Omit<GQL${entityName}FormFragment, ${numberFields.map((field) => `"${field.name}"`).join(" | ")}>`
             : `GQL${entityName}FormFragment`
     } ${
         numberFields.length > 0 || Object.keys(rootBlocks).length > 0
