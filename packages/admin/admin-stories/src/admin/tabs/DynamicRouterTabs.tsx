@@ -1,5 +1,5 @@
 import { RouterTab, RouterTabs, Tab, Tabs } from "@comet/admin";
-import { Menu, MenuItem, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -34,19 +34,6 @@ export const DynamicTabs = () => {
                 </Tab>
             ))}
         </Tabs>
-    );
-};
-
-export const DynamicMenu = () => {
-    const content = ["Two", "Three"];
-
-    return (
-        <Menu open={true}>
-            <MenuItem>One</MenuItem>
-            {content.map((value) => (
-                <MenuItem key={value}>{value}</MenuItem>
-            ))}
-        </Menu>
     );
 };
 
