@@ -14,18 +14,16 @@ export class VideoBlockFixtureService {
     ) {}
 
     async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof VideoBlock>> {
-        return VideoBlock.blockInputFactory({
-            attachedBlocks: [
-                {
-                    type: "damVideo",
-                    props: await this.damVideoBlockFixtureService.generateBlock(),
-                },
-                {
-                    type: "youtubeVideo",
-                    props: await this.youtubeVideoBlockFixtureService.generateBlock(),
-                },
-            ],
-            activeType: random.arrayElement(["damVideo", "youtubeVideo"]),
-        });
+        const types = ["damVideo", "youtubeVideo"] as const;
+        const type = random.arrayElement(types);
+
+        switch (type) {
+            case "damVideo":
+                return { attachedBlocks: [{ type, props: await this.damVideoBlockFixtureService.generateBlock() }], activeType: type };
+                break;
+            case "youtubeVideo":
+                return { attachedBlocks: [{ type, props: await this.youtubeVideoBlockFixtureService.generateBlock() }], activeType: type };
+                break;
+        }
     }
 }

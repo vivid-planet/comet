@@ -1,7 +1,7 @@
 import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
 import { DamImageBlock } from "@comet/cms-api";
 import { Injectable } from "@nestjs/common";
-import { datatype } from "faker";
+import { random } from "faker";
 
 import { PixelImageBlockFixtureService } from "./pixel-image-block-fixture.service";
 import { SvgImageBlockFixtureService } from "./svg-image-block-fixture.service";
@@ -14,25 +14,20 @@ export class DamImageBlockFixtureService {
     ) {}
 
     async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof DamImageBlock>> {
-        let type: "svgImage" | "pixelImage" = "pixelImage";
-        let props;
+        const types = ["svgImage", "pixelImage"] as const;
+        const type = random.arrayElement(types);
 
-        if (datatype.boolean()) {
-            type = "svgImage";
-            props = await this.svgImageBlockFixtureService.generateBlock();
-        } else {
-            type = "pixelImage";
-            props = await this.pixelImageBlockFixtureService.generateBlock();
+        switch (type) {
+            case "svgImage":
+                return {
+                    attachedBlocks: [{ type, props: await this.svgImageBlockFixtureService.generateBlock() }],
+                    activeType: type,
+                };
+            case "pixelImage":
+                return {
+                    attachedBlocks: [{ type, props: await this.pixelImageBlockFixtureService.generateBlock() }],
+                    activeType: type,
+                };
         }
-
-        return {
-            attachedBlocks: [
-                {
-                    type,
-                    props,
-                },
-            ],
-            activeType: type,
-        };
     }
 }
