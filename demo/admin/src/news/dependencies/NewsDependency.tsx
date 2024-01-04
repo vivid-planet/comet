@@ -16,6 +16,7 @@ export const NewsDependency: DependencyInterface = {
                 node: news(id: $id) {
                     id
                     content
+                    image
                 }
             }
         `,
