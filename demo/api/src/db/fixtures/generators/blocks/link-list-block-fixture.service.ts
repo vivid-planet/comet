@@ -9,12 +9,12 @@ import { TextLinkBlockFixtureService } from "./text-link-block-fixture.service";
 export class LinkListBlockFixtureService {
     constructor(private readonly textLinkBlockFixtureService: TextLinkBlockFixtureService) {}
 
-    async generateBlock(min = 2, max = 6): Promise<ExtractBlockInputFactoryProps<typeof LinkListBlock>> {
+    async generateBlockInput(min = 2, max = 6): Promise<ExtractBlockInputFactoryProps<typeof LinkListBlock>> {
         const blockAmount = datatype.number({ min, max });
         const blocks = [];
 
         for (let i = 0; i < blockAmount; i++) {
-            blocks.push({ key: datatype.uuid(), visible: true, props: await this.textLinkBlockFixtureService.generateBlock() });
+            blocks.push({ key: datatype.uuid(), visible: true, props: await this.textLinkBlockFixtureService.generateBlockInput() });
         }
 
         return {

@@ -13,12 +13,12 @@ export class FullWidthImageBlockFixtureService {
         private readonly richTextBlockFixtureService: RichTextBlockFixtureService,
     ) {}
 
-    async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof FullWidthImageBlock>> {
+    async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof FullWidthImageBlock>> {
         return {
-            image: await this.damImageBlockFixtureService.generateBlock(),
+            image: await this.damImageBlockFixtureService.generateBlockInput(),
             content: FullWidthImageContentBlock.blockInputFactory({
                 visible: datatype.boolean(),
-                block: await this.richTextBlockFixtureService.generateBlock(),
+                block: await this.richTextBlockFixtureService.generateBlockInput(),
             }),
         };
     }

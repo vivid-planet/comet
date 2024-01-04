@@ -13,16 +13,16 @@ export class VideoBlockFixtureService {
         private readonly damVideoBlockFixtureService: DamVideoBlockFixtureService,
     ) {}
 
-    async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof VideoBlock>> {
+    async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof VideoBlock>> {
         const types = ["damVideo", "youtubeVideo"] as const;
         const type = random.arrayElement(types);
 
         switch (type) {
             case "damVideo":
-                return { attachedBlocks: [{ type, props: await this.damVideoBlockFixtureService.generateBlock() }], activeType: type };
+                return { attachedBlocks: [{ type, props: await this.damVideoBlockFixtureService.generateBlockInput() }], activeType: type };
                 break;
             case "youtubeVideo":
-                return { attachedBlocks: [{ type, props: await this.youtubeVideoBlockFixtureService.generateBlock() }], activeType: type };
+                return { attachedBlocks: [{ type, props: await this.youtubeVideoBlockFixtureService.generateBlockInput() }], activeType: type };
                 break;
         }
     }

@@ -17,10 +17,10 @@ export class TextImageBlockFixtureService {
         @Inject(CONFIG) private readonly config: Config,
     ) {}
 
-    async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof TextImageBlock>> {
+    async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof TextImageBlock>> {
         return {
-            text: await this.richtextBlockFixtureService.generateBlock(),
-            image: await this.damImageBlockFixtureService.generateBlock(),
+            text: await this.richtextBlockFixtureService.generateBlockInput(),
+            image: await this.damImageBlockFixtureService.generateBlockInput(),
             imagePosition: faker.random.arrayElement([ImagePosition.Left, ImagePosition.Right]),
             imageAspectRatio: faker.random.arrayElement(this.config.dam.allowedImageAspectRatios),
         };

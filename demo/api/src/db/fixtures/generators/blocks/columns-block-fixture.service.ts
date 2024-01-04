@@ -19,7 +19,7 @@ export class ColumnsBlockFixtureService {
         private readonly headlineBlockFixtureService: HeadlineBlockFixtureService,
     ) {}
 
-    async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof ColumnsBlock>> {
+    async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof ColumnsBlock>> {
         const layoutTypes = ["one-column", "two-columns"];
         const columnCount = datatype.number({ min: 1, max: 2 });
         const layout = layoutTypes[columnCount - 1];
@@ -38,7 +38,7 @@ export class ColumnsBlockFixtureService {
             for (let i = 0; i < datatype.number(20); i++) {
                 const [type, generator] = random.arrayElement(Object.entries(supportedBlocksFixtureGenerators));
                 if (generator) {
-                    const props = await generator.generateBlock();
+                    const props = await generator.generateBlockInput();
 
                     blocks.push({
                         key: String(i),

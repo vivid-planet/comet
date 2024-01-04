@@ -13,19 +13,19 @@ export class DamImageBlockFixtureService {
         private readonly pixelImageBlockFixtureService: PixelImageBlockFixtureService,
     ) {}
 
-    async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof DamImageBlock>> {
+    async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof DamImageBlock>> {
         const types = ["svgImage", "pixelImage"] as const;
         const type = random.arrayElement(types);
 
         switch (type) {
             case "svgImage":
                 return {
-                    attachedBlocks: [{ type, props: await this.svgImageBlockFixtureService.generateBlock() }],
+                    attachedBlocks: [{ type, props: await this.svgImageBlockFixtureService.generateBlockInput() }],
                     activeType: type,
                 };
             case "pixelImage":
                 return {
-                    attachedBlocks: [{ type, props: await this.pixelImageBlockFixtureService.generateBlock() }],
+                    attachedBlocks: [{ type, props: await this.pixelImageBlockFixtureService.generateBlockInput() }],
                     activeType: type,
                 };
         }

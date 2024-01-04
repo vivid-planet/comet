@@ -9,10 +9,10 @@ import { LinkBlockFixtureService } from "./link-block-fixture.service";
 export class TextLinkBlockFixtureService {
     constructor(private readonly linkBlockFixtureService: LinkBlockFixtureService) {}
 
-    async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof TextLinkBlock>> {
+    async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof TextLinkBlock>> {
         return {
             text: random.words(datatype.number({ min: 1, max: 5 })),
-            link: await this.linkBlockFixtureService.generateBlock(),
+            link: await this.linkBlockFixtureService.generateBlockInput(),
         };
     }
 }

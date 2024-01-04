@@ -5,7 +5,7 @@ import { random } from "faker";
 
 @Injectable()
 export class RichTextBlockFixtureService {
-    async generateBlock(
+    async generateBlockInput(
         lineCount = 3,
         blocks?: ExtractBlockInputFactoryProps<typeof RichTextBlock>["draftContent"]["blocks"],
     ): Promise<ExtractBlockInputFactoryProps<typeof RichTextBlock>> {

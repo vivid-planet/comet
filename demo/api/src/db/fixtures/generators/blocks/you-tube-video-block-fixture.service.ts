@@ -10,7 +10,7 @@ enum AspectRatio {
 
 @Injectable()
 export class YouTubeVideoBlockFixtureService {
-    async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof YouTubeVideoBlock>> {
+    async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof YouTubeVideoBlock>> {
         const identifier = ["F_oOtaxb0L8", "Sklc_fQBmcs", "Xoz31I1FuiY", "bMknfKXIFA8"];
         const autoplay = datatype.boolean();
 

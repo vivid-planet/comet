@@ -51,8 +51,8 @@ export class PageFixtureService {
 
         const page = this.pagesRepository.create({
             id,
-            content: (await this.pageContentBlockFixtureService.generateBlock()).transformToBlockData(),
-            seo: (await this.seoBlockFixtureService.generateBlock()).transformToBlockData(),
+            content: (await this.pageContentBlockFixtureService.generateBlockInput()).transformToBlockData(),
+            seo: (await this.seoBlockFixtureService.generateBlockInput()).transformToBlockData(),
         });
 
         await this.pagesRepository.persistAndFlush(page);

@@ -5,7 +5,7 @@ import { datatype, random } from "faker";
 
 @Injectable()
 export class LinkBlockFixtureService {
-    async generateBlock(): Promise<ExtractBlockInput<typeof LinkBlock>> {
+    async generateBlockInput(): Promise<ExtractBlockInput<typeof LinkBlock>> {
         const externalLinkUrls = ["https://www.comet-dxp.com/", "https://docs.comet-dxp.com/", "https://vivid-planet.com/"];
 
         // TODO: Internal Link

@@ -10,7 +10,7 @@ import { PixelImageBlockFixtureService } from "./pixel-image-block-fixture.servi
 export class SeoBlockFixtureService {
     constructor(private readonly pixelImageBlockFixtureService: PixelImageBlockFixtureService) {}
 
-    async generateBlock(): Promise<ExtractBlockInput<typeof SeoBlock>> {
+    async generateBlockInput(): Promise<ExtractBlockInput<typeof SeoBlock>> {
         const alternativeLinks = [];
         const codes = ["en_US", "en_GB", "es_ES", "fr_FR", "ja_JP", "it_IT"];
         for (let i = 0; i < faker.datatype.number({ min: 0, max: 5 }); i++) {
@@ -22,7 +22,7 @@ export class SeoBlockFixtureService {
             metaDescription: faker.random.words(20),
             openGraphTitle: faker.random.words(2),
             openGraphDescription: faker.random.words(20),
-            openGraphImage: { block: await this.pixelImageBlockFixtureService.generateBlock(), visible: faker.datatype.boolean() },
+            openGraphImage: { block: await this.pixelImageBlockFixtureService.generateBlockInput(), visible: faker.datatype.boolean() },
             noIndex: faker.datatype.boolean(),
             priority: faker.random.arrayElement(Object.values(SitemapPagePriority)),
             changeFrequency: faker.random.arrayElement(Object.values(SitemapPageChangeFrequency)),

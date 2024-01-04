@@ -48,7 +48,7 @@ export class LinkFixtureService {
 
         const link = this.linkRepository.create({
             id,
-            content: (await this.linkBlockFixtureService.generateBlock()).transformToBlockData(),
+            content: (await this.linkBlockFixtureService.generateBlockInput()).transformToBlockData(),
         });
         await this.linkRepository.persistAndFlush(link);
 

@@ -9,7 +9,7 @@ import { ImageFixtureService } from "../image-fixture.service";
 export class PixelImageBlockFixtureService {
     constructor(private readonly imageFixtureService: ImageFixtureService) {}
 
-    async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof PixelImageBlock>> {
+    async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof PixelImageBlock>> {
         return {
             damFileId: this.imageFixtureService.getRandomPixelImage().id,
             cropArea: this.calculateDefaultCropInput(),

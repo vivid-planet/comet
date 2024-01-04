@@ -5,7 +5,7 @@ import { random } from "faker";
 
 @Injectable()
 export class AnchorBlockFixtureService {
-    async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof AnchorBlock>> {
+    async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof AnchorBlock>> {
         return {
             name: random.word(),
         };

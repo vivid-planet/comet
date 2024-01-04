@@ -8,7 +8,7 @@ import { ImageFixtureService } from "../image-fixture.service";
 export class SvgImageBlockFixtureService {
     constructor(private readonly imageFixtureService: ImageFixtureService) {}
 
-    async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof SvgImageBlock>> {
+    async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof SvgImageBlock>> {
         return {
             damFileId: this.imageFixtureService.getRandomSvg().id,
         };

@@ -9,7 +9,7 @@ import { VideoFixtureService } from "../video-fixture.service";
 export class DamVideoBlockFixtureService {
     constructor(private readonly videoFixtureService: VideoFixtureService) {}
 
-    async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof DamVideoBlock>> {
+    async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof DamVideoBlock>> {
         const autoplay = datatype.boolean();
         const damFileId = this.videoFixtureService.getRandomVideo().id;
 

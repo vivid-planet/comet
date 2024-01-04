@@ -10,7 +10,7 @@ import { RichTextBlockFixtureService } from "./richtext-block-fixture.service";
 export class HeadlineBlockFixtureService {
     constructor(private readonly richtextBlockFixtureService: RichTextBlockFixtureService) {}
 
-    async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof HeadlineBlock>> {
+    async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof HeadlineBlock>> {
         const richTextBlocks: ExtractBlockInputFactoryProps<typeof RichTextBlock>["draftContent"]["blocks"] = [];
 
         const keys = ["5jda2", "bifh7", "er118", "37lco", "5e7g4"];
@@ -28,7 +28,7 @@ export class HeadlineBlockFixtureService {
         }
 
         return {
-            headline: await this.richtextBlockFixtureService.generateBlock(1, richTextBlocks),
+            headline: await this.richtextBlockFixtureService.generateBlockInput(1, richTextBlocks),
             eyebrow: random.words(datatype.number({ min: 1, max: 5 })),
             level: random.arrayElement(Object.values(HeadlineLevel)),
         };

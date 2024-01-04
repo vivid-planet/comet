@@ -9,7 +9,7 @@ import { HeadlineBlockFixtureService } from "./headline-block-fixture.service";
 export class TwoListsBlockFixtureService {
     constructor(private readonly headlineBlockFixtureService: HeadlineBlockFixtureService) {}
 
-    async generateBlock(): Promise<ExtractBlockInputFactoryProps<typeof TwoListsBlock>> {
+    async generateBlockInput(): Promise<ExtractBlockInputFactoryProps<typeof TwoListsBlock>> {
         return {
             list1: await this.generateHeadlineListBlock(),
             list2: await this.generateHeadlineListBlock(),
@@ -21,7 +21,7 @@ export class TwoListsBlockFixtureService {
         const blocks = [];
 
         for (let i = 0; i < blockAmount; i++) {
-            blocks.push({ key: datatype.uuid(), visible: datatype.boolean(), props: await this.headlineBlockFixtureService.generateBlock() });
+            blocks.push({ key: datatype.uuid(), visible: datatype.boolean(), props: await this.headlineBlockFixtureService.generateBlockInput() });
         }
 
         return {

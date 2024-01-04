@@ -19,7 +19,7 @@ import { TwoListsBlockFixtureService } from "./two-lists-block-fixture.service";
 import { VideoBlockFixtureService } from "./video-block-fixture.service";
 import { YouTubeVideoBlockFixtureService } from "./you-tube-video-block-fixture.service";
 
-export type BlockFixture = { generateBlock: () => Promise<ExtractBlockInputFactoryProps<Block>> };
+export type BlockFixture = { generateBlockInput: () => Promise<ExtractBlockInputFactoryProps<Block>> };
 
 @Injectable()
 export class PageContentBlockFixtureService {
@@ -40,7 +40,7 @@ export class PageContentBlockFixtureService {
         private readonly twoListsBlockFixtureService: TwoListsBlockFixtureService,
     ) {}
 
-    async generateBlock(): Promise<ExtractBlockInput<typeof PageContentBlock>> {
+    async generateBlockInput(): Promise<ExtractBlockInput<typeof PageContentBlock>> {
         const blocks: ExtractBlockInputFactoryProps<typeof PageContentBlock>["blocks"] = [];
 
         const supportedBlocksFixtureGenerators: Record<keyof typeof supportedBlocks, BlockFixture> = {
@@ -63,7 +63,7 @@ export class PageContentBlockFixtureService {
         for (let i = 0; i < 10; i++) {
             const [type, generator] = random.arrayElement(Object.entries(supportedBlocksFixtureGenerators));
             if (generator) {
-                const props = await generator.generateBlock();
+                const props = await generator.generateBlockInput();
                 const userGroup = random.arrayElement(Object.values(UserGroup));
                 blocks.push({
                     key: String(i),
