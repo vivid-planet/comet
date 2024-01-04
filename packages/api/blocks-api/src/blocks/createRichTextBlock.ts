@@ -23,6 +23,7 @@ import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFact
 interface CreateRichTextBlockOptions {
     link: Block;
     indexSearchText?: boolean;
+    migrateOptions?: MigrateOptions;
 }
 
 // Replaces draft-js' RawDraftContentBlock
@@ -70,12 +71,10 @@ export interface RichTextBlockInputInterface<LinkBlockInput extends BlockInputIn
 export function createRichTextBlock<LinkBlock extends Block>({
     link: LinkBlock,
     indexSearchText = true,
+    migrateOptions = { migrations: [], version: 0 },
 }: CreateRichTextBlockOptions): Block<RichTextBlockDataInterface, RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>>> {
     const BLOCK_NAME = "RichText";
-    const MIGRATE: MigrateOptions = {
-        migrations: [],
-        version: 0,
-    }; // Placeholder for future migrations
+    const MIGRATE = migrateOptions;
 
     @BlockDataMigrationVersion(MIGRATE.version)
     class RichTextBlockData extends BlockData {
