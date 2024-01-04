@@ -12,13 +12,20 @@ import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
 import { Permission } from "./interfaces/user-permission.interface";
-import { USER_PERMISSIONS_OPTIONS } from "./user-permissions.constants";
-import { UserPermissions, UserPermissionsOptions } from "./user-permissions.types";
+import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER_SERVICE } from "./user-permissions.constants";
+import {
+    AccessControlServiceInterface,
+    UserPermissions,
+    UserPermissionsOptions,
+    UserPermissionsUserServiceInterface,
+} from "./user-permissions.types";
 
 @Injectable()
 export class UserPermissionsService {
     constructor(
         @Inject(USER_PERMISSIONS_OPTIONS) private readonly options: UserPermissionsOptions,
+        @Inject(USER_PERMISSIONS_USER_SERVICE) private readonly userService: UserPermissionsUserServiceInterface,
+        @Inject(ACCESS_CONTROL_SERVICE) private readonly accessControlService: AccessControlServiceInterface,
         @InjectRepository(UserPermission) private readonly permissionRepository: EntityRepository<UserPermission>,
         @InjectRepository(UserContentScopes) private readonly contentScopeRepository: EntityRepository<UserContentScopes>,
     ) {}
@@ -28,15 +35,17 @@ export class UserPermissionsService {
     }
 
     async getAvailablePermissions(): Promise<(keyof Permission)[]> {
-        return [...new Set<keyof Permission>(["dam", "pageTree", "userPermissions", "system", ...(this.options.availablePermissions ?? [])])];
+        return [
+            ...new Set<keyof Permission>(["dam", "pageTree", "userPermissions", "cronJobs", "builds", ...(this.options.availablePermissions ?? [])]),
+        ];
     }
 
     async getUser(id: string): Promise<User> {
-        return this.options.userService.getUser(id);
+        return this.userService.getUser(id);
     }
 
     async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
-        return this.options.userService.findUsers(args);
+        return this.userService.findUsers(args);
     }
 
     async checkContentScopes(contentScopes: ContentScope[]): Promise<void> {
@@ -58,10 +67,10 @@ export class UserPermissionsService {
             p.source = UserPermissionSource.MANUAL;
             return p;
         });
-        if (this.options.userService.getPermissionsForUser) {
+        if (this.accessControlService.getPermissionsForUser) {
             const user = await this.getUser(userId);
             if (user) {
-                let permissionsByRule = await this.options.userService.getPermissionsForUser(user);
+                let permissionsByRule = await this.accessControlService.getPermissionsForUser(user);
                 if (permissionsByRule === UserPermissions.allPermissions) {
                     permissionsByRule = availablePermissions.map((permission) => ({ permission }));
                 }
@@ -91,10 +100,10 @@ export class UserPermissionsService {
     async getContentScopes(userId: string, skipManual = false): Promise<ContentScope[]> {
         const availableContentScopes = await this.getAvailableContentScopes();
         const contentScopes: ContentScope[] = [];
-        if (this.options.userService.getContentScopesForUser) {
+        if (this.accessControlService.getContentScopesForUser) {
             const user = await this.getUser(userId);
             if (user) {
-                const userContentScopes = await this.options.userService.getContentScopesForUser(user);
+                const userContentScopes = await this.accessControlService.getContentScopesForUser(user);
                 if (userContentScopes === UserPermissions.allContentScopes) {
                     contentScopes.push(...availableContentScopes);
                 } else {

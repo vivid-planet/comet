@@ -17,7 +17,7 @@ import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
-import { BlockCategory, BlockDependency, BlockInputApi, BlockInterface, DispatchSetStateAction, PreviewContent } from "../types";
+import { BlockCategory, BlockDependency, BlockInputApi, BlockInterface, CustomBlockCategory, DispatchSetStateAction, PreviewContent } from "../types";
 import { resolveNewState } from "../utils";
 import { FinalFormColumnsSelect } from "./columnsBlock/FinalFormColumnsSelect";
 import { FinalFormLayoutSelect } from "./columnsBlock/FinalFormLayoutSelect";
@@ -54,7 +54,7 @@ interface ColumnsBlockState<T extends BlockInterface> {
 interface CreateColumnsBlockOptions<T extends BlockInterface> {
     name: string;
     displayName: React.ReactNode;
-    category?: BlockCategory;
+    category?: BlockCategory | CustomBlockCategory;
     contentBlock: T;
     layouts: ColumnsBlockLayout[];
 }
@@ -267,7 +267,7 @@ export function createColumnsBlock<T extends BlockInterface>({
                                     fullWidth
                                 />
                             </BlocksFinalForm>
-                            <AdminComponentSection title={<FormattedMessage id="comet.blocks.columns.columns" defaultMessage="Columns" />}>
+                            <AdminComponentSection title={<FormattedMessage id="comet.blocks.columns.items" defaultMessage="Items" />}>
                                 <AdminComponentPaper disablePadding>
                                     <StackSwitchApiContext.Consumer>
                                         {(stackApi) => {

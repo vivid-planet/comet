@@ -18,7 +18,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
     const crudSearchPropNames = metadata.props
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "search") && !prop.name.startsWith("scope_"))
         .reduce((acc, prop) => {
-            if (prop.type === "string") {
+            if (prop.type === "string" || prop.type === "text") {
                 acc.push(prop.name);
             } else if (prop.reference == "m:1") {
                 if (!prop.targetMeta) {
@@ -28,7 +28,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     .filter((innerProp) => hasFieldFeature(prop.targetMeta!.class, innerProp.name, "search") && !innerProp.name.startsWith("scope_"))
                     .forEach((innerProp) => {
-                        if (innerProp.type === "string") {
+                        if (innerProp.type === "string" || innerProp.type === "text") {
                             acc.push(`${prop.name}.${innerProp.name}`);
                         }
                     });
@@ -43,6 +43,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
             !prop.name.startsWith("scope_") &&
             (prop.enum ||
                 prop.type === "string" ||
+                prop.type === "text" ||
                 prop.type === "DecimalType" ||
                 prop.type === "number" ||
                 integerTypes.includes(prop.type) ||
@@ -58,6 +59,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
             hasFieldFeature(metadata.class, prop.name, "sort") &&
             !prop.name.startsWith("scope_") &&
             (prop.type === "string" ||
+                prop.type === "text" ||
                 prop.type === "DecimalType" ||
                 prop.type === "number" ||
                 integerTypes.includes(prop.type) ||
@@ -140,7 +142,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     @Type(() => ${enumName}EnumFilter)
                     ${prop.name}?: ${enumName}EnumFilter;
                     `;
-                } else if (prop.type === "string") {
+                } else if (prop.type === "string" || prop.type === "text") {
                     return `@Field(() => StringFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
@@ -549,6 +551,7 @@ ${
 
 function generateNestedEntityResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
     const { classNameSingular } = buildNameVariants(metadata);
+    const { scopeProp } = buildOptions(metadata);
 
     const imports: Imports = [];
 
@@ -559,10 +562,12 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     imports.push(generateEntityImport(metadata, generatorOptions.targetDirectory));
 
     return `
+    import { RequiredPermission } from "@comet/cms-api";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
+    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         ${code}
     }
@@ -705,7 +710,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { FindOptions, Reference } from "@mikro-orm/core";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
-    import { extractGraphqlFields, SortDirection, SubjectEntity, validateNotModified } from "@comet/cms-api";
+    import { extractGraphqlFields, SortDirection, RequiredPermission, AffectedEntity, validateNotModified } from "@comet/cms-api";
     import { GraphQLResolveInfo } from "graphql";
 
     import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
@@ -715,6 +720,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
+    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
@@ -726,7 +732,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         ) {}
 
         @Query(() => ${metadata.className})
-        @SubjectEntity(${metadata.className})
+        @AffectedEntity(${metadata.className})
         async ${instanceNameSingular}(${
         integerTypes.includes(metadata.properties.id.type)
             ? `@Args("id", { type: () => ID }, { transform: (value) => parseInt(value) }) id: number`
@@ -826,7 +832,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             generatorOptions.update
                 ? `
         @Mutation(() => ${metadata.className})
-        @SubjectEntity(${metadata.className})
+        @AffectedEntity(${metadata.className})
         async update${classNameSingular}(
             ${
                 integerTypes.includes(metadata.properties.id.type)
@@ -858,7 +864,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             generatorOptions.delete
                 ? `
         @Mutation(() => Boolean)
-        @SubjectEntity(${metadata.className})
+        @AffectedEntity(${metadata.className})
         async delete${metadata.className}(${
                       integerTypes.includes(metadata.properties.id.type)
                           ? `@Args("id", { type: () => ID }, { transform: (value) => parseInt(value) }) id: number`
@@ -877,7 +883,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             hasVisibleProp && generatorOptions.update
                 ? `
         @Mutation(() => ${metadata.className})
-        @SubjectEntity(${metadata.className})
+        @AffectedEntity(${metadata.className})
         async update${classNameSingular}Visibility(
             @Args("id", { type: () => ID }) id: string,
             @Args("visible", { type: () => Boolean }) visible: boolean,
@@ -910,8 +916,9 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
 
     const generatedFiles: GeneratedFile[] = [];
 
-    const { fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
+    const { fileNameSingular, fileNamePlural, instanceNamePlural } = buildNameVariants(metadata);
     const { hasFilterArg, hasSortArg, argsFileName } = buildOptions(metadata);
+    if (!generatorOptions.requiredPermission) generatorOptions.requiredPermission = [instanceNamePlural];
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {
         if (hasFilterArg) {

@@ -89,12 +89,15 @@ export function BaseBlocksBlockItemInput<BlockMap extends BaseBlockMap>(
     class BlocksBlockItemInput extends BlockInput {
         @Allow()
         @IsString()
+        @BlockField()
         key: string;
 
         @IsBoolean()
+        @BlockField()
         visible: boolean;
 
         @IsString()
+        @BlockField()
         type: string;
 
         @Transform(
@@ -111,6 +114,7 @@ export function BaseBlocksBlockItemInput<BlockMap extends BaseBlockMap>(
             { toClassOnly: true },
         )
         @ValidateNested()
+        @BlockField({ kind: "oneOfBlocks", blocks: supportedBlocks })
         props: BlockInputInterface;
 
         transformToBlockData(): BlocksBlockItemDataInterface {
@@ -208,7 +212,8 @@ export function createBlocksBlock<BlockMap extends BaseBlockMap>(
                 .map((item) => plainToInstance(BlocksBlockItemInput, item)),
         )
         @ValidateNested({ each: true })
-        blocks: BlocksBlockInputInterface<BlockMap>["blocks"];
+        @BlockField(BlocksBlockItemInput)
+        blocks: SupportedBlocksInputInterfaces<BlockMap>[];
 
         transformToBlockData(): BlocksBlockData {
             return plainToInstance(BlocksBlockData, {

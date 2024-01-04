@@ -7,12 +7,12 @@ import { CannotPasteBlockDialog } from "../../../clipboard/CannotPasteBlockDialo
 import { ClipboardContent, useBlockClipboard } from "../../../clipboard/useBlockClipboard";
 import { BlockAdminComponentProps, BlockInterface, BlockState, DispatchSetStateAction } from "../../types";
 import { resolveNewState } from "../../utils";
-import { AdditionalItemField, ListBlockState } from "../createListBlock";
+import { ListBlockAdditionalItemField, ListBlockState } from "../createListBlock";
 
 interface CreateListBlockUseAdminComponentOptions<T extends BlockInterface> {
     block: T;
     maxVisibleBlocks?: number;
-    additionalItemFields?: Record<string, AdditionalItemField>;
+    additionalItemFields?: Record<string, ListBlockAdditionalItemField>;
 }
 
 type ListBlockUseAdminComponentProps<T extends BlockInterface> = BlockAdminComponentProps<ListBlockState<T>>;
