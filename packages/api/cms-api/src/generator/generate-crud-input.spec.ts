@@ -58,6 +58,16 @@ export class TestEntityWithUuid extends BaseEntity<TestEntityWithUuid, "id"> {
     @Property({ type: "uuid" })
     fooId: string;
 }
+
+@Entity()
+export class TestEntityWithTextRuntimeType extends BaseEntity<TestEntityWithTextRuntimeType, "id"> {
+    @PrimaryKey({ type: "uuid" })
+    id: string = uuid();
+
+    @Property({ type: "text" })
+    title: string;
+}
+
 describe("GenerateCrudInput", () => {
     describe("string input class", () => {
         it("should be a valid generated ts file", async () => {
@@ -225,6 +235,41 @@ describe("GenerateCrudInput", () => {
                 const decorators = prop.decorators?.map((i) => i.name);
                 expect(decorators).toContain("Field");
                 expect(decorators).toContain("IsUUID");
+                expect(decorators).toContain("IsNotEmpty");
+            }
+
+            orm.close();
+        });
+    });
+
+    describe("text type input class", () => {
+        it("should be a valid generated ts file", async () => {
+            LazyMetadataStorage.load();
+            const orm = await MikroORM.init({
+                type: "postgresql",
+                dbName: "test-db",
+                entities: [TestEntityWithTextRuntimeType],
+            });
+            const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithTextRuntimeType"));
+            const lintedOutput = await lintSource(out[0].content);
+            //console.log(lintedOutput);
+            const source = parseSource(lintedOutput);
+
+            const classes = source.getClasses();
+            expect(classes.length).toBe(2);
+
+            const cls = classes[0];
+            const structure = cls.getStructure();
+
+            expect(structure.properties?.length).toBe(1);
+            {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const prop = structure.properties![0];
+                expect(prop.name).toBe("title");
+                expect(prop.type).toBe("string");
+                const decorators = prop.decorators?.map((i) => i.name);
+                expect(decorators).toContain("Field");
+                expect(decorators).toContain("IsString");
                 expect(decorators).toContain("IsNotEmpty");
             }
 

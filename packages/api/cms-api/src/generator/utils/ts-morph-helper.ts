@@ -62,7 +62,8 @@ export function findEnumName(propertyName: string, metadata: EntityMetadata<any>
     return tsProp
         .getType()
         .getText(tsProp)
-        .replace(/ ?\| ?undefined$/, "");
+        .replace(/ ?\| ?undefined$/, "")
+        .replace(/\[\]$/, "");
 }
 
 export function findEnumImportPath(enumName: string, generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): string {

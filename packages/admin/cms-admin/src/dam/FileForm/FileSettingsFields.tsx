@@ -59,6 +59,18 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
         [apollo, folderId, scope],
     );
 
+    const requiredValidator = React.useCallback(
+        (value: unknown, allValues: object) => {
+            const type = (allValues as EditFileFormValues).license?.type;
+            const isRequired = type === "ROYALTY_FREE" ? false : damConfig.requireLicense;
+
+            if (isRequired && !value) {
+                return <FormattedMessage id="comet.form.required" defaultMessage="Required" />;
+            }
+        },
+        [damConfig.requireLicense],
+    );
+
     return (
         <div>
             <FormSection title="General">
@@ -122,10 +134,9 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                             }
                         }}
                         shouldShowError={() => true}
-                        validateFields={["license.durationTo"]}
                     />
                     <Field name="license.type">
-                        {({ input: { value } }) => {
+                        {({ input: { value: licenseType } }) => {
                             return (
                                 <>
                                     <Field
@@ -135,8 +146,8 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                         multiline
                                         minRows={3}
                                         fullWidth
-                                        disabled={value === "NO_LICENSE"}
-                                        required={damConfig.requireLicense}
+                                        disabled={licenseType === "NO_LICENSE"}
+                                        validate={requiredValidator}
                                         shouldShowError={() => true}
                                     />
                                     <Field
@@ -144,15 +155,14 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                         name="license.author"
                                         component={FinalFormInput}
                                         fullWidth
-                                        disabled={value === "NO_LICENSE"}
-                                        required={damConfig.requireLicense}
+                                        disabled={licenseType === "NO_LICENSE"}
+                                        validate={requiredValidator}
                                         shouldShowError={() => true}
                                     />
                                     <FieldContainer
                                         label={<FormattedMessage id="comet.dam.file.licenseDuration" defaultMessage="License duration" />}
                                         fullWidth
-                                        disabled={value === "NO_LICENSE"}
-                                        required={damConfig.requireLicense}
+                                        disabled={licenseType === "NO_LICENSE"}
                                     >
                                         <DurationFieldWrapper>
                                             <Field
@@ -166,8 +176,9 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                                         <Calendar />
                                                     </InputAdornment>
                                                 }
-                                                disabled={value === "NO_LICENSE"}
-                                                required={damConfig.requireLicense}
+                                                validateFields={["license.durationTo"]}
+                                                disabled={licenseType === "NO_LICENSE"}
+                                                validate={requiredValidator}
                                                 shouldShowError={() => true}
                                             />
                                             <Field
@@ -182,7 +193,13 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                                     </InputAdornment>
                                                 }
                                                 validate={(value: Date | undefined, allValues) => {
-                                                    if (value && allValues && value < (allValues as EditFileFormValues).license?.durationFrom) {
+                                                    const requiredError = requiredValidator(value, allValues);
+                                                    if (requiredError) {
+                                                        return requiredError;
+                                                    }
+
+                                                    const durationFrom = (allValues as EditFileFormValues).license?.durationFrom;
+                                                    if (value && durationFrom && value < durationFrom) {
                                                         return (
                                                             <FormattedMessage
                                                                 id="comet.dam.file.error.durationTo"
@@ -191,8 +208,7 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                                         );
                                                     }
                                                 }}
-                                                disabled={value === "NO_LICENSE"}
-                                                required={value === "ROYALTY_FREE" ? false : damConfig.requireLicense}
+                                                disabled={licenseType === "NO_LICENSE"}
                                                 shouldShowError={() => true}
                                             />
                                         </DurationFieldWrapper>

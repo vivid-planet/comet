@@ -99,7 +99,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     \`;
     
     `;
-    writeGenerated(`${targetDirectory}/${entityName}Form.gql.tsx`, outGql);
+    writeGenerated(`${targetDirectory}/${entityName}Form.gql.ts`, outGql);
 
     const numberFields = formFields.filter((field) => {
         const type = field.type.kind === "NON_NULL" ? field.type.ofType : field.type;
@@ -273,9 +273,6 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                 onSubmit={handleSubmit}
                 mode={mode}
                 initialValues={initialValues}
-                onAfterSubmit={(values, form) => {
-                    //don't go back automatically
-                }}
             >
                 {({ values }) => (
                     <EditPageLayout>
@@ -293,7 +290,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                             </ToolbarTitleItem>
                             <ToolbarFillSpace />
                             <ToolbarActions>
-                                <FinalFormSaveSplitButton />
+                                <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
                             </ToolbarActions>
                         </Toolbar>
                         <MainContent>

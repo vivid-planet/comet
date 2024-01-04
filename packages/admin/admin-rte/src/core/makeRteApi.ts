@@ -5,6 +5,7 @@ import useDebounce from "../useDebounce";
 import usePrevious from "../usePrevious";
 import LinkDecorator from "./extension/Link/Decorator";
 import NonBreakingSpaceDecorator from "./extension/NonBreakingSpace/Decorator";
+
 export interface IMakeRteApiProps<T = any> {
     decorators?: DraftDecorator[];
     parse?: (v: T) => ContentState;

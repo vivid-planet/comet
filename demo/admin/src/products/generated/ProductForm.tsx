@@ -135,15 +135,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
     }
 
     return (
-        <FinalForm<FormValues>
-            apiRef={formApiRef}
-            onSubmit={handleSubmit}
-            mode={mode}
-            initialValues={initialValues}
-            onAfterSubmit={(values, form) => {
-                //don't go back automatically
-            }}
-        >
+        <FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues}>
             {({ values }) => (
                 <EditPageLayout>
                     {saveConflict.dialogs}
@@ -158,7 +150,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <FinalFormSaveSplitButton />
+                            <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>

@@ -1,6 +1,7 @@
 import { Args, ObjectType, Query, Resolver } from "@nestjs/graphql";
 
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
+import { RequiredPermission } from "./decorators/required-permission.decorator";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
 import { UserPermissionsService } from "./user-permissions.service";
@@ -9,6 +10,7 @@ import { UserPermissionsService } from "./user-permissions.service";
 class PaginatedUserList extends PaginatedResponseFactory.create(User) {}
 
 @Resolver(() => User)
+@RequiredPermission(["userPermissions"], { skipScopeCheck: true })
 export class UserResolver {
     constructor(private readonly userService: UserPermissionsService) {}
 
