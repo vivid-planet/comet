@@ -1,11 +1,11 @@
 import { RouterTab, RouterTabs, Tab, Tabs } from "@comet/admin";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-export const DynamicRouterTabs = () => {
+export const DynamicRouterTabs = ({ showFourthTab }: { showFourthTab: boolean }) => {
     const content = ["Two", "Three"];
 
     return (
@@ -18,11 +18,16 @@ export const DynamicRouterTabs = () => {
                     {value}
                 </RouterTab>
             ))}
+            {showFourthTab && (
+                <RouterTab label="Four" path="/four">
+                    Four
+                </RouterTab>
+            )}
         </RouterTabs>
     );
 };
 
-export const DynamicTabs = () => {
+export const DynamicTabs = ({ showFourthTab }: { showFourthTab: boolean }) => {
     const content = ["Two", "Three"];
 
     return (
@@ -33,20 +38,27 @@ export const DynamicTabs = () => {
                     {value}
                 </Tab>
             ))}
+            {showFourthTab && <Tab label="Four">Four</Tab>}
         </Tabs>
     );
 };
 
 function Story() {
+    const [showFourthTab, setShowFourthTab] = React.useState(false);
+
     return (
         <>
-            <Typography variant="h2">Tabs:</Typography>
-            <DynamicTabs />
+            <Button onClick={() => setShowFourthTab((show) => !show)}>{showFourthTab ? "Hide" : "Show"} fourth tab</Button>
+
+            <Typography py={4} variant="h2">
+                Tabs:
+            </Typography>
+            <DynamicTabs showFourthTab={showFourthTab} />
 
             <Typography py={4} variant="h2">
                 RouterTabs:
             </Typography>
-            <DynamicRouterTabs />
+            <DynamicRouterTabs showFourthTab={showFourthTab} />
         </>
     );
 }

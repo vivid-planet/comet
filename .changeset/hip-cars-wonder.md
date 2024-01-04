@@ -16,8 +16,10 @@ For example:
             {value}
         </RouterTab>
     ))}
-    <RouterTab label="Four" path="/four">
-        Four
-    </RouterTab>
+    {showFourthTab && (
+        <RouterTab label="Four" path="/four">
+            Four
+        </RouterTab>
+    )}
 </RouterTabs>
 ```
