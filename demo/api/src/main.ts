@@ -10,6 +10,7 @@ import { AppModule } from "@src/app.module";
 import { useContainer } from "class-validator";
 import compression from "compression";
 import cookieParser from "cookie-parser";
+import { json } from "express";
 
 import { createConfig } from "./config/config";
 
@@ -38,6 +39,7 @@ async function bootstrap(): Promise<void> {
         }),
     );
 
+    app.use(json({ limit: "1mb" }));
     app.use(compression());
     app.use(cookieParser());
 
