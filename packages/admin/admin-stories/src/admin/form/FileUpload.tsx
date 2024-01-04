@@ -18,7 +18,7 @@ function Story() {
                             <Grid item xs={6}>
                                 <Card variant="outlined">
                                     <CardContent>
-                                        <Field name="upload" label="File upload (default)" component={FinalFormFileUpload} />
+                                        <Field name="uploadDefault" label="File upload (default)" component={FinalFormFileUpload} />
                                     </CardContent>
                                 </Card>
                             </Grid>
@@ -26,15 +26,29 @@ function Story() {
                                 <Card variant="outlined">
                                     <CardContent>
                                         <Field
-                                            name="upload"
+                                            name="uploadMultipleDisabled"
                                             label="File upload (dropzone only, multiple disabled)"
                                             dropzoneVariant="dropzoneOnly"
                                             component={FinalFormFileUpload}
                                             multipleFiles={false}
+                                        />
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Card variant="outlined">
+                                    <CardContent>
+                                        <Field
+                                            name="uploadImages"
+                                            label="File upload (button only, accept only images)"
+                                            accept={{ "image/*": [] }}
+                                            maxSize={10}
+                                            dropzoneVariant="buttonOnly"
+                                            component={FinalFormFileUpload}
                                             caption={
                                                 <FormattedMessage
                                                     id="comet.finalformfileupload.maximumfilesize"
-                                                    defaultMessage="Maximum file size 50 MB"
+                                                    defaultMessage="Maximum file size 10 MB"
                                                 />
                                             }
                                         />
@@ -44,20 +58,7 @@ function Story() {
                             <Grid item xs={6}>
                                 <Card variant="outlined">
                                     <CardContent>
-                                        <Field
-                                            name="upload"
-                                            label="File upload (button only, accept only images)"
-                                            accept={{ "image/*": [] }}
-                                            dropzoneVariant="buttonOnly"
-                                            component={FinalFormFileUpload}
-                                        />
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Card variant="outlined">
-                                    <CardContent>
-                                        <Field name="upload" label="File upload (disabled)" disabled component={FinalFormFileUpload} />
+                                        <Field name="uploadDisabled" label="File upload (disabled)" disabled component={FinalFormFileUpload} />
                                     </CardContent>
                                 </Card>
                             </Grid>

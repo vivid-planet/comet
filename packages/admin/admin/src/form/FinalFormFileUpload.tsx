@@ -1,4 +1,3 @@
-import { PrettyBytes } from "@comet/admin";
 import { Delete, Select } from "@comet/admin-icons";
 import { Button, Chip, ComponentsOverrides, FormHelperText, IconButton, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
@@ -7,6 +6,8 @@ import * as React from "react";
 import { Accept, useDropzone } from "react-dropzone";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
+
+import { PrettyBytes } from "../helpers/PrettyBytes";
 
 export type FinalFormFileUploadClassKey = "root" | "droppableArea" | "droppableAreaCaption" | "fileList" | "fileListItem" | "disabled" | "error";
 
@@ -84,14 +85,14 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
     caption,
     multipleFiles = true,
     accept,
-    maxSize,
+    maxSize = 50,
     input: { name, onChange, value: fieldValue },
 }) => {
     const onDrop = React.useCallback(
         (acceptedFiles: File[]) => {
-            onChange([...fieldValue, ...acceptedFiles]);
+            multipleFiles ? onChange([...fieldValue, ...acceptedFiles]) : onChange([...acceptedFiles]);
         },
-        [fieldValue, onChange],
+        [fieldValue, multipleFiles, onChange],
     );
 
     const removeFile = (file: File) => () => {
@@ -100,7 +101,15 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
         onChange(newFiles);
     };
 
-    const { acceptedFiles, getRootProps, getInputProps, isDragReject } = useDropzone({ onDrop, accept, disabled, multiple: multipleFiles });
+    const maxFileSizeInBytes = maxSize * 1024 * 1024;
+
+    const { acceptedFiles, getRootProps, getInputProps, isDragReject } = useDropzone({
+        onDrop,
+        accept,
+        disabled,
+        multiple: multipleFiles,
+        maxSize: maxFileSizeInBytes,
+    });
 
     // list of the accepted files
     const files =
