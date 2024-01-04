@@ -124,20 +124,24 @@ function RouterTabsComponent({
                 return (
                     <Route path={path}>
                         {({ match }) => {
-                            if (match && stackApi && stackSwitchApi && !foundFirstMatch) {
+                            let ret = null;
+                            if (match && !foundFirstMatch) {
                                 foundFirstMatch = true;
+                                ret = <div className={classes.content}>{child.props.children}</div>;
+                            } else if (child.props.forceRender) {
+                                ret = <div className={`${classes.content} ${classes.contentHidden}`}>{child.props.children}</div>;
+                            } else {
+                                // don't render tab contents, return early as we don't need StackBreadcrumb either
+                                return null;
+                            }
+                            if (stackApi && stackSwitchApi) {
                                 return (
                                     <StackBreadcrumb url={path} title={child.props.label} invisible={true}>
-                                        <div className={classes.content}>{child.props.children}</div>
+                                        {ret}
                                     </StackBreadcrumb>
                                 );
-                            } else if (match && !foundFirstMatch) {
-                                foundFirstMatch = true;
-                                return <div className={classes.content}>{child.props.children}</div>;
-                            } else if (child.props.forceRender) {
-                                return <div className={`${classes.content} ${classes.contentHidden}`}>{child.props.children}</div>;
                             } else {
-                                return null;
+                                return ret;
                             }
                         }}
                     </Route>

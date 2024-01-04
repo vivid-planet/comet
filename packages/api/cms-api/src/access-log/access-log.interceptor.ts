@@ -1,7 +1,8 @@
 import { CallHandler, ExecutionContext, Inject, Injectable, Logger, NestInterceptor, Optional } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
-import { CurrentUser } from "src/user-permissions/dto/current-user";
+import { GraphQLResolveInfo } from "graphql";
 
+import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { SHOULD_LOG_REQUEST } from "./access-log.constants";
 import { ShouldLogRequest } from "./access-log.module";
 
@@ -37,21 +38,17 @@ export class AccessLogInterceptor implements NestInterceptor {
             this.pushUserToRequestData(graphqlContext.req.user, requestData);
 
             const gqlArgs = { ...graphqlExecutionContext.getArgs() };
-            const gqlInfo = graphqlExecutionContext.getInfo();
+            const gqlInfo = graphqlExecutionContext.getInfo<GraphQLResolveInfo>();
 
             if (gqlInfo.operation.operation === "mutation") {
                 delete gqlArgs["input"];
                 delete gqlArgs["data"];
             }
 
-            requestData.push(
-                ...[
-                    `operationType: ${gqlInfo.parentType}`,
-                    `operationName: ${gqlInfo.operation.name.value}`,
-                    `resolver function: ${gqlInfo.fieldName}`,
-                    `args: ${JSON.stringify(gqlArgs)}`,
-                ],
-            );
+            requestData.push(`operationType: ${gqlInfo.parentType}`);
+            if (gqlInfo.operation.name?.value) requestData.push(`operationName: ${gqlInfo.operation.name.value}`);
+            requestData.push(`resolver function: ${gqlInfo.fieldName}`);
+            requestData.push(`args: ${JSON.stringify(gqlArgs)}`);
         } else {
             const httpContext = context.switchToHttp();
             const httpRequest = httpContext.getRequest();
@@ -82,7 +79,7 @@ export class AccessLogInterceptor implements NestInterceptor {
         return next.handle();
     }
 
-    private pushUserToRequestData(user: CurrentUser, requestData: string[]) {
+    private pushUserToRequestData(user: CurrentUserInterface, requestData: string[]) {
         if (user) {
             requestData.push(`user: ${user.id} (${user.name})`);
         }

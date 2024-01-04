@@ -1,0 +1,6 @@
+addAssignees: author
+
+addReviewers: true
+
+reviewers:
+    - johnnyomair

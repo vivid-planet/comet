@@ -4,6 +4,11 @@ import { Block, isBlockDataInterface } from "../block";
 import { BlockField } from "./field";
 
 interface ChildBlockOptions {
+    /**
+     * @deprecated Nullable child blocks are not correctly supported in
+     * the Admin, for instance, in `createCompositeBlock`. Save a
+     * block's default values instead.
+     */
     nullable?: boolean;
 }
 export function ChildBlock(block: Block, options?: ChildBlockOptions): PropertyDecorator {

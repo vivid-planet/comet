@@ -49,6 +49,20 @@ const ColumnsBlock = createColumnsBlock({
                 </ColumnsLayoutPreview>
             ),
         },
+        {
+            name: "two-columns-12-6",
+            label: "Two columns 12-6",
+            columns: 2,
+            preview: (
+                <ColumnsLayoutPreview>
+                    <ColumnsLayoutPreviewSpacing width={2} />
+                    <ColumnsLayoutPreviewContent width={12} />
+                    <ColumnsLayoutPreviewSpacing width={2} />
+                    <ColumnsLayoutPreviewContent width={6} />
+                    <ColumnsLayoutPreviewSpacing width={2} />
+                </ColumnsLayoutPreview>
+            ),
+        },
     ],
     contentBlock: ColumnsContentBlock,
 });

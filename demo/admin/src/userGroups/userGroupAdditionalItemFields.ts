@@ -1,6 +1,8 @@
+import { GQLUserGroup } from "@src/graphql.generated";
+
 const userGroupAdditionalItemFields = {
     userGroup: {
-        defaultValue: "All",
+        defaultValue: "All" as GQLUserGroup,
     },
 };
 

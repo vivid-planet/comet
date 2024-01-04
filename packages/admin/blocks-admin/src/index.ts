@@ -49,6 +49,7 @@ export type {
     SetStateAction,
     SetStateFn,
 } from "./blocks/types";
+export type { CustomBlockCategory } from "./blocks/types";
 export { BlockCategory, blockCategoryLabels } from "./blocks/types";
 export { resolveNewState } from "./blocks/utils";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
