@@ -587,14 +587,7 @@
             {
                 "name": "level",
                 "kind": "Enum",
-                "enum": [
-                    "header-one",
-                    "header-two",
-                    "header-three",
-                    "header-four",
-                    "header-five",
-                    "header-six"
-                ],
+                "enum": ["header-one", "header-two", "header-three", "header-four", "header-five", "header-six"],
                 "nullable": false
             }
         ],
@@ -613,14 +606,7 @@
             {
                 "name": "level",
                 "kind": "Enum",
-                "enum": [
-                    "header-one",
-                    "header-two",
-                    "header-three",
-                    "header-four",
-                    "header-five",
-                    "header-six"
-                ],
+                "enum": ["header-one", "header-two", "header-three", "header-four", "header-five", "header-six"],
                 "nullable": false
             }
         ]
@@ -768,11 +754,7 @@
                         {
                             "name": "userGroup",
                             "kind": "Enum",
-                            "enum": [
-                                "All",
-                                "Admin",
-                                "User"
-                            ],
+                            "enum": ["All", "Admin", "User"],
                             "nullable": false
                         }
                     ]
@@ -805,11 +787,7 @@
                         {
                             "name": "userGroup",
                             "kind": "Enum",
-                            "enum": [
-                                "All",
-                                "Admin",
-                                "User"
-                            ],
+                            "enum": ["All", "Admin", "User"],
                             "nullable": false
                         }
                     ]
@@ -1080,11 +1058,7 @@
                         {
                             "name": "userGroup",
                             "kind": "Enum",
-                            "enum": [
-                                "All",
-                                "Admin",
-                                "User"
-                            ],
+                            "enum": ["All", "Admin", "User"],
                             "nullable": false
                         }
                     ]
@@ -1137,11 +1111,7 @@
                         {
                             "name": "userGroup",
                             "kind": "Enum",
-                            "enum": [
-                                "All",
-                                "Admin",
-                                "User"
-                            ],
+                            "enum": ["All", "Admin", "User"],
                             "nullable": false
                         }
                     ]
@@ -1226,14 +1196,7 @@
                                                 {
                                                     "name": "focalPoint",
                                                     "kind": "Enum",
-                                                    "enum": [
-                                                        "SMART",
-                                                        "CENTER",
-                                                        "NORTHWEST",
-                                                        "NORTHEAST",
-                                                        "SOUTHWEST",
-                                                        "SOUTHEAST"
-                                                    ],
+                                                    "enum": ["SMART", "CENTER", "NORTHWEST", "NORTHEAST", "SOUTHWEST", "SOUTHEAST"],
                                                     "nullable": false
                                                 },
                                                 {
@@ -1286,14 +1249,7 @@
                         {
                             "name": "focalPoint",
                             "kind": "Enum",
-                            "enum": [
-                                "SMART",
-                                "CENTER",
-                                "NORTHWEST",
-                                "NORTHEAST",
-                                "SOUTHWEST",
-                                "SOUTHEAST"
-                            ],
+                            "enum": ["SMART", "CENTER", "NORTHWEST", "NORTHEAST", "SOUTHWEST", "SOUTHEAST"],
                             "nullable": false
                         },
                         {
@@ -1340,14 +1296,7 @@
                         {
                             "name": "focalPoint",
                             "kind": "Enum",
-                            "enum": [
-                                "SMART",
-                                "CENTER",
-                                "NORTHWEST",
-                                "NORTHEAST",
-                                "SOUTHWEST",
-                                "SOUTHEAST"
-                            ],
+                            "enum": ["SMART", "CENTER", "NORTHWEST", "NORTHEAST", "SOUTHWEST", "SOUTHEAST"],
                             "nullable": false
                         },
                         {
@@ -1500,33 +1449,13 @@
             {
                 "name": "priority",
                 "kind": "Enum",
-                "enum": [
-                    "0_0",
-                    "0_1",
-                    "0_2",
-                    "0_3",
-                    "0_4",
-                    "0_5",
-                    "0_6",
-                    "0_7",
-                    "0_8",
-                    "0_9",
-                    "1_0"
-                ],
+                "enum": ["0_0", "0_1", "0_2", "0_3", "0_4", "0_5", "0_6", "0_7", "0_8", "0_9", "1_0"],
                 "nullable": false
             },
             {
                 "name": "changeFrequency",
                 "kind": "Enum",
-                "enum": [
-                    "always",
-                    "hourly",
-                    "daily",
-                    "weekly",
-                    "monthly",
-                    "yearly",
-                    "never"
-                ],
+                "enum": ["always", "hourly", "daily", "weekly", "monthly", "yearly", "never"],
                 "nullable": false
             },
             {
@@ -1594,33 +1523,13 @@
             {
                 "name": "priority",
                 "kind": "Enum",
-                "enum": [
-                    "0_0",
-                    "0_1",
-                    "0_2",
-                    "0_3",
-                    "0_4",
-                    "0_5",
-                    "0_6",
-                    "0_7",
-                    "0_8",
-                    "0_9",
-                    "1_0"
-                ],
+                "enum": ["0_0", "0_1", "0_2", "0_3", "0_4", "0_5", "0_6", "0_7", "0_8", "0_9", "1_0"],
                 "nullable": false
             },
             {
                 "name": "changeFrequency",
                 "kind": "Enum",
-                "enum": [
-                    "always",
-                    "hourly",
-                    "daily",
-                    "weekly",
-                    "monthly",
-                    "yearly",
-                    "never"
-                ],
+                "enum": ["always", "hourly", "daily", "weekly", "monthly", "yearly", "never"],
                 "nullable": false
             },
             {
@@ -1755,10 +1664,7 @@
             {
                 "name": "imagePosition",
                 "kind": "Enum",
-                "enum": [
-                    "left",
-                    "right"
-                ],
+                "enum": ["left", "right"],
                 "nullable": false
             },
             {
@@ -1783,10 +1689,7 @@
             {
                 "name": "imagePosition",
                 "kind": "Enum",
-                "enum": [
-                    "left",
-                    "right"
-                ],
+                "enum": ["left", "right"],
                 "nullable": false
             },
             {
@@ -1958,10 +1861,7 @@
             {
                 "name": "aspectRatio",
                 "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
+                "enum": ["16X9", "4X3"],
                 "nullable": false
             },
             {
@@ -1989,10 +1889,7 @@
             {
                 "name": "aspectRatio",
                 "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
+                "enum": ["16X9", "4X3"],
                 "nullable": false
             },
             {
