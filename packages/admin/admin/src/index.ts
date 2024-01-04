@@ -94,8 +94,8 @@ export { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 export { IWindowSize, useWindowSize } from "./helpers/useWindowSize";
 export { AsyncOptionsProps, useAsyncOptionsProps } from "./hooks/useAsyncOptionsProps";
 export { useStoredState } from "./hooks/useStoredState";
-export { InputWithPopper, InputWithPopperComponents, InputWithPopperComponentsProps, InputWithPopperProps } from "./inputWithPopper/InputWithPopper";
-export { InputWithPopperClassKey } from "./inputWithPopper/InputWithPopper.styles";
+export { InputWithPopper, InputWithPopperComponents, InputWithPopperProps } from "./inputWithPopper/InputWithPopper";
+export { InputWithPopperClassKey } from "./inputWithPopper/InputWithPopper.slots";
 export { messages } from "./messages";
 export { MainContent, MainContentClassKey, MainContentProps } from "./mui/MainContent";
 export { MasterLayout, MasterLayoutProps } from "./mui/MasterLayout";
@@ -196,3 +196,6 @@ export { RouterTabsClassKey } from "./tabs/RouterTabs.styles";
 export { Tab, Tabs, TabsProps } from "./tabs/Tabs";
 export { TabsClassKey } from "./tabs/Tabs.styles";
 export { TabScrollButton, TabScrollButtonClassKey, TabScrollButtonProps } from "./tabs/TabScrollButton";
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
+import emotionStyled from "@emotion/styled";

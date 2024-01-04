@@ -1,7 +1,7 @@
 import { Field, FieldProps } from "@comet/admin";
 import * as React from "react";
 
-import { FinalFormDateTimePicker } from "../FinalFormDateTimePicker";
+import { FinalFormDateTimePicker } from "./FinalFormDateTimePicker";
 
 export type DateTimeFieldProps = FieldProps<Date, HTMLInputElement>;
 

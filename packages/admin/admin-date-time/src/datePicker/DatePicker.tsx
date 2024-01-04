@@ -1,66 +1,57 @@
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 
-import { ClearInputAdornment, InputWithPopper, InputWithPopperProps } from "@comet/admin";
+import { ClearInputAdornment, InputWithPopperProps } from "@comet/admin";
 import { Calendar as CalendarIcon } from "@comet/admin-icons";
-import { ComponentsOverrides, InputAdornment } from "@mui/material";
-import { Theme } from "@mui/material/styles";
-import { WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides } from "@mui/material";
+import { Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
-import { Calendar, CalendarProps } from "react-date-range";
 import { FormatDateOptions, useIntl } from "react-intl";
 
-import { DatePickerClassKey, styles } from "./DatePicker.styles";
-import { DatePickerNavigation } from "./DatePickerNavigation";
-import { useDateFnsLocale } from "./helpers/DateFnsLocaleProvider";
-import { defaultMaxDate, defaultMinDate } from "./helpers/datePickerHelpers";
+import { DatePickerNavigation } from "../DatePickerNavigation";
+import { useDateFnsLocale } from "../utils/DateFnsLocaleProvider";
+import { defaultMaxDate, defaultMinDate } from "../utils/datePickerHelpers";
+import { Calendar, DatePickerClassKey, Root, SlotProps, StartAdornment } from "./DatePicker.slots";
 
-type DatePickerComponentsProps = InputWithPopperProps["componentsProps"] & {
-    calendar?: Partial<Omit<CalendarProps, "onChange" | "date">>;
-};
-
-export interface DatePickerProps extends Omit<InputWithPopperProps, "children" | "value" | "onChange" | "componentsProps"> {
+export interface DatePickerProps extends Omit<InputWithPopperProps, "children" | "value" | "onChange" | "slotProps"> {
     onChange?: (date?: Date) => void;
     value?: Date;
     formatDateOptions?: FormatDateOptions;
-    componentsProps?: DatePickerComponentsProps;
     clearable?: boolean;
     monthsToShow?: number;
     maxDate?: Date;
     minDate?: Date;
+    slotProps?: SlotProps;
 }
 
-function DatePicker({
-    classes,
-    onChange,
-    value,
-    componentsProps = {},
-    formatDateOptions,
-    endAdornment,
-    clearable,
-    placeholder,
-    monthsToShow,
-    minDate = defaultMinDate,
-    maxDate = defaultMaxDate,
-    ...inputWithPopperProps
-}: DatePickerProps & WithStyles<typeof styles>): React.ReactElement {
-    const { calendar: calendarClass, ...inputWithPopperClasses } = classes;
-    const { calendar: calendarProps, ...inputWithPopperComponentsProps } = componentsProps;
+export const DatePicker = (inProps: DatePickerProps) => {
+    const {
+        onChange,
+        value,
+        formatDateOptions,
+        endAdornment,
+        clearable,
+        placeholder,
+        monthsToShow,
+        minDate = defaultMinDate,
+        maxDate = defaultMaxDate,
+        slotProps,
+        ...inputWithPopperProps
+    } = useThemeProps({ props: inProps, name: "CometAdminDatePicker" });
     const intl = useIntl();
     const dateFnsLocale = useDateFnsLocale();
 
     return (
-        <InputWithPopper
-            classes={inputWithPopperClasses}
+        <Root
             value={value ? intl.formatDate(value, formatDateOptions) : ""}
             startAdornment={
-                <InputAdornment position="start" disablePointerEvents>
+                <StartAdornment position="start" disablePointerEvents {...slotProps?.startAdornment}>
                     <CalendarIcon />
-                </InputAdornment>
+                </StartAdornment>
             }
             placeholder={placeholder ?? intl.formatMessage({ id: "comet.datePicker.selectDate", defaultMessage: "Select date" })}
             {...inputWithPopperProps}
-            componentsProps={inputWithPopperComponentsProps}
+            {...slotProps?.root}
             readOnly
             endAdornment={
                 clearable ? (
@@ -75,7 +66,6 @@ function DatePicker({
         >
             {(closePopper) => (
                 <Calendar
-                    className={calendarClass}
                     locale={dateFnsLocale}
                     minDate={minDate}
                     maxDate={maxDate}
@@ -91,16 +81,12 @@ function DatePicker({
                         closePopper(true);
                         onChange && onChange(date);
                     }}
-                    {...calendarProps}
+                    {...slotProps?.calendar}
                 />
             )}
-        </InputWithPopper>
+        </Root>
     );
-}
-
-const DatePickerWithStyles = withStyles(styles, { name: "CometAdminDatePicker" })(DatePicker);
-
-export { DatePickerWithStyles as DatePicker };
+};
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
