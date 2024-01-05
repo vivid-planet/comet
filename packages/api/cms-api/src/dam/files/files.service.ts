@@ -465,6 +465,7 @@ export class FilesService {
             folderId: targetFolder?.id,
             copyOf: file,
             scope: targetScope,
+            name: await this.findNextAvailableFilename({ filePath: fileProps.name, folderId: targetFolder?.id, scope: targetScope }),
         };
 
         return this.create(fileInput);
