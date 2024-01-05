@@ -33,7 +33,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
     const intl = useIntl();
     const client = useApolloClient();
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
-    const { doCopy, getFromClipboard } = useCopyPasteDamItems();
+    const { createCopies, getFromClipboard } = useCopyPasteDamItems();
 
     const folderInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -85,7 +85,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
     const handlePasteClick = async () => {
         const clipboard = await getFromClipboard();
         if (clipboard.canPaste) {
-            await doCopy({ clipboard: clipboard.content, targetFolderId: folderId });
+            await createCopies({ clipboard: clipboard.content, targetFolderId: folderId });
         }
         handleClose();
     };
@@ -164,7 +164,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
                             <FormattedMessage id="comet.pages.dam.addFolder" defaultMessage="Add Folder" />
                         </MenuItem>
 
-                        <MenuItem disabled={itemsSelected} onClick={handlePasteClick}>
+                        <MenuItem onClick={handlePasteClick}>
                             <ListItemIcon>
                                 <Paste />
                             </ListItemIcon>
@@ -197,6 +197,13 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
                             <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.moveItems" defaultMessage="Move" />} />
                             {itemsSelected && <NumberSelectedChip>{selectionSize}</NumberSelectedChip>}
                         </MenuItem>
+                        <MenuItem disabled={!itemsSelected} onClick={handleCopyClick}>
+                            <ListItemIcon>
+                                <Copy />
+                            </ListItemIcon>
+                            <ListItemText primary={<FormattedMessage {...messages.copy} />} />
+                            {itemsSelected && <NumberSelectedChip>{selectionSize}</NumberSelectedChip>}
+                        </MenuItem>
                         <MenuItem disabled={!itemsSelected} onClick={handleArchiveClick}>
                             <ListItemIcon>
                                 <Archive />
@@ -216,13 +223,6 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
                                 <Delete />
                             </ListItemIcon>
                             <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.deleteItems" defaultMessage="Delete" />} />
-                            {itemsSelected && <NumberSelectedChip>{selectionSize}</NumberSelectedChip>}
-                        </MenuItem>
-                        <MenuItem disabled={!itemsSelected} onClick={handleCopyClick}>
-                            <ListItemIcon>
-                                <Copy />
-                            </ListItemIcon>
-                            <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.copyItems" defaultMessage="Copy" />} />
                             {itemsSelected && <NumberSelectedChip>{selectionSize}</NumberSelectedChip>}
                         </MenuItem>
                     </MenuList>

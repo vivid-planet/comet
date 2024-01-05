@@ -300,7 +300,7 @@ export const DamSelectionProvider: React.FunctionComponent = ({ children }) => {
         });
 
         try {
-            await writeToClipboard(await prepareForClipboard(selectedItems));
+            await writeToClipboard(prepareForClipboard(selectedItems));
         } catch (e) {
             showError(setHasCopyErrors);
         }

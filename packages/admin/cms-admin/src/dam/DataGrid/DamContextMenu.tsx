@@ -1,6 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { RowActionsItem, RowActionsMenu, useEditDialogApi, useErrorDialog, useStackSwitchApi } from "@comet/admin";
-import { Archive, Delete, Download, Edit, Move, Restore } from "@comet/admin-icons";
+import { messages, RowActionsItem, RowActionsMenu, useEditDialogApi, useErrorDialog, useStackSwitchApi } from "@comet/admin";
+import { Archive, Copy, Delete, Download, Edit, Move, Paste, Restore } from "@comet/admin-icons";
 import { Divider } from "@mui/material";
 import { saveAs } from "file-saver";
 import * as React from "react";
@@ -10,6 +10,7 @@ import { UnknownError } from "../../common/errors/errorMessages";
 import { GQLDamFile, GQLDamFolder } from "../../graphql.generated";
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
+import { useCopyPasteDamItems } from "./copyPaste/useCopyPasteDamItems";
 import { GQLDeleteDamFolderMutation, GQLDeleteDamFolderMutationVariables } from "./DamContextMenu.generated";
 import { archiveDamFileMutation, deleteDamFileMutation, restoreDamFileMutation } from "./DamContextMenu.gql";
 import {
@@ -30,6 +31,7 @@ const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps): Reac
     const editDialogApi = useEditDialogApi();
     const errorDialog = useErrorDialog();
     const apolloClient = useApolloClient();
+    const { createCopies, getFromClipboard } = useCopyPasteDamItems();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
 
@@ -77,6 +79,17 @@ const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps): Reac
                         <FormattedMessage id="comet.pages.dam.move" defaultMessage="Move" />
                     </RowActionsItem>
                     <RowActionsItem
+                        icon={<Paste />}
+                        onClick={async () => {
+                            const clipboard = await getFromClipboard();
+                            if (clipboard.canPaste) {
+                                await createCopies({ clipboard: clipboard.content, targetFolderId: folder.id });
+                            }
+                        }}
+                    >
+                        <FormattedMessage {...messages.paste} />
+                    </RowActionsItem>
+                    <RowActionsItem
                         icon={<Delete />}
                         onClick={() => {
                             setDeleteDialogOpen(true);
@@ -109,6 +122,7 @@ interface FileInnerMenuProps {
 const FileInnerMenu = ({ file, openMoveDialog }: FileInnerMenuProps): React.ReactElement => {
     const client = useApolloClient();
     const stackApi = useStackSwitchApi();
+    const { prepareForClipboard, writeToClipboard } = useCopyPasteDamItems();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
 
@@ -131,6 +145,14 @@ const FileInnerMenu = ({ file, openMoveDialog }: FileInnerMenuProps): React.Reac
                         }}
                     >
                         <FormattedMessage id="comet.pages.dam.moveFile" defaultMessage="Move file" />
+                    </RowActionsItem>
+                    <RowActionsItem
+                        icon={<Copy />}
+                        onClick={async () => {
+                            await writeToClipboard(prepareForClipboard([{ type: "file", id: file.id }]));
+                        }}
+                    >
+                        <FormattedMessage {...messages.copy} />
                     </RowActionsItem>
                     <RowActionsItem
                         icon={<Download />}

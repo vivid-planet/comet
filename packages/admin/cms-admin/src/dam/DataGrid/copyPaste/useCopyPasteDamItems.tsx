@@ -13,7 +13,6 @@ interface DamItem {
 
 interface DamItemsClipboard {
     damItems: DamItem[];
-    scope: Record<string, unknown>;
 }
 
 type GetFromClipboardResponse = { canPaste: true; content: DamItemsClipboard } | { canPaste: false; error: React.ReactNode };
@@ -41,14 +40,11 @@ export const useCopyPasteDamItems = () => {
     const currScope = useDamScope();
     const apolloClient = useApolloClient();
 
-    const prepareForClipboard = React.useCallback(
-        async (damItems: Array<{ id: string; type: "file" | "folder" }>): Promise<DamItemsClipboard> => {
-            return { scope: currScope, damItems };
-        },
-        [currScope],
-    );
+    const prepareForClipboard = React.useCallback((damItems: Array<{ id: string; type: "file" | "folder" }>): DamItemsClipboard => {
+        return { damItems };
+    }, []);
 
-    const writeToClipboard = React.useCallback(async (items: DamItemsClipboard) => {
+    const writeToClipboard = React.useCallback((items: DamItemsClipboard) => {
         return writeClipboardText(JSON.stringify(items));
     }, []);
 
@@ -89,14 +85,8 @@ export const useCopyPasteDamItems = () => {
         }
     }, []);
 
-    const doCopy = React.useCallback(
-        async ({
-            clipboard: { scope: rootScope, damItems },
-            targetFolderId,
-        }: {
-            clipboard: DamItemsClipboard;
-            targetFolderId: string | undefined;
-        }) => {
+    const createCopies = React.useCallback(
+        async ({ clipboard: { damItems }, targetFolderId }: { clipboard: DamItemsClipboard; targetFolderId: string | undefined }) => {
             const fileIds = damItems.filter(({ type }) => type === "file").map((file) => file.id);
 
             await apolloClient.mutate<GQLCopyPasteFilesMutation, GQLCopyPasteFilesMutationVariables>({
@@ -110,5 +100,5 @@ export const useCopyPasteDamItems = () => {
         [apolloClient, currScope],
     );
 
-    return { prepareForClipboard, writeToClipboard, getFromClipboard, doCopy };
+    return { prepareForClipboard, writeToClipboard, getFromClipboard, createCopies };
 };
