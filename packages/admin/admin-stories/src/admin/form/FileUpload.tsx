@@ -3,7 +3,6 @@ import { Card, CardContent, Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
-import { FormattedMessage } from "react-intl";
 
 function Story() {
     return (
@@ -27,10 +26,11 @@ function Story() {
                                     <CardContent>
                                         <Field
                                             name="uploadMultipleDisabled"
-                                            label="File upload (dropzone only, multiple disabled)"
+                                            label="File upload (dropzone only, multiple, max file size 5 MB)"
                                             dropzoneVariant="dropzoneOnly"
                                             component={FinalFormFileUpload}
-                                            multipleFiles={false}
+                                            maxSize={5}
+                                            multiple
                                         />
                                     </CardContent>
                                 </Card>
@@ -42,15 +42,8 @@ function Story() {
                                             name="uploadImages"
                                             label="File upload (button only, accept only images)"
                                             accept={{ "image/*": [] }}
-                                            maxSize={10}
                                             dropzoneVariant="buttonOnly"
                                             component={FinalFormFileUpload}
-                                            caption={
-                                                <FormattedMessage
-                                                    id="comet.finalformfileupload.maximumfilesize"
-                                                    defaultMessage="Maximum file size 10 MB"
-                                                />
-                                            }
                                         />
                                     </CardContent>
                                 </Card>

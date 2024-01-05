@@ -1,5 +1,5 @@
 import { Delete, Select } from "@comet/admin-icons";
-import { Button, Chip, ComponentsOverrides, FormHelperText, IconButton, Theme } from "@mui/material";
+import { Button, Chip, ComponentsOverrides, IconButton, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
@@ -72,8 +72,6 @@ const styles = ({ palette }: Theme) => {
 
 export interface FinalFormFileUploadProps extends FieldRenderProps<File[], HTMLInputElement> {
     dropzoneVariant: "dropzoneOnly" | "buttonOnly" | "default";
-    caption: React.ReactNode;
-    multipleFiles: boolean;
     accept: Accept;
     maxSize: number;
 }
@@ -82,11 +80,9 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
     classes,
     disabled,
     dropzoneVariant,
-    caption,
-    multipleFiles = true,
     accept,
     maxSize = 50,
-    input: { name, onChange, value: fieldValue },
+    input: { onChange, value: fieldValue, multiple: multipleFiles },
 }) => {
     const onDrop = React.useCallback(
         (acceptedFiles: File[]) => {
@@ -103,7 +99,7 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
 
     const maxFileSizeInBytes = maxSize * 1024 * 1024;
 
-    const { acceptedFiles, getRootProps, getInputProps, isDragReject } = useDropzone({
+    const { getRootProps, getInputProps, isDragReject } = useDropzone({
         onDrop,
         accept,
         disabled,
@@ -143,8 +139,7 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
                     </Button>
                 )}
             </div>
-            {acceptedFiles.length > 0 && <div className={classes.fileList}>{files}</div>}
-            {caption && <FormHelperText>{caption}</FormHelperText>}
+            {fieldValue.length > 0 && <div className={classes.fileList}>{files}</div>}
         </div>
     );
 };
