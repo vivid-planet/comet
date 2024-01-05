@@ -461,6 +461,9 @@ export class FilesService {
         return this.create(fileInput);
     }
 
+    /**
+     *  @deprecated Loop over FilesService.createCopyOfFile() instead
+     */
     async copyFilesToScope({ user, fileIds, inboxFolderId }: { user: CurrentUserInterface; fileIds: string[]; inboxFolderId: string }) {
         const inboxFolder = await this.foldersService.findOneById(inboxFolderId);
         if (!inboxFolder) {
