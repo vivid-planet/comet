@@ -1,5 +1,5 @@
 ---
-"@comet/cms-api": patch
+"@comet/cms-api": minor
 ---
 
 Deprecate
