@@ -13,6 +13,7 @@ export type FinalFormFileUploadClassKey =
     | "root"
     | "droppableArea"
     | "droppableAreaCaption"
+    | "droppableAreaError"
     | "fileList"
     | "fileListItem"
     | "rejectedFileListItem"
@@ -31,6 +32,7 @@ const styles = ({ palette }: Theme) => {
             minWidth: "350px",
         },
         droppableArea: {
+            position: "relative",
             display: "flex",
             height: "80px",
             padding: "10px",
@@ -54,6 +56,14 @@ const styles = ({ palette }: Theme) => {
             fontStyle: "normal",
             fontWeight: "300",
             lineHeight: "20px",
+        },
+        droppableAreaError: {
+            float: "right",
+            position: "absolute",
+            top: 0,
+            right: 0,
+            padding: "10px",
+            color: palette.error.main,
         },
         fileList: {
             display: "flex",
@@ -94,7 +104,6 @@ const styles = ({ palette }: Theme) => {
             alignSelf: "stretch",
             color: palette.error.main,
             gap: "5px",
-            paddingTop: "10px",
         },
         disabled: {},
         error: {},
@@ -153,22 +162,16 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
             </div>
         ));
 
-    const rejectedFiles = fileRejections.length > 0 && (
-        <>
-            {fileRejections.map((rejectedFile) => (
-                <div key={rejectedFile.file.name} className={classes.rejectedFileListItem}>
-                    {rejectedFile.file.name.length < 20 ? rejectedFile.file.name : `${rejectedFile.file.name.substring(0, 20)}...`}
-                    <IconButton color="error">
-                        <Info />
-                    </IconButton>
-                </div>
-            ))}
-            <div className={classes.errorMessage}>
-                <Info color="error" />
-                <FormattedMessage id="comet.finalformfileupload.errors.unknownError" defaultMessage="Something went wrong." />
+    const rejectedFiles =
+        fileRejections.length > 0 &&
+        fileRejections.map((rejectedFile) => (
+            <div key={rejectedFile.file.name} className={classes.rejectedFileListItem}>
+                {rejectedFile.file.name.length < 20 ? rejectedFile.file.name : `${rejectedFile.file.name.substring(0, 20)}...`}
+                <IconButton color="error">
+                    <Info />
+                </IconButton>
             </div>
-        </>
-    );
+        ));
 
     return (
         <div className={classes.root}>
@@ -176,6 +179,11 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
                 <input {...getInputProps()} />
                 {dropzoneVariant !== "buttonOnly" && (
                     <div className={clsx(classes.droppableArea, disabled && classes.disabled, isDragReject && classes.error)}>
+                        {isDragReject && (
+                            <div className={classes.droppableAreaError}>
+                                <Info />
+                            </div>
+                        )}
                         <div className={classes.droppableAreaCaption}>
                             <FormattedMessage id="comet.finalformfileupload.dropfiles" defaultMessage="Drop files here to upload" />
                         </div>
@@ -189,6 +197,12 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
             </div>
             {fieldValue.length > 0 && <div className={classes.fileList}>{files}</div>}
             {fileRejections.length > 0 && <div className={classes.fileList}>{rejectedFiles}</div>}
+            {(fileRejections.length > 0 || isDragReject) && (
+                <div className={classes.errorMessage}>
+                    <Info color="error" />
+                    <FormattedMessage id="comet.finalformfileupload.errors.unknownError" defaultMessage="Something went wrong." />
+                </div>
+            )}
         </div>
     );
 };
