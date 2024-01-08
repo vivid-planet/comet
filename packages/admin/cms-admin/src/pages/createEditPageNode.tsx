@@ -138,9 +138,7 @@ export function createEditPageNode({
 
         React.useEffect(() => {
             apollo.cache.evict({ fieldName: "pageTreeNodeSlugAvailable" });
-            // should only be executed on initial render
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, []);
+        }, [apollo.cache]);
 
         const isPathAvailable = React.useCallback(
             async (newSlug: string): Promise<GQLSlugAvailability> => {
@@ -201,6 +199,9 @@ export function createEditPageNode({
             <div>
                 <FinalForm<FormValues>
                     mode={mode}
+                    onAfterSubmit={() => {
+                        // noop
+                    }}
                     mutators={{
                         setFieldTouched: setFieldTouched as Mutator<FormValues>,
                     }}
@@ -252,9 +253,6 @@ export function createEditPageNode({
                                 refetchQueries: [namedOperations.Query.Pages],
                             });
                         }
-                    }}
-                    onAfterSubmit={() => {
-                        // noop
                     }}
                     initialValues={data?.page ?? { documentType: Object.keys(documentTypes)[0] }}
                     render={({ form }) => {

@@ -95,13 +95,19 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         return formRenderProps.form.getState().dirty;
                     },
                     submit: async (): Promise<SubmitResult> => {
-                        if (formRenderProps.hasValidationErrors) {
+                        editDialogFormApi?.onFormStatusChange("saving");
+                        const hasValidationErrors = await waitForValidationToFinish(formRenderProps.form);
+
+                        if (hasValidationErrors) {
+                            editDialogFormApi?.onFormStatusChange("error");
                             return {
                                 error: new SubmitError("Form has Validation Errors", formRenderProps.errors),
                             };
                         }
-                        const submissionErrors = await handleSubmit(formRenderProps.values, formRenderProps.form);
+
+                        const submissionErrors = await formRenderProps.form.submit();
                         if (submissionErrors) {
+                            editDialogFormApi?.onFormStatusChange("error");
                             return {
                                 error: new SubmitError("Form has Submission Errors", submissionErrors),
                             };
@@ -177,13 +183,11 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     }
 
     async function handleSubmit(values: FormValues, form: FormApi<FormValues>) {
-        editDialogFormApi?.onFormStatusChange("saving");
-
-        await waitForFormValidationToBeFinished(form);
-
         const ret = props.onSubmit(values, form);
 
         if (ret === undefined) return ret;
+
+        editDialogFormApi?.onFormStatusChange("saving");
 
         return Promise.resolve(ret)
             .then((data) => {
@@ -208,6 +212,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                 (data) => {
                     // for final-form undefined means success, an obj means error
                     editDialogFormApi?.resetFormStatus();
+
                     form.reset(values);
                     return undefined;
                 },
@@ -226,22 +231,21 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     }
 }
 
-const waitForFormValidationToBeFinished = (form: FormApi<any>): Promise<boolean> => {
-    return new Promise((resolve) => {
-        const interval = setInterval(() => {
-            const validating = form.getState().validating;
-            if (!validating) {
-                clearTimeout(timer);
-                clearInterval(interval);
-                resolve(true);
-            }
-        }, 100);
+const waitForValidationToFinish = (form: FormApi<any>): Promise<boolean> | boolean => {
+    const formState = form.getState();
+    if (!formState.validating) {
+        return formState.hasValidationErrors;
+    }
 
-        // Abort checking if validation is finished after 5 seconds
-        // The form is still submitted
-        const timer = setTimeout(() => {
-            clearInterval(interval);
-            resolve(false);
-        }, 5000);
+    return new Promise((resolve) => {
+        const unsubscribe = form.subscribe(
+            (state) => {
+                if (!state.validating) {
+                    unsubscribe();
+                    resolve(state.hasValidationErrors);
+                }
+            },
+            { validating: true, hasValidationErrors: true },
+        );
     });
 };
