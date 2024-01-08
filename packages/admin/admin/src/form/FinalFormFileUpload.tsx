@@ -1,4 +1,4 @@
-import { Delete, Select } from "@comet/admin-icons";
+import { Delete, Info, Select } from "@comet/admin-icons";
 import { Button, Chip, ComponentsOverrides, IconButton, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
@@ -9,7 +9,16 @@ import { FormattedMessage } from "react-intl";
 
 import { PrettyBytes } from "../helpers/PrettyBytes";
 
-export type FinalFormFileUploadClassKey = "root" | "droppableArea" | "droppableAreaCaption" | "fileList" | "fileListItem" | "disabled" | "error";
+export type FinalFormFileUploadClassKey =
+    | "root"
+    | "droppableArea"
+    | "droppableAreaCaption"
+    | "fileList"
+    | "fileListItem"
+    | "rejectedFileListItem"
+    | "errorMessage"
+    | "disabled"
+    | "error";
 
 const styles = ({ palette }: Theme) => {
     return createStyles<FinalFormFileUploadClassKey, FinalFormFileUploadProps>({
@@ -65,6 +74,28 @@ const styles = ({ palette }: Theme) => {
             justifyContent: "space-between",
             minWidth: "250px",
         },
+        rejectedFileListItem: {
+            display: "flex",
+            height: "35px",
+            padding: "8px 7px 8px 15px",
+            alignItems: "center",
+            gap: "10px",
+            alignSelf: "stretch",
+            borderRadius: "4px",
+            background: palette.background.default,
+            justifyContent: "space-between",
+            minWidth: "250px",
+            border: `1px dashed ${palette.error.main}`,
+            color: palette.error.main,
+        },
+        errorMessage: {
+            display: "flex",
+            alignItems: "center",
+            alignSelf: "stretch",
+            color: palette.error.main,
+            gap: "5px",
+            paddingTop: "10px",
+        },
         disabled: {},
         error: {},
     });
@@ -99,7 +130,7 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
 
     const maxFileSizeInBytes = maxSize * 1024 * 1024;
 
-    const { getRootProps, getInputProps, isDragReject } = useDropzone({
+    const { fileRejections, getRootProps, getInputProps, isDragReject } = useDropzone({
         onDrop,
         accept,
         disabled,
@@ -122,6 +153,23 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
             </div>
         ));
 
+    const rejectedFiles = fileRejections.length > 0 && (
+        <>
+            {fileRejections.map((rejectedFile) => (
+                <div key={rejectedFile.file.name} className={classes.rejectedFileListItem}>
+                    {rejectedFile.file.name.length < 20 ? rejectedFile.file.name : `${rejectedFile.file.name.substring(0, 20)}...`}
+                    <IconButton color="error">
+                        <Info />
+                    </IconButton>
+                </div>
+            ))}
+            <div className={classes.errorMessage}>
+                <Info color="error" />
+                <FormattedMessage id="comet.finalformfileupload.errors.unknownError" defaultMessage="Something went wrong." />
+            </div>
+        </>
+    );
+
     return (
         <div className={classes.root}>
             <div {...getRootProps()} className={classes.root}>
@@ -140,6 +188,7 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
                 )}
             </div>
             {fieldValue.length > 0 && <div className={classes.fileList}>{files}</div>}
+            {fileRejections.length > 0 && <div className={classes.fileList}>{rejectedFiles}</div>}
         </div>
     );
 };
