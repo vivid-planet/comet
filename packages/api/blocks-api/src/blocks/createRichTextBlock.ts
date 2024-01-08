@@ -13,17 +13,16 @@ import {
     BlockInputFactory,
     BlockInputInterface,
     ExtractBlockInput,
-    MigrateOptions,
     registerBlock,
 } from "./block";
 import { AnnotationBlockMeta, BlockField } from "./decorators/field";
+import { NameOrOptions } from "./factories/types";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
 
 interface CreateRichTextBlockOptions {
     link: Block;
     indexSearchText?: boolean;
-    migrateOptions?: MigrateOptions;
 }
 
 // Replaces draft-js' RawDraftContentBlock
@@ -68,13 +67,12 @@ export interface RichTextBlockInputInterface<LinkBlockInput extends BlockInputIn
     draftContent: DraftJsInput<LinkBlockInput>;
 }
 
-export function createRichTextBlock<LinkBlock extends Block>({
-    link: LinkBlock,
-    indexSearchText = true,
-    migrateOptions = { migrations: [], version: 0 },
-}: CreateRichTextBlockOptions): Block<RichTextBlockDataInterface, RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>>> {
-    const BLOCK_NAME = "RichText";
-    const MIGRATE = migrateOptions;
+export function createRichTextBlock<LinkBlock extends Block>(
+    { link: LinkBlock, indexSearchText = true }: CreateRichTextBlockOptions,
+    nameOrOptions: NameOrOptions = "RichText",
+): Block<RichTextBlockDataInterface, RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>>> {
+    const BLOCK_NAME = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
+    const MIGRATE = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
     @BlockDataMigrationVersion(MIGRATE.version)
     class RichTextBlockData extends BlockData {
