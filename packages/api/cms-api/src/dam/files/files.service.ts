@@ -422,16 +422,25 @@ export class FilesService {
         file: FileInterface,
         {
             inboxFolder,
-            scope: inputScope,
+            targetFolder: inputTargetFolder,
+            targetScope: inputTargetScope,
         }: {
-            inboxFolder: FolderInterface | null;
-            scope?: DamScopeInterface;
+            /**
+             * @deprecated Use targetFolder instead
+             */
+            inboxFolder?: FolderInterface;
+            targetFolder?: FolderInterface | null;
+            targetScope?: DamScopeInterface;
         },
     ) {
-        if (inputScope && inboxFolder?.scope && !this.contentScopeService.scopesAreEqual(inputScope, inboxFolder.scope)) {
-            throw new Error("Passed scope and scope of inbox folder don't match");
+        const targetFolder = inputTargetFolder !== undefined ? inputTargetFolder : inboxFolder;
+        if (targetFolder === undefined) {
+            throw new Error("targetFolder cannot be undefined");
         }
-        const scope = inputScope ?? inboxFolder?.scope;
+        if (inputTargetScope && targetFolder?.scope && !this.contentScopeService.scopesAreEqual(inputTargetScope, targetFolder.scope)) {
+            throw new Error("Passed scope and scope of target folder don't match");
+        }
+        const targetScope = inputTargetScope ?? targetFolder?.scope;
 
         let fileImageInput: ImageFileInput | undefined;
         if (file.image) {
@@ -453,9 +462,9 @@ export class FilesService {
         const fileInput: CreateFileInput & { copyOf: FileInterface } = {
             ...Utils.copy(fileProps),
             image: fileImageInput,
-            folderId: inboxFolder?.id,
+            folderId: targetFolder?.id,
             copyOf: file,
-            scope: scope,
+            scope: targetScope,
         };
 
         return this.create(fileInput);

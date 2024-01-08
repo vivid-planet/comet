@@ -221,8 +221,8 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             const mappedFiles: Array<{ rootFile: FileInterface; copy: FileInterface }> = [];
             for (const file of files) {
                 const copiedFile = await this.filesService.createCopyOfFile(file, {
-                    inboxFolder: targetFolder,
-                    scope: scope,
+                    targetFolder,
+                    targetScope: scope,
                 });
                 mappedFiles.push({ rootFile: file, copy: copiedFile });
             }
