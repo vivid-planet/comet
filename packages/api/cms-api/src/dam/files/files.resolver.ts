@@ -168,14 +168,14 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
                 type: () => ID,
                 nullable: true,
             })
-            targetFolderId: string | undefined,
+            targetFolderId?: string | null,
             @Args("targetScope", {
                 type: () => Scope,
                 nullable: true,
                 defaultValue: hasNonEmptyScope ? undefined : {},
                 description: "Doesn't need to be set if targetFolderId is set",
             })
-            targetScope?: typeof Scope,
+            targetScope?: typeof Scope | null,
         ): Promise<CopyFilesResponseInterface> {
             const targetFolder = targetFolderId ? await this.foldersService.findOneById(targetFolderId) : null;
             if (targetFolderId && !targetFolder) {
