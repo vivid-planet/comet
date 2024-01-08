@@ -1,5 +1,5 @@
 ---
-"@comet/cms-api": major
+"@comet/cms-api": minor
 ---
 
 Remove license types `MICRO` and `SUBSCRIPTION`
