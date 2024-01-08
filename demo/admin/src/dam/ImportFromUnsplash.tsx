@@ -28,9 +28,9 @@ export const ImportFromUnsplash: React.FC = () => {
         setIsOpen(false);
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (unsplashImage === undefined) return;
-        uploadFiles(
+        await uploadFiles(
             { acceptedFiles: [unsplashImage.file], fileRejections: [] },
             {
                 folderId,
