@@ -1,5 +1,65 @@
 # @comet/cms-admin
 
+## 5.4.0
+
+### Minor Changes
+
+-   e146d8bb: Support the import of files from external DAMs
+
+    To connect an external DAM, implement a component with the necessary logic (asset picker, upload functionality, ...). Pass this component to the `DamPage` via the `additionalToolbarItems` prop.
+
+    ```tsx
+    <DamPage
+        // ...
+        additionalToolbarItems={<ImportFromExternalDam />}
+    />
+    ```
+
+    You can find an [example](demo/admin/src/dam/ImportFromUnsplash.tsx) in the demo project.
+
+-   51d6c2b9: Move soft-hyphen functionality to `@comet/admin-rte`
+
+    This allows using the soft-hyphen functionality in plain RTEs, and not only in `RichTextBlock`
+
+    ```tsx
+    const [useRteApi] = makeRteApi();
+
+    export default function MyRte() {
+        const { editorState, setEditorState } = useRteApi();
+        return (
+            <Rte
+                value={editorState}
+                onChange={setEditorState}
+                options={{
+                    supports: [
+                        // Soft Hyphen
+                        "soft-hyphen",
+                        // Other options you may wish to support
+                        "bold",
+                        "italic",
+                    ],
+                }}
+            />
+        );
+    }
+    ```
+
+-   dcaf750d: Make all DAM license fields optional if `LicenseType` is `ROYALTY_FREE` even if `requireLicense` is true in `DamConfig`
+
+### Patch Changes
+
+-   087cb01d: Enable copying documents from one `PageTree` category to another (e.g. from "Main navigation" to "Top menu" in Demo)
+-   Updated dependencies [ba800163]
+-   Updated dependencies [981bf48c]
+-   Updated dependencies [60a18392]
+-   Updated dependencies [51d6c2b9]
+    -   @comet/admin@5.4.0
+    -   @comet/admin-rte@5.4.0
+    -   @comet/admin-date-time@5.4.0
+    -   @comet/admin-icons@5.4.0
+    -   @comet/admin-theme@5.4.0
+    -   @comet/blocks-admin@5.4.0
+
 ## 5.3.0
 
 ### Patch Changes
