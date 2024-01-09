@@ -39,7 +39,7 @@ async function bootstrap(): Promise<void> {
         }),
     );
 
-    app.use(json({ limit: "1mb" }));
+    app.use(json({ limit: "1mb" })); // increase default limit of 100kb for saving large pages
     app.use(compression());
     app.use(cookieParser());
 
