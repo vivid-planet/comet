@@ -39,6 +39,8 @@ export interface FileInterface extends BaseEntity<FileInterface, "id"> {
     createdAt: Date;
     updatedAt: Date;
     scope?: DamScopeInterface;
+    importSourceId?: string;
+    importSourceType?: string;
 }
 
 export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInterface>; Folder: Type<FolderInterface> }): Type<FileInterface> {
@@ -134,6 +136,14 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         })
         @Field()
         updatedAt: Date = new Date();
+
+        @Field({ nullable: true })
+        @Property({ columnType: "text", nullable: true })
+        importSourceId?: string;
+
+        @Field({ nullable: true })
+        @Property({ columnType: "text", nullable: true })
+        importSourceType?: string;
 
         // fileUrl: Field is resolved in resolver
     }
