@@ -5,10 +5,7 @@ import useDebounce from "../useDebounce";
 import usePrevious from "../usePrevious";
 import LinkDecorator from "./extension/Link/Decorator";
 import NonBreakingSpaceDecorator from "./extension/NonBreakingSpace/Decorator";
-<<<<<<< HEAD
-=======
 import SoftHyphenDecorator from "./extension/SoftHyphen/Decorator";
->>>>>>> main
 
 export interface IMakeRteApiProps<T = any> {
     decorators?: DraftDecorator[];

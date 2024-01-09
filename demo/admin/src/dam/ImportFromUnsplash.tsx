@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { getRandomUnsplashImage, UnsplashImage } from "../dam/getRandomUnsplashImage";
+import { getRandomUnsplashImage, UnsplashImage } from "./getRandomUnsplashImage";
 import UnsplashIcon from "./UnsplashIcon";
 
 export const ImportFromUnsplash: React.FC = () => {
