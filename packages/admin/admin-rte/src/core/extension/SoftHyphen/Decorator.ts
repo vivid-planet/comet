@@ -4,7 +4,7 @@ import { EditorComponent } from "./EditorComponent";
 
 const SHY_UNICHAR_REGEX = /\u00ad/g;
 
-export const Decorator: DraftDecorator = {
+const Decorator: DraftDecorator = {
     strategy: (contentBlock, callback) => {
         findWithRegex(SHY_UNICHAR_REGEX, contentBlock, callback);
     },
@@ -19,3 +19,5 @@ function findWithRegex(regex: RegExp, contentBlock: Draft.ContentBlock, callback
         callback(start, start + matchArr[0].length);
     }
 }
+
+export default Decorator;

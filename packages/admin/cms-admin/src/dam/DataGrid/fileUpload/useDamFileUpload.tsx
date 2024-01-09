@@ -9,6 +9,7 @@ import { NetworkError, UnknownError } from "../../../common/errors/errorMessages
 import { upload } from "../../../form/file/upload";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../../config/useDamScope";
+import { clearDamItemCache } from "../../helpers/clearDamItemCache";
 import { FilenameData, useManualDuplicatedFilenamesHandler } from "../duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { NewlyUploadedItem, useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
@@ -21,13 +22,13 @@ import {
     UnsupportedTypeError,
 } from "./fileUploadErrorMessages";
 import { ProgressDialog } from "./ProgressDialog";
-import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./useFileUpload.gql";
+import { createDamFolderForFolderUpload, damFolderByNameAndParentId } from "./useDamFileUpload.gql";
 import {
     GQLDamFolderByNameAndParentIdQuery,
     GQLDamFolderByNameAndParentIdQueryVariables,
     GQLDamFolderForFolderUploadMutation,
     GQLDamFolderForFolderUploadMutationVariables,
-} from "./useFileUpload.gql.generated";
+} from "./useDamFileUpload.gql.generated";
 
 interface FileWithPath extends File {
     path?: string;
@@ -37,9 +38,8 @@ interface FileWithFolderPath extends FileWithPath {
     folderPath?: string;
 }
 
-interface UploadFileOptions {
+interface UploadDamFileOptions {
     acceptedMimetypes?: string[];
-    onAfterUpload?: (errorOccurred: boolean) => void;
 }
 
 interface Files {
@@ -47,8 +47,15 @@ interface Files {
     fileRejections: FileRejection[];
 }
 
+type ImportSource = { importSourceType: never; importSourceId: never } | { importSourceType: string; importSourceId: string };
+
+interface UploadFilesOptions {
+    folderId?: string;
+    importSource?: ImportSource;
+}
+
 export interface FileUploadApi {
-    uploadFiles: ({ acceptedFiles, fileRejections }: Files, folderId?: string) => void;
+    uploadFiles: ({ acceptedFiles, fileRejections }: Files, { folderId, importSource }: UploadFilesOptions) => Promise<void>;
     validationErrors?: FileUploadValidationError[];
     maxFileSizeInBytes: number;
     dialogs: React.ReactNode;
@@ -98,7 +105,7 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithPath[]): Promise<File
     return newFiles;
 };
 
-export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
+export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi => {
     const context = useCmsBlockContext(); // TODO create separate CmsContext?
     const client = useApolloClient();
     const manualDuplicatedFilenamesHandler = useManualDuplicatedFilenamesHandler();
@@ -351,7 +358,7 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         [manualDuplicatedFilenamesHandler],
     );
 
-    const uploadFiles = async ({ acceptedFiles, fileRejections }: Files, folderId?: string) => {
+    const uploadFiles = async ({ acceptedFiles, fileRejections }: Files, { folderId, importSource }: UploadFilesOptions): Promise<void> => {
         setProgressDialogOpen(true);
         setValidationErrors(undefined);
 
@@ -397,6 +404,8 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                             file,
                             folderId: targetFolderId,
                             scope,
+                            importSourceId: importSource?.importSourceId,
+                            importSourceType: importSource?.importSourceType,
                         },
                         cancelUpload.current.token,
                         {
@@ -435,6 +444,9 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
                     }
                 }
             }
+
+            await client.reFetchObservableQueries();
+            clearDamItemCache(client.cache);
         }
 
         setProgressDialogOpen(false);
@@ -443,7 +455,6 @@ export const useFileUpload = (options: UploadFileOptions): FileUploadApi => {
         }
         setTotalSizes({});
         setUploadedSizes({});
-        options.onAfterUpload?.(errorOccurred);
 
         addNewlyUploadedItems([...uploadedFolders, ...uploadedFiles]);
     };
