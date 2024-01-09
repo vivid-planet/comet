@@ -28,6 +28,7 @@ import { additionalPageTreeNodeFieldsFragment, EditPageNode } from "@src/common/
 import MasterHeader from "@src/common/MasterHeader";
 import MasterMenu from "@src/common/MasterMenu";
 import { createConfig } from "@src/config";
+import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import Dashboard from "@src/dashboard/Dashboard";
 import { pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
@@ -172,6 +173,7 @@ class App extends React.Component {
                                                                                                         variant="toolbar"
                                                                                                     />
                                                                                                 )}
+                                                                                                additionalToolbarItems={<ImportFromUnsplash />}
                                                                                             />
                                                                                         )}
                                                                                     />

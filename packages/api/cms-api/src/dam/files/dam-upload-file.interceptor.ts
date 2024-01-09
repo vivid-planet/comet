@@ -33,6 +33,8 @@ export function DamUploadFileInterceptor(fieldName: string): Type<NestIntercepto
                         });
                     },
                     filename: function (req, file, cb) {
+                        // otherwise special characters aren't decoded properly (https://github.com/expressjs/multer/issues/836#issuecomment-1264338996)
+                        file.originalname = Buffer.from(file.originalname, "latin1").toString("utf8");
                         cb(null, `${uuid()}-${file.originalname}`);
                     },
                 }),

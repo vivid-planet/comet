@@ -16,8 +16,10 @@ import { Migration20230209111818 } from "./migrations/Migration20230209111818";
 import { Migration20230302145445 } from "./migrations/Migration20230302145445";
 import { Migration20230613150332 } from "./migrations/Migration20230613150332";
 import { Migration20230802124224 } from "./migrations/Migration20230802124224";
+import { Migration20230808085034 } from "./migrations/Migration20230808085034";
 import { Migration20230821090303 } from "./migrations/Migration20230821090303";
 import { Migration20231206123505 } from "./migrations/Migration20231206123505";
+import { Migration20231222090009 } from "./migrations/Migration20231222090009";
 
 export const PG_UNIQUE_CONSTRAINT_VIOLATION = "23505";
 
@@ -71,8 +73,10 @@ export function createOrmConfig({ migrations, ...defaults }: MikroOrmNestjsOptio
                 { name: "Migration20230209111818", class: Migration20230209111818 },
                 { name: "Migration20230613150332", class: Migration20230613150332 },
                 { name: "Migration20230802124224", class: Migration20230802124224 },
+                { name: "Migration20230808085034", class: Migration20230808085034 },
                 { name: "Migration20230821090303", class: Migration20230821090303 },
                 { name: "Migration20231206123505", class: Migration20231206123505 },
+                { name: "Migration20231222090009", class: Migration20231222090009 },
                 ...(migrations?.migrationsList || []),
             ].sort((migrationA, migrationB) => {
                 if (migrationA.name < migrationB.name) {

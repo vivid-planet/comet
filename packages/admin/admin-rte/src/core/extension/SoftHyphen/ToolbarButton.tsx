@@ -1,10 +1,11 @@
 import { RteSoftHyphen } from "@comet/admin-icons";
-import { ControlButton } from "@comet/admin-rte";
-import { IControlProps } from "@comet/admin-rte/lib/core/types"; //@TODO export from RTE
 import Tooltip from "@mui/material/Tooltip";
 import { EditorState, Modifier } from "draft-js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
+
+import ControlButton from "../../Controls/ControlButton";
+import { IControlProps } from "../../types";
 
 const SHY_UNICODE_CHAR = 0x00ad;
 
