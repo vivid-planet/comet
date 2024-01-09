@@ -1,5 +1,5 @@
 import { Delete, Info, Select } from "@comet/admin-icons";
-import { Button, Chip, ComponentsOverrides, IconButton, Theme } from "@mui/material";
+import { Button, Chip, ComponentsOverrides, FormHelperText, IconButton, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
@@ -121,7 +121,7 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
     disabled,
     dropzoneVariant,
     accept,
-    maxSize = 50,
+    maxSize = 52428800,
     input: { onChange, value: fieldValue, multiple: multipleFiles },
 }) => {
     const onDrop = React.useCallback(
@@ -131,20 +131,17 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
         [fieldValue, multipleFiles, onChange],
     );
 
-    const removeFile = (file: File) => () => {
-        const newFiles = [...fieldValue];
-        newFiles.splice(newFiles.indexOf(file), 1);
+    const removeFile = (removedFile: File) => () => {
+        const newFiles = fieldValue.filter((file) => file !== removedFile);
         onChange(newFiles);
     };
-
-    const maxFileSizeInBytes = maxSize * 1024 * 1024;
 
     const { fileRejections, getRootProps, getInputProps, isDragReject } = useDropzone({
         onDrop,
         accept,
         disabled,
         multiple: multipleFiles,
-        maxSize: maxFileSizeInBytes,
+        maxSize: maxSize,
     });
 
     // list of the accepted files
@@ -203,6 +200,9 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
                     <FormattedMessage id="comet.finalformfileupload.errors.unknownError" defaultMessage="Something went wrong." />
                 </div>
             )}
+            <FormHelperText>
+                <FormattedMessage id="comet.finalformfileupload.maximumFileSize" defaultMessage="Maximum file size" /> <PrettyBytes value={maxSize} />
+            </FormHelperText>
         </div>
     );
 };
