@@ -19,7 +19,7 @@ export class UnsplashImageFileFixtureService {
 
         const imageUrl = `https://source.unsplash.com/all/${width}x${height}`;
         console.log(`Downloading ${imageUrl}.`);
-        const downloadedImage = await this.fileUploadService.createUploadFromUrl(imageUrl);
+        const downloadedImage = await this.fileUploadService.createFileUploadInputFromUrl(imageUrl);
         console.log(`Downloading ${imageUrl} done.`);
         console.log(`Uploading ${downloadedImage.originalname}.`);
         const file = await this.filesService.upload(downloadedImage, { scope });

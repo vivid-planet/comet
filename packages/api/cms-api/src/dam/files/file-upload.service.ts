@@ -7,14 +7,14 @@ import stream from "stream";
 import { promisify } from "util";
 import { v4 as uuid } from "uuid";
 
-import { FileUploadInterface } from "./dto/file-upload.interface";
+import { FileUploadInput } from "./dto/file-upload.input";
 import { FilesService } from "./files.service";
 
 const pipeline = promisify(stream.pipeline);
 
 @Injectable()
 class FileUploadService {
-    async createUploadFromUrl(url: string): Promise<FileUploadInterface> {
+    async createFileUploadInputFromUrl(url: string): Promise<FileUploadInput> {
         const tempDir = fs.mkdtempSync(`${os.tmpdir()}/download`);
         const fakeName = uuid();
         const tempFile = `${tempDir}/${fakeName}`;
@@ -44,8 +44,8 @@ class FileUploadService {
 }
 
 /**
- * @deprecated use FileUploadService#createUploadFromUrl instead
+ * @deprecated use FileUploadService#createFileUploadInputFromUrl instead
  */
-const download = FileUploadService.prototype.createUploadFromUrl;
+const download = FileUploadService.prototype.createFileUploadInputFromUrl;
 
 export { download, FileUploadService };

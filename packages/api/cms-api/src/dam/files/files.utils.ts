@@ -3,7 +3,7 @@ import { unlink } from "fs/promises";
 import { sep } from "path";
 import slugify from "slugify";
 
-import { FileUploadInterface } from "./dto/file-upload.interface";
+import { FileUploadInput } from "./dto/file-upload.input";
 
 export function slugifyFilename(filename: string, extension: string): string {
     return `${slugify(filename, { locale: "de", lower: true, strict: true })}${extension}`;
@@ -69,13 +69,13 @@ export const svgContainsJavaScript = (svg: string) => {
     return recursivelyFindJSInSvg(jsonObj);
 };
 
-export const removeMulterTempFile = async (file: FileUploadInterface) => {
+export const removeMulterTempFile = async (file: FileUploadInput) => {
     // https://github.com/expressjs/multer/blob/master/storage/disk.js#L54-L62
     const path = file.path;
 
-    delete (file as Partial<FileUploadInterface>).destination;
-    delete (file as Partial<FileUploadInterface>).filename;
-    delete (file as Partial<FileUploadInterface>).path;
+    delete (file as Partial<FileUploadInput>).destination;
+    delete (file as Partial<FileUploadInput>).filename;
+    delete (file as Partial<FileUploadInput>).path;
 
     await unlink(path);
 };

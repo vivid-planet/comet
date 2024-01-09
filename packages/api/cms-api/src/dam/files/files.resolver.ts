@@ -98,7 +98,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
             @Args("input", { type: () => UpdateFileInput }) { image: imageInput, ...input }: UpdateFileInput,
         ): Promise<FileInterface> {
-            const file = await this.fileUploadService.createUploadFromUrl(url);
+            const file = await this.fileUploadService.createFileUploadInputFromUrl(url);
             const validationResult = await this.fileValidationService.validateFile(file);
             if (validationResult !== undefined) {
                 throw new CometValidationException(validationResult);
