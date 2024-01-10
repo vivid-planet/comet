@@ -4,7 +4,7 @@ import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import isMobile from "is-mobile";
 import * as React from "react";
 
-export type TabScrollButtonClassKey = "root" | "vertical" | "disabled";
+export type TabScrollButtonClassKey = "root" | "vertical";
 
 type OwnerState = Pick<TabScrollButtonProps, "orientation">;
 
@@ -37,7 +37,7 @@ export interface TabScrollButtonProps extends ButtonBaseProps {
 }
 
 export function TabScrollButton(inProps: TabScrollButtonProps) {
-    const { orientation, direction, disabled, onClick, ...restProps } = useThemeProps({
+    const { orientation, direction, ...restProps } = useThemeProps({
         props: inProps,
         name: "CometAdminTabScrollButton",
     });
@@ -47,7 +47,7 @@ export function TabScrollButton(inProps: TabScrollButtonProps) {
     };
 
     return !isMobile({ tablet: true }) ? (
-        <Root ownerState={ownerState} {...restProps} disabled={disabled} onClick={onClick}>
+        <Root ownerState={ownerState} {...restProps}>
             <>{direction === "left" ? <ChevronLeft /> : <ChevronRight />}</>
         </Root>
     ) : null;
