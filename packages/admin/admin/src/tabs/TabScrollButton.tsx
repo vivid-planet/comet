@@ -12,7 +12,7 @@ const Root = styled(ButtonBase, {
     name: "CometAdminTabScrollButton",
     slot: "root",
     overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.root, ownerState.orientation && styles.vertical];
+        return [styles.root, ownerState.orientation === "vertical" && styles.vertical];
     },
 })<{ ownerState: OwnerState }>(
     ({ ownerState }) => css`
