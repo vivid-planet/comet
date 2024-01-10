@@ -1,15 +1,43 @@
+import { ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import React from "react";
 
-import { Tooltip } from "./common/Tooltip";
+import { Tooltip as CommonTooltip } from "./common/Tooltip";
+import { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 
-export interface EllipsisTooltipProps {
+export type EllipsisTooltipClassKey = "root" | "tooltip";
+
+export interface EllipsisTooltipProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        tooltip: typeof CommonTooltip;
+    }> {
     children?: React.ReactNode;
 }
 
-export const EllipsisTooltip = ({ children }: EllipsisTooltipProps) => {
+const Root = styled("div", {
+    name: "CometAdminEllipsisTooltip",
+    slot: "root",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})(css`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+`);
+
+const Tooltip = styled(CommonTooltip, {
+    name: "CometAdminEllipsisTooltip",
+    slot: "tooltip",
+    overridesResolver(_, styles) {
+        return [styles.tooltip];
+    },
+})();
+
+export const EllipsisTooltip = (inProps: EllipsisTooltipProps) => {
+    const { children, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminEllipsisTooltip" });
     const rootRef = React.useRef<HTMLDivElement>(null);
     const contentRef = React.useRef<HTMLSpanElement>(null);
-
     const [renderWithTooltip, setRenderWithTooltip] = React.useState(false);
 
     const updateRenderWithTooltip = React.useCallback(() => {
@@ -46,21 +74,38 @@ export const EllipsisTooltip = ({ children }: EllipsisTooltipProps) => {
     const content = <span ref={contentRef}>{children}</span>;
 
     return (
-        <div
-            style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-            }}
-            ref={rootRef}
-        >
+        <Root ref={rootRef} {...restProps} {...slotProps?.root}>
             {renderWithTooltip ? (
-                <Tooltip PopperProps={{ anchorEl: rootRef.current }} title={children}>
+                <Tooltip
+                    title={children}
+                    {...slotProps?.tooltip}
+                    PopperProps={{
+                        anchorEl: rootRef.current,
+                        ...slotProps?.tooltip?.PopperProps,
+                    }}
+                >
                     {content}
                 </Tooltip>
             ) : (
                 content
             )}
-        </div>
+        </Root>
     );
 };
+
+declare module "@mui/material/styles" {
+    interface ComponentsPropsList {
+        CometAdminEllipsisTooltip: Partial<EllipsisTooltipProps>;
+    }
+
+    interface ComponentNameToClassKey {
+        CometAdminEllipsisTooltip: EllipsisTooltipClassKey;
+    }
+
+    interface Components {
+        CometAdminEllipsisTooltip?: {
+            defaultProps?: ComponentsPropsList["CometAdminEllipsisTooltip"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminEllipsisTooltip"];
+        };
+    }
+}

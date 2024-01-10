@@ -55,7 +55,7 @@ export { usePersistentColumnState } from "./dataGrid/usePersistentColumnState";
 export { DeleteMutation } from "./DeleteMutation";
 export { EditDialog, useEditDialog } from "./EditDialog";
 export { EditDialogApiContext, IEditDialogApi, useEditDialogApi } from "./EditDialogApiContext";
-export { EllipsisTooltip, EllipsisTooltipProps } from "./EllipsisTooltip";
+export { EllipsisTooltip, EllipsisTooltipClassKey, EllipsisTooltipProps } from "./EllipsisTooltip";
 export { ErrorBoundary, ErrorBoundaryClassKey, ErrorBoundaryProps } from "./error/errorboundary/ErrorBoundary";
 export { RouteWithErrorBoundary } from "./error/errorboundary/RouteWithErrorBoundary";
 export { createErrorDialogApolloLink } from "./error/errordialog/createErrorDialogApolloLink";
