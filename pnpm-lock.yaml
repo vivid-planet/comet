@@ -409,6 +409,15 @@ importers:
         specifier: ^4.0.0
         version: 4.11.1(webpack-cli@4.10.0)(webpack@5.75.0)
 
+  demo/admin/server:
+    dependencies:
+      compression:
+        specifier: ^1.7.4
+        version: 1.7.4
+      express:
+        specifier: ^4.18.2
+        version: 4.18.2
+
   demo/api:
     dependencies:
       '@aws-sdk/client-s3':
