@@ -75,6 +75,7 @@ export function RouterTabs(inProps: Props) {
         tabComponent: TabComponent = MuiTab,
         tabsProps: { ScrollButtonComponent = TabScrollButton, ...tabsProps } = {},
         slotProps,
+        ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminRouterTabs" });
 
     const stackApi = useStackApi();
@@ -130,7 +131,7 @@ export function RouterTabs(inProps: Props) {
     let foundFirstMatch = false;
 
     return (
-        <Root {...slotProps?.root}>
+        <Root {...slotProps?.root} {...restProps}>
             {shouldShowTabBar && (
                 <Route path={deduplicateSlashesInUrl(`${subRoutePrefix}/:tab`)}>
                     {({ match }) => {
