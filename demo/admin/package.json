@@ -9,7 +9,6 @@
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"npm run generate-block-types\"",
         "gql:types": "graphql-codegen",
         "gql:watch": "graphql-codegen --watch",
-        "postinstall": "cd server && npm install",
         "intl:compile": "run-p intl:compile:comet intl:compile:comet-demo",
         "intl:compile:comet": "formatjs compile-folder --format simple --ast lang/comet-lang lang-compiled/comet-lang",
         "intl:compile:comet-demo": "formatjs compile-folder --format simple --ast lang/comet-demo-lang lang-compiled/comet-demo-lang",
