@@ -14,7 +14,7 @@ type OwnerState = { contentHidden?: boolean };
 const Root = styled("div", {
     name: "CometAdminTabs",
     slot: "root",
-    overridesResolver(styles) {
+    overridesResolver(_, styles) {
         return [styles.root];
     },
 })();
@@ -135,13 +135,7 @@ export function Tabs(inProps: TabsProps) {
                     return null;
                 }
 
-                if (index === value) {
-                    return (
-                        <Content ownerState={ownerState} {...slotProps?.content}>
-                            {child.props.children}
-                        </Content>
-                    );
-                } else if (child.props.forceRender) {
+                if (index === value || child.props.forceRender) {
                     return (
                         <Content ownerState={ownerState} {...slotProps?.content}>
                             {child.props.children}
