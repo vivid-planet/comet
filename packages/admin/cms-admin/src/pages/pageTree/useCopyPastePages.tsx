@@ -4,7 +4,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
-import { useContentScope } from "../../contentScope/Provider";
+import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
 import { useDamScope } from "../../dam/config/useDamScope";
 import { GQLDocument, GQLPageQuery, GQLPageQueryVariables } from "../../documents/types";
 import { useProgressDialog } from "./useCopyPastePages/ProgressDialog";
@@ -16,6 +16,7 @@ export type PageClipboard = GQLPageTreePageFragment & { document?: GQLDocument |
 
 export interface PagesClipboard {
     pages: PageClipboard[];
+    scope: ContentScopeInterface;
 }
 
 /**
@@ -107,10 +108,11 @@ function useCopyPastePages(): UseCopyPastePagesApi {
 
             const clipboardPages: PagesClipboard = {
                 pages: [...pagesWithDocuments],
+                scope,
             };
             return clipboardPages;
         },
-        [client, documentTypes],
+        [client, documentTypes, scope],
     );
     const writeToClipboard = React.useCallback(async (pages: PagesClipboard) => {
         return writeClipboardText(JSON.stringify(pages));
