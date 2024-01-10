@@ -128,7 +128,7 @@ export function Tabs(inProps: TabsProps) {
             </StyledTabs>
             {React.Children.map(children, (child: React.ReactElement<TabProps>, index) => {
                 const ownerState: OwnerState = {
-                    forceRender: child.props.forceRender,
+                    contentHidden: index !== value && child.props.forceRender,
                 };
 
                 if (!React.isValidElement<TabProps>(child)) {
