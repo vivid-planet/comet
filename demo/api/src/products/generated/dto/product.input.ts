@@ -69,11 +69,11 @@ export class ProductInput {
     @Field(() => ProductDimensions, { nullable: true })
     dimensions?: ProductDimensions;
 
-    @IsNullable()
+    @IsNotEmpty()
     @ValidateNested()
     @Type(() => ProductPackageDimensions)
-    @Field(() => ProductPackageDimensions, { nullable: true })
-    packageDimensions?: ProductPackageDimensions;
+    @Field(() => ProductPackageDimensions)
+    packageDimensions: ProductPackageDimensions;
 
     @IsNullable()
     @Field(() => ProductStatisticsInput, { nullable: true })
