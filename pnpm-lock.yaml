@@ -18056,13 +18056,8 @@ packages:
       postcss-modules-values: 3.0.0
       postcss-value-parser: 4.2.0
       schema-utils: 2.7.1
-<<<<<<< HEAD
       semver: 6.3.1
-      webpack: 4.46.0
-=======
-      semver: 6.3.0
       webpack: 4.47.0
->>>>>>> main
     dev: false
 
   /css-loader@5.2.7(webpack@5.89.0):
