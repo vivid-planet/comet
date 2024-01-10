@@ -9,7 +9,7 @@ import { TabScrollButton } from "./TabScrollButton";
 
 export type TabsClassKey = "root" | "tabs" | "content" | "contentHidden";
 
-type OwnerState = Pick<TabProps, "forceRender">;
+type OwnerState = { contentHidden?: boolean };
 
 const Root = styled("div", {
     name: "CometAdminTabs",
@@ -31,11 +31,11 @@ const Content = styled("div", {
     name: "CometAdminTabs",
     slot: "content",
     overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.content, ownerState.forceRender && styles.contentHidden];
+        return [styles.content, ownerState.contentHidden && styles.contentHidden];
     },
 })<{ ownerState: OwnerState }>(
     ({ ownerState }) => css`
-        ${ownerState.forceRender &&
+        ${ownerState.contentHidden &&
         css`
             display: "none";
         `}
