@@ -198,3 +198,5 @@ export { RouterTabsClassKey } from "./tabs/RouterTabs.styles";
 export { Tab, Tabs, TabsProps } from "./tabs/Tabs";
 export { TabsClassKey } from "./tabs/Tabs.styles";
 export { TabScrollButton, TabScrollButtonClassKey, TabScrollButtonProps } from "./tabs/TabScrollButton";
+export { ContentTranslationServiceProvider } from "./translator/ContentTranslationServiceProvider";
+export { useContentTranslationService } from "./translator/useContentTranslationService";
