@@ -92,7 +92,7 @@ interface SendPagesDependencies {
  **/
 export async function sendPages(
     parentId: string | null,
-    { pages, scope: rootContentScope }: PagesClipboard,
+    { pages, scope: sourceContentScope }: PagesClipboard,
     options: SendPagesOptions,
     { client, scope: targetContentScope, documentTypes, blockContext, damScope: targetDamScope, currentCategory }: SendPagesDependencies,
     updateProgress: (progress: number, message: React.ReactNode) => void,
@@ -356,7 +356,7 @@ export async function sendPages(
             }
 
             // 3b. Replace unhandled dependencies with undefined (when copying to another scope)
-            if (sourcePage.document && !isEqual(rootContentScope, targetContentScope)) {
+            if (sourcePage.document && !isEqual(sourceContentScope, targetContentScope)) {
                 const unhandledDependencies = unhandledDependenciesFromDocument(documentType, sourcePage.document, {
                     existingReplacements: dependencyReplacements,
                 });
