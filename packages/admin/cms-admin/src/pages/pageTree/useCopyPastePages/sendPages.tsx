@@ -435,7 +435,7 @@ function createUndefinedReplacementsForDependencies(dependencies: BlockDependenc
         const key = `${dependency.targetGraphqlObjectType}#${dependency.id}`;
 
         if (!existingReplacements.has(key)) {
-            replacements.push({ type: "PageTreeNode", originalId: dependency.id, replaceWithId: undefined });
+            replacements.push({ type: dependency.targetGraphqlObjectType, originalId: dependency.id, replaceWithId: undefined });
             existingReplacements.add(key);
         }
     }
