@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import {
+    Alert,
     Loading,
     LocalErrorScopeApolloContext,
     MainContent,
@@ -220,11 +221,35 @@ export function PagesPage({
                             const page = data?.pages.find((page) => page.id == selectedId);
 
                             if (!page) {
-                                return null;
+                                return (
+                                    <Box px={4} py={4}>
+                                        <Alert
+                                            title={<FormattedMessage id="comet.pages.pages.notFound" defaultMessage="Not found" />}
+                                            severity="error"
+                                        >
+                                            <FormattedMessage
+                                                id="comet.pages.pages.documentDoesntExist"
+                                                defaultMessage="This document doesn't exist"
+                                            />
+                                        </Alert>
+                                    </Box>
+                                );
                             }
 
                             if (page.visibility === "Archived") {
-                                return <>403, not allowed</>;
+                                return (
+                                    <Box px={4} py={4}>
+                                        <Alert
+                                            title={<FormattedMessage id="comet.pages.pages.archived" defaultMessage="Archived" />}
+                                            severity="warning"
+                                        >
+                                            <FormattedMessage
+                                                id="comet.pages.pages.documentHasBeenArchived"
+                                                defaultMessage="This document has been archived and can no longer be edited"
+                                            />
+                                        </Alert>
+                                    </Box>
+                                );
                             }
 
                             const documentType = documentTypes[page.documentType];
