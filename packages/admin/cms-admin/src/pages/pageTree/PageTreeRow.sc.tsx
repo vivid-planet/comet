@@ -1,3 +1,4 @@
+import { StackLink } from "@comet/admin";
 import { TableCell } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -36,13 +37,16 @@ export const PageActionsCell = styled(PageTreeCell)`
     width: 160px;
 `;
 
-export const RowClickContainer = styled("div")`
+export const RowClickStackLink = styled(StackLink)`
     position: absolute;
     z-index: 10;
     left: 0;
     right: 0;
     bottom: 0;
     top: 0;
+
+    text-decoration: none;
+    color: inherit;
 `;
 
 export const AddContainer = styled("div")`
