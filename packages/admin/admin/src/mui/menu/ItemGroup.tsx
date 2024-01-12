@@ -2,6 +2,7 @@ import { Box, ComponentsOverrides, Theme, Tooltip, Typography } from "@mui/mater
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
+import { FormattedMessage, MessageDescriptor, useIntl } from "react-intl";
 
 import { MenuContext } from "./Context";
 
@@ -39,15 +40,38 @@ const styles = (theme: Theme) =>
     });
 
 export interface MenuItemGroupProps {
-    title: string;
+    title: React.ReactNode;
     shortTitle?: string;
 }
 
 const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({ title, shortTitle, children, classes }) => {
     const { open: menuOpen } = React.useContext(MenuContext);
+    const intl = useIntl();
     let displayedTitle = title;
-    function getInitials(title: string) {
-        const words = title.split(/\s+/).filter((word) => word.match(/[A-Za-z]/));
+
+    function isFormattedMessage(node: React.ReactNode): node is React.ReactElement<MessageDescriptor> {
+        return !!node && React.isValidElement(node) && node.type === FormattedMessage;
+    }
+
+    function getInitials(title: React.ReactNode) {
+        let titleAsString: string;
+        if (typeof title === "string") {
+            titleAsString = title;
+        } else if (isFormattedMessage(title)) {
+            titleAsString = intl.formatMessage(title.props);
+        } else {
+            throw new TypeError("Title must be either a string or a FormattedMessage");
+        }
+        const words = titleAsString.split(/\s+/).filter((word) => word.match(/[A-Za-z]/));
+
+        if (words.length > 3) {
+            console.warn("Title has more than 3 words, only the first 3 will be used.");
+
+            return words
+                .slice(0, 3)
+                .map((word) => word[0].toUpperCase())
+                .join("");
+        }
         return words.map((word) => word[0].toUpperCase()).join("");
     }
 
