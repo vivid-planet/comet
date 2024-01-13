@@ -76,9 +76,9 @@ describe("GenerateCrud Status with active", () => {
         expect(cls.getName()).toBe("TestEntity1Resolver");
         const structure = cls.getStructure();
 
-        const mathodNames = (structure.methods || []).map((method) => method.name);
+        const methodNames = (structure.methods || []).map((method) => method.name);
 
-        expect(mathodNames).not.toContain("updateTestEntity1Status");
+        expect(methodNames).not.toContain("updateTestEntity1Status");
     });
 
     it("args should use status enum as defined for enitity", async () => {
