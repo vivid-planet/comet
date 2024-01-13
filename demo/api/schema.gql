@@ -820,6 +820,7 @@ enum NewsSortField {
 
 input ProductFilter {
   title: StringFilter
+  status: ProductStatusEnumFilter
   slug: StringFilter
   description: StringFilter
   type: ProductTypeEnumFilter
@@ -831,6 +832,12 @@ input ProductFilter {
   updatedAt: DateFilter
   and: [ProductFilter!]
   or: [ProductFilter!]
+}
+
+input ProductStatusEnumFilter {
+  isAnyOf: [ProductStatus!]
+  equal: ProductStatus
+  notEqual: ProductStatus
 }
 
 input ProductTypeEnumFilter {
@@ -861,6 +868,7 @@ input ProductSort {
 
 enum ProductSortField {
   title
+  status
   slug
   description
   type
@@ -959,7 +967,6 @@ type Mutation {
   createProduct(input: ProductInput!): Product!
   updateProduct(id: ID!, input: ProductUpdateInput!, lastUpdatedAt: DateTime): Product!
   deleteProduct(id: ID!): Boolean!
-  updateProductStatus(id: ID!, status: ProductStatus!): Product!
   createProductCategory(input: ProductCategoryInput!): ProductCategory!
   updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!, lastUpdatedAt: DateTime): ProductCategory!
   deleteProductCategory(id: ID!): Boolean!
@@ -1139,6 +1146,7 @@ input PredefinedPageInput {
 
 input ProductInput {
   title: String!
+  status: ProductStatus! = Unpublished
   slug: String!
   description: String!
   type: ProductType!
@@ -1166,6 +1174,7 @@ input ProductVariantInput {
 
 input ProductUpdateInput {
   title: String
+  status: ProductStatus
   slug: String
   description: String
   type: ProductType
