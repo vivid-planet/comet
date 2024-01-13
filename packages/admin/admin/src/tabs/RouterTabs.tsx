@@ -8,6 +8,7 @@ import { useStackApi } from "../stack/Api";
 import { StackBreadcrumb } from "../stack/Breadcrumb";
 import { useStackSwitchApi } from "../stack/Switch";
 import { RouterTabsClassKey, styles } from "./RouterTabs.styles";
+import { TabScrollButton } from "./TabScrollButton";
 
 function deduplicateSlashesInUrl(url: string) {
     return url.replace(/\/+/g, "/");
@@ -22,13 +23,21 @@ interface TabProps extends Omit<MuiTabProps, "children"> {
 
 export const RouterTab: React.FunctionComponent<TabProps> = () => null;
 
+type RouterTabsChild = React.ReactElement<TabProps> | boolean | null | undefined;
+type RouterTabsChildren = RouterTabsChild | Array<RouterTabsChild | Array<RouterTabsChild>>;
+
 export interface Props {
-    children: Array<React.ReactElement<TabProps> | boolean | null | undefined> | React.ReactElement<TabProps>;
+    children: RouterTabsChildren;
     tabComponent?: React.ComponentType<MuiTabProps>;
     tabsProps?: Partial<TabsProps>;
 }
 
-function RouterTabsComponent({ children, tabComponent: TabComponent = MuiTab, tabsProps, classes }: Props & WithStyles<typeof styles>) {
+function RouterTabsComponent({
+    children,
+    tabComponent: TabComponent = MuiTab,
+    tabsProps: { ScrollButtonComponent = TabScrollButton, ...tabsProps } = {},
+    classes,
+}: Props & WithStyles<typeof styles>) {
     const stackApi = useStackApi();
     const stackSwitchApi = useStackSwitchApi();
     const history = useHistory();
@@ -89,7 +98,15 @@ function RouterTabsComponent({ children, tabComponent: TabComponent = MuiTab, ta
                         const routePath = match ? `/${match.params.tab}` : "";
                         const value = paths.includes(routePath) ? paths.indexOf(routePath) : defaultPathIndex;
                         return (
-                            <Tabs classes={{ root: classes.tabs }} value={value} onChange={handleChange} {...tabsProps}>
+                            <Tabs
+                                classes={{ root: classes.tabs }}
+                                value={value}
+                                onChange={handleChange}
+                                ScrollButtonComponent={ScrollButtonComponent}
+                                scrollButtons="auto"
+                                variant="scrollable"
+                                {...tabsProps}
+                            >
                                 {React.Children.map(children, (child) => {
                                     if (!React.isValidElement<TabProps>(child)) {
                                         return null;
@@ -110,20 +127,24 @@ function RouterTabsComponent({ children, tabComponent: TabComponent = MuiTab, ta
                 return (
                     <Route path={path}>
                         {({ match }) => {
-                            if (match && stackApi && stackSwitchApi && !foundFirstMatch) {
+                            let ret = null;
+                            if (match && !foundFirstMatch) {
                                 foundFirstMatch = true;
+                                ret = <div className={classes.content}>{child.props.children}</div>;
+                            } else if (child.props.forceRender) {
+                                ret = <div className={`${classes.content} ${classes.contentHidden}`}>{child.props.children}</div>;
+                            } else {
+                                // don't render tab contents, return early as we don't need StackBreadcrumb either
+                                return null;
+                            }
+                            if (stackApi && stackSwitchApi) {
                                 return (
                                     <StackBreadcrumb url={path} title={child.props.label} invisible={true}>
-                                        <div className={classes.content}>{child.props.children}</div>
+                                        {ret}
                                     </StackBreadcrumb>
                                 );
-                            } else if (match && !foundFirstMatch) {
-                                foundFirstMatch = true;
-                                return <div className={classes.content}>{child.props.children}</div>;
-                            } else if (child.props.forceRender) {
-                                return <div className={`${classes.content} ${classes.contentHidden}`}>{child.props.children}</div>;
                             } else {
-                                return null;
+                                return ret;
                             }
                         }}
                     </Route>

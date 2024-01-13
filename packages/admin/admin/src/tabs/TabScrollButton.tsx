@@ -7,6 +7,7 @@ import {
     Theme,
 } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import isMobile from "is-mobile";
 import * as React from "react";
 
 export type TabScrollButtonClassKey = MuiTabScrollButtonClassKey;
@@ -25,7 +26,9 @@ const styles = () => {
             width: "100%",
             height: 40,
         },
-        disabled: {},
+        disabled: {
+            opacity: 0.25,
+        },
     });
 };
 
@@ -34,11 +37,11 @@ function ScrollButton({ orientation, direction, disabled, onClick, classes }: Ta
     if (orientation === "vertical") rootClasses.push(classes.vertical);
     if (disabled) rootClasses.push(classes.disabled);
 
-    return (
+    return !isMobile({ tablet: true }) ? (
         <ButtonBase classes={{ root: rootClasses.join(" ") }} disabled={disabled} onClick={onClick}>
             <>{direction === "left" ? <ChevronLeft /> : <ChevronRight />}</>
         </ButtonBase>
-    );
+    ) : null;
 }
 
 export const TabScrollButton = withStyles(styles, { name: "TabScrollButton" })(ScrollButton);

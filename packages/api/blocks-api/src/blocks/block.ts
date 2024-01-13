@@ -200,7 +200,7 @@ export type BlockMetaField =
     | { name: string; kind: BlockMetaFieldKind.Block; block: Block; nullable: boolean }
     | { name: string; kind: BlockMetaFieldKind.NestedObject; object: BlockMetaInterface; nullable: boolean }
     | { name: string; kind: BlockMetaFieldKind.NestedObjectList; object: BlockMetaInterface; nullable: boolean }
-    | { name: string; kind: BlockMetaFieldKind.OneOfBlocks; blocks: Block[]; nullable: boolean };
+    | { name: string; kind: BlockMetaFieldKind.OneOfBlocks; blocks: Record<string, Block>; nullable: boolean };
 
 export interface BlockMetaInterface {
     fields: BlockMetaField[];

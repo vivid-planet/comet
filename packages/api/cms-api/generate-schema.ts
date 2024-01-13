@@ -12,7 +12,6 @@ import {
     createPageTreeResolver,
     createRedirectsResolver,
     CurrentUserInterface,
-    CurrentUserRightInterface,
     DependenciesResolverFactory,
     DependentsResolverFactory,
     DocumentInterface,
@@ -23,12 +22,14 @@ import {
 } from "./src";
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
 import { CronJobsResolver } from "./src/cron-jobs/cron-jobs.resolver";
+import { JobsResolver } from "./src/cron-jobs/jobs.resolver";
 import { createDamItemsResolver } from "./src/dam/files/dam-items.resolver";
 import { createFileEntity } from "./src/dam/files/entities/file.entity";
 import { createFolderEntity } from "./src/dam/files/entities/folder.entity";
 import { FileLicensesResolver } from "./src/dam/files/file-licenses.resolver";
 import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
+import { SitePreviewResolver } from "./src/page-tree/site-preview.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
 import { CurrentUserPermission } from "./src/user-permissions/dto/current-user";
@@ -51,16 +52,8 @@ class Page implements DocumentInterface {
 }
 
 @ObjectType()
-class CurrentUserRight implements CurrentUserRightInterface {
-    @Field()
-    right: string;
-
-    @Field(() => [String])
-    values: string[];
-}
-
-@ObjectType()
 class CurrentUser implements CurrentUserInterface {
+    @Field()
     id: string;
     @Field()
     name: string;
@@ -68,10 +61,6 @@ class CurrentUser implements CurrentUserInterface {
     email: string;
     @Field()
     language: string;
-    @Field()
-    role: string;
-    @Field(() => [CurrentUserRight], { nullable: true })
-    rights: CurrentUserRightInterface[];
     @Field(() => [GraphQLJSONObject])
     contentScopes: ContentScope[];
     @Field(() => [CurrentUserPermission])
@@ -118,10 +107,12 @@ async function generateSchema(): Promise<void> {
         createFoldersResolver({ Folder }),
         pageTreeResolver,
         CronJobsResolver,
+        JobsResolver,
         AuthResolver,
         RedirectsDependenciesResolver,
         PageTreeDependentsResolver,
         FileDependentsResolver,
+        SitePreviewResolver,
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,

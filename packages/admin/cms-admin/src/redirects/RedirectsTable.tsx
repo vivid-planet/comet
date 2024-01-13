@@ -6,7 +6,6 @@ import {
     muiGridPagingToGql,
     muiGridSortToGql,
     StackLink,
-    StackSwitchApiContext,
     TableDeleteButton,
     Toolbar,
     ToolbarAutomaticTitleItem,
@@ -73,14 +72,12 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
         },
     ];
 
-    const stackApi = React.useContext(StackSwitchApiContext);
-
     const columns: GridColDef[] = [
         {
             field: "source",
             headerName: intl.formatMessage({ id: "comet.pages.redirects.redirect.source", defaultMessage: "Source" }),
             sortable: true,
-            flex: 1,
+            flex: 4,
         },
         {
             field: "target",
@@ -93,7 +90,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
                 );
             },
             sortable: false,
-            flex: 1,
+            flex: 2,
             filterable: false,
         },
         {
@@ -101,7 +98,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             headerName: intl.formatMessage({ id: "comet.pages.redirects.redirect.comment", defaultMessage: "Comment" }),
             renderCell: (params) => <div>{params.value}</div>,
             sortable: false,
-            flex: 1,
+            flex: 2,
             filterable: false,
         },
         {
@@ -120,7 +117,6 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
                 </Typography>
             ),
             sortable: false,
-            flex: 1,
             filterOperators: getGridSingleSelectOperators(),
             type: "singleSelect",
             valueOptions: typeOptions,
@@ -133,7 +129,6 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             }),
             renderCell: (params) => <RedirectActiveness redirect={params.row} />,
             sortable: false,
-            flex: 1,
             type: "boolean",
         },
         {
@@ -141,11 +136,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
             headerName: "",
             renderCell: (params) => (
                 <IconWrapper>
-                    <IconButton
-                        onClick={() => {
-                            stackApi.activatePage("edit", params.id.toString());
-                        }}
-                    >
+                    <IconButton component={StackLink} pageName="edit" payload={params.id.toString()}>
                         <Edit color="primary" />
                     </IconButton>
                     <TableDeleteButton
@@ -158,7 +149,6 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
                 </IconWrapper>
             ),
             sortable: false,
-            flex: 1,
             disableColumnMenu: true,
             filterable: false,
         },

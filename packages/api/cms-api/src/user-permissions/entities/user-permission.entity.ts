@@ -1,18 +1,17 @@
 import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
-/* eslint-disable @typescript-eslint/naming-convention */
 import { v4 } from "uuid";
 
 export enum UserPermissionSource {
-    MANUAL = "manual",
-    BY_RULE = "by rule",
+    MANUAL = "MANUAL",
+    BY_RULE = "BY_RULE",
 }
 registerEnumType(UserPermissionSource, {
     name: "UserPermissionSource",
 });
 
 @ObjectType()
-@Entity()
+@Entity({ tableName: "CometUserPermission" })
 export class UserPermission extends BaseEntity<UserPermission, "id"> {
     @Field(() => ID)
     @PrimaryKey({ type: "uuid" })
@@ -21,7 +20,7 @@ export class UserPermission extends BaseEntity<UserPermission, "id"> {
     @Property()
     userId: string;
 
-    @Field(() => UserPermissionSource, { nullable: true })
+    @Field(() => UserPermissionSource)
     source: UserPermissionSource;
 
     @Field()

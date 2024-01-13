@@ -32,7 +32,11 @@ type BlockFieldOptions =
       };
 
 export function BlockField(
-    type?: Block | Block[] | ClassConstructor<BlockDataInterface | BlockInputInterface> | BlockFieldOptions,
+    type?:
+        | Block
+        | { kind: "oneOfBlocks"; blocks: Record<string, Block> }
+        | ClassConstructor<BlockDataInterface | BlockInputInterface>
+        | BlockFieldOptions,
 ): PropertyDecorator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (ctorPrototype: any, propertyKey: string | symbol): void {
@@ -54,7 +58,7 @@ type BlockFieldData =
     | { kind: BlockMetaFieldKind.Block; block: Block; nullable: boolean }
     | { kind: BlockMetaFieldKind.NestedObject; object: ClassConstructor<BlockDataInterface | BlockInputInterface>; nullable: boolean }
     | { kind: BlockMetaFieldKind.NestedObjectList; object: ClassConstructor<BlockDataInterface | BlockInputInterface>; nullable: boolean }
-    | { kind: BlockMetaFieldKind.OneOfBlocks; blocks: Block[]; nullable: boolean };
+    | { kind: BlockMetaFieldKind.OneOfBlocks; blocks: Record<string, Block>; nullable: boolean };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getBlockFieldData(ctor: { prototype: any }, propertyKey: string): BlockFieldData {
@@ -77,8 +81,8 @@ export function getBlockFieldData(ctor: { prototype: any }, propertyKey: string)
             throw new Error(`unknown field type '${fieldType.type}' for '${propertyKey}' in ${ctor}`);
         }
     } else if (isBlockDataInterface(designType.prototype) || isBlockInputInterface(designType.prototype)) {
-        if (fieldType && Array.isArray(fieldType)) {
-            ret = { kind: BlockMetaFieldKind.OneOfBlocks, blocks: fieldType, nullable };
+        if (fieldType && fieldType.kind == "oneOfBlocks") {
+            ret = { kind: BlockMetaFieldKind.OneOfBlocks, blocks: fieldType.blocks, nullable };
         } else {
             ret = { kind: BlockMetaFieldKind.NestedObject, object: designType, nullable };
         }
@@ -98,8 +102,8 @@ export function getBlockFieldData(ctor: { prototype: any }, propertyKey: string)
                     ret = { kind: BlockMetaFieldKind.Block, block: fieldType, nullable };
                 } else if (fieldType && (isBlockDataInterface(fieldType.prototype) || isBlockInputInterface(fieldType.prototype))) {
                     ret = { kind: BlockMetaFieldKind.NestedObject, object: fieldType, nullable };
-                } else if (fieldType && Array.isArray(fieldType)) {
-                    ret = { kind: BlockMetaFieldKind.OneOfBlocks, blocks: fieldType, nullable };
+                } else if (fieldType && fieldType.kind == "oneOfBlocks") {
+                    ret = { kind: BlockMetaFieldKind.OneOfBlocks, blocks: fieldType.blocks, nullable };
                 } else {
                     throw new Error(`unknown field type '${designType.name}' for '${propertyKey}' in ${ctor}`);
                 }

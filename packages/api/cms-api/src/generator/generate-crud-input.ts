@@ -2,6 +2,7 @@ import { EntityMetadata } from "@mikro-orm/core";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
 import { buildNameVariants } from "./utils/build-name-variants";
+import { integerTypes } from "./utils/constants";
 import { generateImportsCode, Imports } from "./utils/generate-imports-code";
 import {
     findBlockImportPath,
@@ -83,6 +84,19 @@ export async function generateCrudInput(
             decorators.push(`@IsEnum(${enumName})`);
             decorators.push(`@Field(() => ${enumName}, ${fieldOptions})`);
             type = enumName;
+        } else if (prop.type === "EnumArrayType") {
+            if (prop.nullable) {
+                console.warn(`${prop.name}: Nullable enum arrays are not supported`);
+            }
+            decorators.length = 0; //remove @IsNotEmpty
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const fieldOptions = tsCodeRecordToString({ defaultValue: initializer });
+            const enumName = findEnumName(prop.name, metadata);
+            const importPath = findEnumImportPath(enumName, `${generatorOptions.targetDirectory}/dto`, metadata);
+            imports.push({ name: enumName, importPath });
+            decorators.push(`@IsEnum(${enumName}, { each: true })`);
+            decorators.push(`@Field(() => [${enumName}], ${fieldOptions})`);
+            type = `${enumName}[]`;
         } else if (prop.type === "string" || prop.type === "text") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
@@ -95,11 +109,11 @@ export async function generateCrudInput(
                 decorators.push("@IsSlug()");
             }
             decorators.push(`@Field(${fieldOptions})`);
+            type = "string";
         } else if (prop.type === "DecimalType" || prop.type == "BigIntType" || prop.type === "number") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
-            const integerTypes = ["int", "integer", "tinyint", "smallint", "mediumint", "bigint", "int2", "int4", "int8", "serial"];
             if (integerTypes.includes(prop.columnTypes[0])) {
                 decorators.push("@IsInt()");
             } else {
@@ -151,7 +165,7 @@ export async function generateCrudInput(
                 decorators.push("@IsString()");
             } else if (refType == "integer") {
                 type = "number";
-                decorators.push("@Transform(({ value }) => parseInt(value))");
+                decorators.push("@Transform(({ value }) => (value ? parseInt(value) : null))");
                 decorators.push("@IsInt()");
             } else {
                 console.warn(`${prop.name}: Unsupported referenced type`);
@@ -194,7 +208,7 @@ export async function generateCrudInput(
                     decorators.push("@IsString({ each: true })");
                 } else if (refType == "integer") {
                     type = "number[]";
-                    decorators.push("@Transform(({ value }) => value.map(id) => parseInt(id))");
+                    decorators.push("@Transform(({ value }) => value.map((id: string) => parseInt(id)))");
                     decorators.push("@IsInt({ each: true })");
                 } else {
                     console.warn(`${prop.name}: Unsupported referenced type`);
@@ -218,7 +232,7 @@ export async function generateCrudInput(
                 decorators.push("@IsString({ each: true })");
             } else if (refType == "integer") {
                 type = "number[]";
-                decorators.push("@Transform(({ value }) => value.map(id) => parseInt(id))");
+                decorators.push("@Transform(({ value }) => value.map((id: string) => parseInt(id)))");
             } else {
                 console.warn(`${prop.name}: Unsupported referenced type`);
             }
@@ -238,7 +252,7 @@ export async function generateCrudInput(
             decorators.push(`@Type(() => ${inputName})`);
             decorators.push("@ValidateNested()");
             type = `${inputName}`;
-        } else if (prop.type == "JsonType" || prop.embeddable) {
+        } else if (prop.type == "JsonType" || prop.embeddable || prop.type == "ArrayType") {
             const tsProp = morphTsProperty(prop.name, metadata);
 
             let tsType = tsProp.getType();

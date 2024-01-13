@@ -5,25 +5,21 @@ module.exports = {
         "react/prop-types": "off",
         "react/self-closing-comp": "error",
         "import/no-extraneous-dependencies": "error",
+        "import/newline-after-import": "error",
         "@comet/no-private-sibling-import": ["error", ["gql", "sc", "gql.generated"]],
         "no-restricted-imports": [
             "error",
             {
                 paths: [
                     {
-                        name: "next/link",
-                        importNames: ["default"],
-                        message: "Please use Link from @comet/cms-site instead",
-                    },
-                    {
-                        name: "next/router",
-                        importNames: ["useRouter"],
-                        message: "Please use useRouter from @comet/cms-site instead",
-                    },
-                    {
                         name: "next/image",
                         importNames: ["default"],
                         message: "Please use Image from @comet/cms-site instead",
+                    },
+                    {
+                        name: "@mui/material",
+                        importNames: ["Alert"],
+                        message: "Please use Alert from @comet/admin instead",
                     },
                 ],
             },

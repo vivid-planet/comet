@@ -3,12 +3,10 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { createHmac } from "crypto";
-import { format } from "date-fns";
 import exifr from "exifr";
 import { createReadStream } from "fs";
 import getColors from "get-image-colors";
 import * as hasha from "hasha";
-import isEqual from "lodash.isequal";
 import fetch from "node-fetch";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
@@ -18,15 +16,19 @@ import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
-import { ContentScopeService } from "../../content-scope/content-scope.service";
+import { ContentScopeService } from "../../user-permissions/content-scope.service";
+import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
+import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { FocalPoint } from "../common/enums/focal-point.enum";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG, IMGPROXY_CONFIG } from "../dam.constants";
+import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
 import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
 import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
 import { DamScopeInterface } from "../types";
 import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
+import { UploadFileBodyInterface } from "./dto/file.body";
 import { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
 import { FileUploadInterface } from "./dto/file-upload.interface";
@@ -55,6 +57,7 @@ export const withFilesSelect = (
         offset?: number;
         limit?: number;
         scope?: DamScopeInterface;
+        imageCropArea?: ImageCropAreaInput;
     },
 ): QueryBuilder<FileInterface> => {
     if (args.query) {
@@ -80,6 +83,9 @@ export const withFilesSelect = (
     }
 
     if (args.imageId) qb.andWhere({ image: { id: args.imageId } });
+    if (args.imageCropArea) {
+        qb.andWhere({ image: { cropArea: args.imageCropArea } });
+    }
 
     if (args.sortColumnName && args.sortDirection) {
         qb.orderBy({ [`file.${args.sortColumnName}`]: args.sortDirection });
@@ -110,6 +116,7 @@ export class FilesService {
         private readonly imgproxyService: ImgproxyService,
         private readonly orm: MikroORM,
         private readonly contentScopeService: ContentScopeService,
+        @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
     ) {}
 
     private selectQueryBuilder(): QueryBuilder<FileInterface> {
@@ -180,8 +187,8 @@ export class FilesService {
             .getResult();
     }
 
-    async findCopiesOfFileInScope(fileId: string, scope: DamScopeInterface) {
-        return withFilesSelect(this.selectQueryBuilder(), { copyOfId: fileId, scope: scope }).getResult();
+    async findCopiesOfFileInScope(fileId: string, imageCropArea?: ImageCropAreaInput, scope?: DamScopeInterface) {
+        return withFilesSelect(this.selectQueryBuilder(), { copyOfId: fileId, imageCropArea, scope }).getResult();
     }
 
     async findOneById(id: string): Promise<FileInterface | null> {
@@ -220,7 +227,15 @@ export class FilesService {
 
     async create({ folderId, ...data }: CreateFileInput & { copyOf?: FileInterface }): Promise<FileInterface> {
         const folder = folderId ? await this.foldersService.findOneById(folderId) : undefined;
-        return this.save(this.filesRepository.create({ ...data, license: { ...data.license }, folder: folder?.id }));
+        return this.save(
+            this.filesRepository.create({
+                ...data,
+                license: { ...data.license },
+                folder: folder?.id,
+                importSourceId: data.importSourceId,
+                importSourceType: data.importSourceType,
+            }),
+        );
     }
 
     async updateById(id: string, data: UpdateFileInput): Promise<FileInterface> {
@@ -254,7 +269,7 @@ export class FilesService {
 
         for (const file of files) {
             // Convert to JS object because deep-comparing classes and objects doesn't work
-            if (targetFolder?.scope !== undefined && !isEqual({ ...file.scope }, { ...targetFolder.scope })) {
+            if (targetFolder?.scope !== undefined && !this.contentScopeService.scopesAreEqual(file.scope, targetFolder.scope)) {
                 throw new Error("Target folder scope doesn't match file scope");
             }
 
@@ -286,7 +301,10 @@ export class FilesService {
         return entity;
     }
 
-    async upload({ file, folderId }: { file: FileUploadInterface; folderId?: string }, scope?: DamScopeInterface): Promise<FileInterface> {
+    async upload(
+        file: FileUploadInterface,
+        { folderId, scope, ...assignData }: Omit<UploadFileBodyInterface, "scope"> & { scope?: DamScopeInterface },
+    ): Promise<FileInterface> {
         let result: FileInterface | undefined = undefined;
         try {
             const contentHash = await this.calculateHashForFile(file.path);
@@ -312,6 +330,14 @@ export class FilesService {
                 Math.round(((image.width * image.height) / 1000000) * 10) / 10 >= this.imgproxyConfig.maxSrcResolution
             ) {
                 throw new CometImageResolutionException(`Maximal image resolution exceeded`);
+            }
+
+            if (folderId) {
+                const folder = await this.foldersService.findOneById(folderId);
+                if (!folder) throw new Error("Folder not found");
+                if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
+                    throw new Error("Folder scope doesn't match passed scope");
+                }
             }
 
             await this.blobStorageBackendService.upload(file, contentHash, this.config.filesDirectory);
@@ -341,6 +367,7 @@ export class FilesService {
                         : undefined,
                 contentHash,
                 scope,
+                ...assignData,
             });
 
             if (result.image) {
@@ -401,7 +428,7 @@ export class FilesService {
         return Number(result.rows[0].row_number) - 1;
     }
 
-    async createCopyOfFile(file: FileInterface, { targetFolder }: { targetFolder: FolderInterface }) {
+    async createCopyOfFile(file: FileInterface, { inboxFolder }: { inboxFolder: FolderInterface }) {
         let fileImageInput: ImageFileInput | undefined;
         if (file.image) {
             const { id: ignoreId, file: ignoreFile, ...imageProps } = file.image;
@@ -422,25 +449,23 @@ export class FilesService {
         const fileInput: CreateFileInput & { copyOf: FileInterface } = {
             ...Utils.copy(fileProps),
             image: fileImageInput,
-            folderId: targetFolder.id,
+            folderId: inboxFolder.id,
             copyOf: file,
-            scope: targetFolder.scope,
+            scope: inboxFolder.scope,
         };
 
         return this.create(fileInput);
     }
 
-    async copyFilesToScope({
-        user,
-        fileIds,
-        targetScope,
-        existingInboxFolderId,
-    }: {
-        user: CurrentUserInterface;
-        fileIds: string[];
-        targetScope: DamScopeInterface;
-        existingInboxFolderId?: string;
-    }) {
+    async copyFilesToScope({ user, fileIds, inboxFolderId }: { user: CurrentUserInterface; fileIds: string[]; inboxFolderId: string }) {
+        const inboxFolder = await this.foldersService.findOneById(inboxFolderId);
+        if (!inboxFolder) {
+            throw new Error("Specified inbox folder doesn't exist.");
+        }
+        if (inboxFolder.scope && !this.accessControlService.isAllowedContentScope(user, inboxFolder.scope)) {
+            throw new Error("User can't access the target scope");
+        }
+
         const getUniqueFileScopes = (files: FileInterface[]): DamScopeInterface[] => {
             const fileScopes: DamScopeInterface[] = [];
             for (const file of files) {
@@ -456,61 +481,6 @@ export class FilesService {
             return fileScopes;
         };
 
-        const getOrCreateInboxFolder = async ({
-            existingInboxFolder,
-            targetScope,
-            fileScopes,
-        }: {
-            existingInboxFolder?: string;
-            targetScope: DamScopeInterface;
-            fileScopes: DamScopeInterface[];
-        }) => {
-            let createdInboxFolderAutomatically = false;
-            let inboxFolder: FolderInterface;
-            if (existingInboxFolder) {
-                const folder = await this.foldersService.findOneById(existingInboxFolder);
-                if (folder === null) {
-                    throw new Error("Specified inbox folder doesn't exist.");
-                }
-
-                inboxFolder = folder;
-            } else {
-                const scopeString = fileScopes.length === 0 ? "unknown" : fileScopes.map((scope) => Object.values(scope).join("-")).join(", ");
-                const date = new Date();
-
-                inboxFolder = await this.foldersService.create(
-                    {
-                        name: `Copy from ${scopeString} ${format(date, "dd.MM.yyyy")}, ${format(date, "HH:mm:ss")}`,
-                        isInboxFromOtherScope: true,
-                    },
-                    targetScope,
-                );
-                createdInboxFolderAutomatically = true;
-            }
-
-            return { inboxFolder, createdInboxFolderAutomatically };
-        };
-
-        const findCopyWithSameCroppingInTargetScope = async (file: FileInterface) => {
-            const copiesInTargetScope = await this.findCopiesOfFileInScope(file.id, targetScope);
-
-            if (copiesInTargetScope.length === 0) {
-                return undefined;
-            }
-
-            for (const copy of copiesInTargetScope) {
-                if (isEqual(file.image?.cropArea, copy.image?.cropArea)) {
-                    return copy;
-                }
-            }
-
-            return undefined;
-        };
-
-        if (!this.contentScopeService.canAccessScope(targetScope, user)) {
-            throw new Error("User can't access the target scope");
-        }
-
         const files = await this.findMultipleByIds(fileIds);
         if (files.length === 0) {
             throw new Error("No valid file ids provided");
@@ -518,51 +488,19 @@ export class FilesService {
 
         const fileScopes = getUniqueFileScopes(files);
         const canAccessFileScopes = fileScopes.every((scope) => {
-            return this.contentScopeService.canAccessScope(scope, user);
+            return this.accessControlService.isAllowedContentScope(user, scope);
         });
         if (!canAccessFileScopes) {
             throw new Error(`User can't access the scope of one or more files`);
         }
 
-        const { inboxFolder: returnedInboxFolder, createdInboxFolderAutomatically } = await getOrCreateInboxFolder({
-            existingInboxFolder: existingInboxFolderId,
-            targetScope,
-            fileScopes,
-        });
-        let inboxFolder: FolderInterface | undefined = returnedInboxFolder;
-        if (!this.contentScopeService.scopesAreEqual(targetScope, inboxFolder.scope)) {
-            throw new Error("Target scope and inbox folder scope don't match");
-        }
-
-        let numberNewlyCopiedFiles = 0;
-        let numberAlreadyCopiedFiles = 0;
-
         const mappedFiles: Array<{ rootFile: FileInterface; copy: FileInterface }> = [];
         for (const file of files) {
-            if (this.contentScopeService.scopesAreEqual(file.scope, targetScope)) {
-                continue;
-            }
-
-            let copiedFile: FileInterface;
-
-            const copyInTargetScope = await findCopyWithSameCroppingInTargetScope(file);
-            if (copyInTargetScope) {
-                copiedFile = copyInTargetScope;
-                numberAlreadyCopiedFiles++;
-            } else {
-                copiedFile = await this.createCopyOfFile(file, { targetFolder: inboxFolder });
-                numberNewlyCopiedFiles++;
-            }
-
+            const copiedFile = await this.createCopyOfFile(file, { inboxFolder });
             mappedFiles.push({ rootFile: file, copy: copiedFile });
         }
 
-        if (createdInboxFolderAutomatically && numberNewlyCopiedFiles === 0) {
-            await this.foldersService.delete(inboxFolder.id);
-            inboxFolder = undefined;
-        }
-
-        return { inboxFolderId: inboxFolder?.id, numberNewlyCopiedFiles, numberAlreadyCopiedFiles, mappedFiles };
+        return { mappedFiles };
     }
 
     async findNextAvailableFilename({

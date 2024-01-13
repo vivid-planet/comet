@@ -9,9 +9,8 @@ import {
     ExtractBlockInput,
     inputToData,
 } from "@comet/blocks-api";
+import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { IsOptional, IsString, ValidateNested } from "class-validator";
-
-import { LinkListBlock } from "../../common/blocks/link-list.block";
 
 class FooterLinkSectionBlockData extends BlockData {
     @BlockField()

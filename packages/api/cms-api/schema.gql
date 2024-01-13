@@ -63,8 +63,6 @@ type DamFileLicense {
 enum LicenseType {
   ROYALTY_FREE
   RIGHTS_MANAGED
-  SUBSCRIPTION
-  MICRO
 }
 
 """
@@ -90,7 +88,7 @@ type AutoBuildStatus {
 
 type Build {
   id: ID!
-  status: JobStatus!
+  status: KubernetesJobStatus!
   name: String
 
   """
@@ -103,18 +101,37 @@ type Build {
   estimatedCompletionTime: DateTime
 }
 
-enum JobStatus {
+enum KubernetesJobStatus {
   pending
   active
   succeeded
   failed
 }
 
-type CronJob {
+type KubernetesCronJob {
   id: ID!
   name: String!
+
+  """
+  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+  """
+  label: String
   schedule: String!
   lastScheduledAt: DateTime
+  lastJobRun: KubernetesJob
+}
+
+type KubernetesJob {
+  id: ID!
+  name: String!
+
+  """
+  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+  """
+  label: String
+  status: KubernetesJobStatus!
+  startTime: DateTime
+  completionTime: DateTime
 }
 
 type FilenameResponse {
@@ -136,7 +153,7 @@ type User {
 
 type UserPermission {
   id: ID!
-  source: UserPermissionSource
+  source: UserPermissionSource!
   permission: String!
   validFrom: DateTime
   validTo: DateTime
@@ -199,17 +216,11 @@ input DependentFilter {
   rootColumnName: String
 }
 
-type CurrentUserRight {
-  right: String!
-  values: [String!]!
-}
-
 type CurrentUser {
+  id: String!
   name: String!
   email: String!
   language: String!
-  role: String!
-  rights: [CurrentUserRight!]
   contentScopes: [JSONObject!]!
   permissions: [CurrentUserPermission!]!
 }
@@ -280,6 +291,8 @@ type DamFile {
   license: DamFileLicense
   createdAt: DateTime!
   updatedAt: DateTime!
+  importSourceId: String
+  importSourceType: String
   fileUrl: String!
   duplicates: [DamFile!]!
   damPath: String!
@@ -294,9 +307,6 @@ type PaginatedDamItems {
 union DamItem = DamFile | DamFolder
 
 type CopyFilesResponse {
-  numberNewlyCopiedFiles: Float!
-  numberAlreadyCopiedFiles: Float!
-  inboxFolderId: String
   mappedFiles: [MappedFile!]!
 }
 
@@ -327,6 +337,7 @@ type Query {
   damItemListPosition(sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Int!
   damFilesList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
+  findCopiesOfFileInScope(id: ID!, scope: DamScopeInput! = {}, imageCropArea: ImageCropAreaInput): [DamFile!]!
   damIsFilenameOccupied(filename: String!, scope: DamScopeInput! = {}, folderId: String): Boolean!
   damAreFilenamesOccupied(filenames: [FilenameInput!]!, scope: DamScopeInput! = {}): [FilenameResponse!]!
   damFoldersFlat(scope: DamScopeInput! = {}): [DamFolder!]!
@@ -338,8 +349,11 @@ type Query {
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   paginatedPageTreeNodes(scope: PageTreeNodeScopeInput! = {}, category: String, sort: [PageTreeNodeSort!], offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
-  cronJobs: [CronJob!]!
+  kubernetesCronJobs: [KubernetesCronJob!]!
+  kubernetesCronJob(name: String!): KubernetesCronJob!
+  kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
   currentUser: CurrentUser!
+  getSitePreviewJwt(path: String!, previewData: PreviewData!): String!
   userPermissionsUserById(id: String!): User!
   userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
@@ -419,6 +433,14 @@ input FileFilterInput {
   mimetypes: [String!]
 }
 
+input ImageCropAreaInput {
+  focalPoint: FocalPoint!
+  width: Float
+  height: Float
+  x: Float
+  y: Float
+}
+
 input FilenameInput {
   name: String!
   folderId: ID
@@ -446,6 +468,10 @@ enum SlugAvailability {
   Available
   Taken
   Reserved
+}
+
+input PreviewData {
+  includeInvisible: Boolean!
 }
 
 input UserFilter {
@@ -476,16 +502,9 @@ type Mutation {
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
+  importDamFileByDownload(url: String!, scope: DamScopeInput! = {}, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
-  copyFilesToScope(
-    fileIds: [ID!]!
-    targetScope: DamScopeInput!
-
-    """
-    You can set this argument to use the same inbox folder for multiple consecutive copy operations. Keep it empty for the first copy operation and use the ID from the response for the following copies.
-    """
-    existingInboxFolderId: ID
-  ): CopyFilesResponse!
+  copyFilesToScope(fileIds: [ID!]!, inboxFolderId: ID!): CopyFilesResponse!
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
   restoreDamFile(id: ID!): DamFile!
@@ -503,6 +522,7 @@ type Mutation {
   movePageTreeNodesByNeighbour(ids: [ID!]!, input: MovePageTreeNodesByNeighbourInput!): [PageTreeNode!]!
   updatePageTreeNodeCategory(id: ID!, category: String!): PageTreeNode!
   createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
+  triggerKubernetesCronJob(name: String!): KubernetesJob!
   currentUserSignOut: String!
   userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
@@ -540,14 +560,6 @@ input UpdateImageFileInput {
   cropArea: ImageCropAreaInput
 }
 
-input ImageCropAreaInput {
-  focalPoint: FocalPoint!
-  width: Float
-  height: Float
-  x: Float
-  y: Float
-}
-
 input LicenseInput {
   type: LicenseType
   details: String
@@ -559,6 +571,7 @@ input LicenseInput {
 input CreateDamFolderInput {
   name: String!
   parentId: ID
+  isInboxFromOtherScope: Boolean! = false
 }
 
 input UpdateDamFolderInput {

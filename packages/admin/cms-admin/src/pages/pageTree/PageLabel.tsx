@@ -17,14 +17,20 @@ interface PageLabelProps {
 const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, onClick }) => {
     const { documentTypes } = usePageTreeContext();
     const documentType = documentTypes[page.documentType];
+    const pathMatches = page.matches.filter((match) => match.where === "path");
 
     return (
         <Root onClick={onClick}>
             <PageTypeIcon page={page} disabled={disabled} />
             <LinkContent>
                 <LinkText color={page.visibility === "Unpublished" || disabled ? "textSecondary" : "textPrimary"}>
-                    <MarkedMatches text={page.name} matches={page.matches} />
+                    <MarkedMatches text={page.name} matches={page.matches.filter((match) => match.where === "name")} />
                 </LinkText>
+                {pathMatches.length > 0 && (
+                    <LinkText color={page.visibility === "Unpublished" || disabled ? "textSecondary" : "textPrimary"}>
+                        <MarkedMatches text={page.path} matches={pathMatches} />
+                    </LinkText>
+                )}
                 {page.visibility === "Archived" && (
                     <ArchivedChip
                         component="span"
@@ -35,7 +41,6 @@ const PageLabel: React.FunctionComponent<PageLabelProps> = ({ page, disabled, on
                     />
                 )}
             </LinkContent>
-
             {documentType.InfoTag !== undefined && (
                 <InfoPanel>
                     <documentType.InfoTag page={page} />
@@ -60,6 +65,7 @@ const LinkContent = styled("div")`
     margin-left: ${({ theme }) => theme.spacing(2)};
     display: flex;
     min-width: 0;
+    flex-direction: column;
 `;
 
 const LinkText = styled(Typography)`

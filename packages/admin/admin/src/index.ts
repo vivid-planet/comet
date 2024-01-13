@@ -1,3 +1,4 @@
+export { Alert, AlertClassKey, AlertProps } from "./alert/Alert";
 export { useFocusAwarePolling } from "./apollo/useFocusAwarePolling";
 export { AppHeader, AppHeaderClassKey } from "./appHeader/AppHeader";
 export { AppHeaderButton, AppHeaderButtonProps } from "./appHeader/button/AppHeaderButton";
@@ -26,6 +27,7 @@ export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
+export { FieldSet, FieldSetClassKey, FieldSetProps } from "./common/FieldSet";
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
 export { Loading, LoadingProps } from "./common/Loading";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
@@ -64,6 +66,7 @@ export { useErrorDialog, UseErrorDialogReturn } from "./error/errordialog/useErr
 export { createFetch, FetchContext, FetchProvider, useFetch } from "./fetchProvider/fetch";
 export { FileIcon } from "./fileIcons/FileIcon";
 export { FinalForm, FinalFormSubmitEvent, useFormApiRef } from "./FinalForm";
+export { FinalFormSaveButton } from "./FinalFormSaveButton";
 export {
     FinalFormSaveCancelButtonsLegacy,
     FinalFormSaveCancelButtonsLegacyClassKey,

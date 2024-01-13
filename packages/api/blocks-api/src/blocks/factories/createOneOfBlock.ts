@@ -80,7 +80,7 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
             },
             { toClassOnly: true },
         )
-        @BlockField(Object.values(supportedBlocks))
+        @BlockField({ kind: "oneOfBlocks", blocks: supportedBlocks })
         props: BlockData;
 
         async transformToPlain(): Promise<TraversableTransformResponse> {
@@ -210,7 +210,7 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
                         {
                             name: "props",
                             kind: BlockMetaFieldKind.OneOfBlocks,
-                            blocks: Object.values(supportedBlocks),
+                            blocks: supportedBlocks,
                             nullable: false,
                         },
                     ],

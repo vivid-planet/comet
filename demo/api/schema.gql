@@ -67,8 +67,6 @@ type DamFileLicense {
 enum LicenseType {
   ROYALTY_FREE
   RIGHTS_MANAGED
-  SUBSCRIPTION
-  MICRO
 }
 
 """
@@ -94,7 +92,7 @@ type AutoBuildStatus {
 
 type Build {
   id: ID!
-  status: JobStatus!
+  status: KubernetesJobStatus!
   name: String
 
   """
@@ -107,18 +105,37 @@ type Build {
   estimatedCompletionTime: DateTime
 }
 
-enum JobStatus {
+enum KubernetesJobStatus {
   pending
   active
   succeeded
   failed
 }
 
-type CronJob {
+type KubernetesCronJob {
   id: ID!
   name: String!
+
+  """
+  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+  """
+  label: String
   schedule: String!
   lastScheduledAt: DateTime
+  lastJobRun: KubernetesJob
+}
+
+type KubernetesJob {
+  id: ID!
+  name: String!
+
+  """
+  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+  """
+  label: String
+  status: KubernetesJobStatus!
+  startTime: DateTime
+  completionTime: DateTime
 }
 
 type FilenameResponse {
@@ -131,6 +148,15 @@ type CurrentUserPermission {
   permission: String!
 }
 
+type CurrentUser {
+  id: String!
+  name: String!
+  email: String!
+  language: String!
+  contentScopes: [JSONObject!]!
+  permissions: [CurrentUserPermission!]!
+}
+
 type User {
   id: String!
   name: String!
@@ -140,7 +166,7 @@ type User {
 
 type UserPermission {
   id: ID!
-  source: UserPermissionSource
+  source: UserPermissionSource!
   permission: String!
   validFrom: DateTime
   validTo: DateTime
@@ -260,14 +286,6 @@ type PredefinedPage implements DocumentInterface {
   type: String
 }
 
-type CurrentUser {
-  name: String!
-  email: String!
-  language: String!
-  role: String!
-  domains: [String!]!
-}
-
 type DamScope {
   domain: String!
 }
@@ -301,6 +319,8 @@ type DamFile {
   license: DamFileLicense
   createdAt: DateTime!
   updatedAt: DateTime!
+  importSourceId: String
+  importSourceType: String
   scope: DamScope!
   fileUrl: String!
   duplicates: [DamFile!]!
@@ -530,9 +550,6 @@ type PaginatedDamItems {
 union DamItem = DamFile | DamFolder
 
 type CopyFilesResponse {
-  numberNewlyCopiedFiles: Float!
-  numberAlreadyCopiedFiles: Float!
-  inboxFolderId: String
   mappedFiles: [MappedFile!]!
 }
 
@@ -610,6 +627,7 @@ type Query {
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   paginatedPageTreeNodes(scope: PageTreeNodeScopeInput!, category: String, sort: [PageTreeNodeSort!], offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
+  getSitePreviewJwt(path: String!, previewData: PreviewData!): String!
   redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection! = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
   paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int! = 0, limit: Int! = 25): PaginatedRedirects!
   redirect(id: ID!): Redirect!
@@ -618,6 +636,7 @@ type Query {
   damItemListPosition(sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput!, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Int!
   damFilesList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput!, folderId: ID, includeArchived: Boolean = false, filter: FileFilterInput): PaginatedDamFiles!
   damFile(id: ID!): DamFile!
+  findCopiesOfFileInScope(id: ID!, scope: DamScopeInput!, imageCropArea: ImageCropAreaInput): [DamFile!]!
   damIsFilenameOccupied(filename: String!, scope: DamScopeInput!, folderId: String): Boolean!
   damAreFilenamesOccupied(filenames: [FilenameInput!]!, scope: DamScopeInput!): [FilenameResponse!]!
   damFoldersFlat(scope: DamScopeInput!): [DamFolder!]!
@@ -633,7 +652,9 @@ type Query {
   footer(scope: FooterContentScopeInput!): Footer
   predefinedPage(id: ID!): PredefinedPage
   pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
-  cronJobs: [CronJob!]!
+  kubernetesCronJobs: [KubernetesCronJob!]!
+  kubernetesCronJob(name: String!): KubernetesCronJob!
+  kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
   products(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
@@ -694,6 +715,10 @@ enum SlugAvailability {
   Reserved
 }
 
+input PreviewData {
+  includeInvisible: Boolean!
+}
+
 input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
@@ -741,6 +766,14 @@ enum DamItemType {
 input FileFilterInput {
   searchText: String
   mimetypes: [String!]
+}
+
+input ImageCropAreaInput {
+  focalPoint: FocalPoint!
+  width: Float
+  height: Float
+  x: Float
+  y: Float
 }
 
 input FilenameInput {
@@ -901,16 +934,9 @@ type Mutation {
   updateRedirectActiveness(id: ID!, input: RedirectUpdateActivenessInput!): Redirect!
   deleteRedirect(id: ID!): Boolean!
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
+  importDamFileByDownload(url: String!, scope: DamScopeInput!, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
-  copyFilesToScope(
-    fileIds: [ID!]!
-    targetScope: DamScopeInput!
-
-    """
-    You can set this argument to use the same inbox folder for multiple consecutive copy operations. Keep it empty for the first copy operation and use the ID from the response for the following copies.
-    """
-    existingInboxFolderId: ID
-  ): CopyFilesResponse!
+  copyFilesToScope(fileIds: [ID!]!, inboxFolderId: ID!): CopyFilesResponse!
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
   restoreDamFile(id: ID!): DamFile!
@@ -929,6 +955,7 @@ type Mutation {
   updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
   saveFooter(scope: FooterContentScopeInput!, input: FooterInput!, lastUpdatedAt: DateTime): Footer!
   savePredefinedPage(id: ID!, input: PredefinedPageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): PredefinedPage!
+  triggerKubernetesCronJob(name: String!): KubernetesJob!
   createProduct(input: ProductInput!): Product!
   updateProduct(id: ID!, input: ProductUpdateInput!, lastUpdatedAt: DateTime): Product!
   deleteProduct(id: ID!): Boolean!
@@ -1042,14 +1069,6 @@ input UpdateImageFileInput {
   cropArea: ImageCropAreaInput
 }
 
-input ImageCropAreaInput {
-  focalPoint: FocalPoint!
-  width: Float
-  height: Float
-  x: Float
-  y: Float
-}
-
 input LicenseInput {
   type: LicenseType
   details: String
@@ -1061,6 +1080,7 @@ input LicenseInput {
 input CreateDamFolderInput {
   name: String!
   parentId: ID
+  isInboxFromOtherScope: Boolean! = false
 }
 
 input UpdateDamFolderInput {

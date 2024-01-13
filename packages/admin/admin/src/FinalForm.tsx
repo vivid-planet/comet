@@ -5,15 +5,12 @@ import * as React from "react";
 import { AnyObject, Form, FormRenderProps, RenderableProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
-import { Loading } from "./common/Loading";
-import { EditDialogApiContext } from "./EditDialogApiContext";
 import { useEditDialogFormApi } from "./EditDialogFormApiContext";
 import { renderComponent } from "./finalFormRenderComponent";
 import { FinalFormContext, FinalFormContextProvider } from "./form/FinalFormContextProvider";
 import { messages } from "./messages";
 import { RouterPrompt } from "./router/Prompt";
 import { useSubRoutePrefix } from "./router/SubRoute";
-import { StackApiContext } from "./stack/Api";
 import { TableQueryContext } from "./table/TableQueryContext";
 
 export const useFormApiRef = <FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>() =>
@@ -39,9 +36,8 @@ interface IProps<FormValues = Record<string, any>, InitialFormValues = Partial<F
         event: FinalFormSubmitEvent,
     ) => SubmissionErrors | Promise<SubmissionErrors | undefined> | undefined | void;
 
-    /* override onAfterSubmit. This method will be called at the end of a submit process.
-     *
-     * default implementation : go back if a stackApi context exists
+    /**
+     * This method will be called at the end of a submit process.
      */
     onAfterSubmit?: (values: FormValues, form: FormApi<FormValues>) => void;
     validateWarning?: (values: FormValues) => ValidationErrors | Promise<ValidationErrors> | undefined;
@@ -70,18 +66,10 @@ export class FinalFormSubmitEvent extends Event {
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     const { client } = React.useContext(getApolloContext());
-    const stackApi = React.useContext(StackApiContext);
-    const editDialog = React.useContext(EditDialogApiContext);
     const tableQuery = React.useContext(TableQueryContext);
     const editDialogFormApi = useEditDialogFormApi();
 
-    const {
-        onAfterSubmit = () => {
-            stackApi?.goBack();
-            editDialog?.closeDialog({ delay: true });
-        },
-        validateWarning,
-    } = props;
+    const { onAfterSubmit, validateWarning } = props;
 
     return (
         <Form
@@ -170,11 +158,18 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         return true;
                     }}
                     saveAction={async () => {
-                        if (formRenderProps.hasValidationErrors) {
+                        editDialogFormApi?.onFormStatusChange("saving");
+                        const hasValidationErrors = await waitForValidationToFinish(formRenderProps.form);
+
+                        if (hasValidationErrors) {
+                            editDialogFormApi?.onFormStatusChange("error");
                             return false;
                         }
+
                         const submissionErrors = await formRenderProps.form.submit();
+
                         if (submissionErrors) {
+                            editDialogFormApi?.onFormStatusChange("error");
                             return false;
                         }
 
@@ -197,20 +192,18 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         {(formRenderProps.submitError || formRenderProps.error) && (
                             <div className="error">{formRenderProps.submitError || formRenderProps.error}</div>
                         )}
-                        {!editDialog && <>{formRenderProps.submitting && <Loading behavior="fillParent" />}</>}
                     </form>
                 </RouterPrompt>
             </FinalFormContextProvider>
         );
     }
 
-    function handleSubmit(values: FormValues, form: FormApi<FormValues>) {
+    async function handleSubmit(values: FormValues, form: FormApi<FormValues>) {
         const submitEvent = (form.mutators.getSubmitEvent ? form.mutators.getSubmitEvent() : undefined) || new FinalFormSubmitEvent("submit");
         const ret = props.onSubmit(values, form, submitEvent);
 
-        if (ret === undefined) return ret;
-
         editDialogFormApi?.onFormStatusChange("saving");
+
         return Promise.resolve(ret)
             .then((data) => {
                 // setTimeout is required because of https://github.com/final-form/final-form/pull/229
@@ -226,7 +219,8 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                         }
                     }
 
-                    onAfterSubmit(values, form);
+                    onAfterSubmit?.(values, form);
+                    editDialogFormApi?.onAfterSave?.();
                 });
                 return data;
             })
@@ -234,6 +228,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                 (data) => {
                     // for final-form undefined means success, an obj means error
                     editDialogFormApi?.resetFormStatus();
+
                     form.reset(values);
                     return undefined;
                 },
@@ -251,3 +246,22 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             );
     }
 }
+
+const waitForValidationToFinish = (form: FormApi<any>): Promise<boolean> | boolean => {
+    const formState = form.getState();
+    if (!formState.validating) {
+        return formState.hasValidationErrors;
+    }
+
+    return new Promise((resolve) => {
+        const unsubscribe = form.subscribe(
+            (state) => {
+                if (!state.validating) {
+                    unsubscribe();
+                    resolve(state.hasValidationErrors);
+                }
+            },
+            { validating: true, hasValidationErrors: true },
+        );
+    });
+};

@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 
 import { usePromise } from "../../common/usePromise";
+
 export interface AdminTabLabelProps {
     children: React.ReactNode;
     isValid?: () => Promise<boolean> | boolean;

@@ -1,24 +1,23 @@
-import { Inject, Injectable, mixin, NestInterceptor, Type } from "@nestjs/common";
+import { CallHandler, ExecutionContext, HttpException, Inject, Injectable, mixin, NestInterceptor, Type } from "@nestjs/common";
 import { FileInterceptor as NestFileInterceptor } from "@nestjs/platform-express";
 import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 import fs from "fs";
-import * as mimedb from "mime-db";
 import * as multer from "multer";
 import os from "os";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import { v4 as uuid } from "uuid";
 
 import { CometValidationException } from "../../common/errors/validation.exception";
-import { defaultDamAcceptedMimetypes } from "../common/mimeTypes/default-dam-accepted-mimetypes";
-import { DamConfig } from "../dam.config";
-import { DAM_CONFIG } from "../dam.constants";
+import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
+import { FileValidationService } from "./file-validation.service";
+import { removeMulterTempFile } from "./files.utils";
 
 export function DamUploadFileInterceptor(fieldName: string): Type<NestInterceptor> {
     @Injectable()
     class Interceptor implements NestInterceptor {
         fileInterceptor: NestInterceptor;
 
-        constructor(@Inject(DAM_CONFIG) private readonly config: DamConfig) {
+        constructor(@Inject(DAM_FILE_VALIDATION_SERVICE) private readonly fileValidationService: FileValidationService) {
             const multerOptions: MulterOptions = {
                 storage: multer.diskStorage({
                     destination: function (req, file, cb) {
@@ -34,49 +33,42 @@ export function DamUploadFileInterceptor(fieldName: string): Type<NestIntercepto
                         });
                     },
                     filename: function (req, file, cb) {
+                        // otherwise special characters aren't decoded properly (https://github.com/expressjs/multer/issues/836#issuecomment-1264338996)
+                        file.originalname = Buffer.from(file.originalname, "latin1").toString("utf8");
                         cb(null, `${uuid()}-${file.originalname}`);
                     },
                 }),
                 limits: {
-                    fileSize: config.maxFileSize * 1024 * 1024,
+                    fileSize: this.fileValidationService.config.maxFileSize * 1024 * 1024,
                 },
                 fileFilter: (req, file, cb) => {
-                    const acceptedMimeTypes = [...defaultDamAcceptedMimetypes, ...(config.additionalMimeTypes ?? [])];
-
-                    if (!acceptedMimeTypes.includes(file.mimetype)) {
-                        return cb(new CometValidationException(`Unsupported mime type: ${file.mimetype}`), false);
-                    }
-
-                    const extension = file.originalname.split(".").pop()?.toLowerCase();
-                    if (extension === undefined) {
-                        return cb(new CometValidationException(`Invalid file name: Missing file extension`), false);
-                    }
-
-                    let supportedExtensions: readonly string[] | undefined;
-                    if (file.mimetype === "application/x-zip-compressed") {
-                        // zip files in Windows, not supported by mime-db
-                        // see https://github.com/jshttp/mime-db/issues/245
-                        supportedExtensions = ["zip"];
-                    } else {
-                        supportedExtensions = mimedb[file.mimetype]?.extensions;
-                    }
-
-                    if (supportedExtensions === undefined || !supportedExtensions.includes(extension)) {
-                        return cb(
-                            new CometValidationException(`File type and extension mismatch: .${extension} and ${file.mimetype} are incompatible`),
-                            false,
-                        );
-                    }
-
-                    return cb(null, true);
+                    this.fileValidationService.validateFileMetadata(file).then((result) => {
+                        if (result === undefined) {
+                            return cb(null, true);
+                        } else {
+                            return cb(new CometValidationException(result), false);
+                        }
+                    });
                 },
             };
 
             this.fileInterceptor = new (NestFileInterceptor(fieldName, multerOptions))();
         }
 
-        intercept(...args: Parameters<NestInterceptor["intercept"]>): Observable<unknown> | Promise<Observable<unknown>> {
-            return this.fileInterceptor.intercept(...args);
+        async intercept(context: ExecutionContext, next: CallHandler<unknown>): Promise<Observable<unknown>> {
+            const fileInterceptor = await this.fileInterceptor.intercept(context, next);
+
+            const ctx = context.switchToHttp();
+            const file = ctx.getRequest().file;
+
+            const error = await this.fileValidationService.validateFileContents(file);
+
+            if (error) {
+                await removeMulterTempFile(file);
+                return throwError(() => new HttpException(`Rejected File Upload: ${error}`, 422));
+            }
+
+            return fileInterceptor;
         }
     }
     return mixin(Interceptor);

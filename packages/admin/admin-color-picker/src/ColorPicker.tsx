@@ -11,6 +11,7 @@ import tinycolor from "tinycolor2";
 import { useDebouncedCallback } from "use-debounce";
 
 import { ColorPickerClassKey, styles } from "./ColorPicker.styles";
+
 export interface ColorPickerPropsComponents extends InputWithPopperComponents {
     ColorPickerColorPreview?: React.ElementType<ColorPickerColorPreviewProps>;
     ColorPickerInvalidPreview?: React.ElementType<React.HTMLAttributes<HTMLDivElement>>;

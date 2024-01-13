@@ -46,5 +46,5 @@ export interface DocumentInterface<
     InfoTag?: React.ComponentType<{ page: PageTreePage }>;
     anchors: (input: DocumentInput) => string[];
     dependencies: (input: DocumentInput) => BlockDependency[];
-    replaceDependenciesInOutput?: (output: DocumentOutput, replacements: ReplaceDependencyObject[]) => DocumentOutput;
+    replaceDependenciesInOutput: (output: DocumentOutput, replacements: ReplaceDependencyObject[]) => DocumentOutput;
 }
