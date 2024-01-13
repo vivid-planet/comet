@@ -132,7 +132,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
                     (blockPreviewState as any)[attr] = extractedBlock.createPreviewState(blockState, {
                         ...previewContext,
-                        parentUrl: `${previewContext.parentUrl}/${attr}/${attr}`,
+                        parentUrl: `${previewContext.parentUrlSubRoute ?? previewContext.parentUrl}/${attr}/${attr}`,
                     });
                 } else if ((block.nested == null || !block.nested) && isBlockInterface(extractedBlock)) {
                     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -140,7 +140,8 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
 
                     const embeddedBlockState = extractedBlock.createPreviewState(blockState, {
                         ...previewContext,
-                        parentUrl: `${previewContext.parentUrl}/${attr}`,
+                        parentUrlSubRoute: `${previewContext.parentUrl}/${attr}`,
+                        parentUrl: `${previewContext.parentUrl}`,
                     });
                     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
                     (blockPreviewState as any)[attr] = { ...embeddedBlockState, adminMeta: { route: `${previewContext.parentUrl}#${attr}` } };

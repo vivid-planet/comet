@@ -7,6 +7,7 @@ export type DispatchSetStateAction<S> = (setStateAction: SetStateAction<S>) => v
 export interface IPreviewContext {
     showVisibleOnly?: boolean;
     parentUrl: string;
+    parentUrlSubRoute?: string;
 }
 
 interface AdminMetaInterface {
