@@ -2,4 +2,4 @@
 "@comet/admin": minor
 ---
 
-Add `SubmissionBoundary` and `SubmissionBoundarySaveButton` that helps implementing multiple forms with a centralized save button
+Add `SaveBoundary` and `SaveBoundarySaveButton` that helps implementing multiple forms with a centralized save button

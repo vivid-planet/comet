@@ -12,8 +12,8 @@ import { FinalFormContext, FinalFormContextProvider } from "./form/FinalFormCont
 import { messages } from "./messages";
 import { RouterPrompt } from "./router/Prompt";
 import { useSubRoutePrefix } from "./router/SubRoute";
+import { Saveable, useSaveBoundaryApi } from "./saveBoundary/SaveBoundary";
 import { StackApiContext } from "./stack/Api";
-import { SubmissionBoundaryState, useSubmissionBoundaryApi } from "./submissionBoundary/SubmissionBoundary";
 import { TableQueryContext } from "./table/TableQueryContext";
 
 export const useFormApiRef = <FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>() =>
@@ -75,11 +75,11 @@ function RouterPromptIf({
     subRoutePath: string;
     formApi: FormApi<any>;
 }) {
-    const submissionBoundaryApi = useSubmissionBoundaryApi();
+    const saveBoundaryApi = useSaveBoundaryApi();
     const intl = useIntl();
 
-    if (submissionBoundaryApi) {
-        //render no RouterPrompt if we are inside a SubmissionBoundary
+    if (saveBoundaryApi) {
+        //render no RouterPrompt if we are inside a SaveBoundary
         return <>{children}</>;
     }
     return (
@@ -133,7 +133,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
     function RenderForm({ formContext = {}, ...formRenderProps }: FormRenderProps<FormValues> & { formContext: Partial<FinalFormContext> }) {
         const subRoutePrefix = useSubRoutePrefix();
-        const submissionBoundaryApi = useSubmissionBoundaryApi();
+        const saveBoundaryApi = useSaveBoundaryApi();
         if (props.apiRef) props.apiRef.current = formRenderProps.form;
         const { mutators } = formRenderProps.form;
         const setFieldData = mutators.setFieldData as (...args: any[]) => any;
@@ -213,11 +213,11 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
         return (
             <FinalFormContextProvider {...formContext}>
-                {submissionBoundaryApi && (
+                {saveBoundaryApi && (
                     <FormSpy subscription={{ dirty: true }}>
                         {(props) => (
                             <>
-                                <SubmissionBoundaryState hasChanges={props.dirty} doSave={doSave} />
+                                <Saveable hasChanges={props.dirty} doSave={doSave} />
                             </>
                         )}
                     </FormSpy>

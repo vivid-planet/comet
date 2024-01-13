@@ -4,8 +4,8 @@ import {
     Stack,
     StackPage,
     StackSwitch,
-    SubmissionBoundary,
-    SubmissionBoundarySaveButton,
+    SaveBoundary,
+    SaveBoundarySaveButton,
     Toolbar,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
@@ -31,13 +31,13 @@ const ProductsPage: React.FC = () => {
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit product" })}>
                     {(selectedId) => (
-                        <SubmissionBoundary>
+                        <SaveBoundary>
                             <Toolbar>
                                 <ToolbarBackButton />
                                 <ToolbarAutomaticTitleItem />
                                 <ToolbarFillSpace />
                                 <ToolbarActions>
-                                    <SubmissionBoundarySaveButton />
+                                    <SaveBoundarySaveButton />
                                 </ToolbarActions>
                             </Toolbar>
                             <RouterTabs>
@@ -75,7 +75,7 @@ const ProductsPage: React.FC = () => {
                                     </StackSwitch>
                                 </RouterTab>
                             </RouterTabs>
-                        </SubmissionBoundary>
+                        </SaveBoundary>
                     )}
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add product" })}>
