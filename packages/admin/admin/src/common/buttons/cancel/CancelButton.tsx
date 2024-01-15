@@ -1,8 +1,8 @@
 import { Clear } from "@comet/admin-icons";
-import { Button, ButtonClassKey, Theme } from "@mui/material";
+import { Button, ButtonClassKey } from "@mui/material";
 import { ButtonProps } from "@mui/material/Button";
+import { styled, Theme, useThemeProps } from "@mui/material/styles";
 import { ComponentsOverrides } from "@mui/material/styles/overrides";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -11,72 +11,27 @@ import { messages } from "../../../messages";
 export type CancelButtonProps = ButtonProps;
 export type CancelButtonClassKey = ButtonClassKey;
 
-const styles = () => {
-    return createStyles<CancelButtonClassKey, CancelButtonProps>({
-        root: {},
-        text: {},
-        textInherit: {},
-        textPrimary: {},
-        textSecondary: {},
+const Root = styled(Button, {
+    name: "CometAdminCancelButton",
+    slot: "root",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})();
 
-        outlined: {},
-        outlinedInherit: {},
-        outlinedPrimary: {},
-        outlinedSecondary: {},
-        contained: {},
-        containedInherit: {},
-        containedPrimary: {},
-        containedSecondary: {},
-        disableElevation: {},
-        focusVisible: {},
-        disabled: {},
-        colorInherit: {},
-        textSizeSmall: {},
-        textSizeMedium: {},
-        textSizeLarge: {},
-        outlinedSizeSmall: {},
-        outlinedSizeMedium: {},
-        outlinedSizeLarge: {},
-        containedSizeSmall: {},
-        containedSizeMedium: {},
-        containedSizeLarge: {},
-        sizeSmall: {},
-        sizeMedium: {},
-        sizeLarge: {},
-        fullWidth: {},
-        startIcon: {},
-        endIcon: {},
-        iconSizeSmall: {},
-        iconSizeMedium: {},
-        iconSizeLarge: {},
-        textError: {},
-        textInfo: {},
-        textSuccess: {},
-        textWarning: {},
-        outlinedError: {},
-        outlinedInfo: {},
-        outlinedSuccess: {},
-        outlinedWarning: {},
-        containedError: {},
-        containedInfo: {},
-        containedSuccess: {},
-        containedWarning: {},
-    });
-};
+export function CancelButton(inProps: CancelButtonProps) {
+    const {
+        children = <FormattedMessage {...messages.cancel} />,
+        startIcon = <Clear />,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminCancelButton" });
 
-function CancelBtn({
-    children = <FormattedMessage {...messages.cancel} />,
-    startIcon = <Clear />,
-    ...restProps
-}: CancelButtonProps & WithStyles<typeof styles>) {
     return (
-        <Button color="info" startIcon={startIcon} {...restProps}>
+        <Root color="info" startIcon={startIcon} {...restProps}>
             {children}
-        </Button>
+        </Root>
     );
 }
-
-export const CancelButton = withStyles(styles, { name: "CometAdminCancelButton" })(CancelBtn);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
