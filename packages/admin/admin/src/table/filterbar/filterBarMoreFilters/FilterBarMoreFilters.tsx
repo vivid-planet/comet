@@ -1,24 +1,56 @@
 import { Filter } from "@comet/admin-icons";
-import { ComponentsOverrides, Theme } from "@mui/material";
-import { WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides } from "@mui/material";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { FilterBarButton } from "../filterBarButton/FilterBarButton";
-import { FilterBarMoveFilersClassKey, styles } from "./FilterBarMoreFilters.styles";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export interface FilterBarMoreFiltersProps {
+
+export type FilterBarMoreFiltersClassKey = "root" | "button";
+
+const Root = styled("div", {
+    name: "CometAdminFilterBarMoreFilters",
+    slot: "root",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})(
+    css`
+        margin-bottom: 10px;
+        margin-right: 6px;
+    `,
+);
+
+const StyledFilterBarButton = styled(FilterBarButton, {
+    name: "CometAdminFilterBarMoreFilters",
+    slot: "button",
+    overridesResolver(_, styles) {
+        return [styles.button];
+    },
+})(
+    ({ theme }) => css`
+        font-weight: ${theme.typography.fontWeightBold};
+    `,
+);
+
+export interface FilterBarMoreFiltersProps extends ThemedComponentBaseProps<{ root: any; button: typeof FilterBarButton }> {
     icon?: React.ReactNode;
 }
 
-export function MoreFilters({
-    children,
-    icon = <Filter />,
-    classes,
-}: React.PropsWithChildren<FilterBarMoreFiltersProps> & WithStyles<typeof styles>): React.ReactElement {
+export function FilterBarMoreFilters(children: React.PropsWithChildren<FilterBarMoreFiltersProps>, inProps: FilterBarMoreFiltersProps) {
+    const {
+        icon = <Filter />,
+        slotProps,
+        ...restProps
+    } = useThemeProps({
+        props: inProps,
+        name: "CometAdminFilterBarMoreFilters",
+    });
     const [hasExtended, setHasExtended] = React.useState(false);
 
     if (hasExtended) {
@@ -26,22 +58,17 @@ export function MoreFilters({
     }
 
     return (
-        <div className={classes.root}>
-            <FilterBarButton className={classes.button} onClick={() => setHasExtended(true)} startIcon={icon} endIcon={null}>
+        <Root {...slotProps?.root} {...restProps}>
+            <StyledFilterBarButton {...slotProps?.button} onClick={() => setHasExtended(true)} startIcon={icon} endIcon={null}>
                 <FormattedMessage id="comet.filterbar.moreFilter" defaultMessage="More Filter" />
-            </FilterBarButton>
-        </div>
+            </StyledFilterBarButton>
+        </Root>
     );
 }
 
-/**
- * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
- */
-export const FilterBarMoreFilters = withStyles(styles, { name: "CometAdminFilterBarMoreFilters" })(MoreFilters);
-
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminFilterBarMoreFilters: FilterBarMoveFilersClassKey;
+        CometAdminFilterBarMoreFilters: FilterBarMoreFiltersClassKey;
     }
 
     interface ComponentsPropsList {
