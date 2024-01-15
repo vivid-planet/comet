@@ -1073,8 +1073,7 @@
                                 "columns": "Columns",
                                 "anchor": "Anchor",
                                 "twoLists": "TwoLists",
-                                "media": "Media",
-                                "teaser": "Teaser"
+                                "media": "Media"
                             },
                             "nullable": false
                         },
@@ -1131,8 +1130,7 @@
                                 "columns": "Columns",
                                 "anchor": "Anchor",
                                 "twoLists": "TwoLists",
-                                "media": "Media",
-                                "teaser": "Teaser"
+                                "media": "Media"
                             },
                             "nullable": false
                         },
@@ -1736,61 +1734,6 @@
                 "name": "damFileId",
                 "kind": "String",
                 "nullable": true
-            }
-        ]
-    },
-    {
-        "name": "Teaser",
-        "fields": [
-            {
-                "name": "headline",
-                "kind": "Block",
-                "block": "Headline",
-                "nullable": false
-            },
-            {
-                "name": "image",
-                "kind": "Block",
-                "block": "DamImage",
-                "nullable": false
-            },
-            {
-                "name": "links",
-                "kind": "Block",
-                "block": "LinkList",
-                "nullable": false
-            },
-            {
-                "name": "buttons",
-                "kind": "Block",
-                "block": "LinkList",
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "headline",
-                "kind": "Block",
-                "block": "Headline",
-                "nullable": false
-            },
-            {
-                "name": "image",
-                "kind": "Block",
-                "block": "DamImage",
-                "nullable": false
-            },
-            {
-                "name": "links",
-                "kind": "Block",
-                "block": "LinkList",
-                "nullable": false
-            },
-            {
-                "name": "buttons",
-                "kind": "Block",
-                "block": "LinkList",
-                "nullable": false
             }
         ]
     },
