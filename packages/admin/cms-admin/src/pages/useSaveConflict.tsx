@@ -1,4 +1,6 @@
 import { useSnackbarApi } from "@comet/admin";
+// TODO Our Alert currently can't be used inside a Snackbar
+// eslint-disable-next-line no-restricted-imports
 import { Alert, Snackbar } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
