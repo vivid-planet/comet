@@ -126,7 +126,7 @@ function ProductsGrid() {
                                 variables: { id: params.row.id, status: status ? "Published" : "Unpublished" },
                                 optimisticResponse: {
                                     __typename: "Mutation",
-                                    updateProductStatus: { __typename: "Product", id: params.row.id, status: status ? "Published" : "Unpublished" },
+                                    updateProduct: { __typename: "Product", id: params.row.id, status: status ? "Published" : "Unpublished" },
                                 },
                             });
                         }}
@@ -294,7 +294,7 @@ const createProductMutation = gql`
 
 const updateProductStatusMutation = gql`
     mutation UpdateProductStatus($id: ID!, $status: ProductStatus!) {
-        updateProductStatus(id: $id, status: $status) {
+        updateProduct(id: $id, input: { status: $status }) {
             id
             status
         }
