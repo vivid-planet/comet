@@ -51,12 +51,9 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     const validateError = required ? (validate ? composeValidators(requiredValidator, validate) : requiredValidator) : validate;
 
     const finalFormContext = useFinalFormContext();
-    const shouldShowError =
-        passedShouldShowError ?? ((fieldMeta: FieldMetaState<FieldValue>) => finalFormContext.shouldShowFieldError({ fieldMeta }));
-    const shouldShowWarning =
-        passedShouldShowWarning ?? ((fieldMeta: FieldMetaState<FieldValue>) => finalFormContext.shouldShowFieldWarning({ fieldMeta }));
-    const shouldScrollToField =
-        passedShouldScrollTo ?? ((fieldMeta: FieldMetaState<FieldValue>) => finalFormContext.shouldScrollToField({ fieldMeta }));
+    const shouldShowError = passedShouldShowError ?? finalFormContext.shouldShowFieldError;
+    const shouldShowWarning = passedShouldShowWarning ?? finalFormContext.shouldShowFieldWarning;
+    const shouldScrollToField = passedShouldScrollTo ?? finalFormContext.shouldScrollToField;
 
     function renderField({ input, meta, fieldContainerProps, ...rest }: FieldRenderProps<FieldValue, FieldElement> & { warning?: string }) {
         function render() {
