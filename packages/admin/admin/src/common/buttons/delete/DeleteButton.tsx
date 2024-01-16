@@ -1,6 +1,6 @@
 import { Delete } from "@comet/admin-icons";
-import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -9,78 +9,35 @@ import { messages } from "../../../messages";
 export type DeleteButtonClassKey = ButtonClassKey;
 export type DeleteButtonProps = ButtonProps;
 
-const styles = ({ palette }: Theme) => {
-    return createStyles<DeleteButtonClassKey, DeleteButtonProps>({
-        root: {
-            backgroundColor: palette.error.main,
-            "&:hover": {
-                backgroundColor: palette.error.dark,
-            },
-        },
-        text: {
-            color: palette.error.contrastText,
-        },
-        textInherit: {},
-        textPrimary: {},
-        textSecondary: {},
-        outlined: {},
-        outlinedInherit: {},
-        outlinedPrimary: {},
-        outlinedSecondary: {},
-        contained: {},
-        containedInherit: {},
-        containedPrimary: {},
-        containedSecondary: {},
-        disableElevation: {},
-        focusVisible: {},
-        disabled: {},
-        colorInherit: {},
-        textSizeSmall: {},
-        textSizeMedium: {},
-        textSizeLarge: {},
-        outlinedSizeSmall: {},
-        outlinedSizeMedium: {},
-        outlinedSizeLarge: {},
-        containedSizeSmall: {},
-        containedSizeMedium: {},
-        containedSizeLarge: {},
-        sizeSmall: {},
-        sizeMedium: {},
-        sizeLarge: {},
-        fullWidth: {},
-        startIcon: {},
-        endIcon: {},
-        iconSizeSmall: {},
-        iconSizeMedium: {},
-        iconSizeLarge: {},
-        textError: {},
-        textInfo: {},
-        textSuccess: {},
-        textWarning: {},
-        outlinedError: {},
-        outlinedInfo: {},
-        outlinedSuccess: {},
-        outlinedWarning: {},
-        containedError: {},
-        containedInfo: {},
-        containedSuccess: {},
-        containedWarning: {},
-    });
-};
+const Root = styled(Button, {
+    name: "CometAdminDeleteButton",
+    slot: "root",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})(
+    ({ theme }) => css`
+        background-color: ${theme.palette.error.main};
+        color: ${theme.palette.error.contrastText};
+        &:hover {
+            background-color: ${theme.palette.error.dark};
+        }
+    `,
+);
 
-function DeleteBtn({
-    children = <FormattedMessage {...messages.delete} />,
-    startIcon = <Delete />,
-    ...restProps
-}: ButtonProps & WithStyles<typeof styles>) {
+export function DeleteButton(inProps: DeleteButtonProps) {
+    const {
+        children = <FormattedMessage {...messages.delete} />,
+        startIcon = <Delete />,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminDeleteButton" });
+
     return (
-        <Button startIcon={startIcon} {...restProps}>
+        <Root startIcon={startIcon} {...restProps}>
             {children}
-        </Button>
+        </Root>
     );
 }
-
-export const DeleteButton = withStyles(styles, { name: "CometAdminDeleteButton" })(DeleteBtn);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
