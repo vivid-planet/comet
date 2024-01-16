@@ -116,8 +116,6 @@ export function ProductsGrid(): React.ReactElement {
             field: "status",
             headerName: intl.formatMessage({ id: "product.status", defaultMessage: "Status" }),
             type: "singleSelect",
-            filterable: false,
-            sortable: false,
             valueOptions: [
                 { value: "Published", label: intl.formatMessage({ id: "product.status.published", defaultMessage: "Published" }) },
                 { value: "Unpublished", label: intl.formatMessage({ id: "product.status.unpublished", defaultMessage: "Unpublished" }) },
@@ -174,6 +172,7 @@ export function ProductsGrid(): React.ReactElement {
                                 const row = params.row;
                                 return {
                                     title: row.title,
+                                    status: row.status,
                                     slug: row.slug,
                                     description: row.description,
                                     type: row.type,
