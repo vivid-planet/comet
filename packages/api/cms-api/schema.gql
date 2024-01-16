@@ -427,7 +427,7 @@ type Mutation {
     fileIds: [ID!]!
     targetFolderId: ID
 
-    """Doesn't need to be set if targetFolderId is set"""
+    """Not needed when using targetFolderId"""
     targetScope: DamScopeInput = {}
   ): CopyDamFilesResponse!
   archiveDamFile(id: ID!): DamFile!

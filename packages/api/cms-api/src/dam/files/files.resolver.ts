@@ -173,7 +173,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
                 type: () => Scope,
                 nullable: true,
                 defaultValue: hasNonEmptyScope ? undefined : {},
-                description: "Doesn't need to be set if targetFolderId is set",
+                description: "Not needed when using targetFolderId",
             })
             targetScope?: typeof Scope | null,
         ): Promise<CopyDamFilesResponseInterface> {
