@@ -278,7 +278,9 @@ export function createReadApi(
         async getNodeOrFail(id) {
             const node = await this.getNode(id);
             if (!node) {
-                throw new NotFoundError("foo");
+                throw new NotFoundError(
+                    `Cannot find PageTreeNode with ID ${id} and visibility ${Array.isArray(visibility) ? visibility.join(" or ") : visibility}`,
+                );
             }
             return node;
         },
