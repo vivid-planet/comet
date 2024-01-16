@@ -15,8 +15,8 @@ import { arrayToTreeMap } from "../treemap/TreeMapUtils";
 import { PageClipboard, PagesClipboard } from "../useCopyPastePages";
 import { createInboxFolder } from "./createInboxFolder";
 import {
-    GQLCopyFilesMutation,
-    GQLCopyFilesMutationVariables,
+    GQLCopyDamFilesMutation,
+    GQLCopyDamFilesMutationVariables,
     GQLCreatePageNodeMutation,
     GQLCreatePageNodeMutationVariables,
     GQLDownloadDamFileMutation,
@@ -41,9 +41,9 @@ const createPageNodeMutation = gql`
     }
 `;
 
-const copyFilesMutation = gql`
-    mutation CopyFiles($fileIds: [ID!]!, $inboxFolderId: ID!) {
-        copyFiles(fileIds: $fileIds, targetFolderId: $inboxFolderId) {
+const copyDamFilesMutation = gql`
+    mutation CopyDamFiles($fileIds: [ID!]!, $inboxFolderId: ID!) {
+        copyDamFiles(fileIds: $fileIds, targetFolderId: $inboxFolderId) {
             mappedFiles {
                 rootFile {
                     id
@@ -335,8 +335,8 @@ export async function sendPages(
 
                 if (fileIdsToCopyDirectly.length > 0) {
                     if (!inboxFolderIdForCopiedFiles) throw new Error("inbox folder must be created in step 0 when files need to be copied");
-                    const { data: copiedFiles } = await client.mutate<GQLCopyFilesMutation, GQLCopyFilesMutationVariables>({
-                        mutation: copyFilesMutation,
+                    const { data: copiedFiles } = await client.mutate<GQLCopyDamFilesMutation, GQLCopyDamFilesMutationVariables>({
+                        mutation: copyDamFilesMutation,
                         variables: { fileIds: fileIdsToCopyDirectly, inboxFolderId: inboxFolderIdForCopiedFiles },
                         update: (cache, result) => {
                             cache.evict({ fieldName: "damItemsList" });
@@ -344,7 +344,7 @@ export async function sendPages(
                     });
 
                     if (copiedFiles) {
-                        for (const item of copiedFiles.copyFiles.mappedFiles) {
+                        for (const item of copiedFiles.copyDamFiles.mappedFiles) {
                             dependencyReplacements.push({ type: "DamFile", originalId: item.rootFile.id, replaceWithId: item.copy.id });
                         }
                     }

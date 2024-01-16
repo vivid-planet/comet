@@ -14,7 +14,7 @@ import { ContentScopeService } from "../../content-scope/content-scope.service";
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
 import { DamScopeInterface } from "../types";
-import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
+import { CopyDamFilesResponseInterface, createCopyDamFilesResponseType } from "./dto/copyFiles.types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
@@ -40,7 +40,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
     }
 
     const FileArgs = createFileArgs({ Scope });
-    const CopyFilesResponse = createCopyFilesResponseType({ File });
+    const CopyDamFilesResponse = createCopyDamFilesResponseType({ File });
     const FindCopiesOfFileInScopeArgs = createFindCopiesOfFileInScopeArgs({ Scope, hasNonEmptyScope });
 
     @ObjectType()
@@ -144,9 +144,9 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         /**
-         *  @deprecated Use copyFiles() instead
+         *  @deprecated Use copyDamFiles() instead
          */
-        @Mutation(() => CopyFilesResponse, { deprecationReason: "Use copyFiles instead" })
+        @Mutation(() => CopyDamFilesResponse, { deprecationReason: "Use copyDamFiles instead" })
         @SkipBuild()
         async copyFilesToScope(
             @GetCurrentUser() user: CurrentUserInterface,
@@ -155,13 +155,13 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
                 type: () => ID,
             })
             inboxFolderId: string,
-        ): Promise<CopyFilesResponseInterface> {
-            return this.copyFiles(user, fileIds, inboxFolderId);
+        ): Promise<CopyDamFilesResponseInterface> {
+            return this.copyDamFiles(user, fileIds, inboxFolderId);
         }
 
-        @Mutation(() => CopyFilesResponse)
+        @Mutation(() => CopyDamFilesResponse)
         @SkipBuild()
-        async copyFiles(
+        async copyDamFiles(
             @GetCurrentUser() user: CurrentUserInterface,
             @Args("fileIds", { type: () => [ID] }) fileIds: string[],
             @Args("targetFolderId", {
@@ -176,7 +176,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
                 description: "Doesn't need to be set if targetFolderId is set",
             })
             targetScope?: typeof Scope | null,
-        ): Promise<CopyFilesResponseInterface> {
+        ): Promise<CopyDamFilesResponseInterface> {
             const targetFolder = targetFolderId ? await this.foldersService.findOneById(targetFolderId) : null;
             if (targetFolderId && !targetFolder) {
                 throw new Error("Specified target folder doesn't exist.");

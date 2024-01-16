@@ -3,7 +3,7 @@ import { Field, ObjectType } from "@nestjs/graphql";
 
 import { FileInterface } from "../entities/file.entity";
 
-export interface CopyFilesResponseInterface {
+export interface CopyDamFilesResponseInterface {
     mappedFiles: Array<MappedFileInterface>;
 }
 
@@ -12,9 +12,9 @@ export interface MappedFileInterface {
     copy: FileInterface;
 }
 
-export function createCopyFilesResponseType({ File }: { File: Type<FileInterface> }) {
+export function createCopyDamFilesResponseType({ File }: { File: Type<FileInterface> }) {
     @ObjectType()
-    class CopyFilesResponse implements CopyFilesResponseInterface {
+    class CopyDamFilesResponse implements CopyDamFilesResponseInterface {
         @Field(() => [MappedFile])
         mappedFiles: Array<MappedFile>;
     }
@@ -28,5 +28,5 @@ export function createCopyFilesResponseType({ File }: { File: Type<FileInterface
         copy: FileInterface;
     }
 
-    return CopyFilesResponse;
+    return CopyDamFilesResponse;
 }
