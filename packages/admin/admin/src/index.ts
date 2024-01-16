@@ -128,9 +128,7 @@ export { ISelectionRouterRenderPropArgs, SelectionRoute, SelectionRouteInner, us
 export { SnackbarApi, SnackbarProvider, useSnackbarApi } from "./snackbar/SnackbarProvider";
 export { UndoSnackbar, UndoSnackbarProps } from "./snackbar/UndoSnackbar";
 export { IStackApi, IWithApiProps, StackApiContext, useStackApi, withStackApi } from "./stack/Api";
-export { StackBackButton } from "./stack/backbutton/StackBackButton";
-export { StackBackButtonProps } from "./stack/backbutton/StackBackButton";
-export { StackBackButtonClassKey } from "./stack/backbutton/StackBackButton.styles";
+export { StackBackButton, StackBackButtonClassKey, StackBackButtonProps } from "./stack/backbutton/StackBackButton";
 export { StackBreadcrumb } from "./stack/Breadcrumb";
 export { StackBreadcrumbs, StackBreadcrumbsProps } from "./stack/breadcrumbs/StackBreadcrumbs";
 export { StackBreadcrumbsClassKey } from "./stack/breadcrumbs/StackBreadcrumbs.styles";
