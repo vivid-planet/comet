@@ -14,6 +14,8 @@ export const INLINE_STYLE = {
     ITALIC: "ITALIC",
     STRIKETHROUGH: "STRIKETHROUGH",
     UNDERLINE: "UNDERLINE",
+    SUB: "SUB",
+    SUP: "SUP",
 };
 
 export const ENTITY_TYPE = {
@@ -22,13 +24,22 @@ export const ENTITY_TYPE = {
 
 // Order: inner-most style to outer-most.
 // Examle: <em><strong>foo</strong></em>
-const DEFAULT_STYLE_ORDER = [INLINE_STYLE.BOLD, INLINE_STYLE.ITALIC, INLINE_STYLE.UNDERLINE, INLINE_STYLE.STRIKETHROUGH];
+const DEFAULT_STYLE_ORDER = [
+    INLINE_STYLE.BOLD,
+    INLINE_STYLE.ITALIC,
+    INLINE_STYLE.UNDERLINE,
+    INLINE_STYLE.STRIKETHROUGH,
+    INLINE_STYLE.SUB,
+    INLINE_STYLE.SUP,
+];
 
 const DEFAULT_STYLE_MAP = {
     [INLINE_STYLE.BOLD]: { element: "inline" },
     [INLINE_STYLE.ITALIC]: { element: "inline" },
     [INLINE_STYLE.STRIKETHROUGH]: { element: "inline" },
     [INLINE_STYLE.UNDERLINE]: { element: "inline" },
+    [INLINE_STYLE.SUB]: { element: "inline" },
+    [INLINE_STYLE.SUP]: { element: "inline" },
 };
 
 /* 
