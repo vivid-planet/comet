@@ -89,7 +89,7 @@ class App extends React.Component {
                         resolveSiteConfigForScope: (configs: Record<string, SiteConfig>, scope: ContentScope) => configs[scope.domain],
                     }}
                 >
-                    <DamConfigProvider value={{ scopeParts: ["domain"] }}>
+                    <DamConfigProvider value={{ scopeParts: ["domain"], additionalToolbarItems: <ImportFromUnsplash /> }}>
                         <IntlProvider locale="en" messages={getMessages()}>
                             <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
                                 <MuiThemeProvider theme={theme}>
@@ -173,7 +173,6 @@ class App extends React.Component {
                                                                                                         variant="toolbar"
                                                                                                     />
                                                                                                 )}
-                                                                                                additionalToolbarItems={<ImportFromUnsplash />}
                                                                                             />
                                                                                         )}
                                                                                     />
