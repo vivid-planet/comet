@@ -42,7 +42,7 @@ jobs:
               uses: dotansimha/changesets-action@cbc5ff3569ae9861100a48b290f4e9c1b94e45b5
               with:
                   version: pnpm run version
-                  publish: pnpm run publish --tag=v4.x.x
+                  publish: pnpm run publish --tag=stable-v4
                   title: "Version Packages (v4)"
                   createGithubReleases: aggregate
                   githubReleaseName: "${{ env.PUBLISHED_VERSION }}"
