@@ -5,9 +5,9 @@
     "fixed": [["@comet/*"]],
     "linked": [],
     "access": "restricted",
-    "baseBranch": "main",
+    "baseBranch": "v4.x.x",
     "updateInternalDependencies": "patch",
-    "ignore": ["comet-admin-stories", "comet-demo-api", "comet-demo-admin", "comet-demo-site"],
+    "ignore": ["comet-admin-stories", "comet-demo-api", "comet-demo-admin", "comet-demo-site", "comet-docs"],
     "snapshot": {
         "useCalculatedVersion": true
     }

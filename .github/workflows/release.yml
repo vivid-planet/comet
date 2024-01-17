@@ -1,9 +1,9 @@
-name: Release
+name: Release (v4)
 
 on:
     push:
         branches:
-            - main
+            - v4.x.x
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -42,7 +42,8 @@ jobs:
               uses: dotansimha/changesets-action@cbc5ff3569ae9861100a48b290f4e9c1b94e45b5
               with:
                   version: pnpm run version
-                  publish: pnpm run publish
+                  publish: pnpm run publish --tag=v4.x.x
+                  title: "Version Packages (v4)"
                   createGithubReleases: aggregate
                   githubReleaseName: "${{ env.PUBLISHED_VERSION }}"
                   githubTagName: "v${{ env.PUBLISHED_VERSION }}"
