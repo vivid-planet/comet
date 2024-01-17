@@ -22,7 +22,6 @@ export class MediaBlockFixtureService {
                 return { attachedBlocks: [{ type, props: await this.damImageBlockFixtureService.generateBlockInput() }], activeType: type };
             case "video":
                 return { attachedBlocks: [{ type, props: await this.damVideoBlockFixtureService.generateBlockInput() }], activeType: type };
-                break;
         }
     }
 }
