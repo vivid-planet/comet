@@ -5,6 +5,8 @@ import useDebounce from "../useDebounce";
 import usePrevious from "../usePrevious";
 import LinkDecorator from "./extension/Link/Decorator";
 import NonBreakingSpaceDecorator from "./extension/NonBreakingSpace/Decorator";
+import SoftHyphenDecorator from "./extension/SoftHyphen/Decorator";
+
 export interface IMakeRteApiProps<T = any> {
     decorators?: DraftDecorator[];
     parse?: (v: T) => ContentState;
@@ -38,7 +40,7 @@ function makeRteApi<T = any>(o?: IMakeRteApiProps<T>) {
     const { decorators = [LinkDecorator], parse = defaultParseContent, format = defaultFormatContent }: IMakeRteApiProps<T> = o || {};
 
     // Add default decorators
-    decorators.push(NonBreakingSpaceDecorator);
+    decorators.push(NonBreakingSpaceDecorator, SoftHyphenDecorator);
 
     const decorator = new CompositeDecorator(decorators);
 

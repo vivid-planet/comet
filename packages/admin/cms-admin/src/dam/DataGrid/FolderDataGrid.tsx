@@ -23,12 +23,11 @@ import { useDamScope } from "../config/useDamScope";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
-import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { isFile } from "../helpers/isFile";
 import { isFolder } from "../helpers/isFolder";
 import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
 import DamContextMenu from "./DamContextMenu";
-import { useFileUpload } from "./fileUpload/useFileUpload";
+import { useDamFileUpload } from "./fileUpload/useDamFileUpload";
 import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
 import {
     GQLDamFolderQuery,
@@ -135,12 +134,8 @@ const FolderDataGrid = ({
 
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
-    const fileUploadApi = useFileUpload({
+    const fileUploadApi = useDamFileUpload({
         acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
-        onAfterUpload: () => {
-            apolloClient.reFetchObservableQueries();
-            clearDamItemCache(apolloClient.cache);
-        },
     });
 
     React.useEffect(() => {
@@ -280,7 +275,7 @@ const FolderDataGrid = ({
             hideHoverStyles();
             hideUploadFooter();
 
-            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, currentFolderId);
+            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, { folderId: currentFolderId });
 
             // react-dropzone doesn't support folder drops natively
             // the only way to find out if an empty folder was dropped is if there are no rejected files and no accepted files

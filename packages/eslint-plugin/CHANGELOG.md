@@ -1,5 +1,13 @@
 # @comet/eslint-plugin
 
+## 5.5.0
+
+## 5.4.0
+
+## 5.3.0
+
+## 5.2.0
+
 ## 5.1.0
 
 ### Minor Changes

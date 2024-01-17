@@ -12,7 +12,7 @@ import { parallelAsyncEvery } from "../../utils/parallelAsyncEvery";
 import { useAdminComponentPaper } from "../common/AdminComponentPaper";
 import { HiddenInSubroute } from "../common/HiddenInSubroute";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
-import { BlockCategory, BlockInterface, BlockState, DispatchSetStateAction, PreviewStateInterface } from "../types";
+import { BlockCategory, BlockInterface, BlockState, CustomBlockCategory, DispatchSetStateAction, PreviewStateInterface } from "../types";
 import { resolveNewState } from "../utils";
 
 interface OneOfBlockItem<T extends BlockInterface = BlockInterface> {
@@ -57,7 +57,7 @@ export interface CreateOneOfBlockOptions<T extends boolean> {
     name: string;
     displayName?: React.ReactNode;
     supportedBlocks: Record<BlockType, BlockInterface>;
-    category?: BlockCategory;
+    category?: BlockCategory | CustomBlockCategory;
     variant?: "select" | "radio" | "toggle";
     allowEmpty?: T;
 }
@@ -87,7 +87,13 @@ export const createOneOfBlock = <T extends boolean = boolean>({
         }
         const activeBlockState = s.attachedBlocks.find((c) => c.type === s.activeType);
         if (!activeBlockState) {
-            throw new Error(`Reference to active block of type ${s.activeType} not found`);
+            let message = `Can't find reference to active block of type "${s.activeType}".`;
+
+            if (process.env.NODE_ENV === "development") {
+                message += ` This is probably due to a missing "x-include-invisible-content" HTTP header. Please make sure to include the header when fetching the block.`;
+            }
+
+            throw new Error(message);
         }
         const block = activeBlockState ? blockForType(activeBlockState.type) : undefined;
 

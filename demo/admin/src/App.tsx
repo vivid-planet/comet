@@ -8,7 +8,6 @@ import "typeface-open-sans";
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, RouteWithErrorBoundary, SnackbarProvider } from "@comet/admin";
 import {
-    AllCategories,
     CmsBlockContextProvider,
     createHttpClient,
     createRedirectsPage,
@@ -21,7 +20,6 @@ import {
     SiteConfig,
     SitePreview,
     SitesConfigProvider,
-    UserPermissionsPage,
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
@@ -30,15 +28,17 @@ import { additionalPageTreeNodeFieldsFragment, EditPageNode } from "@src/common/
 import MasterHeader from "@src/common/MasterHeader";
 import MasterMenu from "@src/common/MasterMenu";
 import { createConfig } from "@src/config";
+import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import Dashboard from "@src/dashboard/Dashboard";
+import { pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import theme from "@src/theme";
 import * as React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import * as ReactDOM from "react-dom";
-import { FormattedMessage, IntlProvider } from "react-intl";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { IntlProvider } from "react-intl";
+import { Redirect, Route, RouteComponentProps, Switch } from "react-router-dom";
 
 import { ComponentDemo } from "./common/ComponentDemo";
 import { ContentScopeIndicator } from "./common/ContentScopeIndicator";
@@ -52,7 +52,6 @@ import ProductCategoriesPage from "./products/categories/ProductCategoriesPage";
 import { ProductsPage } from "./products/generated/ProductsPage";
 import ProductsHandmadePage from "./products/ProductsPage";
 import ProductTagsPage from "./products/tags/ProductTagsPage";
-import { urlParamToCategory } from "./utils/pageTreeNodeCategoryMapping";
 
 const GlobalStyle = () => (
     <Global
@@ -67,17 +66,6 @@ const GlobalStyle = () => (
 const config = createConfig();
 const apolloClient = createApolloClient(config.apiUrl);
 const apiClient = createHttpClient(config.apiUrl);
-
-const categories: AllCategories = [
-    {
-        category: "MainNavigation",
-        label: <FormattedMessage id="menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
-    },
-    {
-        category: "TopMenu",
-        label: <FormattedMessage id="menu.pageTree.topMenu" defaultMessage="Top menu" />,
-    },
-];
 
 const pageTreeDocumentTypes = {
     Page,
@@ -101,7 +89,7 @@ class App extends React.Component {
                         resolveSiteConfigForScope: (configs: Record<string, SiteConfig>, scope: ContentScope) => configs[scope.domain],
                     }}
                 >
-                    <DamConfigProvider value={{ scopeParts: ["domain"] }}>
+                    <DamConfigProvider value={{ scopeParts: ["domain"], additionalToolbarItems: <ImportFromUnsplash /> }}>
                         <IntlProvider locale="en" messages={getMessages()}>
                             <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
                                 <MuiThemeProvider theme={theme}>
@@ -116,7 +104,7 @@ class App extends React.Component {
                                                         maxSrcResolution: config.imgproxy.maxSrcResolution,
                                                         allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
                                                     }}
-                                                    pageTreeCategories={categories}
+                                                    pageTreeCategories={pageTreeCategories}
                                                     pageTreeDocumentTypes={pageTreeDocumentTypes}
                                                     additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
                                                 >
@@ -144,7 +132,9 @@ class App extends React.Component {
                                                                                     />
                                                                                     <RouteWithErrorBoundary
                                                                                         path={`${match.path}/pages/pagetree/:category`}
-                                                                                        render={({ match: { params } }) => {
+                                                                                        render={({
+                                                                                            match: { params },
+                                                                                        }: RouteComponentProps<{ category: string }>) => {
                                                                                             const category = urlParamToCategory(params.category);
 
                                                                                             if (category === undefined) {
@@ -154,7 +144,7 @@ class App extends React.Component {
                                                                                             return (
                                                                                                 <PagesPage
                                                                                                     path={`/pages/pagetree/${params.category}`}
-                                                                                                    allCategories={categories}
+                                                                                                    allCategories={pageTreeCategories}
                                                                                                     documentTypes={pageTreeDocumentTypes}
                                                                                                     editPageNode={EditPageNode}
                                                                                                     category={category}
@@ -224,10 +214,6 @@ class App extends React.Component {
                                                                                     <RouteWithErrorBoundary
                                                                                         path={`${match.path}/product-tags`}
                                                                                         component={ProductTagsPage}
-                                                                                    />
-                                                                                    <RouteWithErrorBoundary
-                                                                                        path={`${match.path}/user-permissions`}
-                                                                                        component={UserPermissionsPage}
                                                                                     />
 
                                                                                     <Redirect from={`${match.path}`} to={`${match.url}/dashboard`} />

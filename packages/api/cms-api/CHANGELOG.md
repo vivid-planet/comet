@@ -1,5 +1,139 @@
 # @comet/cms-api
 
+## 5.5.0
+
+### Minor Changes
+
+-   bb2c76d8: Deprecate `FileUploadInterface` interface
+
+    Use `FileUploadInput` instead.
+
+-   bb2c76d8: Deprecate `download` helper
+
+    The helper is primarily used to create a `FileUploadInput` (previously `FileUploadInterface`) input for `FilesService#upload` while creating fixtures.
+    However, the name of the helper is too generic to be part of the package's public API.
+    Instead, use the newly added `FileUploadService#createFileUploadInputFromUrl`.
+
+    **Example:**
+
+    ```ts
+    @Injectable()
+    class ImageFixtureService {
+        constructor(private readonly filesService: FilesService, private readonly fileUploadService: FileUploadService) {}
+
+        async generateImage(url: string): Promise<FileInterface> {
+            const upload = await this.fileUploadService.createFileUploadInputFromUrl(url);
+            return this.filesService.upload(upload, {});
+        }
+    }
+    ```
+
+### Patch Changes
+
+-   @comet/blocks-api@5.5.0
+
+## 5.4.0
+
+### Minor Changes
+
+-   e146d8bb: Support the import of files from external DAMs
+
+    To connect an external DAM, implement a component with the necessary logic (asset picker, upload functionality, ...). Pass this component to the `DamPage` via the `additionalToolbarItems` prop.
+
+    ```tsx
+    <DamPage
+        // ...
+        additionalToolbarItems={<ImportFromExternalDam />}
+    />
+    ```
+
+    You can find an [example](demo/admin/src/dam/ImportFromUnsplash.tsx) in the demo project.
+
+-   27bf643b: Add `PublicUploadsService` to public API
+
+    The service can be used to programmatically create public uploads, such as when creating fixtures.
+
+-   df5c959c: Remove license types `MICRO` and `SUBSCRIPTION`
+
+    The `LicenseType` enum no longer contains the values `MICRO` and `SUBSCRIPTION`. The database migration will automatically update all licenses of type `MICRO` or `SUBSCRIPTION` to `RIGHTS_MANAGED`.
+
+### Patch Changes
+
+-   60f5208e: Fix encoding of special characters in names of uploaded files
+
+    For example:
+
+    Previously:
+
+    -   `€.jpg` -> `a.jpg`
+    -   `ä.jpg` -> `ai.jpg`
+
+    Now:
+
+    -   `€.jpg` -> `euro.jpg`
+    -   `ä.jpg` -> `ae.jpg`
+    -   @comet/blocks-api@5.4.0
+
+## 5.3.0
+
+### Minor Changes
+
+-   570fdbc8: CRUD Generator: Add support for `ArrayType` fields in generated input
+-   8d0e3ee1: CRUD Generator: Add support for enum arrays in input
+
+### Patch Changes
+
+-   dfb3c840: CRUD Generator: Correctly support `type: "text"` fields in filter and sort
+-   c883d351: Consider filtered mimetypes when calculating the position of a DAM item in `DamItemsService`'s `getDamItemPosition()`
+
+    Previously, the mimetypes were ignored, sometimes resulting in an incorrect position.
+
+-   Updated dependencies [920f2b85]
+    -   @comet/blocks-api@5.3.0
+
+## 5.2.0
+
+### Minor Changes
+
+-   bbc0a0a5: Add access logging to log information about the request to standard output. The log contains information about the requester and the request itself. This can be useful for fulfilling legal requirements regarding data integrity or for forensics.
+
+    There are two ways to integrate logging into an application:
+
+    **First option: Use the default implementation**
+
+    ```ts
+    imports: [
+        ...
+        AccessLogModule,
+        ...
+    ]
+    ```
+
+    **Second option: Configure logging**
+
+    Use the `shouldLogRequest` to prevent logging for specific requests. For instance, one may filter requests for system users.
+
+    ```ts
+    imports: [
+        ...
+        AccessLogModule.forRoot({
+            shouldLogRequest: ({user, req}) => {
+                // do something
+                return true; //or false
+            },
+        }),
+        ...
+    ]
+    ```
+
+    More information can be found in the documentation under 'Authentication > Access Logging'.
+
+### Patch Changes
+
+-   1a170b9b: API Generator: Use correct type for `where` when `getFindCondition` service method is not used
+-   6b240a01: CRUD Generator: Correctly support `type: "text"` fields in input
+    -   @comet/blocks-api@5.2.0
+
 ## 5.1.0
 
 ### Patch Changes

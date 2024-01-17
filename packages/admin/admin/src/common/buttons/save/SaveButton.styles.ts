@@ -1,10 +1,10 @@
-import { ButtonClassKey } from "@mui/material";
+import { ButtonClassKey, buttonGroupClasses } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import { createStyles } from "@mui/styles";
 
 import { SaveButtonProps } from "./SaveButton";
 
-export type SaveButtonClassKey = "saving" | "error" | "success" | ButtonClassKey;
+export type SaveButtonClassKey = "saving" | "error" | "success" | "conflict" | ButtonClassKey;
 
 export const styles = (theme: Theme) => {
     return createStyles<SaveButtonClassKey, SaveButtonProps>({
@@ -63,6 +63,16 @@ export const styles = (theme: Theme) => {
             "&$disabled": {
                 color: theme.palette.success.contrastText,
                 backgroundColor: theme.palette.success.light,
+            },
+        },
+        conflict: {
+            color: theme.palette.error.contrastText,
+            backgroundColor: theme.palette.error.main,
+            "&:hover": {
+                backgroundColor: theme.palette.error.dark,
+            },
+            [`&.${buttonGroupClasses.grouped}:not(:last-child)`]: {
+                borderRightColor: theme.palette.error.dark,
             },
         },
         textError: {},
