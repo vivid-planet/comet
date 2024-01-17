@@ -11,6 +11,7 @@ import { Command, Console } from "nestjs-console";
 import { LinkFixtureService } from "./generators/link-fixture.service";
 import { PageFixtureService } from "./generators/page-fixture.service";
 import { PublicUploadsFixtureService } from "./generators/public-uploads-fixture.service";
+import { VideoFixtureService } from "./generators/video-fixture.service";
 
 @Injectable()
 @Console()
@@ -21,7 +22,7 @@ export class FixturesConsole {
         private readonly pageFixtureService: PageFixtureService,
         private readonly linkFixtureService: LinkFixtureService,
         private readonly imageFixtureService: ImageFixtureService,
-
+        private readonly videoFixtureService: VideoFixtureService,
         private readonly orm: MikroORM,
         private readonly publicUploadsFixtureService: PublicUploadsFixtureService,
     ) {}
@@ -34,6 +35,11 @@ export class FixturesConsole {
     async execute(): Promise<void> {
         // ensure repeatable runs
         faker.seed(123456);
+
+        const scope: PageTreeNodeScope = {
+            domain: "main",
+            language: "en",
+        };
 
         const damFilesDirectory = `${this.config.blob.storageDirectoryPrefix}-files`;
         if (await this.blobStorageBackendService.folderExists(damFilesDirectory)) {
@@ -51,13 +57,12 @@ export class FixturesConsole {
         await migrator.up();
 
         console.log("Generate Images...");
-        await this.imageFixtureService.generateImages(10);
+        await this.imageFixtureService.generateImages(10, { domain: scope.domain });
+
+        console.log("Generate Videos...");
+        await this.videoFixtureService.generateVideos({ domain: scope.domain });
 
         console.log("Generate Page Tree...");
-        const scope: PageTreeNodeScope = {
-            domain: "main",
-            language: "en",
-        };
 
         const { node } = await this.pageFixtureService.generatePage({ name: "Home", scope });
         await this.pageFixtureService.generatePage({ name: "Sub", scope, parentId: node.id });

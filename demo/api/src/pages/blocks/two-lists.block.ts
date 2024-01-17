@@ -13,7 +13,7 @@ import {
 
 import { HeadlineBlock } from "./headline.block";
 
-const TwoListsList = createListBlock({ block: HeadlineBlock }, "TwoListsList");
+export const TwoListsList = createListBlock({ block: HeadlineBlock }, "TwoListsList");
 
 class TwoListsBlockData extends BlockData {
     @ChildBlock(TwoListsList)
