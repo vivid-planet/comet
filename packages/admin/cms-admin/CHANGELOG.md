@@ -1,5 +1,27 @@
 # @comet/cms-admin
 
+## 4.7.1
+
+### Patch Changes
+
+-   3275154e: Prevent false positive save conflicts while editing documents (e.g. `Page`):
+
+    -   Stop checking for conflicts while saving is in progress
+    -   Ensure that all "CheckForChanges" polls are cleared
+
+-   56b33ff3: Improved the `EditPageNode` dialog ("Page Properties" dialog):
+
+    -   Execute the asynchronous slug validation less often (increased the debounce wait time from 200ms to 500ms)
+    -   Cache the slug validation results. Evict the cache on the initial render of the dialog
+
+-   Updated dependencies [56b33ff3]
+    -   @comet/admin@4.7.1
+    -   @comet/admin-date-time@4.7.1
+    -   @comet/admin-icons@4.7.1
+    -   @comet/admin-rte@4.7.1
+    -   @comet/admin-theme@4.7.1
+    -   @comet/blocks-admin@4.7.1
+
 ## 4.7.0
 
 ### Minor Changes

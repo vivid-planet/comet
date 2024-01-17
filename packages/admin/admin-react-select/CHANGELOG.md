@@ -1,5 +1,12 @@
 # @comet/admin-react-select
 
+## 4.7.1
+
+### Patch Changes
+
+-   Updated dependencies [56b33ff3]
+    -   @comet/admin@4.7.1
+
 ## 4.7.0
 
 ### Patch Changes
