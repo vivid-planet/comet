@@ -23,6 +23,7 @@ import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
 import { additionalPageTreeNodeFieldsFragment } from "@src/common/EditPageNode";
 import { createConfig } from "@src/config";
+import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import { pageTreeCategories } from "@src/pageTree/pageTreeCategories";
 import theme from "@src/theme";
 import * as React from "react";
@@ -65,7 +66,7 @@ class App extends React.Component {
                             resolveSiteConfigForScope: (configs: Record<string, SiteConfig>, scope: ContentScope) => configs[scope.domain],
                         }}
                     >
-                        <DamConfigProvider value={{ scopeParts: ["domain"] }}>
+                        <DamConfigProvider value={{ scopeParts: ["domain"], additionalToolbarItems: <ImportFromUnsplash /> }}>
                             <IntlProvider locale="en" messages={getMessages()}>
                                 <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
                                     <MuiThemeProvider theme={theme}>

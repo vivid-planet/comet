@@ -1,4 +1,5 @@
 import { Close } from "@comet/admin-icons";
+// eslint-disable-next-line no-restricted-imports
 import { Alert as MuiAlert, AlertTitle, buttonClasses, IconButton, Theme, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
