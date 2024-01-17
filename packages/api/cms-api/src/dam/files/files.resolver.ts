@@ -14,7 +14,7 @@ import { ContentScopeService } from "../../content-scope/content-scope.service";
 import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
 import { DamScopeInterface } from "../types";
-import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
+import { CopyDamFilesResponseInterface, createCopyDamFilesResponseType } from "./dto/copyFiles.types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
@@ -25,6 +25,7 @@ import { FolderInterface } from "./entities/folder.entity";
 import { FileValidationService } from "./file-validation.service";
 import { FilesService } from "./files.service";
 import { download, slugifyFilename } from "./files.utils";
+import { FoldersService } from "./folders.service";
 
 export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<FileInterface>; Scope?: Type<DamScopeInterface> }): Type<unknown> {
     const Scope = PassedScope ?? EmptyDamScope;
@@ -39,7 +40,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
     }
 
     const FileArgs = createFileArgs({ Scope });
-    const CopyFilesResponse = createCopyFilesResponseType({ File });
+    const CopyDamFilesResponse = createCopyDamFilesResponseType({ File });
     const FindCopiesOfFileInScopeArgs = createFindCopiesOfFileInScopeArgs({ Scope, hasNonEmptyScope });
 
     @ObjectType()
@@ -50,6 +51,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
     class FilesResolver {
         constructor(
             private readonly filesService: FilesService,
+            private readonly foldersService: FoldersService,
             @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
             @InjectRepository("DamFolder") private readonly foldersRepository: EntityRepository<FolderInterface>,
             private readonly contentScopeService: ContentScopeService,
@@ -141,7 +143,10 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             return this.filesService.moveBatch(files, targetFolder);
         }
 
-        @Mutation(() => CopyFilesResponse)
+        /**
+         *  @deprecated Use copyDamFiles() instead
+         */
+        @Mutation(() => CopyDamFilesResponse, { deprecationReason: "Use copyDamFiles instead" })
         @SkipBuild()
         async copyFilesToScope(
             @GetCurrentUser() user: CurrentUserInterface,
@@ -150,8 +155,79 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
                 type: () => ID,
             })
             inboxFolderId: string,
-        ): Promise<CopyFilesResponseInterface> {
-            return this.filesService.copyFilesToScope({ fileIds, inboxFolderId, user });
+        ): Promise<CopyDamFilesResponseInterface> {
+            return this.copyDamFiles(user, fileIds, inboxFolderId);
+        }
+
+        @Mutation(() => CopyDamFilesResponse)
+        @SkipBuild()
+        async copyDamFiles(
+            @GetCurrentUser() user: CurrentUserInterface,
+            @Args("fileIds", { type: () => [ID] }) fileIds: string[],
+            @Args("targetFolderId", {
+                type: () => ID,
+                nullable: true,
+            })
+            targetFolderId?: string | null,
+            @Args("targetScope", {
+                type: () => Scope,
+                nullable: true,
+                defaultValue: hasNonEmptyScope ? undefined : {},
+                description: "Not needed when using targetFolderId",
+            })
+            targetScope?: typeof Scope | null,
+        ): Promise<CopyDamFilesResponseInterface> {
+            const targetFolder = targetFolderId ? await this.foldersService.findOneById(targetFolderId) : null;
+            if (targetFolderId && !targetFolder) {
+                throw new Error("Specified target folder doesn't exist.");
+            }
+            if (targetScope && targetFolder?.scope && !this.contentScopeService.scopesAreEqual(targetScope, targetFolder.scope)) {
+                throw new Error("targetScope and targetFolder.scope don't match");
+            }
+
+            const scope = targetScope ?? targetFolder?.scope;
+            if (scope && !this.contentScopeService.canAccessScope(scope, user)) {
+                throw new Error("User can't access the target scope");
+            }
+
+            const files = await this.filesService.findMultipleByIds(fileIds);
+            if (files.length === 0) {
+                throw new Error("No valid file ids provided");
+            }
+
+            const getUniqueFileScopes = (files: FileInterface[]): DamScopeInterface[] => {
+                const fileScopes: DamScopeInterface[] = [];
+                for (const file of files) {
+                    if (file.scope === undefined) {
+                        continue;
+                    }
+
+                    const isDuplicateScope = Boolean(fileScopes.find((scope) => this.contentScopeService.scopesAreEqual(scope, file.scope)));
+                    if (!isDuplicateScope) {
+                        fileScopes.push(file.scope);
+                    }
+                }
+                return fileScopes;
+            };
+
+            const fileScopes = getUniqueFileScopes(files);
+            const canAccessFileScopes = fileScopes.every((scope) => {
+                return this.contentScopeService.canAccessScope(scope, user);
+            });
+            if (!canAccessFileScopes) {
+                throw new Error(`User can't access the scope of one or more files`);
+            }
+
+            const mappedFiles: Array<{ rootFile: FileInterface; copy: FileInterface }> = [];
+            for (const file of files) {
+                const copiedFile = await this.filesService.createCopyOfFile(file, {
+                    targetFolder,
+                    targetScope: scope,
+                });
+                mappedFiles.push({ rootFile: file, copy: copiedFile });
+            }
+
+            return { mappedFiles };
         }
 
         @Mutation(() => File)

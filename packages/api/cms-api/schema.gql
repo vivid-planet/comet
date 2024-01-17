@@ -259,7 +259,7 @@ type PaginatedDamItems {
 
 union DamItem = DamFile | DamFolder
 
-type CopyFilesResponse {
+type CopyDamFilesResponse {
   mappedFiles: [MappedFile!]!
 }
 
@@ -422,7 +422,14 @@ type Mutation {
   updateDamFile(id: ID!, input: UpdateDamFileInput!): DamFile!
   importDamFileByDownload(url: String!, scope: DamScopeInput! = {}, input: UpdateDamFileInput!): DamFile!
   moveDamFiles(fileIds: [ID!]!, targetFolderId: ID): [DamFile!]!
-  copyFilesToScope(fileIds: [ID!]!, inboxFolderId: ID!): CopyFilesResponse!
+  copyFilesToScope(fileIds: [ID!]!, inboxFolderId: ID!): CopyDamFilesResponse! @deprecated(reason: "Use copyDamFiles instead")
+  copyDamFiles(
+    fileIds: [ID!]!
+    targetFolderId: ID
+
+    """Not needed when using targetFolderId"""
+    targetScope: DamScopeInput = {}
+  ): CopyDamFilesResponse!
   archiveDamFile(id: ID!): DamFile!
   archiveDamFiles(ids: [ID!]!): [DamFile!]!
   restoreDamFile(id: ID!): DamFile!
