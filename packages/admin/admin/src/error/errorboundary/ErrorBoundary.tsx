@@ -1,4 +1,5 @@
 import { ChevronDown, ChevronRight, Error } from "@comet/admin-icons";
+// eslint-disable-next-line no-restricted-imports
 import { Alert, AlertProps, ComponentsOverrides, Theme, Typography } from "@mui/material";
 import { WithStyles } from "@mui/styles";
 import createStyles from "@mui/styles/createStyles";
