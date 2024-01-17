@@ -14,11 +14,6 @@ module.exports = {
                         importNames: ["default"],
                         message: "Please use Image from @comet/cms-site instead",
                     },
-                    {
-                        name: "@mui/material",
-                        importNames: ["Alert"],
-                        message: "Please use Alert from @comet/admin instead",
-                    },
                 ],
             },
         ],

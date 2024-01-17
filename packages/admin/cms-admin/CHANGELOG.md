@@ -1,5 +1,60 @@
 # @comet/cms-admin
 
+## 5.5.0
+
+### Patch Changes
+
+-   1b37b1f6: Show `additionalToolbarItems` in `ChooseFileDialog`
+
+    The `additionalToolbarItems` were only shown inside the `DamPage`, but not in the `ChooseFileDialog`.
+    To fix this, use the `additionalToolbarItems` option in `DamConfigProvider`.
+    The `additionalToolbarItems` prop of `DamPage` has been deprecated in favor of this option.
+
+    **Previously:**
+
+    ```tsx
+    <DamPage
+        // ...
+        additionalToolbarItems={<ImportFromExternalDam />}
+    />
+    ```
+
+    **Now:**
+
+    ```tsx
+    <DamConfigProvider
+        value={{
+            // ...
+            additionalToolbarItems: <ImportFromExternalDam />,
+        }}
+    >
+        {/*...*/}
+    </DamConfigProvider>
+    ```
+
+-   85aa962c: Set unhandled dependencies to `undefined` when copying documents to another scope
+
+    This prevents leaks between scopes. In practice, this mostly concerns links to documents that don't exist in the target scope.
+
+    **Example:**
+
+    -   Page A links to Page B
+    -   Page A is copied from Scope A to Scope B
+    -   Link to Page B is removed from Page A by replacing the `id` with `undefined` (since Page B doesn't exist in Scope B)
+
+    **Note:** The link is only retained if both pages are copied in the same operation.
+
+-   c4639be5: Clip crop values when cropping an image in the DAM or `PixelImageBlock`
+
+    Previously, negative values could occur, causing the image proxy to fail on delivery.
+
+    -   @comet/admin@5.5.0
+    -   @comet/admin-date-time@5.5.0
+    -   @comet/admin-icons@5.5.0
+    -   @comet/admin-rte@5.5.0
+    -   @comet/admin-theme@5.5.0
+    -   @comet/blocks-admin@5.5.0
+
 ## 5.4.0
 
 ### Minor Changes

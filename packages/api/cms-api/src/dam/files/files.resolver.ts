@@ -23,9 +23,10 @@ import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { createFindCopiesOfFileInScopeArgs, FindCopiesOfFileInScopeArgsInterface } from "./dto/find-copies-of-file-in-scope.args";
 import { FileInterface } from "./entities/file.entity";
 import { FolderInterface } from "./entities/folder.entity";
+import { FileUploadService } from "./file-upload.service";
 import { FileValidationService } from "./file-validation.service";
 import { FilesService } from "./files.service";
-import { download, slugifyFilename } from "./files.utils";
+import { slugifyFilename } from "./files.utils";
 
 export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<FileInterface>; Scope?: Type<DamScopeInterface> }): Type<unknown> {
     const Scope = PassedScope ?? EmptyDamScope;
@@ -55,6 +56,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             @InjectRepository("DamFolder") private readonly foldersRepository: EntityRepository<FolderInterface>,
             @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
             @Inject(DAM_FILE_VALIDATION_SERVICE) private readonly fileValidationService: FileValidationService,
+            private readonly fileUploadService: FileUploadService,
         ) {}
 
         @Query(() => PaginatedDamFiles)
@@ -97,7 +99,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
             @Args("input", { type: () => UpdateFileInput }) { image: imageInput, ...input }: UpdateFileInput,
         ): Promise<FileInterface> {
-            const file = await download(url);
+            const file = await this.fileUploadService.createFileUploadInputFromUrl(url);
             const validationResult = await this.fileValidationService.validateFile(file);
             if (validationResult !== undefined) {
                 throw new CometValidationException(validationResult);
