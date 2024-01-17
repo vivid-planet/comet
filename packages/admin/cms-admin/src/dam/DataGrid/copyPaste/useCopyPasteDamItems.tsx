@@ -23,7 +23,7 @@ function isDamItemsClipboard(damItemsClipboard: unknown): damItemsClipboard is D
 
 const copyFilesMutation = gql`
     mutation CopyPasteFiles($fileIds: [ID!]!, $targetFolderId: ID, $targetScope: DamScopeInput) {
-        copyFiles(fileIds: $fileIds, targetFolderId: $targetFolderId, targetScope: $targetScope) {
+        copyDamFiles(fileIds: $fileIds, targetFolderId: $targetFolderId, targetScope: $targetScope) {
             mappedFiles {
                 rootFile {
                     id
