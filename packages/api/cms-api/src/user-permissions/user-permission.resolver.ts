@@ -6,7 +6,7 @@ import { IsString } from "class-validator";
 import { SkipBuild } from "../builds/skip-build.decorator";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
 import { UserPermissionInput, UserPermissionOverrideContentScopesInput } from "./dto/user-permission.input";
-import { UserPermission } from "./entities/user-permission.entity";
+import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
 import { UserPermissionsService } from "./user-permissions.service";
 
 @ArgsType()
@@ -88,7 +88,10 @@ export class UserPermissionResolver {
 
     async getPermission(id: string, userId?: string): Promise<UserPermission> {
         const permission = await this.permissionRepository.findOne(id);
-        if (permission) return permission;
+        if (permission) {
+            permission.source = UserPermissionSource.MANUAL;
+            return permission;
+        }
         if (!userId) {
             throw new Error(`Permission not found: ${id}`);
         }
