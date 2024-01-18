@@ -1,17 +1,36 @@
-import { Menu, MenuCollapsibleItem, MenuContext, MenuItemRouterLink, MenuItemRouterLinkProps, useWindowSize } from "@comet/admin";
+import {
+    Menu,
+    MenuCollapsibleItem,
+    MenuContext,
+    MenuItemAnchorLink,
+    MenuItemAnchorLinkProps,
+    MenuItemRouterLink,
+    MenuItemRouterLinkProps,
+    useWindowSize,
+} from "@comet/admin";
 import * as React from "react";
 import { RouteProps, useRouteMatch } from "react-router-dom";
 
 import { CurrentUserContext } from "../userPermissions/hooks/currentUser";
 
-export type MasterMenuItem = Omit<MenuItemRouterLinkProps, "to"> & {
+type MasterMenuItemRoute = Omit<MenuItemRouterLinkProps, "to"> & {
     requiredPermission?: string;
     route?: RouteProps;
     to?: string;
     submenu?: MasterMenuItem[];
 };
 
+type MasterMenuItemAnchor = MenuItemAnchorLinkProps & {
+    requiredPermission?: string;
+};
+
+export type MasterMenuItem = MasterMenuItemRoute | MasterMenuItemAnchor;
+
 export type MasterMenuData = MasterMenuItem[];
+
+export function isMasterMenuItemAnchor(item: MasterMenuItem): item is MasterMenuItemAnchor {
+    return !!item.href;
+}
 
 export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
     const context = React.useContext(CurrentUserContext);
@@ -23,6 +42,10 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
     };
 
     const mapFn = (item: MasterMenuItem): MenuItem => {
+        if (isMasterMenuItemAnchor(item)) {
+            return { menuItem: item };
+        }
+
         const { route, submenu, to, ...menuItem } = item;
         return {
             menuItem: {
@@ -36,11 +59,21 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
     return items.filter(checkPermission).map(mapFn);
 }
 
-type MenuItem = {
+type MenuItemRoute = {
     menuItem: MenuItemRouterLinkProps;
     hasSubmenu: boolean;
     submenu: MenuItem[];
 };
+
+type MenuItemAnchor = {
+    menuItem: MenuItemAnchorLinkProps;
+};
+
+type MenuItem = MenuItemRoute | MenuItemAnchor;
+
+function isMenuItemAnchor(item: MenuItem): item is MenuItemAnchor {
+    return !!item.menuItem.href;
+}
 
 export interface MasterMenuProps {
     permanentMenuMinWidth?: number;
@@ -66,11 +99,17 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
     return (
         <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
             {menuItems.map((menuItem, index) =>
-                menuItem.hasSubmenu ? (
+                isMenuItemAnchor(menuItem) ? (
+                    <MenuItemAnchorLink key={index} {...menuItem.menuItem} />
+                ) : menuItem.hasSubmenu ? (
                     <MenuCollapsibleItem key={index} {...menuItem.menuItem}>
-                        {menuItem.submenu.map((submenu, index) => (
-                            <MenuItemRouterLink key={index} {...submenu.menuItem} to={`${match.url}${submenu.menuItem.to}`} />
-                        ))}
+                        {menuItem.submenu.map((submenuItem, index) =>
+                            isMenuItemAnchor(submenuItem) ? (
+                                <MenuItemAnchorLink key={index} {...submenuItem.menuItem} />
+                            ) : (
+                                <MenuItemRouterLink key={index} {...submenuItem.menuItem} to={`${match.url}${submenuItem.menuItem.to}`} />
+                            ),
+                        )}
                     </MenuCollapsibleItem>
                 ) : (
                     <MenuItemRouterLink key={index} {...menuItem.menuItem} to={`${match.url}${menuItem.menuItem.to}`} />

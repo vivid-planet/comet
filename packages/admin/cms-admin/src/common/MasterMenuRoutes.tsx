@@ -3,7 +3,7 @@ import * as React from "react";
 import { Redirect, RouteProps, Switch, useRouteMatch } from "react-router-dom";
 
 import { CurrentUserContext } from "../userPermissions/hooks/currentUser";
-import { MasterMenuData, MasterMenuItem } from "./MasterMenu";
+import { isMasterMenuItemAnchor, MasterMenuData, MasterMenuItem } from "./MasterMenu";
 
 export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
     const context = React.useContext(CurrentUserContext);
@@ -15,6 +15,10 @@ export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RoutePro
     };
 
     const flat = (routes: RouteProps[], item: MasterMenuItem): RouteProps[] => {
+        if (isMasterMenuItemAnchor(item)) {
+            return routes;
+        }
+
         if (item.route && checkPermission(item)) {
             routes.push(item.route);
         }
