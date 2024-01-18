@@ -64,7 +64,7 @@ export function useCurrentUser(): CurrentUserInterface {
     return ret.currentUser;
 }
 
-export function useIsAllowed(): (permission: string) => boolean {
+export function useUserPermissionCheck(): (permission: string) => boolean {
     const context = React.useContext(CurrentUserContext);
     if (!context) throw new Error("CurrentUser not found. Make sure CurrentUserContext exists.");
     const contentScope = useContentScope();
