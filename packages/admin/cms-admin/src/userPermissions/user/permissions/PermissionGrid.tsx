@@ -113,7 +113,7 @@ export const PermissionGrid: React.FC<{
             renderCell: ({ row }) =>
                 (row.source === "MANUAL" || row.overrideContentScopes) && (
                     <Button onClick={() => setOverrideContentScopesId(row.id)}>
-                        <FormattedMessage id="comet.userPermissions.overrideContentScopes" defaultMessage="Override Content-Scopes" />
+                        <FormattedMessage id="comet.userPermissions.overrideContentScopes" defaultMessage="Permission-specific Content-Scopes" />
                     </Button>
                 ),
         },
