@@ -1,4 +1,4 @@
-import cometConfig from "../comet-config.json";
+import cometConfig from "./comet-config.json";
 import environment from "./environment";
 
 export function createConfig() {
