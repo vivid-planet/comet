@@ -2,4 +2,4 @@
 "@comet/blocks-api": minor
 ---
 
-Add property `migrationOptions` to `createRichTextBlock()` factory to enable adding migrations to the RichTextBlock
+Add support for a custom block name and migrations to `createRichTextBlock`
