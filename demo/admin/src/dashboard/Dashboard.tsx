@@ -1,5 +1,5 @@
 import { MainContent, Stack } from "@comet/admin";
-import { DashboardHeader, LatestBuildsDashboardWidget, useIsAllowed } from "@comet/cms-admin";
+import { DashboardHeader, LatestBuildsDashboardWidget, useUserPermissionCheck } from "@comet/cms-admin";
 import { Grid } from "@mui/material";
 import { ContentScopeIndicator } from "@src/common/ContentScopeIndicator";
 import * as React from "react";
@@ -11,7 +11,7 @@ import { LatestContentUpdates } from "./LatestContentUpdates";
 
 const Dashboard: React.FC = () => {
     const intl = useIntl();
-    const isAllowed = useIsAllowed();
+    const isAllowed = useUserPermissionCheck();
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "dashboard", defaultMessage: "Dashboard" })}>
             <DashboardHeader
