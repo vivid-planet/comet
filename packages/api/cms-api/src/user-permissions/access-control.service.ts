@@ -7,7 +7,7 @@ import { AccessControlServiceInterface } from "./user-permissions.types";
 
 @Injectable()
 export abstract class AbstractAccessControlService implements AccessControlServiceInterface {
-    checkContentScope(userContentScopes: ContentScope[], contentScope: ContentScope): boolean {
+    private checkContentScope(userContentScopes: ContentScope[], contentScope: ContentScope): boolean {
         return userContentScopes.some((cs) => Object.entries(contentScope).every(([scope, value]) => cs[scope] === value));
     }
     isAllowed(user: CurrentUserInterface, permission: keyof Permission, contentScope?: ContentScope): boolean {
