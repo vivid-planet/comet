@@ -94,7 +94,9 @@ export const OverrideContentScopesDialog: React.FC<FormProps> = ({ permissionId,
                         <DialogContent>
                             <Field
                                 name="overrideContentScopes"
-                                label={<FormattedMessage id="comet.userPermissions.overrideScopes" defaultMessage="Override Scopes" />}
+                                label={
+                                    <FormattedMessage id="comet.userPermissions.overrideScopes" defaultMessage="Permission-specific Content-Scopes" />
+                                }
                                 component={FinalFormSwitch}
                                 type="checkbox"
                                 disabled={disabled}
