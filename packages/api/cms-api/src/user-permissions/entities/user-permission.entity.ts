@@ -52,7 +52,7 @@ export class UserPermission extends BaseEntity<UserPermission, "id"> {
 
     @Field(() => Boolean)
     @Property({ columnType: "boolean" })
-    overrideContentScopes = false;
+    overrideContentScopes: boolean = false;
 
     @Field(() => [GraphQLJSONObject])
     @Property({ type: "json" })
