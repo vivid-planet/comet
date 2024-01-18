@@ -26,7 +26,6 @@ export interface FieldProps<FieldValue = any, T extends HTMLElement = HTMLElemen
     shouldScrollTo?: (meta: FieldMetaState<FieldValue>) => boolean;
     shouldShowError?: (meta: FieldMetaState<FieldValue>) => boolean;
     shouldShowWarning?: (meta: FieldMetaState<FieldValue>) => boolean;
-    shouldShowHelperText?: (meta: FieldMetaState<FieldValue>) => boolean;
     [otherProp: string]: any;
 }
 
@@ -40,7 +39,6 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     validateWarning,
     shouldShowError: passedShouldShowError,
     shouldShowWarning: passedShouldShowWarning,
-    shouldShowHelperText: passedShouldShowHelperText,
     shouldScrollTo: passedShouldScrollTo,
     ...otherProps
 }: FieldProps<FieldValue, FieldElement>): React.ReactElement {
@@ -57,8 +55,6 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
         passedShouldShowError ?? ((fieldMeta: FieldMetaState<FieldValue>) => finalFormContext.shouldShowFieldError({ fieldMeta }));
     const shouldShowWarning =
         passedShouldShowWarning ?? ((fieldMeta: FieldMetaState<FieldValue>) => finalFormContext.shouldShowFieldWarning({ fieldMeta }));
-    const shouldShowHelperText =
-        passedShouldShowHelperText ?? ((fieldMeta: FieldMetaState<FieldValue>) => finalFormContext.shouldShowFieldHelperText({ fieldMeta }));
     const shouldScrollToField =
         passedShouldScrollTo ?? ((fieldMeta: FieldMetaState<FieldValue>) => finalFormContext.shouldScrollToField({ fieldMeta }));
 
@@ -80,7 +76,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 disabled={disabled}
                 error={shouldShowError(meta) && (meta.error || meta.submitError)}
                 warning={shouldShowWarning(meta) && meta.data?.warning}
-                helperText={shouldShowHelperText(meta) && meta.data?.helperText}
+                helperText={meta.data?.helperText}
                 variant={variant}
                 fullWidth={fullWidth}
                 scrollTo={shouldScrollToField(meta)}
