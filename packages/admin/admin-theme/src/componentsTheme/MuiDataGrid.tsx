@@ -12,7 +12,7 @@ import {
     TextField,
     TextFieldProps,
 } from "@mui/material";
-import { getDataGridUtilityClass } from "@mui/x-data-grid";
+import { getDataGridUtilityClass, GRID_DEFAULT_LOCALE_TEXT } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 import React from "react";
 
@@ -35,7 +35,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             ...component?.defaultProps?.components,
         },
         localeText: {
-            noRowsLabel: "No results found",
+            noRowsLabel: GRID_DEFAULT_LOCALE_TEXT.noResultsOverlayLabel,
         },
         ...component?.defaultProps,
     },
