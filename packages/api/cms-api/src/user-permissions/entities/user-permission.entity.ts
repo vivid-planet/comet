@@ -50,8 +50,8 @@ export class UserPermission extends BaseEntity<UserPermission, "id"> {
     @Property({ columnType: "text", nullable: true })
     approvedBy?: string;
 
-    @Field(() => Boolean, { defaultValue: false })
-    @Property({ columnType: "boolean", default: false })
+    @Field()
+    @Property()
     overrideContentScopes: boolean = false;
 
     @Field(() => [GraphQLJSONObject])
