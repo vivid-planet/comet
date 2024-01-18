@@ -1,64 +1,62 @@
 import { ButtonBase, ButtonBaseProps, ComponentsOverrides, Theme, Typography } from "@mui/material";
-import { WithStyles, withStyles } from "@mui/styles";
+import { useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { AppHeaderButtonClassKey, styles } from "./AppHeaderButton.styles";
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { AppHeaderButtonClassKey, EndIcon, Inner, Root, StartIcon, Text } from "./AppHeaderButton.styles";
 
-export interface AppHeaderButtonProps extends ButtonBaseProps {
+export interface AppHeaderButtonProps
+    extends ButtonBaseProps,
+        ThemedComponentBaseProps<{
+            root: typeof ButtonBase;
+            inner: "div";
+            text: typeof Typography;
+            startIcon: "div";
+            endIcon: "div";
+        }> {
     startIcon?: React.ReactNode;
     endIcon?: React.ReactNode;
     disableTypography?: boolean;
 }
 
-function Button({
-    classes,
-    children,
-    startIcon,
-    endIcon,
-    disableTypography,
-    onClick,
-    ...restProps
-}: AppHeaderButtonProps & WithStyles<typeof styles>): React.ReactElement {
-    const {
-        startIcon: startIconClassName,
-        endIcon: endIconClassName,
-        typography: typographyClassName,
-        inner: innerClassName,
-        ...buttonBaseClasses
-    } = classes;
+export function AppHeaderButton(inProps: AppHeaderButtonProps) {
+    const { children, disableTypography, slotProps, onClick, startIcon, endIcon, ...restProps } = useThemeProps({
+        props: inProps,
+        name: "CometAdminAppHeaderButton",
+    });
 
     return (
-        <ButtonBase classes={buttonBaseClasses} {...restProps} onClick={onClick}>
-            <div className={innerClassName}>
-                {startIcon && <div className={startIconClassName}>{startIcon}</div>}
+        <Root {...restProps} {...slotProps?.root} onClick={onClick}>
+            <Inner {...slotProps?.inner}>
+                {startIcon && <StartIcon {...slotProps?.startIcon}>{startIcon}</StartIcon>}
                 {children &&
                     (disableTypography ? (
-                        children
+                        { children }
                     ) : (
-                        <Typography component="div" classes={{ root: typographyClassName }}>
+                        // @ts-expect-error TODO
+                        <Text component="div" {...slotProps?.text}>
                             {children}
-                        </Typography>
+                        </Text>
                     ))}
-                {endIcon && <div className={endIconClassName}>{endIcon}</div>}
-            </div>
-        </ButtonBase>
+
+                {endIcon && <EndIcon {...slotProps?.endIcon}>{endIcon}</EndIcon>}
+            </Inner>
+        </Root>
     );
 }
 
-export const AppHeaderButton = withStyles(styles, { name: "CometAdminAppHeaderButton" })(Button);
-
 declare module "@mui/material/styles" {
+    interface ComponentsPropsList {
+        CometAdminAppHeaderButton: AppHeaderButtonProps;
+    }
+
     interface ComponentNameToClassKey {
         CometAdminAppHeaderButton: AppHeaderButtonClassKey;
     }
 
-    interface ComponentsPropsList {
-        CometAdminAppHeaderButton: Partial<AppHeaderButtonProps>;
-    }
-
     interface Components {
         CometAdminAppHeaderButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminAppHeaderButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminAppHeaderButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminAppHeaderButton"];
         };
     }
