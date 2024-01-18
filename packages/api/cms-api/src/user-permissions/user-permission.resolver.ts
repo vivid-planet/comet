@@ -77,11 +77,11 @@ export class UserPermissionResolver {
 
     @Mutation(() => UserPermission)
     async userPermissionsUpdateOverrideContentScopes(
-        @Args("input", { type: () => UserPermissionOverrideContentScopesInput }) data: UserPermissionOverrideContentScopesInput,
+        @Args("input", { type: () => UserPermissionOverrideContentScopesInput }) input: UserPermissionOverrideContentScopesInput,
     ): Promise<UserPermission> {
-        const permission = await this.getPermission(data.permissionId);
-        permission.overrideContentScopes = data.overrideContentScopes;
-        permission.contentScopes = data.contentScopes;
+        const permission = await this.getPermission(input.permissionId);
+        permission.overrideContentScopes = input.overrideContentScopes;
+        permission.contentScopes = input.contentScopes;
         await this.permissionRepository.persistAndFlush(permission);
         return permission;
     }
