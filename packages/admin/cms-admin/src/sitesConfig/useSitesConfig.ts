@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { SiteConfigApi, SiteConfigContext } from "./SitesConfigContext";
 
-export function useSitesConfig(): SiteConfigApi {
+export function useSitesConfig<Configs = unknown>(): SiteConfigApi<Configs> {
     const context = React.useContext(SiteConfigContext);
 
     if (!context) {
@@ -11,5 +11,6 @@ export function useSitesConfig(): SiteConfigApi {
         );
     }
 
+    //@ts-expect-error SiteConfigContext can't be generic
     return context;
 }

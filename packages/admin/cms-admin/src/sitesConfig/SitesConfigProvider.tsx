@@ -2,11 +2,12 @@ import * as React from "react";
 
 import { SiteConfigApi, SiteConfigContext } from "./SitesConfigContext";
 
-interface Props {
+interface Props<Config> {
     children: React.ReactNode;
-    value: SiteConfigApi;
+    value: SiteConfigApi<Config>;
 }
 
-export const SitesConfigProvider = ({ children, value }: Props): React.ReactElement => {
+export function SitesConfigProvider<Config = unknown>({ children, value }: Props<Config>) {
+    //@ts-expect-error SiteConfigContext can't be generic
     return <SiteConfigContext.Provider value={value}>{children}</SiteConfigContext.Provider>;
-};
+}
