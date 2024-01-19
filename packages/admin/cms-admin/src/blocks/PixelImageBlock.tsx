@@ -52,6 +52,15 @@ export function createPreviewUrl({ damFile, cropArea }: ImageBlockState, apiUrl:
     return url.toString();
 }
 
+function rewriteUrlHost(url: string, newHost: string) {
+    const oldUrl = new URL(url);
+    const newHostUrl = new URL(newHost);
+
+    const newUrl = new URL(oldUrl);
+    newUrl.host = newHostUrl.host;
+    return newUrl.toString();
+}
+
 export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockState, PixelImageBlockInput> = {
     ...createBlockSkeleton(),
 
@@ -224,7 +233,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                             <EditImageDialog
                                 image={{
                                     name: state.damFile.name,
-                                    url: state.damFile.fileUrl,
+                                    url: rewriteUrlHost(state.damFile.fileUrl, context.damConfig.apiUrl), // replace public api domain with auth proxy domain
                                     width: state.damFile.image.width,
                                     height: state.damFile.image.height,
                                     size: state.damFile.size,
