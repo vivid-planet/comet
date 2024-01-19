@@ -102,12 +102,11 @@ const styles = (theme: Theme) => {
         warning: {
             color: theme.palette.warning.main,
         },
-        hasHelperText: {
+        hasHelperText: {},
+        helperText: {
             "& $label:not([class*='Mui-focused'])": {
                 color: theme.palette.grey["300"],
             },
-        },
-        helperText: {
             color: theme.palette.grey["300"],
         },
     });
@@ -138,7 +137,7 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles> & Field
     if (fullWidth) formControlClasses.push(classes.fullWidth);
     if (hasError) formControlClasses.push(classes.hasError);
     if (hasWarning && !hasError) formControlClasses.push(classes.hasWarning);
-    if (hasHelperText) formControlClasses.push(classes.helperText);
+    if (hasHelperText) formControlClasses.push(classes.hasHelperText);
     if (disabled) formControlClasses.push(classes.disabled);
     if (required) formControlClasses.push(classes.required);
     if (fieldMargin === "always") formControlClasses.push(classes.fieldMarginAlways);
