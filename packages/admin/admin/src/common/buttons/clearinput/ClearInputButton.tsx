@@ -1,5 +1,5 @@
 import { Clear } from "@comet/admin-icons";
-import { ButtonBase, ButtonBaseProps, ComponentsOverrides } from "@mui/material";
+import { ButtonBase, ButtonBaseProps, ComponentsOverrides, inputAdornmentClasses } from "@mui/material";
 import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
@@ -17,11 +17,11 @@ const Root = styled(ButtonBase, {
         width: 40px;
         color: ${theme.palette.action.active};
 
-        &:last-child {
+        ${`.${inputAdornmentClasses.positionEnd}`}:last-child & {
             margin-right: ${theme.spacing(-2)};
         }
 
-        &:first-child {
+        ${`.${inputAdornmentClasses.positionStart}`}:first-child & {
             margin-left: ${theme.spacing(-2)};
         }
 
