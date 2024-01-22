@@ -4,7 +4,7 @@
 
 Make sites config generic
 
-The sites config was previously assumed to be `Record<string, SiteConfg`.
+The sites config was previously assumed to be `Record<string, SiteConfg>`.
 However, as the sites config is solely used in application code, it could be of any shape.
 Therefore, the `SitesConfigProvider` and `useSitesConfig` are made generic.
 The following changes have to be made in the application:
