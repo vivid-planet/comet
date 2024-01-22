@@ -132,7 +132,7 @@ export class UserPermissionsService {
 
     async createCurrentUser(user: User): Promise<CurrentUser> {
         const currentUser = new CurrentUser();
-        const contentScopes = await this.getContentScopes(user.id, {
+        const availableContentScopes = await this.getContentScopes(user.id, {
             includeContentScopesByRule: true,
             includeContentScopesManual: true,
             includeContentScopesFromPermissions: true,
@@ -142,7 +142,7 @@ export class UserPermissionsService {
             name: user.name,
             email: user.email ?? "",
             language: user.language,
-            contentScopes,
+            availableContentScopes,
             permissions: (await this.getPermissions(user.id))
                 .filter(
                     (p) =>
@@ -151,7 +151,7 @@ export class UserPermissionsService {
                 )
                 .map((p) => ({
                     permission: p.permission,
-                    contentScopes: p.overrideContentScopes ? p.contentScopes : contentScopes,
+                    contentScopes: p.overrideContentScopes ? p.contentScopes : availableContentScopes,
                 })),
         });
         return currentUser;

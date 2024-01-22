@@ -18,7 +18,7 @@ export interface CurrentUserInterface {
     email?: string;
     language?: string;
     permissions: GQLCurrentUserPermission[];
-    contentScopes: ContentScopeInterface[];
+    availableContentScopes: ContentScopeInterface[];
 }
 
 export const CurrentUserProvider: React.FC<{
@@ -30,7 +30,7 @@ export const CurrentUserProvider: React.FC<{
                 id
                 name
                 email
-                contentScopes
+                availableContentScopes
                 permissions {
                     permission
                     contentScopes

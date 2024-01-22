@@ -23,7 +23,7 @@ export class CurrentUser implements CurrentUserInterface {
     @Field()
     language: string;
     @Field(() => [GraphQLJSONObject])
-    contentScopes: ContentScope[];
+    availableContentScopes: ContentScope[];
     @Field(() => [CurrentUserPermission])
     permissions: CurrentUserPermission[];
 }

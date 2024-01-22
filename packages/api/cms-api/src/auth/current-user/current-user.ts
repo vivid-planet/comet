@@ -9,5 +9,5 @@ export interface CurrentUserInterface {
         permission: string;
         contentScopes: ContentScope[];
     }[];
-    contentScopes?: ContentScope[];
+    availableContentScopes?: ContentScope[];
 }

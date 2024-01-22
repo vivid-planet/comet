@@ -224,7 +224,7 @@ type CurrentUser {
   name: String!
   email: String!
   language: String!
-  contentScopes: [JSONObject!]!
+  availableContentScopes: [JSONObject!]!
   permissions: [CurrentUserPermission!]!
 }
 
