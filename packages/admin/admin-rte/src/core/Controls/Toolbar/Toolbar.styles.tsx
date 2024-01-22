@@ -1,5 +1,7 @@
 import { css, styled } from "@mui/material/styles";
 
+import getRteTheme from "../../utils/getRteTheme";
+
 export type RteToolbarClassKey = "root" | "slot";
 
 export const Root = styled("div", {
@@ -9,18 +11,19 @@ export const Root = styled("div", {
         return [styles.root];
     },
 })(
-    ({ theme }) => css`
-        position: sticky;
-        top: 0;
-        z-index: 2;
-        display: flex;
-        flex-wrap: wrap;
-        border-top: 1px solid ${theme.components?.CometAdminRte?.defaultProps?.colors?.border};
-        background-color: ${theme.components?.CometAdminRte?.defaultProps?.colors?.toolbarBackground};
-        padding-left: 6px; //px right?
-        padding-right: 6px;
-        overflow: hidden;
-    `,
+    ({ theme }) =>
+        css`
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            display: flex;
+            flex-wrap: wrap;
+            border-top: 1px solid ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors?.border};
+            background-color: ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors?.toolbarBackground};
+            padding-left: 6px;
+            padding-right: 6px;
+            overflow: hidden;
+        `,
 );
 
 export const Slot = styled("div", {
@@ -34,7 +37,7 @@ export const Slot = styled("div", {
         position: relative;
         flex-shrink: 0;
         flex-grow: 0;
-        height: 34px; //right unit?
+        height: 34px;
         box-sizing: border-box;
         padding-top: 5px;
         padding-bottom: 5px;
@@ -45,7 +48,7 @@ export const Slot = styled("div", {
         &::after {
             content: "";
             position: absolute;
-            background-color: ${theme.components?.CometAdminRte?.defaultProps?.colors?.border};
+            background-color: ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors?.border};
         }
 
         &::before {
