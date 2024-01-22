@@ -194,8 +194,7 @@ export { IChangePageOptions, IPagingApi, useTableQueryPaging } from "./table/use
 export { ISortApi, ISortInformation, SortDirection, useTableQuerySort } from "./table/useTableQuerySort";
 export { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQueryContext";
 export { RouterTab, RouterTabs, RouterTabsClassKey } from "./tabs/RouterTabs";
-export { Tab, Tabs, TabsProps } from "./tabs/Tabs";
-export { TabsClassKey } from "./tabs/Tabs.styles";
+export { Tab, Tabs, TabsClassKey, TabsProps } from "./tabs/Tabs";
 export { TabScrollButton, TabScrollButtonClassKey, TabScrollButtonProps } from "./tabs/TabScrollButton";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
