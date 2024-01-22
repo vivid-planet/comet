@@ -193,8 +193,7 @@ export { IFilterApi, useTableQueryFilter } from "./table/useTableQueryFilter";
 export { IChangePageOptions, IPagingApi, useTableQueryPaging } from "./table/useTableQueryPaging";
 export { ISortApi, ISortInformation, SortDirection, useTableQuerySort } from "./table/useTableQuerySort";
 export { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQueryContext";
-export { RouterTab, RouterTabs } from "./tabs/RouterTabs";
-export { RouterTabsClassKey } from "./tabs/RouterTabs.styles";
+export { RouterTab, RouterTabs, RouterTabsClassKey } from "./tabs/RouterTabs";
 export { Tab, Tabs, TabsClassKey, TabsProps } from "./tabs/Tabs";
 export { TabScrollButton, TabScrollButtonClassKey, TabScrollButtonProps } from "./tabs/TabScrollButton";
 
