@@ -22,7 +22,7 @@ export { DeleteButton, DeleteButtonClassKey, DeleteButtonProps } from "./common/
 export { OkayButton, OkayButtonClassKey, OkayButtonProps } from "./common/buttons/okay/OkayButton";
 export { SaveButton, SaveButtonProps } from "./common/buttons/save/SaveButton";
 export { SaveButtonClassKey } from "./common/buttons/save/SaveButton.styles";
-export { SplitButton, SplitButtonProps } from "./common/buttons/split/SplitButton";
+export { SplitButton, SplitButtonClassKey, SplitButtonProps } from "./common/buttons/split/SplitButton";
 export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/split/SplitButtonContext";
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";

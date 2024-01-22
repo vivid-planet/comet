@@ -1,11 +1,21 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Button, ButtonGroup, ButtonGroupProps, MenuItem, MenuList, Popover, PopoverProps } from "@mui/material";
-import { withStyles } from "@mui/styles";
+import {
+    Button,
+    ButtonGroup as MuiButtonGroup,
+    ButtonGroupProps,
+    MenuItem as MuiMenuItem,
+    MenuList as MuiMenuList,
+    Popover as MuiPopover,
+    PopoverProps,
+} from "@mui/material";
+import { styled, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { PropsWithChildren } from "react";
 
 import { useStoredState } from "../../../hooks/useStoredState";
 import { SplitButtonContext } from "./SplitButtonContext";
+
+export type SplitButtonClassKey = "buttonGroup" | "activeButton" | "popover" | "menuList" | "menuItem";
 
 export interface SplitButtonProps extends ButtonGroupProps<any> {
     selectIcon?: React.ReactNode;
@@ -18,19 +28,61 @@ export interface SplitButtonProps extends ButtonGroupProps<any> {
     popoverProps?: Partial<PopoverProps>;
 }
 
+const ButtonGroup = styled(MuiButtonGroup, {
+    name: "CometAdminSplitButton",
+    slot: "buttonGroup",
+    overridesResolver(_, styles) {
+        return [styles.buttonGroup];
+    },
+})();
+
+const ActiveButton = styled(Button, {
+    name: "CometAdminSplitButton",
+    slot: "activeButton",
+    overridesResolver(_, styles) {
+        return [styles.activeButton];
+    },
+})();
+
+const Popover = styled(MuiPopover, {
+    name: "CometAdminSplitButton",
+    slot: "popover",
+    overridesResolver(_, styles) {
+        return [styles.popover];
+    },
+})();
+
+const MenuList = styled(MuiMenuList, {
+    name: "CometAdminSplitButton",
+    slot: "menuList",
+    overridesResolver(_, styles) {
+        return [styles.menuList];
+    },
+})();
+
+const MenuItem = styled(MuiMenuItem, {
+    name: "CometAdminSplitButton",
+    slot: "menuItem",
+    overridesResolver(_, styles) {
+        return [styles.menuItem];
+    },
+})();
+
 // Based on https://v4.mui.com/components/button-group/#split-button
-const SplitBtn = ({
-    selectIcon = <ChevronDown />,
-    selectedIndex,
-    onSelectIndex,
-    children,
-    showSelectButton,
-    localStorageKey,
-    storage,
-    autoClickOnSelect = true,
-    popoverProps,
-    ...restProps
-}: PropsWithChildren<SplitButtonProps>) => {
+export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
+    const {
+        selectIcon = <ChevronDown />,
+        selectedIndex,
+        onSelectIndex,
+        children,
+        showSelectButton,
+        localStorageKey,
+        storage,
+        autoClickOnSelect = true,
+        popoverProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminSplitButton" });
+
     const [showSelectButtonState, setShowSelectButtonState] = React.useState<boolean | undefined>(undefined);
 
     const childrenArray = React.Children.toArray(children);
@@ -79,7 +131,7 @@ const SplitBtn = ({
             <ButtonGroup variant={activeChildVariant} color={activeChildColor} {...restProps} ref={anchorRef}>
                 {ActiveChild}
                 {(showSelect ?? childrenArray.length > 1) && (
-                    <Button
+                    <ActiveButton
                         variant={activeChildVariant}
                         color={activeChildColor}
                         size="small"
@@ -87,7 +139,7 @@ const SplitBtn = ({
                         onClick={handleToggle}
                     >
                         {selectIcon}
-                    </Button>
+                    </ActiveButton>
                 )}
             </ButtonGroup>
             <Popover
@@ -115,9 +167,7 @@ const SplitBtn = ({
             </Popover>
         </SplitButtonContext.Provider>
     );
-};
-
-export const SplitButton = withStyles({}, { name: "CometAdminSplitButton" })(SplitBtn);
+}
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
