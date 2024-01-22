@@ -106,8 +106,7 @@ export { IMenuContext, IWithMenu, MenuContext, withMenu } from "./mui/menu/Conte
 export { MenuItem, MenuItemClassKey, MenuItemProps } from "./mui/menu/Item";
 export { MenuItemAnchorLink, MenuItemAnchorLinkProps } from "./mui/menu/ItemAnchorLink";
 export { MenuItemRouterLink, MenuItemRouterLinkProps } from "./mui/menu/ItemRouterLink";
-export { Menu, MenuProps } from "./mui/menu/Menu";
-export { MenuClassKey, styles } from "./mui/menu/Menu.styles";
+export { Menu, MenuClassKey, MenuProps } from "./mui/menu/Menu";
 export { MuiThemeProvider } from "./mui/ThemeProvider";
 export { RouterBrowserRouter } from "./router/BrowserRouter";
 export { RouterConfirmationDialog, RouterConfirmationDialogClassKey, RouterConfirmationDialogProps } from "./router/ConfirmationDialog";

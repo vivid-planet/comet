@@ -1,13 +1,76 @@
-import { ComponentsOverrides, Drawer, DrawerProps, PaperProps, Theme } from "@mui/material";
-import { WithStyles, withStyles } from "@mui/styles";
+import Drawer, { DrawerProps } from "@mui/material/Drawer";
+import { PaperProps } from "@mui/material/Paper";
+import { ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { useHistory } from "react-router";
 
 import { MasterLayoutContext } from "../MasterLayoutContext";
 import { MenuContext } from "./Context";
-import { MenuClassKey, styles } from "./Menu.styles";
 
-export interface MenuProps {
+export type MenuClassKey = "drawer" | "permanent" | "temporary" | "open";
+
+type OwnerState = { open: boolean; variant: string };
+
+const StyledDrawer = styled(Drawer, {
+    name: "CometAdminMenu",
+    slot: "drawer",
+    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+        return [
+            styles.drawer,
+            ownerState.variant === "temporary" && styles.temporary,
+            ownerState.variant === "permanent" && ownerState.open && styles.permanent,
+        ];
+    },
+})<{ ownerState: OwnerState }>(
+    ({ theme, ownerState }) => css`
+        .MuiDrawer-paper {
+            background-color: #fff;
+        }
+        .MuiPaper-root {
+            flex-grow: 1;
+            overflow-x: hidden;
+        }
+        .MuiDrawer-paperAnchorLeft {
+            border-right: none;
+        }
+
+        ${ownerState.variant === "permanent" &&
+        ownerState.open &&
+        css`
+            transition: ${theme.transitions.create("width", {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.enteringScreen,
+            })};
+
+            .MuiPaper-root {
+                transition: ${theme.transitions.create("margin", {
+                    easing: theme.transitions.easing.sharp,
+                    duration: theme.transitions.duration.enteringScreen,
+                })};
+            }
+        `}
+
+        ${ownerState.variant === "permanent" &&
+        !ownerState.open &&
+        css`
+            transition: ${theme.transitions.create("width", {
+                easing: theme.transitions.easing.easeOut,
+                duration: theme.transitions.duration.leavingScreen,
+            })};
+
+            .MuiPaper-root {
+                transition: ${theme.transitions.create("margin", {
+                    easing: theme.transitions.easing.easeOut,
+                    duration: theme.transitions.duration.enteringScreen,
+                })};
+                box-shadow: none;
+            }
+        `}
+    `,
+);
+
+export interface MenuProps extends ThemedComponentBaseProps<{ drawer: typeof Drawer }> {
     children: React.ReactNode;
     variant?: "permanent" | "temporary";
     drawerWidth?: number;
@@ -17,20 +80,27 @@ export interface MenuProps {
     permanentDrawerPaperProps?: PaperProps;
 }
 
-const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
-    classes,
-    children,
-    drawerWidth = 300,
-    variant = "permanent",
-    temporaryDrawerProps = {},
-    permanentDrawerProps = {},
-    temporaryDrawerPaperProps = {},
-    permanentDrawerPaperProps = {},
-}) => {
+export function Menu(inProps: MenuProps) {
+    const {
+        children,
+        drawerWidth = 300,
+        variant = "permanent",
+        temporaryDrawerProps = {},
+        permanentDrawerProps = {},
+        temporaryDrawerPaperProps = {},
+        permanentDrawerPaperProps = {},
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminMenu" });
     const history = useHistory();
     const { open, toggleOpen } = React.useContext(MenuContext);
     const { headerHeight } = React.useContext(MasterLayoutContext);
     const initialRender = React.useRef(true);
+
+    const ownerState: OwnerState = {
+        variant,
+        open,
+    };
 
     // Close the menu on initial render if it is temporary to prevent a page-overlay when initially loading the page.
     React.useEffect(() => {
@@ -53,35 +123,32 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
         });
     }, [history, variant, open, toggleOpen]);
 
-    const temporaryDrawerClasses: string[] = [classes.drawer, classes.temporary];
-    temporaryDrawerClasses.push(open ? classes.open : classes.closed);
-
-    const permanentDrawerClasses: string[] = [classes.drawer, classes.permanent];
-    permanentDrawerClasses.push(open ? classes.open : classes.closed);
-
     const temporaryOpen = variant === "temporary" && open;
     const permanentOpen = variant === "permanent" && open;
 
     // Always render both temporary and permanent drawers to make sure, the opening and closing animations run fully when switching between variants.
     return (
         <>
-            <Drawer
+            <StyledDrawer
                 variant="temporary"
-                className={temporaryDrawerClasses.join(" ")}
+                {...slotProps?.drawer}
                 // workaround for issue: https://github.com/mui/material-ui/issues/35793
                 open={initialRender.current ? false : temporaryOpen}
+                ownerState={ownerState}
                 PaperProps={{ style: { width: drawerWidth }, ...temporaryDrawerPaperProps }}
                 onClose={toggleOpen}
                 {...temporaryDrawerProps}
+                {...restProps}
             >
                 {children}
-            </Drawer>
+            </StyledDrawer>
 
-            <Drawer
+            <StyledDrawer
                 variant="permanent"
-                className={permanentDrawerClasses.join(" ")}
+                {...slotProps?.drawer}
                 open={permanentOpen}
                 style={{ width: permanentOpen ? drawerWidth : 0 }}
+                ownerState={ownerState}
                 PaperProps={{
                     elevation: 2,
                     style: {
@@ -95,12 +162,10 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
                 {...permanentDrawerProps}
             >
                 {children}
-            </Drawer>
+            </StyledDrawer>
         </>
     );
-};
-
-export const Menu = withStyles(styles, { name: "CometAdminMenu" })(MenuDrawer);
+}
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
