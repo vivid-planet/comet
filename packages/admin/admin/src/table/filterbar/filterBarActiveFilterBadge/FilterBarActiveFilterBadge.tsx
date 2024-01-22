@@ -20,8 +20,8 @@ const HasValueCount = styled("div", {
         text-align: center;
         border-radius: 4px;
         padding: 4px 5px;
-        margin-top: -4;
-        margin-bottom: -4;
+        margin-top: -4px;
+        margin-bottom: -4px;
         font-size: 12px;
     `,
 );
