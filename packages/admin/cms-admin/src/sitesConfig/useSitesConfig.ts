@@ -11,6 +11,5 @@ export function useSitesConfig<Configs = unknown>(): SiteConfigApi<Configs> {
         );
     }
 
-    //@ts-expect-error SiteConfigContext can't be generic
-    return context;
+    return context as SiteConfigApi<Configs>;
 }
