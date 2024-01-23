@@ -2,4 +2,4 @@
 "@comet/admin": major
 ---
 
-Rename `FilterBarMoveFilersClassKey` in `FilterBarMoreFiltersClassKey`
+Rename `FilterBarMoveFilersClassKey` to `FilterBarMoreFiltersClassKey`

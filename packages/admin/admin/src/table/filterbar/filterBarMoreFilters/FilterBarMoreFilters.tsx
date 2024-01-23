@@ -7,10 +7,6 @@ import { FormattedMessage } from "react-intl";
 
 import { FilterBarButton } from "../filterBarButton/FilterBarButton";
 
-/**
- * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
- */
-
 export type FilterBarMoreFiltersClassKey = "root" | "button";
 
 const Root = styled("div", {
@@ -38,12 +34,19 @@ const StyledFilterBarButton = styled(FilterBarButton, {
     `,
 );
 
-export interface FilterBarMoreFiltersProps extends ThemedComponentBaseProps<{ root: any; button: typeof FilterBarButton }> {
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
+export interface FilterBarMoreFiltersProps extends ThemedComponentBaseProps<{ root: "div"; button: typeof FilterBarButton }> {
     icon?: React.ReactNode;
 }
 
-export function FilterBarMoreFilters(children: React.PropsWithChildren<FilterBarMoreFiltersProps>, inProps: FilterBarMoreFiltersProps) {
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
+export function FilterBarMoreFilters(inProps: React.PropsWithChildren<FilterBarMoreFiltersProps>) {
     const {
+        children,
         icon = <Filter />,
         slotProps,
         ...restProps
