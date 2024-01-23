@@ -241,7 +241,7 @@ export function PagesPage({
                                     <MainContent>
                                         <Alert
                                             title={<FormattedMessage id="comet.pages.pages.archived" defaultMessage="Archived" />}
-                                            severity="warning"
+                                            severity="error"
                                         >
                                             <FormattedMessage
                                                 id="comet.pages.pages.documentHasBeenArchived"
