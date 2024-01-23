@@ -45,7 +45,7 @@ type OwnerState = Pick<FieldContainerProps, "fullWidth" | "disabled" | "required
     hasWarning: boolean;
 };
 
-const Root = styled(FormControl, {
+export const Root = styled(FormControl, {
     name: "CometAdminFormFieldContainer",
     slot: "root",
     overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {

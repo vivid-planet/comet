@@ -2,6 +2,7 @@ import { ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/mat
 import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 
+import { Root as FieldContainerRoot } from "../../form/FieldContainer";
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
@@ -19,7 +20,7 @@ const Root = styled("div", {
         return [styles.root];
     },
 })(css`
-    & [class*="CometAdminFormFieldContainer-root"] {
+    & ${FieldContainerRoot} {
         margin-bottom: 0;
     }
 `);
@@ -55,6 +56,10 @@ export function FilterBar(inProps: FilterBarProps) {
         </Root>
     );
 }
+
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
