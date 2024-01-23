@@ -222,7 +222,7 @@ export function PagesPage({
 
                             if (!page) {
                                 return (
-                                    <Box px={4} py={4}>
+                                    <MainContent>
                                         <Alert
                                             title={<FormattedMessage id="comet.pages.pages.notFound" defaultMessage="Not found" />}
                                             severity="error"
@@ -232,13 +232,13 @@ export function PagesPage({
                                                 defaultMessage="This document doesn't exist"
                                             />
                                         </Alert>
-                                    </Box>
+                                    </MainContent>
                                 );
                             }
 
                             if (page.visibility === "Archived") {
                                 return (
-                                    <Box px={4} py={4}>
+                                    <MainContent>
                                         <Alert
                                             title={<FormattedMessage id="comet.pages.pages.archived" defaultMessage="Archived" />}
                                             severity="warning"
@@ -248,7 +248,7 @@ export function PagesPage({
                                                 defaultMessage="This document has been archived and can no longer be edited"
                                             />
                                         </Alert>
-                                    </Box>
+                                    </MainContent>
                                 );
                             }
 
