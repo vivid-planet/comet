@@ -7,10 +7,8 @@ import * as React from "react";
 import { BreadcrumbItem } from "../Stack";
 import { BreadcrumbLink } from "./BreadcrumbLink";
 
-export type BreadcrumbsOverflowClassKey = "overflowLink";
-
 const StyledOverflowLink = styled(Link, {
-    name: "CometAdminBreadcrumbsOverflow",
+    name: "CometAdminStackBreadcrumbs",
     slot: "overflowLink",
     overridesResolver(_, styles) {
         return [styles.link];

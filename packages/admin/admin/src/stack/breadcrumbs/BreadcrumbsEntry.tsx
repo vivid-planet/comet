@@ -1,5 +1,5 @@
 import { LevelUp } from "@comet/admin-icons";
-import { IconButton } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import Link from "@mui/material/Link";
 import { css, styled, useThemeProps } from "@mui/material/styles";
 import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
@@ -8,10 +8,8 @@ import * as React from "react";
 import { BreadcrumbItem } from "../Stack";
 import { BreadcrumbLink } from "./BreadcrumbLink";
 
-export type BreadcrumbsEntryClassKey = "backButtonSeparator" | "link" | "disabledLink";
-
 const StyledLink: typeof Link = styled(Link, {
-    name: "CometAdminBreadcrumbsEntry",
+    name: "CometAdminStackBreadcrumbs",
     slot: "link",
     overridesResolver(_, styles) {
         return [styles.link];
@@ -26,8 +24,8 @@ const StyledLink: typeof Link = styled(Link, {
     `,
 );
 
-const StyledDisabledLink = styled(Link, {
-    name: "CometAdminBreadcrumbsEntry",
+const StyledDisabledLink = styled(Typography, {
+    name: "CometAdminStackBreadcrumbs",
     slot: "disabledLink",
     overridesResolver(_, styles) {
         return [styles.disabledLink];
@@ -44,7 +42,7 @@ const StyledDisabledLink = styled(Link, {
 );
 
 const BackButtonSeparator = styled("div", {
-    name: "CometAdminBreadcrumbsEntry",
+    name: "CometAdminStackBreadcrumbs",
     slot: "backButtonSeparator",
     overridesResolver(_, styles) {
         return [styles.backButtonSeparator];
@@ -59,7 +57,7 @@ const BackButtonSeparator = styled("div", {
 );
 
 export interface BreadcrumbsEntryProps
-    extends ThemedComponentBaseProps<{ styledLink: typeof Link; backButtonSeparator: "div"; styledDisabledLink: typeof Link }> {
+    extends ThemedComponentBaseProps<{ link: typeof Link; backButtonSeparator: "div"; disabledLink: typeof Typography }> {
     item: BreadcrumbItem;
     isLastItem?: boolean;
     backButtonUrl?: string;
@@ -78,11 +76,11 @@ export function BreadcrumbsEntry(inProps: BreadcrumbsEntryProps) {
                 </>
             )}
             {isLastItem ? (
-                <StyledDisabledLink {...slotProps?.styledDisabledLink} variant="body2">
+                <StyledDisabledLink {...slotProps?.disabledLink} variant="body2">
                     {item.title}
                 </StyledDisabledLink>
             ) : (
-                <StyledLink to={item.url} component={BreadcrumbLink} variant="body2" {...slotProps?.styledLink}>
+                <StyledLink to={item.url} component={BreadcrumbLink} variant="body2" {...slotProps?.link}>
                     {item.title}
                 </StyledLink>
             )}

@@ -6,7 +6,15 @@ import * as React from "react";
 import { useStackApi } from "../Api";
 import { getElementOuterWidth, useItemsToRender, useObservedWidth } from "./utils";
 
-export type StackBreadcrumbsClassKey = "root" | "breadcrumbs" | "listItem" | "separator";
+export type StackBreadcrumbsClassKey =
+    | "root"
+    | "breadcrumbs"
+    | "listItem"
+    | "link"
+    | "disabledLink"
+    | "overflowLink"
+    | "separator"
+    | "backButtonSeparator";
 
 const Root = styled("div", {
     name: "CometAdminStackBreadcrumbs",
