@@ -160,7 +160,7 @@ export function createColumnsBlock<T extends BlockInterface>({
             columns: state.columns
                 .filter((c) => (previewContext.showVisibleOnly ? c.visible : true)) // depending on context show all blocks or only visible blocks
                 .map((column) => {
-                    const blockAdminRoute = `${previewContext.parentUrl}/${column.key}/edit`;
+                    const blockAdminRoute = `${previewContext.parentUrlSubRoute ?? previewContext.parentUrl}/${column.key}/edit`;
 
                     return {
                         key: column.key,
