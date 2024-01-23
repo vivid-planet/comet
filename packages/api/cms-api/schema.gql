@@ -531,7 +531,7 @@ type Mutation {
   userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!
   userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
-  userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): [JSONObject!]!
+  userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
 }
 
 input CreateBuildsInput {

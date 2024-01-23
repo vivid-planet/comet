@@ -86,20 +86,20 @@ export class UserPermissionsService {
             }
         }
 
-        return permissions.sort(
-            (a, b) => availablePermissions.indexOf(a.permission as keyof Permission) - availablePermissions.indexOf(b.permission as keyof Permission),
-        );
+        return permissions
+            .filter((value) => availablePermissions.some((p) => p === value.permission))
+            .sort(
+                (a, b) =>
+                    availablePermissions.indexOf(a.permission as keyof Permission) - availablePermissions.indexOf(b.permission as keyof Permission),
+            );
     }
 
-    async getContentScopes(
-        userId: string,
-        options: { includeContentScopesByRule: boolean; includeContentScopesManual: boolean; includeContentScopesFromPermissions: boolean },
-    ): Promise<ContentScope[]> {
-        const availableContentScopes = await this.getAvailableContentScopes();
-
+    async getContentScopes(userId: string, includeContentScopesManual = true): Promise<ContentScope[]> {
         const contentScopes: ContentScope[] = [];
 
-        if (options.includeContentScopesByRule && this.accessControlService.getContentScopesForUser) {
+        const availableContentScopes = await this.getAvailableContentScopes();
+
+        if (this.accessControlService.getContentScopesForUser) {
             const user = await this.getUser(userId);
             if (user) {
                 const userContentScopes = await this.accessControlService.getContentScopesForUser(user);
@@ -111,49 +111,63 @@ export class UserPermissionsService {
             }
         }
 
-        if (options.includeContentScopesManual) {
+        if (includeContentScopesManual) {
             const entity = await this.contentScopeRepository.findOne({ userId });
             if (entity) {
                 contentScopes.push(...entity.contentScopes);
             }
         }
 
-        if (options.includeContentScopesFromPermissions) {
-            const permissions = await this.getPermissions(userId);
-            permissions.forEach((p) => {
-                contentScopes.push(...p.contentScopes);
-            });
-        }
+        return this.normalizeContentScopes(contentScopes, availableContentScopes);
+    }
 
-        return [...new Set(contentScopes)] // Make values unique
+    private normalizeContentScopes(contentScopes: ContentScope[], availableContentScopes: ContentScope[]): ContentScope[] {
+        return [...new Set(contentScopes.map((cs) => JSON.stringify(cs)))] // Make values unique
+            .map((cs) => JSON.parse(cs))
             .filter((value) => availableContentScopes.some((cs) => isEqual(cs, value))) // Allow only values that are defined in availableContentScopes
             .sort((a, b) => availableContentScopes.indexOf(a) - availableContentScopes.indexOf(b)); // Order by availableContentScopes
     }
 
     async createCurrentUser(user: User): Promise<CurrentUser> {
+        const allContentScopes = await this.getAvailableContentScopes();
+
+        const userContentScopes = await this.getContentScopes(user.id);
+        const permissions = (await this.getPermissions(user.id))
+            .filter(
+                (p) =>
+                    (!p.validFrom || differenceInDays(new Date(), p.validFrom) >= 0) && (!p.validTo || differenceInDays(p.validTo, new Date()) >= 0),
+            )
+            .reduce((acc: CurrentUser["permissions"], userPermission) => {
+                const contentScopes = userPermission.overrideContentScopes ? userPermission.contentScopes : userContentScopes;
+
+                const existingPermission = acc.find((p) => p.permission === userPermission.permission);
+                if (existingPermission) {
+                    existingPermission.contentScopes = this.normalizeContentScopes(
+                        [...existingPermission.contentScopes, ...contentScopes],
+                        allContentScopes,
+                    );
+                } else {
+                    acc.push({
+                        permission: userPermission.permission,
+                        contentScopes,
+                    });
+                }
+                return acc;
+            }, []);
+
+        const availableContentScopes = await this.normalizeContentScopes(
+            permissions.flatMap((p) => p.contentScopes),
+            allContentScopes,
+        );
+
         const currentUser = new CurrentUser();
-        const availableContentScopes = await this.getContentScopes(user.id, {
-            includeContentScopesByRule: true,
-            includeContentScopesManual: true,
-            includeContentScopesFromPermissions: true,
-        });
-        Object.assign(currentUser, {
+        return Object.assign(currentUser, {
             id: user.id,
             name: user.name,
             email: user.email ?? "",
             language: user.language,
             availableContentScopes,
-            permissions: (await this.getPermissions(user.id))
-                .filter(
-                    (p) =>
-                        (!p.validFrom || differenceInDays(new Date(), p.validFrom) >= 0) &&
-                        (!p.validTo || differenceInDays(p.validTo, new Date()) >= 0),
-                )
-                .map((p) => ({
-                    permission: p.permission,
-                    contentScopes: p.overrideContentScopes ? p.contentScopes : availableContentScopes,
-                })),
+            permissions,
         });
-        return currentUser;
     }
 }
