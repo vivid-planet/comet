@@ -1,5 +1,6 @@
 import "reflect-metadata";
 
+export { AccessLogModule } from "./access-log/access-log.module";
 export { CurrentUserInterface, CurrentUserLoaderInterface, CurrentUserRightInterface } from "./auth/current-user/current-user";
 export { AllowForRole } from "./auth/decorators/allow-for-role.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
@@ -38,6 +39,7 @@ export { BuildsService } from "./builds/builds.service";
 export { AutoBuildStatus } from "./builds/dto/auto-build-status.object";
 export { ChangesSinceLastBuild } from "./builds/entities/changes-since-last-build.entity";
 export { SKIP_BUILD_METADATA_KEY, SkipBuild } from "./builds/skip-build.decorator";
+export { ContentScope } from "./common/decorators/content-scope.interface";
 export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInterface } from "./common/decorators/request-context.decorator";
 export { ScopedEntity, ScopedEntityMeta } from "./common/decorators/scoped-entity.decorator";
 export { SubjectEntity, SubjectEntityMeta, SubjectEntityOptions } from "./common/decorators/subject-entity.decorator";
@@ -74,14 +76,15 @@ export { DamConfig } from "./dam/dam.config";
 export { DAM_CONFIG, IMGPROXY_CONFIG } from "./dam/dam.constants";
 export { DamModule } from "./dam/dam.module";
 export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dto/file.input";
-export { FileUploadInterface } from "./dam/files/dto/file-upload.interface";
+export { FileUploadInterface } from "./dam/files/dto/file-upload.input";
 export { CreateFolderInput, UpdateFolderInput } from "./dam/files/dto/folder.input";
 export { createFileEntity, FileInterface } from "./dam/files/entities/file.entity";
 export { DamFileImage } from "./dam/files/entities/file-image.entity";
 export { createFolderEntity, FolderInterface } from "./dam/files/entities/folder.entity";
 export { FileImagesResolver } from "./dam/files/file-image.resolver";
+export { download, FileUploadService } from "./dam/files/file-upload.service";
 export { FilesService } from "./dam/files/files.service";
-export { download, slugifyFilename } from "./dam/files/files.utils";
+export { slugifyFilename } from "./dam/files/files.utils";
 export { FoldersService } from "./dam/files/folders.service";
 export { ImageInterface } from "./dam/images/dto/image.interface";
 export { HashImageParams, ImageParams } from "./dam/images/dto/image.params";
@@ -137,24 +140,9 @@ export { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility, Sc
 export { PageExists, PageExistsConstraint } from "./page-tree/validators/page-exists.validator";
 export { PublicUpload } from "./public-upload/entities/public-upload.entity";
 export { PublicUploadModule } from "./public-upload/public-upload.module";
+export { PublicUploadsService } from "./public-upload/public-uploads.service";
 export { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects/redirects.enum";
 export { RedirectsModule } from "./redirects/redirects.module";
 export { createRedirectsResolver } from "./redirects/redirects.resolver";
 export { RedirectsService } from "./redirects/redirects.service";
 export { IsValidRedirectSource, IsValidRedirectSourceConstraint } from "./redirects/validators/isValidRedirectSource";
-export { CurrentUser } from "./user-permissions/dto/current-user";
-export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
-export { User } from "./user-permissions/dto/user";
-export { ContentScope } from "./user-permissions/interfaces/content-scope.interface";
-export { Permission } from "./user-permissions/interfaces/user-permission.interface";
-export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
-export { UserPermissionsService } from "./user-permissions/user-permissions.service";
-export {
-    ContentScopesForUser,
-    PermissionsForUser,
-    UserPermissions,
-    UserPermissionsOptions,
-    UserPermissionsOptionsFactory,
-    UserPermissionsUserService,
-    Users,
-} from "./user-permissions/user-permissions.types";

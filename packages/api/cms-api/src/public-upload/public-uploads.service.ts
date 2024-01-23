@@ -5,8 +5,8 @@ import hasha from "hasha";
 import { basename, extname } from "path";
 
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
-import { FileUploadInterface } from "../dam/files/dto/file-upload.interface";
 import { slugifyFilename } from "../dam/files/files.utils";
+import { PublicUploadFileUploadInterface } from "./dto/public-upload-file-upload.interface";
 import { PublicUpload } from "./entities/public-upload.entity";
 import { PublicUploadConfig } from "./public-upload.config";
 import { PUBLIC_UPLOAD_CONFIG } from "./public-upload.constants";
@@ -19,7 +19,7 @@ export class PublicUploadsService {
         @Inject(PUBLIC_UPLOAD_CONFIG) private readonly config: PublicUploadConfig,
     ) {}
 
-    async upload(file: FileUploadInterface): Promise<PublicUpload> {
+    async upload(file: PublicUploadFileUploadInterface): Promise<PublicUpload> {
         const contentHash = await hasha.fromFile(file.path, { algorithm: "md5" });
         await this.blobStorageBackendService.upload(file, contentHash, this.config.directory);
 

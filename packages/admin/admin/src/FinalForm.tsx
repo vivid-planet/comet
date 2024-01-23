@@ -267,6 +267,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     }
 
                     onAfterSubmit(values, form);
+                    editDialogFormApi?.onAfterSave?.();
                 });
                 return data;
             })

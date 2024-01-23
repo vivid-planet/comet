@@ -1,5 +1,99 @@
 # @comet/blocks-admin
 
+## 5.5.0
+
+### Patch Changes
+
+-   @comet/admin@5.5.0
+-   @comet/admin-icons@5.5.0
+
+## 5.4.0
+
+### Patch Changes
+
+-   Updated dependencies [ba800163]
+-   Updated dependencies [60a18392]
+    -   @comet/admin@5.4.0
+    -   @comet/admin-icons@5.4.0
+
+## 5.3.0
+
+### Minor Changes
+
+-   a2273887: Add support for custom block categories
+
+    Allows specifying custom block categories in application code.
+
+    **Example:**
+
+    In `src/common/blocks/customBlockCategories.tsx`:
+
+    ```tsx
+    import { BlockCategory, CustomBlockCategory } from "@comet/blocks-admin";
+    import React from "react";
+    import { FormattedMessage } from "react-intl";
+
+    const productsBlockCategory: CustomBlockCategory = {
+        id: "Products",
+        label: <FormattedMessage id="blocks.category.products" defaultMessage="Products" />,
+        // Specify where category will be shown in drawer
+        insertBefore: BlockCategory.Teaser,
+    };
+
+    export { productsBlockCategory };
+    ```
+
+    In `src/documents/pages/blocks/MyBlock.tsx`:
+
+    ```tsx
+    import { productsBlockCategory } from "@src/common/blocks/customBlockCategories";
+
+    const MyBlock: BlockInterface = {
+        category: productsBlockCategory,
+        ...
+    };
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [0ff9b9ba]
+-   Updated dependencies [0ff9b9ba]
+-   Updated dependencies [a677a162]
+-   Updated dependencies [60cc1b2a]
+-   Updated dependencies [5435b278]
+    -   @comet/admin-icons@5.3.0
+    -   @comet/admin@5.3.0
+
+## 5.2.0
+
+### Minor Changes
+
+-   824ea66a: Improve layout selection UX in `createColumnsBlock`
+
+    Hide select when there's only one layout for a specific number of columns
+
+### Patch Changes
+
+-   3702bb23: Infer additional item fields in `BlocksBlock` and `ListBlock`
+
+    Additional fields in the `item` prop of `AdditionalItemContextMenuItems` and `AdditionalItemContent` will be typed correctly if the `additionalItemFields` option is strongly typed.
+
+-   Updated dependencies [25daac07]
+-   Updated dependencies [0bed4e7c]
+-   Updated dependencies [9fc7d474]
+    -   @comet/admin@5.2.0
+    -   @comet/admin-icons@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+-   Updated dependencies [21c30931]
+-   Updated dependencies [93b3d971]
+-   Updated dependencies [e33cd652]
+    -   @comet/admin@5.1.0
+    -   @comet/admin-icons@5.1.0
+
 ## 5.0.0
 
 ### Major Changes
@@ -22,21 +116,14 @@
 
     ```tsx
     const state = linkBlock.input2State(params.value);
-    
-    return (
-        <BlockPreview
-            title={linkBlock.dynamicDisplayName?.(state) ?? linkBlock.displayName}
-            content={linkBlock.previewContent(state)}
-        />
-    );
+
+    return <BlockPreview title={linkBlock.dynamicDisplayName?.(state) ?? linkBlock.displayName} content={linkBlock.previewContent(state)} />;
     ```
-    
+
     **After:**
-    
+
     ```tsx
-    return (
-        <BlockPreviewContent block={linkBlock} input={params.value} />
-    );
+    return <BlockPreviewContent block={linkBlock} input={params.value} />;
     ```
 
 ### Minor Changes

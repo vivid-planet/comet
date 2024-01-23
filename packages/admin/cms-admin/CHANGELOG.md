@@ -1,5 +1,208 @@
 # @comet/cms-admin
 
+## 5.5.0
+
+### Patch Changes
+
+-   1b37b1f6: Show `additionalToolbarItems` in `ChooseFileDialog`
+
+    The `additionalToolbarItems` were only shown inside the `DamPage`, but not in the `ChooseFileDialog`.
+    To fix this, use the `additionalToolbarItems` option in `DamConfigProvider`.
+    The `additionalToolbarItems` prop of `DamPage` has been deprecated in favor of this option.
+
+    **Previously:**
+
+    ```tsx
+    <DamPage
+        // ...
+        additionalToolbarItems={<ImportFromExternalDam />}
+    />
+    ```
+
+    **Now:**
+
+    ```tsx
+    <DamConfigProvider
+        value={{
+            // ...
+            additionalToolbarItems: <ImportFromExternalDam />,
+        }}
+    >
+        {/*...*/}
+    </DamConfigProvider>
+    ```
+
+-   85aa962c: Set unhandled dependencies to `undefined` when copying documents to another scope
+
+    This prevents leaks between scopes. In practice, this mostly concerns links to documents that don't exist in the target scope.
+
+    **Example:**
+
+    -   Page A links to Page B
+    -   Page A is copied from Scope A to Scope B
+    -   Link to Page B is removed from Page A by replacing the `id` with `undefined` (since Page B doesn't exist in Scope B)
+
+    **Note:** The link is only retained if both pages are copied in the same operation.
+
+-   c4639be5: Clip crop values when cropping an image in the DAM or `PixelImageBlock`
+
+    Previously, negative values could occur, causing the image proxy to fail on delivery.
+
+    -   @comet/admin@5.5.0
+    -   @comet/admin-date-time@5.5.0
+    -   @comet/admin-icons@5.5.0
+    -   @comet/admin-rte@5.5.0
+    -   @comet/admin-theme@5.5.0
+    -   @comet/blocks-admin@5.5.0
+
+## 5.4.0
+
+### Minor Changes
+
+-   e146d8bb: Support the import of files from external DAMs
+
+    To connect an external DAM, implement a component with the necessary logic (asset picker, upload functionality, ...). Pass this component to the `DamPage` via the `additionalToolbarItems` prop.
+
+    ```tsx
+    <DamPage
+        // ...
+        additionalToolbarItems={<ImportFromExternalDam />}
+    />
+    ```
+
+    You can find an [example](demo/admin/src/dam/ImportFromUnsplash.tsx) in the demo project.
+
+-   51d6c2b9: Move soft-hyphen functionality to `@comet/admin-rte`
+
+    This allows using the soft-hyphen functionality in plain RTEs, and not only in `RichTextBlock`
+
+    ```tsx
+    const [useRteApi] = makeRteApi();
+
+    export default function MyRte() {
+        const { editorState, setEditorState } = useRteApi();
+        return (
+            <Rte
+                value={editorState}
+                onChange={setEditorState}
+                options={{
+                    supports: [
+                        // Soft Hyphen
+                        "soft-hyphen",
+                        // Other options you may wish to support
+                        "bold",
+                        "italic",
+                    ],
+                }}
+            />
+        );
+    }
+    ```
+
+-   dcaf750d: Make all DAM license fields optional if `LicenseType` is `ROYALTY_FREE` even if `requireLicense` is true in `DamConfig`
+
+### Patch Changes
+
+-   087cb01d: Enable copying documents from one `PageTree` category to another (e.g. from "Main navigation" to "Top menu" in Demo)
+-   Updated dependencies [ba800163]
+-   Updated dependencies [981bf48c]
+-   Updated dependencies [60a18392]
+-   Updated dependencies [51d6c2b9]
+    -   @comet/admin@5.4.0
+    -   @comet/admin-rte@5.4.0
+    -   @comet/admin-date-time@5.4.0
+    -   @comet/admin-icons@5.4.0
+    -   @comet/admin-theme@5.4.0
+    -   @comet/blocks-admin@5.4.0
+
+## 5.3.0
+
+### Patch Changes
+
+-   0fdf4eaf: Always use the `/preview` file URLs in the admin application
+
+    This is achieved by setting the `x-preview-dam-urls` in the `includeInvisibleContentContext`.
+
+    This fixes a page copy bug where all files were downloaded and uploaded again, even when copying within the same environment.
+
+-   Updated dependencies [0ff9b9ba]
+-   Updated dependencies [0ff9b9ba]
+-   Updated dependencies [a677a162]
+-   Updated dependencies [60cc1b2a]
+-   Updated dependencies [5435b278]
+-   Updated dependencies [a2273887]
+    -   @comet/admin-icons@5.3.0
+    -   @comet/admin@5.3.0
+    -   @comet/blocks-admin@5.3.0
+    -   @comet/admin-date-time@5.3.0
+    -   @comet/admin-rte@5.3.0
+    -   @comet/admin-theme@5.3.0
+
+## 5.2.0
+
+### Minor Changes
+
+-   0bed4e7c: Improve the `SaveConflictDialog`
+
+    -   extend the text in the dialog to explain
+        -   what happened
+        -   what the next steps are
+        -   what can be done to avoid conflicts
+    -   make the button labels more precise
+    -   once the save dialog is closed
+        -   stop polling
+        -   mark the save button red and with an error icon
+
+-   0bed4e7c: `useSaveConflict()`, `useSaveConflictQuery()` and `useFormSaveConflict()` now return a `hasConflict` prop
+
+    If `hasConflict` is true, a save conflict has been detected.
+    You should pass `hasConflict` on to `SaveButton`, `FinalFormSaveButton` or `FinalFormSaveSplitButton`. The button will then display a "conflict" state.
+
+-   0bed4e7c: Admin Generator: In the generated form, the `hasConflict` prop is passed from the `useFormSaveConflict()` hook to the `FinalFormSaveSplitButton`
+-   6fda5a53: CRUD Generator: Change the file ending of the private sibling GraphQL files from `.gql.tsx` to `.gql.ts`
+
+    The GraphQL files do not contain JSX.
+    Regenerate the files to apply this change to a project.
+
+### Patch Changes
+
+-   Updated dependencies [25daac07]
+-   Updated dependencies [0bed4e7c]
+-   Updated dependencies [9fc7d474]
+-   Updated dependencies [3702bb23]
+-   Updated dependencies [824ea66a]
+    -   @comet/admin@5.2.0
+    -   @comet/admin-icons@5.2.0
+    -   @comet/blocks-admin@5.2.0
+    -   @comet/admin-date-time@5.2.0
+    -   @comet/admin-rte@5.2.0
+    -   @comet/admin-theme@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+-   e1d3f007: Prevent false positive save conflicts while editing documents (e.g. `Page`):
+
+    -   Stop checking for conflicts while saving is in progress
+    -   Ensure that all "CheckForChanges" polls are cleared
+
+-   6d69dfac: Fix issue in PixelImageBlock that caused the preview URLs for files without a file extension in their filename to be invalid
+-   21c30931: Improved the EditPageNode dialog ("Page Properties" dialog):
+
+    -   Execute the asynchronous slug validation less often (increased the debounce wait time from 200ms to 500ms)
+    -   Cache the slug validation results. Evict the cache on the initial render of the dialog
+
+-   Updated dependencies [21c30931]
+-   Updated dependencies [93b3d971]
+-   Updated dependencies [e33cd652]
+    -   @comet/admin@5.1.0
+    -   @comet/admin-date-time@5.1.0
+    -   @comet/admin-icons@5.1.0
+    -   @comet/admin-rte@5.1.0
+    -   @comet/admin-theme@5.1.0
+    -   @comet/blocks-admin@5.1.0
+
 ## 5.0.0
 
 ### Major Changes

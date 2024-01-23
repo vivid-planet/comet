@@ -156,7 +156,7 @@ export function PagesPage({
                                 </Button>
                             </ToolbarActions>
                         </Toolbar>
-                        <PageTreeContext.Provider value={{ allCategories, documentTypes, tree, query: pagesQuery }}>
+                        <PageTreeContext.Provider value={{ allCategories, currentCategory: category, documentTypes, tree, query: pagesQuery }}>
                             <PageTreeContent fullHeight>
                                 <ActionToolbarBox>
                                     <PagesPageActionToolbar

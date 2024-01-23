@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, MessageDescriptor } from "react-intl";
 
 export type SetStateFn<S> = (prevState: S) => S;
 export type SetStateAction<S> = S | SetStateFn<S>;
@@ -59,7 +59,7 @@ export type PreviewContent = PreviewContentImage | PreviewContentText;
 
 export type BlockDependency = { targetGraphqlObjectType: string; id: string; data?: unknown };
 
-export type ReplaceDependencyObject = { originalId: string; replaceWithId: string; type: string };
+export type ReplaceDependencyObject = { originalId: string; replaceWithId: string | undefined; type: string };
 
 export interface BlockMethods<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -110,7 +110,7 @@ export interface BlockInterface<
 > extends AnonymousBlockInterface<InputApi, State, OutputApi, PreviewState> {
     name: string;
     displayName: React.ReactNode;
-    category: BlockCategory;
+    category: BlockCategory | CustomBlockCategory;
 }
 
 export interface RootBlockInterface<
@@ -149,6 +149,8 @@ export enum BlockCategory {
     Form = "Form",
     Other = "Other",
 }
+
+export type CustomBlockCategory = { id: string; label: string | React.ReactElement<MessageDescriptor>; insertBefore?: BlockCategory };
 
 export const blockCategoryLabels = {
     [BlockCategory.TextAndContent]: <FormattedMessage id="comet.blocks.category.textAndContent" defaultMessage="Text & Content" />,

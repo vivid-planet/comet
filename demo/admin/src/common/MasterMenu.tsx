@@ -83,11 +83,6 @@ const MasterMenu: React.FC = () => {
                 <MenuItemRouterLink primary="Tags" to={`${match.url}/product-tags`} icon={<Snips />} />
                 <MenuItemRouterLink primary="Products Handmade" to={`${match.url}/products-handmade`} icon={<Snips />} />
             </MenuCollapsibleItem>
-            <MenuItemRouterLink
-                primary={intl.formatMessage({ id: "menu.userPermissions", defaultMessage: "User Permissions" })}
-                to={`${match.url}/user-permissions`}
-                icon={<Snips />}
-            />
         </Menu>
     );
 };
