@@ -43,7 +43,7 @@ const ContentWrapper = styled("div", {
     },
 })(
     () => css`
-        flex-grow: "1";
+        flex-grow: 1;
         padding-top: var(--comet-admin-master-layout-content-top-spacing);
     `,
 );
