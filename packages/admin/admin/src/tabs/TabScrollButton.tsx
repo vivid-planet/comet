@@ -1,50 +1,57 @@
 import { ChevronLeft, ChevronRight } from "@comet/admin-icons";
-import {
-    ButtonBase,
-    ComponentsOverrides,
-    TabScrollButtonClassKey as MuiTabScrollButtonClassKey,
-    TabScrollButtonProps as MuiTabScrollButtonProps,
-    Theme,
-} from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { ButtonBase, ButtonBaseProps, ComponentsOverrides } from "@mui/material";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import isMobile from "is-mobile";
 import * as React from "react";
 
-export type TabScrollButtonClassKey = MuiTabScrollButtonClassKey;
+export type TabScrollButtonClassKey = "root" | "vertical";
 
-export interface TabScrollButtonProps extends MuiTabScrollButtonProps {
-    onClick: (event: React.MouseEvent<HTMLElement>) => void;
+type OwnerState = Pick<TabScrollButtonProps, "orientation">;
+
+const Root = styled(ButtonBase, {
+    name: "CometAdminTabScrollButton",
+    slot: "root",
+    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+        return [styles.root, ownerState.orientation === "vertical" && styles.vertical];
+    },
+})<{ ownerState: OwnerState }>(
+    ({ ownerState }) => css`
+        width: 40px;
+        flex-shrink: 0;
+
+        ${ownerState.orientation === "vertical" &&
+        css`
+            width: 100%;
+            height: 40px;
+        `}
+
+        &:disabled {
+            opacity: 0.25;
+        }
+    `,
+);
+
+export interface TabScrollButtonProps extends ButtonBaseProps {
+    orientation: "horizontal" | "vertical";
+    direction: "left" | "right";
 }
 
-const styles = () => {
-    return createStyles<TabScrollButtonClassKey, TabScrollButtonProps>({
-        root: {
-            width: 40,
-            flexShrink: 0,
-        },
-        vertical: {
-            width: "100%",
-            height: 40,
-        },
-        disabled: {
-            opacity: 0.25,
-        },
+export function TabScrollButton(inProps: TabScrollButtonProps) {
+    const { orientation, direction, ...restProps } = useThemeProps({
+        props: inProps,
+        name: "CometAdminTabScrollButton",
     });
-};
 
-function ScrollButton({ orientation, direction, disabled, onClick, classes }: TabScrollButtonProps & WithStyles<typeof styles>) {
-    const rootClasses: string[] = [classes.root];
-    if (orientation === "vertical") rootClasses.push(classes.vertical);
-    if (disabled) rootClasses.push(classes.disabled);
+    const ownerState: OwnerState = {
+        orientation,
+    };
 
     return !isMobile({ tablet: true }) ? (
-        <ButtonBase classes={{ root: rootClasses.join(" ") }} disabled={disabled} onClick={onClick}>
+        <Root ownerState={ownerState} {...restProps}>
             <>{direction === "left" ? <ChevronLeft /> : <ChevronRight />}</>
-        </ButtonBase>
+        </Root>
     ) : null;
 }
-
-export const TabScrollButton = withStyles(styles, { name: "TabScrollButton" })(ScrollButton);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

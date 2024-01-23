@@ -1,5 +1,6 @@
-import { ComponentsOverrides, Tab as MuiTab, TabProps as MuiTabProps, Tabs, TabsProps, Theme } from "@mui/material";
-import { WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides, Tab as MuiTab, TabProps as MuiTabProps, Tabs, TabsProps } from "@mui/material";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { Route, useHistory, useRouteMatch } from "react-router-dom";
 
@@ -7,8 +8,42 @@ import { useSubRoutePrefix } from "../router/SubRoute";
 import { useStackApi } from "../stack/Api";
 import { StackBreadcrumb } from "../stack/Breadcrumb";
 import { useStackSwitchApi } from "../stack/Switch";
-import { RouterTabsClassKey, styles } from "./RouterTabs.styles";
 import { TabScrollButton } from "./TabScrollButton";
+
+export type RouterTabsClassKey = "root" | "tabs" | "content" | "contentHidden";
+
+type OwnerState = { contentHidden?: boolean };
+
+const Root = styled("div", {
+    name: "CometAdminRouterTabs",
+    slot: "root",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})();
+
+const StyledTabs = styled(Tabs, {
+    name: "CometAdminRouterTabs",
+    slot: "tabs",
+    overridesResolver(_, styles) {
+        return [styles.tabs];
+    },
+})();
+
+const Content = styled("div", {
+    name: "CometAdminRouterTabs",
+    slot: "content",
+    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+        return [styles.content, ownerState.contentHidden && styles.contentHidden];
+    },
+})<{ ownerState: OwnerState }>(
+    ({ ownerState }) => css`
+        ${ownerState.contentHidden &&
+        css`
+            display: "none";
+        `}
+    `,
+);
 
 function deduplicateSlashesInUrl(url: string) {
     return url.replace(/\/+/g, "/");
@@ -23,18 +58,26 @@ interface TabProps extends Omit<MuiTabProps, "children"> {
 
 export const RouterTab: React.FunctionComponent<TabProps> = () => null;
 
-export interface Props {
+export interface Props
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        tabs: typeof Tabs;
+        content: "div";
+    }> {
     children: Array<React.ReactElement<TabProps> | boolean | null | undefined> | React.ReactElement<TabProps>;
     tabComponent?: React.ComponentType<MuiTabProps>;
     tabsProps?: Partial<TabsProps>;
 }
 
-function RouterTabsComponent({
-    children,
-    tabComponent: TabComponent = MuiTab,
-    tabsProps: { ScrollButtonComponent = TabScrollButton, ...tabsProps } = {},
-    classes,
-}: Props & WithStyles<typeof styles>) {
+export function RouterTabs(inProps: Props) {
+    const {
+        children,
+        tabComponent: TabComponent = MuiTab,
+        tabsProps: { ScrollButtonComponent = TabScrollButton, ...tabsProps } = {},
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminRouterTabs" });
+
     const stackApi = useStackApi();
     const stackSwitchApi = useStackSwitchApi();
     const history = useHistory();
@@ -88,20 +131,20 @@ function RouterTabsComponent({
     let foundFirstMatch = false;
 
     return (
-        <div className={classes.root}>
+        <Root {...slotProps?.root} {...restProps}>
             {shouldShowTabBar && (
                 <Route path={deduplicateSlashesInUrl(`${subRoutePrefix}/:tab`)}>
                     {({ match }) => {
                         const routePath = match ? `/${match.params.tab}` : "";
                         const value = paths.includes(routePath) ? paths.indexOf(routePath) : defaultPathIndex;
                         return (
-                            <Tabs
-                                classes={{ root: classes.tabs }}
+                            <StyledTabs
                                 value={value}
                                 onChange={handleChange}
                                 ScrollButtonComponent={ScrollButtonComponent}
                                 scrollButtons="auto"
                                 variant="scrollable"
+                                {...slotProps?.tabs}
                                 {...tabsProps}
                             >
                                 {React.Children.map(children, (child) => {
@@ -111,7 +154,7 @@ function RouterTabsComponent({
                                     const { path, forceRender, children, label, ...restTabProps } = child.props;
                                     return <TabComponent label={label} {...restTabProps} />;
                                 })}
-                            </Tabs>
+                            </StyledTabs>
                         );
                     }}
                 </Route>
@@ -124,12 +167,17 @@ function RouterTabsComponent({
                 return (
                     <Route path={path}>
                         {({ match }) => {
+                            const ownerState: OwnerState = {
+                                contentHidden: !(match && !foundFirstMatch) && child.props.forceRender,
+                            };
                             let ret = null;
-                            if (match && !foundFirstMatch) {
+                            if ((match && !foundFirstMatch) || child.props.forceRender) {
                                 foundFirstMatch = true;
-                                ret = <div className={classes.content}>{child.props.children}</div>;
-                            } else if (child.props.forceRender) {
-                                ret = <div className={`${classes.content} ${classes.contentHidden}`}>{child.props.children}</div>;
+                                ret = (
+                                    <Content ownerState={ownerState} {...slotProps?.content}>
+                                        {child.props.children}
+                                    </Content>
+                                );
                             } else {
                                 // don't render tab contents, return early as we don't need StackBreadcrumb either
                                 return null;
@@ -147,11 +195,9 @@ function RouterTabsComponent({
                     </Route>
                 );
             })}
-        </div>
+        </Root>
     );
 }
-
-export const RouterTabs = withStyles(styles, { name: "CometAdminRouterTabs" })(RouterTabsComponent);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
