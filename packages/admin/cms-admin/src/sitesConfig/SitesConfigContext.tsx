@@ -8,9 +8,9 @@ export interface SiteConfig {
     preloginEnabled: boolean;
 }
 
-export interface SiteConfigApi {
-    configs: Record<string, SiteConfig>;
-    resolveSiteConfigForScope: (configs: Record<string, SiteConfig>, scope: ContentScopeInterface) => SiteConfig;
+export interface SiteConfigApi<Configs = unknown> {
+    configs: Configs;
+    resolveSiteConfigForScope: (configs: Configs, scope: ContentScopeInterface) => SiteConfig;
 }
 
 export const SiteConfigContext = React.createContext<SiteConfigApi | undefined>(undefined);

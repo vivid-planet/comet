@@ -14,7 +14,6 @@ import {
     DamConfigProvider,
     LocaleProvider,
     MasterMenuRoutes,
-    SiteConfig,
     SitePreview,
     SitesConfigProvider,
 } from "@comet/cms-admin";
@@ -63,7 +62,7 @@ class App extends React.Component {
                     <SitesConfigProvider
                         value={{
                             configs: config.sitesConfig,
-                            resolveSiteConfigForScope: (configs: Record<string, SiteConfig>, scope: ContentScope) => configs[scope.domain],
+                            resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
                         }}
                     >
                         <DamConfigProvider value={{ scopeParts: ["domain"], additionalToolbarItems: <ImportFromUnsplash /> }}>

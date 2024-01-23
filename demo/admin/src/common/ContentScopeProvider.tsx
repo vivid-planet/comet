@@ -12,6 +12,7 @@ import {
     useCurrentUser,
     useSitesConfig,
 } from "@comet/cms-admin";
+import { SitesConfig } from "@src/config";
 import React from "react";
 
 type Domain = "main" | "secondary" | string;
@@ -50,7 +51,7 @@ export function useContentScopeConfig(p: ContentScopeConfigProps): void {
 }
 
 const ContentScopeProvider: React.FC<Pick<ContentScopeProviderProps, "children">> = ({ children }) => {
-    const sitesConfig = useSitesConfig();
+    const sitesConfig = useSitesConfig<SitesConfig>();
     const user = useCurrentUser();
 
     const allowedUserDomains = user.contentScopes.map((scope) => scope.domain);
