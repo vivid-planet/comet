@@ -2,4 +2,4 @@
 "@comet/admin": minor
 ---
 
-`Field` now supports a `helperText` prop to provide information
+Add `helperText` prop to `Field` and `FieldContainer` to provide additional information
