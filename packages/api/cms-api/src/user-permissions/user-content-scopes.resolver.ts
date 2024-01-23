@@ -24,7 +24,7 @@ export class UserContentScopesResolver {
         @Args("userId", { type: () => String }) userId: string,
         @Args("input", { type: () => UserContentScopesInput }) { contentScopes }: UserContentScopesInput,
     ): Promise<boolean> {
-        this.userService.checkContentScopes(contentScopes);
+        await this.userService.checkContentScopes(contentScopes);
         let entity = await this.repository.findOne({ userId });
         if (entity) {
             entity = this.repository.assign(entity, { userId, contentScopes });
