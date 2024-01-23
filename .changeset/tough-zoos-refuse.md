@@ -1,5 +1,5 @@
 ---
-"@comet/admin": minor
+"@comet/admin": major
 ---
 
 Remove the `disabled` and `focusVisible` class key in `AppHeaderDropdownClassKey`
