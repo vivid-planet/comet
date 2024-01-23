@@ -76,7 +76,7 @@ export interface FileUploadValidationError {
 }
 
 interface RejectedFile {
-    file: FileWithFolderPath;
+    file: File;
 }
 
 const addFolderPathToFiles = async (acceptedFiles: FileWithPath[]): Promise<FileWithFolderPath[]> => {
@@ -380,7 +380,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         if (fileRejections.length > 0) {
             errorOccurred = true;
             generateValidationErrorsForRejectedFiles(fileRejections);
-            rejectedFiles.push(...fileRejections);
+            rejectedFiles.push(...fileRejections.map(({ errors, ...rejection }) => rejection));
         }
 
         if (acceptedFiles.length > 0) {
