@@ -29,6 +29,9 @@ const HasValueCount = styled("div", {
     `,
 );
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface FilterBarActiveFilterBadgeProps extends ThemedComponentBaseProps<{ hasValueCount: "div" }> {
     countValue: number;
 }
