@@ -13,7 +13,7 @@ export interface FieldContainerProps {
     warning?: string;
     scrollTo?: boolean;
     fieldMargin?: "always" | "never" | "onlyIfNotLast";
-    helperText?: string;
+    helperText?: React.ReactNode;
 }
 
 export type FieldContainerClassKey =
@@ -32,7 +32,6 @@ export type FieldContainerClassKey =
     | "error"
     | "hasWarning"
     | "warning"
-    | "hasHelperText"
     | "helperText";
 
 const styles = (theme: Theme) => {
@@ -102,11 +101,7 @@ const styles = (theme: Theme) => {
         warning: {
             color: theme.palette.warning.main,
         },
-        hasHelperText: {},
         helperText: {
-            "& $label:not([class*='Mui-focused'])": {
-                color: theme.palette.grey["300"],
-            },
             color: theme.palette.grey["300"],
         },
     });
@@ -129,7 +124,6 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles> & Field
 }) => {
     const hasError = !!error;
     const hasWarning = !!warning;
-    const hasHelperText = !!helperText;
 
     const formControlClasses: string[] = [classes.root];
     if (variant === "vertical") formControlClasses.push(classes.vertical);
@@ -137,7 +131,7 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles> & Field
     if (fullWidth) formControlClasses.push(classes.fullWidth);
     if (hasError) formControlClasses.push(classes.hasError);
     if (hasWarning && !hasError) formControlClasses.push(classes.hasWarning);
-    if (hasHelperText) formControlClasses.push(classes.hasHelperText);
+    if (helperText) formControlClasses.push(classes.helperText);
     if (disabled) formControlClasses.push(classes.disabled);
     if (required) formControlClasses.push(classes.required);
     if (fieldMargin === "always") formControlClasses.push(classes.fieldMarginAlways);
@@ -169,9 +163,7 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles> & Field
                         </FormHelperText>
                     )}
                     {hasWarning && !hasError && <FormHelperText classes={{ root: classes.warning }}>{warning}</FormHelperText>}
-                    {hasHelperText && !hasError && !hasWarning && (
-                        <FormHelperText classes={{ root: classes.helperText }}>{helperText}</FormHelperText>
-                    )}
+                    {helperText && !hasError && !hasWarning && <FormHelperText classes={{ root: classes.helperText }}>{helperText}</FormHelperText>}
                 </div>
             </>
         </FormControl>
