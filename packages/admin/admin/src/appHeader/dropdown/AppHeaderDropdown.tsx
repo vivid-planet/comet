@@ -38,7 +38,7 @@ const PopoverRoot = styled(Popover, {
     name: "CometAdminAppHeaderDropdown",
     slot: "popoverRoot",
     overridesResolver(_, styles) {
-        return [styles.root];
+        return [styles.popoverRoot];
     },
 })();
 
