@@ -3,6 +3,10 @@ import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
+
 export type FilterBarActiveFilterBadgeClassKey = "hasValueCount";
 
 const HasValueCount = styled("div", {
@@ -29,6 +33,10 @@ const HasValueCount = styled("div", {
 export interface FilterBarActiveFilterBadgeProps extends ThemedComponentBaseProps<{ hasValueCount: "div" }> {
     countValue: number;
 }
+
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 
 export function FilterBarActiveFilterBadge(inProps: FilterBarActiveFilterBadgeProps) {
     const { countValue, slotProps, ...restProps } = useThemeProps({
