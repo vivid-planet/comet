@@ -1,6 +1,5 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Button, ComponentsOverrides } from "@mui/material";
-import { ButtonProps } from "@mui/material/Button";
+import { Button, buttonClasses, ButtonProps, ComponentsOverrides, svgIconClasses } from "@mui/material";
 import { css, styled, Theme } from "@mui/material/styles";
 import { useThemeProps } from "@mui/system";
 import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
@@ -20,7 +19,7 @@ const Root = styled(Button, {
     name: "CometAdminFilterBarButton",
     slot: "root",
     overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.root, styles.openPopover, styles.numberDirtyFields];
+        return [styles.root, ownerState.openPopover && styles.open, ownerState.numberDirtyFields && styles.numberDirtyFields];
     },
 })<{ ownerState: OwnerState }>(
     ({ theme, ownerState }) => css`
@@ -30,6 +29,10 @@ const Root = styled(Button, {
         background-color: ${theme.palette.common.white};
         border-color: ${theme.palette.grey[100]};
         border-radius: 2px;
+
+        & .${buttonClasses.startIcon} .${svgIconClasses.root}, & .${buttonClasses.endIcon} .${svgIconClasses.root} {
+            font-size: 12px;
+        }
 
         &:hover {
             border-color: ${theme.palette.grey[100]};
@@ -101,16 +104,20 @@ export function FilterBarButtonWithStyles(inProps: FilterBarButtonProps) {
     const FilterBarActiveFilterBadgeComponent = dirtyFieldsBadge ? dirtyFieldsBadge : FilterBarActiveFilterBadge;
 
     return (
-        <Root ownerState={ownerState} {...restProps} {...slotProps?.root} disableRipple endIcon={endIcon} variant="outlined">
+        <Root ownerState={ownerState} disableRipple endIcon={endIcon} variant="outlined" {...slotProps?.root} {...restProps}>
             {children}
             {hasDirtyFields && (
-                <FilterBadge {...slotProps?.filterBadge} {...restProps}>
+                <FilterBadge {...slotProps?.filterBadge}>
                     <FilterBarActiveFilterBadgeComponent countValue={numberDirtyFields} />
                 </FilterBadge>
             )}
         </Root>
     );
 }
+
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 
 export { FilterBarButtonWithStyles as FilterBarButton };
 
