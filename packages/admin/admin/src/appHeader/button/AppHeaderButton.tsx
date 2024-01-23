@@ -10,7 +10,7 @@ export interface AppHeaderButtonProps
         ThemedComponentBaseProps<{
             root: typeof ButtonBase;
             inner: "div";
-            text: typeof Typography;
+            typography: typeof Typography;
             startIcon: "div";
             endIcon: "div";
         }> {
@@ -34,7 +34,7 @@ export function AppHeaderButton(inProps: AppHeaderButtonProps) {
                         { children }
                     ) : (
                         // @ts-expect-error TODO
-                        <Text component="div" {...slotProps?.text}>
+                        <Text component="div" {...slotProps?.typography}>
                             {children}
                         </Text>
                     ))}
