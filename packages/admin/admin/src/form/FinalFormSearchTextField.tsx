@@ -1,6 +1,6 @@
 import { Search } from "@comet/admin-icons";
 import { InputAdornment } from "@mui/material";
-import { withStyles } from "@mui/styles";
+import { useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
@@ -12,13 +12,14 @@ export interface FinalFormSearchTextFieldProps extends FinalFormInputProps {
     clearable?: boolean;
 }
 
-function SearchTextField({
-    icon = <Search />,
-    placeholder,
-    endAdornment,
-    clearable,
-    ...restProps
-}: FinalFormSearchTextFieldProps): React.ReactElement {
+export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps) {
+    const {
+        icon = <Search />,
+        placeholder,
+        endAdornment,
+        clearable,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminFinalFormSearchTextField" });
     const intl = useIntl();
 
     return (
@@ -47,8 +48,6 @@ function SearchTextField({
         />
     );
 }
-
-export const FinalFormSearchTextField = withStyles({}, { name: "CometAdminFinalFormSearchTextField" })(SearchTextField);
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
