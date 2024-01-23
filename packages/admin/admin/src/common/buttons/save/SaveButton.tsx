@@ -9,7 +9,7 @@ import { useSplitButtonContext } from "../split/useSplitButtonContext";
 
 export type SaveButtonClassKey = "root" | "saving" | "error" | "success" | "conflict" | ButtonClassKey;
 
-type OwnerState = { savingState?: boolean; errorsState?: boolean; successState?: boolean; conflictState?: boolean };
+type OwnerState = Pick<SaveButtonProps, "variant" | "color"> & { displayState?: SaveButtonDisplayState };
 
 const Root = styled(Button, {
     name: "CometAdminSaveButton",
@@ -17,37 +17,46 @@ const Root = styled(Button, {
     overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
         return [
             styles.root,
-            ownerState.savingState && styles.saving,
-            ownerState.errorsState && styles.error,
-            ownerState.successState && styles.success,
-            ownerState.conflictState && styles.conflict,
+            ownerState.displayState === "saving" && styles.saving,
+            ownerState.displayState === "error" && styles.error,
+            ownerState.displayState === "success" && styles.success,
+            ownerState.displayState === "conflict" && styles.conflict,
         ];
     },
 })<{ ownerState: OwnerState }>(
     ({ ownerState, theme }) => css`
-        ${ownerState.savingState &&
+        ${ownerState.displayState === "saving" &&
         css`
             &:disabled {
-                color: ${theme.palette.primary.contrastText};
-                background-color: ${theme.palette.primary.main};
+                ${ownerState.variant === "contained" &&
+                ownerState.color === "primary" &&
+                css`
+                    color: ${theme.palette.primary.contrastText};
+                    background-color: ${theme.palette.primary.main};
+                `};
+                ${ownerState.variant === "contained" &&
+                ownerState.color === "secondary" &&
+                css`
+                    color: ${theme.palette.secondary.contrastText};
+                    background-color: ${theme.palette.secondary.main};
+                `}
             }
-            // TODO "&$disabled$containedPrimary" and "&$disabled$containedSecondary"
         `}
-        ${ownerState.errorsState &&
+        ${ownerState.displayState === "error" &&
         css`
             &:disabled {
                 color: ${theme.palette.error.contrastText};
                 background-color: ${theme.palette.error.light};
             }
         `}
-        ${ownerState.successState &&
+        ${ownerState.displayState === "success" &&
         css`
             &:disabled {
                 color: ${theme.palette.success.contrastText};
                 background-color: ${theme.palette.success.light};
             }
         `}
-        ${ownerState.conflictState &&
+        ${ownerState.displayState === "conflict" &&
         css`
             color: ${theme.palette.error.contrastText};
             background-color: ${theme.palette.error.main};
@@ -106,10 +115,9 @@ export function SaveButton(inProps: SaveButtonProps) {
     const saveSplitButton = useSplitButtonContext();
 
     const ownerState: OwnerState = {
-        savingState: displayState === "saving",
-        errorsState: displayState === "error",
-        successState: displayState === "success",
-        conflictState: displayState === "conflict",
+        displayState: displayState,
+        variant,
+        color,
     };
 
     const resolveIconForDisplayState = (displayState: SaveButtonDisplayState): React.ReactNode => {
