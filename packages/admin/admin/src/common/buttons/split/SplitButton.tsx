@@ -39,7 +39,7 @@ const Root = styled(MuiButtonGroup, {
     name: "CometAdminSplitButton",
     slot: "root",
     overridesResolver(_, styles) {
-        return [styles.buttonGroup];
+        return [styles.root];
     },
 })();
 
