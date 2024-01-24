@@ -28,14 +28,13 @@ const StyledDisabledLink = styled(Typography, {
     name: "CometAdminStackBreadcrumbs",
     slot: "disabledLink",
     overridesResolver(_, styles) {
-        return [styles.disabledLink];
+        return [styles.link, styles.disabledLink];
     },
 })(
     ({ theme }) => css`
         font-size: 13px;
         line-height: 14px;
         font-weight: ${theme.typography.fontWeightMedium};
-        color: ${theme.palette.grey[600]};
         text-decoration-color: currentColor;
         color: ${theme.palette.text.disabled};
     `,

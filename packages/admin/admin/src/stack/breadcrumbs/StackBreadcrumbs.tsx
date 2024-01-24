@@ -14,6 +14,7 @@ export type StackBreadcrumbsClassKey =
     | "disabledLink"
     | "overflowLink"
     | "separator"
+    | "backButton"
     | "backButtonSeparator";
 
 const Root = styled("div", {
