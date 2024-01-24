@@ -1,5 +1,23 @@
 # @comet/cms-admin
 
+## 5.6.0
+
+### Minor Changes
+
+-   fe26a6e6: Show an error message when trying to edit a non-existing document and when trying to edit an archived document
+-   3ee4ce09: Return newly uploaded items from `useDamFileUpload#uploadFiles`
+
+### Patch Changes
+
+-   Updated dependencies [fb6c8063]
+-   Updated dependencies [76f85abe]
+    -   @comet/admin-theme@5.6.0
+    -   @comet/blocks-admin@5.6.0
+    -   @comet/admin@5.6.0
+    -   @comet/admin-date-time@5.6.0
+    -   @comet/admin-icons@5.6.0
+    -   @comet/admin-rte@5.6.0
+
 ## 5.5.0
 
 ### Patch Changes

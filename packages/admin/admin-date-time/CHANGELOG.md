@@ -1,5 +1,12 @@
 # @comet/admin-date-time
 
+## 5.6.0
+
+### Patch Changes
+
+-   @comet/admin@5.6.0
+-   @comet/admin-icons@5.6.0
+
 ## 5.5.0
 
 ### Patch Changes
