@@ -6,18 +6,26 @@ import {
     MenuItem as MuiMenuItem,
     MenuList as MuiMenuList,
     Popover as MuiPopover,
-    PopoverProps,
 } from "@mui/material";
 import { styled, useThemeProps } from "@mui/material/styles";
+import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { PropsWithChildren } from "react";
 
 import { useStoredState } from "../../../hooks/useStoredState";
 import { SplitButtonContext } from "./SplitButtonContext";
 
-export type SplitButtonClassKey = "buttonGroup" | "activeButton" | "popover" | "menuList" | "menuItem";
+export type SplitButtonClassKey = "root" | "activeButton" | "popover" | "menuList" | "menuItem";
 
-export interface SplitButtonProps extends ButtonGroupProps<any> {
+export interface SplitButtonProps
+    extends ButtonGroupProps<any>,
+        ThemedComponentBaseProps<{
+            root: typeof MuiButtonGroup;
+            activeButton: typeof Button;
+            popover: typeof MuiPopover;
+            menuList: typeof MuiMenuList;
+            menuItem: typeof MuiMenuItem;
+        }> {
     selectIcon?: React.ReactNode;
     selectedIndex?: number;
     onSelectIndex?: (index: number, item: React.ReactElement) => void;
@@ -25,12 +33,11 @@ export interface SplitButtonProps extends ButtonGroupProps<any> {
     localStorageKey?: string;
     autoClickOnSelect?: boolean;
     storage?: Storage;
-    popoverProps?: Partial<PopoverProps>;
 }
 
-const ButtonGroup = styled(MuiButtonGroup, {
+const Root = styled(MuiButtonGroup, {
     name: "CometAdminSplitButton",
-    slot: "buttonGroup",
+    slot: "root",
     overridesResolver(_, styles) {
         return [styles.buttonGroup];
     },
@@ -79,7 +86,7 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
         localStorageKey,
         storage,
         autoClickOnSelect = true,
-        popoverProps,
+        slotProps,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminSplitButton" });
 
@@ -128,7 +135,7 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
     const showSelect = showSelectButtonState != null ? showSelectButtonState : showSelectButton;
     return (
         <SplitButtonContext.Provider value={{ setShowSelectButton: setShowSelectButtonState }}>
-            <ButtonGroup variant={activeChildVariant} color={activeChildColor} {...restProps} ref={anchorRef}>
+            <Root variant={activeChildVariant} color={activeChildColor} {...restProps} {...slotProps?.root} ref={anchorRef}>
                 {ActiveChild}
                 {(showSelect ?? childrenArray.length > 1) && (
                     <ActiveButton
@@ -137,20 +144,21 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
                         size="small"
                         classes={ActiveChild.props.classes}
                         onClick={handleToggle}
+                        {...slotProps?.activeButton}
                     >
                         {selectIcon}
                     </ActiveButton>
                 )}
-            </ButtonGroup>
+            </Root>
             <Popover
                 open={open}
                 anchorEl={anchorRef.current}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                 transformOrigin={{ vertical: "top", horizontal: "center" }}
                 onClose={handleClose}
-                {...popoverProps}
+                {...slotProps?.popover}
             >
-                <MenuList>
+                <MenuList {...slotProps?.menuList}>
                     {childrenArray.map((child: React.ReactElement, index) => {
                         return (
                             <MenuItem
@@ -158,6 +166,7 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
                                 selected={index === selectedIndex}
                                 onClick={(event) => handleMenuItemClick(event, index, child)}
                                 disabled={child.props.disabled}
+                                {...slotProps?.menuItem}
                             >
                                 {child.props.children}
                             </MenuItem>
