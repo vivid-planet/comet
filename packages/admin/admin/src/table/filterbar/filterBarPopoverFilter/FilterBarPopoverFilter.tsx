@@ -6,6 +6,7 @@ import * as React from "react";
 import { Form, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { Root as FieldContainerRoot } from "../../../form/FieldContainer";
 import { messages } from "../../../messages";
 import { dirtyFieldsCount } from "../dirtyFieldsCount";
 import { FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
@@ -14,14 +15,7 @@ import { FilterBarButton, FilterBarButtonProps } from "../filterBarButton/Filter
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-
-export type FilterBarPopoverFilterClassKey =
-    | "root"
-    | "fieldBarWrapper"
-    | "popoverContentContainer"
-    | "paper"
-    | "buttonsContainer"
-    | "contentContainer";
+export type FilterBarPopoverFilterClassKey = "root" | "fieldBarWrapper" | "popoverContentContainer" | "buttonsContainer";
 
 const Root = styled("div", {
     name: "CometAdminFilterBarPopoverFilter",
@@ -60,31 +54,12 @@ const PopoverContentContainer = styled("div", {
 })(
     css`
         min-width: 300px;
-    `,
-);
 
-const StyledPopover = styled(Popover, {
-    name: "CometAdminFilterBarPopoverFilter",
-    slot: "paper",
-    overridesResolver(_, styles) {
-        return [styles.tabs];
-    },
-})(css`
-    margin-left: -1px;
-    margin-top: 2px;
-`);
-
-const ContentContainer = styled("div", {
-    name: "CometAdminFilterBarPopoverFilter",
-    slot: "contentContainer",
-    overridesResolver(_, styles) {
-        return [styles.contentContainer];
-    },
-})(
-    css`
-        box-sizing: border-box;
-        padding: 20px;
-        margin-bottom: 0;
+        & ${FieldContainerRoot} {
+            box-sizing: border-box;
+            padding: 20px;
+            margin-bottom: 0;
+        }
     `,
 );
 
@@ -105,12 +80,14 @@ const ButtonsContainer = styled("div", {
     `,
 );
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface FilterBarPopoverFilterProps
     extends ThemedComponentBaseProps<{
         root: "div";
         fieldBarWrapper: "div";
         popoverContentContainer: "div";
-        paper: typeof Popover;
         buttonsContainer: "div";
         contentContainer: "div";
     }> {
@@ -120,10 +97,12 @@ export interface FilterBarPopoverFilterProps
     submitButtonProps?: Partial<ButtonProps>;
     resetButtonProps?: Partial<ButtonProps>;
     filterBarButtonProps?: Partial<FilterBarButtonProps>;
-    children: any;
 }
 
-export function FilterBarPopoverFilter(inProps: FilterBarPopoverFilterProps) {
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
+export function FilterBarPopoverFilter(inProps: React.PropsWithChildren<FilterBarPopoverFilterProps>) {
     const {
         children,
         label,
@@ -167,7 +146,7 @@ export function FilterBarPopoverFilter(inProps: FilterBarPopoverFilterProps) {
                             >
                                 {label}
                             </FilterBarButton>
-                            <StyledPopover
+                            <Popover
                                 open={open}
                                 anchorEl={anchorEl}
                                 onClose={() => {
@@ -178,12 +157,19 @@ export function FilterBarPopoverFilter(inProps: FilterBarPopoverFilterProps) {
                                     vertical: "bottom",
                                     horizontal: "left",
                                 }}
-                                PaperProps={{ square: true, elevation: 1 }}
+                                PaperProps={{
+                                    square: true,
+                                    elevation: 1,
+                                    sx: {
+                                        marginLeft: "-1", //due to border of popover, but now overrideable with styling if needed
+                                        marginTop: "2", //due to boxShadow of popover to not overlap border of clickable fieldBar
+                                    },
+                                }}
                                 elevation={2}
                                 keepMounted
                             >
                                 <PopoverContentContainer {...slotProps?.popoverContentContainer}>
-                                    <ContentContainer {...slotProps?.contentContainer}>{children}</ContentContainer>
+                                    {children}
                                     <ButtonsContainer {...slotProps?.buttonsContainer}>
                                         <Button
                                             type="reset"
@@ -218,7 +204,7 @@ export function FilterBarPopoverFilter(inProps: FilterBarPopoverFilterProps) {
                                         </Button>
                                     </ButtonsContainer>
                                 </PopoverContentContainer>
-                            </StyledPopover>
+                            </Popover>
                         </FieldBarWrapper>
                     );
                 }}
@@ -226,10 +212,6 @@ export function FilterBarPopoverFilter(inProps: FilterBarPopoverFilterProps) {
         </Root>
     );
 }
-
-/**
- * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
- */
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
