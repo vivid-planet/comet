@@ -31,7 +31,7 @@ const Header = styled("div", {
     },
 })(
     ({ theme }) => css`
-        z-index: ${theme.zIndex.drawer} - 10;
+        z-index: ${theme.zIndex.drawer - 10};
     `,
 );
 
