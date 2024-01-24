@@ -11,7 +11,11 @@
 
 Visit https://docs.comet-dxp.com/ to view the documentation.
 
-## Getting started
+## Create a new Comet DXP project
+
+Use `@comet/create-app` to create a new Comet DXP project. More information can be found in the [docs](https://docs.comet-dxp.com/docs/getting-started/).
+
+## Devlopment
 
 ### Prerequisites
 

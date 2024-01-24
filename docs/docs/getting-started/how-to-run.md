@@ -1,6 +1,6 @@
 ---
 title: How to Run
-sidebar_position: 1
+sidebar_position: 3
 ---
 
 A COMET DXP application consists of multiple processes, such as:
@@ -32,8 +32,6 @@ Your COMET DXP application is up and running.
 List the status of al processes:
 
 `npx dev-pm status`
-
-<!-- TODO: not pm2? -->
 
 <br />
 
