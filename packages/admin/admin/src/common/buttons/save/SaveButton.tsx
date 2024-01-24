@@ -7,7 +7,7 @@ import { FormattedMessage } from "react-intl";
 import { messages } from "../../../messages";
 import { useSplitButtonContext } from "../split/useSplitButtonContext";
 
-export type SaveButtonClassKey = "root" | "saving" | "error" | "success" | "conflict" | ButtonClassKey;
+export type SaveButtonClassKey = "saving" | "error" | "success" | "conflict" | ButtonClassKey;
 
 type OwnerState = Pick<SaveButtonProps, "variant" | "color"> & { displayState?: SaveButtonDisplayState };
 
