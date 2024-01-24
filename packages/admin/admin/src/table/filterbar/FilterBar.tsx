@@ -3,15 +3,11 @@ import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 
 import { Root as FieldContainerRoot } from "../../form/FieldContainer";
+
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-
 export type FilterBarClassKey = "root" | "barWrapper";
-
-/**
- * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
- */
 
 const Root = styled("div", {
     name: "CometAdminFilterBar",
@@ -36,6 +32,9 @@ const BarWrapper = styled("div", {
     display: flex;
 `);
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface FilterBarProps
     extends ThemedComponentBaseProps<{
         root: "div";
@@ -44,6 +43,9 @@ export interface FilterBarProps
     children?: React.ReactNode;
 }
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export function FilterBar(inProps: FilterBarProps) {
     const { children, slotProps, ...restProps } = useThemeProps({
         props: inProps,
@@ -56,10 +58,6 @@ export function FilterBar(inProps: FilterBarProps) {
         </Root>
     );
 }
-
-/**
- * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
- */
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
