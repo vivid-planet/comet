@@ -1,4 +1,3 @@
-import { SitePreviewProvider } from "@comet/cms-site";
 import theme, { Theme } from "@src/theme";
 import { AppProps, NextWebVitalsMetric } from "next/app";
 import Head from "next/head";
@@ -66,9 +65,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
             </Head>
             <ThemeProvider theme={theme}>
                 <GlobalStyle />
-                <SitePreviewProvider>
-                    <Component {...pageProps} />
-                </SitePreviewProvider>
+                <Component {...pageProps} />
             </ThemeProvider>
         </IntlProvider>
     );

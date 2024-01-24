@@ -10,6 +10,16 @@ module.exports = {
             {
                 paths: [
                     {
+                        name: "next/link",
+                        importNames: ["default"],
+                        message: "Please use Link from @comet/cms-site instead",
+                    },
+                    {
+                        name: "next/router",
+                        importNames: ["useRouter"],
+                        message: "Please use useRouter from @comet/cms-site instead",
+                    },
+                    {
                         name: "next/image",
                         importNames: ["default"],
                         message: "Please use Image from @comet/cms-site instead",
