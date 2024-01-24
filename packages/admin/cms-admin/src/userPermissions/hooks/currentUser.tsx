@@ -18,7 +18,7 @@ export interface CurrentUserInterface {
     email?: string;
     language?: string;
     permissions: GQLCurrentUserPermission[];
-    availableContentScopes: ContentScopeInterface[];
+    allowedContentScopes: ContentScopeInterface[];
 }
 
 export const CurrentUserProvider: React.FC<{
@@ -30,7 +30,6 @@ export const CurrentUserProvider: React.FC<{
                 id
                 name
                 email
-                availableContentScopes
                 permissions {
                     permission
                     contentScopes
@@ -44,7 +43,10 @@ export const CurrentUserProvider: React.FC<{
     if (!data) return <Loading behavior="fillPageHeight" />;
 
     const context: CurrentUserContext = {
-        currentUser: data.currentUser,
+        currentUser: {
+            ...data.currentUser,
+            allowedContentScopes: data.currentUser.permissions.flatMap((p) => p.contentScopes),
+        },
         isAllowed:
             isAllowed ??
             ((user: CurrentUserInterface, permission: string, contentScope?: ContentScopeInterface) => {

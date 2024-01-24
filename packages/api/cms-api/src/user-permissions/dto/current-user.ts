@@ -22,8 +22,6 @@ export class CurrentUser implements CurrentUserInterface {
     email: string;
     @Field()
     language: string;
-    @Field(() => [GraphQLJSONObject])
-    availableContentScopes: ContentScope[];
     @Field(() => [CurrentUserPermission])
     permissions: CurrentUserPermission[];
 }

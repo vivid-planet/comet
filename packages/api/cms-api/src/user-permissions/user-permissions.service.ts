@@ -155,18 +155,12 @@ export class UserPermissionsService {
                 return acc;
             }, []);
 
-        const availableContentScopes = await this.normalizeContentScopes(
-            permissions.flatMap((p) => p.contentScopes),
-            allContentScopes,
-        );
-
         const currentUser = new CurrentUser();
         return Object.assign(currentUser, {
             id: user.id,
             name: user.name,
             email: user.email ?? "",
             language: user.language,
-            availableContentScopes,
             permissions,
         });
     }
