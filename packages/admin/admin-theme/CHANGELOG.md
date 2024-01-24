@@ -1,5 +1,15 @@
 # @comet/admin-theme
 
+## 5.6.0
+
+### Minor Changes
+
+-   fb6c8063: Change `DataGrid`'s `noRowsLabel` from "No rows" to "No results found."
+
+### Patch Changes
+
+-   @comet/admin-icons@5.6.0
+
 ## 5.5.0
 
 ### Patch Changes

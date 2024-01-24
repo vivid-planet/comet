@@ -18,6 +18,7 @@ import { Migration20230613150332 } from "./migrations/Migration20230613150332";
 import { Migration20230802124224 } from "./migrations/Migration20230802124224";
 import { Migration20230808085034 } from "./migrations/Migration20230808085034";
 import { Migration20230821090303 } from "./migrations/Migration20230821090303";
+import { Migration20231204140305 } from "./migrations/Migration20231204140305";
 import { Migration20231206123505 } from "./migrations/Migration20231206123505";
 import { Migration20231215103630 } from "./migrations/Migration20231215103630";
 import { Migration20231222090009 } from "./migrations/Migration20231222090009";
@@ -79,6 +80,7 @@ export function createOrmConfig({ migrations, ...defaults }: MikroOrmNestjsOptio
                 { name: "Migration20231206123505", class: Migration20231206123505 },
                 { name: "Migration20231215103630", class: Migration20231215103630 },
                 { name: "Migration20231222090009", class: Migration20231222090009 },
+                { name: "Migration20231204140305", class: Migration20231204140305 },
                 ...(migrations?.migrationsList || []),
             ].sort((migrationA, migrationB) => {
                 if (migrationA.name < migrationB.name) {
