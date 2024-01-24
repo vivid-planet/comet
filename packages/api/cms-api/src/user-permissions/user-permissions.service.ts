@@ -1,7 +1,7 @@
 import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Inject, Injectable } from "@nestjs/common";
-import { differenceInDays } from "date-fns";
+import { isFuture, isPast } from "date-fns";
 import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
 
@@ -87,7 +87,7 @@ export class UserPermissionsService {
         }
 
         return permissions
-            .filter((value) => availablePermissions.some((p) => p === value.permission))
+            .filter((value) => availablePermissions.some((p) => p === value.permission)) // Filter out permissions that are not defined in availablePermissions (e.g. outdated database entries)
             .sort(
                 (a, b) =>
                     availablePermissions.indexOf(a.permission as keyof Permission) - availablePermissions.indexOf(b.permission as keyof Permission),
@@ -97,14 +97,12 @@ export class UserPermissionsService {
     async getContentScopes(userId: string, includeContentScopesManual = true): Promise<ContentScope[]> {
         const contentScopes: ContentScope[] = [];
 
-        const availableContentScopes = await this.getAvailableContentScopes();
-
         if (this.accessControlService.getContentScopesForUser) {
             const user = await this.getUser(userId);
             if (user) {
                 const userContentScopes = await this.accessControlService.getContentScopesForUser(user);
                 if (userContentScopes === UserPermissions.allContentScopes) {
-                    contentScopes.push(...availableContentScopes);
+                    contentScopes.push(...(await this.getAvailableContentScopes()));
                 } else {
                     contentScopes.push(...userContentScopes);
                 }
@@ -118,10 +116,10 @@ export class UserPermissionsService {
             }
         }
 
-        return this.normalizeContentScopes(contentScopes, availableContentScopes);
+        return contentScopes;
     }
 
-    private normalizeContentScopes(contentScopes: ContentScope[], availableContentScopes: ContentScope[]): ContentScope[] {
+    normalizeContentScopes(contentScopes: ContentScope[], availableContentScopes: ContentScope[]): ContentScope[] {
         return [...new Set(contentScopes.map((cs) => JSON.stringify(cs)))] // Make values unique
             .map((cs) => JSON.parse(cs))
             .filter((value) => availableContentScopes.some((cs) => isEqual(cs, value))) // Allow only values that are defined in availableContentScopes
@@ -129,23 +127,15 @@ export class UserPermissionsService {
     }
 
     async createCurrentUser(user: User): Promise<CurrentUser> {
-        const allContentScopes = await this.getAvailableContentScopes();
-
+        const availableContentScopes = await this.getAvailableContentScopes();
         const userContentScopes = await this.getContentScopes(user.id);
         const permissions = (await this.getPermissions(user.id))
-            .filter(
-                (p) =>
-                    (!p.validFrom || differenceInDays(new Date(), p.validFrom) >= 0) && (!p.validTo || differenceInDays(p.validTo, new Date()) >= 0),
-            )
+            .filter((p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)))
             .reduce((acc: CurrentUser["permissions"], userPermission) => {
                 const contentScopes = userPermission.overrideContentScopes ? userPermission.contentScopes : userContentScopes;
-
                 const existingPermission = acc.find((p) => p.permission === userPermission.permission);
                 if (existingPermission) {
-                    existingPermission.contentScopes = this.normalizeContentScopes(
-                        [...existingPermission.contentScopes, ...contentScopes],
-                        allContentScopes,
-                    );
+                    existingPermission.contentScopes = [...existingPermission.contentScopes, ...contentScopes];
                 } else {
                     acc.push({
                         permission: userPermission.permission,
@@ -153,7 +143,11 @@ export class UserPermissionsService {
                     });
                 }
                 return acc;
-            }, []);
+            }, [])
+            .map((p) => {
+                p.contentScopes = this.normalizeContentScopes(p.contentScopes, availableContentScopes);
+                return p;
+            });
 
         const currentUser = new CurrentUser();
         return Object.assign(currentUser, {

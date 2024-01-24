@@ -40,7 +40,10 @@ export class UserContentScopesResolver {
         @Args("userId", { type: () => String }) userId: string,
         @Args("skipManual", { type: () => Boolean, nullable: true }) skipManual = false,
     ): Promise<ContentScope[]> {
-        return this.userService.getContentScopes(userId, !skipManual);
+        return this.userService.normalizeContentScopes(
+            await this.userService.getContentScopes(userId, !skipManual),
+            await this.userService.getAvailableContentScopes(),
+        );
     }
 
     @Query(() => [GraphQLJSONObject])
