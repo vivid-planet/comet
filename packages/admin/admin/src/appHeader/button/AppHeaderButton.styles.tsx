@@ -75,4 +75,4 @@ export const Text = styled(Typography, {
     overridesResolver(_, styles) {
         return [styles.typography];
     },
-})();
+})() as typeof Typography;
