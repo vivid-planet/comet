@@ -6,6 +6,7 @@ import {
     MenuItem as MuiMenuItem,
     MenuList as MuiMenuList,
     Popover as MuiPopover,
+    PopoverProps,
 } from "@mui/material";
 import { styled, useThemeProps } from "@mui/material/styles";
 import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
@@ -33,6 +34,10 @@ export interface SplitButtonProps
     localStorageKey?: string;
     autoClickOnSelect?: boolean;
     storage?: Storage;
+    /**
+     * @deprecated Use `slotProps` instead.
+     */
+    popoverProps?: Partial<PopoverProps>;
 }
 
 const Root = styled(MuiButtonGroup, {
