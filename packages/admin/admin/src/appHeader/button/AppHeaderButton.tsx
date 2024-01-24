@@ -31,7 +31,7 @@ export function AppHeaderButton(inProps: AppHeaderButtonProps) {
                 {startIcon && <StartIcon {...slotProps?.startIcon}>{startIcon}</StartIcon>}
                 {children &&
                     (disableTypography ? (
-                        { children }
+                        children
                     ) : (
                         // @ts-expect-error TODO
                         <Text component="div" {...slotProps?.typography}>
