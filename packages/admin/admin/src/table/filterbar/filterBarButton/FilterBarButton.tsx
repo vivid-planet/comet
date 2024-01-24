@@ -1,5 +1,6 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Button, buttonClasses, ButtonProps, ComponentsOverrides, svgIconClasses } from "@mui/material";
+import { buttonClasses, ButtonProps, ComponentsOverrides, svgIconClasses } from "@mui/material";
+import Button from "@mui/material/Button";
 import { css, styled, Theme } from "@mui/material/styles";
 import { useThemeProps } from "@mui/system";
 import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
@@ -13,13 +14,13 @@ import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "../
 
 export type FilterBarButtonClassKey = "root" | "open" | "hasDirtyFields" | "filterBadge";
 
-type OwnerState = Pick<FilterBarButtonProps, "openPopover" | "numberDirtyFields">;
+type OwnerState = { hasDirtyFields: boolean; openPopover: boolean | undefined };
 
 const Root = styled(Button, {
     name: "CometAdminFilterBarButton",
     slot: "root",
     overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.root, ownerState.openPopover && styles.open, ownerState.numberDirtyFields && styles.numberDirtyFields];
+        return [styles.root, ownerState.openPopover && styles.open, ownerState.hasDirtyFields && styles.hasDirtyFields];
     },
 })<{ ownerState: OwnerState }>(
     ({ theme, ownerState }) => css`
@@ -30,7 +31,7 @@ const Root = styled(Button, {
         border-color: ${theme.palette.grey[100]};
         border-radius: 2px;
 
-        & .${buttonClasses.startIcon} .${svgIconClasses.root}, & .${buttonClasses.endIcon} .${svgIconClasses.root} {
+        && .${buttonClasses.startIcon} .${svgIconClasses.root}, && .${buttonClasses.endIcon} .${svgIconClasses.root} {
             font-size: 12px;
         }
 
@@ -49,7 +50,7 @@ const Root = styled(Button, {
             border-color: ${theme.palette.primary.main};
         `}
 
-        ${ownerState.numberDirtyFields &&
+        ${ownerState.hasDirtyFields &&
         css`
             border-color: ${theme.palette.grey[400]};
             font-weight: ${theme.typography.fontWeightBold};
@@ -95,13 +96,10 @@ export function FilterBarButtonWithStyles(inProps: FilterBarButtonProps) {
         name: "CometAdminFilterBarButton",
     });
 
-    const ownerState: OwnerState = {
-        openPopover,
-        numberDirtyFields,
-    };
-
     const hasDirtyFields = !!(numberDirtyFields && numberDirtyFields > 0);
     const FilterBarActiveFilterBadgeComponent = dirtyFieldsBadge ? dirtyFieldsBadge : FilterBarActiveFilterBadge;
+
+    const ownerState: OwnerState = { hasDirtyFields, openPopover };
 
     return (
         <Root ownerState={ownerState} disableRipple endIcon={endIcon} variant="outlined" {...slotProps?.root} {...restProps}>
@@ -118,7 +116,6 @@ export function FilterBarButtonWithStyles(inProps: FilterBarButtonProps) {
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-
 export { FilterBarButtonWithStyles as FilterBarButton };
 
 declare module "@mui/material/styles" {
