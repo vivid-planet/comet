@@ -28,6 +28,9 @@ storiesOf("stories/Form/Components", module).add("FieldContainer", () => {
             <FieldContainer label="Warning" warning="This is a warning">
                 <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
             </FieldContainer>
+            <FieldContainer label="Helper" helperText="This is a helper">
+                <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
+            </FieldContainer>
         </form>
     );
 });

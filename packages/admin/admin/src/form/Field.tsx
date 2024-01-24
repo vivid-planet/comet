@@ -16,6 +16,7 @@ const composeValidators =
 export interface FieldProps<FieldValue = any, T extends HTMLElement = HTMLElement> {
     name: string;
     label?: React.ReactNode;
+    helperText?: React.ReactNode;
     component?: React.ComponentType<any> | string;
     children?: (props: FieldRenderProps<FieldValue, T>) => React.ReactNode;
     required?: boolean;
@@ -34,6 +35,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     component,
     name,
     label,
+    helperText,
     required,
     validate,
     validateWarning,
@@ -76,6 +78,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 disabled={disabled}
                 error={shouldShowError(meta) && (meta.error || meta.submitError)}
                 warning={shouldShowWarning(meta) && meta.data?.warning}
+                helperText={helperText}
                 variant={variant}
                 fullWidth={fullWidth}
                 scrollTo={shouldScrollToField(meta)}
