@@ -42,7 +42,6 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     shouldShowError: passedShouldShowError,
     shouldShowWarning: passedShouldShowWarning,
     shouldScrollTo: passedShouldScrollTo,
-
     ...otherProps
 }: FieldProps<FieldValue, FieldElement>): React.ReactElement {
     const { disabled, variant, fullWidth } = otherProps;

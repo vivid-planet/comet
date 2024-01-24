@@ -131,7 +131,6 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles> & Field
     if (fullWidth) formControlClasses.push(classes.fullWidth);
     if (hasError) formControlClasses.push(classes.hasError);
     if (hasWarning && !hasError) formControlClasses.push(classes.hasWarning);
-    if (helperText) formControlClasses.push(classes.helperText);
     if (disabled) formControlClasses.push(classes.disabled);
     if (required) formControlClasses.push(classes.required);
     if (fieldMargin === "always") formControlClasses.push(classes.fieldMarginAlways);
