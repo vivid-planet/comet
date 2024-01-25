@@ -91,6 +91,7 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
         localStorageKey,
         storage,
         autoClickOnSelect = true,
+        popoverProps,
         slotProps,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminSplitButton" });
@@ -161,6 +162,7 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                 transformOrigin={{ vertical: "top", horizontal: "center" }}
                 onClose={handleClose}
+                {...popoverProps}
                 {...slotProps?.popover}
             >
                 <MenuList {...slotProps?.menuList}>
