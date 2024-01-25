@@ -23,16 +23,6 @@ const Root = styled("div", {
         ${ownerState.hasSelectedChild &&
         css`
             color: ${theme.palette.primary.main};
-
-
-            ${ListItem} {
-                [class*='MuiListItemText-root'] {
-                    color: ${theme.palette.primary.main}
-                }
-                [class*='MuiListItemIcon-root'] {
-                    color: ${theme.palette.primary.main}
-                }
-            },
         `}
     `,
 );
@@ -43,7 +33,19 @@ const ListItem = styled("div", {
     overridesResolver(_, styles) {
         return [styles.listItem];
     },
-})();
+})<{ ownerState: OwnerState }>(
+    ({ theme, ownerState }) => css`
+        ${ownerState.hasSelectedChild &&
+        css`
+            [class*="MuiListItemText-root"] {
+                color: ${theme.palette.primary.main};
+            }
+            && [class*="MuiListItemIcon-root"] {
+                color: ${theme.palette.primary.main};
+            }
+        `}
+    `,
+);
 
 export interface MenuLevel {
     level?: 1 | 2;
@@ -97,7 +99,7 @@ export function MenuCollapsibleItem(inProps: MenuCollapsibleItemProps) {
 
     return (
         <Root ownerState={ownerState} {...slotProps?.root} {...otherProps}>
-            <ListItem {...slotProps?.listItem}>
+            <ListItem ownerState={ownerState} {...slotProps?.listItem}>
                 <MenuItem
                     primary={primary}
                     secondary={secondary}
