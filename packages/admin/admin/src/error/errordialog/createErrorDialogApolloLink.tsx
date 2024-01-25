@@ -23,11 +23,15 @@ export const createErrorDialogApolloLink = () => {
         let title: React.ReactNode | undefined;
         let userMessage: React.ReactNode | undefined;
         let httpStatus: string | undefined;
+        let isUnauthenticated = false;
 
         if (graphQLErrors) {
             error = graphQLErrors.map(({ message }) => message);
             errorType = "graphql";
             title = <FormattedMessage id="comet.errorDialog.graphQLErrors.title" defaultMessage="Server error" />;
+            isUnauthenticated = graphQLErrors.some(
+                (e) => e.extensions?.exception?.status === StatusCodes.UNAUTHORIZED || e.extensions?.code === "UNAUTHENTICATED",
+            );
         }
 
         if (networkError) {
@@ -41,21 +45,22 @@ export const createErrorDialogApolloLink = () => {
             if (isServerError(networkError)) {
                 const { statusCode } = networkError;
                 httpStatus = `${statusCode} ${getReasonPhrase(statusCode)}`;
-
-                if (statusCode === StatusCodes.UNAUTHORIZED) {
-                    title = <FormattedMessage id="comet.errorDialog.sessionExpired.title" defaultMessage="Session expired" />;
-                    userMessage = (
-                        <>
-                            <Typography gutterBottom>
-                                <FormattedMessage id="comet.errorDialog.sessionExpired.message" defaultMessage="Your login-session has expired." />
-                            </Typography>
-                            <Button href="/" color="info" variant="outlined">
-                                <FormattedMessage id="comet.errorDialog.sessionExpired.button" defaultMessage="Re-login" />
-                            </Button>
-                        </>
-                    );
-                }
+                isUnauthenticated = statusCode === StatusCodes.UNAUTHORIZED;
             }
+        }
+
+        if (!isUnauthenticated) {
+            title = <FormattedMessage id="comet.errorDialog.sessionExpired.title" defaultMessage="Session expired" />;
+            userMessage = (
+                <>
+                    <Typography gutterBottom>
+                        <FormattedMessage id="comet.errorDialog.sessionExpired.message" defaultMessage="Your login-session has expired." />
+                    </Typography>
+                    <Button href="/" color="info" variant="outlined">
+                        <FormattedMessage id="comet.errorDialog.sessionExpired.button" defaultMessage="Re-login" />
+                    </Button>
+                </>
+            );
         }
 
         errorDialogVar({
