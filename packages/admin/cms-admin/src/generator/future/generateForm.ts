@@ -87,10 +87,10 @@ export function generateForm(
         useFormApiRef,
         useStackApi,
         useStackSwitchApi,
-    } from "@comet/admin";
-    import { ArrowLeft } from "@comet/admin-icons";
-    import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-    import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+    } from "packages/admin/admin/src/index";
+    import { ArrowLeft } from "packages/admin/admin-icons/src/index";
+    import { BlockState, createFinalFormBlock } from "packages/admin/blocks-admin/src/index";
+    import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "packages/admin/cms-admin/src/index";
     import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
     import { FormApi } from "final-form";
     import { filter } from "graphql-anywhere";

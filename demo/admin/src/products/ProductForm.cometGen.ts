@@ -1,4 +1,4 @@
-import { FormConfig } from "@src/generator/generator";
+import { FormConfig } from "@comet/cms-admin/src/generator";
 import { GQLProduct } from "@src/graphql.generated";
 
 export const ProductForm: FormConfig<GQLProduct> = {

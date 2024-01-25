@@ -42,14 +42,11 @@ async function main() {
 
     const files = await glob("src/**/*.cometGen.ts");
     for (const file of files) {
-        console.log("Processing", file);
         let outputCode = "";
         let gqlQueriesOutputCode = "";
         const baseOutputFilename = basename(file).replace(/\.cometGen\.ts$/, "");
-        console.log("loading", `${process.cwd()}/${file.replace(/\.ts$/, "")}`);
         const configs = await import(`${process.cwd()}/${file.replace(/\.ts$/, "")}`);
         //const configs = await import(`${process.cwd()}/${file}`);
-        console.log("loaded");
 
         for (const exportName in configs) {
             const config = configs[exportName] as GeneratorConfig;

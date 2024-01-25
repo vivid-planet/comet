@@ -381,9 +381,6 @@ importers:
       eslint-plugin-graphql:
         specifier: ^4.0.0
         version: 4.0.0(@types/node@18.15.3)(graphql@15.8.0)(typescript@4.9.4)
-      glob:
-        specifier: ^10.3.10
-        version: 10.3.10
       graphql-request:
         specifier: ^3.0.0
         version: 3.7.0(graphql@15.8.0)
@@ -2280,6 +2277,9 @@ importers:
       final-form:
         specifier: ^4.20.9
         version: 4.20.9
+      glob:
+        specifier: ^10.3.10
+        version: 10.3.10
       graphql:
         specifier: ^15.0.0
         version: 15.8.0
