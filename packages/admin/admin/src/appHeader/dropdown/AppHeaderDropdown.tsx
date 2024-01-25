@@ -1,18 +1,18 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
-import { ComponentsOverrides, Popover, PopoverProps, Theme, useTheme } from "@mui/material";
+import { ComponentsOverrides, Popover as MuiPopover, PopoverProps, Theme, useTheme } from "@mui/material";
 import { css, styled, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { AppHeaderButton, AppHeaderButtonProps } from "../button/AppHeaderButton";
 
-export type AppHeaderDropdownClassKey = "root" | "popoverRoot";
+export type AppHeaderDropdownClassKey = "root" | "popover";
 
 export interface AppHeaderDropdownProps
     extends Omit<AppHeaderButtonProps, "children">,
         ThemedComponentBaseProps<{
             root: "div";
-            popoverRoot: typeof Popover;
+            popover: typeof Popover;
         }> {
     children?: ((closeDropdown: () => void) => React.ReactNode) | React.ReactNode;
     buttonChildren?: React.ReactNode;
@@ -34,11 +34,11 @@ const Root = styled("div", {
     `,
 );
 
-const PopoverRoot = styled(Popover, {
+const Popover = styled(MuiPopover, {
     name: "CometAdminAppHeaderDropdown",
-    slot: "popoverRoot",
+    slot: "popover",
     overridesResolver(_, styles) {
-        return [styles.popoverRoot];
+        return [styles.popover];
     },
 })();
 
@@ -89,8 +89,8 @@ export function AppHeaderDropdown(inProps: AppHeaderDropdownProps) {
             <AppHeaderButton endIcon={dropdownArrow !== null ? dropdownArrow(_open) : undefined} {...restProps} onClick={() => _onOpenChange(true)}>
                 {buttonChildren}
             </AppHeaderButton>
-            <PopoverRoot
-                {...slotProps?.popoverRoot}
+            <Popover
+                {...slotProps?.popover}
                 open={_open}
                 anchorEl={rootRef.current}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
@@ -105,7 +105,7 @@ export function AppHeaderDropdown(inProps: AppHeaderDropdownProps) {
                 {...popoverProps}
             >
                 {typeof children === "function" ? children(() => _onOpenChange(false)) : children}
-            </PopoverRoot>
+            </Popover>
         </Root>
     );
 }
