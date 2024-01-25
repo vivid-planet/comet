@@ -6,9 +6,9 @@ import * as React from "react";
 import { MenuLevel } from "./CollapsibleItem";
 import { MenuContext } from "./Context";
 
-export type MenuItemClassKey = "root" | "level1" | "level2" | "hasIcon" | "hasSecondaryAction";
+export type MenuItemClassKey = "root" | "level1" | "level2" | "hasIcon" | "hasSecondaryText" | "hasSecondaryAction";
 
-type OwnerState = Pick<MenuItemProps, "level" | "icon" | "secondaryAction">;
+type OwnerState = Pick<MenuItemProps, "level" | "icon" | "secondary" | "secondaryAction">;
 
 const colors = {
     textLevel1: "#242424",
@@ -25,6 +25,7 @@ const Root = styled(ListItemButton, {
             ownerState.level === 2 && styles.level2,
             ownerState.icon && styles.hasIcon,
             ownerState.secondaryAction && styles.hasSecondaryAction,
+            ownerState.secondary && styles.hasSecondaryText,
         ];
     },
 })<{ ownerState: OwnerState }>(
@@ -106,7 +107,7 @@ const Root = styled(ListItemButton, {
                 &:hover {
                     background-color: ${theme.palette.primary.dark};
                 }
-                &.MuiListItemText-primary {
+                & .MuiListItemText-primary {
                     font-weight: ${theme.typography.fontWeightBold};
                 }
             }
@@ -140,6 +141,7 @@ export interface MenuItemProps extends ThemedComponentBaseProps<{ root: typeof L
 export function MenuItem(inProps: MenuItemProps) {
     const {
         primary,
+        secondary,
         icon,
         level = 1,
         secondaryAction,
@@ -154,6 +156,7 @@ export function MenuItem(inProps: MenuItemProps) {
         level,
         icon,
         secondaryAction,
+        secondary,
     };
 
     const hasIcon = !!icon;
@@ -165,7 +168,7 @@ export function MenuItem(inProps: MenuItemProps) {
     return (
         <Root {...slotProps?.root} ownerState={ownerState} {...otherProps}>
             {hasIcon && <ListItemIcon>{icon}</ListItemIcon>}
-            <ListItemText primary={primary} inset={!icon} />
+            <ListItemText primary={primary} secondary={secondary} inset={!icon} />
             {!!secondaryAction && secondaryAction}
         </Root>
     );
