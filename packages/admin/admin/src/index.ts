@@ -99,8 +99,7 @@ export { InputWithPopper, InputWithPopperComponents, InputWithPopperProps } from
 export { InputWithPopperClassKey } from "./inputWithPopper/InputWithPopper.slots";
 export { messages } from "./messages";
 export { MainContent, MainContentClassKey, MainContentProps } from "./mui/MainContent";
-export { MasterLayout, MasterLayoutProps } from "./mui/MasterLayout";
-export { MasterLayoutClassKey } from "./mui/MasterLayout.styles";
+export { MasterLayout, MasterLayoutClassKey, MasterLayoutProps } from "./mui/MasterLayout";
 export { MasterLayoutContext } from "./mui/MasterLayoutContext";
 export { MenuCollapsibleItem, MenuCollapsibleItemClassKey, MenuCollapsibleItemProps, MenuLevel } from "./mui/menu/CollapsibleItem";
 export { IMenuContext, IWithMenu, MenuContext, withMenu } from "./mui/menu/Context";
