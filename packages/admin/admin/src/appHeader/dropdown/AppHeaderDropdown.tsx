@@ -112,7 +112,7 @@ export function AppHeaderDropdown(inProps: AppHeaderDropdownProps) {
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminAppHeaderDropdown: Partial<AppHeaderDropdownProps>;
+        CometAdminAppHeaderDropdown: AppHeaderDropdownProps;
     }
 
     interface ComponentNameToClassKey {
