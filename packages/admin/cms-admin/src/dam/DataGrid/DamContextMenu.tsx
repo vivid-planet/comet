@@ -28,10 +28,11 @@ interface FolderInnerMenuProps {
 }
 
 const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps): React.ReactElement => {
+    const errorDialogApi = useErrorDialog();
     const editDialogApi = useEditDialogApi();
     const errorDialog = useErrorDialog();
     const apolloClient = useApolloClient();
-    const { createCopies, getFromClipboard } = useCopyPasteDamItems();
+    const { pasteFromClipboard } = useCopyPasteDamItems();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
 
@@ -81,9 +82,9 @@ const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps): Reac
                     <RowActionsItem
                         icon={<Paste />}
                         onClick={async () => {
-                            const clipboard = await getFromClipboard();
-                            if (clipboard.canPaste) {
-                                await createCopies({ clipboard: clipboard.content, targetFolderId: folder.id });
+                            const { error } = await pasteFromClipboard({ targetFolderId: folder.id });
+                            if (error) {
+                                errorDialogApi?.showError({ error: "Cannot paste", userMessage: error });
                             }
                         }}
                     >
@@ -122,7 +123,7 @@ interface FileInnerMenuProps {
 const FileInnerMenu = ({ file, openMoveDialog }: FileInnerMenuProps): React.ReactElement => {
     const client = useApolloClient();
     const stackApi = useStackSwitchApi();
-    const { prepareForClipboard, writeToClipboard } = useCopyPasteDamItems();
+    const { writeToClipboard } = useCopyPasteDamItems();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
 
@@ -149,7 +150,7 @@ const FileInnerMenu = ({ file, openMoveDialog }: FileInnerMenuProps): React.Reac
                     <RowActionsItem
                         icon={<Copy />}
                         onClick={async () => {
-                            await writeToClipboard(prepareForClipboard([{ type: "file", id: file.id }]));
+                            await writeToClipboard([{ type: "file", id: file.id }]);
                         }}
                     >
                         <FormattedMessage {...messages.copy} />

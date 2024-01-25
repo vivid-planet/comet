@@ -113,7 +113,7 @@ export const useDamSelectionApi = () => {
 export const DamSelectionProvider: React.FunctionComponent = ({ children }) => {
     const apolloClient = useApolloClient();
     const [selectionMap, setSelectionMap] = React.useState<DamItemSelectionMap>(new Map());
-    const { prepareForClipboard, writeToClipboard } = useCopyPasteDamItems();
+    const { writeToClipboard } = useCopyPasteDamItems();
 
     const showError = (setError: React.Dispatch<React.SetStateAction<boolean>>) => {
         setError(true);
@@ -300,7 +300,7 @@ export const DamSelectionProvider: React.FunctionComponent = ({ children }) => {
         });
 
         try {
-            await writeToClipboard(prepareForClipboard(selectedItems));
+            await writeToClipboard(selectedItems);
         } catch (e) {
             showError(setHasCopyErrors);
         }

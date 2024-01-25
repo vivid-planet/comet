@@ -40,12 +40,8 @@ export const useCopyPasteDamItems = () => {
     const scope = useDamScope();
     const apolloClient = useApolloClient();
 
-    const prepareForClipboard = React.useCallback((damItems: Array<{ id: string; type: "file" | "folder" }>): DamItemsClipboard => {
-        return { damItems };
-    }, []);
-
-    const writeToClipboard = React.useCallback((items: DamItemsClipboard) => {
-        return writeClipboardText(JSON.stringify(items));
+    const writeToClipboard = React.useCallback((damItems: Array<{ id: string; type: "file" | "folder" }>) => {
+        return writeClipboardText(JSON.stringify({ damItems }));
     }, []);
 
     const getFromClipboard = React.useCallback(async (): Promise<GetFromClipboardResponse> => {
@@ -86,7 +82,7 @@ export const useCopyPasteDamItems = () => {
     }, []);
 
     const createCopies = React.useCallback(
-        async ({ clipboard: { damItems }, targetFolderId }: { clipboard: DamItemsClipboard; targetFolderId: string | undefined }) => {
+        async ({ clipboardContent: { damItems }, targetFolderId }: { clipboardContent: DamItemsClipboard; targetFolderId: string | undefined }) => {
             const fileIds = damItems.filter(({ type }) => type === "file").map((file) => file.id);
 
             await apolloClient.mutate<GQLCopyPasteFilesMutation, GQLCopyPasteFilesMutationVariables>({
@@ -100,5 +96,19 @@ export const useCopyPasteDamItems = () => {
         [apolloClient, scope],
     );
 
-    return { prepareForClipboard, writeToClipboard, getFromClipboard, createCopies };
+    const pasteFromClipboard = React.useCallback(
+        async ({ targetFolderId }: { targetFolderId: string | undefined }) => {
+            const clipboard = await getFromClipboard();
+
+            if (clipboard.canPaste) {
+                await createCopies({ clipboardContent: clipboard.content, targetFolderId });
+                return {};
+            } else {
+                return { error: clipboard.error };
+            }
+        },
+        [createCopies, getFromClipboard],
+    );
+
+    return { writeToClipboard, pasteFromClipboard };
 };

@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import { messages, useEditDialog, useSnackbarApi } from "@comet/admin";
+import { messages, useEditDialog, useErrorDialog, useSnackbarApi } from "@comet/admin";
 import { AddFolder as AddFolderIcon, Archive, Copy, Delete, Download, Move, Paste, Restore, Upload } from "@comet/admin-icons";
 import { Box, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Slide, Snackbar, Typography } from "@mui/material";
 import { PopoverOrigin } from "@mui/material/Popover/Popover";
@@ -27,13 +27,14 @@ interface DamMoreActionsProps {
 
 export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId, filter }: DamMoreActionsProps): React.ReactElement => {
     const damSelectionActionsApi = useDamSelectionApi();
+    const errorDialogApi = useErrorDialog();
     const { selectionMap, archiveSelected, deleteSelected, downloadSelected, restoreSelected, moveSelected, copySelected } = damSelectionActionsApi;
     const snackbarApi = useSnackbarApi();
     const [, , editDialogApi] = useEditDialog();
     const intl = useIntl();
     const client = useApolloClient();
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
-    const { createCopies, getFromClipboard } = useCopyPasteDamItems();
+    const { pasteFromClipboard } = useCopyPasteDamItems();
 
     const folderInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -83,10 +84,11 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
     };
 
     const handlePasteClick = async () => {
-        const clipboard = await getFromClipboard();
-        if (clipboard.canPaste) {
-            await createCopies({ clipboard: clipboard.content, targetFolderId: folderId });
+        const { error } = await pasteFromClipboard({ targetFolderId: folderId });
+        if (error) {
+            errorDialogApi?.showError({ error: "Cannot paste", userMessage: error });
         }
+
         handleClose();
     };
 
