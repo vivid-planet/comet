@@ -3,7 +3,7 @@ import {
     Field,
     FinalForm,
     FinalFormInput,
-    FinalFormSaveSplitButton,
+    FinalFormSaveButton,
     FinalFormSubmitEvent,
     MainContent,
     Toolbar,
@@ -145,7 +145,7 @@ function ProductTagForm({ id }: FormProps): React.ReactElement {
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
+                            <FinalFormSaveButton hasConflict={saveConflict.hasConflict} />
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>

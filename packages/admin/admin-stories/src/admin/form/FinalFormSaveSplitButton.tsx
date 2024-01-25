@@ -16,11 +16,11 @@ import { Button, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloSwapiStoryDecorator } from "../../../../apollo-story.decorator";
-import { storyRouterDecorator } from "../../../../story-router.decorator";
-import { toolbarDecorator } from "../toolbar.decorator";
+import { apolloSwapiStoryDecorator } from "../../apollo-story.decorator";
+import { toolbarDecorator } from "../../docs/components/Toolbar/toolbar.decorator";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
-storiesOf("stories/components/Toolbar/Final Form Save Split Button", module)
+storiesOf("stories/form/FinalForm", module)
     .addDecorator(apolloSwapiStoryDecorator())
     .addDecorator(toolbarDecorator())
     .addDecorator(storyRouterDecorator())
