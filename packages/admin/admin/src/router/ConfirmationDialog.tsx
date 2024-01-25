@@ -17,9 +17,7 @@ export type RouterConfirmationDialogClassKey =
     | "saveButton"
     | "discardButton";
 
-type OwnerState = Pick<RouterConfirmationDialogProps, "showSaveButton">;
-
-export const StyledDialog = styled(Dialog, {
+const StyledDialog = styled(Dialog, {
     name: "CometAdminRouterConfirmationDialog",
     slot: "root",
     overridesResolver(_, styles) {
@@ -29,7 +27,7 @@ export const StyledDialog = styled(Dialog, {
     z-index: 1301;
 `);
 
-export const CloseButton = styled(IconButton, {
+const CloseButton = styled(IconButton, {
     name: "CometAdminRouterConfirmationDialog",
     slot: "closeButton",
     overridesResolver(_, styles) {
@@ -42,7 +40,7 @@ export const CloseButton = styled(IconButton, {
     color: #fff;
 `);
 
-export const MessageWrapper = styled("div", {
+const MessageWrapper = styled("div", {
     name: "CometAdminRouterConfirmationDialog",
     slot: "messageWrapper",
     overridesResolver(_, styles) {
@@ -52,7 +50,7 @@ export const MessageWrapper = styled("div", {
     display: flex;
 `);
 
-export const StyledWarning = styled(Warning, {
+const StyledWarning = styled(Warning, {
     name: "CometAdminRouterConfirmationDialog",
     slot: "messageWarningIcon",
     overridesResolver(_, styles) {
@@ -62,7 +60,7 @@ export const StyledWarning = styled(Warning, {
     font-size: 20px;
 `);
 
-export const MessageText = styled(Typography, {
+const MessageText = styled(Typography, {
     name: "CometAdminRouterConfirmationDialog",
     slot: "messageText",
     overridesResolver(_, styles) {
@@ -72,29 +70,33 @@ export const MessageText = styled(Typography, {
     padding-left: 10px;
 `);
 
-export const ActionButton = styled(Button, {
+const SaveButton = styled(Button, {
     name: "CometAdminRouterConfirmationDialog",
-    slot: "actionButton",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.messageText, ownerState.showSaveButton && styles.saveButton, !ownerState.showSaveButton && styles.discardButton];
+    slot: "saveButton",
+    overridesResolver(_, styles) {
+        return [styles.actionButton, styles.saveButton];
     },
-})<{ ownerState: OwnerState }>(
-    ({ ownerState, theme }) => css`
+})(
+    ({ theme }) => css`
         flex-grow: 1;
         flex-basis: 50%;
-
-        ${ownerState.showSaveButton &&
-        css`
-            margin-left: ${theme.spacing(2)};
-        `}
-
-        ${!ownerState.showSaveButton &&
-        css`
-            margin-right: ${theme.spacing(2)};
-        `}
+        margin-left: ${theme.spacing(2)};
     `,
 );
 
+const DiscardButton = styled(Button, {
+    name: "CometAdminRouterConfirmationDialog",
+    slot: "discardButton",
+    overridesResolver(_, styles) {
+        return [styles.actionButton, styles.discardButton];
+    },
+})(
+    ({ theme }) => css`
+        flex-grow: 1;
+        flex-basis: 50%;
+        margin-right: ${theme.spacing(2)};
+    `,
+);
 export enum PromptAction {
     Cancel,
     Discard,
@@ -109,6 +111,8 @@ export interface RouterConfirmationDialogProps
         messageWarningIcon: typeof Warning;
         messageText: typeof Typography;
         actionButton: typeof Button;
+        saveButton: typeof Button;
+        discardButton: typeof Button;
     }> {
     isOpen: boolean;
     message?: React.ReactNode; // typically a string or a FormattedMessage (intl) is passed
@@ -126,10 +130,6 @@ export function RouterConfirmationDialog(inProps: RouterConfirmationDialogProps)
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminRouterConfirmationDialog" });
 
-    const ownerState: OwnerState = {
-        showSaveButton,
-    };
-
     return (
         <StyledDialog open={isOpen} onClose={() => handleClose(PromptAction.Cancel)} maxWidth="sm" {...slotProps?.root} {...restProps}>
             <DialogTitle>
@@ -145,34 +145,30 @@ export function RouterConfirmationDialog(inProps: RouterConfirmationDialogProps)
                 </MessageWrapper>
             </DialogContent>
             <DialogActions>
-                <ActionButton
+                <DiscardButton
                     startIcon={<Delete />}
                     color="error"
                     variant="outlined"
                     onClick={() => handleClose(PromptAction.Discard)}
-                    ownerState={ownerState}
-                    {...slotProps?.actionButton}
+                    {...slotProps?.discardButton}
                 >
                     <FormattedMessage {...messages.discard} />
-                </ActionButton>
+                </DiscardButton>
                 {showSaveButton && (
-                    <ActionButton
+                    <SaveButton
                         startIcon={<Save />}
                         color="primary"
                         variant="contained"
                         onClick={() => handleClose(PromptAction.Save)}
-                        ownerState={ownerState}
-                        {...slotProps?.actionButton}
+                        {...slotProps?.saveButton}
                     >
                         <FormattedMessage {...messages.save} />
-                    </ActionButton>
+                    </SaveButton>
                 )}
             </DialogActions>
         </StyledDialog>
     );
 }
-
-//export const RouterConfirmationDialog = withStyles(styles, { name: "CometAdminRouterConfirmationDialog" })(InternalRouterConfirmationDialog);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
