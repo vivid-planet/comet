@@ -20,8 +20,7 @@ export {
 } from "./common/buttons/CopyToClipboardButton";
 export { DeleteButton, DeleteButtonClassKey, DeleteButtonProps } from "./common/buttons/delete/DeleteButton";
 export { OkayButton, OkayButtonClassKey, OkayButtonProps } from "./common/buttons/okay/OkayButton";
-export { SaveButton, SaveButtonProps } from "./common/buttons/save/SaveButton";
-export { SaveButtonClassKey } from "./common/buttons/save/SaveButton.styles";
+export { SaveButton, SaveButtonClassKey, SaveButtonProps } from "./common/buttons/save/SaveButton";
 export { SplitButton, SplitButtonProps } from "./common/buttons/split/SplitButton";
 export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/split/SplitButtonContext";
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
