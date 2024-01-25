@@ -6,6 +6,7 @@ import { basename, dirname } from "path";
 
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
+import { DeepKeyOf } from "./utils/deepKeyOf";
 import { writeGenerated } from "./utils/writeGenerated";
 
 type BlockReference = {
@@ -22,7 +23,7 @@ export type FormFieldConfig<T> = (
     | { type: "staticSelect"; values?: string[] }
     | { type: "asyncSelect"; values?: string[] }
     | { type: "block"; block: BlockReference }
-) & { name: keyof T; label?: string; required?: boolean };
+) & { name: DeepKeyOf<T>; label?: string; required?: boolean };
 
 export type FormConfig<T extends { __typename?: string }> = {
     type: "form";

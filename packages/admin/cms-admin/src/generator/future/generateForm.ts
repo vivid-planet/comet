@@ -4,6 +4,7 @@ import { generateFormField } from "./generateFormField";
 import { FormConfig, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
+import { generateFieldListGqlString } from "./utils/generateFieldList";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
 export function generateForm(
@@ -22,6 +23,9 @@ export function generateForm(
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
 
+    const fieldNamesFromConfig: string[] = config.fields.map((field) => field.name);
+    const fieldList = generateFieldListGqlString(fieldNamesFromConfig);
+
     // TODO make RootBlocks configurable (from config)
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
 
@@ -30,9 +34,7 @@ export function generateForm(
 
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
-        fragment ${fragmentName} on ${gqlType} {
-            ${config.fields.map((field) => field.name).join("\n")}
-        }
+        fragment ${fragmentName} on ${gqlType} { ${fieldList} }
     `;
 
     gqlDocuments[`${instanceGqlType}Query`] = `
