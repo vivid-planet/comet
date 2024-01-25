@@ -44,7 +44,6 @@ export const RowClickStackLink = styled(StackLink)`
     right: 0;
     bottom: 0;
     top: 0;
-
     text-decoration: none;
     color: inherit;
 `;
