@@ -86,9 +86,7 @@ export function FilterBarButtonWithStyles(inProps: FilterBarButtonProps) {
         dirtyFieldsBadge,
         numberDirtyFields,
         openPopover,
-        classes,
         endIcon = <ChevronDown />,
-        className,
         slotProps,
         ...restProps
     } = useThemeProps({
