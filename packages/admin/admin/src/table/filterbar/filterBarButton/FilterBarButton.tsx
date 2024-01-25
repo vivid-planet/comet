@@ -80,7 +80,10 @@ export interface FilterBarButtonProps extends ThemedComponentBaseProps<{ root: t
     openPopover?: boolean;
 }
 
-export function FilterBarButtonWithStyles(inProps: FilterBarButtonProps) {
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
+export function FilterBarButton(inProps: FilterBarButtonProps) {
     const {
         children,
         dirtyFieldsBadge,
@@ -110,11 +113,6 @@ export function FilterBarButtonWithStyles(inProps: FilterBarButtonProps) {
         </Root>
     );
 }
-
-/**
- * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
- */
-export { FilterBarButtonWithStyles as FilterBarButton };
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
