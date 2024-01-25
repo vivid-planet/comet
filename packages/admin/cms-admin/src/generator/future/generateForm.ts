@@ -3,6 +3,7 @@ import { IntrospectionQuery } from "graphql";
 import { generateFormField } from "./generateFormField";
 import { FormConfig, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
+import { generateFieldListGqlString } from "./utils/generateFieldList";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
 export function generateForm(
@@ -16,13 +17,12 @@ export function generateForm(
     const gqlQueries: Record<string, string> = {};
     const imports: Imports = [];
 
+    const fieldNamesFromConfig: string[] = config.fields.map((field) => field.name);
+    const fieldList = generateFieldListGqlString(fieldNamesFromConfig);
+
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlQueries[`${instanceGqlType}FormFragment`] = `
-        fragment ${fragmentName} on ${gqlType} {
-            title
-            slug
-            description
-        }
+        fragment ${fragmentName} on ${gqlType} ${fieldList}
     `;
 
     gqlQueries[`${instanceGqlType}Query`] = `
