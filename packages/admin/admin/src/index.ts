@@ -145,8 +145,11 @@ export { useExportPagedTableQuery } from "./table/excelexport/useExportPagedTabl
 export { useExportTableQuery } from "./table/excelexport/useExportTableQuery";
 export { ExcelExportButton } from "./table/ExcelExportButton";
 export { FilterBar, FilterBarClassKey, FilterBarProps } from "./table/filterbar/FilterBar";
-export { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "./table/filterbar/filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
-export { FilterBarActiveFilterBadgeClassKey } from "./table/filterbar/filterBarActiveFilterBadge/FilterBarActiveFilterBadge.styles";
+export {
+    FilterBarActiveFilterBadge,
+    FilterBarActiveFilterBadgeClassKey,
+    FilterBarActiveFilterBadgeProps,
+} from "./table/filterbar/filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
 export { FilterBarButton, FilterBarButtonProps } from "./table/filterbar/filterBarButton/FilterBarButton";
 export { FilterBarButtonClassKey } from "./table/filterbar/filterBarButton/FilterBarButton.styles";
 export { FilterBarMoreFilters, FilterBarMoreFiltersProps } from "./table/filterbar/filterBarMoreFilters/FilterBarMoreFilters";
