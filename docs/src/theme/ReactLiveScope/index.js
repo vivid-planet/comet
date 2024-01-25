@@ -48,8 +48,24 @@ if (ExecutionEnvironment.canUseDOM) {
     const cometAdminColorPickerImports = require("@comet/admin-color-picker");
     const cometAdminReactSelectImports = require("@comet/admin-react-select");
     const cometAdminThemeImports = require("@comet/admin-theme");
-    const { Card, CardContent, FormControlLabel, Grid, Chip, IconButton, Typography } = require("@mui/material");
+    const {
+        Card,
+        CardContent,
+        FormControlLabel,
+        Grid,
+        Chip,
+        IconButton,
+        Typography,
+        MenuList,
+        Divider,
+        Box,
+        Avatar,
+        InputBase,
+        InputAdornment,
+        useTheme,
+    } = require("@mui/material");
     const { Form } = require("react-final-form");
+    const { IntlProvider } = require("react-intl");
 
     ReactLiveScope = generateScope([
         {
@@ -86,11 +102,30 @@ if (ExecutionEnvironment.canUseDOM) {
         },
         {
             name: "@mui/material",
-            imports: { Card, CardContent, FormControlLabel, Grid, Chip, IconButton, Typography },
+            imports: {
+                Card,
+                CardContent,
+                FormControlLabel,
+                Grid,
+                Chip,
+                IconButton,
+                Typography,
+                MenuList,
+                Divider,
+                Box,
+                Avatar,
+                InputBase,
+                InputAdornment,
+                useTheme,
+            },
         },
         {
             name: "react-final-form",
             imports: { Form },
+        },
+        {
+            name: "react-intl",
+            imports: { IntlProvider },
         },
     ]);
 }
