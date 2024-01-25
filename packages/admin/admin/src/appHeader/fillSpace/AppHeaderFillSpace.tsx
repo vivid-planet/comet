@@ -1,24 +1,38 @@
 import { ComponentsOverrides, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { css, styled, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
+
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export type AppHeaderFillSpaceClassKey = "root";
 
-const styles = () => {
-    return createStyles<AppHeaderFillSpaceClassKey, Record<string, any>>({
-        root: {
-            flexGrow: 1,
-        },
-    });
-};
+export type AppHeaderFillSpaceProps = ThemedComponentBaseProps<{
+    root: "div";
+}>;
 
-function FillSpace({ classes }: WithStyles<typeof styles>) {
-    return <div className={classes.root} />;
+const Root = styled("div", {
+    name: "CometAdminAppHeaderFillSpace",
+    slot: "root",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})(
+    css`
+        flex-grow: 1;
+    `,
+);
+
+export function AppHeaderFillSpace(inProps: AppHeaderFillSpaceProps) {
+    const { slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminAppHeaderFillSpace" });
+
+    return <Root {...slotProps?.root} {...restProps} />;
 }
 
-export const AppHeaderFillSpace = withStyles(styles, { name: "CometAdminAppHeaderFillSpace" })(FillSpace);
-
 declare module "@mui/material/styles" {
+    interface ComponentsPropsList {
+        CometAdminAppHeaderFillSpace: AppHeaderFillSpaceProps;
+    }
+
     interface ComponentNameToClassKey {
         CometAdminAppHeaderFillSpace: AppHeaderFillSpaceClassKey;
     }
