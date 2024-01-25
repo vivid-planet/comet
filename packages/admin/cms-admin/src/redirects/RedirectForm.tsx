@@ -3,23 +3,18 @@ import {
     Field,
     FinalForm,
     FinalFormInput,
+    FinalFormSaveButton,
     FinalFormSelect,
     Loading,
     MainContent,
-    messages,
-    SaveButton,
-    SplitButton,
     Toolbar,
     ToolbarActions,
     ToolbarBackButton,
     ToolbarFillSpace,
     ToolbarTitleItem,
-    useStackApi,
 } from "@comet/admin";
-import { useStackSwitchApi } from "@comet/admin/lib/stack/Switch";
 import { BlockInterface, BlockState, createFinalFormBlock, isValidUrl } from "@comet/blocks-admin";
 import { Card, CardContent, Grid, MenuItem } from "@mui/material";
-import { FORM_ERROR } from "final-form";
 import isEqual from "lodash.isequal";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -100,10 +95,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
         },
     ];
 
-    const stackApi = useStackApi();
-    const stackSwitchApi = useStackSwitchApi();
-
-    const [submit, { loading: saving, error: saveError }] = useSubmitMutation(mode, id, linkBlock, scope);
+    const [submit] = useSubmitMutation(mode, id, linkBlock, scope);
     const newlyCreatedRedirectId = React.useRef<string>();
 
     if (mode === "edit" && initialValues === undefined) {
@@ -182,40 +174,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <SplitButton disabled={pristine || hasValidationErrors || submitting || validating} localStorageKey="editRedirectSave">
-                                <SaveButton
-                                    color="primary"
-                                    variant="contained"
-                                    saving={saving}
-                                    hasErrors={saveError != null}
-                                    type="submit"
-                                    onClick={async () => {
-                                        const submitResult = await handleSubmit();
-                                        const error = submitResult?.[FORM_ERROR];
-                                        if (!error && mode === "add" && newlyCreatedRedirectId.current) {
-                                            stackSwitchApi.activatePage("edit", newlyCreatedRedirectId.current);
-                                        }
-                                    }}
-                                >
-                                    <FormattedMessage {...messages.save} />
-                                </SaveButton>
-
-                                <SaveButton
-                                    color="primary"
-                                    variant="contained"
-                                    saving={saving}
-                                    hasErrors={saveError != null}
-                                    onClick={async () => {
-                                        const submitResult = await handleSubmit();
-                                        const error = submitResult?.[FORM_ERROR];
-                                        if (!error) {
-                                            stackApi?.goBack();
-                                        }
-                                    }}
-                                >
-                                    <FormattedMessage {...messages.saveAndGoBack} />
-                                </SaveButton>
-                            </SplitButton>
+                            <FinalFormSaveButton />
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
