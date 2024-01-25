@@ -110,8 +110,8 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
         handleClose();
     };
 
-    const handleCopyClick = () => {
-        copySelected();
+    const handleCopyClick = async () => {
+        await copySelected();
         handleClose();
     };
 
@@ -156,14 +156,12 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
                             </ListItemIcon>
                             <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.uploadFolder" defaultMessage="Upload folder" />} />
                         </MenuItem>
-
                         <MenuItem disabled={itemsSelected} onClick={handleAddFolderClick}>
                             <ListItemIcon>
                                 <AddFolderIcon />
                             </ListItemIcon>
                             <FormattedMessage id="comet.pages.dam.addFolder" defaultMessage="Add Folder" />
                         </MenuItem>
-
                         <MenuItem onClick={handlePasteClick}>
                             <ListItemIcon>
                                 <Paste />

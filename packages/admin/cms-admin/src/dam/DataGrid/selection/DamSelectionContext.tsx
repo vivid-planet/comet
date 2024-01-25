@@ -58,7 +58,7 @@ interface DamSelectionApi {
     hasDownloadErrors: boolean;
 
     // copying
-    copySelected: () => void;
+    copySelected: () => Promise<void>;
     copying: boolean;
     hasCopyErrors: boolean;
 }
