@@ -37,7 +37,7 @@ const copyFilesMutation = gql`
 `;
 
 export const useCopyPasteDamItems = () => {
-    const currScope = useDamScope();
+    const scope = useDamScope();
     const apolloClient = useApolloClient();
 
     const prepareForClipboard = React.useCallback((damItems: Array<{ id: string; type: "file" | "folder" }>): DamItemsClipboard => {
@@ -91,13 +91,13 @@ export const useCopyPasteDamItems = () => {
 
             await apolloClient.mutate<GQLCopyPasteFilesMutation, GQLCopyPasteFilesMutationVariables>({
                 mutation: copyFilesMutation,
-                variables: { fileIds, targetFolderId, targetScope: currScope },
+                variables: { fileIds, targetFolderId, targetScope: scope },
                 update: (cache) => {
                     cache.evict({ fieldName: "damItemsList" });
                 },
             });
         },
-        [apolloClient, currScope],
+        [apolloClient, scope],
     );
 
     return { prepareForClipboard, writeToClipboard, getFromClipboard, createCopies };
