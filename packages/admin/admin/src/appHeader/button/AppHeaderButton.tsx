@@ -3,13 +3,13 @@ import { useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { AppHeaderButtonClassKey, EndIcon, Inner, Root, StartIcon, Text } from "./AppHeaderButton.styles";
+import { AppHeaderButtonClassKey, Content, EndIcon, Root, StartIcon, Text } from "./AppHeaderButton.styles";
 
 export interface AppHeaderButtonProps
     extends ButtonBaseProps,
         ThemedComponentBaseProps<{
             root: typeof ButtonBase;
-            inner: "div";
+            content: "div";
             typography: typeof Typography;
             startIcon: "div";
             endIcon: "div";
@@ -27,7 +27,7 @@ export function AppHeaderButton(inProps: AppHeaderButtonProps) {
 
     return (
         <Root {...restProps} {...slotProps?.root} onClick={onClick}>
-            <Inner {...slotProps?.inner}>
+            <Content {...slotProps?.content}>
                 {startIcon && <StartIcon {...slotProps?.startIcon}>{startIcon}</StartIcon>}
                 {children &&
                     (disableTypography ? (
@@ -40,7 +40,7 @@ export function AppHeaderButton(inProps: AppHeaderButtonProps) {
                     ))}
 
                 {endIcon && <EndIcon {...slotProps?.endIcon}>{endIcon}</EndIcon>}
-            </Inner>
+            </Content>
         </Root>
     );
 }

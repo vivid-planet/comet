@@ -1,7 +1,7 @@
 import { ButtonBase, Typography } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
 
-export type AppHeaderButtonClassKey = "root" | "inner" | "startIcon" | "endIcon" | "typography";
+export type AppHeaderButtonClassKey = "root" | "content" | "startIcon" | "endIcon" | "typography";
 
 export const Root = styled(ButtonBase, {
     name: "CometAdminAppHeaderButton",
@@ -16,11 +16,11 @@ export const Root = styled(ButtonBase, {
     `,
 );
 
-export const Inner = styled("div", {
+export const Content = styled("div", {
     name: "CometAdminAppHeaderButton",
-    slot: "inner",
+    slot: "content",
     overridesResolver(_, styles) {
-        return [styles.inner];
+        return [styles.content];
     },
 })(
     ({ theme }) => css`
