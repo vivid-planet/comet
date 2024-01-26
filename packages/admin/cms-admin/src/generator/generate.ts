@@ -3,6 +3,7 @@ import { loadSchema } from "@graphql-tools/load";
 import { Command } from "commander";
 import { introspectionFromSchema, IntrospectionQuery } from "graphql";
 
+import { runFutureGenerate } from "./future/generator";
 import { writeCrudForm } from "./generateForm";
 import { writeCrudGrid } from "./generateGrid";
 import { writeCrudPage } from "./generatePage";
@@ -14,19 +15,25 @@ async function writeCrud(options: CrudGeneratorConfig, schema: IntrospectionQuer
     await writeCrudPage(options, schema);
 }
 
-const generate = new Command("generate").argument("<configFile>").action(async (configFile: string) => {
-    const schema = await loadSchema("./schema.gql", {
-        loaders: [new GraphQLFileLoader()],
-    });
-    const introspection = introspectionFromSchema(schema);
-    const configs: CrudGeneratorConfig[] = (await import(configFile)).default;
-    for (const config of configs) {
-        await writeCrud(config, introspection);
-    }
-});
-
 const program = new Command();
 
-program.addCommand(generate);
+program.addCommand(
+    new Command("generate").argument("<configFile>").action(async (configFile: string) => {
+        const schema = await loadSchema("./schema.gql", {
+            loaders: [new GraphQLFileLoader()],
+        });
+        const introspection = introspectionFromSchema(schema);
+        const configs: CrudGeneratorConfig[] = (await import(configFile)).default;
+        for (const config of configs) {
+            await writeCrud(config, introspection);
+        }
+    }),
+);
+
+program.addCommand(
+    new Command("future-generate").action(async () => {
+        await runFutureGenerate();
+    }),
+);
 
 program.parse();

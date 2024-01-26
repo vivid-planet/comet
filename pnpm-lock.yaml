@@ -288,12 +288,6 @@ importers:
       '@graphql-codegen/typescript-operations':
         specifier: ^2.0.0
         version: 2.5.12(graphql@15.8.0)
-      '@graphql-tools/graphql-file-loader':
-        specifier: ^7.5.17
-        version: 7.5.17(graphql@15.8.0)
-      '@graphql-tools/load':
-        specifier: ^7.8.14
-        version: 7.8.14(graphql@15.8.0)
       '@ory/hydra-client':
         specifier: ^1.0.0
         version: 1.11.8

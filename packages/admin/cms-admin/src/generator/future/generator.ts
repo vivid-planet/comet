@@ -34,7 +34,7 @@ export type GeneratorConfig = FormConfig<any> | TabsConfig;
 
 export type GeneratorReturn = { code: string; gqlQueries: Record<string, string> };
 
-async function main() {
+export async function runFutureGenerate() {
     const schema = await loadSchema("./schema.gql", {
         loaders: [new GraphQLFileLoader()],
     });
@@ -74,4 +74,3 @@ async function main() {
         }
     }
 }
-main();

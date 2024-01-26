@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "admin-generator": "rimraf 'src/*/generated' && comet-admin-generator generate crud-generator-config.ts",
+        "admin-generator": "rimraf 'src/*/generated' && comet-admin-generator generate crud-generator-config.ts && comet-admin-generator future-generate",
         "build": "run-s intl:compile && run-p gql:types generate-block-types && cross-env BABEL_ENV=production webpack --config ./webpack.config.ts --env production --mode production --progress",
         "generate-block-types": "comet generate-block-types --inputs",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"npm run generate-block-types\"",
@@ -101,8 +101,6 @@
         "@graphql-codegen/near-operation-file-preset": "^2.5.0",
         "@graphql-codegen/typescript": "^2.0.0",
         "@graphql-codegen/typescript-operations": "^2.0.0",
-        "@graphql-tools/graphql-file-loader": "^7.5.17",
-        "@graphql-tools/load": "^7.8.14",
         "@ory/hydra-client": "^1.0.0",
         "@types/draft-js": "^0.11.10",
         "@types/final-form-set-field-touched": "^1.0.0",
