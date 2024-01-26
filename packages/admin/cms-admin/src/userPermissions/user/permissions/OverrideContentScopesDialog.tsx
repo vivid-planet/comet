@@ -114,15 +114,7 @@ export const OverrideContentScopesDialog: React.FC<FormProps> = ({ permissionId,
                                         value={JSON.stringify(contentScope)}
                                         label={Object.entries(contentScope).map(([scope, value]) => (
                                             <>
-                                                <FormattedMessage
-                                                    id={`contentScope.scope.${scope}`}
-                                                    defaultMessage={camelCaseToHumanReadable(scope)}
-                                                />
-                                                :{" "}
-                                                <FormattedMessage
-                                                    id={`contentScope.values.${value}`}
-                                                    defaultMessage={camelCaseToHumanReadable(value)}
-                                                />
+                                                {camelCaseToHumanReadable(scope)}: {camelCaseToHumanReadable(value)}
                                                 <br />
                                             </>
                                         ))}

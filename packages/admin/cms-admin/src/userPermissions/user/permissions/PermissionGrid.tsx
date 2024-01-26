@@ -52,13 +52,7 @@ export const PermissionGrid: React.FC<{
             flex: 1,
             pinnable: false,
             headerName: intl.formatMessage({ id: "comet.userPermissions.permission", defaultMessage: "Permission" }),
-            renderCell: ({ row }) => (
-                <>
-                    <Typography variant="h6">
-                        <FormattedMessage id={`permission.${row.permission}`} defaultMessage={camelCaseToHumanReadable(row.permission)} />
-                    </Typography>
-                </>
-            ),
+            renderCell: ({ row }) => <Typography variant="h6">{camelCaseToHumanReadable(row.permission)}</Typography>,
         },
         {
             field: "source",
