@@ -67,6 +67,11 @@ export { queryUpdatedAt } from "./form/queryUpdatedAt";
 export { serializeInitialValues } from "./form/serializeInitialValues";
 export { SyncFields } from "./form/SyncFields";
 export { useFormSaveConflict } from "./form/useFormSaveConflict";
+export type {
+    FormConfig as future_FormConfig,
+    FormFieldConfig as future_FormFieldConfig,
+    GeneratorConfig as future_GeneratorConfig,
+} from "./generator/future/generator";
 export { CrudGeneratorConfig } from "./generator/types";
 export { createHttpClient } from "./http/createHttpClient";
 export { LocaleProvider } from "./locale/LocaleProvider";
