@@ -7,6 +7,9 @@ import { FormattedMessage } from "react-intl";
 
 import { FilterBarButton } from "../filterBarButton/FilterBarButton";
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export type FilterBarMoreFiltersClassKey = "root" | "button";
 
 const Root = styled("div", {
