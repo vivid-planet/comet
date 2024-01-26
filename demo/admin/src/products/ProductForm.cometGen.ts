@@ -57,7 +57,7 @@ type GridColumnConfig<T> = ({ type: "text" } | { type: "number" }) & { name: key
 type GridConfig<T extends { __typename?: string }> = { type: "form"; gqlType: T["__typename"]; columns: GridColumnConfig<T>[] };
 
 export const gridConfig: GridConfig<GQLProduct> = {
-    type: "form",
+    type: "grid",
     gqlType: "Product",
     columns: [
         { type: "text", name: "title", headerName: "Titel", width: 150 },
