@@ -11,7 +11,6 @@ import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "../
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-
 export type FilterBarButtonClassKey = "root" | "open" | "hasDirtyFields" | "filterBadge";
 
 type OwnerState = { hasDirtyFields: boolean; openPopover: boolean | undefined };
@@ -74,6 +73,9 @@ const FilterBadge = styled("span", {
     `,
 );
 
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
 export interface FilterBarButtonProps extends ThemedComponentBaseProps<{ root: typeof Button; filterBadge: "span" }>, ButtonProps {
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
     numberDirtyFields?: number;
