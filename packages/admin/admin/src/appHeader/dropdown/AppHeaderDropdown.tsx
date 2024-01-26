@@ -60,7 +60,6 @@ export function AppHeaderDropdown(inProps: AppHeaderDropdownProps) {
         popoverProps,
         open,
         onOpenChange,
-        classes,
         slotProps,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminAppHeaderDropdown" });
