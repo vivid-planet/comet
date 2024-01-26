@@ -146,6 +146,7 @@ type FilenameResponse {
 
 type CurrentUserPermission {
   permission: String!
+  contentScopes: [JSONObject!]!
 }
 
 type CurrentUser {
@@ -153,7 +154,6 @@ type CurrentUser {
   name: String!
   email: String!
   language: String!
-  contentScopes: [JSONObject!]!
   permissions: [CurrentUserPermission!]!
 }
 
@@ -173,6 +173,8 @@ type UserPermission {
   reason: String
   requestedBy: String
   approvedBy: String
+  overrideContentScopes: Boolean!
+  contentScopes: [JSONObject!]!
 }
 
 enum UserPermissionSource {
@@ -909,7 +911,8 @@ type Mutation {
   userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!
-  userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): [JSONObject!]!
+  userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
+  userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
   createBuilds(input: CreateBuildsInput!): Boolean!
   saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
   savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
@@ -968,6 +971,12 @@ input UserPermissionInput {
   reason: String
   requestedBy: String
   approvedBy: String
+}
+
+input UserPermissionOverrideContentScopesInput {
+  permissionId: ID!
+  overrideContentScopes: Boolean!
+  contentScopes: [JSONObject!]! = []
 }
 
 input UserContentScopesInput {

@@ -3,11 +3,9 @@ import { NestFactory } from "@nestjs/core";
 import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType } from "@nestjs/graphql";
 import { writeFile } from "fs/promises";
 import { printSchema } from "graphql";
-import { GraphQLJSONObject } from "graphql-type-json";
 
 import {
     BuildsResolver,
-    ContentScope,
     createAuthResolver,
     createPageTreeResolver,
     createRedirectsResolver,
@@ -60,8 +58,6 @@ class CurrentUser implements CurrentUserInterface {
     email: string;
     @Field()
     language: string;
-    @Field(() => [GraphQLJSONObject])
-    contentScopes: ContentScope[];
     @Field(() => [CurrentUserPermission])
     permissions: CurrentUserPermission[];
 }
