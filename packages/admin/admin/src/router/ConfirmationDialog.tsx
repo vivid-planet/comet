@@ -110,7 +110,6 @@ export interface RouterConfirmationDialogProps
         messageWrapper: "div";
         messageWarningIcon: typeof Warning;
         messageText: typeof Typography;
-        actionButton: typeof Button;
         saveButton: typeof Button;
         discardButton: typeof Button;
     }> {
