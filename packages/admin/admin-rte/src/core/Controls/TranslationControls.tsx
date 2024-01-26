@@ -8,7 +8,14 @@ import { IControlProps } from "../types";
 function TranslationControls(props: IControlProps) {
     const translationContext = useContentTranslationService();
 
-    return <ButtonGroup>{translationContext && <TranslationToolbarButton {...props} />}</ButtonGroup>;
+    if (translationContext.enabled) {
+        return (
+            <ButtonGroup>
+                <TranslationToolbarButton {...props} />
+            </ButtonGroup>
+        );
+    }
+    return null;
 }
 
 export default TranslationControls;
