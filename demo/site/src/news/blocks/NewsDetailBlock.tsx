@@ -29,11 +29,16 @@ export { NewsDetailBlock };
 registerBlock<NewsLinkBlockData>("NewsDetail", {
     async loader({ blockData, client }): Promise<LoadedData | null> {
         if (!blockData.id) return null;
-        const data = await client.request<GQLNewsBlockDetailQuery, GQLNewsBlockDetailQueryVariables>(gql`query NewsBlockDetail {
-            news(id: "${blockData.id}") {
-                title
-            }
-        }`);
+        const data = await client.request<GQLNewsBlockDetailQuery, GQLNewsBlockDetailQueryVariables>(
+            gql`
+                query NewsBlockDetail($id: ID!) {
+                    news(id: $id) {
+                        title
+                    }
+                }
+            `,
+            { id: blockData.id },
+        );
         return data.news;
     },
 });
