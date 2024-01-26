@@ -1,18 +1,20 @@
-import { Box, ComponentsOverrides, Theme, Tooltip, Typography } from "@mui/material";
+import { QuestionMark } from "@comet/admin-icons";
+import { Box, ComponentsOverrides, Theme, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
 import { FormattedMessage, MessageDescriptor, useIntl } from "react-intl";
 
+import { Tooltip } from "../../common/Tooltip";
 import { MenuContext } from "./Context";
 
-export type MenuItemGroupClassKey = "root" | "title" | "titleMenuOpen" | "titleContainer" | "titleContainerMenuOpen";
+export type MenuItemGroupClassKey = "root" | "title" | "titleMenuOpen" | "titleContainer" | "titleContainerMenuOpen" | "tooltipHelperBox";
 
 const styles = (theme: Theme) =>
     createStyles<MenuItemGroupClassKey, MenuItemGroupProps>({
         root: { marginTop: theme.spacing(8) },
         title: {
-            fontWeight: theme.typography.fontWeightBold,
+            fontWeight: 600,
             fontSize: 12,
             border: `2px solid ${theme.palette.grey[100]}`,
             borderRadius: 20,
@@ -21,10 +23,12 @@ const styles = (theme: Theme) =>
             color: `${theme.palette.grey[300]}`,
         },
         titleMenuOpen: {
+            fontWeight: 600,
             fontSize: 14,
             border: `2px solid ${theme.palette.common.white}`,
             borderRadius: "initial",
             padding: 0,
+            marginRight: theme.spacing(1),
             color: theme.palette.common.black,
         },
         titleContainer: {
@@ -36,15 +40,31 @@ const styles = (theme: Theme) =>
         titleContainerMenuOpen: {
             justifyContent: "flex-start",
             padding: theme.spacing(2, 4),
+            alignItems: "center",
+        },
+        tooltipHelperBox: {
+            display: "flex",
+            alignItems: "center",
+            cursor: "pointer",
         },
     });
 
 export interface MenuItemGroupProps {
     title: React.ReactNode;
     shortTitle?: React.ReactNode;
+    helperIcon?: React.ReactElement<React.SVGProps<SVGSVGElement>>;
+    helperText?: React.ReactNode;
 }
 
-const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({ title, shortTitle, children, classes }) => {
+const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({
+    title,
+    shortTitle,
+    helperIcon,
+    helperText,
+    children,
+    classes,
+}) => {
+    helperIcon = helperIcon || (helperText ? <QuestionMark /> : undefined);
     const { open: menuOpen } = React.useContext(MenuContext);
     const intl = useIntl();
     let displayedTitle = title;
@@ -86,6 +106,15 @@ const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & Me
                     <Typography className={clsx(classes.title, menuOpen && classes.titleMenuOpen)} variant="h3">
                         {displayedTitle}
                     </Typography>
+                    {menuOpen &&
+                        (helperIcon && helperText ? (
+                            <Tooltip title={helperText}>
+                                {/* The Box is a workaround because tooltip doesn't work with an icon directly. */}
+                                <Box className={classes.tooltipHelperBox}>{helperIcon}</Box>
+                            </Tooltip>
+                        ) : (
+                            helperIcon
+                        ))}
                 </Box>
             </Tooltip>
             {children}
