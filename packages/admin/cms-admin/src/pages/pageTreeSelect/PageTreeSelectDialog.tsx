@@ -223,7 +223,13 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
             </Toolbar>
             <DialogContent ref={refDialogContent}>
                 <PageTreeContext.Provider
-                    value={{ allCategories: pageTreeCategories, documentTypes: pageTreeDocumentTypes, tree, query: pagesQuery }}
+                    value={{
+                        allCategories: pageTreeCategories,
+                        currentCategory: category,
+                        documentTypes: pageTreeDocumentTypes,
+                        tree,
+                        query: pagesQuery,
+                    }}
                 >
                     <List
                         ref={refList}

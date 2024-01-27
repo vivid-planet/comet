@@ -5,7 +5,7 @@ export {
     GQLDamFolderByNameAndParentIdQueryVariables,
     GQLDamFolderForFolderUploadMutation,
     GQLDamFolderForFolderUploadMutationVariables,
-} from "./useFileUpload.gql.generated";
+} from "./useDamFileUpload.gql.generated";
 
 export const damFolderByNameAndParentId = gql`
     query DamFolderByNameAndParentId($name: String!, $parentId: ID, $scope: DamScopeInput!) {

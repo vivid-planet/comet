@@ -114,6 +114,7 @@ export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes
                             hideContextMenu={true}
                             hideMultiselect={true}
                             hideArchiveFilter={true}
+                            additionalToolbarItems={damConfig.additionalToolbarItems}
                         />
                     </SubRoute>
                 </MemoryRouter>

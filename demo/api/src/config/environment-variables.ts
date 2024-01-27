@@ -92,7 +92,4 @@ export class EnvironmentVariables {
     @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
     @IsString()
     S3_BUCKET: string;
-
-    @IsString()
-    SITE_PREVIEW_SECRET: string;
 }

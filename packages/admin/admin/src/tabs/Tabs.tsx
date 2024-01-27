@@ -55,6 +55,9 @@ interface ITabsState {
     setValue: (value: number) => void;
 }
 
+type TabsChild = React.ReactElement<TabProps> | boolean | null | undefined;
+type TabsChildren = TabsChild | Array<TabsChild | Array<TabsChild>>;
+
 export interface TabsProps
     extends MuiTabsProps,
         ThemedComponentBaseProps<{
@@ -62,7 +65,7 @@ export interface TabsProps
             tabs: typeof MuiTabs;
             content: "div";
         }> {
-    children: Array<React.ReactElement<TabProps> | boolean | null | undefined> | React.ReactElement<TabProps>;
+    children: TabsChildren;
     tabComponent?: React.ComponentType<MuiTabProps>;
     defaultIndex?: number;
     tabsState?: ITabsState;

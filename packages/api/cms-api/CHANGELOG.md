@@ -1,5 +1,86 @@
 # @comet/cms-api
 
+## 5.6.0
+
+### Patch Changes
+
+-   Updated dependencies [fd10b801]
+    -   @comet/blocks-api@5.6.0
+
+## 5.5.0
+
+### Minor Changes
+
+-   bb2c76d8: Deprecate `FileUploadInterface` interface
+
+    Use `FileUploadInput` instead.
+
+-   bb2c76d8: Deprecate `download` helper
+
+    The helper is primarily used to create a `FileUploadInput` (previously `FileUploadInterface`) input for `FilesService#upload` while creating fixtures.
+    However, the name of the helper is too generic to be part of the package's public API.
+    Instead, use the newly added `FileUploadService#createFileUploadInputFromUrl`.
+
+    **Example:**
+
+    ```ts
+    @Injectable()
+    class ImageFixtureService {
+        constructor(private readonly filesService: FilesService, private readonly fileUploadService: FileUploadService) {}
+
+        async generateImage(url: string): Promise<FileInterface> {
+            const upload = await this.fileUploadService.createFileUploadInputFromUrl(url);
+            return this.filesService.upload(upload, {});
+        }
+    }
+    ```
+
+### Patch Changes
+
+-   @comet/blocks-api@5.5.0
+
+## 5.4.0
+
+### Minor Changes
+
+-   e146d8bb: Support the import of files from external DAMs
+
+    To connect an external DAM, implement a component with the necessary logic (asset picker, upload functionality, ...). Pass this component to the `DamPage` via the `additionalToolbarItems` prop.
+
+    ```tsx
+    <DamPage
+        // ...
+        additionalToolbarItems={<ImportFromExternalDam />}
+    />
+    ```
+
+    You can find an [example](demo/admin/src/dam/ImportFromUnsplash.tsx) in the demo project.
+
+-   27bf643b: Add `PublicUploadsService` to public API
+
+    The service can be used to programmatically create public uploads, such as when creating fixtures.
+
+-   df5c959c: Remove license types `MICRO` and `SUBSCRIPTION`
+
+    The `LicenseType` enum no longer contains the values `MICRO` and `SUBSCRIPTION`. The database migration will automatically update all licenses of type `MICRO` or `SUBSCRIPTION` to `RIGHTS_MANAGED`.
+
+### Patch Changes
+
+-   60f5208e: Fix encoding of special characters in names of uploaded files
+
+    For example:
+
+    Previously:
+
+    -   `€.jpg` -> `a.jpg`
+    -   `ä.jpg` -> `ai.jpg`
+
+    Now:
+
+    -   `€.jpg` -> `euro.jpg`
+    -   `ä.jpg` -> `ae.jpg`
+    -   @comet/blocks-api@5.4.0
+
 ## 5.3.0
 
 ### Minor Changes

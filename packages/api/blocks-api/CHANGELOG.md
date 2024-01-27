@@ -1,5 +1,15 @@
 # @comet/blocks-api
 
+## 5.6.0
+
+### Minor Changes
+
+-   fd10b801: Add support for a custom block name and migrations to `createRichTextBlock`
+
+## 5.5.0
+
+## 5.4.0
+
 ## 5.3.0
 
 ### Minor Changes

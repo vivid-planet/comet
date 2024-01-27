@@ -37,7 +37,7 @@ export class BuildsResolver {
                 throw new Error("Triggering build from different instance is not allowed");
             }
 
-            if (!this.accessControlService.isAllowedContentScope(user, this.kubernetesService.getContentScope(cronJob) ?? {})) {
+            if (!this.accessControlService.isAllowed(user, "builds", this.kubernetesService.getContentScope(cronJob) ?? {})) {
                 throw new Error("Triggering build not allowed");
             }
 
