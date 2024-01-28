@@ -7,8 +7,15 @@ sidebar_position: 1
 
 ## API
 
+### JobStatus
+
+The `JobStatus` enum was renamed to `KubernetesJobStatus`.
 
 ## Admin
+
+### BuildRuntime
+
+The `BuildRuntime` component was renamed to `JobRuntime`.
 
 ### @comet/admin
 
@@ -78,3 +85,20 @@ The `@comet/no-other-module-relative-import` rule is now enabled by default. It 
 
 The `import/newline-after-import` rule is now enabled by default. It enforces adding a blank line between imports and code.
 
+## New Features
+
+### Cron Jobs
+
+The `CronJobsPage` now
+
+- shows the last run of every job
+- has a button to manually trigger a job
+- offers a subpage that displays all job runs
+
+You must add the `CronJobsModule` to your `AppModule` in the API for the `CronJobsPage` to work.
+
+:::warning
+
+Ensure you have sufficient access controls in place to prevent anyone from triggering cron jobs.
+
+:::
