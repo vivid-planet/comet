@@ -1,5 +1,5 @@
 ---
-title: Migrating from v4 to v5
+title: Migrating from v5 to v6
 sidebar_position: 1
 ---
 
@@ -69,13 +69,10 @@ If you used any of these icons in your app, you must add them to your project. Y
 
 The `@comet/no-other-module-relative-import` rule is now enabled by default. It enforces absolute imports when importing from other modules.
 
-**Example:**
-
-`import { AThingInModuleA } from "../moduleA/AThingInModuleA"`
-
-is changed to 
-
-`import { AThingInModuleA } from "@src/moduleA/AThingInModuleA"`
+```diff
+- import { AThingInModuleA } from "../moduleA/AThingInModuleA"
++ import { AThingInModuleA } from "@src/moduleA/AThingInModuleA"
+```
 
 ### import/newline-after-import
 
