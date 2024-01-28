@@ -16,11 +16,11 @@ sidebar_position: 1
 
 ## ESLint
 
+**Both new rules are auto-fixable.** All errors can be fixed by executing `npm run lint:eslint -- --fix` in `/api`, `/admin` and `/site`.
+
 ### @comet/no-other-module-relative-import
 
 The `@comet/no-other-module-relative-import` rule is now enabled by default. It enforces absolute imports when importing from other modules.
-
-**This rule is auto-fixable.** All warnings can be fixed by executing `npm run lint:eslint -- --fix` in `/api`, `/admin` and `/site`.
 
 **Example:**
 
@@ -29,4 +29,8 @@ The `@comet/no-other-module-relative-import` rule is now enabled by default. It 
 is changed to 
 
 `import { AThingInModuleA } from "@src/moduleA/AThingInModuleA"`
+
+### import/newline-after-import
+
+The `import/newline-after-import` rule is now enabled by default. It enforces adding a blank line between imports and code.
 
