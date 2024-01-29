@@ -7,7 +7,7 @@ We use [NestJS Console](https://github.com/Pop-Code/nestjs-console) to create co
 
 ## Defining Commands
 
-```ts title="Demo Cron Job"
+```ts title="Demo console command"
 import { MikroORM, UseRequestContext } from "@mikro-orm/core";
 import { Injectable, Logger } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
@@ -46,7 +46,7 @@ Deployed
 npm run console:prod
 ```
 
-## Running Commands
+## Running commands
 
 Locally
 
@@ -62,13 +62,13 @@ npm run console:prod demo-command
 
 ## Best practices
 
--   Dangerous commands should check the `NODE_ENV` and only run locally.
+-   Dangerous commands (e.g. resetting the database) should check the `NODE_ENV` and only run locally.
 
 ```ts
 async execute(): Promise<void> {
     if (process.env.NODE_ENV !== "development") {
-        console.warn("You are not development mode – you probably don't want to do this!");
-        return;
+        this.logger.error("Not allowed in production environments");
+        process.exit(1);
     }
 
     // ...
