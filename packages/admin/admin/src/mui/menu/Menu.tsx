@@ -8,7 +8,7 @@ import { useHistory } from "react-router";
 import { MasterLayoutContext } from "../MasterLayoutContext";
 import { MenuContext } from "./Context";
 
-export type MenuClassKey = "drawer" | "permanent" | "temporary" | "open";
+export type MenuClassKey = "drawer" | "permanent" | "temporary" | "open" | "closed";
 
 type OwnerState = { open: boolean; variant: string };
 
@@ -19,7 +19,9 @@ const StyledDrawer = styled(Drawer, {
         return [
             styles.drawer,
             ownerState.variant === "temporary" && styles.temporary,
-            ownerState.variant === "permanent" && ownerState.open && styles.permanent,
+            ownerState.variant === "permanent" && styles.permanent,
+            ownerState.open && styles.open,
+            !ownerState.open && styles.closed,
         ];
     },
 })<{ ownerState: OwnerState }>(
@@ -64,6 +66,9 @@ const StyledDrawer = styled(Drawer, {
                     easing: theme.transitions.easing.easeOut,
                     duration: theme.transitions.duration.enteringScreen,
                 })};
+            }
+
+            [class*="MuiPaper"] {
                 box-shadow: none;
             }
         `}
