@@ -47,7 +47,6 @@ EditPage: previewApi, created with useBlockPreview: State containing showOnlyVis
         - highlights blocks with matching hoveredSiteRoute (with useIFrameBridge)
         - sends SelectComponent on block admin render (using SelectPreviewComponent[blocks-admin] with useIFrameBridge)
         - sends HoverComponent on block preview hover (using HoverPreviewComponent[blocks-admin] with useIFrameBridge)
-
 ```
 
 ### Site: States, Contexts and Components
@@ -74,7 +73,7 @@ IFrameBridgePreviewPage (src/pages/preview/admin/page.tsx)
 
 ## Site Preview
 
-Uses Next.js Preview Mode to live render pages (SSR), optionally with invisible blocks shown.
+Similar to real site but live rendered (SSR) and optionally with invisible blocks shown.
 
 ### iframe messages: admin -> site
 
@@ -82,13 +81,14 @@ Uses Next.js Preview Mode to live render pages (SSR), optionally with invisible 
 
 ### URL: admin -> site
 
-Admin opens I-Frame with {previewSiteUrl}/api/preview to enter Next.js Preview Mode and passes the following parameters:
-
--   path: which pathname to be shown
--   includeInvisibleBlocks
--   timestamp & hash: is validated to activate Preview Mode -
+    - page url (real site url prefixed with /preview)
+    - __preview parameter:  { includeInvisibleBlocks: boolean } (JSON encoded)
 
 ### iframe messages: site -> admin
+
+        Expand All
+
+    @@ -96,7 +99,6 @@ Similar to real site but live rendered (SSR) and optionally with invisible block
 
     - OpenLink: user clicked an external link and admin should ask the user if it should be opened in a new tab
     - SitePreviewLocation: user navigated in the page and the url changed, admin should update the current url
@@ -99,20 +99,37 @@ Admin opens I-Frame with {previewSiteUrl}/api/preview to enter Next.js Preview M
 SitePreview: state from Url (get params): path, device, showOnlyVisible
     - has controls for managing path, device, showOnlyVisible
     - handles messages coming from iframe (OpenLink, SitePreviewLocation)
+    - appends authProvider to iframeUrl
     - handles incoming messages (with useSitePreviewIFrameBridge)
   IFrameViewer[common] (prop drilling: device)
     - does scale the iframe according to device (+the device around the iframe)
+
+
+
+
+
+
+
+        Expand All
+
+    @@ -106,16 +108,11 @@ SitePreview: state from Url (get params): path, device, showOnlyVisible
+
     - renders the actual iframe
 ```
 
 ### Site: States, Contexts and Components
 
 ```
-SitePreviewProvider (only active in Preview Mode)
-    - messages SitePreviewLocation on location change (sends message directly using sendSitePreviewIFrameMessage helper)
-    - creates PreviewContext containing
-        - previewType: "SitePreview",
-        - showPreviewSkeletons: false,
-    Page (src/pages/[...path]].tsx)
-        - ExternalLinkBlock messages OpenLink (sends message directly using sendSitePreviewIFrameMessage helper)
+AuthenticatedPreviewPage (src/pages/preview/[...path]].tsx)
+  SitePreviewPage
+      - checks login and registers serviceworker
+    SitePreviewProvider
+        - messages SitePreviewLocation on location change (sends message directly using sendSitePreviewIFrameMessage helper)
+        - creates PreviewContext containing
+            - previewType: "SitePreview",
+            - showPreviewSkeletons: false,
+            - pathToPreviewPath: implementation that adds baseUrl (/preview) and __preview params
+            - previewPathToPath: implementation that removes them
+      Page (src/pages/[...path]].tsx)
+          - ExternalLinkBlock messages OpenLink (sends message directly using sendSitePreviewIFrameMessage helper)
 ```

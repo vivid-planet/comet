@@ -212,7 +212,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 blocks: state.blocks
                     .filter((child) => (previewCtx.showVisibleOnly ? child.visible : true)) // depending on context show all blocks or only visible blocks
                     .map((child) => {
-                        const blockAdminRoute = `${previewCtx.parentUrl}/${child.key}/blocks`;
+                        const blockAdminRoute = `${previewCtx.parentUrlSubRoute ?? previewCtx.parentUrl}/${child.key}/blocks`;
                         const block = blockForType(child.type);
                         if (!block) {
                             throw new Error(`No Block found for type ${child.type}`); // for TS

@@ -1,5 +1,29 @@
 # @comet/blocks-admin
 
+## 5.6.0
+
+### Patch Changes
+
+-   76f85abe: Fix linking from block preview to block admin for non-trivial composite/list block combinations
+    -   @comet/admin@5.6.0
+    -   @comet/admin-icons@5.6.0
+
+## 5.5.0
+
+### Patch Changes
+
+-   @comet/admin@5.5.0
+-   @comet/admin-icons@5.5.0
+
+## 5.4.0
+
+### Patch Changes
+
+-   Updated dependencies [ba800163]
+-   Updated dependencies [60a18392]
+    -   @comet/admin@5.4.0
+    -   @comet/admin-icons@5.4.0
+
 ## 5.3.0
 
 ### Minor Changes

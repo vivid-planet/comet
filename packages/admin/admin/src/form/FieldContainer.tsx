@@ -10,6 +10,7 @@ export type FieldContainerProps = ThemedComponentBaseProps<{
     inputContainer: "div";
     error: typeof FormHelperText;
     warning: typeof FormHelperText;
+    helperText: typeof FormHelperText;
 }> & {
     variant?: "vertical" | "horizontal";
     fullWidth?: boolean;
@@ -21,6 +22,7 @@ export type FieldContainerProps = ThemedComponentBaseProps<{
     warning?: string;
     scrollTo?: boolean;
     fieldMargin?: "always" | "never" | "onlyIfNotLast";
+    helperText?: React.ReactNode;
 };
 
 export type FieldContainerClassKey =
@@ -38,7 +40,8 @@ export type FieldContainerClassKey =
     | "hasError"
     | "error"
     | "hasWarning"
-    | "warning";
+    | "warning"
+    | "helperText";
 
 type OwnerState = Pick<FieldContainerProps, "fullWidth" | "disabled" | "required" | "fieldMargin" | "variant"> & {
     hasError: boolean;
@@ -186,6 +189,18 @@ const Warning = styled(FormHelperText, {
     `,
 );
 
+const HelperText = styled(FormHelperText, {
+    name: "CometAdminFormFieldContainer",
+    slot: "helperText",
+    overridesResolver(_, styles) {
+        return [styles.helperText];
+    },
+})(
+    ({ theme }) => css`
+        color: ${theme.palette.grey[300]};
+    `,
+);
+
 export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerProps>) => {
     const {
         variant = "vertical",
@@ -197,6 +212,7 @@ export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerPr
         requiredSymbol = "*",
         children,
         warning,
+        helperText,
         scrollTo = false,
         fieldMargin = "onlyIfNotLast",
         slotProps,
@@ -241,6 +257,7 @@ export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerPr
                         </Error>
                     )}
                     {hasWarning && !hasError && <Warning {...slotProps?.warning}>{warning}</Warning>}
+                    {helperText && !hasError && !hasWarning && <HelperText {...slotProps?.helperText}>{helperText}</HelperText>}
                 </InputContainer>
             </>
         </Root>

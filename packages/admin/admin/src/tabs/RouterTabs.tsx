@@ -58,13 +58,16 @@ interface TabProps extends Omit<MuiTabProps, "children"> {
 
 export const RouterTab: React.FunctionComponent<TabProps> = () => null;
 
+type RouterTabsChild = React.ReactElement<TabProps> | boolean | null | undefined;
+type RouterTabsChildren = RouterTabsChild | Array<RouterTabsChild | Array<RouterTabsChild>>;
+
 export interface Props
     extends ThemedComponentBaseProps<{
         root: "div";
         tabs: typeof Tabs;
         content: "div";
     }> {
-    children: Array<React.ReactElement<TabProps> | boolean | null | undefined> | React.ReactElement<TabProps>;
+    children: RouterTabsChildren;
     tabComponent?: React.ComponentType<MuiTabProps>;
     tabsProps?: Partial<TabsProps>;
 }
