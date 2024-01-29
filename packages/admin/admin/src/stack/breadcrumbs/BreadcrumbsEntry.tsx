@@ -1,14 +1,13 @@
 import { LevelUp } from "@comet/admin-icons";
-import { IconButton, Typography } from "@mui/material";
-import Link from "@mui/material/Link";
-import { css, styled, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
+import { IconButton as MuiIconButton, Link, Typography } from "@mui/material";
+import { css, styled } from "@mui/material/styles";
 import * as React from "react";
 
 import { BreadcrumbItem } from "../Stack";
 import { BreadcrumbLink } from "./BreadcrumbLink";
+import { BackButtonSeparator } from "./StackBreadcrumbs";
 
-const StyledLink: typeof Link = styled(Link, {
+const StyledLink = styled(Link, {
     name: "CometAdminStackBreadcrumbs",
     slot: "link",
     overridesResolver(_, styles) {
@@ -40,35 +39,27 @@ const StyledDisabledLink = styled(Typography, {
     `,
 );
 
-const BackButtonSeparator = styled("div", {
+const IconButton = styled(MuiIconButton, {
     name: "CometAdminStackBreadcrumbs",
-    slot: "backButtonSeparator",
+    slot: "backButton",
     overridesResolver(_, styles) {
-        return [styles.backButtonSeparator];
+        return [styles.backButton];
     },
-})(
-    ({ theme }) => css`
-        height: 30px;
-        width: 1px;
-        background-color: ${theme.palette.divider};
-        margin-right: 12px;
-    `,
-);
+})();
 
-export interface BreadcrumbsEntryProps
-    extends ThemedComponentBaseProps<{ link: typeof Link; backButtonSeparator: "div"; disabledLink: typeof Typography }> {
+interface BreadcrumbsEntryProps {
     item: BreadcrumbItem;
     isLastItem?: boolean;
     backButtonUrl?: string;
+    slotProps: any;
 }
 
-export function BreadcrumbsEntry(inProps: BreadcrumbsEntryProps) {
-    const { item, isLastItem, backButtonUrl, slotProps } = useThemeProps({ props: inProps, name: "CometAdminBreadcrumbsEntry" });
+export const BreadcrumbsEntry = ({ item, isLastItem, backButtonUrl, slotProps }: BreadcrumbsEntryProps) => {
     return (
         <>
             {backButtonUrl && (
                 <>
-                    <IconButton component={BreadcrumbLink} to={backButtonUrl}>
+                    <IconButton component={BreadcrumbLink} to={backButtonUrl} {...slotProps?.backButton}>
                         <LevelUp />
                     </IconButton>
                     <BackButtonSeparator {...slotProps?.backButtonSeparator} />
@@ -85,4 +76,4 @@ export function BreadcrumbsEntry(inProps: BreadcrumbsEntryProps) {
             )}
         </>
     );
-}
+};

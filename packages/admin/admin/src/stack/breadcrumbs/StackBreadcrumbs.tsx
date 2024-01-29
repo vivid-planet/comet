@@ -1,5 +1,7 @@
 import { ChevronRight } from "@comet/admin-icons";
+import { IconButton as MuiIconButton, Link } from "@mui/material";
 import { ComponentsOverrides, css, styled, Theme, useTheme, useThemeProps } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 
@@ -76,7 +78,33 @@ const Separator = styled("div", {
     `,
 );
 
-export interface StackBreadcrumbsProps extends ThemedComponentBaseProps<{ root: "div"; breadcrumbs: "div"; listItem: "div"; separator: "div" }> {
+export const BackButtonSeparator = styled("div", {
+    name: "CometAdminStackBreadcrumbs",
+    slot: "backButtonSeparator",
+    overridesResolver(_, styles) {
+        return [styles.backButtonSeparator];
+    },
+})(
+    ({ theme }) => css`
+        height: 30px;
+        width: 1px;
+        background-color: ${theme.palette.divider};
+        margin-right: 12px;
+    `,
+);
+
+export interface StackBreadcrumbsProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        breadcrumbs: "div";
+        listItem: "div";
+        link: typeof Link;
+        disabledLink: typeof Typography;
+        overflowLink: typeof Link;
+        separator: "div";
+        backButton: typeof MuiIconButton;
+        backButtonSeparator: "div";
+    }> {
     separator?: React.ReactNode;
     overflowLinkText?: React.ReactNode;
 }
@@ -105,7 +133,7 @@ export function StackBreadcrumbs(inProps: StackBreadcrumbsProps) {
     }, [breadcrumbItems?.length, combinedTitlesOfBreadcrumbs, itemWidths]);
 
     const backButtonUrl = breadcrumbItems.length > 1 ? breadcrumbItems[breadcrumbItems.length - 2].url : undefined;
-    const itemsToRender = useItemsToRender(breadcrumbItems, containerWidth ?? 0, itemWidths, overflowLinkText, backButtonUrl);
+    const itemsToRender = useItemsToRender(breadcrumbItems, containerWidth ?? 0, itemWidths, overflowLinkText, backButtonUrl, slotProps);
 
     if (!breadcrumbItems) return null;
 

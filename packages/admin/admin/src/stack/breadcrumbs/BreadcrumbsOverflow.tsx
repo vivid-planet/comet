@@ -1,17 +1,22 @@
 import { ChevronRight } from "@comet/admin-icons";
 import { Link, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
-import { css, styled, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
+import { css, styled } from "@mui/material/styles";
 import * as React from "react";
 
 import { BreadcrumbItem } from "../Stack";
 import { BreadcrumbLink } from "./BreadcrumbLink";
 
+export interface BreadcrumbsOverflowProps {
+    items: BreadcrumbItem[];
+    linkText: React.ReactNode;
+    slotProps: any;
+}
+
 const StyledOverflowLink = styled(Link, {
     name: "CometAdminStackBreadcrumbs",
     slot: "overflowLink",
     overridesResolver(_, styles) {
-        return [styles.link];
+        return [styles.link, styles.overflowLink];
     },
 })(
     ({ theme }) => css`
@@ -26,19 +31,13 @@ const StyledOverflowLink = styled(Link, {
     `,
 );
 
-export interface BreadcrumbsOverflowProps extends ThemedComponentBaseProps<{ overFlowLink: typeof Link }> {
-    items: BreadcrumbItem[];
-    linkText: React.ReactNode;
-}
-
-export function BreadcrumbsOverflow(inProps: BreadcrumbsOverflowProps) {
-    const { items, linkText, slotProps } = useThemeProps({ props: inProps, name: "CometAdminBreadcrumbsOverflow" });
+export const BreadcrumbsOverflow = ({ items, linkText, slotProps }: BreadcrumbsOverflowProps): React.ReactElement => {
     const [showOverflowMenu, setShowOverflowMenu] = React.useState<boolean>(false);
     const overflowLinkRef = React.useRef<HTMLAnchorElement>(null);
 
     return (
         <>
-            <StyledOverflowLink ref={overflowLinkRef} {...slotProps?.overFlowLink} onClick={() => setShowOverflowMenu(true)} variant="body2">
+            <StyledOverflowLink ref={overflowLinkRef} {...slotProps?.overflowLink} onClick={() => setShowOverflowMenu(true)} variant="body2">
                 {linkText}
             </StyledOverflowLink>
             <Menu open={showOverflowMenu} onClose={() => setShowOverflowMenu(false)} anchorEl={overflowLinkRef.current}>
@@ -53,4 +52,4 @@ export function BreadcrumbsOverflow(inProps: BreadcrumbsOverflowProps) {
             </Menu>
         </>
     );
-}
+};

@@ -60,6 +60,7 @@ export const useItemsToRender = (
     itemWidths: number[] | undefined,
     overflowLinkText: React.ReactNode,
     backButtonUrl: string | undefined,
+    slotProps: any,
 ): React.ReactNode[] => {
     const numberOfItemsToBeHidden = useNumberOfItemsToBeHidden(items, containerWidth, Boolean(backButtonUrl), itemWidths);
 
@@ -75,10 +76,12 @@ export const useItemsToRender = (
 
     const showOverflowMenu = Boolean(renderAllItemsToAllowCalculatingWidths || itemsInsideOverflowMenu.length);
 
-    const firstItemWithBackButton = <BreadcrumbsEntry item={items[0]} isLastItem={items.length === 1} backButtonUrl={backButtonUrl} />;
-    const overflowMenu = <BreadcrumbsOverflow items={itemsInsideOverflowMenu} linkText={overflowLinkText} />;
+    const firstItemWithBackButton = (
+        <BreadcrumbsEntry item={items[0]} isLastItem={items.length === 1} backButtonUrl={backButtonUrl} slotProps={slotProps} />
+    );
+    const overflowMenu = <BreadcrumbsOverflow items={itemsInsideOverflowMenu} linkText={overflowLinkText} slotProps={slotProps} />;
     const remainingItems = itemsAfterOverflowMenu.map((item, index) => (
-        <BreadcrumbsEntry key={item.id} item={item} isLastItem={index === itemsAfterOverflowMenu.length - 1} />
+        <BreadcrumbsEntry key={item.id} item={item} isLastItem={index === itemsAfterOverflowMenu.length - 1} slotProps={slotProps} />
     ));
 
     return [firstItemWithBackButton, showOverflowMenu && overflowMenu, ...remainingItems].filter((item) => item !== false);
