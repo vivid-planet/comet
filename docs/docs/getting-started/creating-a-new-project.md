@@ -1,5 +1,5 @@
 ---
-title: Create New Project
+title: Creating a new Project
 sidebar_position: 2
 ---
 
@@ -27,4 +27,4 @@ And can be customized with other commands required for your application.
 
 :::
 
-Once installation is finished, we can start developing.
+Once installation is finished, you can start developing.

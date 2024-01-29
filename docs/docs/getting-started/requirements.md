@@ -12,4 +12,4 @@ use [Deeper Shell Integration](https://github.com/nvm-sh/nvm#deeper-shell-integr
 
 :::
 
-Now, we are ready to create a new Comet DXP project.
+Now, you are ready to create a new Comet DXP project.
