@@ -12,6 +12,9 @@
         "test": "jest",
         "test:watch": "jest --watch"
     },
+    "dependencies": {
+        "change-case": "^4.1.2"
+    },
     "devDependencies": {
         "@types/eslint": "^8.37.0",
         "@types/jest": "^27.0.2",
