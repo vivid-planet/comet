@@ -22,6 +22,13 @@ interface EntityRange {
     length: number;
 }
 
+/* 
+    turns escaped special characters in the xml back to text for content
+*/
+function decodeContent(text: string): string {
+    return text.split("&amp;").join("&").split("&lt;").join("<").split("&gt;").join(">").split("&nbsp;").join("\xA0");
+}
+
 export const updateBlockContent = (block: RawDraftContentBlock) => {
     const regexInlineStylesPattern = /<inline id="[0-9][0-9]?">|<\/inline>/g;
     const regexEntitiesPattern = /<entity id="[0-9][0-9]?">|<\/entity>/g;
@@ -191,7 +198,7 @@ export const translateAndTransformXmlToState = (
             newEntityMap = { ...newEntityMap, [entityRange.key]: rawContent.entityMap[entityRange.key] };
         });
 
-        return newBlockstate;
+        return { ...newBlockstate, text: decodeContent(newBlockstate.text) };
     });
 
     return EditorState.createWithContent(convertFromRaw({ blocks: translatedBlocks, entityMap: newEntityMap }));

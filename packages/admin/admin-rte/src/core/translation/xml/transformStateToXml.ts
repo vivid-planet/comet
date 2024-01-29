@@ -1,6 +1,7 @@
 import { CharacterMetadata, ContentBlock, ContentState } from "draft-js";
 import type { List } from "immutable";
 
+import { CustomInlineStyles } from "../../types";
 /*
     This is a first, very basic implementation, inspired by https://github.com/sstur/draft-js-utils/blob/master/packages/draft-js-export-html/src/stateToHTML.js.
     Images, code snippets, custom options as attributes, elements or styles are not taken into account.
@@ -46,7 +47,7 @@ const DEFAULT_STYLE_MAP = {
     escapes special characters in the text content to their HTML/XML entities
 */
 function encodeContent(text: string): string {
-    return text.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;").split("\xA0").join("&nbsp;").split("\n").join(`<br>\n`);
+    return text.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;").split("\xA0").join("&nbsp;");
 }
 
 class MarkupGenerator {
@@ -61,8 +62,22 @@ class MarkupGenerator {
     indent = "  ";
     counter = 1;
 
-    constructor(contentState?: ContentState) {
+    constructor(contentState?: ContentState, customInlineStyle?: CustomInlineStyles) {
         this.contentState = contentState;
+
+        if (customInlineStyle) {
+            const customInlineStyleKeys = Object.keys(customInlineStyle);
+
+            customInlineStyleKeys.forEach((item) => {
+                this.inlineStyles[item] = { element: "inline" };
+            });
+
+            for (const key of customInlineStyleKeys) {
+                if (!this.styleOrder.includes(key)) {
+                    this.styleOrder.push(key);
+                }
+            }
+        }
     }
 
     generate(): string[] {
@@ -162,10 +177,10 @@ preserves leading/trailing/consecutive whitespace in the text content
     }
 }
 
-export function transformStateToXml(content: ContentState): string[] {
-    return new MarkupGenerator(content).generate();
+export function transformStateToXml(content: ContentState, customInlineStyle?: CustomInlineStyles): string[] {
+    return new MarkupGenerator(content, customInlineStyle).generate();
 }
 
-export function blockToXml(contentBlock: ContentBlock, contentState: ContentState): string {
-    return new MarkupGenerator().renderBlockContent(contentBlock, contentState);
+export function blockToXml(contentBlock: ContentBlock, contentState: ContentState, customInlineStyle?: CustomInlineStyles): string {
+    return new MarkupGenerator(undefined, customInlineStyle).renderBlockContent(contentBlock, contentState);
 }
