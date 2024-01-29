@@ -1,5 +1,5 @@
 import { Check, Reset } from "@comet/admin-icons";
-import { Button, ButtonProps, ComponentsOverrides, Popover, Theme } from "@mui/material";
+import { Button, ButtonProps, ComponentsOverrides, Popover as MuiPopover, Theme } from "@mui/material";
 import { css, styled, useThemeProps } from "@mui/material/styles";
 import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
@@ -15,7 +15,7 @@ import { FilterBarButton, FilterBarButtonProps } from "../filterBarButton/Filter
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export type FilterBarPopoverFilterClassKey = "root" | "fieldBarWrapper" | "popoverContentContainer" | "buttonsContainer";
+export type FilterBarPopoverFilterClassKey = "root" | "fieldBarWrapper" | "popoverContentContainer" | "buttonsContainer" | "popover";
 
 const Root = styled("div", {
     name: "CometAdminFilterBarPopoverFilter",
@@ -80,6 +80,14 @@ const ButtonsContainer = styled("div", {
     `,
 );
 
+const Popover = styled(MuiPopover, {
+    name: "CometAdminFilterBarPopoverFilter",
+    slot: "popover",
+    overridesResolver(_, styles) {
+        return [styles.popover];
+    },
+})();
+
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
@@ -90,6 +98,7 @@ export interface FilterBarPopoverFilterProps
         popoverContentContainer: "div";
         buttonsContainer: "div";
         contentContainer: "div";
+        popover: typeof Popover;
     }> {
     label: string;
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
@@ -149,6 +158,7 @@ export function FilterBarPopoverFilter(inProps: React.PropsWithChildren<FilterBa
                             <Popover
                                 open={open}
                                 anchorEl={anchorEl}
+                                {...slotProps?.popover}
                                 onClose={() => {
                                     setAnchorEl(null);
                                     handleSubmit();
