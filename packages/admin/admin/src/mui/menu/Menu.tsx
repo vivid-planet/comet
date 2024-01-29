@@ -24,14 +24,14 @@ const StyledDrawer = styled(Drawer, {
     },
 })<{ ownerState: OwnerState }>(
     ({ theme, ownerState }) => css`
-        .MuiDrawer-paper {
+        [class*="MuiDrawer-paper"] {
             background-color: #fff;
         }
-        .MuiPaper-root {
+        [class*="MuiPaper-root"] {
             flex-grow: 1;
             overflow-x: hidden;
         }
-        .MuiDrawer-paperAnchorLeft {
+        [class*="MuiDrawer-paperAnchorLeft"] {
             border-right: none;
         }
 
@@ -43,7 +43,7 @@ const StyledDrawer = styled(Drawer, {
                 duration: theme.transitions.duration.enteringScreen,
             })};
 
-            .MuiPaper-root {
+            [class*="MuiPaper-root"] {
                 transition: ${theme.transitions.create("margin", {
                     easing: theme.transitions.easing.sharp,
                     duration: theme.transitions.duration.enteringScreen,
@@ -59,7 +59,7 @@ const StyledDrawer = styled(Drawer, {
                 duration: theme.transitions.duration.leavingScreen,
             })};
 
-            .MuiPaper-root {
+            [class*="MuiPaper-root"] {
                 transition: ${theme.transitions.create("margin", {
                     easing: theme.transitions.easing.easeOut,
                     duration: theme.transitions.duration.enteringScreen,
