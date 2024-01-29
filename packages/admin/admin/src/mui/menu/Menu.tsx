@@ -1,4 +1,4 @@
-import Drawer, { DrawerProps } from "@mui/material/Drawer";
+import Drawer from "@mui/material/Drawer";
 import { PaperProps } from "@mui/material/Paper";
 import { ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
@@ -8,21 +8,15 @@ import { useHistory } from "react-router";
 import { MasterLayoutContext } from "../MasterLayoutContext";
 import { MenuContext } from "./Context";
 
-export type MenuClassKey = "drawer" | "permanent" | "temporary" | "open" | "closed";
+export type MenuClassKey = "permanentDrawer" | "temporaryDrawer" | "permanent" | "temporary" | "open" | "closed";
 
-type OwnerState = { open: boolean; variant: string };
+type OwnerState = { open: boolean };
 
-const StyledDrawer = styled(Drawer, {
+const PermanentDrawer = styled(Drawer, {
     name: "CometAdminMenu",
-    slot: "drawer",
+    slot: "permanentDrawer",
     overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [
-            styles.drawer,
-            ownerState.variant === "temporary" && styles.temporary,
-            ownerState.variant === "permanent" && styles.permanent,
-            ownerState.open && styles.open,
-            !ownerState.open && styles.closed,
-        ];
+        return [styles.drawer, ownerState.open && styles.open, !ownerState.open && styles.closed];
     },
 })<{ ownerState: OwnerState }>(
     ({ theme, ownerState }) => css`
@@ -37,8 +31,7 @@ const StyledDrawer = styled(Drawer, {
             border-right: none;
         }
 
-        ${ownerState.variant === "permanent" &&
-        ownerState.open &&
+        ${ownerState.open &&
         css`
             transition: ${theme.transitions.create("width", {
                 easing: theme.transitions.easing.sharp,
@@ -53,8 +46,7 @@ const StyledDrawer = styled(Drawer, {
             }
         `}
 
-        ${ownerState.variant === "permanent" &&
-        !ownerState.open &&
+        ${!ownerState.open &&
         css`
             transition: ${theme.transitions.create("width", {
                 easing: theme.transitions.easing.easeOut,
@@ -75,12 +67,31 @@ const StyledDrawer = styled(Drawer, {
     `,
 );
 
-export interface MenuProps extends ThemedComponentBaseProps<{ drawer: typeof Drawer }> {
+const TemporaryDrawer = styled(Drawer, {
+    name: "CometAdminMenu",
+    slot: "temporaryDrawer",
+    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+        return [styles.drawer, ownerState.open && styles.open, !ownerState.open && styles.closed];
+    },
+})<{ ownerState: OwnerState }>(
+    ({ theme, ownerState }) => css`
+        [class*="MuiDrawer-paper"] {
+            background-color: #fff;
+        }
+        [class*="MuiPaper-root"] {
+            flex-grow: 1;
+            overflow-x: hidden;
+        }
+        [class*="MuiDrawer-paperAnchorLeft"] {
+            border-right: none;
+        }
+    `,
+);
+
+export interface MenuProps extends ThemedComponentBaseProps<{ permanentDrawer: typeof Drawer; temporaryDrawer: typeof Drawer }> {
     children: React.ReactNode;
     variant?: "permanent" | "temporary";
     drawerWidth?: number;
-    temporaryDrawerProps?: DrawerProps;
-    permanentDrawerProps?: DrawerProps;
     temporaryDrawerPaperProps?: PaperProps;
     permanentDrawerPaperProps?: PaperProps;
 }
@@ -90,8 +101,6 @@ export function Menu(inProps: MenuProps) {
         children,
         drawerWidth = 300,
         variant = "permanent",
-        temporaryDrawerProps = {},
-        permanentDrawerProps = {},
         temporaryDrawerPaperProps = {},
         permanentDrawerPaperProps = {},
         slotProps,
@@ -103,7 +112,6 @@ export function Menu(inProps: MenuProps) {
     const initialRender = React.useRef(true);
 
     const ownerState: OwnerState = {
-        variant,
         open,
     };
 
@@ -134,23 +142,22 @@ export function Menu(inProps: MenuProps) {
     // Always render both temporary and permanent drawers to make sure, the opening and closing animations run fully when switching between variants.
     return (
         <>
-            <StyledDrawer
+            <TemporaryDrawer
                 variant="temporary"
-                {...slotProps?.drawer}
+                {...slotProps?.temporaryDrawer}
                 // workaround for issue: https://github.com/mui/material-ui/issues/35793
                 open={initialRender.current ? false : temporaryOpen}
                 ownerState={ownerState}
                 PaperProps={{ style: { width: drawerWidth }, ...temporaryDrawerPaperProps }}
                 onClose={toggleOpen}
-                {...temporaryDrawerProps}
                 {...restProps}
             >
                 {children}
-            </StyledDrawer>
+            </TemporaryDrawer>
 
-            <StyledDrawer
+            <PermanentDrawer
                 variant="permanent"
-                {...slotProps?.drawer}
+                {...slotProps?.permanentDrawer}
                 open={permanentOpen}
                 style={{ width: permanentOpen ? drawerWidth : 0 }}
                 ownerState={ownerState}
@@ -164,10 +171,9 @@ export function Menu(inProps: MenuProps) {
                     },
                     ...permanentDrawerPaperProps,
                 }}
-                {...permanentDrawerProps}
             >
                 {children}
-            </StyledDrawer>
+            </PermanentDrawer>
         </>
     );
 }
