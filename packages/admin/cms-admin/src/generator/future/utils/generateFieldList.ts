@@ -2,15 +2,27 @@ import { IntrospectionField, IntrospectionQuery, IntrospectionType } from "graph
 import objectPath from "object-path";
 
 export function generateFieldListGqlString(fields: string[]) {
-    const fieldsObject = fields.reduce<object>((acc, fieldName) => {
+    type FieldsObjectType = { [key: string]: FieldsObjectType | boolean };
+    const fieldsObject: FieldsObjectType = fields.reduce((acc, fieldName) => {
         objectPath.set(acc, fieldName, true);
         return acc;
     }, {});
-    return JSON.stringify(fieldsObject, null, 4)
-        .replace(/: true,/g, "")
-        .replace(/: true/g, "")
-        .replace(/"/g, "")
-        .replace(/:/g, "");
+
+    const recursiveStringify = (obj: FieldsObjectType): string => {
+        let ret = "";
+        let prefixField = "";
+        for (const key in obj) {
+            const valueForKey = obj[key];
+            if (typeof valueForKey === "boolean") {
+                ret += `${prefixField}${key}`;
+            } else {
+                ret += `${prefixField}${key} { ${recursiveStringify(valueForKey)} }`;
+            }
+            prefixField = " ";
+        }
+        return ret;
+    };
+    return recursiveStringify(fieldsObject);
 }
 
 function fieldListFromIntrospectionTypeRecursive(
