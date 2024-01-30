@@ -5,7 +5,7 @@ import changeBlockType from "./utils/changeBlockType";
 
 const removeUnsupportedBlockTypes: FilterEditorStateBeforeUpdateFn = (newState, { supports, standardBlockType }) => {
     // unstyle all core-blocks which are not supported
-    const blackListBlocks: DraftBlockType[] = ["paragraph", "header-four", "header-five", "header-six", "blockquote", "code-block", "atomic"]; // these are not supported at all by our rte
+    const blackListBlocks: DraftBlockType[] = ["paragraph", "code-block", "atomic"]; // these are not supported at all by our rte
 
     const supportsToBlockMap: Partial<Record<SupportedThings, DraftBlockType>> = {
         "header-one": "header-one",
