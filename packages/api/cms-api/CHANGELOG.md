@@ -1,5 +1,40 @@
 # @comet/cms-api
 
+## 6.0.0
+
+### Major Changes
+
+-   d20f59c0: Enhance CronJob module
+
+    -   Show latest job run on `CronJobsPage`
+    -   Add option to manually trigger cron jobs to `CronJobsPage`
+    -   Add subpage to `CronJobsPage` that shows all job runs
+
+    Warning: Only include this module if all your users should be able to trigger cron jobs manually or you have sufficient access control in place.
+
+    Includes the following breaking changes:
+
+    -   Rename `JobStatus` to `KubernetesJobStatus` to avoid naming conflicts
+    -   Rename `BuildRuntime` to `JobRuntime`
+
+-   b3ceaef1: Replace ContentScopeModule with UserPermissionsModule
+
+    Breaking changes:
+
+    -   ContentScope-Module has been removed
+    -   canAccessScope has been moved to AccessControlService and refactored into isAllowed
+    -   contentScopes- and permissions-fields have been added to CurrentUser-Object
+    -   role- and rights-fields has been removed from CurrentUser-Object
+    -   AllowForRole-decorator has been removed
+    -   Rename decorator SubjectEntity to AffectedEntity
+    -   Add RequiredPermission-decorator and make it mandatory when using UserPermissionsModule
+
+    Upgrade-Guide: tbd
+
+### Patch Changes
+
+-   @comet/blocks-api@6.0.0
+
 ## 5.6.0
 
 ### Patch Changes

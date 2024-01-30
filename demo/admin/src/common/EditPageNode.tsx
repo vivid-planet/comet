@@ -4,6 +4,7 @@ import { createEditPageNode } from "@comet/cms-admin";
 import { Box, Divider, MenuItem } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
+
 export type { GQLPageTreeNodeAdditionalFieldsFragment } from "./EditPageNode.generated"; //re-export
 
 const userGroupOptions = [

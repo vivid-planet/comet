@@ -18,7 +18,6 @@ export { isWithPreviewPropsData, withPreview, WithPreviewProps } from "./iframeb
 export type { ImageDimensions } from "./image/Image";
 export { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, Image, parseAspectRatio } from "./image/Image";
 export { Link } from "./link/Link";
-export { getAuthedUser, hasAuthedUser } from "./preview/auth";
 export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";
 export { usePreview } from "./preview/usePreview";
 export { parsePreviewParams, parsePreviewState } from "./preview/utils";

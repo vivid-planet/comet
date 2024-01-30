@@ -8,6 +8,7 @@ import { useOptimisticQuery } from "../../common/useOptimisticQuery";
 import FolderBreadcrumbs from "./breadcrumbs/FolderBreadcrumbs";
 import { damFolderMPathFragment, damFolderMPathQuery } from "./FolderHead.gql";
 import { GQLDamFolderMPathFragment, GQLDamFolderMPathQuery, GQLDamFolderMPathQueryVariables } from "./FolderHead.gql.generated";
+
 export { GQLDamFolderMPathFragment, GQLDamFolderMPathQuery, GQLDamFolderMPathQueryVariables } from "./FolderHead.gql.generated";
 
 interface TableHeadProps {
