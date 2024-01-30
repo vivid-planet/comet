@@ -5,6 +5,9 @@ sidebar_position: 1
 
 # Migrating from v5 to v6
 
+First, execute `npx @comet/upgrade v6` in the root of your project. 
+It automatically installs the new versions of all `@comet` libraries and handles some of the necessary renames.
+
 ## API
 
 ### User Permissions
@@ -113,7 +116,7 @@ sidebar_position: 1
 
 6. Rename and add decorators
 
-    Rename `@SubjectEntity` to `@AffectedEntity`
+    Rename `@SubjectEntity` to `@AffectedEntity` (this is done by `@comet/upgrade`)
 
     ```diff
     - @SubjectEntity(...)
@@ -135,7 +138,7 @@ sidebar_position: 1
 
 ### JobStatus
 
-The `JobStatus` enum was renamed to `KubernetesJobStatus`.
+The `JobStatus` enum was renamed to `KubernetesJobStatus`. The rename is done by `@comet/upgrade`.
 
 ## Admin
 
@@ -223,7 +226,7 @@ You must make following changes in the application:
 
 ### BuildRuntime
 
-The `BuildRuntime` component was renamed to `JobRuntime`.
+The `BuildRuntime` component was renamed to `JobRuntime`. The rename is done by `@comet/upgrade`.
 
 ### @comet/admin
 
