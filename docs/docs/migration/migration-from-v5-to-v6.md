@@ -54,40 +54,40 @@ The `JobStatus` enum was renamed to `KubernetesJobStatus`.
 
 3. Create interface for `availablePermissions` similar to the already existing interface `interface ContentScope`
 
-    ```diff
-    + declare module "@comet/cms-api" {
-    +     interface Permission {
-    +         // e.g. `products: string;`
-    +     }
-    + }
-    + export {};
+    ```ts
+    declare module "@comet/cms-api" {
+        interface Permission {
+            // e.g. `products: string;`
+        }
+    }
+    export {};
     ```
 
 4. Create Services necessary for the UserPermission-Module (either in a new module or where it fits best)
 
-    ```diff
-    + // Attention: might already being provided by the library which syncs the users
-    + @Injectable()
-    + export class UserService implements UserPermissionsUserServiceInterface {
-    +     getUser(id: string): User {
-    +         ...
-    +     }
-    +     findUsers(args: FindUsersArgs): Users {
-    +         ...
-    +     }
-    + }
+    ```ts
+    // Attention: might already being provided by the library which syncs the users
+    @Injectable()
+    export class UserService implements UserPermissionsUserServiceInterface {
+        getUser(id: string): User {
+            ...
+        }
+        findUsers(args: FindUsersArgs): Users {
+            ...
+        }
+    }
     ```
 
-    ```diff
-    + @Injectable()
-    + export class AccessControlService extends AbstractAccessControlService {
-    +     getPermissionsForUser(user: User): PermissionsForUser {
-    +         // e.g. return `UserPermissions.allPermissions;` for certain users
-    +     }
-    +     getContentScopesForUser(user: User): ContentScopesForUser {
-    +         // e.g. return `UserPermissions.allContentScopes;` for certain users
-    +     }
-    + }
+    ```ts
+    @Injectable()
+    export class AccessControlService extends AbstractAccessControlService {
+        getPermissionsForUser(user: User): PermissionsForUser {
+            // e.g. return `UserPermissions.allPermissions;` for certain users
+        }
+        getContentScopesForUser(user: User): ContentScopesForUser {
+            // e.g. return `UserPermissions.allContentScopes;` for certain users
+        }
+    }
     ```
 
 5. Replace `ContentScopeModule` with `UserPermissionsModule` :
@@ -163,16 +163,16 @@ The `JobStatus` enum was renamed to `KubernetesJobStatus`.
 
 3. Add the `UserPermissionsPage`
 
-    ```diff
-    + <MenuItemRouterLink
-    +     primary={intl.formatMessage({ id: "menu.userPermissions", defaultMessage: "User Permissions" })}
-    +     icon={<Snips />}
-    +     to={`${match.url}/user-permissions`}
-    + />
+    ```tsx
+    <MenuItemRouterLink
+        primary={intl.formatMessage({ id: "menu.userPermissions", defaultMessage: "User Permissions" })}
+        icon={<Snips />}
+        to={`${match.url}/user-permissions`}
+    />
     ```
 
-    ```diff
-    + <RouteWithErrorBoundary path={`${match.path}/user-permissions`} component={UserPermissionsPage} />
+    ```tsx
+    <RouteWithErrorBoundary path={`${match.path}/user-permissions`} component={UserPermissionsPage} />
     ```
 
 ### BuildRuntime
