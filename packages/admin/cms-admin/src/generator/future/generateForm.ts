@@ -58,10 +58,8 @@ export function generateForm(
         \${${`${instanceGqlType}FormFragment`}}
     `;
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore TS2589: Type instantiation is excessively deep and possibly infinite.
     const fieldsCode = config.fields
-        .map((field) => {
+        .map<string>((field) => {
             const generated = generateFormField({ gqlIntrospection }, field, config);
             for (const name in generated.gqlQueries) {
                 gqlQueries[name] = generated.gqlQueries[name];
