@@ -49,7 +49,7 @@ export const createErrorDialogApolloLink = () => {
             }
         }
 
-        if (!isUnauthenticated) {
+        if (isUnauthenticated) {
             title = <FormattedMessage id="comet.errorDialog.sessionExpired.title" defaultMessage="Session expired" />;
             userMessage = (
                 <>
