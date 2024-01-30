@@ -14,20 +14,20 @@ function ToolbarButton({ editorState, setEditorState, options }: IControlProps):
     const translationContext = useContentTranslationService();
 
     async function handleClick(event: React.MouseEvent) {
-        if (translationContext) {
-            event.preventDefault();
+        if (!translationContext) return;
 
-            const contentState = editorState.getCurrentContent();
+        event.preventDefault();
 
-            const xml = transformStateToXml(contentState, options.customInlineStyles);
+        const contentState = editorState.getCurrentContent();
 
-            const translationPromises = xml.map(async (item) => ({
-                original: item,
-                replaceWith: (await translationContext.translate(item)) ?? item,
-            }));
-            const translations = await Promise.all(translationPromises);
+        const xml = transformStateToXml(contentState, options.customInlineStyles);
 
-            const translatedState = translateAndTransformXmlToState(contentState, convertToRaw(contentState), translations);
+        const translations = (await translationContext.translate(xml.join("<split />"))).split("<split />");
+
+        if (xml.length === translations.length) {
+            const translationMap = xml.map((original, index) => ({ original, replaceWith: translations[index] }));
+
+            const translatedState = translateAndTransformXmlToState(contentState, convertToRaw(contentState), translationMap);
 
             setEditorState(translatedState);
         }
