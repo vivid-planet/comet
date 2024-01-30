@@ -135,7 +135,6 @@ export interface MenuItemProps extends ThemedComponentBaseProps<{ root: typeof L
     secondary?: React.ReactNode;
     icon?: React.ReactElement;
     secondaryAction?: React.ReactNode;
-    secondaryText?: boolean;
 }
 
 export function MenuItem(inProps: MenuItemProps) {
