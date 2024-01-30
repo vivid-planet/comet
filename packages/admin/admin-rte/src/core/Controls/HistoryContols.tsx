@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { IControlProps } from "../types";
-import FeaturesButtonGroup from "./FeaturesButtonGroup";
+import { FeaturesButtonGroup } from "./FeaturesButtonGroup";
 import useHistory from "./useHistory";
 
 export default function HistoryControls({ editorState, setEditorState, options, disabled, editorRef }: IControlProps) {
