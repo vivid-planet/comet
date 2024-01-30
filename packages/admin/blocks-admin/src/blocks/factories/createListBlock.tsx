@@ -190,7 +190,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                 blocks: state.blocks
                     .filter((child) => (previewCtx.showVisibleOnly ? child.visible : true)) // depending on context show all blocks or only visible blocks
                     .map((child) => {
-                        const blockAdminRoute = `${previewCtx.parentUrl}/${child.key}/edit`;
+                        const blockAdminRoute = `${previewCtx.parentUrlSubRoute ?? previewCtx.parentUrl}/${child.key}/edit`;
 
                         return {
                             key: child.key,

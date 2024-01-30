@@ -14,15 +14,16 @@ export enum UserPermissions {
 
 export type Users = [User[], number];
 
-export type PermissionsForUser =
-    | Pick<UserPermission, "permission" | "validFrom" | "validTo" | "reason" | "requestedBy" | "approvedBy">[]
-    | UserPermissions.allPermissions;
+type PermissionForUser = {
+    permission: keyof Permission;
+    contentScopes?: ContentScope[];
+} & Pick<UserPermission, "validFrom" | "validTo" | "reason" | "requestedBy" | "approvedBy">;
+export type PermissionsForUser = PermissionForUser[] | UserPermissions.allPermissions;
 
 export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentScopes;
 
 export interface AccessControlServiceInterface {
-    isAllowedPermission(user: CurrentUserInterface, permission: keyof Permission): boolean;
-    isAllowedContentScope(user: CurrentUserInterface, contentScope: ContentScope): boolean;
+    isAllowed(user: CurrentUserInterface, permission: keyof Permission, contentScope?: ContentScope): boolean;
     getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }

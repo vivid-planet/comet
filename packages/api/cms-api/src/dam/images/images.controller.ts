@@ -71,7 +71,7 @@ export class ImagesController {
             throw new NotFoundException();
         }
 
-        if (file.scope !== undefined && !this.accessControlService.isAllowedContentScope(user, file.scope)) {
+        if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
             throw new ForbiddenException();
         }
 
@@ -97,7 +97,7 @@ export class ImagesController {
             throw new NotFoundException();
         }
 
-        if (file.scope !== undefined && !this.accessControlService.isAllowedContentScope(user, file.scope)) {
+        if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
             throw new ForbiddenException();
         }
 

@@ -1,5 +1,67 @@
 # @comet/admin
 
+## 5.6.0
+
+### Patch Changes
+
+-   @comet/admin-icons@5.6.0
+
+## 5.5.0
+
+### Patch Changes
+
+-   @comet/admin-icons@5.5.0
+
+## 5.4.0
+
+### Minor Changes
+
+-   60a18392: Add `Alert` component
+
+    **Example:**
+
+    ```tsx
+    import { Alert, OkayButton, SaveButton } from "@comet/admin";
+
+    <Alert
+        severity="warning"
+        title="Title"
+        action={
+            <Button variant="text" startIcon={<ArrowRight />}>
+                Action Text
+            </Button>
+        }
+    >
+        Notification Text
+    </Alert>;
+    ```
+
+### Patch Changes
+
+-   ba800163: Allow passing a mix of elements and arrays to `Tabs` and `RouterTabs` as children
+
+    For example:
+
+    ```tsx
+    <RouterTabs>
+        <RouterTab label="One" path="">
+            One
+        </RouterTab>
+        {content.map((value) => (
+            <RouterTab key={value} label={value} path={`/${value}`}>
+                {value}
+            </RouterTab>
+        ))}
+        {showFourthTab && (
+            <RouterTab label="Four" path="/four">
+                Four
+            </RouterTab>
+        )}
+    </RouterTabs>
+    ```
+
+    -   @comet/admin-icons@5.4.0
+
 ## 5.3.0
 
 ### Minor Changes

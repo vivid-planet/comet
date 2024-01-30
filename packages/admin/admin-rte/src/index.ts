@@ -7,6 +7,7 @@ export { Toolbar } from "./core/Controls/Toolbar/Toolbar";
 export { RteToolbarClassKey } from "./core/Controls/Toolbar/Toolbar.styles";
 export { default as LinkDecorator } from "./core/extension/Link/Decorator";
 export { default as NonBreakingSpaceDecorator } from "./core/extension/NonBreakingSpace/Decorator";
+export { default as SoftHyphenDecorator } from "./core/extension/SoftHyphen/Decorator";
 export { default as filterEditorStateDefault } from "./core/filterEditor/default";
 export { default as filterEditorStateRemoveUnsupportedBlockTypes } from "./core/filterEditor/removeUnsupportedBlockTypes";
 export { default as filterEditorStateRemoveUnsupportedEntities } from "./core/filterEditor/removeUnsupportedEntities";

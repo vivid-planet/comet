@@ -9,6 +9,7 @@ import {
     PublisherPage,
     UserPermissionsPage,
 } from "@comet/cms-admin";
+import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import Dashboard from "@src/dashboard/Dashboard";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import { Link } from "@src/links/Link";
@@ -96,7 +97,12 @@ export const masterMenuData: MasterMenuData = [
         icon: <Assets />,
         route: {
             path: "/assets",
-            render: () => <DamPage renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} domainOnly variant="toolbar" />} />,
+            render: () => (
+                <DamPage
+                    renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} domainOnly variant="toolbar" />}
+                    additionalToolbarItems={<ImportFromUnsplash />}
+                />
+            ),
         },
         requiredPermission: "dam",
     },
@@ -143,6 +149,7 @@ export const masterMenuData: MasterMenuData = [
                 requiredPermission: "pageTree",
             },
         ],
+        requiredPermission: "pageTree",
     },
     {
         primary: <FormattedMessage id="menu.componentDemo" defaultMessage="Component demo" />,

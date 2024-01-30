@@ -1,8 +1,50 @@
-import { ComponentsOverrides, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides } from "@mui/material";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
 export type MainContentClassKey = "root" | "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight";
+
+type OwnerState = Pick<MainContentProps, "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight">;
+
+const Root = styled("main", {
+    name: "CometAdminMainContent",
+    slot: "root",
+    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+        return [
+            styles.root,
+            ownerState.disablePaddingTop && styles.disablePaddingTop,
+            ownerState.disablePaddingBottom && styles.disablePaddingBottom,
+            ownerState.disablePadding && styles.disablePadding,
+            ownerState.fullHeight && styles.fullHeight,
+        ];
+    },
+})<{ ownerState: OwnerState }>(
+    ({ theme, ownerState }) => css`
+        position: relative;
+        z-index: 5;
+        padding: ${theme.spacing(4)};
+
+        ${ownerState.fullHeight &&
+        css`
+            height: calc(100vh - var(--comet-admin-main-content-top-position));
+        `}
+
+        ${ownerState.disablePaddingTop &&
+        css`
+            padding-top: 0;
+        `}
+
+        ${ownerState.disablePaddingBottom &&
+        css`
+            padding-bottom: 0;
+        `}
+
+        ${ownerState.disablePadding &&
+        css`
+            padding: 0;
+        `}
+    `,
+);
 
 export interface MainContentProps {
     children?: React.ReactNode;
@@ -12,57 +54,33 @@ export interface MainContentProps {
     fullHeight?: boolean;
 }
 
-const styles = ({ spacing }: Theme) => {
-    return createStyles<MainContentClassKey, MainContentProps>({
-        root: {
-            position: "relative",
-            zIndex: 5,
-            padding: spacing(4),
-        },
-        fullHeight: {
-            height: "calc(100vh - var(--comet-admin-main-content-top-position))",
-        },
-        disablePaddingTop: {
-            paddingTop: 0,
-        },
-        disablePaddingBottom: {
-            paddingBottom: 0,
-        },
-        disablePadding: {
-            padding: 0,
-        },
+export function MainContent(inProps: MainContentProps) {
+    const { children, fullHeight, disablePaddingTop, disablePaddingBottom, disablePadding, ...restProps } = useThemeProps({
+        props: inProps,
+        name: "CometAdminMainContent",
     });
-};
 
-function Main({
-    children,
-    fullHeight,
-    disablePaddingTop,
-    disablePaddingBottom,
-    disablePadding,
-    classes,
-}: MainContentProps & WithStyles<typeof styles>) {
     const mainRef = React.useRef<HTMLElement>(null);
     const topPosition = fullHeight && mainRef.current ? mainRef.current.offsetTop : 0;
 
-    const rootClasses: string[] = [classes.root];
-    if (disablePaddingTop) rootClasses.push(classes.disablePaddingTop);
-    if (disablePaddingBottom) rootClasses.push(classes.disablePaddingBottom);
-    if (disablePadding) rootClasses.push(classes.disablePadding);
-    if (fullHeight) rootClasses.push(classes.fullHeight);
+    const ownerState: OwnerState = {
+        fullHeight,
+        disablePaddingTop,
+        disablePaddingBottom,
+        disablePadding,
+    };
 
     return (
-        <main
+        <Root
+            ownerState={ownerState}
+            {...restProps}
             ref={mainRef}
-            className={rootClasses.join(" ")}
             style={{ "--comet-admin-main-content-top-position": `${topPosition}px` } as React.CSSProperties}
         >
             {children}
-        </main>
+        </Root>
     );
 }
-
-export const MainContent = withStyles(styles, { name: "CometAdminMainContent" })(Main);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

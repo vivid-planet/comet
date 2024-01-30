@@ -60,9 +60,9 @@ export class RedirectEntityFactory {
             @Field({ nullable: true })
             comment?: string;
 
-            @Property({ default: true })
+            @Property()
             @Field()
-            active: boolean;
+            active: boolean = true;
 
             @Enum(() => RedirectGenerationType)
             @Field(() => RedirectGenerationType)

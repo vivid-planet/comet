@@ -1,53 +1,76 @@
-import { ComponentsOverrides, Theme, Typography } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides, Typography } from "@mui/material";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 
 export type FormSectionClassKey = "root" | "disableMarginBottom" | "title" | "children";
 
-export interface FormSectionProps {
+type OwnerState = Pick<FormSectionProps, "disableMarginBottom">;
+
+const Root = styled("div", {
+    name: "CometAdminFormSection",
+    slot: "root",
+    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+        return [styles.root, ownerState.disableMarginBottom && styles.disableMarginBottom];
+    },
+})<{ ownerState: OwnerState }>(
+    ({ theme, ownerState }) => css`
+        ${!ownerState.disableMarginBottom &&
+        css`
+            margin-bottom: ${theme.spacing(12)};
+        `}
+    `,
+);
+
+const Title = styled("div", {
+    name: "CometAdminFormSection",
+    slot: "title",
+    overridesResolver(_, styles) {
+        return [styles.title];
+    },
+})(
+    ({ theme }) => css`
+        margin-bottom: ${theme.spacing(4)};
+    `,
+);
+
+const Children = styled("div", {
+    name: "CometAdminFormSection",
+    slot: "children",
+    overridesResolver(_, styles) {
+        return [styles.children];
+    },
+})();
+
+export interface FormSectionProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        title: "div";
+        children: "div";
+    }> {
     children: React.ReactNode;
     title?: React.ReactNode;
     disableMarginBottom?: boolean;
     disableTypography?: boolean;
 }
 
-const styles = ({ spacing }: Theme) => {
-    return createStyles<FormSectionClassKey, any>({
-        root: {
-            "&:not($disableMarginBottom)": {
-                marginBottom: spacing(12),
-            },
-        },
-        disableMarginBottom: {},
-        title: {
-            marginBottom: spacing(4),
-        },
-        children: {},
+export function FormSection(inProps: FormSectionProps) {
+    const { children, title, disableMarginBottom, disableTypography, slotProps, ...restProps } = useThemeProps({
+        props: inProps,
+        name: "CometAdminFormSection",
     });
-};
 
-function Section({
-    children,
-    title,
-    disableMarginBottom,
-    disableTypography,
-    classes,
-}: FormSectionProps & WithStyles<typeof styles>): React.ReactElement {
-    const rootClasses: string[] = [classes.root];
-
-    if (disableMarginBottom) {
-        rootClasses.push(classes.disableMarginBottom);
-    }
+    const ownerState: OwnerState = {
+        disableMarginBottom,
+    };
 
     return (
-        <div className={rootClasses.join(" ")}>
-            {title && <div className={classes.title}>{disableTypography ? title : <Typography variant="h3">{title}</Typography>}</div>}
-            <div className={classes.children}>{children}</div>
-        </div>
+        <Root ownerState={ownerState} {...restProps} {...slotProps?.root}>
+            {title && <Title {...slotProps?.title}>{disableTypography ? title : <Typography variant="h3">{title}</Typography>}</Title>}
+            <Children {...slotProps?.children}>{children}</Children>
+        </Root>
     );
 }
-
-export const FormSection = withStyles(styles, { name: "CometAdminFormSection" })(Section);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

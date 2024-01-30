@@ -4,3 +4,7 @@ addReviewers: true
 
 reviewers:
     - johnnyomair
+
+skipKeywords:
+    - Merge main into next
+    - Version Packages
