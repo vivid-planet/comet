@@ -24,11 +24,11 @@ const config = {
             ({
                 docs: {
                     sidebarPath: require.resolve("./sidebars.js"),
-                    editUrl: "https://github.com/vivid-planet/comet-docs/edit/main/",
+                    editUrl: "https://github.com/vivid-planet/comet/edit/main/docs/",
                 },
                 blog: {
                     showReadingTime: true,
-                    editUrl: "https://github.com/vivid-planet/comet-docs/edit/main/blog/",
+                    editUrl: "https://github.com/vivid-planet/comet/edit/main/docs/blog/",
                 },
                 theme: {
                     customCss: require.resolve("./src/css/custom.css"),
