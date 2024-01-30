@@ -50,7 +50,7 @@ The `JobStatus` enum was renamed to `KubernetesJobStatus`.
     - import { CurrentUser } from "@comet/cms-api";
     ```
 
-    It shouldn't be necessary to overwrite these classes anymore, however, if you really need it, provide the CurrentUserLoader with `CURRENT_USER_LOADER`
+    It shouldn't be necessary to override these classes anymore, however, if you really need it, provide the CurrentUserLoader with `CURRENT_USER_LOADER`
 
 3. Create interface for `availablePermissions` similar to the already existing interface `interface ContentScope`
 
