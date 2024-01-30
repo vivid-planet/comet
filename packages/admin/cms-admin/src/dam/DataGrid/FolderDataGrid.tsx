@@ -44,6 +44,7 @@ import { DamUploadFooter } from "./footer/UploadFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
 import { useDamSelectionApi } from "./selection/DamSelectionContext";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
+
 export { damFolderQuery } from "./FolderDataGrid.gql";
 export { moveDamFilesMutation, moveDamFoldersMutation } from "./FolderDataGrid.gql";
 export {

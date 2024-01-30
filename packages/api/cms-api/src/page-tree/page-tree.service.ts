@@ -18,6 +18,7 @@ import {
     PageTreeNodeVisibility as Visibility,
     ScopeInterface,
 } from "./types";
+
 export { PageTreeReadApi } from "./page-tree-read-api";
 
 @Injectable()

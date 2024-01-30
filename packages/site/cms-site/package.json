@@ -21,11 +21,10 @@
         "lint": "$npm_execpath generate-block-types && run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 --ext .ts,.tsx,.js,.jsx,.json,.md src/ package.json",
         "lint:tsc": "tsc --noEmit",
-        "test": "jest --verbose=true",
+        "test": "jest --verbose=true --passWithNoTests",
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "@types/jsonwebtoken": "^8.5.9",
         "jsonwebtoken": "^8.5.1",
         "jwks-rsa": "^3.0.0",
         "rimraf": "^3.0.0",
@@ -39,6 +38,7 @@
         "@testing-library/react-hooks": "^8.0.0",
         "@types/draft-js": "^0.11.10",
         "@types/jest": "^29.5.0",
+        "@types/jsonwebtoken": "^8.5.9",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "@types/styled-components": "^5.0.0",

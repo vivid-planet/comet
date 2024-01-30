@@ -6,6 +6,7 @@ import * as React from "react";
 
 import { DocumentInterface, DocumentType } from "../documents/types";
 import { AllCategories } from "../pages/pageTree/PageTreeContext";
+
 export interface CmsBlockContext {
     apolloClient: ApolloClient<NormalizedCacheObject>;
     damConfig: {
