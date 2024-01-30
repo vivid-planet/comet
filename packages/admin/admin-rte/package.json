@@ -25,7 +25,7 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
-        "@comet/admin": "workspace:^5.3.0",
+        "@comet/admin": "workspace:^5.6.0",
         "@comet/admin-icons": "workspace:^5.6.0",
         "detect-browser": "^5.2.1",
         "draftjs-conductor": "^3.0.0",

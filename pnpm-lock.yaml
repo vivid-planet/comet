@@ -1484,7 +1484,7 @@ importers:
   packages/admin/admin-rte:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^5.3.0
+        specifier: workspace:^5.6.0
         version: link:../admin
       '@comet/admin-icons':
         specifier: workspace:^5.6.0
