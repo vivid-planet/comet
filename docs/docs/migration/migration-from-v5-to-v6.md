@@ -90,22 +90,29 @@ The `JobStatus` enum was renamed to `KubernetesJobStatus`.
     }
     ```
 
-5. Replace `ContentScopeModule` with `UserPermissionsModule` :
+5. Replace `ContentScopeModule` with `UserPermissionsModule`
+
+   Remove `ContentScopeModule`:
 
     ```diff
     - ContentScopeModule.forRoot({
     -     ...
     - }),
-    + UserPermissionsModule.forRootAsync({
-    +     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
-    +         availablePermissions: [/* Array of strings defined in interface Permission */],
-    +         availableContentScopes: [/* Array of content Scopes */],
-    +         userService,
-    +         accessControlService,
-    +     }),
-    +     inject: [UserService, AccessControlService],
-    +     imports: [/* Modules which provide the services injected in useFactory */],
-    + }),
+    ```
+
+   Add `UserPermissionsModule`:
+
+    ```ts
+    UserPermissionsModule.forRootAsync({
+        useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
+            availablePermissions: [/* Array of strings defined in interface Permission */],
+            availableContentScopes: [/* Array of content Scopes */],
+            userService,
+            accessControlService,
+        }),
+        inject: [UserService, AccessControlService],
+        imports: [/* Modules which provide the services injected in useFactory */],
+    }),
     ```
 
 6. Rename and add Decorators
@@ -251,12 +258,10 @@ This was removed because it was often unwanted and overridden.
 
 2. You can remove workarounds like
 
-    ```tsx
-    <FinalForm
-        onAfterSubmit={() => {
-            //don't go back automatically
-        }}
-    />
+    ```diff
+    - onAfterSubmit={() => {
+    -     //don't go back automatically
+    - }}
     ```
 
 ### @comet/admin-icons
