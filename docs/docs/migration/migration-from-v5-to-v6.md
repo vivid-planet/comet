@@ -7,11 +7,7 @@ sidebar_position: 1
 
 ## API
 
-### JobStatus
-
-The `JobStatus` enum was renamed to `KubernetesJobStatus`.
-
-### User-Permissions
+### User Permissions
 
 1. _Prerequisites_: Manage or sync allowed users in project (not covered here)
 
@@ -46,11 +42,11 @@ The `JobStatus` enum was renamed to `KubernetesJobStatus`.
     Change imports of removed classes
 
     ```diff
-    - import { CurrentUser } from "@src/auth/current-user";
-    - import { CurrentUser } from "@comet/cms-api";
+    - import { CurrentUser, CurrentUserLoader } from "@src/auth/current-user";
+    + import { CurrentUser } from "@comet/cms-api";
     ```
 
-    It shouldn't be necessary to override these classes anymore, however, if you really need it, provide the CurrentUserLoader with `CURRENT_USER_LOADER`
+    It shouldn't be necessary to override these classes anymore. However, if you really need it, provide the CurrentUserLoader with `CURRENT_USER_LOADER`.
 
 3. Create interface for `availablePermissions` similar to the already existing interface `interface ContentScope`
 
@@ -63,7 +59,7 @@ The `JobStatus` enum was renamed to `KubernetesJobStatus`.
     export {};
     ```
 
-4. Create Services necessary for the UserPermission-Module (either in a new module or where it fits best)
+4. Create necessary services for the `UserPermissionsModule` (either in a new module or where it fits best)
 
     ```ts
     // Attention: might already being provided by the library which syncs the users
@@ -115,31 +111,35 @@ The `JobStatus` enum was renamed to `KubernetesJobStatus`.
     }),
     ```
 
-6. Rename and add Decorators
+6. Rename and add decorators
 
-    Rename SubjectEntity to AffectedEntity
+    Rename `@SubjectEntity` to `@AffectedEntity`
 
     ```diff
     - @SubjectEntity(...)
     + @AffectedEntity(...)
     ```
 
-    Add RequiredPermission to resolvers and controllers
+    Add `@RequiredPermission` to resolvers and controllers
 
     ```diff
     + @RequiredPermission(["pageTree"])
       export class PagesResolver {
     ```
 
-    Remove AllowForRole (replaced by RequiredPermission)
+    Remove `@AllowForRole` (replaced by `@RequiredPermission`)
 
     ```diff
     - @AllowForRole(...)
     ```
 
+### JobStatus
+
+The `JobStatus` enum was renamed to `KubernetesJobStatus`.
+
 ## Admin
 
-### User-Permissions
+### User Permissions
 
 1. Add `<CurrentUserProvider>` to App.tsx
 
@@ -148,7 +148,7 @@ The `JobStatus` enum was renamed to `KubernetesJobStatus`.
     +    <CurrentUserProvider>
     ```
 
-2. Use `useCurrentUser()`-Hook instead requesting CurrentUser from the API
+2. Use `useCurrentUser()` hook instead requesting the current user from the API
 
     ```diff
     - const { loading, data } = useQuery(gql`
@@ -181,10 +181,6 @@ The `JobStatus` enum was renamed to `KubernetesJobStatus`.
     ```tsx
     <RouteWithErrorBoundary path={`${match.path}/user-permissions`} component={UserPermissionsPage} />
     ```
-
-### BuildRuntime
-
-The `BuildRuntime` component was renamed to `JobRuntime`.
 
 ### Sites Config
 
@@ -224,6 +220,10 @@ You must make following changes in the application:
     - resolveSiteConfigForScope: (configs: Record<string, SiteConfig>, scope: ContentScope) => configs[scope.domain],
     + resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
     ```
+
+### BuildRuntime
+
+The `BuildRuntime` component was renamed to `JobRuntime`.
 
 ### @comet/admin
 
