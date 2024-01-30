@@ -186,8 +186,7 @@ export { TableBodyRow, TableBodyRowClassKey, TableBodyRowProps } from "./table/T
 export { TableDndOrder } from "./table/TableDndOrder";
 export { TableFilterFinalForm } from "./table/TableFilterFinalForm";
 export { ITableLocalChangesApi, submitChangesWithMutation, TableLocalChanges } from "./table/TableLocalChanges";
-export { IDefaultVariables, parseIdFromIri, TableQuery, TableQueryProps } from "./table/TableQuery";
-export { TableQueryClassKey } from "./table/TableQuery.styles";
+export { IDefaultVariables, parseIdFromIri, TableQuery, TableQueryClassKey, TableQueryProps } from "./table/TableQuery";
 export { ITableQueryApi, ITableQueryContext, TableQueryContext } from "./table/TableQueryContext";
 export { usePersistedState } from "./table/usePersistedState";
 export { usePersistedStateId } from "./table/usePersistedStateId";
