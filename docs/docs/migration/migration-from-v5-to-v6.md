@@ -126,7 +126,7 @@ It automatically installs the new versions of all `@comet` libraries and handles
     }),
     ```
 
-6. Rename and add decorators
+6. Adapt decorators
 
     Add `@RequiredPermission` to resolvers and controllers
 
