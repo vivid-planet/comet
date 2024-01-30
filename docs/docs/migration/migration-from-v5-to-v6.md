@@ -295,9 +295,3 @@ The `CronJobsPage` now
 -   offers a subpage that displays all job runs
 
 You must add the `CronJobsModule` to your `AppModule` in the API for the `CronJobsPage` to work.
-
-:::warning
-
-Ensure you have sufficient access controls in place to prevent anyone from triggering cron jobs.
-
-:::
