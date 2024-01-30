@@ -281,15 +281,3 @@ The `@comet/no-other-module-relative-import` rule is now enabled by default. It 
 ### import/newline-after-import
 
 The `import/newline-after-import` rule is now enabled by default. It enforces adding a blank line between imports and code.
-
-## New Features
-
-### Cron Jobs
-
-The `CronJobsPage` now
-
--   shows the last run of every job
--   has a button to manually trigger a job
--   offers a subpage that displays all job runs
-
-You must add the `CronJobsModule` to your `AppModule` in the API for the `CronJobsPage` to work.
