@@ -34,4 +34,34 @@ export class JobsResolver {
         const jobs = await this.kubernetesService.getAllJobsForCronJob(cronJobName);
         return jobs.map((job) => this.jobsService.convertKuberneteJobToJobObjectType(job));
     }
+
+    @Query(() => Job)
+    async kubernetesJob(@Args("name") jobName: string, @GetCurrentUser() user: CurrentUserInterface): Promise<Job> {
+        if (this.kubernetesService.localMode) {
+            throw Error("Not available in local mode!");
+        }
+
+        const job = await this.kubernetesService.getJob(jobName);
+        const contentScope = this.kubernetesService.getContentScope(job);
+        if (contentScope && !this.accessControlService.isAllowed(user, "cronJobs", contentScope)) {
+            throw new Error("Access denied");
+        }
+
+        return this.jobsService.convertKuberneteJobToJobObjectType(job);
+    }
+
+    @Query(() => String)
+    async kubernetesJobLogs(@Args("name") jobName: string, @GetCurrentUser() user: CurrentUserInterface): Promise<string> {
+        if (this.kubernetesService.localMode) {
+            throw Error("Not available in local mode!");
+        }
+
+        const job = await this.kubernetesService.getJob(jobName);
+        const contentScope = this.kubernetesService.getContentScope(job);
+        if (contentScope && !this.accessControlService.isAllowed(user, "cronJobs", contentScope)) {
+            throw new Error("Access denied");
+        }
+
+        return this.kubernetesService.getJobLogs(job);
+    }
 }

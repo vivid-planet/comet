@@ -1,4 +1,4 @@
-import { BatchV1Api, KubeConfig, V1CronJob, V1Job, V1ObjectMeta } from "@kubernetes/client-node";
+import { BatchV1Api, CoreV1Api, KubeConfig, V1CronJob, V1Job, V1ObjectMeta, V1Pod } from "@kubernetes/client-node";
 import { Inject, Injectable } from "@nestjs/common";
 import { addMinutes, differenceInMinutes } from "date-fns";
 import fs from "fs";
@@ -16,6 +16,7 @@ export class KubernetesService {
     namespace: string;
 
     batchApi: BatchV1Api;
+    coreApi: CoreV1Api;
 
     constructor(@Inject(KUBERNETES_CONFIG) readonly config: KubernetesConfig) {
         const path = "/var/run/secrets/kubernetes.io/serviceaccount/namespace";
@@ -28,6 +29,7 @@ export class KubernetesService {
 
             kc.loadFromCluster();
             this.batchApi = kc.makeApiClient(BatchV1Api);
+            this.coreApi = kc.makeApiClient(CoreV1Api);
         }
         // DEBUG-Code if used locally, you need to be logged in (e.g. by using oc login)
         /*else {
@@ -35,6 +37,7 @@ export class KubernetesService {
 
             kc.loadFromDefault();
             this.batchApi = kc.makeApiClient(BatchV1Api);
+            this.coreApi = kc.makeApiClient(CoreV1Api);
             this.localMode = false;
         }*/
     }
@@ -72,6 +75,50 @@ export class KubernetesService {
         if (response.statusCode !== 200) {
             throw new Error(`Error deleting Job "${name}"`);
         }
+    }
+
+    async getJob(name: string): Promise<V1Job> {
+        const { response, body } = await this.batchApi.readNamespacedJob(name, this.namespace);
+        if (response.statusCode !== 200) {
+            throw new Error(`Error fetching Job "${name}"`);
+        }
+        return body;
+    }
+
+    async getPodsForJob(job: V1Job): Promise<V1Pod[]> {
+        const { response, body } = await this.coreApi.listNamespacedPod(
+            this.namespace,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            `job-name=${job.metadata?.name}`,
+        );
+        if (response.statusCode !== 200) {
+            throw new Error(`Error fetching Job "${job.metadata?.name}"`);
+        }
+
+        return body.items;
+    }
+
+    async getPodLogs(pod: V1Pod): Promise<string> {
+        const { response, body } = await this.coreApi.readNamespacedPodLog(pod.metadata?.name || "", this.namespace);
+        if (response.statusCode !== 200) {
+            throw new Error(`Error fetching logs for Pod "${pod.metadata?.name}"`);
+        }
+
+        return body;
+    }
+
+    async getJobLogs(job: V1Job): Promise<string> {
+        let logs = "";
+
+        const pods = await this.getPodsForJob(job);
+        for (const pod of pods) {
+            logs += await this.getPodLogs(pod);
+        }
+
+        return logs;
     }
 
     /**
