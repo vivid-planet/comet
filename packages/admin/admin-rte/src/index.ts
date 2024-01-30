@@ -3,7 +3,8 @@ export { default as BlockTypesControls, RteBlockTypeControlsClassKey } from "./c
 export { default as ControlButton, IProps as IControlButtonProps, RteControlButtonClassKey } from "./core/Controls/ControlButton";
 export { default as FeaturesButtonGroup, RteFeaturesButtonGroupClassKey } from "./core/Controls/FeaturesButtonGroup";
 export { default as LinkControls, RteLinkControlsClassKey } from "./core/Controls/LinkControls";
-export { RteToolbarClassKey, default as Toolbar } from "./core/Controls/Toolbar";
+export { Toolbar } from "./core/Controls/Toolbar/Toolbar";
+export { RteToolbarClassKey } from "./core/Controls/Toolbar/Toolbar.styles";
 export { default as LinkDecorator } from "./core/extension/Link/Decorator";
 export { default as NonBreakingSpaceDecorator } from "./core/extension/NonBreakingSpace/Decorator";
 export { default as SoftHyphenDecorator } from "./core/extension/SoftHyphen/Decorator";
