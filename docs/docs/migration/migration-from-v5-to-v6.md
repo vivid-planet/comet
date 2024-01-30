@@ -5,8 +5,20 @@ sidebar_position: 1
 
 # Migrating from v5 to v6
 
-First, execute `npx @comet/upgrade v6` in the root of your project. 
+First, execute `npx @comet/upgrade@latest v6` in the root of your project. 
 It automatically installs the new versions of all `@comet` libraries and handles some of the necessary renames.
+
+<details>
+
+<summary>Renames handled by @comet/upgrade</summary>
+
+- `JobStatus` -> `KubernetesJobStatus` in API
+- `@SubjectEntity` -> `@AffectedEntity` in API
+- `BuildRuntime` -> `JobRuntime` in Admin
+
+</details>
+
+
 
 ## API
 
@@ -116,13 +128,6 @@ It automatically installs the new versions of all `@comet` libraries and handles
 
 6. Rename and add decorators
 
-    Rename `@SubjectEntity` to `@AffectedEntity` (this is done by `@comet/upgrade`)
-
-    ```diff
-    - @SubjectEntity(...)
-    + @AffectedEntity(...)
-    ```
-
     Add `@RequiredPermission` to resolvers and controllers
 
     ```diff
@@ -135,10 +140,6 @@ It automatically installs the new versions of all `@comet` libraries and handles
     ```diff
     - @AllowForRole(...)
     ```
-
-### JobStatus
-
-The `JobStatus` enum was renamed to `KubernetesJobStatus`. The rename is done by `@comet/upgrade`.
 
 ## Admin
 
@@ -223,10 +224,6 @@ You must make following changes in the application:
     - resolveSiteConfigForScope: (configs: Record<string, SiteConfig>, scope: ContentScope) => configs[scope.domain],
     + resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
     ```
-
-### BuildRuntime
-
-The `BuildRuntime` component was renamed to `JobRuntime`. The rename is done by `@comet/upgrade`.
 
 ### @comet/admin
 
