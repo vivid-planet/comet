@@ -3,6 +3,7 @@
 
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    ContentTranslationServiceProvider,
     Field,
     FinalForm,
     FinalFormInput,
@@ -141,78 +142,86 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
     }
 
     return (
-        <FinalForm<FormValues>
-            apiRef={formApiRef}
-            onSubmit={handleSubmit}
-            mode={mode}
-            initialValues={initialValues}
-            onAfterSubmit={(values, form) => {
-                //don't go back automatically
+        <ContentTranslationServiceProvider
+            enabled={true}
+            translate={async function (text: string): Promise<string> {
+                console.log("html to translate: ", text);
+                return `<p>[Start Translation]</p>${text}<p>[End Translation]</p>`;
             }}
         >
-            {({ values }) => (
-                <EditPageLayout>
-                    {saveConflict.dialogs}
-                    <Toolbar>
-                        <ToolbarItem>
-                            <IconButton onClick={stackApi?.goBack}>
-                                <ArrowLeft />
-                            </IconButton>
-                        </ToolbarItem>
-                        <ToolbarTitleItem>
-                            <FormattedMessage id="news.News" defaultMessage="News" />
-                        </ToolbarTitleItem>
-                        <ToolbarFillSpace />
-                        <ToolbarActions>
-                            <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
-                        </ToolbarActions>
-                    </Toolbar>
-                    <MainContent>
-                        <Field
-                            required
-                            fullWidth
-                            name="slug"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="news.slug" defaultMessage="Slug" />}
-                        />
-                        <Field
-                            required
-                            fullWidth
-                            name="title"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="news.title" defaultMessage="Title" />}
-                        />
-                        <Field
-                            required
-                            fullWidth
-                            name="date"
-                            component={FinalFormDatePicker}
-                            label={<FormattedMessage id="news.date" defaultMessage="Date" />}
-                        />
-                        <Field fullWidth name="category" label={<FormattedMessage id="news.category" defaultMessage="Category" />}>
-                            {(props) => (
-                                <FinalFormSelect {...props}>
-                                    <MenuItem value="Events">
-                                        <FormattedMessage id="news.category.events" defaultMessage="Events" />
-                                    </MenuItem>
-                                    <MenuItem value="Company">
-                                        <FormattedMessage id="news.category.company" defaultMessage="Company" />
-                                    </MenuItem>
-                                    <MenuItem value="Awards">
-                                        <FormattedMessage id="news.category.awards" defaultMessage="Awards" />
-                                    </MenuItem>
-                                </FinalFormSelect>
-                            )}
-                        </Field>
-                        <Field name="image" isEqual={isEqual}>
-                            {createFinalFormBlock(rootBlocks.image)}
-                        </Field>
-                        <Field name="content" isEqual={isEqual}>
-                            {createFinalFormBlock(rootBlocks.content)}
-                        </Field>
-                    </MainContent>
-                </EditPageLayout>
-            )}
-        </FinalForm>
+            <FinalForm<FormValues>
+                apiRef={formApiRef}
+                onSubmit={handleSubmit}
+                mode={mode}
+                initialValues={initialValues}
+                onAfterSubmit={(values, form) => {
+                    //don't go back automatically
+                }}
+            >
+                {({ values }) => (
+                    <EditPageLayout>
+                        {saveConflict.dialogs}
+                        <Toolbar>
+                            <ToolbarItem>
+                                <IconButton onClick={stackApi?.goBack}>
+                                    <ArrowLeft />
+                                </IconButton>
+                            </ToolbarItem>
+                            <ToolbarTitleItem>
+                                <FormattedMessage id="news.News" defaultMessage="News" />
+                            </ToolbarTitleItem>
+                            <ToolbarFillSpace />
+                            <ToolbarActions>
+                                <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
+                            </ToolbarActions>
+                        </Toolbar>
+                        <MainContent>
+                            <Field
+                                required
+                                fullWidth
+                                name="slug"
+                                component={FinalFormInput}
+                                label={<FormattedMessage id="news.slug" defaultMessage="Slug" />}
+                            />
+                            <Field
+                                required
+                                fullWidth
+                                name="title"
+                                component={FinalFormInput}
+                                label={<FormattedMessage id="news.title" defaultMessage="Title" />}
+                            />
+                            <Field
+                                required
+                                fullWidth
+                                name="date"
+                                component={FinalFormDatePicker}
+                                label={<FormattedMessage id="news.date" defaultMessage="Date" />}
+                            />
+                            <Field fullWidth name="category" label={<FormattedMessage id="news.category" defaultMessage="Category" />}>
+                                {(props) => (
+                                    <FinalFormSelect {...props}>
+                                        <MenuItem value="Events">
+                                            <FormattedMessage id="news.category.events" defaultMessage="Events" />
+                                        </MenuItem>
+                                        <MenuItem value="Company">
+                                            <FormattedMessage id="news.category.company" defaultMessage="Company" />
+                                        </MenuItem>
+                                        <MenuItem value="Awards">
+                                            <FormattedMessage id="news.category.awards" defaultMessage="Awards" />
+                                        </MenuItem>
+                                    </FinalFormSelect>
+                                )}
+                            </Field>
+                            <Field name="image" isEqual={isEqual}>
+                                {createFinalFormBlock(rootBlocks.image)}
+                            </Field>
+                            <Field name="content" isEqual={isEqual}>
+                                {createFinalFormBlock(rootBlocks.content)}
+                            </Field>
+                        </MainContent>
+                    </EditPageLayout>
+                )}
+            </FinalForm>
+        </ContentTranslationServiceProvider>
     );
 }
