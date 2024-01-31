@@ -9,10 +9,11 @@ import { AppHeaderButton, AppHeaderButtonProps } from "../button/AppHeaderButton
 export type AppHeaderDropdownClassKey = "root" | "popover";
 
 export interface AppHeaderDropdownProps
-    extends Omit<AppHeaderButtonProps, "children">,
+    extends Omit<AppHeaderButtonProps, "children" | "slotProps">,
         ThemedComponentBaseProps<{
             root: "div";
             popover: typeof Popover;
+            button: typeof AppHeaderButton;
         }> {
     children?: ((closeDropdown: () => void) => React.ReactNode) | React.ReactNode;
     buttonChildren?: React.ReactNode;
@@ -33,6 +34,14 @@ const Root = styled("div", {
         height: 100%;
     `,
 );
+
+const Button = styled(AppHeaderButton, {
+    name: "CometAdminAppHeaderDropdown",
+    slot: "button",
+    overridesResolver(_, styles) {
+        return [styles.button];
+    },
+})();
 
 const Popover = styled(MuiPopover, {
     name: "CometAdminAppHeaderDropdown",
@@ -85,9 +94,14 @@ export function AppHeaderDropdown(inProps: AppHeaderDropdownProps) {
 
     return (
         <Root ref={rootRef} {...slotProps?.root}>
-            <AppHeaderButton endIcon={dropdownArrow !== null ? dropdownArrow(_open) : undefined} {...restProps} onClick={() => _onOpenChange(true)}>
+            <Button
+                endIcon={dropdownArrow !== null ? dropdownArrow(_open) : undefined}
+                {...restProps}
+                {...slotProps?.button}
+                onClick={() => _onOpenChange(true)}
+            >
                 {buttonChildren}
-            </AppHeaderButton>
+            </Button>
             <Popover
                 {...slotProps?.popover}
                 open={_open}
