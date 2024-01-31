@@ -1,7 +1,8 @@
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
-import { ComponentsOverrides, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { ThemedComponentBaseProps } from "@comet/admin";
+import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import {
     DraftBlockType,
     DraftEditorCommand,
@@ -90,7 +91,11 @@ export type FilterEditorStateBeforeUpdateFn = (
     context: Pick<IRteOptions, "supports" | "listLevelMax" | "maxBlocks" | "standardBlockType">,
 ) => EditorState;
 
-export interface RteProps {
+export interface RteProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        editor: "div";
+    }> {
     value: EditorState;
     onChange: OnEditorStateChangeFn;
     options?: IOptions;
@@ -148,13 +153,31 @@ export const styleMap = {
     },
 };
 
-const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles>> = (props, ref) => {
-    const { value: editorState, onChange, options: passedOptions, disabled, classes } = props;
+export const Rte: React.ForwardRefRenderFunction<any, RteProps> = (inProps: RteProps, ref) => {
+    //move ref to props?
+    const {
+        value: editorState,
+        onChange,
+        options: rteOptions,
+        disabled,
+        minHeight,
+        colors,
+        slotProps,
+        ...restProps
+    } = useThemeProps({
+        props: inProps,
+        name: "CometAdminRte",
+    });
+
+    const ownerState: OwnerState = {
+        disabled,
+    };
+
     const editorRef = React.useRef<DraftJsEditor>(null);
     const editorWrapperRef = React.useRef<HTMLDivElement>(null);
 
     // merge default options with passed options
-    let options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions;
+    let options = rteOptions ? { ...defaultOptions, ...rteOptions } : defaultOptions;
 
     // extract deprecated options and handle them specially
     let deprecatedCustomBlockMap: ICustomBlockTypeMap_Deprecated = {};
@@ -266,9 +289,6 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
         return getDefaultKeyBinding(event);
     }
 
-    const rootClasses: string[] = [classes.root];
-    if (disabled) rootClasses.push(classes.disabled);
-
     const customStyleMap: DraftStyleMap = { ...styleMap };
 
     if (options.customInlineStyles) {
@@ -278,12 +298,9 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
     }
 
     return (
-        <div ref={editorWrapperRef} className={rootClasses.join(" ")}>
+        <Root ref={editorWrapperRef} ownerState={ownerState} {...restProps} {...slotProps?.root}>
             <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} disabled={disabled} />
-            <div
-                className={classes.editor}
-                style={{ "--comet-admin-rte-min-height": `${props.minHeight === undefined ? 240 : props.minHeight}px` } as React.CSSProperties}
-            >
+            <Editor ownerState={ownerState} {...slotProps?.editor}>
                 <DraftJsEditor
                     ref={editorRef}
                     editorState={editorState}
@@ -311,38 +328,56 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
                     }}
                     {...options.draftJsProps}
                 />
-            </div>
-        </div>
+            </Editor>
+        </Root>
     );
 };
 
 export type RteClassKey = "root" | "disabled" | "editor";
 
-const styles = (theme: Theme) => {
-    const rteTheme = getRteTheme(theme.components?.CometAdminRte?.defaultProps);
+type OwnerState = Pick<RteProps, "disabled" | "minHeight">;
 
-    return createStyles<RteClassKey, RteProps>({
-        root: {
-            border: `1px solid ${rteTheme.colors.border}`,
-            borderTopWidth: 0,
-            backgroundColor: "#fff",
-        },
-        disabled: {
-            "& $editor": {
-                color: theme.palette.text.disabled,
-            },
-        },
-        editor: {
-            "& .public-DraftEditor-content": {
-                minHeight: "var(--comet-admin-rte-min-height)",
-                padding: 20,
-                boxSizing: "border-box",
-            },
-        },
-    });
-};
+const Root = styled("div", {
+    name: "CometAdminRte",
+    slot: "root",
+    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+        return [styles.root, ownerState.disabled && styles.disabled];
+    },
+})<{ ownerState: OwnerState }>(
+    ({ theme, ownerState }) => css`
+        border: 1px solid ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors.border};
+        border-top-width: 0;
+        background-color: #fff;
 
-export default withStyles(styles, { name: "CometAdminRte" })(React.forwardRef(Rte));
+        ${ownerState.disabled && css``}// check that. needs it?
+    `,
+);
+
+const Editor = styled("div", {
+    name: "CometAdminRte",
+    slot: "editor",
+    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+        return [styles.editor, ownerState.disabled && styles.disabled];
+    },
+})<{ ownerState: OwnerState }>(
+    ({ ownerState, theme }) => css`
+        & .public-DraftEditor-content {
+            min-height: 240px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        ${ownerState.disabled &&
+        css`
+            color: ${theme.palette.text.disabled};
+        `} // check that
+        
+        ${ownerState.minHeight &&
+        css`
+            min-height: ${ownerState.minHeight};
+        `}
+    `,
+);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -355,7 +390,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminRte?: {
-            defaultProps?: ComponentsPropsList["CometAdminRte"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminRte"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminRte"];
         };
     }
