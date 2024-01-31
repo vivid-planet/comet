@@ -110,7 +110,7 @@ const styles = ({ palette }: Theme) => {
     });
 };
 
-export interface FinalFormFileUploadProps extends FieldRenderProps<File[], HTMLInputElement> {
+export interface FinalFormFileUploadProps extends FieldRenderProps<File | File[], HTMLInputElement> {
     dropzoneVariant: "dropzoneOnly" | "buttonOnly" | "default";
     accept: Accept;
     maxSize: number;
@@ -121,18 +121,18 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
     disabled,
     dropzoneVariant,
     accept,
-    maxSize = 52428800,
+    maxSize = 50 * 1024 * 1024,
     input: { onChange, value: fieldValue, multiple: multipleFiles },
 }) => {
     const onDrop = React.useCallback(
         (acceptedFiles: File[]) => {
-            multipleFiles ? onChange([...fieldValue, ...acceptedFiles]) : onChange([...acceptedFiles]);
+            multipleFiles && Array.isArray(fieldValue) ? onChange([...fieldValue, ...acceptedFiles]) : onChange([...acceptedFiles]);
         },
         [fieldValue, multipleFiles, onChange],
     );
 
     const removeFile = (removedFile: File) => () => {
-        const newFiles = fieldValue.filter((file) => file !== removedFile);
+        const newFiles = Array.isArray(fieldValue) ? fieldValue.filter((file) => file !== removedFile) : undefined;
         onChange(newFiles);
     };
 
@@ -145,19 +145,30 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
     });
 
     // list of the accepted files
-    const files =
-        fieldValue.length > 0 &&
-        fieldValue.map((file) => (
-            <div key={file.name} className={classes.fileListItem}>
-                {file.name.length < 20 ? file.name : `${file.name.substring(0, 20)}...`}
-                <div>
-                    <Chip label={<PrettyBytes value={file.size} />} />
-                    <IconButton onClick={removeFile(file)}>
-                        <Delete />
-                    </IconButton>
-                </div>
-            </div>
-        ));
+    const files = Array.isArray(fieldValue)
+        ? fieldValue.map((file) => (
+              <div key={file.name} className={classes.fileListItem}>
+                  {file.name.length < 20 ? file.name : `${file.name.substring(0, 20)}...`}
+                  <div>
+                      <Chip label={<PrettyBytes value={file.size} />} />
+                      <IconButton onClick={removeFile(file)}>
+                          <Delete />
+                      </IconButton>
+                  </div>
+              </div>
+          ))
+        : !Array.isArray(fieldValue) &&
+          fieldValue.name !== undefined && (
+              <div key={fieldValue.name} className={classes.fileListItem}>
+                  {fieldValue.name.length < 20 ? fieldValue.name : `${fieldValue.name.substring(0, 20)}...`}
+                  <div>
+                      <Chip label={<PrettyBytes value={fieldValue.size} />} />
+                      <IconButton onClick={removeFile(fieldValue)}>
+                          <Delete />
+                      </IconButton>
+                  </div>
+              </div>
+          );
 
     const rejectedFiles =
         fileRejections.length > 0 &&
@@ -192,7 +203,9 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
                     </Button>
                 )}
             </div>
-            {fieldValue.length > 0 && <div className={classes.fileList}>{files}</div>}
+            {((Array.isArray(fieldValue) && fieldValue.length > 0) || (!Array.isArray(fieldValue) && fieldValue.name !== undefined)) && (
+                <div className={classes.fileList}>{files}</div>
+            )}
             {fileRejections.length > 0 && <div className={classes.fileList}>{rejectedFiles}</div>}
             {(fileRejections.length > 0 || isDragReject) && (
                 <div className={classes.errorMessage}>
