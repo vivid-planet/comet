@@ -96,13 +96,14 @@ export class UserPermissionsService {
 
     async getContentScopes(userId: string, includeContentScopesManual = true): Promise<ContentScope[]> {
         const contentScopes: ContentScope[] = [];
+        const availableContentScopes = await this.getAvailableContentScopes();
 
         if (this.accessControlService.getContentScopesForUser) {
             const user = await this.getUser(userId);
             if (user) {
                 const userContentScopes = await this.accessControlService.getContentScopesForUser(user);
                 if (userContentScopes === UserPermissions.allContentScopes) {
-                    contentScopes.push(...(await this.getAvailableContentScopes()));
+                    contentScopes.push(...availableContentScopes);
                 } else {
                     contentScopes.push(...userContentScopes);
                 }
@@ -112,7 +113,7 @@ export class UserPermissionsService {
         if (includeContentScopesManual) {
             const entity = await this.contentScopeRepository.findOne({ userId });
             if (entity) {
-                contentScopes.push(...entity.contentScopes);
+                contentScopes.push(...entity.contentScopes.filter((value) => availableContentScopes.some((cs) => isEqual(cs, value))));
             }
         }
 
@@ -122,7 +123,6 @@ export class UserPermissionsService {
     normalizeContentScopes(contentScopes: ContentScope[], availableContentScopes: ContentScope[]): ContentScope[] {
         return [...new Set(contentScopes.map((cs) => JSON.stringify(cs)))] // Make values unique
             .map((cs) => JSON.parse(cs))
-            .filter((value) => availableContentScopes.some((cs) => isEqual(cs, value))) // Allow only values that are defined in availableContentScopes
             .sort((a, b) => availableContentScopes.indexOf(a) - availableContentScopes.indexOf(b)); // Order by availableContentScopes
     }
 
