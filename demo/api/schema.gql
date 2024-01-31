@@ -640,7 +640,7 @@ type Query {
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(scope: DamScopeInput!, name: String!, parentId: ID): DamFolder
   news(id: ID!): News!
-  newsBySlug(slug: String!): News
+  newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
   newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
