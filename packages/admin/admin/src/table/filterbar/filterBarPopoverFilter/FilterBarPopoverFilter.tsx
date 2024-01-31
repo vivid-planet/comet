@@ -170,9 +170,11 @@ export function FilterBarPopoverFilter(inProps: React.PropsWithChildren<FilterBa
                                 PaperProps={{
                                     square: true,
                                     elevation: 1,
+                                    ...slotProps?.popover?.PaperProps,
                                     sx: {
                                         marginLeft: "-1", //due to border of popover, but now overrideable with styling if needed
                                         marginTop: "2", //due to boxShadow of popover to not overlap border of clickable fieldBar
+                                        ...slotProps?.popover?.PaperProps?.sx,
                                     },
                                 }}
                                 elevation={2}
