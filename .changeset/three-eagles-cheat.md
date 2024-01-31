@@ -2,4 +2,4 @@
 "@comet/cms-api": patch
 ---
 
-api-generator: add scope argument and filter for slug query
+API Generator: Support `scope` argument and filter in `<entity>BySlug` query
