@@ -47,13 +47,23 @@ const ListItem = styled("div", {
     `,
 );
 
+const Item = styled(MenuItem, {
+    name: "CometAdminMenuCollapsibleItem",
+    slot: "menuItem",
+    overridesResolver(_, styles) {
+        return [styles.menuItem];
+    },
+})();
+
 export interface MenuLevel {
     level?: 1 | 2;
 }
 
 type MenuChild = React.ReactElement<MenuItemRouterLinkProps>;
 
-export interface MenuCollapsibleItemProps extends ThemedComponentBaseProps<{ root: "div"; listItem: "div" }>, MenuItemProps {
+export interface MenuCollapsibleItemProps
+    extends Omit<MenuItemProps, "slotProps">,
+        ThemedComponentBaseProps<{ root: "div"; listItem: "div"; menuItem: typeof MenuItem }> {
     children: MenuChild | MenuChild[];
     openByDefault?: boolean;
     openedIcon?: React.ReactNode;
@@ -100,13 +110,14 @@ export function MenuCollapsibleItem(inProps: MenuCollapsibleItemProps) {
     return (
         <Root ownerState={ownerState} {...slotProps?.root} {...otherProps}>
             <ListItem ownerState={ownerState} {...slotProps?.listItem}>
-                <MenuItem
+                <Item
                     primary={primary}
                     secondary={secondary}
                     icon={icon}
                     level={level}
                     onClick={() => setOpen(!open)}
                     secondaryAction={open ? openedIcon : closedIcon}
+                    {...slotProps?.menuItem}
                 />
             </ListItem>
             <Collapse in={open} timeout="auto" unmountOnExit>
