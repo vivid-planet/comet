@@ -1,5 +1,5 @@
 ---
-title: Creating a new Project
+title: Creating a new project
 sidebar_position: 2
 ---
 

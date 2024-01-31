@@ -1,5 +1,5 @@
 ---
-title: How to Run
+title: How to run
 sidebar_position: 3
 ---
 
