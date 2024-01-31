@@ -1483,6 +1483,12 @@ importers:
       detect-browser:
         specifier: ^5.2.1
         version: 5.3.0
+      draft-js-export-html:
+        specifier: ^1.4.1
+        version: 1.4.1(draft-js@0.11.7)(immutable@3.7.6)
+      draft-js-import-html:
+        specifier: ^1.4.1
+        version: 1.4.1(draft-js@0.11.7)(immutable@3.7.6)
       draftjs-conductor:
         specifier: ^3.0.0
         version: 3.0.0(draft-js@0.11.7)
@@ -1511,21 +1517,12 @@ importers:
       '@mui/styles':
         specifier: ^5.0.0
         version: 5.11.2(@types/react@17.0.53)(react@17.0.2)
-      '@testing-library/jest-dom':
-        specifier: ^5.16.5
-        version: 5.16.5
-      '@testing-library/react':
-        specifier: ^12.0.0
-        version: 12.1.5(react-dom@17.0.2)(react@17.0.2)
       '@types/draft-js':
         specifier: ^0.11.10
         version: 0.11.10
       '@types/immutable':
         specifier: ^3.8.7
         version: 3.8.7
-      '@types/jest':
-        specifier: ^29.5.0
-        version: 29.5.0
       '@types/react':
         specifier: ^17.0.0
         version: 17.0.53
@@ -1544,15 +1541,6 @@ importers:
       final-form:
         specifier: ^4.16.1
         version: 4.20.9
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.15.3)(ts-node@10.9.1)
-      jest-environment-jsdom:
-        specifier: ^29.5.0
-        version: 29.5.0
-      jest-junit:
-        specifier: ^15.0.0
-        version: 15.0.0
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
@@ -19170,7 +19158,6 @@ packages:
       draft-js: 0.11.7(react-dom@17.0.2)(react@17.0.2)
       draft-js-utils: 1.4.1(draft-js@0.11.7)(immutable@3.7.6)
       immutable: 3.7.6
-    dev: true
 
   /draft-js-export-markdown@1.4.0(draft-js@0.11.7)(immutable@3.7.6):
     resolution: {integrity: sha512-blfAvlhGhjVlHNaZ5WJKlrXhcftnwwC5VC+Eu3ztOGpGLaOom4hxhBjbKEWjvbQZJ9zL+xo57ukm39prYZMG5Q==}
@@ -19193,7 +19180,17 @@ packages:
       draft-js-utils: 1.4.1(draft-js@0.11.7)(immutable@3.7.6)
       immutable: 3.7.6
       synthetic-dom: 1.4.0
-    dev: true
+
+  /draft-js-import-html@1.4.1(draft-js@0.11.7)(immutable@3.7.6):
+    resolution: {integrity: sha512-KOZmtgxZriCDgg5Smr3Y09TjubvXe7rHPy/2fuLSsL+aSzwUDwH/aHDA/k47U+WfpmL4qgyg4oZhqx9TYJV0tg==}
+    peerDependencies:
+      draft-js: '>=0.10.0'
+      immutable: 3.x.x
+    dependencies:
+      draft-js: 0.11.7(react-dom@17.0.2)(react@17.0.2)
+      draft-js-import-element: 1.4.0(draft-js@0.11.7)(immutable@3.7.6)
+      immutable: 3.7.6
+    dev: false
 
   /draft-js-import-markdown@1.4.1(draft-js@0.11.7)(immutable@3.7.6):
     resolution: {integrity: sha512-58mDXJURrb5dsiN+cIms/gojI9jngE60WAwygYoxrEbsQeIIITOlFLjV/m/7Ko7HVpc5wjngVV2hzJ71T3FpMA==}
@@ -19215,7 +19212,6 @@ packages:
     dependencies:
       draft-js: 0.11.7(react-dom@17.0.2)(react@17.0.2)
       immutable: 3.7.6
-    dev: true
 
   /draft-js@0.11.7(react-dom@17.0.2)(react@17.0.2):
     resolution: {integrity: sha512-ne7yFfN4sEL82QPQEn80xnADR8/Q6ALVworbC5UOSzOvjffmYfFsr3xSZtxbIirti14R7Y33EZC5rivpLgIbsg==}
@@ -29922,7 +29918,6 @@ packages:
 
   /synthetic-dom@1.4.0:
     resolution: {integrity: sha512-mHv51ZsmZ+ShT/4s5kg+MGUIhY7Ltq4v03xpN1c8T1Krb5pScsh/lzEjyhrVD0soVDbThbd2e+4dD9vnDG4rhg==}
-    dev: true
 
   /tapable@1.1.3:
     resolution: {integrity: sha512-4WK/bYZmj8xLr+HUCODHGF1ZFzsYffasLUgEiMBY4fgtltdO6B4WJtlSbPaDTLpYTcGVwM2qLnFTICEcNxs3kA==}

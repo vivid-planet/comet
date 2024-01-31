@@ -1,14 +1,13 @@
 import { useContentTranslationService } from "@comet/admin";
 import { Translate } from "@comet/admin-icons";
 import Tooltip from "@mui/material/Tooltip";
-import { convertToRaw } from "draft-js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import ControlButton from "../Controls/ControlButton";
 import { IControlProps } from "../types";
-import { transformStateToXml } from "./xml/transformStateToXml";
-import { translateAndTransformXmlToState } from "./xml/translateAndTransformToState";
+import { htmlToState } from "./htmlToState";
+import { stateToHtml } from "./stateToHtml";
 
 function ToolbarButton({ editorState, setEditorState, options }: IControlProps): React.ReactElement {
     const translationContext = useContentTranslationService();
@@ -18,19 +17,13 @@ function ToolbarButton({ editorState, setEditorState, options }: IControlProps):
 
         event.preventDefault();
 
-        const contentState = editorState.getCurrentContent();
+        const { html, linkDataList } = stateToHtml({ editorState, options });
 
-        const xml = transformStateToXml(contentState, options.customInlineStyles);
+        const translation = await translationContext.translate(html);
 
-        const translations = (await translationContext.translate(xml.join("<split />"))).split("<split />");
+        const translatedEditorState = htmlToState({ translation, linkDataList });
 
-        if (xml.length === translations.length) {
-            const translationMap = xml.map((original, index) => ({ original, replaceWith: translations[index] }));
-
-            const translatedState = translateAndTransformXmlToState(contentState, convertToRaw(contentState), translationMap);
-
-            setEditorState(translatedState);
-        }
+        setEditorState(translatedEditorState);
     }
 
     return (
