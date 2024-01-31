@@ -149,8 +149,7 @@ export {
     FilterBarActiveFilterBadgeClassKey,
     FilterBarActiveFilterBadgeProps,
 } from "./table/filterbar/filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
-export { FilterBarButton, FilterBarButtonProps } from "./table/filterbar/filterBarButton/FilterBarButton";
-export { FilterBarButtonClassKey } from "./table/filterbar/filterBarButton/FilterBarButton.styles";
+export { FilterBarButton, FilterBarButtonClassKey, FilterBarButtonProps } from "./table/filterbar/filterBarButton/FilterBarButton";
 export {
     FilterBarMoreFilters,
     FilterBarMoreFiltersClassKey,

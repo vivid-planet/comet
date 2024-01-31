@@ -1,60 +1,120 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Button, ComponentsOverrides, Theme } from "@mui/material";
-import { ButtonProps } from "@mui/material/Button";
-import { WithStyles } from "@mui/styles";
-import withStyles from "@mui/styles/withStyles";
-import clsx from "clsx";
+import { buttonClasses, ButtonProps, ComponentsOverrides, svgIconClasses } from "@mui/material";
+import Button from "@mui/material/Button";
+import { css, styled, Theme } from "@mui/material/styles";
+import { useThemeProps } from "@mui/system";
+import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 
 import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
-import { FilterBarButtonClassKey, styles } from "./FilterBarButton.styles";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export interface FilterBarButtonProps extends ButtonProps {
+export type FilterBarButtonClassKey = "root" | "open" | "hasDirtyFields" | "filterBadge";
+
+type OwnerState = { hasDirtyFields: boolean; openPopover: boolean | undefined };
+
+const Root = styled(Button, {
+    name: "CometAdminFilterBarButton",
+    slot: "root",
+    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+        return [styles.root, ownerState.openPopover && styles.open, ownerState.hasDirtyFields && styles.hasDirtyFields];
+    },
+})<{ ownerState: OwnerState }>(
+    ({ theme, ownerState }) => css`
+        position: relative;
+        cursor: pointer;
+        display: flex;
+        background-color: ${theme.palette.common.white};
+        border-color: ${theme.palette.grey[100]};
+        border-radius: 2px;
+
+        && .${buttonClasses.startIcon} .${svgIconClasses.root}, && .${buttonClasses.endIcon} .${svgIconClasses.root} {
+            font-size: 12px;
+        }
+
+        &:hover {
+            border-color: ${theme.palette.grey[100]};
+            background-color: ${theme.palette.common.white};
+        }
+
+        &:focus {
+            border-color: ${theme.palette.primary.main};
+            background-color: ${theme.palette.common.white};
+        }
+
+        ${ownerState.openPopover &&
+        css`
+            border-color: ${theme.palette.primary.main};
+        `}
+
+        ${ownerState.hasDirtyFields &&
+        css`
+            border-color: ${theme.palette.grey[400]};
+            font-weight: ${theme.typography.fontWeightBold};
+
+            &:disabled {
+                border-color: ${theme.palette.grey[100]};
+            }
+        `}
+    `,
+);
+
+const FilterBadge = styled("span", {
+    name: "CometAdminFilterBarButton",
+    slot: "filterBadge",
+    overridesResolver(_, styles) {
+        return [styles.filterBadge];
+    },
+})(
+    css`
+        margin-left: 6px;
+    `,
+);
+
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
+export interface FilterBarButtonProps extends ThemedComponentBaseProps<{ root: typeof Button; filterBadge: "span" }>, ButtonProps {
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
     numberDirtyFields?: number;
     openPopover?: boolean;
 }
 
-const FilterBarButton = ({
-    children,
-    dirtyFieldsBadge,
-    numberDirtyFields,
-    openPopover,
-    classes,
-    endIcon = <ChevronDown />,
-    className,
-    ...buttonProps
-}: FilterBarButtonProps & WithStyles<typeof styles>): React.ReactElement => {
-    const hasDirtyFields = !!(numberDirtyFields && numberDirtyFields > 0);
-    const FilterBarActiveFilterBadgeComponent = dirtyFieldsBadge ? dirtyFieldsBadge : FilterBarActiveFilterBadge;
-
-    return (
-        <Button
-            className={clsx(className, classes.root, hasDirtyFields && classes.hasDirtyFields, openPopover && classes.open)}
-            disableRipple
-            endIcon={endIcon}
-            variant="outlined"
-            {...buttonProps}
-        >
-            {children}
-            {hasDirtyFields && (
-                <span className={classes.filterBadge}>
-                    <FilterBarActiveFilterBadgeComponent countValue={numberDirtyFields} />
-                </span>
-            )}
-        </Button>
-    );
-};
-
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-const FilterBarButtonWithStyles = withStyles(styles, { name: "CometAdminFilterBarButton" })(FilterBarButton);
+export function FilterBarButton(inProps: FilterBarButtonProps) {
+    const {
+        children,
+        dirtyFieldsBadge,
+        numberDirtyFields,
+        openPopover,
+        endIcon = <ChevronDown />,
+        slotProps,
+        ...restProps
+    } = useThemeProps({
+        props: inProps,
+        name: "CometAdminFilterBarButton",
+    });
 
-export { FilterBarButtonWithStyles as FilterBarButton };
+    const hasDirtyFields = !!(numberDirtyFields && numberDirtyFields > 0);
+    const FilterBarActiveFilterBadgeComponent = dirtyFieldsBadge ? dirtyFieldsBadge : FilterBarActiveFilterBadge;
+
+    const ownerState: OwnerState = { hasDirtyFields, openPopover };
+
+    return (
+        <Root ownerState={ownerState} disableRipple endIcon={endIcon} variant="outlined" {...slotProps?.root} {...restProps}>
+            {children}
+            {hasDirtyFields && (
+                <FilterBadge {...slotProps?.filterBadge}>
+                    <FilterBarActiveFilterBadgeComponent countValue={numberDirtyFields} />
+                </FilterBadge>
+            )}
+        </Root>
+    );
+}
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
