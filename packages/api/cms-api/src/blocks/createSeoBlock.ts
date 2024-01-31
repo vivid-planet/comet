@@ -51,7 +51,6 @@ interface CreateSeoBlockOptions<ImageBlock extends Block> {
     image?: ImageBlock;
 }
 
-// Block-factories need the their BlockInputInterface to be public
 interface SeoBlockInputInterface<ImageBlockInput extends BlockInputInterface> extends SimpleBlockInputInterface {
     htmlTitle?: string;
     metaDescription?: string;

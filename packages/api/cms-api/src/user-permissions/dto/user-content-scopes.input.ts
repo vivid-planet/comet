@@ -1,5 +1,5 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { IsArray } from "class-validator";
+import { IsArray, IsObject } from "class-validator";
 import { GraphQLJSONObject } from "graphql-type-json";
 
 import { ContentScope } from "../interfaces/content-scope.interface";
@@ -8,5 +8,6 @@ import { ContentScope } from "../interfaces/content-scope.interface";
 export class UserContentScopesInput {
     @Field(() => [GraphQLJSONObject], { defaultValue: [] })
     @IsArray()
+    @IsObject({ each: true })
     contentScopes: ContentScope[] = [];
 }

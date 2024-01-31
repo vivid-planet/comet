@@ -33,7 +33,7 @@ import { DamUploadFileInterceptor } from "./dam-upload-file.interceptor";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createUploadFileBody, UploadFileBodyInterface } from "./dto/file.body";
 import { FileParams, HashFileParams } from "./dto/file.params";
-import { FileUploadInterface } from "./dto/file-upload.interface";
+import { FileUploadInput } from "./dto/file-upload.input";
 import { FileInterface } from "./entities/file.entity";
 import { FilesService } from "./files.service";
 import { calculatePartialRanges, createHashedPath } from "./files.utils";
@@ -63,7 +63,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         @Post("upload")
         @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
         async upload(
-            @UploadedFile() file: FileUploadInterface,
+            @UploadedFile() file: FileUploadInput,
             @Body() body: UploadFileBodyInterface,
             @GetCurrentUser() user: CurrentUserInterface,
         ): Promise<FileInterface> {
@@ -75,7 +75,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
             const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
-            if (scope && !this.accessControlService.isAllowedContentScope(user, scope)) {
+            if (scope && !this.accessControlService.isAllowed(user, "dam", scope)) {
                 throw new ForbiddenException();
             }
 
@@ -96,7 +96,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 throw new NotFoundException();
             }
 
-            if (file.scope !== undefined && !this.accessControlService.isAllowedContentScope(user, file.scope)) {
+            if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
                 throw new ForbiddenException();
             }
 

@@ -10,10 +10,14 @@ import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { ContentScopeInterface, useContentScope } from "../contentScope/Provider";
 import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { DamScopeProvider } from "./config/DamScopeProvider";
+import { useDamConfig } from "./config/useDamConfig";
 import { DamTable } from "./DamTable";
 
 type Props = {
     renderContentScopeIndicator?: (scope: ContentScopeInterface) => React.ReactNode;
+    /**
+     * @deprecated Use `additionalToolbarItems` option in `DamConfigProvider` instead
+     */
     additionalToolbarItems?: React.ReactNode;
 };
 
@@ -53,11 +57,15 @@ function DamPage({ renderContentScopeIndicator = defaultRenderContentScopeIndica
     const routeMatch = useRouteMatch();
     const damRouteLocation = routeMatch.url.replace(match.url, "");
     useContentScopeConfig({ redirectPathAfterChange: damRouteLocation });
+    const damConfig = useDamConfig();
 
     return (
         <DamScopeProvider>
             <DamTableWrapper>
-                <DamTable contentScopeIndicator={renderContentScopeIndicator(scope)} additionalToolbarItems={additionalToolbarItems} />
+                <DamTable
+                    contentScopeIndicator={renderContentScopeIndicator(scope)}
+                    additionalToolbarItems={damConfig.additionalToolbarItems ?? additionalToolbarItems}
+                />
             </DamTableWrapper>
         </DamScopeProvider>
     );

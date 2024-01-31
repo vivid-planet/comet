@@ -1,5 +1,18 @@
 # @comet/eslint-config
 
+## 5.6.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@5.6.0
+
+## 5.5.0
+
+### Patch Changes
+
+-   80a6d8d3: Move import restriction for MUI's `Alert` to correct ESLint config
+    -   @comet/eslint-plugin@5.5.0
+
 ## 5.4.0
 
 ### Patch Changes
