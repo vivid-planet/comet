@@ -5,11 +5,12 @@ import * as React from "react";
 
 import { BreadcrumbItem } from "../Stack";
 import { BreadcrumbLink } from "./BreadcrumbLink";
+import { StackBreadcrumbsProps } from "./StackBreadcrumbs";
 
-export interface BreadcrumbsOverflowProps {
+interface BreadcrumbsOverflowProps {
     items: BreadcrumbItem[];
     linkText: React.ReactNode;
-    slotProps: any;
+    slotProps: StackBreadcrumbsProps["slotProps"];
 }
 
 const StyledOverflowLink = styled(Link, {

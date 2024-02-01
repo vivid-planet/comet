@@ -5,7 +5,7 @@ import * as React from "react";
 
 import { BreadcrumbItem } from "../Stack";
 import { BreadcrumbLink } from "./BreadcrumbLink";
-import { BackButtonSeparator } from "./StackBreadcrumbs";
+import { BackButtonSeparator, StackBreadcrumbsProps } from "./StackBreadcrumbs";
 
 const StyledLink = styled(Link, {
     name: "CometAdminStackBreadcrumbs",
@@ -21,7 +21,7 @@ const StyledLink = styled(Link, {
         color: ${theme.palette.grey[600]};
         text-decoration-color: currentColor;
     `,
-);
+) as typeof Link;
 
 const StyledDisabledLink = styled(Typography, {
     name: "CometAdminStackBreadcrumbs",
@@ -45,13 +45,13 @@ const IconButton = styled(MuiIconButton, {
     overridesResolver(_, styles) {
         return [styles.backButton];
     },
-})();
+})() as typeof MuiIconButton;
 
 interface BreadcrumbsEntryProps {
     item: BreadcrumbItem;
     isLastItem?: boolean;
     backButtonUrl?: string;
-    slotProps: any;
+    slotProps: StackBreadcrumbsProps["slotProps"];
 }
 
 export const BreadcrumbsEntry = ({ item, isLastItem, backButtonUrl, slotProps }: BreadcrumbsEntryProps) => {
@@ -59,6 +59,7 @@ export const BreadcrumbsEntry = ({ item, isLastItem, backButtonUrl, slotProps }:
         <>
             {backButtonUrl && (
                 <>
+                    {/* @ts-expect-error: TODO: Fix type */}
                     <IconButton component={BreadcrumbLink} to={backButtonUrl} {...slotProps?.backButton}>
                         <LevelUp />
                     </IconButton>

@@ -4,6 +4,7 @@ import * as React from "react";
 import { BreadcrumbItem } from "../Stack";
 import { BreadcrumbsEntry } from "./BreadcrumbsEntry";
 import { BreadcrumbsOverflow } from "./BreadcrumbsOverflow";
+import { StackBreadcrumbsProps } from "./StackBreadcrumbs";
 
 export const getElementOuterWidth = (element: Element): number =>
     element.clientWidth + parseFloat(getComputedStyle(element).marginLeft) + parseFloat(getComputedStyle(element).marginRight);
@@ -60,7 +61,7 @@ export const useItemsToRender = (
     itemWidths: number[] | undefined,
     overflowLinkText: React.ReactNode,
     backButtonUrl: string | undefined,
-    slotProps: any,
+    slotProps: StackBreadcrumbsProps["slotProps"],
 ): React.ReactNode[] => {
     const numberOfItemsToBeHidden = useNumberOfItemsToBeHidden(items, containerWidth, Boolean(backButtonUrl), itemWidths);
 

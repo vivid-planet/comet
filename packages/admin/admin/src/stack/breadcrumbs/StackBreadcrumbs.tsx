@@ -1,5 +1,5 @@
 import { ChevronRight } from "@comet/admin-icons";
-import { IconButton as MuiIconButton, Link } from "@mui/material";
+import { Link } from "@mui/material";
 import { ComponentsOverrides, css, styled, Theme, useTheme, useThemeProps } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
@@ -102,7 +102,7 @@ export interface StackBreadcrumbsProps
         disabledLink: typeof Typography;
         overflowLink: typeof Link;
         separator: "div";
-        backButton: typeof MuiIconButton;
+        backButton: typeof Link;
         backButtonSeparator: "div";
     }> {
     separator?: React.ReactNode;
