@@ -1,5 +1,62 @@
 # @comet/admin-rte
 
+## 6.0.0
+
+### Patch Changes
+
+-   803f5045: Retain headings 4 - 6, blockquote and strikethrough formatting when copying from one RTE to another
+-   Updated dependencies [76e50aa8]
+-   Updated dependencies [a525766c]
+    -   @comet/admin-icons@6.0.0
+
+## 5.6.0
+
+### Patch Changes
+
+-   @comet/admin-icons@5.6.0
+
+## 5.5.0
+
+### Patch Changes
+
+-   @comet/admin-icons@5.5.0
+
+## 5.4.0
+
+### Minor Changes
+
+-   981bf48c: Allow setting a tooltip to the button of custom-inline-styles using the `tooltipText` prop
+-   51d6c2b9: Move soft-hyphen functionality to `@comet/admin-rte`
+
+    This allows using the soft-hyphen functionality in plain RTEs, and not only in `RichTextBlock`
+
+    ```tsx
+    const [useRteApi] = makeRteApi();
+
+    export default function MyRte() {
+        const { editorState, setEditorState } = useRteApi();
+        return (
+            <Rte
+                value={editorState}
+                onChange={setEditorState}
+                options={{
+                    supports: [
+                        // Soft Hyphen
+                        "soft-hyphen",
+                        // Other options you may wish to support
+                        "bold",
+                        "italic",
+                    ],
+                }}
+            />
+        );
+    }
+    ```
+
+### Patch Changes
+
+-   @comet/admin-icons@5.4.0
+
 ## 5.3.0
 
 ### Patch Changes

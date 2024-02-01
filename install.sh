@@ -28,13 +28,13 @@ ln -sf ../../.env.local ./demo/api/.env.local
 ln -sf ../../.env ./demo/admin/.env
 ln -sf ../api/schema.gql ./demo/admin/schema.gql
 ln -sf ../api/block-meta.json ./demo/admin/block-meta.json
-ln -sf ../api/comet-config.json ./demo/admin/comet-config.json
+ln -sf ../../api/src/comet-config.json ./demo/admin/src/comet-config.json
 
 # site DEMO
 ln -sf ../../.env ./demo/site/.env
 ln -sf ../api/schema.gql ./demo/site/schema.gql
 ln -sf ../api/block-meta.json ./demo/site/block-meta.json
-ln -sf ../api/comet-config.json ./demo/site/comet-config.json
+ln -sf ../../api/src/comet-config.json ./demo/site/src/comet-config.json
 
 # Lang install
 sh ./demo/admin/intl-update.sh

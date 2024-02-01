@@ -34,6 +34,7 @@ export default function Page(props: InferGetStaticPropsType<typeof getStaticProp
         );
     }
     const { component: Component } = pageTypes[props.documentType];
+
     return <Component {...props} />;
 }
 
@@ -79,7 +80,6 @@ export function createGetUniversalProps({
         const client = createGraphQLClient({ includeInvisiblePages, includeInvisibleBlocks, previewDamUrls });
         const path = params?.path ?? "";
         const scope = { domain, language: locale };
-
         //fetch pageType
         const data = await client.request<GQLPageTypeQuery, GQLPageTypeQueryVariables>(pageTypeQuery, {
             path: `/${Array.isArray(path) ? path.join("/") : path}`,

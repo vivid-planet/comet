@@ -273,9 +273,6 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                 onSubmit={handleSubmit}
                 mode={mode}
                 initialValues={initialValues}
-                onAfterSubmit={(values, form) => {
-                    //don't go back automatically
-                }}
             >
                 {({ values }) => (
                     <EditPageLayout>

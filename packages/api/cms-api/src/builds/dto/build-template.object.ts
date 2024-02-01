@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 
-import { LABEL_ANNOTATION } from "../builds.constants";
+import { LABEL_ANNOTATION } from "../../kubernetes/kubernetes.constants";
 
 @ObjectType("BuildTemplate")
 export class BuildTemplateObject {
