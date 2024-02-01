@@ -146,7 +146,7 @@ type FilenameResponse {
 
 type CurrentUserPermission {
   permission: String!
-  contentScopes: [JSONObject!]!
+  contentScopes: [JSONObject!]
 }
 
 type CurrentUser {
@@ -154,6 +154,7 @@ type CurrentUser {
   name: String!
   email: String!
   language: String!
+  contentScopes: [JSONObject!]
   permissions: [CurrentUserPermission!]!
 }
 
@@ -614,6 +615,7 @@ type Query {
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
+  currentUserContentScopes: [JSONObject!]!
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!

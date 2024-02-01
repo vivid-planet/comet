@@ -3,12 +3,16 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
 
+import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
+import { PublicApi } from "../auth/decorators/public-api.decorator";
 import { SkipBuild } from "../builds/skip-build.decorator";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
+import { CurrentUser } from "./dto/current-user";
 import { UserContentScopesInput } from "./dto/user-content-scopes.input";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
 import { UserPermissionsService } from "./user-permissions.service";
+import { UserPermissions } from "./user-permissions.types";
 
 @Resolver()
 @RequiredPermission(["userPermissions"], { skipScopeCheck: true })
@@ -40,14 +44,28 @@ export class UserContentScopesResolver {
         @Args("userId", { type: () => String }) userId: string,
         @Args("skipManual", { type: () => Boolean, nullable: true }) skipManual = false,
     ): Promise<ContentScope[]> {
-        return this.userService.normalizeContentScopes(
-            await this.userService.getContentScopes(userId, !skipManual),
-            await this.userService.getAvailableContentScopes(),
-        );
+        const contentScopes = await this.userService.getContentScopes(userId, !skipManual);
+        const availableContentScopes = await this.userService.getAvailableContentScopes();
+        if (contentScopes === UserPermissions.allContentScopes) return availableContentScopes;
+        return this.userService.normalizeContentScopes(contentScopes, availableContentScopes);
     }
 
     @Query(() => [GraphQLJSONObject])
     async userPermissionsAvailableContentScopes(): Promise<ContentScope[]> {
         return this.userService.getAvailableContentScopes();
+    }
+
+    @Query(() => [GraphQLJSONObject])
+    @PublicApi()
+    async currentUserContentScopes(@GetCurrentUser() user: CurrentUser): Promise<ContentScope[]> {
+        const availableContentScopes = await this.userService.getAvailableContentScopes();
+        if (!user.contentScopes) {
+            return availableContentScopes;
+        } else {
+            return this.userService.normalizeContentScopes(
+                [...user.contentScopes, ...user.permissions.flatMap((p) => p.contentScopes || [])],
+                availableContentScopes,
+            );
+        }
     }
 }

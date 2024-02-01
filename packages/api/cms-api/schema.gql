@@ -142,7 +142,7 @@ type FilenameResponse {
 
 type CurrentUserPermission {
   permission: String!
-  contentScopes: [JSONObject!]!
+  contentScopes: [JSONObject!]
 }
 
 type User {
@@ -224,6 +224,7 @@ type CurrentUser {
   name: String!
   email: String!
   language: String!
+  contentScopes: [JSONObject!]!
   permissions: [CurrentUserPermission!]!
 }
 
@@ -362,6 +363,7 @@ type Query {
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
+  currentUserContentScopes: [JSONObject!]!
 }
 
 input RedirectScopeInput {

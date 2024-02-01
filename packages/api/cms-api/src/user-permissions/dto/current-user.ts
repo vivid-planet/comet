@@ -8,8 +8,8 @@ import { ContentScope } from "../interfaces/content-scope.interface";
 export class CurrentUserPermission {
     @Field()
     permission: string;
-    @Field(() => [GraphQLJSONObject])
-    contentScopes: ContentScope[];
+    @Field(() => [GraphQLJSONObject], { nullable: true })
+    contentScopes: ContentScope[] | null;
 }
 
 @ObjectType()
@@ -22,6 +22,8 @@ export class CurrentUser implements CurrentUserInterface {
     email: string;
     @Field()
     language: string;
+    @Field(() => [GraphQLJSONObject], { nullable: true })
+    contentScopes: ContentScope[] | null;
     @Field(() => [CurrentUserPermission])
     permissions: CurrentUserPermission[];
 }

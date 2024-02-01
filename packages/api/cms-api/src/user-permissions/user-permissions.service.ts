@@ -94,16 +94,15 @@ export class UserPermissionsService {
             );
     }
 
-    async getContentScopes(userId: string, includeContentScopesManual = true): Promise<ContentScope[]> {
+    async getContentScopes(userId: string, includeContentScopesManual = true): Promise<ContentScope[] | UserPermissions.allContentScopes> {
         const contentScopes: ContentScope[] = [];
-        const availableContentScopes = await this.getAvailableContentScopes();
 
         if (this.accessControlService.getContentScopesForUser) {
             const user = await this.getUser(userId);
             if (user) {
                 const userContentScopes = await this.accessControlService.getContentScopesForUser(user);
                 if (userContentScopes === UserPermissions.allContentScopes) {
-                    contentScopes.push(...availableContentScopes);
+                    return UserPermissions.allContentScopes;
                 } else {
                     contentScopes.push(...userContentScopes);
                 }
@@ -113,6 +112,7 @@ export class UserPermissionsService {
         if (includeContentScopesManual) {
             const entity = await this.contentScopeRepository.findOne({ userId });
             if (entity) {
+                const availableContentScopes = await this.getAvailableContentScopes();
                 contentScopes.push(...entity.contentScopes.filter((value) => availableContentScopes.some((cs) => isEqual(cs, value))));
             }
         }
@@ -129,13 +129,21 @@ export class UserPermissionsService {
     async createCurrentUser(user: User): Promise<CurrentUser> {
         const availableContentScopes = await this.getAvailableContentScopes();
         const userContentScopes = await this.getContentScopes(user.id);
-        const permissions = (await this.getPermissions(user.id))
-            .filter((p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)))
+        const contentScopes =
+            userContentScopes === UserPermissions.allContentScopes ? null : this.normalizeContentScopes(userContentScopes, availableContentScopes);
+        const userPermissions = (await this.getPermissions(user.id)).filter(
+            (p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)),
+        );
+        const permissions = userPermissions
             .reduce((acc: CurrentUser["permissions"], userPermission) => {
-                const contentScopes = userPermission.overrideContentScopes ? userPermission.contentScopes : userContentScopes;
+                const contentScopes = userPermission.overrideContentScopes ? userPermission.contentScopes : null;
                 const existingPermission = acc.find((p) => p.permission === userPermission.permission);
                 if (existingPermission) {
-                    existingPermission.contentScopes = [...existingPermission.contentScopes, ...contentScopes];
+                    if (contentScopes === null || existingPermission.contentScopes === null) {
+                        existingPermission.contentScopes = null;
+                    } else {
+                        existingPermission.contentScopes = [...existingPermission.contentScopes, ...contentScopes];
+                    }
                 } else {
                     acc.push({
                         permission: userPermission.permission,
@@ -145,7 +153,7 @@ export class UserPermissionsService {
                 return acc;
             }, [])
             .map((p) => {
-                p.contentScopes = this.normalizeContentScopes(p.contentScopes, availableContentScopes);
+                p.contentScopes = p.contentScopes ? this.normalizeContentScopes(p.contentScopes, availableContentScopes) : null;
                 return p;
             });
 
@@ -155,6 +163,7 @@ export class UserPermissionsService {
             name: user.name,
             email: user.email ?? "",
             language: user.language,
+            contentScopes,
             permissions,
         });
     }

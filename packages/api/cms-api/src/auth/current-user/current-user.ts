@@ -5,8 +5,9 @@ export interface CurrentUserInterface {
     name: string;
     email: string;
     language: string;
+    contentScopes?: ContentScope[] | null; // null means all
     permissions?: {
         permission: string;
-        contentScopes: ContentScope[];
+        contentScopes: ContentScope[] | null; // null means contentScopes from above
     }[];
 }
