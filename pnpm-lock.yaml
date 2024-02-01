@@ -1565,9 +1565,6 @@ importers:
       typescript:
         specifier: ^4.0.0
         version: 4.9.4
-      uuid:
-        specifier: ^9.0.0
-        version: 9.0.0
 
   packages/admin/admin-stories:
     dependencies:

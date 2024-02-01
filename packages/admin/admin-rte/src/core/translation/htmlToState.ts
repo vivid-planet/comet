@@ -20,10 +20,10 @@ export function htmlToState({
                 return Style("SUP");
             }
             if (element.tagName == "SPAN") {
-                return Style((element.attributes as any).customType.value);
+                return Style((element.attributes as any).style.value);
             }
             if (element.tagName === "A") {
-                return Entity("LINK", { id: (element.attributes as any).arrayRef.value });
+                return Entity("LINK", { id: (element.attributes as any).id.value });
             }
         },
     });

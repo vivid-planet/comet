@@ -1,6 +1,5 @@
 import { EditorState } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
-import { v4 } from "uuid";
 
 import { IRteOptions } from "../Rte";
 
@@ -15,7 +14,7 @@ export function stateToHtml({ editorState, options }: { editorState: EditorState
     };
 
     customInlineStyleKeys.forEach((item) => {
-        inlineStyles[item] = { element: "span", attributes: { customType: [item] } };
+        inlineStyles[item] = { element: "span", attributes: { style: [item] } };
     });
 
     const linkDataList: { id: string; data: any }[] = [];
@@ -27,9 +26,9 @@ export function stateToHtml({ editorState, options }: { editorState: EditorState
             const data = entity.getData();
 
             if (entityType === "LINK") {
-                const id = v4();
+                const id = `${linkDataList.length}`;
                 linkDataList.push({ id, data });
-                return { element: "a", attributes: { arrayRef: id } };
+                return { element: "a", attributes: { id } };
             }
 
             return undefined;
