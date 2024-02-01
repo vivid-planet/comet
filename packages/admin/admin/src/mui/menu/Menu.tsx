@@ -8,18 +8,19 @@ import { useHistory } from "react-router";
 import { MasterLayoutContext } from "../MasterLayoutContext";
 import { MenuContext } from "./Context";
 
-export type MenuClassKey = "permanentDrawer" | "temporaryDrawer" | "permanent" | "temporary" | "open" | "closed";
+export type MenuClassKey = "drawer" | "permanentDrawer" | "temporaryDrawer" | "open" | "closed";
 
-type OwnerState = { open: boolean };
+type OwnerState = { open: boolean; drawerWidth: number };
 
 const PermanentDrawer = styled(Drawer, {
     name: "CometAdminMenu",
     slot: "permanentDrawer",
     overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.drawer, ownerState.open && styles.open, !ownerState.open && styles.closed];
+        return [styles.drawer, styles.permanentDrawer, ownerState.open && styles.open, !ownerState.open && styles.closed];
     },
 })<{ ownerState: OwnerState }>(
     ({ theme, ownerState }) => css`
+        width: 0;
         [class*="MuiDrawer-paper"] {
             background-color: #fff;
         }
@@ -33,6 +34,7 @@ const PermanentDrawer = styled(Drawer, {
 
         ${ownerState.open &&
         css`
+            width: ${ownerState.drawerWidth};
             transition: ${theme.transitions.create("width", {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.enteringScreen,
@@ -71,7 +73,7 @@ const TemporaryDrawer = styled(Drawer, {
     name: "CometAdminMenu",
     slot: "temporaryDrawer",
     overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.drawer, ownerState.open && styles.open, !ownerState.open && styles.closed];
+        return [styles.drawer, styles.temporaryDrawer, ownerState.open && styles.open, !ownerState.open && styles.closed];
     },
 })<{ ownerState: OwnerState }>(
     ({ theme, ownerState }) => css`
@@ -113,6 +115,7 @@ export function Menu(inProps: MenuProps) {
 
     const ownerState: OwnerState = {
         open,
+        drawerWidth,
     };
 
     // Close the menu on initial render if it is temporary to prevent a page-overlay when initially loading the page.
@@ -148,7 +151,10 @@ export function Menu(inProps: MenuProps) {
                 // workaround for issue: https://github.com/mui/material-ui/issues/35793
                 open={initialRender.current ? false : temporaryOpen}
                 ownerState={ownerState}
-                PaperProps={{ style: { width: drawerWidth }, ...temporaryDrawerPaperProps }}
+                PaperProps={{
+                    ...temporaryDrawerPaperProps,
+                    sx: { width: drawerWidth, ...temporaryDrawerPaperProps?.sx },
+                }}
                 onClose={toggleOpen}
                 {...restProps}
             >
@@ -159,17 +165,17 @@ export function Menu(inProps: MenuProps) {
                 variant="permanent"
                 {...slotProps?.permanentDrawer}
                 open={permanentOpen}
-                style={{ width: permanentOpen ? drawerWidth : 0 }}
                 ownerState={ownerState}
                 PaperProps={{
                     elevation: 2,
-                    style: {
+                    ...permanentDrawerPaperProps,
+                    sx: {
                         top: headerHeight,
                         height: `calc(100% - ${headerHeight}px)`,
                         width: drawerWidth,
                         marginLeft: permanentOpen ? 0 : -drawerWidth,
+                        ...permanentDrawerPaperProps?.sx,
                     },
-                    ...permanentDrawerPaperProps,
                 }}
             >
                 {children}

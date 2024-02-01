@@ -2,6 +2,8 @@
 "@comet/admin": major
 ---
 
-Use `permanentDrawer` and `temporaryDrawer` slots instead of `drawer` slot
+Change theming method of `Menu`
 
-Delete `permanentDrawerProps` and `temporaryDrawerProps`, use `slotProps` instead
+-   Rename `permanent` class key to `permanentDrawer` and `temporary` class key to `temporaryDrawer`
+-   Delete `permanentDrawerProps` and `temporaryDrawerProps`, use `slotProps` instead
+-   Instead of using the `style` prop for `PaperProps` in PermanentDrawer and TemporaryDrawer, use the `sx` prop.
