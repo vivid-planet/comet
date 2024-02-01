@@ -549,9 +549,55 @@ ${
     `;
 }
 
+function generateRequiredPermissionDecorators({
+    generatorOptions,
+    metadata,
+}: {
+    generatorOptions: CrudGeneratorOptions;
+    metadata: EntityMetadata<any>;
+}) {
+    const { scopeProp } = buildOptions(metadata);
+    const ret: {
+        resolverDecorator?: string;
+        listDecorator?: string;
+        singleDecorator?: string;
+        createDecorator?: string;
+        updateDecorator?: string;
+        deleteDecorator?: string;
+    } = {};
+    if (generatorOptions.requiredPermission) {
+        const requiredPermission = generatorOptions.requiredPermission;
+        if (typeof requiredPermission === "string" || Array.isArray(requiredPermission)) {
+            ret.resolverDecorator = `@RequiredPermission(${JSON.stringify(
+                Array.isArray(requiredPermission) ? requiredPermission : [requiredPermission],
+            )}${!scopeProp ? `, { skipScopeCheck: true }` : ""})`;
+        } else {
+            ret.listDecorator = `@RequiredPermission(${JSON.stringify(
+                Array.isArray(requiredPermission.list) ? requiredPermission.list : [requiredPermission.list],
+            )}${!scopeProp ? `, { skipScopeCheck: true }` : ""})`;
+            ret.singleDecorator = `@RequiredPermission(${JSON.stringify([
+                ...(Array.isArray(requiredPermission.create) ? requiredPermission.create : [requiredPermission.create]),
+                ...(Array.isArray(requiredPermission.update) ? requiredPermission.update : [requiredPermission.update]),
+                ...(Array.isArray(requiredPermission.delete) ? requiredPermission.delete : [requiredPermission.delete]),
+            ])}${!scopeProp ? `, { skipScopeCheck: true }` : ""})`;
+            ret.createDecorator = `@RequiredPermission(${JSON.stringify(
+                Array.isArray(requiredPermission.create) ? requiredPermission.create : [requiredPermission.create],
+            )}${!scopeProp ? `, { skipScopeCheck: true }` : ""})`;
+            ret.updateDecorator = `@RequiredPermission(${JSON.stringify(
+                Array.isArray(requiredPermission.update) ? requiredPermission.update : [requiredPermission.update],
+            )}${!scopeProp ? `, { skipScopeCheck: true }` : ""})`;
+            ret.deleteDecorator = `@RequiredPermission(${JSON.stringify(
+                Array.isArray(requiredPermission.delete) ? requiredPermission.delete : [requiredPermission.delete],
+            )}${!scopeProp ? `, { skipScopeCheck: true }` : ""})`;
+        }
+    }
+    return ret;
+}
+
 function generateNestedEntityResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
     const { classNameSingular } = buildNameVariants(metadata);
-    const { scopeProp } = buildOptions(metadata);
+
+    const { resolverDecorator: resolverPermissionDecorator } = generateRequiredPermissionDecorators({ generatorOptions, metadata });
 
     const imports: Imports = [];
 
@@ -567,7 +613,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    ${resolverPermissionDecorator ? resolverPermissionDecorator : ""}
     export class ${classNameSingular}Resolver {
         ${code}
     }
@@ -630,7 +676,7 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
         @ResolveField(() => [${prop.type}])
         async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}[]> {
             return ${instanceNameSingular}.${prop.name}.loadItems();
-        }   
+        }
     `,
         )
         .join("\n")}
@@ -669,6 +715,18 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
 function generateResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular, instanceNameSingular, classNamePlural, fileNamePlural, instanceNamePlural } =
         buildNameVariants(metadata);
+
+    const {
+        resolverDecorator: resolverPermissionDecorator,
+        listDecorator: listPermissionDecorator,
+        singleDecorator: singlePermissionDecorator,
+        createDecorator: createPermissionDecorator,
+        updateDecorator: updatePermissionDecorator,
+        deleteDecorator: deletePermissionDecorator,
+    } = generateRequiredPermissionDecorators({
+        generatorOptions,
+        metadata,
+    });
     const { scopeProp, argsClassName, argsFileName, hasSlugProp, hasSearchArg, hasSortArg, hasFilterArg, hasVisibleProp, hasUpdatedAt } =
         buildOptions(metadata);
 
@@ -720,7 +778,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    ${resolverPermissionDecorator ? resolverPermissionDecorator : ""}
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
@@ -733,6 +791,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
         @Query(() => ${metadata.className})
         @AffectedEntity(${metadata.className})
+        ${singlePermissionDecorator ? singlePermissionDecorator : ""}
         async ${instanceNameSingular}(${
         integerTypes.includes(metadata.properties.id.type)
             ? `@Args("id", { type: () => ID }, { transform: (value) => parseInt(value) }) id: number`
@@ -746,6 +805,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             hasSlugProp
                 ? `
         @Query(() => ${metadata.className}, { nullable: true })
+        ${singlePermissionDecorator ? singlePermissionDecorator : ""}
         async ${instanceNameSingular}BySlug(
             @Args("slug") slug: string
             ${scopeProp ? `, @Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type}` : ""}
@@ -759,6 +819,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
 
         @Query(() => Paginated${classNamePlural})
+        ${listPermissionDecorator ? listPermissionDecorator : ""}
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
             @Args() { ${scopeProp ? `scope, ` : ""}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${
         hasSortArg ? `sort, ` : ""
@@ -813,6 +874,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
 
         @Mutation(() => ${metadata.className})
+        ${createPermissionDecorator ? createPermissionDecorator : ""}
         async create${classNameSingular}(
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
             @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
@@ -836,6 +898,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
         @Mutation(() => ${metadata.className})
         @AffectedEntity(${metadata.className})
+        ${updatePermissionDecorator ? updatePermissionDecorator : ""}
         async update${classNameSingular}(
             ${
                 integerTypes.includes(metadata.properties.id.type)
@@ -868,6 +931,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
         @Mutation(() => Boolean)
         @AffectedEntity(${metadata.className})
+        ${deletePermissionDecorator ? deletePermissionDecorator : ""}
         async delete${metadata.className}(${
                       integerTypes.includes(metadata.properties.id.type)
                           ? `@Args("id", { type: () => ID }, { transform: (value) => parseInt(value) }) id: number`
@@ -887,6 +951,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
         @Mutation(() => ${metadata.className})
         @AffectedEntity(${metadata.className})
+        ${updatePermissionDecorator ? updatePermissionDecorator : ""}
         async update${classNameSingular}Visibility(
             @Args("id", { type: () => ID }) id: string,
             @Args("visible", { type: () => Boolean }) visible: boolean,

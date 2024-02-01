@@ -1,6 +1,9 @@
 export interface CrudGeneratorOptions {
     targetDirectory: string;
-    requiredPermission?: string[] | string;
+    requiredPermission?:
+        | string[]
+        | string
+        | { list: string | string[]; create: string | string[]; update: string | string[]; delete: string | string[] };
     create?: boolean;
     update?: boolean;
     delete?: boolean;
@@ -21,7 +24,10 @@ export function CrudGenerator({
 
 export interface CrudSingleGeneratorOptions {
     targetDirectory: string;
-    requiredPermission?: string[] | string;
+    requiredPermission?:
+        | string[]
+        | string
+        | { list: string | string[]; create: string | string[]; update: string | string[]; delete: string | string[] };
 }
 
 export function CrudSingleGenerator(options: CrudSingleGeneratorOptions): ClassDecorator {

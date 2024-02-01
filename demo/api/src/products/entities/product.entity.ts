@@ -80,7 +80,10 @@ export class ProductPackageDimensions {
 })
 @Entity()
 @RootBlockEntity()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
+@CrudGenerator({
+    targetDirectory: `${__dirname}/../generated/`,
+    requiredPermission: { list: "products", create: "createProduct", update: "updateProduct", delete: "deleteProduct" },
+})
 export class Product extends BaseEntity<Product, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
