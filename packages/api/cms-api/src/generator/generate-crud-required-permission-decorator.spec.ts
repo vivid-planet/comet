@@ -129,7 +129,7 @@ describe("GenerateCrudRequiredPermissionDecorator", () => {
                     {
                         targetDirectory: __dirname,
                         requiredPermission: {
-                            list: ["testEntities"],
+                            read: ["testEntities"],
                             create: ["createTestEntity"],
                             update: ["updateTestEntity"],
                             delete: ["deleteTestEntity"],
@@ -148,8 +148,8 @@ describe("GenerateCrudRequiredPermissionDecorator", () => {
                     const methods = cls.getMethods();
 
                     const checklist = [
-                        { methodName: "testEntity", params: ["testEntities", "createTestEntity", "updateTestEntity", "deleteTestEntity"] },
-                        { methodName: "testEntityBySlug", params: ["testEntities", "createTestEntity", "updateTestEntity", "deleteTestEntity"] },
+                        { methodName: "testEntity", params: ["testEntities"] },
+                        { methodName: "testEntityBySlug", params: ["testEntities"] },
                         { methodName: "testEntities", params: ["testEntities"] },
                         { methodName: "createTestEntity", params: ["createTestEntity"] },
                         { methodName: "updateTestEntity", params: ["updateTestEntity"] },
@@ -274,7 +274,7 @@ describe("GenerateCrudRequiredPermissionDecorator", () => {
                     {
                         targetDirectory: __dirname,
                         requiredPermission: {
-                            list: ["testEntities"],
+                            read: ["testEntities"],
                             create: ["createTestEntity"],
                             update: ["updateTestEntity"],
                             delete: ["deleteTestEntity"],
@@ -293,14 +293,8 @@ describe("GenerateCrudRequiredPermissionDecorator", () => {
                     const methods = cls.getMethods();
 
                     const checklist = [
-                        {
-                            methodName: "testEntityWithoutScope",
-                            params: ["testEntities", "createTestEntity", "updateTestEntity", "deleteTestEntity"],
-                        },
-                        {
-                            methodName: "testEntityWithoutScopeBySlug",
-                            params: ["testEntities", "createTestEntity", "updateTestEntity", "deleteTestEntity"],
-                        },
+                        { methodName: "testEntityWithoutScope", params: ["testEntities"] },
+                        { methodName: "testEntityWithoutScopeBySlug", params: ["testEntities"] },
                         { methodName: "testEntityWithoutScopes", params: ["testEntities"] },
                         { methodName: "createTestEntityWithoutScope", params: ["createTestEntity"] },
                         { methodName: "updateTestEntityWithoutScope", params: ["updateTestEntity"] },
