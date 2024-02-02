@@ -147,9 +147,9 @@ describe("GenerateCrudRequiredPermissionDecorator", () => {
                     const cls = source.getClassOrThrow("TestEntityResolver");
                     const methods = cls.getMethods();
 
-                    // TODO testEntityBySlug
                     const checklist = [
                         { methodName: "testEntity", params: ["testEntities", "createTestEntity", "updateTestEntity", "deleteTestEntity"] },
+                        { methodName: "testEntityBySlug", params: ["testEntities", "createTestEntity", "updateTestEntity", "deleteTestEntity"] },
                         { methodName: "testEntities", params: ["testEntities"] },
                         { methodName: "createTestEntity", params: ["createTestEntity"] },
                         { methodName: "updateTestEntity", params: ["updateTestEntity"] },
@@ -292,10 +292,13 @@ describe("GenerateCrudRequiredPermissionDecorator", () => {
                     const cls = source.getClassOrThrow("TestEntityWithoutScopeResolver");
                     const methods = cls.getMethods();
 
-                    // TODO testEntityBySlug
                     const checklist = [
                         {
                             methodName: "testEntityWithoutScope",
+                            params: ["testEntities", "createTestEntity", "updateTestEntity", "deleteTestEntity"],
+                        },
+                        {
+                            methodName: "testEntityWithoutScopeBySlug",
                             params: ["testEntities", "createTestEntity", "updateTestEntity", "deleteTestEntity"],
                         },
                         { methodName: "testEntityWithoutScopes", params: ["testEntities"] },
