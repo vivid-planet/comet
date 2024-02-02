@@ -31,14 +31,14 @@ export class ProductResolver {
 
     @Query(() => Product)
     @AffectedEntity(Product)
-    @RequiredPermission(["createProduct", "updateProduct", "deleteProduct"], { skipScopeCheck: true })
+    @RequiredPermission(["products", "createProduct", "updateProduct", "deleteProduct"], { skipScopeCheck: true })
     async product(@Args("id", { type: () => ID }) id: string): Promise<Product> {
         const product = await this.repository.findOneOrFail(id);
         return product;
     }
 
     @Query(() => Product, { nullable: true })
-    @RequiredPermission(["createProduct", "updateProduct", "deleteProduct"], { skipScopeCheck: true })
+    @RequiredPermission(["products", "createProduct", "updateProduct", "deleteProduct"], { skipScopeCheck: true })
     async productBySlug(@Args("slug") slug: string): Promise<Product | null> {
         const product = await this.repository.findOne({ slug });
 

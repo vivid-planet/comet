@@ -149,7 +149,7 @@ describe("GenerateCrudRequiredPermissionDecorator", () => {
 
                     // TODO testEntityBySlug
                     const checklist = [
-                        { methodName: "testEntity", params: ["createTestEntity", "updateTestEntity", "deleteTestEntity"] },
+                        { methodName: "testEntity", params: ["testEntities", "createTestEntity", "updateTestEntity", "deleteTestEntity"] },
                         { methodName: "testEntities", params: ["testEntities"] },
                         { methodName: "createTestEntity", params: ["createTestEntity"] },
                         { methodName: "updateTestEntity", params: ["updateTestEntity"] },
@@ -294,7 +294,10 @@ describe("GenerateCrudRequiredPermissionDecorator", () => {
 
                     // TODO testEntityBySlug
                     const checklist = [
-                        { methodName: "testEntityWithoutScope", params: ["createTestEntity", "updateTestEntity", "deleteTestEntity"] },
+                        {
+                            methodName: "testEntityWithoutScope",
+                            params: ["testEntities", "createTestEntity", "updateTestEntity", "deleteTestEntity"],
+                        },
                         { methodName: "testEntityWithoutScopes", params: ["testEntities"] },
                         { methodName: "createTestEntityWithoutScope", params: ["createTestEntity"] },
                         { methodName: "updateTestEntityWithoutScope", params: ["updateTestEntity"] },

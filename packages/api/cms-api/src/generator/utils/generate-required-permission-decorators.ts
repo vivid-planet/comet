@@ -26,6 +26,7 @@ export function generateRequiredPermissionDecorators({
                 Array.isArray(requiredPermission.list) ? requiredPermission.list : [requiredPermission.list],
             )}${!hasScopeProp ? `, { skipScopeCheck: true }` : ""})`;
             ret.singleDecorator = `@RequiredPermission(${JSON.stringify([
+                ...(Array.isArray(requiredPermission.list) ? requiredPermission.list : [requiredPermission.list]),
                 ...(Array.isArray(requiredPermission.create) ? requiredPermission.create : [requiredPermission.create]),
                 ...(Array.isArray(requiredPermission.update) ? requiredPermission.update : [requiredPermission.update]),
                 ...(Array.isArray(requiredPermission.delete) ? requiredPermission.delete : [requiredPermission.delete]),
