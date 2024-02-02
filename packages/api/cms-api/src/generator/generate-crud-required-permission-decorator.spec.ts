@@ -129,10 +129,10 @@ describe("GenerateCrudRequiredPermissionDecorator", () => {
                     {
                         targetDirectory: __dirname,
                         requiredPermission: {
-                            list: "testEntities",
-                            create: "createTestEntity",
-                            update: "updateTestEntity",
-                            delete: "deleteTestEntity",
+                            list: ["testEntities"],
+                            create: ["createTestEntity"],
+                            update: ["updateTestEntity"],
+                            delete: ["deleteTestEntity"],
                         },
                     },
                     orm.em.getMetadata().get("TestEntity"),
@@ -274,10 +274,10 @@ describe("GenerateCrudRequiredPermissionDecorator", () => {
                     {
                         targetDirectory: __dirname,
                         requiredPermission: {
-                            list: "testEntities",
-                            create: "createTestEntity",
-                            update: "updateTestEntity",
-                            delete: "deleteTestEntity",
+                            list: ["testEntities"],
+                            create: ["createTestEntity"],
+                            update: ["updateTestEntity"],
+                            delete: ["deleteTestEntity"],
                         },
                     },
                     orm.em.getMetadata().get("TestEntityWithoutScope"),
