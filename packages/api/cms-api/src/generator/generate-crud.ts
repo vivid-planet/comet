@@ -554,7 +554,10 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     const { classNameSingular } = buildNameVariants(metadata);
     const { scopeProp } = buildOptions(metadata);
 
-    const { resolverDecorator: resolverPermissionDecorator } = generateRequiredPermissionDecorators({ generatorOptions, hasScopeProp: !!scopeProp });
+    const { resolverDecorator: resolverPermissionDecorator, singleDecorator: singlePermissionDecorator } = generateRequiredPermissionDecorators({
+        generatorOptions,
+        hasScopeProp: !!scopeProp,
+    });
 
     const imports: Imports = [];
 
@@ -571,6 +574,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
 
     @Resolver(() => ${metadata.className})
     ${resolverPermissionDecorator ? resolverPermissionDecorator : ""}
+    ${singlePermissionDecorator ? singlePermissionDecorator : ""}
     export class ${classNameSingular}Resolver {
         ${code}
     }
