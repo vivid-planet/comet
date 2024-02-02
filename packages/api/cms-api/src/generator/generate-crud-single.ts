@@ -3,6 +3,7 @@ import * as path from "path";
 
 import { CrudSingleGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { generateCrudInput } from "./generate-crud-input";
+import { generateRequiredPermissionDecorators } from "./utils/generate-required-permission-decorators";
 import { GeneratedFile } from "./utils/write-generated-files";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,6 +21,16 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
 
         const scopeProp = metadata.props.find((prop) => prop.name == "scope");
         if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
+
+        const {
+            resolverDecorator: resolverPermissionDecorator,
+            singleDecorator: singlePermissionDecorator,
+            updateDecorator: updatePermissionDecorator,
+        } = generateRequiredPermissionDecorators({
+            generatorOptions,
+            hasScopeProp: !!scopeProp,
+        });
+
         const hasUpdatedAt = metadata.props.some((prop) => prop.name == "updatedAt");
         const blockProps = metadata.props.filter((prop) => {
             return hasFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
@@ -57,7 +68,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    ${resolverPermissionDecorator ? resolverPermissionDecorator : ""}
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
@@ -66,6 +77,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         ) {}
     
         @Query(() => ${metadata.className}, { nullable: true })
+        ${singlePermissionDecorator ? singlePermissionDecorator : ""}
         async ${instanceNameSingular}(
                 ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
             ): Promise<${metadata.className} | null> {
@@ -78,6 +90,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         }
     
         @Mutation(() => ${metadata.className})
+        ${updatePermissionDecorator ? updatePermissionDecorator : ""}
         async save${classNameSingular}(
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
             @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input,
