@@ -8,7 +8,7 @@ import { Product } from "../entities/product.entity";
 import { ProductVariant } from "../entities/product-variant.entity";
 
 @Resolver(() => ProductVariant)
-@RequiredPermission(["products", "createProduct", "updateProduct", "deleteProduct"], { skipScopeCheck: true })
+@RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductVariantResolver {
     @ResolveField(() => Product)
     async product(@Parent() productVariant: ProductVariant): Promise<Product> {
