@@ -1,4 +1,4 @@
-import { IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
 import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
@@ -24,6 +24,7 @@ export function generateFormField(
 
     const introspectionField = introspectionObject.fields.find((field) => field.name === name);
     if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
+    const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
 
     const requiredByIntrospection = introspectionField.type.kind == "NON_NULL";
 
@@ -43,6 +44,26 @@ export function generateFormField(
             component={FinalFormInput}
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
         />`;
+    } else if (config.type == "number") {
+        code = `
+            <Field
+                ${required ? "required" : ""}
+                fullWidth
+                name="${name}"
+                component={FinalFormInput}
+                type="number"
+                label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+            />`;
+        //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
+    } else if (config.type == "boolean") {
+        code = `<Field name="${name}" label="" type="checkbox" fullWidth>
+            {(props) => (
+                <FormControlLabel
+                    label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                    control={<FinalFormCheckbox {...props} />}
+                />
+            )}
+        </Field>`;
     } else if (config.type == "block") {
         imports.push({
             name: config.block.name,
@@ -50,6 +71,29 @@ export function generateFormField(
         });
         code = `<Field name="${name}" isEqual={isEqual}>
             {createFinalFormBlock(${config.block.name})}
+        </Field>`;
+    } else if (config.type == "staticSelect") {
+        const enumType = gqlIntrospection.__schema.types.find(
+            (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
+        ) as IntrospectionEnumType | undefined;
+        if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
+        const values = enumType.enumValues.map((i) => i.name);
+        // TODO use values from config.values if present
+        code = `<Field
+            fullWidth
+            name="${name}"
+            label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
+            {(props) => 
+                <FinalFormSelect {...props}>
+                ${values
+                    .map((value) => {
+                        const id = `${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`;
+                        const label = `<FormattedMessage id="${id}" defaultMessage="${camelCaseToHumanReadable(value)}" />`;
+                        return `<MenuItem value="${value}">${label}</MenuItem>`;
+                    })
+                    .join("\n")}
+                </FinalFormSelect>
+            }
         </Field>`;
     } else {
         throw new Error(`Unsupported type: ${config.type}`);
