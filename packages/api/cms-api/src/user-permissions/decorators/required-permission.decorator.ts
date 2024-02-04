@@ -20,7 +20,7 @@ type RequiredPermissionOptions = {
 };
 
 export type RequiredPermission = {
-    requiredPermission: (keyof Permission)[] | keyof Permission;
+    requiredPermission: (keyof Permission)[];
     options: RequiredPermissionOptions | undefined;
 };
 
