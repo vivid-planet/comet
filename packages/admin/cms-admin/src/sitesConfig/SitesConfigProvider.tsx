@@ -2,11 +2,11 @@ import * as React from "react";
 
 import { SiteConfigApi, SiteConfigContext } from "./SitesConfigContext";
 
-interface Props {
+interface Props<Config> {
     children: React.ReactNode;
-    value: SiteConfigApi;
+    value: SiteConfigApi<Config>;
 }
 
-export const SitesConfigProvider = ({ children, value }: Props): React.ReactElement => {
-    return <SiteConfigContext.Provider value={value}>{children}</SiteConfigContext.Provider>;
-};
+export function SitesConfigProvider<Config = unknown>({ children, value }: Props<Config>) {
+    return <SiteConfigContext.Provider value={value as SiteConfigApi<unknown>}>{children}</SiteConfigContext.Provider>;
+}

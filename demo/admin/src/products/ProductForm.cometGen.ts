@@ -1,4 +1,4 @@
-import { FormConfig } from "@comet/cms-admin/src/generator";
+import { future_FormConfig as FormConfig } from "@comet/cms-admin";
 import { GQLProduct } from "@src/graphql.generated";
 
 export const ProductForm: FormConfig<GQLProduct> = {
@@ -58,7 +58,7 @@ type GridColumnConfig<T> = ({ type: "text" } | { type: "number" }) & { name: key
 type GridConfig<T extends { __typename?: string }> = { type: "form"; gqlType: T["__typename"]; columns: GridColumnConfig<T>[] };
 
 export const gridConfig: GridConfig<GQLProduct> = {
-    type: "form",
+    type: "grid",
     gqlType: "Product",
     columns: [
         { type: "text", name: "title", headerName: "Titel", width: 150 },

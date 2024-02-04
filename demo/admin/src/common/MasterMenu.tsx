@@ -149,6 +149,7 @@ export const masterMenuData: MasterMenuData = [
                 requiredPermission: "pageTree",
             },
         ],
+        requiredPermission: "pageTree",
     },
     {
         primary: <FormattedMessage id="menu.componentDemo" defaultMessage="Component demo" />,

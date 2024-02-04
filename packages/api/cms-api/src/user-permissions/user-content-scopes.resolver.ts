@@ -18,13 +18,13 @@ export class UserContentScopesResolver {
         private readonly userService: UserPermissionsService,
     ) {}
 
-    @Mutation(() => [GraphQLJSONObject])
+    @Mutation(() => Boolean)
     @SkipBuild()
     async userPermissionsUpdateContentScopes(
         @Args("userId", { type: () => String }) userId: string,
         @Args("input", { type: () => UserContentScopesInput }) { contentScopes }: UserContentScopesInput,
-    ): Promise<ContentScope[]> {
-        this.userService.checkContentScopes(contentScopes);
+    ): Promise<boolean> {
+        await this.userService.checkContentScopes(contentScopes);
         let entity = await this.repository.findOne({ userId });
         if (entity) {
             entity = this.repository.assign(entity, { userId, contentScopes });
@@ -32,7 +32,7 @@ export class UserContentScopesResolver {
             entity = this.repository.create({ userId, contentScopes });
         }
         await this.repository.persistAndFlush(entity);
-        return this.userService.getContentScopes(userId);
+        return true;
     }
 
     @Query(() => [GraphQLJSONObject])
@@ -40,7 +40,10 @@ export class UserContentScopesResolver {
         @Args("userId", { type: () => String }) userId: string,
         @Args("skipManual", { type: () => Boolean, nullable: true }) skipManual = false,
     ): Promise<ContentScope[]> {
-        return this.userService.getContentScopes(userId, skipManual);
+        return this.userService.normalizeContentScopes(
+            await this.userService.getContentScopes(userId, !skipManual),
+            await this.userService.getAvailableContentScopes(),
+        );
     }
 
     @Query(() => [GraphQLJSONObject])

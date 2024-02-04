@@ -12,6 +12,7 @@ import * as React from "react";
 import { ColumnsBlock } from "./blocks/ColumnsBlock";
 import { FullWidthImageBlock } from "./blocks/FullWidthImageBlock";
 import { MediaBlock } from "./blocks/MediaBlock";
+import { TeaserBlock } from "./blocks/TeaserBlock";
 import { TwoListsBlock } from "./blocks/TwoListsBlock";
 import { VideoBlock } from "./blocks/VideoBlock";
 
@@ -32,6 +33,7 @@ export const PageContentBlock = createBlocksBlock({
         anchor: AnchorBlock,
         twoLists: TwoListsBlock,
         media: MediaBlock,
+        teaser: TeaserBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,

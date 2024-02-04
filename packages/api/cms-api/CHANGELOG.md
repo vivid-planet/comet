@@ -1,5 +1,44 @@
 # @comet/cms-api
 
+## 5.6.0
+
+### Patch Changes
+
+-   Updated dependencies [fd10b801]
+    -   @comet/blocks-api@5.6.0
+
+## 5.5.0
+
+### Minor Changes
+
+-   bb2c76d8: Deprecate `FileUploadInterface` interface
+
+    Use `FileUploadInput` instead.
+
+-   bb2c76d8: Deprecate `download` helper
+
+    The helper is primarily used to create a `FileUploadInput` (previously `FileUploadInterface`) input for `FilesService#upload` while creating fixtures.
+    However, the name of the helper is too generic to be part of the package's public API.
+    Instead, use the newly added `FileUploadService#createFileUploadInputFromUrl`.
+
+    **Example:**
+
+    ```ts
+    @Injectable()
+    class ImageFixtureService {
+        constructor(private readonly filesService: FilesService, private readonly fileUploadService: FileUploadService) {}
+
+        async generateImage(url: string): Promise<FileInterface> {
+            const upload = await this.fileUploadService.createFileUploadInputFromUrl(url);
+            return this.filesService.upload(upload, {});
+        }
+    }
+    ```
+
+### Patch Changes
+
+-   @comet/blocks-api@5.5.0
+
 ## 5.4.0
 
 ### Minor Changes

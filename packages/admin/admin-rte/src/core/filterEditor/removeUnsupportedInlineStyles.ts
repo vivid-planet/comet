@@ -4,7 +4,7 @@ import removeInlineStyles from "./utils/removeInlineStyles";
 
 const removeUnsupportedInlineStyles: FilterEditorStateBeforeUpdateFn = (newState, { supports }) => {
     // unstyle all core-blocks which are not supported
-    const blackListInlineStyles: InlineStyleType[] = ["STRIKETHROUGH", "CODE"]; // these are not supported at all by our rte
+    const blackListInlineStyles: InlineStyleType[] = ["CODE"]; // these are not supported at all by our rte
 
     const supportsToInlineStyleMap: Partial<Record<SupportedThings, InlineStyleType>> = {
         bold: "BOLD",

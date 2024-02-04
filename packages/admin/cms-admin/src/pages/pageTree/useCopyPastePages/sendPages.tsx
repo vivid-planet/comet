@@ -1,6 +1,6 @@
 import { ApolloClient, gql } from "@apollo/client";
 import { LocalErrorScopeApolloContext } from "@comet/admin";
-import { ReplaceDependencyObject } from "@comet/blocks-admin";
+import { BlockDependency, ReplaceDependencyObject } from "@comet/blocks-admin";
 import isEqual from "lodash.isequal";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -85,20 +85,21 @@ interface SendPagesDependencies {
  *          2b. Create new PageTreeNode with new name "{name} {uniqueNumber}" and new parent
  *      3. create documents (and copy files if required) and attach them to the page tree nodes
  *          3a. Copy all files used on page to target scope
- *          3b. Create new document and attach it to new page tree node
+ *          3b.  Replace unhandled dependencies with undefined (when copying to another scope)
+ *          3c. Create new document and attach it to new page tree node
  *      4. Refetch Pages query
  *
  **/
 export async function sendPages(
     parentId: string | null,
-    { pages }: PagesClipboard,
+    { pages, scope: sourceContentScope }: PagesClipboard,
     options: SendPagesOptions,
-    { client, scope, documentTypes, blockContext, damScope, currentCategory }: SendPagesDependencies,
+    { client, scope: targetContentScope, documentTypes, blockContext, damScope: targetDamScope, currentCategory }: SendPagesDependencies,
     updateProgress: (progress: number, message: React.ReactNode) => void,
 ): Promise<void> {
     const dependencyReplacements = createPageTreeNodeIdReplacements(pages);
     let inboxFolderIdForCopiedFiles: string | undefined = undefined;
-    const hasDamScope = Object.entries(damScope).length > 0;
+    const hasDamScope = Object.entries(targetDamScope).length > 0;
 
     // 1. find all source scopes of file dependencies, to create an dam inbox folder if needed
     updateProgress(0, <FormattedMessage id="comet.pages.paste.analyzingPages" defaultMessage="analyzing pages" />);
@@ -115,7 +116,10 @@ export async function sendPages(
                     //TODO use damFile.size; to build a progress bar for uploading/downloading files
                     if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
                         //file already handled (same file used multiple times on page)
-                    } else if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl) && (!hasDamScope || isEqual(damFile.scope, damScope))) {
+                    } else if (
+                        damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl) &&
+                        (!hasDamScope || isEqual(damFile.scope, targetDamScope))
+                    ) {
                         //same scope, same server, no need to copy
                     } else {
                         // TODO eventually handle multiple files in one request for better performance
@@ -129,7 +133,7 @@ export async function sendPages(
                             `,
                             variables: {
                                 id: damFile.id,
-                                scope: damScope,
+                                scope: targetDamScope,
                                 imageCropArea: damFile.image?.cropArea,
                             },
                         });
@@ -159,7 +163,7 @@ export async function sendPages(
         if (sourceScopes.length > 0) {
             const { id } = await createInboxFolder({
                 client,
-                targetScope: damScope,
+                targetScope: targetDamScope,
                 sourceScopes,
             });
             inboxFolderIdForCopiedFiles = id;
@@ -187,7 +191,7 @@ export async function sendPages(
                 variables: {
                     parentId: newParentId,
                     slug,
-                    scope,
+                    scope: targetContentScope,
                 },
                 fetchPolicy: "network-only",
                 context: LocalErrorScopeApolloContext,
@@ -217,7 +221,7 @@ export async function sendPages(
                     parentId: newParentId,
                     pos: options.targetPos ? options.targetPos + posOffset : undefined,
                 },
-                contentScope: scope,
+                contentScope: targetContentScope,
                 category: currentCategory,
             },
             context: LocalErrorScopeApolloContext,
@@ -273,7 +277,7 @@ export async function sendPages(
                         //already copied
                     } else if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl)) {
                         //our own api, no need to download&upload
-                        if (!hasDamScope || isEqual(damFile.scope, damScope)) {
+                        if (!hasDamScope || isEqual(damFile.scope, targetDamScope)) {
                             //same scope, same server, no need to copy
                         } else {
                             //batch copy below
@@ -288,7 +292,7 @@ export async function sendPages(
                             const file = new File([fileBlob], damFile.name, { type: damFile.mimetype });
                             const formData = new FormData();
                             formData.append("file", file);
-                            if (hasDamScope) formData.append("scope", JSON.stringify(damScope));
+                            if (hasDamScope) formData.append("scope", JSON.stringify(targetDamScope));
                             formData.append("folderId", inboxFolderIdForCopiedFiles);
                             if (damFile.title) formData.append("title", damFile.title);
                             if (damFile.altText) formData.append("altText", damFile.altText);
@@ -314,7 +318,7 @@ export async function sendPages(
                                 `,
                                 variables: {
                                     url: damFile.fileUrl,
-                                    scope: damScope,
+                                    scope: targetDamScope,
                                     input: {
                                         name: damFile.name,
                                         folderId: inboxFolderIdForCopiedFiles,
@@ -351,7 +355,16 @@ export async function sendPages(
                 }
             }
 
-            // 3b. Create new document and attach it to new page tree node
+            // 3b. Replace unhandled dependencies with undefined (when copying to another scope)
+            if (sourcePage.document && !isEqual(sourceContentScope, targetContentScope)) {
+                const unhandledDependencies = unhandledDependenciesFromDocument(documentType, sourcePage.document, {
+                    existingReplacements: dependencyReplacements,
+                });
+                const replacementsForUnhandledDependencies = createUndefinedReplacementsForDependencies(unhandledDependencies);
+                dependencyReplacements.push(...replacementsForUnhandledDependencies);
+            }
+
+            // 3c. Create new document and attach it to new page tree node
             const newDocumentId = uuid();
             if (
                 sourcePage?.document != null &&
@@ -392,6 +405,39 @@ function createPageTreeNodeIdReplacements(nodes: PageClipboard[]): ReplaceDepend
 
     for (const node of nodes) {
         replacements.push({ type: "PageTreeNode", originalId: node.id, replaceWithId: uuid() });
+    }
+
+    return replacements;
+}
+
+function unhandledDependenciesFromDocument(
+    documentType: DocumentInterface,
+    document: GQLDocument,
+    { existingReplacements }: { existingReplacements: ReplaceDependencyObject[] },
+) {
+    const unhandledDependencies = documentType
+        .dependencies(document)
+        .filter(
+            (dependency) =>
+                !existingReplacements.some(
+                    (replacement) => replacement.originalId === dependency.id && replacement.type === dependency.targetGraphqlObjectType,
+                ),
+        );
+
+    return unhandledDependencies;
+}
+
+function createUndefinedReplacementsForDependencies(dependencies: BlockDependency[]) {
+    const existingReplacements = new Set();
+    const replacements: ReplaceDependencyObject[] = [];
+
+    for (const dependency of dependencies) {
+        const key = `${dependency.targetGraphqlObjectType}#${dependency.id}`;
+
+        if (!existingReplacements.has(key)) {
+            replacements.push({ type: dependency.targetGraphqlObjectType, originalId: dependency.id, replaceWithId: undefined });
+            existingReplacements.add(key);
+        }
     }
 
     return replacements;
