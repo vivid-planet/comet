@@ -14,8 +14,15 @@ export enum UserPermissions {
 
 export type Users = [User[], number];
 
+export type AllowedPermission<P extends keyof Permission> =
+    | {
+          permission: P;
+          configuration?: Permission[P];
+      }
+    | P;
+
 type PermissionForUser = {
-    permission: keyof Permission;
+    permission: AllowedPermission<keyof Permission>;
     contentScopes?: ContentScope[];
 } & Pick<UserPermission, "validFrom" | "validTo" | "reason" | "requestedBy" | "approvedBy">;
 export type PermissionsForUser = PermissionForUser[] | UserPermissions.allPermissions;
@@ -23,7 +30,7 @@ export type PermissionsForUser = PermissionForUser[] | UserPermissions.allPermis
 export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentScopes;
 
 export interface AccessControlServiceInterface {
-    isAllowed(user: CurrentUserInterface, permission: keyof Permission, contentScope?: ContentScope): boolean;
+    isAllowed(user: CurrentUserInterface, permission: AllowedPermission<keyof Permission>, contentScope?: ContentScope): boolean;
     getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }

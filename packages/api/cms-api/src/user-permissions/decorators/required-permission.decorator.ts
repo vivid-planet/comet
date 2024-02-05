@@ -5,6 +5,7 @@ import { Request } from "express";
 import { CurrentUser } from "../dto/current-user";
 import { ContentScope } from "../interfaces/content-scope.interface";
 import { Permission } from "../interfaces/user-permission.interface";
+import { AllowedPermission } from "../user-permissions.types";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type RequiredPermissionArgs<ArgsType = any> = {
@@ -20,10 +21,13 @@ type RequiredPermissionOptions = {
 };
 
 export type RequiredPermission = {
-    requiredPermission: (keyof Permission)[] | keyof Permission;
+    requiredPermission: AllowedPermission<keyof Permission>[];
     options: RequiredPermissionOptions | undefined;
 };
 
-export const RequiredPermission = (requiredPermission: (keyof Permission)[], options?: RequiredPermissionOptions): CustomDecorator<string> => {
+export const RequiredPermission = <P extends keyof Permission>(
+    requiredPermission: AllowedPermission<P>[],
+    options?: RequiredPermissionOptions,
+): CustomDecorator<string> => {
     return SetMetadata<string, RequiredPermission>("requiredPermission", { requiredPermission, options });
 };

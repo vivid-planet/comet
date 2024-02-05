@@ -154,6 +154,7 @@ export { Permission } from "./user-permissions/interfaces/user-permission.interf
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export {
     AccessControlServiceInterface,
+    AllowedPermission,
     ContentScopesForUser,
     PermissionsForUser,
     UserPermissions,

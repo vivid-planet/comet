@@ -1,10 +1,12 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, Loading, SaveButton } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, InputBaseProps, styled } from "@mui/material";
 import React from "react";
+import { FieldRenderProps, Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { UserPermissionsSettings } from "../../UserPermissionsPage";
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import {
     GQLAvailablePermissionsQuery,
@@ -19,12 +21,46 @@ import {
     namedOperations,
 } from "./PermissionDialog.generated";
 
+type ConfigurationProps = InputBaseProps &
+    FieldRenderProps<JSON, HTMLInputElement | HTMLTextAreaElement> & {
+        configurationComponent: () => React.ReactNode;
+    };
+const Configuration = ({ configurationComponent, input, disabled }: ConfigurationProps) => {
+    const ConfigurationComponent = ({ values }: { values: JSON }) => {
+        React.useEffect(() => {
+            if (input.value !== values) {
+                input.onChange(values);
+            }
+        }, [values]);
+        return configurationComponent();
+    };
+    return (
+        <FormSection title={<FormattedMessage id="comet.userPermissions.configuration" defaultMessage="Configuration" />}>
+            <Fieldset disabled={disabled}>
+                <Form
+                    onSubmit={() => {
+                        /* */
+                    }}
+                    initialValues={input.value}
+                    render={ConfigurationComponent}
+                />
+            </Fieldset>
+        </FormSection>
+    );
+};
+
+// TODO Find better way to disable all children
+const Fieldset = styled("fieldset")`
+    border: none;
+`;
+
 interface FormProps {
     userId: string;
     permissionId: string | "add";
     handleDialogClose: () => void;
 }
 export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, handleDialogClose }) => {
+    const settings = React.useContext(UserPermissionsSettings);
     const client = useApolloClient();
     const submit = async (submitData: GQLUserPermissionDialogFragment) => {
         const { source, __typename, ...data } = submitData; // Remove source and __typename from data
@@ -66,6 +102,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
             }
             fragment UserPermissionDialog on UserPermission {
                 permission
+                configuration
                 source
                 validFrom
                 validTo
@@ -133,6 +170,15 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
                                 disabled={disabled}
                                 label={<FormattedMessage id="comet.userPermissions.permission" defaultMessage="Permission" />}
                             />
+                            {settings.configurationSlots && values.permission && settings.configurationSlots[values.permission] && (
+                                <Field
+                                    name="configuration"
+                                    type="hidden"
+                                    component={Configuration}
+                                    disabled={disabled}
+                                    configurationComponent={settings.configurationSlots[values.permission]}
+                                />
+                            )}
                             <Field
                                 name="validFrom"
                                 label={<FormattedMessage id="comet.userPermissions.validFrom" defaultMessage="Valid from" />}

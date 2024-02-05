@@ -3,6 +3,7 @@ import { IsArray, IsBoolean, IsDate, IsObject, IsOptional, IsString, IsUUID } fr
 import { GraphQLJSONObject } from "graphql-type-json";
 
 import { ContentScope } from "../interfaces/content-scope.interface";
+import { Permission } from "../interfaces/user-permission.interface";
 
 @InputType()
 export class UserPermissionOverrideContentScopesInput {
@@ -25,6 +26,11 @@ export class UserPermissionInput {
     @Field()
     @IsString()
     permission: string;
+
+    @Field(() => GraphQLJSONObject, { nullable: true })
+    @IsObject()
+    @IsOptional()
+    configuration?: Permission[keyof Permission];
 
     @Field(() => Date, { nullable: true })
     @IsDate()

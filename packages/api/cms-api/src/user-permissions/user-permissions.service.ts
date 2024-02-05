@@ -76,11 +76,15 @@ export class UserPermissionsService {
                 }
                 for (const p of permissionsByRule) {
                     const permission = new UserPermission();
-                    permission.id = getUuid(JSON.stringify(p));
-                    permission.source = UserPermissionSource.BY_RULE;
-                    permission.userId = userId;
-                    permission.overrideContentScopes = !!p.contentScopes;
-                    permission.assign(p);
+                    permission.assign({
+                        id: getUuid(JSON.stringify(p)),
+                        ...p,
+                        overrideContentScopes: !!p.contentScopes,
+                        source: UserPermissionSource.BY_RULE,
+                        userId,
+                        permission: typeof p.permission === "string" ? p.permission : p.permission.permission,
+                        configuration: typeof p.permission === "string" ? null : p.permission.configuration,
+                    });
                     permissions.push(permission);
                 }
             }
@@ -144,9 +148,13 @@ export class UserPermissionsService {
                     } else {
                         existingPermission.contentScopes = [...existingPermission.contentScopes, ...contentScopes];
                     }
+                    if (userPermission.configuration) {
+                        existingPermission.configuration = { ...existingPermission.configuration, ...userPermission.configuration };
+                    }
                 } else {
                     acc.push({
                         permission: userPermission.permission,
+                        configuration: userPermission.configuration,
                         contentScopes,
                     });
                 }

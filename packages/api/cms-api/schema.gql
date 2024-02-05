@@ -142,6 +142,7 @@ type FilenameResponse {
 
 type CurrentUserPermission {
   permission: String!
+  configuration: JSONObject
   contentScopes: [JSONObject!]
 }
 
@@ -156,6 +157,7 @@ type UserPermission {
   id: ID!
   source: UserPermissionSource!
   permission: String!
+  configuration: JSONObject
   validFrom: DateTime
   validTo: DateTime
   reason: String
@@ -620,6 +622,7 @@ input PageTreeNodeCreateInput {
 
 input UserPermissionInput {
   permission: String!
+  configuration: JSONObject
   validFrom: DateTime
   validTo: DateTime
   reason: String

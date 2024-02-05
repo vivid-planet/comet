@@ -146,6 +146,7 @@ type FilenameResponse {
 
 type CurrentUserPermission {
   permission: String!
+  configuration: JSONObject
   contentScopes: [JSONObject!]
 }
 
@@ -169,6 +170,7 @@ type UserPermission {
   id: ID!
   source: UserPermissionSource!
   permission: String!
+  configuration: JSONObject
   validFrom: DateTime
   validTo: DateTime
   reason: String
@@ -968,6 +970,7 @@ type Mutation {
 
 input UserPermissionInput {
   permission: String!
+  configuration: JSONObject
   validFrom: DateTime
   validTo: DateTime
   reason: String
