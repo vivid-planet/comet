@@ -21,6 +21,7 @@ import {
     useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
+import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
@@ -205,6 +206,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 />
                             )}
                         </Field>
+                        <Field
+                            fullWidth
+                            name="availableSince"
+                            component={FinalFormDatePicker}
+                            label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                        />
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
