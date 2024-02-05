@@ -1,5 +1,5 @@
 import { ComponentsOverrides, TableRow } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { styled, Theme, useThemeProps } from "@mui/material/styles";
 import { TableRowProps } from "@mui/material/TableRow";
 import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import React from "react";
@@ -9,22 +9,15 @@ import React from "react";
  */
 export type TableBodyRowClassKey = "root" | "even" | "odd";
 
-type OwnerState = Pick<TableBodyRowProps, "index" | "hideTableHead">;
+type OwnerState = { isOdd: boolean };
 
 const Root = styled(TableRow, {
     name: "CometAdminTableBodyRow",
     slot: "root",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        const isOdd = ((ownerState.index || 0) + (ownerState.hideTableHead ? 1 : 0)) % 2 === 1;
+    overridesResolver({ ownerState: { isOdd } }: { ownerState: OwnerState }, styles) {
         return [styles.root, !isOdd && styles.even, isOdd && styles.odd];
     },
-})<{ ownerState: OwnerState }>(({ ownerState: { index, hideTableHead } }) => {
-    const isOdd = ((index || 0) + (hideTableHead ? 1 : 0)) % 2 === 1;
-    if (isOdd) {
-        return css``;
-    }
-    return css``;
-});
+})<{ ownerState: OwnerState }>();
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
@@ -41,8 +34,7 @@ export function TableBodyRow(inProps: TableBodyRowProps) {
     const { title, children, index, hideTableHead, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminTableBodyRow" });
 
     const ownerState: OwnerState = {
-        index,
-        hideTableHead,
+        isOdd: ((index || 0) + (hideTableHead ? 1 : 0)) % 2 === 1,
     };
 
     return (
