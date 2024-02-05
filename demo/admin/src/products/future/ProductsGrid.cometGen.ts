@@ -9,5 +9,8 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
         { type: "text", name: "title", headerName: "Titel", width: 150 },
         { type: "text", name: "description", headerName: "Description", width: 150 },
         { type: "number", name: "price", headerName: "Price", width: 150 },
+        { type: "staticSelect", name: "type" /*, values: from gql schema (TODO overridable)*/ },
+        { type: "date", name: "availableSince" },
+        { type: "dateTime", name: "createdAt" },
     ],
 };

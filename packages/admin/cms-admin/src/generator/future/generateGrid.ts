@@ -1,4 +1,11 @@
-import { IntrospectionEnumType, IntrospectionInputObjectType, IntrospectionInputValue, IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import {
+    IntrospectionEnumType,
+    IntrospectionInputObjectType,
+    IntrospectionInputValue,
+    IntrospectionNamedTypeRef,
+    IntrospectionObjectType,
+    IntrospectionQuery,
+} from "graphql";
 import { plural } from "pluralize";
 
 import { GeneratorReturn, GridConfig } from "./generator";
@@ -139,61 +146,64 @@ export function generateGrid(
 
     const gridColumnFields = config.columns.map((column) => {
         const type = column.type;
+        const name = String(column.name);
 
-        const renderCell: string | undefined = undefined;
-        const valueGetter: string | undefined = undefined;
+        let renderCell: string | undefined = undefined;
+        let valueGetter: string | undefined = undefined;
 
-        let gridType: "number" | "boolean" | "dateTime" | undefined;
-        /*
-        if (type.kind == "SCALAR") {
-            if (type.name == "Float" || type.name == "Int") {
-                gridType = "number" as const;
-            } else if (type.name == "Boolean") {
-                gridType = "boolean" as const;
-            } else if (type.name == "DateTime") {
-                gridType = "dateTime" as const;
-                valueGetter = `({ value }) => value && new Date(value)`;
-                //TODO support date without time    gridType = "date";
-            } else {
-                if (rootBlocks[column.name]) {
-                    renderCell = `(params) => {
-                            return <BlockPreviewContent block={${rootBlocks[column.name].name}} input={params.row.${column.name}} />;
-                        }`;
-                }
+        let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
+
+        if (type == "dateTime") {
+            valueGetter = `({ value }) => value && new Date(value)`;
+            gridType = "dateTime";
+        } else if (type == "date") {
+            valueGetter = `({ value }) => value && new Date(value)`;
+            gridType = "date";
+        } else if (type == "block") {
+            if (rootBlocks[name]) {
+                renderCell = `(params) => {
+                        return <BlockPreviewContent block={${rootBlocks[name].name}} input={params.row.${name}} />;
+                    }`;
             }
-        } else if (type.kind == "ENUM") {
-            const enumType = gqlIntrospection.__schema.types.find((t) => t.kind === "ENUM" && t.name === (type as IntrospectionNamedTypeRef).name) as
-                | IntrospectionEnumType
-                | undefined;
+        } else if (type == "staticSelect") {
+            if (column.values) {
+                throw new Error("custom values for staticSelect is not yet supported"); // TODO add support
+            }
+            const introspectionField = schemaEntity.fields.find((field) => field.name === name);
+            if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
+            const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
+
+            const enumType = gqlIntrospection.__schema.types.find(
+                (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
+            ) as IntrospectionEnumType | undefined;
             if (!enumType) throw new Error(`Enum type not found`);
             const values = enumType.enumValues.map((i) => i.name);
             const valueOptions = `[${values
                 .map((i) => {
-                    const id = `${instanceEntityName}.${column.name}.${i.charAt(0).toLowerCase() + i.slice(1)}`;
+                    const id = `${instanceGqlType}.${name}.${i.charAt(0).toLowerCase() + i.slice(1)}`;
                     const label = `intl.formatMessage({ id: "${id}", defaultMessage: "${camelCaseToHumanReadable(i)}" })`;
                     return `{value: ${JSON.stringify(i)}, label: ${label}}, `;
                 })
                 .join(" ")}]`;
 
             return {
-                name: column.name,
+                name,
                 type,
                 gridType: "singleSelect" as const,
                 valueOptions,
             };
         }
+
         //TODO suppoort n:1 relation with singleSelect
-        */
 
         return {
-            name: String(column.name),
+            name,
             headerName: column.headerName,
             width: column.width,
             type,
             gridType,
             renderCell,
             valueGetter,
-            valueOptions: undefined,
         };
     });
 

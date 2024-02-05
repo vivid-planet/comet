@@ -17,6 +17,8 @@ export type FormFieldConfig<T> = (
     | { type: "text"; multiline?: boolean }
     | { type: "number" }
     | { type: "boolean" }
+    | { type: "date" }
+    // TODO | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
     | { type: "asyncSelect"; values?: string[] }
     | { type: "block"; block: BlockReference }
@@ -32,7 +34,15 @@ export type FormConfig<T extends { __typename?: string }> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-export type GridColumnConfig<T> = ({ type: "text" } | { type: "number" }) & { name: keyof T; headerName?: string; width?: number };
+export type GridColumnConfig<T> = (
+    | { type: "text" }
+    | { type: "number" }
+    | { type: "boolean" }
+    | { type: "date" }
+    | { type: "dateTime" }
+    | { type: "staticSelect"; values?: string[] }
+    | { type: "block"; block: BlockReference }
+) & { name: keyof T; headerName?: string; width?: number };
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];

@@ -64,6 +64,15 @@ export function generateFormField(
                 />
             )}
         </Field>`;
+    } else if (config.type == "date") {
+        code = `
+            <Field
+                ${required ? "required" : ""}
+                fullWidth
+                name="${name}"
+                component={FinalFormDatePicker}
+                label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+            />`;
     } else if (config.type == "block") {
         imports.push({
             name: config.block.name,
@@ -73,12 +82,14 @@ export function generateFormField(
             {createFinalFormBlock(${config.block.name})}
         </Field>`;
     } else if (config.type == "staticSelect") {
+        if (config.values) {
+            throw new Error("custom values for staticSelect is not yet supported"); // TODO add support
+        }
         const enumType = gqlIntrospection.__schema.types.find(
             (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
         ) as IntrospectionEnumType | undefined;
         if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
         const values = enumType.enumValues.map((i) => i.name);
-        // TODO use values from config.values if present
         code = `<Field
             fullWidth
             name="${name}"

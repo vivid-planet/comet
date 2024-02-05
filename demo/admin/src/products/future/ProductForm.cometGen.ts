@@ -18,6 +18,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
         //TODO { type: "asyncSelect", name: "category", label: "Category" /*, endpoint: from gql schema (overridable)*/ },
         { type: "number", name: "price" },
         { type: "boolean", name: "inStock" },
+        { type: "date", name: "availableSince" },
         { type: "block", name: "image", label: "Image", block: { name: "PixelImageBlock", import: "@comet/cms-admin" } },
     ],
 };

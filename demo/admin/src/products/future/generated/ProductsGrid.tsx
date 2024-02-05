@@ -46,6 +46,7 @@ const productsFragment = gql`
         price
         inStock
         soldCount
+        availableSince
         image
         createdAt
     }
@@ -107,6 +108,31 @@ export function ProductsGrid(): React.ReactElement {
         { field: "description", headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }), width: 150 },
         { field: "price", headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }), width: 150 },
         {
+            field: "type",
+            headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
+            type: "singleSelect",
+            valueOptions: [
+                { value: "Cap", label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "Cap" }) },
+                { value: "Shirt", label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }) },
+                { value: "Tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
+            ],
+            width: 150,
+        },
+        {
+            field: "availableSince",
+            headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
+            type: "date",
+            valueGetter: ({ value }) => value && new Date(value),
+            width: 150,
+        },
+        {
+            field: "createdAt",
+            headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
+            type: "dateTime",
+            valueGetter: ({ value }) => value && new Date(value),
+            width: 150,
+        },
+        {
             field: "actions",
             headerName: "",
             sortable: false,
@@ -128,6 +154,7 @@ export function ProductsGrid(): React.ReactElement {
                                     type: row.type,
                                     price: row.price,
                                     inStock: row.inStock,
+                                    availableSince: row.availableSince,
                                     image: DamImageBlock.state2Output(DamImageBlock.input2State(row.image)),
                                 };
                             }}
