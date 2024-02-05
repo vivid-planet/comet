@@ -20,6 +20,14 @@ export function useScrollRestoration<Element extends HTMLElement>(identifier: st
         }
     }, [identifierForRoute]);
 
+    for (const key of Object.keys(scrollPositions)) {
+        const keyWithoutIdentifier = key.replace(`-${identifier}`, "");
+
+        if (keyWithoutIdentifier.startsWith(location.pathname) && keyWithoutIdentifier !== location.pathname) {
+            scrollPositions[key] = 0;
+        }
+    }
+
     const onScroll = React.useCallback(() => {
         if (ref.current) {
             scrollPositions[identifierForRoute] = ref.current.scrollTop;
