@@ -153,185 +153,186 @@ export const styleMap = {
     },
 };
 
-export const Rte: React.ForwardRefRenderFunction<any, RteProps> = (inProps: RteProps, ref) => {
-    //move ref to props?
-    const {
-        value: editorState,
-        onChange,
-        options: rteOptions,
-        disabled,
-        minHeight,
-        colors,
-        slotProps,
-        ...restProps
-    } = useThemeProps({
-        props: inProps,
-        name: "CometAdminRte",
-    });
+export const Rte: React.ForwardRefExoticComponent<React.PropsWithoutRef<RteProps> & React.RefAttributes<unknown>> = React.forwardRef(
+    (inProps: RteProps, ref) => {
+        const {
+            value: editorState,
+            onChange,
+            options: rteOptions,
+            disabled,
+            minHeight,
+            colors,
+            slotProps,
+            ...restProps
+        } = useThemeProps({
+            props: inProps,
+            name: "CometAdminRte",
+        });
 
-    const ownerState: OwnerState = {
-        disabled,
-    };
-
-    const editorRef = React.useRef<DraftJsEditor>(null);
-    const editorWrapperRef = React.useRef<HTMLDivElement>(null);
-
-    // merge default options with passed options
-    let options = rteOptions ? { ...defaultOptions, ...rteOptions } : defaultOptions;
-
-    // extract deprecated options and handle them specially
-    let deprecatedCustomBlockMap: ICustomBlockTypeMap_Deprecated = {};
-    if (options.customBlockMap) {
-        deprecatedCustomBlockMap = options.customBlockMap;
-        delete options.customBlockMap;
-    }
-
-    cleanBlockTypeMap(options.blocktypeMap); // mutate object and print warning when configuration is wrong
-
-    // blocktypes need an extra merge as they have their own merge strategy
-    options = {
-        ...options,
-        blocktypeMap: mergeBlocktypeMaps(defaultBlocktypeMap, deprecatedCustomBlockMap, options.blocktypeMap),
-    };
-
-    // force draftjs to be readonly when rte is disabled
-    if (disabled) {
-        options.draftJsProps = { ...options.draftJsProps, readOnly: true };
-    }
-
-    /**
-     * Expose methods
-     */
-    React.useImperativeHandle(ref, () => ({
-        focus: () => {
-            if (editorRef && editorRef.current) {
-                editorRef.current.focus();
-            }
-        },
-    }));
-
-    const { filterEditorStateBeforeUpdate, supports, listLevelMax, maxBlocks, standardBlockType } = options;
-
-    const decoratedOnChange = React.useCallback(
-        (nextEditorState: EditorState) => {
-            let modifiedState = nextEditorState;
-            const context = {
-                supports: supports,
-                listLevelMax: listLevelMax,
-                maxBlocks: maxBlocks,
-                standardBlockType: standardBlockType,
-            };
-            // apply optional filter to editorState
-            if (filterEditorStateBeforeUpdate) {
-                modifiedState = filterEditorStateBeforeUpdate(modifiedState, context);
-            }
-            // apply mandatory filter to editorState
-            modifiedState = mandatoryFilterEditorStateFn(modifiedState, context);
-
-            // pass the modified filter to original onChange
-            onChange(modifiedState);
-        },
-        [filterEditorStateBeforeUpdate, supports, listLevelMax, maxBlocks, standardBlockType, onChange],
-    );
-
-    const blockRenderMap = createBlockRenderMap({ blocktypeMap: options.blocktypeMap });
-
-    function handleKeyCommand(command: DraftEditorCommand) {
-        const commandToSupportsMap: Partial<Record<DraftEditorCommand, SupportedThings>> = {
-            bold: "bold",
-            italic: "italic",
-            strikethrough: "strikethrough",
-            underline: "underline",
+        const ownerState: OwnerState = {
+            disabled,
         };
 
-        const relevantSupports = commandToSupportsMap[command];
-        if (relevantSupports && options.supports.includes(relevantSupports)) {
-            const newState = RichUtils.handleKeyCommand(editorState, command);
+        const editorRef = React.useRef<DraftJsEditor>(null);
+        const editorWrapperRef = React.useRef<HTMLDivElement>(null);
 
-            if (newState) {
-                onChange(newState);
+        // merge default options with passed options
+        let options = rteOptions ? { ...defaultOptions, ...rteOptions } : defaultOptions;
+
+        // extract deprecated options and handle them specially
+        let deprecatedCustomBlockMap: ICustomBlockTypeMap_Deprecated = {};
+        if (options.customBlockMap) {
+            deprecatedCustomBlockMap = options.customBlockMap;
+            delete options.customBlockMap;
+        }
+
+        cleanBlockTypeMap(options.blocktypeMap); // mutate object and print warning when configuration is wrong
+
+        // blocktypes need an extra merge as they have their own merge strategy
+        options = {
+            ...options,
+            blocktypeMap: mergeBlocktypeMaps(defaultBlocktypeMap, deprecatedCustomBlockMap, options.blocktypeMap),
+        };
+
+        // force draftjs to be readonly when rte is disabled
+        if (disabled) {
+            options.draftJsProps = { ...options.draftJsProps, readOnly: true };
+        }
+
+        /**
+         * Expose methods
+         */
+        React.useImperativeHandle(ref, () => ({
+            focus: () => {
+                if (editorRef && editorRef.current) {
+                    editorRef.current.focus();
+                }
+            },
+        }));
+
+        const { filterEditorStateBeforeUpdate, supports, listLevelMax, maxBlocks, standardBlockType } = options;
+
+        const decoratedOnChange = React.useCallback(
+            (nextEditorState: EditorState) => {
+                let modifiedState = nextEditorState;
+                const context = {
+                    supports: supports,
+                    listLevelMax: listLevelMax,
+                    maxBlocks: maxBlocks,
+                    standardBlockType: standardBlockType,
+                };
+                // apply optional filter to editorState
+                if (filterEditorStateBeforeUpdate) {
+                    modifiedState = filterEditorStateBeforeUpdate(modifiedState, context);
+                }
+                // apply mandatory filter to editorState
+                modifiedState = mandatoryFilterEditorStateFn(modifiedState, context);
+
+                // pass the modified filter to original onChange
+                onChange(modifiedState);
+            },
+            [filterEditorStateBeforeUpdate, supports, listLevelMax, maxBlocks, standardBlockType, onChange],
+        );
+
+        const blockRenderMap = createBlockRenderMap({ blocktypeMap: options.blocktypeMap });
+
+        function handleKeyCommand(command: DraftEditorCommand) {
+            const commandToSupportsMap: Partial<Record<DraftEditorCommand, SupportedThings>> = {
+                bold: "bold",
+                italic: "italic",
+                strikethrough: "strikethrough",
+                underline: "underline",
+            };
+
+            const relevantSupports = commandToSupportsMap[command];
+            if (relevantSupports && options.supports.includes(relevantSupports)) {
+                const newState = RichUtils.handleKeyCommand(editorState, command);
+
+                if (newState) {
+                    onChange(newState);
+                    return "handled";
+                }
+            }
+
+            // disallow user to add a new block when block limit is already reached
+            if (command === "split-block" && options.maxBlocks) {
+                const content = editorState.getCurrentContent();
+                const blockSize = content.getBlockMap().count();
+
+                const userTriesToAddTooMuchBlocks = blockSize >= options.maxBlocks;
+                if (userTriesToAddTooMuchBlocks) {
+                    return "handled"; // do nothing
+                }
+            }
+            return "not-handled";
+        }
+
+        function handleReturn(e: React.KeyboardEvent, innerEditorState: EditorState) {
+            // inserts a newline "\n" on SHIFT+ENTER-key
+            if (e.shiftKey) {
+                onChange(RichUtils.insertSoftNewline(innerEditorState));
                 return "handled";
             }
+            return "not-handled";
         }
 
-        // disallow user to add a new block when block limit is already reached
-        if (command === "split-block" && options.maxBlocks) {
-            const content = editorState.getCurrentContent();
-            const blockSize = content.getBlockMap().count();
-
-            const userTriesToAddTooMuchBlocks = blockSize >= options.maxBlocks;
-            if (userTriesToAddTooMuchBlocks) {
-                return "handled"; // do nothing
+        function keyBindingFn(event: React.KeyboardEvent) {
+            if (event.key === "Tab") {
+                // nested lists for ol and ul
+                event.preventDefault();
+                const newEditorState = RichUtils.onTab(event, editorState, options.listLevelMax);
+                if (newEditorState !== editorState) {
+                    onChange(newEditorState);
+                }
             }
-        }
-        return "not-handled";
-    }
 
-    function handleReturn(e: React.KeyboardEvent, innerEditorState: EditorState) {
-        // inserts a newline "\n" on SHIFT+ENTER-key
-        if (e.shiftKey) {
-            onChange(RichUtils.insertSoftNewline(innerEditorState));
-            return "handled";
-        }
-        return "not-handled";
-    }
-
-    function keyBindingFn(event: React.KeyboardEvent) {
-        if (event.key === "Tab") {
-            // nested lists for ol and ul
-            event.preventDefault();
-            const newEditorState = RichUtils.onTab(event, editorState, options.listLevelMax);
-            if (newEditorState !== editorState) {
-                onChange(newEditorState);
-            }
+            return getDefaultKeyBinding(event);
         }
 
-        return getDefaultKeyBinding(event);
-    }
+        const customStyleMap: DraftStyleMap = { ...styleMap };
 
-    const customStyleMap: DraftStyleMap = { ...styleMap };
+        if (options.customInlineStyles) {
+            Object.entries(options.customInlineStyles).forEach(([name, { style }]) => {
+                customStyleMap[name] = style;
+            });
+        }
 
-    if (options.customInlineStyles) {
-        Object.entries(options.customInlineStyles).forEach(([name, { style }]) => {
-            customStyleMap[name] = style;
-        });
-    }
+        return (
+            <Root ref={editorWrapperRef} ownerState={ownerState} {...restProps} {...slotProps?.root}>
+                <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} disabled={disabled} />
+                <Editor ownerState={ownerState} {...slotProps?.editor}>
+                    <DraftJsEditor
+                        ref={editorRef}
+                        editorState={editorState}
+                        onChange={decoratedOnChange}
+                        handleKeyCommand={handleKeyCommand}
+                        handleReturn={handleReturn}
+                        keyBindingFn={keyBindingFn}
+                        customStyleMap={customStyleMap}
+                        blockRenderMap={blockRenderMap}
+                        onCopy={(editor, event) => {
+                            onDraftEditorCopy(editor, event as React.ClipboardEvent<HTMLElement>);
+                        }}
+                        onCut={(editor, event) => {
+                            onDraftEditorCut(editor, event as React.ClipboardEvent<HTMLElement>);
+                        }}
+                        handlePastedText={(text: string, html: string | undefined, editorState: EditorState): DraftHandleValue => {
+                            const nextEditorState = pasteAndFilterText(html, editorState, options);
 
-    return (
-        <Root ref={editorWrapperRef} ownerState={ownerState} {...restProps} {...slotProps?.root}>
-            <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} disabled={disabled} />
-            <Editor ownerState={ownerState} {...slotProps?.editor}>
-                <DraftJsEditor
-                    ref={editorRef}
-                    editorState={editorState}
-                    onChange={decoratedOnChange}
-                    handleKeyCommand={handleKeyCommand}
-                    handleReturn={handleReturn}
-                    keyBindingFn={keyBindingFn}
-                    customStyleMap={customStyleMap}
-                    blockRenderMap={blockRenderMap}
-                    onCopy={(editor, event) => {
-                        onDraftEditorCopy(editor, event as React.ClipboardEvent<HTMLElement>);
-                    }}
-                    onCut={(editor, event) => {
-                        onDraftEditorCut(editor, event as React.ClipboardEvent<HTMLElement>);
-                    }}
-                    handlePastedText={(text: string, html: string | undefined, editorState: EditorState): DraftHandleValue => {
-                        const nextEditorState = pasteAndFilterText(html, editorState, options);
+                            if (nextEditorState) {
+                                decoratedOnChange(nextEditorState);
+                                return "handled";
+                            }
 
-                        if (nextEditorState) {
-                            decoratedOnChange(nextEditorState);
-                            return "handled";
-                        }
-
-                        return "not-handled";
-                    }}
-                    {...options.draftJsProps}
-                />
-            </Editor>
-        </Root>
-    );
-};
+                            return "not-handled";
+                        }}
+                        {...options.draftJsProps}
+                    />
+                </Editor>
+            </Root>
+        );
+    },
+);
 
 export type RteClassKey = "root" | "disabled" | "editor";
 
@@ -344,12 +345,10 @@ const Root = styled("div", {
         return [styles.root, ownerState.disabled && styles.disabled];
     },
 })<{ ownerState: OwnerState }>(
-    ({ theme, ownerState }) => css`
+    ({ theme }) => css`
         border: 1px solid ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors.border};
         border-top-width: 0;
         background-color: #fff;
-
-        ${ownerState.disabled && css``}// check that. needs it?
     `,
 );
 
@@ -370,14 +369,16 @@ const Editor = styled("div", {
         ${ownerState.disabled &&
         css`
             color: ${theme.palette.text.disabled};
-        `} // check that
-        
+        `}
+
         ${ownerState.minHeight &&
         css`
             min-height: ${ownerState.minHeight};
         `}
     `,
 );
+
+export default Rte;
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
