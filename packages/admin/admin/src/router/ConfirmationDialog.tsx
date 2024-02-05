@@ -8,9 +8,9 @@ import { messages } from "../messages";
 import { RouterConfirmationDialogClassKey, styles } from "./ConfirmationDialog.styles";
 
 export enum PromptAction {
-    Cancel,
-    Discard,
-    Save,
+    Cancel = "Cancel",
+    Discard = "Discard",
+    Save = "Save",
 }
 
 export interface RouterConfirmationDialogProps {

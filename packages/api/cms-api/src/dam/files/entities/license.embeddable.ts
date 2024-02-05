@@ -1,10 +1,13 @@
 import { Embeddable, Enum, Property } from "@mikro-orm/core";
 import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with PascalCase
 export enum LicenseType {
     ROYALTY_FREE = "ROYALTY_FREE",
     RIGHTS_MANAGED = "RIGHTS_MANAGED",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(LicenseType, { name: "LicenseType" });
 
 @ObjectType("DamFileLicense")
