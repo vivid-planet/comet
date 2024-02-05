@@ -1,4 +1,3 @@
-import { DragHandle } from "@comet/admin-icons";
 import { ComponentsOverrides } from "@mui/material";
 import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import TableCell from "@mui/material/TableCell";
@@ -11,8 +10,6 @@ import { IRow, ITableProps, ITableRowProps, Table, TableColumns, TableHeadColumn
 import { TableBodyRow } from "./TableBodyRow";
 
 export type TableDndOrderClassKey = "root" | "dragCell" | "dragIconContainer";
-
-type OwnerState<TRow extends IRow> = Pick<TableDndOrderProps<TRow>, "moveRow" | "onDragEnd"> & { dragHandleIcon: React.ReactNode };
 
 interface IDndOrderRowProps<TRow extends IRow>
     extends ThemedComponentBaseProps<{ dragCell: typeof TableCell; dragIconContainer: "div" }>,
@@ -175,15 +172,6 @@ interface TableDndOrderProps<TRow extends IRow>
 export function TableDndOrder<TRow extends IRow>(inProps: TableDndOrderProps<TRow>) {
     const { moveRow, onDragEnd, dragHandleIcon, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminTableDndOrder" });
 
-    const ownerState = React.useMemo<OwnerState<TRow>>(
-        () => ({
-            moveRow,
-            onDragEnd,
-            dragHandleIcon: dragHandleIcon ?? <DragHandle />,
-        }),
-        [dragHandleIcon, moveRow, onDragEnd],
-    );
-
     const renderHeadTableRow = React.useCallback<NonNullable<ITableProps<TRow>["renderHeadTableRow"]>>((ownProps) => {
         return (
             <TableRow>
@@ -194,9 +182,9 @@ export function TableDndOrder<TRow extends IRow>(inProps: TableDndOrderProps<TRo
     }, []);
     const renderTableRow = React.useCallback<NonNullable<ITableProps<TRow>["renderTableRow"]>>(
         (ownProps) => {
-            return <DndOrderRow {...ownerState} {...ownProps} />;
+            return <DndOrderRow dragHandleIcon={dragHandleIcon} moveRow={moveRow} onDragEnd={onDragEnd} {...ownProps} />;
         },
-        [ownerState],
+        [dragHandleIcon, moveRow, onDragEnd],
     );
 
     const tableProps = {
