@@ -2,10 +2,9 @@ import {
     Field,
     FinalForm,
     FinalFormInput,
+    FinalFormSaveButton,
     RouterTab,
     RouterTabs,
-    SaveButton,
-    SplitButton,
     Stack,
     Toolbar,
     ToolbarActions,
@@ -46,34 +45,7 @@ function Story() {
                                                         <ToolbarBackButton />
                                                         <ToolbarFillSpace />
                                                         <ToolbarActions>
-                                                            <SplitButton
-                                                                disabled={pristine || hasValidationErrors || submitting}
-                                                                localStorageKey="routertabs-with-forms-save"
-                                                            >
-                                                                <SaveButton
-                                                                    color="primary"
-                                                                    variant="contained"
-                                                                    saving={submitting}
-                                                                    hasErrors={hasSubmitErrors}
-                                                                    type="button"
-                                                                    onClick={async () => {
-                                                                        handleSubmit();
-                                                                    }}
-                                                                >
-                                                                    Save
-                                                                </SaveButton>
-                                                                <SaveButton
-                                                                    color="primary"
-                                                                    variant="contained"
-                                                                    saving={submitting}
-                                                                    hasErrors={hasSubmitErrors}
-                                                                    onClick={async () => {
-                                                                        handleSubmit();
-                                                                    }}
-                                                                >
-                                                                    Save and go back
-                                                                </SaveButton>
-                                                            </SplitButton>
+                                                            <FinalFormSaveButton />
                                                         </ToolbarActions>
                                                     </Toolbar>
                                                     <Card variant="outlined">

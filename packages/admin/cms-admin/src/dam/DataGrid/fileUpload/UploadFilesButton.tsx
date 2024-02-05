@@ -7,14 +7,14 @@ import { FormattedMessage } from "react-intl";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamFileUpload } from "./useDamFileUpload";
 
-interface UploadSplitButtonProps {
+interface UploadFilesButtonProps {
     folderId?: string;
     filter?: {
         allowedMimetypes?: string[];
     };
 }
 
-export const UploadFilesButton = ({ folderId, filter }: UploadSplitButtonProps): React.ReactElement => {
+export const UploadFilesButton = ({ folderId, filter }: UploadFilesButtonProps): React.ReactElement => {
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
     const fileInputRef = React.useRef<HTMLInputElement>(null);

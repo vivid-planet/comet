@@ -1,4 +1,4 @@
-import { messages, SaveButton, SaveButtonProps, SplitButton, useStackApi } from "@comet/admin";
+import { messages, SaveButton, SaveButtonProps } from "@comet/admin";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -84,8 +84,6 @@ interface SaveStateSaveButtonProps {
     saveError: "invalid" | "conflict" | "error" | undefined;
 }
 export function SaveStateSaveButton({ handleSaveClick, hasChanges, saving, saveError }: SaveStateSaveButtonProps): JSX.Element {
-    const stackApi = useStackApi();
-
     const saveButtonProps: Omit<SaveButtonProps, "children" | "onClick"> = {
         color: "primary",
         variant: "contained",
@@ -100,19 +98,8 @@ export function SaveStateSaveButton({ handleSaveClick, hasChanges, saving, saveE
     };
 
     return (
-        <SplitButton localStorageKey="SaveSplitButton" disabled={!hasChanges}>
-            <SaveButton onClick={() => handleSaveClick(true)} {...saveButtonProps}>
-                <FormattedMessage {...messages.save} />
-            </SaveButton>
-            <SaveButton
-                onClick={async () => {
-                    await handleSaveClick();
-                    stackApi?.goBack();
-                }}
-                {...saveButtonProps}
-            >
-                <FormattedMessage {...messages.saveAndGoBack} />
-            </SaveButton>
-        </SplitButton>
+        <SaveButton disabled={!hasChanges} onClick={() => handleSaveClick(true)} {...saveButtonProps}>
+            <FormattedMessage {...messages.save} />
+        </SaveButton>
     );
 }

@@ -2,8 +2,7 @@ import {
     Field,
     FinalForm,
     FinalFormInput,
-    SaveButton,
-    SplitButton,
+    FinalFormSaveButton,
     Tab,
     Tabs,
     Toolbar,
@@ -43,31 +42,7 @@ storiesOf("stories/components/Tabs/Tabs forceRender", module)
                                     <ToolbarBackButton />
                                     <ToolbarFillSpace />
                                     <ToolbarActions>
-                                        <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="tabs-with-forms-save">
-                                            <SaveButton
-                                                color="primary"
-                                                variant="contained"
-                                                saving={submitting}
-                                                hasErrors={hasSubmitErrors}
-                                                type="button"
-                                                onClick={async () => {
-                                                    handleSubmit();
-                                                }}
-                                            >
-                                                Save
-                                            </SaveButton>
-                                            <SaveButton
-                                                color="primary"
-                                                variant="contained"
-                                                saving={submitting}
-                                                hasErrors={hasSubmitErrors}
-                                                onClick={async () => {
-                                                    handleSubmit();
-                                                }}
-                                            >
-                                                Save and go back
-                                            </SaveButton>
-                                        </SplitButton>
+                                        <FinalFormSaveButton />
                                     </ToolbarActions>
                                 </Toolbar>
                                 <Tabs>
@@ -116,31 +91,7 @@ storiesOf("stories/components/Tabs/Tabs forceRender", module)
                                     <ToolbarBackButton />
                                     <ToolbarFillSpace />
                                     <ToolbarActions>
-                                        <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="tabs-with-forms-save">
-                                            <SaveButton
-                                                color="primary"
-                                                variant="contained"
-                                                saving={submitting}
-                                                hasErrors={hasSubmitErrors}
-                                                type="button"
-                                                onClick={async () => {
-                                                    handleSubmit();
-                                                }}
-                                            >
-                                                Save
-                                            </SaveButton>
-                                            <SaveButton
-                                                color="primary"
-                                                variant="contained"
-                                                saving={submitting}
-                                                hasErrors={hasSubmitErrors}
-                                                onClick={async () => {
-                                                    handleSubmit();
-                                                }}
-                                            >
-                                                Save and go back
-                                            </SaveButton>
-                                        </SplitButton>
+                                        <FinalFormSaveButton />
                                     </ToolbarActions>
                                 </Toolbar>
                                 <Tabs>

@@ -7,6 +7,9 @@ import { PropsWithChildren } from "react";
 import { useStoredState } from "../../../hooks/useStoredState";
 import { SplitButtonContext } from "./SplitButtonContext";
 
+/**
+ * @deprecated Use a simple `SaveButton` instead as we are retiring the SplitButton pattern.
+ */
 export interface SplitButtonProps extends ButtonGroupProps<any> {
     selectIcon?: React.ReactNode;
     selectedIndex?: number;
@@ -117,6 +120,9 @@ const SplitBtn = ({
     );
 };
 
+/**
+ * @deprecated Use a simple `SaveButton` instead as we are retiring the SplitButton pattern.
+ */
 export const SplitButton = withStyles({}, { name: "CometAdminSplitButton" })(SplitBtn);
 
 declare module "@mui/material/styles" {

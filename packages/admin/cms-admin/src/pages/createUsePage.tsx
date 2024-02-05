@@ -1,6 +1,5 @@
 import { ApolloError, gql, TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
-import { messages, SaveButton, SaveButtonProps, SplitButton, SplitButtonProps, useStackApi } from "@comet/admin";
-import { ChevronDown } from "@comet/admin-icons";
+import { messages, SaveButton, SaveButtonProps } from "@comet/admin";
 import {
     BindBlockAdminComponent,
     BlockInterface,
@@ -448,8 +447,6 @@ interface PageSaveButtonProps {
     saveError: "invalid" | "conflict" | "error" | undefined;
 }
 function PageSaveButton({ handleSavePage, hasChanges, hasConflict, saving, saveError }: PageSaveButtonProps): JSX.Element {
-    const stackApi = useStackApi();
-
     const saveButtonProps: Omit<SaveButtonProps, "children | onClick"> = {
         color: "primary",
         variant: "contained",
@@ -464,27 +461,9 @@ function PageSaveButton({ handleSavePage, hasChanges, hasConflict, saving, saveE
             ) : undefined,
     };
 
-    const splitButtonProps: Partial<SplitButtonProps> = {};
-    if (hasConflict) {
-        // setting the color to "error" is only necessary for the SplitButton and doesn't affect the SaveButton
-        saveButtonProps.color = "error";
-        splitButtonProps.selectIcon = <ChevronDown sx={{ color: (theme) => theme.palette.error.contrastText }} />;
-    }
-
     return (
-        <SplitButton {...splitButtonProps} localStorageKey="SaveSplitButton" disabled={!hasChanges}>
-            <SaveButton onClick={handleSavePage} {...saveButtonProps}>
-                <FormattedMessage {...messages.save} />
-            </SaveButton>
-            <SaveButton
-                onClick={async () => {
-                    await handleSavePage();
-                    stackApi?.goBack();
-                }}
-                {...saveButtonProps}
-            >
-                <FormattedMessage {...messages.saveAndGoBack} />
-            </SaveButton>
-        </SplitButton>
+        <SaveButton disabled={!hasChanges} onClick={handleSavePage} {...saveButtonProps}>
+            <FormattedMessage {...messages.save} />
+        </SaveButton>
     );
 }

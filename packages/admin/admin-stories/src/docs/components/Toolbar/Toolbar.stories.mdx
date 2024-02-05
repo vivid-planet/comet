@@ -168,23 +168,38 @@ The Toolbar expands automatically if it needs more space
     <Story id="stories-components-toolbar-search-autocomplete--search-autocomplete" />
 </Canvas>
 
-### SplitButton Save
-
-<Canvas>
-    <Story id="stories-components-toolbar-save-split-button--save-split-button" />
-</Canvas>
-
 ### Save
 
 <Canvas>
     <Story id="stories-components-toolbar-save-button--save" />
 </Canvas>
 
+### Final Form Save Button
+
+There is also a component (`FinalFormSaveButton`) which automatically handles saving inside a `Form` or `FinalForm` component.
+
+This component uses final form data (e.g. pristine, hasValidationErrors, submitting, hasSubmitErrors,...) for displaying statuses (disabled, saving, error, success).
+
+<Canvas>
+    <Story id="stories-components-toolbar-final-form-save-button--final-form-save-button" />
+</Canvas>
+
+### SplitButton Save
+
+> ⚠️`SplitButton` is deprecated since v7 and shouldn't be used
+
+
+<Canvas>
+    <Story id="stories-components-toolbar-save-split-button--save-split-button" />
+</Canvas>
+
 ### Final Form Save Split Button
 
-There is also a drop in Component (`FinalFormSaveSplitButton`) which automatically handles **saving** and **save and go back** inside a `Form` or `FinalForm` component.
+> ⚠️`FinalFormSaveSplitButton` is deprecated since v7 and shouldn't be used
 
-This component uses final form data (e.g. pristine, hasValidationErrors, submitting, hasSubmitErrors,...) for displaying stati (disabled, saving, saving successfully) and also handles back navigation on automatically
+The `FinalFormSaveSplitButton` component automatically handles **saving** and **save and go back** inside a `Form` or `FinalForm` component.
+
+This component uses final form data (e.g. pristine, hasValidationErrors, submitting, hasSubmitErrors,...) for displaying statuses (disabled, saving, saving successfully) and also handles back navigation on automatically.
 
 <Canvas>
     <Story id="stories-components-toolbar-final-form-save-split-button--final-form-save-split-button" />
