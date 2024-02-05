@@ -4,8 +4,10 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
     FinalForm,
+    FinalFormCheckbox,
     FinalFormInput,
     FinalFormSaveSplitButton,
+    FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
     MainContent,
@@ -19,31 +21,38 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
-import { createFinalFormBlock } from "@comet/blocks-admin";
-import { EditPageLayout, PixelImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { IconButton } from "@mui/material";
+import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
+import { DamImageBlock, EditPageLayout, PixelImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.generated.gql";
+import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
-    GQLProductFormFragment,
+    GQLProductFormDetailsFragment,
     GQLProductQuery,
     GQLProductQueryVariables,
     GQLUpdateProductMutation,
     GQLUpdateProductMutationVariables,
-} from "./ProductForm.generated.gql.generated";
+} from "./ProductForm.gql.generated";
+
+const rootBlocks = {
+    image: DamImageBlock,
+};
+
+type FormValues = Omit<GQLProductFormDetailsFragment, "price"> & {
+    price: string;
+    image: BlockState<typeof rootBlocks.image>;
+};
 
 interface FormProps {
     id?: string;
 }
-
-type FormValues = GQLProductFormFragment;
 
 export function ProductForm({ id }: FormProps): React.ReactElement {
     const stackApi = useStackApi();
@@ -57,11 +66,20 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues: Partial<FormValues> = data?.product
-        ? {
-              ...filter<GQLProductFormFragment>(productFormFragment, data.product),
-          }
-        : {};
+    const initialValues = React.useMemo<Partial<FormValues>>(
+        () =>
+            data?.product
+                ? {
+                      ...filter<GQLProductFormDetailsFragment>(productFormFragment, data.product),
+                      price: String(data.product.price),
+                      image: rootBlocks.image.input2State(data.product.image),
+                  }
+                : {
+                      inStock: false,
+                      image: rootBlocks.image.defaultValues(),
+                  },
+        [data],
+    );
 
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
@@ -78,6 +96,8 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
+            price: parseFloat(formValues.price),
+            image: rootBlocks.image.state2Output(formValues.image),
         };
         if (mode === "edit") {
             if (!id) throw new Error();
@@ -162,6 +182,37 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
+                        <Field fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
+                            {(props) => (
+                                <FinalFormSelect {...props}>
+                                    <MenuItem value="Cap">
+                                        <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
+                                    </MenuItem>
+                                    <MenuItem value="Shirt">
+                                        <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
+                                    </MenuItem>
+                                    <MenuItem value="Tie">
+                                        <FormattedMessage id="product.type.tie" defaultMessage="Tie" />
+                                    </MenuItem>
+                                </FinalFormSelect>
+                            )}
+                        </Field>
+
+                        <Field
+                            fullWidth
+                            name="price"
+                            component={FinalFormInput}
+                            type="number"
+                            label={<FormattedMessage id="product.price" defaultMessage="Price" />}
+                        />
+                        <Field name="inStock" label="" type="checkbox" fullWidth>
+                            {(props) => (
+                                <FormControlLabel
+                                    label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                                    control={<FinalFormCheckbox {...props} />}
+                                />
+                            )}
+                        </Field>
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(PixelImageBlock)}
                         </Field>

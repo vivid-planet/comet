@@ -1,0 +1,13 @@
+import { future_GridConfig as GridConfig } from "@comet/cms-admin";
+import { GQLProduct } from "@src/graphql.generated";
+
+export const ProductsGrid: GridConfig<GQLProduct> = {
+    type: "grid",
+    gqlType: "Product",
+    fragmentName: "ProductsGridFuture", // configurable as it must be unique across project
+    columns: [
+        { type: "text", name: "title", headerName: "Titel", width: 150 },
+        { type: "text", name: "description", headerName: "Description", width: 150 },
+        { type: "number", name: "price", headerName: "Price", width: 150 },
+    ],
+};

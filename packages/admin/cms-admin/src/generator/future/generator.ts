@@ -2,9 +2,10 @@ import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
-import { basename } from "path";
+import { basename, dirname } from "path";
 
 import { generateForm } from "./generateForm";
+import { generateGrid } from "./generateGrid";
 import { Leaves, Paths } from "./utils/deepKeyOf";
 import { writeGenerated } from "./utils/writeGenerated";
 
@@ -13,25 +14,49 @@ type BlockReference = {
     import: string;
 };
 
-export type FormFieldConfig<T> = (
-    | { type: "text"; multiline?: boolean }
-    | { type: "staticSelect"; values?: string[] }
-    | { type: "asyncSelect"; values?: string[] }
-    | { type: "block"; block: BlockReference }
-) & { name: Leaves<T> | Paths<T>; label?: string; required?: boolean };
+export type GeneratorEntity = { __typename?: string };
 
-export type FormConfig<T extends { __typename?: string }> = {
+export type FormFieldConfigInternal =
+    // extra internal type to avoid "Type instantiation is excessively deep and possibly infinite." because of name-typing and simplify typing
+    (
+        | { type: "text"; multiline?: boolean }
+        | { type: "number" }
+        | { type: "boolean" }
+        | { type: "staticSelect"; values?: string[] }
+        | { type: "asyncSelect"; values?: string[] }
+        | { type: "block"; block: BlockReference }
+    ) & { name: string; label?: string; required?: boolean };
+export type FormFieldConfig<T extends GeneratorEntity> = Omit<FormFieldConfigInternal, "name"> & { name: Leaves<T> | Paths<T> };
+
+export type FormConfigInternal = {
     type: "form";
-    gqlType: T["__typename"];
+    gqlType: string;
     fragmentName?: string;
-    fields: FormFieldConfig<T>[];
+    fields: FormFieldConfigInternal[];
     title?: string;
+};
+export type FormConfig<T extends GeneratorEntity> = Omit<FormConfigInternal, "gqlType" | "fields"> & {
+    gqlType: T["__typename"];
+    fields: FormFieldConfig<T>[];
 };
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type GeneratorConfig = FormConfig<any> | TabsConfig;
+export type GridColumnConfigInternal = // extra internal type to avoid "Type instantiation is excessively deep and possibly infinite." because of name-typing and simplify typing
+    ({ type: "text" } | { type: "number" }) & { name: string; headerName?: string; width?: number };
+export type GridColumnConfig<T> = Omit<GridColumnConfigInternal, "name"> & { name: Leaves<T> | Paths<T> };
+export type GridConfigInternal = {
+    type: "grid";
+    gqlType: string;
+    fragmentName?: string;
+    columns: GridColumnConfigInternal[];
+};
+export type GridConfig<T extends GeneratorEntity> = Omit<GridConfigInternal, "gqlType" | "columns"> & {
+    gqlType: T["__typename"];
+    columns: GridColumnConfig<T>[];
+};
+
+export type GeneratorConfig = FormConfigInternal | GridConfigInternal | TabsConfig;
 
 export type GeneratorReturn = { code: string; gqlQueries: Record<string, string> };
 
@@ -45,28 +70,34 @@ export async function runFutureGenerate() {
     for (const file of files) {
         let outputCode = "";
         let gqlQueriesOutputCode = "";
+        const targetDirectory = `${dirname(file)}/generated`;
         const baseOutputFilename = basename(file).replace(/\.cometGen\.ts$/, "");
         const configs = await import(`${process.cwd()}/${file.replace(/\.ts$/, "")}`);
         //const configs = await import(`${process.cwd()}/${file}`);
 
         for (const exportName in configs) {
             const config = configs[exportName] as GeneratorConfig;
+            let generated: GeneratorReturn;
             if (config.type == "form") {
-                const generated = generateForm({ exportName, gqlIntrospection, baseOutputFilename }, config);
-                outputCode += generated.code;
-                for (const queryName in generated.gqlQueries) {
-                    gqlQueriesOutputCode += `export const ${queryName} = gql\`${generated.gqlQueries[queryName]}\`\n`;
-                }
+                generated = generateForm({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
+            } else if (config.type == "grid") {
+                generated = generateGrid({ exportName, gqlIntrospection, baseOutputFilename, targetDirectory }, config);
+            } else {
+                throw new Error(`Unknown config type: ${config.type}`);
+            }
+            outputCode += generated.code;
+            for (const queryName in generated.gqlQueries) {
+                gqlQueriesOutputCode += `export const ${queryName} = gql\`${generated.gqlQueries[queryName]}\`\n`;
             }
         }
 
         {
-            const codeOuputFilename = `${file.replace(/\.cometGen\.ts$/, "")}.generated.tsx`;
+            const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.tsx`;
             await writeGenerated(codeOuputFilename, outputCode);
         }
 
         if (gqlQueriesOutputCode != "") {
-            const gqlQueriesOuputFilename = `${file.replace(/\.cometGen\.ts$/, "")}.generated.gql.tsx`;
+            const gqlQueriesOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.gql.tsx`;
             gqlQueriesOutputCode = `import { gql } from "@apollo/client";
 
             ${gqlQueriesOutputCode}

@@ -15,8 +15,10 @@ export const ProductForm: FormConfig<GQLProduct> = {
         { type: "text", name: "packageDimensions.height", label: "Height" },
         { type: "text", name: "slug" },
         { type: "text", name: "description", label: "Description", multiline: true },
-        //TODO { type: "staticSelect", name: "type", label: "Type" /*, values: from gql schema (overridable)*/ },
-        //TODO { type: "asyncSelect", name: "type", label: "Type" /*, endpoint: from gql schema (overridable)*/ },
+        { type: "staticSelect", name: "type", label: "Type" /*, values: from gql schema (TODO overridable)*/ },
+        //TODO { type: "asyncSelect", name: "category", label: "Category" /*, endpoint: from gql schema (overridable)*/ },
+        { type: "number", name: "price" },
+        { type: "boolean", name: "inStock" },
         { type: "block", name: "image", label: "Image", block: { name: "PixelImageBlock", import: "@comet/cms-admin" } },
     ],
 };
@@ -50,20 +52,4 @@ export const tabsConfig2: TabsConfig = {
     ],
 };
 
-*/
-
-/*
-TODO
-type GridColumnConfig<T> = ({ type: "text" } | { type: "number" }) & { name: keyof T; headerName?: string; width?: number };
-type GridConfig<T extends { __typename?: string }> = { type: "form"; gqlType: T["__typename"]; columns: GridColumnConfig<T>[] };
-
-export const gridConfig: GridConfig<GQLProduct> = {
-    type: "grid",
-    gqlType: "Product",
-    columns: [
-        { type: "text", name: "title", headerName: "Titel", width: 150 },
-        { type: "text", name: "description", headerName: "Description", width: 150 },
-        { type: "number", name: "price", headerName: "Price", width: 150 },
-    ],
-};
 */

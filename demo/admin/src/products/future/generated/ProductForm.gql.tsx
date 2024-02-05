@@ -7,6 +7,10 @@ export const productFormFragment = gql`
         title
         slug
         description
+        type
+        price
+        inStock
+        image
     }
 `;
 export const productQuery = gql`
