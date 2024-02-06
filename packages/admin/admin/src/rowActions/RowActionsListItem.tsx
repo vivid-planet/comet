@@ -17,9 +17,9 @@ export interface RowActionsListItemProps<MenuItemComponent extends React.Element
     children?: React.ReactNode;
 }
 
-const RowActionsListItemNoRef = <MenuItemComponent extends React.ElementType>(
+const RowActionsListItemNoRef = <MenuItemComponent extends React.ElementType = "li">(
     props: RowActionsListItemProps<MenuItemComponent>,
-    ref: React.ForwardedRef<HTMLLIElement>,
+    ref: React.ForwardedRef<any>,
 ) => {
     const { icon, children, textSecondary, endIcon, componentsProps = {}, ...restMenuItemProps } = props;
     const { listItemIcon: listItemIconProps, listItemText: listItemTextProps, menuItem: menuItemProps } = componentsProps;
@@ -33,8 +33,8 @@ const RowActionsListItemNoRef = <MenuItemComponent extends React.ElementType>(
     );
 };
 
-export const RowActionsListItem = React.forwardRef(RowActionsListItemNoRef) as <MenuItemComponent extends React.ElementType>(
-    props: RowActionsListItemProps<MenuItemComponent> & { ref?: React.ForwardedRef<HTMLLIElement> },
+export const RowActionsListItem = React.forwardRef(RowActionsListItemNoRef) as <MenuItemComponent extends React.ElementType = "li">(
+    props: RowActionsListItemProps<MenuItemComponent> & { ref?: React.ForwardedRef<any> },
 ) => React.ReactElement;
 
 const EndIcon = styled("div")(({ theme }) => ({
