@@ -39,7 +39,7 @@ export const CurrentUserProvider: React.FC<{
                     contentScopes
                 }
             }
-            currentUserContentScopes
+            currentUserAllowedContentScopes
         }
     `);
 
@@ -50,7 +50,7 @@ export const CurrentUserProvider: React.FC<{
     const context: CurrentUserContext = {
         currentUser: {
             ...data.currentUser,
-            allowedContentScopes: data.currentUserContentScopes,
+            allowedContentScopes: data.currentUserAllowedContentScopes,
         },
         isAllowed:
             isAllowed ??

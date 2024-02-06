@@ -57,7 +57,7 @@ export class UserContentScopesResolver {
 
     @Query(() => [GraphQLJSONObject])
     @PublicApi()
-    async currentUserContentScopes(@GetCurrentUser() user: CurrentUser): Promise<ContentScope[]> {
+    async currentUserAllowedContentScopes(@GetCurrentUser() user: CurrentUser): Promise<ContentScope[]> {
         const availableContentScopes = await this.userService.getAvailableContentScopes();
         if (!user.contentScopes) {
             return availableContentScopes;
