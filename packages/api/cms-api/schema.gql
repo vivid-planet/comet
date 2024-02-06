@@ -1,3 +1,23 @@
+type CurrentUserPermission {
+  permission: String!
+  contentScopes: [JSONObject!]
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type CurrentUser {
+  id: String!
+  name: String!
+  email: String!
+  language: String!
+  availableContentScopes: [JSONObject!]!
+  contentScopes: [JSONObject!]
+  permissions: [CurrentUserPermission!]!
+}
+
 type Dependency {
   rootId: String!
   rootGraphqlObjectType: String!
@@ -39,11 +59,6 @@ type DamFileImage {
   cropArea: ImageCropArea!
   url(width: Int!, height: Int!): String
 }
-
-"""
-The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type DamFileLicense {
   type: LicenseType
@@ -140,11 +155,6 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
-type CurrentUserPermission {
-  permission: String!
-  contentScopes: [JSONObject!]
-}
-
 type User {
   id: String!
   name: String!
@@ -217,15 +227,6 @@ input DependentFilter {
   rootGraphqlObjectType: String
   rootId: String
   rootColumnName: String
-}
-
-type CurrentUser {
-  id: String!
-  name: String!
-  email: String!
-  language: String!
-  contentScopes: [JSONObject!]!
-  permissions: [CurrentUserPermission!]!
 }
 
 type Redirect implements DocumentInterface {

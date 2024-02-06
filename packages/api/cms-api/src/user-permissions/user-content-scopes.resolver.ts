@@ -1,6 +1,6 @@
 import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
@@ -58,6 +58,19 @@ export class UserContentScopesResolver {
     @Query(() => [GraphQLJSONObject])
     @PublicApi()
     async currentUserAllowedContentScopes(@GetCurrentUser() user: CurrentUser): Promise<ContentScope[]> {
+        const availableContentScopes = await this.userService.getAvailableContentScopes();
+        if (!user.contentScopes) {
+            return availableContentScopes;
+        } else {
+            return this.userService.normalizeContentScopes(
+                [...user.contentScopes, ...user.permissions.flatMap((p) => p.contentScopes || [])],
+                availableContentScopes,
+            );
+        }
+    }
+
+    @ResolveField(() => [GraphQLJSONObject])
+    async availableContentScopes(@Parent() user: CurrentUser): Promise<ContentScope[]> {
         const availableContentScopes = await this.userService.getAvailableContentScopes();
         if (!user.contentScopes) {
             return availableContentScopes;

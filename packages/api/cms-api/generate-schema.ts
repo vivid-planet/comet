@@ -3,15 +3,12 @@ import { NestFactory } from "@nestjs/core";
 import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType } from "@nestjs/graphql";
 import { writeFile } from "fs/promises";
 import { printSchema } from "graphql";
-import { GraphQLJSONObject } from "graphql-type-json";
 
 import {
     BuildsResolver,
-    ContentScope,
     createAuthResolver,
     createPageTreeResolver,
     createRedirectsResolver,
-    CurrentUserInterface,
     DependenciesResolverFactory,
     DependentsResolverFactory,
     DocumentInterface,
@@ -31,7 +28,7 @@ import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
-import { CurrentUserPermission } from "./src/user-permissions/dto/current-user";
+import { CurrentUser } from "./src/user-permissions/dto/current-user";
 import { UserResolver } from "./src/user-permissions/user.resolver";
 import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
 import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
@@ -48,22 +45,6 @@ class PageTreeNode extends PageTreeNodeBase {
 class Page implements DocumentInterface {
     id: string;
     updatedAt: Date;
-}
-
-@ObjectType()
-class CurrentUser implements CurrentUserInterface {
-    @Field()
-    id: string;
-    @Field()
-    name: string;
-    @Field()
-    email: string;
-    @Field()
-    language: string;
-    @Field(() => [GraphQLJSONObject])
-    contentScopes: ContentScope[];
-    @Field(() => [CurrentUserPermission])
-    permissions: CurrentUserPermission[];
 }
 
 async function generateSchema(): Promise<void> {
