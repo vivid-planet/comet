@@ -2,7 +2,7 @@
 "@comet/admin": minor
 ---
 
-Add props `helperIcon` to MenuItemGroup. Its intended purpose is to render an icon with a Tooltip behind the group section title, if the menu is not collapsed.
+Add `helperIcon` prop to MenuItemGroup. Its intended purpose is to render an icon with a `Tooltip` behind the group section title, if the menu is not collapsed.
 
 ### Examples:
 **Render only an icon:**
