@@ -52,7 +52,7 @@ const styles = (theme: Theme) =>
 export interface MenuItemGroupProps {
     title: React.ReactNode;
     shortTitle?: React.ReactNode;
-    helperIcon?: React.ReactElement<React.SVGProps<SVGSVGElement>>;
+    helperIcon?: React.ReactNode;
     helperText?: React.ReactNode;
 }
 
