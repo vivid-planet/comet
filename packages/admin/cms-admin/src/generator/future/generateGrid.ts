@@ -71,7 +71,7 @@ export function generateGrid(
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
     const instanceGqlTypePlural = gqlTypePlural[0].toLowerCase() + gqlTypePlural.substring(1);
     const gridQuery = instanceGqlType != instanceGqlTypePlural ? instanceGqlTypePlural : `${instanceGqlTypePlural}List`;
-    const gqlQueries: Record<string, string> = {};
+    const gqlDocuments: Record<string, string> = {};
     //const imports: Imports = [];
 
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
@@ -463,6 +463,6 @@ export function generateGrid(
 
     return {
         code,
-        gqlQueries,
+        gqlDocuments,
     };
 }

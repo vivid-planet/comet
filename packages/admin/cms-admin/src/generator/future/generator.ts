@@ -53,7 +53,7 @@ export type GridConfig<T extends { __typename?: string }> = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type GeneratorConfig = FormConfig<any> | GridConfig<any> | TabsConfig;
 
-export type GeneratorReturn = { code: string; gqlQueries: Record<string, string> };
+export type GeneratorReturn = { code: string; gqlDocuments: Record<string, string> };
 
 export async function runFutureGenerate() {
     const schema = await loadSchema("./schema.gql", {
@@ -64,7 +64,7 @@ export async function runFutureGenerate() {
     const files = await glob("src/**/*.cometGen.ts");
     for (const file of files) {
         let outputCode = "";
-        let gqlQueriesOutputCode = "";
+        let gqlDocumentsOutputCode = "";
         const targetDirectory = `${dirname(file)}/generated`;
         const baseOutputFilename = basename(file).replace(/\.cometGen\.ts$/, "");
         const configs = await import(`${process.cwd()}/${file.replace(/\.ts$/, "")}`);
@@ -81,8 +81,8 @@ export async function runFutureGenerate() {
                 throw new Error(`Unknown config type: ${config.type}`);
             }
             outputCode += generated.code;
-            for (const queryName in generated.gqlQueries) {
-                gqlQueriesOutputCode += `export const ${queryName} = gql\`${generated.gqlQueries[queryName]}\`\n`;
+            for (const queryName in generated.gqlDocuments) {
+                gqlDocumentsOutputCode += `export const ${queryName} = gql\`${generated.gqlDocuments[queryName]}\`\n`;
             }
         }
 
@@ -91,13 +91,13 @@ export async function runFutureGenerate() {
             await writeGenerated(codeOuputFilename, outputCode);
         }
 
-        if (gqlQueriesOutputCode != "") {
-            const gqlQueriesOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.gql.tsx`;
-            gqlQueriesOutputCode = `import { gql } from "@apollo/client";
+        if (gqlDocumentsOutputCode != "") {
+            const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.gql.tsx`;
+            gqlDocumentsOutputCode = `import { gql } from "@apollo/client";
 
-            ${gqlQueriesOutputCode}
+            ${gqlDocumentsOutputCode}
             `;
-            await writeGenerated(gqlQueriesOuputFilename, gqlQueriesOutputCode);
+            await writeGenerated(gqlDocumentsOuputFilename, gqlDocumentsOutputCode);
         }
     }
 }

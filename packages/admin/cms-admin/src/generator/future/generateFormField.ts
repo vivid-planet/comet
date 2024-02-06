@@ -111,7 +111,7 @@ export function generateFormField(
     }
     return {
         code,
-        gqlQueries: {},
+        gqlDocuments: {},
         imports,
     };
 }
