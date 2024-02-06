@@ -2,19 +2,10 @@
 "@comet/admin": minor
 ---
 
-Add props `helperText` and `helperIcon` to MenuItemGroup. It renders an icon with a Tooltip behind the group section title, if the menu is not collapsed. If only a `helperText` is defined the icon `QuestionMark` will be used as default. If only `helperIcon` is defined the icon will be rendered without the Tooltip.
+Add props `helperIcon` to MenuItemGroup. Its intended purpose is to render an icon with a Tooltip behind the group section title, if the menu is not collapsed.
 
 ### Examples:
-**Show helper text in a tooltip with default icon:**
-```tsx
-<MenuItemGroup
-  title="Group Title"
-  helperText="Helper Text"
->
-      {/* ... */}
-</MenuItemGroup>
-```
-**Show only a custom icon:**
+**Render only an icon:**
 ```tsx
 <MenuItemGroup
     title="Group Title"
@@ -23,12 +14,11 @@ Add props `helperText` and `helperIcon` to MenuItemGroup. It renders an icon wit
     {/* ... */}
 </MenuItemGroup>
 ```
-**Show a custom icon with the helper text in a tooltip:**
+**Render an icon with tooltip:**
 ```tsx
 <MenuItemGroup
     title="Group Title"
-    helperText="Helper Text"
-    helperIcon={<QuestionMark />}
+    helperIcon={<Tooltip title="Some help text"><QuestionMark /></Tooltip>}
 >
     {/* ... */}
 </MenuItemGroup>

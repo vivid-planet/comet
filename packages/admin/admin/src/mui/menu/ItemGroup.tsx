@@ -1,4 +1,3 @@
-import { QuestionMark } from "@comet/admin-icons";
 import { Box, ComponentsOverrides, Theme, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
@@ -8,7 +7,7 @@ import { FormattedMessage, MessageDescriptor, useIntl } from "react-intl";
 import { Tooltip } from "../../common/Tooltip";
 import { MenuContext } from "./Context";
 
-export type MenuItemGroupClassKey = "root" | "title" | "titleMenuOpen" | "titleContainer" | "titleContainerMenuOpen" | "tooltipHelperBox";
+export type MenuItemGroupClassKey = "root" | "title" | "titleMenuOpen" | "titleContainer" | "titleContainerMenuOpen";
 
 const styles = (theme: Theme) =>
     createStyles<MenuItemGroupClassKey, MenuItemGroupProps>({
@@ -42,29 +41,21 @@ const styles = (theme: Theme) =>
             padding: theme.spacing(2, 4),
             alignItems: "center",
         },
-        tooltipHelperBox: {
-            display: "flex",
-            alignItems: "center",
-            cursor: "pointer",
-        },
     });
 
 export interface MenuItemGroupProps {
     title: React.ReactNode;
     shortTitle?: React.ReactNode;
     helperIcon?: React.ReactNode;
-    helperText?: React.ReactNode;
 }
 
 const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({
     title,
     shortTitle,
     helperIcon,
-    helperText,
     children,
     classes,
 }) => {
-    helperIcon = helperIcon || (helperText ? <QuestionMark /> : undefined);
     const { open: menuOpen } = React.useContext(MenuContext);
     const intl = useIntl();
     let displayedTitle = title;
@@ -106,15 +97,7 @@ const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & Me
                     <Typography className={clsx(classes.title, menuOpen && classes.titleMenuOpen)} variant="h3">
                         {displayedTitle}
                     </Typography>
-                    {menuOpen &&
-                        (helperIcon && helperText ? (
-                            <Tooltip title={helperText}>
-                                {/* The Box is a workaround because tooltip doesn't work with an icon directly. */}
-                                <Box className={classes.tooltipHelperBox}>{helperIcon}</Box>
-                            </Tooltip>
-                        ) : (
-                            helperIcon
-                        ))}
+                    {menuOpen && helperIcon}
                 </Box>
             </Tooltip>
             {children}
