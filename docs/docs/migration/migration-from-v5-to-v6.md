@@ -6,7 +6,7 @@ sidebar_position: 1
 # Migrating from v5 to v6
 
 First, execute `npx @comet/upgrade@latest v6` in the root of your project. 
-It automatically installs the new versions of all `@comet` libraries, runs an eslint autofix and handles some of the necessary renames.
+It automatically installs the new versions of all `@comet` libraries, runs an ESLint autofix and handles some of the necessary renames.
 
 <details>
 
