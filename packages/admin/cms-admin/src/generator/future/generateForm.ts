@@ -212,12 +212,12 @@ export function generateForm(
                     variables: { id, input: output, lastUpdatedAt: data?.${instanceGqlType}.updatedAt },
                 });
             } else {
-                const { data: mutationReponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
+                const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                     mutation: create${gqlType}Mutation,
                     variables: { input: output },
                 });
                 if (!event.navigatingBack) {
-                    const id = mutationReponse?.create${gqlType}.id;
+                    const id = mutationResponse?.create${gqlType}.id;
                     if (id) {
                         setTimeout(() => {
                             stackSwitchApi.activatePage(\`edit\`, id);
