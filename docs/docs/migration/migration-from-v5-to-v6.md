@@ -6,7 +6,7 @@ sidebar_position: 1
 # Migrating from v5 to v6
 
 First, execute `npx @comet/upgrade@latest v6` in the root of your project. 
-It automatically installs the new versions of all `@comet` libraries and handles some of the necessary renames.
+It automatically installs the new versions of all `@comet` libraries, runs an eslint autofix and handles some of the necessary renames.
 
 <details>
 
@@ -272,7 +272,7 @@ If you used any of these icons in your app, you must add them to your project. Y
 
 ## ESLint
 
-**Both new rules are auto-fixable.** All errors can be fixed by executing `npm run lint:eslint -- --fix` in `/api`, `/admin` and `/site`.
+**Both new rules are fixed automatically by `@comet/upgrade`.**
 
 ### @comet/no-other-module-relative-import
 
