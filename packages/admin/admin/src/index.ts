@@ -8,6 +8,7 @@ export { AppHeaderMenuButton, AppHeaderMenuButtonClassKey, AppHeaderMenuButtonPr
 export { buildCreateRestMutation, buildDeleteRestMutation, buildUpdateRestMutation } from "./buildRestMutation";
 export { readClipboardText } from "./clipboard/readClipboardText";
 export { writeClipboardText } from "./clipboard/writeClipboardText";
+export { Badge } from "./common/Badge";
 export { CancelButton, CancelButtonClassKey, CancelButtonProps } from "./common/buttons/cancel/CancelButton";
 export { ClearInputButton, ClearInputButtonClassKey, ClearInputButtonProps } from "./common/buttons/clearinput/ClearInputButton";
 export {

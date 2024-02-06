@@ -34,6 +34,11 @@ module.exports = {
                         importNames: ["styled"],
                         message: "Please use styled from @mui/material/styles instead.",
                     },
+                    {
+                        name: "@mui/material",
+                        importNames: ["Badge"],
+                        message: "Please use Badge from @comet/admin instead",
+                    },
                 ],
             },
         ],
