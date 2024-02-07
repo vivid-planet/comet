@@ -1,11 +1,8 @@
 export { BlockElement, RteBlockElementClassKey, RteBlockElementProps } from "./core/BlockElement";
 export { default as BlockTypesControls, RteBlockTypeControlsClassKey } from "./core/Controls/BlockTypesControls";
 export { default as ControlButton, IProps as IControlButtonProps, RteControlButtonClassKey } from "./core/Controls/ControlButton";
-<<<<<<< HEAD
 export { FeaturesButtonGroup, RteFeaturesButtonGroupClassKey } from "./core/Controls/FeaturesButtonGroup";
-=======
 export { default as LinkControls, RteLinkControlsClassKey, RteLinkControlsProps } from "./core/Controls/LinkControls";
->>>>>>> ad66a31a (refactor theming of LinkControls)
 export { Toolbar } from "./core/Controls/Toolbar/Toolbar";
 export { RteToolbarClassKey } from "./core/Controls/Toolbar/Toolbar.styles";
 export { default as LinkDecorator } from "./core/extension/Link/Decorator";
