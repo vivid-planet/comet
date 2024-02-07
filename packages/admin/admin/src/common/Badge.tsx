@@ -7,14 +7,12 @@ const Badge: React.ForwardRefExoticComponent<React.PropsWithChildren<MuiBadgePro
         <MuiBadge
             ref={ref}
             {...props}
-            sx={
+            slotProps={
                 !children
                     ? {
-                          position: "static",
-                          "& span": {
-                              transform: "none",
-                              position: "static",
-                          },
+                          // @ts-expect-error `sx` props is missing in types of `slotProps.root`
+                          root: { sx: { position: "static" } },
+                          badge: { sx: { transform: "none", position: "static" } },
                       }
                     : undefined
             }
