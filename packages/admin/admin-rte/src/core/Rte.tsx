@@ -171,6 +171,7 @@ export const Rte: React.ForwardRefExoticComponent<React.PropsWithoutRef<RteProps
 
         const ownerState: OwnerState = {
             disabled,
+            minHeight,
         };
 
         const editorRef = React.useRef<DraftJsEditor>(null);
