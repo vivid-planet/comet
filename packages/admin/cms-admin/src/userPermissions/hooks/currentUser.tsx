@@ -33,13 +33,13 @@ export const CurrentUserProvider: React.FC<{
                 id
                 name
                 email
+                allowedContentScopes
                 contentScopes
                 permissions {
                     permission
                     contentScopes
                 }
             }
-            currentUserAllowedContentScopes
         }
     `);
 
@@ -50,7 +50,6 @@ export const CurrentUserProvider: React.FC<{
     const context: CurrentUserContext = {
         currentUser: {
             ...data.currentUser,
-            allowedContentScopes: data.currentUserAllowedContentScopes,
         },
         isAllowed:
             isAllowed ??

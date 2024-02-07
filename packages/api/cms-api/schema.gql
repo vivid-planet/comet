@@ -145,6 +145,16 @@ type CurrentUserPermission {
   contentScopes: [JSONObject!]
 }
 
+type CurrentUser {
+  id: String!
+  name: String!
+  email: String!
+  language: String!
+  allowedContentScopes: [JSONObject!]!
+  contentScopes: [JSONObject!]
+  permissions: [CurrentUserPermission!]!
+}
+
 type User {
   id: String!
   name: String!
@@ -217,15 +227,6 @@ input DependentFilter {
   rootGraphqlObjectType: String
   rootId: String
   rootColumnName: String
-}
-
-type CurrentUser {
-  id: String!
-  name: String!
-  email: String!
-  language: String!
-  contentScopes: [JSONObject!]!
-  permissions: [CurrentUserPermission!]!
 }
 
 type Redirect implements DocumentInterface {
@@ -363,7 +364,6 @@ type Query {
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
-  currentUserAllowedContentScopes: [JSONObject!]!
 }
 
 input RedirectScopeInput {

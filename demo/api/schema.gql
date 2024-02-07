@@ -154,6 +154,7 @@ type CurrentUser {
   name: String!
   email: String!
   language: String!
+  allowedContentScopes: [JSONObject!]!
   contentScopes: [JSONObject!]
   permissions: [CurrentUserPermission!]!
 }
@@ -615,7 +616,6 @@ type Query {
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
-  currentUserAllowedContentScopes: [JSONObject!]!
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!

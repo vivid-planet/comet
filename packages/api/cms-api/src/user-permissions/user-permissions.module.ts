@@ -6,6 +6,7 @@ import { CURRENT_USER_LOADER } from "../auth/current-user/current-user-loader";
 import { UserPermissionsCurrentUserLoader } from "./auth/current-user-loader";
 import { UserPermissionsGuard } from "./auth/user-permissions.guard";
 import { ContentScopeService } from "./content-scope.service";
+import { CurrentUserResolver } from "./current-user.resolver";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission } from "./entities/user-permission.entity";
 import { UserResolver } from "./user.resolver";
@@ -28,6 +29,7 @@ import {
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,
+        CurrentUserResolver,
         {
             provide: CURRENT_USER_LOADER,
             useClass: UserPermissionsCurrentUserLoader,

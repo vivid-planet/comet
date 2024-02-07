@@ -3,12 +3,12 @@ import { Context, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { IncomingMessage } from "http";
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
-import { CurrentUserInterface } from "../current-user/current-user";
+import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { GetCurrentUser } from "../decorators/get-current-user.decorator";
 import { PublicApi } from "../decorators/public-api.decorator";
 
 interface AuthResolverConfig {
-    currentUser: Type<CurrentUserInterface>;
+    currentUser: Type<CurrentUser>;
     endSessionEndpoint?: string;
     postLogoutRedirectUri?: string;
 }
