@@ -19,11 +19,6 @@ async function generateBlockMeta(): Promise<void> {
     // Create SeoBlock for block types generation in client libraries
     createSeoBlock();
 
-    // Create LinkBlock for block types generation in client libraries
-    createLinkBlock({
-        supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock },
-    });
-
     const metaJson = getBlocksMeta();
     await fs.writeFile("block-meta.json", JSON.stringify(metaJson, null, 4));
 
