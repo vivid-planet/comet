@@ -1,17 +1,12 @@
-import { createOneOfBlock, createRichTextBlock, createTextLinkBlock, ExternalLinkBlock, getBlocksMeta } from "@comet/blocks-api";
+import { createRichTextBlock, createTextLinkBlock, ExternalLinkBlock, getBlocksMeta } from "@comet/blocks-api";
 import { promises as fs } from "fs";
 
-import { createSeoBlock, createTextImageBlock, InternalLinkBlock } from "./src";
+import { createLinkBlock, createSeoBlock, createTextImageBlock, InternalLinkBlock } from "./src";
 
 async function generateBlockMeta(): Promise<void> {
     console.info("Generating block-meta.json...");
 
-    const LinkBlock = createOneOfBlock(
-        { supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock } },
-        {
-            name: "Link",
-        },
-    );
+    const LinkBlock = createLinkBlock({ supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock } });
 
     const TextBlock = createRichTextBlock({ link: LinkBlock });
 
@@ -23,6 +18,11 @@ async function generateBlockMeta(): Promise<void> {
 
     // Create SeoBlock for block types generation in client libraries
     createSeoBlock();
+
+    // Create LinkBlock for block types generation in client libraries
+    createLinkBlock({
+        supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock },
+    });
 
     const metaJson = getBlocksMeta();
     await fs.writeFile("block-meta.json", JSON.stringify(metaJson, null, 4));
