@@ -2,6 +2,7 @@ import { Box, ComponentsOverrides, Theme, Tooltip, Typography } from "@mui/mater
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
+import { useMemo } from "react";
 
 import { MenuChild, MenuCollapsibleItemProps } from "./CollapsibleItem";
 import { MenuContext } from "./Context";
@@ -58,11 +59,15 @@ const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & Me
         displayedTitle = shortTitle || getInitials(title);
     }
 
-    const childElements = React.Children.map(children, (child: MenuChild) => {
-        return React.cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
-            isMenuOpen: menuOpen,
-        });
-    });
+    const childElements = useMemo(
+        () =>
+            React.Children.map(children, (child: MenuChild) => {
+                return React.cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
+                    isMenuOpen: menuOpen,
+                });
+            }),
+        [children, menuOpen],
+    );
 
     return (
         <Box className={classes.root}>
