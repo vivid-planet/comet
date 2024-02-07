@@ -3,7 +3,6 @@ import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { MenuLevel } from "./CollapsibleItem";
-import { MenuContext } from "./Context";
 import { MenuItemClassKey, styles } from "./Item.styles";
 
 export interface MenuItemProps extends MenuLevel {
@@ -26,14 +25,14 @@ const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProp
     level = 1,
     secondaryAction,
     isMenuOpen,
+    hasSubitems,
+    isCollapsibleOpen,
     ...otherProps
 }) => {
-    const context = React.useContext(MenuContext);
-    if (!context) throw new Error("Could not find context for menu");
     if (level > 3) throw new Error("Maximum nesting level of 2 exceeded.");
 
     const showIcon = !!icon && level === 1;
-    const showText = context.open || level !== 1;
+    const showText = isMenuOpen || level !== 1;
 
     const listItemClasses = [classes.root];
     if (level === 1) listItemClasses.push(classes.level1);
