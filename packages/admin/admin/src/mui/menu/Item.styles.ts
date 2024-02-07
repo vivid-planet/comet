@@ -29,6 +29,11 @@ export const styles = (theme: Theme) => {
             "& [class*='MuiListItemText-inset']": {
                 paddingLeft: ({ icon, level }) => (!!icon && level === 1 ? 28 : 0),
             },
+            "&[class*='Mui-selected']": {
+                "& [class*='MuiListItemText-secondary']": {
+                    color: "inherit",
+                },
+            },
         },
         level1: {
             borderBottom: `1px solid ${theme.palette.grey[50]}`,
