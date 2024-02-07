@@ -29,7 +29,7 @@ function Story() {
                                             label="File upload (dropzone only, multiple, max file size 5 MB)"
                                             disableButton
                                             component={FinalFormFileUpload}
-                                            maxSize={5242880}
+                                            maxSize={5 * 1024 * 1024}
                                             multiple
                                         />
                                     </CardContent>
