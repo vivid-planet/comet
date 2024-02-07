@@ -48,5 +48,3 @@ async function bootstrap(): Promise<void> {
     console.log(`Application is running on: http://localhost:${port}/`);
 }
 bootstrap();
-
-//s
