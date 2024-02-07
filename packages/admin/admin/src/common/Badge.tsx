@@ -2,9 +2,7 @@
 import { Badge as MuiBadge, BadgeProps as MuiBadgeProps } from "@mui/material";
 import * as React from "react";
 
-export type BadgeProps = MuiBadgeProps;
-
-const Badge: React.ForwardRefExoticComponent<React.PropsWithChildren<BadgeProps>> = React.forwardRef(({ children, ...props }, ref) => {
+const Badge: React.ForwardRefExoticComponent<React.PropsWithChildren<MuiBadgeProps>> = React.forwardRef(({ children, ...props }, ref) => {
     return (
         <MuiBadge
             ref={ref}
@@ -27,15 +25,3 @@ const Badge: React.ForwardRefExoticComponent<React.PropsWithChildren<BadgeProps>
 });
 
 export { Badge };
-
-declare module "@mui/material/styles" {
-    interface ComponentsPropsList {
-        CometAdminBadge: BadgeProps;
-    }
-
-    interface Components {
-        CometAdminBadge?: {
-            defaultProps?: ComponentsPropsList["CometAdminBadge"];
-        };
-    }
-}
