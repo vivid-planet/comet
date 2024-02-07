@@ -1,5 +1,18 @@
 # @comet/blocks-admin
 
+## 6.0.0
+
+### Patch Changes
+
+-   Updated dependencies [921f6378]
+-   Updated dependencies [76e50aa8]
+-   Updated dependencies [298b63b7]
+-   Updated dependencies [a525766c]
+-   Updated dependencies [0d768540]
+-   Updated dependencies [62779124]
+    -   @comet/admin@6.0.0
+    -   @comet/admin-icons@6.0.0
+
 ## 5.6.0
 
 ### Patch Changes
