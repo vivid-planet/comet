@@ -380,8 +380,6 @@ const Editor = styled("div", {
     `,
 );
 
-export default Rte;
-
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminRte: RteClassKey;
