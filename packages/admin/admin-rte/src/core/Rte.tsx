@@ -363,6 +363,12 @@ const Editor = styled("div", {
     ({ ownerState, theme }) => css`
         & .public-DraftEditor-content {
             min-height: 240px;
+
+            ${ownerState.minHeight !== undefined &&
+            css`
+                min-height: ${ownerState.minHeight};
+            `}
+
             padding: 20px;
             box-sizing: border-box;
         }
@@ -370,11 +376,6 @@ const Editor = styled("div", {
         ${ownerState.disabled &&
         css`
             color: ${theme.palette.text.disabled};
-        `}
-
-        ${ownerState.minHeight &&
-        css`
-            min-height: ${ownerState.minHeight};
         `}
     `,
 );
