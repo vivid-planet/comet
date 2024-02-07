@@ -27,7 +27,7 @@ function Story() {
                                         <Field
                                             name="uploadMultipleDisabled"
                                             label="File upload (dropzone only, multiple, max file size 5 MB)"
-                                            dropzoneVariant="dropzoneOnly"
+                                            disableButton
                                             component={FinalFormFileUpload}
                                             maxSize={5242880}
                                             multiple
@@ -42,7 +42,7 @@ function Story() {
                                             name="uploadImages"
                                             label="File upload (button only, accept only images)"
                                             accept={{ "image/*": [] }}
-                                            dropzoneVariant="buttonOnly"
+                                            disableDropzone
                                             component={FinalFormFileUpload}
                                         />
                                     </CardContent>

@@ -111,7 +111,8 @@ const styles = ({ palette }: Theme) => {
 };
 
 export interface FinalFormFileUploadProps extends FieldRenderProps<File | File[], HTMLInputElement> {
-    dropzoneVariant: "dropzoneOnly" | "buttonOnly" | "default";
+    disableDropzone?: boolean;
+    disableButton?: boolean;
     accept: Accept;
     maxSize: number;
 }
@@ -119,7 +120,8 @@ export interface FinalFormFileUploadProps extends FieldRenderProps<File | File[]
 const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof styles> & FinalFormFileUploadProps> = ({
     classes,
     disabled,
-    dropzoneVariant,
+    disableDropzone,
+    disableButton,
     accept,
     maxSize = 50 * 1024 * 1024,
     input: { onChange, value: fieldValue, multiple: multipleFiles },
@@ -185,7 +187,7 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
         <div className={classes.root}>
             <div {...getRootProps()} className={classes.root}>
                 <input {...getInputProps()} />
-                {dropzoneVariant !== "buttonOnly" && (
+                {!disableDropzone && (
                     <div className={clsx(classes.droppableArea, disabled && classes.disabled, isDragReject && classes.error)}>
                         {isDragReject && (
                             <div className={classes.droppableAreaError}>
@@ -197,7 +199,7 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
                         </div>
                     </div>
                 )}
-                {dropzoneVariant !== "dropzoneOnly" && (
+                {!disableButton && (
                     <Button disabled={disabled} variant="contained" color="primary" startIcon={<Select />}>
                         <FormattedMessage id="comet.finalformfileupload.selectfile" defaultMessage="Select file" />
                     </Button>
