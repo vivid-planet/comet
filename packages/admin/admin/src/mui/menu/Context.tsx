@@ -3,15 +3,20 @@ import * as React from "react";
 export interface IMenuContext {
     open: boolean;
     toggleOpen: () => void;
+    drawerVariant: "temporary" | "permanent";
+    setDrawerVariant: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface IWithMenu {
     menu: IMenuContext;
 }
-
 export const MenuContext = React.createContext<IMenuContext>({
     open: false,
     toggleOpen: () => {
+        // nothing
+    },
+    drawerVariant: "permanent",
+    setDrawerVariant: () => {
         // nothing
     },
 });
