@@ -1517,12 +1517,21 @@ importers:
       '@mui/styles':
         specifier: ^5.0.0
         version: 5.11.2(@types/react@17.0.53)(react@17.0.2)
+      '@testing-library/jest-dom':
+        specifier: ^5.16.5
+        version: 5.16.5
+      '@testing-library/react':
+        specifier: ^12.0.0
+        version: 12.1.5(react-dom@17.0.2)(react@17.0.2)
       '@types/draft-js':
         specifier: ^0.11.10
         version: 0.11.10
       '@types/immutable':
         specifier: ^3.8.7
         version: 3.8.7
+      '@types/jest':
+        specifier: ^29.5.0
+        version: 29.5.0
       '@types/react':
         specifier: ^17.0.0
         version: 17.0.53
@@ -1541,6 +1550,15 @@ importers:
       final-form:
         specifier: ^4.16.1
         version: 4.20.9
+      jest:
+        specifier: ^29.5.0
+        version: 29.5.0(@types/node@18.15.3)(ts-node@10.9.1)
+      jest-environment-jsdom:
+        specifier: ^29.5.0
+        version: 29.5.0
+      jest-junit:
+        specifier: ^15.0.0
+        version: 15.0.0
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
@@ -1562,6 +1580,9 @@ importers:
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2
+      ts-jest:
+        specifier: ^29.0.0
+        version: 29.0.5(@babel/core@7.20.12)(jest@29.5.0)(typescript@4.9.4)
       typescript:
         specifier: ^4.0.0
         version: 4.9.4
@@ -4465,7 +4486,7 @@ packages:
       debug: 4.3.4(supports-color@9.3.1)
       lodash.debounce: 4.0.8
       resolve: 1.22.1
-      semver: 6.3.0
+      semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -4481,7 +4502,7 @@ packages:
       debug: 4.3.4(supports-color@9.3.1)
       lodash.debounce: 4.0.8
       resolve: 1.22.1
-      semver: 6.3.0
+      semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
 
@@ -4496,7 +4517,7 @@ packages:
       debug: 4.3.4(supports-color@9.3.1)
       lodash.debounce: 4.0.8
       resolve: 1.22.1
-      semver: 6.3.0
+      semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -16432,7 +16453,7 @@ packages:
       '@babel/compat-data': 7.20.10
       '@babel/core': 7.20.12
       '@babel/helper-define-polyfill-provider': 0.3.3(@babel/core@7.20.12)
-      semver: 6.3.0
+      semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
 
@@ -16444,7 +16465,7 @@ packages:
       '@babel/compat-data': 7.20.10
       '@babel/core': 7.22.11
       '@babel/helper-define-polyfill-provider': 0.3.3(@babel/core@7.22.11)
-      semver: 6.3.0
+      semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -19288,7 +19309,7 @@ packages:
       fast-stream-to-buffer: 1.0.0
       object-filter-sequence: 1.0.0
       readable-stream: 3.6.0
-      semver: 6.3.0
+      semver: 6.3.1
       stream-chopper: 3.0.1
     transitivePeerDependencies:
       - supports-color
@@ -19802,7 +19823,7 @@ packages:
       minimatch: 3.1.2
       object.entries: 1.1.6
       object.fromentries: 2.0.6
-      semver: 6.3.0
+      semver: 6.3.1
 
   /eslint-plugin-prettier@4.2.1(eslint-config-prettier@8.6.0)(eslint@8.32.0)(prettier@2.8.3):
     resolution: {integrity: sha512-f/0rXLXUt0oFYs8ra4w49wYZBG5GKZpAYsJSm6rnYL5uVDjd+zowwMwVZHnAjf4edNrKpCDYfXDgmRE/Ak7QyQ==}
@@ -25911,7 +25932,7 @@ packages:
       got: 9.6.0
       registry-auth-token: 4.2.2
       registry-url: 5.1.0
-      semver: 6.3.0
+      semver: 6.3.1
     dev: false
 
   /packet-reader@1.0.0:
@@ -28742,7 +28763,7 @@ packages:
     resolution: {integrity: sha512-GX0Ix/CJcHyB8c4ykpHGIAvLyOwOobtM/8d+TQkAd81/bEjgPHrfba41Vpesr7jX/t8Uh+R3EX9eAS5be+jQYg==}
     engines: {node: '>=8'}
     dependencies:
-      semver: 6.3.0
+      semver: 6.3.1
     dev: false
 
   /semver@5.7.1:

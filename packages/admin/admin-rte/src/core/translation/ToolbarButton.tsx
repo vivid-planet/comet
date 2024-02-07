@@ -21,7 +21,7 @@ function ToolbarButton({ editorState, setEditorState, options }: IControlProps):
 
         const translation = await translationContext.translate(html);
 
-        const translatedEditorState = htmlToState({ translation, linkDataList });
+        const translatedEditorState = htmlToState({ html: translation, linkDataList });
 
         setEditorState(translatedEditorState);
     }

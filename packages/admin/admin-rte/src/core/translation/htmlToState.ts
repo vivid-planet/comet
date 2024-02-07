@@ -2,16 +2,16 @@ import { convertFromRaw, convertToRaw, EditorState } from "draft-js";
 import { stateFromHTML } from "draft-js-import-html";
 
 export function htmlToState({
-    translation,
+    html,
     linkDataList,
 }: {
-    translation: string;
+    html: string;
     linkDataList: {
         id: string;
         data: any;
     }[];
 }) {
-    const translatedContentState = stateFromHTML(translation, {
+    const translatedContentState = stateFromHTML(html, {
         customInlineFn: (element, { Style, Entity }) => {
             if (element.tagName === "SUB") {
                 return Style("SUB");
