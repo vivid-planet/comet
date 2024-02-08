@@ -381,6 +381,7 @@ type News implements DocumentInterface {
   scope: NewsContentScope!
   slug: String!
   title: String!
+  status: NewsStatus!
   date: DateTime!
   category: NewsCategory!
   visible: Boolean!
@@ -390,6 +391,11 @@ type News implements DocumentInterface {
   comments: [NewsComment!]!
   dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+}
+
+enum NewsStatus {
+  Active
+  Deleted
 }
 
 enum NewsCategory {
@@ -646,7 +652,7 @@ type Query {
   damFolderByNameAndParentId(scope: DamScopeInput!, name: String!, parentId: ID): DamFolder
   news(id: ID!): News!
   newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
-  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: NewsStatus! = Active, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
@@ -785,6 +791,7 @@ input FolderFilterInput {
 input NewsFilter {
   slug: StringFilter
   title: StringFilter
+  status: NewsStatusEnumFilter
   date: DateFilter
   category: NewsCategoryEnumFilter
   visible: BooleanFilter
@@ -792,6 +799,12 @@ input NewsFilter {
   updatedAt: DateFilter
   and: [NewsFilter!]
   or: [NewsFilter!]
+}
+
+input NewsStatusEnumFilter {
+  isAnyOf: [NewsStatus!]
+  equal: NewsStatus
+  notEqual: NewsStatus
 }
 
 input NewsCategoryEnumFilter {
@@ -808,6 +821,7 @@ input NewsSort {
 enum NewsSortField {
   slug
   title
+  status
   date
   category
   visible
@@ -1103,6 +1117,7 @@ input UpdateDamFolderInput {
 input NewsInput {
   slug: String!
   title: String!
+  status: NewsStatus! = Active
   date: DateTime!
   category: NewsCategory! = Awards
   visible: Boolean!
@@ -1119,6 +1134,7 @@ scalar NewsContentBlockInput @specifiedBy(url: "http://www.ecma-international.or
 input NewsUpdateInput {
   slug: String
   title: String
+  status: NewsStatus
   date: DateTime
   category: NewsCategory
   visible: Boolean
