@@ -1,14 +1,18 @@
-import { Controller, ForbiddenException, Get, NotFoundException, Param, Res } from "@nestjs/common";
+import { Controller, ForbiddenException, Get, Inject, NotFoundException, Param, Res } from "@nestjs/common";
 import { Response } from "express";
 
 import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
-import { ContentScopeService } from "../../content-scope/content-scope.service";
+import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
+import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { FoldersService } from "./folders.service";
 
 @Controller("dam/folders")
 export class FoldersController {
-    constructor(private readonly foldersService: FoldersService, private readonly contentScopeService: ContentScopeService) {}
+    constructor(
+        private readonly foldersService: FoldersService,
+        @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
+    ) {}
 
     @Get("/:folderId/zip")
     async createZip(@Param("folderId") folderId: string, @Res() res: Response, @GetCurrentUser() user: CurrentUserInterface): Promise<void> {
@@ -17,7 +21,7 @@ export class FoldersController {
             throw new NotFoundException("Folder not found");
         }
 
-        if (folder.scope !== undefined && !this.contentScopeService.canAccessScope(folder.scope, user)) {
+        if (folder.scope && !this.accessControlService.isAllowed(user, "dam", folder.scope)) {
             throw new ForbiddenException("The current user is not allowed to access this scope and download this folder.");
         }
 
