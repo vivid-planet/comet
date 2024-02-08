@@ -93,13 +93,13 @@ const writeComponent = async (icon: Icon, pathData: string) => {
                     */`
                 : ""
         };
-        export function ${icon.componentName}(props: SvgIconProps): JSX.Element {
+        export const ${icon.componentName} = React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => {
             return (
-                <SvgIcon {...props} viewBox="0 0 16 16">
+                <SvgIcon {...props} ref={ref} viewBox="0 0 16 16">
                     <path d="${pathData}" />
                 </SvgIcon>
             );
-        }
+        });
     `);
 
     if (icon.componentName != null && component != null) {
