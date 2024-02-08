@@ -1,3 +1,4 @@
+import { DragHandle } from "@comet/admin-icons";
 import { ComponentsOverrides } from "@mui/material";
 import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import TableCell from "@mui/material/TableCell";
@@ -170,7 +171,13 @@ interface TableDndOrderProps<TRow extends IRow>
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
 export function TableDndOrder<TRow extends IRow>(inProps: TableDndOrderProps<TRow>) {
-    const { moveRow, onDragEnd, dragHandleIcon, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminTableDndOrder" });
+    const {
+        moveRow,
+        onDragEnd,
+        dragHandleIcon = <DragHandle />,
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminTableDndOrder" });
 
     const renderHeadTableRow = React.useCallback<NonNullable<ITableProps<TRow>["renderHeadTableRow"]>>((ownProps) => {
         return (
