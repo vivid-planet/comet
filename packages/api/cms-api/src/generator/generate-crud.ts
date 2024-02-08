@@ -82,9 +82,9 @@ function buildOptions(metadata: EntityMetadata<any>) {
     });
 
     const mainProps = metadata.props.filter((prop) => {
-        if (hasFieldFeature(metadata.class, prop.name, "mainProperty")) {
+        if (hasFieldFeature(metadata.class, prop.name, "rootArg")) {
             if (prop.reference != "m:1") {
-                console.warn(`${prop.name} mainProperty=true is only supported for 1:m relations`);
+                console.warn(`${prop.name} rootArg=true is only supported for 1:m relations`);
                 return false;
             } else {
                 return true;
