@@ -7,6 +7,10 @@ import { GeneratedFile } from "./utils/write-generated-files";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOptions, metadata: EntityMetadata<any>): Promise<GeneratedFile[]> {
+    generatorOptions.update = generatorOptions.update ?? true;
+    generatorOptions.create = generatorOptions.create ?? true;
+    generatorOptions.delete = generatorOptions.delete ?? true;
+
     const classNameSingular = metadata.className;
     const classNamePlural = !metadata.className.endsWith("s") ? `${metadata.className}s` : metadata.className;
     const instanceNameSingular = classNameSingular[0].toLocaleLowerCase() + classNameSingular.slice(1);
@@ -113,5 +117,9 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         return generatedFiles;
     }
 
-    return [...(await generateCrudInput(generatorOptions, metadata)), ...(await generateCrudResolver())];
+    if (generatorOptions.create || generatorOptions.update) {
+        return [...(await generateCrudInput(generatorOptions, metadata)), ...(await generateCrudResolver())];
+    }
+
+    return [...(await generateCrudResolver())];
 }

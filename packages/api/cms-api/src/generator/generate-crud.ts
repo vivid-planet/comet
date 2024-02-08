@@ -979,5 +979,9 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         return generatedFiles;
     }
 
-    return [...(await generateCrudInput(generatorOptions, metadata)), ...(await generateCrudResolver())];
+    if (generatorOptions.create || generatorOptions.update) {
+        return [...(await generateCrudInput(generatorOptions, metadata)), ...(await generateCrudResolver())];
+    }
+
+    return [...(await generateCrudResolver())];
 }
