@@ -44,6 +44,8 @@ export function generateForm(
     if (!introspectedUpdateMutationField) throw new Error(`update-mutation "${updateMutationName}" for ${gqlType} in schema not found`);
     const updateMutationScopeParam = introspectedUpdateMutationField.args.find((arg) => arg.name === gqlQueryScopeParamName);
 
+    const requiresScope = !!(queryScopeParam || createMutationScopeParam || updateMutationScopeParam);
+
     // TODO make RootBlocks configurable (from config)
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
 
@@ -190,7 +192,7 @@ export function generateForm(
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
-        const { scope } = useContentScope();
+        ${requiresScope ? `const { scope } = useContentScope()` : ""};
     
         const { data, error, loading, refetch } = useQuery<GQL${gqlType}Query, GQL${gqlType}QueryVariables>(
             ${instanceGqlType}Query,
