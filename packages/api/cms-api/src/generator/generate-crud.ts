@@ -979,9 +979,8 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         return generatedFiles;
     }
 
-    if (generatorOptions.create || generatorOptions.update) {
-        return [...(await generateCrudInput(generatorOptions, metadata)), ...(await generateCrudResolver())];
-    }
+    const crudInput = await generateCrudInput(generatorOptions, metadata);
+    const crudResolver = await generateCrudResolver();
 
-    return [...(await generateCrudResolver())];
+    return generatorOptions.create || generatorOptions.update ? [...crudInput, ...crudResolver] : [...crudResolver];
 }
