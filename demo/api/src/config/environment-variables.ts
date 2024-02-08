@@ -104,5 +104,5 @@ export class EnvironmentVariables {
     @IsString()
     @IsNotEmpty()
     @ValidateIf((v) => v.CDN_ENABLED)
-    CDN_ORIGIN_CHECK: string;
+    CDN_ORIGIN_CHECK?: string;
 }

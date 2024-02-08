@@ -59,6 +59,10 @@ async function bootstrap(): Promise<void> {
 
     // if CDN is enabled, make sure all traffic is either coming from the CDN or internal sources
     if (config.cdn.enabled) {
+        if (!config.cdn.originCheck) {
+            throw new Error("CDN is enabled, but no origin check is configured");
+        }
+
         app.useGlobalGuards(new ExternalRequestWithoutHeaderGuard({ headerName: "x-cdn-origin-check", headerValue: config.cdn.originCheck }));
     }
 
