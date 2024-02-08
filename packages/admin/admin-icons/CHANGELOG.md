@@ -1,5 +1,39 @@
 # @comet/admin-icons
 
+## 6.0.0
+
+### Major Changes
+
+-   a525766c: Remove deprecated icons `Betrieb`, `Logische Filter`, `Pool`, `Pool 2`, `State Green`, `State Green Ring`, `State Orange`, `State Orange Ring`, `State Red`, `State Red Ring`, `Vignette 1` and `Vignette 2`.
+
+### Patch Changes
+
+-   76e50aa8: Fix broken `Logout` icon
+
+## 5.6.0
+
+## 5.5.0
+
+## 5.4.0
+
+## 5.3.0
+
+### Minor Changes
+
+-   0ff9b9ba: Deprecate icons `StateGreen`, `StateGreenRing`, `StateOrange`, `StateOrangeRing`, `StateRed`, and `StateRedRing`,
+
+### Patch Changes
+
+-   0ff9b9ba: Fix various icons
+
+    Since version 5.2.0 several icons were not displayed correctly. This problem has been fixed.
+
+## 5.2.0
+
+### Minor Changes
+
+-   9fc7d474: Add new icons from the Comet UX library. Replace existing icons with new versions. Mark icons Pool, Pool2, Vignette1, Vignette2, Betrieb, LogischeFilter as deprecated.
+
 ## 5.1.0
 
 ## 5.0.0

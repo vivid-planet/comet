@@ -7,7 +7,6 @@ import exifr from "exifr";
 import { createReadStream } from "fs";
 import getColors from "get-image-colors";
 import * as hasha from "hasha";
-import isEqual from "lodash.isequal";
 import fetch from "node-fetch";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
@@ -17,7 +16,9 @@ import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
-import { ContentScopeService } from "../../content-scope/content-scope.service";
+import { ContentScopeService } from "../../user-permissions/content-scope.service";
+import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
+import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { FocalPoint } from "../common/enums/focal-point.enum";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
@@ -30,7 +31,7 @@ import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
 import { UploadFileBodyInterface } from "./dto/file.body";
 import { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dto/file.input";
 import { FileParams } from "./dto/file.params";
-import { FileUploadInterface } from "./dto/file-upload.interface";
+import { FileUploadInput } from "./dto/file-upload.input";
 import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
@@ -115,6 +116,7 @@ export class FilesService {
         private readonly imgproxyService: ImgproxyService,
         private readonly orm: MikroORM,
         private readonly contentScopeService: ContentScopeService,
+        @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
     ) {}
 
     private selectQueryBuilder(): QueryBuilder<FileInterface> {
@@ -225,7 +227,15 @@ export class FilesService {
 
     async create({ folderId, ...data }: CreateFileInput & { copyOf?: FileInterface }): Promise<FileInterface> {
         const folder = folderId ? await this.foldersService.findOneById(folderId) : undefined;
-        return this.save(this.filesRepository.create({ ...data, license: { ...data.license }, folder: folder?.id }));
+        return this.save(
+            this.filesRepository.create({
+                ...data,
+                license: { ...data.license },
+                folder: folder?.id,
+                importSourceId: data.importSourceId,
+                importSourceType: data.importSourceType,
+            }),
+        );
     }
 
     async updateById(id: string, data: UpdateFileInput): Promise<FileInterface> {
@@ -259,7 +269,7 @@ export class FilesService {
 
         for (const file of files) {
             // Convert to JS object because deep-comparing classes and objects doesn't work
-            if (targetFolder?.scope !== undefined && !isEqual({ ...file.scope }, { ...targetFolder.scope })) {
+            if (targetFolder?.scope !== undefined && !this.contentScopeService.scopesAreEqual(file.scope, targetFolder.scope)) {
                 throw new Error("Target folder scope doesn't match file scope");
             }
 
@@ -292,7 +302,7 @@ export class FilesService {
     }
 
     async upload(
-        file: FileUploadInterface,
+        file: FileUploadInput,
         { folderId, scope, ...assignData }: Omit<UploadFileBodyInterface, "scope"> & { scope?: DamScopeInterface },
     ): Promise<FileInterface> {
         let result: FileInterface | undefined = undefined;
@@ -452,7 +462,7 @@ export class FilesService {
         if (!inboxFolder) {
             throw new Error("Specified inbox folder doesn't exist.");
         }
-        if (inboxFolder.scope && !this.contentScopeService.canAccessScope(inboxFolder.scope, user)) {
+        if (inboxFolder.scope && !this.accessControlService.isAllowed(user, "dam", inboxFolder.scope)) {
             throw new Error("User can't access the target scope");
         }
 
@@ -478,7 +488,7 @@ export class FilesService {
 
         const fileScopes = getUniqueFileScopes(files);
         const canAccessFileScopes = fileScopes.every((scope) => {
-            return this.contentScopeService.canAccessScope(scope, user);
+            return this.accessControlService.isAllowed(user, "dam", scope);
         });
         if (!canAccessFileScopes) {
             throw new Error(`User can't access the scope of one or more files`);

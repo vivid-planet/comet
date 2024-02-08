@@ -1,5 +1,50 @@
 # @comet/admin-theme
 
+## 6.0.0
+
+### Patch Changes
+
+-   Updated dependencies [76e50aa8]
+-   Updated dependencies [a525766c]
+    -   @comet/admin-icons@6.0.0
+
+## 5.6.0
+
+### Minor Changes
+
+-   fb6c8063: Change `DataGrid`'s `noRowsLabel` from "No rows" to "No results found."
+
+### Patch Changes
+
+-   @comet/admin-icons@5.6.0
+
+## 5.5.0
+
+### Patch Changes
+
+-   @comet/admin-icons@5.5.0
+
+## 5.4.0
+
+### Patch Changes
+
+-   @comet/admin-icons@5.4.0
+
+## 5.3.0
+
+### Patch Changes
+
+-   Updated dependencies [0ff9b9ba]
+-   Updated dependencies [0ff9b9ba]
+    -   @comet/admin-icons@5.3.0
+
+## 5.2.0
+
+### Patch Changes
+
+-   Updated dependencies [9fc7d474]
+    -   @comet/admin-icons@5.2.0
+
 ## 5.1.0
 
 ### Patch Changes

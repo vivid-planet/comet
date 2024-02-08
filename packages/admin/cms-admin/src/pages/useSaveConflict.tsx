@@ -1,4 +1,6 @@
 import { useSnackbarApi } from "@comet/admin";
+// TODO Our Alert currently can't be used inside a Snackbar
+// eslint-disable-next-line no-restricted-imports
 import { Alert, Snackbar } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -15,55 +17,64 @@ export interface SaveConflictOptions {
 export interface SaveConflictHookReturn {
     dialogs: React.ReactNode;
     checkForConflicts: () => Promise<boolean>;
+    hasConflict: boolean;
 }
 
 export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookReturn {
     const { checkConflict, hasChanges, loadLatestVersion, onDiscardButtonPressed } = options;
     const snackbarApi = useSnackbarApi();
+    const pollingIntervalId = React.useRef<number | undefined>();
 
     const [showDialog, setShowDialog] = React.useState(false);
+    const [hasConflict, setHasConflict] = React.useState(false);
 
-    React.useEffect(() => {
-        const checkChanges = async () => {
-            const newHasConflict = await checkConflict();
-            //we don't need setHasConflict as that is used during save only
-            if (newHasConflict) {
-                if (!hasChanges()) {
-                    // No local changes, server changes available
-                    await loadLatestVersion();
-                    snackbarApi.showSnackbar(
-                        <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "left" }} autoHideDuration={5000}>
-                            <Alert severity="success">
-                                <FormattedMessage
-                                    id="comet.saveConflict.autoReloadSuccessfull"
-                                    defaultMessage="This content has changed. We've refreshed the page for you."
-                                />
-                            </Alert>
-                        </Snackbar>,
-                    );
-                } else {
-                    // local changes, and server changes available: ask user what to do
+    const checkChanges = React.useCallback(async () => {
+        const newHasConflict = await checkConflict();
+        //we don't need setHasConflict as that is used during save only
+        if (newHasConflict) {
+            if (!hasChanges()) {
+                // No local changes, server changes available
+                await loadLatestVersion();
+                snackbarApi.showSnackbar(
+                    <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "left" }} autoHideDuration={5000}>
+                        <Alert severity="success">
+                            <FormattedMessage
+                                id="comet.saveConflict.autoReloadSuccessfull"
+                                defaultMessage="This content has changed. We've refreshed the page for you."
+                            />
+                        </Alert>
+                    </Snackbar>,
+                );
+            } else {
+                // local changes, and server changes available: ask user what to do
+                if (!hasConflict) {
                     setShowDialog(true);
                 }
-            } else {
-                setShowDialog(false);
+                setHasConflict(true);
             }
-        };
+        } else {
+            setShowDialog(false);
+            setHasConflict(false);
+        }
+    }, [checkConflict, hasChanges, hasConflict, loadLatestVersion, snackbarApi]);
 
-        let intervalId: number | undefined;
+    const startPolling = React.useCallback(() => {
+        if (!hasConflict) {
+            window.clearInterval(pollingIntervalId.current);
+            pollingIntervalId.current = window.setInterval(checkChanges, 10000);
+        }
+    }, [checkChanges, hasConflict]);
 
-        const startPolling = () => {
-            window.clearInterval(intervalId);
-            intervalId = window.setInterval(checkChanges, 10000);
-        };
+    const stopPolling = React.useCallback(() => {
+        window.clearInterval(pollingIntervalId.current);
+        pollingIntervalId.current = undefined;
+    }, []);
 
-        const stopPolling = () => {
-            window.clearInterval(intervalId);
-            intervalId = undefined;
-        };
-
+    React.useEffect(() => {
         const handleFocus = () => {
-            checkChanges();
+            if (!hasConflict) {
+                checkChanges();
+            }
             startPolling();
         };
 
@@ -84,25 +95,30 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
 
             stopPolling();
         };
-    }, [checkConflict, snackbarApi, loadLatestVersion, hasChanges]);
+    }, [checkConflict, snackbarApi, loadLatestVersion, hasChanges, checkChanges, startPolling, stopPolling, hasConflict]);
 
     const checkForConflicts = React.useCallback(async () => {
         const newHasConflict = await checkConflict();
         if (newHasConflict) {
             setShowDialog(true);
+            setHasConflict(true);
         }
         return newHasConflict;
     }, [checkConflict]);
+
     return {
         checkForConflicts,
+        hasConflict,
         dialogs: (
             <>
                 <SaveConflictDialog
                     open={showDialog}
                     onClosePressed={() => {
+                        stopPolling();
                         setShowDialog(false);
                     }}
                     onDiscardChangesPressed={() => {
+                        setHasConflict(false);
                         setShowDialog(false);
                         onDiscardButtonPressed();
                     }}

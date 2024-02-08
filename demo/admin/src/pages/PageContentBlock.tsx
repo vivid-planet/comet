@@ -12,6 +12,7 @@ import * as React from "react";
 import { ColumnsBlock } from "./blocks/ColumnsBlock";
 import { FullWidthImageBlock } from "./blocks/FullWidthImageBlock";
 import { MediaBlock } from "./blocks/MediaBlock";
+import { TeaserBlock } from "./blocks/TeaserBlock";
 import { TwoListsBlock } from "./blocks/TwoListsBlock";
 import { VideoBlock } from "./blocks/VideoBlock";
 
@@ -32,18 +33,15 @@ export const PageContentBlock = createBlocksBlock({
         anchor: AnchorBlock,
         twoLists: TwoListsBlock,
         media: MediaBlock,
+        teaser: TeaserBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,
     },
     AdditionalItemContextMenuItems: ({ item, onChange, onMenuClose }) => {
-        // TODO fix typing: infer additional fields somehow
-        // @ts-expect-error missing additional field
         return <UserGroupContextMenuItem item={item} onChange={onChange} onMenuClose={onMenuClose} />;
     },
     AdditionalItemContent: ({ item }) => {
-        // TODO fix typing: infer additional fields somehow
-        // @ts-expect-error missing additional field
         return <UserGroupChip item={item} />;
     },
 });

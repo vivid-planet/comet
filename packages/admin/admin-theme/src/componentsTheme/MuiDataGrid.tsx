@@ -12,7 +12,7 @@ import {
     TextField,
     TextFieldProps,
 } from "@mui/material";
-import { getDataGridUtilityClass } from "@mui/x-data-grid";
+import { getDataGridUtilityClass, GRID_DEFAULT_LOCALE_TEXT } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 import React from "react";
 
@@ -33,6 +33,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             BaseTextField: (props: TextFieldProps) => <TextField {...props} InputLabelProps={{ shrink: true }} />,
             ColumnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
             ...component?.defaultProps?.components,
+        },
+        localeText: {
+            noRowsLabel: GRID_DEFAULT_LOCALE_TEXT.noResultsOverlayLabel,
         },
         ...component?.defaultProps,
     },

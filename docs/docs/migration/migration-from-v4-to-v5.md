@@ -1,6 +1,6 @@
 ---
 title: Migrating from v4 to v5
-sidebar_position: 1
+sidebar_position: 2
 ---
 
 # Migrating from v4 to v5
@@ -84,7 +84,7 @@ indexData(): BlockIndexData {
 
 ### File and Folder Entities
 
-`File` and `Folder` are no longer exported by `@comet/cms-api`. Instead, use the exported `FileInterface` and `FolderInterface` for typing. 
+`File` and `Folder` are no longer exported by `@comet/cms-api`. Instead, use the exported `FileInterface` and `FolderInterface` for typing.
 
 If you need classes (e.g. as return type of a GraphQL field), you can create them using the `createFileEntity()` and `createFolderEntity()` factories.
 You will then need to pass your classes to the `DamModule` during initialization:
@@ -178,7 +178,10 @@ dependencies: (state) => {
 ```tsx
 replaceDependenciesInOutput: (output, replacements) => {
     const clonedOutput: PixelImageBlockInput = deepClone(output);
-    const replacement = replacements.find((replacement) => replacement.type === "DamFile" && replacement.originalId === output.damFileId);
+    const replacement = replacements.find(
+        (replacement) =>
+            replacement.type === "DamFile" && replacement.originalId === output.damFileId,
+    );
 
     if (replacement) {
         clonedOutput.damFileId = replacement.replaceWithId;

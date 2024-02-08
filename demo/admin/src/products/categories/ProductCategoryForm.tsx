@@ -125,16 +125,7 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
     }
 
     return (
-        <FinalForm<FormState>
-            apiRef={formApiRef}
-            onSubmit={handleSubmit}
-            mode={mode}
-            initialValues={initialValues}
-            onAfterSubmit={(values, form) => {
-                //don't go back automatically TODO remove this automatismn
-            }}
-            subscription={{}}
-        >
+        <FinalForm<FormState> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues} subscription={{}}>
             {() => (
                 <EditPageLayout>
                     {saveConflict.dialogs}
@@ -157,7 +148,7 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <FinalFormSaveSplitButton />
+                            <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>

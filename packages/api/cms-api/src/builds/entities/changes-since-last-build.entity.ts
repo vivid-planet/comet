@@ -1,7 +1,7 @@
 import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { v4 as uuid } from "uuid";
 
-import { ContentScope } from "../../common/decorators/content-scope.interface";
+import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
 
 @Entity()
 export class ChangesSinceLastBuild extends BaseEntity<ChangesSinceLastBuild, "id"> {

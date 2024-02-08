@@ -7,6 +7,7 @@ import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { BlockCategory, BlockInterface } from "./types";
+
 type State = SpaceBlockData;
 
 const isHeightValid = (h: number) => h <= 1000;

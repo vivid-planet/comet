@@ -1,4 +1,4 @@
-import cometConfig from "@src/../comet-config.json";
+import cometConfig from "@src/comet-config.json";
 import { plainToClass } from "class-transformer";
 import { validateSync } from "class-validator";
 

@@ -1,3 +1,4 @@
+export { Alert, AlertClassKey, AlertProps } from "./alert/Alert";
 export { useFocusAwarePolling } from "./apollo/useFocusAwarePolling";
 export { AppHeader, AppHeaderClassKey } from "./appHeader/AppHeader";
 export { AppHeaderButton, AppHeaderButtonProps } from "./appHeader/button/AppHeaderButton";
@@ -26,6 +27,7 @@ export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
+export { FieldSet, FieldSetClassKey, FieldSetProps } from "./common/FieldSet";
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
 export { Loading, LoadingProps } from "./common/Loading";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
@@ -104,7 +106,7 @@ export { MasterLayoutContext } from "./mui/MasterLayoutContext";
 export { MenuCollapsibleItem, MenuCollapsibleItemClassKey, MenuCollapsibleItemProps, MenuLevel } from "./mui/menu/CollapsibleItem";
 export { IMenuContext, IWithMenu, MenuContext, withMenu } from "./mui/menu/Context";
 export { MenuItem, MenuItemClassKey, MenuItemProps } from "./mui/menu/Item";
-export { MenuItemAnchorLink } from "./mui/menu/ItemAnchorLink";
+export { MenuItemAnchorLink, MenuItemAnchorLinkProps } from "./mui/menu/ItemAnchorLink";
 export { MenuItemRouterLink, MenuItemRouterLinkProps } from "./mui/menu/ItemRouterLink";
 export { Menu, MenuProps } from "./mui/menu/Menu";
 export { MenuClassKey, styles } from "./mui/menu/Menu.styles";

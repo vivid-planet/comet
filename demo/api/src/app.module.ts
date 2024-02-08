@@ -1,13 +1,11 @@
 import {
+    AccessLogModule,
     BlobStorageModule,
     BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
     BlocksModule,
     BlocksTransformerMiddlewareFactory,
     BuildsModule,
-    ContentScope,
-    ContentScopeModule,
     CronJobsModule,
-    CurrentUserInterface,
     DamModule,
     DependenciesModule,
     FilesService,
@@ -28,9 +26,9 @@ import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
-import { randomBytes } from "crypto";
 import { Request } from "express";
 
+import { AccessControlService } from "./auth/access-control.service";
 import { AuthModule } from "./auth/auth.module";
 import { UserService } from "./auth/user.service";
 import { DamScope } from "./dam/dto/dam-scope";
@@ -78,14 +76,8 @@ export class AppModule {
                     inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
                 }),
                 AuthModule,
-                ContentScopeModule.forRoot({
-                    canAccessScope(requestScope: ContentScope, user: CurrentUserInterface) {
-                        if (!user.domains) return true; //all domains
-                        return user.domains.includes(requestScope.domain);
-                    },
-                }),
                 UserPermissionsModule.forRootAsync({
-                    useFactory: (userService: UserService) => ({
+                    useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
                         availablePermissions: ["news", "products"],
                         availableContentScopes: [
                             { domain: "main", language: "de" },
@@ -93,8 +85,9 @@ export class AppModule {
                             { domain: "secondary", language: "en" },
                         ],
                         userService,
+                        accessControlService,
                     }),
-                    inject: [UserService],
+                    inject: [UserService, AccessControlService],
                     imports: [AuthModule],
                 }),
                 BlocksModule.forRoot({
@@ -124,7 +117,6 @@ export class AppModule {
                     Documents: [Page, Link, PredefinedPage],
                     Scope: PageTreeNodeScope,
                     reservedPaths: ["/events"],
-                    sitePreviewSecret: randomBytes(32).toString("hex"),
                 }),
                 RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
                 BlobStorageModule.register({
@@ -158,6 +150,7 @@ export class AppModule {
                 PredefinedPageModule,
                 CronJobsModule,
                 ProductsModule,
+                AccessLogModule,
             ],
         };
     }
