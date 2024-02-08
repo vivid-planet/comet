@@ -27,9 +27,9 @@ const noop = () => {
 };
 
 const finalFormContextValues: Omit<FinalFormContextProviderProps, "children"> = {
-    shouldShowFieldError: ({ fieldMeta }) => fieldMeta.error || fieldMeta.submitError, // Doesnt matter if touched or not
-    shouldShowFieldWarning: ({ fieldMeta }) => fieldMeta.data?.warning,
-    shouldScrollToField: ({ fieldMeta }) => fieldMeta.error && !fieldMeta.touched, // If a field is not touched yet and has an error we scroll to it
+    shouldShowFieldError: (fieldMeta) => fieldMeta.error || fieldMeta.submitError, // Doesnt matter if touched or not
+    shouldShowFieldWarning: (fieldMeta) => fieldMeta.data?.warning,
+    shouldScrollToField: (fieldMeta) => fieldMeta.error && !fieldMeta.touched, // If a field is not touched yet and has an error we scroll to it
 };
 
 export function BlocksFinalForm<FormValues = AnyObject>({ onSubmit, children, ...rest }: FormProps<FormValues>): JSX.Element {

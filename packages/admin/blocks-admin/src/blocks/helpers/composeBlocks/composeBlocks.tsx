@@ -127,16 +127,20 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
                     { flatten: true },
                 ),
 
-            createPreviewState: (s, previewCtx) =>
-                applyToCompositeBlocks(
-                    compositeBlocks,
-                    ([block, options], attr) => {
-                        const extractedState = extractData([block, options], attr, s);
-                        return block.createPreviewState(extractedState, previewCtx);
-                    },
-                    { flatten: true },
-                ),
-
+            createPreviewState: (s, previewCtx) => {
+                return {
+                    adminRoute: previewCtx.parentUrl,
+                    adminMeta: { route: previewCtx.parentUrl },
+                    ...applyToCompositeBlocks(
+                        compositeBlocks,
+                        ([block, options], attr) => {
+                            const extractedState = extractData([block, options], attr, s);
+                            return block.createPreviewState(extractedState, previewCtx);
+                        },
+                        { flatten: true },
+                    ),
+                };
+            },
             isValid: async (state) => {
                 const isValidPromises: Promise<boolean>[] = Object.values(
                     applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {

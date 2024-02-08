@@ -10,7 +10,6 @@ import {
     createPageTreeResolver,
     createRedirectsResolver,
     CurrentUserInterface,
-    CurrentUserRightInterface,
     DependenciesResolverFactory,
     DependentsResolverFactory,
     DocumentInterface,
@@ -21,6 +20,7 @@ import {
 } from "./src";
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
 import { CronJobsResolver } from "./src/cron-jobs/cron-jobs.resolver";
+import { JobsResolver } from "./src/cron-jobs/jobs.resolver";
 import { createDamItemsResolver } from "./src/dam/files/dam-items.resolver";
 import { createFileEntity } from "./src/dam/files/entities/file.entity";
 import { createFolderEntity } from "./src/dam/files/entities/folder.entity";
@@ -29,6 +29,10 @@ import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
+import { CurrentUserPermission } from "./src/user-permissions/dto/current-user";
+import { UserResolver } from "./src/user-permissions/user.resolver";
+import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
+import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
 
 @ObjectType()
 class PageTreeNode extends PageTreeNodeBase {
@@ -45,16 +49,8 @@ class Page implements DocumentInterface {
 }
 
 @ObjectType()
-class CurrentUserRight implements CurrentUserRightInterface {
-    @Field()
-    right: string;
-
-    @Field(() => [String])
-    values: string[];
-}
-
-@ObjectType()
 class CurrentUser implements CurrentUserInterface {
+    @Field()
     id: string;
     @Field()
     name: string;
@@ -62,10 +58,8 @@ class CurrentUser implements CurrentUserInterface {
     email: string;
     @Field()
     language: string;
-    @Field()
-    role: string;
-    @Field(() => [CurrentUserRight], { nullable: true })
-    rights: CurrentUserRightInterface[];
+    @Field(() => [CurrentUserPermission])
+    permissions: CurrentUserPermission[];
 }
 
 async function generateSchema(): Promise<void> {
@@ -108,10 +102,14 @@ async function generateSchema(): Promise<void> {
         createFoldersResolver({ Folder }),
         pageTreeResolver,
         CronJobsResolver,
+        JobsResolver,
         AuthResolver,
         RedirectsDependenciesResolver,
         PageTreeDependentsResolver,
         FileDependentsResolver,
+        UserResolver,
+        UserPermissionResolver,
+        UserContentScopesResolver,
     ]);
 
     await writeFile("schema.gql", printSchema(schema));
