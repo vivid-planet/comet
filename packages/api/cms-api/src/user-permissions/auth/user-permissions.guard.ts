@@ -5,6 +5,7 @@ import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { ContentScopeService } from "../content-scope.service";
 import { RequiredPermission } from "../decorators/required-permission.decorator";
+import { ContentScope } from "../interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions.constants";
 import { AccessControlServiceInterface } from "../user-permissions.types";
 
@@ -38,8 +39,9 @@ export class UserPermissionsGuard implements CanActivate {
             throw new Error(`RequiredPermission decorator is missing in ${context.getClass().name}::${context.getHandler().name}()`);
         }
 
+        let contentScope: ContentScope | undefined;
         if (!this.isResolvingGraphQLField(context) && !requiredPermission.options?.skipScopeCheck) {
-            const contentScope = await this.contentScopeService.inferScopeFromExecutionContext(context);
+            contentScope = await this.contentScopeService.inferScopeFromExecutionContext(context);
             if (!contentScope) {
                 throw new Error(
                     `Could not get ContentScope. Either pass a scope-argument or add @AffectedEntity()-decorator or enable skipScopeCheck in @RequiredPermission() (${
@@ -47,15 +49,15 @@ export class UserPermissionsGuard implements CanActivate {
                     }::${context.getHandler().name}())`,
                 );
             }
-            if (!this.accessControlService.isAllowedContentScope(user, contentScope)) {
-                return false;
-            }
         }
 
         const requiredPermissions = Array.isArray(requiredPermission.requiredPermission)
             ? requiredPermission.requiredPermission
             : [requiredPermission.requiredPermission];
-        return requiredPermissions.some((permission) => this.accessControlService.isAllowedPermission(user, permission));
+        if (requiredPermissions.length === 0) {
+            throw new Error(`RequiredPermission decorator has empty permissions in ${context.getClass().name}::${context.getHandler().name}()`);
+        }
+        return requiredPermissions.some((permission) => this.accessControlService.isAllowed(user, permission, contentScope));
     }
 
     // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level

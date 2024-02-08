@@ -43,7 +43,7 @@ function Story() {
                         }}
                         initialValues={initialValues}
                         validate={validate}
-                        formContext={{ shouldScrollToField: ({ fieldMeta: { touched } }) => !touched, shouldShowFieldError: () => true }}
+                        formContext={{ shouldScrollToField: ({ touched }) => !touched, shouldShowFieldError: () => true }}
                     >
                         <Field label="Foo" name="foo" component={FinalFormInput} fullWidth />
                         <div style={{ height: "2000px", borderLeft: "1px solid black" }} />

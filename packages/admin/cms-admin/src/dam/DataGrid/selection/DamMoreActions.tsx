@@ -1,4 +1,3 @@
-import { useApolloClient } from "@apollo/client";
 import { useEditDialog, useSnackbarApi } from "@comet/admin";
 import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, Upload } from "@comet/admin-icons";
 import { Box, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Slide, Snackbar, Typography } from "@mui/material";
@@ -10,8 +9,7 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
-import { clearDamItemCache } from "../../helpers/clearDamItemCache";
-import { useFileUpload } from "../fileUpload/useFileUpload";
+import { useDamFileUpload } from "../fileUpload/useDamFileUpload";
 import { useDamSelectionApi } from "./DamSelectionContext";
 
 interface DamMoreActionsProps {
@@ -30,7 +28,6 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
     const snackbarApi = useSnackbarApi();
     const [, , editDialogApi] = useEditDialog();
     const intl = useIntl();
-    const client = useApolloClient();
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
     const folderInputRef = React.useRef<HTMLInputElement>(null);
@@ -104,18 +101,14 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
         uploadFiles,
         dialogs: fileUploadDialogs,
         dropzoneConfig,
-    } = useFileUpload({
+    } = useDamFileUpload({
         acceptedMimetypes: filter?.allowedMimetypes ?? allAcceptedMimeTypes,
-        onAfterUpload: () => {
-            client.reFetchObservableQueries();
-            clearDamItemCache(client.cache);
-        },
     });
 
     const { getInputProps } = useDropzone({
         ...dropzoneConfig,
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-            await uploadFiles({ acceptedFiles, fileRejections }, folderId);
+            await uploadFiles({ acceptedFiles, fileRejections }, { folderId: folderId });
         },
     });
 

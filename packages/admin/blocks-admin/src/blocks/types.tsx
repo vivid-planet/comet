@@ -7,6 +7,7 @@ export type DispatchSetStateAction<S> = (setStateAction: SetStateAction<S>) => v
 export interface IPreviewContext {
     showVisibleOnly?: boolean;
     parentUrl: string;
+    parentUrlSubRoute?: string;
 }
 
 interface AdminMetaInterface {
@@ -59,7 +60,7 @@ export type PreviewContent = PreviewContentImage | PreviewContentText;
 
 export type BlockDependency = { targetGraphqlObjectType: string; id: string; data?: unknown };
 
-export type ReplaceDependencyObject = { originalId: string; replaceWithId: string; type: string };
+export type ReplaceDependencyObject = { originalId: string; replaceWithId: string | undefined; type: string };
 
 export interface BlockMethods<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,7 +1,6 @@
-import { messages } from "@comet/admin";
-import { Clear, Delete, OpenNewTab, Warning } from "@comet/admin-icons";
-import { fontWeights } from "@comet/admin-theme";
-import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, Stack, Typography } from "@mui/material";
+import { Alert, messages } from "@comet/admin";
+import { Clear, Delete, OpenNewTab } from "@comet/admin-icons";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
@@ -28,12 +27,6 @@ export const useStyles = makeStyles((theme) => ({
             backgroundColor: theme.palette.error.dark,
         },
     },
-    errorAlert: {
-        backgroundColor: "white",
-        marginBottom: "20px",
-        color: "black",
-        fontWeight: fontWeights.fontWeightBold,
-    },
 }));
 
 function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: SaveConflictDialogProps): React.ReactElement {
@@ -47,7 +40,7 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                 </Typography>
             </DialogTitle>
             <DialogContent>
-                <Alert variant="outlined" severity="error" icon={<Warning />} classes={{ root: styles.errorAlert }}>
+                <Alert severity="error">
                     <FormattedMessage id="comet.saveConflictDialog.description1" defaultMessage="There was a conflict while saving" />
                 </Alert>
 

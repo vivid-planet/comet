@@ -13,6 +13,7 @@ import { DamFileImage } from "./files/entities/file-image.entity";
 import { createFolderEntity, FolderInterface } from "./files/entities/folder.entity";
 import { FileImagesResolver } from "./files/file-image.resolver";
 import { FileLicensesResolver } from "./files/file-licenses.resolver";
+import { FileUploadService } from "./files/file-upload.service";
 import { FileValidationService } from "./files/file-validation.service";
 import { createFilesController } from "./files/files.controller";
 import { createFilesResolver } from "./files/files.resolver";
@@ -117,9 +118,10 @@ export class DamModule {
                 FileImagesResolver,
                 CalculateDominantImageColor,
                 FileValidationService,
+                FileUploadService,
             ],
             controllers: [createFilesController({ Scope }), ImagesController],
-            exports: [ImgproxyService, FilesService, FoldersService, ImagesService, ScaledImagesCacheService, damConfigProvider],
+            exports: [ImgproxyService, FilesService, FoldersService, ImagesService, ScaledImagesCacheService, damConfigProvider, FileUploadService],
         };
     }
 }

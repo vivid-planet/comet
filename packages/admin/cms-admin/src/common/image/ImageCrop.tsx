@@ -11,6 +11,10 @@ const focalPoints: GQLFocalPoint[] = ["CENTER", "NORTHEAST", "NORTHWEST", "SOUTH
 
 type ImageCropProps = Pick<ReactCropProps, "src" | "imageStyle" | "disabled">;
 
+const clipValue = (value?: number) => {
+    return value === undefined ? undefined : Math.max(0, Math.min(100, value));
+};
+
 export const ImageCrop = (props: ImageCropProps): React.ReactElement => {
     const form = useForm<EditImageFormValues>();
     const {
@@ -39,10 +43,10 @@ export const ImageCrop = (props: ImageCropProps): React.ReactElement => {
                             }
 
                             onChange({
-                                x: percentCrop.x,
-                                y: percentCrop.y,
-                                width: percentCrop.width,
-                                height: percentCrop.height,
+                                x: clipValue(percentCrop.x),
+                                y: clipValue(percentCrop.y),
+                                width: clipValue(percentCrop.width),
+                                height: clipValue(percentCrop.height),
                             });
                         }}
                         renderSelectionAddon={() => {

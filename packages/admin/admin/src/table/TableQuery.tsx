@@ -1,11 +1,11 @@
 import { ApolloError } from "@apollo/client";
-import { ComponentsOverrides, Paper, Theme } from "@mui/material";
-import { WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides, Paper } from "@mui/material";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Loading } from "../common/Loading";
-import { styles, TableQueryClassKey } from "./TableQuery.styles";
 import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
 
 /**
@@ -23,58 +23,116 @@ export const parseIdFromIri = (iri: string) => {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IDefaultVariables {}
 
-export interface TableQueryProps {
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
+export type TableQueryClassKey = "root" | "loadingContainer" | "loadingPaper";
+
+const Root = styled("div", {
+    name: "CometAdminTableQuery",
+    slot: "root",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})(
+    () => css`
+        position: relative;
+    `,
+);
+
+const LoadingContainer = styled("div", {
+    name: "CometAdminTableQuery",
+    slot: "loadingContainer",
+    overridesResolver(_, styles) {
+        return [styles.loadingContainer];
+    },
+})(
+    ({ theme }) => css`
+        position: sticky;
+        top: 0;
+        width: 100%;
+        z-index: ${theme.zIndex.modal};
+        transform: translate(50%, 200px);
+    `,
+);
+
+const LoadingPaper = styled(Paper, {
+    name: "CometAdminTableQuery",
+    slot: "loadingPaper",
+    overridesResolver(_, styles) {
+        return [styles.loadingPaper];
+    },
+})(
+    () => css`
+        display: flex;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        justify-content: center;
+        align-items: center;
+        margin-left: auto;
+        margin-right: auto;
+        height: 100px;
+        width: 100px;
+    `,
+);
+
+export interface TableQueryProps extends ThemedComponentBaseProps<{ root: "div"; loadingContainer: "div"; loadingPaper: typeof Paper }> {
     api: ITableQueryApi;
     loading: boolean;
     error?: ApolloError;
     children: React.ReactNode;
 }
 
-export function Query({ classes, ...otherProps }: TableQueryProps & WithStyles<typeof styles>) {
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
+export function TableQuery(inProps: TableQueryProps) {
+    const { loading, error, children, api, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminTableQuery" });
+
     return (
         <TableQueryContext.Provider
             value={{
-                api: otherProps.api,
+                api,
             }}
         >
-            <div className={classes.root}>
-                <div className={classes.loadingContainer}>
-                    {otherProps.loading && (
-                        <Paper classes={{ root: classes.loadingPaper }}>
+            <Root {...restProps} {...slotProps?.root}>
+                <LoadingContainer {...slotProps?.loadingContainer}>
+                    {loading && (
+                        <LoadingPaper {...slotProps?.loadingPaper}>
                             <Loading behavior="fillParent" />
-                        </Paper>
+                        </LoadingPaper>
                     )}
-                </div>
-                {otherProps.error && (
+                </LoadingContainer>
+                {error && (
                     <p>
                         <FormattedMessage
                             id="comet.table.tableQuery.error"
                             defaultMessage="Error :( {error}"
                             description="Display apollo error message"
                             values={{
-                                error: otherProps.error.toString(),
+                                error: error.toString(),
                             }}
                         />
                     </p>
                 )}
-                {otherProps.children}
-            </div>
+                {children}
+            </Root>
         </TableQueryContext.Provider>
     );
 }
 
-/**
- * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
- */
-export const TableQuery = withStyles(styles, { name: "CometAdminTableQuery" })(Query);
-
 declare module "@mui/material/styles" {
+    interface ComponentsPropsList {
+        CometAdminTableQuery: TableQueryProps;
+    }
+
     interface ComponentNameToClassKey {
         CometAdminTableQuery: TableQueryClassKey;
     }
 
     interface Components {
         CometAdminTableQuery?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminTableQuery"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminTableQuery"];
         };
     }

@@ -27,14 +27,12 @@ const damIsFilenameOccupiedQuery = gql`
 
 export type LicenseType = GQLLicenseType | "NO_LICENSE";
 
-const licenseTypeArray: readonly LicenseType[] = ["NO_LICENSE", "ROYALTY_FREE", "RIGHTS_MANAGED", "SUBSCRIPTION", "MICRO"];
+const licenseTypeArray: readonly LicenseType[] = ["NO_LICENSE", "ROYALTY_FREE", "RIGHTS_MANAGED"];
 
 const licenseTypeLabels: { [key in LicenseType]: React.ReactNode } = {
     NO_LICENSE: "-",
     ROYALTY_FREE: <FormattedMessage id="comet.dam.file.licenseType.royaltyFree" defaultMessage="Royalty free" />,
     RIGHTS_MANAGED: <FormattedMessage id="comet.dam.file.licenseType.rightsManaged" defaultMessage="Rights managed" />,
-    SUBSCRIPTION: <FormattedMessage id="comet.dam.file.licenseType.subscription" defaultMessage="Subscription" />,
-    MICRO: <FormattedMessage id="comet.dam.file.licenseType.micro" defaultMessage="Micro" />,
 };
 
 export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): React.ReactElement => {
