@@ -1,10 +1,10 @@
 import * as React from "react";
 
 import { SaveButton, SaveButtonProps } from "../common/buttons/save/SaveButton";
-import { useSaveable, useSaveBoundaryApi } from "./SaveBoundary";
+import { useSavable, useSaveBoundaryApi } from "./SaveBoundary";
 
 export function SaveBoundarySaveButton(props: SaveButtonProps) {
-    const saveBoundaryState = useSaveable();
+    const saveBoundaryState = useSavable();
     const saveBoundaryApi = useSaveBoundaryApi();
     if (!saveBoundaryState || !saveBoundaryApi) throw new Error("SaveBoundarySaveButton must be inside SaveBoundary");
     return (

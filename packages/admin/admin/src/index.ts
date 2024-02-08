@@ -122,12 +122,12 @@ export { SubRoute, SubRouteIndexRoute, useSubRoutePrefix } from "./router/SubRou
 export { RowActionsItem, RowActionsItemProps } from "./rowActions/RowActionsItem";
 export { RowActionsMenu, RowActionsMenuProps } from "./rowActions/RowActionsMenu";
 export {
-    Saveable,
-    SaveableProps,
+    Savable,
+    SavableProps,
     SaveBoundary,
     SaveBoundaryApi,
     SaveBoundaryApiContext,
-    useSaveable,
+    useSavable,
     useSaveBoundaryApi,
 } from "./saveBoundary/SaveBoundary";
 export { SaveBoundarySaveButton } from "./saveBoundary/SaveBoundarySaveButton";

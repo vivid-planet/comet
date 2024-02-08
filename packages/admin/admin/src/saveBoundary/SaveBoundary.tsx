@@ -9,10 +9,10 @@ import { RouterPrompt } from "../router/Prompt";
 export type SaveActionSuccess = boolean;
 export interface SaveBoundaryApi {
     save: () => Promise<SaveActionSuccess>;
-    register: (id: string, props: SaveableProps) => void;
+    register: (id: string, props: SavableProps) => void;
     unregister: (id: string) => void;
 }
-export interface Saveable {
+export interface Savable {
     hasErrors: boolean;
     hasChanges: boolean;
     saving: boolean;
@@ -23,9 +23,9 @@ export function useSaveBoundaryApi() {
     return React.useContext(SaveBoundaryApiContext);
 }
 
-export const SaveableContext = React.createContext<Saveable | undefined>(undefined);
-export function useSaveable() {
-    return React.useContext(SaveableContext);
+export const SavableContext = React.createContext<Savable | undefined>(undefined);
+export function useSavable() {
+    return React.useContext(SavableContext);
 }
 
 interface SaveBoundaryProps {
@@ -38,7 +38,7 @@ export function SaveBoundary({ onAfterSave, ...props }: SaveBoundaryProps) {
     const [saving, setSaving] = React.useState(false);
     const [hasErrors, setHasErrors] = React.useState(false);
     const [hasChanges, setHasChanges] = React.useState(false);
-    const saveStates = React.useRef<Record<string, SaveableProps>>({});
+    const saveStates = React.useRef<Record<string, SavableProps>>({});
     const intl = useIntl();
 
     const save = React.useCallback(async (): Promise<SaveActionSuccess> => {
@@ -72,7 +72,7 @@ export function SaveBoundary({ onAfterSave, ...props }: SaveBoundaryProps) {
     }, []);
 
     const register = React.useCallback(
-        (id: string, props: SaveableProps) => {
+        (id: string, props: SavableProps) => {
             saveStates.current[id] = props;
             onSaveStatesChanged();
         },
@@ -97,7 +97,7 @@ export function SaveBoundary({ onAfterSave, ...props }: SaveBoundaryProps) {
             saveAction={save}
             subRoutePath={props.subRoutePath}
         >
-            <SaveableContext.Provider
+            <SavableContext.Provider
                 value={{
                     hasErrors,
                     hasChanges,
@@ -113,20 +113,20 @@ export function SaveBoundary({ onAfterSave, ...props }: SaveBoundaryProps) {
                 >
                     {props.children}
                 </SaveBoundaryApiContext.Provider>
-            </SaveableContext.Provider>
+            </SavableContext.Provider>
         </RouterPrompt>
     );
 }
 
-export interface SaveableProps {
+export interface SavableProps {
     hasChanges: boolean;
     doSave: () => Promise<SaveActionSuccess> | SaveActionSuccess;
 }
 
-export function Saveable({ doSave, hasChanges }: SaveableProps) {
+export function Savable({ doSave, hasChanges }: SavableProps) {
     const id = useConstant<string>(() => uuid());
     const saveBoundaryApi = useSaveBoundaryApi();
-    if (!saveBoundaryApi) throw new Error("Saveable must be inside SaveBoundary");
+    if (!saveBoundaryApi) throw new Error("Savable must be inside SaveBoundary");
     React.useEffect(() => {
         saveBoundaryApi.register(id, { doSave, hasChanges });
         return function cleanup() {

@@ -1,4 +1,4 @@
-import { Saveable, SaveBoundary, SaveBoundarySaveButton } from "@comet/admin";
+import { Savable, SaveBoundary, SaveBoundarySaveButton } from "@comet/admin";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -28,7 +28,7 @@ function DemoForm() {
     }, [input]);
     return (
         <div>
-            DemoForm <Saveable hasChanges={input != ""} doSave={doSave} />
+            DemoForm <Savable hasChanges={input != ""} doSave={doSave} />
             <input value={input} onChange={(e) => setInput(e.target.value)} />
             {saving && <>Saving...</>}
         </div>

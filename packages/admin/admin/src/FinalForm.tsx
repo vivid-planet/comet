@@ -11,7 +11,7 @@ import { FinalFormContext, FinalFormContextProvider } from "./form/FinalFormCont
 import { messages } from "./messages";
 import { RouterPrompt } from "./router/Prompt";
 import { useSubRoutePrefix } from "./router/SubRoute";
-import { Saveable, useSaveBoundaryApi } from "./saveBoundary/SaveBoundary";
+import { Savable, useSaveBoundaryApi } from "./saveBoundary/SaveBoundary";
 import { TableQueryContext } from "./table/TableQueryContext";
 
 export const useFormApiRef = <FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>() =>
@@ -206,7 +206,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     <FormSpy subscription={{ dirty: true }}>
                         {(props) => (
                             <>
-                                <Saveable hasChanges={props.dirty} doSave={doSave} />
+                                <Savable hasChanges={props.dirty} doSave={doSave} />
                             </>
                         )}
                     </FormSpy>
