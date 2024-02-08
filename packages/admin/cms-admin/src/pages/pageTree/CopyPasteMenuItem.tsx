@@ -41,17 +41,6 @@ export const CopyPasteMenuItem = ({ page }: Props): React.ReactElement => {
             >
                 <FormattedMessage id="comet.pages.pages.page.paste" defaultMessage="Paste" />
             </RowActionsItem>
-            <RowActionsItem
-                icon={<Copy />}
-                onClick={async () => {
-                    const subTree = subTreeFromNode(page, tree);
-                    const pagesAsArray = treeMapToArray(subTree, "root");
-                    const pages = await prepareForClipboard(pagesAsArray);
-                    await sendPages(page.parentId, pages, { targetPos: page.pos + 1 });
-                }}
-            >
-                <FormattedMessage id="comet.pageTree.duplicate" defaultMessage="Duplicate" />
-            </RowActionsItem>
         </>
     );
 };

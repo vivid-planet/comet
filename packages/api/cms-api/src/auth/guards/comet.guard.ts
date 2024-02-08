@@ -5,9 +5,6 @@ import { AuthGuard, IAuthGuard, Type } from "@nestjs/passport";
 import { Request } from "express";
 import { isObservable, lastValueFrom } from "rxjs";
 
-import { CurrentUserInterface } from "../current-user/current-user";
-import { allowForRoleMetadataKey } from "../decorators/allow-for-role.decorator";
-
 export function createCometAuthGuard(type?: string | string[]): Type<IAuthGuard> {
     @Injectable()
     class CometAuthGuard extends AuthGuard(type) implements CanActivate {
@@ -45,18 +42,7 @@ export function createCometAuthGuard(type?: string | string[]): Type<IAuthGuard>
             }
 
             const canActivate = await super.canActivate(context);
-            const isAllowed = isObservable(canActivate) ? await lastValueFrom(canActivate) : canActivate;
-
-            const roles = this.reflector.getAllAndOverride<string[]>(allowForRoleMetadataKey, [context.getHandler(), context.getClass()]) ?? [];
-            if (isAllowed && roles.length > 0) {
-                const userRole = ((this.getRequest(context).user as CurrentUserInterface) || undefined)?.role;
-                if (!userRole) return false;
-
-                const userRoleIsAllowed = roles.some((role) => role.toLowerCase() === userRole.toLowerCase());
-                return userRoleIsAllowed;
-            }
-
-            return isAllowed;
+            return isObservable(canActivate) ? lastValueFrom(canActivate) : canActivate;
         }
     }
     return mixin(CometAuthGuard);

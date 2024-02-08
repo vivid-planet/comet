@@ -1,10 +1,11 @@
 import { GraphQLClient } from "graphql-request";
 
-interface GraphQLClientOptions {
+export type GraphQLClientOptions = {
     includeInvisiblePages: boolean;
     includeInvisibleBlocks: boolean;
     previewDamUrls: boolean;
-}
+};
+
 const defaultOptions: GraphQLClientOptions = {
     includeInvisiblePages: false,
     includeInvisibleBlocks: false,
