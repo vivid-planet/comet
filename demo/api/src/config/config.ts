@@ -1,4 +1,4 @@
-import cometConfig from "@src/../comet-config.json";
+import cometConfig from "@src/comet-config.json";
 import { plainToClass } from "class-transformer";
 import { validateSync } from "class-validator";
 
@@ -48,7 +48,6 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             },
             storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
         },
-        sitePreviewSecret: envVars.SITE_PREVIEW_SECRET,
     };
 }
 

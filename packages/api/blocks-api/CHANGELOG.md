@@ -1,5 +1,15 @@
 # @comet/blocks-api
 
+## 6.0.0
+
+## 5.6.0
+
+### Minor Changes
+
+-   fd10b801: Add support for a custom block name and migrations to `createRichTextBlock`
+
+## 5.5.0
+
 ## 5.4.0
 
 ## 5.3.0
@@ -25,6 +35,7 @@
 
     -   Install `@comet/cli` as a dev dependency
     -   Replace the scripts in the package.json of your admin:
+
         ```json
             "generate-block-types": "comet generate-block-types --inputs",
             "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"npm run generate-block-types\""

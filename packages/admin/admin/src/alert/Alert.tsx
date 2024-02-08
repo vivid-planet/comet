@@ -1,4 +1,5 @@
 import { Close } from "@comet/admin-icons";
+// eslint-disable-next-line no-restricted-imports
 import { Alert as MuiAlert, AlertTitle, buttonClasses, IconButton, Theme, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
@@ -71,28 +72,31 @@ const styles = (theme: Theme) =>
         },
     });
 
-function Alert({ severity = "info", title, children, classes, onClose, action }: AlertProps & WithStyles<typeof styles>): React.ReactElement {
-    return (
-        <MuiAlert
-            classes={{
-                root: clsx(classes.root, Boolean(title) && classes.hasTitle),
-                message: classes.message,
-            }}
-            severity={severity}
-        >
-            {Boolean(title) && <AlertTitle className={classes.title}>{title}</AlertTitle>}
-            <Typography className={classes.text} variant="body2">
-                {children}
-            </Typography>
-            <div className={classes.action}>{action}</div>
-            {onClose && (
-                <IconButton className={classes.closeIcon} onClick={onClose}>
-                    <Close />
-                </IconButton>
-            )}
-        </MuiAlert>
-    );
-}
+const Alert = React.forwardRef<HTMLDivElement, AlertProps & WithStyles<typeof styles>>(
+    ({ severity = "info", title, children, classes, onClose, action }, ref) => {
+        return (
+            <MuiAlert
+                ref={ref}
+                classes={{
+                    root: clsx(classes.root, Boolean(title) && classes.hasTitle),
+                    message: classes.message,
+                }}
+                severity={severity}
+            >
+                {Boolean(title) && <AlertTitle className={classes.title}>{title}</AlertTitle>}
+                <Typography className={classes.text} variant="body2">
+                    {children}
+                </Typography>
+                <div className={classes.action}>{action}</div>
+                {onClose && (
+                    <IconButton className={classes.closeIcon} onClick={onClose}>
+                        <Close />
+                    </IconButton>
+                )}
+            </MuiAlert>
+        );
+    },
+);
 
 const AdminComponentWithStyles = withStyles(styles, { name: "CometAdminAlert" })(Alert);
 

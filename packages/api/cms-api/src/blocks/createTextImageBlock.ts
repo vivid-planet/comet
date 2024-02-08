@@ -28,7 +28,6 @@ interface CreateTextImageBlockOptions<TextBlock extends Block, ImageBlock extend
     image?: ImageBlock;
 }
 
-// Block-factories need the their BlockInputInterface to be public
 interface TextImageBlockInputInterface<TextBlockInput extends BlockInputInterface, ImageBlockInput extends BlockInputInterface>
     extends SimpleBlockInputInterface {
     text: TextBlockInput;

@@ -2,7 +2,7 @@
 
 // @ts-check
 
-const cometConfig = require("./comet-config.json");
+const cometConfig = require("./src/comet-config.json");
 
 /**
  * @type {import('next').NextConfig['i18n'] | undefined}

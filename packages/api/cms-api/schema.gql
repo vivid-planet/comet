@@ -142,6 +142,7 @@ type FilenameResponse {
 
 type CurrentUserPermission {
   permission: String!
+  contentScopes: [JSONObject!]!
 }
 
 type User {
@@ -160,6 +161,8 @@ type UserPermission {
   reason: String
   requestedBy: String
   approvedBy: String
+  overrideContentScopes: Boolean!
+  contentScopes: [JSONObject!]!
 }
 
 enum UserPermissionSource {
@@ -221,7 +224,6 @@ type CurrentUser {
   name: String!
   email: String!
   language: String!
-  contentScopes: [JSONObject!]!
   permissions: [CurrentUserPermission!]!
 }
 
@@ -353,7 +355,6 @@ type Query {
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
   currentUser: CurrentUser!
-  getSitePreviewJwt(path: String!, previewData: PreviewData!): String!
   userPermissionsUserById(id: String!): User!
   userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
@@ -470,10 +471,6 @@ enum SlugAvailability {
   Reserved
 }
 
-input PreviewData {
-  includeInvisible: Boolean!
-}
-
 input UserFilter {
   name: StringFilter
   email: StringFilter
@@ -527,7 +524,8 @@ type Mutation {
   userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!
-  userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): [JSONObject!]!
+  userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
+  userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
 }
 
 input CreateBuildsInput {
@@ -625,6 +623,12 @@ input UserPermissionInput {
   reason: String
   requestedBy: String
   approvedBy: String
+}
+
+input UserPermissionOverrideContentScopesInput {
+  permissionId: ID!
+  overrideContentScopes: Boolean!
+  contentScopes: [JSONObject!]! = []
 }
 
 input UserContentScopesInput {

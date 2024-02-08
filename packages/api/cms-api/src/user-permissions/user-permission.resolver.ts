@@ -5,8 +5,8 @@ import { IsString } from "class-validator";
 
 import { SkipBuild } from "../builds/skip-build.decorator";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
-import { UserPermissionInput } from "./dto/user-permission.input";
-import { UserPermission } from "./entities/user-permission.entity";
+import { UserPermissionInput, UserPermissionOverrideContentScopesInput } from "./dto/user-permission.input";
+import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
 import { UserPermissionsService } from "./user-permissions.service";
 
 @ArgsType()
@@ -20,13 +20,13 @@ export class UserPermissionListArgs {
 @RequiredPermission(["userPermissions"], { skipScopeCheck: true })
 export class UserPermissionResolver {
     constructor(
-        private readonly userService: UserPermissionsService,
+        private readonly service: UserPermissionsService,
         @InjectRepository(UserPermission) private readonly permissionRepository: EntityRepository<UserPermission>,
     ) {}
 
     @Query(() => [UserPermission])
     async userPermissionsPermissionList(@Args() args: UserPermissionListArgs): Promise<UserPermission[]> {
-        return this.userService.getPermissions(args.userId);
+        return this.service.getPermissions(args.userId);
     }
 
     @Query(() => UserPermission)
@@ -44,7 +44,7 @@ export class UserPermissionResolver {
         @Args("input", { type: () => UserPermissionInput }) input: UserPermissionInput,
     ): Promise<UserPermission> {
         const permission = new UserPermission();
-        this.userService.getUser(userId); //validate user exists
+        this.service.getUser(userId); //validate user exists
         permission.userId = userId;
         permission.assign(input);
         await this.permissionRepository.persistAndFlush(permission);
@@ -53,7 +53,7 @@ export class UserPermissionResolver {
 
     @Query(() => [String])
     async userPermissionsAvailablePermissions(): Promise<string[]> {
-        return this.userService.getAvailablePermissions();
+        return this.service.getAvailablePermissions();
     }
 
     @Mutation(() => UserPermission)
@@ -75,13 +75,28 @@ export class UserPermissionResolver {
         return true;
     }
 
+    @Mutation(() => UserPermission)
+    async userPermissionsUpdateOverrideContentScopes(
+        @Args("input", { type: () => UserPermissionOverrideContentScopesInput }) input: UserPermissionOverrideContentScopesInput,
+    ): Promise<UserPermission> {
+        const permission = await this.getPermission(input.permissionId);
+        await this.service.checkContentScopes(input.contentScopes);
+        permission.overrideContentScopes = input.overrideContentScopes;
+        permission.contentScopes = input.contentScopes;
+        await this.permissionRepository.persistAndFlush(permission);
+        return permission;
+    }
+
     async getPermission(id: string, userId?: string): Promise<UserPermission> {
         const permission = await this.permissionRepository.findOne(id);
-        if (permission) return permission;
+        if (permission) {
+            permission.source = UserPermissionSource.MANUAL;
+            return permission;
+        }
         if (!userId) {
             throw new Error(`Permission not found: ${id}`);
         }
-        for (const p of await this.userService.getPermissions(userId)) {
+        for (const p of await this.service.getPermissions(userId)) {
             if (p.id === id) return p;
         }
         throw new Error("Permission not found");

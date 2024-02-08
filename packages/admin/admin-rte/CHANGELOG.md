@@ -1,5 +1,26 @@
 # @comet/admin-rte
 
+## 6.0.0
+
+### Patch Changes
+
+-   803f5045: Retain headings 4 - 6, blockquote and strikethrough formatting when copying from one RTE to another
+-   Updated dependencies [76e50aa8]
+-   Updated dependencies [a525766c]
+    -   @comet/admin-icons@6.0.0
+
+## 5.6.0
+
+### Patch Changes
+
+-   @comet/admin-icons@5.6.0
+
+## 5.5.0
+
+### Patch Changes
+
+-   @comet/admin-icons@5.5.0
+
 ## 5.4.0
 
 ### Minor Changes
