@@ -22,9 +22,6 @@ export function CrudGenerator({
 export interface CrudSingleGeneratorOptions {
     targetDirectory: string;
     requiredPermission?: string[] | string;
-    create?: boolean;
-    update?: boolean;
-    delete?: boolean;
 }
 
 export function CrudSingleGenerator(options: CrudSingleGeneratorOptions): ClassDecorator {
