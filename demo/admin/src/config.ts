@@ -18,7 +18,7 @@ export function createConfig() {
     }
     return {
         ...cometConfig,
-        apiUrl: environmentVariables.API_URL,
+        privateApiUrl: environmentVariables.PRIVATE_API_URL,
         adminUrl: environmentVariables.ADMIN_URL,
         sitesConfig: JSON.parse(environmentVariables.SITES_CONFIG) as SitesConfig,
         sitePreviewUrl: environmentVariables.SITE_PREVIEW_URL,

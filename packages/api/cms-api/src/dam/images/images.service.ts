@@ -26,26 +26,20 @@ export class ImagesService {
         const imageCropArea = cropArea !== undefined ? cropArea : file.image!.cropArea;
         const filename = parse(file.name).name;
 
-        const baseUrl = [this.config.imagesBaseUrl];
-
-        if (previewDamUrls) {
-            baseUrl.push("preview");
-        } else {
-            const hash = this.createHash({
-                fileId: file.id,
-                filename,
-                focalPoint: imageCropArea.focalPoint,
-                cropWidth: imageCropArea.width,
-                cropHeight: imageCropArea.height,
-                cropX: imageCropArea.x,
-                cropY: imageCropArea.y,
-            });
-
-            baseUrl.push(hash);
-        }
+        const baseUrl = previewDamUrls
+            ? `${this.config.privateApiUrl}/dam/images/preview`
+            : `${this.config.publicApiUrl}/dam/images/${this.createHash({
+                  fileId: file.id,
+                  filename,
+                  focalPoint: imageCropArea.focalPoint,
+                  cropWidth: imageCropArea.width,
+                  cropHeight: imageCropArea.height,
+                  cropX: imageCropArea.x,
+                  cropY: imageCropArea.y,
+              })}`;
 
         return [
-            ...baseUrl,
+            baseUrl,
             file.id,
             (imageCropArea.focalPoint !== FocalPoint.SMART
                 ? ["crop", imageCropArea.width, imageCropArea.height, imageCropArea.focalPoint, imageCropArea.x, imageCropArea.y]

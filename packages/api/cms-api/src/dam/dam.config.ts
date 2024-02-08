@@ -1,6 +1,6 @@
 export interface DamConfig {
-    filesBaseUrl: string;
-    imagesBaseUrl: string;
+    privateApiUrl: string; // URLs for preview
+    publicApiUrl: string;
     secret: string;
     allowedImageSizes: number[];
     allowedAspectRatios: string[];

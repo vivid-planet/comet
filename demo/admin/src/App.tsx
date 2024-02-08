@@ -47,8 +47,8 @@ const GlobalStyle = () => (
 );
 
 const config = createConfig();
-const apolloClient = createApolloClient(config.apiUrl);
-const apiClient = createHttpClient(config.apiUrl);
+const apolloClient = createApolloClient(config.privateApiUrl);
+const apiClient = createHttpClient(config.privateApiUrl);
 
 class App extends React.Component {
     public static render(baseEl: Element): void {
@@ -84,7 +84,7 @@ class App extends React.Component {
                                                 <SnackbarProvider>
                                                     <CmsBlockContextProvider
                                                         damConfig={{
-                                                            apiUrl: config.apiUrl,
+                                                            apiUrl: config.privateApiUrl,
                                                             apiClient,
                                                             maxFileSize: config.dam.uploadsMaxFileSize,
                                                             maxSrcResolution: config.imgproxy.maxSrcResolution,
