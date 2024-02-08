@@ -26,7 +26,7 @@ interface DragItem {
 }
 
 function DndOrderRow<TRow extends IRow>(props: IDndOrderRowProps<TRow>) {
-    const { columns, row, rowProps, slotProps, ...restProps } = props;
+    const { columns, row, rowProps, slotProps } = props;
 
     const refDragHandle = React.useRef<HTMLTableCellElement>(null);
     const refRow = React.useRef<HTMLTableRowElement>(null);
@@ -108,7 +108,7 @@ function DndOrderRow<TRow extends IRow>(props: IDndOrderRowProps<TRow>) {
 
     return (
         <TableBodyRow ref={refRow} {...rowProps} style={{ opacity }}>
-            <DragCell ref={refDragHandle} {...slotProps?.dragCell} {...restProps}>
+            <DragCell ref={refDragHandle} {...slotProps?.dragCell}>
                 <DragItemContainer {...slotProps?.dragIconContainer}>{props.dragHandleIcon} </DragItemContainer>
             </DragCell>
             <TableColumns columns={columns} row={row} />
