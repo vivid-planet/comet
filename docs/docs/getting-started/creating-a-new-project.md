@@ -1,5 +1,5 @@
 ---
-title: How to Start
+title: Creating a new project
 sidebar_position: 2
 ---
 
@@ -26,3 +26,5 @@ The _install.sh_ script executes several commands necessary for development, suc
 And can be customized with other commands required for your application.
 
 :::
+
+Once installation is finished, you can start developing.
