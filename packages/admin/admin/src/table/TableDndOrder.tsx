@@ -109,7 +109,7 @@ function DndOrderRow<TRow extends IRow>(props: IDndOrderRowProps<TRow>) {
     return (
         <TableBodyRow ref={refRow} {...rowProps} style={{ opacity }}>
             <DragCell ref={refDragHandle} {...slotProps?.dragCell}>
-                <DragItemContainer {...slotProps?.dragIconContainer}>{props.dragHandleIcon} </DragItemContainer>
+                <DragItemContainer {...slotProps?.dragIconContainer}>{props.dragHandleIcon}</DragItemContainer>
             </DragCell>
             <TableColumns columns={columns} row={row} />
         </TableBodyRow>
