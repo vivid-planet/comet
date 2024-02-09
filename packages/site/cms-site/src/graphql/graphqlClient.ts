@@ -2,7 +2,7 @@ import { GraphQLClient } from "graphql-request";
 
 import { PreviewData } from "../sitePreview/SitePreviewApiHelper";
 
-export function createGraphQLClient(url: string, previewData?: PreviewData): GraphQLClient {
+export function buildGraphqlClientHeaders(previewData?: PreviewData) {
     const { includeInvisibleBlocks, includeInvisiblePages, previewDamUrls } = {
         includeInvisiblePages: !!previewData,
         includeInvisibleBlocks: previewData && previewData.includeInvisible,
@@ -32,7 +32,11 @@ export function createGraphQLClient(url: string, previewData?: PreviewData): Gra
     if (previewDamUrls) {
         headers["x-preview-dam-urls"] = "1";
     }
+    return headers;
+}
 
+export function createGraphQLClient(url: string, previewData?: PreviewData): GraphQLClient {
+    const headers = buildGraphqlClientHeaders(previewData);
     return new GraphQLClient(url, {
         headers,
     });

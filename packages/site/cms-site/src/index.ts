@@ -12,7 +12,7 @@ export type { PropsWithData } from "./blocks/PropsWithData";
 export { hasRichTextBlockContent } from "./blocks/RichTextBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
-export { createGraphQLClient } from "./graphql/graphqlClient";
+export { buildGraphqlClientHeaders, createGraphQLClient } from "./graphql/graphqlClient";
 export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
 export { IFrameMessageType } from "./iframebridge/IFrameMessage";
 export { Preview } from "./iframebridge/Preview";
