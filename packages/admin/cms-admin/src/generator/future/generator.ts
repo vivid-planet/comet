@@ -28,7 +28,7 @@ export type FormFieldConfigInternal =
         | { type: "asyncSelect"; values?: string[] }
         | { type: "block"; block: BlockReference }
     ) & { name: string; label?: string; required?: boolean };
-export type FormFieldConfig<T extends GeneratorEntity> = Omit<FormFieldConfigInternal, "name"> & { name: Leaves<T> | Paths<T> };
+export type FormFieldConfig<T extends GeneratorEntity> = FormFieldConfigInternal;
 
 export type FormConfigInternal = {
     type: "form";
@@ -54,7 +54,7 @@ export type GridColumnConfigInternal = // extra internal type to avoid "Type ins
         | { type: "staticSelect"; values?: string[] }
         | { type: "block"; block: BlockReference }
     ) & { name: string; headerName?: string; width?: number };
-export type GridColumnConfig<T> = Omit<GridColumnConfigInternal, "name"> & { name: Leaves<T> | Paths<T> };
+export type GridColumnConfig<T> = GridColumnConfigInternal;
 export type GridConfigInternal = {
     type: "grid";
     gqlType: string;
