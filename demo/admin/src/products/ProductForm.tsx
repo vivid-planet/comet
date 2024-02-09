@@ -8,6 +8,7 @@ import {
     Loading,
     MainContent,
     SelectField,
+    TextAreaField,
     TextField,
     useAsyncOptionsProps,
     useFormApiRef,
@@ -160,11 +161,9 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                     <MainContent>
                         <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
                         <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
-                        <TextField
+                        <TextAreaField
                             required
                             fullWidth
-                            multiline
-                            rows={5}
                             name="description"
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
