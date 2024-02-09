@@ -826,25 +826,25 @@ importers:
         version: 3.7.4(graphql@15.8.0)(react-dom@17.0.2)(react@17.0.2)
       '@comet/admin':
         specifier: '*'
-        version: link:../packages/admin/admin
+        version: 6.0.0(@apollo/client@3.7.4)(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@mui/icons-material@5.11.0)(@mui/material@5.11.6)(@mui/styles@5.11.2)(@mui/x-data-grid@5.17.20)(@types/react@17.0.53)(final-form@4.20.9)(graphql@15.8.0)(history@4.10.1)(react-dnd@16.0.1)(react-dom@17.0.2)(react-final-form@6.5.9)(react-intl@5.25.1)(react-router-dom@5.3.4)(react-router@5.3.4)(react@17.0.2)
       '@comet/admin-color-picker':
         specifier: '*'
-        version: link:../packages/admin/admin-color-picker
+        version: 6.0.0(@apollo/client@3.7.4)(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@mui/icons-material@5.11.0)(@mui/material@5.11.6)(@mui/styles@5.11.2)(@mui/x-data-grid@5.17.20)(@types/react@17.0.53)(final-form@4.20.9)(graphql@15.8.0)(history@4.10.1)(react-dnd@16.0.1)(react-dom@17.0.2)(react-final-form@6.5.9)(react-intl@5.25.1)(react-router-dom@5.3.4)(react-router@5.3.4)(react@17.0.2)
       '@comet/admin-date-time':
         specifier: '*'
-        version: link:../packages/admin/admin-date-time
+        version: 6.0.0(@apollo/client@3.7.4)(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@mui/icons-material@5.11.0)(@mui/material@5.11.6)(@mui/styles@5.11.2)(@mui/x-data-grid@5.17.20)(@types/react@17.0.53)(final-form@4.20.9)(graphql@15.8.0)(history@4.10.1)(react-dnd@16.0.1)(react-dom@17.0.2)(react-final-form@6.5.9)(react-intl@5.25.1)(react-router-dom@5.3.4)(react-router@5.3.4)(react@17.0.2)
       '@comet/admin-icons':
         specifier: '*'
-        version: link:../packages/admin/admin-icons
+        version: 6.0.0(@mui/material@5.11.6)(react-dom@17.0.2)(react@17.0.2)
       '@comet/admin-react-select':
         specifier: '*'
-        version: link:../packages/admin/admin-react-select
+        version: 6.0.0(@apollo/client@3.7.4)(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@mui/icons-material@5.11.0)(@mui/material@5.11.6)(@mui/styles@5.11.2)(@mui/x-data-grid@5.17.20)(@types/react@17.0.53)(final-form@4.20.9)(graphql@15.8.0)(history@4.10.1)(react-dnd@16.0.1)(react-dom@17.0.2)(react-final-form@6.5.9)(react-intl@5.25.1)(react-router-dom@5.3.4)(react-router@5.3.4)(react@17.0.2)
       '@comet/admin-rte':
         specifier: '*'
-        version: link:../packages/admin/admin-rte
+        version: 6.0.0(@mui/icons-material@5.11.0)(@mui/material@5.11.6)(@mui/styles@5.11.2)(final-form@4.20.9)(react-dom@17.0.2)(react-final-form@6.5.9)(react-intl@5.25.1)(react@17.0.2)
       '@comet/admin-theme':
         specifier: '*'
-        version: link:../packages/admin/admin-theme
+        version: 6.0.0(@mui/material@5.11.6)(@mui/styles@5.11.2)(@mui/system@5.11.5)(react-dom@17.0.2)(react@17.0.2)
       '@docusaurus/core':
         specifier: 2.4.1
         version: 2.4.1(@docusaurus/types@2.4.1)(react-dom@17.0.2)(react@17.0.2)(typescript@4.9.4)
@@ -2039,6 +2039,9 @@ importers:
       '@mui/lab':
         specifier: ^5.0.0-alpha.76
         version: 5.0.0-alpha.117(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@mui/material@5.11.6)(@types/react@17.0.53)(react-dom@17.0.2)(react@17.0.2)
+      change-case:
+        specifier: ^4.1.2
+        version: 4.1.2
       class-validator:
         specifier: 0.13.2
         version: 0.13.2
@@ -7021,6 +7024,243 @@ packages:
     engines: {node: '>=0.1.90'}
     requiresBuild: true
     optional: true
+
+  /@comet/admin-color-picker@6.0.0(@apollo/client@3.7.4)(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@mui/icons-material@5.11.0)(@mui/material@5.11.6)(@mui/styles@5.11.2)(@mui/x-data-grid@5.17.20)(@types/react@17.0.53)(final-form@4.20.9)(graphql@15.8.0)(history@4.10.1)(react-dnd@16.0.1)(react-dom@17.0.2)(react-final-form@6.5.9)(react-intl@5.25.1)(react-router-dom@5.3.4)(react-router@5.3.4)(react@17.0.2):
+    resolution: {integrity: sha512-5gYTW4E2W0PLT1251TYtG8dUtx28pwEWE1O8tjlXGMge5e3YBz9MCrPE6Nn9EqfkJ89MJnSagCK2dLi8BdJ0CQ==}
+    peerDependencies:
+      '@mui/icons-material': ^5.0.0
+      '@mui/material': ^5.0.0
+      '@mui/styles': ^5.0.0
+      react: ^17.0
+      react-dom: ^17.0
+      react-final-form: ^6.3.1
+      react-intl: ^5.24.6
+    dependencies:
+      '@comet/admin': 6.0.0(@apollo/client@3.7.4)(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@mui/icons-material@5.11.0)(@mui/material@5.11.6)(@mui/styles@5.11.2)(@mui/x-data-grid@5.17.20)(@types/react@17.0.53)(final-form@4.20.9)(graphql@15.8.0)(history@4.10.1)(react-dnd@16.0.1)(react-dom@17.0.2)(react-final-form@6.5.9)(react-intl@5.25.1)(react-router-dom@5.3.4)(react-router@5.3.4)(react@17.0.2)
+      '@comet/admin-icons': 6.0.0(@mui/material@5.11.6)(react-dom@17.0.2)(react@17.0.2)
+      '@mui/icons-material': 5.11.0(@mui/material@5.11.6)(@types/react@17.0.53)(react@17.0.2)
+      '@mui/material': 5.11.6(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@types/react@17.0.53)(react-dom@17.0.2)(react@17.0.2)
+      '@mui/styles': 5.11.2(@types/react@17.0.53)(react@17.0.2)
+      clsx: 1.2.1
+      react: 17.0.2
+      react-colorful: 5.6.1(react-dom@17.0.2)(react@17.0.2)
+      react-dom: 17.0.2(react@17.0.2)
+      react-final-form: 6.5.9(final-form@4.20.9)(react@17.0.2)
+      react-intl: 5.25.1(react@17.0.2)(typescript@4.9.4)
+      tinycolor2: 1.5.2
+      use-debounce: 6.0.1(react@17.0.2)
+    transitivePeerDependencies:
+      - '@apollo/client'
+      - '@emotion/react'
+      - '@emotion/styled'
+      - '@mui/x-data-grid'
+      - '@mui/x-data-grid-premium'
+      - '@mui/x-data-grid-pro'
+      - '@types/react'
+      - final-form
+      - graphql
+      - history
+      - react-dnd
+      - react-router
+      - react-router-dom
+    dev: false
+
+  /@comet/admin-date-time@6.0.0(@apollo/client@3.7.4)(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@mui/icons-material@5.11.0)(@mui/material@5.11.6)(@mui/styles@5.11.2)(@mui/x-data-grid@5.17.20)(@types/react@17.0.53)(final-form@4.20.9)(graphql@15.8.0)(history@4.10.1)(react-dnd@16.0.1)(react-dom@17.0.2)(react-final-form@6.5.9)(react-intl@5.25.1)(react-router-dom@5.3.4)(react-router@5.3.4)(react@17.0.2):
+    resolution: {integrity: sha512-fm2wfw0RNl+LiB+3DE491QDlcOddL052+Cjr80A6bzHNbhD6N3DpL3nsWbF5BYZL1cX66hJSFrBgmR13d3hxNQ==}
+    peerDependencies:
+      '@mui/material': ^5.0.0
+      '@mui/styles': ^5.0.0
+      react: ^17.0
+      react-dom: ^17.0
+      react-final-form: ^6.5.7
+      react-intl: ^5.24.6
+    dependencies:
+      '@comet/admin': 6.0.0(@apollo/client@3.7.4)(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@mui/icons-material@5.11.0)(@mui/material@5.11.6)(@mui/styles@5.11.2)(@mui/x-data-grid@5.17.20)(@types/react@17.0.53)(final-form@4.20.9)(graphql@15.8.0)(history@4.10.1)(react-dnd@16.0.1)(react-dom@17.0.2)(react-final-form@6.5.9)(react-intl@5.25.1)(react-router-dom@5.3.4)(react-router@5.3.4)(react@17.0.2)
+      '@comet/admin-icons': 6.0.0(@mui/material@5.11.6)(react-dom@17.0.2)(react@17.0.2)
+      '@mui/material': 5.11.6(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@types/react@17.0.53)(react-dom@17.0.2)(react@17.0.2)
+      '@mui/styles': 5.11.2(@types/react@17.0.53)(react@17.0.2)
+      '@mui/utils': 5.11.2(react@17.0.2)
+      clsx: 1.2.1
+      date-fns: 2.29.3
+      react: 17.0.2
+      react-date-range: 1.4.0(date-fns@2.29.3)(react@17.0.2)
+      react-dom: 17.0.2(react@17.0.2)
+      react-final-form: 6.5.9(final-form@4.20.9)(react@17.0.2)
+      react-intl: 5.25.1(react@17.0.2)(typescript@4.9.4)
+    transitivePeerDependencies:
+      - '@apollo/client'
+      - '@emotion/react'
+      - '@emotion/styled'
+      - '@mui/icons-material'
+      - '@mui/x-data-grid'
+      - '@mui/x-data-grid-premium'
+      - '@mui/x-data-grid-pro'
+      - '@types/react'
+      - final-form
+      - graphql
+      - history
+      - react-dnd
+      - react-router
+      - react-router-dom
+    dev: false
+
+  /@comet/admin-icons@6.0.0(@mui/material@5.11.6)(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-VNh+62H3dnZ5pvJEUX5MJ2zLir6fiTPXYkDl8yCmJ48Vm/YxagTljlCUbp+DcJYrM6PA/qMlheE6lnqdIG3+LA==}
+    peerDependencies:
+      '@mui/material': ^5.0.0
+      react: ^17.0
+      react-dom: ^17.0
+    dependencies:
+      '@mui/material': 5.11.6(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@types/react@17.0.53)(react-dom@17.0.2)(react@17.0.2)
+      react: 17.0.2
+      react-dom: 17.0.2(react@17.0.2)
+    dev: false
+
+  /@comet/admin-react-select@6.0.0(@apollo/client@3.7.4)(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@mui/icons-material@5.11.0)(@mui/material@5.11.6)(@mui/styles@5.11.2)(@mui/x-data-grid@5.17.20)(@types/react@17.0.53)(final-form@4.20.9)(graphql@15.8.0)(history@4.10.1)(react-dnd@16.0.1)(react-dom@17.0.2)(react-final-form@6.5.9)(react-intl@5.25.1)(react-router-dom@5.3.4)(react-router@5.3.4)(react@17.0.2):
+    resolution: {integrity: sha512-36VWyrmorT6Sqvd5Fu7hocpFCWituEQRyruEexG2HdWq1Ts4B+yyheCul9lfcla3A+XMHPqmK9t7oyuUP/yG2Q==}
+    peerDependencies:
+      '@mui/icons-material': ^5.0.0
+      '@mui/material': ^5.0.0
+      '@mui/styles': ^5.0.0
+      final-form: ^4.16.1
+      react: ^17.0
+      react-dom: ^17.0
+      react-final-form: ^6.3.1
+      react-select: ^3.0.4
+    dependencies:
+      '@comet/admin': 6.0.0(@apollo/client@3.7.4)(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@mui/icons-material@5.11.0)(@mui/material@5.11.6)(@mui/styles@5.11.2)(@mui/x-data-grid@5.17.20)(@types/react@17.0.53)(final-form@4.20.9)(graphql@15.8.0)(history@4.10.1)(react-dnd@16.0.1)(react-dom@17.0.2)(react-final-form@6.5.9)(react-intl@5.25.1)(react-router-dom@5.3.4)(react-router@5.3.4)(react@17.0.2)
+      '@mui/icons-material': 5.11.0(@mui/material@5.11.6)(@types/react@17.0.53)(react@17.0.2)
+      '@mui/material': 5.11.6(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@types/react@17.0.53)(react-dom@17.0.2)(react@17.0.2)
+      '@mui/styles': 5.11.2(@types/react@17.0.53)(react@17.0.2)
+      classnames: 2.3.2
+      final-form: 4.20.9
+      react: 17.0.2
+      react-dom: 17.0.2(react@17.0.2)
+      react-final-form: 6.5.9(final-form@4.20.9)(react@17.0.2)
+    transitivePeerDependencies:
+      - '@apollo/client'
+      - '@emotion/react'
+      - '@emotion/styled'
+      - '@mui/x-data-grid'
+      - '@mui/x-data-grid-premium'
+      - '@mui/x-data-grid-pro'
+      - '@types/react'
+      - graphql
+      - history
+      - react-dnd
+      - react-intl
+      - react-router
+      - react-router-dom
+    dev: false
+
+  /@comet/admin-rte@6.0.0(@mui/icons-material@5.11.0)(@mui/material@5.11.6)(@mui/styles@5.11.2)(final-form@4.20.9)(react-dom@17.0.2)(react-final-form@6.5.9)(react-intl@5.25.1)(react@17.0.2):
+    resolution: {integrity: sha512-9WddOXtYH71a4hmjyexZHurEauEV6Tr2BFmQjCaf77LUrHOuDbH9/FMicqyu10lrD61zvJRrxLxsEbpt6r7WnQ==}
+    peerDependencies:
+      '@mui/icons-material': ^5.0.0
+      '@mui/material': ^5.0.0
+      '@mui/styles': ^5.0.0
+      draft-js: ^0.11.4
+      final-form: ^4.16.1
+      react: ^17.0
+      react-dom: ^17.0
+      react-final-form: ^6.3.1
+      react-intl: ^5.10.0
+    dependencies:
+      '@comet/admin-icons': 6.0.0(@mui/material@5.11.6)(react-dom@17.0.2)(react@17.0.2)
+      '@mui/icons-material': 5.11.0(@mui/material@5.11.6)(@types/react@17.0.53)(react@17.0.2)
+      '@mui/material': 5.11.6(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@types/react@17.0.53)(react-dom@17.0.2)(react@17.0.2)
+      '@mui/styles': 5.11.2(@types/react@17.0.53)(react@17.0.2)
+      detect-browser: 5.3.0
+      draftjs-conductor: 3.0.0(draft-js@0.11.7)
+      final-form: 4.20.9
+      immutable: 3.7.6
+      react: 17.0.2
+      react-dom: 17.0.2(react@17.0.2)
+      react-final-form: 6.5.9(final-form@4.20.9)(react@17.0.2)
+      react-intl: 5.25.1(react@17.0.2)(typescript@4.9.4)
+    dev: false
+
+  /@comet/admin-theme@6.0.0(@mui/material@5.11.6)(@mui/styles@5.11.2)(@mui/system@5.11.5)(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-3KouYLXS7UY9UdALfC2NNX6V+GaLilaSdpLTRRFa4y7Ss+bgktW13t19AvP3D9A3H78+3zn3Y2BPn19o+xwZ+Q==}
+    peerDependencies:
+      '@mui/material': ^5.0.0
+      '@mui/styles': ^5.0.0
+      '@mui/system': ^5.0.0
+      react: ^17.0
+    dependencies:
+      '@comet/admin-icons': 6.0.0(@mui/material@5.11.6)(react-dom@17.0.2)(react@17.0.2)
+      '@mui/material': 5.11.6(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@types/react@17.0.53)(react-dom@17.0.2)(react@17.0.2)
+      '@mui/styles': 5.11.2(@types/react@17.0.53)(react@17.0.2)
+      '@mui/system': 5.11.5(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@types/react@17.0.53)(react@17.0.2)
+      '@mui/utils': 5.11.2(react@17.0.2)
+      react: 17.0.2
+    transitivePeerDependencies:
+      - react-dom
+    dev: false
+
+  /@comet/admin@6.0.0(@apollo/client@3.7.4)(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@mui/icons-material@5.11.0)(@mui/material@5.11.6)(@mui/styles@5.11.2)(@mui/x-data-grid@5.17.20)(@types/react@17.0.53)(final-form@4.20.9)(graphql@15.8.0)(history@4.10.1)(react-dnd@16.0.1)(react-dom@17.0.2)(react-final-form@6.5.9)(react-intl@5.25.1)(react-router-dom@5.3.4)(react-router@5.3.4)(react@17.0.2):
+    resolution: {integrity: sha512-sKqKw2KD9BgvCjctzg86O3V3T5U7ouUCCMPRRszW7kmR5WF+OMQGCpS8PolSu7WS+mTunLxMV9ZhbS08HQzcJQ==}
+    peerDependencies:
+      '@apollo/client': ^3.7.0
+      '@emotion/react': ^11.5.0
+      '@emotion/styled': ^11.3.0
+      '@mui/icons-material': ^5.0.0
+      '@mui/material': ^5.0.0
+      '@mui/styles': ^5.0.0
+      '@mui/x-data-grid': ^5.0.0
+      '@mui/x-data-grid-premium': ^5.0.0
+      '@mui/x-data-grid-pro': ^5.0.0
+      final-form: ^4.16.1
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+      history: ^4.10.1
+      react: ^17.0
+      react-dnd: ^16.0.0
+      react-dom: ^17.0
+      react-final-form: ^6.3.1
+      react-intl: ^5.10.0
+      react-router: ^5.1.2
+      react-router-dom: ^5.1.2
+    peerDependenciesMeta:
+      '@mui/x-data-grid-premium':
+        optional: true
+      '@mui/x-data-grid-pro':
+        optional: true
+      react-dnd:
+        optional: true
+    dependencies:
+      '@apollo/client': 3.7.4(graphql@15.8.0)(react-dom@17.0.2)(react@17.0.2)
+      '@comet/admin-icons': 6.0.0(@mui/material@5.11.6)(react-dom@17.0.2)(react@17.0.2)
+      '@emotion/react': 11.9.3(@babel/core@7.22.11)(@types/react@17.0.53)(react@17.0.2)
+      '@emotion/styled': 11.10.5(@babel/core@7.22.11)(@emotion/react@11.9.3)(@types/react@17.0.53)(react@17.0.2)
+      '@mui/icons-material': 5.11.0(@mui/material@5.11.6)(@types/react@17.0.53)(react@17.0.2)
+      '@mui/material': 5.11.6(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@types/react@17.0.53)(react-dom@17.0.2)(react@17.0.2)
+      '@mui/private-theming': 5.11.2(@types/react@17.0.53)(react@17.0.2)
+      '@mui/styles': 5.11.2(@types/react@17.0.53)(react@17.0.2)
+      '@mui/x-data-grid': 5.17.20(@mui/material@5.11.6)(@mui/system@5.11.5)(react-dom@17.0.2)(react@17.0.2)
+      clsx: 1.2.1
+      exceljs: 3.10.0
+      file-saver: 2.0.5
+      final-form: 4.20.9
+      final-form-set-field-data: 1.0.2(final-form@4.20.9)
+      graphql: 15.8.0
+      history: 4.10.1
+      http-status-codes: 2.3.0
+      is-mobile: 4.0.0
+      lodash.debounce: 4.0.8
+      lodash.isequal: 4.5.0
+      query-string: 6.14.1
+      react: 17.0.2
+      react-dnd: 16.0.1(@types/node@18.15.3)(@types/react@17.0.53)(react@17.0.2)
+      react-dom: 17.0.2(react@17.0.2)
+      react-final-form: 6.5.9(final-form@4.20.9)(react@17.0.2)
+      react-intl: 5.25.1(react@17.0.2)(typescript@4.9.4)
+      react-router: 5.3.4(react@17.0.2)
+      react-router-dom: 5.3.4(react@17.0.2)
+      use-constant: 1.1.1(react@17.0.2)
+      uuid: 9.0.0
+    transitivePeerDependencies:
+      - '@types/react'
+    dev: false
 
   /@comet/dev-process-manager@2.3.2:
     resolution: {integrity: sha512-SOP1H8rZBpNhgRzFMofiZPtXYzU16s/uD4ME3J7IXPtqsHNkSjm+WD1LzpK1czVqWAGgowZsXbjL46cYPt41oA==}
@@ -17059,7 +17299,6 @@ packages:
       no-case: 3.0.4
       tslib: 2.4.1
       upper-case-first: 2.0.2
-    dev: true
 
   /capture-exit@2.0.0:
     resolution: {integrity: sha512-PiT/hQmTonHhl/HFGN+Lx3JJUznrVYJ3+AQsnthneZbvW7x+f08Tk7yLJTLEOUvBTbduLeeBkxEaYXUOUrRq6g==}
@@ -17154,7 +17393,6 @@ packages:
       sentence-case: 3.0.4
       snake-case: 3.0.4
       tslib: 2.4.1
-    dev: true
 
   /change-case@5.2.0:
     resolution: {integrity: sha512-L6VzznESnMIKKdKhVzCG+KPz4+x1FWbjOs1AdhoHStV3qo8aySMRGPUoqC0aL1ThKaQNGhAu6ZfHL/QAyQRuiw==}
@@ -17686,7 +17924,6 @@ packages:
       no-case: 3.0.4
       tslib: 2.4.1
       upper-case: 2.0.2
-    dev: true
 
   /constants-browserify@1.0.0:
     resolution: {integrity: sha512-xFxOwqIzR/e1k1gLiWEophSCMqXcwVHIH7akf7b/vxcUeGunlj3hvZaaqxwHsTgn+IndtkQJgSztIDWeumWJDQ==}
@@ -21680,7 +21917,6 @@ packages:
     dependencies:
       capital-case: 1.0.4
       tslib: 2.4.1
-    dev: true
 
   /headers-utils@3.0.2:
     resolution: {integrity: sha512-xAxZkM1dRyGV2Ou5bzMxBPNLoRCjcX+ya7KSWybQD2KwLphxsapUVK6x/02o7f4VU6GPSXch9vNY2+gkU8tYWQ==}
@@ -25954,7 +26190,6 @@ packages:
     dependencies:
       dot-case: 3.0.4
       tslib: 2.4.1
-    dev: true
 
   /path-dirname@1.0.2:
     resolution: {integrity: sha512-ALzNPpyNq9AqXMBjeymIjFDAkAFH06mHJH/cSBHAgU0s4vfpBn6b2nf8tiRLvagKD8RbTpq2FKTBg7cl9l3c7Q==}
@@ -28669,7 +28904,6 @@ packages:
       no-case: 3.0.4
       tslib: 2.4.1
       upper-case-first: 2.0.2
-    dev: true
 
   /serialize-javascript@4.0.0:
     resolution: {integrity: sha512-GaNA54380uFefWghODBWEGisLZFj00nS5ACs6yHa9nLqlLpVLO8ChDGeKRjZnV4Nh4n0Qi7nhYZD/9fCPzEqkw==}
@@ -28961,7 +29195,6 @@ packages:
     dependencies:
       dot-case: 3.0.4
       tslib: 2.4.1
-    dev: true
 
   /snapdragon-node@2.1.1:
     resolution: {integrity: sha512-O27l4xaMYt/RSQ5TR3vpWCAB5Kb/czIcqUFOM/C4fYcLnbZUc1PkjTAMjof2pBWaSTwOUd6qUHcFGVGj7aIwnw==}
@@ -30921,13 +31154,11 @@ packages:
     resolution: {integrity: sha512-514ppYHBaKwfJRK/pNC6c/OxfGa0obSnAl106u97Ed0I625Nin96KAjttZF6ZL3e1XLtphxnqrOi9iWgm+u+bg==}
     dependencies:
       tslib: 2.4.1
-    dev: true
 
   /upper-case@2.0.2:
     resolution: {integrity: sha512-KgdgDGJt2TpuwBUIjgG6lzw2GWFRCW9Qkfkiv0DxqHHLYJHmtmdUIKcZd8rHgFSjopVTlw6ggzCm1b8MFQwikg==}
     dependencies:
       tslib: 2.4.1
-    dev: true
 
   /uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}

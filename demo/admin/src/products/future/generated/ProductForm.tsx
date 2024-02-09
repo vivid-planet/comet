@@ -20,6 +20,7 @@ import {
     useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
+import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, PixelImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
@@ -106,12 +107,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                 variables: { id, input: output, lastUpdatedAt: data?.product.updatedAt },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
+            const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
                 variables: { input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createProduct.id;
+                const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage(`edit`, id);
@@ -213,6 +214,13 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 />
                             )}
                         </Field>
+
+                        <Field
+                            fullWidth
+                            name="availableSince"
+                            component={FinalFormDatePicker}
+                            label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                        />
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(PixelImageBlock)}
                         </Field>

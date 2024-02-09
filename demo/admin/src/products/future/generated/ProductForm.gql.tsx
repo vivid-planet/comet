@@ -10,6 +10,7 @@ export const productFormFragment = gql`
         type
         price
         inStock
+        availableSince
         image
     }
 `;

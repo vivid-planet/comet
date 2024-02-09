@@ -19,7 +19,7 @@ export function generateForm(
     const gqlType = config.gqlType;
     const title = config.title ?? camelCaseToHumanReadable(gqlType);
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
-    const gqlQueries: Record<string, string> = {};
+    const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
 
     const fieldNamesFromConfig = config.fields.map<string>((field) => field.name);
@@ -32,11 +32,11 @@ export function generateForm(
     const booleanFields = config.fields.filter((field) => field.type == "boolean");
 
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
-    gqlQueries[`${instanceGqlType}FormFragment`] = `
+    gqlDocuments[`${instanceGqlType}FormFragment`] = `
         fragment ${fragmentName} on ${gqlType} ${fieldList}
     `;
 
-    gqlQueries[`${instanceGqlType}Query`] = `
+    gqlDocuments[`${instanceGqlType}Query`] = `
         query ${gqlType}($id: ID!) {
             ${instanceGqlType}(id: $id) {
                 id
@@ -47,7 +47,7 @@ export function generateForm(
         \${${`${instanceGqlType}FormFragment`}}
     `;
 
-    gqlQueries[`create${gqlType}Mutation`] = `
+    gqlDocuments[`create${gqlType}Mutation`] = `
         mutation Create${gqlType}($input: ${gqlType}Input!) {
             create${gqlType}(input: $input) {
                 id
@@ -58,7 +58,7 @@ export function generateForm(
         \${${`${instanceGqlType}FormFragment`}}
     `;
 
-    gqlQueries[`update${gqlType}Mutation`] = `
+    gqlDocuments[`update${gqlType}Mutation`] = `
         mutation Update${gqlType}($id: ID!, $input: ${gqlType}UpdateInput!, $lastUpdatedAt: DateTime) {
             update${gqlType}(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
                 id
@@ -72,8 +72,8 @@ export function generateForm(
     const fieldsCode = config.fields
         .map<string>((field) => {
             const generated = generateFormField({ gqlIntrospection }, field, config);
-            for (const name in generated.gqlQueries) {
-                gqlQueries[name] = generated.gqlQueries[name];
+            for (const name in generated.gqlDocuments) {
+                gqlDocuments[name] = generated.gqlDocuments[name];
             }
             imports.push(...generated.imports);
             return generated.code;
@@ -101,6 +101,7 @@ export function generateForm(
         useStackSwitchApi,
     } from "@comet/admin";
     import { ArrowLeft } from "@comet/admin-icons";
+    import { FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
     import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
     import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
@@ -212,12 +213,12 @@ export function generateForm(
                     variables: { id, input: output, lastUpdatedAt: data?.${instanceGqlType}.updatedAt },
                 });
             } else {
-                const { data: mutationReponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
+                const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                     mutation: create${gqlType}Mutation,
                     variables: { input: output },
                 });
                 if (!event.navigatingBack) {
-                    const id = mutationReponse?.create${gqlType}.id;
+                    const id = mutationResponse?.create${gqlType}.id;
                     if (id) {
                         setTimeout(() => {
                             stackSwitchApi.activatePage(\`edit\`, id);
@@ -276,6 +277,6 @@ export function generateForm(
 
     return {
         code,
-        gqlQueries,
+        gqlDocuments,
     };
 }
