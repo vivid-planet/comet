@@ -63,7 +63,7 @@ export default (p: IControlProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminMyComponent: RteLinkControlsProps;
+        CometAdminRteLinkControls: RteLinkControlsProps;
     }
 
     interface ComponentNameToClassKey {
@@ -73,6 +73,7 @@ declare module "@mui/material/styles" {
     interface Components {
         CometAdminRteLinkControls?: {
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteLinkControls"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminRteLinkControls"]>;
         };
     }
 }
