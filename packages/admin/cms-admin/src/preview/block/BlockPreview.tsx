@@ -28,6 +28,12 @@ function BlockPreview({
         }
     }, [iFrameBridge, previewState]);
 
+    React.useEffect(() => {
+        if (iFrameBridge.iFrameReady) {
+            iFrameBridge.sendShowOnlyVisible(showOnlyVisible);
+        }
+    }, [iFrameBridge, showOnlyVisible]);
+
     const handleMinimizeClick = () => {
         setMinimized((minimized) => !minimized);
     };

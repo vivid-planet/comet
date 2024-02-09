@@ -63,6 +63,7 @@ export type IFrameMessage =
 // Messages sent from Admin -> iFrame
 export enum AdminMessageType {
     Block = "Block",
+    ShowOnlyVisible = "ShowOnlyVisible",
     SelectComponent = "SelectComponent",
     HoverComponent = "HoverComponent",
 }
@@ -71,6 +72,13 @@ export interface IAdminBlockMessage {
     data: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         block: any;
+    };
+}
+
+export interface IAdminShowOnlyVisibleMessage {
+    cometType: AdminMessageType.ShowOnlyVisible;
+    data: {
+        showOnlyVisible: boolean;
     };
 }
 
@@ -88,4 +96,4 @@ export interface IAdminHoverComponentMessage {
     };
 }
 
-export type AdminMessage = IAdminBlockMessage | IAdminSelectComponentMessage | IAdminHoverComponentMessage;
+export type AdminMessage = IAdminBlockMessage | IAdminShowOnlyVisibleMessage | IAdminSelectComponentMessage | IAdminHoverComponentMessage;

@@ -11,7 +11,7 @@ const defaultOptions: GraphQLClientOptions = {
     includeInvisibleBlocks: false,
     previewDamUrls: false,
 };
-export default function createGraphQLClient(options: Partial<GraphQLClientOptions> = {}): GraphQLClient {
+export function buildGraphqlClientHeaders(options: Partial<GraphQLClientOptions> = {}) {
     const { includeInvisibleBlocks, includeInvisiblePages, previewDamUrls } = { ...defaultOptions, ...options };
 
     const headers: Record<string, string> = {};
@@ -37,8 +37,10 @@ export default function createGraphQLClient(options: Partial<GraphQLClientOption
     if (previewDamUrls) {
         headers["x-preview-dam-urls"] = "1";
     }
-
+    return headers;
+}
+export default function createGraphQLClient(options: Partial<GraphQLClientOptions> = {}): GraphQLClient {
     return new GraphQLClient(`${typeof window === "undefined" ? process.env.API_URL_INTERNAL : process.env.NEXT_PUBLIC_API_URL}/graphql`, {
-        headers,
+        headers: buildGraphqlClientHeaders(options),
     });
 }

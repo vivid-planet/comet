@@ -7,6 +7,7 @@ import {
     IAdminBlockMessage,
     IAdminHoverComponentMessage,
     IAdminSelectComponentMessage,
+    IAdminShowOnlyVisibleMessage,
     IFrameMessage,
     IFrameMessageType,
 } from "./IFrameMessage";
@@ -15,6 +16,7 @@ export interface IFrameBridgeContext {
     iFrameRef: React.Ref<HTMLIFrameElement>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sendBlockState: (blockState: any) => void; // TODO: only PageBlock is supported currently
+    sendShowOnlyVisible: (showOnlyVisible: boolean) => void;
     iFrameReady: boolean;
     hoveredSiteRoute: string | null;
     sendSelectComponent: (adminRoute: string) => void;
@@ -24,6 +26,9 @@ export interface IFrameBridgeContext {
 export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
     iFrameRef: React.createRef(),
     sendBlockState: () => {
+        // empty
+    },
+    sendShowOnlyVisible: () => {
         // empty
     },
     iFrameReady: false,
@@ -117,6 +122,15 @@ export const IFrameBridgeProvider: React.FunctionComponent<IFrameBridgeProviderP
                                     cometType: AdminMessageType.Block,
                                     data: {
                                         block: blockState, // @TODO: refactor block to blockState
+                                    },
+                                };
+                                sendMessage(message);
+                            },
+                            sendShowOnlyVisible: (showOnlyVisible: boolean) => {
+                                const message: IAdminShowOnlyVisibleMessage = {
+                                    cometType: AdminMessageType.ShowOnlyVisible,
+                                    data: {
+                                        showOnlyVisible,
                                     },
                                 };
                                 sendMessage(message);
