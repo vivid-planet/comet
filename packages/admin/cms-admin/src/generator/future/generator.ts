@@ -22,7 +22,7 @@ export type FormFieldConfig<T> = (
     | { type: "staticSelect"; values?: string[] }
     | { type: "asyncSelect"; values?: string[] }
     | { type: "block"; block: BlockReference }
-) & { name: keyof T; label?: string; required?: boolean };
+) & { name: keyof T; label?: string; required?: boolean; readOnly?: boolean };
 
 export type FormConfig<T extends { __typename?: string }> = {
     type: "form";
@@ -31,7 +31,6 @@ export type FormConfig<T extends { __typename?: string }> = {
     fields: FormFieldConfig<T>[];
     title?: string;
 };
-
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
 export type GridColumnConfig<T> = (

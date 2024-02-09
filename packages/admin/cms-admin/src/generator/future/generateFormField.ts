@@ -32,12 +32,17 @@ export function generateFormField(
 
     //TODO verify introspectionField.type is compatbile with config.type
 
+    const endAdornmentWithLockIconProp = `endAdornment={<InputAdornment position="end"><Lock /></InputAdornment>}`;
+    const readOnlyProps = `readOnly disabled`;
+    const readOnlyPropsWithLock = `${readOnlyProps} ${endAdornmentWithLockIconProp}`;
+
     const imports: Imports = [];
     let code = "";
     if (config.type == "text") {
         code = `
         <Field
             ${required ? "required" : ""}
+            ${config.readOnly ? readOnlyPropsWithLock : ""}
             ${config.multiline ? "multiline" : ""}
             fullWidth
             name="${name}"
@@ -48,6 +53,7 @@ export function generateFormField(
         code = `
             <Field
                 ${required ? "required" : ""}
+                ${config.readOnly ? readOnlyPropsWithLock : ""}
                 fullWidth
                 name="${name}"
                 component={FinalFormInput}
@@ -60,7 +66,7 @@ export function generateFormField(
             {(props) => (
                 <FormControlLabel
                     label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
-                    control={<FinalFormCheckbox {...props} />}
+                    control={<FinalFormCheckbox ${config.readOnly ? readOnlyProps : ""} {...props} />}
                 />
             )}
         </Field>`;
@@ -68,6 +74,7 @@ export function generateFormField(
         code = `
             <Field
                 ${required ? "required" : ""}
+                ${config.readOnly ? readOnlyPropsWithLock : ""}
                 fullWidth
                 name="${name}"
                 component={FinalFormDatePicker}
@@ -94,8 +101,8 @@ export function generateFormField(
             fullWidth
             name="${name}"
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
-            {(props) => 
-                <FinalFormSelect {...props}>
+            {(props) =>
+                <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
                 ${values
                     .map((value) => {
                         const id = `${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`;

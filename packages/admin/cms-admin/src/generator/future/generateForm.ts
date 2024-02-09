@@ -35,6 +35,16 @@ export function generateForm(
         }
     `;
 
+    const updateMutationFragmentName = `${fragmentName}Update`;
+    gqlDocuments[`${instanceGqlType}FormUpdateMutationFragment`] = `
+    fragment ${updateMutationFragmentName} on ${gqlType} {
+        ${config.fields
+            .filter((field) => !field.readOnly)
+            .map((field) => field.name)
+            .join("\n")}
+    }
+    `;
+
     gqlDocuments[`${instanceGqlType}Query`] = `
         query ${gqlType}($id: ID!) {
             ${instanceGqlType}(id: $id) {
@@ -62,10 +72,10 @@ export function generateForm(
             update${gqlType}(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
                 id
                 updatedAt
-                ...${fragmentName}
+                ...${updateMutationFragmentName}
             }
         }
-        \${${`${instanceGqlType}FormFragment`}}
+        \${${`${instanceGqlType}FormUpdateMutationFragment`}}
     `;
 
     const fieldsCode = config.fields
@@ -99,11 +109,11 @@ export function generateForm(
         useStackApi,
         useStackSwitchApi,
     } from "@comet/admin";
-    import { ArrowLeft } from "@comet/admin-icons";
+    import { ArrowLeft, Lock } from "@comet/admin-icons";
     import { FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
     import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-    import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
+    import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
     import { FormApi } from "final-form";
     import { filter } from "graphql-anywhere";
     import isEqual from "lodash.isequal";
