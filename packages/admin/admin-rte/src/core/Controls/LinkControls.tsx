@@ -6,22 +6,22 @@ import LinkToolbarButton from "../extension/Link/ToolbarButton";
 import LinksRemoveToolbarButton from "../extension/LinksRemove/ToolbarButton";
 import { IControlProps } from "../types";
 
-export type RteLinkControlsProps = ThemedComponentBaseProps<{ root: typeof ButtonGroup; item: "div" }>;
+export interface RteLinkControlsProps extends IControlProps, ThemedComponentBaseProps<{ root: typeof ButtonGroup; item: "div" }> {}
 
-function StyledLinkControls(p: IControlProps, inProps: RteLinkControlsProps) {
+function StyledLinkControls(inProps: RteLinkControlsProps) {
     const {
         options: { supports: supportedThings, overwriteLinkButton, overwriteLinksRemoveButton },
-    } = p;
-
-    const { slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminRteLinkControls" });
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminRteLinkControls" });
 
     const LinkButtonComponent = overwriteLinkButton ? overwriteLinkButton : LinkToolbarButton;
     const LinksRemoveButtonComponent = overwriteLinksRemoveButton ? overwriteLinksRemoveButton : LinksRemoveToolbarButton;
 
     return (
         <Root {...slotProps?.root} {...restProps}>
-            <Item {...slotProps?.item}>{supportedThings.includes("link") && <LinkButtonComponent {...p} />}</Item>
-            <Item {...slotProps?.item}>{supportedThings.includes("links-remove") && <LinksRemoveButtonComponent {...p} />}</Item>
+            <Item {...slotProps?.item}>{supportedThings.includes("link") && <LinkButtonComponent {...inProps} />}</Item>
+            <Item {...slotProps?.item}>{supportedThings.includes("links-remove") && <LinksRemoveButtonComponent {...inProps} />}</Item>
         </Root>
     );
 }
@@ -43,6 +43,7 @@ const Item = styled("div", {
         return [styles.item];
     },
 })(css`
+    outline: 10px solid green;
     margin-right: 1px;
     min-width: 0;
     &:last-child {
@@ -63,7 +64,7 @@ export default (p: IControlProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminRteLinkControls: RteLinkControlsProps;
+        CometAdminMyComponent: RteLinkControlsProps;
     }
 
     interface ComponentNameToClassKey {
@@ -73,7 +74,6 @@ declare module "@mui/material/styles" {
     interface Components {
         CometAdminRteLinkControls?: {
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteLinkControls"];
-            defaultProps?: Partial<ComponentsPropsList["CometAdminRteLinkControls"]>;
         };
     }
 }
