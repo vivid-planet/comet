@@ -176,6 +176,18 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             label={<FormattedMessage id="news.title" defaultMessage="Title" />}
                         />
+                        <Field fullWidth name="status" label={<FormattedMessage id="news.status" defaultMessage="Status" />}>
+                            {(props) => (
+                                <FinalFormSelect {...props}>
+                                    <MenuItem value="Active">
+                                        <FormattedMessage id="news.status.active" defaultMessage="Active" />
+                                    </MenuItem>
+                                    <MenuItem value="Deleted">
+                                        <FormattedMessage id="news.status.deleted" defaultMessage="Deleted" />
+                                    </MenuItem>
+                                </FinalFormSelect>
+                            )}
+                        </Field>
                         <Field
                             required
                             fullWidth

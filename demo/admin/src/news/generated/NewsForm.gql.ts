@@ -7,6 +7,7 @@ export const newsFormFragment = gql`
     fragment NewsForm on News {
         slug
         title
+        status
         date
         category
         visible
