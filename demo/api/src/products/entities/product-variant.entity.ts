@@ -11,7 +11,7 @@ import { Product } from "./product.entity";
 })
 @Entity()
 @RootBlockEntity()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: "products" })
 export class ProductVariant extends BaseEntity<ProductVariant, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 

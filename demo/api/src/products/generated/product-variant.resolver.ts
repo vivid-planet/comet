@@ -15,7 +15,7 @@ import { ProductVariantsArgs } from "./dto/product-variants.args";
 import { ProductVariantsService } from "./product-variants.service";
 
 @Resolver(() => ProductVariant)
-@RequiredPermission(["productVariants"], { skipScopeCheck: true })
+@RequiredPermission("products", { skipScopeCheck: true })
 export class ProductVariantResolver {
     constructor(
         private readonly entityManager: EntityManager,
