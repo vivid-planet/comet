@@ -11,8 +11,8 @@ interface LoadedData {
 
 function NewsDetailBlock({
     data: { id, loaded },
-}: React.PropsWithChildren<PropsWithData<NewsLinkBlockData & { loaded: LoadedData }>>): JSX.Element | null {
-    if (id === undefined) {
+}: React.PropsWithChildren<PropsWithData<NewsLinkBlockData & { loaded: LoadedData | null }>>): JSX.Element | null {
+    if (!loaded) {
         return null;
     }
 
@@ -26,9 +26,12 @@ function NewsDetailBlock({
 
 export { NewsDetailBlock };
 
-registerBlock<NewsLinkBlockData>("NewsDetail", {
-    async loader({ blockData, client }): Promise<LoadedData | null> {
-        if (!blockData.id) return null;
+registerBlock("NewsDetail", {
+    loaderPayload(blockData: NewsLinkBlockData) {
+        return blockData.id;
+    },
+    async loader(payload, client): Promise<LoadedData | null> {
+        if (!payload) return null;
         const data = await client.request<GQLNewsBlockDetailQuery, GQLNewsBlockDetailQueryVariables>(
             gql`
                 query NewsBlockDetail($id: ID!) {
@@ -37,7 +40,7 @@ registerBlock<NewsLinkBlockData>("NewsDetail", {
                     }
                 }
             `,
-            { id: blockData.id },
+            { id: payload },
         );
         return data.news;
     },

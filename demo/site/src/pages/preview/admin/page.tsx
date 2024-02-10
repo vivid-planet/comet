@@ -25,6 +25,8 @@ const PreviewPage: React.FunctionComponent = () => {
             includeInvisiblePages: true,
         }),
     );
+    const loaderCache = React.useRef({});
+
     const [blockData, setBlockData] = React.useState<PageContentBlockData>();
     React.useEffect(() => {
         async function load() {
@@ -32,7 +34,12 @@ const PreviewPage: React.FunctionComponent = () => {
                 setBlockData(undefined);
                 return;
             }
-            const newData = await recursivelyLoadBlockData({ blockType: "PageContent", blockData: iFrameBridge.block, client: clientRef.current });
+            const newData = await recursivelyLoadBlockData({
+                blockType: "PageContent",
+                blockData: iFrameBridge.block,
+                client: clientRef.current,
+                cache: loaderCache.current,
+            });
             setBlockData(newData);
         }
         load();

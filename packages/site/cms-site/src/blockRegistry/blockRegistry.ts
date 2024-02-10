@@ -61,11 +61,12 @@ interface BetterBlockMetaNestedObject {
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export interface RegisterBlockOptions<BlockData> {
-    loader: (options: { blockData: BlockData; client: GraphQLClient }) => Promise<any> | any;
+export interface RegisterBlockOptions<BlockData, LoaderPayload> {
+    loaderPayload: (blockData: BlockData) => LoaderPayload;
+    loader: (payload: LoaderPayload, client: GraphQLClient) => Promise<any> | any;
 }
-const blocks: Record<string, RegisterBlockOptions<any>> = {};
-export function registerBlock<BlockData = unknown>(blockName: string, options: RegisterBlockOptions<BlockData>) {
+const blocks: Record<string, RegisterBlockOptions<any, any>> = {};
+export function registerBlock<BlockData, LoaderPayload>(blockName: string, options: RegisterBlockOptions<BlockData, LoaderPayload>) {
     blocks[blockName] = options;
 }
 
@@ -74,11 +75,13 @@ export async function recursivelyLoadBlockData({
     blockData,
     client,
     blocksMeta,
+    cache,
 }: {
     blockType: string;
     blockData: unknown;
     client: GraphQLClient;
     blocksMeta: BlockMeta[];
+    cache?: Record<string, Record<string, unknown>>;
 }) {
     function iterateField(block: BetterBlockMeta | BetterBlockMetaNestedObject, passedBlockData: any) {
         const blockData = { ...passedBlockData };
@@ -115,8 +118,22 @@ export async function recursivelyLoadBlockData({
 
         const newBlockData = iterateField(block, blockData);
         if (blocks[blockType]) {
-            newBlockData.loaded = blocks[blockType].loader({ blockData, client }); // return unresolved promise
-            loadedBlockData.push(newBlockData);
+            const payload = blocks[blockType].loaderPayload(blockData);
+            if (cache) {
+                const cacheKey = JSON.stringify(payload);
+                if (cache[blockType] && cache[blockType][cacheKey]) {
+                    newBlockData.loaded = cache[blockType][cacheKey]; // return possibly unresolved promise
+                    loadedBlockData.push(newBlockData);
+                } else {
+                    newBlockData.loaded = blocks[blockType].loader(payload, client); // return unresolved promise
+                    loadedBlockData.push(newBlockData);
+                    if (!cache[blockType]) cache[blockType] = {};
+                    cache[blockType][cacheKey] = newBlockData.loaded;
+                }
+            } else {
+                newBlockData.loaded = blocks[blockType].loader(payload, client); // return unresolved promise
+                loadedBlockData.push(newBlockData);
+            }
         }
         return newBlockData;
     }
