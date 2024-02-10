@@ -1,4 +1,4 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
     FinalForm,
@@ -27,9 +27,11 @@ import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
+import debounce from "p-debounce";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { GQLProductBySlugQuery, GQLProductBySlugQueryVariables } from "./ProductForm.generated";
 import {
     createProductMutation,
     productCategoriesQuery,
@@ -147,6 +149,29 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         const tags = await client.query<GQLProductTagsQuery, GQLProductTagsListQueryVariables>({ query: productTagsQuery });
         return tags.data.productTags.nodes;
     });
+    const validateSlug = debounce(async (slug: string) => {
+        if (!/^([a-zA-Z0-9-._~]|%[0-9a-fA-F]{2})+$/.test(slug)) {
+            return <FormattedMessage id="product.slugNotValid" defaultMessage="Slug is not valid" />;
+        }
+
+        const { data } = await client.query<GQLProductBySlugQuery, GQLProductBySlugQueryVariables>({
+            query: gql`
+                query ProductBySlug($slug: String!) {
+                    productBySlug(slug: $slug) {
+                        id
+                    }
+                }
+            `,
+            variables: {
+                slug,
+            },
+            fetchPolicy: "network-only",
+        });
+
+        if (data.productBySlug && data.productBySlug?.id !== id) {
+            return <FormattedMessage id="product.slugNotAvailable" defaultMessage="Slug is not available" />;
+        }
+    }, 200);
 
     if (error) {
         return <FormattedMessage id="common.error" defaultMessage="An error has occurred. Please try again at later" />;
@@ -198,6 +223,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             required
                             fullWidth
                             name="slug"
+                            validate={validateSlug}
                             component={FinalFormInput}
                             label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
                         />
