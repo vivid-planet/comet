@@ -1,6 +1,7 @@
-import { Parent, ResolveField, Resolver } from "@nestjs/graphql";
+import { Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
 
+import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
 import { CurrentUser } from "./dto/current-user";
 import { ContentScope } from "./interfaces/content-scope.interface";
@@ -10,6 +11,11 @@ import { UserPermissionsService } from "./user-permissions.service";
 @RequiredPermission(["userPermissions"], { skipScopeCheck: true })
 export class CurrentUserResolver {
     constructor(private readonly userService: UserPermissionsService) {}
+
+    @Query(() => CurrentUser)
+    async currentUser(@GetCurrentUser() user: CurrentUser): Promise<CurrentUser> {
+        return user;
+    }
 
     @ResolveField(() => [GraphQLJSONObject])
     async allowedContentScopes(@Parent() user: CurrentUser): Promise<ContentScope[]> {

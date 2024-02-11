@@ -127,35 +127,8 @@ export class UserPermissionsService {
     }
 
     async createCurrentUser(user: User): Promise<CurrentUser> {
-        const availableContentScopes = await this.getAvailableContentScopes();
         const userContentScopes = await this.getContentScopes(user.id);
-        const contentScopes =
-            userContentScopes === UserPermissions.allContentScopes ? null : this.normalizeContentScopes(userContentScopes, availableContentScopes);
-        const userPermissions = (await this.getPermissions(user.id)).filter(
-            (p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)),
-        );
-        const permissions = userPermissions
-            .reduce((acc: CurrentUser["permissions"], userPermission) => {
-                const contentScopes = userPermission.overrideContentScopes ? userPermission.contentScopes : null;
-                const existingPermission = acc.find((p) => p.permission === userPermission.permission);
-                if (existingPermission) {
-                    if (contentScopes === null || existingPermission.contentScopes === null) {
-                        existingPermission.contentScopes = null;
-                    } else {
-                        existingPermission.contentScopes = [...existingPermission.contentScopes, ...contentScopes];
-                    }
-                } else {
-                    acc.push({
-                        permission: userPermission.permission,
-                        contentScopes,
-                    });
-                }
-                return acc;
-            }, [])
-            .map((p) => {
-                p.contentScopes = p.contentScopes ? this.normalizeContentScopes(p.contentScopes, availableContentScopes) : null;
-                return p;
-            });
+        const userPermissions = await this.getPermissions(user.id);
 
         const currentUser = new CurrentUser();
         return Object.assign(currentUser, {
@@ -163,8 +136,13 @@ export class UserPermissionsService {
             name: user.name,
             email: user.email ?? "",
             language: user.language,
-            contentScopes,
-            permissions,
+            contentScopes: userContentScopes === UserPermissions.allContentScopes ? null : userContentScopes,
+            permissions: userPermissions
+                .filter((p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)))
+                .map((p) => ({
+                    permission: p.permission,
+                    contentScopes: p.overrideContentScopes ? p.contentScopes : null,
+                })),
         });
     }
 }

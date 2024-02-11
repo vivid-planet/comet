@@ -145,16 +145,6 @@ type CurrentUserPermission {
   contentScopes: [JSONObject!]
 }
 
-type CurrentUser {
-  id: String!
-  name: String!
-  email: String!
-  language: String!
-  allowedContentScopes: [JSONObject!]!
-  contentScopes: [JSONObject!]
-  permissions: [CurrentUserPermission!]!
-}
-
 type User {
   id: String!
   name: String!
@@ -356,7 +346,6 @@ type Query {
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
-  currentUser: CurrentUser!
   userPermissionsUserById(id: String!): User!
   userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
