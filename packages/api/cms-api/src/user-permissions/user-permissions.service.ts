@@ -3,6 +3,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { Inject, Injectable } from "@nestjs/common";
 import { isFuture, isPast } from "date-fns";
 import isEqual from "lodash.isequal";
+import { CurrentUserInterface } from "src/auth/current-user/current-user";
 import getUuid from "uuid-by-string";
 
 import { CurrentUser } from "./dto/current-user";
@@ -126,7 +127,7 @@ export class UserPermissionsService {
             .sort((a, b) => availableContentScopes.indexOf(a) - availableContentScopes.indexOf(b)); // Order by availableContentScopes
     }
 
-    async createCurrentUser(user: User): Promise<CurrentUser> {
+    async createCurrentUser(user: CurrentUserInterface): Promise<CurrentUser> {
         const availableContentScopes = await this.getAvailableContentScopes();
         const userContentScopes = await this.getContentScopes(user.id);
         const permissions = (await this.getPermissions(user.id))
@@ -149,13 +150,9 @@ export class UserPermissionsService {
                 return p;
             });
 
-        const currentUser = new CurrentUser();
-        return Object.assign(currentUser, {
-            id: user.id,
-            name: user.name,
-            email: user.email ?? "",
-            language: user.language,
+        return {
+            ...user,
             permissions,
-        });
+        };
     }
 }

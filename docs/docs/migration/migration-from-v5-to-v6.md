@@ -54,6 +54,13 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
       }),
     ```
 
+    Furthermore, it's not necessary anymore to provide the CurrentUser
+
+    ```diff
+      createAuthResolver({
+    -      currentUser: CurrentUser,
+    ```
+
     Change imports of removed classes
 
     ```diff
@@ -61,7 +68,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     + import { CurrentUser } from "@comet/cms-api";
     ```
 
-    It shouldn't be necessary to override these classes anymore. However, if you really need it, provide the CurrentUserLoader with `CURRENT_USER_LOADER`.
+    It is not possible anymore to use a custom CurrentUserLoader.
 
 3. Create interface for `availablePermissions` similar to the already existing interface `interface ContentScope`
 

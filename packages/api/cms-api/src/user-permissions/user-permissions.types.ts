@@ -1,6 +1,6 @@
 import { ModuleMetadata, Type } from "@nestjs/common";
-import { CurrentUserInterface } from "src/auth/current-user/current-user";
 
+import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
 import { UserPermission } from "./entities/user-permission.entity";
@@ -23,7 +23,7 @@ export type PermissionsForUser = PermissionForUser[] | UserPermissions.allPermis
 export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentScopes;
 
 export interface AccessControlServiceInterface {
-    isAllowed(user: CurrentUserInterface, permission: keyof Permission, contentScope?: ContentScope): boolean;
+    isAllowed(user: CurrentUser, permission: keyof Permission, contentScope?: ContentScope): boolean;
     getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }
