@@ -7,7 +7,6 @@ import {
     MasterMenuData,
     PagesPage,
     PublisherPage,
-    UserPermissionsPage,
 } from "@comet/cms-admin";
 import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import Dashboard from "@src/dashboard/Dashboard";
@@ -23,6 +22,7 @@ import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPag
 import { ProductsPage } from "@src/products/generated/ProductsPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
+import { UserPermissionsPage } from "@src/userPermission/UserPermissionsPage";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { Redirect, RouteComponentProps } from "react-router-dom";

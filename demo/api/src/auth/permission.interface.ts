@@ -1,7 +1,9 @@
 declare module "@comet/cms-api" {
     interface Permission {
-        news: string;
-        products: string;
+        news: {
+            commentsEdit: boolean;
+        };
+        products: Record<string, never>;
     }
 }
 

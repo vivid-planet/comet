@@ -1,4 +1,4 @@
-import { AffectedEntity } from "@comet/cms-api";
+import { AffectedEntity, RequiredPermission } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Args, ID, Mutation, Resolver } from "@nestjs/graphql";
@@ -8,6 +8,7 @@ import { News } from "./entities/news.entity";
 import { NewsComment } from "./entities/news-comment.entity";
 
 @Resolver(() => NewsComment)
+@RequiredPermission([{ permission: "news", configuration: { commentsEdit: true } }])
 export class NewsCommentResolver {
     constructor(
         @InjectRepository(NewsComment) private readonly newsCommentRepository: EntityRepository<NewsComment>,

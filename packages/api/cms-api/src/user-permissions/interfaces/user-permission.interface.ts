@@ -1,7 +1,7 @@
 export interface Permission {
-    dam?: string;
-    pageTree?: string;
-    userPermissions?: string;
-    cronJobs?: string;
-    builds?: string;
+    dam?: Record<string, never>;
+    pageTree?: Record<string, never>;
+    userPermissions?: Record<string, never>;
+    cronJobs?: Record<string, never>;
+    builds?: Record<string, never>;
 }
