@@ -94,8 +94,7 @@ export const ContentScopeGrid: React.FC<{
                             value={JSON.stringify(contentScope)}
                             label={Object.entries(contentScope).map(([scope, value]) => (
                                 <>
-                                    <FormattedMessage id={`contentScope.scope.${scope}`} defaultMessage={camelCaseToHumanReadable(scope)} />:{" "}
-                                    <FormattedMessage id={`contentScope.values.${value}`} defaultMessage={camelCaseToHumanReadable(value)} />
+                                    {camelCaseToHumanReadable(scope)}: {camelCaseToHumanReadable(value)}
                                     <br />
                                 </>
                             ))}

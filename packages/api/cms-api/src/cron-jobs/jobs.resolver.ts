@@ -27,7 +27,7 @@ export class JobsResolver {
 
         const cronJob = await this.kubernetesService.getCronJob(cronJobName);
         const contentScope = this.kubernetesService.getContentScope(cronJob);
-        if (contentScope && !this.accessControlService.isAllowedContentScope(user, contentScope)) {
+        if (contentScope && !this.accessControlService.isAllowed(user, "cronJobs", contentScope)) {
             throw new Error("Access denied");
         }
 

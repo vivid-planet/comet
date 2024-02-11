@@ -1,5 +1,82 @@
 # @comet/cms-admin
 
+## 6.0.0
+
+### Major Changes
+
+-   d20f59c0: Enhance CronJob module
+
+    -   Show latest job run on `CronJobsPage`
+    -   Add option to manually trigger cron jobs to `CronJobsPage`
+    -   Add subpage to `CronJobsPage` that shows all job runs
+
+    Warning: Only include this module if all your users should be able to trigger cron jobs manually or you have sufficient access control in place.
+
+    Includes the following breaking changes:
+
+    -   Rename `JobStatus` to `KubernetesJobStatus` to avoid naming conflicts
+    -   Rename `BuildRuntime` to `JobRuntime`
+
+-   d86d5a90: Make sites config generic
+
+    The sites config was previously assumed to be `Record<string, SiteConfg>`.
+    However, as the sites config is solely used in application code, it could be of any shape.
+    Therefore, the `SitesConfigProvider` and `useSitesConfig` are made generic.
+    The following changes have to be made in the application:
+
+    1.  Define the type of your sites config
+
+        Preferably this should be done in `config.ts`:
+
+        ```diff
+        export function createConfig() {
+            // ...
+
+            return {
+                ...cometConfig,
+                apiUrl: environmentVariables.API_URL,
+                adminUrl: environmentVariables.ADMIN_URL,
+        +       sitesConfig: JSON.parse(environmentVariables.SITES_CONFIG) as SitesConfig,
+            };
+        }
+
+        + export type SitesConfig = Record<string, SiteConfig>;
+        ```
+
+    2.  Use the type when using `useSitesConfig`
+
+        ```diff
+        - const sitesConfig = useSitesConfig();
+        + const sitesConfig = useSitesConfig<SitesConfig>();
+        ```
+
+    3.  Optional: Remove type annotation from `ContentScopeProvider#resolveSiteConfigForScope` (as it's now inferred)
+
+        ```diff
+        - resolveSiteConfigForScope: (configs: Record<string, SiteConfig>, scope: ContentScope) => configs[scope.domain],
+        + resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
+        ```
+
+### Minor Changes
+
+-   0f814c5e: Add `MasterMenu` and `MasterMenuRoutes` components which both take a single data structure to define menu and routes.
+
+### Patch Changes
+
+-   Updated dependencies [921f6378]
+-   Updated dependencies [76e50aa8]
+-   Updated dependencies [298b63b7]
+-   Updated dependencies [803f5045]
+-   Updated dependencies [a525766c]
+-   Updated dependencies [0d768540]
+-   Updated dependencies [62779124]
+    -   @comet/admin@6.0.0
+    -   @comet/admin-icons@6.0.0
+    -   @comet/admin-rte@6.0.0
+    -   @comet/admin-date-time@6.0.0
+    -   @comet/blocks-admin@6.0.0
+    -   @comet/admin-theme@6.0.0
+
 ## 5.6.0
 
 ### Minor Changes

@@ -1,13 +1,17 @@
 import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
 import { Button, Typography } from "@mui/material";
+import isEqual from "lodash.isequal";
 import React from "react";
 
-import { ContentScopeInterface } from "../../contentScope/Provider";
+import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
 import { GQLCurrentUserPermission } from "../../graphql.generated";
 import { GQLCurrentUserQuery } from "./currentUser.generated";
 
-type CurrentUserContext = { currentUser: CurrentUserInterface; isAllowed: (user: CurrentUserInterface, permission: string) => boolean };
+type CurrentUserContext = {
+    currentUser: CurrentUserInterface;
+    isAllowed: (user: CurrentUserInterface, permission: string, contentScope?: ContentScopeInterface) => boolean;
+};
 export const CurrentUserContext = React.createContext<CurrentUserContext | undefined>(undefined);
 
 export interface CurrentUserInterface {
@@ -15,7 +19,7 @@ export interface CurrentUserInterface {
     email?: string;
     language?: string;
     permissions: GQLCurrentUserPermission[];
-    contentScopes: ContentScopeInterface[];
+    allowedContentScopes: ContentScopeInterface[];
 }
 
 export const CurrentUserProvider: React.FC<{
@@ -27,9 +31,9 @@ export const CurrentUserProvider: React.FC<{
                 id
                 name
                 email
-                contentScopes
                 permissions {
                     permission
+                    contentScopes
                 }
             }
         }
@@ -58,12 +62,17 @@ export const CurrentUserProvider: React.FC<{
     if (!data) return <Loading behavior="fillPageHeight" />;
 
     const context: CurrentUserContext = {
-        currentUser: data.currentUser,
+        currentUser: {
+            ...data.currentUser,
+            allowedContentScopes: data.currentUser.permissions.flatMap((p) => p.contentScopes),
+        },
         isAllowed:
             isAllowed ??
-            ((user: CurrentUserInterface, permission: string) => {
+            ((user: CurrentUserInterface, permission: string, contentScope?: ContentScopeInterface) => {
                 if (user.email === undefined) return false;
-                return user.permissions.some((p) => p.permission === permission);
+                return user.permissions.some(
+                    (p) => p.permission === permission && (!contentScope || p.contentScopes.some((cs) => isEqual(cs, contentScope))),
+                );
             }),
     };
 
@@ -74,4 +83,11 @@ export function useCurrentUser(): CurrentUserInterface {
     const ret = React.useContext(CurrentUserContext);
     if (!ret || !ret.currentUser) throw new Error("CurrentUser not found. Make sure CurrentUserContext exists.");
     return ret.currentUser;
+}
+
+export function useUserPermissionCheck(): (permission: string) => boolean {
+    const context = React.useContext(CurrentUserContext);
+    if (!context) throw new Error("CurrentUser not found. Make sure CurrentUserContext exists.");
+    const contentScope = useContentScope();
+    return (permission: string) => context.isAllowed(context.currentUser, permission, contentScope.scope);
 }

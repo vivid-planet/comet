@@ -462,7 +462,7 @@ export class FilesService {
         if (!inboxFolder) {
             throw new Error("Specified inbox folder doesn't exist.");
         }
-        if (inboxFolder.scope && !this.accessControlService.isAllowedContentScope(user, inboxFolder.scope)) {
+        if (inboxFolder.scope && !this.accessControlService.isAllowed(user, "dam", inboxFolder.scope)) {
             throw new Error("User can't access the target scope");
         }
 
@@ -488,7 +488,7 @@ export class FilesService {
 
         const fileScopes = getUniqueFileScopes(files);
         const canAccessFileScopes = fileScopes.every((scope) => {
-            return this.accessControlService.isAllowedContentScope(user, scope);
+            return this.accessControlService.isAllowed(user, "dam", scope);
         });
         if (!canAccessFileScopes) {
             throw new Error(`User can't access the scope of one or more files`);

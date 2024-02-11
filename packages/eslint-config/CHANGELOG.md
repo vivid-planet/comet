@@ -1,5 +1,16 @@
 # @comet/eslint-config
 
+## 6.0.0
+
+### Major Changes
+
+-   72f98c7a: Enable `import/newline-after-import`
+-   47eb81c6: Enable no-other-module-relative-import rule by default
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.0.0
+
 ## 5.6.0
 
 ### Patch Changes

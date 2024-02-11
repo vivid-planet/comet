@@ -40,7 +40,7 @@ export class CronJobsResolver {
             .filter((cronJob) => {
                 const contentScope = this.kubernetesService.getContentScope(cronJob);
                 if (contentScope) {
-                    return this.accessControlService.isAllowedContentScope(user, contentScope);
+                    return this.accessControlService.isAllowed(user, "builds", contentScope);
                 }
 
                 return true;
@@ -56,7 +56,7 @@ export class CronJobsResolver {
 
         const cronJob = await this.kubernetesService.getCronJob(name);
         const contentScope = this.kubernetesService.getContentScope(cronJob);
-        if (contentScope && !this.accessControlService.isAllowedContentScope(user, contentScope)) {
+        if (contentScope && !this.accessControlService.isAllowed(user, "builds", contentScope)) {
             throw new Error("Access denied");
         }
 
@@ -68,7 +68,7 @@ export class CronJobsResolver {
     async triggerKubernetesCronJob(@Args("name") name: string, @GetCurrentUser() user: CurrentUserInterface): Promise<Job> {
         const cronJob = await this.kubernetesService.getCronJob(name);
         const contentScope = this.kubernetesService.getContentScope(cronJob);
-        if (contentScope && !this.accessControlService.isAllowedContentScope(user, contentScope)) {
+        if (contentScope && !this.accessControlService.isAllowed(user, "builds", contentScope)) {
             throw new Error("Access denied");
         }
 

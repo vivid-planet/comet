@@ -75,7 +75,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
             const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
-            if (scope && !this.accessControlService.isAllowedContentScope(user, scope)) {
+            if (scope && !this.accessControlService.isAllowed(user, "dam", scope)) {
                 throw new ForbiddenException();
             }
 
@@ -96,7 +96,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 throw new NotFoundException();
             }
 
-            if (file.scope !== undefined && !this.accessControlService.isAllowedContentScope(user, file.scope)) {
+            if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
                 throw new ForbiddenException();
             }
 
