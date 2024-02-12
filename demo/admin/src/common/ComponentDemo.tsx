@@ -206,7 +206,7 @@ export function ComponentDemo(): React.ReactElement {
                                 <CheckboxField name="multiple-choice-3" type="checkbox" label="Option 3" fullWidth />
                             </FieldContainer>
 
-                            <SwitchField name="switch" label="Switch with label" />
+                            <SwitchField name="switch" fieldLabel="Switch with label" />
 
                             <SwitchField name="switch" label="Switch with inline label" />
 
