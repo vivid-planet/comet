@@ -12,6 +12,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
             label: "Titel", // default is generated from name (camelCaseToHumanReadable)
             required: true, // default is inferred from gql schema
         },
+        { type: "text", name: "packageDimensions.height", label: "Height", helperText: "Enter height in centimeters" },
         { type: "text", name: "slug" },
         { type: "text", name: "description", label: "Description", multiline: true },
         { type: "staticSelect", name: "type", label: "Type" /*, values: from gql schema (TODO overridable)*/ },
