@@ -21,7 +21,6 @@ const styles = (theme: Theme) =>
             display: "flex",
             alignItems: "center",
             boxShadow: theme.shadows[2],
-            position: "relative",
             padding: theme.spacing(2, "12px", 2, 4),
             minHeight: 40, // to ensure consistent height for the content, regardless of the presence of a button or close icon, in order to set the outer padding correctly
         },
@@ -41,7 +40,10 @@ const styles = (theme: Theme) =>
         action: {},
         closeIcon: {},
         hasTitle: {
+            position: "relative",
             alignItems: "flex-start",
+            paddingTop: theme.spacing(4),
+            paddingBottom: "6px",
 
             [`& .${buttonClasses.text}`]: {
                 marginLeft: -15,
@@ -59,10 +61,6 @@ const styles = (theme: Theme) =>
             "& $message": {
                 flexDirection: "column",
                 alignItems: "flex-start",
-            },
-            "&$root": {
-                paddingBottom: "6px",
-                paddingTop: theme.spacing(4),
             },
         },
     });
