@@ -189,12 +189,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             {...tagsSelectAsyncProps}
                             getOptionLabel={(option: GQLProductTagsSelectFragment) => option.title}
                         />
-                        <CheckboxField
-                            name="inStock"
-                            label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />}
-                            type="checkbox"
-                            fullWidth
-                        />
+                        <CheckboxField name="inStock" label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />} fullWidth />
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
