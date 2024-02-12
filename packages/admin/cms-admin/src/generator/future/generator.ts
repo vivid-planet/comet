@@ -17,7 +17,7 @@ type BlockReference = {
 export type GeneratorEntity = { __typename?: string };
 
 export type FormFieldConfigInternal =
-    // extra internal type to avoid "Type instantiation is excessively deep and possibly infinite." because of name-typing and simplify typing
+// extra internal type to avoid "Type instantiation is excessively deep and possibly infinite." because of name-typing and simplify typing
     (
         | { type: "text"; multiline?: boolean }
         | { type: "number" }
@@ -27,7 +27,7 @@ export type FormFieldConfigInternal =
         | { type: "staticSelect"; values?: string[] }
         | { type: "asyncSelect"; values?: string[] }
         | { type: "block"; block: BlockReference }
-    ) & { name: string; label?: string; required?: boolean };
+        ) & { name: string; label?: string; required?: boolean, readOnly: boolean };
 export type FormFieldConfig<T extends GeneratorEntity> = FormFieldConfigInternal & { name: Leaves<T> | Paths<T> };
 
 export type FormConfigInternal = {

@@ -60,6 +60,16 @@ export function generateForm(
         fragment ${fragmentName} on ${gqlType} ${fieldList}
     `;
 
+    const mutationFragmentName = `${fragmentName}Mutation`;
+    gqlDocuments[`${instanceGqlType}FormMutationFragment`] = `
+    fragment ${mutationFragmentName} on ${gqlType} {
+        ${config.fields
+            .filter((field) => !field.readOnly)
+            .map((field) => field.name)
+            .join("\n")}
+    }
+    `;
+
     gqlDocuments[`${instanceGqlType}Query`] = `
         query ${queryName}($id: ID!${queryScopeParam ? `, $scope: ${generateGqlParamDefinition(queryScopeParam)}` : ""}) {
             ${instanceGqlType}(id: $id${queryScopeParam ? `, scope: $scope` : ""}) {
@@ -91,10 +101,10 @@ export function generateForm(
             ${updateMutationName}(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt${updateMutationScopeParam ? `, scope: $scope` : ""}) {
                 id
                 updatedAt
-                ...${fragmentName}
+                ...${mutationFragmentName}
             }
         }
-        \${${`${instanceGqlType}FormFragment`}}
+        \${${`${instanceGqlType}FormMutationFragment`}}
     `;
 
     const fieldsCode = config.fields
@@ -128,11 +138,11 @@ export function generateForm(
         useStackApi,
         useStackSwitchApi,
     } from "@comet/admin";
-    import { ArrowLeft } from "@comet/admin-icons";
+    import { ArrowLeft, Lock } from "@comet/admin-icons";
     import { FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
     import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-    import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
+    import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
     import { FormApi } from "final-form";
     import { filter } from "graphql-anywhere";
     import isEqual from "lodash.isequal";
