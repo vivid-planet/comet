@@ -78,7 +78,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps & WithStyles<typeof st
                 <Typography className={classes.text} variant="body2">
                     {children}
                 </Typography>
-                <div className={classes.action}>{action}</div>
+                {action && <div className={classes.action}>{action}</div>}
                 {onClose && (
                     <IconButton className={classes.closeIcon} onClick={onClose}>
                         <Close />
