@@ -14,23 +14,32 @@ type BlockReference = {
     import: string;
 };
 
-export type FormFieldConfig<T> = (
-    | { type: "text"; multiline?: boolean }
-    | { type: "number" }
-    | { type: "boolean" }
-    | { type: "date" }
-    // TODO | { type: "dateTime" }
-    | { type: "staticSelect"; values?: string[] }
-    | { type: "asyncSelect"; values?: string[] }
-    | { type: "block"; block: BlockReference }
-) & { name: Leaves<T> | Paths<T>; label?: string; required?: boolean };
+export type GeneratorEntity = { __typename?: string };
 
-export type FormConfig<T extends { __typename?: string }> = {
+export type FormFieldConfigInternal =
+    // extra internal type to avoid "Type instantiation is excessively deep and possibly infinite." because of name-typing and simplify typing
+    (
+        | { type: "text"; multiline?: boolean }
+        | { type: "number" }
+        | { type: "boolean" }
+        | { type: "date" }
+        // TODO | { type: "dateTime" }
+        | { type: "staticSelect"; values?: string[] }
+        | { type: "asyncSelect"; values?: string[] }
+        | { type: "block"; block: BlockReference }
+    ) & { name: string; label?: string; required?: boolean };
+export type FormFieldConfig<T extends GeneratorEntity> = FormFieldConfigInternal & { name: Leaves<T> | Paths<T> };
+
+export type FormConfigInternal = {
     type: "form";
-    gqlType: T["__typename"];
+    gqlType: string;
     fragmentName?: string;
-    fields: FormFieldConfig<T>[];
+    fields: FormFieldConfigInternal[];
     title?: string;
+};
+export type FormConfig<T extends GeneratorEntity> = FormConfigInternal & {
+    gqlType: T["__typename"];
+    fields: FormFieldConfig<T>[];
 };
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
