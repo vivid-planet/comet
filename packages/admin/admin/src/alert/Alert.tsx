@@ -20,8 +20,6 @@ const styles = (theme: Theme) =>
         root: {
             display: "flex",
             alignItems: "center",
-            backgroundColor: theme.palette.background.paper,
-            borderRadius: 4,
             boxShadow: theme.shadows[2],
             position: "relative",
             padding: theme.spacing(2, "12px", 2, 4),
