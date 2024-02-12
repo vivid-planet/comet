@@ -28,9 +28,6 @@ const styles = (theme: Theme) =>
             display: "flex",
             alignItems: "center",
             flexGrow: 1,
-            padding: 0,
-            paddingLeft: theme.spacing(2),
-            marginBottom: 0,
         },
         title: {},
         text: {
