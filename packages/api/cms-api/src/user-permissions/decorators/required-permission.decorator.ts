@@ -19,7 +19,7 @@ type RequiredPermissionOptions = {
     skipScopeCheck?: boolean;
 };
 
-export type RequiredPermissionMetaData = {
+export type RequiredPermissionMetadata = {
     requiredPermission: (keyof Permission)[] | keyof Permission;
     options: RequiredPermissionOptions | undefined;
 };
@@ -28,5 +28,5 @@ export const RequiredPermission = (
     requiredPermission: (keyof Permission)[] | keyof Permission,
     options?: RequiredPermissionOptions,
 ): CustomDecorator<string> => {
-    return SetMetadata<string, RequiredPermissionMetaData>("requiredPermission", { requiredPermission, options });
+    return SetMetadata<string, RequiredPermissionMetadata>("requiredPermission", { requiredPermission, options });
 };

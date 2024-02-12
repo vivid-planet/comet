@@ -4,7 +4,7 @@ import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 
 import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { ContentScopeService } from "../content-scope.service";
-import { RequiredPermissionMetaData } from "../decorators/required-permission.decorator";
+import { RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
 import { ContentScope } from "../interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions.constants";
 import { AccessControlServiceInterface } from "../user-permissions.types";
