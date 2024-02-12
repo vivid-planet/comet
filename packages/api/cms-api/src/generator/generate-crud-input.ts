@@ -288,7 +288,7 @@ export async function generateCrudInput(
                     decorators.push(`@Type(() => ${nestedClassName})`);
                     decorators.push(`@Field(() => [${nestedClassName}], ${fieldOptions})`);
                 } else {
-                    decorators.push(`@Field(() => [GraphQLJSONObject], ${fieldOptions}) //Warning: this input is not validated properly`);
+                    decorators.push(`@Field(() => [GraphQLJSONObject], ${fieldOptions}) // Warning: this input is not validated properly`);
                 }
             } else if (tsType.isClass()) {
                 const nestedClassName = tsType.getText(tsProp);
