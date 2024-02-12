@@ -299,7 +299,7 @@ export async function generateCrudInput(
                 decorators.push(`@Field(() => ${nestedClassName}${prop.nullable ? ", { nullable: true }" : ""})`);
             } else {
                 decorators.push(
-                    `@Field(() => GraphQLJSONObject${prop.nullable ? ", { nullable: true }" : ""}) //Warning: this input is not validated properly`,
+                    `@Field(() => GraphQLJSONObject${prop.nullable ? ", { nullable: true }" : ""}) // Warning: this input is not validated properly`,
                 );
             }
         } else if (prop.type == "uuid") {
