@@ -13,14 +13,27 @@ type BlockReference = {
     import: string;
 };
 
+export type FormLayoutConfig<T> = { type: "collapsible"; title: string; supportText?: string | keyof T; fields: FormFieldConfig<T>[] };
 export type FormFieldConfig<T> = (
     | { type: "text"; multiline?: boolean }
     | { type: "number" }
+    | { type: "numberRange"; minField?: string | "min"; maxField?: string | "max" } // TODO probably this will not be needed.
     | { type: "boolean" }
+    | { type: "booleanList"; values?: string[] }
     | { type: "date" }
     // TODO | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
-    | { type: "asyncSelect"; values?: string[] }
+    | { type: "staticRadio"; values?: string[] } // TODO UX-Team validates if this is even required or we can use staticSelect
+    | { type: "asyncSelect"; values?: string[] } // TODO this could be combined with staticSelect to type="select" supporting both cases
+    | {
+          type: "fileUpload";
+          multiple?: boolean;
+          preview?: boolean;
+          button?: boolean;
+          dropzone?: boolean;
+          accept?: { [key: string]: string[] };
+          maxFileSize?: number;
+      }
     | { type: "block"; block: BlockReference }
 ) & { name: keyof T; label?: string; required?: boolean };
 
@@ -28,7 +41,7 @@ export type FormConfig<T extends { __typename?: string }> = {
     type: "form";
     gqlType: T["__typename"];
     fragmentName?: string;
-    fields: FormFieldConfig<T>[];
+    fields: (FormFieldConfig<T> | FormLayoutConfig<T>)[];
     title?: string;
 };
 
