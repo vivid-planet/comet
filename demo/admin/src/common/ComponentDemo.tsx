@@ -186,7 +186,7 @@ export function ComponentDemo(): React.ReactElement {
                                 </MenuItem>
                             </SelectField>
 
-                            <TextAreaField name="textArea" label="Text Area" multiline minRows={3} fullWidth />
+                            <TextAreaField name="textArea" label="Text Area" fullWidth />
 
                             <Field name="richText" label="Rich Text" component={FinalFormRichTextBlock} fullWidth />
 
