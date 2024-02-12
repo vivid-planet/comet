@@ -15,7 +15,7 @@ export const AppHeaderMenuButton = (inProps: AppHeaderMenuButtonProps) => {
     const children = !propChildren ? open ? <HamburgerClose fontSize="large" /> : <HamburgerOpen fontSize="large" /> : propChildren;
 
     return (
-        <Root onClick={toggleOpen} {...restProps} size="large">
+        <Root onClick={toggleOpen} size="large" {...restProps}>
             {children}
         </Root>
     );
