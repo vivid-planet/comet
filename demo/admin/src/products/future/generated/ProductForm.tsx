@@ -170,6 +170,14 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field
                             required
                             fullWidth
+                            name="packageDimensions.height"
+                            component={FinalFormInput}
+                            label={<FormattedMessage id="product.packageDimensions.height" defaultMessage="Height" />}
+                        />
+
+                        <Field
+                            required
+                            fullWidth
                             name="slug"
                             component={FinalFormInput}
                             label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}

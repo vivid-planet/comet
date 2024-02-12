@@ -33,7 +33,7 @@ export function generateForm(
 
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
-        fragment ${fragmentName} on ${gqlType} ${fieldList}
+        fragment ${fragmentName} on ${gqlType} { ${fieldList} }
     `;
 
     gqlDocuments[`${instanceGqlType}Query`] = `
