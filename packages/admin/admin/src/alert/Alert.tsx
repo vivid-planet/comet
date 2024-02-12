@@ -35,10 +35,7 @@ const styles = (theme: Theme) =>
             paddingLeft: theme.spacing(2),
             marginBottom: 0,
         },
-        title: {
-            fontWeight: 600,
-            marginBottom: theme.spacing(1),
-        },
+        title: {},
         text: {
             flexGrow: 1,
             marginRight: theme.spacing(4),
