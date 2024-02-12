@@ -35,15 +35,13 @@ const styles = (theme: Theme) =>
         title: {},
         text: {
             flexGrow: 1,
-            marginRight: theme.spacing(4),
         },
         action: {},
         closeIcon: {},
         hasTitle: {
             position: "relative",
             alignItems: "flex-start",
-            paddingTop: theme.spacing(4),
-            paddingBottom: "6px",
+            padding: theme.spacing(4, 6, "8px", 3),
 
             [`& .${buttonClasses.text}`]: {
                 marginLeft: -15,
@@ -55,8 +53,8 @@ const styles = (theme: Theme) =>
 
             "& $closeIcon": {
                 position: "absolute",
-                right: 10,
-                top: 10,
+                right: 2,
+                top: 2,
             },
             "& $message": {
                 flexDirection: "column",
