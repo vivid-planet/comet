@@ -4,7 +4,6 @@ import {
     FieldContainer,
     FinalForm,
     FinalFormRadio,
-    FinalFormSwitch,
     MainContent,
     SelectField,
     Stack,
@@ -207,11 +206,7 @@ export function ComponentDemo(): React.ReactElement {
                                 <CheckboxField name="multiple-choice-3" type="checkbox" label="Option 3" fullWidth />
                             </FieldContainer>
 
-                            <Field name="switch" label="Switch with label">
-                                {(props) => <FormControlLabel label={null} control={<FinalFormSwitch {...props} />} />}
-                            </Field>
-
-                            <SwitchField name="switch" fieldLabel="Switch with inline label" />
+                            <SwitchField name="switch" label="Switch with label" />
 
                             <SwitchField name="switch" label="Switch with inline label" />
 
