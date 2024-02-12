@@ -21,15 +21,11 @@ export const HoverActions = (inProps: HoverActionsProps) => {
 
     return (
         <Root onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)} {...slotProps?.root} {...restProps}>
-            <HoverAreaExpansion {...slotProps?.hoverAreaExpansion} {...restProps} />
+            <HoverAreaExpansion {...slotProps?.hoverAreaExpansion} />
             <Grow in={Boolean(actions) && isHovering}>
-                <Actions {...slotProps?.actions} {...restProps}>
-                    {actions}
-                </Actions>
+                <Actions {...slotProps?.actions}>{actions}</Actions>
             </Grow>
-            <Children {...slotProps?.children} {...restProps}>
-                {children}
-            </Children>
+            <Children {...slotProps?.children}>{children}</Children>
         </Root>
     );
 };
