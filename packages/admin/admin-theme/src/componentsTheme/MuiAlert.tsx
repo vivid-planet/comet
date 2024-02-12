@@ -4,7 +4,7 @@ import React from "react";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiAlert: GetMuiComponentTheme<"MuiAlert"> = (component, { palette, spacing }) => ({
+export const getMuiAlert: GetMuiComponentTheme<"MuiAlert"> = (component, { palette, spacing, shadows }) => ({
     ...component,
     defaultProps: {
         variant: "outlined",
@@ -24,6 +24,7 @@ export const getMuiAlert: GetMuiComponentTheme<"MuiAlert"> = (component, { palet
             color: palette.grey[800],
             borderRadius: spacing(1),
             borderLeftWidth: spacing(1),
+            boxShadow: shadows[2],
         },
         outlinedSuccess: {
             borderColor: palette.success.main,

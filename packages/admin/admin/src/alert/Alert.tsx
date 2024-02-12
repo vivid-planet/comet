@@ -18,7 +18,6 @@ export type AlertClassKey = "root" | "message" | "title" | "text" | "action" | "
 const styles = (theme: Theme) =>
     createStyles<AlertClassKey, AlertProps>({
         root: {
-            boxShadow: theme.shadows[2],
             padding: theme.spacing(4, "12px", 4, 4),
         },
         message: {
