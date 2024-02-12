@@ -28,7 +28,7 @@ export type FormFieldConfigInternal =
         | { type: "asyncSelect"; values?: string[] }
         | { type: "block"; block: BlockReference }
     ) & { name: string; label?: string; required?: boolean };
-export type FormFieldConfig<T extends GeneratorEntity> = Omit<FormFieldConfigInternal, "name"> & { name: Leaves<T> | Paths<T> };
+export type FormFieldConfig<T extends GeneratorEntity> = FormFieldConfigInternal & { name: Leaves<T> | Paths<T> };
 
 export type FormConfigInternal = {
     type: "form";
@@ -37,7 +37,7 @@ export type FormConfigInternal = {
     fields: FormFieldConfigInternal[];
     title?: string;
 };
-export type FormConfig<T extends GeneratorEntity> = Omit<FormConfigInternal, "gqlType" | "fields"> & {
+export type FormConfig<T extends GeneratorEntity> = FormConfigInternal & {
     gqlType: T["__typename"];
     fields: FormFieldConfig<T>[];
 };
