@@ -2199,6 +2199,9 @@ importers:
       jsonwebtoken:
         specifier: ^8.5.1
         version: 8.5.1
+      jszip:
+        specifier: ^3.10.1
+        version: 3.10.1
       jwks-rsa:
         specifier: ^3.0.0
         version: 3.0.1
