@@ -1,8 +1,9 @@
-import { Link, useRouter } from "@comet/cms-site";
 import { LinkBlock } from "@src/blocks/LinkBlock";
 import { GQLPredefinedPage } from "@src/graphql.generated";
 import { predefinedPagePaths } from "@src/predefinedPages/predefinedPagePaths";
 import { gql } from "graphql-request";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import * as React from "react";
 
 import { GQLPageLinkFragment } from "./PageLink.generated";
