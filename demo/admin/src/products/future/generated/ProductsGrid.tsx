@@ -18,7 +18,6 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
-import { BlockPreviewContent } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
@@ -30,13 +29,13 @@ import {
     GQLCreateProductMutationVariables,
     GQLDeleteProductMutation,
     GQLDeleteProductMutationVariables,
+    GQLProductsGridFutureFragment,
     GQLProductsGridQuery,
     GQLProductsGridQueryVariables,
-    GQLProductsListFragment,
 } from "./ProductsGrid.generated";
 
 const productsFragment = gql`
-    fragment ProductsList on Product {
+    fragment ProductsGridFuture on Product {
         id
         updatedAt
         title
@@ -57,7 +56,7 @@ const productsQuery = gql`
     query ProductsGrid($offset: Int, $limit: Int, $sort: [ProductSort!], $search: String, $filter: ProductFilter) {
         products(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
             nodes {
-                ...ProductsList
+                ...ProductsGridFuture
             }
             totalCount
         }
@@ -104,18 +103,10 @@ export function ProductsGrid(): React.ReactElement {
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 
-    const columns: GridColDef<GQLProductsListFragment>[] = [
-        {
-            field: "updatedAt",
-            headerName: intl.formatMessage({ id: "product.updatedAt", defaultMessage: "Updated At" }),
-            type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
-            width: 150,
-        },
-        { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }), width: 150 },
-        { field: "visible", headerName: intl.formatMessage({ id: "product.visible", defaultMessage: "Visible" }), type: "boolean", width: 150 },
-        { field: "slug", headerName: intl.formatMessage({ id: "product.slug", defaultMessage: "Slug" }), width: 150 },
+    const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
+        { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), width: 150 },
         { field: "description", headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }), width: 150 },
+        { field: "price", headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }), width: 150 },
         {
             field: "type",
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
@@ -127,25 +118,12 @@ export function ProductsGrid(): React.ReactElement {
             ],
             width: 150,
         },
-        { field: "price", headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }), type: "number", width: 150 },
-        { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }), type: "boolean", width: 150 },
-        { field: "soldCount", headerName: intl.formatMessage({ id: "product.soldCount", defaultMessage: "Sold Count" }), type: "number", width: 150 },
         {
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
-            type: "dateTime",
+            type: "date",
             valueGetter: ({ value }) => value && new Date(value),
             width: 150,
-        },
-        {
-            field: "image",
-            headerName: intl.formatMessage({ id: "product.image", defaultMessage: "Image" }),
-            filterable: false,
-            sortable: false,
-            width: 150,
-            renderCell: (params) => {
-                return <BlockPreviewContent block={DamImageBlock} input={params.row.image} />;
-            },
         },
         {
             field: "createdAt",
