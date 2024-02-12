@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
-import { useEditDialog, useSnackbarApi } from "@comet/admin";
-import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, Upload } from "@comet/admin-icons";
+import { messages, useEditDialog, useErrorDialog, useSnackbarApi } from "@comet/admin";
+import { AddFolder as AddFolderIcon, Archive, Copy, Delete, Download, Move, Paste, Restore, Upload } from "@comet/admin-icons";
 import { Box, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Slide, Snackbar, Typography } from "@mui/material";
 import { PopoverOrigin } from "@mui/material/Popover/Popover";
 import { SlideProps } from "@mui/material/Slide/Slide";
@@ -11,6 +11,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
+import { useCopyPasteDamItems } from "../copyPaste/useCopyPasteDamItems";
 import { useFileUpload } from "../fileUpload/useFileUpload";
 import { useDamSelectionApi } from "./DamSelectionContext";
 
@@ -26,12 +27,14 @@ interface DamMoreActionsProps {
 
 export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId, filter }: DamMoreActionsProps): React.ReactElement => {
     const damSelectionActionsApi = useDamSelectionApi();
-    const { selectionMap, archiveSelected, deleteSelected, downloadSelected, restoreSelected, moveSelected } = damSelectionActionsApi;
+    const errorDialogApi = useErrorDialog();
+    const { selectionMap, archiveSelected, deleteSelected, downloadSelected, restoreSelected, moveSelected, copySelected } = damSelectionActionsApi;
     const snackbarApi = useSnackbarApi();
     const [, , editDialogApi] = useEditDialog();
     const intl = useIntl();
     const client = useApolloClient();
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
+    const { pasteFromClipboard } = useCopyPasteDamItems();
 
     const folderInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -80,6 +83,15 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
         handleClose();
     };
 
+    const handlePasteClick = async () => {
+        const { error } = await pasteFromClipboard({ targetFolderId: folderId });
+        if (error) {
+            errorDialogApi?.showError({ error: "Cannot paste", userMessage: error });
+        }
+
+        handleClose();
+    };
+
     const handleMoveClick = () => {
         moveSelected();
         handleClose();
@@ -97,6 +109,11 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
 
     const handleDeleteClick = () => {
         deleteSelected();
+        handleClose();
+    };
+
+    const handleCopyClick = async () => {
+        await copySelected();
         handleClose();
     };
 
@@ -141,12 +158,17 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
                             </ListItemIcon>
                             <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.uploadFolder" defaultMessage="Upload folder" />} />
                         </MenuItem>
-
                         <MenuItem disabled={itemsSelected} onClick={handleAddFolderClick}>
                             <ListItemIcon>
                                 <AddFolderIcon />
                             </ListItemIcon>
                             <FormattedMessage id="comet.pages.dam.addFolder" defaultMessage="Add Folder" />
+                        </MenuItem>
+                        <MenuItem onClick={handlePasteClick}>
+                            <ListItemIcon>
+                                <Paste />
+                            </ListItemIcon>
+                            <FormattedMessage {...messages.paste} />
                         </MenuItem>
                     </MenuList>
                     <Divider sx={{ my: 1, borderColor: (theme) => theme.palette.grey[50] }} />
@@ -173,6 +195,13 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
                                 <Move />
                             </ListItemIcon>
                             <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.moveItems" defaultMessage="Move" />} />
+                            {itemsSelected && <NumberSelectedChip>{selectionSize}</NumberSelectedChip>}
+                        </MenuItem>
+                        <MenuItem disabled={!itemsSelected} onClick={handleCopyClick}>
+                            <ListItemIcon>
+                                <Copy />
+                            </ListItemIcon>
+                            <ListItemText primary={<FormattedMessage {...messages.copy} />} />
                             {itemsSelected && <NumberSelectedChip>{selectionSize}</NumberSelectedChip>}
                         </MenuItem>
                         <MenuItem disabled={!itemsSelected} onClick={handleArchiveClick}>

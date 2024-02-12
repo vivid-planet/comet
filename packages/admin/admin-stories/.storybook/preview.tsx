@@ -9,13 +9,13 @@ import { createCometTheme } from "@comet/admin-theme";
 import { createTheme as createMuiTheme, GlobalStyles } from "@mui/material";
 import { select, withKnobs } from "@storybook/addon-knobs";
 import { addDecorator, addParameters } from "@storybook/react";
+import { Locale as DateFnsLocale } from "date-fns";
+import { de as deLocale, enUS as enLocale } from "date-fns/locale";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
-import { de as deLocale, enUS as enLocale } from "date-fns/locale";
-import { Locale as DateFnsLocale } from "date-fns";
 
-import { previewGlobalStyles } from "./preview.styles";
 import { worker } from "./mocks/browser";
+import { previewGlobalStyles } from "./preview.styles";
 
 type LocaleKey = "de" | "en";
 
@@ -160,4 +160,4 @@ addParameters({
     },
 });
 
-worker.start()
+worker.start();

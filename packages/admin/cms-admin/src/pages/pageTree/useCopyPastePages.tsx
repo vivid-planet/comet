@@ -122,19 +122,14 @@ function useCopyPastePages(): UseCopyPastePagesApi {
         if (text === undefined) {
             return {
                 canPaste: false,
-                error: (
-                    <FormattedMessage
-                        id="comet.pages.cannotPastePage.messageFailedToReadClipboard"
-                        defaultMessage="Can't read clipboard content. Please make sure that clipboard access is given"
-                    />
-                ),
+                error: <FormattedMessage {...messages.failedToReadClipboard} />,
             };
         }
 
         if (text.trim() === "") {
             return {
                 canPaste: false,
-                error: <FormattedMessage id="comet.pages.cannotPastePage.messageEmptyClipboard" defaultMessage="Clipboard is empty" />,
+                error: <FormattedMessage {...messages.emptyClipboard} />,
             };
         }
 
