@@ -39,7 +39,7 @@ export const getMuiAlert: GetMuiComponentTheme<"MuiAlert"> = (component, { palet
         },
         icon: {
             marginRight: 0,
-            padding: 0,
+            padding: spacing("2px", 0),
         },
         message: {
             padding: spacing(0, 0, 0, 2),
