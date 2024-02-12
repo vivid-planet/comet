@@ -31,7 +31,7 @@ export class UserPermissionsGuard implements CanActivate {
         const user = request.user as CurrentUserInterface | undefined;
         if (!user) return false;
 
-        const requiredPermission = this.reflector.getAllAndOverride<RequiredPermissionMetaData>("requiredPermission", [
+        const requiredPermission = this.reflector.getAllAndOverride<RequiredPermissionMetadata>("requiredPermission", [
             context.getHandler(),
             context.getClass(),
         ]);
