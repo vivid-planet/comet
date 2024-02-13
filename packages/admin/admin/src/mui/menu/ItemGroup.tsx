@@ -17,15 +17,15 @@ const styles = (theme: Theme) =>
         title: {
             fontWeight: theme.typography.fontWeightBold,
             fontSize: 12,
-            border: `2px solid ${theme.palette.grey[100]}`,
+            border: `1px solid ${theme.palette.grey[100]}`,
             borderRadius: 20,
-            padding: theme.spacing(0.5, 2),
+            padding: theme.spacing(0, 1.5),
             lineHeight: "20px",
             color: `${theme.palette.grey[300]}`,
         },
         titleMenuOpen: {
             fontSize: 14,
-            border: `2px solid ${theme.palette.common.white}`,
+            border: `1px solid ${theme.palette.common.white}`,
             borderRadius: "initial",
             padding: 0,
             color: theme.palette.common.black,
