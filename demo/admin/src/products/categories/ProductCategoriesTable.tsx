@@ -74,7 +74,12 @@ const columns: GridColDef<GQLProductsCategoriesListFragment>[] = [
                         onPaste={async ({ input, client }) => {
                             await client.mutate<GQLCreateProductCategoryMutation, GQLCreateProductCategoryMutationVariables>({
                                 mutation: createProductMutation,
-                                variables: { input: { ...input, products: [] } },
+                                variables: {
+                                    input: {
+                                        title: input.title,
+                                        slug: input.slug,
+                                    },
+                                },
                             });
                         }}
                         onDelete={async ({ client }) => {
