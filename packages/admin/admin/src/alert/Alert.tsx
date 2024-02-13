@@ -13,7 +13,7 @@ export interface AlertProps {
     action?: React.ReactNode;
 }
 
-export type AlertClassKey = "root" | "message" | "title" | "text" | "action" | "closeIcon" | "hasTitle" | "singleLine";
+export type AlertClassKey = "root" | "message" | "title" | "text" | "action" | "closeIcon" | "hasTitle" | "singleRow";
 
 const styles = (theme: Theme) =>
     createStyles<AlertClassKey, AlertProps>({
@@ -54,7 +54,7 @@ const styles = (theme: Theme) =>
                 alignItems: "flex-start",
             },
         },
-        singleLine: {
+        singleRow: {
             display: "flex",
             alignItems: "center",
             padding: theme.spacing(2, "12px", 2, 4),
@@ -63,12 +63,12 @@ const styles = (theme: Theme) =>
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps & WithStyles<typeof styles>>(
     ({ severity = "info", title, children, classes, onClose, action }, ref) => {
-        const singleLine = !title && (action || onClose);
+        const singleRow = !title && (action || onClose);
         return (
             <MuiAlert
                 ref={ref}
                 classes={{
-                    root: clsx(classes.root, Boolean(title) && classes.hasTitle, singleLine && classes.singleLine),
+                    root: clsx(classes.root, Boolean(title) && classes.hasTitle, singleRow && classes.singleRow),
                     message: classes.message,
                 }}
                 severity={severity}
