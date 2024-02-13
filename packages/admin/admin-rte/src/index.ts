@@ -1,6 +1,6 @@
 export { BlockElement, RteBlockElementClassKey, RteBlockElementProps } from "./core/BlockElement";
 export { default as BlockTypesControls, RteBlockTypeControlsClassKey } from "./core/Controls/BlockTypesControls";
-export { default as ControlButton, IProps as IControlButtonProps, RteControlButtonClassKey } from "./core/Controls/ControlButton";
+export { ControlButton, IProps as IControlButtonProps, RteControlButtonClassKey } from "./core/Controls/ControlButton";
 export { FeaturesButtonGroup, RteFeaturesButtonGroupClassKey } from "./core/Controls/FeaturesButtonGroup";
 export { default as LinkControls, RteLinkControlsClassKey } from "./core/Controls/LinkControls";
 export { Toolbar } from "./core/Controls/Toolbar/Toolbar";

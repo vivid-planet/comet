@@ -7,7 +7,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { IFeatureConfig } from "../types";
-import ControlButton from "./ControlButton";
+import { ControlButton } from "./ControlButton";
 
 interface IProps
     extends ThemedComponentBaseProps<{ root: "div"; buttonWrapper: "div"; listItem: typeof MenuItem; listItemIcon: typeof MuiListItemIcon }> {
