@@ -6,7 +6,7 @@ sidebar_position: 1
 # Migrating from v5 to v6
 
 First, execute `npx @comet/upgrade@latest v6` in the root of your project. 
-It automatically installs the new versions of all `@comet` libraries and handles some of the necessary renames.
+It automatically installs the new versions of all `@comet` libraries, runs an ESLint autofix and handles some of the necessary renames.
 
 <details>
 
@@ -269,20 +269,3 @@ This was removed because it was often unwanted and overridden.
 The icons `Betrieb`, `LogischeFilter`, `Pool`, `Pool2`, `Vignette1`, `Vignette2`, `StateGreen`, `StateGreenRing`, `StateOrange`, `StateOrangeRing`, `StateRed` and `StateRedRing` were removed.
 
 If you used any of these icons in your app, you must add them to your project. You can download them [here](https://github.com/vivid-planet/comet/tree/76e50aa86fd69b1df79825967c6c5c50e2cb6df7/packages/admin/admin-icons/icons/deprecated).
-
-## ESLint
-
-**Both new rules are auto-fixable.** All errors can be fixed by executing `npm run lint:eslint -- --fix` in `/api`, `/admin` and `/site`.
-
-### @comet/no-other-module-relative-import
-
-The `@comet/no-other-module-relative-import` rule is now enabled by default. It enforces absolute imports when importing from other modules.
-
-```diff
-- import { AThingInModuleA } from "../moduleA/AThingInModuleA"
-+ import { AThingInModuleA } from "@src/moduleA/AThingInModuleA"
-```
-
-### import/newline-after-import
-
-The `import/newline-after-import` rule is now enabled by default. It enforces adding a blank line between imports and code.
