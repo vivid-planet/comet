@@ -20,6 +20,7 @@ import { Page } from "@src/pages/Page";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
+import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
 import { ProductsPage } from "@src/products/generated/ProductsPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
@@ -164,6 +165,13 @@ export const masterMenuData: MasterMenuData = [
         primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
         icon: <Snips />,
         submenu: [
+            {
+                primary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products Future" />,
+                route: {
+                    path: "/products-future",
+                    component: FutureProductsPage,
+                },
+            },
             {
                 primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
                 route: {

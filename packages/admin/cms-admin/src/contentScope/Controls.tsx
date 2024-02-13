@@ -7,7 +7,9 @@ import ContentScopeSelect from "./Select";
 export type ContentScopeControlsConfig<S extends ContentScopeInterface = ContentScopeInterface> = {
     [P in keyof S]?: {
         label?: string;
-        icon?: (props: SvgIconProps) => JSX.Element;
+        icon?:
+            | React.ComponentType<SvgIconProps>
+            | React.ForwardRefExoticComponent<React.PropsWithoutRef<SvgIconProps> & React.RefAttributes<SVGSVGElement>>;
         searchable?: boolean;
     };
 };

@@ -125,11 +125,15 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     inStock: boolean = true;
 
     @Property({ type: types.decimal, nullable: true })
-    @Field()
+    @Field({ nullable: true })
     @CrudField({
         input: false,
     })
     soldCount?: number;
+
+    @Property({ type: types.date, nullable: true })
+    @Field({ nullable: true })
+    availableSince?: Date;
 
     @Property({ customType: new RootBlockType(DamImageBlock) })
     @Field(() => RootBlockDataScalar(DamImageBlock))

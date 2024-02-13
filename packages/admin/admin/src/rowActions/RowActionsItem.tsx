@@ -10,14 +10,24 @@ export interface CommonRowActionItemProps {
     onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
-export type RowActionsItemPropsComponentsProps = RowActionsIconItemComponentsProps & RowActionsListItemComponentsProps;
+export type RowActionsItemPropsComponentsProps<T extends React.ElementType = "li"> = RowActionsIconItemComponentsProps &
+    RowActionsListItemComponentsProps<T>;
 
-export interface RowActionsItemProps extends Omit<RowActionsIconItemProps, "componentsProps">, Omit<RowActionsListItemProps, "componentsProps"> {
-    componentsProps?: RowActionsItemPropsComponentsProps;
+export interface RowActionsItemProps<T extends React.ElementType = "li">
+    extends Omit<RowActionsIconItemProps, "componentsProps">,
+        Omit<RowActionsListItemProps<T>, "componentsProps"> {
+    componentsProps?: RowActionsItemPropsComponentsProps<T>;
     children?: React.ReactNode;
 }
 
-export const RowActionsItem = ({ icon, children, disabled, onClick, componentsProps, ...restListItemProps }: RowActionsItemProps) => {
+export function RowActionsItem<MenuItemComponent extends React.ElementType = "li">({
+    icon,
+    children,
+    disabled,
+    onClick,
+    componentsProps,
+    ...restListItemProps
+}: RowActionsItemProps<MenuItemComponent>): React.ReactElement<RowActionsItemProps<MenuItemComponent>> {
     const { level, closeAllMenus } = React.useContext(RowActionsMenuContext);
 
     if (level === 1) {
@@ -33,7 +43,7 @@ export const RowActionsItem = ({ icon, children, disabled, onClick, componentsPr
     }
 
     return (
-        <RowActionsListItem
+        <RowActionsListItem<MenuItemComponent>
             icon={icon}
             disabled={disabled}
             onClick={(event) => {
@@ -50,4 +60,4 @@ export const RowActionsItem = ({ icon, children, disabled, onClick, componentsPr
             {children}
         </RowActionsListItem>
     );
-};
+}
