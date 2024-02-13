@@ -25,6 +25,7 @@ export const styles = (theme: Theme) => {
             "& [class*='MuiListItemIcon-root']": {
                 color: colors.textLevel1,
                 minWidth: ({ isMenuOpen }) => (isMenuOpen ? 28 : 22),
+                margin: theme.spacing(0, "auto"),
             },
             "& [class*='MuiListItemText-inset']": {
                 paddingLeft: ({ icon, level }) => (!!icon && level === 1 ? 28 : 0),
@@ -34,6 +35,7 @@ export const styles = (theme: Theme) => {
             borderBottom: `1px solid ${theme.palette.grey[50]}`,
             boxSizing: "border-box",
             color: colors.textLevel1,
+            height: 60,
             paddingLeft: 20,
             paddingRight: 20,
             paddingTop: 16,
