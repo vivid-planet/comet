@@ -2,4 +2,4 @@
 "@comet/cms-admin": patch
 ---
 
-Use currentUser-Hook where possible
+Use `useCurrentUser` hook where possible
