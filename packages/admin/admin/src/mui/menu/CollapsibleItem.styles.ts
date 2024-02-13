@@ -58,7 +58,7 @@ export const styles = (theme: Theme) =>
             color: theme.palette.grey[200],
         },
         colorGrey: {
-            color: theme.palette.grey[500],
+            color: theme.palette.grey[200],
         },
         colorWhite: {
             color: theme.palette.common.white,
