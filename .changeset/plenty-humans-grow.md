@@ -2,4 +2,4 @@
 "@comet/cms-api": minor
 ---
 
-Remove CurrentUserLoader completely
+Remove CurrentUserLoader and CurrentUserInterface completely
