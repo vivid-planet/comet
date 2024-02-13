@@ -25,8 +25,8 @@ export function generateForm(
     const fieldNamesFromConfig = config.fields.map<string>((field) => field.name);
     const fieldList = generateFieldListGqlString(fieldNamesFromConfig);
 
-    const fieldNamesFromConfigWithoutReadOnly = config.fields.filter((field) => !field.readOnly).map<string>((field) => field.name);
-    const fieldListWithoutReadOnly = generateFieldListGqlString(fieldNamesFromConfigWithoutReadOnly);
+    const updateMutationFieldNamesFromConfig = config.fields.filter((field) => !field.readOnly).map<string>((field) => field.name);
+    const updateMutationFieldList = generateFieldListGqlString(updateMutationFieldNamesFromConfig);
 
     // TODO make RootBlocks configurable (from config)
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
@@ -39,9 +39,9 @@ export function generateForm(
         fragment ${fragmentName} on ${gqlType} { ${fieldList} }
     `;
 
-    const mutationFragmentName = `${fragmentName}Mutation`;
-    gqlDocuments[`${instanceGqlType}FormMutationFragment`] = `
-        fragment ${mutationFragmentName} on ${gqlType} { ${fieldListWithoutReadOnly} }
+    const updateMutationFragmentName = `${fragmentName}Update`;
+    gqlDocuments[`${instanceGqlType}FormUpdateMutationFragment`] = `
+        fragment ${updateMutationFragmentName} on ${gqlType} { ${updateMutationFieldList} }
     `;
 
     gqlDocuments[`${instanceGqlType}Query`] = `
@@ -71,10 +71,10 @@ export function generateForm(
             update${gqlType}(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
                 id
                 updatedAt
-                ...${mutationFragmentName}
+                ...${updateMutationFragmentName}
             }
         }
-        \${${`${instanceGqlType}FormMutationFragment`}}
+        \${${`${instanceGqlType}FormUpdateMutationFragment`}}
     `;
 
     const fieldsCode = config.fields
