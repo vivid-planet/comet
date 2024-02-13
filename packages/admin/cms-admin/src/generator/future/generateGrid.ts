@@ -8,7 +8,7 @@ import {
 } from "graphql";
 import { plural } from "pluralize";
 
-import { GeneratorReturn, GridConfig } from "./generator";
+import { GeneratorReturn, GridConfigInternal } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
 
@@ -62,8 +62,7 @@ export function generateGrid(
         targetDirectory,
         gqlIntrospection,
     }: { exportName: string; baseOutputFilename: string; targetDirectory: string; gqlIntrospection: IntrospectionQuery },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: GridConfig<any>,
+    config: GridConfigInternal,
 ): GeneratorReturn {
     const gqlType = config.gqlType;
     const gqlTypePlural = plural(gqlType);

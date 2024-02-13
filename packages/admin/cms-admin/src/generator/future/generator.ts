@@ -6,6 +6,7 @@ import { basename, dirname } from "path";
 
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
+import { Leaves, Paths } from "./utils/deepKeyOf";
 import { writeGenerated } from "./utils/writeGenerated";
 
 type BlockReference = {
@@ -13,7 +14,9 @@ type BlockReference = {
     import: string;
 };
 
-export type FormFieldConfig<T> = (
+export type GeneratorEntity = { __typename?: string };
+
+export type FormFieldConfigInternal = (
     | { type: "text"; multiline?: boolean }
     | { type: "number" }
     | { type: "boolean" }
@@ -22,19 +25,24 @@ export type FormFieldConfig<T> = (
     | { type: "staticSelect"; values?: string[] }
     | { type: "asyncSelect"; values?: string[] }
     | { type: "block"; block: BlockReference }
-) & { name: keyof T; label?: string; required?: boolean };
+) & { name: string; label?: string; required?: boolean };
+export type FormFieldConfig<T extends GeneratorEntity> = FormFieldConfigInternal & { name: Leaves<T> | Paths<T> };
 
-export type FormConfig<T extends { __typename?: string }> = {
+export type FormConfigInternal = {
     type: "form";
-    gqlType: T["__typename"];
+    gqlType: string;
     fragmentName?: string;
-    fields: FormFieldConfig<T>[];
     title?: string;
+    fields: FormFieldConfigInternal[];
+};
+export type FormConfig<T extends GeneratorEntity> = FormConfigInternal & {
+    gqlType: T["__typename"];
+    fields: FormFieldConfig<T>[];
 };
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-export type GridColumnConfig<T> = (
+export type GridColumnConfigInternal = (
     | { type: "text" }
     | { type: "number" }
     | { type: "boolean" }
@@ -42,11 +50,17 @@ export type GridColumnConfig<T> = (
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
     | { type: "block"; block: BlockReference }
-) & { name: keyof T; headerName?: string; width?: number };
-export type GridConfig<T extends { __typename?: string }> = {
+) & { name: string; headerName?: string; width?: number };
+export type GridColumnConfig<T extends GeneratorEntity> = GridColumnConfigInternal & { name: Leaves<T> | Paths<T> };
+
+export type GridConfigInternal = {
     type: "grid";
-    gqlType: T["__typename"];
+    gqlType: string;
     fragmentName?: string;
+    columns: GridColumnConfigInternal[];
+};
+export type GridConfig<T extends GeneratorEntity> = GridConfigInternal & {
+    gqlType: T["__typename"];
     columns: GridColumnConfig<T>[];
 };
 

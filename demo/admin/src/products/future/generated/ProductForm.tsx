@@ -46,7 +46,8 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormDetailsFragment, "price"> & {
+type FormValues = Omit<GQLProductFormDetailsFragment, "packageDimensions" | "price"> & {
+    packageDimensions: { height: string; width: string; depth: string };
     price: string;
     image: BlockState<typeof rootBlocks.image>;
 };
@@ -72,6 +73,13 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             data?.product
                 ? {
                       ...filter<GQLProductFormDetailsFragment>(productFormFragment, data.product),
+                      packageDimensions: data.product.packageDimensions
+                          ? {
+                                height: String(data.product.packageDimensions.height),
+                                width: String(data.product.packageDimensions.width),
+                                depth: String(data.product.packageDimensions.depth),
+                            }
+                          : undefined,
                       price: String(data.product.price),
                       image: rootBlocks.image.input2State(data.product.image),
                   }
@@ -97,6 +105,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
+            packageDimensions: {
+                height: parseFloat(formValues.packageDimensions.height),
+                width: parseFloat(formValues.packageDimensions.width),
+                depth: parseFloat(formValues.packageDimensions.depth),
+            },
             price: parseFloat(formValues.price),
             image: rootBlocks.image.state2Output(formValues.image),
         };
@@ -165,6 +178,33 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             name="title"
                             component={FinalFormInput}
                             label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
+                        />
+
+                        <Field
+                            required
+                            fullWidth
+                            name="packageDimensions.height"
+                            component={FinalFormInput}
+                            type="number"
+                            label={<FormattedMessage id="product.packageDimensions.height" defaultMessage="Height" />}
+                        />
+
+                        <Field
+                            required
+                            fullWidth
+                            name="packageDimensions.width"
+                            component={FinalFormInput}
+                            type="number"
+                            label={<FormattedMessage id="product.packageDimensions.width" defaultMessage="Width" />}
+                        />
+
+                        <Field
+                            required
+                            fullWidth
+                            name="packageDimensions.depth"
+                            component={FinalFormInput}
+                            type="number"
+                            label={<FormattedMessage id="product.packageDimensions.depth" defaultMessage="Depth" />}
                         />
 
                         <Field

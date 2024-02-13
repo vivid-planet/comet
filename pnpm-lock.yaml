@@ -1834,6 +1834,9 @@ importers:
       mime-db:
         specifier: ^1.0.0
         version: 1.52.0
+      object-path:
+        specifier: ^0.11.8
+        version: 0.11.8
       p-debounce:
         specifier: ^4.0.0
         version: 4.0.0
@@ -1973,6 +1976,9 @@ importers:
       '@types/node':
         specifier: ^18.0.0
         version: 18.15.3
+      '@types/object-path':
+        specifier: ^0.11.4
+        version: 0.11.4
       '@types/pluralize':
         specifier: ^0.0.29
         version: 0.0.29
@@ -14404,6 +14410,10 @@ packages:
     resolution: {integrity: sha512-WKG4gTr8przEZBiJ5r3s8ZIAoMXNbOgQ+j/d5O4X3x6kZJRLNvyUJuUK/KoG3+8BaOHPhp2m7WC6JKKeovDSzQ==}
     dev: false
 
+  /@types/object-path@0.11.4:
+    resolution: {integrity: sha512-4tgJ1Z3elF/tOMpA8JLVuR9spt9Ynsf7+JjqsQ2IqtiPJtcLoHoXcT6qU4E10cPFqyXX5HDm9QwIzZhBSkLxsw==}
+    dev: true
+
   /@types/parse-json@4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
 
@@ -25641,6 +25651,11 @@ packages:
   /object-keys@1.1.1:
     resolution: {integrity: sha512-NuAESUOUMrlIXOfHKzD6bpPu3tYt3xvjNdRIQ+FeT0lNb4K8WR70CaDxhuNguS2XG+GjkyMwOzsN5ZktImfhLA==}
     engines: {node: '>= 0.4'}
+
+  /object-path@0.11.8:
+    resolution: {integrity: sha512-YJjNZrlXJFM42wTBn6zgOJVar9KFJvzx6sTWDte8sWZF//cnjl0BxHNpfZx+ZffXX63A9q0b1zsFiBX4g4X5KA==}
+    engines: {node: '>= 10.12.0'}
+    dev: false
 
   /object-visit@1.0.1:
     resolution: {integrity: sha512-GBaMwwAVK9qbQN3Scdo0OyvgPW7l3lnaVMj84uTOZlswkX0KpF6fyDBJhtTthf7pymztoN36/KEr1DyhF96zEA==}

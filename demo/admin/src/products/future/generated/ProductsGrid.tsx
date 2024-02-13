@@ -108,6 +108,20 @@ export function ProductsGrid(): React.ReactElement {
         { field: "description", headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }), width: 150 },
         { field: "price", headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }), width: 150 },
         {
+            field: "packageDimensions.height",
+            headerName: intl.formatMessage({ id: "product.packageDimensions.height", defaultMessage: "Height" }),
+            filterable: false,
+            sortable: false,
+            width: 50,
+        },
+        {
+            field: "packageDimensions.width",
+            headerName: intl.formatMessage({ id: "product.packageDimensions.width", defaultMessage: "Width" }),
+            filterable: false,
+            sortable: false,
+            width: 50,
+        },
+        {
             field: "type",
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
             type: "singleSelect",

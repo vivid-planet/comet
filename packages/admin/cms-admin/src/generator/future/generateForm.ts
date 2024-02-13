@@ -1,10 +1,14 @@
 import { IntrospectionQuery } from "graphql";
 
 import { generateFormField } from "./generateFormField";
-import { FormConfig, GeneratorReturn } from "./generator";
+import { FormConfigInternal, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
+import { generateFieldListGqlString, getRootProps } from "./utils/generateFieldList";
+import { generateFormValuesTypeDefinition } from "./utils/generateFormValuesTypeDefinition";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
+import { generateInitialValuesValue } from "./utils/generateInitialValuesValue";
+import { generateOutputObject } from "./utils/generateOutputObject";
 
 export function generateForm(
     {
@@ -13,8 +17,7 @@ export function generateForm(
         targetDirectory,
         gqlIntrospection,
     }: { exportName: string; baseOutputFilename: string; targetDirectory: string; gqlIntrospection: IntrospectionQuery },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: FormConfig<any>,
+    config: FormConfigInternal,
 ): GeneratorReturn {
     const gqlType = config.gqlType;
     const title = config.title ?? camelCaseToHumanReadable(gqlType);
@@ -22,17 +25,15 @@ export function generateForm(
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
 
+    const fieldNamesFromConfig: string[] = config.fields.map((field) => field.name);
+    const fieldList = generateFieldListGqlString(fieldNamesFromConfig);
+
     // TODO make RootBlocks configurable (from config)
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
 
-    const numberFields = config.fields.filter((field) => field.type == "number");
-    const booleanFields = config.fields.filter((field) => field.type == "boolean");
-
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
-        fragment ${fragmentName} on ${gqlType} {
-            ${config.fields.map((field) => field.name).join("\n")}
-        }
+        fragment ${fragmentName} on ${gqlType} { ${fieldList} }
     `;
 
     gqlDocuments[`${instanceGqlType}Query`] = `
@@ -138,20 +139,7 @@ export function generateForm(
             : ""
     }
 
-    type FormValues = ${
-        numberFields.length > 0
-            ? `Omit<GQL${fragmentName}Fragment, ${numberFields.map((field) => `"${String(field.name)}"`).join(" | ")}>`
-            : `GQL${fragmentName}Fragment`
-    } ${
-        numberFields.length > 0 || Object.keys(rootBlocks).length > 0
-            ? `& {
-        ${numberFields.map((field) => `${String(field.name)}: string;`).join("\n")}
-        ${Object.keys(rootBlocks)
-            .map((rootBlockKey) => `${rootBlockKey}: BlockState<typeof rootBlocks.${rootBlockKey}>;`)
-            .join("\n")}
-    }`
-            : ""
-    };
+    type FormValues = ${generateFormValuesTypeDefinition({ fragmentName, rootBlocks, config })};
 
     interface FormProps {
         id?: string;
@@ -169,21 +157,7 @@ export function generateForm(
             id ? { variables: { id } } : { skip: true },
         );
     
-        const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
-        ? {
-            ...filter<GQL${fragmentName}Fragment>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
-            ${numberFields.map((field) => `${String(field.name)}: String(data.${instanceGqlType}.${String(field.name)}),`).join("\n")}
-            ${Object.keys(rootBlocks)
-                .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.input2State(data.${instanceGqlType}.${rootBlockKey}),`)
-                .join("\n")}
-        }
-        : {
-            ${booleanFields.map((field) => `${String(field.name)}: false,`).join("\n")}
-            ${Object.keys(rootBlocks)
-                .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.defaultValues(),`)
-                .join("\n")}
-        }
-    , [data]);
+        const initialValues = ${generateInitialValuesValue({ config, fragmentName, rootBlocks, instanceGqlType })};
     
         const saveConflict = useFormSaveConflict({
             checkConflict: async () => {
@@ -198,13 +172,7 @@ export function generateForm(
     
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = {
-                ...formValues,
-                ${numberFields.map((field) => `${String(field.name)}: parseFloat(formValues.${String(field.name)}),`).join("\n")}
-                ${Object.keys(rootBlocks)
-                    .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.state2Output(formValues.${rootBlockKey}),`)
-                    .join("\n")}
-            };
+            const output = ${generateOutputObject({ rootBlocks, config })};
             if (mode === "edit") {
                 if (!id) throw new Error();
                 await client.mutate<GQLUpdate${gqlType}Mutation, GQLUpdate${gqlType}MutationVariables>({
