@@ -746,8 +746,11 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             hasSlugProp
                 ? `
         @Query(() => ${metadata.className}, { nullable: true })
-        async ${instanceNameSingular}BySlug(@Args("slug") slug: string): Promise<${metadata.className} | null> {
-            const ${instanceNameSingular} = await this.repository.findOne({ slug });
+        async ${instanceNameSingular}BySlug(
+            @Args("slug") slug: string
+            ${scopeProp ? `, @Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type}` : ""}
+        ): Promise<${metadata.className} | null> {
+            const ${instanceNameSingular} = await this.repository.findOne({ slug${scopeProp ? `, scope` : ""}});
 
             return ${instanceNameSingular} ?? null;
         }

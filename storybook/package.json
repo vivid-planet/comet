@@ -1,6 +1,5 @@
 {
-    "name": "comet-admin-stories",
-    "version": "0.0.0",
+    "name": "comet-storybook",
     "private": true,
     "license": "BSD-2-Clause",
     "files": [

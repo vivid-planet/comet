@@ -13,8 +13,9 @@ const fallbackLibraryBlocks: { [key: string]: string } = {
     YouTubeVideoBlock: "@comet/blocks-admin",
 };
 
+export type RootBlocks = Record<string, { import: string; name: string }>;
 export function findRootBlocks({ gqlType, targetDirectory }: { gqlType: string; targetDirectory: string }, schema: IntrospectionQuery) {
-    const ret: Record<string, { import: string; name: string }> = {};
+    const ret: RootBlocks = {};
 
     const schemaEntity = schema.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as IntrospectionObjectType | undefined;
     if (!schemaEntity) throw new Error("didn't find entity in schema types");

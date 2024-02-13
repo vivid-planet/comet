@@ -17,7 +17,7 @@ type BlockReference = {
 export type GeneratorEntity = { __typename?: string };
 
 export type FormFieldConfigInternal =
-// extra internal type to avoid "Type instantiation is excessively deep and possibly infinite." because of name-typing and simplify typing
+    // extra internal type to avoid "Type instantiation is excessively deep and possibly infinite." because of name-typing and simplify typing
     (
         | { type: "text"; multiline?: boolean }
         | { type: "number" }
@@ -54,19 +54,21 @@ export type GridColumnConfigInternal = // extra internal type to avoid "Type ins
         | { type: "staticSelect"; values?: string[] }
         | { type: "block"; block: BlockReference }
     ) & { name: string; headerName?: string; width?: number };
-export type GridColumnConfig<T> = GridColumnConfigInternal;
+export type GridColumnConfig<T extends GeneratorEntity> = GridColumnConfigInternal & { name: Leaves<T> | Paths<T> };
+
 export type GridConfigInternal = {
     type: "grid";
     gqlType: string;
     fragmentName?: string;
     columns: GridColumnConfigInternal[];
 };
-export type GridConfig<T extends GeneratorEntity> = Omit<GridConfigInternal, "gqlType" | "columns"> & {
+export type GridConfig<T extends GeneratorEntity> = GridConfigInternal & {
     gqlType: T["__typename"];
     columns: GridColumnConfig<T>[];
 };
 
-export type GeneratorConfig = FormConfigInternal | GridConfigInternal | TabsConfig;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type GeneratorConfig = FormConfig<any> | GridConfig<any> | TabsConfig;
 
 export type GeneratorReturn = { code: string; gqlDocuments: Record<string, string> };
 

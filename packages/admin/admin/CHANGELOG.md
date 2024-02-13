@@ -1,5 +1,65 @@
 # @comet/admin
 
+## 6.0.0
+
+### Major Changes
+
+-   298b63b7: FinalForm: remove default `onAfterSubmit` implementation
+
+    In most cases the default implementation is not needed anymore. When upgrading, an empty
+    function override of `onAfterSubmit` can be removed as it is not necessary any longer.
+
+    To get back the old behavior use the following in application code:
+
+    ```
+    const stackApi = React.useContext(StackApiContext);
+    const editDialog = React.useContext(EditDialogApiContext);
+    ....
+        <FinalForm
+            onAfterSubmit={() => {
+                stackApi?.goBack();
+                editDialog?.closeDialog({ delay: true });
+            }}
+        >
+    ```
+
+-   0d768540: FinalForm: Don't handle sync submit differently than async submit
+-   62779124: Change the signatures of `shouldScrollToField`, `shouldShowFieldError` and `shouldShowFieldWarning` in `FinalFormContext` to match the corresponding methods in `Field`
+
+    The API in `FinalFormContext` was changed from
+
+    ```tsx
+    // ❌
+    export interface FinalFormContext {
+        shouldScrollToField: ({ fieldMeta }: { fieldMeta: FieldMetaState<any> }) => boolean;
+        shouldShowFieldError: ({ fieldMeta }: { fieldMeta: FieldMetaState<any> }) => boolean;
+        shouldShowFieldWarning: ({ fieldMeta }: { fieldMeta: FieldMetaState<any> }) => boolean;
+    }
+    ```
+
+    to
+
+    ```tsx
+    // ✅
+    export interface FinalFormContext {
+        shouldScrollToField: (fieldMeta: FieldMetaState<any>) => boolean;
+        shouldShowFieldError: (fieldMeta: FieldMetaState<any>) => boolean;
+        shouldShowFieldWarning: (fieldMeta: FieldMetaState<any>) => boolean;
+    }
+    ```
+
+    Now the corresponding methods in `Field` and `FinalFormContext` have the same signature.
+
+### Minor Changes
+
+-   921f6378: Add `helperText` prop to `Field` and `FieldContainer` to provide additional information
+
+### Patch Changes
+
+-   Updated dependencies [76e50aa8]
+-   Updated dependencies [a525766c]
+    -   @comet/admin-icons@6.0.0
+
 ## 5.6.0
 
 ### Patch Changes

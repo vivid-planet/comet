@@ -1,27 +1,37 @@
 import { IntrospectionField, IntrospectionQuery, IntrospectionType } from "graphql";
 import objectPath from "object-path";
 
+type FieldsObjectType = { [key: string]: FieldsObjectType | boolean | string };
+const recursiveStringify = (obj: FieldsObjectType, objectSuffix?: string): string => {
+    let ret = "";
+    let prefixField = "";
+    for (const key in obj) {
+        const valueForKey = obj[key];
+        if (typeof valueForKey === "boolean") {
+            ret += `${prefixField}${key}`;
+        } else if (typeof valueForKey === "string") {
+            ret += `${prefixField}${key}${valueForKey}`;
+        } else {
+            ret += `${prefixField}${key}${objectSuffix ? objectSuffix : ""} { ${recursiveStringify(valueForKey)} }`;
+        }
+        prefixField = " ";
+    }
+    return ret;
+};
+
+export function getRootProps(fields: string[]): string[] {
+    const fieldsObject: FieldsObjectType = fields.reduce((acc, field) => {
+        objectPath.set(acc, field, true);
+        return acc;
+    }, {});
+    return Object.keys(fieldsObject);
+}
+
 export function generateFieldListGqlString(fields: string[]) {
-    type FieldsObjectType = { [key: string]: FieldsObjectType | boolean };
     const fieldsObject: FieldsObjectType = fields.reduce((acc, fieldName) => {
         objectPath.set(acc, fieldName, true);
         return acc;
     }, {});
-
-    const recursiveStringify = (obj: FieldsObjectType): string => {
-        let ret = "";
-        let prefixField = "";
-        for (const key in obj) {
-            const valueForKey = obj[key];
-            if (typeof valueForKey === "boolean") {
-                ret += `${prefixField}${key}`;
-            } else {
-                ret += `${prefixField}${key} { ${recursiveStringify(valueForKey)} }`;
-            }
-            prefixField = " ";
-        }
-        return ret;
-    };
     return recursiveStringify(fieldsObject);
 }
 

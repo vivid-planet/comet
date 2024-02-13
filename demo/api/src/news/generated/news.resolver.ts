@@ -31,8 +31,8 @@ export class NewsResolver {
     }
 
     @Query(() => News, { nullable: true })
-    async newsBySlug(@Args("slug") slug: string): Promise<News | null> {
-        const news = await this.repository.findOne({ slug });
+    async newsBySlug(@Args("slug") slug: string, @Args("scope", { type: () => NewsContentScope }) scope: NewsContentScope): Promise<News | null> {
+        const news = await this.repository.findOne({ slug, scope });
 
         return news ?? null;
     }

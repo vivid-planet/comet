@@ -13,7 +13,9 @@ export interface ContentScopeSelectProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onChange: (newValue: any) => void;
     defaultLabel?: string;
-    icon?: (p: SvgIconProps) => JSX.Element;
+    icon?:
+        | React.ComponentType<SvgIconProps>
+        | React.ForwardRefExoticComponent<React.PropsWithoutRef<SvgIconProps> & React.RefAttributes<SVGSVGElement>>;
     disabled?: boolean;
     searchable?: boolean;
 }

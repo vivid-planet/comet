@@ -50,23 +50,7 @@ Provides a customizable rich-text-editor component to allow advanced formatting 
 
 Provides a set of select components for use in forms, built with react-final-form.
 
-#### @comet/admin-date-picker
-
-:::warning
-
-This package is deprecated and will be replaced by `@comet/admin-date-time` in version 3.0.
-
-:::
-
-Provides a date-picker and a date-range-picker component for use in forms built with react-final-form.
-
 #### @comet/admin-date-time
-
-:::info
-
-This package is not complete. It will be released with version 3.0.
-
-:::
 
 Provides components for selecting date and time or a range or combination of date and time.
 

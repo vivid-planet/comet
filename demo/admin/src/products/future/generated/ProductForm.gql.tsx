@@ -7,6 +7,25 @@ export const productFormFragment = gql`
         title
         packageDimensions {
             height
+            width
+            depth
+        }
+        slug
+        description
+        type
+        price
+        inStock
+        availableSince
+        image
+    }
+`;
+export const productFormUpdateMutationFragment = gql`
+    fragment ProductFormDetailsUpdate on Product {
+        title
+        packageDimensions {
+            height
+            width
+            depth
         }
         slug
         description
@@ -42,8 +61,8 @@ export const updateProductMutation = gql`
         updateProduct(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
             id
             updatedAt
-            ...ProductFormDetails
+            ...ProductFormDetailsUpdate
         }
     }
-    ${productFormFragment}
+    ${productFormUpdateMutationFragment}
 `;
