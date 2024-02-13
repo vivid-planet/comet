@@ -31,7 +31,7 @@ export function stateToHtml({ editorState, options }: { editorState: EditorState
                 return { element: "a", attributes: { id } };
             }
 
-            return undefined;
+            throw Error(`The entityType ${entityType} is not supported.`);
         },
     });
 
