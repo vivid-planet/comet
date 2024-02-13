@@ -504,7 +504,7 @@ describe("stateToHtml", () => {
             options,
         });
 
-        const expectedHtml = `<p><span style="HIGHLIGHT">A rte text with custom styling</span></p>`;
+        const expectedHtml = `<p><span class="HIGHLIGHT">A rte text with custom styling</span></p>`;
 
         expect(html).toEqual(expectedHtml);
     });

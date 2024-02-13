@@ -14,7 +14,7 @@ export function stateToHtml({ editorState, options }: { editorState: EditorState
     };
 
     customInlineStyleKeys.forEach((item) => {
-        inlineStyles[item] = { element: "span", attributes: { style: [item] } };
+        inlineStyles[item] = { element: "span", attributes: { class: [item] } };
     });
 
     const linkDataList: { id: string; data: any }[] = [];
