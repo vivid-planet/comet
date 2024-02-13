@@ -66,7 +66,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     + import { CurrentUser } from "@comet/cms-api";
     ```
 
-    Replace occurences of CurrentUserInterface
+    Replace occurrences of CurrentUserInterface
 
     ```diff
     - @GetCurrentUser() user: CurrentUserInterface;
