@@ -5,20 +5,18 @@ sidebar_position: 1
 
 # Migrating from v5 to v6
 
-First, execute `npx @comet/upgrade@latest v6` in the root of your project. 
+First, execute `npx @comet/upgrade@latest v6` in the root of your project.
 It automatically installs the new versions of all `@comet` libraries, runs an ESLint autofix and handles some of the necessary renames.
 
 <details>
 
 <summary>Renames handled by @comet/upgrade</summary>
 
-- `JobStatus` -> `KubernetesJobStatus` in API
-- `@SubjectEntity` -> `@AffectedEntity` in API
-- `BuildRuntime` -> `JobRuntime` in Admin
+-   `JobStatus` -> `KubernetesJobStatus` in API
+-   `@SubjectEntity` -> `@AffectedEntity` in API
+-   `BuildRuntime` -> `JobRuntime` in Admin
 
 </details>
-
-
 
 ## API
 
@@ -68,7 +66,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     + import { CurrentUser } from "@comet/cms-api";
     ```
 
-    It is not possible anymore to use a custom CurrentUserLoader.
+    It is not possible anymore to use a custom CurrentUserLoader neither to augment/use the CurrentUserInterface.
 
 3. Create interface for `availablePermissions` similar to the already existing interface `interface ContentScope`
 
@@ -110,7 +108,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
 5. Replace `ContentScopeModule` with `UserPermissionsModule`
 
-   Remove `ContentScopeModule`:
+    Remove `ContentScopeModule`:
 
     ```diff
     - ContentScopeModule.forRoot({
@@ -118,7 +116,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     - }),
     ```
 
-   Add `UserPermissionsModule`:
+    Add `UserPermissionsModule`:
 
     ```ts
     UserPermissionsModule.forRootAsync({
@@ -183,14 +181,20 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
     ```tsx
     <MenuItemRouterLink
-        primary={intl.formatMessage({ id: "menu.userPermissions", defaultMessage: "User Permissions" })}
+        primary={intl.formatMessage({
+            id: "menu.userPermissions",
+            defaultMessage: "User Permissions",
+        })}
         icon={<Snips />}
         to={`${match.url}/user-permissions`}
     />
     ```
 
     ```tsx
-    <RouteWithErrorBoundary path={`${match.path}/user-permissions`} component={UserPermissionsPage} />
+    <RouteWithErrorBoundary
+        path={`${match.path}/user-permissions`}
+        component={UserPermissionsPage}
+    />
     ```
 
 ### Sites Config

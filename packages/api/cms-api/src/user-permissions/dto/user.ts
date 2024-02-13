@@ -1,8 +1,7 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { CurrentUserInterface } from "src/auth/current-user/current-user";
 
 @ObjectType()
-export class User implements CurrentUserInterface {
+export class User {
     @Field()
     id: string;
 

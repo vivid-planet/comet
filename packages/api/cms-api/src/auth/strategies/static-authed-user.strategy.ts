@@ -4,10 +4,10 @@ import { Strategy } from "passport-custom";
 
 import { UserPermissionsService } from "../..//user-permissions/user-permissions.service";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
-import { CurrentUserInterface } from "../current-user/current-user";
+import { User } from "../../user-permissions/dto/user";
 
 interface StaticAuthedUserStrategyConfig {
-    staticAuthedUser: CurrentUserInterface | string;
+    staticAuthedUser: User | string;
     userExtraData?: unknown;
 }
 
