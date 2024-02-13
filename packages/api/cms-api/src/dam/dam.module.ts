@@ -18,6 +18,7 @@ import { FileValidationService } from "./files/file-validation.service";
 import { createFilesController } from "./files/files.controller";
 import { createFilesResolver } from "./files/files.resolver";
 import { FilesService } from "./files/files.service";
+import { FoldersController } from "./files/folders.controller";
 import { createFoldersResolver } from "./files/folders.resolver";
 import { FoldersService } from "./files/folders.service";
 import { CalculateDominantImageColor } from "./images/calculateDominantImageColor.console";
@@ -120,7 +121,7 @@ export class DamModule {
                 FileValidationService,
                 FileUploadService,
             ],
-            controllers: [createFilesController({ Scope }), ImagesController],
+            controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
             exports: [ImgproxyService, FilesService, FoldersService, ImagesService, ScaledImagesCacheService, damConfigProvider, FileUploadService],
         };
     }
