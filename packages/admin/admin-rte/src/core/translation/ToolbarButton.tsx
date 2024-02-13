@@ -17,11 +17,11 @@ function ToolbarButton({ editorState, setEditorState, options }: IControlProps):
 
         event.preventDefault();
 
-        const { html, linkDataList } = stateToHtml({ editorState, options });
+        const { html, entities } = stateToHtml({ editorState, options });
 
         const translation = await translationContext.translate(html);
 
-        const translatedEditorState = htmlToState({ html: translation, linkDataList });
+        const translatedEditorState = htmlToState({ html: translation, entities });
 
         setEditorState(translatedEditorState);
     }

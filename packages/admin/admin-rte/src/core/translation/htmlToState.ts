@@ -3,10 +3,10 @@ import { stateFromHTML } from "draft-js-import-html";
 
 export function htmlToState({
     html,
-    linkDataList,
+    entities,
 }: {
     html: string;
-    linkDataList: {
+    entities: {
         id: string;
         data: any;
     }[];
@@ -32,7 +32,7 @@ export function htmlToState({
 
     for (const key of Object.keys(entityMap)) {
         if ("id" in entityMap[key].data) {
-            entityMap[key].data = linkDataList.find((item) => item.id == entityMap[key].data.id)?.data;
+            entityMap[key].data = entities.find((item) => item.id == entityMap[key].data.id)?.data;
         }
     }
 

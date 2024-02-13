@@ -441,7 +441,7 @@ describe("stateToHtml", () => {
         const content = convertFromRaw(rawContent);
         const editorState = EditorState.createWithContent(content);
 
-        const { html, linkDataList } = stateToHtml({
+        const { html, entities } = stateToHtml({
             editorState,
             options,
         });
@@ -475,7 +475,7 @@ describe("stateToHtml", () => {
             { id: "2", data: { activeType: "news", attachedBlocks: [{ type: "news", props: { id: "3d90dd58-f880-4fd8-a4b8-9ff690655a5b" } }] } },
         ];
 
-        expect(linkDataList).toEqual(expectedLinkDataList);
+        expect(entities).toEqual(expectedLinkDataList);
     });
 
     it("should convert the rte editor state with formating into html while keeping the format via tags - formats part 5 (custom styles)", () => {

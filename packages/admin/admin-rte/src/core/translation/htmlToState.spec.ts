@@ -330,22 +330,22 @@ describe("htmlToState", () => {
         const content = convertFromRaw(rawContent);
         const editorState = EditorState.createWithContent(content);
 
-        const { html, linkDataList } = stateToHtml({
+        const { html, entities } = stateToHtml({
             editorState,
             options,
         });
 
         const state = htmlToState({
             html: html,
-            linkDataList,
+            entities,
         });
 
-        const { html: html2, linkDataList: linkDataList2 } = stateToHtml({
+        const { html: html2, entities: linkDataList2 } = stateToHtml({
             editorState: state,
             options,
         });
 
         expect(html).toEqual(html2);
-        expect(linkDataList).toEqual(linkDataList2);
+        expect(entities).toEqual(linkDataList2);
     });
 });

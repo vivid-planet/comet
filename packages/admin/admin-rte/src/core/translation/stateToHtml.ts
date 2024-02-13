@@ -17,7 +17,7 @@ export function stateToHtml({ editorState, options }: { editorState: EditorState
         inlineStyles[item] = { element: "span", attributes: { class: [item] } };
     });
 
-    const linkDataList: { id: string; data: any }[] = [];
+    const entities: { id: string; data: any }[] = [];
 
     const html = stateToHTML(contentState, {
         inlineStyles,
@@ -26,8 +26,8 @@ export function stateToHtml({ editorState, options }: { editorState: EditorState
             const data = entity.getData();
 
             if (entityType === "LINK") {
-                const id = `${linkDataList.length}`;
-                linkDataList.push({ id, data });
+                const id = `${entities.length}`;
+                entities.push({ id, data });
                 return { element: "a", attributes: { id } };
             }
 
@@ -35,5 +35,5 @@ export function stateToHtml({ editorState, options }: { editorState: EditorState
         },
     });
 
-    return { html, linkDataList };
+    return { html, entities };
 }
