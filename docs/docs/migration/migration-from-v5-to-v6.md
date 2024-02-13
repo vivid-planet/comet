@@ -66,6 +66,13 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     + import { CurrentUser } from "@comet/cms-api";
     ```
 
+    Replace occurences of CurrentUserInterface
+
+    ```diff
+    - @GetCurrentUser() user: CurrentUserInterface;
+    + @GetCurrentUser() user: CurrentUser;
+    ```
+
     It is not possible anymore to use a custom CurrentUserLoader neither to augment/use the CurrentUserInterface.
 
 3. Create interface for `availablePermissions` similar to the already existing interface `interface ContentScope`
