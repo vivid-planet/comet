@@ -8,8 +8,6 @@ export const BlockPreviewProvider: React.FunctionComponent = ({ children }) => {
             value={{
                 previewType: "BlockPreview",
                 showPreviewSkeletons: true,
-                pathToPreviewPath: () => "",
-                previewPathToPath: () => "",
             }}
         >
             {children}

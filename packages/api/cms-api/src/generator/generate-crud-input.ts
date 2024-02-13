@@ -12,13 +12,7 @@ import {
     findInputClassImportPath,
     morphTsProperty,
 } from "./utils/ts-morph-helper";
-import { GeneratedFile, writeGeneratedFiles } from "./utils/write-generated-files";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function writeCrudInput(generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): Promise<void> {
-    const files = await generateCrudInput(generatorOptions, metadata);
-    await writeGeneratedFiles(files, generatorOptions);
-}
+import { GeneratedFile } from "./utils/write-generated-files";
 
 function tsCodeRecordToString(object: Record<string, string | undefined>) {
     const filteredEntries = Object.entries(object).filter(([key, value]) => value !== undefined);

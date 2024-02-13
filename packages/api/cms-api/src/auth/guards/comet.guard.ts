@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, HttpException, Injectable, mixin } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, mixin, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { AuthGuard, IAuthGuard, Type } from "@nestjs/passport";
@@ -19,14 +19,14 @@ export function createCometAuthGuard(type?: string | string[]): Type<IAuthGuard>
         }
 
         // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-        handleRequest<CurrentUserInterface>(err: unknown, user: any): CurrentUserInterface {
+        handleRequest<CurrentUserInterface>(err: unknown, user: any, info: any): CurrentUserInterface {
             if (err) {
                 throw err;
             }
             if (user) {
                 return user;
             }
-            throw new HttpException("UserNotAuthenticated", 200);
+            throw new UnauthorizedException(info[0]?.message);
         }
 
         async canActivate(context: ExecutionContext): Promise<boolean> {

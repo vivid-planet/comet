@@ -4,7 +4,7 @@ import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 
 import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { ContentScopeService } from "../content-scope.service";
-import { RequiredPermission } from "../decorators/required-permission.decorator";
+import { RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
 import { ContentScope } from "../interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions.constants";
 import { AccessControlServiceInterface } from "../user-permissions.types";
@@ -31,7 +31,7 @@ export class UserPermissionsGuard implements CanActivate {
         const user = request.user as CurrentUserInterface | undefined;
         if (!user) return false;
 
-        const requiredPermission = this.reflector.getAllAndOverride<RequiredPermission>("requiredPermission", [
+        const requiredPermission = this.reflector.getAllAndOverride<RequiredPermissionMetadata>("requiredPermission", [
             context.getHandler(),
             context.getClass(),
         ]);

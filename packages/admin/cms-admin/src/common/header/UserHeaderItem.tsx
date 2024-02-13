@@ -6,7 +6,7 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { AboutModal } from "./about/AboutModal";
-import { GQLCurrentUserQuery, GQLSignOutMutation } from "./UserHeaderItem.generated";
+import { GQLSignOutMutation } from "./UserHeaderItem.generated";
 
 const DropdownContent = styled(Box)`
     width: 250px;
@@ -24,21 +24,9 @@ const Separator = styled(Box)`
     margin-bottom: 20px;
 `;
 
-const LoadingWrapper = styled("div")`
-    width: 60px;
-    height: 100%;
-    border-left: 1px solid rgba(255, 255, 255, 0.2);
-`;
+import { gql, useMutation } from "@apollo/client";
 
-import { gql, useMutation, useQuery } from "@apollo/client";
-
-const currentUserQuery = gql`
-    query CurrentUser {
-        currentUser {
-            name
-        }
-    }
-`;
+import { useCurrentUser } from "../../userPermissions/hooks/currentUser";
 
 const signOutMutation = gql`
     mutation SignOut {
@@ -53,19 +41,12 @@ interface UserHeaderItemProps {
 export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
     const { aboutModalLogo } = props;
 
+    const user = useCurrentUser();
     const [showAboutModal, setShowAboutModal] = React.useState(false);
-    const { loading, data } = useQuery<GQLCurrentUserQuery>(currentUserQuery);
     const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
 
-    if (loading || !data)
-        return (
-            <LoadingWrapper>
-                <Loading behavior="fillParent" sx={{ fontSize: 20 }} color="inherit" />
-            </LoadingWrapper>
-        );
-
     return (
-        <AppHeaderDropdown buttonChildren={data.currentUser.name} startIcon={<Account />}>
+        <AppHeaderDropdown buttonChildren={user.name} startIcon={<Account />}>
             <DropdownContent padding={4}>
                 <Button
                     fullWidth={true}

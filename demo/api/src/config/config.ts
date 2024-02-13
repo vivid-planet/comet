@@ -48,6 +48,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             },
             storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
         },
+        sitePreviewSecret: envVars.SITE_PREVIEW_SECRET,
     };
 }
 

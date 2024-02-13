@@ -144,7 +144,7 @@ export function generateGrid(
     }
 
     const hasSearch = gridQueryType.args.some((arg) => arg.name === "search");
-    const hasScope = gridQueryType.args.some((arg) => arg.name === "scope");
+    const requiresScope = !!(queryScopeParam || createMutationScopeParam || deleteMutationScopeParam);
 
     const schemaEntity = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
         | IntrospectionObjectType
@@ -366,7 +366,7 @@ export function generateGrid(
         const client = useApolloClient();
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
-        ${hasScope ? `const { scope } = useContentScope();` : ""}
+        ${requiresScope ? `const { scope } = useContentScope();` : ""}
     
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
@@ -456,7 +456,7 @@ export function generateGrid(
     
         const { data, loading, error } = useQuery<GQL${gqlTypePlural}GridQuery, GQL${gqlTypePlural}GridQueryVariables>(${instanceGqlTypePlural}Query, {
             variables: {
-                ${hasScope ? `scope,` : ""}
+                ${queryScopeParam ? `scope,` : ""}
                 ${hasFilter ? `filter: gqlFilter,` : ""}
                 ${hasSearch ? `search: gqlSearch,` : ""}
                 offset: dataGridProps.page * dataGridProps.pageSize,
