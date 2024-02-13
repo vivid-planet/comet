@@ -1,0 +1,55 @@
+import { IntrospectionField, IntrospectionQuery, IntrospectionType } from "graphql";
+import objectPath from "object-path";
+
+export function generateFieldListGqlString(fields: string[]) {
+    type FieldsObjectType = { [key: string]: FieldsObjectType | boolean };
+    const fieldsObject: FieldsObjectType = fields.reduce((acc, fieldName) => {
+        objectPath.set(acc, fieldName, true);
+        return acc;
+    }, {});
+
+    const recursiveStringify = (obj: FieldsObjectType): string => {
+        let ret = "";
+        let prefixField = "";
+        for (const key in obj) {
+            const valueForKey = obj[key];
+            if (typeof valueForKey === "boolean") {
+                ret += `${prefixField}${key}`;
+            } else {
+                ret += `${prefixField}${key} { ${recursiveStringify(valueForKey)} }`;
+            }
+            prefixField = " ";
+        }
+        return ret;
+    };
+    return recursiveStringify(fieldsObject);
+}
+
+function fieldListFromIntrospectionTypeRecursive(
+    types: readonly IntrospectionType[],
+    type: string,
+    parentPath?: string,
+): { path: string; field: IntrospectionField }[] {
+    const typeDef = types.find((typeDef) => typeDef.name === type);
+    if (!typeDef || typeDef.kind !== "OBJECT") return [];
+
+    return typeDef.fields.reduce<{ path: string; field: IntrospectionField }[]>((acc, field) => {
+        const path = `${parentPath ? `${parentPath}.` : ""}${field.name}`;
+        if (field.type.kind === "OBJECT") {
+            const subFields = fieldListFromIntrospectionTypeRecursive(types, field.type.name, path);
+            acc.push(...subFields);
+        } else {
+            acc.push({
+                path: path,
+                field: field,
+            });
+        }
+        return acc;
+    }, []);
+}
+export function generateFieldListFromIntrospection(
+    gqlIntrospection: IntrospectionQuery,
+    type: string,
+): { path: string; field: IntrospectionField }[] {
+    return fieldListFromIntrospectionTypeRecursive(gqlIntrospection.__schema.types, type);
+}

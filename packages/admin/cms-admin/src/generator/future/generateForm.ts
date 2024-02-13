@@ -1,10 +1,10 @@
 import { IntrospectionQuery } from "graphql";
 
 import { generateFormField } from "./generateFormField";
-import { FormConfig, GeneratorReturn } from "./generator";
+import { FormConfigInternal, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
-import { generateGqlParamDefinition } from "./utils/generateGqlParamDefinition";
+import { generateFieldListGqlString } from "./utils/generateFieldList";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
 export function generateForm(
@@ -14,37 +14,19 @@ export function generateForm(
         targetDirectory,
         gqlIntrospection,
     }: { exportName: string; baseOutputFilename: string; targetDirectory: string; gqlIntrospection: IntrospectionQuery },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: FormConfig<any>,
+    config: FormConfigInternal,
 ): GeneratorReturn {
-    const gqlQueryScopeParamName = "scope";
     const gqlType = config.gqlType;
     const title = config.title ?? camelCaseToHumanReadable(gqlType);
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
 
-    const queries = gqlIntrospection.__schema.types.find((type) => type.name === "Query");
-    if (!queries || queries.kind !== "OBJECT") throw new Error(`Missing Query-Type in schema. Do any queries exist?`);
-    const mutations = gqlIntrospection.__schema.types.find((type) => type.name === "Mutation");
-    if (!mutations || mutations.kind !== "OBJECT") throw new Error(`Missing Mutation-Type in schema. Do any mutations exist?`);
+    const fieldNamesFromConfig = config.fields.map<string>((field) => field.name);
+    const fieldList = generateFieldListGqlString(fieldNamesFromConfig);
 
-    const queryName = instanceGqlType;
-    const introspectedQueryField = queries.fields.find((field) => field.name === queryName);
-    if (!introspectedQueryField) throw new Error(`query "${queryName}" for ${gqlType} in schema not found`);
-    const queryScopeParam = introspectedQueryField.args.find((arg) => arg.name === gqlQueryScopeParamName);
-
-    const createMutationName = `create${gqlType}`;
-    const introspectedCreateMutationField = mutations.fields.find((field) => field.name === createMutationName);
-    if (!introspectedCreateMutationField) throw new Error(`create-mutation "${createMutationName}" for ${gqlType} in schema not found`);
-    const createMutationScopeParam = introspectedCreateMutationField.args.find((arg) => arg.name === gqlQueryScopeParamName);
-
-    const updateMutationName = `update${gqlType}`;
-    const introspectedUpdateMutationField = mutations.fields.find((field) => field.name === updateMutationName);
-    if (!introspectedUpdateMutationField) throw new Error(`update-mutation "${updateMutationName}" for ${gqlType} in schema not found`);
-    const updateMutationScopeParam = introspectedUpdateMutationField.args.find((arg) => arg.name === gqlQueryScopeParamName);
-
-    const requiresScope = !!(queryScopeParam || createMutationScopeParam || updateMutationScopeParam);
+    const fieldNamesFromConfigWithoutReadOnly = config.fields.filter((field) => !field.readOnly).map<string>((field) => field.name);
+    const fieldListWithoutReadOnly = generateFieldListGqlString(fieldNamesFromConfigWithoutReadOnly);
 
     // TODO make RootBlocks configurable (from config)
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
@@ -54,24 +36,17 @@ export function generateForm(
 
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
-        fragment ${fragmentName} on ${gqlType} {
-            ${config.fields.map((field) => field.name).join("\n")}
-        }
+        fragment ${fragmentName} on ${gqlType} { ${fieldList} }
     `;
 
     const mutationFragmentName = `${fragmentName}Mutation`;
     gqlDocuments[`${instanceGqlType}FormMutationFragment`] = `
-    fragment ${mutationFragmentName} on ${gqlType} {
-        ${config.fields
-            .filter((field) => !field.readOnly)
-            .map((field) => field.name)
-            .join("\n")}
-    }
+        fragment ${mutationFragmentName} on ${gqlType} { ${fieldListWithoutReadOnly} }
     `;
 
     gqlDocuments[`${instanceGqlType}Query`] = `
-        query ${queryName}($id: ID!${queryScopeParam ? `, $scope: ${generateGqlParamDefinition(queryScopeParam)}` : ""}) {
-            ${instanceGqlType}(id: $id${queryScopeParam ? `, scope: $scope` : ""}) {
+        query ${gqlType}($id: ID!) {
+            ${instanceGqlType}(id: $id) {
                 id
                 updatedAt
                 ...${fragmentName}
@@ -81,10 +56,8 @@ export function generateForm(
     `;
 
     gqlDocuments[`create${gqlType}Mutation`] = `
-        mutation Create${gqlType}($input: ${gqlType}Input!${
-        createMutationScopeParam ? `, $scope: ${generateGqlParamDefinition(createMutationScopeParam)}` : ""
-    }) {
-            ${createMutationName}(input: $input${createMutationScopeParam ? `, scope: $scope` : ""}) {
+        mutation Create${gqlType}($input: ${gqlType}Input!) {
+            create${gqlType}(input: $input) {
                 id
                 updatedAt
                 ...${fragmentName}
@@ -94,10 +67,8 @@ export function generateForm(
     `;
 
     gqlDocuments[`update${gqlType}Mutation`] = `
-        mutation Update${gqlType}($id: ID!, $input: ${gqlType}UpdateInput!, $lastUpdatedAt: DateTime${
-        updateMutationScopeParam ? `, $scope: ${generateGqlParamDefinition(updateMutationScopeParam)}` : ""
-    }) {
-            ${updateMutationName}(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt${updateMutationScopeParam ? `, scope: $scope` : ""}) {
+        mutation Update${gqlType}($id: ID!, $input: ${gqlType}UpdateInput!, $lastUpdatedAt: DateTime) {
+            update${gqlType}(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
                 id
                 updatedAt
                 ...${mutationFragmentName}
@@ -107,7 +78,7 @@ export function generateForm(
     `;
 
     const fieldsCode = config.fields
-        .map((field) => {
+        .map<string>((field) => {
             const generated = generateFormField({ gqlIntrospection }, field, config);
             for (const name in generated.gqlDocuments) {
                 gqlDocuments[name] = generated.gqlDocuments[name];
@@ -137,11 +108,11 @@ export function generateForm(
         useStackApi,
         useStackSwitchApi,
     } from "@comet/admin";
-    import { ArrowLeft, Lock } from "@comet/admin-icons";
+    import { ArrowLeft } from "@comet/admin-icons";
     import { FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
     import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-    import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
+    import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
     import { FormApi } from "final-form";
     import { filter } from "graphql-anywhere";
     import isEqual from "lodash.isequal";
@@ -164,7 +135,6 @@ export function generateForm(
         GQLUpdate${gqlType}Mutation,
         GQLUpdate${gqlType}MutationVariables,
     } from "./${baseOutputFilename}.gql.generated";
-    import { useContentScope } from "@src/common/ContentScopeProvider"; // TODO: should this be imported from project?
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
         .join("\n")}
@@ -186,8 +156,8 @@ export function generateForm(
             ? `& {
         ${numberFields.map((field) => `${String(field.name)}: string;`).join("\n")}
         ${Object.keys(rootBlocks)
-            .map((rootBlockKey) => `${rootBlockKey}: BlockState<typeof rootBlocks.${rootBlockKey}>;`)
-            .join("\n")}
+                .map((rootBlockKey) => `${rootBlockKey}: BlockState<typeof rootBlocks.${rootBlockKey}>;`)
+                .join("\n")}
     }`
             : ""
     };
@@ -202,11 +172,10 @@ export function generateForm(
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
-        ${requiresScope ? `const { scope } = useContentScope()` : ""};
     
         const { data, error, loading, refetch } = useQuery<GQL${gqlType}Query, GQL${gqlType}QueryVariables>(
             ${instanceGqlType}Query,
-            id ? { variables: { id${queryScopeParam ? `, scope` : ""} } } : { skip: true },
+            id ? { variables: { id } } : { skip: true },
         );
     
         const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
@@ -214,14 +183,14 @@ export function generateForm(
             ...filter<GQL${fragmentName}Fragment>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
             ${numberFields.map((field) => `${String(field.name)}: String(data.${instanceGqlType}.${String(field.name)}),`).join("\n")}
             ${Object.keys(rootBlocks)
-                .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.input2State(data.${instanceGqlType}.${rootBlockKey}),`)
-                .join("\n")}
+        .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.input2State(data.${instanceGqlType}.${rootBlockKey}),`)
+        .join("\n")}
         }
         : {
             ${booleanFields.map((field) => `${String(field.name)}: false,`).join("\n")}
             ${Object.keys(rootBlocks)
-                .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.defaultValues(),`)
-                .join("\n")}
+        .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.defaultValues(),`)
+        .join("\n")}
         }
     , [data]);
     
@@ -242,19 +211,19 @@ export function generateForm(
                 ...formValues,
                 ${numberFields.map((field) => `${String(field.name)}: parseFloat(formValues.${String(field.name)}),`).join("\n")}
                 ${Object.keys(rootBlocks)
-                    .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.state2Output(formValues.${rootBlockKey}),`)
-                    .join("\n")}
+        .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.state2Output(formValues.${rootBlockKey}),`)
+        .join("\n")}
             };
             if (mode === "edit") {
                 if (!id) throw new Error();
                 await client.mutate<GQLUpdate${gqlType}Mutation, GQLUpdate${gqlType}MutationVariables>({
                     mutation: update${gqlType}Mutation,
-                    variables: { id, input: output, lastUpdatedAt: data?.${instanceGqlType}.updatedAt${updateMutationScopeParam ? `, scope` : ""} },
+                    variables: { id, input: output, lastUpdatedAt: data?.${instanceGqlType}.updatedAt },
                 });
             } else {
                 const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                     mutation: create${gqlType}Mutation,
-                    variables: { input: output${createMutationScopeParam ? `, scope` : ""} },
+                    variables: { input: output },
                 });
                 if (!event.navigatingBack) {
                     const id = mutationResponse?.create${gqlType}.id;

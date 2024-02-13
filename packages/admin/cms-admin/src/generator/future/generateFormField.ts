@@ -1,15 +1,14 @@
-import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionQuery } from "graphql";
 
-import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
+import { FormConfigInternal, FormFieldConfigInternal, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
+import { generateFieldListFromIntrospection } from "./utils/generateFieldList";
 import { Imports } from "./utils/generateImportsCode";
 
 export function generateFormField(
     { gqlIntrospection }: { gqlIntrospection: IntrospectionQuery },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: FormFieldConfig<any>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    formConfig: FormConfig<any>,
+    config: FormFieldConfigInternal,
+    formConfig: FormConfigInternal,
 ): GeneratorReturn & { imports: Imports } {
     const gqlType = formConfig.gqlType;
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
@@ -17,13 +16,15 @@ export function generateFormField(
     const name = String(config.name);
     const label = config.label ?? camelCaseToHumanReadable(name);
 
-    const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
-        | IntrospectionObjectType
-        | undefined;
-    if (!introspectionObject) throw new Error(`didn't find object ${gqlType} in gql introspection`);
+    const introspectedTypes = gqlIntrospection.__schema.types;
+    const introspectionObject = introspectedTypes.find((type) => type.kind === "OBJECT" && type.name === gqlType);
+    if (!introspectionObject || introspectionObject.kind !== "OBJECT") throw new Error(`didn't find object ${gqlType} in gql introspection`);
 
-    const introspectionField = introspectionObject.fields.find((field) => field.name === name);
-    if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
+    const introspectedFields = generateFieldListFromIntrospection(gqlIntrospection, gqlType);
+
+    const introspectionFieldWithPath = introspectedFields.find((field) => field.path === name);
+    if (!introspectionFieldWithPath) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
+    const introspectionField = introspectionFieldWithPath.field;
     const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
 
     const requiredByIntrospection = introspectionField.type.kind == "NON_NULL";

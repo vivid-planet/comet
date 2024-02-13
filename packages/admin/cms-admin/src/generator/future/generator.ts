@@ -6,6 +6,7 @@ import { basename, dirname } from "path";
 
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
+import { Leaves, Paths } from "./utils/deepKeyOf";
 import { writeGenerated } from "./utils/writeGenerated";
 
 type BlockReference = {
@@ -13,50 +14,59 @@ type BlockReference = {
     import: string;
 };
 
-export type FormFieldConfig<T> = (
-    | { type: "text"; multiline?: boolean }
-    | { type: "number" }
-    | { type: "boolean" }
-    | { type: "date" }
-    // TODO | { type: "dateTime" }
-    | { type: "staticSelect"; values?: string[] }
-    | { type: "asyncSelect"; values?: string[] }
-    | { type: "block"; block: BlockReference }
-) & {
-    name: keyof T;
-    label?: string;
-    required?: boolean;
-    readOnly?: boolean;
-};
+export type GeneratorEntity = { __typename?: string };
 
-export type FormConfig<T extends { __typename?: string }> = {
+export type FormFieldConfigInternal =
+// extra internal type to avoid "Type instantiation is excessively deep and possibly infinite." because of name-typing and simplify typing
+    (
+        | { type: "text"; multiline?: boolean }
+        | { type: "number" }
+        | { type: "boolean" }
+        | { type: "date" }
+        // TODO | { type: "dateTime" }
+        | { type: "staticSelect"; values?: string[] }
+        | { type: "asyncSelect"; values?: string[] }
+        | { type: "block"; block: BlockReference }
+        ) & { name: string; label?: string; required?: boolean, readOnly?: boolean};
+export type FormFieldConfig<T extends GeneratorEntity> = FormFieldConfigInternal & { name: Leaves<T> | Paths<T> };
+
+export type FormConfigInternal = {
     type: "form";
-    gqlType: T["__typename"];
+    gqlType: string;
     fragmentName?: string;
-    fields: FormFieldConfig<T>[];
+    fields: FormFieldConfigInternal[];
     title?: string;
+};
+export type FormConfig<T extends GeneratorEntity> = FormConfigInternal & {
+    gqlType: T["__typename"];
+    fields: FormFieldConfig<T>[];
 };
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-export type GridColumnConfig<T> = (
-    | { type: "text" }
-    | { type: "number" }
-    | { type: "boolean" }
-    | { type: "date" }
-    | { type: "dateTime" }
-    | { type: "staticSelect"; values?: string[] }
-    | { type: "block"; block: BlockReference }
-) & { name: keyof T; headerName?: string; width?: number };
-export type GridConfig<T extends { __typename?: string }> = {
+export type GridColumnConfigInternal = // extra internal type to avoid "Type instantiation is excessively deep and possibly infinite." because of name-typing and simplify typing
+    (
+        | { type: "text" }
+        | { type: "number" }
+        | { type: "boolean" }
+        | { type: "date" }
+        | { type: "dateTime" }
+        | { type: "staticSelect"; values?: string[] }
+        | { type: "block"; block: BlockReference }
+    ) & { name: string; headerName?: string; width?: number };
+export type GridColumnConfig<T> = Omit<GridColumnConfigInternal, "name"> & { name: Leaves<T> | Paths<T> };
+export type GridConfigInternal = {
     type: "grid";
-    gqlType: T["__typename"];
+    gqlType: string;
     fragmentName?: string;
+    columns: GridColumnConfigInternal[];
+};
+export type GridConfig<T extends GeneratorEntity> = Omit<GridConfigInternal, "gqlType" | "columns"> & {
+    gqlType: T["__typename"];
     columns: GridColumnConfig<T>[];
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type GeneratorConfig = FormConfig<any> | GridConfig<any> | TabsConfig;
+export type GeneratorConfig = FormConfigInternal | GridConfigInternal | TabsConfig;
 
 export type GeneratorReturn = { code: string; gqlDocuments: Record<string, string> };
 
