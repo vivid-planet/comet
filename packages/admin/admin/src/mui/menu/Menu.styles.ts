@@ -13,7 +13,6 @@ const openedMixin = (theme: Theme, drawerWidth?: number): CSSObject => ({
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
     }),
-    overflowX: "hidden",
 });
 const closedMixin = (theme: Theme, drawerVariant: DrawerProps["variant"], drawerWidth?: number, drawerWidthCollapsed?: number): CSSObject => ({
     width: drawerVariant === "temporary" ? drawerWidth ?? DEFAULT_DRAWER_WIDTH : drawerWidthCollapsed ?? DEFAULT_DRAWER_WIDTH_COLLAPSED,
@@ -21,7 +20,6 @@ const closedMixin = (theme: Theme, drawerVariant: DrawerProps["variant"], drawer
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
     }),
-    overflowX: "hidden",
 });
 export const Drawer: StyledComponent<DrawerProps & MUIStyledCommonProps<Theme> & Pick<MenuProps, "drawerWidth" | "drawerWidthCollapsed">> = styled(
     MuiDrawer,
@@ -30,16 +28,21 @@ export const Drawer: StyledComponent<DrawerProps & MUIStyledCommonProps<Theme> &
     ({ theme, open, variant, drawerWidth, drawerWidthCollapsed }) => {
         const { headerHeight } = React.useContext(MasterLayoutContext);
 
+        const sharedStyles: CSSObject = {
+            backgroundColor: theme.palette.common.white,
+            overflowX: "hidden",
+        };
+
         return {
             ...(variant === "permanent" && {
-                backgroundColor: theme.palette.common.white,
+                ...sharedStyles,
                 flexShrink: 0,
                 whiteSpace: "nowrap",
                 boxSizing: "border-box",
                 ...(open ? openedMixin(theme, drawerWidth) : closedMixin(theme, variant, drawerWidth, drawerWidthCollapsed)),
             }),
             "& .MuiDrawer-paper": {
-                backgroundColor: theme.palette.common.white,
+                ...sharedStyles,
                 ...(variant === "permanent" && {
                     top: headerHeight,
                     height: `calc(100% - ${headerHeight}px)`,
