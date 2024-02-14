@@ -1,5 +1,6 @@
-import { Field, FinalFormInput, FinalFormSelect } from "@comet/admin";
+import { Field, FinalFormSelect } from "@comet/admin";
 import { BlockCategory, BlocksFinalForm, createCompositeBlock, createCompositeSetting } from "@comet/blocks-admin";
+import { createCompositeBlockTextField } from "@comet/blocks-admin/lib/blocks/helpers/createCompositeBlockTextField";
 import { createRichTextBlock } from "@comet/cms-admin";
 import { MenuItem } from "@mui/material";
 import { HeadlineBlockData } from "@src/blocks.generated";
@@ -22,16 +23,9 @@ export const HeadlineBlock = createCompositeBlock(
         displayName: "Headline",
         blocks: {
             eyebrow: {
-                block: createCompositeSetting<HeadlineBlockData["eyebrow"]>({
-                    defaultValue: undefined,
-                    AdminComponent: ({ state, updateState }) => (
-                        <BlocksFinalForm<Pick<HeadlineBlockData, "eyebrow">>
-                            onSubmit={({ eyebrow }) => updateState(eyebrow)}
-                            initialValues={{ eyebrow: state }}
-                        >
-                            <Field name="eyebrow" label="Eyebrow" component={FinalFormInput} fullWidth />
-                        </BlocksFinalForm>
-                    ),
+                block: createCompositeBlockTextField({
+                    defaultValue: "",
+                    displayName: "Eyebrow",
                 }),
             },
             headline: {
