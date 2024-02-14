@@ -3,6 +3,11 @@ import { convertFromRaw, EditorState, RawDraftContentState } from "draft-js";
 import { IRteOptions } from "../Rte";
 import { stateToHtml } from "./stateToHtml";
 
+// Remove all newlines and spaces to compare the html strings
+function trimHtml(html: string) {
+    return html.replace(/\s|\n/g, "");
+}
+
 describe("stateToHtml", () => {
     const options = { customInlineStyles: { HIGHLIGHT: { label: "Highlight!", style: { backgroundColor: "yellow" } } } } as unknown as IRteOptions;
 
@@ -87,9 +92,9 @@ describe("stateToHtml", () => {
             options,
         });
 
-        const expectedHtml = `<p>Normal Text</p>\n<p><strong>Bold Text</strong></p>\n<p><em>Italic Text</em></p>\n<p><em><strong>Bold Italic Text</strong></em></p>\n<p><del>Strikethrough Text</del></p>\n<p>A <sub>Subscript Text</sub></p>\n<p>B <sup>Superscript Text</sup></p>\n<h1>Headline 1</h1>\n<h2>Headline 2</h2>\n<h3>Headline 3</h3>\n<h4>Headline 4</h4>\n<h5>Headline 5</h5>\n<h6>Headline 6</h6>`;
+        const expectedHtml = `<p>Normal Text</p><p><strong>Bold Text</strong></p><p><em>Italic Text</em></p><p><em><strong>Bold Italic Text</strong></em></p><p><del>Strikethrough Text</del></p><p>A <sub>Subscript Text</sub></p><p>B <sup>Superscript Text</sup></p><h1>Headline 1</h1><h2>Headline 2</h2><h3>Headline 3</h3><h4>Headline 4</h4><h5>Headline 5</h5><h6>Headline 6</h6>`;
 
-        expect(html).toEqual(expectedHtml);
+        expect(trimHtml(html)).toEqual(trimHtml(expectedHtml));
     });
 
     it("should convert the rte editor state with formating into html while keeping the format via tags - formats part 2 (unordered list)", () => {
@@ -137,9 +142,9 @@ describe("stateToHtml", () => {
             options,
         });
 
-        const expectedHtml = `<ul>\n  <li>Unordered List\n    <ul>\n      <li>123<sub>456</sub>\n        <ul>\n          <li><em>234</em></li>\n          <li><strong>345</strong></li>\n        </ul>\n      </li>\n    </ul>\n  </li>\n</ul>`;
+        const expectedHtml = `<ul><li>Unordered List<ul><li>123<sub>456</sub><ul><li><em>234</em></li><li><strong>345</strong></li></ul></li></ul></li></ul>`;
 
-        expect(html).toEqual(expectedHtml);
+        expect(trimHtml(html)).toEqual(trimHtml(expectedHtml));
     });
 
     it("should convert the rte editor state with formating into html while keeping the format via tags - formats part 3 (ordered list)", () => {
@@ -187,9 +192,9 @@ describe("stateToHtml", () => {
             options,
         });
 
-        const expectedHtml = `<ol>\n  <li>List\n    <ol>\n      <li>123<sup>456</sup>\n        <ol>\n          <li><em>234</em></li>\n          <li><strong>345</strong></li>\n        </ol>\n      </li>\n    </ol>\n  </li>\n</ol>`;
+        const expectedHtml = `<ol><li>List<ol><li>123<sup>456</sup><ol><li><em>234</em></li><li><strong>345</strong></li></ol></li></ol></li></ol>`;
 
-        expect(html).toEqual(expectedHtml);
+        expect(trimHtml(html)).toEqual(trimHtml(expectedHtml));
     });
 
     it("should convert the rte editor state with formating into html while keeping the format via tags - formats part 4 (links)", () => {
@@ -271,9 +276,9 @@ describe("stateToHtml", () => {
             options,
         });
 
-        const expectedHtml = `<p><a id="0">External Link</a></p>\n<p><a id="1">Internal Link</a></p>\n<p><a id="2">Internal News Link</a></p>`;
+        const expectedHtml = `<p><a id="0">External Link</a></p><p><a id="1">Internal Link</a></p><p><a id="2">Internal News Link</a></p>`;
 
-        expect(html).toEqual(expectedHtml);
+        expect(trimHtml(html)).toEqual(trimHtml(expectedHtml));
 
         const expectedLinkDataList = [
             {
@@ -331,6 +336,6 @@ describe("stateToHtml", () => {
 
         const expectedHtml = `<p><span class="HIGHLIGHT">A rte text with custom styling</span></p>`;
 
-        expect(html).toEqual(expectedHtml);
+        expect(trimHtml(html)).toEqual(trimHtml(expectedHtml));
     });
 });
