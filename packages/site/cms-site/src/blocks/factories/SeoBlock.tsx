@@ -27,7 +27,8 @@ export const SeoBlock = <T = PixelImageBlockData,>({
     canonicalUrl: passedCanonicalUrl,
     resolveOpenGraphImageUrlTemplate = (block) => (block as PixelImageBlockData).urlTemplate,
 }: SeoBlockProps<T>) => {
-    const usedHtmlTitle = htmlTitle && htmlTitle != "" ? htmlTitle : title;
+    const usedHtmlTitle = htmlTitle || title;
+    const usedCanonicalUrl = canonicalUrl ?? passedCanonicalUrl;
     const openGraphImageUrlTemplate = openGraphImage.block && resolveOpenGraphImageUrlTemplate(openGraphImage.block as T);
 
     return (
@@ -42,7 +43,7 @@ export const SeoBlock = <T = PixelImageBlockData,>({
                 {openGraphTitle && <meta property={"og:title"} content={openGraphTitle} />}
                 {openGraphDescription && <meta property={"og:description"} content={openGraphDescription} />}
                 <meta property={"og:type"} content={"website"} />
-                <meta property={"og:url"} content={canonicalUrl ?? passedCanonicalUrl} />
+                <meta property={"og:url"} content={usedCanonicalUrl} />
                 {openGraphImageUrlTemplate && (
                     <meta property={"og:image"} content={generateImageUrl({ src: openGraphImageUrlTemplate, width: 1024 }, 1 / 1)} />
                 )}
@@ -51,14 +52,10 @@ export const SeoBlock = <T = PixelImageBlockData,>({
                 {structuredData && structuredData.length > 0 && <script type="application/ld+json">{structuredData}</script>}
 
                 {/* No Index */}
-                {noIndex && (
-                    <>
-                        <meta name={"robots"} content={"noindex"} />
-                    </>
-                )}
+                {noIndex && <meta name={"robots"} content={"noindex"} />}
 
                 {/* Canonical Url */}
-                {(canonicalUrl ?? passedCanonicalUrl) && <link rel="canonical" href={canonicalUrl ?? passedCanonicalUrl} />}
+                {usedCanonicalUrl && <link rel="canonical" href={usedCanonicalUrl} />}
 
                 {/* Alternate Hreflang */}
                 {alternativeLinks &&
