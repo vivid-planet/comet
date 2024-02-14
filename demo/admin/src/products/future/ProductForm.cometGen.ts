@@ -12,7 +12,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
             label: "Titel", // default is generated from name (camelCaseToHumanReadable)
             required: true, // default is inferred from gql schema
         },
-        { type: "number", name: "packageDimensions.height", label: "Height" },
+        { type: "number", name: "packageDimensions.height", label: "Height", helperText: "Enter height in centimeters" },
         { type: "number", name: "packageDimensions.width", label: "Width" },
         { type: "number", name: "packageDimensions.depth", label: "Depth" },
         { type: "text", name: "slug" },

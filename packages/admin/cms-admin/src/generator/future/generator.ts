@@ -27,7 +27,7 @@ export type FormFieldConfigInternal =
         | { type: "staticSelect"; values?: string[] }
         | { type: "asyncSelect"; values?: string[] }
         | { type: "block"; block: BlockReference }
-    ) & { name: string; label?: string; required?: boolean; readOnly?: boolean };
+    ) & { name: string; label?: string; required?: boolean; readOnly?: boolean; helperText?: string };
 export type FormFieldConfig<T extends GeneratorEntity> = FormFieldConfigInternal & { name: Leaves<T> | Paths<T> };
 
 export type FormConfigInternal = {

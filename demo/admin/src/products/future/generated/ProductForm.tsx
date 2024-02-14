@@ -187,6 +187,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             type="number"
                             label={<FormattedMessage id="product.packageDimensions.height" defaultMessage="Height" />}
+                            helperText={
+                                <FormattedMessage id="product.packageDimensions.height.helperText" defaultMessage="Enter height in centimeters" />
+                            }
                         />
 
                         <Field

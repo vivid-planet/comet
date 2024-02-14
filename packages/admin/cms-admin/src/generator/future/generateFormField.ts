@@ -49,6 +49,11 @@ export function generateFormField(
             name="${name}"
             component={FinalFormInput}
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+            ${
+                config.helperText
+                    ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
+                    : ""
+            }
         />`;
     } else if (config.type == "number") {
         code = `
@@ -60,6 +65,13 @@ export function generateFormField(
                 component={FinalFormInput}
                 type="number"
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                ${
+                    config.helperText
+                        ? `helperText={<FormattedMessage id=` +
+                          `"${instanceGqlType}.${name}.helperText" ` +
+                          `defaultMessage="${config.helperText}" />}`
+                        : ""
+                }
             />`;
         //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
     } else if (config.type == "boolean") {
@@ -68,6 +80,14 @@ export function generateFormField(
                 <FormControlLabel
                     label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
                     control={<FinalFormCheckbox ${config.readOnly ? readOnlyProps : ""} {...props} />}
+
+                    ${
+                        config.helperText
+                            ? `helperText={<FormattedMessage id=` +
+                              `"${instanceGqlType}.${name}.helperText" ` +
+                              `defaultMessage="${config.helperText}" />}`
+                            : ""
+                    }
                 />
             )}
         </Field>`;
@@ -80,6 +100,13 @@ export function generateFormField(
                 name="${name}"
                 component={FinalFormDatePicker}
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                ${
+                    config.helperText
+                        ? `helperText={<FormattedMessage id=` +
+                          `"${instanceGqlType}.${name}.helperText" ` +
+                          `defaultMessage="${config.helperText}" />}`
+                        : ""
+                }
             />`;
     } else if (config.type == "block") {
         imports.push({
@@ -104,6 +131,13 @@ export function generateFormField(
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
             {(props) =>
                 <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
+            ${
+                config.helperText
+                    ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
+                    : ""
+            }
+            {(props) => 
+                <FinalFormSelect {...props}>
                 ${values
                     .map((value) => {
                         const id = `${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`;

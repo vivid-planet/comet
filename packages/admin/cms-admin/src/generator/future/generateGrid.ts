@@ -8,7 +8,7 @@ import {
 } from "graphql";
 import { plural } from "pluralize";
 
-import { GeneratorReturn, GridConfig, GridConfigInternal } from "./generator";
+import { GeneratorReturn, GridConfigInternal } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
 import { generateGqlParamDefinition } from "./utils/generateGqlParamDefinition";
