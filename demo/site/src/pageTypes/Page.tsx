@@ -47,12 +47,11 @@ export async function loader({
     pageTreeNodeId: string;
     scope: GQLPageTreeNodeScopeInput;
 }): Promise<unknown> {
-    const data = await client.request<GQLPageQuery>(pageQuery, {
+    return client.request<GQLPageQuery>(pageQuery, {
         pageTreeNodeId,
         domain: scope.domain,
         language: scope.language,
     });
-    return data;
 }
 
 export default function Page(props: GQLPageQuery): JSX.Element {
@@ -67,11 +66,7 @@ export default function Page(props: GQLPageQuery): JSX.Element {
             <TopNavigation data={props.topMenu} />
             <Header header={props.header} />
             {props.pageContent && <Breadcrumbs {...props.pageContent} />}
-            {document && document.__typename === "Page" ? (
-                <>
-                    <div>{document.content && <PageContentBlock data={document.content} />}</div>
-                </>
-            ) : null}
+            {document?.__typename === "Page" ? <div>{document.content && <PageContentBlock data={document.content} />}</div> : null}
         </>
     );
 }
