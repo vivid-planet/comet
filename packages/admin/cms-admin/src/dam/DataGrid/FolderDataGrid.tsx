@@ -36,6 +36,7 @@ import {
     GQLDamItemListPositionQueryVariables,
     GQLDamItemsListQuery,
     GQLDamItemsListQueryVariables,
+    GQLDamRowFragment,
 } from "./FolderDataGrid.gql.generated";
 import * as sc from "./FolderDataGrid.sc";
 import { FolderHead } from "./FolderHead";
@@ -59,6 +60,8 @@ export {
 } from "./FolderDataGrid.gql.generated";
 
 export type DamItemSelectionMap = Map<string, "file" | "folder">;
+
+export type DamRow = GQLDamRowFragment;
 
 interface FolderDataGridProps extends DamConfig {
     id?: string;

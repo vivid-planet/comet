@@ -34,6 +34,7 @@ import { Route, Switch } from "react-router-dom";
 
 import MasterHeader from "./common/MasterHeader";
 import MasterMenu, { masterMenuData, pageTreeDocumentTypes } from "./common/MasterMenu";
+import { renderUnsplashChip } from "./dam/renderUnsplashChip";
 import { getMessages } from "./lang";
 
 const GlobalStyle = () => (
@@ -65,7 +66,13 @@ class App extends React.Component {
                             resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
                         }}
                     >
-                        <DamConfigProvider value={{ scopeParts: ["domain"], additionalToolbarItems: <ImportFromUnsplash /> }}>
+                        <DamConfigProvider
+                            value={{
+                                scopeParts: ["domain"],
+                                additionalToolbarItems: <ImportFromUnsplash />,
+                                renderAdditionalRowContent: renderUnsplashChip,
+                            }}
+                        >
                             <IntlProvider locale="en" messages={getMessages()}>
                                 <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
                                     <MuiThemeProvider theme={theme}>

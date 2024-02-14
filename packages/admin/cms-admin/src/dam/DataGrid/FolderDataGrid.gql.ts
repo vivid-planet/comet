@@ -31,6 +31,8 @@ export const damFileTableFragment = gql`
             ...DamFileThumbnail
         }
         updatedAt
+        importSourceId
+        importSourceType
     }
     ${damFileThumbnailFragment}
 `;
@@ -60,6 +62,20 @@ export const damFolderQuery = gql`
     ${damFolderTableFragment}
 `;
 
+export const damRowFragment = gql`
+    fragment DamRow on DamItem {
+        ... on DamFile {
+            ...DamFileTable
+        }
+        ... on DamFolder {
+            ...DamFolderTable
+        }
+    }
+
+    ${damFileTableFragment}
+    ${damFolderTableFragment}
+`;
+
 export const damItemsListQuery = gql`
     query DamItemsList(
         $folderId: ID
@@ -82,18 +98,13 @@ export const damItemsListQuery = gql`
             scope: $scope
         ) {
             nodes {
-                ... on DamFile {
-                    ...DamFileTable
-                }
-                ... on DamFolder {
-                    ...DamFolderTable
-                }
+                ...DamRow
             }
             totalCount
         }
     }
-    ${damFileTableFragment}
-    ${damFolderTableFragment}
+
+    ${damRowFragment}
 `;
 
 export const moveDamFilesMutation = gql`
