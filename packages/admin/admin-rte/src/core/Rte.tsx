@@ -159,7 +159,7 @@ export const Rte: React.ForwardRefExoticComponent<React.PropsWithoutRef<RteProps
         const {
             value: editorState,
             onChange,
-            options: rteOptions,
+            options: passedOptions,
             disabled,
             minHeight,
             colors,
@@ -179,7 +179,7 @@ export const Rte: React.ForwardRefExoticComponent<React.PropsWithoutRef<RteProps
         const editorWrapperRef = React.useRef<HTMLDivElement>(null);
 
         // merge default options with passed options
-        let options = rteOptions ? { ...defaultOptions, ...rteOptions } : defaultOptions;
+        let options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions;
 
         // extract deprecated options and handle them specially
         let deprecatedCustomBlockMap: ICustomBlockTypeMap_Deprecated = {};
