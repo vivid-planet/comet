@@ -38,6 +38,21 @@ export function generateFormField(
     const readOnlyPropsWithLock = `${readOnlyProps} ${endAdornmentWithLockIconProp}`;
 
     const imports: Imports = [];
+
+    let validateCode = "";
+    if (config.validate) {
+        let importPath = config.validate.import;
+        if (importPath.startsWith("./")) {
+            //go one level up as generated files are in generated subfolder
+            importPath = `.${importPath}`;
+        }
+        imports.push({
+            name: config.validate.name,
+            importPath,
+        });
+        validateCode = `validate={${config.validate.name}}`;
+    }
+
     let code = "";
     if (config.type == "text") {
         const TextInputComponent = config.multiline ? "TextAreaField" : "TextField";
@@ -53,6 +68,7 @@ export function generateFormField(
                     ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
                     : ""
             }
+            ${validateCode}
         />`;
     } else if (config.type == "number") {
         code = `
@@ -71,10 +87,11 @@ export function generateFormField(
                           `defaultMessage="${config.helperText}" />}`
                         : ""
                 }
+                ${validateCode}
             />`;
         //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
     } else if (config.type == "boolean") {
-        code = `<Field name="${name}" label="" type="checkbox" fullWidth>
+        code = `<Field name="${name}" label="" type="checkbox" fullWidth ${validateCode}>
             {(props) => (
                 <FormControlLabel
                     label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
@@ -106,6 +123,7 @@ export function generateFormField(
                           `defaultMessage="${config.helperText}" />}`
                         : ""
                 }
+                ${validateCode}
             />`;
     } else if (config.type == "block") {
         imports.push({
@@ -127,16 +145,16 @@ export function generateFormField(
         code = `<Field
             fullWidth
             name="${name}"
-            label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
-            {(props) =>
-                <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
+            label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
             ${
                 config.helperText
                     ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
                     : ""
             }
-            {(props) => 
-                <FinalFormSelect {...props}>
+            ${validateCode}
+            >
+            {(props) =>
+                <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
                 ${values
                     .map((value) => {
                         const id = `${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`;

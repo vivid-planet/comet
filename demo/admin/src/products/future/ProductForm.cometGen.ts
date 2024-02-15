@@ -11,6 +11,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
             name: "title",
             label: "Titel", // default is generated from name (camelCaseToHumanReadable)
             required: true, // default is inferred from gql schema
+            validate: { name: "validateTitle", import: "./validateTitle" },
         },
         { type: "number", name: "packageDimensions.height", label: "Height", helperText: "Enter height in centimeters" },
         { type: "number", name: "packageDimensions.width", label: "Width" },
