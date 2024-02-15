@@ -1,6 +1,9 @@
 export interface CrudGeneratorOptions {
     targetDirectory: string;
-    requiredPermission?: string[] | string | { read: string[]; create: string[]; update: string[]; delete: string[] };
+    requiredPermission?:
+        | string[]
+        | string
+        | { read: string[] | string; create: string[] | string; update: string[] | string; delete: string[] | string };
     create?: boolean;
     update?: boolean;
     delete?: boolean;
