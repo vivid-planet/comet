@@ -149,13 +149,9 @@ export class UserPermissionsService {
                 return p;
             });
 
-        const currentUser = new CurrentUser();
-        return Object.assign(currentUser, {
-            id: user.id,
-            name: user.name,
-            email: user.email ?? "",
-            language: user.language,
+        return {
+            ...user,
             permissions,
-        });
+        };
     }
 }

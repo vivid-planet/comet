@@ -2,7 +2,7 @@ import { CallHandler, ExecutionContext, Inject, Injectable, Logger, NestIntercep
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 
-import { CurrentUserInterface } from "../auth/current-user/current-user";
+import { CurrentUser } from "../user-permissions/dto/current-user";
 import { SHOULD_LOG_REQUEST } from "./access-log.constants";
 import { ShouldLogRequest } from "./access-log.module";
 
@@ -79,7 +79,7 @@ export class AccessLogInterceptor implements NestInterceptor {
         return next.handle();
     }
 
-    private pushUserToRequestData(user: CurrentUserInterface, requestData: string[]) {
+    private pushUserToRequestData(user: CurrentUser, requestData: string[]) {
         if (user) {
             requestData.push(`user: ${user.id} (${user.name})`);
         }
