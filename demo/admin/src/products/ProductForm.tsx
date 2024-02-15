@@ -1,4 +1,4 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { ApolloClient, DocumentNode, gql, OperationVariables, TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
     FinalForm,
@@ -19,9 +19,11 @@ import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
+import debounce from "p-debounce";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { GQLProductBySlugQuery, GQLProductBySlugQueryVariables } from "./ProductForm.generated";
 import {
     createProductMutation,
     productCategoriesQuery,
@@ -57,6 +59,43 @@ const rootBlocks = {
 type FormValues = Omit<GQLProductFormManualFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
+
+// TODO move into @comet/cms-admin
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function createValidateSlug<TData = any, TVariables = OperationVariables>({
+    client,
+    query,
+    variables,
+    id,
+    resolveIdFromResponse: resolveIdFromResponse,
+}: {
+    client: ApolloClient<object>;
+    query: DocumentNode | TypedDocumentNode<TData, TVariables>;
+    variables?: Omit<TVariables, "slug">;
+    id: string | undefined;
+    resolveIdFromResponse: (data: TData) => string | undefined;
+}) {
+    return debounce(async (slug: string) => {
+        if (!/^([a-zA-Z0-9-._~]|%[0-9a-fA-F]{2})+$/.test(slug)) {
+            return <FormattedMessage id="product.slugNotValid" defaultMessage="Slug is not valid" />;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data } = await client.query<any, any>({
+            query,
+            variables: {
+                ...variables,
+                slug,
+            },
+            fetchPolicy: "network-only",
+        });
+
+        const resolvedId = resolveIdFromResponse(data);
+        if (resolvedId && resolvedId !== id) {
+            return <FormattedMessage id="product.slugNotAvailable" defaultMessage="Slug is not available" />;
+        }
+    }, 200);
+}
 
 function ProductForm({ id }: FormProps): React.ReactElement {
     const client = useApolloClient();
@@ -136,6 +175,19 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         return tags.data.productTags.nodes;
     });
 
+    const validateSlug = createValidateSlug<GQLProductBySlugQuery, GQLProductBySlugQueryVariables>({
+        client,
+        query: gql`
+            query ProductBySlug($slug: String!) {
+                productBySlug(slug: $slug) {
+                    id
+                }
+            }
+        `,
+        id,
+        resolveIdFromResponse: (data) => data.productBySlug?.id,
+    });
+
     if (error) {
         return <FormattedMessage id="common.error" defaultMessage="An error has occurred. Please try again at later" />;
     }
@@ -168,6 +220,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             required
                             fullWidth
                             name="slug"
+                            validate={validateSlug}
                             component={FinalFormInput}
                             label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
                         />

@@ -60,6 +60,7 @@
         "lodash.merge": "^4.0.0",
         "lodash.unset": "^4.0.0",
         "material-design-icons": "^3.0.0",
+        "p-debounce": "^4.0.0",
         "prop-types": "^15.7.2",
         "query-string": "^7.1.1",
         "react": "^17.0.2",
