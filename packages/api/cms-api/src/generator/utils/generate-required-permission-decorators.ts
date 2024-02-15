@@ -9,8 +9,7 @@ export function generateRequiredPermissionDecorators({
 }) {
     const ret: {
         resolverDecorator?: string;
-        listDecorator?: string;
-        singleDecorator?: string;
+        readDecorator?: string;
         createDecorator?: string;
         updateDecorator?: string;
         deleteDecorator?: string;
@@ -20,10 +19,7 @@ export function generateRequiredPermissionDecorators({
         if (Array.isArray(requiredPermission)) {
             ret.resolverDecorator = `@RequiredPermission(${JSON.stringify(requiredPermission)}${!hasScopeProp ? `, { skipScopeCheck: true }` : ""})`;
         } else {
-            ret.listDecorator = `@RequiredPermission(${JSON.stringify(requiredPermission.read)}${!hasScopeProp ? `, { skipScopeCheck: true }` : ""})`;
-            ret.singleDecorator = `@RequiredPermission(${JSON.stringify([...requiredPermission.read])}${
-                !hasScopeProp ? `, { skipScopeCheck: true }` : ""
-            })`;
+            ret.readDecorator = `@RequiredPermission(${JSON.stringify(requiredPermission.read)}${!hasScopeProp ? `, { skipScopeCheck: true }` : ""})`;
             ret.createDecorator = `@RequiredPermission(${JSON.stringify(requiredPermission.create)}${
                 !hasScopeProp ? `, { skipScopeCheck: true }` : ""
             })`;

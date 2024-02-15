@@ -24,7 +24,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
 
         const {
             resolverDecorator: resolverPermissionDecorator,
-            singleDecorator: singlePermissionDecorator,
+            readDecorator: readPermissionDecorator,
             updateDecorator: updatePermissionDecorator,
         } = generateRequiredPermissionDecorators({
             generatorOptions,
@@ -77,7 +77,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         ) {}
     
         @Query(() => ${metadata.className}, { nullable: true })
-        ${singlePermissionDecorator ? singlePermissionDecorator : ""}
+        ${readPermissionDecorator ? readPermissionDecorator : ""}
         async ${instanceNameSingular}(
                 ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
             ): Promise<${metadata.className} | null> {

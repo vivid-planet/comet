@@ -554,7 +554,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     const { classNameSingular } = buildNameVariants(metadata);
     const { scopeProp } = buildOptions(metadata);
 
-    const { resolverDecorator: resolverPermissionDecorator, singleDecorator: singlePermissionDecorator } = generateRequiredPermissionDecorators({
+    const { resolverDecorator: resolverPermissionDecorator, readDecorator: readPermissionDecorator } = generateRequiredPermissionDecorators({
         generatorOptions,
         hasScopeProp: !!scopeProp,
     });
@@ -574,7 +574,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
 
     @Resolver(() => ${metadata.className})
     ${resolverPermissionDecorator ? resolverPermissionDecorator : ""}
-    ${singlePermissionDecorator ? singlePermissionDecorator : ""}
+    ${readPermissionDecorator ? readPermissionDecorator : ""}
     export class ${classNameSingular}Resolver {
         ${code}
     }
@@ -681,8 +681,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
     const {
         resolverDecorator: resolverPermissionDecorator,
-        listDecorator: listPermissionDecorator,
-        singleDecorator: singlePermissionDecorator,
+        readDecorator: readPermissionDecorator,
         createDecorator: createPermissionDecorator,
         updateDecorator: updatePermissionDecorator,
         deleteDecorator: deletePermissionDecorator,
@@ -752,7 +751,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
         @Query(() => ${metadata.className})
         @AffectedEntity(${metadata.className})
-        ${singlePermissionDecorator ? singlePermissionDecorator : ""}
+        ${readPermissionDecorator ? readPermissionDecorator : ""}
         async ${instanceNameSingular}(${
         integerTypes.includes(metadata.properties.id.type)
             ? `@Args("id", { type: () => ID }, { transform: (value) => parseInt(value) }) id: number`
@@ -766,7 +765,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             hasSlugProp
                 ? `
         @Query(() => ${metadata.className}, { nullable: true })
-        ${singlePermissionDecorator ? singlePermissionDecorator : ""}
+        ${readPermissionDecorator ? readPermissionDecorator : ""}
         async ${instanceNameSingular}BySlug(
             @Args("slug") slug: string
             ${scopeProp ? `, @Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type}` : ""}
@@ -780,7 +779,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
 
         @Query(() => Paginated${classNamePlural})
-        ${listPermissionDecorator ? listPermissionDecorator : ""}
+        ${readPermissionDecorator ? readPermissionDecorator : ""}
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
             @Args() { ${scopeProp ? `scope, ` : ""}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${
         hasSortArg ? `sort, ` : ""
