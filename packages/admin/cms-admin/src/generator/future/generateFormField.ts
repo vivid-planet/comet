@@ -33,6 +33,21 @@ export function generateFormField(
     //TODO verify introspectionField.type is compatbile with config.type
 
     const imports: Imports = [];
+
+    let validateCode = "";
+    if (config.validate) {
+        let importPath = config.validate.import;
+        if (importPath.startsWith("./")) {
+            //go one level up as generated files are in generated subfolder
+            importPath = `.${importPath}`;
+        }
+        imports.push({
+            name: config.validate.name,
+            importPath,
+        });
+        validateCode = `validate={${config.validate.name}}`;
+    }
+
     let code = "";
     if (config.type == "text") {
         code = `
@@ -43,6 +58,7 @@ export function generateFormField(
             name="${name}"
             component={FinalFormInput}
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+            ${validateCode}
         />`;
     } else if (config.type == "number") {
         code = `
@@ -53,10 +69,11 @@ export function generateFormField(
                 component={FinalFormInput}
                 type="number"
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                ${validateCode}
             />`;
         //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
     } else if (config.type == "boolean") {
-        code = `<Field name="${name}" label="" type="checkbox" fullWidth>
+        code = `<Field name="${name}" label="" type="checkbox" fullWidth ${validateCode}>
             {(props) => (
                 <FormControlLabel
                     label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
@@ -72,6 +89,7 @@ export function generateFormField(
                 name="${name}"
                 component={FinalFormDatePicker}
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                ${validateCode}
             />`;
     } else if (config.type == "block") {
         imports.push({
@@ -93,7 +111,9 @@ export function generateFormField(
         code = `<Field
             fullWidth
             name="${name}"
-            label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
+            label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+            ${validateCode}
+            >
             {(props) => 
                 <FinalFormSelect {...props}>
                 ${values
