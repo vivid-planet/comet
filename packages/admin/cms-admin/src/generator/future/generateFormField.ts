@@ -35,13 +35,12 @@ export function generateFormField(
     const imports: Imports = [];
     let code = "";
     if (config.type == "text") {
+        const TextInputComponent = config.multiline ? "TextAreaField" : "TextField";
         code = `
-        <Field
+        <${TextInputComponent}
             ${required ? "required" : ""}
-            ${config.multiline ? "multiline" : ""}
             fullWidth
             name="${name}"
-            component={FinalFormInput}
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
         />`;
     } else if (config.type == "number") {
