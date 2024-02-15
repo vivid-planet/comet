@@ -75,18 +75,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
     It is not possible anymore to use a custom CurrentUserLoader neither to augment/use the CurrentUserInterface.
 
-3. Create interface for `availablePermissions` similar to the already existing interface `interface ContentScope`
-
-    ```ts
-    declare module "@comet/cms-api" {
-        interface Permission {
-            // e.g. `products: string;`
-        }
-    }
-    export {};
-    ```
-
-4. Create necessary services for the `UserPermissionsModule` (either in a new module or where it fits best)
+3. Create necessary services for the `UserPermissionsModule` (either in a new module or where it fits best)
 
     ```ts
     // Attention: might already being provided by the library which syncs the users
@@ -113,7 +102,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     }
     ```
 
-5. Replace `ContentScopeModule` with `UserPermissionsModule`
+4. Replace `ContentScopeModule` with `UserPermissionsModule`
 
     Remove `ContentScopeModule`:
 
@@ -128,7 +117,6 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     ```ts
     UserPermissionsModule.forRootAsync({
         useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
-            availablePermissions: [/* Array of strings defined in interface Permission */],
             availableContentScopes: [/* Array of content Scopes */],
             userService,
             accessControlService,
@@ -138,7 +126,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     }),
     ```
 
-6. Adapt decorators
+5. Adapt decorators
 
     Add `@RequiredPermission` to resolvers and controllers
 

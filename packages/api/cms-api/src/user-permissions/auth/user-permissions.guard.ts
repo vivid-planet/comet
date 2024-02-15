@@ -51,9 +51,7 @@ export class UserPermissionsGuard implements CanActivate {
             }
         }
 
-        const requiredPermissions = Array.isArray(requiredPermission.requiredPermission)
-            ? requiredPermission.requiredPermission
-            : [requiredPermission.requiredPermission];
+        const requiredPermissions = requiredPermission.requiredPermission;
         if (requiredPermissions.length === 0) {
             throw new Error(`RequiredPermission decorator has empty permissions in ${context.getClass().name}::${context.getHandler().name}()`);
         }

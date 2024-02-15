@@ -1,3 +1,4 @@
+import { DiscoveryModule } from "@golevelup/nestjs-discovery";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Provider } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
@@ -20,7 +21,7 @@ import {
 
 @Global()
 @Module({
-    imports: [MikroOrmModule.forFeature([UserPermission, UserContentScopes])],
+    imports: [MikroOrmModule.forFeature([UserPermission, UserContentScopes]), DiscoveryModule],
     providers: [
         UserPermissionsService,
         UserResolver,
