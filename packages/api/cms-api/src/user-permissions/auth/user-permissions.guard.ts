@@ -39,7 +39,7 @@ export class UserPermissionsGuard implements CanActivate {
             throw new Error(`RequiredPermission decorator is missing in ${context.getClass().name}::${context.getHandler().name}()`);
         }
 
-        let requiredContentScopes: (ContentScope | undefined)[];
+        let requiredContentScopes: ContentScope[] | undefined;
         if (!this.isResolvingGraphQLField(context) && !requiredPermission.options?.skipScopeCheck) {
             requiredContentScopes = await this.contentScopeService.inferScopesFromExecutionContext(context);
             if (!requiredContentScopes) {
@@ -58,7 +58,9 @@ export class UserPermissionsGuard implements CanActivate {
             throw new Error(`RequiredPermission decorator has empty permissions in ${context.getClass().name}::${context.getHandler().name}()`);
         }
         return requiredPermissions.some((permission) =>
-            requiredContentScopes.some((contentScope) => this.accessControlService.isAllowed(user, permission, contentScope)),
+            requiredContentScopes
+                ? requiredContentScopes.some((contentScope) => this.accessControlService.isAllowed(user, permission, contentScope))
+                : this.accessControlService.isAllowed(user, permission),
         );
     }
 

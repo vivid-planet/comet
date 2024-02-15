@@ -74,8 +74,9 @@ export class ContentScopeService {
         }
     }
 
-    async inferScopesFromExecutionContext(context: ExecutionContext): Promise<(ContentScope | undefined)[]> {
+    async inferScopesFromExecutionContext(context: ExecutionContext): Promise<ContentScope[] | undefined> {
         const scope = await this.inferScopeFromExecutionContext(context);
+        if (scope === undefined) return scope;
         return Array.isArray(scope) ? scope : [scope];
     }
 

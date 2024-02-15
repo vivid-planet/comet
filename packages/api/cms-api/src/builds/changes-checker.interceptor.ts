@@ -30,16 +30,18 @@ export class ChangesCheckerInterceptor implements NestInterceptor {
 
                 if (!skipBuild) {
                     const scopes = await this.contentScopeService.inferScopesFromExecutionContext(context);
-                    for (const scope of scopes) {
-                        if (process.env.NODE_ENV === "development" && this.changeAffectsAllScopes(scope)) {
-                            if (operation.name) {
-                                console.warn(`Mutation "${operation.name.value}" affects all scopes. Are you sure this is correct?`);
-                            } else {
-                                console.warn(`Unknown mutation affects all scopes. Are you sure this is correct?`);
+                    if (scopes) {
+                        for (const scope of scopes) {
+                            if (process.env.NODE_ENV === "development" && this.changeAffectsAllScopes(scope)) {
+                                if (operation.name) {
+                                    console.warn(`Mutation "${operation.name.value}" affects all scopes. Are you sure this is correct?`);
+                                } else {
+                                    console.warn(`Unknown mutation affects all scopes. Are you sure this is correct?`);
+                                }
                             }
-                        }
 
-                        await this.buildsService.setChangesSinceLastBuild(scope);
+                            await this.buildsService.setChangesSinceLastBuild(scope);
+                        }
                     }
                 }
             }
