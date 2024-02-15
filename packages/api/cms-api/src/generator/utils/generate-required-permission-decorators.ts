@@ -1,3 +1,5 @@
+import { isString } from "class-validator";
+
 import { CrudGeneratorOptions } from "../crud-generator.decorator";
 
 export function generateRequiredPermissionDecorators({
@@ -16,7 +18,7 @@ export function generateRequiredPermissionDecorators({
     } = {};
     if (generatorOptions.requiredPermission) {
         const requiredPermission = generatorOptions.requiredPermission;
-        if (Array.isArray(requiredPermission)) {
+        if (Array.isArray(requiredPermission) || isString(requiredPermission)) {
             ret.resolverDecorator = `@RequiredPermission(${JSON.stringify(requiredPermission)}${!hasScopeProp ? `, { skipScopeCheck: true }` : ""})`;
         } else {
             ret.readDecorator = `@RequiredPermission(${JSON.stringify(requiredPermission.read)}${!hasScopeProp ? `, { skipScopeCheck: true }` : ""})`;
