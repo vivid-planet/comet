@@ -86,7 +86,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     export {};
     ```
 
-4. Create necessary the `AccessControlService` for the `UserPermissionsModule` (either in a new module or where it fits best)
+4. Create the `AccessControlService` for the `UserPermissionsModule` (either in a new module or where it fits best)
 
     ```ts
     @Injectable()
