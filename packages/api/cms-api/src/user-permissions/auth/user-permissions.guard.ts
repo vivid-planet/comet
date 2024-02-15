@@ -39,10 +39,10 @@ export class UserPermissionsGuard implements CanActivate {
             throw new Error(`RequiredPermission decorator is missing in ${context.getClass().name}::${context.getHandler().name}()`);
         }
 
-        let contentScope: ContentScope | undefined;
+        let requiredContentScopes: (ContentScope | undefined)[];
         if (!this.isResolvingGraphQLField(context) && !requiredPermission.options?.skipScopeCheck) {
-            contentScope = await this.contentScopeService.inferScopeFromExecutionContext(context);
-            if (!contentScope) {
+            requiredContentScopes = await this.contentScopeService.inferScopesFromExecutionContext(context);
+            if (!requiredContentScopes) {
                 throw new Error(
                     `Could not get ContentScope. Either pass a scope-argument or add @AffectedEntity()-decorator or enable skipScopeCheck in @RequiredPermission() (${
                         context.getClass().name
@@ -57,7 +57,9 @@ export class UserPermissionsGuard implements CanActivate {
         if (requiredPermissions.length === 0) {
             throw new Error(`RequiredPermission decorator has empty permissions in ${context.getClass().name}::${context.getHandler().name}()`);
         }
-        return requiredPermissions.some((permission) => this.accessControlService.isAllowed(user, permission, contentScope));
+        return requiredPermissions.some((permission) =>
+            requiredContentScopes.some((contentScope) => this.accessControlService.isAllowed(user, permission, contentScope)),
+        );
     }
 
     // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
