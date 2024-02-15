@@ -7,6 +7,7 @@ import isEqual from "lodash.isequal";
 import { PageTreeService } from "../page-tree/page-tree.service";
 import { ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { AffectedArgSelector } from "./decorators/affected-arg.decorator";
 import { AffectedEntityMeta } from "./decorators/affected-entity.decorator";
 
 @Injectable()
@@ -69,6 +70,15 @@ export class ContentScopeService {
             }
             return contentScope;
         }
+
+        const affectedArg = this.reflector.getAllAndOverride<AffectedArgSelector>("affectedArg", [context.getHandler(), context.getClass()]);
+        if (affectedArg) {
+            if (typeof affectedArg === "function") {
+                return affectedArg(args);
+            }
+            return args[affectedArg];
+        }
+
         if (args.scope) {
             return args.scope;
         }
