@@ -45,8 +45,12 @@ function fieldListFromIntrospectionTypeRecursive(
 
     return typeDef.fields.reduce<{ path: string; field: IntrospectionField }[]>((acc, field) => {
         const path = `${parentPath ? `${parentPath}.` : ""}${field.name}`;
-        if (field.type.kind === "OBJECT") {
-            const subFields = fieldListFromIntrospectionTypeRecursive(types, field.type.name, path);
+        let outputType = field.type;
+        if (outputType.kind === "NON_NULL") {
+            outputType = outputType.ofType;
+        }
+        if (outputType.kind === "OBJECT") {
+            const subFields = fieldListFromIntrospectionTypeRecursive(types, outputType.name, path);
             acc.push(...subFields);
         } else {
             acc.push({
