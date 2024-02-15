@@ -1,7 +1,7 @@
-import { Field, FinalFormInput, FinalFormSelect } from "@comet/admin";
+import { Field, FinalFormInput } from "@comet/admin";
 import { BlockCategory, BlocksFinalForm, createCompositeBlock, createCompositeSetting } from "@comet/blocks-admin";
+import { createCompositeBlockSelectField } from "@comet/blocks-admin/lib/blocks/helpers/createCompositeBlockSelectField";
 import { createRichTextBlock } from "@comet/cms-admin";
-import { MenuItem } from "@mui/material";
 import { HeadlineBlockData } from "@src/blocks.generated";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import * as React from "react";
@@ -39,27 +39,17 @@ export const HeadlineBlock = createCompositeBlock(
                 title: "Headline",
             },
             level: {
-                block: createCompositeSetting<HeadlineBlockData["level"]>({
+                block: createCompositeBlockSelectField({
                     defaultValue: "header-one",
-                    AdminComponent: ({ state, updateState }) => (
-                        <BlocksFinalForm<Pick<HeadlineBlockData, "level">>
-                            onSubmit={({ level }) => updateState(level)}
-                            initialValues={{ level: state }}
-                        >
-                            <Field name="level" label="Level" fullWidth>
-                                {(props) => (
-                                    <FinalFormSelect {...props}>
-                                        <MenuItem value="header-one">Header One</MenuItem>
-                                        <MenuItem value="header-two">Header Two</MenuItem>
-                                        <MenuItem value="header-three">Header Three</MenuItem>
-                                        <MenuItem value="header-four">Header Four</MenuItem>
-                                        <MenuItem value="header-five">Header Five</MenuItem>
-                                        <MenuItem value="header-six">Header Six</MenuItem>
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
-                        </BlocksFinalForm>
-                    ),
+                    fieldProps: { label: "Level", fullWidth: true },
+                    options: [
+                        { value: "header-one", label: "Header One" },
+                        { value: "header-two", label: "Header Two" },
+                        { value: "header-three", label: "Header Three" },
+                        { value: "header-four", label: "Header Four" },
+                        { value: "header-five", label: "Header Five" },
+                        { value: "header-six", label: "Header Six" },
+                    ],
                 }),
             },
         },
