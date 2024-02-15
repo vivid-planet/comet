@@ -2,6 +2,34 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type UserPermission {
+  id: ID!
+  source: UserPermissionSource!
+  permission: String!
+  validFrom: DateTime
+  validTo: DateTime
+  reason: String
+  requestedBy: String
+  approvedBy: String
+  overrideContentScopes: Boolean!
+  contentScopes: [JSONObject!]!
+}
+
+enum UserPermissionSource {
+  MANUAL
+  BY_RULE
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
 type Dependency {
   rootId: String!
   rootGraphqlObjectType: String!
@@ -44,11 +72,6 @@ type DamFileImage {
   url(width: Int!, height: Int!): String
 }
 
-"""
-The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
 type DamFileLicense {
   type: LicenseType
   details: String
@@ -69,10 +92,20 @@ enum LicenseType {
   RIGHTS_MANAGED
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
+type CurrentUserPermission {
+  permission: String!
+  contentScopes: [JSONObject!]
+}
+
+type CurrentUser {
+  id: String!
+  name: String!
+  email: String!
+  language: String!
+  allowedContentScopes: [JSONObject!]!
+  contentScopes: [JSONObject!]
+  permissions: [CurrentUserPermission!]!
+}
 
 type BuildTemplate {
   id: ID!
@@ -144,44 +177,11 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
-type CurrentUserPermission {
-  permission: String!
-  contentScopes: [JSONObject!]
-}
-
-type CurrentUser {
-  id: String!
-  name: String!
-  email: String!
-  language: String!
-  allowedContentScopes: [JSONObject!]!
-  contentScopes: [JSONObject!]
-  permissions: [CurrentUserPermission!]!
-}
-
 type User {
   id: String!
   name: String!
   email: String!
   language: String!
-}
-
-type UserPermission {
-  id: ID!
-  source: UserPermissionSource!
-  permission: String!
-  validFrom: DateTime
-  validTo: DateTime
-  reason: String
-  requestedBy: String
-  approvedBy: String
-  overrideContentScopes: Boolean!
-  contentScopes: [JSONObject!]!
-}
-
-enum UserPermissionSource {
-  MANUAL
-  BY_RULE
 }
 
 type PaginatedUserList {

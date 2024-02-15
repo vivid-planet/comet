@@ -7,7 +7,7 @@ import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { PublicApi } from "../decorators/public-api.decorator";
 
 interface AuthResolverConfig {
-    currentUser: Type<CurrentUser>;
+    currentUser?: Type<CurrentUser>; // TODO Remove in future version as it is not used and here for backwards compatibility
     endSessionEndpoint?: string;
     postLogoutRedirectUri?: string;
 }
@@ -19,9 +19,9 @@ export function createAuthResolver(config: AuthResolverConfig): Type<unknown> {
         @Mutation(() => String)
         @SkipBuild()
         async currentUserSignOut(@Context("req") req: IncomingMessage): Promise<string | null> {
-            let signOutUrl = config.postLogoutRedirectUri || "/";
+            let signOutUrl = config?.postLogoutRedirectUri || "/";
 
-            if (req.headers["authorization"] && config.endSessionEndpoint) {
+            if (req.headers["authorization"] && config?.endSessionEndpoint) {
                 const url = new URL(config.endSessionEndpoint);
                 url.search = new URLSearchParams({
                     id_token_hint: req.headers["authorization"].substring(7),

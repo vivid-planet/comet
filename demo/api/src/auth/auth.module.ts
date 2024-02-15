@@ -1,4 +1,4 @@
-import { createAuthResolver, createCometAuthGuard, createStaticAuthedUserStrategy, CurrentUser } from "@comet/cms-api";
+import { createAuthResolver, createCometAuthGuard, createStaticAuthedUserStrategy } from "@comet/cms-api";
 import { Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 
@@ -11,9 +11,7 @@ import { UserService } from "./user.service";
         createStaticAuthedUserStrategy({
             staticAuthedUser: staticUsers[0].id,
         }),
-        createAuthResolver({
-            currentUser: CurrentUser,
-        }),
+        createAuthResolver({}),
         {
             provide: APP_GUARD,
             useClass: createCometAuthGuard(["static-authed-user"]),

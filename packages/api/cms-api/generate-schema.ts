@@ -28,7 +28,7 @@ import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
-import { CurrentUser } from "./src/user-permissions/dto/current-user";
+import { CurrentUserResolver } from "./src/user-permissions/current-user.resolver";
 import { UserResolver } from "./src/user-permissions/user.resolver";
 import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
 import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
@@ -69,7 +69,7 @@ async function generateSchema(): Promise<void> {
     }); // no scope
     const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
 
-    const AuthResolver = createAuthResolver({ currentUser: CurrentUser });
+    const AuthResolver = createAuthResolver({});
     const RedirectsDependenciesResolver = DependenciesResolverFactory.create(RedirectEntity);
 
     const Folder = createFolderEntity();
@@ -95,6 +95,7 @@ async function generateSchema(): Promise<void> {
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,
+        CurrentUserResolver,
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

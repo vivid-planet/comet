@@ -130,12 +130,8 @@ export class UserPermissionsService {
         const userContentScopes = await this.getContentScopes(user.id);
         const userPermissions = await this.getPermissions(user.id);
 
-        const currentUser = new CurrentUser();
-        return Object.assign(currentUser, {
-            id: user.id,
-            name: user.name,
-            email: user.email ?? "",
-            language: user.language,
+        return {
+            ...user,
             contentScopes: userContentScopes === UserPermissions.allContentScopes ? null : userContentScopes,
             permissions: userPermissions
                 .filter((p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)))
@@ -143,6 +139,6 @@ export class UserPermissionsService {
                     permission: p.permission,
                     contentScopes: p.overrideContentScopes ? p.contentScopes : null,
                 })),
-        });
+        };
     }
 }
