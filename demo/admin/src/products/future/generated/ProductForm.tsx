@@ -205,6 +205,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             type="number"
                             label={<FormattedMessage id="product.price" defaultMessage="Price" />}
+                            helperText={<FormattedMessage id="product.price.helperText" defaultMessage="Enter price in this format: 123,45" />}
                         />
                         <Field name="inStock" label="" type="checkbox" fullWidth>
                             {(props) => (
