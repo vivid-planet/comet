@@ -78,6 +78,25 @@ export function generateForm(
             return generated.code;
         })
         .join("\n");
+    for (const name in gqlDocuments) {
+        const gqlDocument = gqlDocuments[name];
+        imports.push({
+            name: name,
+            importPath: `./${baseOutputFilename}.gql`,
+        });
+        const match = gqlDocument.match(/^\s*(query|mutation|fragment)\s+(\w+)\(/);
+        if (!match) throw new Error(`Could not find query or mutation name in ${gqlDocument}`);
+        const type = match[1];
+        const documentName = match[2];
+        imports.push({
+            name: `GQL${documentName}${type[0].toUpperCase() + type.substring(1)}`,
+            importPath: `./${baseOutputFilename}.gql.generated`,
+        });
+        imports.push({
+            name: `GQL${documentName}${type[0].toUpperCase() + type.substring(1)}Variables`,
+            importPath: `./${baseOutputFilename}.gql.generated`,
+        });
+    }
 
     const code = `import { useApolloClient, useQuery } from "@apollo/client";
     import {
@@ -111,21 +130,6 @@ export function generateForm(
     import { FormattedMessage } from "react-intl";
     ${generateImportsCode(imports)}
     
-    import {
-        create${gqlType}Mutation,
-        ${instanceGqlType}FormFragment,
-        ${instanceGqlType}Query,
-        update${gqlType}Mutation,
-    } from "./${baseOutputFilename}.gql";
-    import {
-        GQLCreate${gqlType}Mutation,
-        GQLCreate${gqlType}MutationVariables,
-        GQL${fragmentName}Fragment,
-        GQL${gqlType}Query,
-        GQL${gqlType}QueryVariables,
-        GQLUpdate${gqlType}Mutation,
-        GQLUpdate${gqlType}MutationVariables,
-    } from "./${baseOutputFilename}.gql.generated";
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
         .join("\n")}
