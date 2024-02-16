@@ -11,13 +11,7 @@ export { readClipboardText } from "./clipboard/readClipboardText";
 export { writeClipboardText } from "./clipboard/writeClipboardText";
 export { CancelButton, CancelButtonClassKey, CancelButtonProps } from "./common/buttons/cancel/CancelButton";
 export { ClearInputButton, ClearInputButtonClassKey, ClearInputButtonProps } from "./common/buttons/clearinput/ClearInputButton";
-export {
-    CopyToClipboardButton,
-    CopyToClipboardButtonClassKey,
-    CopyToClipboardButtonComponents,
-    CopyToClipboardButtonComponentsProps,
-    CopyToClipboardButtonProps,
-} from "./common/buttons/CopyToClipboardButton";
+export { CopyToClipboardButton, CopyToClipboardButtonClassKey, CopyToClipboardButtonProps } from "./common/buttons/CopyToClipboardButton";
 export { DeleteButton, DeleteButtonClassKey, DeleteButtonProps } from "./common/buttons/delete/DeleteButton";
 export { OkayButton, OkayButtonClassKey, OkayButtonProps } from "./common/buttons/okay/OkayButton";
 export { SaveButton, SaveButtonClassKey, SaveButtonProps } from "./common/buttons/save/SaveButton";
