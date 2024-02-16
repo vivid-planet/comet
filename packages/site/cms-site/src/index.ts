@@ -18,9 +18,10 @@ export { isWithPreviewPropsData, withPreview, WithPreviewProps } from "./iframeb
 export type { ImageDimensions } from "./image/Image";
 export { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, Image, parseAspectRatio } from "./image/Image";
 export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";
-export { handlePreviewApiRequest, PreviewData } from "./preview/handlePreviewApiRequest";
 export { usePreview } from "./preview/usePreview";
 export { PreviewSkeleton } from "./previewskeleton/PreviewSkeleton";
 export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSitePreviewIFrameMessage";
 export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePreviewIFrameMessage";
+export type { BlockPreviewParams, SitePreviewParams } from "./sitePreview/SitePreviewApiHelper";
+export { getValidatedBlockPreviewParams, getValidatedSitePreviewParams } from "./sitePreview/SitePreviewApiHelper";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";

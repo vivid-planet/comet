@@ -4,6 +4,8 @@ import { Grid, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 
+import { useContentScope } from "../../contentScope/Provider";
+import { useSitesConfig } from "../../sitesConfig/useSitesConfig";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
 import { VisibilityToggle } from "../common/VisibilityToggle";
@@ -11,12 +13,12 @@ import { BlockPreviewApi } from "./useBlockPreview";
 
 interface Props {
     previewApi: BlockPreviewApi;
-    url: string;
+    previewPath: string;
     previewState: unknown;
 }
 
 function BlockPreview({
-    url,
+    previewPath,
     previewState,
     previewApi: { device, setDevice, showOnlyVisible, setShowOnlyVisible, setMinimized },
 }: Props): React.ReactElement {
@@ -27,6 +29,13 @@ function BlockPreview({
             iFrameBridge.sendBlockState(previewState);
         }
     }, [iFrameBridge, previewState]);
+
+    const { scope } = useContentScope();
+    const sitesConfigContext = useSitesConfig();
+    const initialPageUrl = `${sitesConfigContext.blockPreviewApiUrl}?${new URLSearchParams({
+        scope: JSON.stringify(scope),
+        path: previewPath,
+    }).toString()}`;
 
     const handleMinimizeClick = () => {
         setMinimized((minimized) => !minimized);
@@ -48,7 +57,7 @@ function BlockPreview({
                     </Grid>
                 </Grid>
             </ActionsContainer>
-            <IFrameViewer ref={iFrameBridge.iFrameRef} device={device} initialPageUrl={url} />
+            <IFrameViewer ref={iFrameBridge.iFrameRef} device={device} initialPageUrl={initialPageUrl} />
         </Root>
     );
 }
