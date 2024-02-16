@@ -4,7 +4,7 @@ import { generateFormField } from "./generateFormField";
 import { FormConfigInternal, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
-import { generateFieldListGqlString, getRootProps } from "./utils/generateFieldList";
+import { generateFieldListGqlString } from "./utils/generateFieldList";
 import { generateFormValuesTypeDefinition } from "./utils/generateFormValuesTypeDefinition";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 import { generateInitialValuesValue } from "./utils/generateInitialValuesValue";
