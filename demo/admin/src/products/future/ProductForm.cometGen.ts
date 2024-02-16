@@ -15,7 +15,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
         { type: "text", name: "slug" },
         { type: "text", name: "description", label: "Description", multiline: true },
         { type: "staticSelect", name: "type", label: "Type" /*, values: from gql schema (TODO overridable)*/ },
-        //TODO { type: "asyncSelect", name: "category", label: "Category" /*, endpoint: from gql schema (overridable)*/ },
+        { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
         { type: "number", name: "price" },
         { type: "boolean", name: "inStock" },
         { type: "date", name: "availableSince" },

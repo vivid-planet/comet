@@ -28,10 +28,28 @@ export function generateForm(
     const numberFields = config.fields.filter((field) => field.type == "number");
     const booleanFields = config.fields.filter((field) => field.type == "boolean");
 
+    let hooksCode = "";
+    let formValueToGqlInputCode = "";
+
+    const formFragmentFields: string[] = [];
+    const fieldsCode = config.fields
+        .map((field) => {
+            const generated = generateFormField({ gqlIntrospection }, field, config);
+            for (const name in generated.gqlDocuments) {
+                gqlDocuments[name] = generated.gqlDocuments[name];
+            }
+            imports.push(...generated.imports);
+            hooksCode += generated.hooksCode;
+            formValueToGqlInputCode += generated.formValueToGqlInputCode;
+            formFragmentFields.push(generated.formFragmentField);
+            return generated.code;
+        })
+        .join("\n");
+
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
         fragment ${fragmentName} on ${gqlType} {
-            ${config.fields.map((field) => field.name).join("\n")}
+            ${formFragmentFields.join("\n")}
         }
     `;
 
@@ -68,23 +86,13 @@ export function generateForm(
         \${${`${instanceGqlType}FormFragment`}}
     `;
 
-    const fieldsCode = config.fields
-        .map((field) => {
-            const generated = generateFormField({ gqlIntrospection }, field, config);
-            for (const name in generated.gqlDocuments) {
-                gqlDocuments[name] = generated.gqlDocuments[name];
-            }
-            imports.push(...generated.imports);
-            return generated.code;
-        })
-        .join("\n");
     for (const name in gqlDocuments) {
         const gqlDocument = gqlDocuments[name];
         imports.push({
             name: name,
             importPath: `./${baseOutputFilename}.gql`,
         });
-        const match = gqlDocument.match(/^\s*(query|mutation|fragment)\s+(\w+)\(/);
+        const match = gqlDocument.match(/^\s*(query|mutation|fragment)\s+(\w+)/);
         if (!match) throw new Error(`Could not find query or mutation name in ${gqlDocument}`);
         const type = match[1];
         const documentName = match[2];
@@ -204,10 +212,7 @@ export function generateForm(
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
                 ...formValues,
-                ${numberFields.map((field) => `${String(field.name)}: parseFloat(formValues.${String(field.name)}),`).join("\n")}
-                ${Object.keys(rootBlocks)
-                    .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.state2Output(formValues.${rootBlockKey}),`)
-                    .join("\n")}
+                ${formValueToGqlInputCode}
             };
             if (mode === "edit") {
                 if (!id) throw new Error();
@@ -230,6 +235,8 @@ export function generateForm(
                 }
             }
         };
+
+        ${hooksCode}
     
         if (error) throw error;
     
