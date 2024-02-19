@@ -225,6 +225,10 @@ export class FilesService {
         return withFilesSelect(this.selectQueryBuilder(), { imageId }).getSingleResult();
     }
 
+    async findOneByImportSourceId(importSourceId: string): Promise<FileInterface | null> {
+        return this.filesRepository.findOne({ importSourceId });
+    }
+
     async create({ folderId, ...data }: CreateFileInput & { copyOf?: FileInterface }): Promise<FileInterface> {
         const folder = folderId ? await this.foldersService.findOneById(folderId) : undefined;
         return this.save(
