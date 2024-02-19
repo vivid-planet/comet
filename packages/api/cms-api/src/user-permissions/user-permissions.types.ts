@@ -38,12 +38,12 @@ export interface UserPermissionsOptions {
     availableContentScopes?: ContentScope[];
 }
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {
-    UserService: Type<UserPermissionsUserServiceInterface>;
+    UserService?: Type<UserPermissionsUserServiceInterface>;
     AccessControlService: Type<AccessControlServiceInterface>;
 }
 
 export interface UserPermissionsAsyncOptions extends UserPermissionsOptions {
-    userService: UserPermissionsUserServiceInterface;
+    userService?: UserPermissionsUserServiceInterface;
     accessControlService: AccessControlServiceInterface;
 }
 
