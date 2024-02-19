@@ -13,8 +13,6 @@ export const ProductForm: FormConfig<GQLProduct> = {
             required: true, // default is inferred from gql schema
             validate: { name: "validateTitle", import: "./validateTitle" },
         },
-        // "packageDimensions.height" naming is not yet supported.
-        // { type: "text", name: "packageDimensions.height", label: "Height", helperText: "Enter height in centimeters" },
         { type: "text", name: "slug" },
         { type: "text", name: "description", label: "Description", multiline: true },
         { type: "staticSelect", name: "type", label: "Type" /*, values: from gql schema (TODO overridable)*/ },
