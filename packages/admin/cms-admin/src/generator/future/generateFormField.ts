@@ -58,6 +58,11 @@ export function generateFormField(
             name="${name}"
             component={FinalFormInput}
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+            ${
+                config.helperText
+                    ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
+                    : ""
+            }
             ${validateCode}
         />`;
     } else if (config.type == "number") {
@@ -69,6 +74,13 @@ export function generateFormField(
                 component={FinalFormInput}
                 type="number"
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                ${
+                    config.helperText
+                        ? `helperText={<FormattedMessage id=` +
+                          `"${instanceGqlType}.${name}.helperText" ` +
+                          `defaultMessage="${config.helperText}" />}`
+                        : ""
+                }
                 ${validateCode}
             />`;
         //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
@@ -78,6 +90,13 @@ export function generateFormField(
                 <FormControlLabel
                     label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
                     control={<FinalFormCheckbox {...props} />}
+                    ${
+                        config.helperText
+                            ? `helperText={<FormattedMessage id=` +
+                              `"${instanceGqlType}.${name}.helperText" ` +
+                              `defaultMessage="${config.helperText}" />}`
+                            : ""
+                    }
                 />
             )}
         </Field>`;
@@ -89,6 +108,13 @@ export function generateFormField(
                 name="${name}"
                 component={FinalFormDatePicker}
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                ${
+                    config.helperText
+                        ? `helperText={<FormattedMessage id=` +
+                          `"${instanceGqlType}.${name}.helperText" ` +
+                          `defaultMessage="${config.helperText}" />}`
+                        : ""
+                }
                 ${validateCode}
             />`;
     } else if (config.type == "block") {
@@ -111,9 +137,13 @@ export function generateFormField(
         code = `<Field
             fullWidth
             name="${name}"
-            label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+            label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
+            ${
+                config.helperText
+                    ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
+                    : ""
+            }
             ${validateCode}
-            >
             {(props) => 
                 <FinalFormSelect {...props}>
                 ${values

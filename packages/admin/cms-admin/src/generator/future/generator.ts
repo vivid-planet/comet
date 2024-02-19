@@ -22,7 +22,7 @@ export type FormFieldConfig<T> = (
     | { type: "staticSelect"; values?: string[] }
     | { type: "asyncSelect"; values?: string[] }
     | { type: "block"; block: ImportReference }
-) & { name: keyof T; label?: string; required?: boolean; validate?: ImportReference };
+) & { name: keyof T; label?: string; required?: boolean; validate?: ImportReference; helperText?: string };
 
 export type FormConfig<T extends { __typename?: string }> = {
     type: "form";
