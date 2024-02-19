@@ -6,6 +6,7 @@ import { FieldInputProps, FieldRenderProps } from "react-final-form";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { Loading } from "../common/Loading";
+import { useMlService } from "../ml/useMlService";
 
 export type FinalFormInputProps = InputBaseProps &
     FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement> & {
@@ -25,6 +26,7 @@ export function FinalFormInput({
     ...props
 }: FinalFormInputProps): React.ReactElement {
     const theme = useTheme();
+    const { enabled: MlEnabled } = useMlService();
 
     return (
         <InputBase
@@ -35,7 +37,7 @@ export function FinalFormInput({
                     {clearable && (
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
                     )}
-                    {mlButton && (
+                    {mlButton && MlEnabled && (
                         <IconButton sx={{ color: theme.palette.primary.main }} onClick={() => mlButton(input)}>
                             {loading ? <Loading behavior="fillParent" fontSize="large" /> : <ArtificialIntelligence />}
                         </IconButton>
