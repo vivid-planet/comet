@@ -31,6 +31,7 @@ import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { validateTitle } from "../validateTitle";
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
     GQLCreateProductMutation,
@@ -165,6 +166,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             name="title"
                             component={FinalFormInput}
                             label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
+                            validate={validateTitle}
                         />
 
                         <Field
