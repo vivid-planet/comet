@@ -16,8 +16,6 @@ const dialogSizeOptions: DialogSizeOptions = {
     "XS (350px)": "xs",
     "SM (680px)": "sm",
     "MD (1024px)": "md",
-    "LG (1280px)": "lg",
-    "XL (1920px)": "xl",
     FullWidth: "fullWidth",
 };
 
