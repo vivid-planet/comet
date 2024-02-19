@@ -177,6 +177,7 @@ export function Menu(inProps: MenuProps) {
                         ...permanentDrawerPaperProps?.sx,
                     },
                 }}
+                {...restProps}
             >
                 {children}
             </PermanentDrawer>
