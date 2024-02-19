@@ -33,6 +33,7 @@ import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { validateTitle } from "../validateTitle";
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
     GQLCreateProductMutation,
@@ -74,6 +75,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             data?.product
                 ? {
                       ...filter<GQLProductFormDetailsFragment>(productFormFragment, data.product),
+
                       price: String(data.product.price),
                       image: rootBlocks.image.input2State(data.product.image),
                   }
@@ -99,6 +101,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
+
             price: parseFloat(formValues.price),
             image: rootBlocks.image.state2Output(formValues.image),
         };
@@ -161,7 +164,13 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Titel" />} />
+                        <TextField
+                            required
+                            fullWidth
+                            name="title"
+                            label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
+                            validate={validateTitle}
+                        />
 
                         <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
 
