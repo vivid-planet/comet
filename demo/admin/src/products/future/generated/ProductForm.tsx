@@ -75,7 +75,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             data?.product
                 ? {
                       ...filter<GQLProductFormDetailsFragment>(productFormFragment, data.product),
-
                       price: String(data.product.price),
                       image: rootBlocks.image.input2State(data.product.image),
                   }
@@ -101,7 +100,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
-
             price: parseFloat(formValues.price),
             image: rootBlocks.image.state2Output(formValues.image),
         };
