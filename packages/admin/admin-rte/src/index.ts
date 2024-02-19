@@ -17,7 +17,7 @@ export { default as filterEditorUtilsManipulateEntityData } from "./core/filterE
 export { default as filterEditorUtilsRemoveEntities } from "./core/filterEditor/utils/removeEntities";
 export { default as filterEditorUtilsRemoveInlineStyles } from "./core/filterEditor/utils/removeInlineStyles";
 export { IMakeRteApiProps, IRteApiProps, default as makeRteApi, OnDebouncedContentChangeFn } from "./core/makeRteApi";
-export { FilterEditorStateBeforeUpdateFn, IOptions as IRteOptions, IRteRef, default as Rte, RteClassKey, RteProps } from "./core/Rte";
+export { FilterEditorStateBeforeUpdateFn, IOptions as IRteOptions, IRteRef, Rte, RteClassKey, RteProps } from "./core/Rte";
 export { IOptions as IRteReadOnlyOptions, IProps as IRteReadOnlyProps, default as RteReadOnly } from "./core/RteReadOnly";
 export { default as findEntityInCurrentSelection } from "./core/utils/findEntityInCurrentSelection";
 export { default as findTextInCurrentSelection } from "./core/utils/findTextInCurrentSelection";
