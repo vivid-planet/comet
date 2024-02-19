@@ -26,6 +26,7 @@ import { createFolderEntity } from "./src/dam/files/entities/folder.entity";
 import { FileLicensesResolver } from "./src/dam/files/file-licenses.resolver";
 import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
+import { MlResolver } from "./src/ml/ml.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
 import { UserResolver } from "./src/user-permissions/user.resolver";
@@ -94,6 +95,7 @@ async function generateSchema(): Promise<void> {
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,
+        MlResolver,
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

@@ -11,6 +11,7 @@ import {
     FilesService,
     ImagesService,
     KubernetesModule,
+    MlModule,
     PageTreeModule,
     PageTreeService,
     PublicUploadModule,
@@ -24,6 +25,7 @@ import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
 import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
+import { MLModels } from "@src/ml.module";
 import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { Request } from "express";
@@ -144,6 +146,7 @@ export class AppModule {
                     directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
                     acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
                 }),
+                MlModule.register({ models: MLModels() }),
                 NewsModule,
                 MenusModule,
                 FooterModule,

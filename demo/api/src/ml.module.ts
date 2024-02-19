@@ -1,0 +1,85 @@
+import { MlRequest, Options } from "@comet/cms-api/lib/ml/ml.types";
+import { apiKey, apiUrl } from "@src/ml.key";
+
+export const MLModels = () => {
+    const createMessages = (options: MlRequest, imageDetail: "low" | "high") => {
+        const messages = [];
+        options.instructions && messages.push({ role: "system", content: options.instructions });
+        options.context && messages.push({ role: "user", content: options.context });
+
+        if (options.examples) {
+            for (const example of options.examples) {
+                messages.push({
+                    role: example.role,
+                    content: example.text,
+                });
+            }
+        }
+
+        if (options.image) {
+            messages.push({
+                role: "user",
+                content: [
+                    {
+                        type: "image_url",
+                        image_url: {
+                            url: options.image.base64,
+                            detail: imageDetail,
+                        },
+                    },
+                ],
+            });
+        }
+
+        options.prompt && messages.push({ role: "user", content: options.prompt });
+
+        return messages;
+    };
+
+    function mapOptions(options?: Options) {
+        if (!options) {
+            return {};
+        }
+        return {
+            seed: options.seed,
+            temperature: options.temperature,
+            max_tokens: options.maxTokens,
+        };
+    }
+
+    const createRequest = (options: MlRequest, imageDetail: "low" | "high", apiKey: string) => {
+        const headers = new Headers();
+        headers.append("api-key", apiKey);
+        headers.append("Content-Type", "application/json");
+
+        const body = JSON.stringify({
+            messages: createMessages(options, imageDetail),
+            ...mapOptions(options.options),
+        });
+
+        return {
+            method: "POST",
+            headers: headers,
+            body: body,
+        };
+    };
+
+    const convertResponse = async (response: Response) => {
+        const content = await response.json();
+        if (content.error) {
+            throw new Error(`ML request failed - ${content.error.message}`);
+        }
+        return content.choices[0].message.content;
+    };
+
+    return {
+        image: async (options: MlRequest) => {
+            const response = await fetch(apiUrl, createRequest(options, "low", apiKey));
+            return convertResponse(response);
+        },
+        imageAdvanced: async (options: MlRequest) => {
+            const response = await fetch(apiUrl, createRequest(options, "high", apiKey));
+            return convertResponse(response);
+        },
+    };
+};

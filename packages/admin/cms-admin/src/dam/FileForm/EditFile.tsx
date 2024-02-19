@@ -252,7 +252,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                                     label={intl.formatMessage({ id: "comet.dam.file.settings", defaultMessage: "Settings" })}
                                     path=""
                                 >
-                                    <FileSettingsFields isImage={!!file.image} folderId={file.folder?.id || null} />
+                                    <FileSettingsFields file={file} />
                                 </RouterTab>
                                 {file.image !== null && (
                                     <RouterTab

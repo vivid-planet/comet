@@ -1,22 +1,29 @@
-import { gql, useApolloClient } from "@apollo/client";
+import { gql, useApolloClient, useMutation } from "@apollo/client";
 import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { Calendar } from "@comet/admin-icons";
 import { InputAdornment } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
+import { FieldInputProps } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { GQLLicenseType } from "../../graphql.generated";
 import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
 import { CropSettingsFields } from "./CropSettingsFields";
-import { EditFileFormValues } from "./EditFile";
+import { DamFileDetails, EditFileFormValues } from "./EditFile";
 import { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables } from "./FileSettingsFields.generated";
+import { generateAltTextMutation, generateImageTitleMutation } from "./FileSettingsFields.gql";
+import {
+    GQLGenerateAltTextMutation,
+    GQLGenerateAltTextMutationVariables,
+    GQLGenerateImageTitleMutation,
+    GQLGenerateImageTitleMutationVariables,
+} from "./FileSettingsFields.gql.generated";
 
 interface SettingsFormProps {
-    isImage: boolean;
-    folderId: string | null;
+    file: DamFileDetails;
 }
 
 const damIsFilenameOccupiedQuery = gql`
@@ -35,7 +42,9 @@ const licenseTypeLabels: { [key in LicenseType]: React.ReactNode } = {
     RIGHTS_MANAGED: <FormattedMessage id="comet.dam.file.licenseType.rightsManaged" defaultMessage="Rights managed" />,
 };
 
-export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): React.ReactElement => {
+export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElement => {
+    const folderId = file.folder?.id || null;
+    const isImage = !!file.image;
     const intl = useIntl();
     const apollo = useApolloClient();
     const scope = useDamScope();
@@ -67,6 +76,13 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
             }
         },
         [damConfig.requireLicense],
+    );
+
+    const [generateAltText, { loading: loadingAltText }] = useMutation<GQLGenerateAltTextMutation, GQLGenerateAltTextMutationVariables>(
+        generateAltTextMutation,
+    );
+    const [generateImageTitle, { loading: loadingImage }] = useMutation<GQLGenerateImageTitleMutation, GQLGenerateImageTitleMutationVariables>(
+        generateImageTitleMutation,
     );
 
     return (
@@ -102,6 +118,11 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                     name="altText"
                     component={FinalFormInput}
                     fullWidth
+                    mlButton={async (input: FieldInputProps<string, HTMLInputElement | HTMLTextAreaElement>) => {
+                        const { data } = await generateAltText({ variables: { imageUrl: file.fileUrl } });
+                        input.onChange(data?.generateAltText);
+                    }}
+                    loading={loadingAltText}
                 />
                 <Field
                     label={intl.formatMessage({
@@ -111,6 +132,11 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                     name="title"
                     component={FinalFormInput}
                     fullWidth
+                    mlButton={async (input: FieldInputProps<string, HTMLInputElement | HTMLTextAreaElement>) => {
+                        const { data } = await generateImageTitle({ variables: { imageUrl: file.fileUrl } });
+                        input.onChange(data?.generateImageTitle);
+                    }}
+                    loading={loadingImage}
                 />
             </FormSection>
             {damConfig.enableLicenseFeature && (
