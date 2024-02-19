@@ -1,7 +1,7 @@
 import { DiscoveryService } from "@golevelup/nestjs-discovery";
 import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, Optional } from "@nestjs/common";
 import { isFuture, isPast } from "date-fns";
 import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
@@ -25,7 +25,7 @@ import {
 export class UserPermissionsService {
     constructor(
         @Inject(USER_PERMISSIONS_OPTIONS) private readonly options: UserPermissionsOptions,
-        @Inject(USER_PERMISSIONS_USER_SERVICE) private readonly userService: UserPermissionsUserServiceInterface,
+        @Inject(USER_PERMISSIONS_USER_SERVICE) @Optional() private readonly userService: UserPermissionsUserServiceInterface | undefined,
         @Inject(ACCESS_CONTROL_SERVICE) private readonly accessControlService: AccessControlServiceInterface,
         @InjectRepository(UserPermission) private readonly permissionRepository: EntityRepository<UserPermission>,
         @InjectRepository(UserContentScopes) private readonly contentScopeRepository: EntityRepository<UserContentScopes>,
@@ -52,10 +52,12 @@ export class UserPermissionsService {
     }
 
     async getUser(id: string): Promise<User> {
+        if (!this.userService) throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
         return this.userService.getUser(id);
     }
 
     async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
+        if (!this.userService) throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
         return this.userService.findUsers(args);
     }
 
@@ -68,18 +70,17 @@ export class UserPermissionsService {
         });
     }
 
-    async getPermissions(userId: string): Promise<UserPermission[]> {
+    async getPermissions(user: User): Promise<UserPermission[]> {
         const availablePermissions = await this.getAvailablePermissions();
         const permissions = (
             await this.permissionRepository.find({
-                $and: [{ userId }, { permission: { $in: availablePermissions } }],
+                $and: [{ userId: user.id }, { permission: { $in: availablePermissions } }],
             })
         ).map((p) => {
             p.source = UserPermissionSource.MANUAL;
             return p;
         });
         if (this.accessControlService.getPermissionsForUser) {
-            const user = await this.getUser(userId);
             if (user) {
                 let permissionsByRule = await this.accessControlService.getPermissionsForUser(user);
                 if (permissionsByRule === UserPermissions.allPermissions) {
@@ -89,7 +90,7 @@ export class UserPermissionsService {
                     const permission = new UserPermission();
                     permission.id = getUuid(JSON.stringify(p));
                     permission.source = UserPermissionSource.BY_RULE;
-                    permission.userId = userId;
+                    permission.userId = user.id;
                     permission.overrideContentScopes = !!p.contentScopes;
                     permission.assign(p);
                     permissions.push(permission);
@@ -102,24 +103,21 @@ export class UserPermissionsService {
             .sort((a, b) => availablePermissions.indexOf(a.permission) - availablePermissions.indexOf(b.permission));
     }
 
-    async getContentScopes(userId: string, includeContentScopesManual = true): Promise<ContentScope[]> {
+    async getContentScopes(user: User, includeContentScopesManual = true): Promise<ContentScope[]> {
         const contentScopes: ContentScope[] = [];
         const availableContentScopes = await this.getAvailableContentScopes();
 
         if (this.accessControlService.getContentScopesForUser) {
-            const user = await this.getUser(userId);
-            if (user) {
-                const userContentScopes = await this.accessControlService.getContentScopesForUser(user);
-                if (userContentScopes === UserPermissions.allContentScopes) {
-                    contentScopes.push(...availableContentScopes);
-                } else {
-                    contentScopes.push(...userContentScopes);
-                }
+            const userContentScopes = await this.accessControlService.getContentScopesForUser(user);
+            if (userContentScopes === UserPermissions.allContentScopes) {
+                contentScopes.push(...availableContentScopes);
+            } else {
+                contentScopes.push(...userContentScopes);
             }
         }
 
         if (includeContentScopesManual) {
-            const entity = await this.contentScopeRepository.findOne({ userId });
+            const entity = await this.contentScopeRepository.findOne({ userId: user.id });
             if (entity) {
                 contentScopes.push(...entity.contentScopes.filter((value) => availableContentScopes.some((cs) => isEqual(cs, value))));
             }
@@ -136,8 +134,8 @@ export class UserPermissionsService {
 
     async createCurrentUser(user: User): Promise<CurrentUser> {
         const availableContentScopes = await this.getAvailableContentScopes();
-        const userContentScopes = await this.getContentScopes(user.id);
-        const permissions = (await this.getPermissions(user.id))
+        const userContentScopes = await this.getContentScopes(user);
+        const permissions = (await this.getPermissions(user))
             .filter((p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)))
             .reduce((acc: CurrentUser["permissions"], userPermission) => {
                 const contentScopes = userPermission.overrideContentScopes ? userPermission.contentScopes : userContentScopes;

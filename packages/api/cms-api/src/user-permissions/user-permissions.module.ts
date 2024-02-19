@@ -45,13 +45,17 @@ export class UserPermissionsModule {
                     useValue: options,
                 },
                 {
-                    provide: USER_PERMISSIONS_USER_SERVICE,
-                    useClass: options.UserService,
-                },
-                {
                     provide: ACCESS_CONTROL_SERVICE,
                     useClass: options.AccessControlService,
                 },
+                ...(options.UserService
+                    ? [
+                          {
+                              provide: USER_PERMISSIONS_USER_SERVICE,
+                              useClass: options.UserService,
+                          },
+                      ]
+                    : []),
             ],
         };
     }
