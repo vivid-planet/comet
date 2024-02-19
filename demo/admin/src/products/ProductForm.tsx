@@ -4,17 +4,25 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
+    FinalFormSaveSplitButton,
     FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
     MainContent,
+    Toolbar,
+    ToolbarActions,
+    ToolbarFillSpace,
+    ToolbarItem,
+    ToolbarTitleItem,
     useAsyncOptionsProps,
     useFormApiRef,
+    useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
+import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { FormControlLabel, MenuItem } from "@mui/material";
+import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -54,7 +62,8 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormManualFragment, "image"> & {
+type FormValues = Omit<GQLProductFormManualFragment, "image" | "price"> & {
+    price: string;
     image: BlockState<typeof rootBlocks.image>;
 };
 
@@ -63,6 +72,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
+    const stackApi = useStackApi();
 
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
         productQuery,
@@ -72,6 +82,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     const initialValues: Partial<FormValues> = data?.product
         ? {
               ...filter<GQLProductFormManualFragment>(productFormFragment, data.product),
+              price: String(data.product.price),
               image: rootBlocks.image.input2State(data.product.image),
           }
         : {
@@ -104,6 +115,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             discounts: [],
             packageDimensions: { width: 0, height: 0, depth: 0 },
             statistics: { views: 0 },
+            price: parseFloat(formValues.price),
         };
         if (mode === "edit") {
             if (!id) throw new Error();
@@ -156,6 +168,22 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             {() => (
                 <EditPageLayout>
                     {saveConflict.dialogs}
+                    {mode == "add" && (
+                        <Toolbar>
+                            <ToolbarItem>
+                                <IconButton onClick={stackApi?.goBack}>
+                                    <ArrowLeft />
+                                </IconButton>
+                            </ToolbarItem>
+                            <ToolbarTitleItem>
+                                <FormattedMessage id="products.Product" defaultMessage="Product" />
+                            </ToolbarTitleItem>
+                            <ToolbarFillSpace />
+                            <ToolbarActions>
+                                <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
+                            </ToolbarActions>
+                        </Toolbar>
+                    )}
                     <MainContent>
                         <Field
                             required
@@ -205,6 +233,13 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             multiple
                             {...tagsSelectAsyncProps}
                             getOptionLabel={(option: GQLProductTagsSelectFragment) => option.title}
+                        />
+                        <Field
+                            fullWidth
+                            name="price"
+                            component={FinalFormInput}
+                            type="number"
+                            label={<FormattedMessage id="product.price" defaultMessage="Price" />}
                         />
                         <Field name="inStock" label="" type="checkbox" fullWidth>
                             {(props) => (
