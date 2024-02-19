@@ -13,7 +13,7 @@ interface BreadcrumbsOverflowProps {
     slotProps: StackBreadcrumbsProps["slotProps"];
 }
 
-const StyledOverflowLink = styled(Link, {
+const OverflowLink = styled(Link, {
     name: "CometAdminStackBreadcrumbs",
     slot: "overflowLink",
     overridesResolver(_, styles) {
@@ -38,9 +38,9 @@ export const BreadcrumbsOverflow = ({ items, linkText, slotProps }: BreadcrumbsO
 
     return (
         <>
-            <StyledOverflowLink ref={overflowLinkRef} {...slotProps?.overflowLink} onClick={() => setShowOverflowMenu(true)} variant="body2">
+            <OverflowLink ref={overflowLinkRef} {...slotProps?.overflowLink} onClick={() => setShowOverflowMenu(true)} variant="body2">
                 {linkText}
-            </StyledOverflowLink>
+            </OverflowLink>
             <Menu open={showOverflowMenu} onClose={() => setShowOverflowMenu(false)} anchorEl={overflowLinkRef.current}>
                 {items.map(({ id, url, title }) => (
                     <MenuItem key={id} component={BreadcrumbLink} to={url} onClick={() => setShowOverflowMenu(false)}>

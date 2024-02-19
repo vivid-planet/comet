@@ -1,5 +1,5 @@
 import { LevelUp } from "@comet/admin-icons";
-import { IconButton as MuiIconButton, Link, Typography } from "@mui/material";
+import { IconButton as MuiIconButton, Link as MuiLink, Typography } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
 import * as React from "react";
 
@@ -7,7 +7,7 @@ import { BreadcrumbItem } from "../Stack";
 import { BreadcrumbLink } from "./BreadcrumbLink";
 import { BackButtonSeparator, StackBreadcrumbsProps } from "./StackBreadcrumbs";
 
-const StyledLink = styled(Link, {
+const Link = styled(MuiLink, {
     name: "CometAdminStackBreadcrumbs",
     slot: "link",
     overridesResolver(_, styles) {
@@ -21,9 +21,9 @@ const StyledLink = styled(Link, {
         color: ${theme.palette.grey[600]};
         text-decoration-color: currentColor;
     `,
-) as typeof Link;
+) as typeof MuiLink;
 
-const StyledDisabledLink = styled(Typography, {
+const DisabledLink = styled(Typography, {
     name: "CometAdminStackBreadcrumbs",
     slot: "disabledLink",
     overridesResolver(_, styles) {
@@ -67,13 +67,13 @@ export const BreadcrumbsEntry = ({ item, isLastItem, backButtonUrl, slotProps }:
                 </>
             )}
             {isLastItem ? (
-                <StyledDisabledLink {...slotProps?.disabledLink} variant="body2">
+                <DisabledLink {...slotProps?.disabledLink} variant="body2">
                     {item.title}
-                </StyledDisabledLink>
+                </DisabledLink>
             ) : (
-                <StyledLink to={item.url} component={BreadcrumbLink} variant="body2" {...slotProps?.link}>
+                <Link to={item.url} component={BreadcrumbLink} variant="body2" {...slotProps?.link}>
                     {item.title}
-                </StyledLink>
+                </Link>
             )}
         </>
     );
