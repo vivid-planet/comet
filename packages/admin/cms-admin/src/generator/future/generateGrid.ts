@@ -11,6 +11,7 @@ import { plural } from "pluralize";
 import { GeneratorReturn, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
+import { generateGqlParamDefinition } from "./utils/generateGqlParamDefinition";
 
 function tsCodeRecordToString(object: Record<string, string | undefined>) {
     return `{${Object.entries(object)
@@ -65,6 +66,7 @@ export function generateGrid(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: GridConfig<any>,
 ): GeneratorReturn {
+    const gqlQueryScopeParamName = "scope";
     const gqlType = config.gqlType;
     const gqlTypePlural = plural(gqlType);
     //const title = config.title ?? camelCaseToHumanReadable(gqlType);
@@ -73,6 +75,26 @@ export function generateGrid(
     const gridQuery = instanceGqlType != instanceGqlTypePlural ? instanceGqlTypePlural : `${instanceGqlTypePlural}List`;
     const gqlDocuments: Record<string, string> = {};
     //const imports: Imports = [];
+
+    const queries = gqlIntrospection.__schema.types.find((type) => type.name === "Query");
+    if (!queries || queries.kind !== "OBJECT") throw new Error(`Missing Query-Type in schema. Do any queries exist?`);
+    const mutations = gqlIntrospection.__schema.types.find((type) => type.name === "Mutation");
+    if (!mutations || mutations.kind !== "OBJECT") throw new Error(`Missing Mutation-Type in schema. Do any mutations exist?`);
+
+    const queryName = instanceGqlType;
+    const introspectedQueryField = queries.fields.find((field) => field.name === queryName);
+    if (!introspectedQueryField) throw new Error(`query "${queryName}" for ${gqlType} in schema not found`);
+    const queryScopeParam = introspectedQueryField.args.find((arg) => arg.name === gqlQueryScopeParamName);
+
+    const createMutationName = `create${gqlType}`;
+    const introspectedCreateMutationField = mutations.fields.find((field) => field.name === createMutationName);
+    if (!introspectedCreateMutationField) throw new Error(`create-mutation "${createMutationName}" for ${gqlType} in schema not found`);
+    const createMutationScopeParam = introspectedCreateMutationField.args.find((arg) => arg.name === gqlQueryScopeParamName);
+
+    const deleteMutationName = `delete${gqlType}`;
+    const introspectedDeleteMutationField = mutations.fields.find((field) => field.name === deleteMutationName);
+    if (!introspectedDeleteMutationField) throw new Error(`delete-mutation "${deleteMutationName}" for ${gqlType} in schema not found`);
+    const deleteMutationScopeParam = introspectedDeleteMutationField.args.find((arg) => arg.name === gqlQueryScopeParamName);
 
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
 
@@ -123,7 +145,7 @@ export function generateGrid(
     }
 
     const hasSearch = gridQueryType.args.some((arg) => arg.name === "search");
-    const hasScope = gridQueryType.args.some((arg) => arg.name === "scope");
+    const requiresScope = !!(queryScopeParam || createMutationScopeParam || deleteMutationScopeParam);
 
     const schemaEntity = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
         | IntrospectionObjectType
@@ -268,10 +290,10 @@ export function generateGrid(
     const ${instanceGqlTypePlural}Query = gql\`
         query ${gqlTypePlural}Grid($offset: Int, $limit: Int${hasSort ? `, $sort: [${gqlType}Sort!]` : ""}${hasSearch ? `, $search: String` : ""}${
         hasFilter ? `, $filter: ${gqlType}Filter` : ""
-    }${hasScope ? `, $scope: ${gqlType}ContentScopeInput!` : ""}) {
+    }${queryScopeParam ? `, $scope: ${generateGqlParamDefinition(queryScopeParam)}` : ""}) {
             ${gridQuery}(offset: $offset, limit: $limit${hasSort ? `, sort: $sort` : ""}${hasSearch ? `, search: $search` : ""}${
         hasFilter ? `, filter: $filter` : ""
-    }${hasScope ? `, scope: $scope` : ""}) {
+    }${queryScopeParam ? `, scope: $scope` : ""}) {
                 nodes {
                     ...${fragmentName}
                 }
@@ -285,8 +307,10 @@ export function generateGrid(
     ${
         hasDeleteMutation
             ? `const delete${gqlType}Mutation = gql\`
-                mutation Delete${gqlType}($id: ID!) {
-                    delete${gqlType}(id: $id)
+                mutation Delete${gqlType}($id: ID!${
+                  deleteMutationScopeParam ? `, $scope: ${generateGqlParamDefinition(deleteMutationScopeParam)}` : ""
+              }) {
+                    delete${gqlType}(id: $id${deleteMutationScopeParam ? `, scope: $scope` : ""})
                 }
             \`;`
             : ""
@@ -295,8 +319,10 @@ export function generateGrid(
     ${
         hasCreateMutation
             ? `const create${gqlType}Mutation = gql\`
-        mutation Create${gqlType}(${hasScope ? `$scope: ${gqlType}ContentScopeInput!, ` : ""}$input: ${gqlType}Input!) {
-            create${gqlType}(${hasScope ? `scope: $scope, ` : ""}input: $input) {
+        mutation Create${gqlType}(${
+                  createMutationScopeParam ? `$scope: ${generateGqlParamDefinition(createMutationScopeParam)}, ` : ""
+              }$input: ${gqlType}Input!) {
+            create${gqlType}(${createMutationScopeParam ? `scope: $scope, ` : ""}input: $input) {
                 id
             }
         }
@@ -341,7 +367,7 @@ export function generateGrid(
         const client = useApolloClient();
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
-        ${hasScope ? `const { scope } = useContentScope();` : ""}
+        ${requiresScope ? `const { scope } = useContentScope();` : ""}
     
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
@@ -395,7 +421,7 @@ export function generateGrid(
                                 onPaste={async ({ input }) => {
                                     await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                                         mutation: create${gqlType}Mutation,
-                                        variables: { ${hasScope ? `scope, ` : ""}input },
+                                        variables: { ${createMutationScopeParam ? `scope, ` : ""}input },
                                     });
                                 }}
                                 `
@@ -407,7 +433,7 @@ export function generateGrid(
                                 onDelete={async () => {
                                     await client.mutate<GQLDelete${gqlType}Mutation, GQLDelete${gqlType}MutationVariables>({
                                         mutation: delete${gqlType}Mutation,
-                                        variables: { id: params.row.id },
+                                        variables: { id: params.row.id${deleteMutationScopeParam ? `, scope` : ""} },
                                     });
                                 }}
                                 `
@@ -431,7 +457,7 @@ export function generateGrid(
     
         const { data, loading, error } = useQuery<GQL${gqlTypePlural}GridQuery, GQL${gqlTypePlural}GridQueryVariables>(${instanceGqlTypePlural}Query, {
             variables: {
-                ${hasScope ? `scope,` : ""}
+                ${queryScopeParam ? `scope,` : ""}
                 ${hasFilter ? `filter: gqlFilter,` : ""}
                 ${hasSearch ? `search: gqlSearch,` : ""}
                 offset: dataGridProps.page * dataGridProps.pageSize,
