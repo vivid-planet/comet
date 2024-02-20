@@ -30,7 +30,7 @@ const Root = styled(FormControl, {
         return [styles.root];
     },
 })(css`
-    & .${inputBaseClasses.root} {
+    .${inputBaseClasses.root} {
         background-color: transparent;
         height: auto;
         border: none;
@@ -42,7 +42,7 @@ const Root = styled(FormControl, {
             }
         }
     }
-    & .${selectClasses.icon} {
+    .${selectClasses.icon} {
         top: auto;
         color: inherit;
     }
