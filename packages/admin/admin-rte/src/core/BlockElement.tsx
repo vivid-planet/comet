@@ -18,7 +18,7 @@ const Root = styled(Typography, {
     name: "CometAdminRteBlockElement",
     slot: "root",
     overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return styles.root, styles[ownerState.type];
+        return [styles.root, ownerState.type && styles[ownerState.type]];
     },
 })<{ ownerState: OwnerState }>(
     ({ theme, ownerState }) => css`
