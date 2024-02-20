@@ -4,25 +4,18 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
-    FinalFormSaveSplitButton,
     FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
     MainContent,
-    Toolbar,
-    ToolbarActions,
-    ToolbarFillSpace,
-    ToolbarItem,
-    ToolbarTitleItem,
     useAsyncOptionsProps,
     useFormApiRef,
     useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
-import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
+import { FormControlLabel, MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -168,22 +161,6 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             {() => (
                 <EditPageLayout>
                     {saveConflict.dialogs}
-                    {mode == "add" && (
-                        <Toolbar>
-                            <ToolbarItem>
-                                <IconButton onClick={stackApi?.goBack}>
-                                    <ArrowLeft />
-                                </IconButton>
-                            </ToolbarItem>
-                            <ToolbarTitleItem>
-                                <FormattedMessage id="products.Product" defaultMessage="Product" />
-                            </ToolbarTitleItem>
-                            <ToolbarFillSpace />
-                            <ToolbarActions>
-                                <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
-                            </ToolbarActions>
-                        </Toolbar>
-                    )}
                     <MainContent>
                         <Field
                             required
