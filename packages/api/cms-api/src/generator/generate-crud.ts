@@ -3,6 +3,7 @@ import { EntityMetadata } from "@mikro-orm/core";
 import * as path from "path";
 import { singular } from "pluralize";
 
+import { Permission } from "../user-permissions/interfaces/user-permission.interface";
 import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { generateCrudInput } from "./generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
@@ -924,7 +925,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
 
     const { fileNameSingular, fileNamePlural, instanceNamePlural } = buildNameVariants(metadata);
     const { hasFilterArg, hasSortArg, argsFileName } = buildOptions(metadata);
-    if (!generatorOptions.requiredPermission) generatorOptions.requiredPermission = [instanceNamePlural];
+    if (!generatorOptions.requiredPermission) generatorOptions.requiredPermission = [instanceNamePlural as keyof Permission];
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {
         if (hasFilterArg) {
