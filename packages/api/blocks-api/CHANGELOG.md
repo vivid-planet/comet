@@ -1,5 +1,7 @@
 # @comet/blocks-api
 
+## 5.6.1
+
 ## 5.6.0
 
 ### Minor Changes

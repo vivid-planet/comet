@@ -1,5 +1,20 @@
 # @comet/cms-admin
 
+## 5.6.1
+
+### Patch Changes
+
+-   f79080b8: Add loading state for edit `StackPage` in `PagesPage`
+
+    Prevents flash of "Document not found" error message when reloading the page editor
+
+    -   @comet/admin@5.6.1
+    -   @comet/admin-date-time@5.6.1
+    -   @comet/admin-icons@5.6.1
+    -   @comet/admin-rte@5.6.1
+    -   @comet/admin-theme@5.6.1
+    -   @comet/blocks-admin@5.6.1
+
 ## 5.6.0
 
 ### Minor Changes
