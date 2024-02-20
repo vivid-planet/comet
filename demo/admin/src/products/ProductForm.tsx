@@ -99,7 +99,6 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             type: formValues.type as GQLProductType,
             category: formValues.category?.id,
             tags: formValues.tags.map((i) => i.id),
-            variants: [],
             articleNumbers: [],
             discounts: [],
             packageDimensions: { width: 0, height: 0, depth: 0 },
