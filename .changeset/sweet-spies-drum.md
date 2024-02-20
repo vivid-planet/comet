@@ -2,4 +2,6 @@
 "@comet/cms-api": minor
 ---
 
-Allow setting individual permissions per operation as this can be required if some users may not be allowed to update an entity. This is a additional option so no changes required.
+API Generator: Allow setting individual permissions per operation
+
+This can be necessary if some users aren't allowed to perform certain operations, e.g., updating an entity.
