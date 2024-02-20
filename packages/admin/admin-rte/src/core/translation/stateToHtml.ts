@@ -1,5 +1,5 @@
 import { EditorState } from "draft-js";
-import { stateToHTML } from "draft-js-export-html";
+import { RenderConfig, stateToHTML } from "draft-js-export-html";
 
 import { IRteOptions } from "../Rte";
 
@@ -8,7 +8,7 @@ export function stateToHtml({ editorState, options }: { editorState: EditorState
 
     const customInlineStyleKeys = options?.customInlineStyles ? Object.keys(options.customInlineStyles) : [];
 
-    const inlineStyles: any = {
+    const inlineStyles: { [styleName: string]: RenderConfig } = {
         SUB: { element: "sub" },
         SUP: { element: "sup" },
     };
