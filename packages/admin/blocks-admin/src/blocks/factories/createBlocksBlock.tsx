@@ -600,7 +600,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                                                                         defaultMessage="Make invisible"
                                                                     />
                                                                 </RowActionsItem>
-                                                                <Separator sx={{ marginLeft: 1, marginRight: 1 }} />
+                                                                <Separator />
                                                                 <RowActionsItem
                                                                     icon={<Delete />}
                                                                     disabled={selectedCount === 0}
@@ -843,4 +843,6 @@ const Separator = styled("div")`
     background-color: ${(props) => props.theme.palette.grey["100"]};
     height: 22px;
     width: 1px;
+    margin-left: ${({ theme }) => theme.spacing(1)};
+    margin-right: ${({ theme }) => theme.spacing(1)};
 `;
