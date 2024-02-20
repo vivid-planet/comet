@@ -11,6 +11,8 @@ import {
     FinalFormSubmitEvent,
     Loading,
     MainContent,
+    TextAreaField,
+    TextField,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
@@ -160,29 +162,20 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <Field
+                        <TextField
                             required
                             fullWidth
                             name="title"
-                            component={FinalFormInput}
                             label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
                             validate={validateTitle}
                         />
 
-                        <Field
-                            required
-                            fullWidth
-                            name="slug"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
-                        />
+                        <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
 
-                        <Field
+                        <TextAreaField
                             required
-                            multiline
                             fullWidth
                             name="description"
-                            component={FinalFormInput}
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
                         <Field fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
