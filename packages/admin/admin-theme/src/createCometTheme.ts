@@ -48,3 +48,23 @@ export const createCometTheme = ({
     const themeOptions = deepmerge<ThemeOptions>(cometThemeOptions, restPassedOptions);
     return createTheme(themeOptions);
 };
+
+// TODO: Move this to the correct place so it actually works
+declare module "@mui/material/styles" {
+    interface TypographyVariants {
+        list: React.CSSProperties;
+        listItem: React.CSSProperties;
+    }
+
+    interface TypographyVariantsOptions {
+        list?: React.CSSProperties;
+        listItem?: React.CSSProperties;
+    }
+}
+
+declare module "@mui/material/Typography" {
+    interface TypographyPropsVariantOverrides {
+        list: true;
+        listItem: true;
+    }
+}

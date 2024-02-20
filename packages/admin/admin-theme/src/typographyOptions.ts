@@ -9,6 +9,13 @@ export const fontWeights = {
     fontWeightBold: 500,
 };
 
+const body1Styles = {
+    fontFamily,
+    fontSize: 16,
+    lineHeight: "20px",
+    fontWeight: fontWeights.fontWeightRegular,
+};
+
 export const typographyOptions: TypographyOptions = {
     ...fontWeights,
     h1: {
@@ -47,16 +54,22 @@ export const typographyOptions: TypographyOptions = {
         lineHeight: "20px",
         fontWeight: fontWeights.fontWeightBold,
     },
-    body1: {
-        fontFamily,
-        fontSize: 16,
-        lineHeight: "20px",
-        fontWeight: fontWeights.fontWeightRegular,
-    },
+    body1: body1Styles,
     body2: {
         fontFamily,
         fontSize: 14,
         lineHeight: "20px",
         fontWeight: fontWeights.fontWeightRegular,
+    },
+    list: {
+        paddingInlineStart: 30,
+        paddingTop: 8,
+        paddingBottom: 8,
+    },
+    listItem: {
+        ...body1Styles,
+        paddingLeft: 0,
+        paddingTop: 4,
+        paddingBottom: 4,
     },
 };
