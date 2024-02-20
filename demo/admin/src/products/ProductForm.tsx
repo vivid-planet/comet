@@ -10,7 +10,6 @@ import {
     MainContent,
     useAsyncOptionsProps,
     useFormApiRef,
-    useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
@@ -65,7 +64,6 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
-    const stackApi = useStackApi();
 
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
         productQuery,
