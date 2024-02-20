@@ -806,6 +806,11 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
 
         @Query(() => Paginated${classNamePlural})
+        ${mainProps
+            .map((mainProp) => {
+                return `@AffectedEntity(${mainProp.targetMeta?.className}, { idArg: "${mainProp.name}" })`;
+            })
+            .join("")}
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
             @Args() { ${scopeProp ? `scope, ` : ""}${mainProps
         .map((mainProp) => {
@@ -869,6 +874,11 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
 
         @Mutation(() => ${metadata.className})
+        ${mainProps
+            .map((mainProp) => {
+                return `@AffectedEntity(${mainProp.targetMeta?.className}, { idArg: "${mainProp.name}" })`;
+            })
+            .join("")}
         async create${classNameSingular}(
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}${mainProps
                       .map((mainProp) => {

@@ -32,6 +32,7 @@ export class ProductVariantResolver {
     }
 
     @Query(() => PaginatedProductVariants)
+    @AffectedEntity(Product, { idArg: "product" })
     async productVariants(
         @Args() { product, search, filter, sort, offset, limit }: ProductVariantsArgs,
         @Info() info: GraphQLResolveInfo,
@@ -62,6 +63,7 @@ export class ProductVariantResolver {
     }
 
     @Mutation(() => ProductVariant)
+    @AffectedEntity(Product, { idArg: "product" })
     async createProductVariant(
         @Args("product", { type: () => ID }) product: string,
         @Args("input", { type: () => ProductVariantInput }) input: ProductVariantInput,
