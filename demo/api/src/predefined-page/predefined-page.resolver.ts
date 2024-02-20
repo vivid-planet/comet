@@ -1,10 +1,10 @@
 import {
+    AffectedEntity,
     PageTreeNodeInterface,
     PageTreeNodeVisibility,
     PageTreeService,
     RequestContext,
     RequestContextInterface,
-    SubjectEntity,
     validateNotModified,
 } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
@@ -27,13 +27,13 @@ export class PredefinedPageResolver {
     ) {}
 
     @Query(() => PredefinedPage, { nullable: true })
-    @SubjectEntity(PredefinedPage)
+    @AffectedEntity(PredefinedPage)
     async predefinedPage(@Args("id", { type: () => ID }) id: string): Promise<PredefinedPage | null> {
         return this.repository.findOneOrFail(id);
     }
 
     @Mutation(() => PredefinedPage)
-    @SubjectEntity(PredefinedPage, { pageTreeNodeIdArg: "attachedPageTreeNodeId" })
+    @AffectedEntity(PredefinedPage, { pageTreeNodeIdArg: "attachedPageTreeNodeId" })
     async savePredefinedPage(
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => PredefinedPageInput }) input: PredefinedPageInput,

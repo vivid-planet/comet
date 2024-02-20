@@ -25,9 +25,9 @@ function validate({ foo, bar }: FormValues) {
 type ShowStrategy = "always" | "while-typing" | "on-blur" | "when-submitted";
 const strategies: Record<ShowStrategy, FinalFormContext["shouldShowFieldError"]> = {
     always: () => true,
-    "on-blur": ({ fieldMeta: { touched } }) => !!touched,
-    "while-typing": ({ fieldMeta: { touched, active } }) => !!(touched || active),
-    "when-submitted": ({ fieldMeta: { submitFailed } }) => !!submitFailed,
+    "on-blur": ({ touched }) => !!touched,
+    "while-typing": ({ touched, active }) => !!(touched || active),
+    "when-submitted": ({ submitFailed }) => !!submitFailed,
 };
 
 function Story() {

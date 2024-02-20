@@ -1,13 +1,13 @@
 import { readFile } from "fs/promises";
 import * as mimedb from "mime-db";
 
-import { FileUploadInterface } from "./dto/file-upload.interface";
+import { FileUploadInput } from "./dto/file-upload.input";
 import { svgContainsJavaScript } from "./files.utils";
 
 export class FileValidationService {
     constructor(public config: { maxFileSize: number; acceptedMimeTypes: string[] }) {}
 
-    async validateFile(file: FileUploadInterface): Promise<undefined | string> {
+    async validateFile(file: FileUploadInput): Promise<undefined | string> {
         let error = await this.validateFileMetadata(file);
 
         if (error === undefined) {
@@ -17,7 +17,7 @@ export class FileValidationService {
         return error;
     }
 
-    async validateFileMetadata(file: FileUploadInterface): Promise<undefined | string> {
+    async validateFileMetadata(file: FileUploadInput): Promise<undefined | string> {
         //maximum file size
         if (file.size > this.config.maxFileSize * 1024 * 1024) {
             return "File is too large";
@@ -50,7 +50,7 @@ export class FileValidationService {
         return undefined;
     }
 
-    async validateFileContents(file: FileUploadInterface): Promise<undefined | string> {
+    async validateFileContents(file: FileUploadInput): Promise<undefined | string> {
         if (file.mimetype === "image/svg+xml") {
             const fileContent = await readFile(file.path, { encoding: "utf-8" });
 

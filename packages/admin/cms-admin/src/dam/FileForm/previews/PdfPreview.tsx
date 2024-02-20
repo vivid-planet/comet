@@ -2,6 +2,7 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 
 import { DamFileDetails } from "../EditFile";
+
 const PdfPreviewWrapper = styled("div")`
     width: 100%;
     height: calc(100vh - 300px);

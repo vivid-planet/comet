@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import {
+    Alert,
     Loading,
     LocalErrorScopeApolloContext,
     MainContent,
@@ -156,7 +157,7 @@ export function PagesPage({
                                 </Button>
                             </ToolbarActions>
                         </Toolbar>
-                        <PageTreeContext.Provider value={{ allCategories, documentTypes, tree, query: pagesQuery }}>
+                        <PageTreeContext.Provider value={{ allCategories, currentCategory: category, documentTypes, tree, query: pagesQuery }}>
                             <PageTreeContent fullHeight>
                                 <ActionToolbarBox>
                                     <PagesPageActionToolbar
@@ -220,11 +221,35 @@ export function PagesPage({
                             const page = data?.pages.find((page) => page.id == selectedId);
 
                             if (!page) {
-                                return null;
+                                return (
+                                    <MainContent>
+                                        <Alert
+                                            title={<FormattedMessage id="comet.pages.pages.notFound" defaultMessage="Not found" />}
+                                            severity="error"
+                                        >
+                                            <FormattedMessage
+                                                id="comet.pages.pages.documentDoesntExist"
+                                                defaultMessage="This document doesn't exist"
+                                            />
+                                        </Alert>
+                                    </MainContent>
+                                );
                             }
 
                             if (page.visibility === "Archived") {
-                                return <>403, not allowed</>;
+                                return (
+                                    <MainContent>
+                                        <Alert
+                                            title={<FormattedMessage id="comet.pages.pages.archived" defaultMessage="Archived" />}
+                                            severity="error"
+                                        >
+                                            <FormattedMessage
+                                                id="comet.pages.pages.documentHasBeenArchived"
+                                                defaultMessage="This document has been archived and can no longer be edited"
+                                            />
+                                        </Alert>
+                                    </MainContent>
+                                );
                             }
 
                             const documentType = documentTypes[page.documentType];

@@ -10,6 +10,7 @@ import { AppModule } from "@src/app.module";
 import { useContainer } from "class-validator";
 import compression from "compression";
 import cookieParser from "cookie-parser";
+import { json } from "express";
 
 import { createConfig } from "./config/config";
 
@@ -38,6 +39,7 @@ async function bootstrap(): Promise<void> {
         }),
     );
 
+    app.use(json({ limit: "1mb" })); // increase default limit of 100kb for saving large pages
     app.use(compression());
     app.use(cookieParser());
 

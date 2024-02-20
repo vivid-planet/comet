@@ -67,8 +67,6 @@ type DamFileLicense {
 enum LicenseType {
   ROYALTY_FREE
   RIGHTS_MANAGED
-  SUBSCRIPTION
-  MICRO
 }
 
 """
@@ -94,7 +92,7 @@ type AutoBuildStatus {
 
 type Build {
   id: ID!
-  status: JobStatus!
+  status: KubernetesJobStatus!
   name: String
 
   """
@@ -107,24 +105,86 @@ type Build {
   estimatedCompletionTime: DateTime
 }
 
-enum JobStatus {
+enum KubernetesJobStatus {
   pending
   active
   succeeded
   failed
 }
 
-type CronJob {
+type KubernetesCronJob {
   id: ID!
   name: String!
+
+  """
+  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+  """
+  label: String
   schedule: String!
   lastScheduledAt: DateTime
+  lastJobRun: KubernetesJob
+}
+
+type KubernetesJob {
+  id: ID!
+  name: String!
+
+  """
+  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
+  """
+  label: String
+  status: KubernetesJobStatus!
+  startTime: DateTime
+  completionTime: DateTime
 }
 
 type FilenameResponse {
   name: String!
   folderId: ID
   isOccupied: Boolean!
+}
+
+type CurrentUserPermission {
+  permission: String!
+  contentScopes: [JSONObject!]!
+}
+
+type CurrentUser {
+  id: String!
+  name: String!
+  email: String!
+  language: String!
+  permissions: [CurrentUserPermission!]!
+}
+
+type User {
+  id: String!
+  name: String!
+  email: String!
+  language: String!
+}
+
+type UserPermission {
+  id: ID!
+  source: UserPermissionSource!
+  permission: String!
+  validFrom: DateTime
+  validTo: DateTime
+  reason: String
+  requestedBy: String
+  approvedBy: String
+  overrideContentScopes: Boolean!
+  contentScopes: [JSONObject!]!
+}
+
+enum UserPermissionSource {
+  MANUAL
+  BY_RULE
+}
+
+type PaginatedUserList {
+  nodes: [User!]!
+  totalCount: Int!
 }
 
 type Link implements DocumentInterface {
@@ -228,14 +288,6 @@ type PredefinedPage implements DocumentInterface {
   type: String
 }
 
-type CurrentUser {
-  name: String!
-  email: String!
-  language: String!
-  role: String!
-  domains: [String!]!
-}
-
 type DamScope {
   domain: String!
 }
@@ -269,6 +321,8 @@ type DamFile {
   license: DamFileLicense
   createdAt: DateTime!
   updatedAt: DateTime!
+  importSourceId: String
+  importSourceType: String
   scope: DamScope!
   fileUrl: String!
   duplicates: [DamFile!]!
@@ -553,6 +607,13 @@ input RedirectScopeInput {
 
 type Query {
   currentUser: CurrentUser!
+  userPermissionsUserById(id: String!): User!
+  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
+  userPermissionsPermissionList(userId: String!): [UserPermission!]!
+  userPermissionsPermission(id: ID!, userId: String): UserPermission!
+  userPermissionsAvailablePermissions: [String!]!
+  userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
+  userPermissionsAvailableContentScopes: [JSONObject!]!
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
@@ -579,7 +640,7 @@ type Query {
   damFolder(id: ID!): DamFolder!
   damFolderByNameAndParentId(scope: DamScopeInput!, name: String!, parentId: ID): DamFolder
   news(id: ID!): News!
-  newsBySlug(slug: String!): News
+  newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
   newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
@@ -587,7 +648,9 @@ type Query {
   footer(scope: FooterContentScopeInput!): Footer
   predefinedPage(id: ID!): PredefinedPage
   pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
-  cronJobs: [CronJob!]!
+  kubernetesCronJobs: [KubernetesCronJob!]!
+  kubernetesCronJob(name: String!): KubernetesCronJob!
+  kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
   products(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
@@ -596,6 +659,35 @@ type Query {
   productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
   productTag(id: ID!): ProductTag!
   productTags(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductTagFilter, sort: [ProductTagSort!]): PaginatedProductTags!
+}
+
+input UserFilter {
+  name: StringFilter
+  email: StringFilter
+  status: StringFilter
+  language: StringFilter
+  and: [UserFilter!]
+  or: [UserFilter!]
+}
+
+input StringFilter {
+  contains: String
+  startsWith: String
+  endsWith: String
+  equal: String
+  notEqual: String
+}
+
+input UserSort {
+  field: UserSortField!
+  direction: SortDirection! = ASC
+}
+
+enum UserSortField {
+  name
+  email
+  status
+  language
 }
 
 enum SortDirection {
@@ -627,14 +719,6 @@ input RedirectFilter {
   updatedAt: DateFilter
   and: [RedirectFilter!]
   or: [RedirectFilter!]
-}
-
-input StringFilter {
-  contains: String
-  startsWith: String
-  endsWith: String
-  equal: String
-  notEqual: String
 }
 
 input BooleanFilter {
@@ -824,6 +908,11 @@ enum ProductTagSortField {
 
 type Mutation {
   currentUserSignOut: String!
+  userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
+  userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
+  userPermissionsDeletePermission(id: ID!): Boolean!
+  userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
+  userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
   createBuilds(input: CreateBuildsInput!): Boolean!
   saveLink(linkId: ID!, input: LinkInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Link!
   savePage(pageId: ID!, input: PageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): Page!
@@ -862,6 +951,7 @@ type Mutation {
   updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
   saveFooter(scope: FooterContentScopeInput!, input: FooterInput!, lastUpdatedAt: DateTime): Footer!
   savePredefinedPage(id: ID!, input: PredefinedPageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): PredefinedPage!
+  triggerKubernetesCronJob(name: String!): KubernetesJob!
   createProduct(input: ProductInput!): Product!
   updateProduct(id: ID!, input: ProductUpdateInput!, lastUpdatedAt: DateTime): Product!
   deleteProduct(id: ID!): Boolean!
@@ -872,6 +962,25 @@ type Mutation {
   createProductTag(input: ProductTagInput!): ProductTag!
   updateProductTag(id: ID!, input: ProductTagUpdateInput!, lastUpdatedAt: DateTime): ProductTag!
   deleteProductTag(id: ID!): Boolean!
+}
+
+input UserPermissionInput {
+  permission: String!
+  validFrom: DateTime
+  validTo: DateTime
+  reason: String
+  requestedBy: String
+  approvedBy: String
+}
+
+input UserPermissionOverrideContentScopesInput {
+  permissionId: ID!
+  overrideContentScopes: Boolean!
+  contentScopes: [JSONObject!]! = []
+}
+
+input UserContentScopesInput {
+  contentScopes: [JSONObject!]! = []
 }
 
 input CreateBuildsInput {

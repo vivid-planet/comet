@@ -87,7 +87,13 @@ export const createOneOfBlock = <T extends boolean = boolean>({
         }
         const activeBlockState = s.attachedBlocks.find((c) => c.type === s.activeType);
         if (!activeBlockState) {
-            throw new Error(`Reference to active block of type ${s.activeType} not found`);
+            let message = `Can't find reference to active block of type "${s.activeType}".`;
+
+            if (process.env.NODE_ENV === "development") {
+                message += ` This is probably due to a missing "x-include-invisible-content" HTTP header. Please make sure to include the header when fetching the block.`;
+            }
+
+            throw new Error(message);
         }
         const block = activeBlockState ? blockForType(activeBlockState.type) : undefined;
 

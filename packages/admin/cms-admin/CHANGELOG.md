@@ -1,5 +1,215 @@
 # @comet/cms-admin
 
+## 6.0.0
+
+### Major Changes
+
+-   d20f59c0: Enhance CronJob module
+
+    -   Show latest job run on `CronJobsPage`
+    -   Add option to manually trigger cron jobs to `CronJobsPage`
+    -   Add subpage to `CronJobsPage` that shows all job runs
+
+    Warning: Only include this module if all your users should be able to trigger cron jobs manually or you have sufficient access control in place.
+
+    Includes the following breaking changes:
+
+    -   Rename `JobStatus` to `KubernetesJobStatus` to avoid naming conflicts
+    -   Rename `BuildRuntime` to `JobRuntime`
+
+-   d86d5a90: Make sites config generic
+
+    The sites config was previously assumed to be `Record<string, SiteConfg>`.
+    However, as the sites config is solely used in application code, it could be of any shape.
+    Therefore, the `SitesConfigProvider` and `useSitesConfig` are made generic.
+    The following changes have to be made in the application:
+
+    1.  Define the type of your sites config
+
+        Preferably this should be done in `config.ts`:
+
+        ```diff
+        export function createConfig() {
+            // ...
+
+            return {
+                ...cometConfig,
+                apiUrl: environmentVariables.API_URL,
+                adminUrl: environmentVariables.ADMIN_URL,
+        +       sitesConfig: JSON.parse(environmentVariables.SITES_CONFIG) as SitesConfig,
+            };
+        }
+
+        + export type SitesConfig = Record<string, SiteConfig>;
+        ```
+
+    2.  Use the type when using `useSitesConfig`
+
+        ```diff
+        - const sitesConfig = useSitesConfig();
+        + const sitesConfig = useSitesConfig<SitesConfig>();
+        ```
+
+    3.  Optional: Remove type annotation from `ContentScopeProvider#resolveSiteConfigForScope` (as it's now inferred)
+
+        ```diff
+        - resolveSiteConfigForScope: (configs: Record<string, SiteConfig>, scope: ContentScope) => configs[scope.domain],
+        + resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
+        ```
+
+### Minor Changes
+
+-   0f814c5e: Add `MasterMenu` and `MasterMenuRoutes` components which both take a single data structure to define menu and routes.
+
+### Patch Changes
+
+-   Updated dependencies [921f6378]
+-   Updated dependencies [76e50aa8]
+-   Updated dependencies [298b63b7]
+-   Updated dependencies [803f5045]
+-   Updated dependencies [a525766c]
+-   Updated dependencies [0d768540]
+-   Updated dependencies [62779124]
+    -   @comet/admin@6.0.0
+    -   @comet/admin-icons@6.0.0
+    -   @comet/admin-rte@6.0.0
+    -   @comet/admin-date-time@6.0.0
+    -   @comet/blocks-admin@6.0.0
+    -   @comet/admin-theme@6.0.0
+
+## 5.6.0
+
+### Minor Changes
+
+-   fe26a6e6: Show an error message when trying to edit a non-existing document and when trying to edit an archived document
+-   3ee4ce09: Return newly uploaded items from `useDamFileUpload#uploadFiles`
+
+### Patch Changes
+
+-   Updated dependencies [fb6c8063]
+-   Updated dependencies [76f85abe]
+    -   @comet/admin-theme@5.6.0
+    -   @comet/blocks-admin@5.6.0
+    -   @comet/admin@5.6.0
+    -   @comet/admin-date-time@5.6.0
+    -   @comet/admin-icons@5.6.0
+    -   @comet/admin-rte@5.6.0
+
+## 5.5.0
+
+### Patch Changes
+
+-   1b37b1f6: Show `additionalToolbarItems` in `ChooseFileDialog`
+
+    The `additionalToolbarItems` were only shown inside the `DamPage`, but not in the `ChooseFileDialog`.
+    To fix this, use the `additionalToolbarItems` option in `DamConfigProvider`.
+    The `additionalToolbarItems` prop of `DamPage` has been deprecated in favor of this option.
+
+    **Previously:**
+
+    ```tsx
+    <DamPage
+        // ...
+        additionalToolbarItems={<ImportFromExternalDam />}
+    />
+    ```
+
+    **Now:**
+
+    ```tsx
+    <DamConfigProvider
+        value={{
+            // ...
+            additionalToolbarItems: <ImportFromExternalDam />,
+        }}
+    >
+        {/*...*/}
+    </DamConfigProvider>
+    ```
+
+-   85aa962c: Set unhandled dependencies to `undefined` when copying documents to another scope
+
+    This prevents leaks between scopes. In practice, this mostly concerns links to documents that don't exist in the target scope.
+
+    **Example:**
+
+    -   Page A links to Page B
+    -   Page A is copied from Scope A to Scope B
+    -   Link to Page B is removed from Page A by replacing the `id` with `undefined` (since Page B doesn't exist in Scope B)
+
+    **Note:** The link is only retained if both pages are copied in the same operation.
+
+-   c4639be5: Clip crop values when cropping an image in the DAM or `PixelImageBlock`
+
+    Previously, negative values could occur, causing the image proxy to fail on delivery.
+
+    -   @comet/admin@5.5.0
+    -   @comet/admin-date-time@5.5.0
+    -   @comet/admin-icons@5.5.0
+    -   @comet/admin-rte@5.5.0
+    -   @comet/admin-theme@5.5.0
+    -   @comet/blocks-admin@5.5.0
+
+## 5.4.0
+
+### Minor Changes
+
+-   e146d8bb: Support the import of files from external DAMs
+
+    To connect an external DAM, implement a component with the necessary logic (asset picker, upload functionality, ...). Pass this component to the `DamPage` via the `additionalToolbarItems` prop.
+
+    ```tsx
+    <DamPage
+        // ...
+        additionalToolbarItems={<ImportFromExternalDam />}
+    />
+    ```
+
+    You can find an [example](demo/admin/src/dam/ImportFromUnsplash.tsx) in the demo project.
+
+-   51d6c2b9: Move soft-hyphen functionality to `@comet/admin-rte`
+
+    This allows using the soft-hyphen functionality in plain RTEs, and not only in `RichTextBlock`
+
+    ```tsx
+    const [useRteApi] = makeRteApi();
+
+    export default function MyRte() {
+        const { editorState, setEditorState } = useRteApi();
+        return (
+            <Rte
+                value={editorState}
+                onChange={setEditorState}
+                options={{
+                    supports: [
+                        // Soft Hyphen
+                        "soft-hyphen",
+                        // Other options you may wish to support
+                        "bold",
+                        "italic",
+                    ],
+                }}
+            />
+        );
+    }
+    ```
+
+-   dcaf750d: Make all DAM license fields optional if `LicenseType` is `ROYALTY_FREE` even if `requireLicense` is true in `DamConfig`
+
+### Patch Changes
+
+-   087cb01d: Enable copying documents from one `PageTree` category to another (e.g. from "Main navigation" to "Top menu" in Demo)
+-   Updated dependencies [ba800163]
+-   Updated dependencies [981bf48c]
+-   Updated dependencies [60a18392]
+-   Updated dependencies [51d6c2b9]
+    -   @comet/admin@5.4.0
+    -   @comet/admin-rte@5.4.0
+    -   @comet/admin-date-time@5.4.0
+    -   @comet/admin-icons@5.4.0
+    -   @comet/admin-theme@5.4.0
+    -   @comet/blocks-admin@5.4.0
+
 ## 5.3.0
 
 ### Patch Changes

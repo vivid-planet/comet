@@ -118,10 +118,9 @@ export default function useInlineStyleType({ editorState, setEditorState, suppor
                     onButtonClick: handleInlineStyleButtonClick.bind(null, c.name),
                 })),
             ...(customInlineStyles
-                ? Object.entries(customInlineStyles).map(([name, { label, icon }]) => ({
+                ? Object.entries(customInlineStyles).map(([name, { style, ...restOptions }]) => ({
+                      ...restOptions,
                       name,
-                      label,
-                      icon,
                       selected: inlineStyleActive(name),
                       onButtonClick: handleInlineStyleButtonClick.bind(null, name),
                   }))
