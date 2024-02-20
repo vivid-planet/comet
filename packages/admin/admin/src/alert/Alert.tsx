@@ -13,40 +13,28 @@ export interface AlertProps {
     action?: React.ReactNode;
 }
 
-export type AlertClassKey = "root" | "message" | "title" | "text" | "action" | "closeIcon" | "hasTitle";
+export type AlertClassKey = "root" | "message" | "title" | "text" | "action" | "closeIcon" | "hasTitle" | "singleRow";
 
 const styles = (theme: Theme) =>
     createStyles<AlertClassKey, AlertProps>({
         root: {
-            display: "flex",
-            alignItems: "center",
-            backgroundColor: theme.palette.background.paper,
-            borderRadius: 4,
-            boxShadow: theme.shadows[2],
-            position: "relative",
-            padding: theme.spacing(2, "12px", 2, 4),
-            minHeight: 40, // to ensure consistent height for the content, regardless of the presence of a button or close icon, in order to set the outer padding correctly
+            padding: theme.spacing(4, "12px", 4, 4),
         },
         message: {
             display: "flex",
             alignItems: "center",
             flexGrow: 1,
-            padding: 0,
-            paddingLeft: theme.spacing(2),
-            marginBottom: 0,
         },
-        title: {
-            fontWeight: 600,
-            marginBottom: theme.spacing(1),
-        },
+        title: {},
         text: {
             flexGrow: 1,
-            marginRight: theme.spacing(4),
         },
         action: {},
         closeIcon: {},
         hasTitle: {
+            position: "relative",
             alignItems: "flex-start",
+            padding: theme.spacing(4, 6, "8px", 3),
 
             [`& .${buttonClasses.text}`]: {
                 marginLeft: -15,
@@ -58,42 +46,47 @@ const styles = (theme: Theme) =>
 
             "& $closeIcon": {
                 position: "absolute",
-                right: 10,
-                top: 10,
+                right: 2,
+                top: 2,
             },
             "& $message": {
                 flexDirection: "column",
                 alignItems: "flex-start",
             },
-            "&$root": {
-                paddingBottom: "6px",
-                paddingTop: theme.spacing(4),
-            },
+        },
+        singleRow: {
+            display: "flex",
+            alignItems: "center",
+            padding: theme.spacing(2, "12px", 2, 4),
         },
     });
 
-function Alert({ severity = "info", title, children, classes, onClose, action }: AlertProps & WithStyles<typeof styles>): React.ReactElement {
-    return (
-        <MuiAlert
-            classes={{
-                root: clsx(classes.root, Boolean(title) && classes.hasTitle),
-                message: classes.message,
-            }}
-            severity={severity}
-        >
-            {Boolean(title) && <AlertTitle className={classes.title}>{title}</AlertTitle>}
-            <Typography className={classes.text} variant="body2">
-                {children}
-            </Typography>
-            <div className={classes.action}>{action}</div>
-            {onClose && (
-                <IconButton className={classes.closeIcon} onClick={onClose}>
-                    <Close />
-                </IconButton>
-            )}
-        </MuiAlert>
-    );
-}
+const Alert = React.forwardRef<HTMLDivElement, AlertProps & WithStyles<typeof styles>>(
+    ({ severity = "info", title, children, classes, onClose, action }, ref) => {
+        const singleRow = !title && (action || onClose);
+        return (
+            <MuiAlert
+                ref={ref}
+                classes={{
+                    root: clsx(classes.root, Boolean(title) && classes.hasTitle, singleRow && classes.singleRow),
+                    message: classes.message,
+                }}
+                severity={severity}
+            >
+                {Boolean(title) && <AlertTitle className={classes.title}>{title}</AlertTitle>}
+                <Typography className={classes.text} variant="body2">
+                    {children}
+                </Typography>
+                {action && <div className={classes.action}>{action}</div>}
+                {onClose && (
+                    <IconButton className={classes.closeIcon} onClick={onClose}>
+                        <Close />
+                    </IconButton>
+                )}
+            </MuiAlert>
+        );
+    },
+);
 
 const AdminComponentWithStyles = withStyles(styles, { name: "CometAdminAlert" })(Alert);
 
