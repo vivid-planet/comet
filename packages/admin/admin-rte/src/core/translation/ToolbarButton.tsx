@@ -1,6 +1,5 @@
-import { useContentTranslationService } from "@comet/admin";
+import { Tooltip, useContentTranslationService } from "@comet/admin";
 import { Translate } from "@comet/admin-icons";
-import Tooltip from "@mui/material/Tooltip";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
