@@ -825,25 +825,25 @@ importers:
         specifier: ^3.7.0
         version: 3.7.4(graphql@15.8.0)(react-dom@17.0.2)(react@17.0.2)
       '@comet/admin':
-        specifier: '*'
+        specifier: workspace:^5.6.0
         version: link:../packages/admin/admin
       '@comet/admin-color-picker':
-        specifier: '*'
+        specifier: workspace:^5.6.0
         version: link:../packages/admin/admin-color-picker
       '@comet/admin-date-time':
-        specifier: '*'
+        specifier: workspace:^5.6.0
         version: link:../packages/admin/admin-date-time
       '@comet/admin-icons':
-        specifier: '*'
+        specifier: workspace:^5.6.0
         version: link:../packages/admin/admin-icons
       '@comet/admin-react-select':
-        specifier: '*'
+        specifier: workspace:^5.6.0
         version: link:../packages/admin/admin-react-select
       '@comet/admin-rte':
-        specifier: '*'
+        specifier: workspace:^5.6.0
         version: link:../packages/admin/admin-rte
       '@comet/admin-theme':
-        specifier: '*'
+        specifier: workspace:^5.6.0
         version: link:../packages/admin/admin-theme
       '@docusaurus/core':
         specifier: 2.4.1
@@ -937,7 +937,7 @@ importers:
         specifier: ^7.22.8
         version: 7.22.11
       '@comet/eslint-config':
-        specifier: workspace:*
+        specifier: workspace:^5.6.0
         version: link:../packages/eslint-config
       '@docusaurus/module-type-aliases':
         specifier: 2.4.1
@@ -15331,9 +15331,6 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependenciesMeta:
-      ajv:
-        optional: true
     dependencies:
       ajv: 8.12.0
 
