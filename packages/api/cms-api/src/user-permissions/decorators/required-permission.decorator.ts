@@ -7,7 +7,7 @@ type RequiredPermissionOptions = {
 };
 
 export type RequiredPermissionMetadata = {
-    requiredPermission: (keyof Permission)[] | keyof Permission;
+    requiredPermission: (keyof Permission)[];
     options: RequiredPermissionOptions | undefined;
 };
 
@@ -15,5 +15,8 @@ export const RequiredPermission = (
     requiredPermission: (keyof Permission)[] | keyof Permission,
     options?: RequiredPermissionOptions,
 ): CustomDecorator<string> => {
-    return SetMetadata<string, RequiredPermissionMetadata>("requiredPermission", { requiredPermission, options });
+    return SetMetadata<string, RequiredPermissionMetadata>("requiredPermission", {
+        requiredPermission: Array.isArray(requiredPermission) ? requiredPermission : [requiredPermission],
+        options,
+    });
 };

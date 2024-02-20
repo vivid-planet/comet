@@ -1,3 +1,4 @@
+import { DiscoveryService } from "@golevelup/nestjs-discovery";
 import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Inject, Injectable, Optional } from "@nestjs/common";
@@ -5,6 +6,7 @@ import { isFuture, isPast } from "date-fns";
 import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
 
+import { RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
 import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
@@ -28,6 +30,7 @@ export class UserPermissionsService {
         @Inject(ACCESS_CONTROL_SERVICE) private readonly accessControlService: AccessControlServiceInterface,
         @InjectRepository(UserPermission) private readonly permissionRepository: EntityRepository<UserPermission>,
         @InjectRepository(UserContentScopes) private readonly contentScopeRepository: EntityRepository<UserContentScopes>,
+        private readonly discoveryService: DiscoveryService,
     ) {}
 
     async getAvailableContentScopes(): Promise<ContentScope[]> {
@@ -42,7 +45,16 @@ export class UserPermissionsService {
 
     async getAvailablePermissions(): Promise<(keyof Permission)[]> {
         return [
-            ...new Set<keyof Permission>(["dam", "pageTree", "userPermissions", "cronJobs", "builds", ...(this.options.availablePermissions ?? [])]),
+            ...new Set(
+                [
+                    ...(await this.discoveryService.providerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                    ...(await this.discoveryService.providersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                    ...(await this.discoveryService.controllerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                    ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                ]
+                    .flatMap((p) => p.meta.requiredPermission)
+                    .sort(),
+            ),
         ];
     }
 

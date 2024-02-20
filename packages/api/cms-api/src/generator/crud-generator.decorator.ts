@@ -1,6 +1,7 @@
 export interface CrudGeneratorOptions {
     targetDirectory: string;
     requiredPermission?: string[] | string;
+    // requiredPermission?: (keyof Permission)[] | keyof Permission; // TODO: this only works when the application's permission interface is imported in an entity file
     create?: boolean;
     update?: boolean;
     delete?: boolean;
