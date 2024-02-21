@@ -1,11 +1,8 @@
 ---
-"@comet/admin-color-picker": major
-"@comet/admin-react-select": major
-"@comet/admin-date-time": major
-"@comet/admin-rte": major
 "@comet/admin": major
 ---
 
-The objects `components` and `componentProps` in which the icons and their props were passed separately got removed.
+Remove the `components` and `componentProps` props from `CopyToClipboardButton`
 
-Instead the `copyIcon` and the `successIcon` can be passed now as `React.Nodes` with their props through the `inProps` of the `CometAdminCopyToClipboardButton`.
+Instead, for the icons, use the `copyIcon` and `successIcon` props to pass a `ReactNode` instead of separately passing in values to the `components` and `componentProps` objects. 
+Use `slotPops` to pass props to the remaining elements.
