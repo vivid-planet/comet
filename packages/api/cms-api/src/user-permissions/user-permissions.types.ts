@@ -35,15 +35,15 @@ export interface UserPermissionsUserServiceInterface {
 
 export interface UserPermissionsOptions {
     availablePermissions?: (keyof Permission)[];
-    availableContentScopes?: ContentScope[];
+    availableContentScopes?: ContentScope[] | (() => Promise<ContentScope[]> | ContentScope[]);
 }
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {
-    UserService: Type<UserPermissionsUserServiceInterface>;
+    UserService?: Type<UserPermissionsUserServiceInterface>;
     AccessControlService: Type<AccessControlServiceInterface>;
 }
 
 export interface UserPermissionsAsyncOptions extends UserPermissionsOptions {
-    userService: UserPermissionsUserServiceInterface;
+    userService?: UserPermissionsUserServiceInterface;
     accessControlService: AccessControlServiceInterface;
 }
 
