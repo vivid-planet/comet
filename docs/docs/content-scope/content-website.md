@@ -12,7 +12,7 @@ Usually the scope is stored in a "scope" object as an [embeddable](https://mikro
 
 ```ts title="api/src/news/entities/news.entity.ts"
 @Embeddable()
-@ObjectType("")
+@ObjectType()
 @InputType("NewsContentScopeInput")
 export class NewsContentScope {
     @Property({ columnType: "text" })
