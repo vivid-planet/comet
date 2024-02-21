@@ -1,6 +1,6 @@
 import { Presets, SingleBar } from "cli-progress";
 import { ESLint } from "eslint";
-import { XMLParser } from "fast-xml-parser";
+import { XMLBuilder, XMLParser } from "fast-xml-parser";
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { pascalCase, pascalCaseTransformMerge } from "pascal-case";
 import * as path from "path";
@@ -48,9 +48,12 @@ const main = async () => {
             bar.increment(1, {
                 title: `Generate icons ${icon.name}`,
             });
-            const pathData = getPathData(icon);
+            const svgData = getSVGData(icon);
 
-            return writeComponent(icon, pathData);
+            const builder = new XMLBuilder({ ignoreAttributes: false });
+            const svgString = builder.build(svgData);
+
+            return writeComponent(icon, svgString);
         }),
     );
     bar.stop();
@@ -60,15 +63,24 @@ const main = async () => {
 
 const getComponentName = (fileName: string) => pascalCase(fileName.split(".")[0], { transform: pascalCaseTransformMerge });
 
-const getPathData = (icon: Icon) => {
+const getSVGData = (icon: Icon) => {
     const fileContents = readFileSync(icon.path);
-    const parsedXml = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "" }).parse(fileContents.toString());
+    const parsedXml = new XMLParser({ ignoreAttributes: false }).parse(fileContents.toString());
 
-    if (parsedXml?.svg?.path?.d === undefined) {
-        throw new Error(`The file ${icon.name} must contain a <path> element with a d attribute`);
+    removeFillAttributes(parsedXml.svg);
+    return parsedXml.svg;
+};
+
+const removeFillAttributes = (obj: any) => {
+    if (typeof obj === "object") {
+        Object.keys(obj).forEach((key) => {
+            if (key === "@_fill") {
+                delete obj[key];
+            } else if (typeof obj[key] === "object") {
+                removeFillAttributes(obj[key]);
+            }
+        });
     }
-
-    return parsedXml.svg.path.d;
 };
 
 const getFormattedText = async (text: string) => {
@@ -81,7 +93,7 @@ const getFormattedText = async (text: string) => {
     return results[0].output;
 };
 
-const writeComponent = async (icon: Icon, pathData: string) => {
+const writeComponent = async (icon: Icon, svgString: string) => {
     const component = await getFormattedText(`
         import { SvgIcon, SvgIconProps } from "@mui/material";
         import * as React from "react";
@@ -96,7 +108,7 @@ const writeComponent = async (icon: Icon, pathData: string) => {
         export const ${icon.componentName} = React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => {
             return (
                 <SvgIcon {...props} ref={ref} viewBox="0 0 16 16">
-                    <path d="${pathData}" />
+                    ${svgString}
                 </SvgIcon>
             );
         });
