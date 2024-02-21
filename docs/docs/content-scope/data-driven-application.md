@@ -45,7 +45,7 @@ First an overview of user permissions:
 - Every user has access to resolvers with permissions (e.g., "products") - not covered here
 - Every user has access to scopes
 
-(Both are defined by rule in `AccessControlService` or can be overridden manually per user using UI)
+(Both are defined by rule in `AccessControlService` or can be overridden manually per user in the Admin)
 
 - And every entity belongs to a scope
 
