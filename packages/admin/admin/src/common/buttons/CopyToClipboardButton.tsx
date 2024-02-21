@@ -34,6 +34,7 @@ type OwnerState = {
 
 export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps): React.ReactElement => {
     const {
+        copyText,
         copyIcon = <Copy />,
         successIcon = <Accept />,
         slotProps,
@@ -47,7 +48,7 @@ export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps): Reac
     };
 
     const copyTextToClipboard = () => {
-        navigator.clipboard.writeText(inProps.copyText);
+        navigator.clipboard.writeText(copyText);
         setShowSuccess(true);
 
         setTimeout(() => {
