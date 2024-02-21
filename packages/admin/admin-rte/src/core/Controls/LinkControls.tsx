@@ -9,19 +9,20 @@ import { IControlProps } from "../types";
 export interface RteLinkControlsProps extends IControlProps, ThemedComponentBaseProps<{ root: typeof ButtonGroup; item: "div" }> {}
 
 function StyledLinkControls(inProps: RteLinkControlsProps) {
+    const props = useThemeProps({ props: inProps, name: "CometAdminRteLinkControls" });
     const {
         options: { supports: supportedThings, overwriteLinkButton, overwriteLinksRemoveButton },
         slotProps,
         ...restProps
-    } = useThemeProps({ props: inProps, name: "CometAdminRteLinkControls" });
+    } = props;
 
     const LinkButtonComponent = overwriteLinkButton ? overwriteLinkButton : LinkToolbarButton;
     const LinksRemoveButtonComponent = overwriteLinksRemoveButton ? overwriteLinksRemoveButton : LinksRemoveToolbarButton;
 
     return (
         <Root {...slotProps?.root} {...restProps}>
-            <Item {...slotProps?.item}>{supportedThings.includes("link") && <LinkButtonComponent {...inProps} />}</Item>
-            <Item {...slotProps?.item}>{supportedThings.includes("links-remove") && <LinksRemoveButtonComponent {...inProps} />}</Item>
+            <Item {...slotProps?.item}>{supportedThings.includes("link") && <LinkButtonComponent {...props} />}</Item>
+            <Item {...slotProps?.item}>{supportedThings.includes("links-remove") && <LinksRemoveButtonComponent {...props} />}</Item>
         </Root>
     );
 }
