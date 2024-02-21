@@ -1,20 +1,22 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    CheckboxField,
     Field,
     FinalForm,
-    FinalFormCheckbox,
-    FinalFormInput,
     FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
     MainContent,
+    SelectField,
+    TextAreaField,
+    TextField,
     useAsyncOptionsProps,
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { FormControlLabel, MenuItem } from "@mui/material";
+import { MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -160,38 +162,19 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                 <EditPageLayout>
                     {saveConflict.dialogs}
                     <MainContent>
-                        <Field
+                        <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
+                        <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
+                        <TextAreaField
                             required
                             fullWidth
-                            name="title"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.title" defaultMessage="Title" />}
-                        />
-                        <Field
-                            required
-                            fullWidth
-                            name="slug"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
-                        />
-                        <Field
-                            required
-                            fullWidth
-                            multiline
-                            rows={5}
                             name="description"
-                            component={FinalFormInput}
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
-                        <Field name="type" label="Type" required fullWidth>
-                            {(props) => (
-                                <FinalFormSelect {...props} fullWidth>
-                                    <MenuItem value="Cap">Cap</MenuItem>
-                                    <MenuItem value="Shirt">Shirt</MenuItem>
-                                    <MenuItem value="Tie">Tie</MenuItem>
-                                </FinalFormSelect>
-                            )}
-                        </Field>
+                        <SelectField name="type" label="Type" required fullWidth>
+                            <MenuItem value="Cap">Cap</MenuItem>
+                            <MenuItem value="Shirt">Shirt</MenuItem>
+                            <MenuItem value="Tie">Tie</MenuItem>
+                        </SelectField>
                         <Field
                             fullWidth
                             name="category"
@@ -216,14 +199,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             type="number"
                             label={<FormattedMessage id="product.price" defaultMessage="Price" />}
                         />
-                        <Field name="inStock" label="" type="checkbox" fullWidth>
-                            {(props) => (
-                                <FormControlLabel
-                                    label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />}
-                                    control={<FinalFormCheckbox {...props} />}
-                                />
-                            )}
-                        </Field>
+                        <CheckboxField name="inStock" label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />} fullWidth />
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
