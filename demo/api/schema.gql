@@ -473,7 +473,7 @@ type Product implements DocumentInterface {
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
   dimensions: ProductDimensions
-  packageDimensions: ProductPackageDimensions
+  packageDimensions: ProductPackageDimensions!
   statistics: ProductStatistics
   createdAt: DateTime!
   category: ProductCategory
@@ -1148,7 +1148,7 @@ input ProductInput {
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
   dimensions: ProductDimensionsInput
-  packageDimensions: ProductPackageDimensionsInput
+  packageDimensions: ProductPackageDimensionsInput!
   statistics: ProductStatisticsInput
   variants: [ProductVariantInput!]! = []
   category: ID = null
