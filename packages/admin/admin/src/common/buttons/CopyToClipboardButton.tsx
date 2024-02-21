@@ -27,7 +27,7 @@ export type CopyToClipboardButtonClassKey =
     | "successButton";
 
 type OwnerState = {
-    showSuccess: boolean | undefined;
+    showSuccess: boolean;
 };
 
 export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps): React.ReactElement => {
@@ -39,7 +39,7 @@ export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps): Reac
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminCopyToClipboardButton" });
 
-    const [showSuccess, setShowSuccess] = React.useState<boolean | undefined>(false);
+    const [showSuccess, setShowSuccess] = React.useState<boolean>(false);
 
     const ownerState: OwnerState = {
         showSuccess: showSuccess,
