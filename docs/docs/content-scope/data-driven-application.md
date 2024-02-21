@@ -64,7 +64,7 @@ export class Product extends BaseEntity<Product, "id"> {}
 ```
 
 #### @AffectedEntity
-Use this decorator at query/mutation level to specify which entity (and thus scope) is affected by the query/mutation.
+Use this decorator at operation level to specify which entity (and thus scope) is affected by the operation.
 ```ts
     @Query(Product)
     @AffectedEntity(Product)
