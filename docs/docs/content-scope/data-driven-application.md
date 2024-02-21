@@ -49,7 +49,7 @@ First an overview of user permissions:
 
 - And every entity belongs to a scope
 
-Now UserPermissions needs to check for every request if the entity scope and the user scope match.
+Now user permissions needs to check for every request if the entity scope and the user scope match.
 
 #### @ScopedEntity
 Use this decorator at entity level to return the scope of an entity. You might have to load multiple relations for nested data.
