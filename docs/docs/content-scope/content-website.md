@@ -6,7 +6,7 @@ sidebar_position: 1
 In a content website, the content scope can be used to separate multiple areas of content, such as website (domain) or language. Each area stores its content independent of the others. Not all modules might use the same scope, for example, the DAM might not be scoped at all. Most of Comet's scope features will work out-of-the-box for this use case.
 
 
-### Api: Database
+### API: Database
 
 Usually scope is stored in a "scope" object as embeddable like so, api-generator will create a nice api where you have to pass scope.
 
