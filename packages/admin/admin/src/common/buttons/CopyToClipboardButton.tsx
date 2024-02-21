@@ -28,6 +28,10 @@ export type CopyToClipboardButtonClassKey =
     | "copyButton"
     | "successButton";
 
+type OwnerState = {
+    showSuccess: boolean | undefined;
+};
+
 export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps): React.ReactElement => {
     const {
         copyIcon = <Copy />,
@@ -37,6 +41,10 @@ export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps): Reac
     } = useThemeProps({ props: inProps, name: "CometAdminCopyToClipboardButton" });
 
     const [showSuccess, setShowSuccess] = React.useState<boolean | undefined>(false);
+
+    const ownerState: OwnerState = {
+        showSuccess: showSuccess,
+    };
 
     const copyTextToClipboard = () => {
         navigator.clipboard.writeText(inProps.copyText);
@@ -48,7 +56,7 @@ export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps): Reac
     };
 
     return (
-        <Root {...slotProps?.root} {...restProps}>
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
             <CopyButtonContainer {...slotProps?.copyButtonContainer}>
                 <Grow in={!showSuccess}>
                     <CopyButton
@@ -84,10 +92,10 @@ export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps): Reac
 const Root = styled("div", {
     name: "CometAdminCopyToClipboardButton",
     slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
+    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+        return [styles.root, ownerState.showSuccess && styles.showSuccess];
     },
-})(css`
+})<{ ownerState: OwnerState }>(css`
     position: relative;
     display: inline-flex;
     align-items: center;
