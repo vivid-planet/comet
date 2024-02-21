@@ -42,7 +42,7 @@ So far COMET didn't help us a lot with our scope, but for UserPermissions it has
 
 First an overview of user permissions:
 
-- Every user has access to resolvers with permissions (eg. "products") - not covered here
+- Every user has access to resolvers with permissions (e.g., "products") - not covered here
 - Every user has access to scopes
 
 (Both are defined by rule in `AccessControlService` or can be overridden manually per user using UI)
