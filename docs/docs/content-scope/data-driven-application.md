@@ -77,6 +77,6 @@ Use this decorator at operation level to specify which entity (and thus scope) i
     @Query([Product])
     @AffectedEntity(Dealer, { idArg: "dealer" })
     async products(@Args("dealer", { type: () => ID }) dealer: string): Promise<Product[]> {
-        //note: you can trust "dealer" beeing in a valid scope, but you need to make sure that your business code restricts this query to the given dealer
+        // Note: you can trust "dealer" being in a valid scope, but you need to make sure that your business code restricts this query to the given dealer
     }
 ```
