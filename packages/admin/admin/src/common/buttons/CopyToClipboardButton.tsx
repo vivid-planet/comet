@@ -6,10 +6,8 @@ import * as React from "react";
 export interface CopyToClipboardButtonProps
     extends ThemedComponentBaseProps<{
         root: "div";
-        buttonContainer: "div";
         copyButtonContainer: "div";
         successButtonContainer: "div";
-        button: "div";
         copyButton: typeof IconButton;
         successButton: typeof IconButton;
     }> {
