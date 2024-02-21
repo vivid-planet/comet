@@ -409,6 +409,43 @@ type PaginatedNews {
   totalCount: Int!
 }
 
+type AlternativeAddress {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+}
+
+type Address {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+  alternativeAddress: AlternativeAddress
+}
+
+type AlternativeAddressAsEmbeddable {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+}
+
+type AddressAsEmbeddable {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+  alternativeAddress: AlternativeAddressAsEmbeddable
+}
+
+type Manufacturer {
+  id: ID!
+  address: Address
+  addressAsEmbeddable: AddressAsEmbeddable
+  updatedAt: DateTime!
+}
+
 type ProductCategory implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -503,6 +540,11 @@ type PaginatedProductTags {
   totalCount: Int!
 }
 
+type PaginatedManufacturers {
+  nodes: [Manufacturer!]!
+  totalCount: Int!
+}
+
 type RedirectScope {
   domain: String!
 }
@@ -585,6 +627,36 @@ input NewsContentScopeInput {
   language: String!
 }
 
+input AlternativeAddressInput {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+}
+
+input AddressInput {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+  alternativeAddress: AlternativeAddressInput
+}
+
+input AlternativeAddressAsEmbeddableInput {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+}
+
+input AddressAsEmbeddableInput {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+  alternativeAddress: AlternativeAddressAsEmbeddableInput
+}
+
 input ProductDiscountsInput {
   quantity: Float!
   price: Float!
@@ -661,6 +733,8 @@ type Query {
   productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
   productTag(id: ID!): ProductTag!
   productTags(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductTagFilter, sort: [ProductTagSort!]): PaginatedProductTags!
+  manufacturer(id: ID!): Manufacturer!
+  manufacturers(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerFilter, sort: [ManufacturerSort!]): PaginatedManufacturers!
 }
 
 input UserFilter {
@@ -914,6 +988,37 @@ enum ProductTagSortField {
   updatedAt
 }
 
+input ManufacturerFilter {
+  addressAsEmbeddable_street: StringFilter
+  addressAsEmbeddable_streetNumber: NumberFilter
+  addressAsEmbeddable_zip: NumberFilter
+  addressAsEmbeddable_country: StringFilter
+  addressAsEmbeddable_alternativeAddress_street: StringFilter
+  addressAsEmbeddable_alternativeAddress_streetNumber: NumberFilter
+  addressAsEmbeddable_alternativeAddress_zip: NumberFilter
+  addressAsEmbeddable_alternativeAddress_country: StringFilter
+  updatedAt: DateFilter
+  and: [ManufacturerFilter!]
+  or: [ManufacturerFilter!]
+}
+
+input ManufacturerSort {
+  field: ManufacturerSortField!
+  direction: SortDirection! = ASC
+}
+
+enum ManufacturerSortField {
+  addressAsEmbeddable_street
+  addressAsEmbeddable_streetNumber
+  addressAsEmbeddable_zip
+  addressAsEmbeddable_country
+  addressAsEmbeddable_alternativeAddress_street
+  addressAsEmbeddable_alternativeAddress_streetNumber
+  addressAsEmbeddable_alternativeAddress_zip
+  addressAsEmbeddable_alternativeAddress_country
+  updatedAt
+}
+
 type Mutation {
   currentUserSignOut: String!
   userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
@@ -970,6 +1075,9 @@ type Mutation {
   createProductTag(input: ProductTagInput!): ProductTag!
   updateProductTag(id: ID!, input: ProductTagUpdateInput!, lastUpdatedAt: DateTime): ProductTag!
   deleteProductTag(id: ID!): Boolean!
+  createManufacturer(input: ManufacturerInput!): Manufacturer!
+  updateManufacturer(id: ID!, input: ManufacturerUpdateInput!, lastUpdatedAt: DateTime): Manufacturer!
+  deleteManufacturer(id: ID!): Boolean!
 }
 
 input UserPermissionInput {
@@ -1212,4 +1320,14 @@ input ProductTagInput {
 input ProductTagUpdateInput {
   title: String
   products: [ID!]
+}
+
+input ManufacturerInput {
+  address: AddressInput
+  addressAsEmbeddable: AddressAsEmbeddableInput
+}
+
+input ManufacturerUpdateInput {
+  address: AddressInput
+  addressAsEmbeddable: AddressAsEmbeddableInput
 }
