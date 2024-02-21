@@ -33,7 +33,13 @@ export class UserPermissionsService {
     ) {}
 
     async getAvailableContentScopes(): Promise<ContentScope[]> {
-        return this.options.availableContentScopes ?? [];
+        if (this.options.availableContentScopes) {
+            if (typeof this.options.availableContentScopes === "function") {
+                return this.options.availableContentScopes();
+            }
+            return this.options.availableContentScopes;
+        }
+        return [];
     }
 
     async getAvailablePermissions(): Promise<string[]> {
