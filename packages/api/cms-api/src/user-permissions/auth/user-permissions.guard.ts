@@ -59,7 +59,7 @@ export class UserPermissionsGuard implements CanActivate {
         }
         return requiredPermissions.some((permission) =>
             requiredContentScopes
-                ? requiredContentScopes.some((contentScope) => this.accessControlService.isAllowed(user, permission, contentScope))
+                ? requiredContentScopes.every((contentScope) => this.accessControlService.isAllowed(user, permission, contentScope))
                 : this.accessControlService.isAllowed(user, permission),
         );
     }
