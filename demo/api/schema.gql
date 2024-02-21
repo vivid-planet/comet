@@ -446,6 +446,11 @@ type Manufacturer {
   updatedAt: DateTime!
 }
 
+type PaginatedManufacturers {
+  nodes: [Manufacturer!]!
+  totalCount: Int!
+}
+
 type ProductCategory implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -515,6 +520,7 @@ type Product implements DocumentInterface {
   statistics: ProductStatistics
   createdAt: DateTime!
   category: ProductCategory
+  manufacturer: Manufacturer
   variants: [ProductVariant!]!
   tags: [ProductTag!]!
 }
@@ -537,11 +543,6 @@ type PaginatedProductCategories {
 
 type PaginatedProductTags {
   nodes: [ProductTag!]!
-  totalCount: Int!
-}
-
-type PaginatedManufacturers {
-  nodes: [Manufacturer!]!
   totalCount: Int!
 }
 
@@ -903,6 +904,7 @@ input ProductFilter {
   category: ManyToOneFilter
   createdAt: DateFilter
   updatedAt: DateFilter
+  manufacturer: ManyToOneFilter
   and: [ProductFilter!]
   or: [ProductFilter!]
 }
@@ -946,6 +948,7 @@ enum ProductSortField {
   category
   createdAt
   updatedAt
+  manufacturer
 }
 
 input ProductCategoryFilter {
@@ -1270,6 +1273,7 @@ input ProductInput {
   variants: [ProductVariantInput!]! = []
   category: ID = null
   tags: [ID!]! = []
+  manufacturer: ID
 }
 
 input ProductStatisticsInput {
@@ -1298,6 +1302,7 @@ input ProductUpdateInput {
   variants: [ProductVariantInput!]
   category: ID
   tags: [ID!]
+  manufacturer: ID
 }
 
 input ProductCategoryInput {
