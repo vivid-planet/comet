@@ -1,5 +1,4 @@
 import { MlRequest, Options } from "@comet/cms-api/lib/ml/ml.types";
-import { apiKey, apiUrl } from "@src/ml.key";
 
 export const MLModels = () => {
     const createMessages = (options: MlRequest, imageDetail: "low" | "high") => {
@@ -74,11 +73,11 @@ export const MLModels = () => {
 
     return {
         image: async (options: MlRequest) => {
-            const response = await fetch(apiUrl, createRequest(options, "low", apiKey));
+            const response = await fetch("apiUrl", createRequest(options, "low", "apiKey"));
             return convertResponse(response);
         },
         imageAdvanced: async (options: MlRequest) => {
-            const response = await fetch(apiUrl, createRequest(options, "high", apiKey));
+            const response = await fetch("apiUrl", createRequest(options, "high", "apiKey"));
             return convertResponse(response);
         },
     };
