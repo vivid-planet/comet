@@ -148,7 +148,6 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     dimensions?: ProductDimensions = undefined;
 
     @Embedded(() => ProductPackageDimensions)
-    @Field(() => ProductPackageDimensions)
     packageDimensions: ProductPackageDimensions;
 
     @OneToOne(() => ProductStatistics, { inversedBy: "product", owner: true, ref: true, nullable: true })

@@ -165,7 +165,7 @@ function ProductsGrid() {
                                             })),
                                             articleNumbers: input.articleNumbers,
                                             discounts: input.discounts,
-                                            packageDimensions: input.packageDimensions,
+                                            packageDimensions: { width: 0, height: 0, depth: 0 },
                                             statistics: { views: 0 },
                                         },
                                     },
@@ -244,11 +244,6 @@ const productsFragment = gql`
         discounts {
             quantity
             price
-        }
-        packageDimensions {
-            width
-            height
-            depth
         }
     }
 `;

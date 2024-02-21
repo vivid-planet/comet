@@ -452,12 +452,6 @@ type ProductDimensions {
   depth: Float!
 }
 
-type ProductPackageDimensions {
-  width: Float!
-  height: Float!
-  depth: Float!
-}
-
 type Product implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -473,7 +467,6 @@ type Product implements DocumentInterface {
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
   dimensions: ProductDimensions
-  packageDimensions: ProductPackageDimensions!
   statistics: ProductStatistics
   createdAt: DateTime!
   category: ProductCategory
@@ -590,12 +583,6 @@ input ProductDiscountsInput {
 }
 
 input ProductDimensionsInput {
-  width: Float!
-  height: Float!
-  depth: Float!
-}
-
-input ProductPackageDimensionsInput {
   width: Float!
   height: Float!
   depth: Float!
@@ -1153,6 +1140,12 @@ input ProductInput {
   variants: [ProductVariantInput!]! = []
   category: ID = null
   tags: [ID!]! = []
+}
+
+input ProductPackageDimensionsInput {
+  width: Float!
+  height: Float!
+  depth: Float!
 }
 
 input ProductStatisticsInput {
