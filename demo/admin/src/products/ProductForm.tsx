@@ -3,6 +3,7 @@ import {
     CheckboxField,
     Field,
     FinalForm,
+    FinalFormInput,
     FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
