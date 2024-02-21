@@ -14,7 +14,6 @@ export interface CopyToClipboardButtonProps
         successButton: typeof IconButton;
     }> {
     copyText: string;
-    showSuccess?: boolean;
     copyIcon?: React.ReactNode;
     successIcon?: React.ReactNode;
 }
@@ -31,14 +30,13 @@ export type CopyToClipboardButtonClassKey =
 
 export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps): React.ReactElement => {
     const {
-        showSuccess: success,
         copyIcon = <Copy />,
         successIcon = <Accept />,
         slotProps,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminCopyToClipboardButton" });
 
-    const [showSuccess, setShowSuccess] = React.useState<boolean | undefined>(success);
+    const [showSuccess, setShowSuccess] = React.useState<boolean | undefined>(false);
 
     const copyTextToClipboard = () => {
         navigator.clipboard.writeText(inProps.copyText);
