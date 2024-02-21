@@ -1,11 +1,10 @@
-import { ClassKeyOfStyles, ClassNameMap } from "@mui/styles";
 import debounce from "lodash.debounce";
 import * as React from "react";
 
 import { BreadcrumbItem } from "../Stack";
 import { BreadcrumbsEntry } from "./BreadcrumbsEntry";
 import { BreadcrumbsOverflow } from "./BreadcrumbsOverflow";
-import { styles } from "./StackBreadcrumbs.styles";
+import { StackBreadcrumbsProps } from "./StackBreadcrumbs";
 
 export const getElementOuterWidth = (element: Element): number =>
     element.clientWidth + parseFloat(getComputedStyle(element).marginLeft) + parseFloat(getComputedStyle(element).marginRight);
@@ -59,10 +58,10 @@ const useNumberOfItemsToBeHidden = (
 export const useItemsToRender = (
     items: BreadcrumbItem[],
     containerWidth: number,
-    classes: ClassNameMap<ClassKeyOfStyles<typeof styles>>,
     itemWidths: number[] | undefined,
     overflowLinkText: React.ReactNode,
     backButtonUrl: string | undefined,
+    slotProps: StackBreadcrumbsProps["slotProps"],
 ): React.ReactNode[] => {
     const numberOfItemsToBeHidden = useNumberOfItemsToBeHidden(items, containerWidth, Boolean(backButtonUrl), itemWidths);
 
@@ -79,11 +78,11 @@ export const useItemsToRender = (
     const showOverflowMenu = Boolean(renderAllItemsToAllowCalculatingWidths || itemsInsideOverflowMenu.length);
 
     const firstItemWithBackButton = (
-        <BreadcrumbsEntry item={items[0]} classes={classes} isLastItem={items.length === 1} backButtonUrl={backButtonUrl} />
+        <BreadcrumbsEntry item={items[0]} isLastItem={items.length === 1} backButtonUrl={backButtonUrl} slotProps={slotProps} />
     );
-    const overflowMenu = <BreadcrumbsOverflow items={itemsInsideOverflowMenu} linkText={overflowLinkText} classes={classes} />;
+    const overflowMenu = <BreadcrumbsOverflow items={itemsInsideOverflowMenu} linkText={overflowLinkText} slotProps={slotProps} />;
     const remainingItems = itemsAfterOverflowMenu.map((item, index) => (
-        <BreadcrumbsEntry key={item.id} item={item} classes={classes} isLastItem={index === itemsAfterOverflowMenu.length - 1} />
+        <BreadcrumbsEntry key={item.id} item={item} isLastItem={index === itemsAfterOverflowMenu.length - 1} slotProps={slotProps} />
     ));
 
     return [firstItemWithBackButton, showOverflowMenu && overflowMenu, ...remainingItems].filter((item) => item !== false);
