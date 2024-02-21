@@ -43,7 +43,6 @@ const Item = styled("div", {
         return [styles.item];
     },
 })(css`
-    outline: 10px solid green;
     margin-right: 1px;
     min-width: 0;
     &:last-child {
