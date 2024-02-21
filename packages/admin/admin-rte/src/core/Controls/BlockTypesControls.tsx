@@ -95,7 +95,7 @@ export function StyledBlockTypesControls(inProps: Props) {
     );
 }
 
-//If there are no dropdown-features, this must return null not just an empty component, to prevent an empty item from being rendered in Toolbar
+// If there are no dropdown-features, this must return null not just an empty component, to prevent an empty item from being rendered in Toolbar
 export default (p: IControlProps) => {
     const { editorState, setEditorState, editorRef, options } = p;
     const { supports: supportedThings, blocktypeMap, standardBlockType } = options;
