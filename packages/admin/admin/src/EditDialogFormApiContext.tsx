@@ -7,6 +7,7 @@ export interface EditDialogFormApi {
     hasErrors: boolean;
     onFormStatusChange: (status: FormStatus) => void;
     resetFormStatus: () => void;
+    onAfterSave?: () => void;
 }
 
 export const EditDialogFormApiContext = React.createContext<EditDialogFormApi | null>(null);
@@ -14,7 +15,11 @@ export function useEditDialogFormApi() {
     return React.useContext(EditDialogFormApiContext);
 }
 
-export const EditDialogFormApiProvider: React.FunctionComponent = ({ children }) => {
+type EditDialogFormApiProviderProps = {
+    onAfterSave?: () => void;
+};
+
+export const EditDialogFormApiProvider: React.FunctionComponent<EditDialogFormApiProviderProps> = ({ children, onAfterSave }) => {
     const [status, setStatus] = React.useState<FormStatus | null>(null);
 
     const onFormStatusChange = React.useCallback((status: FormStatus) => {
@@ -31,8 +36,9 @@ export const EditDialogFormApiProvider: React.FunctionComponent = ({ children })
             hasErrors: status === "error",
             onFormStatusChange,
             resetFormStatus,
+            onAfterSave,
         };
-    }, [onFormStatusChange, resetFormStatus, status]);
+    }, [onFormStatusChange, resetFormStatus, status, onAfterSave]);
 
     return <EditDialogFormApiContext.Provider value={editDialogFormApi}>{children}</EditDialogFormApiContext.Provider>;
 };

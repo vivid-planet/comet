@@ -28,7 +28,7 @@ const MasterMenu: React.FC = () => {
 
     return (
         <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
-            <MenuItemGroup title={sectionScopeTitle} shortTitle="YEET">
+            <MenuItemGroup title={sectionScopeTitle}>
                 <MenuItemRouterLink
                     primary={intl.formatMessage({ id: "menu.dashboard", defaultMessage: "Dashboard" })}
                     icon={<Dashboard />}

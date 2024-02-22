@@ -8,6 +8,7 @@ import InlineStyleTypeControls from "./InlineStyleTypeControls";
 import LinkControls from "./LinkControls";
 import ListsControls from "./ListsControls";
 import ListsIndentControls from "./ListsIndentControls";
+import SpecialCharactersControls from "./SpecialCharactersControls";
 import Toolbar from "./Toolbar";
 
 export default function Controls(p: IControlProps) {
@@ -25,6 +26,7 @@ export default function Controls(p: IControlProps) {
                     ListsControls,
                     ListsIndentControls,
                     LinkControls,
+                    SpecialCharactersControls,
                     ...(hasCustomButtons ? [CustomControls] : []),
                 ]}
             </Toolbar>

@@ -53,6 +53,7 @@ export const rteOptions: IRteOptions = {
         "history",
         "link",
         "links-remove",
+        "non-breaking-space",
     ],
     listLevelMax: 2,
     blocktypeMap: {

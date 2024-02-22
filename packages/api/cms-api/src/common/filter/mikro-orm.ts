@@ -152,7 +152,11 @@ export function filtersToMikroOrmQuery(
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function searchToMikroOrmQuery(search: string, fields: string[]): ObjectQuery<any> {
-    const quotedSearchParts = search.split(/ /).map((searchString) => `%${searchString.replace(/([%_\\])/g, "\\$1")}%`);
+    const quotedSearchParts = search
+        .trim()
+        .split(/ /)
+        .map((searchString) => `%${searchString.replace(/([%_\\])/g, "\\$1")}%`);
+
     const ors = [];
     for (const field of fields) {
         for (const quotedSearch of quotedSearchParts) {
