@@ -1,4 +1,4 @@
-import { CSSObject, Drawer as MuiDrawer, DrawerProps, Theme } from "@mui/material";
+import { CSSObject, Drawer as MuiDrawer, drawerClasses, DrawerProps, Theme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { createStyles, StyledComponent } from "@mui/styles";
 import { MUIStyledCommonProps } from "@mui/system";
@@ -41,7 +41,7 @@ export const Drawer: StyledComponent<DrawerProps & MUIStyledCommonProps<Theme> &
                 boxSizing: "border-box",
                 ...(open ? openedMixin(theme, drawerWidth) : closedMixin(theme, variant, drawerWidth, drawerWidthCollapsed)),
             }),
-            "& .MuiDrawer-paper": {
+            [`& .${drawerClasses.paper}`]: {
                 ...sharedStyles,
                 ...(variant === "permanent" && {
                     top: headerHeight,
@@ -49,7 +49,7 @@ export const Drawer: StyledComponent<DrawerProps & MUIStyledCommonProps<Theme> &
                 }),
                 ...(open ? openedMixin(theme, drawerWidth) : closedMixin(theme, variant, drawerWidth, drawerWidthCollapsed)),
             },
-            "& .MuiDrawer-paperAnchorLeft": {
+            [`& .${drawerClasses.paperAnchorLeft}`]: {
                 borderRight: "none",
             },
         };
