@@ -12,13 +12,7 @@ import {
     findInputClassImportPath,
     morphTsProperty,
 } from "./utils/ts-morph-helper";
-import { GeneratedFile, writeGeneratedFiles } from "./utils/write-generated-files";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function writeCrudInput(generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): Promise<void> {
-    const files = await generateCrudInput(generatorOptions, metadata);
-    await writeGeneratedFiles(files, generatorOptions);
-}
+import { GeneratedFile } from "./utils/write-generated-files";
 
 function tsCodeRecordToString(object: Record<string, string | undefined>) {
     const filteredEntries = Object.entries(object).filter(([key, value]) => value !== undefined);
@@ -280,21 +274,27 @@ export async function generateCrudInput(
                 } else if (type == "boolean[]") {
                     decorators.push(`@Field(() => [Boolean], ${fieldOptions})`);
                     decorators.push("@IsBoolean({ each: true })");
-                } else {
+                } else if (tsType.getArrayElementTypeOrThrow().isClass()) {
                     const nestedClassName = tsType.getArrayElementTypeOrThrow().getText(tsProp);
                     const importPath = findInputClassImportPath(nestedClassName, generatorOptions, metadata);
                     imports.push({ name: nestedClassName, importPath });
                     decorators.push(`@ValidateNested()`);
                     decorators.push(`@Type(() => ${nestedClassName})`);
                     decorators.push(`@Field(() => [${nestedClassName}], ${fieldOptions})`);
+                } else {
+                    decorators.push(`@Field(() => [GraphQLJSONObject], ${fieldOptions}) // Warning: this input is not validated properly`);
                 }
-            } else {
+            } else if (tsType.isClass()) {
                 const nestedClassName = tsType.getText(tsProp);
                 const importPath = findInputClassImportPath(nestedClassName, generatorOptions, metadata);
                 imports.push({ name: nestedClassName, importPath });
                 decorators.push(`@ValidateNested()`);
                 decorators.push(`@Type(() => ${nestedClassName})`);
                 decorators.push(`@Field(() => ${nestedClassName}${prop.nullable ? ", { nullable: true }" : ""})`);
+            } else {
+                decorators.push(
+                    `@Field(() => GraphQLJSONObject${prop.nullable ? ", { nullable: true }" : ""}) // Warning: this input is not validated properly`,
+                );
             }
         } else if (prop.type == "uuid") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();

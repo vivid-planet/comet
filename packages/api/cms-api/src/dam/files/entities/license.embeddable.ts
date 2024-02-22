@@ -4,8 +4,6 @@ import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
 export enum LicenseType {
     ROYALTY_FREE = "ROYALTY_FREE",
     RIGHTS_MANAGED = "RIGHTS_MANAGED",
-    SUBSCRIPTION = "SUBSCRIPTION",
-    MICRO = "MICRO",
 }
 registerEnumType(LicenseType, { name: "LicenseType" });
 

@@ -1,5 +1,27 @@
 # @comet/admin-icons
 
+## 6.1.0
+
+### Patch Changes
+
+-   08e0da09: Fix icons inside tooltips by forwarding the ref
+
+## 6.0.0
+
+### Major Changes
+
+-   a525766c: Remove deprecated icons `Betrieb`, `Logische Filter`, `Pool`, `Pool 2`, `State Green`, `State Green Ring`, `State Orange`, `State Orange Ring`, `State Red`, `State Red Ring`, `Vignette 1` and `Vignette 2`.
+
+### Patch Changes
+
+-   76e50aa8: Fix broken `Logout` icon
+
+## 5.6.0
+
+## 5.5.0
+
+## 5.4.0
+
 ## 5.3.0
 
 ### Minor Changes

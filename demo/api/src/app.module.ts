@@ -5,10 +5,7 @@ import {
     BlocksModule,
     BlocksTransformerMiddlewareFactory,
     BuildsModule,
-    ContentScope,
-    ContentScopeModule,
     CronJobsModule,
-    CurrentUserInterface,
     DamModule,
     DependenciesModule,
     FilesService,
@@ -18,6 +15,7 @@ import {
     PageTreeService,
     PublicUploadModule,
     RedirectsModule,
+    UserPermissionsModule,
 } from "@comet/cms-api";
 import { ApolloDriver } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
@@ -30,7 +28,9 @@ import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { Request } from "express";
 
+import { AccessControlService } from "./auth/access-control.service";
 import { AuthModule } from "./auth/auth.module";
+import { UserService } from "./auth/user.service";
 import { DamScope } from "./dam/dto/dam-scope";
 import { DamFile } from "./dam/entities/dam-file.entity";
 import { DamFolder } from "./dam/entities/dam-folder.entity";
@@ -76,11 +76,19 @@ export class AppModule {
                     inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
                 }),
                 AuthModule,
-                ContentScopeModule.forRoot({
-                    canAccessScope(requestScope: ContentScope, user: CurrentUserInterface) {
-                        if (!user.domains) return true; //all domains
-                        return user.domains.includes(requestScope.domain);
-                    },
+                UserPermissionsModule.forRootAsync({
+                    useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
+                        availablePermissions: ["news", "products"],
+                        availableContentScopes: [
+                            { domain: "main", language: "de" },
+                            { domain: "main", language: "en" },
+                            { domain: "secondary", language: "en" },
+                        ],
+                        userService,
+                        accessControlService,
+                    }),
+                    inject: [UserService, AccessControlService],
+                    imports: [AuthModule],
                 }),
                 BlocksModule.forRoot({
                     imports: [PagesModule],

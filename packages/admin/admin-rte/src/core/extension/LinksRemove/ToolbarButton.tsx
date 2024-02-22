@@ -4,6 +4,7 @@ import * as React from "react";
 
 import ControlButton from "../../Controls/ControlButton";
 import { IControlProps } from "../../types";
+
 export default function ToolbarButton(props: IControlProps) {
     const selection = props.editorState.getSelection();
     const globallyDisabled = !!props.disabled;

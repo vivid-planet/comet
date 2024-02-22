@@ -45,4 +45,4 @@ public/robots.txt
 
 tsconfig.tsbuildinfo
 
-comet-config.json
+src/comet-config.json

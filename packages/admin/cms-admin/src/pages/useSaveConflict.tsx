@@ -1,5 +1,5 @@
-import { useSnackbarApi } from "@comet/admin";
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, useSnackbarApi } from "@comet/admin";
+import { Snackbar } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 

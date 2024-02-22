@@ -1,0 +1,77 @@
+import { CanActivate, ExecutionContext, Inject, Injectable } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
+import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
+
+import { ContentScopeService } from "../content-scope.service";
+import { RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
+import { CurrentUser } from "../dto/current-user";
+import { ContentScope } from "../interfaces/content-scope.interface";
+import { ACCESS_CONTROL_SERVICE } from "../user-permissions.constants";
+import { AccessControlServiceInterface } from "../user-permissions.types";
+
+@Injectable()
+export class UserPermissionsGuard implements CanActivate {
+    constructor(
+        protected reflector: Reflector,
+        private readonly contentScopeService: ContentScopeService,
+        @Inject(ACCESS_CONTROL_SERVICE) private readonly accessControlService: AccessControlServiceInterface,
+    ) {}
+
+    async canActivate(context: ExecutionContext): Promise<boolean> {
+        if (this.reflector.getAllAndOverride("disableGlobalGuard", [context.getHandler(), context.getClass()])) {
+            return true;
+        }
+
+        if (this.reflector.getAllAndOverride("publicApi", [context.getHandler(), context.getClass()])) {
+            return true;
+        }
+
+        const request =
+            context.getType().toString() === "graphql" ? GqlExecutionContext.create(context).getContext().req : context.switchToHttp().getRequest();
+        const user = request.user as CurrentUser | undefined;
+        if (!user) return false;
+
+        const requiredPermission = this.reflector.getAllAndOverride<RequiredPermissionMetadata>("requiredPermission", [
+            context.getHandler(),
+            context.getClass(),
+        ]);
+        if (!requiredPermission) {
+            throw new Error(`RequiredPermission decorator is missing in ${context.getClass().name}::${context.getHandler().name}()`);
+        }
+
+        let requiredContentScopes: ContentScope[] | undefined;
+        if (!this.isResolvingGraphQLField(context) && !requiredPermission.options?.skipScopeCheck) {
+            requiredContentScopes = await this.contentScopeService.inferScopesFromExecutionContext(context);
+            if (!requiredContentScopes) {
+                throw new Error(
+                    `Could not get ContentScope. Either pass a scope-argument or add @AffectedEntity()-decorator or enable skipScopeCheck in @RequiredPermission() (${
+                        context.getClass().name
+                    }::${context.getHandler().name}())`,
+                );
+            }
+        }
+
+        const requiredPermissions = Array.isArray(requiredPermission.requiredPermission)
+            ? requiredPermission.requiredPermission
+            : [requiredPermission.requiredPermission];
+        if (requiredPermissions.length === 0) {
+            throw new Error(`RequiredPermission decorator has empty permissions in ${context.getClass().name}::${context.getHandler().name}()`);
+        }
+        return requiredPermissions.some((permission) =>
+            requiredContentScopes
+                ? requiredContentScopes.some((contentScope) => this.accessControlService.isAllowed(user, permission, contentScope))
+                : this.accessControlService.isAllowed(user, permission),
+        );
+    }
+
+    // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
+    isResolvingGraphQLField(context: ExecutionContext): boolean {
+        if (context.getType<GqlContextType>() === "graphql") {
+            const gqlContext = GqlExecutionContext.create(context);
+            const info = gqlContext.getInfo();
+            const parentType = info.parentType.name;
+            return parentType !== "Query" && parentType !== "Mutation";
+        }
+        return false;
+    }
+}

@@ -1,15 +1,15 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 
-import { JobStatus } from "../../kubernetes/job-status.enum";
-import { LABEL_ANNOTATION } from "../builds.constants";
+import { KubernetesJobStatus } from "../../kubernetes/job-status.enum";
+import { LABEL_ANNOTATION } from "../../kubernetes/kubernetes.constants";
 
 @ObjectType()
 export class Build {
     @Field(() => ID)
     id: string;
 
-    @Field(() => JobStatus)
-    status: JobStatus;
+    @Field(() => KubernetesJobStatus)
+    status: KubernetesJobStatus;
 
     @Field({ nullable: true })
     name?: string;

@@ -3,29 +3,31 @@ import { Context, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { IncomingMessage } from "http";
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
-import { CurrentUserInterface } from "../current-user/current-user";
+import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { GetCurrentUser } from "../decorators/get-current-user.decorator";
+import { PublicApi } from "../decorators/public-api.decorator";
 
 interface AuthResolverConfig {
-    currentUser: Type<CurrentUserInterface>;
+    currentUser?: Type<CurrentUser>; // TODO Remove in future version as it is not used and here for backwards compatibility
     endSessionEndpoint?: string;
     postLogoutRedirectUri?: string;
 }
 
-export function createAuthResolver(config: AuthResolverConfig): Type<unknown> {
-    @Resolver(() => config.currentUser)
+export function createAuthResolver(config?: AuthResolverConfig): Type<unknown> {
+    @Resolver(() => CurrentUser)
+    @PublicApi()
     class AuthResolver {
-        @Query(() => config.currentUser)
-        async currentUser(@GetCurrentUser() user: typeof config.currentUser): Promise<typeof config.currentUser> {
+        @Query(() => CurrentUser)
+        async currentUser(@GetCurrentUser() user: CurrentUser): Promise<CurrentUser> {
             return user;
         }
 
         @Mutation(() => String)
         @SkipBuild()
         async currentUserSignOut(@Context("req") req: IncomingMessage): Promise<string | null> {
-            let signOutUrl = config.postLogoutRedirectUri || "/";
+            let signOutUrl = config?.postLogoutRedirectUri || "/";
 
-            if (req.headers["authorization"] && config.endSessionEndpoint) {
+            if (req.headers["authorization"] && config?.endSessionEndpoint) {
                 const url = new URL(config.endSessionEndpoint);
                 url.search = new URLSearchParams({
                     id_token_hint: req.headers["authorization"].substring(7),
