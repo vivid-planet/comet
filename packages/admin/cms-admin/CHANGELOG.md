@@ -1,5 +1,21 @@
 # @comet/cms-admin
 
+## 5.6.3
+
+### Patch Changes
+
+-   651afef8: Prevent the document editor from losing its state when (re)gaining focus
+
+    In v5.6.1 a loading indicator was added to the document editor (in `PagesPage`).
+    This had an unwanted side effect: Focusing the edit page automatically causes a GraphQL request to check for a newer version of the document. This request also caused the loading indicator to render, thus unmounting the editor (`EditComponent`). Consequently, the local state of the editor was lost.
+
+    -   @comet/admin@5.6.3
+    -   @comet/admin-date-time@5.6.3
+    -   @comet/admin-icons@5.6.3
+    -   @comet/admin-rte@5.6.3
+    -   @comet/admin-theme@5.6.3
+    -   @comet/blocks-admin@5.6.3
+
 ## 5.6.2
 
 ### Patch Changes
