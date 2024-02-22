@@ -4,13 +4,13 @@ import { Inject, NotFoundException, Type } from "@nestjs/common";
 import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { basename, extname } from "path";
 
-import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
 import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
+import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
@@ -118,7 +118,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         @SkipBuild()
         async moveDamFiles(
             @Args({ type: () => MoveDamFilesArgs }) { fileIds, targetFolderId }: MoveDamFilesArgs,
-            @GetCurrentUser() user: CurrentUserInterface,
+            @GetCurrentUser() user: CurrentUser,
         ): Promise<FileInterface[]> {
             let targetFolder = null;
             if (targetFolderId !== null) {
@@ -147,7 +147,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         @Mutation(() => CopyFilesResponse)
         @SkipBuild()
         async copyFilesToScope(
-            @GetCurrentUser() user: CurrentUserInterface,
+            @GetCurrentUser() user: CurrentUser,
             @Args("fileIds", { type: () => [ID] }) fileIds: string[],
             @Args("inboxFolderId", {
                 type: () => ID,

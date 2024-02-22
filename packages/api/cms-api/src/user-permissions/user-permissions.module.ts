@@ -2,8 +2,6 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Provider } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 
-import { CURRENT_USER_LOADER } from "../auth/current-user/current-user-loader";
-import { UserPermissionsCurrentUserLoader } from "./auth/current-user-loader";
 import { UserPermissionsGuard } from "./auth/user-permissions.guard";
 import { ContentScopeService } from "./content-scope.service";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
@@ -28,17 +26,13 @@ import {
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,
-        {
-            provide: CURRENT_USER_LOADER,
-            useClass: UserPermissionsCurrentUserLoader,
-        },
         ContentScopeService,
         {
             provide: APP_GUARD,
             useClass: UserPermissionsGuard,
         },
     ],
-    exports: [CURRENT_USER_LOADER, ContentScopeService, ACCESS_CONTROL_SERVICE],
+    exports: [ContentScopeService, ACCESS_CONTROL_SERVICE, UserPermissionsService],
 })
 export class UserPermissionsModule {
     static forRoot(options: UserPermissionsModuleSyncOptions): DynamicModule {
@@ -50,13 +44,17 @@ export class UserPermissionsModule {
                     useValue: options,
                 },
                 {
-                    provide: USER_PERMISSIONS_USER_SERVICE,
-                    useClass: options.UserService,
-                },
-                {
                     provide: ACCESS_CONTROL_SERVICE,
                     useClass: options.AccessControlService,
                 },
+                ...(options.UserService
+                    ? [
+                          {
+                              provide: USER_PERMISSIONS_USER_SERVICE,
+                              useClass: options.UserService,
+                          },
+                      ]
+                    : []),
             ],
         };
     }

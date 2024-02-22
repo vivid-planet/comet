@@ -1,10 +1,10 @@
 import { Inject } from "@nestjs/common";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 
-import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
+import { CurrentUser } from "../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
 import { Job } from "./dto/job.object";
@@ -20,7 +20,7 @@ export class JobsResolver {
     ) {}
 
     @Query(() => [Job])
-    async kubernetesJobs(@Args("cronJobName") cronJobName: string, @GetCurrentUser() user: CurrentUserInterface): Promise<Job[]> {
+    async kubernetesJobs(@Args("cronJobName") cronJobName: string, @GetCurrentUser() user: CurrentUser): Promise<Job[]> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }

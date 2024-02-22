@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-import { CurrentUserInterface } from "../auth/current-user/current-user";
+import { CurrentUser } from "./dto/current-user";
 import { ContentScope } from "./interfaces/content-scope.interface";
 import { Permission } from "./interfaces/user-permission.interface";
 import { AccessControlServiceInterface } from "./user-permissions.types";
@@ -10,7 +10,7 @@ export abstract class AbstractAccessControlService implements AccessControlServi
     private checkContentScope(userContentScopes: ContentScope[], contentScope: ContentScope): boolean {
         return userContentScopes.some((cs) => Object.entries(contentScope).every(([scope, value]) => cs[scope] === value));
     }
-    isAllowed(user: CurrentUserInterface, permission: keyof Permission, contentScope?: ContentScope): boolean {
+    isAllowed(user: CurrentUser, permission: keyof Permission, contentScope?: ContentScope): boolean {
         if (!user.permissions) return false;
         return user.permissions.some((p) => p.permission === permission && (!contentScope || this.checkContentScope(p.contentScopes, contentScope)));
     }

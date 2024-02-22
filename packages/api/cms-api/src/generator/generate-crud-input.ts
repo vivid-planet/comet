@@ -274,21 +274,27 @@ export async function generateCrudInput(
                 } else if (type == "boolean[]") {
                     decorators.push(`@Field(() => [Boolean], ${fieldOptions})`);
                     decorators.push("@IsBoolean({ each: true })");
-                } else {
+                } else if (tsType.getArrayElementTypeOrThrow().isClass()) {
                     const nestedClassName = tsType.getArrayElementTypeOrThrow().getText(tsProp);
                     const importPath = findInputClassImportPath(nestedClassName, generatorOptions, metadata);
                     imports.push({ name: nestedClassName, importPath });
                     decorators.push(`@ValidateNested()`);
                     decorators.push(`@Type(() => ${nestedClassName})`);
                     decorators.push(`@Field(() => [${nestedClassName}], ${fieldOptions})`);
+                } else {
+                    decorators.push(`@Field(() => [GraphQLJSONObject], ${fieldOptions}) // Warning: this input is not validated properly`);
                 }
-            } else {
+            } else if (tsType.isClass()) {
                 const nestedClassName = tsType.getText(tsProp);
                 const importPath = findInputClassImportPath(nestedClassName, generatorOptions, metadata);
                 imports.push({ name: nestedClassName, importPath });
                 decorators.push(`@ValidateNested()`);
                 decorators.push(`@Type(() => ${nestedClassName})`);
                 decorators.push(`@Field(() => ${nestedClassName}${prop.nullable ? ", { nullable: true }" : ""})`);
+            } else {
+                decorators.push(
+                    `@Field(() => GraphQLJSONObject${prop.nullable ? ", { nullable: true }" : ""}) // Warning: this input is not validated properly`,
+                );
             }
         } else if (prop.type == "uuid") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();

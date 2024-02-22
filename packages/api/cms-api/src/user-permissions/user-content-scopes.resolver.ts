@@ -41,7 +41,7 @@ export class UserContentScopesResolver {
         @Args("skipManual", { type: () => Boolean, nullable: true }) skipManual = false,
     ): Promise<ContentScope[]> {
         return this.userService.normalizeContentScopes(
-            await this.userService.getContentScopes(userId, !skipManual),
+            await this.userService.getContentScopes(await this.userService.getUser(userId), !skipManual),
             await this.userService.getAvailableContentScopes(),
         );
     }
