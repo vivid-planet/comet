@@ -8,6 +8,7 @@ import { generateCrudInput } from "./generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";
 import { generateImportsCode, Imports } from "./utils/generate-imports-code";
+import { generateRequiredPermissionDecorators } from "./utils/generate-required-permission-decorators";
 import { findEnumImportPath, findEnumName } from "./utils/ts-morph-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
@@ -553,6 +554,11 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     const { classNameSingular } = buildNameVariants(metadata);
     const { scopeProp } = buildOptions(metadata);
 
+    const { resolverDecorator: resolverPermissionDecorator, readDecorator: readPermissionDecorator } = generateRequiredPermissionDecorators({
+        generatorOptions,
+        hasScopeProp: !!scopeProp,
+    });
+
     const imports: Imports = [];
 
     const { imports: fieldImports, code, hasOutputRelations } = generateRelationsFieldResolver({ generatorOptions, metadata });
@@ -567,7 +573,8 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    ${resolverPermissionDecorator ? resolverPermissionDecorator : ""}
+    ${readPermissionDecorator ? readPermissionDecorator : ""}
     export class ${classNameSingular}Resolver {
         ${code}
     }
@@ -630,7 +637,7 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
         @ResolveField(() => [${prop.type}])
         async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<${prop.type}[]> {
             return ${instanceNameSingular}.${prop.name}.loadItems();
-        }   
+        }
     `,
         )
         .join("\n")}
@@ -671,6 +678,17 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         buildNameVariants(metadata);
     const { scopeProp, argsClassName, argsFileName, hasSlugProp, hasSearchArg, hasSortArg, hasFilterArg, hasVisibleProp, hasUpdatedAt } =
         buildOptions(metadata);
+
+    const {
+        resolverDecorator: resolverPermissionDecorator,
+        readDecorator: readPermissionDecorator,
+        createDecorator: createPermissionDecorator,
+        updateDecorator: updatePermissionDecorator,
+        deleteDecorator: deletePermissionDecorator,
+    } = generateRequiredPermissionDecorators({
+        generatorOptions,
+        hasScopeProp: !!scopeProp,
+    });
 
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
     const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
@@ -720,7 +738,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    ${resolverPermissionDecorator ? resolverPermissionDecorator : ""}
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
@@ -733,6 +751,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
         @Query(() => ${metadata.className})
         @AffectedEntity(${metadata.className})
+        ${readPermissionDecorator ? readPermissionDecorator : ""}
         async ${instanceNameSingular}(${
         integerTypes.includes(metadata.properties.id.type)
             ? `@Args("id", { type: () => ID }, { transform: (value) => parseInt(value) }) id: number`
@@ -746,6 +765,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             hasSlugProp
                 ? `
         @Query(() => ${metadata.className}, { nullable: true })
+        ${readPermissionDecorator ? readPermissionDecorator : ""}
         async ${instanceNameSingular}BySlug(
             @Args("slug") slug: string
             ${scopeProp ? `, @Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type}` : ""}
@@ -759,6 +779,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
 
         @Query(() => Paginated${classNamePlural})
+        ${readPermissionDecorator ? readPermissionDecorator : ""}
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
             @Args() { ${scopeProp ? `scope, ` : ""}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${
         hasSortArg ? `sort, ` : ""
@@ -813,6 +834,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
 
         @Mutation(() => ${metadata.className})
+        ${createPermissionDecorator ? createPermissionDecorator : ""}
         async create${classNameSingular}(
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
             @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
@@ -836,6 +858,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
         @Mutation(() => ${metadata.className})
         @AffectedEntity(${metadata.className})
+        ${updatePermissionDecorator ? updatePermissionDecorator : ""}
         async update${classNameSingular}(
             ${
                 integerTypes.includes(metadata.properties.id.type)
@@ -868,6 +891,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
         @Mutation(() => Boolean)
         @AffectedEntity(${metadata.className})
+        ${deletePermissionDecorator ? deletePermissionDecorator : ""}
         async delete${metadata.className}(${
                       integerTypes.includes(metadata.properties.id.type)
                           ? `@Args("id", { type: () => ID }, { transform: (value) => parseInt(value) }) id: number`
@@ -887,6 +911,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
         @Mutation(() => ${metadata.className})
         @AffectedEntity(${metadata.className})
+        ${updatePermissionDecorator ? updatePermissionDecorator : ""}
         async update${classNameSingular}Visibility(
             @Args("id", { type: () => ID }) id: string,
             @Args("visible", { type: () => Boolean }) visible: boolean,

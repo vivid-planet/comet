@@ -78,7 +78,7 @@ export class AppModule {
                 AuthModule,
                 UserPermissionsModule.forRootAsync({
                     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
-                        availablePermissions: ["news", "products"],
+                        availablePermissions: ["news", "products", "createProduct", "updateProduct", "deleteProduct"],
                         availableContentScopes: [
                             { domain: "main", language: "de" },
                             { domain: "main", language: "en" },
