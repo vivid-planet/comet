@@ -33,6 +33,7 @@ export interface UserPermissionsUserServiceInterface {
 }
 
 export interface UserPermissionsOptions {
+    availablePermissions?: string[]; // TODO Remove in Comet 7
     availableContentScopes?: ContentScope[] | (() => Promise<ContentScope[]> | ContentScope[]);
 }
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {

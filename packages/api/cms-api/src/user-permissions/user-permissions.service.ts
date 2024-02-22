@@ -43,6 +43,8 @@ export class UserPermissionsService {
     }
 
     async getAvailablePermissions(): Promise<string[]> {
+        if (this.options.availablePermissions !== undefined)
+            console.warn("The availablePermissions option is deprecated and is not used anymore. You can remove it safely.");
         return [
             ...new Set(
                 [
