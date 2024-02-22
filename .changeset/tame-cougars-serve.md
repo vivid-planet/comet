@@ -19,5 +19,3 @@ Can be used as a  drop-in replacement for `SeoBlock` defined in application code
     resolveOpenGraphImageUrlTemplate={(block) => block.some.path.to.urlTemplate} />
 ```
 
-
-
