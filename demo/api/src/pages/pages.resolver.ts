@@ -1,5 +1,6 @@
 import {
     AffectedEntity,
+    cometPermissions,
     OffsetBasedPaginationArgs,
     PageTreeNodeInterface,
     PageTreeNodeVisibility,
@@ -23,7 +24,7 @@ import { Page } from "./entities/page.entity";
 export class PagesArgs extends IntersectionType(OffsetBasedPaginationArgs, SortArgs) {}
 
 @Resolver(() => Page)
-@RequiredPermission(["pageTree"])
+@RequiredPermission([cometPermissions.pageTree])
 export class PagesResolver {
     constructor(@InjectRepository(Page) private readonly repository: EntityRepository<Page>, private readonly pageTreeService: PageTreeService) {}
 
