@@ -3,6 +3,7 @@ import * as path from "path";
 
 import { CrudSingleGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { generateCrudInput } from "./generate-crud-input";
+import { createRequiredPermissionDecorator } from "./utils/create-required-permission-decorator";
 import { GeneratedFile } from "./utils/write-generated-files";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -57,7 +58,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, !scopeProp, "read")}
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
@@ -78,6 +79,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         }
     
         @Mutation(() => ${metadata.className})
+        ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, !scopeProp, "update")}
         async save${classNameSingular}(
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
             @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input,

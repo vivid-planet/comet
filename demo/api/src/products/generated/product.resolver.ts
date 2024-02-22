@@ -18,7 +18,7 @@ import { ProductsArgs } from "./dto/products.args";
 import { ProductsService } from "./products.service";
 
 @Resolver(() => Product)
-@RequiredPermission(["products"], { skipScopeCheck: true })
+@RequiredPermission(["products.read"], { skipScopeCheck: true })
 export class ProductResolver {
     constructor(
         private readonly entityManager: EntityManager,
@@ -79,6 +79,7 @@ export class ProductResolver {
     }
 
     @Mutation(() => Product)
+    @RequiredPermission(["products.create"], { skipScopeCheck: true })
     async createProduct(@Args("input", { type: () => ProductInput }) input: ProductInput): Promise<Product> {
         const {
             variants: variantsInput,
@@ -129,6 +130,7 @@ export class ProductResolver {
 
     @Mutation(() => Product)
     @AffectedEntity(Product)
+    @RequiredPermission(["products.update"], { skipScopeCheck: true })
     async updateProduct(
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => ProductUpdateInput }) input: ProductUpdateInput,
@@ -191,6 +193,7 @@ export class ProductResolver {
 
     @Mutation(() => Boolean)
     @AffectedEntity(Product)
+    @RequiredPermission(["products.delete"], { skipScopeCheck: true })
     async deleteProduct(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const product = await this.repository.findOneOrFail(id);
         await this.entityManager.remove(product);
@@ -200,6 +203,7 @@ export class ProductResolver {
 
     @Mutation(() => Product)
     @AffectedEntity(Product)
+    @RequiredPermission(["products.update"], { skipScopeCheck: true })
     async updateProductVisibility(
         @Args("id", { type: () => ID }) id: string,
         @Args("visible", { type: () => Boolean }) visible: boolean,

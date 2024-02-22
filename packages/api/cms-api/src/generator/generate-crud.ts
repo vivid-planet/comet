@@ -7,6 +7,7 @@ import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorato
 import { generateCrudInput } from "./generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";
+import { createRequiredPermissionDecorator } from "./utils/create-required-permission-decorator";
 import { generateImportsCode, Imports } from "./utils/generate-imports-code";
 import { findEnumImportPath, findEnumName } from "./utils/ts-morph-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
@@ -567,7 +568,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, !scopeProp, "read")}
     export class ${classNameSingular}Resolver {
         ${code}
     }
@@ -720,7 +721,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, !scopeProp, "read")}
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
@@ -813,6 +814,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
 
         @Mutation(() => ${metadata.className})
+        ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, !scopeProp, "create")}
         async create${classNameSingular}(
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
             @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
@@ -836,6 +838,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
         @Mutation(() => ${metadata.className})
         @AffectedEntity(${metadata.className})
+        ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, !scopeProp, "update")}
         async update${classNameSingular}(
             ${
                 integerTypes.includes(metadata.properties.id.type)
@@ -868,6 +871,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
         @Mutation(() => Boolean)
         @AffectedEntity(${metadata.className})
+        ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, !scopeProp, "delete")}
         async delete${metadata.className}(${
                       integerTypes.includes(metadata.properties.id.type)
                           ? `@Args("id", { type: () => ID }, { transform: (value) => parseInt(value) }) id: number`
@@ -887,6 +891,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
         @Mutation(() => ${metadata.className})
         @AffectedEntity(${metadata.className})
+        ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, !scopeProp, "update")}
         async update${classNameSingular}Visibility(
             @Args("id", { type: () => ID }) id: string,
             @Args("visible", { type: () => Boolean }) visible: boolean,

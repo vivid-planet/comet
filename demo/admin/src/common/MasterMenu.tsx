@@ -90,7 +90,7 @@ export const masterMenuData: MasterMenuData = [
                 },
             },
         ],
-        requiredPermission: "news",
+        requiredPermission: "news.read",
     },
     {
         primary: <FormattedMessage id="menu.dam" defaultMessage="Assets" />,
