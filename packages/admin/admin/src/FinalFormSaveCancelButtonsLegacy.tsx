@@ -1,5 +1,6 @@
-import { ComponentsOverrides, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides } from "@mui/material";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { useFormState } from "react-final-form";
 
@@ -7,57 +8,73 @@ import { CancelButton } from "./common/buttons/cancel/CancelButton";
 import { SaveButton } from "./common/buttons/save/SaveButton";
 import { useStackApi } from "./stack/Api";
 
-export interface FinalFormSaveCancelButtonsLegacyProps {
+export interface FinalFormSaveCancelButtonsLegacyProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        cancelIcon: typeof CancelButton;
+        saveIcon: typeof SaveButton;
+    }> {
     cancelIcon?: React.ReactNode;
     saveIcon?: React.ReactNode;
 }
 
 export type FinalFormSaveCancelButtonsLegacyClassKey = "root" | "cancelButton" | "saveButton";
 
-const styles = (theme: Theme) => {
-    return createStyles<FinalFormSaveCancelButtonsLegacyClassKey, FinalFormSaveCancelButtonsLegacyProps>({
-        root: {},
-        cancelButton: {
-            margin: theme.spacing(1),
-        },
-        saveButton: {
-            margin: theme.spacing(1),
-        },
-    });
-};
+const Root = styled("div", {
+    name: "CometAdminFinalFormSaveCancelButtonsLegacy",
+    slot: "root",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})();
 
-const FinalFormSaveCancelButtonsLegacyComponent = ({
-    classes,
-    cancelIcon,
-    saveIcon,
-}: FinalFormSaveCancelButtonsLegacyProps & WithStyles<typeof styles>): React.ReactElement => {
+const StyledCancelButton = styled(CancelButton, {
+    name: "CometAdminFinalFormSaveCancelButtonsLegacy",
+    slot: "cancelButton",
+    overridesResolver(_, styles) {
+        return [styles.cancelButton];
+    },
+})(
+    ({ theme }) => css`
+        margin: ${theme.spacing(1)};
+    `,
+);
+
+const StyledSaveButton = styled(SaveButton, {
+    name: "CometAdminFinalFormSaveCancelButtonsLegacy",
+    slot: "saveButton",
+    overridesResolver(_, styles) {
+        return [styles.saveButton];
+    },
+})(
+    ({ theme }) => css`
+        margin: ${theme.spacing(1)};
+    `,
+);
+
+export function FinalFormSaveCancelButtonsLegacy(inProps: FinalFormSaveCancelButtonsLegacyProps) {
+    const { cancelIcon, saveIcon } = useThemeProps({ props: inProps, name: "CometAdminFinalFormSaveCancelButtonsLegacy" });
     const stackApi = useStackApi();
     const formState = useFormState();
 
     return (
-        <div className={classes.root}>
+        <Root>
             {stackApi?.breadCrumbs != null && stackApi?.breadCrumbs.length > 1 && (
-                <CancelButton
-                    classes={{ root: classes.cancelButton }}
+                <StyledCancelButton
                     startIcon={cancelIcon}
                     onClick={() => {
                         stackApi.goBack();
                     }}
                 />
             )}
-            <SaveButton
-                classes={{ root: classes.saveButton }}
+            <StyledSaveButton
                 startIcon={saveIcon}
                 type="submit"
                 disabled={formState.pristine || formState.hasValidationErrors || formState.submitting}
             />
-        </div>
+        </Root>
     );
-};
-
-export const FinalFormSaveCancelButtonsLegacy = withStyles(styles, { name: "CometAdminFinalFormSaveCancelButtonsLegacy" })(
-    FinalFormSaveCancelButtonsLegacyComponent,
-);
+}
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
