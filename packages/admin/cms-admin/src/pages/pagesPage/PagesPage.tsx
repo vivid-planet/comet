@@ -220,7 +220,7 @@ export function PagesPage({
                         {(selectedId) => {
                             const page = data?.pages.find((page) => page.id == selectedId);
 
-                            if (loading) {
+                            if (loading && isInitialLoad.current) {
                                 return <Loading behavior="fillPageHeight" />;
                             }
 
