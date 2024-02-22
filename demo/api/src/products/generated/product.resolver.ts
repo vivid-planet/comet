@@ -7,6 +7,7 @@ import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 
+import { Manufacturer } from "../entities/manufacturer.entity";
 import { Product } from "../entities/product.entity";
 import { ProductCategory } from "../entities/product-category.entity";
 import { ProductStatistics } from "../entities/product-statistics.entity";
@@ -25,6 +26,7 @@ export class ProductResolver {
         private readonly productsService: ProductsService,
         @InjectRepository(Product) private readonly repository: EntityRepository<Product>,
         @InjectRepository(ProductCategory) private readonly productCategoryRepository: EntityRepository<ProductCategory>,
+        @InjectRepository(Manufacturer) private readonly manufacturerRepository: EntityRepository<Manufacturer>,
         @InjectRepository(ProductStatistics) private readonly productStatisticsRepository: EntityRepository<ProductStatistics>,
         @InjectRepository(ProductVariant) private readonly productVariantRepository: EntityRepository<ProductVariant>,
         @InjectRepository(ProductTag) private readonly productTagRepository: EntityRepository<ProductTag>,
@@ -52,6 +54,9 @@ export class ProductResolver {
         const populate: string[] = [];
         if (fields.includes("category")) {
             populate.push("category");
+        }
+        if (fields.includes("manufacturer")) {
+            populate.push("manufacturer");
         }
         if (fields.includes("variants")) {
             populate.push("variants");
@@ -84,6 +89,7 @@ export class ProductResolver {
             variants: variantsInput,
             tags: tagsInput,
             category: categoryInput,
+            manufacturer: manufacturerInput,
             statistics: statisticsInput,
             image: imageInput,
             ...assignInput
@@ -93,6 +99,7 @@ export class ProductResolver {
             visible: false,
 
             category: categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined,
+            manufacturer: manufacturerInput ? Reference.create(await this.manufacturerRepository.findOneOrFail(manufacturerInput)) : undefined,
             image: imageInput.transformToBlockData(),
         });
         if (variantsInput) {
@@ -143,6 +150,7 @@ export class ProductResolver {
             variants: variantsInput,
             tags: tagsInput,
             category: categoryInput,
+            manufacturer: manufacturerInput,
             statistics: statisticsInput,
             image: imageInput,
             ...assignInput
@@ -178,6 +186,11 @@ export class ProductResolver {
         }
         if (categoryInput !== undefined) {
             product.category = categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined;
+        }
+        if (manufacturerInput !== undefined) {
+            product.manufacturer = manufacturerInput
+                ? Reference.create(await this.manufacturerRepository.findOneOrFail(manufacturerInput))
+                : undefined;
         }
 
         if (imageInput) {
@@ -217,6 +230,11 @@ export class ProductResolver {
     @ResolveField(() => ProductCategory, { nullable: true })
     async category(@Parent() product: Product): Promise<ProductCategory | undefined> {
         return product.category?.load();
+    }
+
+    @ResolveField(() => Manufacturer, { nullable: true })
+    async manufacturer(@Parent() product: Product): Promise<Manufacturer | undefined> {
+        return product.manufacturer?.load();
     }
 
     @ResolveField(() => [ProductVariant])

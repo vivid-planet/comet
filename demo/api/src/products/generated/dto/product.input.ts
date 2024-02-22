@@ -100,6 +100,11 @@ export class ProductInput {
     @IsArray()
     @IsUUID(undefined, { each: true })
     tags: string[];
+
+    @IsNullable()
+    @Field(() => ID, { nullable: true })
+    @IsUUID()
+    manufacturer?: string;
 }
 
 @InputType()
