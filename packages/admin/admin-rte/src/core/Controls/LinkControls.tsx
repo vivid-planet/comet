@@ -73,7 +73,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminRteLinkControls?: {
-            defaultProps?: ComponentsPropsList["CometAdminRteLinkControls"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminRteLinkControls"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteLinkControls"];
         };
     }
