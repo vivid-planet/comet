@@ -38,7 +38,7 @@ export class News extends BaseEntity<News, "id"> {
 
 The GraphQL API will have a scope argument (where it makes sense), for the `News` example from above the API will have a `scope` argument:
 ```
-newsList(scope: NewsContentScopeInput!, offset: Int! = 0, limit: Int! = 25, , search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+newsList(scope: NewsContentScopeInput!, offset: Int! = 0, limit: Int! = 25, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
 ```
 
 ### Admin: Scope Selector
