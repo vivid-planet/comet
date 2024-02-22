@@ -3,6 +3,7 @@ import {
     CheckboxField,
     Field,
     FinalForm,
+    FinalFormInput,
     FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
@@ -56,7 +57,8 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormManualFragment, "image"> & {
+type FormValues = Omit<GQLProductFormManualFragment, "image" | "price"> & {
+    price: string;
     image: BlockState<typeof rootBlocks.image>;
 };
 
@@ -74,6 +76,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     const initialValues: Partial<FormValues> = data?.product
         ? {
               ...filter<GQLProductFormManualFragment>(productFormFragment, data.product),
+              price: String(data.product.price),
               image: rootBlocks.image.input2State(data.product.image),
           }
         : {
@@ -104,8 +107,8 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             variants: [],
             articleNumbers: [],
             discounts: [],
-            packageDimensions: { width: 0, height: 0, depth: 0 },
             statistics: { views: 0 },
+            price: parseFloat(formValues.price),
         };
         if (mode === "edit") {
             if (!id) throw new Error();
@@ -188,6 +191,13 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             multiple
                             {...tagsSelectAsyncProps}
                             getOptionLabel={(option: GQLProductTagsSelectFragment) => option.title}
+                        />
+                        <Field
+                            fullWidth
+                            name="price"
+                            component={FinalFormInput}
+                            type="number"
+                            label={<FormattedMessage id="product.price" defaultMessage="Price" />}
                         />
                         <CheckboxField name="inStock" label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />} fullWidth />
                         <Field name="image" isEqual={isEqual}>
