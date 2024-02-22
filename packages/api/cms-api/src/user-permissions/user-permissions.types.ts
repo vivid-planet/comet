@@ -33,9 +33,9 @@ export interface UserPermissionsUserServiceInterface {
 }
 
 export interface UserPermissionsOptions {
-     /**
-      * @deprecated available permissions are automatically discovered. You can remove this option.
-      */
+    /**
+     * @deprecated available permissions are automatically discovered. You can remove this option.
+     */
     availablePermissions?: string[]; // TODO Remove in Comet 7
     availableContentScopes?: ContentScope[] | (() => Promise<ContentScope[]> | ContentScope[]);
 }
@@ -61,11 +61,3 @@ export interface UserPermissionsModuleAsyncOptions extends Pick<ModuleMetadata, 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useFactory?: (...args: any[]) => Promise<UserPermissionsAsyncOptions> | UserPermissionsAsyncOptions;
 }
-
-export const cometPermissions = {
-    pageTree: "pageTree",
-    dam: "dam",
-    userPermissions: "userPermissions",
-    cronJobs: "cronJobs",
-    builds: "builds",
-} as const;
