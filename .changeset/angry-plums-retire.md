@@ -4,5 +4,5 @@
 
 Remove availablePermissions from UserPermissionsModule
 
-Permission-interface and the availablePermissions-setting can simply be removed from the application. To use
-an already existing permission from Comet `CometPermissions` can be imported.
+Simply remove the `Permission` interface module augmentation and the `availablePermissions`-option from the application.
+If you wan to use a permission defined by Comet, for instance, `"pageTree"` for a document type resolver, you may use the exported `cometPermissions` object.
