@@ -2,4 +2,4 @@
 "@comet/cms-api": minor
 ---
 
-Support multiple affectedEntites-decorators
+Support multiple `@AffectedEntity()`-decorators for a single function
