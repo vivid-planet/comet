@@ -83,7 +83,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
         return hasFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
     });
 
-    const mainProps = metadata.props.filter((prop) => {
+    const rootArgProps = metadata.props.filter((prop) => {
         if (hasFieldFeature(metadata.class, prop.name, "rootArg")) {
             if (prop.reference != "m:1") {
                 console.warn(`${prop.name} rootArg=true is only supported for 1:m relations`);
@@ -110,7 +110,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
         argsClassName,
         argsFileName,
         blockProps,
-        mainProps,
+        rootArgProps,
     };
 }
 
@@ -266,7 +266,7 @@ function generatePaginatedDto({ generatorOptions, metadata }: { generatorOptions
 
 function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
-    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, mainProps } = buildOptions(metadata);
+    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, rootArgProps } = buildOptions(metadata);
     const imports: Imports = [];
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`));
@@ -294,17 +294,17 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
                 : ""
         }
 
-        ${mainProps
-            .map((mainProp) => {
-                if (integerTypes.includes(mainProp.type)) {
+        ${rootArgProps
+            .map((rootArgProp) => {
+                if (integerTypes.includes(rootArgProp.type)) {
                     return `@Field(() => ID)
                     @Transform(({ value }) => value.map((id: string) => parseInt(id)))
                     @IsInt()
-                    ${mainProp.name}: number;`;
+                    ${rootArgProp.name}: number;`;
                 } else {
                     return `@Field(() => ID)
                     @IsUUID()
-                    ${mainProp.name}: string;`;
+                    ${rootArgProp.name}: string;`;
                 }
             })
             .join("")}
@@ -411,7 +411,7 @@ function generateInputHandling(
     metadata: EntityMetadata<any>,
 ): string {
     const { instanceNameSingular } = buildNameVariants(metadata);
-    const { blockProps, hasVisibleProp, scopeProp, mainProps } = buildOptions(metadata);
+    const { blockProps, hasVisibleProp, scopeProp, rootArgProps } = buildOptions(metadata);
 
     const props = metadata.props.filter((prop) => !options.excludeFields || !options.excludeFields.includes(prop.name));
 
@@ -475,11 +475,11 @@ function generateInputHandling(
         ${options.mode == "create" && scopeProp ? `scope,` : ""}
         ${
             options.mode == "create"
-                ? mainProps
-                      .map((mainProp) => {
-                          return `${mainProp.name}: Reference.create(await this.${classNameToInstanceName(mainProp.type)}Repository.findOneOrFail(${
-                              mainProp.name
-                          })), `;
+                ? rootArgProps
+                      .map((rootArgProp) => {
+                          return `${rootArgProp.name}: Reference.create(await this.${classNameToInstanceName(
+                              rootArgProp.type,
+                          )}Repository.findOneOrFail(${rootArgProp.name})), `;
                       })
                       .join("")
                 : ""
@@ -709,8 +709,18 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
 function generateResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular, instanceNameSingular, classNamePlural, fileNamePlural, instanceNamePlural } =
         buildNameVariants(metadata);
-    const { scopeProp, argsClassName, argsFileName, hasSlugProp, hasSearchArg, hasSortArg, hasFilterArg, hasVisibleProp, hasUpdatedAt, mainProps } =
-        buildOptions(metadata);
+    const {
+        scopeProp,
+        argsClassName,
+        argsFileName,
+        hasSlugProp,
+        hasSearchArg,
+        hasSortArg,
+        hasFilterArg,
+        hasVisibleProp,
+        hasUpdatedAt,
+        rootArgProps,
+    } = buildOptions(metadata);
 
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
     const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
@@ -730,7 +740,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         .forEach((prop) => {
             injectRepositories.add(prop.type);
         });
-    mainProps.forEach((prop) => {
+    rootArgProps.forEach((prop) => {
         injectRepositories.add(prop.type);
     });
 
@@ -806,15 +816,15 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
 
         @Query(() => Paginated${classNamePlural})
-        ${mainProps
-            .map((mainProp) => {
-                return `@AffectedEntity(${mainProp.targetMeta?.className}, { idArg: "${mainProp.name}" })`;
+        ${rootArgProps
+            .map((rootArgProp) => {
+                return `@AffectedEntity(${rootArgProp.targetMeta?.className}, { idArg: "${rootArgProp.name}" })`;
             })
             .join("")}
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
-            @Args() { ${scopeProp ? `scope, ` : ""}${mainProps
-        .map((mainProp) => {
-            return `${mainProp.name}, `;
+            @Args() { ${scopeProp ? `scope, ` : ""}${rootArgProps
+        .map((rootArgProp) => {
+            return `${rootArgProp.name}, `;
         })
         .join("")}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${hasSortArg ? `sort, ` : ""}offset, limit }: ${argsClassName}${
         hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""
@@ -826,9 +836,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                     : `: ObjectQuery<${metadata.className}> = {}`
             }
             ${scopeProp ? `where.scope = scope;` : ""}
-            ${mainProps
-                .map((mainProp) => {
-                    return `where.${mainProp.name} = ${mainProp.name};`;
+            ${rootArgProps
+                .map((rootArgProp) => {
+                    return `where.${rootArgProp.name} = ${rootArgProp.name};`;
                 })
                 .join("\n")}
 
@@ -874,15 +884,15 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
 
         @Mutation(() => ${metadata.className})
-        ${mainProps
-            .map((mainProp) => {
-                return `@AffectedEntity(${mainProp.targetMeta?.className}, { idArg: "${mainProp.name}" })`;
+        ${rootArgProps
+            .map((rootArgProp) => {
+                return `@AffectedEntity(${rootArgProp.targetMeta?.className}, { idArg: "${rootArgProp.name}" })`;
             })
             .join("")}
         async create${classNameSingular}(
-            ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}${mainProps
-                      .map((mainProp) => {
-                          return `${generateIdArg(mainProp.name, metadata)}, `;
+            ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}${rootArgProps
+                      .map((rootArgProp) => {
+                          return `${generateIdArg(rootArgProp.name, metadata)}, `;
                       })
                       .join("")}@Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
