@@ -121,6 +121,7 @@ const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProp
     if (level > 2) throw new Error("Maximum nesting level of 2 exceeded.");
 
     const hasIcon = !!icon;
+    const showText = context.open || level !== 1;
 
     const listItemClasses = [classes.root];
     if (level === 1) listItemClasses.push(classes.level1);
@@ -131,8 +132,8 @@ const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProp
 
     return (
         <ListItem component="div" button classes={{ root: listItemClasses.join(" ") }} {...otherProps}>
-            {hasIcon && <ListItemIcon>{icon}</ListItemIcon>}
-            <ListItemText primary={primary} secondary={secondary} inset={!icon} />
+            {hasIcon && <ListItemIcon sx={{ my: 1.25 }}>{icon}</ListItemIcon>}
+            {showText && <ListItemText primary={primary} secondary={secondary} inset={!icon} />}
             {!!secondaryAction && secondaryAction}
         </ListItem>
     );
