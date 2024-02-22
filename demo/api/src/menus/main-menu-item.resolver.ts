@@ -1,6 +1,5 @@
 import {
     AffectedEntity,
-    cometPermissions,
     PageTreeNodeVisibility,
     PageTreeService,
     RequestContext,
@@ -17,7 +16,7 @@ import { MainMenuItemInput } from "./dto/main-menu-item.input";
 import { MainMenuItem } from "./entities/main-menu-item.entity";
 
 @Resolver(() => MainMenuItem)
-@RequiredPermission([cometPermissions.pageTree])
+@RequiredPermission(["pageTree"])
 @AffectedEntity(MainMenuItem, { pageTreeNodeIdArg: "pageTreeNodeId" })
 export class MainMenuItemResolver {
     constructor(
