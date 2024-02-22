@@ -147,30 +147,15 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
     });
 
     // list of the accepted files
-    const files = Array.isArray(fieldValue)
-        ? fieldValue.map((file) => (
-              <div key={file.name} className={classes.fileListItem}>
-                  {file.name.length < 20 ? file.name : `${file.name.substring(0, 20)}...`}
-                  <div>
-                      <Chip label={<PrettyBytes value={file.size} />} />
-                      <IconButton onClick={removeFile(file)}>
-                          <Delete />
-                      </IconButton>
-                  </div>
-              </div>
-          ))
-        : !Array.isArray(fieldValue) &&
-          fieldValue.name !== undefined && (
-              <div key={fieldValue.name} className={classes.fileListItem}>
-                  {fieldValue.name.length < 20 ? fieldValue.name : `${fieldValue.name.substring(0, 20)}...`}
-                  <div>
-                      <Chip label={<PrettyBytes value={fieldValue.size} />} />
-                      <IconButton onClick={removeFile(fieldValue)}>
-                          <Delete />
-                      </IconButton>
-                  </div>
-              </div>
-          );
+    let files: File[];
+
+    if (Array.isArray(fieldValue)) {
+        files = fieldValue;
+    } else if (fieldValue.name !== undefined) {
+        files = [fieldValue];
+    } else {
+        files = [];
+    }
 
     const rejectedFiles =
         fileRejections.length > 0 &&
@@ -205,8 +190,20 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
                     </Button>
                 )}
             </div>
-            {((Array.isArray(fieldValue) && fieldValue.length > 0) || (!Array.isArray(fieldValue) && fieldValue.name !== undefined)) && (
-                <div className={classes.fileList}>{files}</div>
+            {files.length > 0 && (
+                <div className={classes.fileList}>
+                    {files.map((file) => (
+                        <div key={file.name} className={classes.fileListItem}>
+                            {file.name.length < 20 ? file.name : `${file.name.substring(0, 20)}...`}
+                            <div>
+                                <Chip label={<PrettyBytes value={file.size} />} />
+                                <IconButton onClick={removeFile(file)}>
+                                    <Delete />
+                                </IconButton>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             )}
             {fileRejections.length > 0 && <div className={classes.fileList}>{rejectedFiles}</div>}
             {(fileRejections.length > 0 || isDragReject) && (
