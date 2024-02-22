@@ -1,5 +1,5 @@
 ---
-title: Content website
+title: Content websites
 sidebar_position: 1
 ---
 
