@@ -53,24 +53,26 @@ const StyledSaveButton = styled(SaveButton, {
 );
 
 export function FinalFormSaveCancelButtonsLegacy(inProps: FinalFormSaveCancelButtonsLegacyProps) {
-    const { cancelIcon, saveIcon } = useThemeProps({ props: inProps, name: "CometAdminFinalFormSaveCancelButtonsLegacy" });
+    const { cancelIcon, saveIcon, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminFinalFormSaveCancelButtonsLegacy" });
     const stackApi = useStackApi();
     const formState = useFormState();
 
     return (
-        <Root>
+        <Root {...restProps}>
             {stackApi?.breadCrumbs != null && stackApi?.breadCrumbs.length > 1 && (
                 <StyledCancelButton
                     startIcon={cancelIcon}
                     onClick={() => {
                         stackApi.goBack();
                     }}
+                    {...restProps}
                 />
             )}
             <StyledSaveButton
                 startIcon={saveIcon}
                 type="submit"
                 disabled={formState.pristine || formState.hasValidationErrors || formState.submitting}
+                {...restProps}
             />
         </Root>
     );
