@@ -3,7 +3,7 @@ title: Content website
 sidebar_position: 1
 ---
 
-In a content website, the content scope can be used to separate multiple areas of content, such as website (domain) or language. Each area stores its content independent of the others. Not all modules might use the same scope, for example, the DAM might not be scoped at all. Most of Comet's scope features will work out-of-the-box for this use case.
+In a content website, the content scope can be used to separate multiple areas of content, such as website (domain) or language. Each area stores its content independently of the others. Not all modules might use the same scope - for example, the DAM might not be scoped at all. Most of Comet's scope features will work out of the box for this use case.
 
 
 ### API: Database
@@ -36,13 +36,13 @@ export class News extends BaseEntity<News, "id"> {
 
 ### API: GraphQL API
 
-The GraphQL API will have a scope argument (where it makes sense), for the `News` example from above the API will have a `scope` argument:
+The GraphQL API will have a scope argument (where it makes sense) - for the `News` example from above, the API will have a `scope` argument:
 ```
 newsList(scope: NewsContentScopeInput!, offset: Int! = 0, limit: Int! = 25, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
 ```
 
 ### Admin: Scope Selector
-In the Admin you need a `<ContentScopeProvider>` and `<ContentScopeControls>` in the `MasterHeader` component.
+In the Admin, you need a `<ContentScopeProvider>` and `<ContentScopeControls>` in the `MasterHeader` component.
 
 You can then use `useContentScope()` to access the currently selected scope, which you will then usually pass through to API requests.
 
