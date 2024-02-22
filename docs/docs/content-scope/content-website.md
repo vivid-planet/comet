@@ -8,7 +8,7 @@ In a content website, the content scope can be used to separate multiple areas o
 
 ### API: Database
 
-Usually the scope is stored in a "scope" object as an [embeddable](https://mikro-orm.io/docs/embeddables), which the API Generator will then use to create a standardized API that requires passing the scope.
+Usually the scope is stored in a `scope` object as an [embeddable](https://mikro-orm.io/docs/embeddables), which the API Generator will then use to create a standardized API that requires passing the scope.
 
 ```ts title="api/src/news/entities/news.entity.ts"
 @Embeddable()
