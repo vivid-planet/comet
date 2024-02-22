@@ -65,22 +65,15 @@ const getComponentName = (fileName: string) => pascalCase(fileName.split(".")[0]
 
 const getSVGData = (icon: Icon) => {
     const fileContents = readFileSync(icon.path);
-    const parsedXml = new XMLParser({ ignoreAttributes: false }).parse(fileContents.toString());
+    const parsedXml = new XMLParser({
+        ignoreAttributes: false,
+        updateTag(_, __, attrs) {
+            delete attrs["@_fill"];
+            return true;
+        },
+    }).parse(fileContents.toString());
 
-    removeFillAttributes(parsedXml.svg);
     return parsedXml.svg;
-};
-
-const removeFillAttributes = (obj: any) => {
-    if (typeof obj === "object") {
-        Object.keys(obj).forEach((key) => {
-            if (key === "@_fill") {
-                delete obj[key];
-            } else if (typeof obj[key] === "object") {
-                removeFillAttributes(obj[key]);
-            }
-        });
-    }
 };
 
 const getFormattedText = async (text: string) => {
