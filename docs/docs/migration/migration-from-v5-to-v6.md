@@ -150,7 +150,6 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
       UserPermissionsModule.forRootAsync({
     +     useFactory: (accessControlService: AccessControlService, userService: UserService) => ({
     -     useFactory: (accessControlService: AccessControlService) => ({
-              availablePermissions: [/* Array of strings defined in interface Permission */],
               availableContentScopes: [/* Array of content Scopes */],
     +         userService,
               accessControlService,

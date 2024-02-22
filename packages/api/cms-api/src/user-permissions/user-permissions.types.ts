@@ -33,10 +33,6 @@ export interface UserPermissionsUserServiceInterface {
 }
 
 export interface UserPermissionsOptions {
-    /**
-     * @deprecated available permissions are automatically discovered. You can remove this option.
-     */
-    availablePermissions?: string[]; // TODO Remove in Comet 7
     availableContentScopes?: ContentScope[] | (() => Promise<ContentScope[]> | ContentScope[]);
 }
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {
