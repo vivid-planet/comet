@@ -58,7 +58,7 @@ export interface UserPermissionsModuleAsyncOptions extends Pick<ModuleMetadata, 
     useFactory?: (...args: any[]) => Promise<UserPermissionsAsyncOptions> | UserPermissionsAsyncOptions;
 }
 
-export const CometPermissions = {
+export const cometPermissions = {
     pageTree: "pageTree",
     dam: "dam",
     userPermissions: "userPermissions",
