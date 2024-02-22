@@ -13,5 +13,5 @@ export class ProductColorInput {
     @IsNotEmpty()
     @IsString()
     @Field()
-    colorHexCode: string;
+    hexCode: string;
 }

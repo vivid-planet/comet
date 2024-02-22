@@ -422,7 +422,7 @@ type ProductColor implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
   name: String!
-  colorHexCode: String!
+  hexCode: String!
   createdAt: DateTime!
 }
 
@@ -1206,7 +1206,7 @@ input ProductStatisticsInput {
 
 input ProductColorInput {
   name: String!
-  colorHexCode: String!
+  hexCode: String!
 }
 
 input ProductUpdateInput {

@@ -22,7 +22,7 @@ export class ProductColor extends BaseEntity<ProductColor, "id"> implements Docu
 
     @Property()
     @Field()
-    colorHexCode: string;
+    hexCode: string;
 
     @ManyToOne(() => Product, { ref: true })
     @CrudField({

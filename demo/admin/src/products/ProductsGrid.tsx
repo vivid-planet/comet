@@ -235,7 +235,7 @@ const productsFragment = gql`
         }
         colors {
             name
-            colorHexCode
+            hexCode
         }
         variants {
             id
