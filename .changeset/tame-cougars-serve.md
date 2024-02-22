@@ -2,9 +2,9 @@
 "@comet/cms-site": minor
 ---
 
-Move `SeoBlock` from `demo/site/src/blocks/seo` to `@comet/cms-site`
+Add `SeoBlock`
 
-Add a `resolveOpenGraphImageUrlTemplate` prop, which ensures that the url template of custom `openGraphImage` block can be resolved. It is only required if a custom block or a generic type is used.
+Can be used as a  drop-in replacement for `SeoBlock` defined in application code. Add a `resolveOpenGraphImageUrlTemplate` to resolve the correct image URL template when using a custom Open Graph image block.
 
 **Example Default Use Case:**
 ```tsx
