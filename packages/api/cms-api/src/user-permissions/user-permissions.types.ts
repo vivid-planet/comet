@@ -14,7 +14,7 @@ export enum UserPermissions {
 export type Users = [User[], number];
 
 type PermissionForUser = {
-    permission: string;
+    permission: string | string[];
     contentScopes?: ContentScope[];
 } & Pick<UserPermission, "validFrom" | "validTo" | "reason" | "requestedBy" | "approvedBy">;
 export type PermissionsForUser = PermissionForUser[] | UserPermissions.allPermissions;
