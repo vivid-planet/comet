@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 4.7.2
+
+### Patch Changes
+
+-   b201d490: Fix attached document deletion when deleting a page tree node
+    -   @comet/blocks-api@4.7.2
+
 ## 4.7.1
 
 ### Patch Changes
