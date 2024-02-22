@@ -1,5 +1,5 @@
 ---
-title: Data driven application
+title: Data-driven applications
 sidebar_position: 2
 ---
 
