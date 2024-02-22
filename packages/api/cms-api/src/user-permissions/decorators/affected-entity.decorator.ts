@@ -8,7 +8,7 @@ export type AffectedEntityMeta = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     entity: EntityClass<object>;
     options: AffectedEntityOptions;
-}[];
+};
 
 export const AffectedEntity = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

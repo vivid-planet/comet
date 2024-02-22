@@ -39,9 +39,9 @@ export class UserPermissionsGuard implements CanActivate {
             throw new Error(`RequiredPermission decorator is missing in ${context.getClass().name}::${context.getHandler().name}()`);
         }
 
-        let requiredContentScopes: ContentScope[] | undefined;
+        let requiredContentScopes: ContentScope[][] | undefined;
         if (!this.isResolvingGraphQLField(context) && !requiredPermission.options?.skipScopeCheck) {
-            requiredContentScopes = await this.contentScopeService.inferScopesFromExecutionContext(context);
+            requiredContentScopes = await this.contentScopeService.getScopesForPermissionCheck(context);
             if (!requiredContentScopes) {
                 throw new Error(
                     `Could not get ContentScope. Either pass a scope-argument or add @AffectedEntity()-decorator or enable skipScopeCheck in @RequiredPermission() (${
@@ -59,7 +59,9 @@ export class UserPermissionsGuard implements CanActivate {
         }
         return requiredPermissions.some((permission) =>
             requiredContentScopes
-                ? requiredContentScopes.every((contentScope) => this.accessControlService.isAllowed(user, permission, contentScope))
+                ? requiredContentScopes.every((contentScopes) =>
+                      contentScopes.some((contentScope) => this.accessControlService.isAllowed(user, permission, contentScope)),
+                  )
                 : this.accessControlService.isAllowed(user, permission),
         );
     }
