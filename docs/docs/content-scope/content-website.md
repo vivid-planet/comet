@@ -28,22 +28,21 @@ export class NewsContentScope {
 
 @Entity()
 export class News extends BaseEntity<News, "id"> {
-
     @Embedded(() => NewsContentScope)
     @Field(() => NewsContentScope)
     scope: NewsContentScope;
 }
 ```
 
-### Api: Graphql Api
+### API: GraphQL API
 
-The graphql api will contain a scope argument (where it makes sense), as defined in the example above.
+The GraphQL API will have a scope argument (where it makes sense), as shown in the example above.
 
 ### Admin: Scope Selector
-On the admin side you need a `<ContentScopeProvider>` and `<ContentScopeControls>` in the `MasterHeader` component.
+In the Admin you need a `<ContentScopeProvider>` and `<ContentScopeControls>` in the `MasterHeader` component.
 
-Then you can use `useContentScope()` to access the currently selected scope - which you typically pass thru to api requests.
+You can then use `useContentScope()` to access the currently selected scope, which you will then usually pass through to API requests.
 
-### Api: UserPermissions
+### API: User permissions
 
-UserPermissions will validate scope arguments of graphql queries/mutations and has access to the scope of an entity if it is stored as scope. You additionally need `@ScopedEntity` (at entitiy level) for nested entities and `@AffectedEntity` (at resolver level) for queries/mutations without scope argument.
+User permissions will validate `scope` arguments of GraphQL operations and check if a user has access to the scope of an entity (the column name needs to be `scope`). You additionally need `@ScopedEntity` (at entity level) for nested entities and `@AffectedEntity` (at resolver level) for operations without a `scope` argument.

@@ -1,16 +1,16 @@
 ---
-title: Data Driven Application
+title: Data driven application
 sidebar_position: 2
 ---
 
-In data driven applications you can also use the scope, but quite differently as you usually have not this clear separations of scopes  as for content websites.
+In data driven applications you may also use the scope, but the usage is quite differently, as you usually have not this clear separations of scopes as for content websites.
 
-If the scope is more the goggles the user is currently looking thru, then use the following approach:
+If the scope is more like the "goggles" the user is currently looking through, then use the following approach:
 
 
-### Api: Database
+### API: Database
 
-If your scopes are relations to entities in your application (such as Dealers, Clubs), do not store this relation or id nested in a scope emeddable (as you would to for a content website), instead use a standard `@ManyToOne` relation:
+If your scopes are relations to entities in your application (e.g., dealers or clubs), do not store this relation or ID in a nested `scope` embeddable (as you would for a content website), instead use a standard `@ManyToOne` relation:
 
 ```ts title="api/src/product/entities/product.entity.ts"
 @Entity()
@@ -19,26 +19,26 @@ export class Product extends BaseEntity<Product, "id"> {
     dealer: Ref<Dealer> = undefined;
 }
 ```
-### Api: Graphql Api
+### API: GraphQL API
 
-Like in the database, do not use an argument named "scope" for any query/mutation that contains references. Instead use a normal reference like you would always do.
+As in the database, do not use an argument named `scope` for any operation that contains references. Instead use a normal reference like you would always do.
 
 ### Admin: Scope Selector
 
-You /might/ want to use the `<ContentScopeControls>` in admin to get the default scope selector. However it is very limited and you might better be off with a custom component that fetches scopes (eg. dealers) on it's own.
+You _might_ want to use the `<ContentScopeControls>` in Admin to get the default scope selector. However, it is very limited and you might better be off with a custom component that fetches scopes (e.g., dealers) on it's own.
 
-You can use `useContentScope()` to access the currently selected scope, but you will usually access only the one id out of it and pass it to queries that depend on the currently selected scope:
+You can use `useContentScope()` to access the currently selected scope, but you will usually access only the ID defined in the scope object and pass it to operations that depend on the currently selected scope:
 
-```
+```tsx
 const { scope } = useContentScope();
 const variables = {
     dealer: scope.dealer
 };
 ```
 
-### Api: UserPermissions
+### API: User permissions
 
-So far COMET didn't help us a lot with our scope, but for UserPermissions it has it's value.
+So far COMET didn't help us a lot with our scope, but for user permssions it has its value.
 
 First an overview of user permissions:
 
