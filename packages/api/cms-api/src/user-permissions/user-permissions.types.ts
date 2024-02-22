@@ -5,7 +5,6 @@ import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
 import { UserPermission } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
-import { Permission } from "./interfaces/user-permission.interface";
 
 export enum UserPermissions {
     allContentScopes = "all-content-scopes",
@@ -15,7 +14,7 @@ export enum UserPermissions {
 export type Users = [User[], number];
 
 type PermissionForUser = {
-    permission: keyof Permission;
+    permission: string;
     contentScopes?: ContentScope[];
 } & Pick<UserPermission, "validFrom" | "validTo" | "reason" | "requestedBy" | "approvedBy">;
 export type PermissionsForUser = PermissionForUser[] | UserPermissions.allPermissions;
@@ -23,7 +22,7 @@ export type PermissionsForUser = PermissionForUser[] | UserPermissions.allPermis
 export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentScopes;
 
 export interface AccessControlServiceInterface {
-    isAllowed(user: CurrentUser, permission: keyof Permission, contentScope?: ContentScope): boolean;
+    isAllowed(user: CurrentUser, permission: string, contentScope?: ContentScope): boolean;
     getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }
@@ -34,7 +33,6 @@ export interface UserPermissionsUserServiceInterface {
 }
 
 export interface UserPermissionsOptions {
-    availablePermissions?: (keyof Permission)[];
     availableContentScopes?: ContentScope[] | (() => Promise<ContentScope[]> | ContentScope[]);
 }
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {
