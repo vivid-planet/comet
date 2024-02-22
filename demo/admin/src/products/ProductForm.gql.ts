@@ -5,7 +5,6 @@ export const productFormFragment = gql`
         title
         slug
         description
-        price
         type
         inStock
         image
