@@ -1,6 +1,6 @@
 export { BlockElement, RteBlockElementClassKey, RteBlockElementProps } from "./core/BlockElement";
 export { default as BlockTypesControls, RteBlockTypeControlsClassKey } from "./core/Controls/BlockTypesControls";
-export { default as ControlButton, IProps as IControlButtonProps, RteControlButtonClassKey } from "./core/Controls/ControlButton";
+export { ControlButton, IProps as IControlButtonProps, RteControlButtonClassKey } from "./core/Controls/ControlButton";
 export { FeaturesButtonGroup, RteFeaturesButtonGroupClassKey } from "./core/Controls/FeaturesButtonGroup";
 export { default as LinkControls, RteLinkControlsClassKey } from "./core/Controls/LinkControls";
 export { Toolbar } from "./core/Controls/Toolbar/Toolbar";
@@ -17,7 +17,7 @@ export { default as filterEditorUtilsManipulateEntityData } from "./core/filterE
 export { default as filterEditorUtilsRemoveEntities } from "./core/filterEditor/utils/removeEntities";
 export { default as filterEditorUtilsRemoveInlineStyles } from "./core/filterEditor/utils/removeInlineStyles";
 export { IMakeRteApiProps, IRteApiProps, default as makeRteApi, OnDebouncedContentChangeFn } from "./core/makeRteApi";
-export { FilterEditorStateBeforeUpdateFn, IOptions as IRteOptions, IRteRef, default as Rte, RteClassKey, RteProps } from "./core/Rte";
+export { FilterEditorStateBeforeUpdateFn, IOptions as IRteOptions, IRteRef, Rte, RteClassKey, RteProps } from "./core/Rte";
 export { IOptions as IRteReadOnlyOptions, IProps as IRteReadOnlyProps, default as RteReadOnly } from "./core/RteReadOnly";
 export { default as findEntityInCurrentSelection } from "./core/utils/findEntityInCurrentSelection";
 export { default as findTextInCurrentSelection } from "./core/utils/findTextInCurrentSelection";
