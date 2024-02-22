@@ -36,7 +36,10 @@ export class News extends BaseEntity<News, "id"> {
 
 ### API: GraphQL API
 
-The GraphQL API will have a scope argument (where it makes sense), as shown in the example above.
+The GraphQL API will have a scope argument (where it makes sense), for the `News` example from above the API will have a `scope` argument:
+```
+newsList(scope: NewsContentScopeInput!, offset: Int! = 0, limit: Int! = 25, , search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+```
 
 ### Admin: Scope Selector
 In the Admin you need a `<ContentScopeProvider>` and `<ContentScopeControls>` in the `MasterHeader` component.
