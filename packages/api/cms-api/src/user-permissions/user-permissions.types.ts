@@ -57,11 +57,3 @@ export interface UserPermissionsModuleAsyncOptions extends Pick<ModuleMetadata, 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useFactory?: (...args: any[]) => Promise<UserPermissionsAsyncOptions> | UserPermissionsAsyncOptions;
 }
-
-export const CometPermissions = {
-    pageTree: "pageTree",
-    dam: "dam",
-    userPermissions: "userPermissions",
-    cronJobs: "cronJobs",
-    builds: "builds",
-} as const;

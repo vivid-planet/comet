@@ -151,7 +151,6 @@ export { ContentScope } from "./user-permissions/interfaces/content-scope.interf
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export {
     AccessControlServiceInterface,
-    CometPermissions,
     ContentScopesForUser,
     PermissionsForUser,
     UserPermissions,
