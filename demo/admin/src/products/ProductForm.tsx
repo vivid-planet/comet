@@ -104,7 +104,6 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             variants: [],
             articleNumbers: [],
             discounts: [],
-            packageDimensions: { width: 0, height: 0, depth: 0 },
             statistics: { views: 0 },
         };
         if (mode === "edit") {

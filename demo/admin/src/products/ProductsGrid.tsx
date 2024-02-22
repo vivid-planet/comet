@@ -165,7 +165,6 @@ function ProductsGrid() {
                                             })),
                                             articleNumbers: input.articleNumbers,
                                             discounts: input.discounts,
-                                            packageDimensions: { width: 0, height: 0, depth: 0 },
                                             statistics: { views: 0 },
                                         },
                                     },
