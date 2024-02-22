@@ -129,6 +129,10 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         const submit = React.useCallback(
             (event: any) => {
                 event.preventDefault(); //  Prevents from reloading the page with GET-params on submit
+                if (saveBoundaryApi) {
+                    // if we are inside a SaveBoundary, save the whole SaveBoundary
+                    return saveBoundaryApi.save();
+                }
                 if (!formRenderProps.dirty) return;
                 return new Promise<SubmissionErrors | void>((resolve) => {
                     Promise.resolve(formRenderProps.handleSubmit(event)).then(
@@ -145,7 +149,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     );
                 });
             },
-            [formRenderProps],
+            [formRenderProps, saveBoundaryApi],
         );
 
         const currentWarningValidationRound = React.useRef(0);

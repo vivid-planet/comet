@@ -133,8 +133,8 @@ const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = (
             if (!disableCloseAfterSave) {
                 api.closeDialog({ delay: true });
             }
-            onAfterSave?.();
         });
+        onAfterSave?.();
     }, [api, disableCloseAfterSave, onAfterSave]);
 
     const isOpen = !!selection.mode;
