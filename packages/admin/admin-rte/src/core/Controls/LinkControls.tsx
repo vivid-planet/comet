@@ -1,44 +1,55 @@
-import { ButtonGroup, ComponentsOverrides, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { ThemedComponentBaseProps } from "@comet/admin";
+import { ButtonGroup, ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/material";
 import * as React from "react";
 
 import LinkToolbarButton from "../extension/Link/ToolbarButton";
 import LinksRemoveToolbarButton from "../extension/LinksRemove/ToolbarButton";
 import { IControlProps } from "../types";
 
-function LinkControls(p: IControlProps & WithStyles<typeof styles>) {
+export interface RteLinkControlsProps extends IControlProps, ThemedComponentBaseProps<{ root: typeof ButtonGroup; item: "div" }> {}
+
+function StyledLinkControls(inProps: RteLinkControlsProps) {
+    const props = useThemeProps({ props: inProps, name: "CometAdminRteLinkControls" });
     const {
         options: { supports: supportedThings, overwriteLinkButton, overwriteLinksRemoveButton },
-        classes,
-    } = p;
+        slotProps,
+        ...restProps
+    } = props;
 
     const LinkButtonComponent = overwriteLinkButton ? overwriteLinkButton : LinkToolbarButton;
     const LinksRemoveButtonComponent = overwriteLinksRemoveButton ? overwriteLinksRemoveButton : LinksRemoveToolbarButton;
 
     return (
-        <ButtonGroup classes={{ root: classes.root }}>
-            <div className={classes.item}>{supportedThings.includes("link") && <LinkButtonComponent {...p} />}</div>
-            <div className={classes.item}>{supportedThings.includes("links-remove") && <LinksRemoveButtonComponent {...p} />}</div>
-        </ButtonGroup>
+        <Root {...slotProps?.root} {...restProps}>
+            <Item {...slotProps?.item}>{supportedThings.includes("link") && <LinkButtonComponent {...props} />}</Item>
+            <Item {...slotProps?.item}>{supportedThings.includes("links-remove") && <LinksRemoveButtonComponent {...props} />}</Item>
+        </Root>
     );
 }
 
 export type RteLinkControlsClassKey = "root" | "item";
 
-const styles = () => {
-    return createStyles<RteLinkControlsClassKey, IControlProps>({
-        root: {},
-        item: {
-            marginRight: 1,
-            minWidth: 0,
-            "&:last-child": {
-                marginRight: 0,
-            },
-        },
-    });
-};
+const Root = styled(ButtonGroup, {
+    name: "CometAdminRteLinkControls",
+    slot: "root",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})();
 
-const StyledLinkControls = withStyles(styles, { name: "CometAdminRteLinkControls" })(LinkControls);
+const Item = styled("div", {
+    name: "CometAdminRteLinkControls",
+    slot: "item",
+    overridesResolver(_, styles) {
+        return [styles.item];
+    },
+})(css`
+    margin-right: 1px;
+    min-width: 0;
+    &:last-child {
+        margin-right: 0;
+    }
+`);
 
 // If there are no link-actions, this must return null not just an empty component, to prevent an empty item from being rendered in Toolbar
 export default (p: IControlProps) => {
@@ -52,12 +63,17 @@ export default (p: IControlProps) => {
 };
 
 declare module "@mui/material/styles" {
+    interface ComponentsPropsList {
+        CometAdminRteLinkControls: RteLinkControlsProps;
+    }
+
     interface ComponentNameToClassKey {
         CometAdminRteLinkControls: RteLinkControlsClassKey;
     }
 
     interface Components {
         CometAdminRteLinkControls?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminRteLinkControls"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteLinkControls"];
         };
     }
