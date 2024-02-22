@@ -6,14 +6,9 @@ on:
             - opened
             - synchronize
             - reopened
-            - closed
-        branches:
-            - main
-            - next
     push:
         branches:
-            - main
-            - next
+            - v4.x.x
 
 jobs:
     lint:
