@@ -32,36 +32,34 @@ export const SeoBlock = <T = PixelImageBlockData,>({
     const openGraphImageUrlTemplate = openGraphImage.block && resolveOpenGraphImageUrlTemplate(openGraphImage.block as T);
 
     return (
-        <>
-            <Head>
-                <title>{usedHtmlTitle}</title>
+        <Head>
+            <title>{usedHtmlTitle}</title>
 
-                {/* Meta*/}
-                {metaDescription && <meta name="description" content={metaDescription} />}
+            {/* Meta*/}
+            {metaDescription && <meta name="description" content={metaDescription} />}
 
-                {/* Open Graph */}
-                {openGraphTitle && <meta property={"og:title"} content={openGraphTitle} />}
-                {openGraphDescription && <meta property={"og:description"} content={openGraphDescription} />}
-                <meta property={"og:type"} content={"website"} />
-                <meta property={"og:url"} content={usedCanonicalUrl} />
-                {openGraphImageUrlTemplate && (
-                    <meta property={"og:image"} content={generateImageUrl({ src: openGraphImageUrlTemplate, width: 1024 }, 1 / 1)} />
-                )}
+            {/* Open Graph */}
+            {openGraphTitle && <meta property={"og:title"} content={openGraphTitle} />}
+            {openGraphDescription && <meta property={"og:description"} content={openGraphDescription} />}
+            <meta property={"og:type"} content={"website"} />
+            <meta property={"og:url"} content={usedCanonicalUrl} />
+            {openGraphImageUrlTemplate && (
+                <meta property={"og:image"} content={generateImageUrl({ src: openGraphImageUrlTemplate, width: 1024 }, 1 / 1)} />
+            )}
 
-                {/* Structured Data */}
-                {structuredData && structuredData.length > 0 && <script type="application/ld+json">{structuredData}</script>}
+            {/* Structured Data */}
+            {structuredData && structuredData.length > 0 && <script type="application/ld+json">{structuredData}</script>}
 
-                {/* No Index */}
-                {noIndex && <meta name={"robots"} content={"noindex"} />}
+            {/* No Index */}
+            {noIndex && <meta name={"robots"} content={"noindex"} />}
 
-                {/* Canonical Url */}
-                {usedCanonicalUrl && <link rel="canonical" href={usedCanonicalUrl} />}
+            {/* Canonical Url */}
+            {usedCanonicalUrl && <link rel="canonical" href={usedCanonicalUrl} />}
 
-                {/* Alternate Hreflang */}
-                {alternativeLinks &&
-                    alternativeLinks.length > 0 &&
-                    alternativeLinks.map((item) => <link key={item.code} rel="alternate" hrefLang={item.code} href={item.url} />)}
-            </Head>
-        </>
+            {/* Alternate Hreflang */}
+            {alternativeLinks &&
+                alternativeLinks.length > 0 &&
+                alternativeLinks.map((item) => <link key={item.code} rel="alternate" hrefLang={item.code} href={item.url} />)}
+        </Head>
     );
 };
