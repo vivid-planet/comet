@@ -11,6 +11,8 @@ import {
     FinalFormSubmitEvent,
     Loading,
     MainContent,
+    TextAreaField,
+    TextField,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
@@ -31,6 +33,7 @@ import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { validateTitle } from "../validateTitle";
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
     GQLCreateProductMutation,
@@ -46,8 +49,7 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormDetailsFragment, "packageDimensions" | "price"> & {
-    packageDimensions: { height: string; width: string; depth: string };
+type FormValues = Omit<GQLProductFormDetailsFragment, "price"> & {
     price: string;
     image: BlockState<typeof rootBlocks.image>;
 };
@@ -73,13 +75,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             data?.product
                 ? {
                       ...filter<GQLProductFormDetailsFragment>(productFormFragment, data.product),
-                      packageDimensions: data.product.packageDimensions
-                          ? {
-                                height: String(data.product.packageDimensions.height),
-                                width: String(data.product.packageDimensions.width),
-                                depth: String(data.product.packageDimensions.depth),
-                            }
-                          : undefined,
+
                       price: String(data.product.price),
                       image: rootBlocks.image.input2State(data.product.image),
                   }
@@ -105,11 +101,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
-            packageDimensions: {
-                height: parseFloat(formValues.packageDimensions.height),
-                width: parseFloat(formValues.packageDimensions.width),
-                depth: parseFloat(formValues.packageDimensions.depth),
-            },
+
             price: parseFloat(formValues.price),
             image: rootBlocks.image.state2Output(formValues.image),
         };
@@ -172,55 +164,20 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <Field
+                        <TextField
                             required
                             fullWidth
                             name="title"
-                            component={FinalFormInput}
                             label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
+                            validate={validateTitle}
                         />
 
-                        <Field
-                            required
-                            fullWidth
-                            name="packageDimensions.height"
-                            component={FinalFormInput}
-                            type="number"
-                            label={<FormattedMessage id="product.packageDimensions.height" defaultMessage="Height" />}
-                        />
+                        <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
 
-                        <Field
+                        <TextAreaField
                             required
-                            fullWidth
-                            name="packageDimensions.width"
-                            component={FinalFormInput}
-                            type="number"
-                            label={<FormattedMessage id="product.packageDimensions.width" defaultMessage="Width" />}
-                        />
-
-                        <Field
-                            required
-                            fullWidth
-                            name="packageDimensions.depth"
-                            component={FinalFormInput}
-                            type="number"
-                            label={<FormattedMessage id="product.packageDimensions.depth" defaultMessage="Depth" />}
-                        />
-
-                        <Field
-                            required
-                            fullWidth
-                            name="slug"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
-                        />
-
-                        <Field
-                            required
-                            multiline
                             fullWidth
                             name="description"
-                            component={FinalFormInput}
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
                         <Field fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
@@ -245,6 +202,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             type="number"
                             label={<FormattedMessage id="product.price" defaultMessage="Price" />}
+                            helperText={<FormattedMessage id="product.price.helperText" defaultMessage="Enter price in this format: 123,45" />}
                         />
                         <Field name="inStock" label="" type="checkbox" fullWidth>
                             {(props) => (

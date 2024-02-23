@@ -9,7 +9,7 @@ import { generateGrid } from "./generateGrid";
 import { Leaves, Paths } from "./utils/deepKeyOf";
 import { writeGenerated } from "./utils/writeGenerated";
 
-type BlockReference = {
+type ImportReference = {
     name: string;
     import: string;
 };
@@ -24,8 +24,8 @@ export type FormFieldConfigInternal = (
     // TODO | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
     | { type: "asyncSelect"; values?: string[] }
-    | { type: "block"; block: BlockReference }
-) & { name: string; label?: string; required?: boolean };
+    | { type: "block"; block: ImportReference }
+) & { name: string; label?: string; required?: boolean; validate?: ImportReference; helperText?: string  };
 export type FormFieldConfig<T extends GeneratorEntity> = FormFieldConfigInternal & { name: Leaves<T> | Paths<T> };
 
 export type FormConfigInternal = {
@@ -49,7 +49,7 @@ export type GridColumnConfigInternal = (
     | { type: "date" }
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
-    | { type: "block"; block: BlockReference }
+    | { type: "block"; block: ImportReference }
 ) & { name: string; headerName?: string; width?: number };
 export type GridColumnConfig<T extends GeneratorEntity> = GridColumnConfigInternal & { name: Leaves<T> | Paths<T> };
 

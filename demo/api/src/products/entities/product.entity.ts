@@ -16,6 +16,7 @@ import {
     types,
 } from "@mikro-orm/core";
 import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
+import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsNumber } from "class-validator";
 import { v4 as uuid } from "uuid";
 
@@ -170,4 +171,7 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Property({ onUpdate: () => new Date() })
     @Field()
     updatedAt: Date = new Date();
+
+    @ManyToOne(() => Manufacturer, { nullable: true, index: true, ref: true })
+    manufacturer?: Ref<Manufacturer>;
 }

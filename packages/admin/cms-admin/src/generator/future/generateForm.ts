@@ -91,6 +91,8 @@ export function generateForm(
         FinalFormSubmitEvent,
         Loading,
         MainContent,
+        TextAreaField,
+        TextField,
         Toolbar,
         ToolbarActions,
         ToolbarFillSpace,

@@ -34,16 +34,36 @@ export function generateFormField(
     //TODO verify introspectionField.type is compatbile with config.type
 
     const imports: Imports = [];
+
+    let validateCode = "";
+    if (config.validate) {
+        let importPath = config.validate.import;
+        if (importPath.startsWith("./")) {
+            //go one level up as generated files are in generated subfolder
+            importPath = `.${importPath}`;
+        }
+        imports.push({
+            name: config.validate.name,
+            importPath,
+        });
+        validateCode = `validate={${config.validate.name}}`;
+    }
+
     let code = "";
     if (config.type == "text") {
+        const TextInputComponent = config.multiline ? "TextAreaField" : "TextField";
         code = `
-        <Field
+        <${TextInputComponent}
             ${required ? "required" : ""}
-            ${config.multiline ? "multiline" : ""}
             fullWidth
             name="${name}"
-            component={FinalFormInput}
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+            ${
+                config.helperText
+                    ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
+                    : ""
+            }
+            ${validateCode}
         />`;
     } else if (config.type == "number") {
         code = `
@@ -54,14 +74,29 @@ export function generateFormField(
                 component={FinalFormInput}
                 type="number"
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                ${
+                    config.helperText
+                        ? `helperText={<FormattedMessage id=` +
+                          `"${instanceGqlType}.${name}.helperText" ` +
+                          `defaultMessage="${config.helperText}" />}`
+                        : ""
+                }
+                ${validateCode}
             />`;
         //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
     } else if (config.type == "boolean") {
-        code = `<Field name="${name}" label="" type="checkbox" fullWidth>
+        code = `<Field name="${name}" label="" type="checkbox" fullWidth ${validateCode}>
             {(props) => (
                 <FormControlLabel
                     label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
                     control={<FinalFormCheckbox {...props} />}
+                    ${
+                        config.helperText
+                            ? `helperText={<FormattedMessage id=` +
+                              `"${instanceGqlType}.${name}.helperText" ` +
+                              `defaultMessage="${config.helperText}" />}`
+                            : ""
+                    }
                 />
             )}
         </Field>`;
@@ -73,6 +108,14 @@ export function generateFormField(
                 name="${name}"
                 component={FinalFormDatePicker}
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                ${
+                    config.helperText
+                        ? `helperText={<FormattedMessage id=` +
+                          `"${instanceGqlType}.${name}.helperText" ` +
+                          `defaultMessage="${config.helperText}" />}`
+                        : ""
+                }
+                ${validateCode}
             />`;
     } else if (config.type == "block") {
         imports.push({
@@ -95,6 +138,12 @@ export function generateFormField(
             fullWidth
             name="${name}"
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
+            ${
+                config.helperText
+                    ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
+                    : ""
+            }
+            ${validateCode}
             {(props) => 
                 <FinalFormSelect {...props}>
                 ${values
