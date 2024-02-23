@@ -12,7 +12,6 @@ import { UserService } from "./user.service";
             staticAuthedUser: staticUsers[0],
         }),
         createAuthResolver(),
-
         {
             provide: APP_GUARD,
             useClass: createCometAuthGuard(["static-authed-user"]),
