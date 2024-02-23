@@ -2,7 +2,7 @@ import { IntrospectionField, IntrospectionQuery, IntrospectionType } from "graph
 import objectPath from "object-path";
 
 type FieldsObjectType = { [key: string]: FieldsObjectType | boolean | string };
-const recursiveStringify = (obj: FieldsObjectType, objectSuffix?: string): string => {
+const recursiveStringify = (obj: FieldsObjectType): string => {
     let ret = "";
     let prefixField = "";
     for (const key in obj) {
@@ -12,7 +12,7 @@ const recursiveStringify = (obj: FieldsObjectType, objectSuffix?: string): strin
         } else if (typeof valueForKey === "string") {
             ret += `${prefixField}${key}${valueForKey}`;
         } else {
-            ret += `${prefixField}${key}${objectSuffix ? objectSuffix : ""} { ${recursiveStringify(valueForKey)} }`;
+            ret += `${prefixField}${key} { ${recursiveStringify(valueForKey)} }`;
         }
         prefixField = " ";
     }
