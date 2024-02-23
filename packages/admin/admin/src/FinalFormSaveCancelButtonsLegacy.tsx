@@ -11,8 +11,8 @@ import { useStackApi } from "./stack/Api";
 export interface FinalFormSaveCancelButtonsLegacyProps
     extends ThemedComponentBaseProps<{
         root: "div";
-        cancelIcon: typeof CancelButton;
-        saveIcon: typeof SaveButton;
+        cancelButton: typeof CancelButton;
+        saveButton: typeof SaveButton;
     }> {
     cancelIcon?: React.ReactNode;
     saveIcon?: React.ReactNode;
@@ -53,26 +53,26 @@ const StyledSaveButton = styled(SaveButton, {
 );
 
 export function FinalFormSaveCancelButtonsLegacy(inProps: FinalFormSaveCancelButtonsLegacyProps) {
-    const { cancelIcon, saveIcon, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminFinalFormSaveCancelButtonsLegacy" });
+    const { cancelIcon, saveIcon, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminFinalFormSaveCancelButtonsLegacy" });
     const stackApi = useStackApi();
     const formState = useFormState();
 
     return (
-        <Root {...restProps}>
+        <Root {...slotProps?.root} {...restProps}>
             {stackApi?.breadCrumbs != null && stackApi?.breadCrumbs.length > 1 && (
                 <StyledCancelButton
                     startIcon={cancelIcon}
                     onClick={() => {
                         stackApi.goBack();
                     }}
-                    {...restProps}
+                    {...slotProps?.cancelButton}
                 />
             )}
             <StyledSaveButton
                 startIcon={saveIcon}
                 type="submit"
                 disabled={formState.pristine || formState.hasValidationErrors || formState.submitting}
-                {...restProps}
+                {...slotProps?.saveButton}
             />
         </Root>
     );
