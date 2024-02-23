@@ -19,7 +19,8 @@ export type FinalFormFileUploadClassKey =
     | "rejectedFileListItem"
     | "errorMessage"
     | "disabled"
-    | "error";
+    | "error"
+    | "fileListText";
 
 const styles = ({ palette }: Theme) => {
     return createStyles<FinalFormFileUploadClassKey, FinalFormFileUploadProps>({
@@ -28,7 +29,6 @@ const styles = ({ palette }: Theme) => {
             flexDirection: "column",
             alignItems: "flex-start",
             gap: "10px",
-            alignSelf: "stretch",
             minWidth: "350px",
         },
         droppableArea: {
@@ -70,7 +70,6 @@ const styles = ({ palette }: Theme) => {
             flexDirection: "column",
             alignItems: "flex-start",
             gap: "2px",
-            alignSelf: "stretch",
         },
         fileListItem: {
             display: "flex",
@@ -78,7 +77,6 @@ const styles = ({ palette }: Theme) => {
             padding: "8px 7px 8px 15px",
             alignItems: "center",
             gap: "10px",
-            alignSelf: "stretch",
             borderRadius: "4px",
             background: palette.background.default,
             justifyContent: "space-between",
@@ -90,7 +88,6 @@ const styles = ({ palette }: Theme) => {
             padding: "8px 7px 8px 15px",
             alignItems: "center",
             gap: "10px",
-            alignSelf: "stretch",
             borderRadius: "4px",
             background: palette.background.default,
             justifyContent: "space-between",
@@ -101,12 +98,16 @@ const styles = ({ palette }: Theme) => {
         errorMessage: {
             display: "flex",
             alignItems: "center",
-            alignSelf: "stretch",
             color: palette.error.main,
             gap: "5px",
         },
         disabled: {},
         error: {},
+        fileListText: {
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+        },
     });
 };
 
@@ -161,7 +162,8 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
         fileRejections.length > 0 &&
         fileRejections.map((rejectedFile) => (
             <div key={rejectedFile.file.name} className={classes.rejectedFileListItem}>
-                {rejectedFile.file.name.length < 20 ? rejectedFile.file.name : `${rejectedFile.file.name.substring(0, 20)}...`}
+                {rejectedFile.file.name}
+                {/* {rejectedFile.file.name.length < 20 ? rejectedFile.file.name : `${rejectedFile.file.name.substring(0, 20)}...`} */}
                 <IconButton color="error">
                     <Info />
                 </IconButton>
@@ -194,13 +196,12 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
                 <div className={classes.fileList}>
                     {files.map((file) => (
                         <div key={file.name} className={classes.fileListItem}>
-                            {file.name.length < 20 ? file.name : `${file.name.substring(0, 20)}...`}
-                            <div>
-                                <Chip label={<PrettyBytes value={file.size} />} />
-                                <IconButton onClick={removeFile(file)}>
-                                    <Delete />
-                                </IconButton>
-                            </div>
+                            <div className={classes.fileListText}>{file.name}</div>
+                            {/* {file.name.length < 20 ? file.name : `${file.name.substring(0, 20)}...`} */}
+                            <Chip label={<PrettyBytes value={file.size} />} />
+                            <IconButton onClick={removeFile(file)}>
+                                <Delete />
+                            </IconButton>
                         </div>
                     ))}
                 </div>
