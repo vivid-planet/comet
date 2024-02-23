@@ -70,10 +70,10 @@ const styles = ({ palette }: Theme) => {
             flexDirection: "column",
             alignItems: "flex-start",
             gap: "2px",
+            width: "100%",
         },
         fileListItem: {
             display: "flex",
-            height: "35px",
             padding: "8px 7px 8px 15px",
             alignItems: "center",
             gap: "10px",
@@ -81,10 +81,11 @@ const styles = ({ palette }: Theme) => {
             background: palette.background.default,
             justifyContent: "space-between",
             minWidth: "250px",
+            width: "100%",
+            boxSizing: "border-box",
         },
         rejectedFileListItem: {
             display: "flex",
-            height: "35px",
             padding: "8px 7px 8px 15px",
             alignItems: "center",
             gap: "10px",
@@ -94,6 +95,8 @@ const styles = ({ palette }: Theme) => {
             minWidth: "250px",
             border: `1px dashed ${palette.error.main}`,
             color: palette.error.main,
+            width: "100%",
+            boxSizing: "border-box",
         },
         errorMessage: {
             display: "flex",
@@ -162,8 +165,7 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
         fileRejections.length > 0 &&
         fileRejections.map((rejectedFile) => (
             <div key={rejectedFile.file.name} className={classes.rejectedFileListItem}>
-                {rejectedFile.file.name}
-                {/* {rejectedFile.file.name.length < 20 ? rejectedFile.file.name : `${rejectedFile.file.name.substring(0, 20)}...`} */}
+                <div className={classes.fileListText}>{rejectedFile.file.name}</div>
                 <IconButton color="error">
                     <Info />
                 </IconButton>
@@ -197,7 +199,6 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
                     {files.map((file) => (
                         <div key={file.name} className={classes.fileListItem}>
                             <div className={classes.fileListText}>{file.name}</div>
-                            {/* {file.name.length < 20 ? file.name : `${file.name.substring(0, 20)}...`} */}
                             <Chip label={<PrettyBytes value={file.size} />} />
                             <IconButton onClick={removeFile(file)}>
                                 <Delete />
