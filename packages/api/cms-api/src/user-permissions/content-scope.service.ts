@@ -9,6 +9,7 @@ import { ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.d
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { AffectedEntityMeta } from "./decorators/affected-entity.decorator";
 
+// TODO Remove service and move into UserPermissionsGuard once ChangesCheckerInterceptor is removed
 @Injectable()
 export class ContentScopeService {
     constructor(private reflector: Reflector, private readonly orm: MikroORM, @Optional() private readonly pageTreeService?: PageTreeService) {}
