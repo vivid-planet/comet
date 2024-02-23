@@ -3,8 +3,8 @@ import { SvgIconComponent } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ClearIcon from "@mui/icons-material/Clear";
 import DropdownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { Chip, ComponentsOverrides, Theme, useTheme } from "@mui/material";
-import classNames from "classnames";
+import { Chip, ComponentsOverrides, InputBase, MenuItem, Paper, Theme, Typography, useTheme } from "@mui/material";
+import { css, styled } from "@mui/material/styles";
 import * as React from "react";
 import Select, { OptionTypeBase } from "react-select";
 import AsyncSelect, { Props as ReactSelectAsyncProps } from "react-select/async";
@@ -20,30 +20,57 @@ import { OptionProps } from "react-select/src/components/Option";
 import { PlaceholderProps } from "react-select/src/components/Placeholder";
 import { SingleValueProps } from "react-select/src/components/SingleValue";
 
-import {
-    ClearIndicatorSlot,
-    ControlInput,
-    DropdownIndicatorSlot,
-    IndicatorsContainerSlot,
-    IndicatorSeparatorSlot,
-    NoOptionsMessageSlot,
-    OptionSlot,
-    PaperSlot,
-    PlaceholderSlot,
-    SelectClassKey,
-    SingleValueSlot,
-    ValueContainerSlot,
-} from "./ReactSelect.styles";
+export type SelectClassKey =
+    | "input"
+    | "valueContainer"
+    | "chip"
+    | "chipFocused"
+    | "noOptionsMessage"
+    | "singleValue"
+    | "placeholder"
+    | "paper"
+    | "indicatorsContainer"
+    | "indicatorSeparator"
+    | "clearIndicator"
+    | "indicator"
+    | "dropdownIndicator"
+    | "option"
+    | "optionSelected"
+    | "optionFocused";
+
+const NoOptionsMessageText = styled(Typography, {
+    name: "CometAdminSelect",
+    slot: "noOptionsMessage",
+    overridesResolver(_, styles) {
+        return [styles.noOptionsMessage];
+    },
+})(
+    ({ theme }) => css`
+        padding: ${theme.spacing(1)} ${theme.spacing(2)};
+        color: ${theme.palette.text.secondary};
+    `,
+);
 
 function NoOptionsMessage<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: NoticeProps<OptionType, IsMulti>) {
-    return <NoOptionsMessageSlot {...props.innerProps}>{props.children}</NoOptionsMessageSlot>;
+    return <NoOptionsMessageText {...props.innerProps}>{props.children}</NoOptionsMessageText>;
 }
 
 function inputComponent({ inputRef, ...props }: any) {
     return <div ref={inputRef} {...props} />;
 }
 
-//TODO Write changelog
+const ControlInput = styled(InputBase, {
+    name: "CometAdminSelect",
+    slot: "input",
+    overridesResolver(_, styles) {
+        return [styles.input];
+    },
+})(css`
+    .MuiInputBase-input {
+        display: flex;
+        padding-right: 0;
+    }
+`);
 
 function Control<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: ControlProps<OptionType, IsMulti>) {
     const InputProps = {
@@ -57,61 +84,191 @@ function Control<OptionType extends OptionTypeBase, IsMulti extends boolean>(pro
     return <ControlInput type="text" fullWidth {...InputProps} {...props.selectProps.textFieldProps} />;
 }
 
+type OptionMenuItemProps = {
+    focused: boolean;
+    selected: boolean;
+};
+
+const OptionMenuItem = styled(MenuItem, {
+    name: "CometAdminSelect",
+    slot: "option",
+    overridesResolver({ focused, selected }: OptionMenuItemProps, styles) {
+        return [styles.option, focused && styles.optionFocused, selected && styles.optionSelected];
+    },
+})<OptionMenuItemProps>(
+    ({ theme, focused, selected }) => css`
+        ${selected &&
+        css`
+            font-weight: ${theme.typography.fontWeightMedium};
+        `}
+
+        ${focused &&
+        css`
+            background-color: ${theme.palette.action.selected};
+        `}
+    `,
+);
+
 function Option<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: OptionProps<OptionType, IsMulti>) {
     return (
-        <OptionSlot
+        <OptionMenuItem
             ref={props.innerRef}
-            isFocused={props.isFocused}
+            focused={props.isFocused}
             selected={props.isSelected}
             disabled={props.isDisabled}
-            // @ts-expect-error TODO
+            // @ts-expect-error The type is not correctly passed through to `MenuItem` when using `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop
             component="div"
             {...props.innerProps}
         >
             {props.children}
-        </OptionSlot>
+        </OptionMenuItem>
     );
 }
+
+const PlaceholderSlot = styled("div", {
+    name: "CometAdminSelect",
+    slot: "placeholder",
+    overridesResolver(_, styles) {
+        return [styles.placeholder];
+    },
+})(
+    ({ theme }) => css`
+        color: ${theme.palette.text.disabled};
+    `,
+);
 
 function Placeholder<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: PlaceholderProps<OptionType, IsMulti>) {
     return <PlaceholderSlot {...props.innerProps}>{props.children}</PlaceholderSlot>;
 }
 
+const SingleValueSlot = styled("div", {
+    name: "CometAdminSelect",
+    slot: "singleValue",
+    overridesResolver(_, styles) {
+        return [styles.singleValue];
+    },
+})(css`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+`);
+
 function SingleValue<OptionType extends OptionTypeBase>(props: SingleValueProps<OptionType>) {
     return <SingleValueSlot {...props.innerProps}>{props.children}</SingleValueSlot>;
 }
+
+const ValueContainerSlot = styled("div", {
+    name: "CometAdminSelect",
+    slot: "valueContainer",
+    overridesResolver(_, styles) {
+        return [styles.valueContainer];
+    },
+})(css`
+    display: flex;
+    flex-wrap: nowrap;
+    flex: 1;
+    align-items: center;
+    overflow: hidden;
+`);
 
 function ValueContainer<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: ValueContainerProps<OptionType, IsMulti>) {
     return <ValueContainerSlot>{props.children}</ValueContainerSlot>;
 }
 
-//TODO apply styled components
+type MultiValueChipProps = {
+    focused: boolean;
+};
+
+const MultiValueChip = styled(Chip, {
+    name: "CometAdminSelect",
+    slot: "chip",
+    overridesResolver({ focused }: MultiValueChipProps, styles) {
+        return [styles.chip, focused && styles.chipFocused];
+    },
+})<MultiValueChipProps>(
+    ({ theme, focused }) => css`
+        margin: ${theme.spacing(0.5)} ${theme.spacing(0.25)};
+
+        ${focused &&
+        css`
+            background-color: ${theme.palette.mode === "light" ? theme.palette.grey[300] : theme.palette.grey[700]};
+        `}
+    `,
+);
+
 function MultiValue<OptionType extends OptionTypeBase>(props: MultiValueProps<OptionType>) {
     return (
-        <Chip
+        <MultiValueChip
             tabIndex={-1}
+            focused={props.isFocused}
             label={props.children}
-            className={classNames(props.selectProps.classes.chip, {
-                [props.selectProps.classes.chipFocused]: props.isFocused,
-            })}
             onDelete={props.removeProps.onClick}
             deleteIcon={<CancelIcon {...props.removeProps} />}
         />
     );
 }
 
+const MenuSlot = styled(Paper, {
+    name: "CometAdminSelect",
+    slot: "paper",
+    overridesResolver(_, styles) {
+        return [styles.paper];
+    },
+})();
+
 function Menu<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: MenuProps<OptionType, IsMulti>) {
-    return <PaperSlot {...props.innerProps}>{props.children}</PaperSlot>;
+    return <MenuSlot {...props.innerProps}>{props.children}</MenuSlot>;
 }
+
+const IndicatorsContainerSlot = styled("div", {
+    name: "CometAdminSelect",
+    slot: "indicatorsContainer",
+    overridesResolver(_, styles) {
+        return [styles.indicatorsContainer];
+    },
+})(css`
+    display: flex;
+`);
 
 function IndicatorsContainer<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: IndicatorContainerProps<OptionType, IsMulti>) {
     return <IndicatorsContainerSlot>{props.children}</IndicatorsContainerSlot>;
 }
 
-//TODO check if slots are applied correctly
+const IndicatorSeparatorSlot = styled("span", {
+    name: "CometAdminSelect",
+    slot: "indicatorSeparator",
+    overridesResolver(_, styles) {
+        return [styles.indicatorSeparator];
+    },
+})(
+    ({ theme }) => css`
+        width: 1px;
+        flex-grow: 1;
+        background-color: ${theme.palette.divider};
+    `,
+);
+
 function IndicatorSeparator<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: IndicatorContainerProps<OptionType, IsMulti>) {
     return <IndicatorSeparatorSlot />;
 }
+
+const ClearIndicatorSlot = styled("div", {
+    name: "CometAdminSelect",
+    slot: "clearIndicator",
+    overridesResolver(_, styles) {
+        return [styles.indicator, styles.clearIndicator];
+    },
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: ${theme.palette.grey[500]};
+        width: 32px;
+        cursor: pointer;
+        font-size: 18px;
+    `,
+);
 
 function ClearIndicator<OptionType extends OptionTypeBase, IsMulti extends boolean>({
     selectProps,
@@ -124,6 +281,24 @@ function ClearIndicator<OptionType extends OptionTypeBase, IsMulti extends boole
         </ClearIndicatorSlot>
     );
 }
+
+const DropdownIndicatorSlot = styled("div", {
+    name: "CometAdminSelect",
+    slot: "dropdownIndicator",
+    overridesResolver(_, styles) {
+        return [styles.indicator, styles.dropdownIndicator];
+    },
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: ${theme.palette.grey[500]};
+        width: 32px;
+        cursor: pointer;
+        font-size: 20px;
+    `,
+);
 
 function DropdownIndicator<OptionType extends OptionTypeBase, IsMulti extends boolean>({ selectProps }: IndicatorProps<OptionType, IsMulti>) {
     const DefaultIcon = selectProps.dropdownIcon ? selectProps.dropdownIcon : DropdownIcon;
@@ -152,56 +327,53 @@ const components = {
     DropdownIndicator,
 };
 
-export interface SelectProps<OptionType extends OptionTypeBase> {
-    theme: Theme;
-    selectComponent: React.ComponentType<ReactSelectProps<OptionType>>;
+export interface SelectProps<OptionType extends OptionTypeBase, IsMulti extends boolean = false> {
+    selectComponent: React.ComponentType<ReactSelectProps<OptionType, IsMulti>>;
     clearIcon?: SvgIconComponent;
     dropdownIcon?: SvgIconComponent;
     dropdownIconOpen?: SvgIconComponent;
 }
 
-function SelectWrapper<OptionType extends OptionTypeBase>({
-    theme,
+function SelectWrapper<OptionType extends OptionTypeBase, IsMulti extends boolean = false>({
     components: origComponents,
     selectComponent: SelectComponent,
     ...rest
-}: SelectProps<OptionType> & ReactSelectProps<OptionType>) {
-    return <SelectComponent menuPortalTarget={document.body} components={{ ...components, ...origComponents }} placeholder="" {...rest} />;
-}
-
-const useReactSelectStyles = () => {
+}: SelectProps<OptionType, IsMulti> & ReactSelectProps<OptionType, IsMulti>) {
     const { zIndex } = useTheme();
-    return {
-        menuPortal: (styles: any) => ({ ...styles, zIndex: zIndex.modal }),
-    };
-};
+
+    return (
+        <SelectComponent
+            menuPortalTarget={document.body}
+            components={{ ...components, ...origComponents }}
+            placeholder=""
+            styles={{
+                menuPortal: (styles) => ({ ...styles, zIndex: zIndex.modal }),
+            }}
+            {...rest}
+        />
+    );
+}
 
 export function ReactSelect<OptionType extends OptionTypeBase>(props: ReactSelectProps<OptionType>) {
-    const reactSelectStyles = useReactSelectStyles();
-    // @ts-expect-error TODO
-    return <SelectWrapper selectComponent={Select} {...props} styles={{ ...reactSelectStyles }} />;
+    return <SelectWrapper selectComponent={Select} {...props} />;
 }
 
-export function ReactSelectAsync<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: ReactSelectAsyncProps<OptionType, IsMulti>) {
-    const reactSelectStyles = useReactSelectStyles();
-    // @ts-expect-error TODO
-    return <SelectWrapper selectComponent={AsyncSelect} {...props} styles={{ ...reactSelectStyles }} />;
+export function ReactSelectAsync<OptionType extends OptionTypeBase, IsMulti extends boolean = false>(
+    props: ReactSelectAsyncProps<OptionType, IsMulti>,
+) {
+    return <SelectWrapper selectComponent={AsyncSelect} {...props} />;
 }
 
 export function ReactSelectCreatable<OptionType extends OptionTypeBase, IsMulti extends boolean>(
     props: ReactSelectCreatableProps<OptionType, IsMulti>,
 ) {
-    const reactSelectStyles = useReactSelectStyles();
-    // @ts-expect-error TODO
-    return <SelectWrapper selectComponent={CreatableSelect} {...props} styles={{ ...reactSelectStyles }} />;
+    return <SelectWrapper selectComponent={CreatableSelect} {...props} />;
 }
 
 export function ReactSelectAsyncCreatable<OptionType extends OptionTypeBase, IsMulti extends boolean>(
     props: ReactSelectCreatableProps<OptionType, IsMulti> & ReactSelectAsyncProps<OptionType, IsMulti>,
 ) {
-    const reactSelectStyles = useReactSelectStyles();
-    // @ts-expect-error TODO
-    return <SelectWrapper selectComponent={AsyncCreatableSelect} {...props} styles={{ ...reactSelectStyles }} />;
+    return <SelectWrapper selectComponent={AsyncCreatableSelect} {...props} />;
 }
 
 declare module "@mui/material/styles" {
