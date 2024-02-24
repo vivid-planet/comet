@@ -1,3 +1,5 @@
+import helmet from "helmet";
+
 if (process.env.TRACING_ENABLED) {
     require("./tracing");
 }
@@ -39,6 +41,11 @@ async function bootstrap(): Promise<void> {
         }),
     );
 
+    app.use(
+        helmet({
+            contentSecurityPolicy: false, // configure this when API returns HTML
+        }),
+    );
     app.use(json({ limit: "1mb" })); // increase default limit of 100kb for saving large pages
     app.use(compression());
     app.use(cookieParser());
