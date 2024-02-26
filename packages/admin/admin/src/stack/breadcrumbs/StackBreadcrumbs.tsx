@@ -3,9 +3,10 @@ import { ComponentsOverrides, Theme, useTheme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
+import { useObservedWidth } from "../../utils/useObservedWidth";
 import { useStackApi } from "../Api";
 import { StackBreadcrumbsClassKey, styles } from "./StackBreadcrumbs.styles";
-import { getElementOuterWidth, useItemsToRender, useObservedWidth } from "./utils";
+import { getElementOuterWidth, useItemsToRender } from "./utils";
 
 export interface StackBreadcrumbsProps {
     separator?: React.ReactNode;
