@@ -43,7 +43,14 @@ async function bootstrap(): Promise<void> {
 
     app.use(
         helmet({
-            contentSecurityPolicy: false, // configure this when API returns HTML
+            contentSecurityPolicy: {
+                useDefaults: false,
+                directives: {
+                    "default-src": helmet.contentSecurityPolicy.dangerouslyDisableDefaultSrc,
+                    // locally: allow localhost in frame-ancestors to enable including files from the API in iframes in admin
+                    "frame-ancestors": `'self' ${process.env.NODE_ENV === "development" ? "http://localhost:*" : ""}`,
+                },
+            },
         }),
     );
     app.use(json({ limit: "1mb" })); // increase default limit of 100kb for saving large pages
