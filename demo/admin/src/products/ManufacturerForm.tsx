@@ -79,36 +79,40 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
                       ...filter<GQLManufacturerFormDetailsFragment>(manufacturerFormFragment, data.manufacturer),
                       address: data.manufacturer.address
                           ? {
+                                // ...data.manufacturer.address,
                                 street: data.manufacturer.address.street,
+                                country: data.manufacturer.address.country,
                                 streetNumber: data.manufacturer.address.streetNumber ? String(data.manufacturer.address.streetNumber) : null,
                                 zip: String(data.manufacturer.address.zip),
-                                country: data.manufacturer.address.country,
                                 alternativeAddress: data.manufacturer.address.alternativeAddress
                                     ? {
+                                          // ...data.manufacturer.address.alternativeAddress,
                                           street: data.manufacturer.address.alternativeAddress.street,
+                                          country: data.manufacturer.address.alternativeAddress.country,
                                           streetNumber: data.manufacturer.address.alternativeAddress.streetNumber
                                               ? String(data.manufacturer.address.alternativeAddress.streetNumber)
                                               : null,
                                           zip: String(data.manufacturer.address.alternativeAddress.zip),
-                                          country: data.manufacturer.address.alternativeAddress.country,
                                       }
                                     : undefined,
                             }
                           : undefined,
                       addressAsEmbeddable: {
+                          // ...data.manufacturer.addressAsEmbeddable,
                           street: data.manufacturer.addressAsEmbeddable.street,
+                          country: data.manufacturer.addressAsEmbeddable.country,
                           streetNumber: data.manufacturer.addressAsEmbeddable.streetNumber
                               ? String(data.manufacturer.addressAsEmbeddable.streetNumber)
                               : null,
                           zip: String(data.manufacturer.addressAsEmbeddable.zip),
-                          country: data.manufacturer.addressAsEmbeddable.country,
                           alternativeAddress: {
+                              // ...data.manufacturer.addressAsEmbeddable.alternativeAddress,
                               street: data.manufacturer.addressAsEmbeddable.alternativeAddress.street,
+                              country: data.manufacturer.addressAsEmbeddable.alternativeAddress.country,
                               streetNumber: data.manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber
                                   ? String(data.manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber)
                                   : null,
                               zip: String(data.manufacturer.addressAsEmbeddable.alternativeAddress.zip),
-                              country: data.manufacturer.addressAsEmbeddable.alternativeAddress.country,
                           },
                       },
                   }
@@ -132,31 +136,27 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
         const output = {
             ...formValues,
             address: {
-                street: formValues.address.street,
+                ...formValues.address,
                 streetNumber: formValues.address.streetNumber ? parseFloat(formValues.address.streetNumber) : null,
                 zip: parseFloat(formValues.address.zip),
-                country: formValues.address.country,
                 alternativeAddress: {
-                    street: formValues.address.alternativeAddress.street,
+                    ...formValues.address.alternativeAddress,
                     streetNumber: formValues.address.alternativeAddress.streetNumber
                         ? parseFloat(formValues.address.alternativeAddress.streetNumber)
                         : null,
                     zip: parseFloat(formValues.address.alternativeAddress.zip),
-                    country: formValues.address.alternativeAddress.country,
                 },
             },
             addressAsEmbeddable: {
-                street: formValues.address.street,
-                streetNumber: formValues.address.streetNumber ? parseFloat(formValues.address.streetNumber) : null,
-                zip: parseFloat(formValues.address.zip),
-                country: formValues.address.country,
+                ...formValues.addressAsEmbeddable,
+                streetNumber: formValues.addressAsEmbeddable.streetNumber ? parseFloat(formValues.addressAsEmbeddable.streetNumber) : null,
+                zip: parseFloat(formValues.addressAsEmbeddable.zip),
                 alternativeAddress: {
-                    street: formValues.address.alternativeAddress.street,
-                    streetNumber: formValues.address.alternativeAddress.streetNumber
-                        ? parseFloat(formValues.address.alternativeAddress.streetNumber)
+                    ...formValues.addressAsEmbeddable.alternativeAddress,
+                    streetNumber: formValues.addressAsEmbeddable.alternativeAddress.streetNumber
+                        ? parseFloat(formValues.addressAsEmbeddable.alternativeAddress.streetNumber)
                         : null,
-                    zip: parseFloat(formValues.address.alternativeAddress.zip),
-                    country: formValues.address.alternativeAddress.country,
+                    zip: parseFloat(formValues.addressAsEmbeddable.alternativeAddress.zip),
                 },
             },
         };
