@@ -1,9 +1,9 @@
 import { V1CronJob } from "@kubernetes/client-node";
 import { Inject, Injectable } from "@nestjs/common";
 
-import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
+import { CurrentUser } from "../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
 import { BUILDER_LABEL } from "./builds.constants";
@@ -15,7 +15,7 @@ export class BuildTemplatesService {
         @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
     ) {}
 
-    async getAllowedBuilderCronJobs(user: CurrentUserInterface): Promise<V1CronJob[]> {
+    async getAllowedBuilderCronJobs(user: CurrentUser): Promise<V1CronJob[]> {
         return (await this.getAllBuilderCronJobs()).filter((cronJob) => {
             return this.accessControlService.isAllowed(user, "builds", this.kubernetesService.getContentScope(cronJob) ?? {});
         });
