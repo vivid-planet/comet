@@ -3,6 +3,7 @@ export { BlocksBlock } from "./blocks/factories/BlocksBlock";
 export { ListBlock } from "./blocks/factories/ListBlock";
 export { OneOfBlock } from "./blocks/factories/OneOfBlock";
 export { OptionalBlock } from "./blocks/factories/OptionalBlock";
+export { SeoBlock } from "./blocks/factories/SeoBlock";
 export type { SupportedBlocks } from "./blocks/factories/types";
 export { InternalLinkBlock } from "./blocks/InternalLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
