@@ -44,26 +44,12 @@ async function getValidatedScope(req: NextApiRequest, res: NextApiResponse, grap
     const scope = JSON.parse(req.query.scope as string);
     if (!scope) throw new Error("Scope is missing");
 
-    let isAllowed = false;
     graphQLClient.setHeader("authorization", req.headers["authorization"] || "");
-    try {
-        const { isAllowedSitePreview } = await graphQLClient.request(
-            "query isAllowedSitePreview($scope: JSONObject!) { isAllowedSitePreview(scope: $scope) }",
-            { scope },
-        );
-        if (isAllowedSitePreview) isAllowed = true;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-        const hasUnauthenticatedRespone =
-            Array.isArray(error?.response?.errors) &&
-            error.response.errors.some(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (e: any) => e.extensions?.code === "FORBIDDEN",
-            );
-        if (!hasUnauthenticatedRespone) throw error;
-    }
-
-    if (!isAllowed) {
+    const { isAllowedSitePreview } = await graphQLClient.request(
+        "query isAllowedSitePreview($scope: JSONObject!) { isAllowedSitePreview(scope: $scope) }",
+        { scope },
+    );
+    if (!isAllowedSitePreview) {
         res.status(403).end("Preview is not allowed");
     }
 

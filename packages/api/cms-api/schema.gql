@@ -355,7 +355,7 @@ type Query {
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
   currentUser: CurrentUser!
-  isAllowedSitePreview: Boolean!
+  isAllowedSitePreview(scope: JSONObject!): Boolean!
   userPermissionsUserById(id: String!): User!
   userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
