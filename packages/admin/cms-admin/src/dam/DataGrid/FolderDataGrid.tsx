@@ -19,6 +19,7 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { GQLDamItemType } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
+import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
@@ -30,8 +31,10 @@ import DamContextMenu from "./DamContextMenu";
 import { useDamFileUpload } from "./fileUpload/useDamFileUpload";
 import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
 import {
+    GQLDamFileTableFragment,
     GQLDamFolderQuery,
     GQLDamFolderQueryVariables,
+    GQLDamFolderTableFragment,
     GQLDamItemListPositionQuery,
     GQLDamItemListPositionQueryVariables,
     GQLDamItemsListQuery,
@@ -84,6 +87,7 @@ const FolderDataGrid = ({
     const damSelectionActionsApi = useDamSelectionApi();
     const scope = useDamScope();
     const snackbarApi = useSnackbarApi();
+    const { importSourceTypeLabels } = useDamConfig();
 
     const [redirectedToId, setRedirectedToId] = useStoredState<string | null>("FolderDataGrid-redirectedToId", null, window.sessionStorage);
 
@@ -338,7 +342,7 @@ const FolderDataGrid = ({
         return "";
     };
 
-    const dataGridColumns: GridColumns = [
+    const dataGridColumns: GridColumns<GQLDamFileTableFragment | GQLDamFolderTableFragment> = [
         {
             field: "name",
             headerName: intl.formatMessage({
@@ -368,6 +372,26 @@ const FolderDataGrid = ({
                     />
                 );
             },
+            sortable: false,
+            hideSortIcons: true,
+            disableColumnMenu: true,
+        },
+        {
+            field: "importSourceType",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.importSourceType",
+                defaultMessage: "Source",
+            }),
+            renderCell: ({ row }) => {
+                if (row.__typename === "DamFile") {
+                    if (row.importSourceType) {
+                        return importSourceTypeLabels?.[row.importSourceType];
+                    } else {
+                        return <FormattedMessage id="comet.dam.file.importSourceType.cmsAsset" defaultMessage="CMS Asset" />;
+                    }
+                }
+            },
+            // TODO enable sorting/filtering in API
             sortable: false,
             hideSortIcons: true,
             disableColumnMenu: true,
@@ -463,6 +487,7 @@ const FolderDataGrid = ({
                     selectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
                     onSelectionModelChange={handleSelectionModelChange}
                     autoHeight={true}
+                    initialState={{ columns: { columnVisibilityModel: { importSourceType: importSourceTypeLabels !== undefined } } }}
                 />
             </sc.FolderOuterHoverHighlight>
             <DamSelectionFooter open={damSelectionActionsApi.selectionMap.size > 0} />
