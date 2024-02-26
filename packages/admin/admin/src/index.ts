@@ -200,6 +200,8 @@ export { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQu
 export { RouterTab, RouterTabs, RouterTabsClassKey } from "./tabs/RouterTabs";
 export { Tab, Tabs, TabsClassKey, TabsProps } from "./tabs/Tabs";
 export { TabScrollButton, TabScrollButtonClassKey, TabScrollButtonProps } from "./tabs/TabScrollButton";
+export { ContentTranslationServiceProvider } from "./translator/ContentTranslationServiceProvider";
+export { useContentTranslationService } from "./translator/useContentTranslationService";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
 import emotionStyled from "@emotion/styled";
