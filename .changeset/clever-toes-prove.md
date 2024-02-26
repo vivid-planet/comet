@@ -3,4 +3,4 @@
 "@comet/cms-api": patch
 ---
 
-Improve performance of CurrentUser when handling a lot of Content-Scopes
+Improve performance of `currentUser` query when handling a lot of content scopes
