@@ -3,6 +3,7 @@ import { ComponentsOverrides, css, styled } from "@mui/material/styles";
 import * as React from "react";
 
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { useObservedWidth } from "../utils/useObservedWidth";
 
 export type FieldContainerProps = ThemedComponentBaseProps<{
     root: typeof FormControl;
@@ -46,6 +47,7 @@ export type FieldContainerClassKey =
 type OwnerState = Pick<FieldContainerProps, "fullWidth" | "disabled" | "required" | "fieldMargin" | "variant"> & {
     hasError: boolean;
     hasWarning: boolean;
+    forceVertical: boolean;
 };
 
 export const Root = styled(FormControl, {
@@ -82,10 +84,13 @@ export const Root = styled(FormControl, {
         }
 
         ${ownerState.variant === "horizontal" &&
+        !ownerState.forceVertical &&
         css`
+            container-type: inline-size;
             display: flex;
             flex-direction: row;
             align-items: center;
+            max-width: 944px;
         `}
 
         ${ownerState.fieldMargin === "onlyIfNotLast" &&
@@ -125,8 +130,9 @@ const Label = styled(FormLabel, {
 })<{ ownerState: OwnerState }>(
     ({ theme, ownerState }) => css`
         ${ownerState.variant === "horizontal" &&
+        !ownerState.forceVertical &&
         css`
-            width: 220px;
+            width: calc(100% / 3);
             flex-shrink: 0;
             flex-grow: 0;
             margin-bottom: 0;
@@ -163,6 +169,7 @@ const InputContainer = styled("div", {
     ({ ownerState }) => css`
         ${ownerState.variant === "horizontal" &&
         ownerState.fullWidth &&
+        !ownerState.forceVertical &&
         css`
             flex-grow: 1;
         `}
@@ -223,6 +230,8 @@ export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerPr
     const hasWarning = !hasError && !!warning;
 
     const ref = React.useRef<HTMLDivElement>(null);
+    const rootWidth = useObservedWidth(ref);
+    const forceVertical = rootWidth <= 600;
 
     React.useEffect(() => {
         if (scrollTo) {
@@ -238,6 +247,7 @@ export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerPr
         variant,
         hasError,
         hasWarning,
+        forceVertical,
     };
 
     return (
