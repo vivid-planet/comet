@@ -68,10 +68,10 @@ export class AlternativeAddressAsEmbeddable {
 @ObjectType()
 @InputType("AddressAsEmbeddableInput")
 export class AddressAsEmbeddable extends AlternativeAddressAsEmbeddable {
-    @Embedded(() => AlternativeAddressAsEmbeddable, { nullable: true })
-    @Field(() => AlternativeAddressAsEmbeddable, { nullable: true })
+    @Embedded(() => AlternativeAddressAsEmbeddable)
+    @Field(() => AlternativeAddressAsEmbeddable)
     @IsObject()
-    alternativeAddress?: AlternativeAddressAsEmbeddable = undefined;
+    alternativeAddress: AlternativeAddressAsEmbeddable;
 }
 
 @Entity()
@@ -88,9 +88,9 @@ export class Manufacturer extends BaseEntity<Manufacturer, "id"> {
     @Field(() => Address, { nullable: true })
     address?: Address = undefined;
 
-    @Embedded(() => AddressAsEmbeddable, { nullable: true })
-    @Field(() => AddressAsEmbeddable, { nullable: true })
-    addressAsEmbeddable?: AddressAsEmbeddable = undefined;
+    @Embedded(() => AddressAsEmbeddable) // Embedded can only be optional if all contained properties are optional
+    @Field(() => AddressAsEmbeddable)
+    addressAsEmbeddable: AddressAsEmbeddable;
 
     @Property({ onUpdate: () => new Date() })
     @Field()

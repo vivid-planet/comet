@@ -436,13 +436,13 @@ type AddressAsEmbeddable {
   streetNumber: Float
   zip: Float!
   country: String!
-  alternativeAddress: AlternativeAddressAsEmbeddable
+  alternativeAddress: AlternativeAddressAsEmbeddable!
 }
 
 type Manufacturer {
   id: ID!
   address: Address
-  addressAsEmbeddable: AddressAsEmbeddable
+  addressAsEmbeddable: AddressAsEmbeddable!
   updatedAt: DateTime!
 }
 
@@ -655,7 +655,7 @@ input AddressAsEmbeddableInput {
   streetNumber: Float
   zip: Float!
   country: String!
-  alternativeAddress: AlternativeAddressAsEmbeddableInput
+  alternativeAddress: AlternativeAddressAsEmbeddableInput!
 }
 
 input ProductDiscountsInput {
@@ -1329,7 +1329,7 @@ input ProductTagUpdateInput {
 
 input ManufacturerInput {
   address: AddressInput
-  addressAsEmbeddable: AddressAsEmbeddableInput
+  addressAsEmbeddable: AddressAsEmbeddableInput!
 }
 
 input ManufacturerUpdateInput {
