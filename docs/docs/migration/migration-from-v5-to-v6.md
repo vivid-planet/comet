@@ -75,31 +75,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
     It is not possible anymore to use a custom CurrentUserLoader neither to augment/use the CurrentUserInterface.
 
-3. Create interface for `availablePermissions` similar to the already existing interface `interface ContentScope`
-
-    ```ts
-    declare module "@comet/cms-api" {
-        interface Permission {
-            // e.g. `products: string;`
-        }
-    }
-    export {};
-    ```
-
-4. Create necessary services for the `UserPermissionsModule` (either in a new module or where it fits best)
-
-    ```ts
-    // Attention: might already being provided by the library which syncs the users
-    @Injectable()
-    export class UserService implements UserPermissionsUserServiceInterface {
-        getUser(id: string): User {
-            ...
-        }
-        findUsers(args: FindUsersArgs): Users {
-            ...
-        }
-    }
-    ```
+3. Create the `AccessControlService` for the `UserPermissionsModule` (either in a new module or where it fits best)
 
     ```ts
     @Injectable()
@@ -113,7 +89,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     }
     ```
 
-5. Replace `ContentScopeModule` with `UserPermissionsModule`
+4. Replace `ContentScopeModule` with `UserPermissionsModule`
 
     Remove `ContentScopeModule`:
 
@@ -127,18 +103,16 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
     ```ts
     UserPermissionsModule.forRootAsync({
-        useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
-            availablePermissions: [/* Array of strings defined in interface Permission */],
+        useFactory: (accessControlService: AccessControlService) => ({
             availableContentScopes: [/* Array of content Scopes */],
-            userService,
             accessControlService,
         }),
-        inject: [UserService, AccessControlService],
+        inject: [AccessControlService],
         imports: [/* Modules which provide the services injected in useFactory */],
     }),
     ```
 
-6. Adapt decorators
+5. Adapt decorators
 
     Add `@RequiredPermission` to resolvers and controllers
 
@@ -151,6 +125,39 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
     ```diff
     - @AllowForRole(...)
+    ```
+
+6. Optional: Add the `UserService` (required for Administration Panel, see Admin)
+
+    Create a `UserService`:
+
+    ```ts
+    // Attention: might already being provided by the library which syncs the users
+    @Injectable()
+    export class UserService implements UserPermissionsUserServiceInterface {
+        getUser(id: string): User {
+        ...
+        }
+        findUsers(args: FindUsersArgs): Users {
+        ...
+        }
+    }
+    ```
+
+    Add it to the `UserPermissionsModule`:
+
+    ```diff
+      UserPermissionsModule.forRootAsync({
+    +     useFactory: (accessControlService: AccessControlService, userService: UserService) => ({
+    -     useFactory: (accessControlService: AccessControlService) => ({
+              availableContentScopes: [/* Array of content Scopes */],
+    +         userService,
+              accessControlService,
+          }),
+    +     inject: [AccessControlService, UserService],
+    -     inject: [AccessControlService],
+          imports: [/* Modules which provide the services injected in useFactory */],
+      }),
     ```
 
 ## Admin
@@ -184,7 +191,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     + const allowedUserDomains = user.allowedContentScopes.map((contentScope) => contentScope.domain);
     ```
 
-3. Add the `UserPermissionsPage`
+3. Optional: Add the Adminstration Panel
 
     ```tsx
     <MenuItemRouterLink

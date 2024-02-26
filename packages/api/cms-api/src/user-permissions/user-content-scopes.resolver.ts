@@ -41,7 +41,7 @@ export class UserContentScopesResolver {
         @Args("userId", { type: () => String }) userId: string,
         @Args("skipManual", { type: () => Boolean, nullable: true }) skipManual = false,
     ): Promise<ContentScope[]> {
-        const contentScopes = await this.userService.getContentScopes(userId, !skipManual);
+        const contentScopes = await this.userService.getContentScopes(await this.userService.getUser(userId), !skipManual);
         const availableContentScopes = await this.userService.getAvailableContentScopes();
         if (contentScopes === UserPermissions.allContentScopes) return availableContentScopes;
         return this.userService.normalizeContentScopes(contentScopes, availableContentScopes);

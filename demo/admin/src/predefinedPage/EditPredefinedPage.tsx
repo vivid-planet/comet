@@ -1,12 +1,11 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import {
-    Field,
     FinalForm,
-    FinalFormSelect,
     Loading,
     MainContent,
     messages,
     SaveButton,
+    SelectField,
     SplitButton,
     Toolbar,
     ToolbarFillSpace,
@@ -118,17 +117,13 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
                             </ToolbarItem>
                         </Toolbar>
                         <MainContent>
-                            <Field label={<FormattedMessage id="structuredContent.type" defaultMessage="Type" />} name="type" fullWidth>
-                                {(props) => (
-                                    <FinalFormSelect {...props}>
-                                        {predefinedPageOptions.map((item, index) => (
-                                            <MenuItem value={item.value} key={index}>
-                                                {item.name}
-                                            </MenuItem>
-                                        ))}
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
+                            <SelectField label={<FormattedMessage id="structuredContent.type" defaultMessage="Type" />} name="type" fullWidth>
+                                {predefinedPageOptions.map((item, index) => (
+                                    <MenuItem value={item.value} key={index}>
+                                        {item.name}
+                                    </MenuItem>
+                                ))}
+                            </SelectField>
                         </MainContent>
                     </EditPageLayout>
                 );

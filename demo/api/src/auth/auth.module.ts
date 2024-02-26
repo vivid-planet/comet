@@ -9,7 +9,7 @@ import { UserService } from "./user.service";
 @Module({
     providers: [
         createStaticAuthedUserStrategy({
-            staticAuthedUser: staticUsers[0].id,
+            staticAuthedUser: staticUsers[0],
         }),
         createAuthResolver({}),
         {
