@@ -105,12 +105,14 @@ const BuildStatusPopperContent: React.FunctionComponent<{ data: GQLBuildStatusQu
 
 export function BuildEntry(): React.ReactElement {
     const { data, error, refetch, startPolling, stopPolling } = useQuery<GQLBuildStatusQuery>(buildStatusQuery, {
+        skip: process.env.NODE_ENV === "development",
         fetchPolicy: "network-only",
         context: LocalErrorScopeApolloContext,
     });
 
     useFocusAwarePolling({
-        pollInterval: 10000,
+        pollInterval: process.env.NODE_ENV === "production" ? 10000 : undefined,
+        skip: process.env.NODE_ENV === "development",
         refetch,
         startPolling,
         stopPolling,
