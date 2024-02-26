@@ -1,5 +1,29 @@
 # @comet/cms-site
 
+## 6.2.0
+
+### Minor Changes
+
+-   34bb33fe: Add `SeoBlock`
+
+    Can be used as a drop-in replacement for `SeoBlock` defined in application code. Add a `resolveOpenGraphImageUrlTemplate` to resolve the correct image URL template when using a custom Open Graph image block.
+
+    **Example Default Use Case:**
+
+    ```tsx
+    <SeoBlock data={exampleData} title={"Some Example Title"} />
+    ```
+
+    **Example Custom Use Case:**
+
+    ```tsx
+    <SeoBlock<SomeCustomImageBlockType>
+        data={exampleData}
+        title={"Some Example Title"}
+        resolveOpenGraphImageUrlTemplate={(block) => block.some.path.to.urlTemplate}
+    />
+    ```
+
 ## 6.1.0
 
 ## 6.0.0
