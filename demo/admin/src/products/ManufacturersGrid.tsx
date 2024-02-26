@@ -23,7 +23,6 @@ import {
     GQLCreateManufacturerMutationVariables,
     GQLDeleteManufacturerMutation,
     GQLDeleteManufacturerMutationVariables,
-    GQLManufacturersListManualFragment,
     GQLManufacturersListQuery,
     GQLManufacturersListQueryVariables,
 } from "@src/products/ManufacturersGrid.generated";
@@ -52,17 +51,17 @@ function ManufacturersGridToolbar() {
     );
 }
 
+type GridValues = GQLManufacturersListQuery["manufacturers"]["nodes"][0];
+
 function ManufacturersGrid() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ManufacturersGrid") };
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
     const intl = useIntl();
 
-    const columns: GridColDef<GQLManufacturersListManualFragment>[] = [
+    const columns: GridColDef<GridValues>[] = [
         {
             field: "id",
-            headerName: "IDxx",
-            // headerName: intl.formatMessage({ id: "manufacturers.id", defaultMessage: "ID" }),
             width: 150,
             renderHeader: () => (
                 <div style={{ display: "flex", alignItems: "center" }}>
@@ -100,7 +99,7 @@ function ManufacturersGrid() {
             field: "address.alternativeAddress.streetNumber",
             headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressStreetNumber", defaultMessage: "alt. Street number" }),
             type: "number",
-            valueGetter: ({ row }) => row.address?.streetNumber,
+            valueGetter: ({ row }) => row.address?.alternativeAddress?.streetNumber,
         },
         {
             // TODO: addressAsEmbeddable is always null, even when
@@ -141,7 +140,7 @@ function ManufacturersGrid() {
                                 await client.mutate<GQLCreateManufacturerMutation, GQLCreateManufacturerMutationVariables>({
                                     mutation: createManufacturerMutation,
                                     variables: {
-                                        input,
+                                        input: filter(manufacturersFragment, input),
                                     },
                                 });
                             }}
@@ -153,7 +152,7 @@ function ManufacturersGrid() {
                             }}
                             refetchQueries={["ManufacturersList"]}
                             copyData={() => {
-                                return filter<GQLManufacturersListManualFragment>(manufacturersFragment, params.row);
+                                return params.row;
                             }}
                         />
                     </>
@@ -193,7 +192,6 @@ function ManufacturersGrid() {
 
 const manufacturersFragment = gql`
     fragment ManufacturersListManual on Manufacturer {
-        id
         address {
             street
             streetNumber
