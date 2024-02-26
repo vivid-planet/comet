@@ -1,7 +1,8 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, NotFoundException, Type } from "@nestjs/common";
-import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, Context, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { IncomingMessage } from "http";
 import { basename, extname } from "path";
 
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
@@ -256,8 +257,8 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @ResolveField(() => String)
-        async fileUrl(@Parent() file: FileInterface): Promise<string> {
-            return this.filesService.createFileUrl(file);
+        async fileUrl(@Parent() file: FileInterface, @Context("req") req: IncomingMessage): Promise<string> {
+            return this.filesService.createFileUrl(file, Boolean(req.headers["x-preview-dam-urls"]));
         }
 
         @ResolveField(() => [File])
