@@ -12,7 +12,7 @@ interface AuthResolverConfig {
     postLogoutRedirectUri?: string;
 }
 
-export function createAuthResolver(config: AuthResolverConfig): Type<unknown> {
+export function createAuthResolver(config?: AuthResolverConfig): Type<unknown> {
     @Resolver()
     @PublicApi()
     class AuthResolver {

@@ -69,7 +69,7 @@ async function generateSchema(): Promise<void> {
     }); // no scope
     const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
 
-    const AuthResolver = createAuthResolver({});
+    const AuthResolver = createAuthResolver();
     const RedirectsDependenciesResolver = DependenciesResolverFactory.create(RedirectEntity);
 
     const Folder = createFolderEntity();
