@@ -1,0 +1,251 @@
+import { useApolloClient, useQuery } from "@apollo/client";
+import {
+    CrudContextMenu,
+    GridFilterButton,
+    MainContent,
+    muiGridFilterToGql,
+    muiGridSortToGql,
+    StackLink,
+    Toolbar,
+    ToolbarAutomaticTitleItem,
+    ToolbarFillSpace,
+    ToolbarItem,
+    Tooltip,
+    useBufferedRowCount,
+    useDataGridRemote,
+    usePersistentColumnState,
+} from "@comet/admin";
+import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
+import { Button, IconButton, Typography } from "@mui/material";
+import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import {
+    GQLCreateManufacturerMutation,
+    GQLCreateManufacturerMutationVariables,
+    GQLDeleteManufacturerMutation,
+    GQLDeleteManufacturerMutationVariables,
+    GQLManufacturersListManualFragment,
+    GQLManufacturersListQuery,
+    GQLManufacturersListQueryVariables,
+} from "@src/products/ManufacturersGrid.generated";
+import { filter } from "graphql-anywhere";
+import gql from "graphql-tag";
+import * as React from "react";
+import { FormattedMessage, useIntl } from "react-intl";
+
+function ManufacturersGridToolbar() {
+    return (
+        <Toolbar>
+            <ToolbarAutomaticTitleItem />
+            <ToolbarItem>
+                <GridToolbarQuickFilter />
+            </ToolbarItem>
+            <ToolbarFillSpace />
+            <ToolbarItem>
+                <GridFilterButton />
+            </ToolbarItem>
+            <ToolbarItem>
+                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                    <FormattedMessage id="manufacturers.newManufacturer" defaultMessage="New Manufacturer" />
+                </Button>
+            </ToolbarItem>
+        </Toolbar>
+    );
+}
+
+function ManufacturersGrid() {
+    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ManufacturersGrid") };
+    const sortModel = dataGridProps.sortModel;
+    const client = useApolloClient();
+    const intl = useIntl();
+
+    const columns: GridColDef<GQLManufacturersListManualFragment>[] = [
+        {
+            field: "id",
+            headerName: "IDxx",
+            // headerName: intl.formatMessage({ id: "manufacturers.id", defaultMessage: "ID" }),
+            width: 150,
+            renderHeader: () => (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                    <Typography fontWeight={400} fontSize={14}>
+                        {intl.formatMessage({ id: "manufacturers.id", defaultMessage: "ID" })}
+                    </Typography>
+                    <Tooltip
+                        trigger="click"
+                        title={<FormattedMessage id="comet.manufacturers.id.info" defaultMessage="The id of the manufacturer" />}
+                    >
+                        <IconButton>
+                            <Info />
+                        </IconButton>
+                    </Tooltip>
+                </div>
+            ),
+        },
+        {
+            field: "address.street",
+            headerName: intl.formatMessage({ id: "manufacturers.street", defaultMessage: "Street" }),
+            valueGetter: ({ row }) => row.address?.street,
+        },
+        {
+            field: "address.streetNumber",
+            headerName: intl.formatMessage({ id: "manufacturers.streetNumber", defaultMessage: "Street number" }),
+            type: "number",
+            valueGetter: ({ row }) => row.address?.streetNumber,
+        },
+        {
+            field: "address.alternativeAddress.street",
+            headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressStreet", defaultMessage: "alt. Street" }),
+            valueGetter: ({ row }) => row.address?.alternativeAddress?.street,
+        },
+        {
+            field: "address.alternativeAddress.streetNumber",
+            headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressStreetNumber", defaultMessage: "alt. Street number" }),
+            type: "number",
+            valueGetter: ({ row }) => row.address?.streetNumber,
+        },
+        {
+            // TODO: addressAsEmbeddable is always null, even when
+            field: "addressAsEmbeddable.street",
+            headerName: intl.formatMessage({ id: "manufacturers.street2", defaultMessage: "Street2" }),
+            valueGetter: ({ row }) => row.addressAsEmbeddable?.street,
+        },
+        {
+            field: "addressAsEmbeddable.streetNumber",
+            headerName: intl.formatMessage({ id: "manufacturers.streetNumber2", defaultMessage: "Street number2" }),
+            type: "number",
+            valueGetter: ({ row }) => row.addressAsEmbeddable?.streetNumber,
+        },
+        {
+            field: "addressAsEmbeddable.alternativeAddress.street",
+            headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressStreet2", defaultMessage: "alt. Street2" }),
+            valueGetter: ({ row }) => row.addressAsEmbeddable?.alternativeAddress?.street,
+        },
+        {
+            field: "addressAsEmbeddable.alternativeAddress.streetNumber",
+            headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressStreetNumber2", defaultMessage: "alt. Street number2" }),
+            type: "number",
+            valueGetter: ({ row }) => row.addressAsEmbeddable?.alternativeAddress?.streetNumber,
+        },
+        {
+            field: "action",
+            headerName: "",
+            sortable: false,
+            filterable: false,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
+                            <Edit color="primary" />
+                        </IconButton>
+                        <CrudContextMenu
+                            onPaste={async ({ input }) => {
+                                await client.mutate<GQLCreateManufacturerMutation, GQLCreateManufacturerMutationVariables>({
+                                    mutation: createManufacturerMutation,
+                                    variables: {
+                                        input,
+                                    },
+                                });
+                            }}
+                            onDelete={async () => {
+                                await client.mutate<GQLDeleteManufacturerMutation, GQLDeleteManufacturerMutationVariables>({
+                                    mutation: deleteManufacturerMutation,
+                                    variables: { id: params.row.id },
+                                });
+                            }}
+                            refetchQueries={["ManufacturersList"]}
+                            copyData={() => {
+                                return filter<GQLManufacturersListManualFragment>(manufacturersFragment, params.row);
+                            }}
+                        />
+                    </>
+                );
+            },
+        },
+    ];
+
+    const { data, loading, error } = useQuery<GQLManufacturersListQuery, GQLManufacturersListQueryVariables>(manufacturersQuery, {
+        variables: {
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+            offset: dataGridProps.page * dataGridProps.pageSize,
+            limit: dataGridProps.pageSize,
+            sort: muiGridSortToGql(sortModel),
+        },
+    });
+    const rows = data?.manufacturers.nodes ?? [];
+    const rowCount = useBufferedRowCount(data?.manufacturers.totalCount);
+
+    return (
+        <MainContent fullHeight disablePadding>
+            <DataGridPro
+                {...dataGridProps}
+                disableSelectionOnClick
+                rows={rows}
+                rowCount={rowCount}
+                columns={columns}
+                loading={loading}
+                error={error}
+                components={{
+                    Toolbar: ManufacturersGridToolbar,
+                }}
+            />
+        </MainContent>
+    );
+}
+
+const manufacturersFragment = gql`
+    fragment ManufacturersListManual on Manufacturer {
+        id
+        address {
+            street
+            streetNumber
+            zip
+            country
+            alternativeAddress {
+                street
+                streetNumber
+                zip
+                country
+            }
+        }
+        addressAsEmbeddable {
+            street
+            streetNumber
+            zip
+            country
+            alternativeAddress {
+                street
+                streetNumber
+                zip
+                country
+            }
+        }
+    }
+`;
+
+const manufacturersQuery = gql`
+    query ManufacturersList($offset: Int!, $limit: Int!, $sort: [ManufacturerSort!], $filter: ManufacturerFilter, $search: String) {
+        manufacturers(offset: $offset, limit: $limit, sort: $sort, filter: $filter, search: $search) {
+            nodes {
+                id
+                ...ManufacturersListManual
+            }
+            totalCount
+        }
+    }
+    ${manufacturersFragment}
+`;
+
+const deleteManufacturerMutation = gql`
+    mutation DeleteManufacturer($id: ID!) {
+        deleteManufacturer(id: $id)
+    }
+`;
+
+const createManufacturerMutation = gql`
+    mutation CreateManufacturer($input: ManufacturerInput!) {
+        createManufacturer(input: $input) {
+            id
+        }
+    }
+`;
+
+export default ManufacturersGrid;
