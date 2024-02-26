@@ -94,7 +94,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             @GetCurrentUser() user: CurrentUser,
             @Headers("range") range?: string,
         ): Promise<void> {
-            if (process.env.NODE_ENV) {
+            if (process.env.NODE_ENV === "development") {
                 // This workaround is only necessary in dev mode. In deployed envs, the preview URLs are delivered through the same URL as the admin app (because of the auth proxy).
                 res.setHeader("Content-Security-Policy", "frame-ancestors 'self' http://localhost:*");
             }
