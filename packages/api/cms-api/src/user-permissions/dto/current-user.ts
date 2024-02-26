@@ -21,8 +21,6 @@ export class CurrentUser {
     email: string;
     @Field()
     language: string;
-    @Field(() => [GraphQLJSONObject])
-    allowedContentScopes?: ContentScope[];
     @Field(() => [GraphQLJSONObject], { nullable: true })
     contentScopes: ContentScope[] | null;
     @Field(() => [CurrentUserPermission])

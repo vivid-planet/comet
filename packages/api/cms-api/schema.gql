@@ -98,9 +98,9 @@ type CurrentUser {
   name: String!
   email: String!
   language: String!
-  allowedContentScopes: [JSONObject!]!
   contentScopes: [JSONObject!]
   permissions: [CurrentUserPermission!]!
+  allowedContentScopes: [JSONObject!]!
 }
 
 type BuildTemplate {
