@@ -37,6 +37,7 @@ export type FieldContainerClassKey =
 const styles = (theme: Theme) => {
     return createStyles<FieldContainerClassKey, FieldContainerProps>({
         root: {
+            maxWidth: "100%",
             "&:not($fieldMarginNever)": {
                 marginBottom: theme.spacing(4),
                 "&:not($fullWidth)": {
