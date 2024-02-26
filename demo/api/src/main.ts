@@ -48,7 +48,7 @@ async function bootstrap(): Promise<void> {
                 directives: {
                     "default-src": helmet.contentSecurityPolicy.dangerouslyDisableDefaultSrc,
                     // locally: allow localhost in frame-ancestors to enable including files from the API in iframes in admin
-                    "frame-ancestors": `'self' ${process.env.NODE_ENV === "development" ? "http://localhost:*" : ""}`,
+                    "frame-ancestors": `'self' ${process.env.NODE_ENV === "development" ? config.adminUrl : ""}`,
                 },
             },
         }),
