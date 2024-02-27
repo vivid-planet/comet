@@ -35,7 +35,6 @@
         "@comet/eslint-config": "workspace:^6.1.0",
         "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
-        "@mui/styles": "^5.0.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "@types/react-select": "^3.1.2",
@@ -53,7 +52,6 @@
     "peerDependencies": {
         "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
-        "@mui/styles": "^5.0.0",
         "final-form": "^4.16.1",
         "react": "^17.0",
         "react-dom": "^17.0",

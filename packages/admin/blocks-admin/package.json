@@ -49,7 +49,6 @@
         "@emotion/styled": "^11.3.0",
         "@mui/lab": "^5.0.0-alpha.76",
         "@mui/material": "^5.0.0",
-        "@mui/styles": "^5.0.0",
         "@mui/system": "^5.0.0",
         "@types/jest": "^29.5.0",
         "@types/lodash.isequal": "^4.0.0",
@@ -78,7 +77,6 @@
     },
     "peerDependencies": {
         "@mui/material": "^5.0.0",
-        "@mui/styles": "^5.0.0",
         "react": "^16.8.0 || ^17.0.0",
         "react-dnd": "^16.0.0",
         "react-dom": "^16.8.0 || ^17.0.0",
