@@ -6,7 +6,7 @@ import { ContentScopeService } from "../content-scope.service";
 import { RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
 import { CurrentUser } from "../dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions.constants";
-import { AccessControlServiceInterface } from "../user-permissions.types";
+import { AccessControlServiceInterface, SystemUser } from "../user-permissions.types";
 
 @Injectable()
 export class UserPermissionsGuard implements CanActivate {
@@ -24,6 +24,9 @@ export class UserPermissionsGuard implements CanActivate {
 
         const user = this.getUser(context);
         if (!user) return false;
+
+        // System user authenticated via basic auth
+        if (user === true) return true;
 
         const requiredPermission = this.getDecorator<RequiredPermissionMetadata>(context, "requiredPermission");
         if (!requiredPermission) throw new Error(`RequiredPermission decorator is missing in ${location}`);
@@ -51,10 +54,10 @@ export class UserPermissionsGuard implements CanActivate {
         }
     }
 
-    private getUser(context: ExecutionContext): CurrentUser | undefined {
+    private getUser(context: ExecutionContext): CurrentUser | SystemUser | undefined {
         const request =
             context.getType().toString() === "graphql" ? GqlExecutionContext.create(context).getContext().req : context.switchToHttp().getRequest();
-        return request.user as CurrentUser | undefined;
+        return request.user as CurrentUser | SystemUser | undefined;
     }
 
     private getDecorator<T = object>(context: ExecutionContext, decorator: string): T {
