@@ -5,11 +5,6 @@ import { createGenerateClassName, GenerateClassNameOptions, StylesProvider } fro
 import type { GenerateId } from "jss";
 import * as React from "react";
 
-declare module "@mui/styles/defaultTheme" {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface DefaultTheme extends Theme {}
-}
-
 interface IProps {
     theme: Theme;
     children: React.ReactNode;

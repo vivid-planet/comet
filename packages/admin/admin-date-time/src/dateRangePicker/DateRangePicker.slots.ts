@@ -1,7 +1,7 @@
 import { InputWithPopper, InputWithPopperClassKey, ThemedComponentBaseProps } from "@comet/admin";
 import { InputAdornment } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { CSSProperties } from "@mui/styles";
+import { CSSProperties } from "@mui/material/styles/createMixins";
 import { deepmerge } from "@mui/utils";
 import { DateRange as ReactDateRange } from "react-date-range";
 
