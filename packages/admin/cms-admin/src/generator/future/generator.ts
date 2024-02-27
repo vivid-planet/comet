@@ -6,6 +6,7 @@ import { basename, dirname } from "path";
 
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
+import { UsableFields } from "./utils/usableFields";
 import { writeGenerated } from "./utils/writeGenerated";
 
 type ImportReference = {
@@ -42,7 +43,7 @@ export type GridColumnConfig<T> = (
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
     | { type: "block"; block: ImportReference }
-) & { name: keyof T; headerName?: string; width?: number };
+) & { name: UsableFields<T>; headerName?: string; width?: number };
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
@@ -55,7 +56,7 @@ export type GeneratorConfig = FormConfig<any> | GridConfig<any> | TabsConfig;
 
 export type GeneratorReturn = { code: string; gqlDocuments: Record<string, string> };
 
-export async function runFutureGenerate() {
+export async function runFutureGenerate(specificFile?: string) {
     const schema = await loadSchema("./schema.gql", {
         loaders: [new GraphQLFileLoader()],
     });
@@ -63,6 +64,7 @@ export async function runFutureGenerate() {
 
     const files = await glob("src/**/*.cometGen.ts");
     for (const file of files) {
+        if (specificFile && file !== specificFile) continue;
         let outputCode = "";
         let gqlDocumentsOutputCode = "";
         const targetDirectory = `${dirname(file)}/generated`;

@@ -31,8 +31,8 @@ program.addCommand(
 );
 
 program.addCommand(
-    new Command("future-generate").action(async () => {
-        await runFutureGenerate();
+    new Command("future-generate").option("-f, --file <file>", "config file to generate").action(async ({ file }: { file: string }) => {
+        await runFutureGenerate(file);
     }),
 );
 

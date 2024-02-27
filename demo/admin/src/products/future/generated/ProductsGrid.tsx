@@ -37,17 +37,11 @@ import {
 const productsFragment = gql`
     fragment ProductsGridFuture on Product {
         id
-        updatedAt
         title
-        visible
-        slug
         description
-        type
         price
-        inStock
-        soldCount
+        type
         availableSince
-        image
         createdAt
     }
 `;
