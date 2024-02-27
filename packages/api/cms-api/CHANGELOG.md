@@ -1,5 +1,15 @@
 # @comet/cms-api
 
+## 6.2.1
+
+### Patch Changes
+
+-   f1457306: Ignore user permissions when using system user
+
+    The `UserPermissionsGuard` didn't allow requests when using a system user (e.g., basic authorization during site build).
+
+    -   @comet/blocks-api@6.2.1
+
 ## 6.2.0
 
 ### Minor Changes
