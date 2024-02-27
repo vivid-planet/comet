@@ -69,8 +69,10 @@ class App extends React.Component {
                             value={{
                                 scopeParts: ["domain"],
                                 additionalToolbarItems: <ImportFromUnsplash />,
-                                importSourceTypeLabels: {
-                                    unsplash: <FormattedMessage id="dam.importSourceLabel.unsplash" defaultMessage="Unsplash" />,
+                                importSources: {
+                                    unsplash: {
+                                        label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
+                                    },
                                 },
                             }}
                         >

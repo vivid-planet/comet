@@ -87,7 +87,7 @@ const FolderDataGrid = ({
     const damSelectionActionsApi = useDamSelectionApi();
     const scope = useDamScope();
     const snackbarApi = useSnackbarApi();
-    const { importSourceTypeLabels } = useDamConfig();
+    const { importSources } = useDamConfig();
 
     const [redirectedToId, setRedirectedToId] = useStoredState<string | null>("FolderDataGrid-redirectedToId", null, window.sessionStorage);
 
@@ -384,8 +384,8 @@ const FolderDataGrid = ({
             }),
             renderCell: ({ row }) => {
                 if (row.__typename === "DamFile") {
-                    if (row.importSourceType) {
-                        return importSourceTypeLabels?.[row.importSourceType];
+                    if (row.importSourceType && importSources?.[row.importSourceType]) {
+                        return importSources[row.importSourceType].label;
                     }
                 }
             },
@@ -485,7 +485,7 @@ const FolderDataGrid = ({
                     selectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
                     onSelectionModelChange={handleSelectionModelChange}
                     autoHeight={true}
-                    initialState={{ columns: { columnVisibilityModel: { importSourceType: importSourceTypeLabels !== undefined } } }}
+                    initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                 />
             </sc.FolderOuterHoverHighlight>
             <DamSelectionFooter open={damSelectionActionsApi.selectionMap.size > 0} />
