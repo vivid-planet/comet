@@ -6,7 +6,7 @@ import { basename, dirname } from "path";
 
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
-import { Leaves, Paths } from "./utils/deepKeyOf";
+import { UsableFields } from "./utils/usableFields";
 import { writeGenerated } from "./utils/writeGenerated";
 
 type ImportReference = {
@@ -16,7 +16,7 @@ type ImportReference = {
 
 export type GeneratorEntity = { __typename?: string };
 
-export type FormFieldConfigInternal = (
+export type FormFieldConfig<T extends GeneratorEntity> = (
     | { type: "text"; multiline?: boolean }
     | { type: "number" }
     | { type: "boolean" }
@@ -25,19 +25,14 @@ export type FormFieldConfigInternal = (
     | { type: "staticSelect"; values?: string[] }
     | { type: "asyncSelect"; values?: string[] }
     | { type: "block"; block: ImportReference }
-) & { name: string; label?: string; required?: boolean; validate?: ImportReference; helperText?: string };
-export type FormFieldConfig<T extends GeneratorEntity> = FormFieldConfigInternal & { name: Leaves<T> | Paths<T> };
+) & { name: UsableFields<T>; label?: string; required?: boolean; validate?: ImportReference; helperText?: string };
 
-export type FormConfigInternal = {
+export type FormConfig<T extends GeneratorEntity> = {
     type: "form";
-    gqlType: string;
-    fragmentName?: string;
-    title?: string;
-    fields: FormFieldConfigInternal[];
-};
-export type FormConfig<T extends GeneratorEntity> = FormConfigInternal & {
     gqlType: T["__typename"];
+    fragmentName?: string;
     fields: FormFieldConfig<T>[];
+    title?: string;
 };
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };

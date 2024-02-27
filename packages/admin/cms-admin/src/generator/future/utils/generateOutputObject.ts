@@ -1,11 +1,12 @@
 import objectPath from "object-path";
 
-import { FormConfigInternal } from "../generator";
+import { FormConfig } from "../generator";
 import { convertObjectToStructuredString, FieldsObjectType } from "./convertObjectToStructuredString";
 import { RootBlocks } from "./findRootBlocks";
 import { getRootProps } from "./generateFieldList";
 
-export function generateOutputObject({ config, rootBlocks }: { config: FormConfigInternal; rootBlocks: RootBlocks }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function generateOutputObject({ config, rootBlocks }: { config: FormConfig<any>; rootBlocks: RootBlocks }) {
     const numberFields = config.fields.filter((field) => field.type == "number" && !field.name.includes("."));
     const nestedNumberFields = config.fields.filter((field) => field.type === "number" && field.name.includes("."));
     const rootPropsContainingNumberField = getRootProps(nestedNumberFields.map((field) => field.name));

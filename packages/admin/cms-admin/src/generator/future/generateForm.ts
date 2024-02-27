@@ -1,7 +1,7 @@
 import { IntrospectionQuery } from "graphql";
 
 import { generateFormField } from "./generateFormField";
-import { FormConfigInternal, GeneratorReturn } from "./generator";
+import { FormConfig, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
 import { generateFieldListGqlString } from "./utils/generateFieldList";
@@ -17,7 +17,8 @@ export function generateForm(
         targetDirectory,
         gqlIntrospection,
     }: { exportName: string; baseOutputFilename: string; targetDirectory: string; gqlIntrospection: IntrospectionQuery },
-    config: FormConfigInternal,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: FormConfig<any>,
 ): GeneratorReturn {
     const gqlType = config.gqlType;
     const title = config.title ?? camelCaseToHumanReadable(gqlType);
