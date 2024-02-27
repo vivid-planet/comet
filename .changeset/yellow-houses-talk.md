@@ -73,5 +73,14 @@ Change the method of overriding the styling of Admin components
 +/>
 ```
 
+-   The module augmentation for the `DefaultTheme` type from `@mui/styles/defaultTheme` is no longer needed and needs to be removed from the admins theme file, usually located in `admin/src/theme.ts`:
+
+```diff
+-declare module "@mui/styles/defaultTheme" {
+-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+-    export interface DefaultTheme extends Theme {}
+-}
+```
+
 -   The required changes we made to the theming method of admin components may cause missing or broken styles when using `styleOverrides` in `createCometTheme()`.
 -   For more details, see MUI's migration guide: https://mui.com/material-ui/migration/v5-style-changes/#mui-styles
