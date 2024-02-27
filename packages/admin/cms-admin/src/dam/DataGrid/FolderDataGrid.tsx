@@ -386,8 +386,6 @@ const FolderDataGrid = ({
                 if (row.__typename === "DamFile") {
                     if (row.importSourceType) {
                         return importSourceTypeLabels?.[row.importSourceType];
-                    } else {
-                        return <FormattedMessage id="comet.dam.file.importSourceType.cmsAsset" defaultMessage="CMS Asset" />;
                     }
                 }
             },
