@@ -28,6 +28,15 @@ export function generateForm(
     const numberFields = config.fields.filter((field) => field.type == "number");
     const booleanFields = config.fields.filter((field) => field.type == "boolean");
 
+    const isFieldOptional = (fieldName: string): boolean => {
+        const schemaEntity = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType);
+        if (!schemaEntity) throw new Error(`didn't find entity ${gqlType} in schema types`);
+        if (schemaEntity.kind !== "OBJECT") throw new Error(`kind of ${gqlType} is not object, but should be.`); // this should not happen
+        const fieldDef = schemaEntity.fields.find((field) => field.name === fieldName);
+        if (!fieldDef) throw new Error(`didn't find field ${fieldName} of ${gqlType} in introspected gql-schema.`);
+        return fieldDef.type.kind !== "NON_NULL";
+    };
+
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
         fragment ${fragmentName} on ${gqlType} {
@@ -147,7 +156,7 @@ export function generateForm(
     } ${
         numberFields.length > 0 || Object.keys(rootBlocks).length > 0
             ? `& {
-        ${numberFields.map((field) => `${String(field.name)}: string;`).join("\n")}
+        ${numberFields.map((field) => `${String(field.name)}: string${isFieldOptional(String(field.name)) ? ` | null` : ``};`).join("\n")}
         ${Object.keys(rootBlocks)
             .map((rootBlockKey) => `${rootBlockKey}: BlockState<typeof rootBlocks.${rootBlockKey}>;`)
             .join("\n")}
@@ -174,7 +183,15 @@ export function generateForm(
         const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
         ? {
             ...filter<GQL${fragmentName}Fragment>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
-            ${numberFields.map((field) => `${String(field.name)}: String(data.${instanceGqlType}.${String(field.name)}),`).join("\n")}
+            ${numberFields
+                .map((field) => {
+                    let assignment = `String(data.${instanceGqlType}.${String(field.name)})`;
+                    if (isFieldOptional(String(field.name))) {
+                        assignment = `data.${instanceGqlType}.${String(field.name)} ? ${assignment} : null`;
+                    }
+                    return `${String(field.name)}: ${assignment},`;
+                })
+                .join("\n")}
             ${Object.keys(rootBlocks)
                 .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.input2State(data.${instanceGqlType}.${rootBlockKey}),`)
                 .join("\n")}
@@ -202,7 +219,15 @@ export function generateForm(
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = {
                 ...formValues,
-                ${numberFields.map((field) => `${String(field.name)}: parseFloat(formValues.${String(field.name)}),`).join("\n")}
+                ${numberFields
+                    .map((field) => {
+                        let assignment = `parseFloat(formValues.${String(field.name)})`;
+                        if (isFieldOptional(String(field.name))) {
+                            assignment = `formValues.${String(field.name)} ? ${assignment} : null`;
+                        }
+                        return `${String(field.name)}: ${assignment},`;
+                    })
+                    .join("\n")}
                 ${Object.keys(rootBlocks)
                     .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.state2Output(formValues.${rootBlockKey}),`)
                     .join("\n")}

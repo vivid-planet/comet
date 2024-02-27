@@ -50,7 +50,7 @@ const rootBlocks = {
 };
 
 type FormValues = Omit<GQLProductFormDetailsFragment, "price"> & {
-    price: string;
+    price: string | null;
     image: BlockState<typeof rootBlocks.image>;
 };
 
@@ -75,7 +75,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             data?.product
                 ? {
                       ...filter<GQLProductFormDetailsFragment>(productFormFragment, data.product),
-                      price: String(data.product.price),
+                      price: data.product.price ? String(data.product.price) : null,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {
@@ -100,7 +100,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
-            price: parseFloat(formValues.price),
+            price: formValues.price ? parseFloat(formValues.price) : null,
             image: rootBlocks.image.state2Output(formValues.image),
         };
         if (mode === "edit") {
