@@ -6,8 +6,14 @@ import "material-design-icons/iconfont/material-icons.css";
 import "typeface-open-sans";
 
 import { ApolloProvider } from "@apollo/client";
-import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
-import { ContentGenerationServiceProvider } from "@comet/admin/lib/contentGeneration/ContentGenerationServiceProvider";
+import {
+    ContentGenerationServiceProvider,
+    ErrorDialogHandler,
+    MasterLayout,
+    MuiThemeProvider,
+    RouterBrowserRouter,
+    SnackbarProvider,
+} from "@comet/admin";
 import {
     CmsBlockContextProvider,
     createHttpClient,
