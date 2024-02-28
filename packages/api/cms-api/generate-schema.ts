@@ -18,6 +18,7 @@ import {
     PageTreeNodeCategory,
 } from "./src";
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
+import { ContentGenerationResolver } from "./src/content-generation/content-generation.resolver";
 import { CronJobsResolver } from "./src/cron-jobs/cron-jobs.resolver";
 import { JobsResolver } from "./src/cron-jobs/jobs.resolver";
 import { createDamItemsResolver } from "./src/dam/files/dam-items.resolver";
@@ -26,7 +27,6 @@ import { createFolderEntity } from "./src/dam/files/entities/folder.entity";
 import { FileLicensesResolver } from "./src/dam/files/file-licenses.resolver";
 import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
-import { MlResolver } from "./src/ml/ml.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
 import { UserResolver } from "./src/user-permissions/user.resolver";
@@ -95,7 +95,7 @@ async function generateSchema(): Promise<void> {
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,
-        MlResolver,
+        ContentGenerationResolver,
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

@@ -6,18 +6,13 @@ export interface Options {
 
 export type ModelType = "text" | "textAdvanced" | "image" | "imageAdvanced";
 
-export interface MlRequest {
+export interface ContentGenerationRequest {
     prompt?: string;
     instructions?: string;
     context?: string;
     examples?: Example[];
     options?: Options;
     image?: Image;
-}
-
-export interface MlResponse {
-    response: string;
-    image?: string;
 }
 
 export interface Example {

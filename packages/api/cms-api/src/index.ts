@@ -60,6 +60,7 @@ export { SortDirection } from "./common/sorting/sort-direction.enum";
 export { IsNullable } from "./common/validators/is-nullable";
 export { IsSlug } from "./common/validators/is-slug";
 export { IsUndefinable } from "./common/validators/is-undefinable";
+export { ContentGenerationModule } from "./content-generation/content-generation.module";
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";
 export { ScaledImagesCacheService } from "./dam/cache/scaled-images-cache.service";
@@ -111,7 +112,6 @@ export {
 export { KubernetesJobStatus } from "./kubernetes/job-status.enum";
 export { KubernetesModule } from "./kubernetes/kubernetes.module";
 export { createMigrationsList, createOrmConfig, MikroOrmModule, MikroOrmModuleOptions } from "./mikro-orm/mikro-orm.module";
-export { MlModule } from "./ml/ml.module";
 export { AttachedDocumentLoaderService } from "./page-tree/attached-document-loader.service";
 export { AnchorBlock } from "./page-tree/blocks/anchor.block";
 export { InternalLinkBlock } from "./page-tree/blocks/internal-link.block";

@@ -118,7 +118,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                     name="altText"
                     component={FinalFormInput}
                     fullWidth
-                    mlButton={async (input: FieldInputProps<string, HTMLInputElement | HTMLTextAreaElement>) => {
+                    contentGenerationButton={async (input: FieldInputProps<string, HTMLInputElement | HTMLTextAreaElement>) => {
                         const { data } = await generateAltText({ variables: { imageUrl: file.fileUrl } });
                         input.onChange(data?.generateAltText);
                     }}
@@ -132,7 +132,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                     name="title"
                     component={FinalFormInput}
                     fullWidth
-                    mlButton={async (input: FieldInputProps<string, HTMLInputElement | HTMLTextAreaElement>) => {
+                    contentGenerationButton={async (input: FieldInputProps<string, HTMLInputElement | HTMLTextAreaElement>) => {
                         const { data } = await generateImageTitle({ variables: { imageUrl: file.fileUrl } });
                         input.onChange(data?.generateImageTitle);
                     }}

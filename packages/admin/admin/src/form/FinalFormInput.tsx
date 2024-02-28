@@ -7,13 +7,13 @@ import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { Loading } from "../common/Loading";
-import { useMlService } from "../ml/useMlService";
+import { useContentGenerationService } from "../contentGeneration/useContentGenerationService";
 import { useContentTranslationService } from "../translator/useContentTranslationService";
 
 export type FinalFormInputProps = InputBaseProps &
     FieldRenderProps<string, HTMLInputElement | HTMLTextAreaElement> & {
         clearable?: boolean;
-        mlButton?: (input: FieldInputProps<string, HTMLInputElement | HTMLTextAreaElement>) => void;
+        contentGenerationButton?: (input: FieldInputProps<string, HTMLInputElement | HTMLTextAreaElement>) => void;
         loading?: boolean;
         disableContentTranslation?: boolean;
     };
@@ -24,7 +24,7 @@ export function FinalFormInput({
     innerRef,
     endAdornment,
     clearable,
-    mlButton,
+    contentGenerationButton,
     loading,
     disableContentTranslation,
 
@@ -32,7 +32,7 @@ export function FinalFormInput({
 }: FinalFormInputProps): React.ReactElement {
     const theme = useTheme();
     const { enabled, translate } = useContentTranslationService();
-    const { enabled: MlEnabled } = useMlService();
+    const { enabled: ContentGenerationEnabled } = useContentGenerationService();
 
     return (
         <InputBase
@@ -43,8 +43,8 @@ export function FinalFormInput({
                     {clearable && (
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
                     )}
-                    {mlButton && MlEnabled && (
-                        <IconButton sx={{ color: theme.palette.primary.main }} onClick={() => mlButton(input)}>
+                    {contentGenerationButton && ContentGenerationEnabled && (
+                        <IconButton sx={{ color: theme.palette.primary.main }} onClick={() => contentGenerationButton(input)}>
                             {loading ? <Loading behavior="fillParent" fontSize="large" /> : <ArtificialIntelligence />}
                         </IconButton>
                     )}

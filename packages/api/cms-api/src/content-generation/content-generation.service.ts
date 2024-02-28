@@ -1,8 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
 import fetch from "node-fetch";
 
-import { MlConfig } from "./ml.config";
-import { ML_CONFIG } from "./ml.constants";
+import { ContentGenerationConfig } from "./content-generation.config";
+import { CONTENT_GENERATION_CONFIG } from "./content-generation.constants";
 
 async function loadImageAsBase64(url: string) {
     const response = await fetch(url);
@@ -13,8 +13,8 @@ async function loadImageAsBase64(url: string) {
 }
 
 @Injectable()
-export class MlService {
-    constructor(@Inject(ML_CONFIG) private readonly config: MlConfig) {}
+export class ContentGenerationService {
+    constructor(@Inject(CONTENT_GENERATION_CONFIG) private readonly config: ContentGenerationConfig) {}
 
     async generateAltText(imageUrl: string): Promise<string> {
         if (!this.config.models.image) return "Model not defined";

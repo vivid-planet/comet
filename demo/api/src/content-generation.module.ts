@@ -1,7 +1,7 @@
-import { MlRequest, Options } from "@comet/cms-api/lib/ml/ml.types";
+import { ContentGenerationRequest, Options } from "@comet/cms-api/lib/content-generation/content-generation.types";
 
-export const MLModels = () => {
-    const createMessages = (options: MlRequest, imageDetail: "low" | "high") => {
+export const ContentGenerationModels = () => {
+    const createMessages = (options: ContentGenerationRequest, imageDetail: "low" | "high") => {
         const messages = [];
         options.instructions && messages.push({ role: "system", content: options.instructions });
         options.context && messages.push({ role: "user", content: options.context });
@@ -46,7 +46,7 @@ export const MLModels = () => {
         };
     }
 
-    const createRequest = (options: MlRequest, imageDetail: "low" | "high", apiKey: string) => {
+    const createRequest = (options: ContentGenerationRequest, imageDetail: "low" | "high", apiKey: string) => {
         const headers = new Headers();
         headers.append("api-key", apiKey);
         headers.append("Content-Type", "application/json");
@@ -66,17 +66,17 @@ export const MLModels = () => {
     const convertResponse = async (response: Response) => {
         const content = await response.json();
         if (content.error) {
-            throw new Error(`ML request failed - ${content.error.message}`);
+            throw new Error(`Content Generation Request request failed - ${content.error.message}`);
         }
         return content.choices[0].message.content;
     };
 
     return {
-        image: async (options: MlRequest) => {
+        image: async (options: ContentGenerationRequest) => {
             const response = await fetch("apiUrl", createRequest(options, "low", "apiKey"));
             return convertResponse(response);
         },
-        imageAdvanced: async (options: MlRequest) => {
+        imageAdvanced: async (options: ContentGenerationRequest) => {
             const response = await fetch("apiUrl", createRequest(options, "high", "apiKey"));
             return convertResponse(response);
         },
