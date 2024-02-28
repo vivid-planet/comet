@@ -85,7 +85,7 @@ export function MenuCollapsibleItem(inProps: MenuCollapsibleItemProps) {
         closedIcon = <ChevronDown />,
         children,
         slotProps,
-        ...otherProps
+        ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminMenuCollapsibleItem" });
 
     const itemLevel: 1 | 2 = level ? level : 1;
@@ -112,7 +112,7 @@ export function MenuCollapsibleItem(inProps: MenuCollapsibleItemProps) {
     };
 
     return (
-        <Root ownerState={ownerState} {...slotProps?.root} {...otherProps}>
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
             <ListItem ownerState={ownerState} {...slotProps?.listItem}>
                 <Item
                     primary={primary}

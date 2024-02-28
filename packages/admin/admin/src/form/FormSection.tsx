@@ -66,7 +66,7 @@ export function FormSection(inProps: FormSectionProps) {
     };
 
     return (
-        <Root ownerState={ownerState} {...restProps} {...slotProps?.root}>
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {title && <Title {...slotProps?.title}>{disableTypography ? title : <Typography variant="h3">{title}</Typography>}</Title>}
             <Children {...slotProps?.children}>{children}</Children>
         </Root>

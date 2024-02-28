@@ -150,7 +150,7 @@ export function MenuItem(inProps: MenuItemProps) {
         level = 1,
         secondaryAction,
         slotProps,
-        ...otherProps
+        ...restProps
     } = useThemeProps({
         props: inProps,
         name: "CometAdminMenuItem",
@@ -170,7 +170,7 @@ export function MenuItem(inProps: MenuItemProps) {
     if (level > 2) throw new Error("Maximum nesting level of 2 exceeded.");
 
     return (
-        <Root {...slotProps?.root} ownerState={ownerState} {...otherProps}>
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {hasIcon && <ListItemIcon>{icon}</ListItemIcon>}
             <ListItemText primary={primary} secondary={secondary} inset={!icon} />
             {!!secondaryAction && secondaryAction}

@@ -26,7 +26,7 @@ export function AppHeaderButton(inProps: AppHeaderButtonProps) {
     });
 
     return (
-        <Root {...restProps} {...slotProps?.root} onClick={onClick}>
+        <Root {...slotProps?.root} {...restProps} onClick={onClick}>
             <Content {...slotProps?.content}>
                 {startIcon && <StartIcon {...slotProps?.startIcon}>{startIcon}</StartIcon>}
                 {children &&

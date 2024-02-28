@@ -86,7 +86,7 @@ export function ControlButton(inProps: IProps) {
         children,
         Icon: deprecatedIcon,
         slotProps,
-        ...otherProps
+        ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminRteControlButton" });
 
     const Icon = icon || deprecatedIcon;
@@ -97,7 +97,7 @@ export function ControlButton(inProps: IProps) {
     };
 
     return (
-        <Root type="button" disabled={disabled} onMouseDown={onButtonClick} {...slotProps?.root} ownerState={ownerState} {...otherProps}>
+        <Root type="button" disabled={disabled} onMouseDown={onButtonClick} ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {!!Icon && <Icon sx={{ fontSize: 15 }} color="inherit" />}
             {children}
         </Root>

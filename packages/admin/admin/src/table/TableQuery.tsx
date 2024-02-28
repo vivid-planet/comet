@@ -96,7 +96,7 @@ export function TableQuery(inProps: TableQueryProps) {
                 api,
             }}
         >
-            <Root {...restProps} {...slotProps?.root}>
+            <Root {...slotProps?.root} {...restProps}>
                 <LoadingContainer {...slotProps?.loadingContainer}>
                     {loading && (
                         <LoadingPaper {...slotProps?.loadingPaper}>

@@ -63,7 +63,7 @@ export const ToolbarBackButton = (inProps: ToolbarBackButtonProps) => {
     }
 
     return (
-        <Root {...restProps} {...slotProps?.root}>
+        <Root {...slotProps?.root} {...restProps}>
             <ToolbarItem {...slotProps?.toolbarItem}>
                 <IconButton
                     onClick={() => {

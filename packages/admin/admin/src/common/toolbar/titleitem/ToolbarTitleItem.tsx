@@ -39,7 +39,7 @@ export const ToolbarTitleItem = (inProps: ToolbarTitleItemProps) => {
     const { children, typographyProps = {}, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarTitleItem" });
 
     return (
-        <Root {...restProps} {...slotProps?.root}>
+        <Root {...slotProps?.root} {...restProps}>
             <Typography variant="h4" {...typographyProps} {...slotProps?.typography}>
                 {children}
             </Typography>

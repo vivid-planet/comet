@@ -43,7 +43,7 @@ export function TableBodyRow(inProps: TableBodyRowProps) {
     };
 
     return (
-        <Root ownerState={ownerState} {...restProps} {...slotProps?.root}>
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {children}
         </Root>
     );

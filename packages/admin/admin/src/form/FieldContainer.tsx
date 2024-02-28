@@ -241,7 +241,7 @@ export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerPr
     };
 
     return (
-        <Root ownerState={ownerState} fullWidth={fullWidth} disabled={disabled} required={required} ref={ref} {...restProps} {...slotProps?.root}>
+        <Root ownerState={ownerState} fullWidth={fullWidth} disabled={disabled} required={required} ref={ref} {...slotProps?.root} {...restProps}>
             <>
                 {label && (
                     <Label ownerState={ownerState} disabled={disabled} {...slotProps?.label}>

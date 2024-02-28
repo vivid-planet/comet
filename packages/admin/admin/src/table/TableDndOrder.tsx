@@ -206,7 +206,7 @@ export function TableDndOrder<TRow extends IRow>(inProps: TableDndOrderProps<TRo
         renderHeadTableRow,
     };
 
-    return <Root {...restProps} {...slotProps?.root} {...tableProps} />;
+    return <Root {...slotProps?.root} {...restProps} {...tableProps} />;
 }
 
 declare module "@mui/material/styles" {

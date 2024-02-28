@@ -81,7 +81,7 @@ export function MasterLayout(inProps: MasterLayoutProps) {
         <MenuContext.Provider value={{ open, toggleOpen }}>
             <MasterLayoutContext.Provider value={{ headerHeight }}>
                 <CssBaseline />
-                <Root {...restProps} {...slotProps?.root}>
+                <Root {...slotProps?.root} {...restProps}>
                     <Header {...slotProps?.header}>
                         {HeaderComponent ? (
                             <HeaderComponent />

@@ -132,7 +132,7 @@ export function MyComponent(inProps: MyComponentProps) {
      * In this case, this is done with `...restProps`.
      */
     return (
-        <Root ownerState={ownerState} {...restProps} {...slotProps?.root}>
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
             <Header {...slotProps?.header}>
                 <Title ownerState={ownerState} variant="h4" {...slotProps?.title}>
                     {title}

@@ -50,8 +50,8 @@ export const DatePicker = (inProps: DatePickerProps) => {
                 </StartAdornment>
             }
             placeholder={placeholder ?? intl.formatMessage({ id: "comet.datePicker.selectDate", defaultMessage: "Select date" })}
-            {...inputWithPopperProps}
             {...slotProps?.root}
+            {...inputWithPopperProps}
             readOnly
             endAdornment={
                 clearable ? (
