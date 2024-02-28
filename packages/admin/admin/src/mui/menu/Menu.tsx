@@ -34,7 +34,7 @@ const PermanentDrawer = styled(Drawer, {
 
         ${ownerState.open &&
         css`
-            width: ${ownerState.drawerWidth};
+            width: ${ownerState.drawerWidth}px;
             transition: ${theme.transitions.create("width", {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.enteringScreen,
