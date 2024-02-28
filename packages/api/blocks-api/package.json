@@ -26,6 +26,7 @@
         "test:watch": "jest -w"
     },
     "dependencies": {
+        "class-transformer": "^0.5.0",
         "rimraf": "^3.0.0"
     },
     "devDependencies": {
@@ -35,7 +36,6 @@
         "@types/jest": "^29.5.0",
         "@types/node": "^18.0.0",
         "chokidar-cli": "^2.0.0",
-        "class-transformer": "^0.5.0",
         "class-validator": "^0.13.0",
         "eslint": "^8.0.0",
         "jest": "^29.5.0",
@@ -50,7 +50,6 @@
     },
     "peerDependencies": {
         "@nestjs/common": "^9.0.0",
-        "class-transformer": "^0.5.0",
         "class-validator": "^0.13.0"
     },
     "publishConfig": {

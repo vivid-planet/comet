@@ -2108,6 +2108,9 @@ importers:
 
   packages/api/blocks-api:
     dependencies:
+      class-transformer:
+        specifier: ^0.5.0
+        version: 0.5.1
       rimraf:
         specifier: ^3.0.0
         version: 3.0.2
@@ -2130,9 +2133,6 @@ importers:
       chokidar-cli:
         specifier: ^2.0.0
         version: 2.1.0
-      class-transformer:
-        specifier: ^0.5.0
-        version: 0.5.1
       class-validator:
         specifier: ^0.13.0
         version: 0.13.2
@@ -2202,6 +2202,9 @@ importers:
       base64url:
         specifier: ^3.0.0
         version: 3.0.1
+      class-transformer:
+        specifier: ^0.5.0
+        version: 0.5.1
       class-validator:
         specifier: 0.13.2
         version: 0.13.2
@@ -2383,9 +2386,6 @@ importers:
       chokidar-cli:
         specifier: ^2.0.0
         version: 2.1.0
-      class-transformer:
-        specifier: ^0.5.0
-        version: 0.5.1
       eslint:
         specifier: ^8.0.0
         version: 8.32.0
