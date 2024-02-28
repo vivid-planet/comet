@@ -78,7 +78,7 @@ export function PagesPage({
     });
 
     useFocusAwarePolling({
-        pollInterval: process.env.NODE_ENV === "development" ? undefined : 10000,
+        pollInterval: 10000,
         refetch,
         startPolling,
         stopPolling,
