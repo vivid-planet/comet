@@ -47,7 +47,6 @@
         "@mdx-js/react": "^1.6.22",
         "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
-        "@mui/styles": "^5.0.0",
         "@mui/system": "^5.0.0",
         "@mui/x-data-grid": "^5.17.6",
         "clsx": "^1.2.1",
