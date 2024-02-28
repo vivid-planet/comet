@@ -558,9 +558,6 @@ importers:
       passport:
         specifier: ^0.4.0
         version: 0.4.1
-      pg-error-constants:
-        specifier: ^1.0.0
-        version: 1.0.0
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.13
@@ -2422,9 +2419,6 @@ importers:
       npm-run-all:
         specifier: ^4.0.0
         version: 4.1.5
-      pg-error-constants:
-        specifier: ^1.0.0
-        version: 1.0.0
       prettier:
         specifier: ^2.0.0
         version: 2.8.3
@@ -26126,9 +26120,6 @@ packages:
 
   /pg-connection-string@2.5.0:
     resolution: {integrity: sha512-r5o/V/ORTA6TmUnyWZR9nCj1klXCO2CEKNRlVuJptZe85QuhFayC7WeMic7ndayT5IRIR0S0xFxFi2ousartlQ==}
-
-  /pg-error-constants@1.0.0:
-    resolution: {integrity: sha512-uXKMjv2Kz1S9y2pu540l5uTkrZwCLrmnMSNHdvMDlXSr29pZM88pkKosFN0bDErFsITVjhQYeA08YxSepSIjHA==}
 
   /pg-int8@1.0.1:
     resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
