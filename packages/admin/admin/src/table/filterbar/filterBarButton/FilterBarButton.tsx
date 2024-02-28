@@ -3,9 +3,9 @@ import { buttonClasses, ButtonProps, ComponentsOverrides, svgIconClasses } from 
 import Button from "@mui/material/Button";
 import { css, styled, Theme } from "@mui/material/styles";
 import { useThemeProps } from "@mui/system";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 
+import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
 
 /**

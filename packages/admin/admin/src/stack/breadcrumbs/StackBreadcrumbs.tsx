@@ -2,9 +2,9 @@ import { ChevronRight } from "@comet/admin-icons";
 import { Link } from "@mui/material";
 import { ComponentsOverrides, css, styled, Theme, useTheme, useThemeProps } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useStackApi } from "../Api";
 import { getElementOuterWidth, useItemsToRender, useObservedWidth } from "./utils";
 

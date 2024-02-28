@@ -1,10 +1,10 @@
 import { Filter } from "@comet/admin-icons";
 import { ComponentsOverrides } from "@mui/material";
 import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { FilterBarButton } from "../filterBarButton/FilterBarButton";
 
 /**

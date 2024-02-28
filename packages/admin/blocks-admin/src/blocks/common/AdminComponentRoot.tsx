@@ -14,7 +14,6 @@ function AdminComponentRoot(props: Props): React.ReactElement {
     return (
         <Stack topLevelTitle={title}>
             <StackBreadcrumbs
-                // @ts-expect-error TODO: fix types - `sx` is missing here for some reason
                 sx={({ palette, spacing }) => ({
                     paddingTop: 0,
                     paddingBottom: "20px",

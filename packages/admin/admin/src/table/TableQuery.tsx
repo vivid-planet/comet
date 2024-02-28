@@ -1,11 +1,11 @@
 import { ApolloError } from "@apollo/client";
 import { ComponentsOverrides, Paper } from "@mui/material";
 import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Loading } from "../common/Loading";
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
 
 /**

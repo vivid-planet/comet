@@ -12,8 +12,9 @@ import {
     Theme,
     useThemeProps,
 } from "@mui/material";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
+
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface ClearInputAdornmentProps
     extends InputAdornmentProps,

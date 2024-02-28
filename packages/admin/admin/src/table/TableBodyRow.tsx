@@ -1,8 +1,9 @@
 import { ComponentsOverrides, TableRow } from "@mui/material";
 import { styled, Theme, useThemeProps } from "@mui/material/styles";
 import { TableRowProps } from "@mui/material/TableRow";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import React from "react";
+
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
