@@ -55,12 +55,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminTableBodyRow: Partial<TableBodyRowProps>;
+        CometAdminTableBodyRow: TableBodyRowProps;
     }
 
     interface Components {
         CometAdminTableBodyRow?: {
-            defaultProps?: ComponentsPropsList["CometAdminTableBodyRow"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminTableBodyRow"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminTableBodyRow"];
         };
     }

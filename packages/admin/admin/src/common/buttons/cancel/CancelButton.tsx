@@ -39,12 +39,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminCancelButton: Partial<CancelButtonProps>;
+        CometAdminCancelButton: CancelButtonProps;
     }
 
     interface Components {
         CometAdminCancelButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminCancelButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminCancelButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminCancelButton"];
         };
     }

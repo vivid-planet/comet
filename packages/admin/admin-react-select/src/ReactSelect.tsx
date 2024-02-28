@@ -382,12 +382,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminSelect: Partial<SelectProps<any>>;
+        CometAdminSelect: SelectProps<any>;
     }
 
     interface Components {
         CometAdminSelect?: {
-            defaultProps?: ComponentsPropsList["CometAdminSelect"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminSelect"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminSelect"];
         };
     }

@@ -153,12 +153,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminCopyToClipboardButton: Partial<CopyToClipboardButtonProps>;
+        CometAdminCopyToClipboardButton: CopyToClipboardButtonProps;
     }
 
     interface Components {
         CometAdminCopyToClipboardButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminCopyToClipboardButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminCopyToClipboardButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminCopyToClipboardButton"];
         };
     }

@@ -46,7 +46,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminAppHeaderMenuButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminAppHeaderMenuButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminAppHeaderMenuButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminAppHeaderMenuButton"];
         };
     }

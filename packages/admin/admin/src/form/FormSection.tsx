@@ -79,12 +79,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFormSection: Partial<FormSectionProps>;
+        CometAdminFormSection: FormSectionProps;
     }
 
     interface Components {
         CometAdminFormSection?: {
-            defaultProps?: ComponentsPropsList["CometAdminFormSection"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFormSection"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFormSection"];
         };
     }

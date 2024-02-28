@@ -211,7 +211,7 @@ export function TableDndOrder<TRow extends IRow>(inProps: TableDndOrderProps<TRo
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminTableDndOrder: Partial<TableDndOrderProps<IRow>>;
+        CometAdminTableDndOrder: TableDndOrderProps<IRow>;
     }
 
     interface ComponentNameToClassKey {

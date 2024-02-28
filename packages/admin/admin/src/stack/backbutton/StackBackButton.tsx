@@ -45,12 +45,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminStackBackButton: Partial<StackBackButtonProps>;
+        CometAdminStackBackButton: StackBackButtonProps;
     }
 
     interface Components {
         CometAdminStackBackButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminStackBackButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminStackBackButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminStackBackButton"];
         };
     }

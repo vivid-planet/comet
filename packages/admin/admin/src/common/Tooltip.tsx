@@ -225,7 +225,7 @@ export const Tooltip = (inProps: TooltipProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminTooltip: Partial<TooltipProps>;
+        CometAdminTooltip: TooltipProps;
     }
 
     interface ComponentNameToClassKey {
@@ -234,7 +234,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminTooltip?: {
-            defaultProps?: ComponentsPropsList["CometAdminTooltip"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminTooltip"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminTooltip"];
         };
     }

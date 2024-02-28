@@ -133,12 +133,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminToolbarBreadcrumbs: Partial<ToolbarBreadcrumbsProps>;
+        CometAdminToolbarBreadcrumbs: ToolbarBreadcrumbsProps;
     }
 
     interface Components {
         CometAdminToolbarBreadcrumbs?: {
-            defaultProps?: ComponentsPropsList["CometAdminToolbarBreadcrumbs"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminToolbarBreadcrumbs"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminToolbarBreadcrumbs"];
         };
     }

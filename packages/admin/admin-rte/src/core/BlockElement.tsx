@@ -125,12 +125,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminRteBlockElement: Partial<RteBlockElementProps>;
+        CometAdminRteBlockElement: RteBlockElementProps;
     }
 
     interface Components {
         CometAdminRteBlockElement?: {
-            defaultProps?: ComponentsPropsList["CometAdminRteBlockElement"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminRteBlockElement"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteBlockElement"];
         };
     }

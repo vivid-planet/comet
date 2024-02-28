@@ -84,12 +84,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFinalFormSaveCancelButtonsLegacy: Partial<FinalFormSaveCancelButtonsLegacyProps>;
+        CometAdminFinalFormSaveCancelButtonsLegacy: FinalFormSaveCancelButtonsLegacyProps;
     }
 
     interface Components {
         CometAdminFinalFormSaveCancelButtonsLegacy?: {
-            defaultProps?: ComponentsPropsList["CometAdminFinalFormSaveCancelButtonsLegacy"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFinalFormSaveCancelButtonsLegacy"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFinalFormSaveCancelButtonsLegacy"];
         };
     }

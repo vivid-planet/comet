@@ -93,12 +93,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminHoverActions: Partial<HoverActionsProps>;
+        CometAdminHoverActions: HoverActionsProps;
     }
 
     interface Components {
         CometAdminHoverActions?: {
-            defaultProps?: ComponentsPropsList["CometAdminHoverActions"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminHoverActions"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminHoverActions"];
         };
     }

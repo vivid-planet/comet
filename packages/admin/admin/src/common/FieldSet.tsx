@@ -233,7 +233,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminFieldSet?: {
-            defaultProps?: ComponentsPropsList["CometAdminFieldSet"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFieldSet"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFieldSet"];
         };
     }

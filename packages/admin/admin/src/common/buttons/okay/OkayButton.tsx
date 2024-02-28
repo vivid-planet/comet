@@ -39,12 +39,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminOkayButton: Partial<OkayButtonProps>;
+        CometAdminOkayButton: OkayButtonProps;
     }
 
     interface Components {
         CometAdminOkayButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminOkayButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminOkayButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminOkayButton"];
         };
     }

@@ -156,12 +156,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminTabs: Partial<TabsProps>;
+        CometAdminTabs: TabsProps;
     }
 
     interface Components {
         CometAdminTabs?: {
-            defaultProps?: ComponentsPropsList["CometAdminTabs"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminTabs"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminTabs"];
         };
     }

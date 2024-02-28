@@ -85,12 +85,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminToolbarBackButton: Partial<ToolbarBackButtonProps>;
+        CometAdminToolbarBackButton: ToolbarBackButtonProps;
     }
 
     interface Components {
         CometAdminToolbarBackButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminToolbarBackButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminToolbarBackButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminToolbarBackButton"];
         };
     }

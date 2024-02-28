@@ -270,12 +270,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFormFieldContainer: Partial<FieldContainerProps>;
+        CometAdminFormFieldContainer: FieldContainerProps;
     }
 
     interface Components {
         CometAdminFormFieldContainer?: {
-            defaultProps?: ComponentsPropsList["CometAdminFormFieldContainer"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFormFieldContainer"]>;
             styleOverrides?: ComponentsOverrides["CometAdminFormFieldContainer"];
         };
     }

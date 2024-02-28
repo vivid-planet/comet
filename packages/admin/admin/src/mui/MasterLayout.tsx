@@ -110,12 +110,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminMasterLayout: Partial<MasterLayoutProps>;
+        CometAdminMasterLayout: MasterLayoutProps;
     }
 
     interface Components {
         CometAdminMasterLayout?: {
-            defaultProps?: ComponentsPropsList["CometAdminMasterLayout"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminMasterLayout"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminMasterLayout"];
         };
     }

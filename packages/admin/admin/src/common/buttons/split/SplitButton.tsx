@@ -188,12 +188,12 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminSplitButton: Partial<SplitButtonProps>;
+        CometAdminSplitButton: SplitButtonProps;
     }
 
     interface Components {
         CometAdminSplitButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminSplitButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminSplitButton"]>;
         };
     }
 }

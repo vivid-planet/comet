@@ -227,12 +227,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFilterBarPopoverFilter: Partial<FilterBarPopoverFilterProps>;
+        CometAdminFilterBarPopoverFilter: FilterBarPopoverFilterProps;
     }
 
     interface Components {
         CometAdminFilterBarPopoverFilter?: {
-            defaultProps?: ComponentsPropsList["CometAdminFilterBarPopoverFilter"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFilterBarPopoverFilter"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFilterBarPopoverFilter"];
         };
     }

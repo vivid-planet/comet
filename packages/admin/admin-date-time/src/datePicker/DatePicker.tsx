@@ -94,12 +94,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminDatePicker: Partial<DatePickerProps>;
+        CometAdminDatePicker: DatePickerProps;
     }
 
     interface Components {
         CometAdminDatePicker?: {
-            defaultProps?: ComponentsPropsList["CometAdminDatePicker"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminDatePicker"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminDatePicker"];
         };
     }

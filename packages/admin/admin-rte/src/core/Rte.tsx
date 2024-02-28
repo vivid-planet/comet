@@ -387,12 +387,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminRte: Partial<RteProps>;
+        CometAdminRte: RteProps;
     }
 
     interface Components {
         CometAdminRte?: {
-            defaultProps?: ComponentsPropsList["CometAdminRte"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminRte"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminRte"];
         };
     }

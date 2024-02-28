@@ -154,12 +154,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminDateRangePicker: Partial<DateRangePickerProps>;
+        CometAdminDateRangePicker: DateRangePickerProps;
     }
 
     interface Components {
         CometAdminDateRangePicker?: {
-            defaultProps?: ComponentsPropsList["CometAdminDateRangePicker"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminDateRangePicker"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminDateRangePicker"];
         };
     }

@@ -229,12 +229,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminErrorBoundary: Partial<ErrorBoundaryProps>;
+        CometAdminErrorBoundary: ErrorBoundaryProps;
     }
 
     interface Components {
         CometAdminErrorBoundary?: {
-            defaultProps?: ComponentsPropsList["CometAdminErrorBoundary"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminErrorBoundary"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminErrorBoundary"];
         };
     }

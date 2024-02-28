@@ -167,7 +167,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminAlert?: {
-            defaultProps?: ComponentsPropsList["CometAdminAlert"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminAlert"]>;
             styleOverrides?: ComponentNameToClassKey["CometAdminAlert"];
         };
     }

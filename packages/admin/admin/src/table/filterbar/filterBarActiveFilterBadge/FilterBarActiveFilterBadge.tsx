@@ -67,12 +67,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFilterBarActiveFilterBadge: Partial<FilterBarActiveFilterBadgeProps>;
+        CometAdminFilterBarActiveFilterBadge: FilterBarActiveFilterBadgeProps;
     }
 
     interface Components {
         CometAdminFilterBarActiveFilterBadge?: {
-            defaultProps?: ComponentsPropsList["CometAdminFilterBarActiveFilterBadge"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFilterBarActiveFilterBadge"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFilterBarActiveFilterBadge"];
         };
     }

@@ -80,12 +80,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFilterBarMoreFilters: Partial<FilterBarMoreFiltersProps>;
+        CometAdminFilterBarMoreFilters: FilterBarMoreFiltersProps;
     }
 
     interface Components {
         CometAdminFilterBarMoreFilters?: {
-            defaultProps?: ComponentsPropsList["CometAdminFilterBarMoreFilters"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFilterBarMoreFilters"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFilterBarMoreFilters"];
         };
     }

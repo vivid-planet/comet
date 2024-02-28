@@ -45,12 +45,12 @@ declare module "@mui/material/styles" {
         CometAdminToolbarAutomaticTitleItem: ToolbarAutomaticTitleItemClassKey;
     }
     interface ComponentsPropsList {
-        CometAdminToolbarAutomaticTitleItem: Partial<ToolbarAutomaticTitleItemProps>;
+        CometAdminToolbarAutomaticTitleItem: ToolbarAutomaticTitleItemProps;
     }
 
     interface Components {
         CometAdminToolbarAutomaticTitleItem?: {
-            defaultProps?: ComponentsPropsList["CometAdminToolbarAutomaticTitleItem"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminToolbarAutomaticTitleItem"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminToolbarAutomaticTitleItem"];
         };
     }

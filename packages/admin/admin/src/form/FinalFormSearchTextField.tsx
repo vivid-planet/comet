@@ -51,12 +51,12 @@ export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps)
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminFinalFormSearchTextField: Partial<FinalFormSearchTextFieldProps>;
+        CometAdminFinalFormSearchTextField: FinalFormSearchTextFieldProps;
     }
 
     interface Components {
         CometAdminFinalFormSearchTextField?: {
-            defaultProps?: ComponentsPropsList["CometAdminFinalFormSearchTextField"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFinalFormSearchTextField"]>;
         };
     }
 }

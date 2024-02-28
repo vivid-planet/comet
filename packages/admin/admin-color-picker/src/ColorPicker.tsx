@@ -228,12 +228,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminColorPicker: Partial<ColorPickerProps>;
+        CometAdminColorPicker: ColorPickerProps;
     }
 
     interface Components {
         CometAdminColorPicker?: {
-            defaultProps?: ComponentsPropsList["CometAdminColorPicker"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminColorPicker"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminColorPicker"];
         };
     }
