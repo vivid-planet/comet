@@ -81,7 +81,6 @@
         "@aws-sdk/types": "^3.47.0",
         "@comet/eslint-config": "workspace:^6.2.1",
         "@kubernetes/client-node": "^0.18.1",
-        "@mikro-orm/cli": "^5.7.1",
         "@mikro-orm/core": "^5.7.1",
         "@mikro-orm/migrations": "^5.7.1",
         "@mikro-orm/nestjs": "^5.1.8",
@@ -122,7 +121,6 @@
     },
     "peerDependencies": {
         "@kubernetes/client-node": ">=0.18.0",
-        "@mikro-orm/cli": "^5.0.4",
         "@mikro-orm/core": "^5.0.4",
         "@mikro-orm/migrations": "^5.0.4",
         "@mikro-orm/nestjs": "^5.1.0",
