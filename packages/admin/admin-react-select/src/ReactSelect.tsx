@@ -3,7 +3,7 @@ import { SvgIconComponent } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ClearIcon from "@mui/icons-material/Clear";
 import DropdownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { Chip, ComponentsOverrides, InputBase, MenuItem, Paper, Theme, Typography, useTheme } from "@mui/material";
+import { Chip, ComponentsOverrides, InputBase, inputBaseClasses, MenuItem, Paper, Theme, Typography, useTheme } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
 import * as React from "react";
 import Select, { OptionTypeBase } from "react-select";
@@ -66,7 +66,7 @@ const ControlInput = styled(InputBase, {
         return [styles.input];
     },
 })(css`
-    .MuiInputBase-input {
+    .${inputBaseClasses.input} {
         display: flex;
         padding-right: 0;
     }
