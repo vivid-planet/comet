@@ -383,10 +383,8 @@ const FolderDataGrid = ({
                 defaultMessage: "Source",
             }),
             renderCell: ({ row }) => {
-                if (isFile(row)) {
-                    if (row.importSourceType && importSources?.[row.importSourceType]) {
-                        return importSources[row.importSourceType].label;
-                    }
+                if (isFile(row) && row.importSourceType && importSources?.[row.importSourceType]) {
+                    return importSources[row.importSourceType].label;
                 }
             },
             // TODO enable sorting/filtering in API
