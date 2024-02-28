@@ -1,5 +1,16 @@
 # @comet/cms-api
 
+## 6.3.0
+
+### Minor Changes
+
+-   fc1b16fe: Allow overriding the block context in `BlocksTransformerService#transformToPlain`
+
+### Patch Changes
+
+-   e2e2114b: Fix parsing of `contentScopeAnnotation` in `KubernetesService#getContentScope`
+    -   @comet/blocks-api@6.3.0
+
 ## 6.2.1
 
 ### Patch Changes
