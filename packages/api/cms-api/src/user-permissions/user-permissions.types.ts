@@ -13,6 +13,8 @@ export enum UserPermissions {
 
 export type Users = [User[], number];
 
+export type SystemUser = true;
+
 type PermissionForUser = {
     permission: string;
     contentScopes?: ContentScope[];
@@ -22,7 +24,7 @@ export type PermissionsForUser = PermissionForUser[] | UserPermissions.allPermis
 export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentScopes;
 
 export interface AccessControlServiceInterface {
-    isAllowed(user: CurrentUser, permission: string, contentScope?: ContentScope): boolean;
+    isAllowed(user: CurrentUser | SystemUser, permission: string, contentScope?: ContentScope): boolean;
     getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }
