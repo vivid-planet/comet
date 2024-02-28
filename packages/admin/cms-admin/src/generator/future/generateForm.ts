@@ -156,7 +156,7 @@ export function generateForm(
     } ${
         numberFields.length > 0 || Object.keys(rootBlocks).length > 0
             ? `& {
-        ${numberFields.map((field) => `${String(field.name)}: string${isFieldOptional(String(field.name)) ? ` | null` : ``};`).join("\n")}
+        ${numberFields.map((field) => `${String(field.name)}${isFieldOptional(String(field.name)) ? `?` : ``}: string;`).join("\n")}
         ${Object.keys(rootBlocks)
             .map((rootBlockKey) => `${rootBlockKey}: BlockState<typeof rootBlocks.${rootBlockKey}>;`)
             .join("\n")}
@@ -187,7 +187,7 @@ export function generateForm(
                 .map((field) => {
                     let assignment = `String(data.${instanceGqlType}.${String(field.name)})`;
                     if (isFieldOptional(String(field.name))) {
-                        assignment = `data.${instanceGqlType}.${String(field.name)} ? ${assignment} : null`;
+                        assignment = `data.${instanceGqlType}.${String(field.name)} ? ${assignment} : undefined`;
                     }
                     return `${String(field.name)}: ${assignment},`;
                 })

@@ -50,7 +50,7 @@ const rootBlocks = {
 };
 
 type FormValues = Omit<GQLProductFormDetailsFragment, "price"> & {
-    price: string | null;
+    price?: string;
     image: BlockState<typeof rootBlocks.image>;
 };
 
@@ -75,7 +75,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             data?.product
                 ? {
                       ...filter<GQLProductFormDetailsFragment>(productFormFragment, data.product),
-                      price: data.product.price ? String(data.product.price) : null,
+                      price: data.product.price ? String(data.product.price) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {
