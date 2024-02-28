@@ -16,11 +16,9 @@ const Root = styled("div", {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})(
-    css`
-        flex-grow: 1;
-    `,
-);
+})(css`
+    flex-grow: 1;
+`);
 
 export function AppHeaderFillSpace(inProps: AppHeaderFillSpaceProps) {
     const { slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminAppHeaderFillSpace" });

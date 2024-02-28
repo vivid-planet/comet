@@ -18,12 +18,10 @@ const Root = styled("div", {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})(
-    css`
-        margin-bottom: 10px;
-        margin-right: 6px;
-    `,
-);
+})(css`
+    margin-bottom: 10px;
+    margin-right: 6px;
+`);
 
 const StyledFilterBarButton = styled(FilterBarButton, {
     name: "CometAdminFilterBarMoreFilters",

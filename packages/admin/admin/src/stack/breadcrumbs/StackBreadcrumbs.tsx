@@ -25,11 +25,9 @@ const Root = styled("div", {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})(
-    css`
-        position: relative;
-    `,
-);
+})(css`
+    position: relative;
+`);
 
 const Breadcrumbs = styled("div", {
     name: "CometAdminStackBreadcrumbs",
@@ -54,14 +52,12 @@ const ListItem = styled("div", {
     overridesResolver(_, styles) {
         return [styles.listItem];
     },
-})(
-    css`
-        display: flex;
-        align-items: center;
-        flex-shrink: 0;
-        white-space: nowrap;
-    `,
-);
+})(css`
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    white-space: nowrap;
+`);
 
 const Separator = styled("div", {
     name: "CometAdminStackBreadcrumbs",
@@ -69,14 +65,12 @@ const Separator = styled("div", {
     overridesResolver(_, styles) {
         return [styles.separator];
     },
-})(
-    css`
-        font-size: 12px;
-        line-height: 0;
-        margin-left: 8px;
-        margin-right: 8px;
-    `,
-);
+})(css`
+    font-size: 12px;
+    line-height: 0;
+    margin-left: 8px;
+    margin-right: 8px;
+`);
 
 export const BackButtonSeparator = styled("div", {
     name: "CometAdminStackBreadcrumbs",

@@ -175,7 +175,7 @@ const Error = styled(FormHelperText, {
     overridesResolver(_, styles) {
         return [styles.error];
     },
-})();
+})(css``);
 
 const Warning = styled(FormHelperText, {
     name: "CometAdminFormFieldContainer",

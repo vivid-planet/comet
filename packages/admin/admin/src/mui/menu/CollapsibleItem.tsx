@@ -53,7 +53,7 @@ const Item = styled(MenuItem, {
     overridesResolver(_, styles) {
         return [styles.menuItem];
     },
-})();
+})(css``);
 
 export interface MenuLevel {
     level?: 1 | 2;

@@ -34,6 +34,7 @@ const Root = styled(IconButton, {
         margin-right: ${theme.spacing(2)};
     `,
 );
+
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminAppHeaderMenuButton: AppHeaderMenuButtonClassKey;

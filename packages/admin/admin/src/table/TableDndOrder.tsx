@@ -122,7 +122,7 @@ const Root = styled(Table, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 const DragCell = styled(TableCell, {
     name: "CometAdminTableDndOrder",

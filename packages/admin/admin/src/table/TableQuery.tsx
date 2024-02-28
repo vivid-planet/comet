@@ -34,11 +34,9 @@ const Root = styled("div", {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})(
-    () => css`
-        position: relative;
-    `,
-);
+})(css`
+    position: relative;
+`);
 
 const LoadingContainer = styled("div", {
     name: "CometAdminTableQuery",
@@ -62,19 +60,17 @@ const LoadingPaper = styled(Paper, {
     overridesResolver(_, styles) {
         return [styles.loadingPaper];
     },
-})(
-    () => css`
-        display: flex;
-        position: absolute;
-        transform: translate(-50%, -50%);
-        justify-content: center;
-        align-items: center;
-        margin-left: auto;
-        margin-right: auto;
-        height: 100px;
-        width: 100px;
-    `,
-);
+})(css`
+    display: flex;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100px;
+    width: 100px;
+`);
 
 export interface TableQueryProps extends ThemedComponentBaseProps<{ root: "div"; loadingContainer: "div"; loadingPaper: typeof Paper }> {
     api: ITableQueryApi;

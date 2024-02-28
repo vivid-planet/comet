@@ -97,6 +97,7 @@ const DiscardButton = styled(Button, {
         margin-right: ${theme.spacing(2)};
     `,
 );
+
 export enum PromptAction {
     Cancel,
     Discard,

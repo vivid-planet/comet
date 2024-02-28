@@ -45,7 +45,7 @@ const IconButton = styled(MuiIconButton, {
     overridesResolver(_, styles) {
         return [styles.backButton];
     },
-})() as typeof MuiIconButton;
+})(css``) as typeof MuiIconButton;
 
 interface BreadcrumbsEntryProps {
     item: BreadcrumbItem;

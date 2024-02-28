@@ -16,12 +16,10 @@ const Root = styled("div", {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})(
-    () => css`
-        display: flex;
-        flex-wrap: nowrap;
-    `,
-);
+})(css`
+    display: flex;
+    flex-wrap: nowrap;
+`);
 
 const Header = styled("div", {
     name: "CometAdminMasterLayout",
@@ -41,12 +39,10 @@ const ContentWrapper = styled("div", {
     overridesResolver(_, styles) {
         return [styles.contentWrapper];
     },
-})(
-    () => css`
-        flex-grow: 1;
-        padding-top: var(--comet-admin-master-layout-content-top-spacing);
-    `,
-);
+})(css`
+    flex-grow: 1;
+    padding-top: var(--comet-admin-master-layout-content-top-spacing);
+`);
 
 export interface MasterLayoutProps
     extends ThemedComponentBaseProps<{

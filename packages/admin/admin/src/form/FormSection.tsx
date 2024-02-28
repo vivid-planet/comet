@@ -41,7 +41,7 @@ const Children = styled("div", {
     overridesResolver(_, styles) {
         return [styles.children];
     },
-})();
+})(css``);
 
 export interface FormSectionProps
     extends ThemedComponentBaseProps<{

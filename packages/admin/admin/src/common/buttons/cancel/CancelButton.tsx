@@ -1,5 +1,5 @@
 import { Clear } from "@comet/admin-icons";
-import { Button, ButtonClassKey } from "@mui/material";
+import { Button, ButtonClassKey, css } from "@mui/material";
 import { ButtonProps } from "@mui/material/Button";
 import { styled, Theme, useThemeProps } from "@mui/material/styles";
 import { ComponentsOverrides } from "@mui/material/styles/overrides";
@@ -17,7 +17,7 @@ const Root = styled(Button, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 export function CancelButton(inProps: CancelButtonProps) {
     const {

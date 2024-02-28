@@ -1,5 +1,5 @@
 import { ComponentsOverrides, TableRow } from "@mui/material";
-import { styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import { TableRowProps } from "@mui/material/TableRow";
 import React from "react";
 
@@ -18,7 +18,7 @@ const Root = styled(TableRow, {
     overridesResolver({ ownerState: { isOdd } }: { ownerState: OwnerState }, styles) {
         return [styles.root, !isOdd && styles.even, isOdd && styles.odd];
     },
-})<{ ownerState: OwnerState }>();
+})<{ ownerState: OwnerState }>(css``);
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

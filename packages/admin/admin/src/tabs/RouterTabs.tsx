@@ -20,7 +20,7 @@ const Root = styled("div", {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 const StyledTabs = styled(Tabs, {
     name: "CometAdminRouterTabs",
@@ -28,7 +28,7 @@ const StyledTabs = styled(Tabs, {
     overridesResolver(_, styles) {
         return [styles.tabs];
     },
-})();
+})(css``);
 
 const Content = styled("div", {
     name: "CometAdminRouterTabs",

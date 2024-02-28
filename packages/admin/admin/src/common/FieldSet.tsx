@@ -99,7 +99,7 @@ const Root = styled(MuiAccordion, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 const Summary = styled(MuiAccordionSummary, {
     name: "CometAdminFieldSet",

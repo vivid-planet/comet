@@ -26,7 +26,7 @@ const Root = styled("div", {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 const StyledCancelButton = styled(CancelButton, {
     name: "CometAdminFinalFormSaveCancelButtonsLegacy",

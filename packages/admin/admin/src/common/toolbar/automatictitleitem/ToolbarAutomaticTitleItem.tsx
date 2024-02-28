@@ -1,5 +1,5 @@
 import { ComponentsOverrides, Typography, TypographyTypeMap } from "@mui/material";
-import { styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
@@ -23,7 +23,7 @@ const Root = styled(ToolbarItem, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 export type ToolbarAutomaticTitleItemClassKey = "root" | "typography";
 

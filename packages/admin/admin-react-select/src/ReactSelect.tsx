@@ -214,7 +214,7 @@ const MenuSlot = styled(Paper, {
     overridesResolver(_, styles) {
         return [styles.paper];
     },
-})();
+})(css``);
 
 function Menu<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: MenuProps<OptionType, IsMulti>) {
     return <MenuSlot {...props.innerProps}>{props.children}</MenuSlot>;

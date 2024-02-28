@@ -112,7 +112,7 @@ const Title = styled(AlertTitle, {
     overridesResolver(_, styles) {
         return [styles.title];
     },
-})();
+})(css``);
 
 const Text = styled(Typography, {
     name: "CometAdminAlert",

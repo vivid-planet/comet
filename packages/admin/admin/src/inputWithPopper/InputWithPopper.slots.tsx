@@ -9,7 +9,7 @@ export const Root = styled("div", {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 export const InputBase = styled(MuiInputBase, {
     name: "CometAdminInputWithPopper",
@@ -17,7 +17,7 @@ export const InputBase = styled(MuiInputBase, {
     overridesResolver(_, styles) {
         return [styles.inputBase];
     },
-})();
+})(css``);
 
 export const Popper = styled(MuiPopper, {
     name: "CometAdminInputWithPopper",

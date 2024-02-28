@@ -67,11 +67,9 @@ const FilterBadge = styled("span", {
     overridesResolver(_, styles) {
         return [styles.filterBadge];
     },
-})(
-    css`
-        margin-left: 6px;
-    `,
-);
+})(css`
+    margin-left: 6px;
+`);
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

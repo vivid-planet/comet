@@ -9,12 +9,10 @@ export const Root = styled(ButtonBase, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})(
-    css`
-        height: 100%;
-        border-left: 1px solid rgba(255, 255, 255, 0.2);
-    `,
-);
+})(css`
+    height: 100%;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+`);
 
 export const Content = styled("div", {
     name: "CometAdminAppHeaderButton",
@@ -75,4 +73,4 @@ export const Text = styled(Typography, {
     overridesResolver(_, styles) {
         return [styles.typography];
     },
-})() as typeof Typography;
+})(css``) as typeof Typography;

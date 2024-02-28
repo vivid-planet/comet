@@ -1,5 +1,5 @@
 import { ComponentsOverrides, Typography as MuiTypography, TypographyTypeMap } from "@mui/material";
-import { styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
@@ -25,7 +25,7 @@ const Root = styled(ToolbarItem, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 const Typography = styled(MuiTypography, {
     name: "CometAdminToolbarTitleItem",
@@ -33,7 +33,7 @@ const Typography = styled(MuiTypography, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 export const ToolbarTitleItem = (inProps: ToolbarTitleItemProps) => {
     const { children, typographyProps = {}, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarTitleItem" });

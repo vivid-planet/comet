@@ -37,7 +37,7 @@ const Root = styled("div", {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 const HoverAreaExpansion = styled("div", {
     name: "CometAdminHoverActions",
@@ -45,17 +45,15 @@ const HoverAreaExpansion = styled("div", {
     overridesResolver(_, styles) {
         return [styles.hoverAreaExpansion];
     },
-})(
-    css`
-        // This element expands the root's hover area to include the parent's full size, including padding.
-        // For example, when used inside a MuiTableCell, the whole cell can be hovered instead of only its text content.
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-    `,
-);
+})(css`
+    // This element expands the root's hover area to include the parent's full size, including padding.
+    // For example, when used inside a MuiTableCell, the whole cell can be hovered instead of only its text content.
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+`);
 
 const Actions = styled("div", {
     name: "CometAdminHoverActions",
@@ -84,12 +82,10 @@ const Children = styled("div", {
     overridesResolver(_, styles) {
         return [styles.children];
     },
-})(
-    css`
-        position: relative;
-        z-index: 1;
-    `,
-);
+})(css`
+    position: relative;
+    z-index: 1;
+`);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

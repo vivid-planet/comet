@@ -25,14 +25,12 @@ const InputsWrapper = styled("div", {
     overridesResolver(_, styles) {
         return [styles.inputsWrapper];
     },
-})(
-    css`
-        justify-content: space-between;
-        margin-bottom: 15px;
-        align-items: center;
-        display: flex;
-    `,
-);
+})(css`
+    justify-content: space-between;
+    margin-bottom: 15px;
+    align-items: center;
+    display: flex;
+`);
 
 const InputFieldsSeparatorContainer = styled("div", {
     name: "CometAdminFinalFormRangeInput",

@@ -39,11 +39,9 @@ const FieldBarWrapper = styled("div", {
     overridesResolver(_, styles) {
         return [styles.fieldBarWrapper];
     },
-})(
-    css`
-        position: relative;
-    `,
-);
+})(css`
+    position: relative;
+`);
 
 const PopoverContentContainer = styled("div", {
     name: "CometAdminFilterBarPopoverFilter",
@@ -51,17 +49,15 @@ const PopoverContentContainer = styled("div", {
     overridesResolver(_, styles) {
         return [styles.popoverContentContainer];
     },
-})(
-    css`
-        min-width: 300px;
+})(css`
+    min-width: 300px;
 
-        & ${FieldContainerRoot} {
-            box-sizing: border-box;
-            padding: 20px;
-            margin-bottom: 0;
-        }
-    `,
-);
+    & ${FieldContainerRoot} {
+        box-sizing: border-box;
+        padding: 20px;
+        margin-bottom: 0;
+    }
+`);
 
 const ButtonsContainer = styled("div", {
     name: "CometAdminFilterBarPopoverFilter",
@@ -86,7 +82,7 @@ const Popover = styled(MuiPopover, {
     overridesResolver(_, styles) {
         return [styles.popover];
     },
-})();
+})(css``);
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

@@ -33,7 +33,7 @@ const TooltipRoot = styled(MuiTooltip, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 const TooltipPopper = styled(MuiPopper, {
     name: "CometAdminTooltip",

@@ -75,20 +75,18 @@ const TemporaryDrawer = styled(Drawer, {
     overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
         return [styles.drawer, styles.temporaryDrawer, ownerState.open && styles.open, !ownerState.open && styles.closed];
     },
-})<{ ownerState: OwnerState }>(
-    ({ theme, ownerState }) => css`
-        [class*="MuiDrawer-paper"] {
-            background-color: #fff;
-        }
-        [class*="MuiPaper-root"] {
-            flex-grow: 1;
-            overflow-x: hidden;
-        }
-        [class*="MuiDrawer-paperAnchorLeft"] {
-            border-right: none;
-        }
-    `,
-);
+})<{ ownerState: OwnerState }>(css`
+    [class*="MuiDrawer-paper"] {
+        background-color: #fff;
+    }
+    [class*="MuiPaper-root"] {
+        flex-grow: 1;
+        overflow-x: hidden;
+    }
+    [class*="MuiDrawer-paperAnchorLeft"] {
+        border-right: none;
+    }
+`);
 
 export interface MenuProps extends ThemedComponentBaseProps<{ permanentDrawer: typeof Drawer; temporaryDrawer: typeof Drawer }> {
     children: React.ReactNode;

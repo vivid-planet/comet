@@ -53,7 +53,7 @@ const Alert = styled(MuiAlert, {
     overridesResolver(_, styles) {
         return [styles.alert];
     },
-})();
+})(css``);
 
 const Message = styled(Typography, {
     name: "CometAdminErrorBoundary",
@@ -61,7 +61,7 @@ const Message = styled(Typography, {
     overridesResolver(_, styles) {
         return [styles.message];
     },
-})();
+})(css``);
 
 const ExceptionDetails = styled("details", {
     name: "CometAdminErrorBoundary",
@@ -69,11 +69,9 @@ const ExceptionDetails = styled("details", {
     overridesResolver(_, styles) {
         return [styles.exceptionDetails];
     },
-})(
-    () => css`
-        white-space: pre-wrap;
-    `,
-);
+})(css`
+    white-space: pre-wrap;
+`);
 
 const ExceptionSummary = styled("summary", {
     name: "CometAdminErrorBoundary",
@@ -150,7 +148,7 @@ const ExceptionStackTrace = styled(Typography, {
     overridesResolver(_, styles) {
         return [styles.exceptionStackTrace];
     },
-})();
+})(css``);
 
 export const ErrorBoundary = (inProps: ErrorBoundaryProps) => {
     const props = useThemeProps({ props: inProps, name: "CometAdminErrorBoundary" });

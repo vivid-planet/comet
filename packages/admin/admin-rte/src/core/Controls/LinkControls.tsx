@@ -35,7 +35,7 @@ const Root = styled(ButtonGroup, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 const Item = styled("div", {
     name: "CometAdminRteLinkControls",

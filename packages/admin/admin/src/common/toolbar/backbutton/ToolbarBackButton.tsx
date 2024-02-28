@@ -27,7 +27,7 @@ const IconButton = styled(MuiIconButton, {
     overridesResolver(_, styles) {
         return [styles.iconButton];
     },
-})();
+})(css``);
 
 const ToolbarItem = styled(CommonToolbarItem, {
     name: "CometAdminToolbarBackButton",

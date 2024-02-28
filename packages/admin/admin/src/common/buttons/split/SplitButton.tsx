@@ -3,6 +3,7 @@ import {
     Button,
     ButtonGroup as MuiButtonGroup,
     ButtonGroupProps,
+    css,
     MenuItem as MuiMenuItem,
     MenuList as MuiMenuList,
     Popover as MuiPopover,
@@ -46,7 +47,7 @@ const Root = styled(MuiButtonGroup, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 const ActiveButton = styled(Button, {
     name: "CometAdminSplitButton",
@@ -54,7 +55,7 @@ const ActiveButton = styled(Button, {
     overridesResolver(_, styles) {
         return [styles.activeButton];
     },
-})();
+})(css``);
 
 const Popover = styled(MuiPopover, {
     name: "CometAdminSplitButton",
@@ -62,7 +63,7 @@ const Popover = styled(MuiPopover, {
     overridesResolver(_, styles) {
         return [styles.popover];
     },
-})();
+})(css``);
 
 const MenuList = styled(MuiMenuList, {
     name: "CometAdminSplitButton",
@@ -70,7 +71,7 @@ const MenuList = styled(MuiMenuList, {
     overridesResolver(_, styles) {
         return [styles.menuList];
     },
-})();
+})(css``);
 
 const MenuItem = styled(MuiMenuItem, {
     name: "CometAdminSplitButton",
@@ -78,7 +79,7 @@ const MenuItem = styled(MuiMenuItem, {
     overridesResolver(_, styles) {
         return [styles.menuItem];
     },
-})();
+})(css``);
 
 // Based on https://v4.mui.com/components/button-group/#split-button
 export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {

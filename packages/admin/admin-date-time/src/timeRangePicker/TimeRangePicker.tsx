@@ -52,7 +52,7 @@ const StartTimePicker = styled(TimePickerBase, {
     overridesResolver(_, styles) {
         return [styles.startTimePicker];
     },
-})();
+})(css``);
 
 const EndTimePicker = styled(TimePickerBase, {
     name: "CometAdminTimeRangePicker",
@@ -60,7 +60,7 @@ const EndTimePicker = styled(TimePickerBase, {
     overridesResolver(_, styles) {
         return [styles.endTimePicker];
     },
-})();
+})(css``);
 
 const Separator = styled(Typography, {
     name: "CometAdminTimeRangePicker",

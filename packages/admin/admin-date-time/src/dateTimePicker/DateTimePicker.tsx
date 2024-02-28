@@ -50,7 +50,7 @@ const DatePicker = styled(DatePickerBase, {
     overridesResolver(_, styles) {
         return [styles.datePicker];
     },
-})();
+})(css``);
 
 const TimePicker = styled(TimePickerBase, {
     name: "CometAdminDateTimePicker",
@@ -58,7 +58,7 @@ const TimePicker = styled(TimePickerBase, {
     overridesResolver(_, styles) {
         return [styles.timePicker];
     },
-})();
+})(css``);
 
 export interface DateTimePickerProps
     extends ThemedComponentBaseProps<{
