@@ -383,7 +383,7 @@ const FolderDataGrid = ({
                 defaultMessage: "Source",
             }),
             renderCell: ({ row }) => {
-                if (row.__typename === "DamFile") {
+                if (isFile(row)) {
                     if (row.importSourceType && importSources?.[row.importSourceType]) {
                         return importSources[row.importSourceType].label;
                     }
