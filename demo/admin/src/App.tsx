@@ -7,7 +7,7 @@ import "typeface-open-sans";
 
 import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
-import { ContentGenerationServiceContext } from "@comet/admin/lib/contentGeneration/ContentGenerationServiceContext";
+import { ContentGenerationServiceProvider } from "@comet/admin/lib/contentGeneration/ContentGenerationServiceProvider";
 import {
     CmsBlockContextProvider,
     createHttpClient,
@@ -58,7 +58,7 @@ class App extends React.Component {
 
     public render(): JSX.Element {
         return (
-            <ContentGenerationServiceContext.Provider value={{ enabled: true }}>
+            <ContentGenerationServiceProvider enabled>
                 <ApolloProvider client={apolloClient}>
                     <CurrentUserProvider>
                         <SitesConfigProvider
@@ -122,7 +122,7 @@ class App extends React.Component {
                         </SitesConfigProvider>
                     </CurrentUserProvider>
                 </ApolloProvider>
-            </ContentGenerationServiceContext.Provider>
+            </ContentGenerationServiceProvider>
         );
     }
 }
