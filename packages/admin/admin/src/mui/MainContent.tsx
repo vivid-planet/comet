@@ -2,6 +2,8 @@ import { ComponentsOverrides } from "@mui/material";
 import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+
 export type MainContentClassKey = "root" | "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight";
 
 type OwnerState = Pick<MainContentProps, "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight">;
@@ -46,7 +48,7 @@ const Root = styled("main", {
     `,
 );
 
-export interface MainContentProps {
+export interface MainContentProps extends ThemedComponentBaseProps {
     children?: React.ReactNode;
     disablePaddingTop?: boolean;
     disablePaddingBottom?: boolean;

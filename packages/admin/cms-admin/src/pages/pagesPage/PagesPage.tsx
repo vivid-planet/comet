@@ -157,7 +157,6 @@ export function PagesPage({
                             </ToolbarActions>
                         </Toolbar>
                         <PageTreeContext.Provider value={{ allCategories, currentCategory: category, documentTypes, tree, query: pagesQuery }}>
-                            {/* @ts-expect-error TODO: fix types - `sx` is missing here for some reason */}
                             <MainContent fullHeight sx={{ display: "flex", flexDirection: "column" }}>
                                 <Box sx={{ width: "100%", paddingLeft: 24, paddingRight: 50 }}>
                                     <PagesPageActionToolbar
