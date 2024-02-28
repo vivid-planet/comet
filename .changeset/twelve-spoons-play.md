@@ -2,6 +2,6 @@
 "@comet/admin": major
 ---
 
-Remove the `disabled` class key in `ClearInputButtonClassKey`
+Remove the `disabled` class-key in `ClearInputButton`
 
-Use the `:disabled` selector on `root` instead when styling the disabled state. 
+Use the `:disabled` selector instead when styling the disabled state.
