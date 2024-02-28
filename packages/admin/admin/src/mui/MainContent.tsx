@@ -6,7 +6,9 @@ import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type MainContentClassKey = "root" | "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight";
 
-type OwnerState = Pick<MainContentProps, "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight">;
+type OwnerState = Pick<MainContentProps, "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight"> & {
+    topPosition: number;
+};
 
 const Root = styled("main", {
     name: "CometAdminMainContent",
@@ -28,7 +30,7 @@ const Root = styled("main", {
 
         ${ownerState.fullHeight &&
         css`
-            height: calc(100vh - var(--comet-admin-main-content-top-position));
+            height: calc(100vh - ${ownerState.topPosition}px);
         `}
 
         ${ownerState.disablePaddingTop &&
@@ -70,15 +72,11 @@ export function MainContent(inProps: MainContentProps) {
         disablePaddingTop,
         disablePaddingBottom,
         disablePadding,
+        topPosition,
     };
 
     return (
-        <Root
-            ownerState={ownerState}
-            {...restProps}
-            ref={mainRef}
-            style={{ "--comet-admin-main-content-top-position": `${topPosition}px` } as React.CSSProperties}
-        >
+        <Root ownerState={ownerState} {...restProps} ref={mainRef}>
             {children}
         </Root>
     );
