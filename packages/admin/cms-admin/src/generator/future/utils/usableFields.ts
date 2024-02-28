@@ -1,7 +1,10 @@
-type GqlLeaves<T> = "__typename" extends keyof T
-    ? {
-          [K in keyof T as K extends "__typename" ? never : K]-?: GqlLeaves<T[K]>;
-      }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type GqlLeaves<T> = T extends any
+    ? "__typename" extends keyof T
+        ? {
+              [K in keyof T as K extends "__typename" ? never : K]-?: GqlLeaves<T[K]>;
+          }
+        : never
     : never;
 
 type FieldNames<T> = {
