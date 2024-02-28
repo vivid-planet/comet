@@ -130,7 +130,12 @@ const Root = styled(ListItemButton, {
     `,
 );
 
-export interface MenuItemProps extends ThemedComponentBaseProps<{ root: typeof ListItemButton }>, MenuLevel, ListItemButtonProps {
+export interface MenuItemProps
+    extends ThemedComponentBaseProps<{
+            root: typeof ListItemButton;
+        }>,
+        MenuLevel,
+        ListItemButtonProps {
     primary: React.ReactNode;
     secondary?: React.ReactNode;
     icon?: React.ReactElement;

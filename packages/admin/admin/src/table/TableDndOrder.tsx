@@ -13,7 +13,10 @@ import { TableBodyRow } from "./TableBodyRow";
 export type TableDndOrderClassKey = "root" | "dragCell" | "dragIconContainer";
 
 interface IDndOrderRowProps<TRow extends IRow>
-    extends ThemedComponentBaseProps<{ dragCell: typeof TableCell; dragIconContainer: "div" }>,
+    extends ThemedComponentBaseProps<{
+            dragCell: typeof TableCell;
+            dragIconContainer: "div";
+        }>,
         ITableRowProps<TRow> {
     moveRow: (dragIndex: number, hoverIndex: number) => void;
     onDragEnd?: () => void;
@@ -160,7 +163,11 @@ const DragItemContainer = styled("div", {
 `);
 
 interface TableDndOrderProps<TRow extends IRow>
-    extends ThemedComponentBaseProps<{ root: typeof Table; dragCell: typeof TableCell; dragIconContainer: "div" }>,
+    extends ThemedComponentBaseProps<{
+            root: typeof Table;
+            dragCell: typeof TableCell;
+            dragIconContainer: "div";
+        }>,
         ITableProps<TRow> {
     moveRow: (dragIndex: number, hoverIndex: number) => void;
     onDragEnd?: () => void;

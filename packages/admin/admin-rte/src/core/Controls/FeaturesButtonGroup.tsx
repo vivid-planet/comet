@@ -10,7 +10,12 @@ import { IFeatureConfig } from "../types";
 import { ControlButton } from "./ControlButton";
 
 interface IProps
-    extends ThemedComponentBaseProps<{ root: "div"; buttonWrapper: "div"; listItem: typeof MenuItem; listItemIcon: typeof MuiListItemIcon }> {
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        buttonWrapper: "div";
+        listItem: typeof MenuItem;
+        listItemIcon: typeof MuiListItemIcon;
+    }> {
     features: IFeatureConfig[];
     disabled?: boolean;
     editorRef: React.RefObject<Editor>;

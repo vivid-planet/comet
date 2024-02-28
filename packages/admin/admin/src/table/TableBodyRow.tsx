@@ -23,7 +23,11 @@ const Root = styled(TableRow, {
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export interface TableBodyRowProps extends ThemedComponentBaseProps<{ root: typeof TableRow }>, TableRowProps {
+export interface TableBodyRowProps
+    extends ThemedComponentBaseProps<{
+            root: typeof TableRow;
+        }>,
+        TableRowProps {
     index?: number;
     hideTableHead?: boolean;
 }

@@ -72,7 +72,12 @@ const LoadingPaper = styled(Paper, {
     width: 100px;
 `);
 
-export interface TableQueryProps extends ThemedComponentBaseProps<{ root: "div"; loadingContainer: "div"; loadingPaper: typeof Paper }> {
+export interface TableQueryProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        loadingContainer: "div";
+        loadingPaper: typeof Paper;
+    }> {
     api: ITableQueryApi;
     loading: boolean;
     error?: ApolloError;

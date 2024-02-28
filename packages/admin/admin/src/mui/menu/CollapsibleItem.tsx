@@ -63,7 +63,11 @@ type MenuChild = React.ReactElement<MenuItemRouterLinkProps>;
 
 export interface MenuCollapsibleItemProps
     extends Omit<MenuItemProps, "slotProps">,
-        ThemedComponentBaseProps<{ root: "div"; listItem: "div"; menuItem: typeof MenuItem }> {
+        ThemedComponentBaseProps<{
+            root: "div";
+            listItem: "div";
+            menuItem: typeof MenuItem;
+        }> {
     children: MenuChild | MenuChild[];
     openByDefault?: boolean;
     openedIcon?: React.ReactNode;

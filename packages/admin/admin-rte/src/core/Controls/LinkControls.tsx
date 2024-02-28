@@ -6,7 +6,12 @@ import LinkToolbarButton from "../extension/Link/ToolbarButton";
 import LinksRemoveToolbarButton from "../extension/LinksRemove/ToolbarButton";
 import { IControlProps } from "../types";
 
-export interface RteLinkControlsProps extends IControlProps, ThemedComponentBaseProps<{ root: typeof ButtonGroup; item: "div" }> {}
+export interface RteLinkControlsProps
+    extends IControlProps,
+        ThemedComponentBaseProps<{
+            root: typeof ButtonGroup;
+            item: "div";
+        }> {}
 
 function StyledLinkControls(inProps: RteLinkControlsProps) {
     const props = useThemeProps({ props: inProps, name: "CometAdminRteLinkControls" });

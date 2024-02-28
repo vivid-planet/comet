@@ -88,7 +88,11 @@ const TemporaryDrawer = styled(Drawer, {
     }
 `);
 
-export interface MenuProps extends ThemedComponentBaseProps<{ permanentDrawer: typeof Drawer; temporaryDrawer: typeof Drawer }> {
+export interface MenuProps
+    extends ThemedComponentBaseProps<{
+        permanentDrawer: typeof Drawer;
+        temporaryDrawer: typeof Drawer;
+    }> {
     children: React.ReactNode;
     variant?: "permanent" | "temporary";
     drawerWidth?: number;

@@ -102,7 +102,11 @@ const Root = styled(Typography, {
     `,
 );
 
-export interface RteBlockElementProps extends ThemedComponentBaseProps<{ root: typeof Typography }>, TypographyProps {
+export interface RteBlockElementProps
+    extends ThemedComponentBaseProps<{
+            root: typeof Typography;
+        }>,
+        TypographyProps {
     type?: StylableBlockTypes;
     component?: React.ElementType;
 }

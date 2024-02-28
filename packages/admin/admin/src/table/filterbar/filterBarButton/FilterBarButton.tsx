@@ -74,7 +74,12 @@ const FilterBadge = styled("span", {
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export interface FilterBarButtonProps extends ThemedComponentBaseProps<{ root: typeof Button; filterBadge: "span" }>, ButtonProps {
+export interface FilterBarButtonProps
+    extends ThemedComponentBaseProps<{
+            root: typeof Button;
+            filterBadge: "span";
+        }>,
+        ButtonProps {
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
     numberDirtyFields?: number;
     openPopover?: boolean;
