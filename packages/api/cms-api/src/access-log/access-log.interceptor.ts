@@ -3,7 +3,7 @@ import { GqlExecutionContext } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 
 import { CurrentUser } from "../user-permissions/dto/current-user";
-import { SHOULD_LOG_REQUEST } from "./access-log.constants";
+import { ENABLE_LOGGING_IN_DEVELOPMENT, SHOULD_LOG_REQUEST } from "./access-log.constants";
 import { ShouldLogRequest } from "./access-log.module";
 
 const IGNORED_PATHS = ["/dam/images/:hash/:fileId", "/dam/files/:hash/:fileId", "/dam/images/preview/:fileId", "/dam/files/preview/:fileId"];
@@ -12,9 +12,13 @@ const IGNORED_PATHS = ["/dam/images/:hash/:fileId", "/dam/files/:hash/:fileId", 
 export class AccessLogInterceptor implements NestInterceptor {
     protected readonly logger = new Logger(AccessLogInterceptor.name);
 
-    constructor(@Optional() @Inject(SHOULD_LOG_REQUEST) private readonly shouldLogRequest?: ShouldLogRequest) {}
+    constructor(
+        @Optional() @Inject(SHOULD_LOG_REQUEST) private readonly shouldLogRequest?: ShouldLogRequest,
+        @Optional() @Inject(ENABLE_LOGGING_IN_DEVELOPMENT) private readonly enableLoggingInDevelopment: boolean = false,
+    ) {}
 
     intercept(context: ExecutionContext, next: CallHandler) {
+        const loggingEnabled = process.env.NODE_ENV !== "development" || this.enableLoggingInDevelopment;
         const requestType = context.getType().toString();
 
         const requestData: string[] = [];
@@ -72,7 +76,7 @@ export class AccessLogInterceptor implements NestInterceptor {
             );
         }
 
-        if (!ignored) {
+        if (!ignored && loggingEnabled) {
             this.logger.log(`Request type: ${requestType} | ${requestData.join(" | ")}`);
         }
 
