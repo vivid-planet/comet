@@ -21,8 +21,17 @@ export class CurrentUser {
     email: string;
     @Field()
     language: string;
+
+    // content scopes generally set for all permissions (or null for all content scopes)
     @Field(() => [GraphQLJSONObject], { nullable: true })
     contentScopes: ContentScope[] | null;
+
+    // overridden content scopes for this permission or null for not overriding it
     @Field(() => [CurrentUserPermission])
     permissions: CurrentUserPermission[];
+
+    // Only for documentation, actually a field resolver in CurrentUserResolver, only used in the admin after login, not used for permission checks
+    // all combined content scopes (no null-value because the discrete values are needed, can be big)
+    // @Field(() => [GraphQLJSONObject])
+    // allowedContentScopes: ContentScope[];
 }
