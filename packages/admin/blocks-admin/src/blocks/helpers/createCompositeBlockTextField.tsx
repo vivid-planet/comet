@@ -1,4 +1,4 @@
-import { Field, FinalFormInput } from "@comet/admin";
+import { Field, FieldProps, FinalFormInput } from "@comet/admin";
 import * as React from "react";
 import { FormProps } from "react-final-form";
 
@@ -7,20 +7,20 @@ import { createCompositeSetting } from "./composeBlocks/createCompositeSetting";
 
 interface Options {
     defaultValue: string;
-    displayName?: string;
-    fieldProps?: FormProps<Record<"value", string>, Record<"value", string>>;
+    formProps?: FormProps<Record<"value", string>, Record<"value", string>>;
+    fieldProps?: Partial<FieldProps<string, HTMLElement>>;
 }
 
-export function createCompositeBlockTextField({ defaultValue, displayName, fieldProps }: Options) {
+export function createCompositeBlockTextField({ defaultValue, formProps, fieldProps }: Options) {
     return createCompositeSetting<string>({
         defaultValue,
         AdminComponent: ({ state, updateState }) => (
             <BlocksFinalForm<{ value: typeof state }>
-                {...fieldProps}
+                {...formProps}
                 onSubmit={({ value }) => updateState(value ?? "")}
                 initialValues={{ value: state || undefined }}
             >
-                <Field fullWidth name="value" type="text" label={displayName} component={FinalFormInput} />
+                <Field fullWidth name="value" type="text" component={FinalFormInput} {...fieldProps} />
             </BlocksFinalForm>
         ),
     });
