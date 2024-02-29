@@ -27,7 +27,7 @@ export function generateFormField(
     if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
     const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
 
-    const required = isFieldOptional({ config, gqlIntrospection, gqlType });
+    const required = !isFieldOptional({ config, gqlIntrospection, gqlType });
 
     //TODO verify introspectionField.type is compatbile with config.type
 
