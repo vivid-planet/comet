@@ -137,26 +137,26 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
             ...formValues,
             address: {
                 ...formValues.address,
-                streetNumber: formValues.address.streetNumber ? parseFloat(formValues.address.streetNumber) : null,
-                zip: parseFloat(formValues.address.zip),
+                streetNumber: formValues.address.streetNumber ? parseInt(formValues.address.streetNumber) : null,
+                zip: parseInt(formValues.address.zip),
                 alternativeAddress: {
                     ...formValues.address.alternativeAddress,
                     streetNumber: formValues.address.alternativeAddress.streetNumber
-                        ? parseFloat(formValues.address.alternativeAddress.streetNumber)
+                        ? parseInt(formValues.address.alternativeAddress.streetNumber)
                         : null,
-                    zip: parseFloat(formValues.address.alternativeAddress.zip),
+                    zip: parseInt(formValues.address.alternativeAddress.zip),
                 },
             },
             addressAsEmbeddable: {
                 ...formValues.addressAsEmbeddable,
-                streetNumber: formValues.addressAsEmbeddable.streetNumber ? parseFloat(formValues.addressAsEmbeddable.streetNumber) : null,
-                zip: parseFloat(formValues.addressAsEmbeddable.zip),
+                streetNumber: formValues.addressAsEmbeddable.streetNumber ? parseInt(formValues.addressAsEmbeddable.streetNumber) : null,
+                zip: parseInt(formValues.addressAsEmbeddable.zip),
                 alternativeAddress: {
                     ...formValues.addressAsEmbeddable.alternativeAddress,
                     streetNumber: formValues.addressAsEmbeddable.alternativeAddress.streetNumber
-                        ? parseFloat(formValues.addressAsEmbeddable.alternativeAddress.streetNumber)
+                        ? parseInt(formValues.addressAsEmbeddable.alternativeAddress.streetNumber)
                         : null,
-                    zip: parseFloat(formValues.addressAsEmbeddable.alternativeAddress.zip),
+                    zip: parseInt(formValues.addressAsEmbeddable.alternativeAddress.zip),
                 },
             },
         };
