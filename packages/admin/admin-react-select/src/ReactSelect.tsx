@@ -3,7 +3,7 @@ import { SvgIconComponent } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ClearIcon from "@mui/icons-material/Clear";
 import DropdownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { Chip, ComponentsOverrides, InputBase, MenuItem, Paper, Theme, Typography, useTheme } from "@mui/material";
+import { Chip, ComponentsOverrides, InputBase, inputBaseClasses, MenuItem, Paper, Theme, Typography, useTheme } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
 import * as React from "react";
 import Select, { OptionTypeBase } from "react-select";
@@ -66,7 +66,7 @@ const ControlInput = styled(InputBase, {
         return [styles.input];
     },
 })(css`
-    .MuiInputBase-input {
+    .${inputBaseClasses.input} {
         display: flex;
         padding-right: 0;
     }
@@ -214,7 +214,7 @@ const MenuSlot = styled(Paper, {
     overridesResolver(_, styles) {
         return [styles.paper];
     },
-})();
+})(css``);
 
 function Menu<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: MenuProps<OptionType, IsMulti>) {
     return <MenuSlot {...props.innerProps}>{props.children}</MenuSlot>;
@@ -382,12 +382,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminSelect: Partial<SelectProps<any>>;
+        CometAdminSelect: SelectProps<any>;
     }
 
     interface Components {
         CometAdminSelect?: {
-            defaultProps?: ComponentsPropsList["CometAdminSelect"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminSelect"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminSelect"];
         };
     }

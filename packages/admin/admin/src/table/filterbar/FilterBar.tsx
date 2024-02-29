@@ -1,8 +1,8 @@
 import { ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 
 import { Root as FieldContainerRoot } from "../../form/FieldContainer";
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
@@ -65,12 +65,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFilterBar: Partial<FilterBarProps>;
+        CometAdminFilterBar: FilterBarProps;
     }
 
     interface Components {
         CometAdminFilterBar?: {
-            defaultProps?: ComponentsPropsList["CometAdminFilterBar"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFilterBar"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFilterBar"];
         };
     }

@@ -1,5 +1,5 @@
 import { Check } from "@comet/admin-icons";
-import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
+import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides, css } from "@mui/material";
 import { styled, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -15,7 +15,7 @@ const Root = styled(Button, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 export function OkayButton(inProps: OkayButtonProps) {
     const {
@@ -39,12 +39,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminOkayButton: Partial<OkayButtonProps>;
+        CometAdminOkayButton: OkayButtonProps;
     }
 
     interface Components {
         CometAdminOkayButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminOkayButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminOkayButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminOkayButton"];
         };
     }

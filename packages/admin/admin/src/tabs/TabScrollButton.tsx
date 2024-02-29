@@ -59,12 +59,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminTabScrollButton: Partial<TabScrollButtonProps>;
+        CometAdminTabScrollButton: TabScrollButtonProps;
     }
 
     interface Components {
         CometAdminTabScrollButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminTabScrollButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminTabScrollButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminTabScrollButton"];
         };
     }

@@ -29,11 +29,9 @@ const Root = styled("div", {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})(
-    css`
-        height: 100%;
-    `,
-);
+})(css`
+    height: 100%;
+`);
 
 const Button = styled(AppHeaderButton, {
     name: "CometAdminAppHeaderDropdown",
@@ -41,7 +39,7 @@ const Button = styled(AppHeaderButton, {
     overridesResolver(_, styles) {
         return [styles.button];
     },
-})();
+})(css``);
 
 const Popover = styled(MuiPopover, {
     name: "CometAdminAppHeaderDropdown",
@@ -49,7 +47,7 @@ const Popover = styled(MuiPopover, {
     overridesResolver(_, styles) {
         return [styles.popover];
     },
-})();
+})(css``);
 
 function DefaultArrowUp(): React.ReactElement {
     const { palette } = useTheme();

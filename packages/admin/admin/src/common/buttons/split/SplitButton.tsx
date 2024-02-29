@@ -3,16 +3,17 @@ import {
     Button,
     ButtonGroup as MuiButtonGroup,
     ButtonGroupProps,
+    css,
     MenuItem as MuiMenuItem,
     MenuList as MuiMenuList,
     Popover as MuiPopover,
     PopoverProps,
 } from "@mui/material";
 import { styled, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { PropsWithChildren } from "react";
 
+import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useStoredState } from "../../../hooks/useStoredState";
 import { SplitButtonContext } from "./SplitButtonContext";
 
@@ -46,7 +47,7 @@ const Root = styled(MuiButtonGroup, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 const ActiveButton = styled(Button, {
     name: "CometAdminSplitButton",
@@ -54,7 +55,7 @@ const ActiveButton = styled(Button, {
     overridesResolver(_, styles) {
         return [styles.activeButton];
     },
-})();
+})(css``);
 
 const Popover = styled(MuiPopover, {
     name: "CometAdminSplitButton",
@@ -62,7 +63,7 @@ const Popover = styled(MuiPopover, {
     overridesResolver(_, styles) {
         return [styles.popover];
     },
-})();
+})(css``);
 
 const MenuList = styled(MuiMenuList, {
     name: "CometAdminSplitButton",
@@ -70,7 +71,7 @@ const MenuList = styled(MuiMenuList, {
     overridesResolver(_, styles) {
         return [styles.menuList];
     },
-})();
+})(css``);
 
 const MenuItem = styled(MuiMenuItem, {
     name: "CometAdminSplitButton",
@@ -78,7 +79,7 @@ const MenuItem = styled(MuiMenuItem, {
     overridesResolver(_, styles) {
         return [styles.menuItem];
     },
-})();
+})(css``);
 
 // Based on https://v4.mui.com/components/button-group/#split-button
 export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
@@ -141,7 +142,7 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
     const showSelect = showSelectButtonState != null ? showSelectButtonState : showSelectButton;
     return (
         <SplitButtonContext.Provider value={{ setShowSelectButton: setShowSelectButtonState }}>
-            <Root variant={activeChildVariant} color={activeChildColor} {...restProps} {...slotProps?.root} ref={anchorRef}>
+            <Root variant={activeChildVariant} color={activeChildColor} {...slotProps?.root} {...restProps} ref={anchorRef}>
                 {ActiveChild}
                 {(showSelect ?? childrenArray.length > 1) && (
                     <ActiveButton
@@ -187,12 +188,12 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminSplitButton: Partial<SplitButtonProps>;
+        CometAdminSplitButton: SplitButtonProps;
     }
 
     interface Components {
         CometAdminSplitButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminSplitButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminSplitButton"]>;
         };
     }
 }

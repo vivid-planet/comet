@@ -1,11 +1,11 @@
 import { ComponentsOverrides } from "@mui/material";
 import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { useFormState } from "react-final-form";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
 import { SaveButton } from "./common/buttons/save/SaveButton";
+import { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 import { useStackApi } from "./stack/Api";
 
 export interface FinalFormSaveCancelButtonsLegacyProps
@@ -26,7 +26,7 @@ const Root = styled("div", {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 const StyledCancelButton = styled(CancelButton, {
     name: "CometAdminFinalFormSaveCancelButtonsLegacy",
@@ -84,12 +84,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFinalFormSaveCancelButtonsLegacy: Partial<FinalFormSaveCancelButtonsLegacyProps>;
+        CometAdminFinalFormSaveCancelButtonsLegacy: FinalFormSaveCancelButtonsLegacyProps;
     }
 
     interface Components {
         CometAdminFinalFormSaveCancelButtonsLegacy?: {
-            defaultProps?: ComponentsPropsList["CometAdminFinalFormSaveCancelButtonsLegacy"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFinalFormSaveCancelButtonsLegacy"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFinalFormSaveCancelButtonsLegacy"];
         };
     }

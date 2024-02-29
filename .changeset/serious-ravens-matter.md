@@ -2,4 +2,4 @@
 "@comet/admin": major
 ---
 
-Renamed the `componentsProps` prop to `slotProps` in `InputWithPopper` and removed the `InputWithPopperComponentsProps` type.
+Replace the `componentsProps` prop with `slotProps` in `InputWithPopper` and remove the `InputWithPopperComponentsProps` type

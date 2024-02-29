@@ -1,10 +1,10 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
 import { Collapse, List } from "@mui/material";
 import { ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { matchPath, useLocation } from "react-router";
 
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MenuItem, MenuItemProps } from "./Item";
 import { MenuItemRouterLinkProps } from "./ItemRouterLink";
 
@@ -53,7 +53,7 @@ const Item = styled(MenuItem, {
     overridesResolver(_, styles) {
         return [styles.menuItem];
     },
-})();
+})(css``);
 
 export interface MenuLevel {
     level?: 1 | 2;
@@ -63,7 +63,11 @@ type MenuChild = React.ReactElement<MenuItemRouterLinkProps>;
 
 export interface MenuCollapsibleItemProps
     extends Omit<MenuItemProps, "slotProps">,
-        ThemedComponentBaseProps<{ root: "div"; listItem: "div"; menuItem: typeof MenuItem }> {
+        ThemedComponentBaseProps<{
+            root: "div";
+            listItem: "div";
+            menuItem: typeof MenuItem;
+        }> {
     children: MenuChild | MenuChild[];
     openByDefault?: boolean;
     openedIcon?: React.ReactNode;
@@ -81,7 +85,7 @@ export function MenuCollapsibleItem(inProps: MenuCollapsibleItemProps) {
         closedIcon = <ChevronDown />,
         children,
         slotProps,
-        ...otherProps
+        ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminMenuCollapsibleItem" });
 
     const itemLevel: 1 | 2 = level ? level : 1;
@@ -108,7 +112,7 @@ export function MenuCollapsibleItem(inProps: MenuCollapsibleItemProps) {
     };
 
     return (
-        <Root ownerState={ownerState} {...slotProps?.root} {...otherProps}>
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
             <ListItem ownerState={ownerState} {...slotProps?.listItem}>
                 <Item
                     primary={primary}
@@ -133,12 +137,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminMenuCollapsibleItem: Partial<MenuCollapsibleItemProps>;
+        CometAdminMenuCollapsibleItem: MenuCollapsibleItemProps;
     }
 
     interface Components {
         CometAdminMenuCollapsibleItem?: {
-            defaultProps?: ComponentsPropsList["CometAdminMenuCollapsibleItem"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminMenuCollapsibleItem"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenuCollapsibleItem"];
         };
     }

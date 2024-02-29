@@ -52,7 +52,7 @@ const StartTimePicker = styled(TimePickerBase, {
     overridesResolver(_, styles) {
         return [styles.startTimePicker];
     },
-})();
+})(css``);
 
 const EndTimePicker = styled(TimePickerBase, {
     name: "CometAdminTimeRangePicker",
@@ -60,7 +60,7 @@ const EndTimePicker = styled(TimePickerBase, {
     overridesResolver(_, styles) {
         return [styles.endTimePicker];
     },
-})();
+})(css``);
 
 const Separator = styled(Typography, {
     name: "CometAdminTimeRangePicker",
@@ -199,12 +199,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminTimeRangePicker: Partial<TimeRangePickerProps>;
+        CometAdminTimeRangePicker: TimeRangePickerProps;
     }
 
     interface Components {
         CometAdminTimeRangePicker?: {
-            defaultProps?: ComponentsPropsList["CometAdminTimeRangePicker"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminTimeRangePicker"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminTimeRangePicker"];
         };
     }

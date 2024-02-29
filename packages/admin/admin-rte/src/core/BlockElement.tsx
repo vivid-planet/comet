@@ -102,7 +102,11 @@ const Root = styled(Typography, {
     `,
 );
 
-export interface RteBlockElementProps extends ThemedComponentBaseProps<{ root: typeof Typography }>, TypographyProps {
+export interface RteBlockElementProps
+    extends ThemedComponentBaseProps<{
+            root: typeof Typography;
+        }>,
+        TypographyProps {
     type?: StylableBlockTypes;
     component?: React.ElementType;
 }
@@ -121,12 +125,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminRteBlockElement: Partial<RteBlockElementProps>;
+        CometAdminRteBlockElement: RteBlockElementProps;
     }
 
     interface Components {
         CometAdminRteBlockElement?: {
-            defaultProps?: ComponentsPropsList["CometAdminRteBlockElement"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminRteBlockElement"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteBlockElement"];
         };
     }

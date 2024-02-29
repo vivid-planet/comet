@@ -1,7 +1,8 @@
 import { ComponentsOverrides, Typography } from "@mui/material";
 import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
+
+import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
@@ -32,7 +33,10 @@ const HasValueCount = styled("div", {
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export interface FilterBarActiveFilterBadgeProps extends ThemedComponentBaseProps<{ hasValueCount: "div" }> {
+export interface FilterBarActiveFilterBadgeProps
+    extends ThemedComponentBaseProps<{
+        hasValueCount: "div";
+    }> {
     countValue: number;
 }
 
@@ -63,12 +67,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFilterBarActiveFilterBadge: Partial<FilterBarActiveFilterBadgeProps>;
+        CometAdminFilterBarActiveFilterBadge: FilterBarActiveFilterBadgeProps;
     }
 
     interface Components {
         CometAdminFilterBarActiveFilterBadge?: {
-            defaultProps?: ComponentsPropsList["CometAdminFilterBarActiveFilterBadge"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFilterBarActiveFilterBadge"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFilterBarActiveFilterBadge"];
         };
     }

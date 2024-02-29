@@ -2,9 +2,13 @@ import { ComponentsOverrides } from "@mui/material";
 import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+
 export type MainContentClassKey = "root" | "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight";
 
-type OwnerState = Pick<MainContentProps, "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight">;
+type OwnerState = Pick<MainContentProps, "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight"> & {
+    topPosition: number;
+};
 
 const Root = styled("main", {
     name: "CometAdminMainContent",
@@ -26,7 +30,7 @@ const Root = styled("main", {
 
         ${ownerState.fullHeight &&
         css`
-            height: calc(100vh - var(--comet-admin-main-content-top-position));
+            height: calc(100vh - ${ownerState.topPosition}px);
         `}
 
         ${ownerState.disablePaddingTop &&
@@ -46,7 +50,7 @@ const Root = styled("main", {
     `,
 );
 
-export interface MainContentProps {
+export interface MainContentProps extends ThemedComponentBaseProps {
     children?: React.ReactNode;
     disablePaddingTop?: boolean;
     disablePaddingBottom?: boolean;
@@ -68,15 +72,11 @@ export function MainContent(inProps: MainContentProps) {
         disablePaddingTop,
         disablePaddingBottom,
         disablePadding,
+        topPosition,
     };
 
     return (
-        <Root
-            ownerState={ownerState}
-            {...restProps}
-            ref={mainRef}
-            style={{ "--comet-admin-main-content-top-position": `${topPosition}px` } as React.CSSProperties}
-        >
+        <Root ownerState={ownerState} {...restProps} ref={mainRef}>
             {children}
         </Root>
     );
@@ -88,12 +88,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminMainContent: Partial<MainContentProps>;
+        CometAdminMainContent: MainContentProps;
     }
 
     interface Components {
         CometAdminMainContent?: {
-            defaultProps?: ComponentsPropsList["CometAdminMainContent"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminMainContent"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminMainContent"];
         };
     }

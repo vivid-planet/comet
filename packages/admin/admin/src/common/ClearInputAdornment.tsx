@@ -12,8 +12,9 @@ import {
     Theme,
     useThemeProps,
 } from "@mui/material";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
+
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface ClearInputAdornmentProps
     extends InputAdornmentProps,
@@ -106,12 +107,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminClearInputAdornment: Partial<ClearInputAdornmentProps>;
+        CometAdminClearInputAdornment: ClearInputAdornmentProps;
     }
 
     interface Components {
         CometAdminClearInputAdornment?: {
-            defaultProps?: ComponentsPropsList["CometAdminClearInputAdornment"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminClearInputAdornment"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminClearInputAdornment"];
         };
     }

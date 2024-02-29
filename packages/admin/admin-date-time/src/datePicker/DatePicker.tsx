@@ -50,8 +50,8 @@ export const DatePicker = (inProps: DatePickerProps) => {
                 </StartAdornment>
             }
             placeholder={placeholder ?? intl.formatMessage({ id: "comet.datePicker.selectDate", defaultMessage: "Select date" })}
-            {...inputWithPopperProps}
             {...slotProps?.root}
+            {...inputWithPopperProps}
             readOnly
             endAdornment={
                 clearable ? (
@@ -94,12 +94,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminDatePicker: Partial<DatePickerProps>;
+        CometAdminDatePicker: DatePickerProps;
     }
 
     interface Components {
         CometAdminDatePicker?: {
-            defaultProps?: ComponentsPropsList["CometAdminDatePicker"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminDatePicker"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminDatePicker"];
         };
     }

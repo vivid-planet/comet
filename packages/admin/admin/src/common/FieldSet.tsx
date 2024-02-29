@@ -4,8 +4,9 @@ import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import { css, styled, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
+
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface FieldSetProps
     extends ThemedComponentBaseProps<{
@@ -98,7 +99,7 @@ const Root = styled(MuiAccordion, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 const Summary = styled(MuiAccordionSummary, {
     name: "CometAdminFieldSet",
@@ -232,7 +233,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminFieldSet?: {
-            defaultProps?: ComponentsPropsList["CometAdminFieldSet"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFieldSet"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFieldSet"];
         };
     }

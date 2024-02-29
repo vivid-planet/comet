@@ -1,6 +1,6 @@
 import { ArrowBack } from "@mui/icons-material";
 import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
-import { styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -16,7 +16,7 @@ const Root = styled(Button, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 export function StackBackButton(inProps: StackBackButtonProps) {
     const { startIcon = <ArrowBack />, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminStackBackButton" });
@@ -45,12 +45,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminStackBackButton: Partial<StackBackButtonProps>;
+        CometAdminStackBackButton: StackBackButtonProps;
     }
 
     interface Components {
         CometAdminStackBackButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminStackBackButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminStackBackButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminStackBackButton"];
         };
     }

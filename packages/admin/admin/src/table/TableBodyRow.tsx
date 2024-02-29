@@ -1,8 +1,9 @@
 import { ComponentsOverrides, TableRow } from "@mui/material";
-import { styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import { TableRowProps } from "@mui/material/TableRow";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import React from "react";
+
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
@@ -17,12 +18,16 @@ const Root = styled(TableRow, {
     overridesResolver({ ownerState: { isOdd } }: { ownerState: OwnerState }, styles) {
         return [styles.root, !isOdd && styles.even, isOdd && styles.odd];
     },
-})<{ ownerState: OwnerState }>();
+})<{ ownerState: OwnerState }>(css``);
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export interface TableBodyRowProps extends ThemedComponentBaseProps<{ root: typeof TableRow }>, TableRowProps {
+export interface TableBodyRowProps
+    extends ThemedComponentBaseProps<{
+            root: typeof TableRow;
+        }>,
+        TableRowProps {
     index?: number;
     hideTableHead?: boolean;
 }
@@ -38,7 +43,7 @@ export function TableBodyRow(inProps: TableBodyRowProps) {
     };
 
     return (
-        <Root ownerState={ownerState} {...restProps} {...slotProps?.root}>
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {children}
         </Root>
     );
@@ -50,12 +55,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminTableBodyRow: Partial<TableBodyRowProps>;
+        CometAdminTableBodyRow: TableBodyRowProps;
     }
 
     interface Components {
         CometAdminTableBodyRow?: {
-            defaultProps?: ComponentsPropsList["CometAdminTableBodyRow"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminTableBodyRow"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminTableBodyRow"];
         };
     }

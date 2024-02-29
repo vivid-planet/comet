@@ -2,4 +2,4 @@
 "@comet/admin": major
 ---
 
-Remove `componentsProps` prop from `FieldSet`, use `slotProps` instead
+Replace the `componentsProps` prop with `slotProps` in `FieldSet`

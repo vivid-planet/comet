@@ -59,7 +59,7 @@ export const Root = styled(InputWithPopper, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 export const InputAdornment = styled(MuiInputAdornment, {
     name: "CometAdminColorPicker",
@@ -67,7 +67,7 @@ export const InputAdornment = styled(MuiInputAdornment, {
     overridesResolver(_, styles) {
         return [styles.inputAdornment];
     },
-})();
+})(css``);
 
 export const PopperRoot = styled("div", {
     name: "CometAdminColorPicker",
@@ -315,7 +315,7 @@ export const HexColorPicker = styled(HexColorPickerBase, {
     overridesResolver(_, styles) {
         return [styles.hexColorPicker];
     },
-})();
+})(css``);
 
 export const RgbaStringColorPicker = styled(RgbaStringColorPickerBase, {
     name: "CometAdminColorPicker",
@@ -323,4 +323,4 @@ export const RgbaStringColorPicker = styled(RgbaStringColorPickerBase, {
     overridesResolver(_, styles) {
         return [styles.rgbaStringColorPicker];
     },
-})();
+})(css``);

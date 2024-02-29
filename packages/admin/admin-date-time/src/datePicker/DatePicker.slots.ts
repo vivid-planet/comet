@@ -1,6 +1,6 @@
 import { InputWithPopper, InputWithPopperClassKey, ThemedComponentBaseProps } from "@comet/admin";
 import { InputAdornment } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { css, styled } from "@mui/material/styles";
 import { CSSProperties } from "@mui/material/styles/createMixins";
 import { deepmerge } from "@mui/utils";
 import { Calendar as CalendarBase } from "react-date-range";
@@ -21,7 +21,7 @@ export const Root = styled(InputWithPopper, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 export const StartAdornment = styled(InputAdornment, {
     name: "CometAdminDatePicker",
@@ -29,7 +29,7 @@ export const StartAdornment = styled(InputAdornment, {
     overridesResolver(_, styles) {
         return [styles.startAdornment];
     },
-})();
+})(css``);
 
 export const Calendar = styled(CalendarBase, {
     name: "CometAdminDatePicker",

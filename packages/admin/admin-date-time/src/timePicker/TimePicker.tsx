@@ -23,7 +23,7 @@ export const Root = styled(InputWithPopper, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 const StartAdornment = styled(InputAdornment, {
     name: "CometAdminTimePicker",
@@ -31,7 +31,7 @@ const StartAdornment = styled(InputAdornment, {
     overridesResolver(_, styles) {
         return [styles.startAdornment];
     },
-})();
+})(css``);
 
 const TimeOptionsList = styled(MenuList, {
     name: "CometAdminTimePicker",
@@ -39,7 +39,7 @@ const TimeOptionsList = styled(MenuList, {
     overridesResolver(_, styles) {
         return [styles.timeOptionsList];
     },
-})();
+})(css``);
 
 const TimeOptionItem = styled(MenuItem, {
     name: "CometAdminTimePicker",
@@ -171,12 +171,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminTimePicker: Partial<TimePickerProps>;
+        CometAdminTimePicker: TimePickerProps;
     }
 
     interface Components {
         CometAdminTimePicker?: {
-            defaultProps?: ComponentsPropsList["CometAdminTimePicker"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminTimePicker"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminTimePicker"];
         };
     }

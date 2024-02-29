@@ -1,8 +1,9 @@
 import { FormControl, InputBase, Slider, SliderProps } from "@mui/material";
 import { ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
+
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type FinalFormRangeInputClassKey = "root" | "inputsWrapper" | "inputFieldsSeparatorContainer" | "sliderWrapper" | "inputFieldContainer";
 
@@ -24,14 +25,12 @@ const InputsWrapper = styled("div", {
     overridesResolver(_, styles) {
         return [styles.inputsWrapper];
     },
-})(
-    css`
-        justify-content: space-between;
-        margin-bottom: 15px;
-        align-items: center;
-        display: flex;
-    `,
-);
+})(css`
+    justify-content: space-between;
+    margin-bottom: 15px;
+    align-items: center;
+    display: flex;
+`);
 
 const InputFieldsSeparatorContainer = styled("div", {
     name: "CometAdminFinalFormRangeInput",

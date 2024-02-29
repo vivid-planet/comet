@@ -57,12 +57,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminClearInputButton: Partial<ClearInputButtonProps>;
+        CometAdminClearInputButton: ClearInputButtonProps;
     }
 
     interface Components {
         CometAdminClearInputButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminClearInputButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminClearInputButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminClearInputButton"];
         };
     }

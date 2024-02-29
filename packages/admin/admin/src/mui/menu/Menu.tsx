@@ -1,10 +1,10 @@
 import Drawer from "@mui/material/Drawer";
 import { PaperProps } from "@mui/material/Paper";
 import { ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { useHistory } from "react-router";
 
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../MasterLayoutContext";
 import { MenuContext } from "./Context";
 
@@ -75,22 +75,24 @@ const TemporaryDrawer = styled(Drawer, {
     overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
         return [styles.drawer, styles.temporaryDrawer, ownerState.open && styles.open, !ownerState.open && styles.closed];
     },
-})<{ ownerState: OwnerState }>(
-    ({ theme, ownerState }) => css`
-        [class*="MuiDrawer-paper"] {
-            background-color: #fff;
-        }
-        [class*="MuiPaper-root"] {
-            flex-grow: 1;
-            overflow-x: hidden;
-        }
-        [class*="MuiDrawer-paperAnchorLeft"] {
-            border-right: none;
-        }
-    `,
-);
+})<{ ownerState: OwnerState }>(css`
+    [class*="MuiDrawer-paper"] {
+        background-color: #fff;
+    }
+    [class*="MuiPaper-root"] {
+        flex-grow: 1;
+        overflow-x: hidden;
+    }
+    [class*="MuiDrawer-paperAnchorLeft"] {
+        border-right: none;
+    }
+`);
 
-export interface MenuProps extends ThemedComponentBaseProps<{ permanentDrawer: typeof Drawer; temporaryDrawer: typeof Drawer }> {
+export interface MenuProps
+    extends ThemedComponentBaseProps<{
+        permanentDrawer: typeof Drawer;
+        temporaryDrawer: typeof Drawer;
+    }> {
     children: React.ReactNode;
     variant?: "permanent" | "temporary";
     drawerWidth?: number;
@@ -191,12 +193,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminMenu: Partial<MenuProps>;
+        CometAdminMenu: MenuProps;
     }
 
     interface Components {
         CometAdminenu?: {
-            defaultProps?: ComponentsPropsList["CometAdminMenu"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminMenu"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenu"];
         };
     }

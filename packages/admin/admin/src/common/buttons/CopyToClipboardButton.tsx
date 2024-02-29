@@ -1,7 +1,8 @@
 import { Accept, Copy } from "@comet/admin-icons";
 import { ComponentsOverrides, css, Grow, IconButton, styled, Theme, useThemeProps } from "@mui/material";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
+
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export interface CopyToClipboardButtonProps
     extends ThemedComponentBaseProps<{
@@ -118,15 +119,13 @@ const SuccessButtonContainer = styled("div", {
     overridesResolver(_, styles) {
         return [styles.buttonContainer, styles.successButtonContainer];
     },
-})(
-    css`
-        position: absolute;
-        z-index: 1;
-        top: 50%;
-        right: 0;
-        transform: translateY(-50%);
-    `,
-);
+})(css`
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+`);
 
 const CopyButton = styled(IconButton, {
     name: "CometAdminCopyToClipboardButton",
@@ -154,12 +153,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminCopyToClipboardButton: Partial<CopyToClipboardButtonProps>;
+        CometAdminCopyToClipboardButton: CopyToClipboardButtonProps;
     }
 
     interface Components {
         CometAdminCopyToClipboardButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminCopyToClipboardButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminCopyToClipboardButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminCopyToClipboardButton"];
         };
     }
