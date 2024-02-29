@@ -170,7 +170,7 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     })
     colors = new Collection<ProductColor>(this);
 
-    @OneToMany(() => ProductVariant, (variant) => variant.product)
+    @OneToMany(() => ProductVariant, (variant) => variant.product, { orphanRemoval: true })
     @CrudField({
         resolveField: true, //default is true
         //search: true, //not yet implemented

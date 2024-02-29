@@ -2,4 +2,7 @@
 "@comet/cms-api": minor
 ---
 
-API Generator: Add the concept of `rootArg` that can be set in `@CrudField()` for a ManyToOne relation
+API Generator: Generate better Api for ManyToOne relations with orphanRemoval activated where the reverse side has its own Api generated.
+
+- add id as arg to create mutation
+- add id as arg to list query

@@ -84,15 +84,17 @@ function buildOptions(metadata: EntityMetadata<any>) {
     });
 
     const rootArgProps = metadata.props.filter((prop) => {
-        if (hasFieldFeature(metadata.class, prop.name, "rootArg")) {
-            if (prop.reference != "m:1") {
-                console.warn(`${prop.name} rootArg=true is only supported for 1:m relations`);
-                return false;
-            } else {
-                return true;
+        if (prop.reference == "m:1") {
+            if (!prop.targetMeta) throw new Error("targetMeta is not set for relation");
+            for (const innerProp of prop.targetMeta.props) {
+                if (innerProp.reference == "1:m" && innerProp.targetMeta == metadata && innerProp.mappedBy == prop.name) {
+                    const hasOwnCrudGenerator = Reflect.getMetadata(`data:crudGeneratorOptions`, prop.targetMeta.class);
+                    if (hasOwnCrudGenerator && innerProp.orphanRemoval) {
+                        //if the back relation has its own crud generator and has orphan removal, it's a root arg
+                        return true;
+                    }
+                }
             }
-        } else {
-            return false;
         }
     });
 
@@ -1034,7 +1036,16 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
         });
 
         metadata.props
-            .filter((prop) => prop.reference === "1:m" && prop.orphanRemoval)
+            .filter((prop) => {
+                if (prop.reference === "1:m" && prop.orphanRemoval) {
+                    if (!prop.targetMeta) throw new Error(`Target metadata not set`);
+                    const hasOwnCrudGenerator = Reflect.getMetadata(`data:crudGeneratorOptions`, prop.targetMeta.class);
+                    if (!hasOwnCrudGenerator) {
+                        //generate nested resolver only if target entity has no own crud generator
+                        return true;
+                    }
+                }
+            })
             .forEach((prop) => {
                 if (!prop.targetMeta) throw new Error(`Target metadata not set`);
                 const { fileNameSingular } = buildNameVariants(prop.targetMeta);

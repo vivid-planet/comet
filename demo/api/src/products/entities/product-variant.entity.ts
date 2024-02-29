@@ -35,7 +35,6 @@ export class ProductVariant extends BaseEntity<ProductVariant, "id"> implements 
         // filter: true, // not yet supported for nested
         // sort: true, // not yet supported for nested
         input: false, // default is true, but usually not needed if it's a rootArg
-        rootArg: true, // default is false, will create a query arg + create arg similar to scope
     })
     product: Ref<Product>;
 

@@ -33,7 +33,6 @@ export function CrudSingleGenerator(options: CrudSingleGeneratorOptions): ClassD
 
 export interface CrudFieldOptions {
     resolveField?: boolean; //only for relations, for others customize using @Field
-    rootArg?: boolean; //only for ManyToOne relations
     search?: boolean;
     filter?: boolean;
     sort?: boolean;
@@ -42,7 +41,6 @@ export interface CrudFieldOptions {
 
 export function CrudField({
     resolveField = true,
-    rootArg = false,
     search = true,
     filter = true,
     sort = true,
@@ -50,22 +48,12 @@ export function CrudField({
 }: CrudFieldOptions = {}): PropertyDecorator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (target: any, propertyKey: string | symbol) {
-        Reflect.defineMetadata(`data:crudField`, { resolveField, rootArg, search, filter, sort, input }, target.constructor, propertyKey);
+        Reflect.defineMetadata(`data:crudField`, { resolveField, search, filter, sort, input }, target.constructor, propertyKey);
     };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function hasFieldFeature(metadataClass: any, propName: string, option: keyof CrudFieldOptions): boolean {
     const crudField = (Reflect.getMetadata(`data:crudField`, metadataClass, propName) ?? {}) as CrudFieldOptions;
-    const optionValue = crudField[option];
-    if (optionValue !== undefined) {
-        return optionValue;
-    } else {
-        //default value
-        if (option == "rootArg") {
-            return false;
-        } else {
-            return true;
-        }
-    }
+    return crudField[option] ?? true;
 }
