@@ -357,8 +357,9 @@ export function generateGrid(
                         sortable: !sortFields.includes(column.name) ? `false` : undefined,
                         valueGetter: column.valueGetter,
                         valueOptions: column.valueOptions,
-                        width: column.width ? String(column.width) : "150",
                         renderCell: column.renderCell,
+                        width: typeof column.width === "undefined" ? undefined : String(column.width),
+                        flex: typeof column.width === "undefined" ? "1" : undefined,
                     }),
                 )
                 .join(",\n")},
@@ -368,6 +369,7 @@ export function generateGrid(
                 sortable: false,
                 filterable: false,
                 type: "actions",
+                align: "right",
                 renderCell: (params) => {
                     return (
                         <>
