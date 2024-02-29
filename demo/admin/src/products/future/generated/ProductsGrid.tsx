@@ -104,9 +104,14 @@ export function ProductsGrid(): React.ReactElement {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
-        { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1 },
-        { field: "description", headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }), flex: 1 },
-        { field: "price", headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }), width: 140 },
+        { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, maxWidth: 250, minWidth: 200 },
+        {
+            field: "description",
+            headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }),
+            flex: 1,
+            minWidth: 150,
+        },
+        { field: "price", headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }), flex: 1, maxWidth: 150, minWidth: 150 },
         {
             field: "type",
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
@@ -116,14 +121,16 @@ export function ProductsGrid(): React.ReactElement {
                 { value: "Shirt", label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }) },
                 { value: "Tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
             ],
-            width: 140,
+            flex: 1,
+            maxWidth: 150,
+            minWidth: 150,
         },
         {
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
             type: "date",
             valueGetter: ({ value }) => value && new Date(value),
-            width: 170,
+            width: 140,
         },
         {
             field: "createdAt",

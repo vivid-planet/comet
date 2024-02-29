@@ -192,6 +192,9 @@ export function generateGrid(
                 gridType: "singleSelect" as const,
                 valueOptions,
                 width: column.width,
+                minWidth: column.minWidth,
+                maxWidth: column.maxWidth,
+                flex: column.flex,
             };
         }
 
@@ -200,11 +203,14 @@ export function generateGrid(
         return {
             name,
             headerName: column.headerName,
-            width: column.width,
             type,
             gridType,
             renderCell,
             valueGetter,
+            width: column.width,
+            minWidth: column.minWidth,
+            maxWidth: column.maxWidth,
+            flex: column.flex,
         };
     });
 
@@ -346,8 +352,8 @@ export function generateGrid(
     
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
-                .map((column) =>
-                    tsCodeRecordToString({
+                .map((column) => {
+                    const columnDefinition: Record<string, string | undefined> = {
                         field: `"${column.name}"`,
                         headerName: `intl.formatMessage({ id: "${instanceGqlType}.${column.name}",  defaultMessage: "${
                             column.headerName || camelCaseToHumanReadable(column.name)
@@ -359,9 +365,26 @@ export function generateGrid(
                         valueOptions: column.valueOptions,
                         renderCell: column.renderCell,
                         width: typeof column.width === "undefined" ? undefined : String(column.width),
-                        flex: typeof column.width === "undefined" ? "1" : undefined,
-                    }),
-                )
+                        flex: typeof column.flex === "undefined" ? undefined : String(column.flex),
+                    };
+
+                    if (typeof column.width === "undefined") {
+                        const defaultMinWidth = 150;
+                        columnDefinition.flex = "1";
+                        columnDefinition.maxWidth = typeof column.maxWidth === "undefined" ? undefined : String(column.maxWidth);
+
+                        if (
+                            typeof column.minWidth === "undefined" &&
+                            (typeof column.maxWidth === "undefined" || column.maxWidth >= defaultMinWidth)
+                        ) {
+                            columnDefinition.minWidth = String(defaultMinWidth);
+                        } else if (typeof column.minWidth !== "undefined") {
+                            columnDefinition.minWidth = String(column.minWidth);
+                        }
+                    }
+
+                    return tsCodeRecordToString(columnDefinition);
+                })
                 .join(",\n")},
             {
                 field: "actions",

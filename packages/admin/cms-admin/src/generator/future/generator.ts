@@ -42,7 +42,7 @@ export type GridColumnConfig<T> = (
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
     | { type: "block"; block: ImportReference }
-) & { name: keyof T; headerName?: string; width?: number };
+) & { name: keyof T; headerName?: string; width?: number; minWidth?: number; maxWidth?: number; flex?: number };
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
