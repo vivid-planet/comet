@@ -1,4 +1,4 @@
-import { Field, FinalFormInput } from "@comet/admin";
+import { TextField } from "@comet/admin";
 import { BlockCategory, BlocksFinalForm, createCompositeBlock, createCompositeSetting } from "@comet/blocks-admin";
 import { createCompositeBlockSelectField } from "@comet/blocks-admin/lib/blocks/helpers/createCompositeBlockSelectField";
 import { createRichTextBlock } from "@comet/cms-admin";
@@ -29,7 +29,7 @@ export const HeadlineBlock = createCompositeBlock(
                             onSubmit={({ eyebrow }) => updateState(eyebrow)}
                             initialValues={{ eyebrow: state }}
                         >
-                            <Field name="eyebrow" label="Eyebrow" component={FinalFormInput} fullWidth />
+                            <TextField name="eyebrow" label="Eyebrow" fullWidth />
                         </BlocksFinalForm>
                     ),
                 }),

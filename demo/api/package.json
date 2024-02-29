@@ -63,6 +63,7 @@
         "graphql": "^15.0.0",
         "graphql-type-json": "^0.3.0",
         "hasha": "^5.0.0",
+        "helmet": "^4.6.0",
         "image-size": "^0.9.0",
         "mime": "^2.0.0",
         "multer": "^1.0.0",
