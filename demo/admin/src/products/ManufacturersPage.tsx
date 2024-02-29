@@ -1,6 +1,6 @@
 import { Stack, StackPage, StackSwitch } from "@comet/admin";
 import { ManufacturerForm } from "@src/products/ManufacturerForm";
-import ManufacturersGrid from "@src/products/ManufacturersGrid";
+import { ManufacturersGrid } from "@src/products/ManufacturersGrid";
 import * as React from "react";
 import { useIntl } from "react-intl";
 

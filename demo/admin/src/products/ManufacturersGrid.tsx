@@ -53,7 +53,7 @@ function ManufacturersGridToolbar() {
 
 type GridValues = GQLManufacturersListQuery["manufacturers"]["nodes"][0];
 
-function ManufacturersGrid() {
+export function ManufacturersGrid() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ManufacturersGrid") };
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
@@ -242,5 +242,3 @@ const createManufacturerMutation = gql`
         }
     }
 `;
-
-export default ManufacturersGrid;
