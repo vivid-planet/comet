@@ -1,4 +1,4 @@
-import type { GraphQLClient } from "graphql-request";
+import type { DocumentNode } from "graphql";
 
 type BlockMetaField = {
     name: string;
@@ -60,10 +60,15 @@ interface BetterBlockMetaNestedObject {
     fields: BetterBlockMetaField[];
 }
 
+//generic graphql client, compatible with eg. graphql-request
+type GenericGraphQLClient = {
+    request: <T, V>(query: string | DocumentNode, variables: V) => Promise<T>;
+};
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface RegisterBlockOptions<BlockData, LoaderPayload> {
     loaderPayload: (blockData: BlockData) => LoaderPayload;
-    loader: (payload: LoaderPayload, client: GraphQLClient) => Promise<any> | any;
+    loader: (payload: LoaderPayload, client: GenericGraphQLClient) => Promise<any> | any;
 }
 const blocks: Record<string, RegisterBlockOptions<any, any>> = {};
 export function registerBlock<BlockData, LoaderPayload>(blockName: string, options: RegisterBlockOptions<BlockData, LoaderPayload>) {
@@ -79,7 +84,7 @@ export async function recursivelyLoadBlockData({
 }: {
     blockType: string;
     blockData: unknown;
-    client: GraphQLClient;
+    client: GenericGraphQLClient;
     blocksMeta: BlockMeta[];
     cache?: Record<string, Record<string, unknown>>;
 }) {
