@@ -191,6 +191,7 @@ export function generateGrid(
                 type,
                 gridType: "singleSelect" as const,
                 valueOptions,
+                width: column.width,
             };
         }
 
