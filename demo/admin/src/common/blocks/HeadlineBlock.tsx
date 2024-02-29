@@ -1,4 +1,4 @@
-import { Field, FinalFormSelect } from "@comet/admin";
+import { SelectField } from "@comet/admin";
 import { BlockCategory, BlocksFinalForm, createCompositeBlock, createCompositeSetting } from "@comet/blocks-admin";
 import { createCompositeBlockTextField } from "@comet/blocks-admin/lib/blocks/helpers/createCompositeBlockTextField";
 import { createRichTextBlock } from "@comet/cms-admin";
@@ -40,18 +40,14 @@ export const HeadlineBlock = createCompositeBlock(
                             onSubmit={({ level }) => updateState(level)}
                             initialValues={{ level: state }}
                         >
-                            <Field name="level" label="Level" fullWidth>
-                                {(props) => (
-                                    <FinalFormSelect {...props}>
-                                        <MenuItem value="header-one">Header One</MenuItem>
-                                        <MenuItem value="header-two">Header Two</MenuItem>
-                                        <MenuItem value="header-three">Header Three</MenuItem>
-                                        <MenuItem value="header-four">Header Four</MenuItem>
-                                        <MenuItem value="header-five">Header Five</MenuItem>
-                                        <MenuItem value="header-six">Header Six</MenuItem>
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
+                            <SelectField name="level" label="Level" fullWidth>
+                                <MenuItem value="header-one">Header One</MenuItem>
+                                <MenuItem value="header-two">Header Two</MenuItem>
+                                <MenuItem value="header-three">Header Three</MenuItem>
+                                <MenuItem value="header-four">Header Four</MenuItem>
+                                <MenuItem value="header-five">Header Five</MenuItem>
+                                <MenuItem value="header-six">Header Six</MenuItem>
+                            </SelectField>
                         </BlocksFinalForm>
                     ),
                 }),
