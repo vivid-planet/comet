@@ -13,7 +13,7 @@ const styles = (theme: Theme) =>
     createStyles<MenuItemGroupClassKey, MenuItemGroupProps>({
         root: { marginTop: theme.spacing(8) },
         title: {
-            fontWeight: 600,
+            fontWeight: theme.typography.fontWeightBold,
             fontSize: 12,
             border: `2px solid ${theme.palette.grey[100]}`,
             borderRadius: 20,
@@ -22,7 +22,7 @@ const styles = (theme: Theme) =>
             color: `${theme.palette.grey[300]}`,
         },
         titleMenuOpen: {
-            fontWeight: 600,
+            fontWeight: theme.typography.fontWeightBold,
             fontSize: 14,
             border: `2px solid ${theme.palette.common.white}`,
             borderRadius: "initial",

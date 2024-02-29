@@ -2,4 +2,4 @@
 "@comet/admin": minor
 ---
 
-Permanent menu will show icons even in closed state.
+Show icons in permanent menu even in closed state.
