@@ -39,7 +39,7 @@ export function createAuthProxyJwtStrategy({
                 id: data.sub,
                 name: data.name,
                 email: data.email,
-                language: data.language,
+                locale: data.locale,
             });
         }
     }

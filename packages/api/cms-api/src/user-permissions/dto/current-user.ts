@@ -20,7 +20,7 @@ export class CurrentUser {
     @Field()
     email: string;
     @Field()
-    language: string;
+    locale: string;
     @Field(() => [CurrentUserPermission])
     permissions: CurrentUserPermission[];
 }
