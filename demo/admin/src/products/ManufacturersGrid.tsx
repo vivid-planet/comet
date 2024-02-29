@@ -165,6 +165,8 @@ function ManufacturersGrid() {
             sort: muiGridSortToGql(sortModel),
         },
     });
+    if (error) throw error;
+
     const rows = data?.manufacturers.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.manufacturers.totalCount);
 
@@ -177,7 +179,6 @@ function ManufacturersGrid() {
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                error={error}
                 components={{
                     Toolbar: ManufacturersGridToolbar,
                 }}
