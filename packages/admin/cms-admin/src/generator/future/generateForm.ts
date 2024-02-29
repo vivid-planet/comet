@@ -1,10 +1,11 @@
 import { IntrospectionQuery } from "graphql";
 
 import { generateFormField } from "./generateFormField";
-import { FormConfig, GeneratorReturn } from "./generator";
+import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
+import { isFieldOptional } from "./utils/isFieldOptional";
 
 export function generateForm(
     {
@@ -28,13 +29,9 @@ export function generateForm(
     const numberFields = config.fields.filter((field) => field.type == "number");
     const booleanFields = config.fields.filter((field) => field.type == "boolean");
 
-    const isFieldOptional = (fieldName: string): boolean => {
-        const schemaEntity = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType);
-        if (!schemaEntity) throw new Error(`didn't find entity ${gqlType} in schema types`);
-        if (schemaEntity.kind !== "OBJECT") throw new Error(`kind of ${gqlType} is not object, but should be.`); // this should not happen
-        const fieldDef = schemaEntity.fields.find((field) => field.name === fieldName);
-        if (!fieldDef) throw new Error(`didn't find field ${fieldName} of ${gqlType} in introspected gql-schema.`);
-        return fieldDef.type.kind !== "NON_NULL";
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const isFieldOptionalWrapper = (fieldConfig: FormFieldConfig<any>) => {
+        return isFieldOptional({ config: fieldConfig, gqlIntrospection: gqlIntrospection, gqlType: gqlType });
     };
 
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
@@ -156,7 +153,7 @@ export function generateForm(
     } ${
         numberFields.length > 0 || Object.keys(rootBlocks).length > 0
             ? `& {
-        ${numberFields.map((field) => `${String(field.name)}${isFieldOptional(String(field.name)) ? `?` : ``}: string;`).join("\n")}
+        ${numberFields.map((field) => `${String(field.name)}${isFieldOptionalWrapper(field) ? `?` : ``}: string;`).join("\n")}
         ${Object.keys(rootBlocks)
             .map((rootBlockKey) => `${rootBlockKey}: BlockState<typeof rootBlocks.${rootBlockKey}>;`)
             .join("\n")}
@@ -186,7 +183,7 @@ export function generateForm(
             ${numberFields
                 .map((field) => {
                     let assignment = `String(data.${instanceGqlType}.${String(field.name)})`;
-                    if (isFieldOptional(String(field.name))) {
+                    if (isFieldOptionalWrapper(field)) {
                         assignment = `data.${instanceGqlType}.${String(field.name)} ? ${assignment} : undefined`;
                     }
                     return `${String(field.name)}: ${assignment},`;
@@ -222,7 +219,7 @@ export function generateForm(
                 ${numberFields
                     .map((field) => {
                         let assignment = `parseFloat(formValues.${String(field.name)})`;
-                        if (isFieldOptional(String(field.name))) {
+                        if (isFieldOptionalWrapper(field)) {
                             assignment = `formValues.${String(field.name)} ? ${assignment} : null`;
                         }
                         return `${String(field.name)}: ${assignment},`;
