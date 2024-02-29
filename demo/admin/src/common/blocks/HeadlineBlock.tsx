@@ -39,7 +39,7 @@ export const HeadlineBlock = createCompositeBlock(
                 title: "Headline",
             },
             level: {
-                block: createCompositeBlockSelectField({
+                block: createCompositeBlockSelectField<HeadlineBlockData["level"]>({
                     defaultValue: "header-one",
                     fieldProps: { label: "Level", fullWidth: true },
                     options: [
