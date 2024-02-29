@@ -30,7 +30,7 @@ export function generateForm(
     const booleanFields = config.fields.filter((field) => field.type == "boolean");
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isFieldOptionalWrapper = (fieldConfig: FormFieldConfig<any>) => {
+    const isOptional = (fieldConfig: FormFieldConfig<any>) => {
         return isFieldOptional({ config: fieldConfig, gqlIntrospection: gqlIntrospection, gqlType: gqlType });
     };
 
@@ -153,7 +153,7 @@ export function generateForm(
     } ${
         numberFields.length > 0 || Object.keys(rootBlocks).length > 0
             ? `& {
-        ${numberFields.map((field) => `${String(field.name)}${isFieldOptionalWrapper(field) ? `?` : ``}: string;`).join("\n")}
+        ${numberFields.map((field) => `${String(field.name)}${isOptional(field) ? `?` : ``}: string;`).join("\n")}
         ${Object.keys(rootBlocks)
             .map((rootBlockKey) => `${rootBlockKey}: BlockState<typeof rootBlocks.${rootBlockKey}>;`)
             .join("\n")}
@@ -183,7 +183,7 @@ export function generateForm(
             ${numberFields
                 .map((field) => {
                     let assignment = `String(data.${instanceGqlType}.${String(field.name)})`;
-                    if (isFieldOptionalWrapper(field)) {
+                    if (isOptional(field)) {
                         assignment = `data.${instanceGqlType}.${String(field.name)} ? ${assignment} : undefined`;
                     }
                     return `${String(field.name)}: ${assignment},`;
@@ -219,7 +219,7 @@ export function generateForm(
                 ${numberFields
                     .map((field) => {
                         let assignment = `parseFloat(formValues.${String(field.name)})`;
-                        if (isFieldOptionalWrapper(field)) {
+                        if (isOptional(field)) {
                             assignment = `formValues.${String(field.name)} ? ${assignment} : null`;
                         }
                         return `${String(field.name)}: ${assignment},`;
