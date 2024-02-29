@@ -1,9 +1,10 @@
-import { Box, ComponentsOverrides, Theme, Tooltip, Typography } from "@mui/material";
+import { Box, ComponentsOverrides, Theme, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
 import { FormattedMessage, MessageDescriptor, useIntl } from "react-intl";
 
+import { Tooltip } from "../../common/Tooltip";
 import { MenuContext } from "./Context";
 
 export type MenuItemGroupClassKey = "root" | "title" | "titleMenuOpen" | "titleContainer" | "titleContainerMenuOpen";
@@ -21,10 +22,12 @@ const styles = (theme: Theme) =>
             color: `${theme.palette.grey[300]}`,
         },
         titleMenuOpen: {
+            fontWeight: theme.typography.fontWeightBold,
             fontSize: 14,
             border: `2px solid ${theme.palette.common.white}`,
             borderRadius: "initial",
             padding: 0,
+            marginRight: theme.spacing(1),
             color: theme.palette.common.black,
         },
         titleContainer: {
@@ -36,15 +39,23 @@ const styles = (theme: Theme) =>
         titleContainerMenuOpen: {
             justifyContent: "flex-start",
             padding: theme.spacing(2, 4),
+            alignItems: "center",
         },
     });
 
 export interface MenuItemGroupProps {
     title: React.ReactNode;
     shortTitle?: React.ReactNode;
+    helperIcon?: React.ReactNode;
 }
 
-const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({ title, shortTitle, children, classes }) => {
+const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({
+    title,
+    shortTitle,
+    helperIcon,
+    children,
+    classes,
+}) => {
     const { open: menuOpen } = React.useContext(MenuContext);
     const intl = useIntl();
     let displayedTitle = title;
@@ -86,6 +97,7 @@ const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & Me
                     <Typography className={clsx(classes.title, menuOpen && classes.titleMenuOpen)} variant="h3">
                         {displayedTitle}
                     </Typography>
+                    {menuOpen && helperIcon}
                 </Box>
             </Tooltip>
             {children}
