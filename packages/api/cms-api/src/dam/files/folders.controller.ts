@@ -1,8 +1,8 @@
 import { Controller, ForbiddenException, Get, Inject, NotFoundException, Param, Res } from "@nestjs/common";
 import { Response } from "express";
 
-import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
+import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { FoldersService } from "./folders.service";
@@ -15,7 +15,7 @@ export class FoldersController {
     ) {}
 
     @Get("/:folderId/zip")
-    async createZip(@Param("folderId") folderId: string, @Res() res: Response, @GetCurrentUser() user: CurrentUserInterface): Promise<void> {
+    async createZip(@Param("folderId") folderId: string, @Res() res: Response, @GetCurrentUser() user: CurrentUser): Promise<void> {
         const folder = await this.foldersService.findOneById(folderId);
         if (!folder) {
             throw new NotFoundException("Folder not found");

@@ -6,11 +6,11 @@ import mime from "mime";
 import fetch from "node-fetch";
 import { PassThrough } from "stream";
 
-import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
+import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { ScaledImagesCacheService } from "../cache/scaled-images-cache.service";
@@ -59,7 +59,7 @@ export class ImagesController {
         @Param() params: ImageParams,
         @Headers("Accept") accept: string,
         @Res() res: Response,
-        @GetCurrentUser() user: CurrentUserInterface,
+        @GetCurrentUser() user: CurrentUser,
     ): Promise<void> {
         if (params.cropArea.focalPoint !== FocalPoint.SMART) {
             throw new NotFoundException();
@@ -85,7 +85,7 @@ export class ImagesController {
         @Param() params: ImageParams,
         @Headers("Accept") accept: string,
         @Res() res: Response,
-        @GetCurrentUser() user: CurrentUserInterface,
+        @GetCurrentUser() user: CurrentUser,
     ): Promise<void> {
         if (params.cropArea.focalPoint === FocalPoint.SMART) {
             throw new NotFoundException();

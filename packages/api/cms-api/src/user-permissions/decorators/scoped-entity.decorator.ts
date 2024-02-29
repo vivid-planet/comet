@@ -4,10 +4,10 @@ import { ContentScope } from "../../user-permissions/interfaces/content-scope.in
 
 export interface ScopedEntityMeta {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    fn: (entity: any) => Promise<ContentScope>;
+    fn: (entity: any) => Promise<ContentScope | ContentScope[]>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const ScopedEntity = (fn: (entity: any) => Promise<ContentScope>): CustomDecorator<string> => {
+export const ScopedEntity = (fn: (entity: any) => Promise<ContentScope | ContentScope[]>): CustomDecorator<string> => {
     return SetMetadata("scopedEntity", { fn });
 };

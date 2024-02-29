@@ -1,6 +1,6 @@
 import objectPath from "object-path";
 
-import { FormConfigInternal } from "../generator";
+import { FormConfig } from "../generator";
 import { convertObjectToStructuredString, FieldsObjectType } from "./convertObjectToStructuredString";
 import { RootBlocks } from "./findRootBlocks";
 import { getRootProps } from "./generateFieldList";
@@ -13,7 +13,8 @@ export function generateInitialValuesValue({
 }: {
     instanceGqlType: string;
     fragmentName: string;
-    config: FormConfigInternal;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: FormConfig<any>;
     rootBlocks: RootBlocks;
 }) {
     const booleanFields = config.fields.filter((field) => field.type == "boolean");

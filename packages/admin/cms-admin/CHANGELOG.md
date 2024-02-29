@@ -1,5 +1,27 @@
 # @comet/cms-admin
 
+## 6.1.0
+
+### Patch Changes
+
+-   7ea5f61f: Use `useCurrentUser` hook where possible
+-   693cbdb4: Add loading state for edit `StackPage` in `PagesPage`
+
+    Prevents flash of "Document not found" error message when reloading the page editor
+
+-   Updated dependencies [dcfa03ca]
+-   Updated dependencies [08e0da09]
+-   Updated dependencies [b35bb8d1]
+-   Updated dependencies [f1fc9e20]
+-   Updated dependencies [8eb13750]
+-   Updated dependencies [a4fac913]
+    -   @comet/admin@6.1.0
+    -   @comet/admin-icons@6.1.0
+    -   @comet/admin-rte@6.1.0
+    -   @comet/admin-theme@6.1.0
+    -   @comet/admin-date-time@6.1.0
+    -   @comet/blocks-admin@6.1.0
+
 ## 6.0.0
 
 ### Major Changes

@@ -84,6 +84,12 @@ export class ProductFilter {
     @Type(() => DateFilter)
     updatedAt?: DateFilter;
 
+    @Field(() => ManyToOneFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => ManyToOneFilter)
+    manufacturer?: ManyToOneFilter;
+
     @Field(() => [ProductFilter], { nullable: true })
     @Type(() => ProductFilter)
     @ValidateNested({ each: true })

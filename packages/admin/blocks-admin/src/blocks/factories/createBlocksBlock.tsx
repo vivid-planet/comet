@@ -1,4 +1,13 @@
-import { StackPage, StackPageTitle, StackSwitch, StackSwitchApiContext, UndoSnackbar, useSnackbarApi } from "@comet/admin";
+import {
+    RowActionsItem,
+    RowActionsMenu,
+    StackPage,
+    StackPageTitle,
+    StackSwitch,
+    StackSwitchApiContext,
+    UndoSnackbar,
+    useSnackbarApi,
+} from "@comet/admin";
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
 import { Checkbox, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -570,42 +579,46 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                                                             <div />
                                                         )}
                                                         <BlockListHeaderActionContainer>
-                                                            <IconButton
-                                                                onClick={() => {
-                                                                    handleToggleVisibilityOfAllSelectedBlocks(true);
-                                                                }}
-                                                                size="large"
-                                                                disabled={selectedCount === 0}
-                                                            >
-                                                                <Visible />
-                                                            </IconButton>
-                                                            <IconButton
-                                                                onClick={() => {
-                                                                    handleToggleVisibilityOfAllSelectedBlocks();
-                                                                }}
-                                                                size="large"
-                                                                disabled={selectedCount === 0}
-                                                            >
-                                                                <Invisible />
-                                                            </IconButton>
-                                                            <Separator />
-                                                            <IconButton
-                                                                onClick={handleDeleteAllSelectedBlocks}
-                                                                size="large"
-                                                                disabled={selectedCount === 0}
-                                                            >
-                                                                <Delete />
-                                                            </IconButton>
-                                                            <IconButton
-                                                                onClick={handleCopySelectedBlocks}
-                                                                size="large"
-                                                                disabled={selectedCount === 0}
-                                                            >
-                                                                <Copy />
-                                                            </IconButton>
-                                                            <IconButton onClick={() => pasteBlock(0)} size="large">
-                                                                <Paste />
-                                                            </IconButton>
+                                                            <RowActionsMenu>
+                                                                <RowActionsItem
+                                                                    icon={<Visible />}
+                                                                    disabled={selectedCount === 0}
+                                                                    onClick={() => handleToggleVisibilityOfAllSelectedBlocks(true)}
+                                                                >
+                                                                    <FormattedMessage
+                                                                        id="comet.blocks.list.action.visible"
+                                                                        defaultMessage="Make visible"
+                                                                    />
+                                                                </RowActionsItem>
+                                                                <RowActionsItem
+                                                                    icon={<Invisible />}
+                                                                    disabled={selectedCount === 0}
+                                                                    onClick={() => handleToggleVisibilityOfAllSelectedBlocks()}
+                                                                >
+                                                                    <FormattedMessage
+                                                                        id="comet.blocks.list.action.invisible"
+                                                                        defaultMessage="Make invisible"
+                                                                    />
+                                                                </RowActionsItem>
+                                                                <Separator />
+                                                                <RowActionsItem
+                                                                    icon={<Delete />}
+                                                                    disabled={selectedCount === 0}
+                                                                    onClick={handleDeleteAllSelectedBlocks}
+                                                                >
+                                                                    <FormattedMessage id="comet.blocks.list.action.delete" defaultMessage="Delete" />
+                                                                </RowActionsItem>
+                                                                <RowActionsItem
+                                                                    icon={<Copy />}
+                                                                    disabled={selectedCount === 0}
+                                                                    onClick={handleCopySelectedBlocks}
+                                                                >
+                                                                    <FormattedMessage id="comet.blocks.list.action.copy" defaultMessage="Copy" />
+                                                                </RowActionsItem>
+                                                                <RowActionsItem icon={<Paste />} onClick={() => pasteBlock(0)}>
+                                                                    <FormattedMessage id="comet.blocks.list.action.paste" defaultMessage="Paste" />
+                                                                </RowActionsItem>
+                                                            </RowActionsMenu>
                                                         </BlockListHeaderActionContainer>
                                                     </BlockListHeader>
                                                 </AdminComponentStickyHeader>
@@ -801,6 +814,7 @@ const BlockListHeader = styled("div")`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: ${({ theme }) => theme.spacing(0, 1)};
 `;
 
 const BlockListHeaderActionContainer = styled("div")`
@@ -829,4 +843,6 @@ const Separator = styled("div")`
     background-color: ${(props) => props.theme.palette.grey["100"]};
     height: 22px;
     width: 1px;
+    margin-left: ${({ theme }) => theme.spacing(1)};
+    margin-right: ${({ theme }) => theme.spacing(1)};
 `;

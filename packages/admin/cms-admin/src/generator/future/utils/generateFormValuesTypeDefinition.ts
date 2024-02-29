@@ -1,6 +1,6 @@
 import objectPath from "object-path";
 
-import { FormConfigInternal, FormFieldConfigInternal } from "../generator";
+import { FormConfig, FormFieldConfig } from "../generator";
 import { convertObjectToStructuredString, FieldsObjectType } from "./convertObjectToStructuredString";
 import { RootBlocks } from "./findRootBlocks";
 import { getRootProps } from "./generateFieldList";
@@ -10,7 +10,8 @@ export function generateFormValuesTypeDefinition({
     rootBlocks,
     fragmentName,
 }: {
-    config: FormConfigInternal;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: FormConfig<any>;
     rootBlocks: RootBlocks;
     fragmentName: string;
 }) {
@@ -32,7 +33,8 @@ export function generateFormValuesTypeDefinition({
     }`;
 }
 
-function generateFieldTypesStructureForRootProp(rootProp: string, fields: FormFieldConfigInternal[]) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function generateFieldTypesStructureForRootProp(rootProp: string, fields: FormFieldConfig<any>[]) {
     const fieldsObject: FieldsObjectType = fields.reduce((acc, field) => {
         if (field.name.includes(rootProp)) {
             if (field.type === "number") {

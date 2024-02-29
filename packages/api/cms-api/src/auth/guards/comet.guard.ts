@@ -19,7 +19,7 @@ export function createCometAuthGuard(type?: string | string[]): Type<IAuthGuard>
         }
 
         // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-        handleRequest<CurrentUserInterface>(err: unknown, user: any, info: any): CurrentUserInterface {
+        handleRequest<CurrentUser>(err: unknown, user: any, info: any): CurrentUser {
             if (err) {
                 throw err;
             }

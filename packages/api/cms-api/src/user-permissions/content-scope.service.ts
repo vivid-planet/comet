@@ -21,12 +21,12 @@ export class ContentScopeService {
         return isEqual({ ...scope1 }, { ...scope2 });
     }
 
-    async inferScopeFromExecutionContext(context: ExecutionContext): Promise<ContentScope | undefined> {
+    async inferScopeFromExecutionContext(context: ExecutionContext): Promise<ContentScope | ContentScope[] | undefined> {
         const args = await this.getArgs(context);
 
         const affectedEntity = this.reflector.getAllAndOverride<AffectedEntityMeta>("affectedEntity", [context.getHandler(), context.getClass()]);
         if (affectedEntity) {
-            let contentScope: ContentScope | undefined;
+            let contentScope: ContentScope | ContentScope[] | undefined;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const repo = this.orm.em.getRepository<any>(affectedEntity.entity);
             if (affectedEntity.options.idArg) {
@@ -72,6 +72,12 @@ export class ContentScopeService {
         if (args.scope) {
             return args.scope;
         }
+    }
+
+    async inferScopesFromExecutionContext(context: ExecutionContext): Promise<ContentScope[] | undefined> {
+        const scope = await this.inferScopeFromExecutionContext(context);
+        if (scope === undefined) return scope;
+        return Array.isArray(scope) ? scope : [scope];
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

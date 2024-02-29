@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Field, FinalFormSelect } from "@comet/admin";
+import { SelectField } from "@comet/admin";
 import { createEditPageNode } from "@comet/cms-admin";
 import { Box, Divider, MenuItem } from "@mui/material";
 import * as React from "react";
@@ -43,22 +43,18 @@ export const EditPageNode = createEditPageNode({
             <Box marginY={6}>
                 <Divider />
             </Box>
-            <Field
+            <SelectField
                 label={<FormattedMessage id="pageTreeNode.fields.userGroup" defaultMessage="User-Group" />}
                 name="userGroup"
                 variant="horizontal"
                 fullWidth
             >
-                {(props) => (
-                    <FinalFormSelect {...props} fullWidth>
-                        {userGroupOptions.map((option) => (
-                            <MenuItem value={option.value} key={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </FinalFormSelect>
-                )}
-            </Field>
+                {userGroupOptions.map((option) => (
+                    <MenuItem value={option.value} key={option.value}>
+                        {option.label}
+                    </MenuItem>
+                ))}
+            </SelectField>
         </>
     ),
 });

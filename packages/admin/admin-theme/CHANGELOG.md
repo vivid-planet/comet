@@ -1,5 +1,20 @@
 # @comet/admin-theme
 
+## 6.1.0
+
+### Minor Changes
+
+-   a4fac913: Rework `Alert` component
+
+    -   Use theme wherever possible
+    -   Move styles where they're more fitting
+    -   Fix some paddings
+
+### Patch Changes
+
+-   Updated dependencies [08e0da09]
+    -   @comet/admin-icons@6.1.0
+
 ## 6.0.0
 
 ### Patch Changes

@@ -2,7 +2,6 @@ import { Inject } from "@nestjs/common";
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { format } from "date-fns";
 
-import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { BUILDER_LABEL } from "../builds/builds.constants";
 import { SkipBuild } from "../builds/skip-build.decorator";
@@ -10,6 +9,7 @@ import { KubernetesJobStatus } from "../kubernetes/job-status.enum";
 import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
+import { CurrentUser } from "../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
 import { CronJobsService } from "./cron-jobs.service";
@@ -28,7 +28,7 @@ export class CronJobsResolver {
     ) {}
 
     @Query(() => [CronJob])
-    async kubernetesCronJobs(@GetCurrentUser() user: CurrentUserInterface): Promise<CronJob[]> {
+    async kubernetesCronJobs(@GetCurrentUser() user: CurrentUser): Promise<CronJob[]> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }
@@ -49,7 +49,7 @@ export class CronJobsResolver {
     }
 
     @Query(() => CronJob)
-    async kubernetesCronJob(@Args("name") name: string, @GetCurrentUser() user: CurrentUserInterface): Promise<CronJob> {
+    async kubernetesCronJob(@Args("name") name: string, @GetCurrentUser() user: CurrentUser): Promise<CronJob> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }
@@ -65,7 +65,7 @@ export class CronJobsResolver {
 
     @Mutation(() => Job)
     @SkipBuild()
-    async triggerKubernetesCronJob(@Args("name") name: string, @GetCurrentUser() user: CurrentUserInterface): Promise<Job> {
+    async triggerKubernetesCronJob(@Args("name") name: string, @GetCurrentUser() user: CurrentUser): Promise<Job> {
         const cronJob = await this.kubernetesService.getCronJob(name);
         const contentScope = this.kubernetesService.getContentScope(cronJob);
         if (contentScope && !this.accessControlService.isAllowed(user, "builds", contentScope)) {

@@ -1,8 +1,6 @@
 import * as React from "react";
 import { useLocation } from "react-router";
 
-const scrollPositions: Record<string, number | undefined> = {};
-
 interface UseScrollRestorationProps<Element> {
     ref: React.MutableRefObject<Element | null>;
     onScroll: () => void;
@@ -14,15 +12,17 @@ export function useScrollRestoration<Element extends HTMLElement>(identifier: st
 
     const ref = React.useRef<Element>(null);
 
+    const scrollPositionsRef = React.useRef<Record<string, number | undefined>>({});
+
     React.useLayoutEffect((): void => {
         if (ref.current) {
-            ref.current.scrollTo(0, scrollPositions[identifierForRoute] ?? 0);
+            ref.current.scrollTo(0, scrollPositionsRef.current[identifierForRoute] ?? 0);
         }
     }, [identifierForRoute]);
 
     const onScroll = React.useCallback(() => {
         if (ref.current) {
-            scrollPositions[identifierForRoute] = ref.current.scrollTop;
+            scrollPositionsRef.current[identifierForRoute] = ref.current.scrollTop;
         }
     }, [identifierForRoute]);
 

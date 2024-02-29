@@ -2,10 +2,10 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
     FinalForm,
-    FinalFormInput,
     FinalFormSaveSplitButton,
     FinalFormSubmitEvent,
     MainContent,
+    TextField,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
@@ -149,13 +149,7 @@ function ProductTagForm({ id }: FormProps): React.ReactElement {
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <Field
-                            required
-                            fullWidth
-                            name="title"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.title" defaultMessage="Title" />}
-                        />
+                        <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
                     </MainContent>
                 </EditPageLayout>
             )}

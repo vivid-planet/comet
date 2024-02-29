@@ -1,14 +1,16 @@
 import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionQuery } from "graphql";
 
-import { FormConfigInternal, FormFieldConfigInternal, GeneratorReturn } from "./generator";
+import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { generateFieldListFromIntrospection } from "./utils/generateFieldList";
 import { Imports } from "./utils/generateImportsCode";
 
 export function generateFormField(
     { gqlIntrospection }: { gqlIntrospection: IntrospectionQuery },
-    config: FormFieldConfigInternal,
-    formConfig: FormConfigInternal,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: FormFieldConfig<any>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formConfig: FormConfig<any>,
 ): GeneratorReturn & { imports: Imports } {
     const gqlType = formConfig.gqlType;
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
@@ -96,7 +98,7 @@ export function generateFormField(
                 <FormControlLabel
                     label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
                     control={<FinalFormCheckbox ${config.readOnly ? readOnlyProps : ""} {...props} />}
-
+                    control={<FinalFormCheckbox {...props} />}
                     ${
                         config.helperText
                             ? `helperText={<FormattedMessage id=` +

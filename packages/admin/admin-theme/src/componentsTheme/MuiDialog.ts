@@ -18,7 +18,7 @@ export const getMuiDialog: GetMuiComponentTheme<"MuiDialog"> = (component, { spa
             maxWidth: 350,
         },
         paperWidthSm: {
-            maxWidth: 600,
+            maxWidth: 680,
         },
         paperWidthMd: {
             maxWidth: 1024,

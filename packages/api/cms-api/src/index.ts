@@ -1,8 +1,6 @@
 import "reflect-metadata";
 
 export { AccessLogModule } from "./access-log/access-log.module";
-export { CurrentUserInterface } from "./auth/current-user/current-user";
-export { CURRENT_USER_LOADER, CurrentUserLoaderInterface } from "./auth/current-user/current-user-loader";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
 export { DisableGlobalGuard } from "./auth/decorators/global-guard-disable.decorator";
 export { PublicApi } from "./auth/decorators/public-api.decorator";

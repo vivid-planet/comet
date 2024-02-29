@@ -6,7 +6,7 @@ import { basename, dirname } from "path";
 
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
-import { Leaves, Paths } from "./utils/deepKeyOf";
+import { UsableFields } from "./utils/usableFields";
 import { writeGenerated } from "./utils/writeGenerated";
 
 type ImportReference = {
@@ -16,54 +16,40 @@ type ImportReference = {
 
 export type GeneratorEntity = { __typename?: string };
 
-export type FormFieldConfigInternal =
-    // extra internal type to avoid "Type instantiation is excessively deep and possibly infinite." because of name-typing and simplify typing
-    (
-        | { type: "text"; multiline?: boolean }
-        | { type: "number" }
-        | { type: "boolean" }
-        | { type: "date" }
-        // TODO | { type: "dateTime" }
-        | { type: "staticSelect"; values?: string[] }
-        | { type: "asyncSelect"; values?: string[] }
-        | { type: "block"; block: ImportReference }
-    ) & { name: string; label?: string; required?: boolean; readOnly?: boolean; helperText?: string;  validate?: ImportReference  };
-export type FormFieldConfig<T extends GeneratorEntity> = FormFieldConfigInternal & { name: Leaves<T> | Paths<T> };
+export type FormFieldConfig<T extends GeneratorEntity> = (
+    | { type: "text"; multiline?: boolean }
+    | { type: "number" }
+    | { type: "boolean" }
+    | { type: "date" }
+    // TODO | { type: "dateTime" }
+    | { type: "staticSelect"; values?: string[] }
+    | { type: "asyncSelect"; values?: string[] }
+    | { type: "block"; block: ImportReference }
+) & { name: UsableFields<T>; label?: string; required?: boolean; readOnly?: boolean; validate?: ImportReference; helperText?: string };
 
-export type FormConfigInternal = {
+export type FormConfig<T extends GeneratorEntity> = {
     type: "form";
-    gqlType: string;
-    fragmentName?: string;
-    fields: FormFieldConfigInternal[];
-    title?: string;
-};
-export type FormConfig<T extends GeneratorEntity> = FormConfigInternal & {
     gqlType: T["__typename"];
+    fragmentName?: string;
     fields: FormFieldConfig<T>[];
+    title?: string;
 };
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-export type GridColumnConfigInternal = // extra internal type to avoid "Type instantiation is excessively deep and possibly infinite." because of name-typing and simplify typing
-    (
-        | { type: "text" }
-        | { type: "number" }
-        | { type: "boolean" }
-        | { type: "date" }
-        | { type: "dateTime" }
-        | { type: "staticSelect"; values?: string[] }
-        | { type: "block"; block: ImportReference }
-    ) & { name: string; headerName?: string; width?: number };
-export type GridColumnConfig<T extends GeneratorEntity> = GridColumnConfigInternal & { name: Leaves<T> | Paths<T> };
-
-export type GridConfigInternal = {
+export type GridColumnConfig<T extends GeneratorEntity> = (
+    | { type: "text" }
+    | { type: "number" }
+    | { type: "boolean" }
+    | { type: "date" }
+    | { type: "dateTime" }
+    | { type: "staticSelect"; values?: string[] }
+    | { type: "block"; block: ImportReference }
+) & { name: keyof T; headerName?: string; width?: number };
+export type GridConfig<T extends GeneratorEntity> = {
     type: "grid";
-    gqlType: string;
-    fragmentName?: string;
-    columns: GridColumnConfigInternal[];
-};
-export type GridConfig<T extends GeneratorEntity> = GridConfigInternal & {
     gqlType: T["__typename"];
+    fragmentName?: string;
     columns: GridColumnConfig<T>[];
 };
 

@@ -1,5 +1,31 @@
 # @comet/cms-api
 
+## 6.1.0
+
+### Minor Changes
+
+-   7ea43eb3: Make the `UserService`-option of the `UserPermissionsModule` optional.
+
+    The service is still necessary though for the Administration-Panel.
+
+-   86cd5c63: Allow a callback for the `availableContentScopes`-option of the `UserPermissionsModule`
+
+    Please be aware that when using this possibility to make sure to cache the
+    response properly as this is called for every request to the API.
+
+-   737ab3b9: Allow returning multiple content scopes in `ScopedEntity`-decorator
+-   f416510b: Remove `CurrentUserLoader` and `CurrentUserInterface`
+
+    Overriding the the current user in the application isn't supported anymore when using the new `UserPermissionsModule`, which provides the current user DTO itself.
+
+### Patch Changes
+
+-   ef84331f: Fix type of @RequiredPermission to accept a non-array string for a single permission
+-   8e158f8d: Add missing `@RequiredPermission()` decorator to `FileLicensesResolver`
+-   50184410: API Generator: Add missing `scope` argument and filter to `<entity>BySlug` query
+-   1f6c58e8: API Generator: support GraphQLJSONObject input for fields that are not a InputType class
+    -   @comet/blocks-api@6.1.0
+
 ## 6.0.0
 
 ### Major Changes

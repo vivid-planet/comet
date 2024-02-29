@@ -12,11 +12,11 @@ import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
 
-import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
+import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { FocalPoint } from "../common/enums/focal-point.enum";
@@ -457,7 +457,7 @@ export class FilesService {
         return this.create(fileInput);
     }
 
-    async copyFilesToScope({ user, fileIds, inboxFolderId }: { user: CurrentUserInterface; fileIds: string[]; inboxFolderId: string }) {
+    async copyFilesToScope({ user, fileIds, inboxFolderId }: { user: CurrentUser; fileIds: string[]; inboxFolderId: string }) {
         const inboxFolder = await this.foldersService.findOneById(inboxFolderId);
         if (!inboxFolder) {
             throw new Error("Specified inbox folder doesn't exist.");

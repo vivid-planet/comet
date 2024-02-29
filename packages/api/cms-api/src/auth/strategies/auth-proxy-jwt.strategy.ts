@@ -1,11 +1,11 @@
-import { Inject, Injectable, Optional } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { PassportStrategy, Type } from "@nestjs/passport";
 import { JwtPayload } from "jsonwebtoken";
 import { passportJwtSecret } from "jwks-rsa";
 import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 
-import { CurrentUserInterface } from "../current-user/current-user";
-import { CURRENT_USER_LOADER, CurrentUserLoaderInterface } from "../current-user/current-user-loader";
+import { CurrentUser } from "../../user-permissions/dto/current-user";
+import { UserPermissionsService } from "../../user-permissions/user-permissions.service";
 
 interface AuthProxyJwtStrategyConfig {
     jwksUri: string;
@@ -22,7 +22,7 @@ export function createAuthProxyJwtStrategy({
 }: AuthProxyJwtStrategyConfig): Type {
     @Injectable()
     class AuthProxyJwtStrategy extends PassportStrategy(Strategy, strategyName) {
-        constructor(@Optional() @Inject(CURRENT_USER_LOADER) private readonly currentUserLoader: CurrentUserLoaderInterface) {
+        constructor(private readonly service: UserPermissionsService) {
             super({
                 jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
                 secretOrKeyProvider: passportJwtSecret({
@@ -33,17 +33,14 @@ export function createAuthProxyJwtStrategy({
             });
         }
 
-        async validate(data: JwtPayload): Promise<CurrentUserInterface> {
+        async validate(data: JwtPayload): Promise<CurrentUser> {
             if (!data.sub) throw new Error("JwtPayload does not contain sub.");
-            if (!this.currentUserLoader) {
-                return {
-                    id: data.sub,
-                    name: data.name,
-                    email: data.email,
-                    language: data.language,
-                };
-            }
-            return this.currentUserLoader.load(data.sub, data);
+            return this.service.createCurrentUser({
+                id: data.sub,
+                name: data.name,
+                email: data.email,
+                language: data.language,
+            });
         }
     }
     return AuthProxyJwtStrategy;
