@@ -75,45 +75,39 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
         () =>
             data?.manufacturer
                 ? {
-                      ...filter<GQLManufacturerFormDetailsFragment>(manufacturerFormFragment, data.manufacturer),
-                      address: data.manufacturer.address
-                          ? {
-                                // ...data.manufacturer.address,
-                                street: data.manufacturer.address.street,
-                                country: data.manufacturer.address.country,
-                                streetNumber: data.manufacturer.address.streetNumber ? String(data.manufacturer.address.streetNumber) : null,
-                                zip: String(data.manufacturer.address.zip),
-                                alternativeAddress: data.manufacturer.address.alternativeAddress
-                                    ? {
-                                          // ...data.manufacturer.address.alternativeAddress,
-                                          street: data.manufacturer.address.alternativeAddress.street,
-                                          country: data.manufacturer.address.alternativeAddress.country,
-                                          streetNumber: data.manufacturer.address.alternativeAddress.streetNumber
-                                              ? String(data.manufacturer.address.alternativeAddress.streetNumber)
-                                              : null,
-                                          zip: String(data.manufacturer.address.alternativeAddress.zip),
-                                      }
-                                    : undefined,
-                            }
-                          : undefined,
-                      addressAsEmbeddable: {
-                          // ...data.manufacturer.addressAsEmbeddable,
-                          street: data.manufacturer.addressAsEmbeddable.street,
-                          country: data.manufacturer.addressAsEmbeddable.country,
-                          streetNumber: data.manufacturer.addressAsEmbeddable.streetNumber
-                              ? String(data.manufacturer.addressAsEmbeddable.streetNumber)
-                              : null,
-                          zip: String(data.manufacturer.addressAsEmbeddable.zip),
-                          alternativeAddress: {
-                              // ...data.manufacturer.addressAsEmbeddable.alternativeAddress,
-                              street: data.manufacturer.addressAsEmbeddable.alternativeAddress.street,
-                              country: data.manufacturer.addressAsEmbeddable.alternativeAddress.country,
-                              streetNumber: data.manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber
-                                  ? String(data.manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber)
+                      ...filter<GQLManufacturerFormDetailsFragment>(manufacturerFormFragment, {
+                          ...data.manufacturer,
+                          address: data.manufacturer.address
+                              ? {
+                                    ...data.manufacturer.address,
+                                    streetNumber: data.manufacturer.address.streetNumber ? String(data.manufacturer.address.streetNumber) : null,
+                                    zip: String(data.manufacturer.address.zip),
+                                    alternativeAddress: data.manufacturer.address.alternativeAddress
+                                        ? {
+                                              ...data.manufacturer.address.alternativeAddress,
+                                              streetNumber: data.manufacturer.address.alternativeAddress.streetNumber
+                                                  ? String(data.manufacturer.address.alternativeAddress.streetNumber)
+                                                  : null,
+                                              zip: String(data.manufacturer.address.alternativeAddress.zip),
+                                          }
+                                        : undefined,
+                                }
+                              : undefined,
+                          addressAsEmbeddable: {
+                              ...data.manufacturer.addressAsEmbeddable,
+                              streetNumber: data.manufacturer.addressAsEmbeddable.streetNumber
+                                  ? String(data.manufacturer.addressAsEmbeddable.streetNumber)
                                   : null,
-                              zip: String(data.manufacturer.addressAsEmbeddable.alternativeAddress.zip),
+                              zip: String(data.manufacturer.addressAsEmbeddable.zip),
+                              alternativeAddress: {
+                                  ...data.manufacturer.addressAsEmbeddable.alternativeAddress,
+                                  streetNumber: data.manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber
+                                      ? String(data.manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber)
+                                      : null,
+                                  zip: String(data.manufacturer.addressAsEmbeddable.alternativeAddress.zip),
+                              },
                           },
-                      },
+                      }),
                   }
                 : {},
         [data],
