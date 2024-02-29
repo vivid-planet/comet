@@ -3,8 +3,6 @@ import { CrudField, CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDa
 import {
     BaseEntity,
     Collection,
-    Embeddable,
-    Embedded,
     Entity,
     Enum,
     ManyToMany,
@@ -50,26 +48,6 @@ export class ProductDimensions {
     @IsNumber()
     height: number;
 
-    @Field()
-    @IsNumber()
-    depth: number;
-}
-
-@Embeddable()
-@ObjectType()
-@InputType("ProductPackageDimensionsInput")
-export class ProductPackageDimensions {
-    @Property({ type: types.integer })
-    @Field()
-    @IsNumber()
-    width: number;
-
-    @Property({ type: types.integer })
-    @Field()
-    @IsNumber()
-    height: number;
-
-    @Property({ type: types.integer })
     @Field()
     @IsNumber()
     depth: number;
@@ -146,10 +124,6 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Property({ type: "json", nullable: true })
     @Field(() => ProductDimensions, { nullable: true })
     dimensions?: ProductDimensions = undefined;
-
-    @Embedded(() => ProductPackageDimensions, { nullable: true })
-    @Field(() => ProductPackageDimensions, { nullable: true })
-    packageDimensions?: ProductPackageDimensions = undefined;
 
     @OneToOne(() => ProductStatistics, { inversedBy: "product", owner: true, ref: true, nullable: true })
     @Field(() => ProductStatistics, { nullable: true })

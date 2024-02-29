@@ -1,5 +1,42 @@
 # @comet/cms-admin
 
+## 6.2.1
+
+### Patch Changes
+
+-   @comet/admin@6.2.1
+-   @comet/admin-date-time@6.2.1
+-   @comet/admin-icons@6.2.1
+-   @comet/admin-rte@6.2.1
+-   @comet/admin-theme@6.2.1
+-   @comet/blocks-admin@6.2.1
+
+## 6.2.0
+
+### Minor Changes
+
+-   75865caa: Deprecate `isHref` validator, `IsHref` decorator and `IsHrefConstraint` class.
+
+    New versions `isLinkTarget`, `IsLinkTarget` and `IsLinkTargetConstraint` are added as replacement.
+
+### Patch Changes
+
+-   ad153c99: Add the `x-preview-dam-urls` header to our axios client
+
+    Now the axios client always requests preview DAM urls just like the GraphQL client.
+
+-   5dfe4839: Prevent the document editor from losing its state when (re)gaining focus
+
+    In v6.1.0 a loading indicator was added to the document editor (in `PagesPage`).
+    This had an unwanted side effect: Focusing the edit page automatically causes a GraphQL request to check for a newer version of the document. This request also caused the loading indicator to render, thus unmounting the editor (`EditComponent`). Consequently, the local state of the editor was lost.
+
+    -   @comet/admin@6.2.0
+    -   @comet/admin-date-time@6.2.0
+    -   @comet/admin-icons@6.2.0
+    -   @comet/admin-rte@6.2.0
+    -   @comet/admin-theme@6.2.0
+    -   @comet/blocks-admin@6.2.0
+
 ## 6.1.0
 
 ### Patch Changes

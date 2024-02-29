@@ -98,7 +98,7 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
                 variables: { id, input: output, lastUpdatedAt: data?.productCategory.updatedAt },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<
+            const { data: mutationResponse } = await client.mutate<
                 GQLProductCategoryFormCreateProductCategoryMutation,
                 GQLProductCategoryFormCreateProductCategoryMutationVariables
             >({
@@ -106,7 +106,7 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
                 variables: { input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createProductCategory.id;
+                const id = mutationResponse?.createProductCategory.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage(`edit`, id);
