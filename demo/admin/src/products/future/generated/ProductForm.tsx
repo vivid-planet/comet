@@ -36,8 +36,8 @@ import { createProductMutation, productCategoriesQuery, productFormFragment, pro
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
-    GQLProductCategoriesQuery,
-    GQLProductCategoriesQueryVariables,
+    GQLProductCategoriesSelectQuery,
+    GQLProductCategoriesSelectQueryVariables,
     GQLProductCategorySelectFragment,
     GQLProductFormDetailsFragment,
     GQLProductQuery,
@@ -128,7 +128,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
     };
 
     const categorySelectAsyncProps = useAsyncOptionsProps(async () => {
-        const result = await client.query<GQLProductCategoriesQuery, GQLProductCategoriesQueryVariables>({ query: productCategoriesQuery });
+        const result = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
+            query: productCategoriesQuery,
+        });
         return result.data.productCategories.nodes;
     });
 

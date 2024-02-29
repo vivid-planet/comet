@@ -148,7 +148,7 @@ export function generateFormField(
         const rootQuery = config.rootQuery; //TODO we should infer a default value from the gql schema
         const queryType = objectType.name;
         const queryVariableName = `${rootQuery}Query`;
-        const queryName = rootQuery[0].toUpperCase() + rootQuery.substring(1);
+        const queryName = `${rootQuery[0].toUpperCase() + rootQuery.substring(1)}Select`;
         const fragmentVariableName = `${rootQuery}SelectFragment`;
         const fragmentName = `${objectType.name}Select`;
 

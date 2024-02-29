@@ -9,7 +9,7 @@ export const productCategoriesSelectFragment = gql`
     }
 `;
 export const productCategoriesQuery = gql`
-    query ProductCategories {
+    query ProductCategoriesSelect {
         productCategories {
             nodes {
                 ...ProductCategorySelect
