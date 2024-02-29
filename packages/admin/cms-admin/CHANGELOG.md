@@ -1,5 +1,20 @@
 # @comet/cms-admin
 
+## 5.6.4
+
+### Patch Changes
+
+-   6bc4f1ef9: Add the `x-preview-dam-urls` header to our axios client
+
+    Now the axios client always requests preview DAM urls just like the GraphQL client.
+
+    -   @comet/admin@5.6.4
+    -   @comet/admin-date-time@5.6.4
+    -   @comet/admin-icons@5.6.4
+    -   @comet/admin-rte@5.6.4
+    -   @comet/admin-theme@5.6.4
+    -   @comet/blocks-admin@5.6.4
+
 ## 5.6.3
 
 ### Patch Changes
