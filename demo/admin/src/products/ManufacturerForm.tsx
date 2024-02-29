@@ -6,7 +6,6 @@ import {
     FinalFormInput,
     FinalFormSaveSplitButton,
     FinalFormSubmitEvent,
-    FormSection,
     Loading,
     MainContent,
     TextField,
@@ -305,7 +304,8 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
                                 />
                             </FieldSet>
                         </FieldSet>
-                        <FormSection
+                        <FieldSet
+                            collapsible={false}
                             title={<FormattedMessage id="manufacturer.address.alternativeAddress.country" defaultMessage="Address as embeddable" />}
                         >
                             <TextField
@@ -367,7 +367,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
                                 name="addressAsEmbeddable.alternativeAddress.country"
                                 label={<FormattedMessage id="manufacturer.address.alternativeAddress.country" defaultMessage="Alt-Address Country" />}
                             />
-                        </FormSection>
+                        </FieldSet>
                     </MainContent>
                 </EditPageLayout>
             )}
