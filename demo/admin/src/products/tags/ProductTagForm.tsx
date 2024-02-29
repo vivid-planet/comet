@@ -95,7 +95,7 @@ function ProductTagForm({ id }: FormProps): React.ReactElement {
                 variables: { id, input: output, lastUpdatedAt: data?.productTag.updatedAt },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<
+            const { data: mutationResponse } = await client.mutate<
                 GQLProductTagFormCreateProductTagMutation,
                 GQLProductTagFormCreateProductTagMutationVariables
             >({
@@ -103,7 +103,7 @@ function ProductTagForm({ id }: FormProps): React.ReactElement {
                 variables: { input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createProductTag.id;
+                const id = mutationResponse?.createProductTag.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage(`edit`, id);
