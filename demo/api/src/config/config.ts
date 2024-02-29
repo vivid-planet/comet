@@ -25,6 +25,10 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             url: envVars.IMGPROXY_URL,
             key: envVars.IMGPROXY_KEY,
         },
+        contentGeneration: {
+            apiKey: envVars.CONTENT_GENERATION_API_KEY,
+            url: envVars.CONTENT_GENERATION_API_URL,
+        },
         dam: {
             ...cometConfig.dam,
             secret: envVars.DAM_SECRET,

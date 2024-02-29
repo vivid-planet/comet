@@ -95,4 +95,12 @@ export class EnvironmentVariables {
     @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
     @IsString()
     S3_BUCKET: string;
+
+    @IsString()
+    @IsOptional()
+    CONTENT_GENERATION_API_URL?: string;
+
+    @IsString()
+    @IsOptional()
+    CONTENT_GENERATION_API_KEY?: string;
 }

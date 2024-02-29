@@ -1,6 +1,6 @@
 import { ContentGenerationRequest, Options } from "@comet/cms-api/lib/content-generation/content-generation.types";
 
-export const ContentGenerationModels = () => {
+export const ContentGenerationModels = ({ apiKey, apiUrl }: { apiKey: string; apiUrl: string }) => {
     const createMessages = (options: ContentGenerationRequest, imageDetail: "low" | "high") => {
         const messages = [];
         options.instructions && messages.push({ role: "system", content: options.instructions });
@@ -73,11 +73,11 @@ export const ContentGenerationModels = () => {
 
     return {
         image: async (options: ContentGenerationRequest) => {
-            const response = await fetch("apiUrl", createRequest(options, "low", "apiKey"));
+            const response = await fetch(apiUrl, createRequest(options, "low", apiKey));
             return convertResponse(response);
         },
         imageAdvanced: async (options: ContentGenerationRequest) => {
-            const response = await fetch("apiUrl", createRequest(options, "high", "apiKey"));
+            const response = await fetch(apiUrl, createRequest(options, "high", apiKey));
             return convertResponse(response);
         },
     };

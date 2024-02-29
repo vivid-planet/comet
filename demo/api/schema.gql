@@ -452,12 +452,6 @@ type ProductDimensions {
   depth: Float!
 }
 
-type ProductPackageDimensions {
-  width: Float!
-  height: Float!
-  depth: Float!
-}
-
 type Product implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -473,7 +467,6 @@ type Product implements DocumentInterface {
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
   dimensions: ProductDimensions
-  packageDimensions: ProductPackageDimensions
   statistics: ProductStatistics
   createdAt: DateTime!
   category: ProductCategory
@@ -590,12 +583,6 @@ input ProductDiscountsInput {
 }
 
 input ProductDimensionsInput {
-  width: Float!
-  height: Float!
-  depth: Float!
-}
-
-input ProductPackageDimensionsInput {
   width: Float!
   height: Float!
   depth: Float!
@@ -941,8 +928,6 @@ type Mutation {
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
   moveDamFolders(folderIds: [ID!]!, targetFolderId: ID, scope: DamScopeInput!): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!
-  generateAltText(imageUrl: String!): String!
-  generateImageTitle(imageUrl: String!): String!
   createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
   updateNews(id: ID!, input: NewsUpdateInput!, lastUpdatedAt: DateTime): News!
   deleteNews(id: ID!): Boolean!
@@ -1150,7 +1135,6 @@ input ProductInput {
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
   dimensions: ProductDimensionsInput
-  packageDimensions: ProductPackageDimensionsInput
   statistics: ProductStatisticsInput
   variants: [ProductVariantInput!]! = []
   category: ID = null
@@ -1177,7 +1161,6 @@ input ProductUpdateInput {
   discounts: [ProductDiscountsInput!]
   articleNumbers: [String!]
   dimensions: ProductDimensionsInput
-  packageDimensions: ProductPackageDimensionsInput
   statistics: ProductStatisticsInput
   variants: [ProductVariantInput!]
   category: ID

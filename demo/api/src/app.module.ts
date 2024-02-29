@@ -145,7 +145,16 @@ export class AppModule {
                     directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
                     acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
                 }),
-                ContentGenerationModule.register({ models: ContentGenerationModels() }),
+                ...(config.contentGeneration.apiKey && config.contentGeneration.url
+                    ? [
+                          ContentGenerationModule.register({
+                              models: ContentGenerationModels({
+                                  apiKey: config.contentGeneration.apiKey,
+                                  apiUrl: config.contentGeneration.url,
+                              }),
+                          }),
+                      ]
+                    : []),
                 NewsModule,
                 MenusModule,
                 FooterModule,
