@@ -91,6 +91,7 @@ export const Root = styled(FormControl, {
             flex-direction: row;
             align-items: center;
             max-width: 944px;
+            gap: ${theme.spacing(4)};
         `}
 
         ${ownerState.fieldMargin === "onlyIfNotLast" &&
