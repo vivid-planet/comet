@@ -86,7 +86,6 @@ export const Root = styled(FormControl, {
         ${ownerState.variant === "horizontal" &&
         !ownerState.forceVertical &&
         css`
-            container-type: inline-size;
             display: flex;
             flex-direction: row;
             align-items: center;
