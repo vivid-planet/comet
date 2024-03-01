@@ -63,7 +63,7 @@ class App extends React.Component {
                         value={{
                             configs: config.sitesConfig,
                             resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
-                            blockPreviewApiUrl: `${config.sitePreviewUrl}/api/block-preview`,
+                            blockPreviewBaseUrl: `${config.sitePreviewUrl}/block-preview`,
                             sitePreviewApiUrl: `${config.sitePreviewUrl}/api/site-preview`,
                         }}
                     >

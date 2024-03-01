@@ -12,10 +12,6 @@ export type SitePreviewParams = {
         includeInvisible: boolean;
     };
 };
-export type BlockPreviewParams = {
-    scope: Scope;
-    path: string;
-};
 
 export async function getValidatedSitePreviewParams(
     req: NextApiRequest,
@@ -26,17 +22,6 @@ export async function getValidatedSitePreviewParams(
         scope: await getValidatedScope(req, res, graphQLClient),
         path: req.query.path as string,
         settings: JSON.parse(req.query.settings as string),
-    };
-}
-
-export async function getValidatedBlockPreviewParams(
-    req: NextApiRequest,
-    res: NextApiResponse,
-    graphQLClient: GraphQLClient,
-): Promise<BlockPreviewParams> {
-    return {
-        scope: await getValidatedScope(req, res, graphQLClient),
-        path: req.query.path as string,
     };
 }
 

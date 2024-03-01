@@ -23,19 +23,19 @@ function BlockPreview({
     previewApi: { device, setDevice, showOnlyVisible, setShowOnlyVisible, setMinimized },
 }: Props): React.ReactElement {
     const iFrameBridge = useIFrameBridge();
+    const { scope } = useContentScope();
 
     React.useEffect(() => {
         if (iFrameBridge.iFrameReady) {
             iFrameBridge.sendBlockState(previewState);
         }
-    }, [iFrameBridge, previewState]);
+        if (iFrameBridge.iFrameReady) {
+            iFrameBridge.sendContentScope(scope);
+        }
+    }, [iFrameBridge, previewState, scope]);
 
-    const { scope } = useContentScope();
     const sitesConfigContext = useSitesConfig();
-    const initialPageUrl = `${sitesConfigContext.blockPreviewApiUrl}?${new URLSearchParams({
-        scope: JSON.stringify(scope),
-        path: previewPath,
-    }).toString()}`;
+    const initialPageUrl = `${sitesConfigContext.blockPreviewBaseUrl}${previewPath}`;
 
     const handleMinimizeClick = () => {
         setMinimized((minimized) => !minimized);

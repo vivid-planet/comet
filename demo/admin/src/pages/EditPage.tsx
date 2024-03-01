@@ -137,7 +137,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                 </ToolbarActions>
             </Toolbar>
             <MainContent disablePaddingBottom>
-                <BlockPreviewWithTabs previewPath="/preview/page" previewState={previewState} previewApi={previewApi}>
+                <BlockPreviewWithTabs previewPath="/page" previewState={previewState} previewApi={previewApi}>
                     {[
                         {
                             key: "content",

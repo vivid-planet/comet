@@ -23,6 +23,6 @@ export { usePreview } from "./preview/usePreview";
 export { PreviewSkeleton } from "./previewskeleton/PreviewSkeleton";
 export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSitePreviewIFrameMessage";
 export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePreviewIFrameMessage";
-export type { BlockPreviewParams, SitePreviewParams } from "./sitePreview/SitePreviewApiHelper";
-export { getValidatedBlockPreviewParams, getValidatedSitePreviewParams } from "./sitePreview/SitePreviewApiHelper";
+export type { SitePreviewParams } from "./sitePreview/SitePreviewApiHelper";
+export { getValidatedSitePreviewParams } from "./sitePreview/SitePreviewApiHelper";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";

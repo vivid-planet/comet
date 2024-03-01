@@ -10,7 +10,7 @@ export interface SiteConfig {
 export interface SiteConfigApi<Configs = unknown> {
     configs: Configs;
     resolveSiteConfigForScope: (configs: Configs, scope: ContentScopeInterface) => SiteConfig;
-    blockPreviewApiUrl: string;
+    blockPreviewBaseUrl: string;
     sitePreviewApiUrl: string;
 }
 

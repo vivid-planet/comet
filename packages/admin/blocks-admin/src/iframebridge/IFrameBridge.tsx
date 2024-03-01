@@ -5,6 +5,7 @@ import {
     AdminMessage,
     AdminMessageType,
     IAdminBlockMessage,
+    IAdminContentScopeMessage,
     IAdminHoverComponentMessage,
     IAdminSelectComponentMessage,
     IFrameMessage,
@@ -15,6 +16,8 @@ export interface IFrameBridgeContext {
     iFrameRef: React.Ref<HTMLIFrameElement>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sendBlockState: (blockState: any) => void; // TODO: only PageBlock is supported currently
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    sendContentScope(contentScope: any): void;
     iFrameReady: boolean;
     hoveredSiteRoute: string | null;
     sendSelectComponent: (adminRoute: string) => void;
@@ -32,6 +35,9 @@ export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
         // empty
     },
     sendHoverComponent: () => {
+        // empty
+    },
+    sendContentScope: () => {
         // empty
     },
 });
@@ -127,6 +133,13 @@ export const IFrameBridgeProvider: React.FunctionComponent<IFrameBridgeProviderP
                             hoveredSiteRoute: hoveredSiteRoute,
                             sendHoverComponent: (adminRoute) => {
                                 const message: IAdminHoverComponentMessage = { cometType: AdminMessageType.HoverComponent, data: { adminRoute } };
+                                sendMessage(message);
+                            },
+                            sendContentScope: (contentScope) => {
+                                const message: IAdminContentScopeMessage = {
+                                    cometType: AdminMessageType.ContentScope,
+                                    data: { contentScope },
+                                };
                                 sendMessage(message);
                             },
                         }}
