@@ -1,9 +1,19 @@
 import * as React from "react";
 
 export interface ContentGenerationServiceContext {
-    enabled: boolean;
+    config: {
+        image?: boolean;
+        imageAdvanced?: boolean;
+        text?: boolean;
+        textAdvanced?: boolean;
+    };
 }
 
 export const ContentGenerationServiceContext = React.createContext<ContentGenerationServiceContext>({
-    enabled: false,
+    config: {
+        image: false,
+        imageAdvanced: false,
+        text: false,
+        textAdvanced: false,
+    },
 });

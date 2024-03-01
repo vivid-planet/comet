@@ -64,7 +64,7 @@ class App extends React.Component {
 
     public render(): JSX.Element {
         return (
-            <ContentGenerationServiceProvider enabled>
+            <ContentGenerationServiceProvider config={{ image: true, imageAdvanced: true }}>
                 <ApolloProvider client={apolloClient}>
                     <CurrentUserProvider>
                         <SitesConfigProvider

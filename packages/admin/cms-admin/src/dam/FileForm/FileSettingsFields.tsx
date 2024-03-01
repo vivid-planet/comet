@@ -52,7 +52,9 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
     const scope = useDamScope();
     const damConfig = useDamConfig();
     const formApi = useForm();
-    const { enabled: ContentGenerationEnabled } = useContentGenerationService();
+    const {
+        config: { image: ContentGenerationEnabled },
+    } = useContentGenerationService();
     const damIsFilenameOccupied = React.useCallback(
         async (filename: string): Promise<boolean> => {
             const { data } = await apollo.query<GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables>({
