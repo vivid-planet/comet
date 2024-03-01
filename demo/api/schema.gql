@@ -928,6 +928,8 @@ type Mutation {
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
   moveDamFolders(folderIds: [ID!]!, targetFolderId: ID, scope: DamScopeInput!): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!
+  generateAltText(imageUrl: String!): String!
+  generateImageTitle(imageUrl: String!): String!
   createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
   updateNews(id: ID!, input: NewsUpdateInput!, lastUpdatedAt: DateTime): News!
   deleteNews(id: ID!): Boolean!

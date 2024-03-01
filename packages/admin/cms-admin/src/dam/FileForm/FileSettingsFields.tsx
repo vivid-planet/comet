@@ -1,11 +1,12 @@
 import { gql, useApolloClient, useMutation } from "@apollo/client";
-import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection } from "@comet/admin";
+import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading } from "@comet/admin";
+import { useContentGenerationService } from "@comet/admin/lib/contentGeneration/useContentGenerationService";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { Calendar } from "@comet/admin-icons";
-import { InputAdornment } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { ArtificialIntelligence, Calendar } from "@comet/admin-icons";
+import { IconButton, InputAdornment } from "@mui/material";
+import { styled, useTheme } from "@mui/material/styles";
 import * as React from "react";
-import { FieldInputProps } from "react-final-form";
+import { useForm } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { GQLLicenseType } from "../../graphql.generated";
@@ -45,10 +46,13 @@ const licenseTypeLabels: { [key in LicenseType]: React.ReactNode } = {
 export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElement => {
     const folderId = file.folder?.id || null;
     const isImage = !!file.image;
+    const theme = useTheme();
     const intl = useIntl();
     const apollo = useApolloClient();
     const scope = useDamScope();
     const damConfig = useDamConfig();
+    const formApi = useForm();
+    const { enabled: ContentGenerationEnabled } = useContentGenerationService();
     const damIsFilenameOccupied = React.useCallback(
         async (filename: string): Promise<boolean> => {
             const { data } = await apollo.query<GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables>({
@@ -81,7 +85,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
     const [generateAltText, { loading: loadingAltText }] = useMutation<GQLGenerateAltTextMutation, GQLGenerateAltTextMutationVariables>(
         generateAltTextMutation,
     );
-    const [generateImageTitle, { loading: loadingImage }] = useMutation<GQLGenerateImageTitleMutation, GQLGenerateImageTitleMutationVariables>(
+    const [generateImageTitle, { loading: loadingImageTitle }] = useMutation<GQLGenerateImageTitleMutation, GQLGenerateImageTitleMutationVariables>(
         generateImageTitleMutation,
     );
 
@@ -118,11 +122,19 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                     name="altText"
                     component={FinalFormInput}
                     fullWidth
-                    contentGenerationButton={async (input: FieldInputProps<string, HTMLInputElement | HTMLTextAreaElement>) => {
-                        const { data } = await generateAltText({ variables: { imageUrl: file.fileUrl } });
-                        input.onChange(data?.generateAltText);
-                    }}
-                    loading={loadingAltText}
+                    endAdornment={
+                        ContentGenerationEnabled && (
+                            <IconButton
+                                sx={{ color: theme.palette.primary.main }}
+                                onClick={async () => {
+                                    const { data } = await generateAltText({ variables: { imageUrl: file.fileUrl } });
+                                    formApi.change("altText", data?.generateAltText);
+                                }}
+                            >
+                                {loadingAltText ? <Loading behavior="fillParent" fontSize="large" /> : <ArtificialIntelligence />}
+                            </IconButton>
+                        )
+                    }
                 />
                 <Field
                     label={intl.formatMessage({
@@ -132,11 +144,19 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                     name="title"
                     component={FinalFormInput}
                     fullWidth
-                    contentGenerationButton={async (input: FieldInputProps<string, HTMLInputElement | HTMLTextAreaElement>) => {
-                        const { data } = await generateImageTitle({ variables: { imageUrl: file.fileUrl } });
-                        input.onChange(data?.generateImageTitle);
-                    }}
-                    loading={loadingImage}
+                    endAdornment={
+                        ContentGenerationEnabled && (
+                            <IconButton
+                                sx={{ color: theme.palette.primary.main }}
+                                onClick={async () => {
+                                    const { data } = await generateImageTitle({ variables: { imageUrl: file.fileUrl } });
+                                    formApi.change("title", data?.generateImageTitle);
+                                }}
+                            >
+                                {loadingImageTitle ? <Loading behavior="fillParent" fontSize="large" /> : <ArtificialIntelligence />}
+                            </IconButton>
+                        )
+                    }
                 />
             </FormSection>
             {damConfig.enableLicenseFeature && (
