@@ -5,11 +5,13 @@
 "@comet/cms-site": minor
 ---
 
-Revise Site-Preview and Block-Preview
+Revise site preview and block preview
 
-The Site-Preview now uses the Next.JS Preview mode.
-Both previews are entered by navigating to an API-Route in the site, which have to be executed in a secured environment.
+The site preview review now uses the Next.JS Preview mode.
+The preview is entered by navigating to an API-Route in the site, which has to be executed in a secured environment.
 In the API-Routes the current scope is checked (and possibly stored), then the client is redirected to the Preview.
+The block preview now uses a single base url and stores the content scope in the a React context instead requiring a
+url for every content scope.
 
 // TODO Move the following introduction to the migration guide before releasing
 
@@ -24,11 +26,12 @@ Requires following changes to site:
 -   Add `SitePreviewProvider` to `App` (typically in `src/pages/_app.tsx`)
 -   Provide a protected environment for the site
     -   Make sure that a Authorization-Header is present in this environment
-    -   Add Next.JS API-Routes for Block-Preview and Site-Preview (eg. `/api/site-preview` `/api/block-preview`)
-    -   Call `getValidatedSitePreviewParams()` in these API-Routes (calls the API which checks the Authorization-Header with the submitted scope)
+    -   Add a Next.JS API-Route for the site preview (eg. `/api/site-preview`)
+    -   Call `getValidatedSitePreviewParams()` in the API-Route (calls the API which checks the Authorization-Header with the submitted scope)
     -   Use the `path`-part of the return value to redirect to the preview
 
 Requires following changes to admin
 
--   The `SitesConfigProvider` needs the absolute Urls to the mentioned API-Routes
--   Use `previewPath` instead of `previewUrl` in Block-Previews in Admin
+-   The `SitesConfigProvider` needs the absolute urls to the site preview API-Route
+-   The `SitesConfigProvider` needs the absolute base Url to the block preview
+-   Use `previewPath` instead of `previewUrl` in block previews in Admin
