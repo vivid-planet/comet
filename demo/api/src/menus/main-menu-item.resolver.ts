@@ -17,7 +17,6 @@ import { MainMenuItem } from "./entities/main-menu-item.entity";
 
 @Resolver(() => MainMenuItem)
 @RequiredPermission(["pageTree"])
-@AffectedEntity(MainMenuItem, { pageTreeNodeIdArg: "pageTreeNodeId" })
 export class MainMenuItemResolver {
     constructor(
         @InjectRepository(MainMenuItem) private readonly mainMenuItemRepository: EntityRepository<MainMenuItem>,
@@ -25,6 +24,7 @@ export class MainMenuItemResolver {
     ) {}
 
     @Query(() => MainMenuItem)
+    @AffectedEntity(MainMenuItem, { pageTreeNodeIdArg: "pageTreeNodeId" })
     async mainMenuItem(
         @Args("pageTreeNodeId", { type: () => ID }) pageTreeNodeId: string,
         @RequestContext() { includeInvisiblePages }: RequestContextInterface,
@@ -47,6 +47,7 @@ export class MainMenuItemResolver {
     }
 
     @Mutation(() => MainMenuItem)
+    @AffectedEntity(MainMenuItem, { pageTreeNodeIdArg: "pageTreeNodeId" })
     async updateMainMenuItem(
         @Args("pageTreeNodeId", { type: () => ID }) pageTreeNodeId: string,
         @Args("input", { type: () => MainMenuItemInput }) input: MainMenuItemInput,

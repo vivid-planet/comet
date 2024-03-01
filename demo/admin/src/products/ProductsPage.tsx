@@ -79,7 +79,17 @@ const ProductsPage: React.FC = () => {
                     )}
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add product" })}>
-                    <ProductForm />
+                    <SaveBoundary>
+                        <Toolbar>
+                            <ToolbarBackButton />
+                            <ToolbarAutomaticTitleItem />
+                            <ToolbarFillSpace />
+                            <ToolbarActions>
+                                <SaveBoundarySaveButton />
+                            </ToolbarActions>
+                        </Toolbar>
+                        <ProductForm />
+                    </SaveBoundary>
                 </StackPage>
             </StackSwitch>
         </Stack>

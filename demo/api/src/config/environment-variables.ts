@@ -32,6 +32,9 @@ export class EnvironmentVariables {
     @IsString()
     API_URL: string;
 
+    @IsString()
+    ADMIN_URL: string;
+
     @Type(() => Number)
     @IsInt()
     API_PORT: number;

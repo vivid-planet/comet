@@ -31,6 +31,7 @@ import { Redirect, RouteComponentProps } from "react-router-dom";
 import { ComponentDemo } from "./ComponentDemo";
 import { ContentScopeIndicator } from "./ContentScopeIndicator";
 import { EditPageNode } from "./EditPageNode";
+import { ManufacturersPage } from "@src/products/future/ManufacturersPage";
 
 export const pageTreeDocumentTypes = {
     Page,
@@ -170,6 +171,13 @@ export const masterMenuData: MasterMenuData = [
                 route: {
                     path: "/products-future",
                     component: FutureProductsPage,
+                },
+            },
+            {
+                primary: <FormattedMessage id="menu.manufacturersFuture" defaultMessage="Manufacturers Future" />,
+                route: {
+                    path: "/manufacturers-future",
+                    component: ManufacturersPage,
                 },
             },
             {

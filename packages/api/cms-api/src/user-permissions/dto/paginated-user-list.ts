@@ -26,7 +26,7 @@ class UserFilter {
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
     @Type(() => StringFilter)
-    language?: StringFilter;
+    locale?: StringFilter;
 
     @Field(() => [UserFilter], { nullable: true })
     @Type(() => UserFilter)
@@ -43,7 +43,7 @@ enum UserSortField {
     name = "name",
     email = "email",
     status = "status",
-    language = "language",
+    locale = "locale",
 }
 registerEnumType(UserSortField, {
     name: "UserSortField",

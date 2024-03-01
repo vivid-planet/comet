@@ -17,7 +17,7 @@ export const CurrentUserContext = React.createContext<CurrentUserContext | undef
 export interface CurrentUserInterface {
     name?: string;
     email?: string;
-    language?: string;
+    locale?: string;
     permissions: GQLCurrentUserPermission[];
     allowedContentScopes: ContentScopeInterface[];
 }
@@ -31,6 +31,7 @@ export const CurrentUserProvider: React.FC<{
                 id
                 name
                 email
+                locale
                 permissions {
                     permission
                     contentScopes

@@ -12,7 +12,7 @@ type CurrentUser {
   id: String!
   name: String!
   email: String!
-  language: String!
+  locale: String!
   permissions: [CurrentUserPermission!]!
 }
 
@@ -175,7 +175,7 @@ type User {
   id: String!
   name: String!
   email: String!
-  language: String!
+  locale: String!
 }
 
 type PaginatedUserList {
@@ -480,7 +480,7 @@ input UserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
-  language: StringFilter
+  locale: StringFilter
   and: [UserFilter!]
   or: [UserFilter!]
 }
@@ -494,7 +494,7 @@ enum UserSortField {
   name
   email
   status
-  language
+  locale
 }
 
 type Mutation {

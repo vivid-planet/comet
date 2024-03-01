@@ -12,5 +12,5 @@ export class User {
     email: string;
 
     @Field()
-    language: string;
+    locale: string;
 }

@@ -1,5 +1,15 @@
 # @comet/blocks-api
 
+## 6.2.1
+
+## 6.2.0
+
+### Minor Changes
+
+-   75865caa: Deprecate `isHref` validator, `IsHref` decorator and `IsHrefConstraint` class.
+
+    New versions `isLinkTarget`, `IsLinkTarget` and `IsLinkTargetConstraint` are added as replacement.
+
 ## 6.1.0
 
 ## 6.0.0

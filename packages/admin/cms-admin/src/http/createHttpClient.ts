@@ -5,6 +5,7 @@ export function createHttpClient(apiUrl: string): AxiosInstance {
         Accept: "application/json",
         "Content-Type": "application/json",
         "X-Requested-With": "XMLHttpRequest",
+        "x-preview-dam-urls": "1",
     };
     const requestInterceptor = async (config: AxiosRequestConfig) => {
         config.headers["x-include-invisible-content"] = ["Pages:Unpublished", "Pages:Archived", "Blocks:Invisible"];

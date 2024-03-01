@@ -1,3 +1,4 @@
+import { DiscoveryService } from "@golevelup/nestjs-discovery";
 import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Inject, Injectable, Optional } from "@nestjs/common";
@@ -5,13 +6,13 @@ import { isFuture, isPast } from "date-fns";
 import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
 
+import { RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
 import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
-import { Permission } from "./interfaces/user-permission.interface";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER_SERVICE } from "./user-permissions.constants";
 import {
     AccessControlServiceInterface,
@@ -28,6 +29,7 @@ export class UserPermissionsService {
         @Inject(ACCESS_CONTROL_SERVICE) private readonly accessControlService: AccessControlServiceInterface,
         @InjectRepository(UserPermission) private readonly permissionRepository: EntityRepository<UserPermission>,
         @InjectRepository(UserContentScopes) private readonly contentScopeRepository: EntityRepository<UserContentScopes>,
+        private readonly discoveryService: DiscoveryService,
     ) {}
 
     async getAvailableContentScopes(): Promise<ContentScope[]> {
@@ -40,9 +42,18 @@ export class UserPermissionsService {
         return [];
     }
 
-    async getAvailablePermissions(): Promise<(keyof Permission)[]> {
+    async getAvailablePermissions(): Promise<string[]> {
         return [
-            ...new Set<keyof Permission>(["dam", "pageTree", "userPermissions", "cronJobs", "builds", ...(this.options.availablePermissions ?? [])]),
+            ...new Set(
+                [
+                    ...(await this.discoveryService.providerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                    ...(await this.discoveryService.providersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                    ...(await this.discoveryService.controllerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                    ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                ]
+                    .flatMap((p) => p.meta.requiredPermission)
+                    .sort(),
+            ),
         ];
     }
 
@@ -95,10 +106,7 @@ export class UserPermissionsService {
 
         return permissions
             .filter((value) => availablePermissions.some((p) => p === value.permission)) // Filter out permissions that are not defined in availablePermissions (e.g. outdated database entries)
-            .sort(
-                (a, b) =>
-                    availablePermissions.indexOf(a.permission as keyof Permission) - availablePermissions.indexOf(b.permission as keyof Permission),
-            );
+            .sort((a, b) => availablePermissions.indexOf(a.permission) - availablePermissions.indexOf(b.permission));
     }
 
     async getContentScopes(user: User, includeContentScopesManual = true): Promise<ContentScope[]> {

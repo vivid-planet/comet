@@ -246,12 +246,12 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                     variables: { id, input: output, lastUpdatedAt: data?.${instanceEntityName}?.updatedAt },
                 });
             } else {
-                const { data: mutationReponse } = await client.mutate<GQLCreate${entityName}Mutation, GQLCreate${entityName}MutationVariables>({
+                const { data: mutationResponse } = await client.mutate<GQLCreate${entityName}Mutation, GQLCreate${entityName}MutationVariables>({
                     mutation: create${entityName}Mutation,
                     variables: { ${hasScope ? `scope, ` : ""}input: output },
                 });
                 if (!event.navigatingBack) {
-                    const id = mutationReponse?.create${entityName}.id;
+                    const id = mutationResponse?.create${entityName}.id;
                     if (id) {
                         setTimeout(() => {
                             stackSwitchApi.activatePage("edit", id);

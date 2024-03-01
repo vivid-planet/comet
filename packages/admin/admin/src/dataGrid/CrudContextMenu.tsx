@@ -1,6 +1,6 @@
 import { ApolloClient, RefetchQueriesOptions, useApolloClient } from "@apollo/client";
 import { Copy, Delete as DeleteIcon, Domain, Paste, ThreeDotSaving } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -151,6 +151,7 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
                             {intl.formatMessage(messages.paste)}
                         </RowActionsItem>
                     )}
+                    {onDelete && (onPaste || copyData || url) && <Divider />}
                     {onDelete && (
                         <RowActionsItem
                             icon={<DeleteIcon />}

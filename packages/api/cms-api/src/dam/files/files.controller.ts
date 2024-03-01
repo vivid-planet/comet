@@ -1,3 +1,4 @@
+import { BaseEntity } from "@mikro-orm/core";
 import {
     Body,
     Controller,
@@ -66,7 +67,8 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             @UploadedFile() file: FileUploadInput,
             @Body() body: UploadFileBodyInterface,
             @GetCurrentUser() user: CurrentUser,
-        ): Promise<FileInterface> {
+            @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
+        ): Promise<Omit<FileInterface, keyof BaseEntity<FileInterface, "id">> & { fileUrl: string }> {
             const transformedBody = plainToInstance(UploadFileBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
@@ -80,7 +82,9 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
 
             const uploadedFile = await this.filesService.upload(file, { ...transformedBody, scope });
-            return Object.assign(uploadedFile, { fileUrl: await this.filesService.createFileUrl(uploadedFile) });
+            const fileUrl = await this.filesService.createFileUrl(uploadedFile, Boolean(previewDamUrls));
+
+            return { ...uploadedFile, fileUrl };
         }
 
         @Get(`/preview/${fileUrl}`)

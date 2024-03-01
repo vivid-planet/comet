@@ -5,12 +5,12 @@ export const staticUsers: User[] = [
         id: "1",
         name: "Admin",
         email: "demo@comet-dxp.com",
-        language: "en",
+        locale: "en",
     },
     {
         id: "2",
         name: "Non-Admin",
         email: "test@test.com",
-        language: "en",
+        locale: "en",
     },
 ];

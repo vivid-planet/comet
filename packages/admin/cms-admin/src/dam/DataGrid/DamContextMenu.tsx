@@ -88,6 +88,7 @@ const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps): Reac
                     >
                         <FormattedMessage id="comet.pages.dam.move" defaultMessage="Move" />
                     </RowActionsItem>
+                    <Divider />
                     <RowActionsItem
                         icon={<Delete />}
                         onClick={() => {

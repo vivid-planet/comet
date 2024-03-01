@@ -292,7 +292,8 @@ export class PageTreeService {
             if (attachedDocument.id) {
                 try {
                     const repository = this.em.getRepository(attachedDocument.type);
-                    await repository.removeAndFlush(attachedDocument);
+                    const document = await repository.findOneOrFail(attachedDocument.documentId);
+                    await repository.removeAndFlush(document);
                     await this.attachedDocumentsRepository.removeAndFlush(attachedDocument);
                 } catch {
                     throw new Error(`documentType ${attachedDocument.type} and documentId ${attachedDocument.id} cannot resolve`);

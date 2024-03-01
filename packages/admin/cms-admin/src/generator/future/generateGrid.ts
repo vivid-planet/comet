@@ -11,6 +11,7 @@ import { plural } from "pluralize";
 import { GeneratorReturn, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
+import { generateFieldListGqlString } from "./utils/generateFieldList";
 import { generateGqlParamDefinition } from "./utils/generateGqlParamDefinition";
 
 function tsCodeRecordToString(object: Record<string, string | undefined>) {
@@ -75,6 +76,9 @@ export function generateGrid(
     const gridQuery = instanceGqlType != instanceGqlTypePlural ? instanceGqlTypePlural : `${instanceGqlTypePlural}List`;
     const gqlDocuments: Record<string, string> = {};
     //const imports: Imports = [];
+
+    const fieldNamesFromConfig: string[] = config.columns.map((field) => String(field.name));
+    const fieldList = generateFieldListGqlString(fieldNamesFromConfig.filter((fieldName) => fieldName !== "id")); // exclude id as it's always fetched
 
     const queries = gqlIntrospection.__schema.types.find((type) => type.name === "Query");
     if (!queries || queries.kind !== "OBJECT") throw new Error(`Missing Query-Type in schema. Do any queries exist?`);
@@ -166,20 +170,22 @@ export function generateGrid(
             return true;
         });
 
+    // TODO compare result with this: https://github.com/vivid-planet/comet/pull/1751/files#diff-5e4664a3c7f414c9b2a7472fafb8a39d9adbb48c394d83e17d63ecfc6c438351
     const gridColumnFields = config.columns.map((column) => {
         const type = column.type;
         const name = String(column.name);
 
         let renderCell: string | undefined = undefined;
-        let valueGetter: string | undefined = undefined;
+        let valueGetter: string | undefined = name.includes(".") ? `({ row }) => row.${name.replace(/\./g, "?.")}` : undefined;
 
+        // TODO implement value-getter detection für nested
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
 
         if (type == "dateTime") {
-            valueGetter = `({ value }) => value && new Date(value)`;
+            valueGetter = `({ row }) => row.${name} && new Date(row.${name})`;
             gridType = "dateTime";
         } else if (type == "date") {
-            valueGetter = `({ value }) => value && new Date(value)`;
+            valueGetter = `({ row }) => row.${name} && new Date(row.${name})`;
             gridType = "date";
         } else if (type == "block") {
             if (rootBlocks[name]) {
@@ -274,6 +280,7 @@ export function generateGrid(
         GQLDelete${gqlType}Mutation,
         GQLDelete${gqlType}MutationVariables 
     } from "./${gqlTypePlural}Grid.generated";
+    import { filter } from "graphql-anywhere";
     import * as React from "react";
     import { FormattedMessage, useIntl } from "react-intl";
     ${Object.entries(rootBlocks)
@@ -283,7 +290,7 @@ export function generateGrid(
     const ${instanceGqlTypePlural}Fragment = gql\`
         fragment ${fragmentName} on ${gqlType} {
             id
-            ${fieldsToLoad.map((field) => field.name).join("\n")}
+            ${fieldList}
         }
     \`;
     
@@ -421,7 +428,7 @@ export function generateGrid(
                                 onPaste={async ({ input }) => {
                                     await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                                         mutation: create${gqlType}Mutation,
-                                        variables: { ${createMutationScopeParam ? `scope, ` : ""}input },
+                                        variables: { ${createMutationScopeParam ? `scope, ` : ""}input: filter(${instanceGqlTypePlural}Fragment, input) },
                                     });
                                 }}
                                 `
