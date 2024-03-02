@@ -1,8 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { Field, FinalForm, FinalFormInput, FinalFormSubmitEvent, MainContent, useFormApiRef, useStackSwitchApi } from "@comet/admin";
+import { Field, FinalForm, FinalFormInput, FinalFormSubmitEvent, Loading, MainContent, useFormApiRef, useStackSwitchApi } from "@comet/admin";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { CircularProgress } from "@mui/material";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
@@ -102,7 +101,7 @@ function ProductVariantForm({ id, productId }: FormProps): React.ReactElement {
     }
 
     if (loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
 
     return (
