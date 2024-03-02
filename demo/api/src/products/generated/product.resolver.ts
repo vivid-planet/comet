@@ -56,11 +56,11 @@ export class ProductResolver {
         if (fields.includes("category")) {
             populate.push("category");
         }
-        if (fields.includes("colors")) {
-            populate.push("colors");
-        }
         if (fields.includes("manufacturer")) {
             populate.push("manufacturer");
+        }
+        if (fields.includes("colors")) {
+            populate.push("colors");
         }
         if (fields.includes("variants")) {
             populate.push("variants");
@@ -230,14 +230,14 @@ export class ProductResolver {
         return product.category?.load();
     }
 
-    @ResolveField(() => [ProductColor])
-    async colors(@Parent() product: Product): Promise<ProductColor[]> {
-        return product.colors.loadItems();
-    }
-
     @ResolveField(() => Manufacturer, { nullable: true })
     async manufacturer(@Parent() product: Product): Promise<Manufacturer | undefined> {
         return product.manufacturer?.load();
+    }
+
+    @ResolveField(() => [ProductColor])
+    async colors(@Parent() product: Product): Promise<ProductColor[]> {
+        return product.colors.loadItems();
     }
 
     @ResolveField(() => [ProductVariant])

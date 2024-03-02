@@ -522,8 +522,8 @@ type Product implements DocumentInterface {
   statistics: ProductStatistics
   createdAt: DateTime!
   category: ProductCategory
-  colors: [ProductColor!]!
   manufacturer: Manufacturer
+  colors: [ProductColor!]!
   variants: [ProductVariant!]!
   tags: [ProductTag!]!
 }
