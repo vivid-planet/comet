@@ -1,5 +1,8 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
+import { Manufacturer } from "@src/products/entities/manufacturer.entity";
+import { ManufacturerResolver } from "@src/products/generated/manufacturer.resolver";
+import { ManufacturersService } from "@src/products/generated/manufacturers.service";
 
 import { Product } from "./entities/product.entity";
 import { ProductCategory } from "./entities/product-category.entity";
@@ -17,7 +20,7 @@ import { ProductVariantsService } from "./generated/product-variants.service";
 import { ProductsService } from "./generated/products.service";
 
 @Module({
-    imports: [MikroOrmModule.forFeature([Product, ProductCategory, ProductTag, ProductVariant, ProductStatistics, ProductColor])],
+    imports: [MikroOrmModule.forFeature([Product, ProductCategory, ProductTag, ProductVariant, ProductStatistics, ProductColor, Manufacturer])],
     providers: [
         ProductResolver,
         ProductsService,
@@ -27,6 +30,8 @@ import { ProductsService } from "./generated/products.service";
         ProductTagsService,
         ProductVariantsService,
         ProductVariantResolver,
+        ManufacturerResolver,
+        ManufacturersService,
     ],
     exports: [],
 })

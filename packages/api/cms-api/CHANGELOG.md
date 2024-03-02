@@ -1,5 +1,63 @@
 # @comet/cms-api
 
+## 6.2.1
+
+### Patch Changes
+
+-   f1457306: Ignore user permissions when using system user
+
+    The `UserPermissionsGuard` didn't allow requests when using a system user (e.g., basic authorization during site build).
+
+    -   @comet/blocks-api@6.2.1
+
+## 6.2.0
+
+### Minor Changes
+
+-   beeea1dd: Remove `availablePermissions`-option in `UserPermissionsModule`
+
+    Simply remove the `Permission` interface module augmentation and the `availablePermissions`-option from the application.
+
+-   151e1218: Support multiple `@AffectedEntity()`-decorators for a single function
+
+### Patch Changes
+
+-   04afb3ee: Fix attached document deletion when deleting a page tree node
+-   ad153c99: Always use preview DAM URLs in the admin application
+
+    This fixes a bug where the PDF preview in the DAM wouldn't work because the file couldn't be included in an iFrame on the admin domain.
+
+    We already intended to use preview URLs everywhere in [v5.3.0](https://github.com/vivid-planet/comet/releases/tag/v5.3.0#:~:text=Always%20use%20the%20/preview%20file%20URLs%20in%20the%20admin%20application). However, the `x-preview-dam-urls` header wasn't passed correctly to the `createFileUrl()` method everywhere. As a result, preview URLs were only used in blocks but not in the DAM. Now, the DAM uses preview URLs as well.
+
+-   Updated dependencies [75865caa]
+    -   @comet/blocks-api@6.2.0
+
+## 6.1.0
+
+### Minor Changes
+
+-   7ea43eb3: Make the `UserService`-option of the `UserPermissionsModule` optional.
+
+    The service is still necessary though for the Administration-Panel.
+
+-   86cd5c63: Allow a callback for the `availableContentScopes`-option of the `UserPermissionsModule`
+
+    Please be aware that when using this possibility to make sure to cache the
+    response properly as this is called for every request to the API.
+
+-   737ab3b9: Allow returning multiple content scopes in `ScopedEntity`-decorator
+-   f416510b: Remove `CurrentUserLoader` and `CurrentUserInterface`
+
+    Overriding the the current user in the application isn't supported anymore when using the new `UserPermissionsModule`, which provides the current user DTO itself.
+
+### Patch Changes
+
+-   ef84331f: Fix type of @RequiredPermission to accept a non-array string for a single permission
+-   8e158f8d: Add missing `@RequiredPermission()` decorator to `FileLicensesResolver`
+-   50184410: API Generator: Add missing `scope` argument and filter to `<entity>BySlug` query
+-   1f6c58e8: API Generator: support GraphQLJSONObject input for fields that are not a InputType class
+    -   @comet/blocks-api@6.1.0
+
 ## 6.0.0
 
 ### Major Changes

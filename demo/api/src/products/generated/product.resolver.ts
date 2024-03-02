@@ -7,6 +7,7 @@ import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 
+import { Manufacturer } from "../entities/manufacturer.entity";
 import { Product } from "../entities/product.entity";
 import { ProductCategory } from "../entities/product-category.entity";
 import { ProductColor } from "../entities/product-color.entity";
@@ -26,6 +27,7 @@ export class ProductResolver {
         private readonly productsService: ProductsService,
         @InjectRepository(Product) private readonly repository: EntityRepository<Product>,
         @InjectRepository(ProductCategory) private readonly productCategoryRepository: EntityRepository<ProductCategory>,
+        @InjectRepository(Manufacturer) private readonly manufacturerRepository: EntityRepository<Manufacturer>,
         @InjectRepository(ProductStatistics) private readonly productStatisticsRepository: EntityRepository<ProductStatistics>,
         @InjectRepository(ProductColor) private readonly productColorRepository: EntityRepository<ProductColor>,
         @InjectRepository(ProductTag) private readonly productTagRepository: EntityRepository<ProductTag>,
@@ -56,6 +58,9 @@ export class ProductResolver {
         }
         if (fields.includes("colors")) {
             populate.push("colors");
+        }
+        if (fields.includes("manufacturer")) {
+            populate.push("manufacturer");
         }
         if (fields.includes("variants")) {
             populate.push("variants");
@@ -88,6 +93,7 @@ export class ProductResolver {
             colors: colorsInput,
             tags: tagsInput,
             category: categoryInput,
+            manufacturer: manufacturerInput,
             statistics: statisticsInput,
             image: imageInput,
             ...assignInput
@@ -97,6 +103,7 @@ export class ProductResolver {
             visible: false,
 
             category: categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined,
+            manufacturer: manufacturerInput ? Reference.create(await this.manufacturerRepository.findOneOrFail(manufacturerInput)) : undefined,
             image: imageInput.transformToBlockData(),
         });
         if (colorsInput) {
@@ -144,6 +151,7 @@ export class ProductResolver {
             colors: colorsInput,
             tags: tagsInput,
             category: categoryInput,
+            manufacturer: manufacturerInput,
             statistics: statisticsInput,
             image: imageInput,
             ...assignInput
@@ -176,6 +184,11 @@ export class ProductResolver {
         }
         if (categoryInput !== undefined) {
             product.category = categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined;
+        }
+        if (manufacturerInput !== undefined) {
+            product.manufacturer = manufacturerInput
+                ? Reference.create(await this.manufacturerRepository.findOneOrFail(manufacturerInput))
+                : undefined;
         }
 
         if (imageInput) {
@@ -220,6 +233,11 @@ export class ProductResolver {
     @ResolveField(() => [ProductColor])
     async colors(@Parent() product: Product): Promise<ProductColor[]> {
         return product.colors.loadItems();
+    }
+
+    @ResolveField(() => Manufacturer, { nullable: true })
+    async manufacturer(@Parent() product: Product): Promise<Manufacturer | undefined> {
+        return product.manufacturer?.load();
     }
 
     @ResolveField(() => [ProductVariant])

@@ -9,7 +9,6 @@ import {
     createAuthResolver,
     createPageTreeResolver,
     createRedirectsResolver,
-    CurrentUserInterface,
     DependenciesResolverFactory,
     DependentsResolverFactory,
     DocumentInterface,
@@ -27,9 +26,9 @@ import { createFolderEntity } from "./src/dam/files/entities/folder.entity";
 import { FileLicensesResolver } from "./src/dam/files/file-licenses.resolver";
 import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
+import { SitePreviewResolver } from "./src/page-tree/site-preview.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
-import { CurrentUserPermission } from "./src/user-permissions/dto/current-user";
 import { UserResolver } from "./src/user-permissions/user.resolver";
 import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
 import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
@@ -46,20 +45,6 @@ class PageTreeNode extends PageTreeNodeBase {
 class Page implements DocumentInterface {
     id: string;
     updatedAt: Date;
-}
-
-@ObjectType()
-class CurrentUser implements CurrentUserInterface {
-    @Field()
-    id: string;
-    @Field()
-    name: string;
-    @Field()
-    email: string;
-    @Field()
-    language: string;
-    @Field(() => [CurrentUserPermission])
-    permissions: CurrentUserPermission[];
 }
 
 async function generateSchema(): Promise<void> {
@@ -84,7 +69,7 @@ async function generateSchema(): Promise<void> {
     }); // no scope
     const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
 
-    const AuthResolver = createAuthResolver({ currentUser: CurrentUser });
+    const AuthResolver = createAuthResolver({});
     const RedirectsDependenciesResolver = DependenciesResolverFactory.create(RedirectEntity);
 
     const Folder = createFolderEntity();
@@ -107,6 +92,7 @@ async function generateSchema(): Promise<void> {
         RedirectsDependenciesResolver,
         PageTreeDependentsResolver,
         FileDependentsResolver,
+        SitePreviewResolver,
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,

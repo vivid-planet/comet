@@ -3,8 +3,6 @@ import { CrudField, CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDa
 import {
     BaseEntity,
     Collection,
-    Embeddable,
-    Embedded,
     Entity,
     Enum,
     ManyToMany,
@@ -18,6 +16,7 @@ import {
     types,
 } from "@mikro-orm/core";
 import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
+import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsNumber } from "class-validator";
 import { v4 as uuid } from "uuid";
 
@@ -51,26 +50,6 @@ export class ProductDimensions {
     @IsNumber()
     height: number;
 
-    @Field()
-    @IsNumber()
-    depth: number;
-}
-
-@Embeddable()
-@ObjectType()
-@InputType("ProductPackageDimensionsInput")
-export class ProductPackageDimensions {
-    @Property({ type: types.integer })
-    @Field()
-    @IsNumber()
-    width: number;
-
-    @Property({ type: types.integer })
-    @Field()
-    @IsNumber()
-    height: number;
-
-    @Property({ type: types.integer })
     @Field()
     @IsNumber()
     depth: number;
@@ -152,10 +131,6 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Field(() => ProductDimensions, { nullable: true })
     dimensions?: ProductDimensions = undefined;
 
-    @Embedded(() => ProductPackageDimensions, { nullable: true })
-    @Field(() => ProductPackageDimensions, { nullable: true })
-    packageDimensions?: ProductPackageDimensions = undefined;
-
     @OneToOne(() => ProductStatistics, { inversedBy: "product", owner: true, ref: true, nullable: true })
     @Field(() => ProductStatistics, { nullable: true })
     statistics?: Ref<ProductStatistics> = undefined;
@@ -207,4 +182,7 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Property({ onUpdate: () => new Date() })
     @Field()
     updatedAt: Date = new Date();
+
+    @ManyToOne(() => Manufacturer, { nullable: true, index: true, ref: true })
+    manufacturer?: Ref<Manufacturer>;
 }

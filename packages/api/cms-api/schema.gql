@@ -1,3 +1,44 @@
+type CurrentUserPermission {
+  permission: String!
+  contentScopes: [JSONObject!]!
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type CurrentUser {
+  id: String!
+  name: String!
+  email: String!
+  locale: String!
+  permissions: [CurrentUserPermission!]!
+}
+
+type UserPermission {
+  id: ID!
+  source: UserPermissionSource!
+  permission: String!
+  validFrom: DateTime
+  validTo: DateTime
+  reason: String
+  requestedBy: String
+  approvedBy: String
+  overrideContentScopes: Boolean!
+  contentScopes: [JSONObject!]!
+}
+
+enum UserPermissionSource {
+  MANUAL
+  BY_RULE
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Dependency {
   rootId: String!
   rootGraphqlObjectType: String!
@@ -40,11 +81,6 @@ type DamFileImage {
   url(width: Int!, height: Int!): String
 }
 
-"""
-The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
 type DamFileLicense {
   type: LicenseType
   details: String
@@ -64,11 +100,6 @@ enum LicenseType {
   ROYALTY_FREE
   RIGHTS_MANAGED
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type BuildTemplate {
   id: ID!
@@ -140,34 +171,11 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
-type CurrentUserPermission {
-  permission: String!
-  contentScopes: [JSONObject!]!
-}
-
 type User {
   id: String!
   name: String!
   email: String!
-  language: String!
-}
-
-type UserPermission {
-  id: ID!
-  source: UserPermissionSource!
-  permission: String!
-  validFrom: DateTime
-  validTo: DateTime
-  reason: String
-  requestedBy: String
-  approvedBy: String
-  overrideContentScopes: Boolean!
-  contentScopes: [JSONObject!]!
-}
-
-enum UserPermissionSource {
-  MANUAL
-  BY_RULE
+  locale: String!
 }
 
 type PaginatedUserList {
@@ -217,14 +225,6 @@ input DependentFilter {
   rootGraphqlObjectType: String
   rootId: String
   rootColumnName: String
-}
-
-type CurrentUser {
-  id: String!
-  name: String!
-  email: String!
-  language: String!
-  permissions: [CurrentUserPermission!]!
 }
 
 type Redirect implements DocumentInterface {
@@ -355,6 +355,7 @@ type Query {
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
   currentUser: CurrentUser!
+  getSitePreviewJwt(path: String!, previewData: PreviewData!): String!
   userPermissionsUserById(id: String!): User!
   userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
@@ -471,11 +472,15 @@ enum SlugAvailability {
   Reserved
 }
 
+input PreviewData {
+  includeInvisible: Boolean!
+}
+
 input UserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
-  language: StringFilter
+  locale: StringFilter
   and: [UserFilter!]
   or: [UserFilter!]
 }
@@ -489,7 +494,7 @@ enum UserSortField {
   name
   email
   status
-  language
+  locale
 }
 
 type Mutation {

@@ -2,6 +2,47 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type CurrentUserPermission {
+  permission: String!
+  contentScopes: [JSONObject!]!
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type CurrentUser {
+  id: String!
+  name: String!
+  email: String!
+  locale: String!
+  permissions: [CurrentUserPermission!]!
+}
+
+type UserPermission {
+  id: ID!
+  source: UserPermissionSource!
+  permission: String!
+  validFrom: DateTime
+  validTo: DateTime
+  reason: String
+  requestedBy: String
+  approvedBy: String
+  overrideContentScopes: Boolean!
+  contentScopes: [JSONObject!]!
+}
+
+enum UserPermissionSource {
+  MANUAL
+  BY_RULE
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Dependency {
   rootId: String!
   rootGraphqlObjectType: String!
@@ -44,11 +85,6 @@ type DamFileImage {
   url(width: Int!, height: Int!): String
 }
 
-"""
-The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
 type DamFileLicense {
   type: LicenseType
   details: String
@@ -68,11 +104,6 @@ enum LicenseType {
   ROYALTY_FREE
   RIGHTS_MANAGED
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type BuildTemplate {
   id: ID!
@@ -144,42 +175,11 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
-type CurrentUserPermission {
-  permission: String!
-  contentScopes: [JSONObject!]!
-}
-
-type CurrentUser {
-  id: String!
-  name: String!
-  email: String!
-  language: String!
-  permissions: [CurrentUserPermission!]!
-}
-
 type User {
   id: String!
   name: String!
   email: String!
-  language: String!
-}
-
-type UserPermission {
-  id: ID!
-  source: UserPermissionSource!
-  permission: String!
-  validFrom: DateTime
-  validTo: DateTime
-  reason: String
-  requestedBy: String
-  approvedBy: String
-  overrideContentScopes: Boolean!
-  contentScopes: [JSONObject!]!
-}
-
-enum UserPermissionSource {
-  MANUAL
-  BY_RULE
+  locale: String!
 }
 
 type PaginatedUserList {
@@ -409,6 +409,48 @@ type PaginatedNews {
   totalCount: Int!
 }
 
+type AlternativeAddress {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+}
+
+type Address {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+  alternativeAddress: AlternativeAddress
+}
+
+type AlternativeAddressAsEmbeddable {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+}
+
+type AddressAsEmbeddable {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+  alternativeAddress: AlternativeAddressAsEmbeddable!
+}
+
+type Manufacturer {
+  id: ID!
+  address: Address
+  addressAsEmbeddable: AddressAsEmbeddable!
+  updatedAt: DateTime!
+}
+
+type PaginatedManufacturers {
+  nodes: [Manufacturer!]!
+  totalCount: Int!
+}
+
 type ProductCategory implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -461,12 +503,6 @@ type ProductDimensions {
   depth: Float!
 }
 
-type ProductPackageDimensions {
-  width: Float!
-  height: Float!
-  depth: Float!
-}
-
 type Product implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -483,11 +519,11 @@ type Product implements DocumentInterface {
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
   dimensions: ProductDimensions
-  packageDimensions: ProductPackageDimensions
   statistics: ProductStatistics
   createdAt: DateTime!
   category: ProductCategory
   colors: [ProductColor!]!
+  manufacturer: Manufacturer
   variants: [ProductVariant!]!
   tags: [ProductTag!]!
 }
@@ -600,18 +636,42 @@ input NewsContentScopeInput {
   language: String!
 }
 
+input AlternativeAddressInput {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+}
+
+input AddressInput {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+  alternativeAddress: AlternativeAddressInput
+}
+
+input AlternativeAddressAsEmbeddableInput {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+}
+
+input AddressAsEmbeddableInput {
+  street: String!
+  streetNumber: Float
+  zip: Float!
+  country: String!
+  alternativeAddress: AlternativeAddressAsEmbeddableInput!
+}
+
 input ProductDiscountsInput {
   quantity: Float!
   price: Float!
 }
 
 input ProductDimensionsInput {
-  width: Float!
-  height: Float!
-  depth: Float!
-}
-
-input ProductPackageDimensionsInput {
   width: Float!
   height: Float!
   depth: Float!
@@ -640,6 +700,7 @@ type Query {
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   paginatedPageTreeNodes(scope: PageTreeNodeScopeInput!, category: String, sort: [PageTreeNodeSort!], offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
+  getSitePreviewJwt(path: String!, previewData: PreviewData!): String!
   redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection! = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
   paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int! = 0, limit: Int! = 25): PaginatedRedirects!
   redirect(id: ID!): Redirect!
@@ -677,13 +738,15 @@ type Query {
   productTags(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductTagFilter, sort: [ProductTagSort!]): PaginatedProductTags!
   productVariant(id: ID!): ProductVariant!
   productVariants(offset: Int! = 0, limit: Int! = 25, product: ID!, search: String, filter: ProductVariantFilter, sort: [ProductVariantSort!]): PaginatedProductVariants!
+  manufacturer(id: ID!): Manufacturer!
+  manufacturers(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerFilter, sort: [ManufacturerSort!]): PaginatedManufacturers!
 }
 
 input UserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
-  language: StringFilter
+  locale: StringFilter
   and: [UserFilter!]
   or: [UserFilter!]
 }
@@ -705,7 +768,7 @@ enum UserSortField {
   name
   email
   status
-  language
+  locale
 }
 
 enum SortDirection {
@@ -727,6 +790,10 @@ enum SlugAvailability {
   Available
   Taken
   Reserved
+}
+
+input PreviewData {
+  includeInvisible: Boolean!
 }
 
 input RedirectFilter {
@@ -841,6 +908,7 @@ input ProductFilter {
   category: ManyToOneFilter
   createdAt: DateFilter
   updatedAt: DateFilter
+  manufacturer: ManyToOneFilter
   and: [ProductFilter!]
   or: [ProductFilter!]
 }
@@ -884,6 +952,7 @@ enum ProductSortField {
   category
   createdAt
   updatedAt
+  manufacturer
 }
 
 input ProductCategoryFilter {
@@ -947,6 +1016,37 @@ enum ProductVariantSortField {
   updatedAt
 }
 
+input ManufacturerFilter {
+  addressAsEmbeddable_street: StringFilter
+  addressAsEmbeddable_streetNumber: NumberFilter
+  addressAsEmbeddable_zip: NumberFilter
+  addressAsEmbeddable_country: StringFilter
+  addressAsEmbeddable_alternativeAddress_street: StringFilter
+  addressAsEmbeddable_alternativeAddress_streetNumber: NumberFilter
+  addressAsEmbeddable_alternativeAddress_zip: NumberFilter
+  addressAsEmbeddable_alternativeAddress_country: StringFilter
+  updatedAt: DateFilter
+  and: [ManufacturerFilter!]
+  or: [ManufacturerFilter!]
+}
+
+input ManufacturerSort {
+  field: ManufacturerSortField!
+  direction: SortDirection! = ASC
+}
+
+enum ManufacturerSortField {
+  addressAsEmbeddable_street
+  addressAsEmbeddable_streetNumber
+  addressAsEmbeddable_zip
+  addressAsEmbeddable_country
+  addressAsEmbeddable_alternativeAddress_street
+  addressAsEmbeddable_alternativeAddress_streetNumber
+  addressAsEmbeddable_alternativeAddress_zip
+  addressAsEmbeddable_alternativeAddress_country
+  updatedAt
+}
+
 type Mutation {
   currentUserSignOut: String!
   userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
@@ -1006,6 +1106,9 @@ type Mutation {
   createProductVariant(product: ID!, input: ProductVariantInput!): ProductVariant!
   updateProductVariant(id: ID!, input: ProductVariantUpdateInput!, lastUpdatedAt: DateTime): ProductVariant!
   deleteProductVariant(id: ID!): Boolean!
+  createManufacturer(input: ManufacturerInput!): Manufacturer!
+  updateManufacturer(id: ID!, input: ManufacturerUpdateInput!, lastUpdatedAt: DateTime): Manufacturer!
+  deleteManufacturer(id: ID!): Boolean!
 }
 
 input UserPermissionInput {
@@ -1193,11 +1296,11 @@ input ProductInput {
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
   dimensions: ProductDimensionsInput
-  packageDimensions: ProductPackageDimensionsInput
   statistics: ProductStatisticsInput
   colors: [ProductColorInput!]! = []
   category: ID = null
   tags: [ID!]! = []
+  manufacturer: ID
 }
 
 input ProductStatisticsInput {
@@ -1221,11 +1324,11 @@ input ProductUpdateInput {
   discounts: [ProductDiscountsInput!]
   articleNumbers: [String!]
   dimensions: ProductDimensionsInput
-  packageDimensions: ProductPackageDimensionsInput
   statistics: ProductStatisticsInput
   colors: [ProductColorInput!]
   category: ID
   tags: [ID!]
+  manufacturer: ID
 }
 
 input ProductCategoryInput {
@@ -1256,4 +1359,14 @@ input ProductVariantInput {
 input ProductVariantUpdateInput {
   name: String
   image: DamImageBlockInput
+}
+
+input ManufacturerInput {
+  address: AddressInput
+  addressAsEmbeddable: AddressAsEmbeddableInput!
+}
+
+input ManufacturerUpdateInput {
+  address: AddressInput
+  addressAsEmbeddable: AddressAsEmbeddableInput
 }

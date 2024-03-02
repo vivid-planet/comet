@@ -6,7 +6,7 @@ import { Field, ID, InputType } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
 
-import { ProductDimensions, ProductDiscounts, ProductPackageDimensions } from "../../entities/product.entity";
+import { ProductDimensions, ProductDiscounts } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
 import { ProductColorInput } from "./product-color.nested.input";
 import { ProductStatisticsInput } from "./product-statistics.nested.input";
@@ -75,12 +75,6 @@ export class ProductInput {
     dimensions?: ProductDimensions;
 
     @IsNullable()
-    @ValidateNested()
-    @Type(() => ProductPackageDimensions)
-    @Field(() => ProductPackageDimensions, { nullable: true })
-    packageDimensions?: ProductPackageDimensions;
-
-    @IsNullable()
     @Field(() => ProductStatisticsInput, { nullable: true })
     @Type(() => ProductStatisticsInput)
     @ValidateNested()
@@ -100,6 +94,11 @@ export class ProductInput {
     @IsArray()
     @IsUUID(undefined, { each: true })
     tags: string[];
+
+    @IsNullable()
+    @Field(() => ID, { nullable: true })
+    @IsUUID()
+    manufacturer?: string;
 }
 
 @InputType()
