@@ -79,7 +79,7 @@ export function PagesPage({
     });
 
     useFocusAwarePolling({
-        pollInterval: process.env.NODE_ENV === "development" ? undefined : 10000,
+        pollInterval: 10000,
         refetch,
         startPolling,
         stopPolling,
@@ -219,6 +219,10 @@ export function PagesPage({
                     <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.pages.editContent", defaultMessage: "Edit content" })}>
                         {(selectedId) => {
                             const page = data?.pages.find((page) => page.id == selectedId);
+
+                            if (loading && isInitialLoad.current) {
+                                return <Loading behavior="fillPageHeight" />;
+                            }
 
                             if (!page) {
                                 return (

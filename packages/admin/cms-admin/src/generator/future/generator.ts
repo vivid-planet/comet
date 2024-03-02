@@ -8,7 +8,7 @@ import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
 import { writeGenerated } from "./utils/writeGenerated";
 
-type BlockReference = {
+type ImportReference = {
     name: string;
     import: string;
 };
@@ -21,8 +21,8 @@ export type FormFieldConfig<T> = (
     // TODO | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
     | { type: "asyncSelect"; rootQuery: string; labelField?: string }
-    | { type: "block"; block: BlockReference }
-) & { name: keyof T; label?: string; required?: boolean };
+    | { type: "block"; block: ImportReference }
+) & { name: keyof T; label?: string; required?: boolean; validate?: ImportReference; helperText?: string };
 
 export type FormConfig<T extends { __typename?: string }> = {
     type: "form";
@@ -41,7 +41,7 @@ export type GridColumnConfig<T> = (
     | { type: "date" }
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
-    | { type: "block"; block: BlockReference }
+    | { type: "block"; block: ImportReference }
 ) & { name: keyof T; headerName?: string; width?: number };
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
