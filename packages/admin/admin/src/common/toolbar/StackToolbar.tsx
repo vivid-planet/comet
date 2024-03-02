@@ -20,7 +20,5 @@ export function StackToolbar(props: ToolbarProps) {
         return null;
     }
 
-    return (
-        <Toolbar {...props} />
-    );
+    return <Toolbar {...props} />;
 }
