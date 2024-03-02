@@ -11,8 +11,9 @@ import { generateImportsCode, Imports } from "./utils/generate-imports-code";
 import { findEnumImportPath, findEnumName } from "./utils/ts-morph-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
+// TODO move into own file
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function buildOptions(metadata: EntityMetadata<any>) {
+export function buildOptions(metadata: EntityMetadata<any>) {
     const { classNameSingular, classNamePlural, fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
 
     const rootArgProps = metadata.props.filter((prop) => {

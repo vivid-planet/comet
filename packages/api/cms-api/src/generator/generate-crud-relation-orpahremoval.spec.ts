@@ -3,10 +3,12 @@ import { MikroORM } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
+import { CrudGenerator } from "./crud-generator.decorator";
 import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
+@CrudGenerator({ targetDirectory: __dirname })
 class TestEntityProductVariant extends BaseEntity<TestEntityProductVariant, "id"> {
     @PrimaryKey({ columnType: "text", type: "string" })
     id: string;
@@ -19,6 +21,7 @@ class TestEntityProductVariant extends BaseEntity<TestEntityProductVariant, "id"
 }
 
 @Entity()
+@CrudGenerator({ targetDirectory: __dirname })
 class TestEntityProduct extends BaseEntity<TestEntityProduct, "id"> {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
