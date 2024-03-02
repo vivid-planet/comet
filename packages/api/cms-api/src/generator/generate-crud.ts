@@ -15,6 +15,21 @@ import { GeneratedFile } from "./utils/write-generated-files";
 function buildOptions(metadata: EntityMetadata<any>) {
     const { classNameSingular, classNamePlural, fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
 
+    const rootArgProps = metadata.props.filter((prop) => {
+        if (prop.reference == "m:1") {
+            if (!prop.targetMeta) throw new Error("targetMeta is not set for relation");
+            for (const innerProp of prop.targetMeta.props) {
+                if (innerProp.reference == "1:m" && innerProp.targetMeta == metadata && innerProp.mappedBy == prop.name) {
+                    const hasOwnCrudGenerator = Reflect.getMetadata(`data:crudGeneratorOptions`, prop.targetMeta.class);
+                    if (hasOwnCrudGenerator && innerProp.orphanRemoval) {
+                        //if the back relation has its own crud generator and has orphan removal, it's a root arg
+                        return true;
+                    }
+                }
+            }
+        }
+    });
+
     const crudSearchPropNames = metadata.props
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "search") && !prop.name.startsWith("scope_"))
         .reduce((acc, prop) => {
@@ -51,7 +66,8 @@ function buildOptions(metadata: EntityMetadata<any>) {
                 prop.type === "boolean" ||
                 prop.type === "DateType" ||
                 prop.type === "Date" ||
-                prop.reference === "m:1"),
+                prop.reference === "m:1") &&
+            !rootArgProps.some((rootArgProp) => rootArgProp.name == prop.name),
     );
     const hasFilterArg = crudFilterProps.length > 0;
     const crudSortProps = metadata.props.filter(
@@ -81,21 +97,6 @@ function buildOptions(metadata: EntityMetadata<any>) {
 
     const blockProps = metadata.props.filter((prop) => {
         return hasFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
-    });
-
-    const rootArgProps = metadata.props.filter((prop) => {
-        if (prop.reference == "m:1") {
-            if (!prop.targetMeta) throw new Error("targetMeta is not set for relation");
-            for (const innerProp of prop.targetMeta.props) {
-                if (innerProp.reference == "1:m" && innerProp.targetMeta == metadata && innerProp.mappedBy == prop.name) {
-                    const hasOwnCrudGenerator = Reflect.getMetadata(`data:crudGeneratorOptions`, prop.targetMeta.class);
-                    if (hasOwnCrudGenerator && innerProp.orphanRemoval) {
-                        //if the back relation has its own crud generator and has orphan removal, it's a root arg
-                        return true;
-                    }
-                }
-            }
-        }
     });
 
     return {

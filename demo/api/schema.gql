@@ -997,7 +997,6 @@ enum ProductTagSortField {
 
 input ProductVariantFilter {
   name: StringFilter
-  product: ManyToOneFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   and: [ProductVariantFilter!]
