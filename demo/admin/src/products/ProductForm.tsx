@@ -140,9 +140,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         return tags.data.productTags.nodes;
     });
 
-    if (error) {
-        return <FormattedMessage id="common.error" defaultMessage="An error has occurred. Please try again at later" />;
-    }
+    if (error) throw error;
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;

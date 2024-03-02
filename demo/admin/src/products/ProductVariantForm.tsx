@@ -96,9 +96,7 @@ function ProductVariantForm({ id, productId }: FormProps): React.ReactElement {
         }
     };
 
-    if (error) {
-        return <FormattedMessage id="common.error" defaultMessage="An error has occured. Please try again at later" />;
-    }
+    if (error) throw error;
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;
