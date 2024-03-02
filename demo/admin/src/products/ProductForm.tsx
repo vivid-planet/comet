@@ -62,7 +62,7 @@ type FormValues = Omit<GQLProductFormManualFragment, "image" | "price"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
 
-function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -206,5 +206,3 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         </FinalForm>
     );
 }
-
-export default ProductForm;

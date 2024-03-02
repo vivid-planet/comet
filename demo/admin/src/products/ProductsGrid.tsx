@@ -59,7 +59,7 @@ function ProductsGridToolbar() {
     );
 }
 
-function ProductsGrid() {
+export function ProductsGrid() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
@@ -294,5 +294,3 @@ const updateProductStatusMutation = gql`
         }
     }
 `;
-
-export default ProductsGrid;

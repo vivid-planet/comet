@@ -15,10 +15,11 @@ import {
 import React from "react";
 import { useIntl } from "react-intl";
 
-import ProductForm from "./ProductForm";
-import ProductPriceForm from "./ProductPriceForm";
-import ProductsGrid from "./ProductsGrid";
-import ProductVariantsGrid from "./ProductVariantsGrid";
+import { ProductForm } from "./ProductForm";
+import { ProductPriceForm } from "./ProductPriceForm";
+import { ProductsGrid } from "./ProductsGrid";
+import { ProductVariantForm } from "./ProductVariantForm";
+import { ProductVariantsGrid } from "./ProductVariantsGrid";
 
 const ProductsPage: React.FC = () => {
     const intl = useIntl();

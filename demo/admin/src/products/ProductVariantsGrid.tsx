@@ -49,7 +49,7 @@ function ProductVariantsGridToolbar() {
     );
 }
 
-function ProductVariantsGrid({ productId }: { productId: string }) {
+export function ProductVariantsGrid({ productId }: { productId: string }) {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductVariantsGrid") };
     //const sortModel = dataGridProps.sortModel;
     //const client = useApolloClient();
@@ -177,5 +177,3 @@ const updateProductVisibilityMutation = gql`
     }
 `;
 */
-
-export default ProductVariantsGrid;
