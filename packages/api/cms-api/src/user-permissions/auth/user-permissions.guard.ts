@@ -2,12 +2,11 @@ import { CanActivate, ExecutionContext, Inject, Injectable } from "@nestjs/commo
 import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 
-import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { ContentScopeService } from "../content-scope.service";
-import { RequiredPermission } from "../decorators/required-permission.decorator";
-import { ContentScope } from "../interfaces/content-scope.interface";
+import { RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
+import { CurrentUser } from "../dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions.constants";
-import { AccessControlServiceInterface } from "../user-permissions.types";
+import { AccessControlServiceInterface, SystemUser } from "../user-permissions.types";
 
 @Injectable()
 export class UserPermissionsGuard implements CanActivate {
@@ -18,50 +17,55 @@ export class UserPermissionsGuard implements CanActivate {
     ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        if (this.reflector.getAllAndOverride("disableGlobalGuard", [context.getHandler(), context.getClass()])) {
-            return true;
-        }
+        const location = `${context.getClass().name}::${context.getHandler().name}()`;
 
-        if (this.reflector.getAllAndOverride("publicApi", [context.getHandler(), context.getClass()])) {
-            return true;
-        }
+        if (this.getDecorator(context, "disableGlobalGuard")) return true;
+        if (this.getDecorator(context, "publicApi")) return true;
 
-        const request =
-            context.getType().toString() === "graphql" ? GqlExecutionContext.create(context).getContext().req : context.switchToHttp().getRequest();
-        const user = request.user as CurrentUserInterface | undefined;
+        const user = this.getUser(context);
         if (!user) return false;
 
-        const requiredPermission = this.reflector.getAllAndOverride<RequiredPermission>("requiredPermission", [
-            context.getHandler(),
-            context.getClass(),
-        ]);
-        if (!requiredPermission) {
-            throw new Error(`RequiredPermission decorator is missing in ${context.getClass().name}::${context.getHandler().name}()`);
-        }
+        // System user authenticated via basic auth
+        if (user === true) return true;
 
-        let contentScope: ContentScope | undefined;
-        if (!this.isResolvingGraphQLField(context) && !requiredPermission.options?.skipScopeCheck) {
-            contentScope = await this.contentScopeService.inferScopeFromExecutionContext(context);
-            if (!contentScope) {
+        const requiredPermission = this.getDecorator<RequiredPermissionMetadata>(context, "requiredPermission");
+        if (!requiredPermission) throw new Error(`RequiredPermission decorator is missing in ${location}`);
+        const requiredPermissions = requiredPermission.requiredPermission;
+        if (requiredPermissions.length === 0) throw new Error(`RequiredPermission decorator has empty permissions in ${location}`);
+        if (this.isResolvingGraphQLField(context) || requiredPermission.options?.skipScopeCheck) {
+            // At least one permission is required
+            return requiredPermissions.some((permission) => this.accessControlService.isAllowed(user, permission));
+        } else {
+            const requiredContentScopes = await this.contentScopeService.getScopesForPermissionCheck(context);
+            if (requiredContentScopes.length === 0)
                 throw new Error(
-                    `Could not get ContentScope. Either pass a scope-argument or add @AffectedEntity()-decorator or enable skipScopeCheck in @RequiredPermission() (${
-                        context.getClass().name
-                    }::${context.getHandler().name}())`,
+                    `Could not get content scope. Either pass a scope-argument or add an @AffectedEntity()-decorator or enable skipScopeCheck in the @RequiredPermission()-decorator of ${location}`,
                 );
-            }
-        }
 
-        const requiredPermissions = Array.isArray(requiredPermission.requiredPermission)
-            ? requiredPermission.requiredPermission
-            : [requiredPermission.requiredPermission];
-        if (requiredPermissions.length === 0) {
-            throw new Error(`RequiredPermission decorator has empty permissions in ${context.getClass().name}::${context.getHandler().name}()`);
+            // requiredContentScopes is an two level array of scopes
+            // The first level has to be checked with AND, the second level with OR
+            // The first level consists of submitted scopes and affected entities
+            // The only case that there is more than one scope in the second level is when the ScopedEntity returns more scopes
+            return requiredPermissions.some((permission) =>
+                requiredContentScopes.every((contentScopes) =>
+                    contentScopes.some((contentScope) => this.accessControlService.isAllowed(user, permission, contentScope)),
+                ),
+            );
         }
-        return requiredPermissions.some((permission) => this.accessControlService.isAllowed(user, permission, contentScope));
+    }
+
+    private getUser(context: ExecutionContext): CurrentUser | SystemUser | undefined {
+        const request =
+            context.getType().toString() === "graphql" ? GqlExecutionContext.create(context).getContext().req : context.switchToHttp().getRequest();
+        return request.user as CurrentUser | SystemUser | undefined;
+    }
+
+    private getDecorator<T = object>(context: ExecutionContext, decorator: string): T {
+        return this.reflector.getAllAndOverride(decorator, [context.getClass(), context.getHandler()]);
     }
 
     // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
-    isResolvingGraphQLField(context: ExecutionContext): boolean {
+    private isResolvingGraphQLField(context: ExecutionContext): boolean {
         if (context.getType<GqlContextType>() === "graphql") {
             const gqlContext = GqlExecutionContext.create(context);
             const info = gqlContext.getInfo();

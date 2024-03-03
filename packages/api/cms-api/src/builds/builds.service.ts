@@ -5,10 +5,10 @@ import { Inject, Injectable } from "@nestjs/common";
 import parser from "cron-parser";
 import { format } from "date-fns";
 
-import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { KubernetesJobStatus } from "../kubernetes/job-status.enum";
 import { INSTANCE_LABEL, LABEL_ANNOTATION, PARENT_CRON_JOB_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
+import { CurrentUser } from "../user-permissions/dto/current-user";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
@@ -29,7 +29,7 @@ export class BuildsService {
         @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
     ) {}
 
-    private async getAllowedBuildJobs(user: CurrentUserInterface): Promise<V1Job[]> {
+    private async getAllowedBuildJobs(user: CurrentUser): Promise<V1Job[]> {
         const allJobs = await this.kubernetesService.getAllJobs(`${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`);
         return allJobs.filter((job) => {
             return this.accessControlService.isAllowed(user, "builds", this.kubernetesService.getContentScope(job) ?? {});
@@ -89,7 +89,7 @@ export class BuildsService {
         return this.createBuilds(trigger, builderCronJobs);
     }
 
-    async getBuilds(user: CurrentUserInterface, options?: { limit?: number | undefined }): Promise<Build[]> {
+    async getBuilds(user: CurrentUser, options?: { limit?: number | undefined }): Promise<Build[]> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }
@@ -114,7 +114,7 @@ export class BuildsService {
         );
     }
 
-    async getAutoBuildStatus(user: CurrentUserInterface): Promise<AutoBuildStatus> {
+    async getAutoBuildStatus(user: CurrentUser): Promise<AutoBuildStatus> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }

@@ -121,12 +121,12 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                 variables: { id, input: output, lastUpdatedAt: data?.news?.updatedAt },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<GQLCreateNewsMutation, GQLCreateNewsMutationVariables>({
+            const { data: mutationResponse } = await client.mutate<GQLCreateNewsMutation, GQLCreateNewsMutationVariables>({
                 mutation: createNewsMutation,
                 variables: { scope, input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createNews.id;
+                const id = mutationResponse?.createNews.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage("edit", id);

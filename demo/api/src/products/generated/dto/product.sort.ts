@@ -13,9 +13,11 @@ export enum ProductSortField {
     price = "price",
     inStock = "inStock",
     soldCount = "soldCount",
+    availableSince = "availableSince",
     category = "category",
     createdAt = "createdAt",
     updatedAt = "updatedAt",
+    manufacturer = "manufacturer",
 }
 registerEnumType(ProductSortField, {
     name: "ProductSortField",

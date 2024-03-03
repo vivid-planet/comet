@@ -63,6 +63,12 @@ export class ProductFilter {
     @Type(() => NumberFilter)
     soldCount?: NumberFilter;
 
+    @Field(() => DateFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => DateFilter)
+    availableSince?: DateFilter;
+
     @Field(() => ManyToOneFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
@@ -80,6 +86,12 @@ export class ProductFilter {
     @IsOptional()
     @Type(() => DateFilter)
     updatedAt?: DateFilter;
+
+    @Field(() => ManyToOneFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => ManyToOneFilter)
+    manufacturer?: ManyToOneFilter;
 
     @Field(() => [ProductFilter], { nullable: true })
     @Type(() => ProductFilter)

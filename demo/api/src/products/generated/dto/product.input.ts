@@ -4,9 +4,9 @@ import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
 import { DamImageBlock, IsNullable, IsSlug, PartialType, RootBlockInputScalar } from "@comet/cms-api";
 import { Field, ID, InputType } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
+import { IsArray, IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
 
-import { ProductDimensions, ProductDiscounts, ProductPackageDimensions, ProductStatus } from "../../entities/product.entity";
+import { ProductDimensions, ProductDiscounts, ProductStatus } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
 import { ProductStatisticsInput } from "./product-statistics.nested.input";
 import { ProductVariantInput } from "./product-variant.nested.input";
@@ -49,6 +49,11 @@ export class ProductInput {
     @Field({ defaultValue: true })
     inStock: boolean;
 
+    @IsNullable()
+    @IsDate()
+    @Field({ nullable: true })
+    availableSince?: Date;
+
     @IsNotEmpty()
     @Field(() => RootBlockInputScalar(DamImageBlock))
     @Transform(({ value }) => (isBlockInputInterface(value) ? value : DamImageBlock.blockInputFactory(value)), { toClassOnly: true })
@@ -75,12 +80,6 @@ export class ProductInput {
     dimensions?: ProductDimensions;
 
     @IsNullable()
-    @ValidateNested()
-    @Type(() => ProductPackageDimensions)
-    @Field(() => ProductPackageDimensions, { nullable: true })
-    packageDimensions?: ProductPackageDimensions;
-
-    @IsNullable()
     @Field(() => ProductStatisticsInput, { nullable: true })
     @Type(() => ProductStatisticsInput)
     @ValidateNested()
@@ -100,6 +99,11 @@ export class ProductInput {
     @IsArray()
     @IsUUID(undefined, { each: true })
     tags: string[];
+
+    @IsNullable()
+    @Field(() => ID, { nullable: true })
+    @IsUUID()
+    manufacturer?: string;
 }
 
 @InputType()
