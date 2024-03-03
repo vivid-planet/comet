@@ -103,14 +103,14 @@ const ProductsPage: React.FC = () => {
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add product" })}>
                     <SaveBoundary>
-                        <Toolbar>
+                        <StackToolbar>
                             <ToolbarBackButton />
                             <ToolbarAutomaticTitleItem />
                             <ToolbarFillSpace />
                             <ToolbarActions>
                                 <SaveBoundarySaveButton />
                             </ToolbarActions>
-                        </Toolbar>
+                        </StackToolbar>
                         <ProductForm />
                     </SaveBoundary>
                 </StackPage>
