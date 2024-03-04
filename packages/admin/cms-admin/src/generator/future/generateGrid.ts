@@ -12,7 +12,9 @@ import { GeneratorReturn, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
 
-function tsCodeRecordToString(object: Record<string, string | undefined>) {
+type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
+
+function tsCodeRecordToString(object: TsCodeRecordToStringObject) {
     return `{${Object.entries(object)
         .filter(([key, value]) => value !== undefined)
         .map(([key, value]) => `${key}: ${value},`)
@@ -353,7 +355,7 @@ export function generateGrid(
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
                 .map((column) => {
-                    const columnDefinition: Record<string, string | undefined> = {
+                    const columnDefinition: TsCodeRecordToStringObject = {
                         field: `"${column.name}"`,
                         headerName: `intl.formatMessage({ id: "${instanceGqlType}.${column.name}",  defaultMessage: "${
                             column.headerName || camelCaseToHumanReadable(column.name)
@@ -364,22 +366,22 @@ export function generateGrid(
                         valueGetter: column.valueGetter,
                         valueOptions: column.valueOptions,
                         renderCell: column.renderCell,
-                        width: typeof column.width === "undefined" ? undefined : String(column.width),
-                        flex: typeof column.flex === "undefined" ? undefined : String(column.flex),
+                        width: typeof column.width === "undefined" ? undefined : column.width,
+                        flex: typeof column.flex === "undefined" ? undefined : column.flex,
                     };
 
                     if (typeof column.width === "undefined") {
                         const defaultMinWidth = 150;
                         columnDefinition.flex = "1";
-                        columnDefinition.maxWidth = typeof column.maxWidth === "undefined" ? undefined : String(column.maxWidth);
+                        columnDefinition.maxWidth = typeof column.maxWidth === "undefined" ? undefined : column.maxWidth;
 
                         if (
                             typeof column.minWidth === "undefined" &&
                             (typeof column.maxWidth === "undefined" || column.maxWidth >= defaultMinWidth)
                         ) {
-                            columnDefinition.minWidth = String(defaultMinWidth);
+                            columnDefinition.minWidth = defaultMinWidth;
                         } else if (typeof column.minWidth !== "undefined") {
-                            columnDefinition.minWidth = String(column.minWidth);
+                            columnDefinition.minWidth = column.minWidth;
                         }
                     }
 
