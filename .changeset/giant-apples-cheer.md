@@ -2,7 +2,7 @@
 "@comet/cms-api": minor
 ---
 
-API Generator: Generate better Api for ManyToOne relations with orphanRemoval activated where the reverse side has its own Api generated.
+API Generator: Generate better API for Many-to-one-relations with `orphanRemoval` activated where the reverse side has its own API generated
 
-- add id as arg to create mutation
-- add id as arg to list query
+- Add `id` as argument to create mutation
+- Add `id` as argument to list query
