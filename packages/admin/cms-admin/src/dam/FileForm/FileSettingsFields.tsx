@@ -4,7 +4,7 @@ import { useContentGenerationService } from "@comet/admin/lib/contentGeneration/
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArtificialIntelligence, Calendar } from "@comet/admin-icons";
 import { IconButton, InputAdornment } from "@mui/material";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { useForm } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -46,7 +46,6 @@ const licenseTypeLabels: { [key in LicenseType]: React.ReactNode } = {
 export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElement => {
     const folderId = file.folder?.id || null;
     const isImage = !!file.image;
-    const theme = useTheme();
     const intl = useIntl();
     const apollo = useApolloClient();
     const scope = useDamScope();
@@ -127,7 +126,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                     endAdornment={
                         ContentGenerationEnabled && (
                             <IconButton
-                                sx={{ color: theme.palette.primary.main }}
+                                color="primary"
                                 onClick={async () => {
                                     const { data } = await generateAltText({ variables: { imageUrl: file.fileUrl } });
                                     formApi.change("altText", data?.generateAltText);
@@ -149,7 +148,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                     endAdornment={
                         ContentGenerationEnabled && (
                             <IconButton
-                                sx={{ color: theme.palette.primary.main }}
+                                color="primary"
                                 onClick={async () => {
                                     const { data } = await generateImageTitle({ variables: { imageUrl: file.fileUrl } });
                                     formApi.change("title", data?.generateImageTitle);
