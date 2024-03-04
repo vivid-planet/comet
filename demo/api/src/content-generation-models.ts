@@ -46,7 +46,7 @@ export const ContentGenerationModels = ({ apiKey, apiUrl }: { apiKey: string; ap
         };
     }
 
-    const createRequest = (options: ContentGenerationRequest, imageDetail: "low" | "high", apiKey: string) => {
+    const createRequestInit = (options: ContentGenerationRequest, imageDetail: "low" | "high", apiKey: string) => {
         const headers = new Headers();
         headers.append("api-key", apiKey);
         headers.append("Content-Type", "application/json");
@@ -73,11 +73,11 @@ export const ContentGenerationModels = ({ apiKey, apiUrl }: { apiKey: string; ap
 
     return {
         image: async (options: ContentGenerationRequest) => {
-            const response = await fetch(apiUrl, createRequest(options, "low", apiKey));
+            const response = await fetch(apiUrl, createRequestInit(options, "low", apiKey));
             return convertResponse(response);
         },
         imageAdvanced: async (options: ContentGenerationRequest) => {
-            const response = await fetch(apiUrl, createRequest(options, "high", apiKey));
+            const response = await fetch(apiUrl, createRequestInit(options, "high", apiKey));
             return convertResponse(response);
         },
     };
