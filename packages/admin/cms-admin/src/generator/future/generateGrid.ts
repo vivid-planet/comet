@@ -372,7 +372,7 @@ export function generateGrid(
 
                     if (typeof column.width === "undefined") {
                         const defaultMinWidth = 150;
-                        columnDefinition.flex = "1";
+                        columnDefinition.flex = 1;
                         columnDefinition.maxWidth = typeof column.maxWidth === "undefined" ? undefined : column.maxWidth;
 
                         if (
