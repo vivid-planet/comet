@@ -44,7 +44,7 @@ const licenseTypeLabels: { [key in LicenseType]: React.ReactNode } = {
 };
 
 export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElement => {
-    const folderId = file.folder?.id || null;
+    const folderId = file.folder?.id ?? null;
     const isImage = !!file.image;
     const intl = useIntl();
     const apollo = useApolloClient();
