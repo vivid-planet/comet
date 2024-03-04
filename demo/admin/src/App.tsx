@@ -64,44 +64,44 @@ class App extends React.Component {
 
     public render(): JSX.Element {
         return (
-            <ContentGenerationServiceProvider config={{ image: true, imageAdvanced: true }}>
-                <ApolloProvider client={apolloClient}>
-                    <CurrentUserProvider>
-                        <SitesConfigProvider
+            <ApolloProvider client={apolloClient}>
+                <CurrentUserProvider>
+                    <SitesConfigProvider
+                        value={{
+                            configs: config.sitesConfig,
+                            resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
+                        }}
+                    >
+                        <DamConfigProvider
                             value={{
-                                configs: config.sitesConfig,
-                                resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
+                                scopeParts: ["domain"],
+                                additionalToolbarItems: <ImportFromUnsplash />,
+                                importSources: {
+                                    unsplash: {
+                                        label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
+                                    },
+                                },
                             }}
                         >
-                            <DamConfigProvider
-                                value={{
-                                    scopeParts: ["domain"],
-                                    additionalToolbarItems: <ImportFromUnsplash />,
-                                    importSources: {
-                                        unsplash: {
-                                            label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
-                                        },
-                                    },
-                                }}
-                            >
-                                <IntlProvider locale="en" messages={getMessages()}>
-                                    <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
-                                        <MuiThemeProvider theme={theme}>
-                                            <RouterBrowserRouter>
-                                                <DndProvider backend={HTML5Backend}>
-                                                    <SnackbarProvider>
-                                                        <CmsBlockContextProvider
-                                                            damConfig={{
-                                                                apiUrl: config.apiUrl,
-                                                                apiClient,
-                                                                maxFileSize: config.dam.uploadsMaxFileSize,
-                                                                maxSrcResolution: config.imgproxy.maxSrcResolution,
-                                                                allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
-                                                            }}
-                                                            pageTreeCategories={pageTreeCategories}
-                                                            pageTreeDocumentTypes={pageTreeDocumentTypes}
-                                                            additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
-                                                        >
+                            <IntlProvider locale="en" messages={getMessages()}>
+                                <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
+                                    <MuiThemeProvider theme={theme}>
+                                        <RouterBrowserRouter>
+                                            <DndProvider backend={HTML5Backend}>
+                                                <SnackbarProvider>
+                                                    <CmsBlockContextProvider
+                                                        damConfig={{
+                                                            apiUrl: config.apiUrl,
+                                                            apiClient,
+                                                            maxFileSize: config.dam.uploadsMaxFileSize,
+                                                            maxSrcResolution: config.imgproxy.maxSrcResolution,
+                                                            allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
+                                                        }}
+                                                        pageTreeCategories={pageTreeCategories}
+                                                        pageTreeDocumentTypes={pageTreeDocumentTypes}
+                                                        additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
+                                                    >
+                                                        <ContentGenerationServiceProvider config={{ image: true, imageAdvanced: true }}>
                                                             <React.Fragment>
                                                                 <GlobalStyle />
                                                                 <ContentScopeProvider>
@@ -127,18 +127,18 @@ class App extends React.Component {
                                                                 </ContentScopeProvider>
                                                                 <ErrorDialogHandler />
                                                             </React.Fragment>
-                                                        </CmsBlockContextProvider>
-                                                    </SnackbarProvider>
-                                                </DndProvider>
-                                            </RouterBrowserRouter>
-                                        </MuiThemeProvider>
-                                    </LocaleProvider>
-                                </IntlProvider>
-                            </DamConfigProvider>
-                        </SitesConfigProvider>
-                    </CurrentUserProvider>
-                </ApolloProvider>
-            </ContentGenerationServiceProvider>
+                                                        </ContentGenerationServiceProvider>
+                                                    </CmsBlockContextProvider>
+                                                </SnackbarProvider>
+                                            </DndProvider>
+                                        </RouterBrowserRouter>
+                                    </MuiThemeProvider>
+                                </LocaleProvider>
+                            </IntlProvider>
+                        </DamConfigProvider>
+                    </SitesConfigProvider>
+                </CurrentUserProvider>
+            </ApolloProvider>
         );
     }
 }
