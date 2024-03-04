@@ -1,5 +1,5 @@
 import { gql } from "graphql-request";
-import { Redirect } from "next/dist/lib/load-custom-routes";
+import { Redirect, Rewrite } from "next/dist/lib/load-custom-routes";
 
 import { ExternalLinkBlockData, InternalLinkBlockData, NewsLinkBlockData, RedirectsLinkBlockData } from "../../src/blocks.generated";
 import { domain } from "../../src/config";
@@ -7,7 +7,9 @@ import createGraphQLClient from "../../src/util/createGraphQLClient";
 import { GQLRedirectsQuery, GQLRedirectsQueryVariables } from "./createRedirects.generated";
 
 const createRedirects = async () => {
-    return [...(await createApiRedirects()), ...(await createInternalRedirects())];
+    const { rewrites, redirects } = await createApiRedirects();
+
+    return { rewrites, redirects: [...redirects, ...(await createInternalRedirects())] };
 };
 
 const createInternalRedirects = async (): Promise<Redirect[]> => {
@@ -24,7 +26,7 @@ const createInternalRedirects = async (): Promise<Redirect[]> => {
         },
     ];
 };
-const createApiRedirects = async (): Promise<Redirect[]> => {
+const createApiRedirects = async (): Promise<{ redirects: Redirect[]; rewrites: Rewrite[] }> => {
     const query = gql`
         query Redirects($scope: RedirectScopeInput!) {
             redirects(scope: $scope, active: true) {
@@ -37,12 +39,13 @@ const createApiRedirects = async (): Promise<Redirect[]> => {
     const apiUrl = process.env.API_URL_INTERNAL;
     if (!apiUrl) {
         console.error("No Environment Variable API_URL_INTERNAL available. Can not perform redirect config");
-        return [];
+        return { redirects: [], rewrites: [] };
     }
 
     const response = await createGraphQLClient().request<GQLRedirectsQuery, GQLRedirectsQueryVariables>(query, { scope: { domain } });
 
     const redirects: Redirect[] = [];
+    const rewrites: Rewrite[] = [];
 
     function replaceRegexCharacters(value: string): string {
         // escape ":" and "?", otherwise it is used for next.js regex path matching  (https://nextjs.org/docs/pages/api-reference/next-config-js/redirects#regex-path-matching)
@@ -98,11 +101,19 @@ const createApiRedirects = async (): Promise<Redirect[]> => {
         }
 
         if (source && destination) {
-            redirects.push({ source, destination, has, permanent: true });
+            if (source.toLowerCase() === destination.toLowerCase()) {
+                const newSource = source
+                    .split("")
+                    .map((char) => (char.toLowerCase() === char.toUpperCase() ? char : `(${char.toLowerCase()}|${char.toUpperCase()})`))
+                    .join("");
+                rewrites.push({ source: newSource, destination });
+            } else {
+                redirects.push({ source, destination, permanent: true });
+            }
         }
     }
 
-    return redirects;
+    return { redirects, rewrites };
 };
 
 export { createRedirects };
