@@ -109,7 +109,7 @@ Demo will be available at
 -   API: [http://localhost:4000/](http://localhost:4000/)
 -   Site: [http://localhost:3000/](http://localhost:3000/)
 
-It is also possbile to start specific microservices
+It is also possible to start specific microservices
 
 ```bash
 npx dev-pm start @demo-api # (@demo-api|@demo-admin|@demo-site)
