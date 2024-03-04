@@ -20,7 +20,6 @@ export function FinalFormInput({
     endAdornment,
     clearable,
     disableContentTranslation,
-
     ...props
 }: FinalFormInputProps): React.ReactElement {
     const { enabled, translate } = useContentTranslationService();
