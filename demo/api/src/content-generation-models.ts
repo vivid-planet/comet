@@ -3,8 +3,8 @@ import { ContentGenerationRequest, Options } from "@comet/cms-api/lib/content-ge
 export const ContentGenerationModels = ({ apiKey, apiUrl }: { apiKey: string; apiUrl: string }) => {
     const createMessages = (options: ContentGenerationRequest, imageDetail: "low" | "high") => {
         const messages = [];
-        options.instructions && messages.push({ role: "system", content: options.instructions });
-        options.context && messages.push({ role: "user", content: options.context });
+        if (options.instructions) messages.push({ role: "system", content: options.instructions });
+        if (options.context) messages.push({ role: "user", content: options.context });
 
         if (options.examples) {
             for (const example of options.examples) {
