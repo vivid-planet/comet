@@ -366,14 +366,14 @@ export function generateGrid(
                         valueGetter: column.valueGetter,
                         valueOptions: column.valueOptions,
                         renderCell: column.renderCell,
-                        width: typeof column.width === "undefined" ? undefined : column.width,
-                        flex: typeof column.flex === "undefined" ? undefined : column.flex,
+                        width: column.width,
+                        flex: column.flex,
                     };
 
                     if (typeof column.width === "undefined") {
                         const defaultMinWidth = 150;
                         columnDefinition.flex = 1;
-                        columnDefinition.maxWidth = typeof column.maxWidth === "undefined" ? undefined : column.maxWidth;
+                        columnDefinition.maxWidth = column.maxWidth;
 
                         if (
                             typeof column.minWidth === "undefined" &&
