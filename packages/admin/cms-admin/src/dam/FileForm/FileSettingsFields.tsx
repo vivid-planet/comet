@@ -128,7 +128,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                             <IconButton
                                 color="primary"
                                 onClick={async () => {
-                                    const { data } = await generateAltText({ variables: { imageUrl: file.fileUrl } });
+                                    const { data } = await generateAltText({ variables: { fileUrl: file.fileUrl } });
                                     formApi.change("altText", data?.generateAltText);
                                 }}
                             >
@@ -150,7 +150,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                             <IconButton
                                 color="primary"
                                 onClick={async () => {
-                                    const { data } = await generateImageTitle({ variables: { imageUrl: file.fileUrl } });
+                                    const { data } = await generateImageTitle({ variables: { fileUrl: file.fileUrl } });
                                     formApi.change("title", data?.generateImageTitle);
                                 }}
                             >

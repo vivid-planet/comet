@@ -9,13 +9,13 @@ export class ContentGenerationResolver {
 
     @RequiredPermission(["dam"], { skipScopeCheck: true })
     @Mutation(() => String)
-    async generateAltText(@Args("imageUrl", { type: () => String }) imageUrl: string): Promise<string> {
-        return this.contentGenerationService.generateAltText(imageUrl);
+    async generateAltText(@Args("fileUrl", { type: () => String }) fileUrl: string): Promise<string> {
+        return this.contentGenerationService.generateAltText(fileUrl);
     }
 
     @RequiredPermission(["dam"], { skipScopeCheck: true })
     @Mutation(() => String)
-    async generateImageTitle(@Args("imageUrl", { type: () => String }) imageUrl: string): Promise<string> {
-        return this.contentGenerationService.generateImageTitle(imageUrl);
+    async generateImageTitle(@Args("fileUrl", { type: () => String }) fileUrl: string): Promise<string> {
+        return this.contentGenerationService.generateImageTitle(fileUrl);
     }
 }
