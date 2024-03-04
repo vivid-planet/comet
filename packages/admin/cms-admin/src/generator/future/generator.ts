@@ -20,7 +20,7 @@ export type FormFieldConfig<T> = (
     | { type: "date" }
     // TODO | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
-    | { type: "asyncSelect"; values?: string[] }
+    | { type: "asyncSelect"; rootQuery: string; labelField?: string }
     | { type: "block"; block: ImportReference }
 ) & { name: keyof T; label?: string; required?: boolean; validate?: ImportReference; helperText?: string };
 
