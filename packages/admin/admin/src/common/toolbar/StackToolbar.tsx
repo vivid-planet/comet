@@ -2,9 +2,9 @@ import React from "react";
 
 import { useStackApi } from "../../stack/Api";
 import { useStackSwitchApi } from "../../stack/Switch";
-import { Toolbar, ToolbarProps } from "./Toolbar";
+import { Toolbar } from "./Toolbar";
 
-export function StackToolbar(props: ToolbarProps) {
+export function StackToolbar(props: React.ComponentProps<typeof Toolbar>) {
     const stackApi = useStackApi();
     const stackSwitchApi = useStackSwitchApi();
     let shouldShowTabBar = true;
