@@ -5,13 +5,10 @@
 "@comet/cms-site": minor
 ---
 
-Revise site preview and block preview
+Uses the Next.JS Preview mode for the site preview
 
-The site preview review now uses the Next.JS Preview mode.
 The preview is entered by navigating to an API-Route in the site, which has to be executed in a secured environment.
 In the API-Routes the current scope is checked (and possibly stored), then the client is redirected to the Preview.
-The block preview now uses a single base url and stores the content scope in the a React context instead requiring a
-url for every content scope.
 
 // TODO Move the following introduction to the migration guide before releasing
 
@@ -32,6 +29,4 @@ Requires following changes to site:
 
 Requires following changes to admin
 
--   The `SitesConfigProvider` needs the absolute urls to the site preview API-Route
--   The `SitesConfigProvider` needs the absolute base Url to the block preview
--   Use `previewPath` instead of `previewUrl` in block previews in Admin
+-   The `SitesConfigProvider` needs the absolute URL to the site preview API-Route
