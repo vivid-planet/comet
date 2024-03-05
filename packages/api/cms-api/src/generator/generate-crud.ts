@@ -496,6 +496,10 @@ function generateInputHandling(
 
     const inputRelationManyToOneProps = relationManyToOneProps
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
+        .filter((prop) => {
+            //filter out props that are rootArgProps
+            return !rootArgProps.some((rootArgProps) => rootArgProps.name === prop.name);
+        })
         .map((prop) => {
             return {
                 name: prop.name,

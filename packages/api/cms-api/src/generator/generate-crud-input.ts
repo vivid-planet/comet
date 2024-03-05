@@ -56,6 +56,7 @@ export async function generateCrudInput(
             return hasFieldFeature(metadata.class, prop.name, "input");
         })
         .filter((prop) => {
+            //filter out props that are rootArgProps
             return !rootArgProps.some((rootArgProps) => rootArgProps.name === prop.name);
         })
         .filter((prop) => !options.excludeFields.includes(prop.name));
