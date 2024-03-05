@@ -1,6 +1,7 @@
 import { EntityMetadata } from "@mikro-orm/core";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
+import { buildOptions } from "./generate-crud";
 import { buildNameVariants } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";
 import { generateImportsCode, Imports } from "./utils/generate-imports-code";
@@ -45,12 +46,18 @@ export async function generateCrudInput(
 ): Promise<GeneratedFile[]> {
     const generatedFiles: GeneratedFile[] = [];
 
+    const { rootArgProps } = buildOptions(metadata);
+
     const props = metadata.props
         .filter((prop) => {
             return !prop.embedded;
         })
         .filter((prop) => {
             return hasFieldFeature(metadata.class, prop.name, "input");
+        })
+        .filter((prop) => {
+            //filter out props that are rootArgProps
+            return !rootArgProps.some((rootArgProps) => rootArgProps.name === prop.name);
         })
         .filter((prop) => !options.excludeFields.includes(prop.name));
 

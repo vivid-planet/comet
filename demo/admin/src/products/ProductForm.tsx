@@ -58,7 +58,7 @@ const rootBlocks = {
 };
 
 type FormValues = Omit<GQLProductFormManualFragment, "image" | "price"> & {
-    price: string;
+    price?: string;
     image: BlockState<typeof rootBlocks.image>;
 };
 
@@ -76,7 +76,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     const initialValues: Partial<FormValues> = data?.product
         ? {
               ...filter<GQLProductFormManualFragment>(productFormFragment, data.product),
-              price: String(data.product.price),
+              price: data.product.price ? String(data.product.price) : undefined,
               image: rootBlocks.image.input2State(data.product.image),
           }
         : {
@@ -104,11 +104,10 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             type: formValues.type as GQLProductType,
             category: formValues.category?.id,
             tags: formValues.tags.map((i) => i.id),
-            variants: [],
             articleNumbers: [],
             discounts: [],
             statistics: { views: 0 },
-            price: parseFloat(formValues.price),
+            price: formValues.price ? parseFloat(formValues.price) : null,
         };
         if (mode === "edit") {
             if (!id) throw new Error();

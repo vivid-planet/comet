@@ -22,7 +22,7 @@ interface FormProps {
 }
 
 type FormValues = Omit<GQLProductPriceFormFragment, "price"> & {
-    price: string;
+    price?: string;
 };
 
 function ProductPriceForm({ id }: FormProps): React.ReactElement {
@@ -36,7 +36,7 @@ function ProductPriceForm({ id }: FormProps): React.ReactElement {
     const initialValues: Partial<FormValues> = data?.product
         ? {
               ...filter<GQLProductPriceFormFragment>(productPriceFormFragment, data.product),
-              price: String(data.product.price),
+              price: data.product.price ? String(data.product.price) : undefined,
           }
         : {};
 
@@ -55,7 +55,7 @@ function ProductPriceForm({ id }: FormProps): React.ReactElement {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
-            price: parseFloat(formValues.price),
+            price: formValues.price ? parseFloat(formValues.price) : null,
         };
         await client.mutate<GQLProductPriceFormUpdateProductMutation, GQLProductPriceFormUpdateProductMutationVariables>({
             mutation: updateProductPriceFormMutation,
