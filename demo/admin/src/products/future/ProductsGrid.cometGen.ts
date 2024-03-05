@@ -6,11 +6,11 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
     gqlType: "Product",
     fragmentName: "ProductsGridFuture", // configurable as it must be unique across project
     columns: [
-        { type: "text", name: "title", headerName: "Titel", width: 150 },
-        { type: "text", name: "description", headerName: "Description", width: 150 },
-        { type: "number", name: "price", headerName: "Price", width: 150 },
-        { type: "staticSelect", name: "type" /*, values: from gql schema (TODO overridable)*/ },
-        { type: "date", name: "availableSince" },
-        { type: "dateTime", name: "createdAt" },
+        { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250 },
+        { type: "text", name: "description", headerName: "Description" },
+        { type: "number", name: "price", headerName: "Price", maxWidth: 150 },
+        { type: "staticSelect", name: "type", maxWidth: 150 /*, values: from gql schema (TODO overridable)*/ },
+        { type: "date", name: "availableSince", width: 140 },
+        { type: "dateTime", name: "createdAt", width: 170 },
     ],
 };

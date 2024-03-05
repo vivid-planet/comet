@@ -1,5 +1,6 @@
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
+import { GridColDef } from "@mui/x-data-grid";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
@@ -37,6 +38,8 @@ export type FormConfig<T extends GeneratorEntity> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
+type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex">;
+
 export type GridColumnConfig<T extends GeneratorEntity> = (
     | { type: "text" }
     | { type: "number" }
@@ -45,7 +48,7 @@ export type GridColumnConfig<T extends GeneratorEntity> = (
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
     | { type: "block"; block: ImportReference }
-) & { name: UsableFields<T>; headerName?: string; width?: number };
+) & { name: UsableFields<T> } & DataGridSettings;
 export type GridConfig<T extends GeneratorEntity> = {
     type: "grid";
     gqlType: T["__typename"];
