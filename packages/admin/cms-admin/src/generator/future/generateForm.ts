@@ -1,10 +1,11 @@
 import { IntrospectionQuery } from "graphql";
 
 import { generateFormField } from "./generateFormField";
-import { FormConfig, GeneratorReturn } from "./generator";
+import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
+import { isFieldOptional } from "./utils/isFieldOptional";
 
 export function generateForm(
     {
@@ -27,6 +28,11 @@ export function generateForm(
 
     const numberFields = config.fields.filter((field) => field.type == "number");
     const booleanFields = config.fields.filter((field) => field.type == "boolean");
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const isOptional = (fieldConfig: FormFieldConfig<any>) => {
+        return isFieldOptional({ config: fieldConfig, gqlIntrospection: gqlIntrospection, gqlType: gqlType });
+    };
 
     let hooksCode = "";
     let formValueToGqlInputCode = "";
@@ -159,7 +165,7 @@ export function generateForm(
     } ${
         numberFields.length > 0 || Object.keys(rootBlocks).length > 0
             ? `& {
-        ${numberFields.map((field) => `${String(field.name)}: string;`).join("\n")}
+        ${numberFields.map((field) => `${String(field.name)}${isOptional(field) ? `?` : ``}: string;`).join("\n")}
         ${Object.keys(rootBlocks)
             .map((rootBlockKey) => `${rootBlockKey}: BlockState<typeof rootBlocks.${rootBlockKey}>;`)
             .join("\n")}
@@ -186,7 +192,15 @@ export function generateForm(
         const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
         ? {
             ...filter<GQL${fragmentName}Fragment>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
-            ${numberFields.map((field) => `${String(field.name)}: String(data.${instanceGqlType}.${String(field.name)}),`).join("\n")}
+            ${numberFields
+                .map((field) => {
+                    let assignment = `String(data.${instanceGqlType}.${String(field.name)})`;
+                    if (isOptional(field)) {
+                        assignment = `data.${instanceGqlType}.${String(field.name)} ? ${assignment} : undefined`;
+                    }
+                    return `${String(field.name)}: ${assignment},`;
+                })
+                .join("\n")}
             ${Object.keys(rootBlocks)
                 .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.input2State(data.${instanceGqlType}.${rootBlockKey}),`)
                 .join("\n")}
