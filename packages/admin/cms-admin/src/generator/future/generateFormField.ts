@@ -98,7 +98,6 @@ export function generateFormField(
                 <FormControlLabel
                     label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
                     control={<FinalFormCheckbox ${config.readOnly ? readOnlyProps : ""} {...props} />}
-                    control={<FinalFormCheckbox {...props} />}
                     ${
                         config.helperText
                             ? `helperText={<FormattedMessage id=` +
