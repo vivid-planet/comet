@@ -39,7 +39,7 @@ const productsFragment = gql`
         id
         updatedAt
         title
-        visible
+        status
         slug
         description
         type
@@ -157,6 +157,7 @@ export function ProductsGrid(): React.ReactElement {
                                 const row = params.row;
                                 return {
                                     title: row.title,
+                                    status: row.status,
                                     slug: row.slug,
                                     description: row.description,
                                     type: row.type,

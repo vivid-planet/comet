@@ -38,8 +38,13 @@ export class NewsResolver {
     }
 
     @Query(() => PaginatedNews)
-    async newsList(@Args() { scope, search, filter, sort, offset, limit }: NewsListArgs, @Info() info: GraphQLResolveInfo): Promise<PaginatedNews> {
+    async newsList(
+        @Args() { scope, status, search, filter, sort, offset, limit }: NewsListArgs,
+        @Info() info: GraphQLResolveInfo,
+    ): Promise<PaginatedNews> {
         const where = this.newsService.getFindCondition({ search, filter });
+
+        where.status = status;
         where.scope = scope;
 
         const fields = extractGraphqlFields(info, { root: "nodes" });
@@ -71,7 +76,6 @@ export class NewsResolver {
         const { image: imageInput, content: contentInput, ...assignInput } = input;
         const news = this.repository.create({
             ...assignInput,
-            visible: false,
             scope,
 
             image: imageInput.transformToBlockData(),
@@ -119,22 +123,6 @@ export class NewsResolver {
         await this.entityManager.remove(news);
         await this.entityManager.flush();
         return true;
-    }
-
-    @Mutation(() => News)
-    @AffectedEntity(News)
-    async updateNewsVisibility(
-        @Args("id", { type: () => ID }) id: string,
-        @Args("visible", { type: () => Boolean }) visible: boolean,
-    ): Promise<News> {
-        const news = await this.repository.findOneOrFail(id);
-
-        news.assign({
-            visible,
-        });
-        await this.entityManager.flush();
-
-        return news;
     }
 
     @ResolveField(() => [NewsComment])

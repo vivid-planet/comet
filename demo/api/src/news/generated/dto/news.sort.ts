@@ -7,6 +7,7 @@ import { IsEnum } from "class-validator";
 export enum NewsSortField {
     slug = "slug",
     title = "title",
+    status = "status",
     date = "date",
     category = "category",
     visible = "visible",
