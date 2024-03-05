@@ -1,10 +1,10 @@
 import { Filter } from "@comet/admin-icons";
 import { ComponentsOverrides } from "@mui/material";
 import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { FilterBarButton } from "../filterBarButton/FilterBarButton";
 
 /**
@@ -18,12 +18,10 @@ const Root = styled("div", {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})(
-    css`
-        margin-bottom: 10px;
-        margin-right: 6px;
-    `,
-);
+})(css`
+    margin-bottom: 10px;
+    margin-right: 6px;
+`);
 
 const StyledFilterBarButton = styled(FilterBarButton, {
     name: "CometAdminFilterBarMoreFilters",
@@ -40,7 +38,11 @@ const StyledFilterBarButton = styled(FilterBarButton, {
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export interface FilterBarMoreFiltersProps extends ThemedComponentBaseProps<{ root: "div"; button: typeof FilterBarButton }> {
+export interface FilterBarMoreFiltersProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        button: typeof FilterBarButton;
+    }> {
     icon?: React.ReactNode;
 }
 
@@ -78,12 +80,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFilterBarMoreFilters: Partial<FilterBarMoreFiltersProps>;
+        CometAdminFilterBarMoreFilters: FilterBarMoreFiltersProps;
     }
 
     interface Components {
         CometAdminFilterBarMoreFilters?: {
-            defaultProps?: ComponentsPropsList["CometAdminFilterBarMoreFilters"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFilterBarMoreFilters"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFilterBarMoreFilters"];
         };
     }

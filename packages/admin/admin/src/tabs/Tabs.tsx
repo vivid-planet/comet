@@ -2,9 +2,9 @@ import { ComponentsOverrides } from "@mui/material";
 import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
 import MuiTabs, { TabsProps as MuiTabsProps } from "@mui/material/Tabs";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { TabScrollButton } from "./TabScrollButton";
 
 export type TabsClassKey = "root" | "tabs" | "content" | "contentHidden";
@@ -17,7 +17,7 @@ const Root = styled("div", {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 const StyledTabs = styled(MuiTabs, {
     name: "CometAdminTabs",
@@ -25,7 +25,7 @@ const StyledTabs = styled(MuiTabs, {
     overridesResolver(_, styles) {
         return [styles.tabs];
     },
-})();
+})(css``);
 
 const Content = styled("div", {
     name: "CometAdminTabs",
@@ -156,12 +156,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminTabs: Partial<TabsProps>;
+        CometAdminTabs: TabsProps;
     }
 
     interface Components {
         CometAdminTabs?: {
-            defaultProps?: ComponentsPropsList["CometAdminTabs"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminTabs"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminTabs"];
         };
     }

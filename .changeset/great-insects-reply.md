@@ -2,4 +2,6 @@
 "@comet/admin": major
 ---
 
-Remove `FieldContainerComponent`, which was exported accidentally. Use `FieldContainer` instead.
+Remove the `FieldContainerComponent` component
+
+`FieldContainerComponent` was never intended to be exported, use `FieldContainer` instead.

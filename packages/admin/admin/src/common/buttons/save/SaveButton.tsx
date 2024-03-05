@@ -212,12 +212,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminSaveButton: Partial<SaveButtonProps>;
+        CometAdminSaveButton: SaveButtonProps;
     }
 
     interface Components {
         CometAdminSaveButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminSaveButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminSaveButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminSaveButton"];
         };
     }

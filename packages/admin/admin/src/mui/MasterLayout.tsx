@@ -1,10 +1,10 @@
 import { ComponentsOverrides, CssBaseline } from "@mui/material";
 import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 
 import { AppHeader } from "../appHeader/AppHeader";
 import { AppHeaderMenuButton } from "../appHeader/menuButton/AppHeaderMenuButton";
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "./MasterLayoutContext";
 import { MenuContext } from "./menu/Context";
 
@@ -16,12 +16,10 @@ const Root = styled("div", {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})(
-    () => css`
-        display: flex;
-        flex-wrap: nowrap;
-    `,
-);
+})(css`
+    display: flex;
+    flex-wrap: nowrap;
+`);
 
 const Header = styled("div", {
     name: "CometAdminMasterLayout",
@@ -41,12 +39,10 @@ const ContentWrapper = styled("div", {
     overridesResolver(_, styles) {
         return [styles.contentWrapper];
     },
-})(
-    () => css`
-        flex-grow: 1;
-        padding-top: var(--comet-admin-master-layout-content-top-spacing);
-    `,
-);
+})(css`
+    flex-grow: 1;
+    padding-top: var(--comet-admin-master-layout-content-top-spacing);
+`);
 
 export interface MasterLayoutProps
     extends ThemedComponentBaseProps<{
@@ -85,7 +81,7 @@ export function MasterLayout(inProps: MasterLayoutProps) {
         <MenuContext.Provider value={{ open, toggleOpen }}>
             <MasterLayoutContext.Provider value={{ headerHeight }}>
                 <CssBaseline />
-                <Root {...restProps} {...slotProps?.root}>
+                <Root {...slotProps?.root} {...restProps}>
                     <Header {...slotProps?.header}>
                         {HeaderComponent ? (
                             <HeaderComponent />
@@ -114,12 +110,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminMasterLayout: Partial<MasterLayoutProps>;
+        CometAdminMasterLayout: MasterLayoutProps;
     }
 
     interface Components {
         CometAdminMasterLayout?: {
-            defaultProps?: ComponentsPropsList["CometAdminMasterLayout"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminMasterLayout"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminMasterLayout"];
         };
     }

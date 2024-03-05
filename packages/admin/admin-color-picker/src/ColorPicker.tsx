@@ -75,7 +75,7 @@ export const ColorPicker = (inProps: ColorPickerProps) => {
         clearButtonText = <FormattedMessage id="comet.colorPicker.clearButton" defaultMessage="clear color" />,
         components = {},
         slotProps,
-        ...rest
+        ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminColorPicker" });
     const {
         ColorPickerColorPreview: ColorPreview = PreviewIndicator,
@@ -159,8 +159,8 @@ export const ColorPicker = (inProps: ColorPickerProps) => {
                 onChangeColor(displayValue);
             }}
             components={inputWithPopperComponents}
-            {...rest}
             {...slotProps?.root}
+            {...restProps}
         >
             {(closePopper) => {
                 return (
@@ -228,12 +228,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminColorPicker: Partial<ColorPickerProps>;
+        CometAdminColorPicker: ColorPickerProps;
     }
 
     interface Components {
         CometAdminColorPicker?: {
-            defaultProps?: ComponentsPropsList["CometAdminColorPicker"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminColorPicker"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminColorPicker"];
         };
     }

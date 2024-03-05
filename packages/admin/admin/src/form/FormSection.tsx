@@ -1,7 +1,8 @@
 import { ComponentsOverrides, Typography } from "@mui/material";
 import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
+
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type FormSectionClassKey = "root" | "disableMarginBottom" | "title" | "children";
 
@@ -40,7 +41,7 @@ const Children = styled("div", {
     overridesResolver(_, styles) {
         return [styles.children];
     },
-})();
+})(css``);
 
 export interface FormSectionProps
     extends ThemedComponentBaseProps<{
@@ -65,7 +66,7 @@ export function FormSection(inProps: FormSectionProps) {
     };
 
     return (
-        <Root ownerState={ownerState} {...restProps} {...slotProps?.root}>
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {title && <Title {...slotProps?.title}>{disableTypography ? title : <Typography variant="h3">{title}</Typography>}</Title>}
             <Children {...slotProps?.children}>{children}</Children>
         </Root>
@@ -78,12 +79,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFormSection: Partial<FormSectionProps>;
+        CometAdminFormSection: FormSectionProps;
     }
 
     interface Components {
         CometAdminFormSection?: {
-            defaultProps?: ComponentsPropsList["CometAdminFormSection"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFormSection"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFormSection"];
         };
     }

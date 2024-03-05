@@ -97,8 +97,8 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
                 </StartAdornment>
             }
             placeholder={placeholder ?? intl.formatMessage({ id: "comet.dateRangePicker.selectDateRange", defaultMessage: "Select date range" })}
-            {...inputWithPopperProps}
             {...slotProps?.root}
+            {...inputWithPopperProps}
             readOnly
             endAdornment={
                 clearable ? (
@@ -154,12 +154,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminDateRangePicker: Partial<DateRangePickerProps>;
+        CometAdminDateRangePicker: DateRangePickerProps;
     }
 
     interface Components {
         CometAdminDateRangePicker?: {
-            defaultProps?: ComponentsPropsList["CometAdminDateRangePicker"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminDateRangePicker"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminDateRangePicker"];
         };
     }

@@ -32,6 +32,9 @@ export class EnvironmentVariables {
     @IsString()
     API_URL: string;
 
+    @IsString()
+    ADMIN_URL: string;
+
     @Type(() => Number)
     @IsInt()
     API_PORT: number;
@@ -92,4 +95,7 @@ export class EnvironmentVariables {
     @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
     @IsString()
     S3_BUCKET: string;
+
+    @IsString()
+    SITE_PREVIEW_SECRET: string;
 }

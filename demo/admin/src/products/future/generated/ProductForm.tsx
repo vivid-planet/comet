@@ -11,6 +11,8 @@ import {
     FinalFormSubmitEvent,
     Loading,
     MainContent,
+    TextAreaField,
+    TextField,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
@@ -31,6 +33,7 @@ import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { validateTitle } from "../validateTitle";
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
     GQLCreateProductMutation,
@@ -159,28 +162,20 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <Field
+                        <TextField
                             required
                             fullWidth
                             name="title"
-                            component={FinalFormInput}
                             label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
+                            validate={validateTitle}
                         />
 
-                        <Field
-                            required
-                            fullWidth
-                            name="slug"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
-                        />
+                        <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
 
-                        <Field
+                        <TextAreaField
                             required
-                            multiline
                             fullWidth
                             name="description"
-                            component={FinalFormInput}
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
                         <Field fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
@@ -205,6 +200,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             type="number"
                             label={<FormattedMessage id="product.price" defaultMessage="Price" />}
+                            helperText={<FormattedMessage id="product.price.helperText" defaultMessage="Enter price in this format: 123,45" />}
                         />
                         <Field name="inStock" label="" type="checkbox" fullWidth>
                             {(props) => (

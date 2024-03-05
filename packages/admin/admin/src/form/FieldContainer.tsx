@@ -182,7 +182,7 @@ const Error = styled(FormHelperText, {
     overridesResolver(_, styles) {
         return [styles.error];
     },
-})();
+})(css``);
 
 const Warning = styled(FormHelperText, {
     name: "CometAdminFormFieldContainer",
@@ -251,7 +251,7 @@ export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerPr
     };
 
     return (
-        <Root ownerState={ownerState} fullWidth={fullWidth} disabled={disabled} required={required} ref={ref} {...restProps} {...slotProps?.root}>
+        <Root ownerState={ownerState} fullWidth={fullWidth} disabled={disabled} required={required} ref={ref} {...slotProps?.root} {...restProps}>
             <>
                 {label && (
                     <Label ownerState={ownerState} disabled={disabled} {...slotProps?.label}>
@@ -280,12 +280,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFormFieldContainer: Partial<FieldContainerProps>;
+        CometAdminFormFieldContainer: FieldContainerProps;
     }
 
     interface Components {
         CometAdminFormFieldContainer?: {
-            defaultProps?: ComponentsPropsList["CometAdminFormFieldContainer"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFormFieldContainer"]>;
             styleOverrides?: ComponentsOverrides["CometAdminFormFieldContainer"];
         };
     }

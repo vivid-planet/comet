@@ -3,17 +3,20 @@ import { ComponentsOverrides } from "@mui/material";
 import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { DropTargetMonitor, useDrag, useDrop, XYCoord } from "react-dnd";
 
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { IRow, ITableProps, ITableRowProps, Table, TableColumns, TableHeadColumns } from "./Table";
 import { TableBodyRow } from "./TableBodyRow";
 
 export type TableDndOrderClassKey = "root" | "dragCell" | "dragIconContainer";
 
 interface IDndOrderRowProps<TRow extends IRow>
-    extends ThemedComponentBaseProps<{ dragCell: typeof TableCell; dragIconContainer: "div" }>,
+    extends ThemedComponentBaseProps<{
+            dragCell: typeof TableCell;
+            dragIconContainer: "div";
+        }>,
         ITableRowProps<TRow> {
     moveRow: (dragIndex: number, hoverIndex: number) => void;
     onDragEnd?: () => void;
@@ -122,7 +125,7 @@ const Root = styled(Table, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 const DragCell = styled(TableCell, {
     name: "CometAdminTableDndOrder",
@@ -160,7 +163,11 @@ const DragItemContainer = styled("div", {
 `);
 
 interface TableDndOrderProps<TRow extends IRow>
-    extends ThemedComponentBaseProps<{ root: typeof Table; dragCell: typeof TableCell; dragIconContainer: "div" }>,
+    extends ThemedComponentBaseProps<{
+            root: typeof Table;
+            dragCell: typeof TableCell;
+            dragIconContainer: "div";
+        }>,
         ITableProps<TRow> {
     moveRow: (dragIndex: number, hoverIndex: number) => void;
     onDragEnd?: () => void;
@@ -199,12 +206,12 @@ export function TableDndOrder<TRow extends IRow>(inProps: TableDndOrderProps<TRo
         renderHeadTableRow,
     };
 
-    return <Root {...restProps} {...slotProps?.root} {...tableProps} />;
+    return <Root {...slotProps?.root} {...restProps} {...tableProps} />;
 }
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminTableDndOrder: Partial<TableDndOrderProps<IRow>>;
+        CometAdminTableDndOrder: TableDndOrderProps<IRow>;
     }
 
     interface ComponentNameToClassKey {

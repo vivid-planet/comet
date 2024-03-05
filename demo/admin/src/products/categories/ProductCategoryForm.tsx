@@ -2,10 +2,10 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
     FinalForm,
-    FinalFormInput,
     FinalFormSaveSplitButton,
     FinalFormSubmitEvent,
     MainContent,
+    TextField,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
@@ -98,7 +98,7 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
                 variables: { id, input: output, lastUpdatedAt: data?.productCategory.updatedAt },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<
+            const { data: mutationResponse } = await client.mutate<
                 GQLProductCategoryFormCreateProductCategoryMutation,
                 GQLProductCategoryFormCreateProductCategoryMutationVariables
             >({
@@ -106,7 +106,7 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
                 variables: { input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createProductCategory.id;
+                const id = mutationResponse?.createProductCategory.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage(`edit`, id);
@@ -152,20 +152,8 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <Field
-                            required
-                            fullWidth
-                            name="title"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.title" defaultMessage="Title" />}
-                        />
-                        <Field
-                            required
-                            fullWidth
-                            name="slug"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
-                        />
+                        <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
+                        <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
                     </MainContent>
                 </EditPageLayout>
             )}

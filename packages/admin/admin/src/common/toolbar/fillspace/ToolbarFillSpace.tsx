@@ -31,12 +31,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminToolbarFillSpace: Partial<ToolbarFillSpaceProps>;
+        CometAdminToolbarFillSpace: ToolbarFillSpaceProps;
     }
 
     interface Components {
         CometAdminToolbarFillSpace?: {
-            defaultProps?: ComponentsPropsList["CometAdminToolbarFillSpace"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminToolbarFillSpace"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminToolbarFillSpace"];
         };
     }

@@ -69,12 +69,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminAppHeader: Partial<AppHeaderProps>;
+        CometAdminAppHeader: AppHeaderProps;
     }
 
     interface Components {
         CometAdminAppHeader?: {
-            defaultProps?: ComponentsPropsList["CometAdminAppHeader"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminAppHeader"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminAppHeader"];
         };
     }

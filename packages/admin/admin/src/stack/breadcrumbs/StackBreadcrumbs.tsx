@@ -1,23 +1,111 @@
 import { ChevronRight } from "@comet/admin-icons";
-import { ComponentsOverrides, Theme, useTheme } from "@mui/material";
-import { WithStyles, withStyles } from "@mui/styles";
+import { Link } from "@mui/material";
+import { ComponentsOverrides, css, styled, Theme, useTheme, useThemeProps } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import * as React from "react";
 
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useObservedWidth } from "../../utils/useObservedWidth";
 import { useStackApi } from "../Api";
-import { StackBreadcrumbsClassKey, styles } from "./StackBreadcrumbs.styles";
 import { getElementOuterWidth, useItemsToRender } from "./utils";
 
-export interface StackBreadcrumbsProps {
+export type StackBreadcrumbsClassKey =
+    | "root"
+    | "breadcrumbs"
+    | "listItem"
+    | "link"
+    | "disabledLink"
+    | "overflowLink"
+    | "separator"
+    | "backButton"
+    | "backButtonSeparator";
+
+const Root = styled("div", {
+    name: "CometAdminStackBreadcrumbs",
+    slot: "root",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})(css`
+    position: relative;
+`);
+
+const Breadcrumbs = styled("div", {
+    name: "CometAdminStackBreadcrumbs",
+    slot: "breadcrumbs",
+    overridesResolver(_, styles) {
+        return [styles.breadcrumbs];
+    },
+})(
+    ({ theme }) => css`
+        display: flex;
+        height: 50px;
+        border-bottom: 1px solid ${theme.palette.divider};
+        box-sizing: border-box;
+        flex-wrap: nowrap;
+        overflow-x: auto; // Make the breadcrumbs scrollable, if they still take up too much space, when only the first, last & the overflow link are visible.
+    `,
+);
+
+const ListItem = styled("div", {
+    name: "CometAdminStackBreadcrumbs",
+    slot: "listItem",
+    overridesResolver(_, styles) {
+        return [styles.listItem];
+    },
+})(css`
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    white-space: nowrap;
+`);
+
+const Separator = styled("div", {
+    name: "CometAdminStackBreadcrumbs",
+    slot: "separator",
+    overridesResolver(_, styles) {
+        return [styles.separator];
+    },
+})(css`
+    font-size: 12px;
+    line-height: 0;
+    margin-left: 8px;
+    margin-right: 8px;
+`);
+
+export const BackButtonSeparator = styled("div", {
+    name: "CometAdminStackBreadcrumbs",
+    slot: "backButtonSeparator",
+    overridesResolver(_, styles) {
+        return [styles.backButtonSeparator];
+    },
+})(
+    ({ theme }) => css`
+        height: 30px;
+        width: 1px;
+        background-color: ${theme.palette.divider};
+        margin-right: 12px;
+    `,
+);
+
+export interface StackBreadcrumbsProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        breadcrumbs: "div";
+        listItem: "div";
+        link: typeof Link;
+        disabledLink: typeof Typography;
+        overflowLink: typeof Link;
+        separator: "div";
+        backButton: typeof Link;
+        backButtonSeparator: "div";
+    }> {
     separator?: React.ReactNode;
     overflowLinkText?: React.ReactNode;
 }
 
-const StackBreadcrumbsComponent = ({
-    classes,
-    separator,
-    overflowLinkText = ". . .",
-}: StackBreadcrumbsProps & WithStyles<typeof styles>): React.ReactElement | null => {
+export function StackBreadcrumbs(inProps: StackBreadcrumbsProps) {
+    const { separator, overflowLinkText = ". . .", slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminStackBreadcrumbs" });
     const stackApi = useStackApi();
     const { palette } = useTheme();
     const breadcrumbsRef = React.useRef<HTMLDivElement>(null);
@@ -33,34 +121,34 @@ const StackBreadcrumbsComponent = ({
 
     React.useEffect(() => {
         if (breadcrumbItems?.length && !itemWidths?.length) {
-            const listItems = breadcrumbsRef.current?.getElementsByClassName(classes.listItem);
+            const listItems = breadcrumbsRef.current?.children;
             const newItemWidths = listItems ? Object.values(listItems).map((listItem) => getElementOuterWidth(listItem)) : [];
             setItemWidths(newItemWidths);
         }
-    }, [breadcrumbItems?.length, combinedTitlesOfBreadcrumbs, itemWidths, classes.listItem]);
+    }, [breadcrumbItems?.length, combinedTitlesOfBreadcrumbs, itemWidths]);
 
     const backButtonUrl = breadcrumbItems.length > 1 ? breadcrumbItems[breadcrumbItems.length - 2].url : undefined;
-    const itemsToRender = useItemsToRender(breadcrumbItems, containerWidth ?? 0, classes, itemWidths, overflowLinkText, backButtonUrl);
+    const itemsToRender = useItemsToRender(breadcrumbItems, containerWidth ?? 0, itemWidths, overflowLinkText, backButtonUrl, slotProps);
 
     if (!breadcrumbItems) return null;
 
     return (
-        <div className={classes.root}>
-            <div className={classes.breadcrumbs} ref={breadcrumbsRef}>
+        <Root {...slotProps?.root} {...restProps}>
+            <Breadcrumbs {...slotProps?.breadcrumbs} ref={breadcrumbsRef}>
                 {itemsToRender.map((item, index) => (
-                    <div className={classes.listItem} key={index}>
+                    <ListItem {...slotProps?.listItem} key={index}>
                         {item}
                         {index < itemsToRender.length - 1 && (
-                            <div className={classes.separator}>{separator ?? <ChevronRight fontSize="inherit" htmlColor={palette.grey[300]} />}</div>
+                            <Separator {...slotProps?.separator}>
+                                {separator ?? <ChevronRight fontSize="inherit" htmlColor={palette.grey[300]} />}
+                            </Separator>
                         )}
-                    </div>
+                    </ListItem>
                 ))}
-            </div>
-        </div>
+            </Breadcrumbs>
+        </Root>
     );
-};
-
-export const StackBreadcrumbs = withStyles(styles, { name: "CometAdminStackBreadcrumbs" })(StackBreadcrumbsComponent);
+}
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -68,12 +156,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminStackBreadcrumbs: Partial<StackBreadcrumbsProps>;
+        CometAdminStackBreadcrumbs: StackBreadcrumbsProps;
     }
 
     interface Components {
         CometAdminStackBreadcrumbs?: {
-            defaultProps?: ComponentsPropsList["CometAdminStackBreadcrumbs"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminStackBreadcrumbs"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminStackBreadcrumbs"];
         };
     }

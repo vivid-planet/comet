@@ -1,12 +1,12 @@
 import { Check, Reset } from "@comet/admin-icons";
 import { Button, ButtonProps, ComponentsOverrides, Popover as MuiPopover, Theme } from "@mui/material";
 import { css, styled, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { Form, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { Root as FieldContainerRoot } from "../../../form/FieldContainer";
+import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { messages } from "../../../messages";
 import { dirtyFieldsCount } from "../dirtyFieldsCount";
 import { FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
@@ -39,11 +39,9 @@ const FieldBarWrapper = styled("div", {
     overridesResolver(_, styles) {
         return [styles.fieldBarWrapper];
     },
-})(
-    css`
-        position: relative;
-    `,
-);
+})(css`
+    position: relative;
+`);
 
 const PopoverContentContainer = styled("div", {
     name: "CometAdminFilterBarPopoverFilter",
@@ -51,17 +49,15 @@ const PopoverContentContainer = styled("div", {
     overridesResolver(_, styles) {
         return [styles.popoverContentContainer];
     },
-})(
-    css`
-        min-width: 300px;
+})(css`
+    min-width: 300px;
 
-        & ${FieldContainerRoot} {
-            box-sizing: border-box;
-            padding: 20px;
-            margin-bottom: 0;
-        }
-    `,
-);
+    & ${FieldContainerRoot} {
+        box-sizing: border-box;
+        padding: 20px;
+        margin-bottom: 0;
+    }
+`);
 
 const ButtonsContainer = styled("div", {
     name: "CometAdminFilterBarPopoverFilter",
@@ -86,7 +82,7 @@ const Popover = styled(MuiPopover, {
     overridesResolver(_, styles) {
         return [styles.popover];
     },
-})();
+})(css``);
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
@@ -231,12 +227,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFilterBarPopoverFilter: Partial<FilterBarPopoverFilterProps>;
+        CometAdminFilterBarPopoverFilter: FilterBarPopoverFilterProps;
     }
 
     interface Components {
         CometAdminFilterBarPopoverFilter?: {
-            defaultProps?: ComponentsPropsList["CometAdminFilterBarPopoverFilter"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFilterBarPopoverFilter"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFilterBarPopoverFilter"];
         };
     }

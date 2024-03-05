@@ -1,19 +1,29 @@
+import { ThemedComponentBaseProps } from "@comet/admin";
 import { ArrowLeft, ArrowRight, ChevronDown } from "@comet/admin-icons";
 import { Box, Button, buttonClasses, ComponentsOverrides, IconButton, Menu, menuClasses, MenuItem } from "@mui/material";
-import { Theme } from "@mui/material/styles";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
-import clsx from "clsx";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
-export interface DatePickerNavigationProps {
+export interface DatePickerNavigationProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        selectMonthButton: typeof Button;
+        selectYearButton: typeof Button;
+        selectMonthMenu: typeof Menu;
+        selectYearMenu: typeof Menu;
+    }> {
     focusedDate: Date;
     changeShownDate: (value: number, mode: "setYear" | "setMonth" | "monthOffset") => void;
     minDate: Date;
     maxDate: Date;
 }
 
-const DatePickerNavigation = ({ classes, focusedDate, changeShownDate, minDate, maxDate }: DatePickerNavigationProps & WithStyles<typeof styles>) => {
+export const DatePickerNavigation = (inProps: DatePickerNavigationProps) => {
+    const { focusedDate, changeShownDate, minDate, maxDate, slotProps, ...restProps } = useThemeProps({
+        props: inProps,
+        name: "CometAdminDatePickerNavigation",
+    });
     const intl = useIntl();
 
     const [showMonthSelect, setShowMonthSelect] = React.useState<boolean>(false);
@@ -23,26 +33,25 @@ const DatePickerNavigation = ({ classes, focusedDate, changeShownDate, minDate, 
     const yearSelectRef = React.useRef<HTMLButtonElement>(null);
 
     return (
-        <Box className={classes.root}>
+        <Root {...slotProps?.root} {...restProps}>
             <IconButton onClick={() => changeShownDate(-1, "monthOffset")}>
                 <ArrowLeft />
             </IconButton>
-
             <Box>
-                <Button
+                <SelectMonthButton
                     size="small"
-                    className={clsx(classes.selectButton, classes.selectMonthButton)}
                     onClick={() => setShowMonthSelect(true)}
                     ref={monthSelectRef}
                     endIcon={<ChevronDown />}
+                    {...slotProps?.selectMonthButton}
                 >
                     {intl.formatDate(focusedDate, { month: "long" })}
-                </Button>
-                <Menu
-                    className={clsx(classes.selectMenu, classes.selectMonthMenu)}
+                </SelectMonthButton>
+                <SelectMonthMenu
                     open={showMonthSelect}
                     onClose={() => setShowMonthSelect(false)}
                     anchorEl={monthSelectRef.current}
+                    {...slotProps?.selectMonthMenu}
                 >
                     {new Array(12).fill(null).map((_, month: number) => (
                         <MenuItem
@@ -57,21 +66,21 @@ const DatePickerNavigation = ({ classes, focusedDate, changeShownDate, minDate, 
                             {intl.formatDate(new Date(focusedDate.getFullYear(), month), { month: "long" })}
                         </MenuItem>
                     ))}
-                </Menu>
-                <Button
+                </SelectMonthMenu>
+                <SelectYearButton
                     size="small"
-                    className={clsx(classes.selectButton, classes.selectYearButton)}
                     ref={yearSelectRef}
                     onClick={() => setShowYearSelect(true)}
                     endIcon={<ChevronDown />}
+                    {...slotProps?.selectYearButton}
                 >
                     {focusedDate.getFullYear()}
-                </Button>
-                <Menu
-                    className={clsx(classes.selectMenu, classes.selectYearMenu)}
+                </SelectYearButton>
+                <SelectYearMenu
                     open={showYearSelect}
                     onClose={() => setShowYearSelect(false)}
                     anchorEl={yearSelectRef.current}
+                    {...slotProps?.selectYearMenu}
                 >
                     {new Array(maxDate.getFullYear() - minDate.getFullYear() + 1).fill(maxDate.getFullYear()).map((val, i) => {
                         const year = val - i;
@@ -89,12 +98,12 @@ const DatePickerNavigation = ({ classes, focusedDate, changeShownDate, minDate, 
                             </MenuItem>
                         );
                     })}
-                </Menu>
+                </SelectYearMenu>
             </Box>
             <IconButton onClick={() => changeShownDate(+1, "monthOffset")}>
                 <ArrowRight />
             </IconButton>
-        </Box>
+        </Root>
     );
 };
 
@@ -107,46 +116,93 @@ export type DatePickerNavigationClassKey =
     | "selectMonthMenu"
     | "selectYearMenu";
 
-export const styles = ({ palette, spacing, typography }: Theme) => {
-    return createStyles<DatePickerNavigationClassKey, DatePickerNavigationProps>({
-        root: {
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            paddingLeft: spacing(2),
-            paddingRight: spacing(2),
-            borderBottom: `1px solid ${palette.grey[50]}`,
-            height: 50,
-        },
-        selectButton: {
-            padding: 10,
-            borderRadius: 4,
-            fontWeight: typography.fontWeightBold,
+const Root = styled("div", {
+    name: "CometAdminDatePickerNavigation",
+    slot: "root",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-left: ${theme.spacing(2)};
+        padding-right: ${theme.spacing(2)};
+        border-bottom: 1px solid ${theme.palette.grey[50]};
+        height: 50px;
+    `,
+);
 
-            "&:hover": {
-                backgroundColor: palette.grey[50],
-            },
+const SelectMonthButton = styled(Button, {
+    name: "CometAdminDatePickerNavigation",
+    slot: "selectMonthButton",
+    overridesResolver(_, styles) {
+        return [styles.selectButton, styles.selectMonthButton];
+    },
+})(
+    ({ theme }) => css`
+        padding: 10px;
+        border-radius: 4;
+        font-weight: ${theme.typography.fontWeightBold};
 
-            [`& .${buttonClasses.endIcon}`]: {
-                marginLeft: 2,
-            },
-        },
-        selectMonthButton: {},
-        selectYearButton: {},
-        selectMenu: {
-            [`& .${menuClasses.paper}`]: {
-                minWidth: 110,
-                maxHeight: 400,
-            },
-        },
-        selectMonthMenu: {},
-        selectYearMenu: {},
-    });
-};
+        :hover {
+            background-color: ${theme.palette.grey[50]};
+        }
 
-const DatePickerNavigationWithStyles = withStyles(styles, { name: "CometAdminDatePickerNavigation" })(DatePickerNavigation);
+        & .${buttonClasses.endIcon} {
+            margin-left: 2px;
+        }
+    `,
+);
 
-export { DatePickerNavigationWithStyles as DatePickerNavigation };
+const SelectYearButton = styled(Button, {
+    name: "CometAdminDatePickerNavigation",
+    slot: "selectYearButton",
+    overridesResolver(_, styles) {
+        return [styles.selectButton, styles.selectYearButton];
+    },
+})(
+    ({ theme }) => css`
+        padding: 10px;
+        border-radius: 4;
+        font-weight: ${theme.typography.fontWeightBold};
+
+        :hover {
+            background-color: ${theme.palette.grey[50]};
+        }
+
+        & .${buttonClasses.endIcon} {
+            margin-left: 2px;
+        }
+    `,
+);
+
+const SelectMonthMenu = styled(Menu, {
+    name: "CometAdminDatePickerNavigation",
+    slot: "selectMonthMenu",
+    overridesResolver(_, styles) {
+        return [styles.selectMenu, styles.selectMonthMenu];
+    },
+})(css`
+    & .${menuClasses.paper} {
+        min-width: 110px;
+        max-height: 400px;
+    }
+`);
+
+const SelectYearMenu = styled(Menu, {
+    name: "CometAdminDatePickerNavigation",
+    slot: "selectYearMenu",
+    overridesResolver(_, styles) {
+        return [styles.selectMenu, styles.selectYearMenu];
+    },
+})(css`
+    & .${menuClasses.paper} {
+        min-width: 110px;
+        max-height: 400px;
+    }
+`);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -154,12 +210,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminDatePickerNavigation: Partial<DatePickerNavigationProps>;
+        CometAdminDatePickerNavigation: DatePickerNavigationProps;
     }
 
     interface Components {
         CometAdminDatePickerNavigation?: {
-            defaultProps?: ComponentsPropsList["CometAdminDatePickerNavigation"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminDatePickerNavigation"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminDatePickerNavigation"];
         };
     }

@@ -46,13 +46,11 @@ const StyledToolbar = styled(MuiToolbar, {
     overridesResolver(_, styles) {
         return [styles.toolbar];
     },
-})(
-    css`
-        display: flex;
-        flex: 1;
-        align-items: stretch;
-    `,
-);
+})(css`
+    display: flex;
+    flex: 1;
+    align-items: stretch;
+`);
 
 const MainContentContainer = styled("div", {
     name: "CometAdminToolbar",
@@ -60,12 +58,10 @@ const MainContentContainer = styled("div", {
     overridesResolver(_, styles) {
         return [styles.mainContentContainer];
     },
-})(
-    css`
-        display: flex;
-        flex: 1;
-    `,
-);
+})(css`
+    display: flex;
+    flex: 1;
+`);
 
 export const Toolbar = (inProps: ToolbarProps) => {
     const { children, elevation = 1, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbar" });
@@ -76,7 +72,7 @@ export const Toolbar = (inProps: ToolbarProps) => {
     };
 
     return (
-        <Root elevation={elevation} ownerState={ownerState} {...restProps} {...slotProps?.root}>
+        <Root elevation={elevation} ownerState={ownerState} {...slotProps?.root} {...restProps}>
             <StyledToolbar {...slotProps?.muiToolbar}>
                 <MainContentContainer {...slotProps?.mainContentContainer}>{children}</MainContentContainer>
             </StyledToolbar>
@@ -90,12 +86,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminToolbar: Partial<ToolbarProps>;
+        CometAdminToolbar: ToolbarProps;
     }
 
     interface Components {
         CometAdminToolbar?: {
-            defaultProps?: ComponentsPropsList["CometAdminToolbar"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminToolbar"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminToolbar"];
         };
     }

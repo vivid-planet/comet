@@ -1,3 +1,4 @@
+import { BaseEntity } from "@mikro-orm/core";
 import {
     Body,
     Controller,
@@ -18,12 +19,12 @@ import { validate } from "class-validator";
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
 
-import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
+import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { CDN_ORIGIN_CHECK_HEADER, DamConfig } from "../dam.config";
@@ -65,8 +66,9 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         async upload(
             @UploadedFile() file: FileUploadInput,
             @Body() body: UploadFileBodyInterface,
-            @GetCurrentUser() user: CurrentUserInterface,
-        ): Promise<FileInterface> {
+            @GetCurrentUser() user: CurrentUser,
+            @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
+        ): Promise<Omit<FileInterface, keyof BaseEntity<FileInterface, "id">> & { fileUrl: string }> {
             const transformedBody = plainToInstance(UploadFileBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
@@ -80,14 +82,16 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
 
             const uploadedFile = await this.filesService.upload(file, { ...transformedBody, scope });
-            return Object.assign(uploadedFile, { fileUrl: await this.filesService.createFileUrl(uploadedFile) });
+            const fileUrl = await this.filesService.createFileUrl(uploadedFile, Boolean(previewDamUrls));
+
+            return { ...uploadedFile, fileUrl };
         }
 
         @Get(`/preview/${fileUrl}`)
         async previewFileUrl(
             @Param() { fileId }: FileParams,
             @Res() res: Response,
-            @GetCurrentUser() user: CurrentUserInterface,
+            @GetCurrentUser() user: CurrentUser,
             @Headers("range") range?: string,
         ): Promise<void> {
             const file = await this.filesService.findOneById(fileId);

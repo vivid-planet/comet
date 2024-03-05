@@ -2,4 +2,4 @@
 "@comet/admin-color-picker": major
 ---
 
-Renamed the `componentsProps` prop to `slotProps` in `ColorPicker` and removed the `ColorPickerPropsComponentsProps` type.
+Replace the `componentsProps` prop with `slotProps` in `ColorPicker` and remove the `ColorPickerComponentsProps` type

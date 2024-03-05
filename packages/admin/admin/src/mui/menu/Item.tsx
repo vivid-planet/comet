@@ -1,8 +1,8 @@
 import { ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText } from "@mui/material";
 import { ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MenuLevel } from "./CollapsibleItem";
 import { MenuContext } from "./Context";
 
@@ -130,7 +130,12 @@ const Root = styled(ListItemButton, {
     `,
 );
 
-export interface MenuItemProps extends ThemedComponentBaseProps<{ root: typeof ListItemButton }>, MenuLevel, ListItemButtonProps {
+export interface MenuItemProps
+    extends ThemedComponentBaseProps<{
+            root: typeof ListItemButton;
+        }>,
+        MenuLevel,
+        ListItemButtonProps {
     primary: React.ReactNode;
     secondary?: React.ReactNode;
     icon?: React.ReactElement;
@@ -145,7 +150,7 @@ export function MenuItem(inProps: MenuItemProps) {
         level = 1,
         secondaryAction,
         slotProps,
-        ...otherProps
+        ...restProps
     } = useThemeProps({
         props: inProps,
         name: "CometAdminMenuItem",
@@ -165,7 +170,7 @@ export function MenuItem(inProps: MenuItemProps) {
     if (level > 2) throw new Error("Maximum nesting level of 2 exceeded.");
 
     return (
-        <Root {...slotProps?.root} ownerState={ownerState} {...otherProps}>
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {hasIcon && <ListItemIcon>{icon}</ListItemIcon>}
             <ListItemText primary={primary} secondary={secondary} inset={!icon} />
             {!!secondaryAction && secondaryAction}

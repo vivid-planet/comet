@@ -10,6 +10,7 @@ import ListsControls from "./ListsControls";
 import ListsIndentControls from "./ListsIndentControls";
 import SpecialCharactersControls from "./SpecialCharactersControls";
 import { Toolbar } from "./Toolbar/Toolbar";
+import TranslationControls from "./TranslationControls";
 
 export default function Controls(p: IControlProps) {
     const {
@@ -22,6 +23,7 @@ export default function Controls(p: IControlProps) {
                 {[
                     HistoryControls,
                     BlockTypesControls,
+                    TranslationControls,
                     InlineStyleTypeControls,
                     ListsControls,
                     ListsIndentControls,

@@ -1,5 +1,5 @@
 import { ComponentsOverrides, Typography as MuiTypography, TypographyTypeMap } from "@mui/material";
-import { styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
@@ -25,7 +25,7 @@ const Root = styled(ToolbarItem, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 const Typography = styled(MuiTypography, {
     name: "CometAdminToolbarTitleItem",
@@ -33,13 +33,13 @@ const Typography = styled(MuiTypography, {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})();
+})(css``);
 
 export const ToolbarTitleItem = (inProps: ToolbarTitleItemProps) => {
     const { children, typographyProps = {}, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarTitleItem" });
 
     return (
-        <Root {...restProps} {...slotProps?.root}>
+        <Root {...slotProps?.root} {...restProps}>
             <Typography variant="h4" {...typographyProps} {...slotProps?.typography}>
                 {children}
             </Typography>
@@ -53,12 +53,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminToolbarTitleItem: Partial<ToolbarTitleItemProps>;
+        CometAdminToolbarTitleItem: ToolbarTitleItemProps;
     }
 
     interface Components {
         CometAdminToolbarTitleItem?: {
-            defaultProps?: ComponentsPropsList["CometAdminToolbarTitleItem"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminToolbarTitleItem"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminToolbarTitleItem"];
         };
     }

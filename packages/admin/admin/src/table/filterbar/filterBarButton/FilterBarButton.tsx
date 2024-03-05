@@ -3,9 +3,9 @@ import { buttonClasses, ButtonProps, ComponentsOverrides, svgIconClasses } from 
 import Button from "@mui/material/Button";
 import { css, styled, Theme } from "@mui/material/styles";
 import { useThemeProps } from "@mui/system";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 
+import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
 
 /**
@@ -67,16 +67,19 @@ const FilterBadge = styled("span", {
     overridesResolver(_, styles) {
         return [styles.filterBadge];
     },
-})(
-    css`
-        margin-left: 6px;
-    `,
-);
+})(css`
+    margin-left: 6px;
+`);
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export interface FilterBarButtonProps extends ThemedComponentBaseProps<{ root: typeof Button; filterBadge: "span" }>, ButtonProps {
+export interface FilterBarButtonProps
+    extends ThemedComponentBaseProps<{
+            root: typeof Button;
+            filterBadge: "span";
+        }>,
+        ButtonProps {
     dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
     numberDirtyFields?: number;
     openPopover?: boolean;
@@ -122,12 +125,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFilterBarButton: Partial<FilterBarButtonProps>;
+        CometAdminFilterBarButton: FilterBarButtonProps;
     }
 
     interface Components {
         CometAdminFilterBarButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminFilterBarButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFilterBarButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFilterBarButton"];
         };
     }

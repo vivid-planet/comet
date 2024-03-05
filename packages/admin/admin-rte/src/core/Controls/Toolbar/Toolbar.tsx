@@ -29,7 +29,8 @@ export function Toolbar(inProps: RteToolbarProps) {
         });
 
     return (
-        <Root {...restProps} {...slotProps?.root}>
+        // TODO: Find alternative to className
+        <Root {...slotProps?.root} {...restProps} className="CometAdminRteToolbar-root">
             {childrenElements.map((c, idx) => {
                 return (
                     <Slot key={idx} {...slotProps?.slot}>

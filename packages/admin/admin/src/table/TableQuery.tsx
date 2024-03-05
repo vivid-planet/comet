@@ -1,11 +1,11 @@
 import { ApolloError } from "@apollo/client";
 import { ComponentsOverrides, Paper } from "@mui/material";
 import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
-import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Loading } from "../common/Loading";
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
 
 /**
@@ -34,11 +34,9 @@ const Root = styled("div", {
     overridesResolver(_, styles) {
         return [styles.root];
     },
-})(
-    () => css`
-        position: relative;
-    `,
-);
+})(css`
+    position: relative;
+`);
 
 const LoadingContainer = styled("div", {
     name: "CometAdminTableQuery",
@@ -62,21 +60,24 @@ const LoadingPaper = styled(Paper, {
     overridesResolver(_, styles) {
         return [styles.loadingPaper];
     },
-})(
-    () => css`
-        display: flex;
-        position: absolute;
-        transform: translate(-50%, -50%);
-        justify-content: center;
-        align-items: center;
-        margin-left: auto;
-        margin-right: auto;
-        height: 100px;
-        width: 100px;
-    `,
-);
+})(css`
+    display: flex;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100px;
+    width: 100px;
+`);
 
-export interface TableQueryProps extends ThemedComponentBaseProps<{ root: "div"; loadingContainer: "div"; loadingPaper: typeof Paper }> {
+export interface TableQueryProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        loadingContainer: "div";
+        loadingPaper: typeof Paper;
+    }> {
     api: ITableQueryApi;
     loading: boolean;
     error?: ApolloError;
@@ -95,7 +96,7 @@ export function TableQuery(inProps: TableQueryProps) {
                 api,
             }}
         >
-            <Root {...restProps} {...slotProps?.root}>
+            <Root {...slotProps?.root} {...restProps}>
                 <LoadingContainer {...slotProps?.loadingContainer}>
                     {loading && (
                         <LoadingPaper {...slotProps?.loadingPaper}>

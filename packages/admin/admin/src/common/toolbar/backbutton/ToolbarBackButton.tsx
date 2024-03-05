@@ -27,7 +27,7 @@ const IconButton = styled(MuiIconButton, {
     overridesResolver(_, styles) {
         return [styles.iconButton];
     },
-})();
+})(css``);
 
 const ToolbarItem = styled(CommonToolbarItem, {
     name: "CometAdminToolbarBackButton",
@@ -63,7 +63,7 @@ export const ToolbarBackButton = (inProps: ToolbarBackButtonProps) => {
     }
 
     return (
-        <Root {...restProps} {...slotProps?.root}>
+        <Root {...slotProps?.root} {...restProps}>
             <ToolbarItem {...slotProps?.toolbarItem}>
                 <IconButton
                     onClick={() => {
@@ -85,12 +85,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminToolbarBackButton: Partial<ToolbarBackButtonProps>;
+        CometAdminToolbarBackButton: ToolbarBackButtonProps;
     }
 
     interface Components {
         CometAdminToolbarBackButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminToolbarBackButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminToolbarBackButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminToolbarBackButton"];
         };
     }

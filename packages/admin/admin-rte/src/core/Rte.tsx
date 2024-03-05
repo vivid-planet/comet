@@ -300,7 +300,7 @@ export const Rte: React.ForwardRefExoticComponent<React.PropsWithoutRef<RteProps
         }
 
         return (
-            <Root ref={editorWrapperRef} ownerState={ownerState} {...restProps} {...slotProps?.root}>
+            <Root ref={editorWrapperRef} ownerState={ownerState} {...slotProps?.root} {...restProps}>
                 <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} disabled={disabled} />
                 <Editor ownerState={ownerState} {...slotProps?.editor}>
                     <DraftJsEditor
@@ -387,12 +387,12 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminRte: Partial<RteProps>;
+        CometAdminRte: RteProps;
     }
 
     interface Components {
         CometAdminRte?: {
-            defaultProps?: ComponentsPropsList["CometAdminRte"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminRte"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminRte"];
         };
     }
