@@ -71,7 +71,7 @@ Here are a few examples:
     Start the development process for `@comet/cms-api`:
 
     ```bash
-    npx dev-pm start @comet-api
+    npx dev-pm start @cms-api
     ```
 
     Start Demo API:
@@ -87,7 +87,7 @@ Here are a few examples:
     Start the development process for `@comet/cms-admin`:
 
     ```bash
-    npx dev-pm start @comet-admin
+    npx dev-pm start @cms-admin
     ```
 
     Start Demo API and Admin:
