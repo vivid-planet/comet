@@ -15,7 +15,7 @@ import {
     Ref,
     types,
 } from "@mikro-orm/core";
-import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
+import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsNumber } from "class-validator";
 import { v4 as uuid } from "uuid";
@@ -26,6 +26,12 @@ import { ProductStatistics } from "./product-statistics.entity";
 import { ProductTag } from "./product-tag.entity";
 import { ProductType } from "./product-type.enum";
 import { ProductVariant } from "./product-variant.entity";
+
+export enum ProductStatus {
+    Published = "Published",
+    Unpublished = "Unpublished",
+}
+registerEnumType(ProductStatus, { name: "ProductStatus" });
 
 @ObjectType()
 @InputType("ProductDiscountsInput")
@@ -62,7 +68,7 @@ export class ProductDimensions {
 @RootBlockEntity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
 export class Product extends BaseEntity<Product, "id"> implements DocumentInterface {
-    [OptionalProps]?: "createdAt" | "updatedAt";
+    [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)
@@ -78,9 +84,9 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     })
     title: string;
 
-    @Property()
-    @Field()
-    visible: boolean;
+    @Enum({ items: () => ProductStatus })
+    @Field(() => ProductStatus)
+    status: ProductStatus = ProductStatus.Unpublished;
 
     @Property()
     @Field()

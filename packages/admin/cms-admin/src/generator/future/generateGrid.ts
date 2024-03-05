@@ -12,7 +12,9 @@ import { GeneratorReturn, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
 
-function tsCodeRecordToString(object: Record<string, string | undefined>) {
+type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
+
+function tsCodeRecordToString(object: TsCodeRecordToStringObject) {
     return `{${Object.entries(object)
         .filter(([key, value]) => value !== undefined)
         .map(([key, value]) => `${key}: ${value},`)
@@ -191,6 +193,10 @@ export function generateGrid(
                 type,
                 gridType: "singleSelect" as const,
                 valueOptions,
+                width: column.width,
+                minWidth: column.minWidth,
+                maxWidth: column.maxWidth,
+                flex: column.flex,
             };
         }
 
@@ -199,11 +205,14 @@ export function generateGrid(
         return {
             name,
             headerName: column.headerName,
-            width: column.width,
             type,
             gridType,
             renderCell,
             valueGetter,
+            width: column.width,
+            minWidth: column.minWidth,
+            maxWidth: column.maxWidth,
+            flex: column.flex,
         };
     });
 
@@ -345,8 +354,8 @@ export function generateGrid(
     
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
-                .map((column) =>
-                    tsCodeRecordToString({
+                .map((column) => {
+                    const columnDefinition: TsCodeRecordToStringObject = {
                         field: `"${column.name}"`,
                         headerName: `intl.formatMessage({ id: "${instanceGqlType}.${column.name}",  defaultMessage: "${
                             column.headerName || camelCaseToHumanReadable(column.name)
@@ -356,10 +365,28 @@ export function generateGrid(
                         sortable: !sortFields.includes(column.name) ? `false` : undefined,
                         valueGetter: column.valueGetter,
                         valueOptions: column.valueOptions,
-                        width: column.width ? String(column.width) : "150",
                         renderCell: column.renderCell,
-                    }),
-                )
+                        width: column.width,
+                        flex: column.flex,
+                    };
+
+                    if (typeof column.width === "undefined") {
+                        const defaultMinWidth = 150;
+                        columnDefinition.flex = 1;
+                        columnDefinition.maxWidth = column.maxWidth;
+
+                        if (
+                            typeof column.minWidth === "undefined" &&
+                            (typeof column.maxWidth === "undefined" || column.maxWidth >= defaultMinWidth)
+                        ) {
+                            columnDefinition.minWidth = defaultMinWidth;
+                        } else if (typeof column.minWidth !== "undefined") {
+                            columnDefinition.minWidth = column.minWidth;
+                        }
+                    }
+
+                    return tsCodeRecordToString(columnDefinition);
+                })
                 .join(",\n")},
             {
                 field: "actions",
@@ -367,6 +394,7 @@ export function generateGrid(
                 sortable: false,
                 filterable: false,
                 type: "actions",
+                align: "right",
                 renderCell: (params) => {
                     return (
                         <>

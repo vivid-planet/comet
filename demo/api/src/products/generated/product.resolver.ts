@@ -100,7 +100,6 @@ export class ProductResolver {
         } = input;
         const product = this.repository.create({
             ...assignInput,
-            visible: false,
 
             category: categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined,
             manufacturer: manufacturerInput ? Reference.create(await this.manufacturerRepository.findOneOrFail(manufacturerInput)) : undefined,
@@ -207,22 +206,6 @@ export class ProductResolver {
         await this.entityManager.remove(product);
         await this.entityManager.flush();
         return true;
-    }
-
-    @Mutation(() => Product)
-    @AffectedEntity(Product)
-    async updateProductVisibility(
-        @Args("id", { type: () => ID }) id: string,
-        @Args("visible", { type: () => Boolean }) visible: boolean,
-    ): Promise<Product> {
-        const product = await this.repository.findOneOrFail(id);
-
-        product.assign({
-            visible,
-        });
-        await this.entityManager.flush();
-
-        return product;
     }
 
     @ResolveField(() => ProductCategory, { nullable: true })

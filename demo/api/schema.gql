@@ -381,6 +381,7 @@ type News implements DocumentInterface {
   scope: NewsContentScope!
   slug: String!
   title: String!
+  status: NewsStatus!
   date: DateTime!
   category: NewsCategory!
   visible: Boolean!
@@ -390,6 +391,11 @@ type News implements DocumentInterface {
   comments: [NewsComment!]!
   dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+}
+
+enum NewsStatus {
+  Active
+  Deleted
 }
 
 enum NewsCategory {
@@ -507,7 +513,7 @@ type Product implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
   title: String!
-  visible: Boolean!
+  status: ProductStatus!
   slug: String!
   description: String!
   type: ProductType!
@@ -526,6 +532,11 @@ type Product implements DocumentInterface {
   colors: [ProductColor!]!
   variants: [ProductVariant!]!
   tags: [ProductTag!]!
+}
+
+enum ProductStatus {
+  Published
+  Unpublished
 }
 
 enum ProductType {
@@ -718,7 +729,7 @@ type Query {
   damFolderByNameAndParentId(scope: DamScopeInput!, name: String!, parentId: ID): DamFolder
   news(id: ID!): News!
   newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
-  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: NewsStatus! = Active, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
@@ -865,6 +876,7 @@ input FolderFilterInput {
 input NewsFilter {
   slug: StringFilter
   title: StringFilter
+  status: NewsStatusEnumFilter
   date: DateFilter
   category: NewsCategoryEnumFilter
   visible: BooleanFilter
@@ -872,6 +884,12 @@ input NewsFilter {
   updatedAt: DateFilter
   and: [NewsFilter!]
   or: [NewsFilter!]
+}
+
+input NewsStatusEnumFilter {
+  isAnyOf: [NewsStatus!]
+  equal: NewsStatus
+  notEqual: NewsStatus
 }
 
 input NewsCategoryEnumFilter {
@@ -888,6 +906,7 @@ input NewsSort {
 enum NewsSortField {
   slug
   title
+  status
   date
   category
   visible
@@ -897,7 +916,7 @@ enum NewsSortField {
 
 input ProductFilter {
   title: StringFilter
-  visible: BooleanFilter
+  status: ProductStatusEnumFilter
   slug: StringFilter
   description: StringFilter
   type: ProductTypeEnumFilter
@@ -911,6 +930,12 @@ input ProductFilter {
   manufacturer: ManyToOneFilter
   and: [ProductFilter!]
   or: [ProductFilter!]
+}
+
+input ProductStatusEnumFilter {
+  isAnyOf: [ProductStatus!]
+  equal: ProductStatus
+  notEqual: ProductStatus
 }
 
 input ProductTypeEnumFilter {
@@ -941,7 +966,7 @@ input ProductSort {
 
 enum ProductSortField {
   title
-  visible
+  status
   slug
   description
   type
@@ -1084,7 +1109,6 @@ type Mutation {
   createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
   updateNews(id: ID!, input: NewsUpdateInput!, lastUpdatedAt: DateTime): News!
   deleteNews(id: ID!): Boolean!
-  updateNewsVisibility(id: ID!, visible: Boolean!): News!
   createNewsComment(newsId: ID!, input: NewsCommentInput!): NewsComment!
   updateNewsComment(id: ID!, input: NewsCommentInput!, lastUpdatedAt: DateTime): NewsComment!
   deleteNewsComment(id: ID!): Boolean!
@@ -1095,7 +1119,6 @@ type Mutation {
   createProduct(input: ProductInput!): Product!
   updateProduct(id: ID!, input: ProductUpdateInput!, lastUpdatedAt: DateTime): Product!
   deleteProduct(id: ID!): Boolean!
-  updateProductVisibility(id: ID!, visible: Boolean!): Product!
   createProductCategory(input: ProductCategoryInput!): ProductCategory!
   updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!, lastUpdatedAt: DateTime): ProductCategory!
   deleteProductCategory(id: ID!): Boolean!
@@ -1240,8 +1263,10 @@ input UpdateDamFolderInput {
 input NewsInput {
   slug: String!
   title: String!
+  status: NewsStatus! = Active
   date: DateTime!
   category: NewsCategory! = Awards
+  visible: Boolean!
   image: DamImageBlockInput!
   content: NewsContentBlockInput!
 }
@@ -1255,8 +1280,10 @@ scalar NewsContentBlockInput @specifiedBy(url: "http://www.ecma-international.or
 input NewsUpdateInput {
   slug: String
   title: String
+  status: NewsStatus
   date: DateTime
   category: NewsCategory
+  visible: Boolean
   image: DamImageBlockInput
   content: NewsContentBlockInput
 }
@@ -1285,6 +1312,7 @@ input PredefinedPageInput {
 
 input ProductInput {
   title: String!
+  status: ProductStatus! = Unpublished
   slug: String!
   description: String!
   type: ProductType!
@@ -1313,6 +1341,7 @@ input ProductColorInput {
 
 input ProductUpdateInput {
   title: String
+  status: ProductStatus
   slug: String
   description: String
   type: ProductType

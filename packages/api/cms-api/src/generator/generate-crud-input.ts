@@ -71,7 +71,7 @@ export async function generateCrudInput(
         } else {
             decorators.push("@IsNullable()");
         }
-        if (["id", "createdAt", "updatedAt", "visible", "scope"].includes(prop.name)) {
+        if (["id", "createdAt", "updatedAt", "scope"].includes(prop.name)) {
             //skip those (TODO find a non-magic solution?)
             continue;
         } else if (prop.enum) {
@@ -79,7 +79,7 @@ export async function generateCrudInput(
             const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             const enumName = findEnumName(prop.name, metadata);
-            const importPath = findEnumImportPath(enumName, generatorOptions, metadata);
+            const importPath = findEnumImportPath(enumName, `${generatorOptions.targetDirectory}/dto`, metadata);
             imports.push({ name: enumName, importPath });
             decorators.push(`@IsEnum(${enumName})`);
             decorators.push(`@Field(() => ${enumName}, ${fieldOptions})`);
@@ -92,7 +92,7 @@ export async function generateCrudInput(
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const fieldOptions = tsCodeRecordToString({ defaultValue: initializer });
             const enumName = findEnumName(prop.name, metadata);
-            const importPath = findEnumImportPath(enumName, generatorOptions, metadata);
+            const importPath = findEnumImportPath(enumName, `${generatorOptions.targetDirectory}/dto`, metadata);
             imports.push({ name: enumName, importPath });
             decorators.push(`@IsEnum(${enumName}, { each: true })`);
             decorators.push(`@Field(() => [${enumName}], ${fieldOptions})`);
@@ -134,7 +134,7 @@ export async function generateCrudInput(
             type = "boolean";
         } else if (prop.type === "RootBlockType") {
             const blockName = findBlockName(prop.name, metadata);
-            const importPath = findBlockImportPath(blockName, generatorOptions, metadata);
+            const importPath = findBlockImportPath(blockName, `${generatorOptions.targetDirectory}/dto`, metadata);
             imports.push({ name: blockName, importPath });
 
             decorators.push(`@Field(() => RootBlockInputScalar(${blockName})${prop.nullable ? ", { nullable: true }" : ""})`);
@@ -282,7 +282,7 @@ export async function generateCrudInput(
                     decorators.push("@IsBoolean({ each: true })");
                 } else if (tsType.getArrayElementTypeOrThrow().isClass()) {
                     const nestedClassName = tsType.getArrayElementTypeOrThrow().getText(tsProp);
-                    const importPath = findInputClassImportPath(nestedClassName, generatorOptions, metadata);
+                    const importPath = findInputClassImportPath(nestedClassName, `${generatorOptions.targetDirectory}/dto`, metadata);
                     imports.push({ name: nestedClassName, importPath });
                     decorators.push(`@ValidateNested()`);
                     decorators.push(`@Type(() => ${nestedClassName})`);
@@ -292,7 +292,7 @@ export async function generateCrudInput(
                 }
             } else if (tsType.isClass()) {
                 const nestedClassName = tsType.getText(tsProp);
-                const importPath = findInputClassImportPath(nestedClassName, generatorOptions, metadata);
+                const importPath = findInputClassImportPath(nestedClassName, `${generatorOptions.targetDirectory}/dto`, metadata);
                 imports.push({ name: nestedClassName, importPath });
                 decorators.push(`@ValidateNested()`);
                 decorators.push(`@Type(() => ${nestedClassName})`);
