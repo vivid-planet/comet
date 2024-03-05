@@ -36,15 +36,18 @@ _It is recommended to run `install.sh` every time you switch to the `main` branc
 
 ### Build packages
 
-Build all Comet packages
+Before starting individual development processes, build all Comet packages at least once.
 
 ```bash
 pnpm run build:packages
 ```
 
+_It is recommended to build all packages every time you switch to the `main` branch._
+
 ### Start development processes
 
-[dev-process-manager](https://github.com/vivid-planet/dev-process-manager) is used for local development. We recommend only running the development process you will need.
+[dev-process-manager](https://github.com/vivid-planet/dev-process-manager) is used for local development.
+We recommend only running the development process you will need.
 Typically, you will need a subset of the available development processes.
 
 Here are a few examples:
@@ -131,11 +134,24 @@ pnpm run docs
 
 The docs will be available at [http://localhost:3000/](http://localhost:3000/)
 
-### Stop Processes
+### Stop processes
 
 ```bash
 npx dev-pm shutdown
 ```
+
+### Dev scripts
+
+We provide `dev:*` scripts for the most common use cases.
+For example, to start the Demo, you can also run:
+
+```bash
+pnpm run dev:demo
+```
+
+However, we recommend directly using dev-process-manager for greater control over which development processes to start.
+
+See [package.json](/package.json) for a list of all available dev scripts.
 
 ## Develop in a project
 
