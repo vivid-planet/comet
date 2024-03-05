@@ -115,6 +115,7 @@ export function generateFormField(
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 fullWidth
                 name="${name}"
+                {!required ? "clearable" : ""}
                 component={FinalFormDatePicker}
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
                 ${
