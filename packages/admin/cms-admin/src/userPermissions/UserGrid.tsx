@@ -44,11 +44,10 @@ export const UserGrid: React.FC = () => {
             headerName: intl.formatMessage({ id: "comet.userPermissions.email", defaultMessage: "E-Mail" }),
         },
         {
-            field: "language",
+            field: "locale",
             flex: 0.5,
             pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userPermissions.language", defaultMessage: "Language" }),
-            renderCell: ({ row }) => row.language.toUpperCase(),
+            headerName: intl.formatMessage({ id: "comet.userPermissions.locale", defaultMessage: "Locale" }),
         },
         {
             field: "actions",
@@ -82,7 +81,7 @@ export const UserGrid: React.FC = () => {
                 id
                 name
                 email
-                language
+                locale
             }
         `,
         {

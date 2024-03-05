@@ -10,6 +10,7 @@ import { GraphQLResolveInfo } from "graphql";
 import { Manufacturer } from "../entities/manufacturer.entity";
 import { Product } from "../entities/product.entity";
 import { ProductCategory } from "../entities/product-category.entity";
+import { ProductColor } from "../entities/product-color.entity";
 import { ProductStatistics } from "../entities/product-statistics.entity";
 import { ProductTag } from "../entities/product-tag.entity";
 import { ProductVariant } from "../entities/product-variant.entity";
@@ -28,7 +29,7 @@ export class ProductResolver {
         @InjectRepository(ProductCategory) private readonly productCategoryRepository: EntityRepository<ProductCategory>,
         @InjectRepository(Manufacturer) private readonly manufacturerRepository: EntityRepository<Manufacturer>,
         @InjectRepository(ProductStatistics) private readonly productStatisticsRepository: EntityRepository<ProductStatistics>,
-        @InjectRepository(ProductVariant) private readonly productVariantRepository: EntityRepository<ProductVariant>,
+        @InjectRepository(ProductColor) private readonly productColorRepository: EntityRepository<ProductColor>,
         @InjectRepository(ProductTag) private readonly productTagRepository: EntityRepository<ProductTag>,
     ) {}
 
@@ -58,6 +59,9 @@ export class ProductResolver {
         if (fields.includes("manufacturer")) {
             populate.push("manufacturer");
         }
+        if (fields.includes("colors")) {
+            populate.push("colors");
+        }
         if (fields.includes("variants")) {
             populate.push("variants");
         }
@@ -86,7 +90,7 @@ export class ProductResolver {
     @Mutation(() => Product)
     async createProduct(@Args("input", { type: () => ProductInput }) input: ProductInput): Promise<Product> {
         const {
-            variants: variantsInput,
+            colors: colorsInput,
             tags: tagsInput,
             category: categoryInput,
             manufacturer: manufacturerInput,
@@ -96,20 +100,16 @@ export class ProductResolver {
         } = input;
         const product = this.repository.create({
             ...assignInput,
-            visible: false,
 
             category: categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined,
             manufacturer: manufacturerInput ? Reference.create(await this.manufacturerRepository.findOneOrFail(manufacturerInput)) : undefined,
             image: imageInput.transformToBlockData(),
         });
-        if (variantsInput) {
-            product.variants.set(
-                variantsInput.map((variantInput) => {
-                    const { image: imageInput, ...assignInput } = variantInput;
-                    return this.productVariantRepository.assign(new ProductVariant(), {
-                        ...assignInput,
-
-                        image: imageInput.transformToBlockData(),
+        if (colorsInput) {
+            product.colors.set(
+                colorsInput.map((colorInput) => {
+                    return this.productColorRepository.assign(new ProductColor(), {
+                        ...colorInput,
                     });
                 }),
             );
@@ -147,7 +147,7 @@ export class ProductResolver {
         }
 
         const {
-            variants: variantsInput,
+            colors: colorsInput,
             tags: tagsInput,
             category: categoryInput,
             manufacturer: manufacturerInput,
@@ -158,14 +158,11 @@ export class ProductResolver {
         product.assign({
             ...assignInput,
         });
-        if (variantsInput) {
-            product.variants.set(
-                variantsInput.map((variantInput) => {
-                    const { image: imageInput, ...assignInput } = variantInput;
-                    return this.productVariantRepository.assign(new ProductVariant(), {
-                        ...assignInput,
-
-                        image: imageInput.transformToBlockData(),
+        if (colorsInput) {
+            product.colors.set(
+                colorsInput.map((colorInput) => {
+                    return this.productColorRepository.assign(new ProductColor(), {
+                        ...colorInput,
                     });
                 }),
             );
@@ -211,22 +208,6 @@ export class ProductResolver {
         return true;
     }
 
-    @Mutation(() => Product)
-    @AffectedEntity(Product)
-    async updateProductVisibility(
-        @Args("id", { type: () => ID }) id: string,
-        @Args("visible", { type: () => Boolean }) visible: boolean,
-    ): Promise<Product> {
-        const product = await this.repository.findOneOrFail(id);
-
-        product.assign({
-            visible,
-        });
-        await this.entityManager.flush();
-
-        return product;
-    }
-
     @ResolveField(() => ProductCategory, { nullable: true })
     async category(@Parent() product: Product): Promise<ProductCategory | undefined> {
         return product.category?.load();
@@ -235,6 +216,11 @@ export class ProductResolver {
     @ResolveField(() => Manufacturer, { nullable: true })
     async manufacturer(@Parent() product: Product): Promise<Manufacturer | undefined> {
         return product.manufacturer?.load();
+    }
+
+    @ResolveField(() => [ProductColor])
+    async colors(@Parent() product: Product): Promise<ProductColor[]> {
+        return product.colors.loadItems();
     }
 
     @ResolveField(() => [ProductVariant])

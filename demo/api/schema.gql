@@ -16,7 +16,7 @@ type CurrentUser {
   id: String!
   name: String!
   email: String!
-  language: String!
+  locale: String!
   permissions: [CurrentUserPermission!]!
 }
 
@@ -179,7 +179,7 @@ type User {
   id: String!
   name: String!
   email: String!
-  language: String!
+  locale: String!
 }
 
 type PaginatedUserList {
@@ -381,6 +381,7 @@ type News implements DocumentInterface {
   scope: NewsContentScope!
   slug: String!
   title: String!
+  status: NewsStatus!
   date: DateTime!
   category: NewsCategory!
   visible: Boolean!
@@ -390,6 +391,11 @@ type News implements DocumentInterface {
   comments: [NewsComment!]!
   dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+}
+
+enum NewsStatus {
+  Active
+  Deleted
 }
 
 enum NewsCategory {
@@ -460,6 +466,14 @@ type ProductCategory implements DocumentInterface {
   products: [Product!]!
 }
 
+type ProductColor implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  name: String!
+  hexCode: String!
+  createdAt: DateTime!
+}
+
 type ProductStatistics {
   id: ID!
   views: Float!
@@ -481,6 +495,7 @@ type ProductVariant implements DocumentInterface {
   name: String!
   image: DamImageBlockData!
   createdAt: DateTime!
+  product: Product!
 }
 
 type ProductDiscounts {
@@ -498,7 +513,7 @@ type Product implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
   title: String!
-  visible: Boolean!
+  status: ProductStatus!
   slug: String!
   description: String!
   type: ProductType!
@@ -514,8 +529,14 @@ type Product implements DocumentInterface {
   createdAt: DateTime!
   category: ProductCategory
   manufacturer: Manufacturer
+  colors: [ProductColor!]!
   variants: [ProductVariant!]!
   tags: [ProductTag!]!
+}
+
+enum ProductStatus {
+  Published
+  Unpublished
 }
 
 enum ProductType {
@@ -536,6 +557,11 @@ type PaginatedProductCategories {
 
 type PaginatedProductTags {
   nodes: [ProductTag!]!
+  totalCount: Int!
+}
+
+type PaginatedProductVariants {
+  nodes: [ProductVariant!]!
   totalCount: Int!
 }
 
@@ -703,7 +729,7 @@ type Query {
   damFolderByNameAndParentId(scope: DamScopeInput!, name: String!, parentId: ID): DamFolder
   news(id: ID!): News!
   newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
-  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: NewsStatus! = Active, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
@@ -721,6 +747,8 @@ type Query {
   productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
   productTag(id: ID!): ProductTag!
   productTags(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductTagFilter, sort: [ProductTagSort!]): PaginatedProductTags!
+  productVariant(id: ID!): ProductVariant!
+  productVariants(offset: Int! = 0, limit: Int! = 25, product: ID!, search: String, filter: ProductVariantFilter, sort: [ProductVariantSort!]): PaginatedProductVariants!
   manufacturer(id: ID!): Manufacturer!
   manufacturers(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerFilter, sort: [ManufacturerSort!]): PaginatedManufacturers!
 }
@@ -729,7 +757,7 @@ input UserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
-  language: StringFilter
+  locale: StringFilter
   and: [UserFilter!]
   or: [UserFilter!]
 }
@@ -751,7 +779,7 @@ enum UserSortField {
   name
   email
   status
-  language
+  locale
 }
 
 enum SortDirection {
@@ -848,6 +876,7 @@ input FolderFilterInput {
 input NewsFilter {
   slug: StringFilter
   title: StringFilter
+  status: NewsStatusEnumFilter
   date: DateFilter
   category: NewsCategoryEnumFilter
   visible: BooleanFilter
@@ -855,6 +884,12 @@ input NewsFilter {
   updatedAt: DateFilter
   and: [NewsFilter!]
   or: [NewsFilter!]
+}
+
+input NewsStatusEnumFilter {
+  isAnyOf: [NewsStatus!]
+  equal: NewsStatus
+  notEqual: NewsStatus
 }
 
 input NewsCategoryEnumFilter {
@@ -871,6 +906,7 @@ input NewsSort {
 enum NewsSortField {
   slug
   title
+  status
   date
   category
   visible
@@ -880,7 +916,7 @@ enum NewsSortField {
 
 input ProductFilter {
   title: StringFilter
-  visible: BooleanFilter
+  status: ProductStatusEnumFilter
   slug: StringFilter
   description: StringFilter
   type: ProductTypeEnumFilter
@@ -894,6 +930,12 @@ input ProductFilter {
   manufacturer: ManyToOneFilter
   and: [ProductFilter!]
   or: [ProductFilter!]
+}
+
+input ProductStatusEnumFilter {
+  isAnyOf: [ProductStatus!]
+  equal: ProductStatus
+  notEqual: ProductStatus
 }
 
 input ProductTypeEnumFilter {
@@ -924,7 +966,7 @@ input ProductSort {
 
 enum ProductSortField {
   title
-  visible
+  status
   slug
   description
   type
@@ -974,6 +1016,26 @@ input ProductTagSort {
 
 enum ProductTagSortField {
   title
+  createdAt
+  updatedAt
+}
+
+input ProductVariantFilter {
+  name: StringFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  and: [ProductVariantFilter!]
+  or: [ProductVariantFilter!]
+}
+
+input ProductVariantSort {
+  field: ProductVariantSortField!
+  direction: SortDirection! = ASC
+}
+
+enum ProductVariantSortField {
+  name
+  product
   createdAt
   updatedAt
 }
@@ -1047,7 +1109,6 @@ type Mutation {
   createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
   updateNews(id: ID!, input: NewsUpdateInput!, lastUpdatedAt: DateTime): News!
   deleteNews(id: ID!): Boolean!
-  updateNewsVisibility(id: ID!, visible: Boolean!): News!
   createNewsComment(newsId: ID!, input: NewsCommentInput!): NewsComment!
   updateNewsComment(id: ID!, input: NewsCommentInput!, lastUpdatedAt: DateTime): NewsComment!
   deleteNewsComment(id: ID!): Boolean!
@@ -1058,13 +1119,15 @@ type Mutation {
   createProduct(input: ProductInput!): Product!
   updateProduct(id: ID!, input: ProductUpdateInput!, lastUpdatedAt: DateTime): Product!
   deleteProduct(id: ID!): Boolean!
-  updateProductVisibility(id: ID!, visible: Boolean!): Product!
   createProductCategory(input: ProductCategoryInput!): ProductCategory!
   updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!, lastUpdatedAt: DateTime): ProductCategory!
   deleteProductCategory(id: ID!): Boolean!
   createProductTag(input: ProductTagInput!): ProductTag!
   updateProductTag(id: ID!, input: ProductTagUpdateInput!, lastUpdatedAt: DateTime): ProductTag!
   deleteProductTag(id: ID!): Boolean!
+  createProductVariant(product: ID!, input: ProductVariantInput!): ProductVariant!
+  updateProductVariant(id: ID!, input: ProductVariantUpdateInput!, lastUpdatedAt: DateTime): ProductVariant!
+  deleteProductVariant(id: ID!): Boolean!
   createManufacturer(input: ManufacturerInput!): Manufacturer!
   updateManufacturer(id: ID!, input: ManufacturerUpdateInput!, lastUpdatedAt: DateTime): Manufacturer!
   deleteManufacturer(id: ID!): Boolean!
@@ -1200,8 +1263,10 @@ input UpdateDamFolderInput {
 input NewsInput {
   slug: String!
   title: String!
+  status: NewsStatus! = Active
   date: DateTime!
   category: NewsCategory! = Awards
+  visible: Boolean!
   image: DamImageBlockInput!
   content: NewsContentBlockInput!
 }
@@ -1215,8 +1280,10 @@ scalar NewsContentBlockInput @specifiedBy(url: "http://www.ecma-international.or
 input NewsUpdateInput {
   slug: String
   title: String
+  status: NewsStatus
   date: DateTime
   category: NewsCategory
+  visible: Boolean
   image: DamImageBlockInput
   content: NewsContentBlockInput
 }
@@ -1245,6 +1312,7 @@ input PredefinedPageInput {
 
 input ProductInput {
   title: String!
+  status: ProductStatus! = Unpublished
   slug: String!
   description: String!
   type: ProductType!
@@ -1256,7 +1324,7 @@ input ProductInput {
   articleNumbers: [String!]! = []
   dimensions: ProductDimensionsInput
   statistics: ProductStatisticsInput
-  variants: [ProductVariantInput!]! = []
+  colors: [ProductColorInput!]! = []
   category: ID = null
   tags: [ID!]! = []
   manufacturer: ID
@@ -1266,13 +1334,14 @@ input ProductStatisticsInput {
   views: Float!
 }
 
-input ProductVariantInput {
+input ProductColorInput {
   name: String!
-  image: DamImageBlockInput!
+  hexCode: String!
 }
 
 input ProductUpdateInput {
   title: String
+  status: ProductStatus
   slug: String
   description: String
   type: ProductType
@@ -1284,7 +1353,7 @@ input ProductUpdateInput {
   articleNumbers: [String!]
   dimensions: ProductDimensionsInput
   statistics: ProductStatisticsInput
-  variants: [ProductVariantInput!]
+  colors: [ProductColorInput!]
   category: ID
   tags: [ID!]
   manufacturer: ID
@@ -1293,13 +1362,11 @@ input ProductUpdateInput {
 input ProductCategoryInput {
   title: String!
   slug: String!
-  products: [ID!]! = []
 }
 
 input ProductCategoryUpdateInput {
   title: String
   slug: String
-  products: [ID!]
 }
 
 input ProductTagInput {
@@ -1310,6 +1377,16 @@ input ProductTagInput {
 input ProductTagUpdateInput {
   title: String
   products: [ID!]
+}
+
+input ProductVariantInput {
+  name: String!
+  image: DamImageBlockInput!
+}
+
+input ProductVariantUpdateInput {
+  name: String
+  image: DamImageBlockInput
 }
 
 input ManufacturerInput {

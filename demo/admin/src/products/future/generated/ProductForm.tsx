@@ -18,6 +18,7 @@ import {
     ToolbarFillSpace,
     ToolbarItem,
     ToolbarTitleItem,
+    useAsyncOptionsProps,
     useFormApiRef,
     useStackApi,
     useStackSwitchApi,
@@ -34,10 +35,13 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
-import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
+import { createProductMutation, productCategoriesQuery, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
+    GQLProductCategoriesSelectQuery,
+    GQLProductCategoriesSelectQueryVariables,
+    GQLProductCategorySelectFragment,
     GQLProductFormDetailsFragment,
     GQLProductQuery,
     GQLProductQueryVariables,
@@ -100,6 +104,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
+            category: formValues.category?.id,
             price: formValues.price ? parseFloat(formValues.price) : null,
             image: rootBlocks.image.state2Output(formValues.image),
         };
@@ -124,6 +129,13 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             }
         }
     };
+
+    const categorySelectAsyncProps = useAsyncOptionsProps(async () => {
+        const result = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
+            query: productCategoriesQuery,
+        });
+        return result.data.productCategories.nodes;
+    });
 
     if (error) throw error;
 
@@ -193,6 +205,14 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 </FinalFormSelect>
                             )}
                         </Field>
+                        <Field
+                            fullWidth
+                            name="category"
+                            label={<FormattedMessage id="product.category" defaultMessage="Category" />}
+                            component={FinalFormSelect}
+                            {...categorySelectAsyncProps}
+                            getOptionLabel={(option: GQLProductCategorySelectFragment) => option.title}
+                        />
 
                         <Field
                             fullWidth

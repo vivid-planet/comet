@@ -114,12 +114,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                 variables: { id, input: output, lastUpdatedAt: data?.product?.updatedAt },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
+            const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
                 variables: { input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createProduct.id;
+                const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage("edit", id);
@@ -162,6 +162,18 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             label={<FormattedMessage id="product.title" defaultMessage="Title" />}
                         />
+                        <Field fullWidth name="status" label={<FormattedMessage id="product.status" defaultMessage="Status" />}>
+                            {(props) => (
+                                <FinalFormSelect {...props}>
+                                    <MenuItem value="Published">
+                                        <FormattedMessage id="product.status.published" defaultMessage="Published" />
+                                    </MenuItem>
+                                    <MenuItem value="Unpublished">
+                                        <FormattedMessage id="product.status.unpublished" defaultMessage="Unpublished" />
+                                    </MenuItem>
+                                </FinalFormSelect>
+                            )}
+                        </Field>
                         <Field
                             required
                             fullWidth
