@@ -26,8 +26,7 @@ export async function getValidatedSitePreviewParams(
 }
 
 async function getValidatedScope(req: NextApiRequest, res: NextApiResponse, graphQLClient: GraphQLClient): Promise<Scope> {
-    const scope = JSON.parse(req.query.scope as string);
-    if (!scope) throw new Error("Scope is missing");
+    const scope = JSON.parse(req.query.scope?.toString() ?? "{}");
 
     graphQLClient.setHeader("authorization", req.headers["authorization"] || "");
     const { isAllowedSitePreview } = await graphQLClient.request(
