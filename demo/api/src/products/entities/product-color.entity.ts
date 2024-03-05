@@ -1,5 +1,4 @@
-import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudField, CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
+import { CrudField, DocumentInterface } from "@comet/cms-api";
 import { BaseEntity, Entity, ManyToOne, OptionalProps, PrimaryKey, Property, Ref } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
@@ -10,9 +9,7 @@ import { Product } from "./product.entity";
     implements: () => [DocumentInterface],
 })
 @Entity()
-@RootBlockEntity()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: "products" })
-export class ProductVariant extends BaseEntity<ProductVariant, "id"> implements DocumentInterface {
+export class ProductColor extends BaseEntity<ProductColor, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })
@@ -23,10 +20,9 @@ export class ProductVariant extends BaseEntity<ProductVariant, "id"> implements 
     @Field()
     name: string;
 
-    @Property({ customType: new RootBlockType(DamImageBlock) })
-    @Field(() => RootBlockDataScalar(DamImageBlock))
-    @RootBlock(DamImageBlock)
-    image: BlockDataInterface;
+    @Property()
+    @Field()
+    hexCode: string;
 
     @ManyToOne(() => Product, { ref: true })
     @CrudField({
@@ -34,7 +30,7 @@ export class ProductVariant extends BaseEntity<ProductVariant, "id"> implements 
         // search: true, // not yet supported for nested
         // filter: true, // not yet supported for nested
         // sort: true, // not yet supported for nested
-        // input: false, // ignored because product is a root argument for create
+        // input: true, // not supported for nested, doesn't make sense
     })
     product: Ref<Product>;
 
