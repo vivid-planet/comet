@@ -114,6 +114,7 @@ export function generateFormField(
                 ${required ? "required" : ""}
                 fullWidth
                 name="${name}"
+                {!required ? "clearable" : ""}
                 component={FinalFormDatePicker}
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
                 ${
