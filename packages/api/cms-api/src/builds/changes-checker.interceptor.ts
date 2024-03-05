@@ -50,6 +50,14 @@ export class ChangesCheckerInterceptor implements NestInterceptor {
                             await this.buildsService.setChangesSinceLastBuild(scope);
                         }
                     } else {
+                        if (process.env.NODE_ENV === "development") {
+                            if (operation.name) {
+                                console.warn(`Mutation "${operation.name.value}" affects all scopes. Are you sure this is correct?`);
+                            } else {
+                                console.warn(`Unknown mutation affects all scopes. Are you sure this is correct?`);
+                            }
+                        }
+
                         await this.buildsService.setChangesSinceLastBuild("all");
                     }
                 }
