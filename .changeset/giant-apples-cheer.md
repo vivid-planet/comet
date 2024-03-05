@@ -1,5 +1,5 @@
 ---
-"@comet/cms-api": minor
+"@comet/cms-api": major
 ---
 
 API Generator: Generate better API for Many-to-one-relations with `orphanRemoval` activated where the reverse side has its own API generated
