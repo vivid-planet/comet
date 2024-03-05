@@ -50,6 +50,8 @@ export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
+    disableCopyPaste?: boolean;
+    readOnly?: boolean;
     columns: GridColumnConfig<T>[];
 };
 
