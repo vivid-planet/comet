@@ -2,6 +2,7 @@ import {
     AppHeader,
     AppHeaderFillSpace,
     AppHeaderMenuButton,
+    Badge,
     CometLogo,
     MainContent,
     MasterLayout,
@@ -39,7 +40,12 @@ const AppMenu: React.FC = () => {
                 </MenuCollapsibleItem>
             </MenuItemGroup>
             <MenuItemGroup title="Further Layers">
-                <MenuItemRouterLink primary="Settings" icon={<Settings />} to="/settings" />
+                <MenuItemRouterLink
+                    primary="Settings"
+                    secondaryAction={<Badge color="error" badgeContent={2} />}
+                    icon={<Settings />}
+                    to="/settings"
+                />
                 <MenuItemAnchorLink
                     primary="Comet Admin"
                     secondary="View on GitHub"
