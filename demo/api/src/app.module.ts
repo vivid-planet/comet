@@ -21,13 +21,14 @@ import {
 } from "@comet/cms-api";
 import { ApolloDriver } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
-import { GraphQLModule } from "@nestjs/graphql";
+import { Enhancer, GraphQLModule } from "@nestjs/graphql";
 import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
 import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
+import { randomBytes } from "crypto";
 import { Request } from "express";
 
 import { AuthModule } from "./auth/auth.module";
@@ -71,6 +72,8 @@ export class AppModule {
                         buildSchemaOptions: {
                             fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(dependencies)],
                         },
+                        // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
+                        fieldResolverEnhancers: ["guards", "interceptors", "filters"] as Enhancer[],
                     }),
                     inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
                 }),
@@ -121,6 +124,7 @@ export class AppModule {
                     Documents: [Page, Link, PredefinedPage],
                     Scope: PageTreeNodeScope,
                     reservedPaths: ["/events"],
+                    sitePreviewSecret: randomBytes(32).toString("hex"),
                 }),
                 RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
                 BlobStorageModule.register({
