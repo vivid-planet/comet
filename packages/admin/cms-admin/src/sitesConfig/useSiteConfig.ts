@@ -4,8 +4,5 @@ import { useSitesConfig } from "./useSitesConfig";
 
 export function useSiteConfig({ scope }: { scope: ContentScopeInterface }): SiteConfig {
     const context = useSitesConfig();
-
-    const siteConfig = context.resolveSiteConfigForScope(context.configs, scope);
-
-    return { ...siteConfig, previewUrl: siteConfig.previewUrl ?? `${siteConfig.url}/preview` };
+    return context.resolveSiteConfigForScope(context.configs, scope);
 }
