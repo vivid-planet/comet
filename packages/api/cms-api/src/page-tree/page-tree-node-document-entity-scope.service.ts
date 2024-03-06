@@ -18,6 +18,6 @@ export class PageTreeNodeDocumentEntityScopeService implements EntityScopeServic
             throw new Error(`PageTreeNode not found for document with id: ${document.id}`);
         }
 
-        return pageTreeNode?.scope ?? {};
+        return pageTreeNode.scope ?? {};
     }
 }
