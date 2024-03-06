@@ -125,7 +125,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(false);
     });
 
-    it("denies user with at least not exactly named permission", async () => {
+    it("denies user with only a partial permission", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: ["p1"],
