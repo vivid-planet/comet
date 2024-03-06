@@ -109,7 +109,7 @@ describe("UserPermissionsGuard", () => {
         ).toBe(true);
     });
 
-    it("denies user with at wrong permission", async () => {
+    it("denies user with a wrong permission", async () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: ["p1"],
