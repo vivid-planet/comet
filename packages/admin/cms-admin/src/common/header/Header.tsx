@@ -1,4 +1,4 @@
-import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton } from "@comet/admin";
+import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton, useWindowSize } from "@comet/admin";
 import * as React from "react";
 
 import { Logo } from "./Logo";
@@ -9,10 +9,13 @@ interface Props {
 }
 
 function Header({ children, logo }: Props): React.ReactElement {
+    const window = useWindowSize();
+    const isMobile = window.width <= 900; //MUI medium breakpoint 900px
+
     return (
         <AppHeader>
             <AppHeaderMenuButton />
-            {logo || <Logo />}
+            {!isMobile && (logo || <Logo />)}
             <AppHeaderFillSpace />
             {children}
         </AppHeader>
