@@ -234,6 +234,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field
                             fullWidth
                             name="availableSince"
+                            clearable
                             component={FinalFormDatePicker}
                             label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
                         />
