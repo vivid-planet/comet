@@ -1,7 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
-import { AppHeaderDropdown, Loading, useWindowSize } from "@comet/admin";
+import { AppHeaderDropdown, Loading } from "@comet/admin";
 import { Account, Info, Logout } from "@comet/admin-icons";
-import { Box, Button as MUIButton } from "@mui/material";
+import { Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -39,8 +39,8 @@ interface UserHeaderItemProps {
 export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
     const { aboutModalLogo } = props;
 
-    const window = useWindowSize();
-    const isMobile = window.width <= 900; //MUI medium breakpoint 900px
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.up("sm"));
 
     const user = useCurrentUser();
     const [showAboutModal, setShowAboutModal] = React.useState(false);
