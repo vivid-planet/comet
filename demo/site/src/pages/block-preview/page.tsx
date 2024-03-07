@@ -40,8 +40,15 @@ function createCachingGraphQLClient(previewData?: PreviewData) {
     return client;
 }
 
-const PreviewPage: React.FunctionComponent = () => {
+function useGraphQLClient() {
     const iFrameBridge = useIFrameBridge();
+    const clientRef = React.useRef(
+        createCachingGraphQLClient({
+            previewDamUrls: true,
+            includeInvisibleBlocks: !iFrameBridge.showOnlyVisible,
+            includeInvisiblePages: true,
+        }),
+    );
     React.useEffect(() => {
         //update headers when showOnlyVisible changes
         clientRef.current.setHeaders(
@@ -52,14 +59,12 @@ const PreviewPage: React.FunctionComponent = () => {
             }),
         );
     }, [iFrameBridge.showOnlyVisible]);
+    return clientRef.current;
+}
 
-    const clientRef = React.useRef(
-        createCachingGraphQLClient({
-            previewDamUrls: true,
-            includeInvisibleBlocks: !iFrameBridge.showOnlyVisible,
-            includeInvisiblePages: true,
-        }),
-    );
+const PreviewPage: React.FunctionComponent = () => {
+    const iFrameBridge = useIFrameBridge();
+    const client = useGraphQLClient();
     const [blockData, setBlockData] = React.useState<PageContentBlockData>();
     React.useEffect(() => {
         async function load() {
@@ -67,11 +72,11 @@ const PreviewPage: React.FunctionComponent = () => {
                 setBlockData(undefined);
                 return;
             }
-            const newData = await recursivelyLoadBlockData({ blockType: "PageContent", blockData: iFrameBridge.block, client: clientRef.current });
+            const newData = await recursivelyLoadBlockData({ blockType: "PageContent", blockData: iFrameBridge.block, client });
             setBlockData(newData);
         }
         load();
-    }, [iFrameBridge.block]);
+    }, [iFrameBridge.block, client]);
 
     return <div>{blockData && <PageContentBlock data={blockData} />}</div>;
 };
