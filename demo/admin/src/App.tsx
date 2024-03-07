@@ -29,7 +29,7 @@ import * as React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import * as ReactDOM from "react-dom";
-import { IntlProvider } from "react-intl";
+import { FormattedMessage, IntlProvider } from "react-intl";
 import { Route, Switch } from "react-router-dom";
 
 import MasterHeader from "./common/MasterHeader";
@@ -67,7 +67,17 @@ class App extends React.Component {
                             sitePreviewApiUrl: `${config.sitePreviewUrl}/api/site-preview`,
                         }}
                     >
-                        <DamConfigProvider value={{ scopeParts: ["domain"], additionalToolbarItems: <ImportFromUnsplash /> }}>
+                        <DamConfigProvider
+                            value={{
+                                scopeParts: ["domain"],
+                                additionalToolbarItems: <ImportFromUnsplash />,
+                                importSources: {
+                                    unsplash: {
+                                        label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
+                                    },
+                                },
+                            }}
+                        >
                             <IntlProvider locale="en" messages={getMessages()}>
                                 <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
                                     <MuiThemeProvider theme={theme}>
