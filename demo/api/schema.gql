@@ -1098,29 +1098,29 @@ type Mutation {
   moveDamFolders(folderIds: [ID!]!, targetFolderId: ID, scope: DamScopeInput!): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!
   createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
-  updateNews(id: ID!, input: NewsUpdateInput!, lastUpdatedAt: DateTime): News!
+  updateNews(id: ID!, input: NewsUpdateInput!): News!
   deleteNews(id: ID!): Boolean!
   createNewsComment(newsId: ID!, input: NewsCommentInput!): NewsComment!
-  updateNewsComment(id: ID!, input: NewsCommentInput!, lastUpdatedAt: DateTime): NewsComment!
+  updateNewsComment(id: ID!, input: NewsCommentInput!): NewsComment!
   deleteNewsComment(id: ID!): Boolean!
   updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
-  saveFooter(scope: FooterContentScopeInput!, input: FooterInput!, lastUpdatedAt: DateTime): Footer!
+  saveFooter(scope: FooterContentScopeInput!, input: FooterInput!): Footer!
   savePredefinedPage(id: ID!, input: PredefinedPageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): PredefinedPage!
   triggerKubernetesCronJob(name: String!): KubernetesJob!
   createProduct(input: ProductInput!): Product!
-  updateProduct(id: ID!, input: ProductUpdateInput!, lastUpdatedAt: DateTime): Product!
+  updateProduct(id: ID!, input: ProductUpdateInput!): Product!
   deleteProduct(id: ID!): Boolean!
   createProductCategory(input: ProductCategoryInput!): ProductCategory!
-  updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!, lastUpdatedAt: DateTime): ProductCategory!
+  updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!): ProductCategory!
   deleteProductCategory(id: ID!): Boolean!
   createProductTag(input: ProductTagInput!): ProductTag!
-  updateProductTag(id: ID!, input: ProductTagUpdateInput!, lastUpdatedAt: DateTime): ProductTag!
+  updateProductTag(id: ID!, input: ProductTagUpdateInput!): ProductTag!
   deleteProductTag(id: ID!): Boolean!
   createProductVariant(product: ID!, input: ProductVariantInput!): ProductVariant!
-  updateProductVariant(id: ID!, input: ProductVariantUpdateInput!, lastUpdatedAt: DateTime): ProductVariant!
+  updateProductVariant(id: ID!, input: ProductVariantUpdateInput!): ProductVariant!
   deleteProductVariant(id: ID!): Boolean!
   createManufacturer(input: ManufacturerInput!): Manufacturer!
-  updateManufacturer(id: ID!, input: ManufacturerUpdateInput!, lastUpdatedAt: DateTime): Manufacturer!
+  updateManufacturer(id: ID!, input: ManufacturerUpdateInput!): Manufacturer!
   deleteManufacturer(id: ID!): Boolean!
 }
 
