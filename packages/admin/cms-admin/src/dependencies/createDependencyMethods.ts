@@ -18,7 +18,7 @@ export function createDependencyMethods<RootBlocks extends Record<string, BlockI
     basePath,
 }: {
     rootQueryName: string;
-    rootBlocks: { [Key in keyof RootBlocks]: { block: RootBlocks[Key]; path?: string } };
+    rootBlocks: { [Key in keyof RootBlocks]: RootBlocks[Key] | { block: RootBlocks[Key]; path?: string } };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     basePath: string | ((data: any /* TODO better typing */) => string);
 }): Pick<DependencyInterface, "resolveUrl"> {
@@ -51,14 +51,27 @@ export function createDependencyMethods<RootBlocks extends Record<string, BlockI
             }
 
             if (jsonPath && rootColumnName) {
-                url += `${rootBlocks[rootColumnName].path ?? ""}/`;
-                url += rootBlocks[rootColumnName].block.resolveDependencyRoute(
-                    rootBlocks[rootColumnName].block.input2State(data.node[rootColumnName]),
-                    jsonPath.substring("root.".length),
-                );
+                let block: BlockInterface;
+                let path: string | undefined;
+
+                const rootBlock = rootBlocks[rootColumnName];
+
+                if (isBlockInterface(rootBlock)) {
+                    block = rootBlock;
+                } else {
+                    block = rootBlock.block;
+                    path = rootBlock.path;
+                }
+
+                url += `${path ?? ""}/`;
+                url += block.resolveDependencyRoute(block.input2State(data.node[rootColumnName]), jsonPath.substring("root.".length));
             }
 
             return url;
         },
     };
+}
+
+function isBlockInterface(block: unknown): block is BlockInterface {
+    return typeof block === "object" && block !== null && "name" in block;
 }

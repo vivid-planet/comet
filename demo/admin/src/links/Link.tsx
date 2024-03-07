@@ -58,7 +58,7 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & D
     ...createDocumentRootBlocksMethods(rootBlocks),
     ...createDocumentDependencyMethods({
         rootQueryName: "link",
-        rootBlocks: { content: { block: LinkBlock } },
+        rootBlocks,
         basePath: ({ pageTreeNode }) => `/pages/pagetree/${categoryToUrlParam(pageTreeNode.category)}/${pageTreeNode.id}/edit`,
     }),
 };

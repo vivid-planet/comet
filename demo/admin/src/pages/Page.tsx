@@ -64,7 +64,7 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
     ...createDocumentDependencyMethods({
         rootQueryName: "page",
         rootBlocks: {
-            content: { block: PageContentBlock },
+            content: PageContentBlock,
             seo: { block: SeoBlock, path: "/config" },
         },
         basePath: ({ pageTreeNode }) => `/pages/pagetree/${categoryToUrlParam(pageTreeNode.category)}/${pageTreeNode.id}/edit`,
