@@ -118,7 +118,7 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
             }
             await client.mutate<GQLUpdateNewsMutation, GQLUpdateNewsMutationVariables>({
                 mutation: updateNewsMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.news?.updatedAt },
+                variables: { id, input: output },
             });
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateNewsMutation, GQLCreateNewsMutationVariables>({

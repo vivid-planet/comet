@@ -119,7 +119,6 @@ export function buildOptions(metadata: EntityMetadata<any>) {
 
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
     if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
-    const hasUpdatedAt = metadata.props.some((prop) => prop.name == "updatedAt");
     const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
     const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
 
@@ -139,7 +138,6 @@ export function buildOptions(metadata: EntityMetadata<any>) {
         statusActiveItems,
         hasStatusFilter,
         scopeProp,
-        hasUpdatedAt,
         argsClassName,
         argsFileName,
         blockProps,
@@ -797,7 +795,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         statusProp,
         statusActiveItems,
         hasStatusFilter,
-        hasUpdatedAt,
         rootArgProps,
     } = buildOptions(metadata);
 
@@ -1025,17 +1022,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         @AffectedEntity(${metadata.className})
         async update${classNameSingular}(
             ${generateIdArg("id", metadata)},
-            @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput,
-            ${hasUpdatedAt ? `@Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,` : ""}
+            @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput
         ): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
-            ${
-                hasUpdatedAt
-                    ? `if (lastUpdatedAt) {
-                validateNotModified(${instanceNameSingular}, lastUpdatedAt);
-            }`
-                    : ""
-            }
             ${generateInputHandling({ mode: "update", inputName: "input", assignEntityCode: `${instanceNameSingular}.assign({` }, metadata)}
 
             await this.entityManager.flush();

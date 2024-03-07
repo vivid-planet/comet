@@ -59,7 +59,7 @@ function ProductPriceForm({ id }: FormProps): React.ReactElement {
         };
         await client.mutate<GQLProductPriceFormUpdateProductMutation, GQLProductPriceFormUpdateProductMutationVariables>({
             mutation: updateProductPriceFormMutation,
-            variables: { id, input: output, lastUpdatedAt: data?.product.updatedAt },
+            variables: { id, input: output },
         });
     };
 
