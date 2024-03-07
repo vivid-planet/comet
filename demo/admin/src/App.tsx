@@ -9,6 +9,7 @@ import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import {
     CmsBlockContextProvider,
+    createDamFileDependency,
     createHttpClient,
     CurrentUserProvider,
     DamConfigProvider,
@@ -85,6 +86,7 @@ class App extends React.Component {
                                     Page,
                                     Link,
                                     News: NewsDependency,
+                                    DamFile: createDamFileDependency(),
                                 }}
                             >
                                 <IntlProvider locale="en" messages={getMessages()}>
