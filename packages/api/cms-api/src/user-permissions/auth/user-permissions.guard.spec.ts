@@ -1,7 +1,7 @@
 import { createMock } from "@golevelup/ts-jest";
 import { BaseEntity, Entity, MikroORM, PrimaryKey } from "@mikro-orm/core";
 import { ExecutionContext } from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
+import { ModuleRef, Reflector } from "@nestjs/core";
 
 import { AbstractAccessControlService } from "../access-control.service";
 import { ContentScopeService } from "../content-scope.service";
@@ -25,16 +25,17 @@ describe("UserPermissionsGuard", () => {
     let orm: MikroORM;
     let contentScopeService: ContentScopeService;
     let accessControlService: AccessControlService;
+    let moduleRef: ModuleRef;
 
     const mockAnnotations = (annotations: {
         requiredPermission?: RequiredPermissionMetadata;
         affectedEntities?: AffectedEntityMeta[];
-        scopedEntity?: ScopedEntityMeta["fn"];
+        scopedEntity?: ScopedEntityMeta<TestEntity>;
     }) => {
         reflector.getAllAndOverride = jest.fn().mockImplementation((decorator: string) => {
             if (decorator === "requiredPermission") return annotations.requiredPermission;
             if (decorator === "affectedEntities") return annotations.affectedEntities;
-            if (decorator === "scopedEntity") return { fn: annotations.scopedEntity };
+            if (decorator === "scopedEntity") return annotations.scopedEntity;
             return false;
         });
     };
@@ -69,7 +70,8 @@ describe("UserPermissionsGuard", () => {
             connect: false,
             allowGlobalContext: true,
         });
-        contentScopeService = new ContentScopeService(reflector, orm);
+        moduleRef = createMock<ModuleRef>();
+        contentScopeService = new ContentScopeService(reflector, orm, moduleRef);
         accessControlService = new AccessControlService();
         guard = new UserPermissionsGuard(reflector, contentScopeService, accessControlService);
     });
