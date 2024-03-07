@@ -1,5 +1,37 @@
 # @comet/cms-admin
 
+## 6.3.0
+
+### Minor Changes
+
+-   80e6fde4: Show DAM import source in grid
+
+    To show the "Source" column in the DAM's data grid, provide `importSources` in `DamConfigProvider`:
+
+    ```tsx
+    <DamConfigProvider
+        value={{
+            ...
+            importSources: {
+                unsplash: {
+                    label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
+                },
+            },
+        }}
+    >
+        ...
+    </DamConfigProvider>
+    ```
+
+### Patch Changes
+
+-   @comet/admin@6.3.0
+-   @comet/admin-date-time@6.3.0
+-   @comet/admin-icons@6.3.0
+-   @comet/admin-rte@6.3.0
+-   @comet/admin-theme@6.3.0
+-   @comet/blocks-admin@6.3.0
+
 ## 6.2.1
 
 ### Patch Changes
