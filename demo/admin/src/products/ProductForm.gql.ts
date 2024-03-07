@@ -16,7 +16,6 @@ export const productFormFragment = gql`
             id
             title
         }
-        price
     }
 `;
 
