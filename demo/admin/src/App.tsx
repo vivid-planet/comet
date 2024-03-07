@@ -63,8 +63,6 @@ class App extends React.Component {
                         value={{
                             configs: config.sitesConfig,
                             resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
-                            blockPreviewBaseUrl: `${config.sitePreviewUrl}/block-preview`,
-                            sitePreviewApiUrl: `${config.sitePreviewUrl}/api/site-preview`,
                         }}
                     >
                         <DamConfigProvider value={{ scopeParts: ["domain"], additionalToolbarItems: <ImportFromUnsplash /> }}>
