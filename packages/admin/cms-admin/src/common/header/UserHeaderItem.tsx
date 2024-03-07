@@ -40,7 +40,7 @@ export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
     const { aboutModalLogo } = props;
 
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.up("sm"));
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
     const user = useCurrentUser();
     const [showAboutModal, setShowAboutModal] = React.useState(false);

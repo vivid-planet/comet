@@ -11,7 +11,7 @@ interface Props {
 
 function Header({ children, logo }: Props): React.ReactElement {
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.up("sm"));
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
     return (
         <AppHeader>
