@@ -1,5 +1,5 @@
 import { TypedDocumentNode, useQuery } from "@apollo/client";
-import { Tooltip, useDataGridRemote } from "@comet/admin";
+import { messages, Tooltip, useDataGridRemote } from "@comet/admin";
 import { Reload } from "@comet/admin-icons";
 import { IconButton, LinearProgress, tablePaginationClasses } from "@mui/material";
 import { LabelDisplayedRowsArgs } from "@mui/material/TablePagination/TablePagination";
@@ -78,7 +78,7 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
             renderCell: ({ row }) => {
                 return (
                     <sc.NameInfoWrapper>
-                        <sc.NameInfoTypography color="text.primary">{row.name}</sc.NameInfoTypography>
+                        <sc.NameInfoTypography color="text.primary">{row.name ?? <FormattedMessage {...messages.unknown} />}</sc.NameInfoTypography>
                         <sc.NameInfoTypography color="text.secondary">{row.secondaryInformation}</sc.NameInfoTypography>
                     </sc.NameInfoWrapper>
                 );
