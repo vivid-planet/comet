@@ -236,7 +236,7 @@ describe("UserPermissionsGuard", () => {
                     args: { scope: { a: "a" } },
                 }),
             ),
-        ).toBe(true); // The shape of the content scope object must be defined in the Input-Object (to be able to handle ScopeParts correctly)
+        ).toBe(true); // It is explicitly allowed to have a partial scope (e.g. for operations using ScopeParts). To prevent allowing empty objects, the shape of the content scope object must be checked in another place (e.g. in the Input-Object of a graphql-resolver)
     });
 
     it("allows user with scope when submitted scope is empty", async () => {
@@ -253,7 +253,7 @@ describe("UserPermissionsGuard", () => {
                     args: { scope: {} },
                 }),
             ),
-        ).toBe(true); // The shape of the content scope object must be defined in the Input-Object (to be able to handle ScopeParts correctly)
+        ).toBe(true); // It is explicitly allowed to have a partial scope (e.g. for operations using ScopeParts). To prevent allowing empty objects, the shape of the content scope object must be checked in another place (e.g. in the Input-Object of a graphql-resolver)
     });
 
     it("denies user with wrong scope", async () => {
