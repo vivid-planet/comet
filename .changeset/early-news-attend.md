@@ -1,5 +1,6 @@
 ---
+"@comet/cms-admin": major
 "@comet/cms-api": major
 ---
 
-Remove lastUpdatedAt argument from update mutations
+CRUD Generator: Remove `lastUpdatedAt` argument from update mutations
