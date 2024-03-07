@@ -97,14 +97,14 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                     return <FormattedMessage id="comet.dependencies.dataGrid.cannotLoadUrl" defaultMessage="Cannot determine URL" />;
                 }
 
-                const loadUrl = () => {
-                    return dependencyObject.resolveUrl({
+                const loadUrl = async () => {
+                    const path = await dependencyObject.resolveUrl({
                         rootColumnName: row.rootColumnName,
                         jsonPath: row.jsonPath,
-                        contentScopeUrl: contentScope.match.url,
                         apolloClient,
                         id: row.id,
                     });
+                    return contentScope.match.url + path;
                 };
 
                 return (

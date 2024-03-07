@@ -1,18 +1,18 @@
 import { messages } from "@comet/admin";
 import { File, FileNotMenu } from "@comet/admin-icons";
-import { createDocumentRootBlocksMethods, DependencyInterface, DocumentInterface } from "@comet/cms-admin";
+import { createDocumentDependencyMethods, createDocumentRootBlocksMethods, DependencyInterface, DocumentInterface } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
 import { GQLPage, GQLPageInput } from "@src/graphql.generated";
-import { PageContentBlock } from "@src/pages/PageContentBlock";
-import { createDocumentDependencyMethods } from "@src/utils/createDocumentDependencyMethods";
+import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { EditPage } from "./EditPage";
+import { PageContentBlock } from "./PageContentBlock";
 
 const rootBlocks = {
     content: PageContentBlock,
@@ -62,20 +62,11 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
     hideInMenuIcon: FileNotMenu,
     ...createDocumentRootBlocksMethods(rootBlocks),
     ...createDocumentDependencyMethods({
-        rootBlocks,
-        prefixes: { seo: "config/" },
-        query: gql`
-            query PageDependency($id: ID!) {
-                node: page(id: $id) {
-                    id
-                    content
-                    seo
-                    pageTreeNode {
-                        id
-                        category
-                    }
-                }
-            }
-        `,
+        rootQueryName: "page",
+        rootBlocks: {
+            content: { block: PageContentBlock },
+            seo: { block: SeoBlock, path: "/config" },
+        },
+        basePath: ({ pageTreeNode }) => `/pages/pagetree/${categoryToUrlParam(pageTreeNode.category)}/${pageTreeNode.id}/edit`,
     }),
 };

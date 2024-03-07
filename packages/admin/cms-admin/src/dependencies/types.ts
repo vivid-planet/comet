@@ -6,13 +6,11 @@ export interface DependencyInterface {
     resolveUrl: ({
         rootColumnName,
         jsonPath,
-        contentScopeUrl,
         apolloClient,
         id,
     }: {
         rootColumnName?: string;
         jsonPath?: string;
-        contentScopeUrl: string;
         apolloClient: ApolloClient<unknown>;
         id: string;
     }) => Promise<string>;

@@ -9,7 +9,7 @@ import { GQLFileDependencyQuery, GQLFileDependencyQueryVariables } from "./creat
 function createDamFileDependency(basePath = "/assets"): DependencyInterface {
     return {
         displayName: <FormattedMessage {...messages.file} />,
-        resolveUrl: async ({ contentScopeUrl, apolloClient, id }) => {
+        resolveUrl: async ({ apolloClient, id }) => {
             const { data, error } = await apolloClient.query<GQLFileDependencyQuery, GQLFileDependencyQueryVariables>({
                 query: gql`
                     query FileDependency($id: ID!) {
@@ -41,9 +41,7 @@ function createDamFileDependency(basePath = "/assets"): DependencyInterface {
                 folderIds.push(data.damFile.folder.id);
             }
 
-            return `${contentScopeUrl}${basePath}/${folderIds.map((id) => `${id}/folder`).join("/")}${folderIds.length > 0 ? "/" : ""}${
-                data.damFile.id
-            }/edit`;
+            return `${basePath}/${folderIds.map((id) => `${id}/folder`).join("/")}${folderIds.length > 0 ? "/" : ""}${data.damFile.id}/edit`;
         },
     };
 }

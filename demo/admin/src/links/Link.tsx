@@ -1,13 +1,13 @@
 import { messages } from "@comet/admin";
 import { Link as LinkIcon } from "@comet/admin-icons";
-import { createDocumentRootBlocksMethods, DependencyInterface, DocumentInterface } from "@comet/cms-admin";
+import { createDocumentDependencyMethods, createDocumentRootBlocksMethods, DependencyInterface, DocumentInterface } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
 import { GQLLink, GQLLinkInput } from "@src/graphql.generated";
 import { EditLink } from "@src/links/EditLink";
-import { createDocumentDependencyMethods } from "@src/utils/createDocumentDependencyMethods";
+import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -57,18 +57,8 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & D
     menuIcon: LinkIcon,
     ...createDocumentRootBlocksMethods(rootBlocks),
     ...createDocumentDependencyMethods({
-        rootBlocks,
-        query: gql`
-            query LinkDependency($id: ID!) {
-                node: link(linkId: $id) {
-                    id
-                    content
-                    pageTreeNode {
-                        id
-                        category
-                    }
-                }
-            }
-        `,
+        rootQueryName: "link",
+        rootBlocks: { content: { block: LinkBlock } },
+        basePath: ({ pageTreeNode }) => `/pages/pagetree/${categoryToUrlParam(pageTreeNode.category)}/${pageTreeNode.id}/edit`,
     }),
 };

@@ -12,7 +12,7 @@ interface QueryVariables {
     id: string;
 }
 
-export function createDependencyMethods<RootBlocks extends Record<string, BlockInterface>>({
+export function createDocumentDependencyMethods<RootBlocks extends Record<string, BlockInterface>>({
     rootQueryName,
     rootBlocks,
     basePath,
@@ -30,6 +30,10 @@ export function createDependencyMethods<RootBlocks extends Record<string, BlockI
                         node: ${rootQueryName}(id: $id) {
                             id
                             ${Object.keys(rootBlocks).join("\n")}
+                            pageTreeNode {
+                                id
+                                category
+                            }
                         }    
                     }    
                 `,
@@ -51,7 +55,7 @@ export function createDependencyMethods<RootBlocks extends Record<string, BlockI
             }
 
             if (jsonPath && rootColumnName) {
-                url += `${rootBlocks[rootColumnName].path ?? ""}/`;
+                url += `${rootBlocks[rootColumnName]?.path ?? ""}/`;
                 url += rootBlocks[rootColumnName].block.resolveDependencyRoute(
                     rootBlocks[rootColumnName].block.input2State(data.node[rootColumnName]),
                     jsonPath.substring("root.".length),
