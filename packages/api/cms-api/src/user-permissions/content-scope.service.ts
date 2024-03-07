@@ -1,18 +1,24 @@
 import { MikroORM } from "@mikro-orm/core";
-import { ExecutionContext, Injectable, Optional } from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
+import { ExecutionContext, Injectable, Optional, Type } from "@nestjs/common";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
+import { ModuleRef, Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import isEqual from "lodash.isequal";
 
 import { PageTreeService } from "../page-tree/page-tree.service";
-import { ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
+import { EntityScopeServiceInterface, ScopedEntityMeta } from "../user-permissions/decorators/scoped-entity.decorator";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { AffectedEntityMeta } from "./decorators/affected-entity.decorator";
 
 // TODO Remove service and move into UserPermissionsGuard once ChangesCheckerInterceptor is removed
 @Injectable()
 export class ContentScopeService {
-    constructor(private reflector: Reflector, private readonly orm: MikroORM, @Optional() private readonly pageTreeService?: PageTreeService) {}
+    constructor(
+        private reflector: Reflector,
+        private readonly orm: MikroORM,
+        private readonly moduleRef: ModuleRef,
+        @Optional() private readonly pageTreeService?: PageTreeService,
+    ) {}
 
     scopesAreEqual(scope1: ContentScope | undefined, scope2: ContentScope | undefined): boolean {
         // The scopes are cloned because they could be
@@ -54,7 +60,13 @@ export class ContentScopeService {
                 } else {
                     const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [affectedEntity.entity]);
                     if (!scoped) throw new Error(`Entity ${affectedEntity.entity} is missing @ScopedEntity decorator`);
-                    const scopes = await scoped.fn(row);
+                    let scopes;
+                    if (this.isService(scoped)) {
+                        const service = this.moduleRef.get(scoped, { strict: false });
+                        scopes = await service.getEntityScope(row);
+                    } else {
+                        scopes = await scoped(row);
+                    }
                     if (!scopes) throw new Error(`@ScopedEntity function for ${affectedEntity.entity} didn't return any scopes`);
                     contentScopes.push(Array.isArray(scopes) ? scopes : [scopes]);
                 }
@@ -86,5 +98,10 @@ export class ContentScopeService {
             const request = context.switchToHttp().getRequest();
             return { ...request.params, ...request.query };
         }
+    }
+
+    private isService(meta: ScopedEntityMeta): meta is Type<EntityScopeServiceInterface> {
+        // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
+        return Reflect.hasMetadata(INJECTABLE_WATERMARK, meta);
     }
 }

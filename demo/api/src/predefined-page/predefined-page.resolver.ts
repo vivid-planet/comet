@@ -5,6 +5,7 @@ import {
     PageTreeService,
     RequestContext,
     RequestContextInterface,
+    RequiredPermission,
     validateNotModified,
 } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
@@ -19,6 +20,7 @@ import { PredefinedPage } from "./entities/predefined-page.entity";
 import { PredefinedPageService } from "./predefined-page.service";
 
 @Resolver(() => PredefinedPage)
+@RequiredPermission("pageTree")
 export class PredefinedPageResolver {
     constructor(
         @InjectRepository(PredefinedPage) private readonly repository: EntityRepository<PredefinedPage>,
