@@ -1,6 +1,6 @@
 import { messages } from "@comet/admin";
 import { Link as LinkIcon } from "@comet/admin-icons";
-import { createDocumentRootBlocksMethods, DocumentInterface } from "@comet/cms-admin";
+import { createDocumentRootBlocksMethods, DependencyInterface, DocumentInterface } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
@@ -11,7 +11,11 @@ import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
+const rootBlocks = {
+    content: LinkBlock,
+};
+
+export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & DependencyInterface = {
     displayName: <FormattedMessage {...messages.link} />,
     editComponent: EditLink,
     getQuery: gql`
@@ -50,7 +54,5 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
         return null;
     },
     menuIcon: LinkIcon,
-    ...createDocumentRootBlocksMethods({
-        content: LinkBlock,
-    }),
+    ...createDocumentRootBlocksMethods(rootBlocks),
 };

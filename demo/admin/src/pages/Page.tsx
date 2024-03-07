@@ -1,10 +1,10 @@
 import { messages } from "@comet/admin";
 import { File, FileNotMenu } from "@comet/admin-icons";
-import { createDocumentRootBlocksMethods, DocumentInterface } from "@comet/cms-admin";
+import { createDocumentRootBlocksMethods, DependencyInterface, DocumentInterface } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
-import { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
+import { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode.generated";
 import { GQLPage, GQLPageInput } from "@src/graphql.generated";
 import gql from "graphql-tag";
 import * as React from "react";
@@ -13,7 +13,12 @@ import { FormattedMessage } from "react-intl";
 import { EditPage } from "./EditPage";
 import { PageContentBlock } from "./PageContentBlock";
 
-export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageInput> = {
+const rootBlocks = {
+    content: PageContentBlock,
+    seo: SeoBlock,
+};
+
+export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageInput> & DependencyInterface = {
     displayName: <FormattedMessage {...messages.page} />,
     editComponent: EditPage,
     getQuery: gql`
@@ -54,8 +59,5 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
     },
     menuIcon: File,
     hideInMenuIcon: FileNotMenu,
-    ...createDocumentRootBlocksMethods({
-        content: PageContentBlock,
-        seo: SeoBlock,
-    }),
+    ...createDocumentRootBlocksMethods(rootBlocks),
 };
