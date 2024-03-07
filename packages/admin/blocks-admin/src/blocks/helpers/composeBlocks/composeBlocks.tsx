@@ -195,6 +195,25 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
 
                 return result;
             },
+            resolveDependencyRoute: (state, jsonPath) => {
+                const pathArr = jsonPath.split(".");
+                const key = pathArr[0];
+                const childJsonPath = pathArr.slice(1).join(".");
+
+                let dependencyRoute: string | undefined;
+                applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
+                    if (attr === key) {
+                        const extractedData = extractData([block, options], attr, state);
+                        dependencyRoute = block.resolveDependencyRoute(extractedData, childJsonPath);
+                    }
+                });
+
+                if (dependencyRoute === undefined) {
+                    throw new Error(`CompositeBlock: Can't find block with key "${key}"`);
+                }
+
+                return dependencyRoute;
+            },
         },
         api: {
             adminComponentProps,
