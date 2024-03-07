@@ -82,8 +82,8 @@ export function generateForm(
     `;
 
     gqlDocuments[`update${gqlType}Mutation`] = `
-        mutation Update${gqlType}($id: ID!, $input: ${gqlType}UpdateInput!, $lastUpdatedAt: DateTime) {
-            update${gqlType}(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
+        mutation Update${gqlType}($id: ID!, $input: ${gqlType}UpdateInput!) {
+            update${gqlType}(id: $id, input: $input) {
                 id
                 updatedAt
                 ...${fragmentName}
@@ -234,7 +234,7 @@ export function generateForm(
                 if (!id) throw new Error();
                 await client.mutate<GQLUpdate${gqlType}Mutation, GQLUpdate${gqlType}MutationVariables>({
                     mutation: update${gqlType}Mutation,
-                    variables: { id, input: output, lastUpdatedAt: data?.${instanceGqlType}.updatedAt },
+                    variables: { id, input: output },
                 });
             } else {
                 const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
