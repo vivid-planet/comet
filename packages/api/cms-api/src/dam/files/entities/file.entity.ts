@@ -17,6 +17,8 @@ import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 import { DamScopeInterface } from "../../types";
+import { EntityInfo } from "../decorators/entity-info.decorator";
+import { FilesEntityInfoService } from "../files-entity-info.service";
 import { DamFileImage } from "./file-image.entity";
 import { FolderInterface } from "./folder.entity";
 import { License } from "./license.embeddable";
@@ -148,6 +150,7 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
     }
 
     if (Scope) {
+        @EntityInfo<DamFile>(FilesEntityInfoService)
         @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
         class DamFile extends FileBase {
@@ -157,6 +160,7 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         }
         return DamFile;
     } else {
+        @EntityInfo<DamFile>(FilesEntityInfoService)
         @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
         class DamFile extends FileBase {}

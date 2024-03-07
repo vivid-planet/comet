@@ -69,6 +69,7 @@ export { defaultDamAcceptedMimetypes } from "./dam/common/mimeTypes/default-dam-
 export { DamConfig } from "./dam/dam.config";
 export { DAM_CONFIG, IMGPROXY_CONFIG } from "./dam/dam.constants";
 export { DamModule } from "./dam/dam.module";
+export { EntityInfo, EntityInfoServiceInterface } from "./dam/files/decorators/entity-info.decorator";
 export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dto/file.input";
 export { FileUploadInterface } from "./dam/files/dto/file-upload.input";
 export { CreateFolderInput, UpdateFolderInput } from "./dam/files/dto/folder.input";
@@ -95,8 +96,9 @@ export { ImgproxyConfig, ImgproxyService } from "./dam/imgproxy/imgproxy.service
 export { DependenciesModule } from "./dependencies/dependencies.module";
 export { DependenciesResolverFactory } from "./dependencies/dependencies.resolver.factory";
 export { DependenciesService } from "./dependencies/dependencies.service";
-export { Dependency } from "./dependencies/dependency";
 export { DependentsResolverFactory } from "./dependencies/dependents.resolver.factory";
+export { BaseDependencyInterface } from "./dependencies/dto/base-dependency.interface";
+export { Dependency } from "./dependencies/dto/dependency";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
@@ -129,6 +131,7 @@ export { PageTreeNodeBase } from "./page-tree/entities/page-tree-node-base.entit
 export { PAGE_TREE_REPOSITORY } from "./page-tree/page-tree.constants";
 export { PageTreeModule } from "./page-tree/page-tree.module";
 export { PageTreeReadApi, PageTreeService } from "./page-tree/page-tree.service";
+export { PageTreeNodeDocumentEntityInfoService } from "./page-tree/page-tree-node-document-entity-info.service";
 export { PageTreeNodeDocumentEntityScopeService } from "./page-tree/page-tree-node-document-entity-scope.service";
 export { PageTreeReadApiService } from "./page-tree/page-tree-read-api.service";
 export { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility, ScopeInterface } from "./page-tree/types";
