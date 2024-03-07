@@ -1,11 +1,13 @@
 import { gql } from "@apollo/client";
 import { BlockInputApi, BlockInterface } from "@comet/blocks-admin";
 
-import { Maybe } from "../graphql.generated";
+import { GQLPageTreeNode, Maybe } from "../graphql.generated";
 import { DependencyInterface } from "./types";
 
 interface Query<RootBlocks extends Record<string, BlockInterface>> {
-    node: Maybe<{ id: string } & { [Key in keyof RootBlocks]: BlockInputApi<RootBlocks[Key]> }>;
+    node: Maybe<
+        { id: string; pageTreeNode: Maybe<Pick<GQLPageTreeNode, "id" | "category">> } & { [Key in keyof RootBlocks]: BlockInputApi<RootBlocks[Key]> }
+    >;
 }
 
 interface QueryVariables {
@@ -19,8 +21,13 @@ export function createDocumentDependencyMethods<RootBlocks extends Record<string
 }: {
     rootQueryName: string;
     rootBlocks: { [Key in keyof RootBlocks]: RootBlocks[Key] | { block: RootBlocks[Key]; path?: string } };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    basePath: string | ((data: any /* TODO better typing */) => string);
+    basePath:
+        | string
+        | ((
+              node: { id: string; pageTreeNode: Pick<GQLPageTreeNode, "id" | "category"> } & {
+                  [Key in keyof RootBlocks]: BlockInputApi<RootBlocks[Key]>;
+              },
+          ) => string);
 }): Pick<DependencyInterface, "resolveUrl"> {
     return {
         resolveUrl: async ({ rootColumnName, jsonPath, apolloClient, id }) => {
@@ -44,6 +51,10 @@ export function createDocumentDependencyMethods<RootBlocks extends Record<string
 
             if (error || data.node === null) {
                 throw new Error(`Error for document ${id}: ${error?.message ?? "Document is undefined"}`);
+            }
+
+            if (!hasPageTreeNode(data.node)) {
+                throw new Error(`Error for document ${id}: No page tree node found`);
             }
 
             let url: string;
@@ -78,4 +89,10 @@ export function createDocumentDependencyMethods<RootBlocks extends Record<string
 
 function isBlockInterface(block: unknown): block is BlockInterface {
     return typeof block === "object" && block !== null && "name" in block;
+}
+
+function hasPageTreeNode(node: {
+    pageTreeNode: Maybe<Pick<GQLPageTreeNode, "id" | "category">>;
+}): node is { pageTreeNode: Pick<GQLPageTreeNode, "id" | "category"> } {
+    return node.pageTreeNode !== null;
 }

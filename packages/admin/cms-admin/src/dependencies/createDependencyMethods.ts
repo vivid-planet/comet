@@ -19,8 +19,7 @@ export function createDependencyMethods<RootBlocks extends Record<string, BlockI
 }: {
     rootQueryName: string;
     rootBlocks: { [Key in keyof RootBlocks]: RootBlocks[Key] | { block: RootBlocks[Key]; path?: string } };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    basePath: string | ((data: any /* TODO better typing */) => string);
+    basePath: string | ((node: NonNullable<Query<RootBlocks>["node"]>) => string);
 }): Pick<DependencyInterface, "resolveUrl"> {
     return {
         resolveUrl: async ({ rootColumnName, jsonPath, apolloClient, id }) => {
