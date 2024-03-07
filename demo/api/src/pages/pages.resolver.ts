@@ -9,7 +9,7 @@ import {
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { UnauthorizedException } from "@nestjs/common";
-import { Args, ID, Mutation, Parent, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 
 import { PageInput } from "./dto/page.input";
@@ -19,6 +19,12 @@ import { Page } from "./entities/page.entity";
 @RequiredPermission(["pageTree"])
 export class PagesResolver {
     constructor(@InjectRepository(Page) private readonly repository: EntityRepository<Page>, private readonly pageTreeService: PageTreeService) {}
+
+    @Query(() => Page)
+    @AffectedEntity(Page)
+    async page(@Args("id", { type: () => ID }) id: string): Promise<Page> {
+        return this.repository.findOneOrFail({ id });
+    }
 
     @ResolveField(() => PageTreeNode, { nullable: true })
     async pageTreeNode(@Parent() page: Page): Promise<PageTreeNodeInterface | null> {
