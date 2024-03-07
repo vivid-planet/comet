@@ -16,7 +16,6 @@ export const LinkListBlock = createListBlock({
     additionalItemFields: {
         ...userGroupAdditionalItemFields,
     },
-    maxVisibleBlocks: 2,
     AdditionalItemContextMenuItems: ({ item, onChange, onMenuClose }) => {
         return <UserGroupContextMenuItem item={item} onChange={onChange} onMenuClose={onMenuClose} />;
     },
