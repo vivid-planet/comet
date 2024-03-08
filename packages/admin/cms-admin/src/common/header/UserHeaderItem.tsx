@@ -47,7 +47,7 @@ export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
     const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
 
     return (
-        <AppHeaderDropdown buttonChildren={isMobile ? undefined : user.name} startIcon={<Account />}>
+        <AppHeaderDropdown buttonChildren={isMobile ? <Account /> : user.name} startIcon={isMobile ? undefined : <Account />}>
             <DropdownContent padding={4}>
                 <Button
                     fullWidth={true}
