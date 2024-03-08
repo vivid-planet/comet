@@ -1,6 +1,6 @@
-import { InputWithPopper, ThemedComponentBaseProps } from "@comet/admin";
+import { createSlot, InputWithPopper, ThemedComponentBaseProps } from "@comet/admin";
 import { Box, ButtonBase, IconButton, InputAdornment as MuiInputAdornment, Typography } from "@mui/material";
-import { css, styled, Theme } from "@mui/material/styles";
+import { css, Theme } from "@mui/material/styles";
 import { HexColorPicker as HexColorPickerBase, RgbaStringColorPicker as RgbaStringColorPickerBase } from "react-colorful";
 
 export type ColorPickerClassKey =
@@ -53,38 +53,26 @@ const getPopperSectionStyles = (theme: Theme) => css`
     }
 `;
 
-export const Root = styled(InputWithPopper, {
-    name: "CometAdminColorPicker",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+export const Root = createSlot(InputWithPopper)<ColorPickerClassKey>({
+    componentName: "ColorPicker",
+    slotName: "root",
+})();
 
-export const InputAdornment = styled(MuiInputAdornment, {
-    name: "CometAdminColorPicker",
-    slot: "inputAdornment",
-    overridesResolver(_, styles) {
-        return [styles.inputAdornment];
-    },
-})(css``);
+export const InputAdornment = createSlot(MuiInputAdornment)<ColorPickerClassKey>({
+    componentName: "ColorPicker",
+    slotName: "inputAdornment",
+})();
 
-export const PopperRoot = styled("div", {
-    name: "CometAdminColorPicker",
-    slot: "popperRoot",
-    overridesResolver(_, styles) {
-        return [styles.popperRoot];
-    },
+export const PopperRoot = createSlot("div")<ColorPickerClassKey>({
+    componentName: "ColorPicker",
+    slotName: "popperRoot",
 })(css`
     width: 300px;
 `);
 
-export const Header = styled("div", {
-    name: "CometAdminColorPicker",
-    slot: "header",
-    overridesResolver(_, styles) {
-        return [styles.header, styles.popperSection];
-    },
+export const Header = createSlot("div")<ColorPickerClassKey>({
+    componentName: "ColorPicker",
+    slotName: "header",
 })(
     ({ theme }) => css`
         ${getPopperSectionStyles(theme)}
@@ -93,24 +81,18 @@ export const Header = styled("div", {
     `,
 );
 
-export const HeaderTitleText = styled(Typography, {
-    name: "CometAdminColorPicker",
-    slot: "headerTitleText",
-    overridesResolver(_, styles) {
-        return [styles.headerTitleText];
-    },
+export const HeaderTitleText = createSlot(Typography)<ColorPickerClassKey>({
+    componentName: "ColorPicker",
+    slotName: "headerTitleText",
 })(
     ({ theme }) => css`
         font-weight: ${theme.typography.fontWeightBold};
     `,
 );
 
-export const HeaderCloseButton = styled(IconButton, {
-    name: "CometAdminColorPicker",
-    slot: "headerCloseButton",
-    overridesResolver(_, styles) {
-        return [styles.headerCloseButton];
-    },
+export const HeaderCloseButton = createSlot(IconButton)<ColorPickerClassKey>({
+    componentName: "ColorPicker",
+    slotName: "headerCloseButton",
 })(
     ({ theme }) => css`
         position: absolute;
@@ -120,11 +102,11 @@ export const HeaderCloseButton = styled(IconButton, {
     `,
 );
 
-export const ColorPickerWrapper = styled("div", {
-    name: "CometAdminColorPicker",
-    slot: "colorPickerWrapper",
-    overridesResolver(_, styles) {
-        return [styles.colorPickerWrapper, styles.popperSection];
+export const ColorPickerWrapper = createSlot("div")<ColorPickerClassKey>({
+    componentName: "ColorPicker",
+    slotName: "colorPickerWrapper",
+    classesResolver() {
+        return ["popperSection"];
     },
 })(
     ({ theme }) => css`
@@ -166,11 +148,11 @@ export const ColorPickerWrapper = styled("div", {
     `,
 );
 
-export const ColorPalette = styled("div", {
-    name: "CometAdminColorPicker",
-    slot: "colorPalette",
-    overridesResolver(_, styles) {
-        return [styles.colorPalette, styles.popperSection];
+export const ColorPalette = createSlot("div")<ColorPickerClassKey>({
+    componentName: "ColorPicker",
+    slotName: "colorPalette",
+    classesResolver() {
+        return ["popperSection"];
     },
 })(
     ({ theme }) => css`
@@ -185,15 +167,13 @@ type ColorPaletteItemProps = {
     colorValue: string;
 };
 
-export const ColorPaletteItem = styled(Box, {
-    name: "CometAdminColorPicker",
-    slot: "colorPaletteItem",
+export const ColorPaletteItem = createSlot(Box)<ColorPickerClassKey, ColorPaletteItemProps>({
+    componentName: "ColorPicker",
+    slotName: "colorPaletteItem",
+    // @ts-expect-error TODO: support `shouldForwardProp` in `createSlot`
     shouldForwardProp: (prop) => prop !== "color",
-    overridesResolver(_, styles) {
-        return [styles.colorPaletteItem];
-    },
-})<ColorPaletteItemProps>(
-    ({ theme, colorValue }) => css`
+})(
+    ({ theme, ownerState }) => css`
         cursor: pointer;
         width: 24px;
         height: 24px;
@@ -201,15 +181,15 @@ export const ColorPaletteItem = styled(Box, {
         border: thin solid ${theme.palette.grey[100]};
         border-radius: ${theme.shape.borderRadius};
         box-sizing: border-box;
-        background-color: ${colorValue};
+        background-color: ${ownerState.colorValue};
     `,
 );
 
-export const Footer = styled("div", {
-    name: "CometAdminColorPicker",
-    slot: "footer",
-    overridesResolver(_, styles) {
-        return [styles.footer, styles.popperSection];
+export const Footer = createSlot("div")<ColorPickerClassKey>({
+    componentName: "ColorPicker",
+    slotName: "footer",
+    classesResolver() {
+        return ["popperSection"];
     },
 })(
     ({ theme }) => css`
@@ -218,12 +198,9 @@ export const Footer = styled("div", {
     `,
 );
 
-export const FooterClearButton = styled(ButtonBase, {
-    name: "CometAdminColorPicker",
-    slot: "footerClearButton",
-    overridesResolver(_, styles) {
-        return [styles.footerClearButton];
-    },
+export const FooterClearButton = createSlot(ButtonBase)<ColorPickerClassKey>({
+    componentName: "ColorPicker",
+    slotName: "footerClearButton",
 })(
     ({ theme }) => css`
         padding: ${theme.spacing(2)};
@@ -231,12 +208,9 @@ export const FooterClearButton = styled(ButtonBase, {
     `,
 );
 
-export const Preview = styled("div", {
-    name: "CometAdminColorPicker",
-    slot: "preview",
-    overridesResolver(_, styles) {
-        return [styles.preview];
-    },
+export const Preview = createSlot("div")<ColorPickerClassKey>({
+    componentName: "ColorPicker",
+    slotName: "preview",
 })(css`
     position: relative;
     overflow: hidden;
@@ -255,20 +229,21 @@ export type PreviewIndicatorColorProps = {
     color: string;
 };
 
-export const PreviewIndicator = styled("div", {
-    name: "CometAdminColorPicker",
-    slot: "previewIndicator",
+// TODO: Check if PreviewIndicatorProps is used correctly here
+export const PreviewIndicator = createSlot("div")<ColorPickerClassKey, PreviewIndicatorProps>({
+    componentName: "ColorPicker",
+    slotName: "previewIndicator",
+    // @ts-expect-error TODO: support `shouldForwardProp` in `createSlot`
     shouldForwardProp: (prop) => prop !== "type" && prop !== "color",
-    overridesResolver({ type }: PreviewIndicatorProps, styles) {
+    classesResolver({ type }) {
         return [
-            styles.previewIndicator,
-            type === "color" && styles.previewIndicatorColor,
-            type === "empty" && styles.previewIndicatorEmpty,
-            type === "invalid" && styles.previewIndicatorInvalid,
+            type === "color" && "previewIndicatorColor",
+            type === "empty" && "previewIndicatorEmpty",
+            type === "invalid" && "previewIndicatorInvalid",
         ];
     },
-})<PreviewIndicatorProps>(
-    ({ type, color, theme }) => css`
+})(
+    ({ theme, ownerState }) => css`
         position: absolute;
         left: 0;
         right: 0;
@@ -277,12 +252,12 @@ export const PreviewIndicator = styled("div", {
         border: thin solid ${theme.palette.divider};
         border-radius: ${theme.shape.borderRadius};
 
-        ${type === "color" &&
+        ${ownerState.type === "color" &&
         css`
-            background-color: ${color};
+            background-color: ${ownerState.color};
         `}
 
-        ${type === "empty" &&
+        ${ownerState.type === "empty" &&
         css`
             display: flex;
             align-items: center;
@@ -298,7 +273,7 @@ export const PreviewIndicator = styled("div", {
             }
         `}
 
-        ${type === "invalid" &&
+        ${ownerState.type === "invalid" &&
         css`
             font-size: 16px;
             line-height: 24px;
@@ -309,18 +284,12 @@ export const PreviewIndicator = styled("div", {
     `,
 );
 
-export const HexColorPicker = styled(HexColorPickerBase, {
-    name: "CometAdminColorPicker",
-    slot: "hexColorPicker",
-    overridesResolver(_, styles) {
-        return [styles.hexColorPicker];
-    },
-})(css``);
+export const HexColorPicker = createSlot(HexColorPickerBase)<ColorPickerClassKey>({
+    componentName: "ColorPicker",
+    slotName: "hexColorPicker",
+})();
 
-export const RgbaStringColorPicker = styled(RgbaStringColorPickerBase, {
-    name: "CometAdminColorPicker",
-    slot: "rgbaStringColorPicker",
-    overridesResolver(_, styles) {
-        return [styles.rgbaStringColorPicker];
-    },
-})(css``);
+export const RgbaStringColorPicker = createSlot(RgbaStringColorPickerBase)<ColorPickerClassKey>({
+    componentName: "ColorPicker",
+    slotName: "rgbaStringColorPicker",
+})();

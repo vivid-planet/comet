@@ -1,11 +1,11 @@
 import { Check, Reset } from "@comet/admin-icons";
 import { Button, ButtonProps, ComponentsOverrides, Popover as MuiPopover, Theme } from "@mui/material";
-import { css, styled, useThemeProps } from "@mui/material/styles";
+import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { Form, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { Root as FieldContainerRoot } from "../../../form/FieldContainer";
+import { createSlot } from "../../../helpers/createSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { messages } from "../../../messages";
 import { dirtyFieldsCount } from "../dirtyFieldsCount";
@@ -17,12 +17,9 @@ import { FilterBarButton, FilterBarButtonProps } from "../filterBarButton/Filter
  */
 export type FilterBarPopoverFilterClassKey = "root" | "fieldBarWrapper" | "popoverContentContainer" | "buttonsContainer" | "popover";
 
-const Root = styled("div", {
-    name: "CometAdminFilterBarPopoverFilter",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createSlot("div")<FilterBarPopoverFilterClassKey>({
+    componentName: "FilterBarPopoverFilter",
+    slotName: "root",
 })(
     ({ theme }) => css`
         background-color: ${theme.palette.common.white};
@@ -33,38 +30,30 @@ const Root = styled("div", {
     `,
 );
 
-const FieldBarWrapper = styled("div", {
-    name: "CometAdminFilterBarPopoverFilter",
-    slot: "fieldBarWrapper",
-    overridesResolver(_, styles) {
-        return [styles.fieldBarWrapper];
-    },
+const FieldBarWrapper = createSlot("div")<FilterBarPopoverFilterClassKey>({
+    componentName: "FilterBarPopoverFilter",
+    slotName: "fieldBarWrapper",
 })(css`
     position: relative;
 `);
 
-const PopoverContentContainer = styled("div", {
-    name: "CometAdminFilterBarPopoverFilter",
-    slot: "popoverContentContainer",
-    overridesResolver(_, styles) {
-        return [styles.popoverContentContainer];
-    },
+const PopoverContentContainer = createSlot("div")<FilterBarPopoverFilterClassKey>({
+    componentName: "FilterBarPopoverFilter",
+    slotName: "popoverContentContainer",
 })(css`
     min-width: 300px;
 
-    & ${FieldContainerRoot} {
+    // TODO: Check if this actually works again now
+    .CometAdminFieldContainer-root {
         box-sizing: border-box;
         padding: 20px;
         margin-bottom: 0;
     }
 `);
 
-const ButtonsContainer = styled("div", {
-    name: "CometAdminFilterBarPopoverFilter",
-    slot: "buttonsContainer",
-    overridesResolver(_, styles) {
-        return [styles.buttonsContainer];
-    },
+const ButtonsContainer = createSlot("div")<FilterBarPopoverFilterClassKey>({
+    componentName: "FilterBarPopoverFilter",
+    slotName: "buttonsContainer",
 })(
     ({ theme }) => css`
         border-top: 1px solid ${theme.palette.grey[100]};
@@ -76,13 +65,10 @@ const ButtonsContainer = styled("div", {
     `,
 );
 
-const Popover = styled(MuiPopover, {
-    name: "CometAdminFilterBarPopoverFilter",
-    slot: "popover",
-    overridesResolver(_, styles) {
-        return [styles.popover];
-    },
-})(css``);
+const Popover = createSlot(MuiPopover)<FilterBarPopoverFilterClassKey>({
+    componentName: "FilterBarPopoverFilter",
+    slotName: "popover",
+})();
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

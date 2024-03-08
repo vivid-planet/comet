@@ -1,7 +1,8 @@
 import { ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText } from "@mui/material";
-import { ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { createSlot } from "../../helpers/createSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MenuLevel } from "./CollapsibleItem";
 import { MenuContext } from "./Context";
@@ -15,20 +16,19 @@ const colors = {
     textLevel2: "#17181A",
 };
 
-const Root = styled(ListItemButton, {
-    name: "CometAdminMenuItem",
-    slot: "root",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+const Root = createSlot(ListItemButton)<MenuItemClassKey, OwnerState>({
+    componentName: "MenuItem",
+    slotName: "root",
+    classesResolver(ownerState) {
         return [
-            styles.root,
-            ownerState.level === 1 && styles.level1,
-            ownerState.level === 2 && styles.level2,
-            ownerState.icon && styles.hasIcon,
-            ownerState.secondaryAction && styles.hasSecondaryAction,
-            ownerState.secondary && styles.hasSecondaryText,
+            ownerState.level === 1 && "level1",
+            ownerState.level === 2 && "level2",
+            Boolean(ownerState.icon) && "hasIcon",
+            Boolean(ownerState.secondaryAction) && "hasSecondaryAction",
+            Boolean(ownerState.secondary) && "hasSecondaryText",
         ];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ theme, ownerState }) => css`
         flex-shrink: 0;
         flex-grow: 0;

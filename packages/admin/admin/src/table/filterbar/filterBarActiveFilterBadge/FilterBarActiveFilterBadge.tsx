@@ -1,7 +1,8 @@
 import { ComponentsOverrides, Typography } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { createSlot } from "../../../helpers/createSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 
 /**
@@ -9,12 +10,9 @@ import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBasePr
  */
 export type FilterBarActiveFilterBadgeClassKey = "hasValueCount";
 
-const HasValueCount = styled("div", {
-    name: "CometAdminFilterBarActiveFilterBadge",
-    slot: "hasValueCount",
-    overridesResolver(_, styles) {
-        return [styles.hasValueCount];
-    },
+const HasValueCount = createSlot("div")<FilterBarActiveFilterBadgeClassKey>({
+    componentName: "FilterBarActiveFilterBadge",
+    slotName: "hasValueCount",
 })(
     ({ theme }) => css`
         display: flex;

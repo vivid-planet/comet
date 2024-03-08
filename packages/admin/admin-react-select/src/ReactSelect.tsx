@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { createSlot } from "@comet/admin";
 import { SvgIconComponent } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ClearIcon from "@mui/icons-material/Clear";
 import DropdownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Chip, ComponentsOverrides, InputBase, inputBaseClasses, MenuItem, Paper, Theme, Typography, useTheme } from "@mui/material";
-import { css, styled } from "@mui/material/styles";
+import { css } from "@mui/material/styles";
 import * as React from "react";
 import Select, { OptionTypeBase } from "react-select";
 import AsyncSelect, { Props as ReactSelectAsyncProps } from "react-select/async";
@@ -38,12 +39,9 @@ export type SelectClassKey =
     | "optionSelected"
     | "optionFocused";
 
-const NoOptionsMessageText = styled(Typography, {
-    name: "CometAdminSelect",
-    slot: "noOptionsMessage",
-    overridesResolver(_, styles) {
-        return [styles.noOptionsMessage];
-    },
+const NoOptionsMessageText = createSlot(Typography)<SelectClassKey>({
+    componentName: "Select",
+    slotName: "noOptionsMessage",
 })(
     ({ theme }) => css`
         padding: ${theme.spacing(1)} ${theme.spacing(2)};
@@ -59,12 +57,10 @@ function inputComponent({ inputRef, ...props }: any) {
     return <div ref={inputRef} {...props} />;
 }
 
-const ControlInput = styled(InputBase, {
-    name: "CometAdminSelect",
-    slot: "input",
-    overridesResolver(_, styles) {
-        return [styles.input];
-    },
+// @ts-expect-error TODO: Fix type
+const ControlInput = createSlot(InputBase)<SelectClassKey>({
+    componentName: "Select",
+    slotName: "input",
 })(css`
     .${inputBaseClasses.input} {
         display: flex;
@@ -84,25 +80,26 @@ function Control<OptionType extends OptionTypeBase, IsMulti extends boolean>(pro
     return <ControlInput type="text" fullWidth {...InputProps} {...props.selectProps.textFieldProps} />;
 }
 
-type OptionMenuItemProps = {
+type OptionMenuItemState = {
     focused: boolean;
     selected: boolean;
 };
 
-const OptionMenuItem = styled(MenuItem, {
-    name: "CometAdminSelect",
-    slot: "option",
-    overridesResolver({ focused, selected }: OptionMenuItemProps, styles) {
-        return [styles.option, focused && styles.optionFocused, selected && styles.optionSelected];
+// TODO: Check if the ownerState type works correctly here
+const OptionMenuItem = createSlot(MenuItem)<SelectClassKey, OptionMenuItemState>({
+    componentName: "Select",
+    slotName: "option",
+    classesResolver(ownerState) {
+        return [ownerState.focused && "optionFocused", ownerState.selected && "optionSelected"];
     },
-})<OptionMenuItemProps>(
-    ({ theme, focused, selected }) => css`
-        ${selected &&
+})(
+    ({ theme, ownerState }) => css`
+        ${ownerState.selected &&
         css`
             font-weight: ${theme.typography.fontWeightMedium};
         `}
 
-        ${focused &&
+        ${ownerState.focused &&
         css`
             background-color: ${theme.palette.action.selected};
         `}
@@ -113,8 +110,8 @@ function Option<OptionType extends OptionTypeBase, IsMulti extends boolean>(prop
     return (
         <OptionMenuItem
             ref={props.innerRef}
-            focused={props.isFocused}
             selected={props.isSelected}
+            ownerState={{ focused: props.isFocused, selected: props.isSelected }}
             disabled={props.isDisabled}
             // @ts-expect-error The type is not correctly passed through to `MenuItem` when using `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop
             component="div"
@@ -125,12 +122,9 @@ function Option<OptionType extends OptionTypeBase, IsMulti extends boolean>(prop
     );
 }
 
-const PlaceholderSlot = styled("div", {
-    name: "CometAdminSelect",
-    slot: "placeholder",
-    overridesResolver(_, styles) {
-        return [styles.placeholder];
-    },
+const PlaceholderSlot = createSlot("div")<SelectClassKey>({
+    componentName: "Select",
+    slotName: "placeholder",
 })(
     ({ theme }) => css`
         color: ${theme.palette.text.disabled};
@@ -141,12 +135,9 @@ function Placeholder<OptionType extends OptionTypeBase, IsMulti extends boolean>
     return <PlaceholderSlot {...props.innerProps}>{props.children}</PlaceholderSlot>;
 }
 
-const SingleValueSlot = styled("div", {
-    name: "CometAdminSelect",
-    slot: "singleValue",
-    overridesResolver(_, styles) {
-        return [styles.singleValue];
-    },
+const SingleValueSlot = createSlot("div")<SelectClassKey>({
+    componentName: "Select",
+    slotName: "singleValue",
 })(css`
     overflow: hidden;
     text-overflow: ellipsis;
@@ -157,12 +148,9 @@ function SingleValue<OptionType extends OptionTypeBase>(props: SingleValueProps<
     return <SingleValueSlot {...props.innerProps}>{props.children}</SingleValueSlot>;
 }
 
-const ValueContainerSlot = styled("div", {
-    name: "CometAdminSelect",
-    slot: "valueContainer",
-    overridesResolver(_, styles) {
-        return [styles.valueContainer];
-    },
+const ValueContainerSlot = createSlot("div")<SelectClassKey>({
+    componentName: "Select",
+    slotName: "valueContainer",
 })(css`
     display: flex;
     flex-wrap: nowrap;
@@ -175,21 +163,18 @@ function ValueContainer<OptionType extends OptionTypeBase, IsMulti extends boole
     return <ValueContainerSlot>{props.children}</ValueContainerSlot>;
 }
 
-type MultiValueChipProps = {
-    focused: boolean;
-};
-
-const MultiValueChip = styled(Chip, {
-    name: "CometAdminSelect",
-    slot: "chip",
-    overridesResolver({ focused }: MultiValueChipProps, styles) {
-        return [styles.chip, focused && styles.chipFocused];
+// TODO: Check if the ownerState type works correctly here
+const MultiValueChip = createSlot(Chip)<SelectClassKey, { focused: boolean }>({
+    componentName: "Select",
+    slotName: "chip",
+    classesResolver(ownerState) {
+        return [ownerState.focused && "chipFocused"];
     },
-})<MultiValueChipProps>(
-    ({ theme, focused }) => css`
+})(
+    ({ theme, ownerState }) => css`
         margin: ${theme.spacing(0.5)} ${theme.spacing(0.25)};
 
-        ${focused &&
+        ${ownerState.focused &&
         css`
             background-color: ${theme.palette.mode === "light" ? theme.palette.grey[300] : theme.palette.grey[700]};
         `}
@@ -200,7 +185,7 @@ function MultiValue<OptionType extends OptionTypeBase>(props: MultiValueProps<Op
     return (
         <MultiValueChip
             tabIndex={-1}
-            focused={props.isFocused}
+            ownerState={{ focused: props.isFocused }}
             label={props.children}
             onDelete={props.removeProps.onClick}
             deleteIcon={<CancelIcon {...props.removeProps} />}
@@ -208,24 +193,18 @@ function MultiValue<OptionType extends OptionTypeBase>(props: MultiValueProps<Op
     );
 }
 
-const MenuSlot = styled(Paper, {
-    name: "CometAdminSelect",
-    slot: "paper",
-    overridesResolver(_, styles) {
-        return [styles.paper];
-    },
-})(css``);
+const MenuSlot = createSlot(Paper)<SelectClassKey>({
+    componentName: "Select",
+    slotName: "paper",
+})();
 
 function Menu<OptionType extends OptionTypeBase, IsMulti extends boolean>(props: MenuProps<OptionType, IsMulti>) {
     return <MenuSlot {...props.innerProps}>{props.children}</MenuSlot>;
 }
 
-const IndicatorsContainerSlot = styled("div", {
-    name: "CometAdminSelect",
-    slot: "indicatorsContainer",
-    overridesResolver(_, styles) {
-        return [styles.indicatorsContainer];
-    },
+const IndicatorsContainerSlot = createSlot("div")<SelectClassKey>({
+    componentName: "Select",
+    slotName: "indicatorsContainer",
 })(css`
     display: flex;
 `);
@@ -234,12 +213,9 @@ function IndicatorsContainer<OptionType extends OptionTypeBase, IsMulti extends 
     return <IndicatorsContainerSlot>{props.children}</IndicatorsContainerSlot>;
 }
 
-const IndicatorSeparatorSlot = styled("span", {
-    name: "CometAdminSelect",
-    slot: "indicatorSeparator",
-    overridesResolver(_, styles) {
-        return [styles.indicatorSeparator];
-    },
+const IndicatorSeparatorSlot = createSlot("span")<SelectClassKey>({
+    componentName: "Select",
+    slotName: "indicatorSeparator",
 })(
     ({ theme }) => css`
         width: 1px;
@@ -252,11 +228,11 @@ function IndicatorSeparator<OptionType extends OptionTypeBase, IsMulti extends b
     return <IndicatorSeparatorSlot />;
 }
 
-const ClearIndicatorSlot = styled("div", {
-    name: "CometAdminSelect",
-    slot: "clearIndicator",
-    overridesResolver(_, styles) {
-        return [styles.indicator, styles.clearIndicator];
+const ClearIndicatorSlot = createSlot("div")<SelectClassKey>({
+    componentName: "Select",
+    slotName: "clearIndicator",
+    classesResolver() {
+        return ["indicator"];
     },
 })(
     ({ theme }) => css`
@@ -282,11 +258,11 @@ function ClearIndicator<OptionType extends OptionTypeBase, IsMulti extends boole
     );
 }
 
-const DropdownIndicatorSlot = styled("div", {
-    name: "CometAdminSelect",
-    slot: "dropdownIndicator",
-    overridesResolver(_, styles) {
-        return [styles.indicator, styles.dropdownIndicator];
+const DropdownIndicatorSlot = createSlot("div")<SelectClassKey>({
+    componentName: "Select",
+    slotName: "dropdownIndicator",
+    classesResolver() {
+        return ["indicator"];
     },
 })(
     ({ theme }) => css`

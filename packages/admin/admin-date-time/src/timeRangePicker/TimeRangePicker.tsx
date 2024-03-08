@@ -1,6 +1,6 @@
-import { ThemedComponentBaseProps } from "@comet/admin";
+import { createSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides, FormControl, Theme, Typography } from "@mui/material";
-import { css, styled, useThemeProps } from "@mui/material/styles";
+import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormatDateOptions, FormattedMessage, useIntl } from "react-intl";
 
@@ -15,59 +15,43 @@ export type TimeRangePickerClassKey =
     | "endTimePicker"
     | "separator";
 
-const Root = styled("div", {
-    name: "CometAdminTimeRangePicker",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createSlot("div")<TimeRangePickerClassKey>({
+    componentName: "TimeRangePicker",
+    slotName: "root",
 })(css`
     display: flex;
     align-items: center;
 `);
 
-const StartFormControl = styled(FormControl, {
-    name: "CometAdminTimeRangePicker",
-    slot: "startFormControl",
-    overridesResolver(_, styles) {
-        return [styles.startFormControl];
-    },
+const StartFormControl = createSlot(FormControl)<TimeRangePickerClassKey>({
+    componentName: "TimeRangePicker",
+    slotName: "startFormControl",
 })(css`
     flex-grow: 1;
 `);
 
-const EndFormControl = styled(FormControl, {
-    name: "CometAdminTimeRangePicker",
-    slot: "endFormControl",
-    overridesResolver(_, styles) {
-        return [styles.endFormControl];
-    },
+const EndFormControl = createSlot(FormControl)<TimeRangePickerClassKey>({
+    componentName: "TimeRangePicker",
+    slotName: "endFormControl",
 })(css`
     flex-grow: 1;
 `);
 
-const StartTimePicker = styled(TimePickerBase, {
-    name: "CometAdminTimeRangePicker",
-    slot: "startTimePicker",
-    overridesResolver(_, styles) {
-        return [styles.startTimePicker];
-    },
-})(css``);
+// @ts-expect-error TODO: Fix the type
+const StartTimePicker = createSlot(TimePickerBase)<TimeRangePickerClassKey>({
+    componentName: "TimeRangePicker",
+    slotName: "startTimePicker",
+})();
 
-const EndTimePicker = styled(TimePickerBase, {
-    name: "CometAdminTimeRangePicker",
-    slot: "endTimePicker",
-    overridesResolver(_, styles) {
-        return [styles.endTimePicker];
-    },
-})(css``);
+// @ts-expect-error TODO: Fix the type
+const EndTimePicker = createSlot(TimePickerBase)<TimeRangePickerClassKey>({
+    componentName: "TimeRangePicker",
+    slotName: "endTimePicker",
+})();
 
-const Separator = styled(Typography, {
-    name: "CometAdminTimeRangePicker",
-    slot: "separator",
-    overridesResolver(_, styles) {
-        return [styles.separator];
-    },
+const Separator = createSlot(Typography)<TimeRangePickerClassKey>({
+    componentName: "TimeRangePicker",
+    slotName: "separator",
 })(
     ({ theme }) => css`
         margin-left: ${theme.spacing(2)};
@@ -167,6 +151,7 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                     inputRef={startPickerRef}
                     value={startTime}
                     placeholder={intl.formatMessage({ id: "comet.timeRangePicker.start", defaultMessage: "Start" })}
+                    // @ts-expect-error TODO: Fix the type
                     onChange={(time) => onChangeTimeValue(time, "start")}
                     onOpenPopper={() => setStartPickerIsOpen(true)}
                     onClosePopper={() => setStartPickerIsOpen(false)}
@@ -181,6 +166,7 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                     inputRef={endPickerRef}
                     value={endTime}
                     placeholder={intl.formatMessage({ id: "comet.timeRangePicker.end", defaultMessage: "End" })}
+                    // @ts-expect-error TODO: Fix the type
                     onChange={(time) => onChangeTimeValue(time, "end")}
                     onOpenPopper={() => setEndPickerIsOpen(true)}
                     onClosePopper={() => setEndPickerIsOpen(false)}

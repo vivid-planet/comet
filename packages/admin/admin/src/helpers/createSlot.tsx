@@ -1,4 +1,5 @@
 import { css, generateUtilityClass, styled, Theme } from "@mui/material";
+import { CSSProperties } from "@mui/material/styles/createMixins";
 import React from "react";
 
 type Options<ClassKey extends string, OwnerState extends object | undefined> = {
@@ -15,9 +16,9 @@ type OwnerStateObjectIfDefined<OwnerState extends object | undefined> = OwnerSta
           ownerState?: undefined;
       };
 
-type SlotStyles<OwnerState extends object | undefined> =
-    | ReturnType<typeof css>
-    | ((props: { theme: Theme } & OwnerStateObjectIfDefined<OwnerState>) => ReturnType<typeof css>);
+type Styles = ReturnType<typeof css> | CSSProperties;
+
+type SlotStyles<OwnerState extends object | undefined> = Styles | ((props: { theme: Theme } & OwnerStateObjectIfDefined<OwnerState>) => Styles);
 
 export const createSlot = <C extends React.FunctionComponent<unknown> | keyof JSX.IntrinsicElements>(component: C) => {
     return <ClassKey extends string, OwnerState extends object | undefined = undefined>(options: Options<ClassKey, OwnerState>) => {

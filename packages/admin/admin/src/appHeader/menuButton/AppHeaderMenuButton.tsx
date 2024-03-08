@@ -1,7 +1,8 @@
 import { HamburgerClose, HamburgerOpen } from "@comet/admin-icons";
-import { ComponentsOverrides, css, IconButton, IconButtonClassKey, IconButtonProps, styled, Theme, useThemeProps } from "@mui/material";
+import { ComponentsOverrides, css, IconButton, IconButtonClassKey, IconButtonProps, Theme, useThemeProps } from "@mui/material";
 import * as React from "react";
 
+import { createSlot } from "../../helpers/createSlot";
 import { MenuContext } from "../../mui/menu/Context";
 
 export type AppHeaderMenuButtonProps = IconButtonProps;
@@ -21,12 +22,9 @@ export const AppHeaderMenuButton = (inProps: AppHeaderMenuButtonProps) => {
     );
 };
 
-const Root = styled(IconButton, {
-    name: "CometAdminAppHeaderMenuButton",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createSlot(IconButton)<AppHeaderMenuButtonClassKey>({
+    componentName: "AppHeaderMenuButton",
+    slotName: "root",
 })(
     ({ theme }) => css`
         color: #fff;

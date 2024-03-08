@@ -1,23 +1,21 @@
 import { Clear } from "@comet/admin-icons";
-import { Button, ButtonClassKey, css } from "@mui/material";
+import { Button, ButtonClassKey } from "@mui/material";
 import { ButtonProps } from "@mui/material/Button";
-import { styled, Theme, useThemeProps } from "@mui/material/styles";
+import { Theme, useThemeProps } from "@mui/material/styles";
 import { ComponentsOverrides } from "@mui/material/styles/overrides";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { createSlot } from "../../../helpers/createSlot";
 import { messages } from "../../../messages";
 
 export type CancelButtonProps = ButtonProps;
 export type CancelButtonClassKey = ButtonClassKey;
 
-const Root = styled(Button, {
-    name: "CometAdminCancelButton",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+const Root = createSlot(Button)<CancelButtonClassKey>({
+    componentName: "CancelButton",
+    slotName: "root",
+})();
 
 export function CancelButton(inProps: CancelButtonProps) {
     const {

@@ -107,16 +107,19 @@ export const InputWithPopper = (inProps: InputWithPopperProps) => {
                     value={value}
                     {...inputBaseProps}
                     inputRef={inputRef}
+                    // @ts-expect-error TODO: Fix type
                     onFocus={(e) => {
                         inputBaseProps?.onFocus && inputBaseProps.onFocus(e);
                         openPopper();
                     }}
                     components={inputBaseComponents}
                     {...slotProps?.inputBase}
+                    // @ts-expect-error TODO: Fix type
                     slotProps={{
                         ...slotProps?.inputBase?.slotProps,
                         input: {
                             ...slotProps?.inputBase?.slotProps?.input,
+                            // @ts-expect-error TODO: Fix type
                             onClick: (e) => {
                                 slotProps?.inputBase?.slotProps?.input?.onClick?.(e);
                                 /**

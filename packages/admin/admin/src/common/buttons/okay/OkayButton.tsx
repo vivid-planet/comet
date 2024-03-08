@@ -1,21 +1,19 @@
 import { Check } from "@comet/admin-icons";
-import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides, css } from "@mui/material";
-import { styled, Theme, useThemeProps } from "@mui/material/styles";
+import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
+import { Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { createSlot } from "../../../helpers/createSlot";
 import { messages } from "../../../messages";
 
 export type OkayButtonClassKey = ButtonClassKey;
 export type OkayButtonProps = ButtonProps;
 
-const Root = styled(Button, {
-    name: "CometAdminOkayButton",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+const Root = createSlot(Button)<OkayButtonClassKey>({
+    componentName: "OkayButton",
+    slotName: "root",
+})();
 
 export function OkayButton(inProps: OkayButtonProps) {
     const {

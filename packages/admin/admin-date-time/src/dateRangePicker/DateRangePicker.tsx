@@ -120,9 +120,11 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
                     direction="horizontal"
                     monthDisplayFormat="MMMM yyyy"
                     months={monthsToShow}
+                    // @ts-expect-error TODO: Fix the type
                     navigatorRenderer={(focusedDate, changeShownDate) => (
                         <DatePickerNavigation focusedDate={focusedDate} changeShownDate={changeShownDate} minDate={minDate} maxDate={maxDate} />
                     )}
+                    // @ts-expect-error TODO: Fix the type
                     onRangeFocusChange={(newFocusedRange) => {
                         const rangeSelectionHasCompleted = newFocusedRange[0] === 0 && newFocusedRange[1] === 0;
                         if (rangeSelectionHasCompleted) {
@@ -130,6 +132,7 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
                         }
                     }}
                     ranges={[getRangeFromValue(value)]}
+                    // @ts-expect-error TODO: Fix the type
                     onChange={(ranges) => {
                         const pickedRange = ranges[rangeKey];
                         if (pickedRange.startDate && pickedRange.endDate) {

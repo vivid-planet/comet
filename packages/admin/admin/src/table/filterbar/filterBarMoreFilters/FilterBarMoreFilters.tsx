@@ -1,9 +1,10 @@
 import { Filter } from "@comet/admin-icons";
 import { ComponentsOverrides } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { createSlot } from "../../../helpers/createSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { FilterBarButton } from "../filterBarButton/FilterBarButton";
 
@@ -12,23 +13,17 @@ import { FilterBarButton } from "../filterBarButton/FilterBarButton";
  */
 export type FilterBarMoreFiltersClassKey = "root" | "button";
 
-const Root = styled("div", {
-    name: "CometAdminFilterBarMoreFilters",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createSlot("div")<FilterBarMoreFiltersClassKey>({
+    componentName: "FilterBarMoreFilters",
+    slotName: "root",
 })(css`
     margin-bottom: 10px;
     margin-right: 6px;
 `);
 
-const StyledFilterBarButton = styled(FilterBarButton, {
-    name: "CometAdminFilterBarMoreFilters",
-    slot: "button",
-    overridesResolver(_, styles) {
-        return [styles.button];
-    },
+const StyledFilterBarButton = createSlot(FilterBarButton)<FilterBarMoreFiltersClassKey>({
+    componentName: "FilterBarMoreFilters",
+    slotName: "button",
 })(
     ({ theme }) => css`
         font-weight: ${theme.typography.fontWeightBold};

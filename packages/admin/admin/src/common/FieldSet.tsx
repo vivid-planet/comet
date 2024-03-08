@@ -3,9 +3,10 @@ import { ComponentsOverrides, Theme } from "@mui/material";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
-import { css, styled, useThemeProps } from "@mui/material/styles";
+import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { createSlot } from "../helpers/createSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface FieldSetProps
@@ -93,20 +94,14 @@ export function FieldSet(inProps: React.PropsWithChildren<FieldSetProps>): React
     );
 }
 
-const Root = styled(MuiAccordion, {
-    name: "CometAdminFieldSet",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+const Root = createSlot(MuiAccordion)<FieldSetClassKey>({
+    componentName: "FieldSet",
+    slotName: "root",
+})();
 
-const Summary = styled(MuiAccordionSummary, {
-    name: "CometAdminFieldSet",
-    slot: "summary",
-    overridesResolver(_, styles) {
-        return [styles.summary];
-    },
+const Summary = createSlot(MuiAccordionSummary)<FieldSetClassKey>({
+    componentName: "FieldSet",
+    slotName: "summary",
 })(
     ({ theme }) => css`
         display: flex;
@@ -120,12 +115,9 @@ const Summary = styled(MuiAccordionSummary, {
     `,
 );
 
-const HeaderColumn = styled("div", {
-    name: "CometAdminFieldSet",
-    slot: "headerColumn",
-    overridesResolver(_, styles) {
-        return [styles.headerColumn];
-    },
+const HeaderColumn = createSlot("div")<FieldSetClassKey>({
+    componentName: "FieldSet",
+    slotName: "headerColumn",
 })(
     ({ theme }) => css`
         display: flex;
@@ -140,12 +132,9 @@ const HeaderColumn = styled("div", {
     `,
 );
 
-const Title = styled("div", {
-    name: "CometAdminFieldSet",
-    slot: "title",
-    overridesResolver(_, styles) {
-        return [styles.title];
-    },
+const Title = createSlot("div")<FieldSetClassKey>({
+    componentName: "FieldSet",
+    slotName: "title",
 })(
     ({ theme }) => css`
         display: flex;
@@ -157,12 +146,9 @@ const Title = styled("div", {
     `,
 );
 
-const SupportText = styled("div", {
-    name: "CometAdminFieldSet",
-    slot: "supportText",
-    overridesResolver(_, styles) {
-        return [styles.supportText];
-    },
+const SupportText = createSlot("div")<FieldSetClassKey>({
+    componentName: "FieldSet",
+    slotName: "supportText",
 })(
     ({ theme }) => css`
         font-size: 12px;
@@ -171,36 +157,30 @@ const SupportText = styled("div", {
     `,
 );
 
-const Placeholder = styled("div", {
-    name: "CometAdminFieldSet",
-    slot: "placeholder",
-    overridesResolver(_, styles) {
-        return [styles.placeholder];
-    },
+const Placeholder = createSlot("div")<FieldSetClassKey>({
+    componentName: "FieldSet",
+    slotName: "placeholder",
 })(css`
     flex-grow: 1;
     box-sizing: inherit;
     user-select: none;
 `);
 
-const EndAdornment = styled("div", {
-    name: "CometAdminFieldSet",
-    slot: "endAdornment",
-    overridesResolver(_, styles) {
-        return [styles.endAdornment];
-    },
+const EndAdornment = createSlot("div")<FieldSetClassKey>({
+    componentName: "FieldSet",
+    slotName: "endAdornment",
 })(css`
     display: flex;
     align-items: center;
 `);
 
-const Children = styled(MuiAccordionDetails, {
-    name: "CometAdminFieldSet",
-    slot: "children",
-    overridesResolver({ disablePadding }: OwnerState, styles) {
-        return [styles.children, disablePadding && styles.disablePadding];
+const Children = createSlot(MuiAccordionDetails)<FieldSetClassKey, OwnerState>({
+    componentName: "FieldSet",
+    slotName: "children",
+    classesResolver(ownerState) {
+        return [ownerState.disablePadding && "disablePadding"];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ theme, ownerState }) => css`
         display: flex;
         flex-direction: column;

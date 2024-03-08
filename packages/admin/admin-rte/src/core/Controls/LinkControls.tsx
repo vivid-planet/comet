@@ -1,5 +1,5 @@
-import { ThemedComponentBaseProps } from "@comet/admin";
-import { ButtonGroup, ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/material";
+import { createSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { ButtonGroup, ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
 import * as React from "react";
 
 import LinkToolbarButton from "../extension/Link/ToolbarButton";
@@ -34,20 +34,14 @@ function StyledLinkControls(inProps: RteLinkControlsProps) {
 
 export type RteLinkControlsClassKey = "root" | "item";
 
-const Root = styled(ButtonGroup, {
-    name: "CometAdminRteLinkControls",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+const Root = createSlot(ButtonGroup)<RteLinkControlsClassKey>({
+    componentName: "RteLinkControls",
+    slotName: "root",
+})();
 
-const Item = styled("div", {
-    name: "CometAdminRteLinkControls",
-    slot: "item",
-    overridesResolver(_, styles) {
-        return [styles.item];
-    },
+const Item = createSlot("div")<RteLinkControlsClassKey>({
+    componentName: "RteLinkControls",
+    slotName: "item",
 })(css`
     margin-right: 1px;
     min-width: 0;

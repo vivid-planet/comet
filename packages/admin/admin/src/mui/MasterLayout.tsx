@@ -1,44 +1,36 @@
 import { ComponentsOverrides, CssBaseline } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
 import { AppHeader } from "../appHeader/AppHeader";
 import { AppHeaderMenuButton } from "../appHeader/menuButton/AppHeaderMenuButton";
+import { createSlot } from "../helpers/createSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "./MasterLayoutContext";
 import { MenuContext } from "./menu/Context";
 
 export type MasterLayoutClassKey = "root" | "header" | "contentWrapper";
 
-const Root = styled("div", {
-    name: "CometAdminMasterLayout",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createSlot("div")<MasterLayoutClassKey>({
+    componentName: "MasterLayout",
+    slotName: "root",
 })(css`
     display: flex;
     flex-wrap: nowrap;
 `);
 
-const Header = styled("div", {
-    name: "CometAdminMasterLayout",
-    slot: "header",
-    overridesResolver(_, styles) {
-        return [styles.header];
-    },
+const Header = createSlot("div")<MasterLayoutClassKey>({
+    componentName: "MasterLayout",
+    slotName: "header",
 })(
     ({ theme }) => css`
         z-index: ${theme.zIndex.drawer - 10};
     `,
 );
 
-const ContentWrapper = styled("div", {
-    name: "CometAdminMasterLayout",
-    slot: "contentWrapper",
-    overridesResolver(_, styles) {
-        return [styles.contentWrapper];
-    },
+const ContentWrapper = createSlot("div")<MasterLayoutClassKey>({
+    componentName: "MasterLayout",
+    slotName: "contentWrapper",
 })(css`
     flex-grow: 1;
     padding-top: var(--comet-admin-master-layout-content-top-spacing);

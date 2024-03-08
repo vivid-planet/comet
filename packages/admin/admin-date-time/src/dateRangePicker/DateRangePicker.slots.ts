@@ -1,6 +1,5 @@
-import { InputWithPopper, InputWithPopperClassKey, ThemedComponentBaseProps } from "@comet/admin";
+import { createSlot, InputWithPopper, InputWithPopperClassKey, ThemedComponentBaseProps } from "@comet/admin";
 import { InputAdornment } from "@mui/material";
-import { css, styled } from "@mui/material/styles";
 import { CSSProperties } from "@mui/material/styles/createMixins";
 import { deepmerge } from "@mui/utils";
 import { DateRange as ReactDateRange } from "react-date-range";
@@ -15,28 +14,20 @@ export type SlotProps = ThemedComponentBaseProps<{
     dateRange: typeof ReactDateRange;
 }>["slotProps"];
 
-export const Root = styled(InputWithPopper, {
-    name: "CometAdminDateRangePicker",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+export const Root = createSlot(InputWithPopper)<DateRangePickerClassKey>({
+    componentName: "DateRangePicker",
+    slotName: "root",
+})();
 
-export const StartAdornment = styled(InputAdornment, {
-    name: "CometAdminDateRangePicker",
-    slot: "startAdornment",
-    overridesResolver(_, styles) {
-        return [styles.startAdornment];
-    },
-})(css``);
+export const StartAdornment = createSlot(InputAdornment)<DateRangePickerClassKey>({
+    componentName: "DateRangePicker",
+    slotName: "startAdornment",
+})();
 
-export const DateRange = styled(ReactDateRange, {
-    name: "CometAdminDateRangePicker",
-    slot: "dateRange",
-    overridesResolver(_, styles) {
-        return [styles.dateRange];
-    },
+// @ts-expect-error TODO: Fix the type
+export const DateRange = createSlot(ReactDateRange)<DateRangePickerClassKey>({
+    componentName: "DateRangePicker",
+    slotName: "dateRange",
 })(({ theme }) =>
     deepmerge<CSSProperties>(getReactDateRangeStyles(theme), {
         "& .rdrDay": {

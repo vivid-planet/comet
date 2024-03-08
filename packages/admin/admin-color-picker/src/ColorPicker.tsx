@@ -38,6 +38,14 @@ export interface ColorPickerPropsComponents extends InputWithPopperComponents {
     ColorPickerEmptyPreview?: React.ComponentType<ColorPickerNoColorPreviewProps>;
 }
 
+const DefaultColorPreviewIndicator = ({ type, color }: ColorPickerColorPreviewProps) => {
+    return <PreviewIndicator ownerState={{ type, color }} />;
+};
+
+const DefaultNoColorPreviewIndicator = ({ type }: ColorPickerNoColorPreviewProps) => {
+    return <PreviewIndicator ownerState={{ type }} />;
+};
+
 export interface ColorPickerProps extends Omit<InputWithPopperProps, "children" | "onChange" | "value" | "components" | "slotProps"> {
     value?: string | null;
     onChange?: (color?: string) => void;
@@ -78,9 +86,9 @@ export const ColorPicker = (inProps: ColorPickerProps) => {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminColorPicker" });
     const {
-        ColorPickerColorPreview: ColorPreview = PreviewIndicator,
-        ColorPickerInvalidPreview: InvalidPreview = PreviewIndicator,
-        ColorPickerEmptyPreview: EmptyPreview = PreviewIndicator,
+        ColorPickerColorPreview: ColorPreview = DefaultColorPreviewIndicator,
+        ColorPickerInvalidPreview: InvalidPreview = DefaultNoColorPreviewIndicator,
+        ColorPickerEmptyPreview: EmptyPreview = DefaultNoColorPreviewIndicator,
         ...inputWithPopperComponents
     } = components;
 
@@ -123,8 +131,8 @@ export const ColorPicker = (inProps: ColorPickerProps) => {
                             {previewColor ? (
                                 previewColor.isValid() ? (
                                     <ColorPreview
-                                        color={previewColor.toRgbString()}
                                         type="color"
+                                        color={previewColor.toRgbString()}
                                         {...slotProps?.previewIndicator}
                                         {...slotProps?.previewIndicatorColor}
                                     />
@@ -193,7 +201,7 @@ export const ColorPicker = (inProps: ColorPickerProps) => {
                                             onChangeColor(color);
                                             closePopper(true);
                                         }}
-                                        colorValue={color}
+                                        ownerState={{ colorValue: color }}
                                         {...slotProps?.colorPaletteItem}
                                     />
                                 ))}

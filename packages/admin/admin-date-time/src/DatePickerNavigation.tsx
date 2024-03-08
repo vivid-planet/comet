@@ -1,7 +1,7 @@
-import { ThemedComponentBaseProps } from "@comet/admin";
+import { createSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ArrowLeft, ArrowRight, ChevronDown } from "@comet/admin-icons";
 import { Box, Button, buttonClasses, ComponentsOverrides, IconButton, Menu, menuClasses, MenuItem } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
@@ -116,12 +116,9 @@ export type DatePickerNavigationClassKey =
     | "selectMonthMenu"
     | "selectYearMenu";
 
-const Root = styled("div", {
-    name: "CometAdminDatePickerNavigation",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createSlot("div")<DatePickerNavigationClassKey>({
+    componentName: "DatePickerNavigation",
+    slotName: "root",
 })(
     ({ theme }) => css`
         display: flex;
@@ -134,11 +131,11 @@ const Root = styled("div", {
     `,
 );
 
-const SelectMonthButton = styled(Button, {
-    name: "CometAdminDatePickerNavigation",
-    slot: "selectMonthButton",
-    overridesResolver(_, styles) {
-        return [styles.selectButton, styles.selectMonthButton];
+const SelectMonthButton = createSlot(Button)<DatePickerNavigationClassKey>({
+    componentName: "DatePickerNavigation",
+    slotName: "selectMonthButton",
+    classesResolver() {
+        return ["selectButton"];
     },
 })(
     ({ theme }) => css`
@@ -156,11 +153,11 @@ const SelectMonthButton = styled(Button, {
     `,
 );
 
-const SelectYearButton = styled(Button, {
-    name: "CometAdminDatePickerNavigation",
-    slot: "selectYearButton",
-    overridesResolver(_, styles) {
-        return [styles.selectButton, styles.selectYearButton];
+const SelectYearButton = createSlot(Button)<DatePickerNavigationClassKey>({
+    componentName: "DatePickerNavigation",
+    slotName: "selectYearButton",
+    classesResolver() {
+        return ["selectButton"];
     },
 })(
     ({ theme }) => css`
@@ -178,11 +175,11 @@ const SelectYearButton = styled(Button, {
     `,
 );
 
-const SelectMonthMenu = styled(Menu, {
-    name: "CometAdminDatePickerNavigation",
-    slot: "selectMonthMenu",
-    overridesResolver(_, styles) {
-        return [styles.selectMenu, styles.selectMonthMenu];
+const SelectMonthMenu = createSlot(Menu)<DatePickerNavigationClassKey>({
+    componentName: "DatePickerNavigation",
+    slotName: "selectMonthMenu",
+    classesResolver() {
+        return ["selectMenu"];
     },
 })(css`
     & .${menuClasses.paper} {
@@ -191,11 +188,11 @@ const SelectMonthMenu = styled(Menu, {
     }
 `);
 
-const SelectYearMenu = styled(Menu, {
-    name: "CometAdminDatePickerNavigation",
-    slot: "selectYearMenu",
-    overridesResolver(_, styles) {
-        return [styles.selectMenu, styles.selectYearMenu];
+const SelectYearMenu = createSlot(Menu)<DatePickerNavigationClassKey>({
+    componentName: "DatePickerNavigation",
+    slotName: "selectYearMenu",
+    classesResolver() {
+        return ["selectMenu"];
     },
 })(css`
     & .${menuClasses.paper} {

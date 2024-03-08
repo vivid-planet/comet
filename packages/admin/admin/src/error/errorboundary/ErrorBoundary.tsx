@@ -1,10 +1,11 @@
 import { ChevronDown, ChevronRight, Error } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
 import { Alert as MuiAlert, AlertProps, ComponentsOverrides, Typography } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { createSlot } from "../../helpers/createSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export type ErrorBoundaryClassKey =
@@ -47,38 +48,26 @@ interface IErrorBoundaryState {
     showDetails?: boolean;
 }
 
-const Alert = styled(MuiAlert, {
-    name: "CometAdminErrorBoundary",
-    slot: "alert",
-    overridesResolver(_, styles) {
-        return [styles.alert];
-    },
-})(css``);
+const Alert = createSlot(MuiAlert)<ErrorBoundaryClassKey>({
+    componentName: "ErrorBoundary",
+    slotName: "alert",
+})();
 
-const Message = styled(Typography, {
-    name: "CometAdminErrorBoundary",
-    slot: "message",
-    overridesResolver(_, styles) {
-        return [styles.message];
-    },
-})(css``);
+const Message = createSlot(Typography)<ErrorBoundaryClassKey>({
+    componentName: "ErrorBoundary",
+    slotName: "message",
+})();
 
-const ExceptionDetails = styled("details", {
-    name: "CometAdminErrorBoundary",
-    slot: "exceptionDetails",
-    overridesResolver(_, styles) {
-        return [styles.exceptionDetails];
-    },
+const ExceptionDetails = createSlot("details")<ErrorBoundaryClassKey>({
+    componentName: "ErrorBoundary",
+    slotName: "exceptionDetails",
 })(css`
     white-space: pre-wrap;
 `);
 
-const ExceptionSummary = styled("summary", {
-    name: "CometAdminErrorBoundary",
-    slot: "exceptionSummary",
-    overridesResolver(_, styles) {
-        return [styles.exceptionSummary];
-    },
+const ExceptionSummary = createSlot("summary")<ErrorBoundaryClassKey>({
+    componentName: "ErrorBoundary",
+    slotName: "exceptionSummary",
 })(
     ({ theme }) => css`
         display: flex;
@@ -93,13 +82,13 @@ const ExceptionSummary = styled("summary", {
     `,
 );
 
-const ExceptionSummaryIconOpen = styled("div", {
-    name: "CometAdminErrorBoundary",
-    slot: "exceptionSummaryIconOpened",
-    overridesResolver(_, styles) {
-        return [styles.exceptionSummaryIcon, styles.exceptionSummaryIconOpened];
+const ExceptionSummaryIconOpen = createSlot("div")<ErrorBoundaryClassKey, OwnerState>({
+    componentName: "ErrorBoundary",
+    slotName: "exceptionSummaryIconOpened",
+    classesResolver() {
+        return ["exceptionSummaryIcon"];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ ownerState }) => css`
         align-items: center;
         display: flex;
@@ -111,13 +100,13 @@ const ExceptionSummaryIconOpen = styled("div", {
     `,
 );
 
-const ExceptionSummaryIconClosed = styled("div", {
-    name: "CometAdminErrorBoundary",
-    slot: "exceptionSummaryIconClosed",
-    overridesResolver(_, styles) {
-        return [styles.exceptionSummaryIcon, styles.exceptionSummaryIconClosed];
+const ExceptionSummaryIconClosed = createSlot("div")<ErrorBoundaryClassKey, OwnerState>({
+    componentName: "ErrorBoundary",
+    slotName: "exceptionSummaryIconClosed",
+    classesResolver() {
+        return ["exceptionSummaryIcon"];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ ownerState }) => css`
         align-items: center;
         display: none;
@@ -129,12 +118,9 @@ const ExceptionSummaryIconClosed = styled("div", {
     `,
 );
 
-const ExceptionSummaryTitle = styled(Typography, {
-    name: "CometAdminErrorBoundary",
-    slot: "exceptionSummaryTitle",
-    overridesResolver(_, styles) {
-        return [styles.exceptionSummaryTitle];
-    },
+const ExceptionSummaryTitle = createSlot(Typography)<ErrorBoundaryClassKey>({
+    componentName: "ErrorBoundary",
+    slotName: "exceptionSummaryTitle",
 })(
     ({ theme }) => css`
         font-weight: ${theme.typography.fontWeightBold};
@@ -142,13 +128,10 @@ const ExceptionSummaryTitle = styled(Typography, {
     `,
 );
 
-const ExceptionStackTrace = styled(Typography, {
-    name: "CometAdminErrorBoundary",
-    slot: "exceptionStackTrace",
-    overridesResolver(_, styles) {
-        return [styles.exceptionStackTrace];
-    },
-})(css``);
+const ExceptionStackTrace = createSlot(Typography)<ErrorBoundaryClassKey>({
+    componentName: "ErrorBoundary",
+    slotName: "exceptionStackTrace",
+})();
 
 export const ErrorBoundary = (inProps: ErrorBoundaryProps) => {
     const props = useThemeProps({ props: inProps, name: "CometAdminErrorBoundary" });

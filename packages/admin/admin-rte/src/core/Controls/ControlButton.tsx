@@ -1,6 +1,6 @@
-import { ThemedComponentBaseProps } from "@comet/admin";
+import { createSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 import * as React from "react";
 
@@ -10,13 +10,13 @@ export type RteControlButtonClassKey = "root" | "selected" | "renderAsIcon";
 
 type OwnerState = Pick<IProps, "selected" | "Icon">;
 
-const Root = styled("button", {
-    name: "CometAdminRteControlButton",
-    slot: "root",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.root, ownerState.selected && styles.selected, Boolean(ownerState.Icon) && styles.renderAsIcon];
+const Root = createSlot("button")<RteControlButtonClassKey, OwnerState>({
+    componentName: "RteControlButton",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [ownerState.selected && "selected", Boolean(ownerState.Icon) && "renderAsIcon"];
     },
-})<{ ownerState: OwnerState }>(({ ownerState, theme }) => {
+})(({ ownerState, theme }) => {
     const rteTheme = getRteTheme(theme.components?.CometAdminRte?.defaultProps);
     return css`
         display: flex;

@@ -1,7 +1,7 @@
-import { ThemedComponentBaseProps } from "@comet/admin";
+import { createSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { MoreHoriz } from "@mui/icons-material";
 import { ListItemIcon as MuiListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
-import { ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
 import { Editor } from "draft-js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -118,23 +118,17 @@ export function FeaturesButtonGroup(inProps: IProps) {
 
 export type RteFeaturesButtonGroupClassKey = "root" | "buttonWrapper" | "listItem" | "listItemIcon";
 
-const Root = styled("div", {
-    name: "CometAdminRteFeaturesButtonGroup",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createSlot("div")<RteFeaturesButtonGroupClassKey>({
+    componentName: "RteFeaturesButtonGroup",
+    slotName: "root",
 })(css`
     display: inline-flex;
     justify-content: flex-start;
 `);
 
-const ButtonWrapper = styled("div", {
-    name: "CometAdminRteFeaturesButtonGroup",
-    slot: "buttonWrapper",
-    overridesResolver(_, styles) {
-        return [styles.buttonWrapper];
-    },
+const ButtonWrapper = createSlot("div")<RteFeaturesButtonGroupClassKey>({
+    componentName: "RteFeaturesButtonGroup",
+    slotName: "buttonWrapper",
 })(css`
     margin-right: 1px;
     &:last-child {
@@ -142,22 +136,16 @@ const ButtonWrapper = styled("div", {
     }
 `);
 
-const ListItem = styled(MenuItem, {
-    name: "CometAdminRteFeaturesButtonGroup",
-    slot: "listItem",
-    overridesResolver(_, styles) {
-        return [styles.listItem];
-    },
+const ListItem = createSlot(MenuItem)<RteFeaturesButtonGroupClassKey>({
+    componentName: "RteFeaturesButtonGroup",
+    slotName: "listItem",
 })(css`
     justify-content: space-between;
 `);
 
-const ListItemIcon = styled(MuiListItemIcon, {
-    name: "CometAdminRteFeaturesButtonGroup",
-    slot: "listItemIcon",
-    overridesResolver(_, styles) {
-        return [styles.listItemIcon];
-    },
+const ListItemIcon = createSlot(MuiListItemIcon)<RteFeaturesButtonGroupClassKey>({
+    componentName: "RteFeaturesButtonGroup",
+    slotName: "listItemIcon",
 })(css`
     justify-content: flex-end;
 `);

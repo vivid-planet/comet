@@ -1,7 +1,8 @@
 import { Accept, Copy } from "@comet/admin-icons";
-import { ComponentsOverrides, css, Grow, IconButton, styled, Theme, useThemeProps } from "@mui/material";
+import { ComponentsOverrides, css, Grow, IconButton, Theme, useThemeProps } from "@mui/material";
 import * as React from "react";
 
+import { createSlot } from "../../helpers/createSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export interface CopyToClipboardButtonProps
@@ -89,35 +90,35 @@ export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps): Reac
     );
 };
 
-const Root = styled("div", {
-    name: "CometAdminCopyToClipboardButton",
-    slot: "root",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.root, ownerState.showSuccess && styles.showSuccess];
+const Root = createSlot("div")<CopyToClipboardButtonClassKey, OwnerState>({
+    componentName: "CopyToClipboardButton",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [ownerState.showSuccess && "showSuccess"];
     },
-})<{ ownerState: OwnerState }>(css`
+})(css`
     position: relative;
     display: inline-flex;
     align-items: center;
     height: 100%;
 `);
 
-const CopyButtonContainer = styled("div", {
-    name: "CometAdminCopyToClipboardButton",
-    slot: "copyButtonContainer",
-    overridesResolver(_, styles) {
-        return [styles.buttonContainer, styles.copyButtonContainer];
+const CopyButtonContainer = createSlot("div")<CopyToClipboardButtonClassKey>({
+    componentName: "CopyToClipboardButton",
+    slotName: "copyButtonContainer",
+    classesResolver() {
+        return ["buttonContainer"];
     },
 })(css`
     position: relative;
     z-index: 2;
 `);
 
-const SuccessButtonContainer = styled("div", {
-    name: "CometAdminCopyToClipboardButton",
-    slot: "successButtonContainer",
-    overridesResolver(_, styles) {
-        return [styles.buttonContainer, styles.successButtonContainer];
+const SuccessButtonContainer = createSlot("div")<CopyToClipboardButtonClassKey>({
+    componentName: "CopyToClipboardButton",
+    slotName: "successButtonContainer",
+    classesResolver() {
+        return ["buttonContainer"];
     },
 })(css`
     position: absolute;
@@ -127,21 +128,21 @@ const SuccessButtonContainer = styled("div", {
     transform: translateY(-50%);
 `);
 
-const CopyButton = styled(IconButton, {
-    name: "CometAdminCopyToClipboardButton",
-    slot: "copyButton",
-    overridesResolver(_, styles) {
-        return [styles.button, styles.copyButton];
+const CopyButton = createSlot(IconButton)<CopyToClipboardButtonClassKey>({
+    componentName: "CopyToClipboardButton",
+    slotName: "copyButton",
+    classesResolver() {
+        return ["button"];
     },
 })(css`
     position: relative;
 `);
 
-const SuccessButton = styled(IconButton, {
-    name: "CometAdminCopyToClipboardButton",
-    slot: "successButton",
-    overridesResolver(_, styles) {
-        return [styles.button, styles.successButton];
+const SuccessButton = createSlot(IconButton)<CopyToClipboardButtonClassKey>({
+    componentName: "CopyToClipboardButton",
+    slotName: "successButton",
+    classesResolver() {
+        return ["button"];
     },
 })(css`
     position: relative;

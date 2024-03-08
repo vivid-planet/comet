@@ -1,4 +1,4 @@
-import { ThemedComponentBaseProps } from "@comet/admin";
+import { createSlot, ThemedComponentBaseProps } from "@comet/admin";
 import {
     ComponentsOverrides,
     css,
@@ -7,7 +7,6 @@ import {
     MenuItem,
     Select as MuiSelect,
     selectClasses,
-    styled,
     Theme,
     useThemeProps,
 } from "@mui/material";
@@ -28,12 +27,9 @@ interface Props
 
 export type RteBlockTypeControlsClassKey = "root" | "select";
 
-const Root = styled(FormControl, {
-    name: "CometAdminRteBlockTypeControls",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createSlot(FormControl)<RteBlockTypeControlsClassKey>({
+    componentName: "RteBlockTypeControls",
+    slotName: "root",
 })(css`
     .${inputBaseClasses.root} {
         background-color: transparent;
@@ -53,12 +49,9 @@ const Root = styled(FormControl, {
     }
 `);
 
-const Select = styled(MuiSelect, {
-    name: "CometAdminRteBlockTypeControls",
-    slot: "select",
-    overridesResolver(_, styles) {
-        return [styles.select];
-    },
+const Select = createSlot(MuiSelect)<RteBlockTypeControlsClassKey>({
+    componentName: "RteBlockTypeControls",
+    slotName: "select",
 })(
     ({ theme }) =>
         css`

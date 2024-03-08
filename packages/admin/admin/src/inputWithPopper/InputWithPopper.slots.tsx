@@ -1,42 +1,33 @@
 import { InputBase as MuiInputBase, Paper as MuiPaper, Popper as MuiPopper } from "@mui/material";
-import { css, styled } from "@mui/material/styles";
+import { css } from "@mui/material/styles";
+
+import { createSlot } from "../helpers/createSlot";
 
 export type InputWithPopperClassKey = "root" | "inputBase" | "popper" | "paper";
 
-export const Root = styled("div", {
-    name: "CometAdminInputWithPopper",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+export const Root = createSlot("div")<InputWithPopperClassKey>({
+    componentName: "InputWithPopper",
+    slotName: "root",
+})();
 
-export const InputBase = styled(MuiInputBase, {
-    name: "CometAdminInputWithPopper",
-    slot: "inputBase",
-    overridesResolver(_, styles) {
-        return [styles.inputBase];
-    },
-})(css``);
+// @ts-expect-error TODO: Fix type
+export const InputBase = createSlot(MuiInputBase)<InputWithPopperClassKey>({
+    componentName: "InputWithPopper",
+    slotName: "inputBase",
+})();
 
-export const Popper = styled(MuiPopper, {
-    name: "CometAdminInputWithPopper",
-    slot: "popper",
-    overridesResolver(_, styles) {
-        return [styles.popper];
-    },
+export const Popper = createSlot(MuiPopper)<InputWithPopperClassKey>({
+    componentName: "InputWithPopper",
+    slotName: "popper",
 })(
     ({ theme }) => css`
         z-index: ${theme.zIndex.modal};
     `,
 );
 
-export const Paper = styled(MuiPaper, {
-    name: "CometAdminInputWithPopper",
-    slot: "paper",
-    overridesResolver(_, styles) {
-        return [styles.paper];
-    },
+export const Paper = createSlot(MuiPaper)<InputWithPopperClassKey>({
+    componentName: "InputWithPopper",
+    slotName: "paper",
 })(css`
     transform-origin: top left;
     font-size: 0;

@@ -3,16 +3,16 @@ import {
     Button,
     ButtonGroup as MuiButtonGroup,
     ButtonGroupProps,
-    css,
     MenuItem as MuiMenuItem,
     MenuList as MuiMenuList,
     Popover as MuiPopover,
     PopoverProps,
 } from "@mui/material";
-import { styled, useThemeProps } from "@mui/material/styles";
+import { useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { PropsWithChildren } from "react";
 
+import { createSlot } from "../../../helpers/createSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useStoredState } from "../../../hooks/useStoredState";
 import { SplitButtonContext } from "./SplitButtonContext";
@@ -41,45 +41,30 @@ export interface SplitButtonProps
     popoverProps?: Partial<PopoverProps>;
 }
 
-const Root = styled(MuiButtonGroup, {
-    name: "CometAdminSplitButton",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+const Root = createSlot(MuiButtonGroup)<SplitButtonClassKey>({
+    componentName: "SplitButton",
+    slotName: "root",
+})();
 
-const ActiveButton = styled(Button, {
-    name: "CometAdminSplitButton",
-    slot: "activeButton",
-    overridesResolver(_, styles) {
-        return [styles.activeButton];
-    },
-})(css``);
+const ActiveButton = createSlot(Button)<SplitButtonClassKey>({
+    componentName: "SplitButton",
+    slotName: "activeButton",
+})();
 
-const Popover = styled(MuiPopover, {
-    name: "CometAdminSplitButton",
-    slot: "popover",
-    overridesResolver(_, styles) {
-        return [styles.popover];
-    },
-})(css``);
+const Popover = createSlot(MuiPopover)<SplitButtonClassKey>({
+    componentName: "SplitButton",
+    slotName: "popover",
+})();
 
-const MenuList = styled(MuiMenuList, {
-    name: "CometAdminSplitButton",
-    slot: "menuList",
-    overridesResolver(_, styles) {
-        return [styles.menuList];
-    },
-})(css``);
+const MenuList = createSlot(MuiMenuList)<SplitButtonClassKey>({
+    componentName: "SplitButton",
+    slotName: "menuList",
+})();
 
-const MenuItem = styled(MuiMenuItem, {
-    name: "CometAdminSplitButton",
-    slot: "menuItem",
-    overridesResolver(_, styles) {
-        return [styles.menuItem];
-    },
-})(css``);
+const MenuItem = createSlot(MuiMenuItem)<SplitButtonClassKey>({
+    componentName: "SplitButton",
+    slotName: "menuItem",
+})();
 
 // Based on https://v4.mui.com/components/button-group/#split-button
 export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
