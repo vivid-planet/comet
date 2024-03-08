@@ -1,17 +1,18 @@
-import { MikroORM } from "@mikro-orm/core";
+import { FindOptions, MikroORM, ObjectQuery } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import JSZip from "jszip";
 import isEqual from "lodash.isequal";
+import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "src/common/filter/mikro-orm";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
-import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { DamScopeInterface } from "../types";
-import { DamFolderListPositionArgs, FolderArgsInterface } from "./dto/folder.args";
+import { DamItemFilter } from "./dto/dam-items.args";
+import { DamFolderListPositionArgs, FolderArgsInterface, FolderSort } from "./dto/folder.args";
 import { UpdateFolderInput } from "./dto/folder.input";
 import { FOLDER_TABLE_NAME, FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
@@ -22,9 +23,8 @@ export const withFoldersSelect = (
     args: {
         includeArchived?: boolean;
         parentId?: string | null;
-        query?: string;
-        sortColumnName?: string;
-        sortDirection?: SortDirection;
+        search?: string;
+        sort: FolderSort;
         offset?: number;
         limit?: number;
         scope?: DamScopeInterface;
@@ -34,7 +34,7 @@ export const withFoldersSelect = (
         qb.where({ archived: false });
     }
 
-    const isSearching = args.query !== undefined && args.query.length > 0;
+    const isSearching = args.search !== undefined && args.search.length > 0;
     if (!isSearching) {
         if (args.parentId !== undefined) {
             qb.where({ parent: { id: args.parentId } });
@@ -47,8 +47,8 @@ export const withFoldersSelect = (
         qb.andWhere({ scope: args.scope });
     }
 
-    if (args.query) {
-        qb = addSearchTermFiltertoQueryBuilder(qb, args.query);
+    if (args.search) {
+        qb = addSearchTermFiltertoQueryBuilder(qb, args.search);
     }
 
     if (args.sortColumnName && args.sortDirection) {
@@ -86,19 +86,23 @@ export class FoldersService {
     ) {}
 
     async findAllByParentId(
-        { parentId, includeArchived, filter, sortColumnName, sortDirection }: Omit<FolderArgsInterface, "offset" | "limit" | "scope">,
+        { parentId, filter, sort }: Omit<FolderArgsInterface, "offset" | "limit" | "scope">,
         scope?: DamScopeInterface,
     ): Promise<FolderInterface[]> {
-        const qb = withFoldersSelect(this.selectQueryBuilder(), {
-            includeArchived,
-            parentId,
-            query: filter?.searchText,
-            sortColumnName,
-            sortDirection,
-            scope,
-        });
+        const where = this.getFindCondition({ filter, parentId });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const options: FindOptions<FolderInterface, any> = {};
 
-        return qb.getResult();
+        if (sort) {
+            options.orderBy = sort.map((sortItem) => {
+                return {
+                    [sortItem.field]: sortItem.direction,
+                };
+            });
+        }
+        const [folders] = await this.foldersRepository.findAndCount(where, options);
+
+        return folders;
     }
 
     async findAllFlat(scope?: DamScopeInterface): Promise<FolderInterface[]> {
@@ -112,27 +116,38 @@ export class FoldersService {
     }
 
     async findAndCount(
-        { parentId, includeArchived, filter, sortColumnName, sortDirection, offset, limit }: Omit<FolderArgsInterface, "scope">,
+        { parentId, search, filter, sort, offset, limit }: Omit<FolderArgsInterface, "scope">,
         scope?: DamScopeInterface,
     ): Promise<[FolderInterface[], number]> {
-        const args = {
-            includeArchived,
-            parentId,
-            query: filter?.searchText,
-            sortColumnName,
-            sortDirection,
-            offset,
-            limit,
-            scope,
-        };
+        const where = this.getFindCondition({ search, filter, parentId });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const options: FindOptions<FolderInterface, any> = { offset, limit };
 
-        const qb = withFoldersSelect(this.selectQueryBuilder(), args);
-        const folders = await qb.getResult();
+        if (sort) {
+            options.orderBy = sort.map((sortItem) => {
+                return {
+                    [sortItem.field]: sortItem.direction,
+                };
+            });
+        }
 
-        const countQb = withFoldersSelect(this.countQueryBuilder(), args);
-        const totalCount = await countQb.getCount();
+        const [folders, totalCount] = await this.foldersRepository.findAndCount(where, options);
 
         return [folders, totalCount];
+    }
+
+    getFindCondition(options: { search?: string; filter?: DamItemFilter; parentId: string | undefined }): ObjectQuery<FolderInterface> {
+        const andFilters = [];
+
+        if (options.search) {
+            andFilters.push(searchToMikroOrmQuery(options.search, ["name"]));
+        }
+
+        if (options.filter) {
+            andFilters.push(filtersToMikroOrmQuery(options.filter));
+        }
+
+        return andFilters.length > 0 ? { $and: andFilters } : {};
     }
 
     async findAllByIds(ids: string[]): Promise<FolderInterface[]> {
@@ -299,11 +314,10 @@ export class FoldersService {
                 .createQueryBuilder("folder")
                 .select(`folder.id, ROW_NUMBER() OVER( ORDER BY folder."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`),
             {
-                includeArchived: args.includeArchived,
                 parentId: args.parentId,
-                query: args.filter?.searchText,
-                sortColumnName: args.sortColumnName,
-                sortDirection: args.sortDirection,
+                query: args.search,
+                filter: args.filter,
+                sort: args.sort,
                 scope,
             },
         );

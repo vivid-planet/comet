@@ -65,9 +65,9 @@ export const damItemsListQuery = gql`
     query DamItemsList(
         $folderId: ID
         $includeArchived: Boolean
-        $filter: DamItemFilterInput
-        $sortColumnName: String
-        $sortDirection: SortDirection
+        $filter: DamItemFilter
+        $sort: [DamItemsSort!]
+        $search: String
         $offset: Int
         $limit: Int
         $scope: DamScopeInput!
@@ -75,9 +75,9 @@ export const damItemsListQuery = gql`
         damItemsList(
             folderId: $folderId
             includeArchived: $includeArchived
+            sort: $sort
             filter: $filter
-            sortColumnName: $sortColumnName
-            sortDirection: $sortDirection
+            search: $search
             offset: $offset
             limit: $limit
             scope: $scope

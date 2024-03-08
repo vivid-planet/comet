@@ -11,16 +11,15 @@ export class DamItemsService {
     constructor(private readonly foldersService: FoldersService, private readonly filesService: FilesService) {}
 
     async findAndCount(
-        { folderId, includeArchived, filter, sortColumnName, sortDirection, offset, limit }: Omit<DamItemsArgsInterface, "scope">,
+        { folderId, filter, search, sort, offset, limit }: Omit<DamItemsArgsInterface, "scope">,
         scope?: DamScopeInterface,
     ): Promise<[DamItemInterface[], number]> {
         const [folders, foldersTotalCount] = await this.foldersService.findAndCount(
             {
                 parentId: folderId,
-                includeArchived,
-                filter: { searchText: filter?.searchText },
-                sortDirection,
-                sortColumnName,
+                search,
+                filter,
+                sort,
                 offset,
                 limit,
             },
@@ -33,10 +32,9 @@ export class DamItemsService {
         const [files, filesTotalCount] = await this.filesService.findAndCount(
             {
                 folderId,
-                includeArchived,
-                filter: { searchText: filter?.searchText, mimetypes: filter?.mimetypes },
-                sortColumnName,
-                sortDirection,
+                search,
+                filter,
+                sort,
                 offset: filesOffset,
                 limit: remainingLimit,
             },
@@ -58,7 +56,6 @@ export class DamItemsService {
                 id,
                 {
                     parentId: args.folderId,
-                    includeArchived: args.includeArchived,
                     filter: { searchText: args.filter?.searchText },
                     sortDirection: args.sortDirection,
                     sortColumnName: args.sortColumnName,
@@ -72,10 +69,8 @@ export class DamItemsService {
         const [, foldersTotalCount] = await this.foldersService.findAndCount(
             {
                 parentId: args.folderId,
-                includeArchived: args.includeArchived,
                 filter: { searchText: args.filter?.searchText },
-                sortDirection: args.sortDirection,
-                sortColumnName: args.sortColumnName,
+                sort: args,
                 // offset and limit do not matter here
                 offset: 0,
                 limit: 10,
@@ -87,7 +82,6 @@ export class DamItemsService {
             id,
             {
                 folderId: args.folderId,
-                includeArchived: args.includeArchived,
                 filter: args.filter,
                 sortDirection: args.sortDirection,
                 sortColumnName: args.sortColumnName,

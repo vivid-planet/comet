@@ -4,6 +4,8 @@ import {
     EditDialog,
     IFilterApi,
     ISelectionApi,
+    muiGridFilterToGql,
+    muiGridSortToGql,
     PrettyBytes,
     useDataGridRemote,
     useSnackbarApi,
@@ -29,6 +31,7 @@ import { isFolder } from "../helpers/isFolder";
 import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
 import DamContextMenu from "./DamContextMenu";
 import { useDamFileUpload } from "./fileUpload/useDamFileUpload";
+import { DamGridToolbar } from "./filter/DamGridToolbar";
 import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
 import {
     GQLDamFileTableFragment,
@@ -41,7 +44,6 @@ import {
     GQLDamItemsListQueryVariables,
 } from "./FolderDataGrid.gql.generated";
 import * as sc from "./FolderDataGrid.sc";
-import { FolderHead } from "./FolderHead";
 import { DamSelectionFooter } from "./footer/SelectionFooter";
 import { DamUploadFooter } from "./footer/UploadFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
@@ -103,38 +105,6 @@ const FolderDataGrid = ({
 
     const dataGridProps = useDataGridRemote({ pageSize: 20 });
 
-    const { data: currentFolderData } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
-        variables: {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            id: currentFolderId!,
-        },
-        skip: currentFolderId === undefined,
-    });
-
-    const {
-        data: dataGridData,
-        loading,
-        error,
-    } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
-        variables: {
-            folderId: currentFolderId,
-            includeArchived: filterApi.current.archived,
-            filter: {
-                mimetypes: props.allowedMimetypes,
-                searchText: filterApi.current.searchText,
-            },
-            sortColumnName: filterApi.current.sort?.columnName,
-            sortDirection: filterApi.current.sort?.direction,
-            limit: dataGridProps.pageSize,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            scope,
-        },
-    });
-
-    const { matches } = useDamSearchHighlighting({
-        items: dataGridData?.damItemsList.nodes ?? [],
-        query: filterApi.current.searchText ?? "",
-    });
     const isSearching = !!(filterApi.current.searchText && filterApi.current.searchText.length > 0);
 
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
@@ -459,14 +429,36 @@ const FolderDataGrid = ({
         },
     ];
 
+    const { data: currentFolderData } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
+        variables: {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            id: currentFolderId!,
+        },
+        skip: currentFolderId === undefined,
+    });
+
+    const {
+        data: dataGridData,
+        loading,
+        error,
+    } = useQuery<GQLDamItemsListQuery, GQLDamItemsListQueryVariables>(damItemsListQuery, {
+        variables: {
+            folderId: currentFolderId,
+            sort: muiGridSortToGql(dataGridProps.sortModel),
+            limit: dataGridProps.pageSize,
+            offset: dataGridProps.page * dataGridProps.pageSize,
+            scope,
+            ...muiGridFilterToGql(dataGridColumns, dataGridProps.filterModel),
+        },
+    });
+
+    const { matches } = useDamSearchHighlighting({
+        items: dataGridData?.damItemsList.nodes ?? [],
+        query: filterApi.current.searchText ?? "",
+    });
+
     return (
         <sc.FolderWrapper>
-            <FolderHead
-                isSearching={isSearching}
-                numberItems={dataGridData?.damItemsList.totalCount ?? 0}
-                breadcrumbs={breadcrumbs}
-                folderId={currentFolderId}
-            />
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
                 <DataGrid
                     {...dataGridProps}
@@ -484,6 +476,17 @@ const FolderDataGrid = ({
                     onSelectionModelChange={handleSelectionModelChange}
                     autoHeight={true}
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
+                    components={{
+                        Toolbar: () => (
+                            <DamGridToolbar
+                                breadcrumbs={breadcrumbs}
+                                additionalToolbarItems={props.additionalToolbarItems}
+                                allowedMimeTypes={props.allowedMimetypes}
+                                isSearching={isSearching}
+                                numberItems={dataGridData?.damItemsList.totalCount ?? 0}
+                            />
+                        ),
+                    }}
                 />
             </sc.FolderOuterHoverHighlight>
             <DamSelectionFooter open={damSelectionActionsApi.selectionMap.size > 0} />

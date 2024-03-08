@@ -1,7 +1,9 @@
 import { Type } from "@nestjs/common";
-import { ArgsType, Field, ID, InputType, IntersectionType, registerEnumType } from "@nestjs/graphql";
+import { ArgsType, Field, ID, InputType, registerEnumType } from "@nestjs/graphql";
 import { Type as TransformerType } from "class-transformer";
 import { IsBoolean, IsEnum, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { DateFilter } from "src/common/filter/date.filter";
+import { SortDirection } from "src/common/sorting/sort-direction.enum";
 
 import { OffsetBasedPaginationArgs } from "../../../common/pagination/offset-based.args";
 import { SortArgs } from "../../../common/sorting/sort.args";
@@ -17,28 +19,43 @@ registerEnumType(DamItemType, {
 });
 
 @InputType()
-export class DamItemFilterInput {
-    @Field({ nullable: true })
+export class DamItemFilter {
+    @Field(() => DateFilter, { nullable: true })
+    @ValidateNested()
     @IsOptional()
-    @IsString()
-    searchText?: string;
+    @TransformerType(() => DateFilter)
+    createdAt?: DateFilter;
 
-    @Field(() => [String], { nullable: true })
+    @Field(() => DateFilter, { nullable: true })
+    @ValidateNested()
     @IsOptional()
-    @IsString({ each: true })
-    mimetypes?: string[];
+    @TransformerType(() => DateFilter)
+    updatedAt?: DateFilter;
+
+    @Field(() => [DamItemFilter], { nullable: true })
+    @TransformerType(() => DamItemFilter)
+    @ValidateNested({ each: true })
+    @IsOptional()
+    and?: DamItemFilter[];
+
+    @Field(() => [DamItemFilter], { nullable: true })
+    @TransformerType(() => DamItemFilter)
+    @ValidateNested({ each: true })
+    @IsOptional()
+    or?: DamItemFilter[];
 }
 
-export interface DamItemsArgsInterface extends OffsetBasedPaginationArgs, SortArgs {
+export interface DamItemsArgsInterface extends OffsetBasedPaginationArgs {
     scope: DamScopeInterface;
     folderId?: string;
-    includeArchived?: boolean;
-    filter?: DamItemFilterInput;
+    search?: string;
+    filter?: DamItemFilter;
+    sort?: DamItemSort[];
 }
 
 export function createDamItemArgs({ Scope }: { Scope: Type<DamScopeInterface> }): Type<DamItemsArgsInterface> {
     @ArgsType()
-    class DamItemsArgs extends IntersectionType(OffsetBasedPaginationArgs, SortArgs) implements DamItemsArgsInterface {
+    class DamItemsArgs extends OffsetBasedPaginationArgs implements DamItemsArgsInterface {
         @Field(() => Scope, { defaultValue: Scope === EmptyDamScope ? {} : undefined })
         @TransformerType(() => Scope)
         @ValidateNested()
@@ -51,14 +68,20 @@ export function createDamItemArgs({ Scope }: { Scope: Type<DamScopeInterface> })
 
         @Field({ nullable: true })
         @IsOptional()
-        @IsBoolean()
-        includeArchived?: boolean;
+        @IsString()
+        search?: string;
 
-        @Field(() => DamItemFilterInput, { nullable: true })
-        @TransformerType(() => DamItemFilterInput)
+        @Field(() => DamItemFilter, { nullable: true })
+        @TransformerType(() => DamItemFilter)
         @IsOptional()
         @ValidateNested()
-        filter?: DamItemFilterInput;
+        filter?: DamItemFilter;
+
+        @Field(() => [DamItemSort], { nullable: true })
+        @ValidateNested({ each: true })
+        @TransformerType(() => DamItemSort)
+        @IsOptional()
+        sort?: DamItemSort[];
     }
 
     return DamItemsArgs;
@@ -70,7 +93,7 @@ export interface DamItemPositionArgsInterface extends SortArgs {
     type: DamItemType;
     folderId?: string;
     includeArchived?: boolean;
-    filter?: DamItemFilterInput;
+    filter?: DamItemFilter;
 }
 
 export function createDamItemPositionArgs({ Scope }: { Scope: Type<DamScopeInterface> }): Type<DamItemPositionArgsInterface> {
@@ -99,12 +122,32 @@ export function createDamItemPositionArgs({ Scope }: { Scope: Type<DamScopeInter
         @IsBoolean()
         includeArchived?: boolean;
 
-        @Field(() => DamItemFilterInput, { nullable: true })
-        @TransformerType(() => DamItemFilterInput)
+        @Field(() => DamItemFilter, { nullable: true })
+        @TransformerType(() => DamItemFilter)
         @IsOptional()
         @ValidateNested()
-        filter?: DamItemFilterInput;
+        filter?: DamItemFilter;
     }
 
     return DamItemPositionArgs;
+}
+
+export enum DamItemSortField {
+    name = "name",
+    createdAt = "createdAt",
+    updatedAt = "updatedAt",
+}
+registerEnumType(DamItemSortField, {
+    name: "DamItemSortField",
+});
+
+@InputType()
+export class DamItemSort {
+    @Field(() => DamItemSortField)
+    @IsEnum(DamItemSortField)
+    field: DamItemSortField;
+
+    @Field(() => SortDirection, { defaultValue: SortDirection.ASC })
+    @IsEnum(SortDirection)
+    direction: SortDirection = SortDirection.ASC;
 }

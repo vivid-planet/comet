@@ -1,4 +1,4 @@
-import { MikroORM, Utils } from "@mikro-orm/core";
+import { FindOptions, MikroORM, ObjectQuery, Utils } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
@@ -11,6 +11,7 @@ import fetch from "node-fetch";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
+import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "src/common/filter/mikro-orm";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
@@ -27,6 +28,7 @@ import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
 import { Extension, ResizingType } from "../imgproxy/imgproxy.enum";
 import { ImgproxyConfig, ImgproxyService } from "../imgproxy/imgproxy.service";
 import { DamScopeInterface } from "../types";
+import { DamItemFilter } from "./dto/dam-items.args";
 import { DamFileListPositionArgs, FileArgsInterface } from "./dto/file.args";
 import { UploadFileBodyInterface } from "./dto/file.body";
 import { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dto/file.input";
@@ -128,53 +130,59 @@ export class FilesService {
     }
 
     async findAll(
-        { folderId, includeArchived, filter, sortColumnName, sortDirection }: Omit<FileArgsInterface, "offset" | "limit" | "scope">,
+        { folderId, filter, sort, search }: Omit<FileArgsInterface, "offset" | "limit" | "scope">,
         scope?: DamScopeInterface,
     ): Promise<FileInterface[]> {
-        const isSearching = filter?.searchText !== undefined && filter.searchText.length > 0;
+        const where = this.getFindCondition({ search, filter, folderId });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const options: FindOptions<FolderInterface, any> = {};
 
-        return withFilesSelect(this.selectQueryBuilder(), {
-            archived: !includeArchived ? false : undefined,
-            folderId: !isSearching ? folderId || null : undefined,
-            mimetypes: filter?.mimetypes,
-            query: filter?.searchText,
-            sortColumnName,
-            sortDirection,
-            scope,
-        }).getResult();
+        if (sort) {
+            options.orderBy = sort.map((sortItem) => {
+                return {
+                    [sortItem.field]: sortItem.direction,
+                };
+            });
+        }
+
+        const [files] = await this.filesRepository.findAndCount(where, options);
+
+        return files;
     }
 
     async findAndCount(
-        { folderId, includeArchived, filter, sortColumnName, sortDirection, offset, limit }: Omit<FileArgsInterface, "scope">,
+        { folderId, search, filter, sort, offset, limit }: Omit<FileArgsInterface, "scope">,
         scope?: DamScopeInterface,
     ): Promise<[FileInterface[], number]> {
-        const isSearching = filter?.searchText !== undefined && filter.searchText.length > 0;
+        const where = this.getFindCondition({ search, filter, folderId });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const options: FindOptions<FolderInterface, any> = { offset, limit };
 
-        const files = await withFilesSelect(this.selectQueryBuilder(), {
-            archived: !includeArchived ? false : undefined,
-            folderId: !isSearching ? folderId || null : undefined,
-            mimetypes: filter?.mimetypes,
-            query: filter?.searchText,
-            sortColumnName,
-            sortDirection,
-            offset,
-            limit,
-            scope,
-        }).getResult();
+        if (sort) {
+            options.orderBy = sort.map((sortItem) => {
+                return {
+                    [sortItem.field]: sortItem.direction,
+                };
+            });
+        }
 
-        const totalCount = await withFilesSelect(this.selectQueryBuilder(), {
-            archived: !includeArchived ? false : undefined,
-            folderId: !isSearching ? folderId || null : undefined,
-            mimetypes: filter?.mimetypes,
-            query: filter?.searchText,
-            sortColumnName,
-            sortDirection,
-            offset,
-            limit,
-            scope,
-        }).getCount();
+        const [files, totalCount] = await this.filesRepository.findAndCount(where, options);
 
         return [files, totalCount];
+    }
+
+    getFindCondition(options: { search?: string; filter?: DamItemFilter; folderId: string | undefined }): ObjectQuery<FileInterface> {
+        const andFilters = [];
+
+        if (options.search) {
+            andFilters.push(searchToMikroOrmQuery(options.search, ["name"]));
+        }
+
+        if (options.filter) {
+            andFilters.push(filtersToMikroOrmQuery(options.filter));
+        }
+
+        return andFilters.length > 0 ? { $and: andFilters } : {};
     }
 
     async findAllByHash(contentHash: string): Promise<FileInterface[]> {
