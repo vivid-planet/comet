@@ -1,4 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { getCookie, setCookie } from "cookies-next";
+import jsonwebtoken from "jsonwebtoken";
+import { GetServerSidePropsContext, NextApiRequest, NextApiResponse, NextPageContext } from "next";
 
 type Scope = Record<string, unknown>;
 type GraphQLClient = {
@@ -37,5 +39,26 @@ async function getValidatedScope(req: NextApiRequest, res: NextApiResponse, grap
         res.status(403).end("Preview is not allowed");
     }
 
+    if (process.env.previewScopeSigningKey) {
+        setCookie("__comet_preview_scope", jsonwebtoken.sign({ data: scope }, process.env.previewScopeSigningKey), {
+            req,
+            res,
+            httpOnly: true,
+            sameSite: "lax",
+            secure: process.env.NODE_ENV !== "development",
+            path: "/",
+        });
+    }
+
     return scope;
+}
+
+export function getPreviewScopeFromContext(context: GetServerSidePropsContext | NextPageContext): Scope | null {
+    if (!process.env.previewScopeSigningKey) throw new Error("process.env.previewScopeSigningKey is not set, please add it to next.config.js");
+    const cookie = getCookie("__comet_preview_scope", { req: context["req"] });
+    if (cookie) {
+        const payload = jsonwebtoken.verify(cookie, process.env.previewScopeSigningKey) as { data: Scope };
+        return payload["data"];
+    }
+    return null;
 }
