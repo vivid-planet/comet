@@ -3,7 +3,7 @@ import { defaultLanguage, domain } from "@src/config";
 import { GQLPage } from "@src/graphql.generated";
 import NotFound404 from "@src/pages/404";
 import PageTypePage, { loader as pageTypePageLoader } from "@src/pageTypes/Page";
-import createGraphQLClient from "@src/util/createGraphQLClient";
+import { createGraphQLClient } from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
@@ -48,7 +48,7 @@ const pageTypes = {
 };
 
 export const getStaticProps: GetStaticProps<PageProps, ParsedUrlQuery, PreviewData> = async ({ params, previewData, locale = defaultLanguage }) => {
-    const client = createGraphQLClient(previewData);
+    const client = createGraphQLClient({ previewData });
     const path = params?.path ?? "";
     const scope = { domain, language: locale };
     //fetch pageType

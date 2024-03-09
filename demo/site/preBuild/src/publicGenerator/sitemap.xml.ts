@@ -4,7 +4,7 @@ import { resolve } from "path";
 import { SitemapStream } from "sitemap";
 
 import { SeoBlockData } from "../../../src/blocks.generated";
-import createGraphQLClient from "../../../src/util/createGraphQLClient";
+import { createGraphQLClient } from "../../../src/util/createGraphQLClient";
 import createPublicGeneratedDirectory from "./createPublicGeneratedDirectory";
 import { GQLSitemapPageDataQuery, GQLSitemapPageDataQueryVariables } from "./sitemap.xml.generated";
 
