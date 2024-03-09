@@ -376,8 +376,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0(@types/node@18.15.3)(graphql@15.8.0)(typescript@4.9.4)
       graphql-request:
-        specifier: ^3.0.0
-        version: 3.7.0(graphql@15.8.0)
+        specifier: ^6.1.0
+        version: 6.1.0(graphql@15.8.0)
       html-webpack-plugin:
         specifier: ^5.0.0
         version: 5.5.0(webpack@5.75.0)
@@ -2603,8 +2603,8 @@ importers:
         specifier: ^15.0.0
         version: 15.8.0
       graphql-request:
-        specifier: ^3.0.0
-        version: 3.7.0(graphql@15.8.0)
+        specifier: ^6.0.0
+        version: 6.1.0(graphql@15.8.0)
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.15.3)(ts-node@10.9.1)
@@ -21462,19 +21462,6 @@ packages:
       - supports-color
     dev: false
 
-  /graphql-request@3.7.0(graphql@15.8.0):
-    resolution: {integrity: sha512-dw5PxHCgBneN2DDNqpWu8QkbbJ07oOziy8z+bK/TAXufsOLaETuVO4GkXrbs0WjhdKhBMN3BkpN/RIvUHkmNUQ==}
-    peerDependencies:
-      graphql: 14 - 16
-    dependencies:
-      cross-fetch: 3.1.5
-      extract-files: 9.0.0
-      form-data: 3.0.1
-      graphql: 15.8.0
-    transitivePeerDependencies:
-      - encoding
-    dev: true
-
   /graphql-request@5.1.0(graphql@15.8.0):
     resolution: {integrity: sha512-0OeRVYigVwIiXhNmqnPDt+JhMzsjinxHE7TVy3Lm6jUzav0guVcL0lfSbi6jVTRAxcbwgyr6yrZioSHxf9gHzw==}
     peerDependencies:
@@ -21499,7 +21486,6 @@ packages:
       graphql: 15.8.0
     transitivePeerDependencies:
       - encoding
-    dev: false
 
   /graphql-tag@2.12.6(graphql@15.8.0):
     resolution: {integrity: sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==}

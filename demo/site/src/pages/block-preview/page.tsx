@@ -1,14 +1,8 @@
-import {
-    BlockPreviewProvider,
-    buildGraphqlClientHeaders,
-    createGraphQLClient,
-    IFrameBridgeProvider,
-    PreviewData,
-    useIFrameBridge,
-} from "@comet/cms-site";
+import { BlockPreviewProvider, buildGraphqlClientHeaders, IFrameBridgeProvider, PreviewData, useIFrameBridge } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
+import createGraphQLClient from "@src/util/createGraphQLClient";
 import { RequestDocument, Variables } from "graphql-request";
 import * as React from "react";
 
@@ -44,18 +38,14 @@ function useGraphQLClient() {
     const iFrameBridge = useIFrameBridge();
     const clientRef = React.useRef(
         createCachingGraphQLClient({
-            previewDamUrls: true,
-            includeInvisibleBlocks: !iFrameBridge.showOnlyVisible,
-            includeInvisiblePages: true,
+            includeInvisible: !iFrameBridge.showOnlyVisible,
         }),
     );
     React.useEffect(() => {
         //update headers when showOnlyVisible changes
         clientRef.current.setHeaders(
             buildGraphqlClientHeaders({
-                previewDamUrls: true,
-                includeInvisibleBlocks: !iFrameBridge.showOnlyVisible,
-                includeInvisiblePages: true,
+                includeInvisible: !iFrameBridge.showOnlyVisible,
             }),
         );
     }, [iFrameBridge.showOnlyVisible]);
