@@ -1,4 +1,5 @@
 import { GraphQLClient } from "graphql-request";
+import { RequestConfig } from "graphql-request/build/esm/types";
 
 import { PreviewData } from "../sitePreview/SitePreviewApiHelper";
 
@@ -35,9 +36,10 @@ export function buildGraphqlClientHeaders(previewData?: PreviewData) {
     return headers;
 }
 
-export function createGraphQLClient(url: string, previewData?: PreviewData): GraphQLClient {
-    const headers = buildGraphqlClientHeaders(previewData);
+export function createGraphQLClient(url: string, requestConfig: RequestConfig & { previewData?: PreviewData } = {}): GraphQLClient {
+    const headers = buildGraphqlClientHeaders(requestConfig.previewData);
     return new GraphQLClient(url, {
+        ...requestConfig,
         headers,
     });
 }

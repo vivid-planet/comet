@@ -3,34 +3,43 @@ import { PageContentBlockData } from "@src/blocks.generated";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
 import createGraphQLClient from "@src/util/createGraphQLClient";
-import { RequestDocument, Variables } from "graphql-request";
+import { RequestConfig } from "graphql-request/build/esm/types";
 import * as React from "react";
 
-function createCachingGraphQLClient(previewData?: PreviewData) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const cache: Record<string, any> = {};
+const fetchCache: Record<string, Response> = {};
 
-    const client = createGraphQLClient(previewData);
-    const originalRequest = client.request.bind(client);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async function requestWithCache<T = any, V = Variables>(
-        document: RequestDocument,
-        variables?: V,
-        requestHeaders?: RequestInit["headers"],
-    ): Promise<T> {
-        const documentString = typeof document === "string" ? document : document.loc?.source.body;
-        const cacheKey = JSON.stringify({ documentString, variables });
-
-        let result = cache[cacheKey];
-        if (result) {
-            return result;
-        } else {
-            result = await originalRequest(document, variables, requestHeaders);
-            cache[cacheKey] = result;
+async function cachingFetch(input: RequestInfo, init?: RequestInit): Promise<Response> {
+    let cacheKey: string | undefined;
+    if (init?.method?.toUpperCase() === "GET") {
+        //cache all get requests
+        cacheKey = input.toString();
+    } else if (init?.body) {
+        const body = JSON.parse(init.body.toString());
+        if (body.query && body.variables) {
+            //looks like a gql query, cache any method
+            cacheKey = `${input.toString()}#${init.body.toString()}`;
         }
-        return result;
     }
-    client.request = requestWithCache;
+    if (!cacheKey) {
+        return fetch(input, init);
+    }
+
+    const cachedResponse = fetchCache[cacheKey];
+    if (cachedResponse) {
+        return cachedResponse.clone();
+    } else {
+        const fetchPromise = fetch(input, init);
+        const response = await fetchPromise;
+        fetchCache[cacheKey] = response.clone();
+        return fetchPromise;
+    }
+}
+
+function createCachingGraphQLClient(requestConfig: RequestConfig & { previewData?: PreviewData } = {}) {
+    const client = createGraphQLClient({
+        fetch: cachingFetch,
+        ...requestConfig,
+    });
     return client;
 }
 
@@ -38,7 +47,7 @@ function useGraphQLClient() {
     const iFrameBridge = useIFrameBridge();
     const clientRef = React.useRef(
         createCachingGraphQLClient({
-            includeInvisible: !iFrameBridge.showOnlyVisible,
+            previewData: { includeInvisible: !iFrameBridge.showOnlyVisible },
         }),
     );
     React.useEffect(() => {
@@ -62,7 +71,7 @@ const PreviewPage: React.FunctionComponent = () => {
                 setBlockData(undefined);
                 return;
             }
-            const newData = await recursivelyLoadBlockData({ blockType: "PageContent", blockData: iFrameBridge.block, client });
+            const newData = await recursivelyLoadBlockData({ blockType: "PageContent", blockData: iFrameBridge.block, client, fetch: cachingFetch });
             setBlockData(newData);
         }
         load();

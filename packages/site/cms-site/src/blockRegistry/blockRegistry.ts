@@ -62,7 +62,7 @@ interface BetterBlockMetaNestedObject {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface RegisterBlockOptions<BlockData> {
-    loader: (options: { blockData: BlockData; client: GraphQLClient }) => Promise<any> | any;
+    loader: (options: { blockData: BlockData; client: GraphQLClient; fetch: typeof fetch }) => Promise<any> | any;
 }
 const blocks: Record<string, RegisterBlockOptions<any>> = {};
 export function registerBlock<BlockData = unknown>(blockName: string, options: RegisterBlockOptions<BlockData>) {
@@ -73,11 +73,13 @@ export async function recursivelyLoadBlockData({
     blockType,
     blockData,
     client,
+    fetch: fetchFunction,
     blocksMeta,
 }: {
     blockType: string;
     blockData: unknown;
     client: GraphQLClient;
+    fetch: typeof fetch;
     blocksMeta: BlockMeta[];
 }) {
     function iterateField(block: BetterBlockMeta | BetterBlockMetaNestedObject, passedBlockData: any) {
@@ -115,7 +117,7 @@ export async function recursivelyLoadBlockData({
 
         const newBlockData = iterateField(block, blockData);
         if (blocks[blockType]) {
-            newBlockData.loaded = blocks[blockType].loader({ blockData, client }); // return unresolved promise
+            newBlockData.loaded = blocks[blockType].loader({ blockData, client, fetch: fetchFunction }); // return unresolved promise
             loadedBlockData.push(newBlockData);
         }
         return newBlockData;

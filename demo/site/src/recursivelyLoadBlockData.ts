@@ -2,7 +2,7 @@ import { recursivelyLoadBlockData as cometRecursivelyLoadBlockData } from "@come
 import { GraphQLClient } from "graphql-request";
 
 //small wrapper for @comet/cms-site recursivelyLoadBlockData that injects blockMeta from block-meta.json
-export async function recursivelyLoadBlockData(options: { blockType: string; blockData: unknown; client: GraphQLClient }) {
+export async function recursivelyLoadBlockData(options: { blockType: string; blockData: unknown; client: GraphQLClient; fetch: typeof fetch }) {
     const blocksMeta = await import("../block-meta.json"); //dynamic import to avoid this json in client bundle
     return cometRecursivelyLoadBlockData({ ...options, blocksMeta: blocksMeta.default });
 }
