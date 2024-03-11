@@ -170,8 +170,6 @@ type ColorPaletteItemProps = {
 export const ColorPaletteItem = createSlot(Box)<ColorPickerClassKey, ColorPaletteItemProps>({
     componentName: "ColorPicker",
     slotName: "colorPaletteItem",
-    // @ts-expect-error TODO: support `shouldForwardProp` in `createSlot`
-    shouldForwardProp: (prop) => prop !== "color",
 })(
     ({ theme, ownerState }) => css`
         cursor: pointer;
@@ -229,12 +227,9 @@ export type PreviewIndicatorColorProps = {
     color: string;
 };
 
-// TODO: Check if PreviewIndicatorProps is used correctly here
 export const PreviewIndicator = createSlot("div")<ColorPickerClassKey, PreviewIndicatorProps>({
     componentName: "ColorPicker",
     slotName: "previewIndicator",
-    // @ts-expect-error TODO: support `shouldForwardProp` in `createSlot`
-    shouldForwardProp: (prop) => prop !== "type" && prop !== "color",
     classesResolver({ type }) {
         return [
             type === "color" && "previewIndicatorColor",
