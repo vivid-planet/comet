@@ -24,7 +24,6 @@ export const StartAdornment = createSlot(InputAdornment)<DatePickerClassKey>({
     slotName: "startAdornment",
 })();
 
-// @ts-expect-error TODO: Fix the type
 export const Calendar = createSlot(CalendarBase)<DatePickerClassKey>({
     componentName: "DatePicker",
     slotName: "calendar",

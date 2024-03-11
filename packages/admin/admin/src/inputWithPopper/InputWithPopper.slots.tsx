@@ -10,7 +10,6 @@ export const Root = createSlot("div")<InputWithPopperClassKey>({
     slotName: "root",
 })();
 
-// @ts-expect-error TODO: Fix type
 export const InputBase = createSlot(MuiInputBase)<InputWithPopperClassKey>({
     componentName: "InputWithPopper",
     slotName: "inputBase",

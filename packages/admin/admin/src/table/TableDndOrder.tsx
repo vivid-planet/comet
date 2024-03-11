@@ -120,7 +120,6 @@ function DndOrderRow<TRow extends IRow>(props: IDndOrderRowProps<TRow>) {
     );
 }
 
-// @ts-expect-error TODO: Fix type
 const Root = createSlot(Table)<TableDndOrderClassKey>({
     componentName: "TableDndOrder",
     slotName: "root",

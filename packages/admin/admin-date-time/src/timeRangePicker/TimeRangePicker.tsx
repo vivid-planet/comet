@@ -37,13 +37,11 @@ const EndFormControl = createSlot(FormControl)<TimeRangePickerClassKey>({
     flex-grow: 1;
 `);
 
-// @ts-expect-error TODO: Fix the type
 const StartTimePicker = createSlot(TimePickerBase)<TimeRangePickerClassKey>({
     componentName: "TimeRangePicker",
     slotName: "startTimePicker",
 })();
 
-// @ts-expect-error TODO: Fix the type
 const EndTimePicker = createSlot(TimePickerBase)<TimeRangePickerClassKey>({
     componentName: "TimeRangePicker",
     slotName: "endTimePicker",
@@ -151,7 +149,6 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                     inputRef={startPickerRef}
                     value={startTime}
                     placeholder={intl.formatMessage({ id: "comet.timeRangePicker.start", defaultMessage: "Start" })}
-                    // @ts-expect-error TODO: Fix the type
                     onChange={(time) => onChangeTimeValue(time, "start")}
                     onOpenPopper={() => setStartPickerIsOpen(true)}
                     onClosePopper={() => setStartPickerIsOpen(false)}
@@ -166,7 +163,6 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                     inputRef={endPickerRef}
                     value={endTime}
                     placeholder={intl.formatMessage({ id: "comet.timeRangePicker.end", defaultMessage: "End" })}
-                    // @ts-expect-error TODO: Fix the type
                     onChange={(time) => onChangeTimeValue(time, "end")}
                     onOpenPopper={() => setEndPickerIsOpen(true)}
                     onClosePopper={() => setEndPickerIsOpen(false)}

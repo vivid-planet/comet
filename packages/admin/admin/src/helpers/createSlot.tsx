@@ -20,7 +20,7 @@ type Styles = ReturnType<typeof css> | CSSProperties;
 
 type SlotStyles<OwnerState extends object | undefined> = Styles | ((props: { theme: Theme } & OwnerStateObjectIfDefined<OwnerState>) => Styles);
 
-export const createSlot = <C extends React.FunctionComponent<unknown> | keyof JSX.IntrinsicElements>(component: C) => {
+export const createSlot = <C extends React.ElementType | keyof JSX.IntrinsicElements>(component: C) => {
     return <ClassKey extends string, OwnerState extends object | undefined = undefined>(options: Options<ClassKey, OwnerState>) => {
         return (styles: SlotStyles<OwnerState> = css``) => {
             return withClassName(

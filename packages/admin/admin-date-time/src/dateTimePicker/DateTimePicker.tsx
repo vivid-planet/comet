@@ -35,13 +35,11 @@ const TimeFormControl = createSlot(FormControl)<DateTimePickerClassKey>({
     flex-grow: 1;
 `);
 
-// @ts-expect-error TODO: Fix the type
 const DatePicker = createSlot(DatePickerBase)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "datePicker",
 })();
 
-// @ts-expect-error TODO: Fix the type
 const TimePicker = createSlot(TimePickerBase)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "timePicker",

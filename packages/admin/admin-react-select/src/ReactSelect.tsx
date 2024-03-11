@@ -57,7 +57,6 @@ function inputComponent({ inputRef, ...props }: any) {
     return <div ref={inputRef} {...props} />;
 }
 
-// @ts-expect-error TODO: Fix type
 const ControlInput = createSlot(InputBase)<SelectClassKey>({
     componentName: "Select",
     slotName: "input",

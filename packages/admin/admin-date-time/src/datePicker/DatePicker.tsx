@@ -73,12 +73,10 @@ export const DatePicker = (inProps: DatePickerProps) => {
                     direction="horizontal"
                     monthDisplayFormat="MMMM yyyy"
                     months={monthsToShow}
-                    // @ts-expect-error TODO: Fix the type
                     navigatorRenderer={(focusedDate, changeShownDate) => (
                         <DatePickerNavigation focusedDate={focusedDate} changeShownDate={changeShownDate} minDate={minDate} maxDate={maxDate} />
                     )}
                     date={value}
-                    // @ts-expect-error TODO: Fix the type
                     onChange={(date) => {
                         closePopper(true);
                         onChange && onChange(date);
