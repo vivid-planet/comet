@@ -9,6 +9,8 @@ import { gql, GraphQLClient } from "graphql-request";
 import Head from "next/head";
 import * as React from "react";
 
+type Fetch = typeof fetch;
+
 import { GQLPageQuery } from "./Page.generated";
 
 // @TODO: Scope for menu should also be of type PageTreeNodeScopeInput
@@ -41,10 +43,12 @@ export const pageQuery = gql`
 
 export async function loader({
     client,
+    fetch,
     pageTreeNodeId,
     scope,
 }: {
     client: GraphQLClient;
+    fetch: Fetch;
     pageTreeNodeId: string;
     scope: GQLPageTreeNodeScopeInput;
 }): Promise<unknown> {
@@ -60,11 +64,13 @@ export async function loader({
             blockType: "PageContent",
             blockData: data.pageContent.document.content,
             client,
+            fetch,
         }),
         recursivelyLoadBlockData({
             blockType: "Seo",
             blockData: data.pageContent.document.seo,
             client,
+            fetch,
         }),
     ]);
     return data;

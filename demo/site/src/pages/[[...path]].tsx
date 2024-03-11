@@ -67,7 +67,7 @@ export const getStaticProps: GetStaticProps<PageProps, ParsedUrlQuery, PreviewDa
     const { loader: loaderForPageType } = pageTypes[data.pageTreeNodeByPath.documentType];
     return {
         props: {
-            ...(await loaderForPageType({ client, scope, pageTreeNodeId })),
+            ...(await loaderForPageType({ client, fetch, scope, pageTreeNodeId })),
             documentType: data.pageTreeNodeByPath.documentType,
             id: pageTreeNodeId,
         },
