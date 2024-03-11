@@ -16,23 +16,8 @@ export type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation"
     graphqlObjectType: string;
 };
 
-type Dependency = {
-    targetGraphqlObjectType: string;
-    targetId: string;
-    rootColumnName: string;
-    jsonPath: string;
-    name: string | null;
-    secondaryInformation: string | null;
-};
-
-type Dependent = {
-    rootGraphqlObjectType: string;
-    rootId: string;
-    rootColumnName: string;
-    jsonPath: string;
-    name: string | null;
-    secondaryInformation: string | null;
-};
+type Dependency = Pick<GQLDependency, "targetGraphqlObjectType" | "targetId" | "rootColumnName" | "jsonPath" | "name" | "secondaryInformation">;
+type Dependent = Pick<GQLDependency, "rootGraphqlObjectType" | "rootId" | "rootColumnName" | "jsonPath" | "name" | "secondaryInformation">;
 
 interface Query {
     item: {
