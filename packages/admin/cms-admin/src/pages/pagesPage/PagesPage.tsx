@@ -158,7 +158,7 @@ export function PagesPage({
                         </Toolbar>
                         <PageTreeContext.Provider value={{ allCategories, currentCategory: category, documentTypes, tree, query: pagesQuery }}>
                             <MainContent fullHeight sx={{ display: "flex", flexDirection: "column" }}>
-                                <Box sx={{ width: "100%", paddingLeft: 24, paddingRight: 50 }}>
+                                <Box>
                                     <PagesPageActionToolbar
                                         selectedState={selectState}
                                         onSelectAllPressed={() => {
