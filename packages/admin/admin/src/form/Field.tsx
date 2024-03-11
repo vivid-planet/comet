@@ -57,15 +57,20 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     const shouldShowWarning = passedShouldShowWarning ?? finalFormContext.shouldShowFieldWarning;
     const shouldScrollToField = passedShouldScrollTo ?? finalFormContext.shouldScrollToField;
 
-    function renderField({ input, meta, fieldContainerProps, ...rest }: FieldRenderProps<FieldValue, FieldElement> & { warning?: string }) {
+    function renderField({
+        input,
+        meta,
+        fieldContainerProps,
+        ...rest
+    }: FieldRenderProps<FieldValue, FieldElement> & { warning?: string; disabled?: boolean }) {
         function render() {
             if (component) {
-                return React.createElement(component, { ...rest, input, meta });
+                return React.createElement(component, { ...rest, input, meta, disabled });
             } else {
                 if (typeof children !== "function") {
                     throw new Error(`Warning: Must specify either a render function as children, or a component prop to ${name}`);
                 }
-                return children({ input, meta });
+                return children({ input, meta, disabled });
             }
         }
         return (
