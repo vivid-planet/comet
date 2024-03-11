@@ -43,8 +43,7 @@ const PopoverContentContainer = createSlot("div")<FilterBarPopoverFilterClassKey
 })(css`
     min-width: 300px;
 
-    // TODO: Check if this actually works again now
-    .CometAdminFieldContainer-root {
+    .CometAdminFormFieldContainer-root {
         box-sizing: border-box;
         padding: 20px;
         margin-bottom: 0;

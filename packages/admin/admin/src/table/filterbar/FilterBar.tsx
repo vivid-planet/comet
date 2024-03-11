@@ -13,8 +13,7 @@ const Root = createSlot("div")<FilterBarClassKey>({
     componentName: "FilterBar",
     slotName: "root",
 })(css`
-    // TODO: Check if this actually works again now
-    .CometAdminFieldContainer-root {
+    .CometAdminFormFieldContainer-root {
         margin-bottom: 0;
     }
 `);
