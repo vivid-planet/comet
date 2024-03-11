@@ -2,12 +2,32 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { gql } from "@apollo/client";
 
+export const productCategoriesSelectFragment = gql`
+    fragment ProductCategorySelect on ProductCategory {
+        id
+        title
+    }
+`;
+export const productCategoriesQuery = gql`
+    query ProductCategoriesSelect {
+        productCategories {
+            nodes {
+                ...ProductCategorySelect
+            }
+        }
+    }
+    ${productCategoriesSelectFragment}
+`;
 export const productFormFragment = gql`
     fragment ProductFormDetails on Product {
         title
         slug
         description
         type
+        category {
+            id
+            title
+        }
         price
         inStock
         availableSince
@@ -35,8 +55,8 @@ export const createProductMutation = gql`
     ${productFormFragment}
 `;
 export const updateProductMutation = gql`
-    mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!, $lastUpdatedAt: DateTime) {
-        updateProduct(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
+    mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!) {
+        updateProduct(id: $id, input: $input) {
             id
             updatedAt
             ...ProductFormDetails

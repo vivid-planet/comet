@@ -33,6 +33,7 @@ export { ToolbarBackButton, ToolbarBackButtonClassKey, ToolbarBackButtonProps } 
 export { ToolbarBreadcrumbs, ToolbarBreadcrumbsClassKey, ToolbarBreadcrumbsProps } from "./common/toolbar/breadcrumb/ToolbarBreadcrumbs";
 export { ToolbarFillSpace, ToolbarFillSpaceClassKey, ToolbarFillSpaceProps } from "./common/toolbar/fillspace/ToolbarFillSpace";
 export { ToolbarItem, ToolbarItemClassKey, ToolbarItemProps } from "./common/toolbar/item/ToolbarItem";
+export { StackToolbar } from "./common/toolbar/StackToolbar";
 export { ToolbarTitleItem, ToolbarTitleItemClassKey, ToolbarTitleItemProps } from "./common/toolbar/titleitem/ToolbarTitleItem";
 export { Toolbar, ToolbarClassKey, ToolbarProps } from "./common/toolbar/Toolbar";
 export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";

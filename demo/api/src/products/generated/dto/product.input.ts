@@ -6,10 +6,10 @@ import { Field, ID, InputType } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
 
-import { ProductDimensions, ProductDiscounts } from "../../entities/product.entity";
+import { ProductDimensions, ProductDiscounts, ProductStatus } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
+import { ProductColorInput } from "./product-color.nested.input";
 import { ProductStatisticsInput } from "./product-statistics.nested.input";
-import { ProductVariantInput } from "./product-variant.nested.input";
 
 @InputType()
 export class ProductInput {
@@ -17,6 +17,11 @@ export class ProductInput {
     @IsString()
     @Field()
     title: string;
+
+    @IsNotEmpty()
+    @IsEnum(ProductStatus)
+    @Field(() => ProductStatus, { defaultValue: ProductStatus.Unpublished })
+    status: ProductStatus;
 
     @IsNotEmpty()
     @IsString()
@@ -80,10 +85,10 @@ export class ProductInput {
     @ValidateNested()
     statistics?: ProductStatisticsInput;
 
-    @Field(() => [ProductVariantInput], { defaultValue: [] })
+    @Field(() => [ProductColorInput], { defaultValue: [] })
     @IsArray()
-    @Type(() => ProductVariantInput)
-    variants: ProductVariantInput[];
+    @Type(() => ProductColorInput)
+    colors: ProductColorInput[];
 
     @IsNullable()
     @Field(() => ID, { nullable: true, defaultValue: null })

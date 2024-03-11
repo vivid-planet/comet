@@ -10,7 +10,6 @@ import {
     PageName,
     useBlockPreview,
     useCmsBlockContext,
-    useSiteConfig,
 } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
@@ -74,8 +73,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
 
     const match = useRouteMatch();
     const stackApi = useStackApi();
-    const { match: contentScopeMatch, scope } = useContentScope();
-    const siteConfig = useSiteConfig({ scope });
+    const { match: contentScopeMatch } = useContentScope();
     const previewApi = useBlockPreview();
 
     const blockContext = useCmsBlockContext();
@@ -139,7 +137,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                 </ToolbarActions>
             </Toolbar>
             <MainContent disablePaddingBottom>
-                <BlockPreviewWithTabs previewUrl={`${siteConfig.previewUrl}/admin/page`} previewState={previewState} previewApi={previewApi}>
+                <BlockPreviewWithTabs previewPath="/page" previewState={previewState} previewApi={previewApi}>
                     {[
                         {
                             key: "content",

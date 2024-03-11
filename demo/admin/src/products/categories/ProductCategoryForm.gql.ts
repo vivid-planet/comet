@@ -38,8 +38,8 @@ export const createProductCategoryMutation = gql`
 `;
 
 export const updateProductCategoryMutation = gql`
-    mutation ProductCategoryFormUpdateProductCategory($id: ID!, $input: ProductCategoryUpdateInput!, $lastUpdatedAt: DateTime) {
-        updateProductCategory(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
+    mutation ProductCategoryFormUpdateProductCategory($id: ID!, $input: ProductCategoryUpdateInput!) {
+        updateProductCategory(id: $id, input: $input) {
             id
             updatedAt
             ...ProductCategoryForm

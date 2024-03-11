@@ -92,7 +92,7 @@ function ProductTagForm({ id }: FormProps): React.ReactElement {
             if (!id) throw new Error();
             await client.mutate<GQLProductTagFormUpdateProductTagMutation, GQLProductTagFormUpdateProductTagMutationVariables>({
                 mutation: updateProductTagMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.productTag.updatedAt },
+                variables: { id, input: output },
             });
         } else {
             const { data: mutationResponse } = await client.mutate<

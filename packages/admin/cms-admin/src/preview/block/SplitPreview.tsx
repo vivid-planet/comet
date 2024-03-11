@@ -7,13 +7,13 @@ import { Column, FirstColumnContainer, MaximizeButton, MaximizeIcon, PreviewCont
 import { BlockPreviewApi } from "./useBlockPreview";
 
 interface Props {
-    url: string;
+    previewPath: string;
     previewApi: BlockPreviewApi;
     previewState: unknown;
     children: React.ReactNode | [React.ReactNode, React.ReactNode];
 }
 
-function SplitPreview({ url, previewState, children, previewApi }: Props): React.ReactElement {
+function SplitPreview({ previewPath, previewState, children, previewApi }: Props): React.ReactElement {
     const { minimized, setMinimized } = previewApi;
     const rootRef = React.useRef<HTMLDivElement>(null);
     const [columnHeight, setColumnHeight] = React.useState<number>(0);
@@ -50,7 +50,7 @@ function SplitPreview({ url, previewState, children, previewApi }: Props): React
                         <Box paddingBottom={4}>{firstColumn}</Box>
                     </FirstColumnContainer>
                     <PreviewContainer minimized={minimized}>
-                        <BlockPreview url={url} previewState={previewState} previewApi={previewApi} />
+                        <BlockPreview previewPath={previewPath} previewState={previewState} previewApi={previewApi} />
                         {minimized && (
                             <MaximizeButton onClick={handleMaximizeClick}>
                                 <MaximizeIcon />
