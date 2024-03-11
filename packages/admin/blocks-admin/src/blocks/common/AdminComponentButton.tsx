@@ -16,14 +16,18 @@ interface Props {
 export function AdminComponentButton({ variant, size, ...buttonProps }: Props): React.ReactElement {
     return (
         <AdminComponentPaper disablePadding>
-            <Button fullWidth color={variant === "primary" ? "primary" : "info"} size={size} {...buttonProps} />
+            <Button fullWidth color={variant === "primary" ? "primary" : "info"} spacingSize={size} {...buttonProps} />
         </AdminComponentPaper>
     );
 }
 
-const Button = styled(MuiButton)<Pick<Props, "size">>`
-    ${({ size, theme }) =>
-        size === "large" &&
+type ButtonProps = {
+    spacingSize?: Props["size"];
+};
+
+const Button = styled(MuiButton)<ButtonProps>`
+    ${({ spacingSize, theme }) =>
+        spacingSize === "large" &&
         css`
             padding: ${theme.spacing(4)};
         `}
