@@ -109,14 +109,13 @@ export class UserPermissionsService {
             .sort((a, b) => availablePermissions.indexOf(a.permission) - availablePermissions.indexOf(b.permission));
     }
 
-    async getContentScopes(user: User, includeContentScopesManual = true): Promise<ContentScope[]> {
+    async getContentScopes(user: User, includeContentScopesManual = true): Promise<ContentScope[] | UserPermissions.allContentScopes> {
         const contentScopes: ContentScope[] = [];
-        const availableContentScopes = await this.getAvailableContentScopes();
 
         if (this.accessControlService.getContentScopesForUser) {
             const userContentScopes = await this.accessControlService.getContentScopesForUser(user);
             if (userContentScopes === UserPermissions.allContentScopes) {
-                contentScopes.push(...availableContentScopes);
+                return UserPermissions.allContentScopes;
             } else {
                 contentScopes.push(...userContentScopes);
             }
@@ -125,6 +124,7 @@ export class UserPermissionsService {
         if (includeContentScopesManual) {
             const entity = await this.contentScopeRepository.findOne({ userId: user.id });
             if (entity) {
+                const availableContentScopes = await this.getAvailableContentScopes();
                 contentScopes.push(...entity.contentScopes.filter((value) => availableContentScopes.some((cs) => isEqual(cs, value))));
             }
         }
@@ -139,31 +139,18 @@ export class UserPermissionsService {
     }
 
     async createCurrentUser(user: User): Promise<CurrentUser> {
-        const availableContentScopes = await this.getAvailableContentScopes();
         const userContentScopes = await this.getContentScopes(user);
-        const permissions = (await this.getPermissions(user))
-            .filter((p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)))
-            .reduce((acc: CurrentUser["permissions"], userPermission) => {
-                const contentScopes = userPermission.overrideContentScopes ? userPermission.contentScopes : userContentScopes;
-                const existingPermission = acc.find((p) => p.permission === userPermission.permission);
-                if (existingPermission) {
-                    existingPermission.contentScopes = [...existingPermission.contentScopes, ...contentScopes];
-                } else {
-                    acc.push({
-                        permission: userPermission.permission,
-                        contentScopes,
-                    });
-                }
-                return acc;
-            }, [])
-            .map((p) => {
-                p.contentScopes = this.normalizeContentScopes(p.contentScopes, availableContentScopes);
-                return p;
-            });
+        const userPermissions = await this.getPermissions(user);
 
         return {
             ...user,
-            permissions,
+            contentScopes: userContentScopes === UserPermissions.allContentScopes ? null : userContentScopes,
+            permissions: userPermissions
+                .filter((p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)))
+                .map((p) => ({
+                    permission: p.permission,
+                    contentScopes: p.overrideContentScopes ? p.contentScopes : null,
+                })),
         };
     }
 }

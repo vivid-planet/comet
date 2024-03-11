@@ -5,6 +5,7 @@ import { APP_GUARD } from "@nestjs/core";
 
 import { UserPermissionsGuard } from "./auth/user-permissions.guard";
 import { ContentScopeService } from "./content-scope.service";
+import { CurrentUserResolver } from "./current-user.resolver";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission } from "./entities/user-permission.entity";
 import { UserResolver } from "./user.resolver";
@@ -27,6 +28,7 @@ import {
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,
+        CurrentUserResolver,
         ContentScopeService,
         {
             provide: APP_GUARD,

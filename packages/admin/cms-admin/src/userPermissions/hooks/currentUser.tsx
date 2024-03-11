@@ -4,7 +4,6 @@ import isEqual from "lodash.isequal";
 import React from "react";
 
 import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
-import { GQLCurrentUserPermission } from "../../graphql.generated";
 import { GQLCurrentUserQuery } from "./currentUser.generated";
 
 type CurrentUserContext = {
@@ -17,7 +16,11 @@ export interface CurrentUserInterface {
     name?: string;
     email?: string;
     language?: string;
-    permissions: GQLCurrentUserPermission[];
+    contentScopes: ContentScopeInterface[] | null;
+    permissions: {
+        permission: string;
+        contentScopes: ContentScopeInterface[] | null;
+    }[];
     allowedContentScopes: ContentScopeInterface[];
 }
 
@@ -30,6 +33,8 @@ export const CurrentUserProvider: React.FC<{
                 id
                 name
                 email
+                allowedContentScopes
+                contentScopes
                 permissions {
                     permission
                     contentScopes
@@ -45,15 +50,18 @@ export const CurrentUserProvider: React.FC<{
     const context: CurrentUserContext = {
         currentUser: {
             ...data.currentUser,
-            allowedContentScopes: data.currentUser.permissions.flatMap((p) => p.contentScopes),
         },
         isAllowed:
             isAllowed ??
             ((user: CurrentUserInterface, permission: string, contentScope?: ContentScopeInterface) => {
-                if (user.email === undefined) return false;
-                return user.permissions.some(
-                    (p) => p.permission === permission && (!contentScope || p.contentScopes.some((cs) => isEqual(cs, contentScope))),
-                );
+                if (!user.permissions) return false;
+                return user.permissions.some((p) => {
+                    if (p.permission !== permission) return false;
+                    if (!contentScope) return true;
+                    const contentScopes = p.contentScopes || user.contentScopes;
+                    if (contentScopes === null) return true;
+                    return contentScopes.some((cs) => isEqual(cs, contentScope));
+                });
             }),
     };
 

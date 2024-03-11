@@ -1,10 +1,9 @@
 import { Type } from "@nestjs/common";
-import { Context, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Context, Mutation, Resolver } from "@nestjs/graphql";
 import { IncomingMessage } from "http";
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
-import { GetCurrentUser } from "../decorators/get-current-user.decorator";
 import { PublicApi } from "../decorators/public-api.decorator";
 
 interface AuthResolverConfig {
@@ -14,14 +13,9 @@ interface AuthResolverConfig {
 }
 
 export function createAuthResolver(config?: AuthResolverConfig): Type<unknown> {
-    @Resolver(() => CurrentUser)
+    @Resolver()
     @PublicApi()
     class AuthResolver {
-        @Query(() => CurrentUser)
-        async currentUser(@GetCurrentUser() user: CurrentUser): Promise<CurrentUser> {
-            return user;
-        }
-
         @Mutation(() => String)
         @SkipBuild()
         async currentUserSignOut(@Context("req") req: IncomingMessage): Promise<string | null> {

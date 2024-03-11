@@ -9,6 +9,7 @@ import { UserContentScopesInput } from "./dto/user-content-scopes.input";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
 import { UserPermissionsService } from "./user-permissions.service";
+import { UserPermissions } from "./user-permissions.types";
 
 @Resolver()
 @RequiredPermission(["userPermissions"], { skipScopeCheck: true })
@@ -40,10 +41,10 @@ export class UserContentScopesResolver {
         @Args("userId", { type: () => String }) userId: string,
         @Args("skipManual", { type: () => Boolean, nullable: true }) skipManual = false,
     ): Promise<ContentScope[]> {
-        return this.userService.normalizeContentScopes(
-            await this.userService.getContentScopes(await this.userService.getUser(userId), !skipManual),
-            await this.userService.getAvailableContentScopes(),
-        );
+        const contentScopes = await this.userService.getContentScopes(await this.userService.getUser(userId), !skipManual);
+        const availableContentScopes = await this.userService.getAvailableContentScopes();
+        if (contentScopes === UserPermissions.allContentScopes) return availableContentScopes;
+        return this.userService.normalizeContentScopes(contentScopes, availableContentScopes);
     }
 
     @Query(() => [GraphQLJSONObject])
