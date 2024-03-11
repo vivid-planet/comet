@@ -30,7 +30,7 @@ type OwnerState = {
     isRtl: boolean;
 };
 
-const TooltipRoot = createSlot(MuiTooltip)<TooltipClassKey>({
+const TooltipRoot = createSlot(MuiTooltip)<TooltipClassKey, OwnerState>({
     componentName: "Tooltip",
     slotName: "root",
 })();
@@ -188,10 +188,11 @@ export const Tooltip = (inProps: TooltipProps) => {
         isRtl: theme.direction === "rtl",
     };
 
-    const commonTooltipProps = {
+    const commonTooltipProps: React.ComponentProps<typeof TooltipRoot> = {
         ...props,
         ownerState,
         slots: {
+            // @ts-expect-error The `ownerState` prop required by `TooltipPopper` does not exist in the type of MUIs `popper` slot in the `Tooltip` component but it is passed to the `TooltipPopper` component correctly.
             popper: TooltipPopper,
             ...props.slots,
         },
@@ -206,7 +207,6 @@ export const Tooltip = (inProps: TooltipProps) => {
 
     return trigger === "click" ? (
         <ClickAwayListener onClickAway={handleTooltipClose}>
-            {/* @ts-expect-error TODO: Fix this */}
             <TooltipRoot
                 onClose={handleTooltipClose}
                 open={open}
@@ -219,7 +219,6 @@ export const Tooltip = (inProps: TooltipProps) => {
             </TooltipRoot>
         </ClickAwayListener>
     ) : (
-        // @ts-expect-error TODO: Fix this
         <TooltipRoot disableFocusListener={trigger === "hover"} disableHoverListener={trigger === "focus"} {...commonTooltipProps}>
             {children}
         </TooltipRoot>
