@@ -18,14 +18,16 @@ type OwnerStateObjectIfDefined<OwnerState extends object | undefined> = OwnerSta
           ownerState?: undefined;
       };
 
-type Styles = ReturnType<typeof css> | CSSProperties;
+type StylesStringOrObject = ReturnType<typeof css> | CSSProperties;
 
-type SlotStyles<OwnerState extends object | undefined> = Styles | ((props: { theme: Theme } & OwnerStateObjectIfDefined<OwnerState>) => Styles);
+type SlotStylesOrStylesFunction<OwnerState extends object | undefined> =
+    | StylesStringOrObject
+    | ((props: { theme: Theme } & OwnerStateObjectIfDefined<OwnerState>) => StylesStringOrObject);
 
-export const createSlot = <C extends React.ElementType | keyof JSX.IntrinsicElements>(component: C) => {
+export const createSlot = <BaseComponent extends React.ElementType | keyof JSX.IntrinsicElements>(component: BaseComponent) => {
     return <ClassKey extends string, OwnerState extends object | undefined = undefined>(options: Options<ClassKey, OwnerState>) => {
-        return (styles: SlotStyles<OwnerState> = css``) => {
-            return withClassName(
+        return (styles: SlotStylesOrStylesFunction<OwnerState> = css``) => {
+            return withClassNameAndOwnerState(
                 // @ts-expect-error TODO: Fix the type. ...
                 styled(component, {
                     name: `${classNamePrefix}${options.componentName}`,
@@ -45,9 +47,11 @@ export const createSlot = <C extends React.ElementType | keyof JSX.IntrinsicElem
     };
 };
 
-function withClassName<C extends React.FunctionComponent<unknown>>(Component: C, options: Options<string, object | undefined>) {
-    // @ts-expect-error TODO: Fix the type. ...
-    const WithClassName = React.forwardRef<unknown, React.ComponentProps<C>>(({ className, ownerState, ...restProps }, ref) => {
+function withClassNameAndOwnerState<BaseComponent extends React.ElementType | keyof JSX.IntrinsicElements>(
+    Component: BaseComponent,
+    options: Options<string, object | undefined>,
+) {
+    const WithClassName = React.forwardRef<unknown, React.ComponentProps<BaseComponent>>(({ className, ownerState, ...restProps }, ref) => {
         const resolvedClassNames = getResolvedClassNames(options, ownerState);
         const customClassName = [className, ...resolvedClassNames].filter(Boolean).join(" ");
         // @ts-expect-error TODO: Fix the type. ...
