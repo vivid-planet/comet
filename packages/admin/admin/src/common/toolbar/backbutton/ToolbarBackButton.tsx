@@ -13,11 +13,18 @@ export type ToolbarBackButtonClassKey = "root" | "iconButton" | "toolbarItem";
 const Root = createSlot("div")<ToolbarBackButtonClassKey>({
     componentName: "ToolbarBackButton",
     slotName: "root",
-})(css`
-    flex: 0;
-    display: flex;
-    align-items: stretch;
-`);
+})(
+    ({ theme }) => css`
+        flex: 0;
+        display: flex;
+        align-items: stretch;
+
+        .CometAdminToolbarItem-root {
+            padding: 0;
+            padding-right: ${theme.spacing(3)};
+        }
+    `,
+);
 
 const IconButton = createSlot(MuiIconButton)<ToolbarBackButtonClassKey>({
     componentName: "ToolbarBackButton",
