@@ -1,10 +1,10 @@
 import { SeoBlock } from "@comet/cms-site";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import Breadcrumbs, { breadcrumbsFragment } from "@src/components/Breadcrumbs";
-import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { Header, headerFragment } from "@src/header/Header";
+import { InferPageTypeLoaderPropsType, PageTypeLoaderOptions } from "@src/pages/[[...path]]";
 import { topMenuPageTreeNodeFragment, TopNavigation } from "@src/topNavigation/TopNavigation";
-import { gql, GraphQLClient } from "graphql-request";
+import { gql } from "graphql-request";
 import Head from "next/head";
 import * as React from "react";
 
@@ -38,15 +38,7 @@ export const pageQuery = gql`
     ${topMenuPageTreeNodeFragment}
 `;
 
-export async function loader({
-    client,
-    pageTreeNodeId,
-    scope,
-}: {
-    client: GraphQLClient;
-    pageTreeNodeId: string;
-    scope: GQLPageTreeNodeScopeInput;
-}): Promise<unknown> {
+export async function loader({ client, pageTreeNodeId, scope }: PageTypeLoaderOptions) {
     return client.request<GQLPageQuery>(pageQuery, {
         pageTreeNodeId,
         domain: scope.domain,
@@ -54,19 +46,21 @@ export async function loader({
     });
 }
 
-export default function Page(props: GQLPageQuery): JSX.Element {
+export default function Page(props: InferPageTypeLoaderPropsType<typeof loader>): JSX.Element {
+    if (!props.pageContent) throw new Error("Could not load page content");
     const document = props.pageContent?.document;
+    if (document?.__typename != "Page") throw new Error("invalid document type");
 
     return (
         <>
             <Head>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            {document?.__typename === "Page" && <SeoBlock data={document.seo} title={props.pageContent?.name ?? ""} />}
+            <SeoBlock data={document.seo} title={props.pageContent.name} />
             <TopNavigation data={props.topMenu} />
             <Header header={props.header} />
-            {props.pageContent && <Breadcrumbs {...props.pageContent} />}
-            {document?.__typename === "Page" ? <div>{document.content && <PageContentBlock data={document.content} />}</div> : null}
+            <Breadcrumbs {...props.pageContent} />
+            <div>{document.content && <PageContentBlock data={document.content} />}</div>
         </>
     );
 }

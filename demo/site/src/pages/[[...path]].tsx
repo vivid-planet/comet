@@ -1,9 +1,9 @@
 import { defaultLanguage, domain } from "@src/config";
-import { GQLPage } from "@src/graphql.generated";
+import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import NotFound404 from "@src/pages/404";
 import PageTypePage, { loader as pageTypePageLoader } from "@src/pageTypes/Page";
 import createGraphQLClient from "@src/util/createGraphQLClient";
-import { gql } from "graphql-request";
+import { gql, GraphQLClient } from "graphql-request";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
 import * as React from "react";
@@ -11,10 +11,10 @@ import * as React from "react";
 import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTypeQuery, GQLPageTypeQueryVariables } from "./[[...path]].generated";
 import { PreviewData } from "./api/site-preview";
 
-type PageProps = GQLPage & {
+type PageProps = {
     documentType: string;
     id: string;
-};
+} & Record<string, unknown>;
 
 export default function Page(props: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
     if (!pageTypes[props.documentType]) {
@@ -40,7 +40,13 @@ const pageTypeQuery = gql`
     }
 `;
 
-const pageTypes = {
+export type PageTypeLoaderOptions = { client: GraphQLClient; pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput };
+export type InferPageTypeLoaderPropsType<T> = T extends (options: PageTypeLoaderOptions) => Promise<infer Return> ? Return : never;
+
+type PageLoader<T = Record<string, unknown>> = (options: PageTypeLoaderOptions) => Promise<T>;
+type PageType<T = Record<string, unknown>> = { component: React.ComponentType<T>; loader: PageLoader<T> };
+
+const pageTypes: Record<string, PageType> = {
     Page: {
         component: PageTypePage,
         loader: pageTypePageLoader,
