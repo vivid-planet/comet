@@ -2,6 +2,8 @@ import { css, generateUtilityClass, styled, Theme } from "@mui/material";
 import { CSSProperties } from "@mui/material/styles/createMixins";
 import React from "react";
 
+const classNamePrefix = "CometAdmin";
+
 type Options<ClassKey extends string, OwnerState extends object | undefined> = {
     componentName: string;
     slotName: ClassKey;
@@ -26,10 +28,9 @@ export const createSlot = <C extends React.ElementType | keyof JSX.IntrinsicElem
             return withClassName(
                 // @ts-expect-error TODO: Fix the type. ...
                 styled(component, {
-                    name: options.componentName,
+                    name: `${classNamePrefix}${options.componentName}`,
                     slot: options.slotName,
-                    overridesResolver(_, styles) {
-                        // @ts-expect-error TODO: Fix the type. ...
+                    overridesResolver({ ownerState }, styles) {
                         const resolvedClasses = getResolvedClasses<ClassKey, OwnerState>(options, ownerState);
                         const allClasses = [options.slotName, ...resolvedClasses].filter(Boolean);
                         return allClasses.map((classKey) => styles[classKey]);
@@ -55,8 +56,6 @@ function withClassName<C extends React.FunctionComponent<unknown>>(Component: C,
 
     return WithClassName;
 }
-
-const classNamePrefix = "CometAdmin";
 
 const getResolvedClasses = <ClassKey extends string, OwnerState extends object | undefined>(
     options: Options<ClassKey, OwnerState>,
