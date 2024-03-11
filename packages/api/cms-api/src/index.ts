@@ -69,7 +69,6 @@ export { defaultDamAcceptedMimetypes } from "./dam/common/mimeTypes/default-dam-
 export { DamConfig } from "./dam/dam.config";
 export { DAM_CONFIG, IMGPROXY_CONFIG } from "./dam/dam.constants";
 export { DamModule } from "./dam/dam.module";
-export { EntityInfo, EntityInfoServiceInterface } from "./dam/files/decorators/entity-info.decorator";
 export { CreateFileInput, ImageFileInput, UpdateFileInput } from "./dam/files/dto/file.input";
 export { FileUploadInterface } from "./dam/files/dto/file-upload.input";
 export { CreateFolderInput, UpdateFolderInput } from "./dam/files/dto/folder.input";
@@ -93,6 +92,7 @@ export { IsAllowedImageSize, IsAllowedImageSizeConstraint } from "./dam/images/v
 export { IsValidImageAspectRatio, IsValidImageAspectRatioConstraint } from "./dam/images/validators/is-valid-aspect-ratio.validator";
 export { Extension, Gravity, ResizingType } from "./dam/imgproxy/imgproxy.enum";
 export { ImgproxyConfig, ImgproxyService } from "./dam/imgproxy/imgproxy.service";
+export { EntityInfo, EntityInfoServiceInterface } from "./dependencies/decorators/entity-info.decorator";
 export { DependenciesModule } from "./dependencies/dependencies.module";
 export { DependenciesResolverFactory } from "./dependencies/dependencies.resolver.factory";
 export { DependenciesService } from "./dependencies/dependencies.service";

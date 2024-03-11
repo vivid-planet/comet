@@ -7,7 +7,7 @@ import { ModuleRef } from "@nestjs/core";
 import { subMinutes } from "date-fns";
 import { v4 } from "uuid";
 
-import { EntityInfoGetter, EntityInfoServiceInterface } from "../dam/files/decorators/entity-info.decorator";
+import { EntityInfoGetter, EntityInfoServiceInterface } from "./decorators/entity-info.decorator";
 import { DiscoverService } from "./discover.service";
 import { BaseDependencyInterface } from "./dto/base-dependency.interface";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
