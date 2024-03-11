@@ -64,8 +64,8 @@ export const Toolbar = (inProps: ToolbarProps) => {
     };
 
     return (
-        <Root elevation={elevation} ownerState={ownerState} {...slotProps?.root} {...restProps} square>
-            <StyledToolbar {...slotProps?.muiToolbar} disableGutters>
+        <Root elevation={elevation} ownerState={ownerState} {...slotProps?.root} {...restProps}>
+            <StyledToolbar {...slotProps?.muiToolbar}>
                 <MainContentContainer {...slotProps?.mainContentContainer}>{children}</MainContentContainer>
             </StyledToolbar>
         </Root>
