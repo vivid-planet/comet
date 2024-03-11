@@ -84,7 +84,6 @@ type OptionMenuItemState = {
     selected: boolean;
 };
 
-// TODO: Check if the ownerState type works correctly here
 const OptionMenuItem = createSlot(MenuItem)<SelectClassKey, OptionMenuItemState>({
     componentName: "Select",
     slotName: "option",
@@ -162,7 +161,6 @@ function ValueContainer<OptionType extends OptionTypeBase, IsMulti extends boole
     return <ValueContainerSlot>{props.children}</ValueContainerSlot>;
 }
 
-// TODO: Check if the ownerState type works correctly here
 const MultiValueChip = createSlot(Chip)<SelectClassKey, { focused: boolean }>({
     componentName: "Select",
     slotName: "chip",
