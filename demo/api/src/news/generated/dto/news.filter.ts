@@ -5,8 +5,10 @@ import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
 
-import { NewsCategory } from "../../entities/news.entity";
+import { NewsCategory, NewsStatus } from "../../entities/news.entity";
 
+@InputType()
+class NewsStatusEnumFilter extends createEnumFilter(NewsStatus) {}
 @InputType()
 class NewsCategoryEnumFilter extends createEnumFilter(NewsCategory) {}
 
@@ -23,6 +25,12 @@ export class NewsFilter {
     @IsOptional()
     @Type(() => StringFilter)
     title?: StringFilter;
+
+    @Field(() => NewsStatusEnumFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => NewsStatusEnumFilter)
+    status?: NewsStatusEnumFilter;
 
     @Field(() => DateFilter, { nullable: true })
     @ValidateNested()

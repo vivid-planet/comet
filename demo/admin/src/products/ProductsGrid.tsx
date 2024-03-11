@@ -35,8 +35,8 @@ import {
     GQLProductsListManualFragment,
     GQLProductsListQuery,
     GQLProductsListQueryVariables,
-    GQLUpdateProductVisibilityMutation,
-    GQLUpdateProductVisibilityMutationVariables,
+    GQLUpdateProductStatusMutation,
+    GQLUpdateProductStatusMutationVariables,
 } from "./ProductsGrid.generated";
 
 function ProductsGridToolbar() {
@@ -59,7 +59,7 @@ function ProductsGridToolbar() {
     );
 }
 
-function ProductsGrid() {
+export function ProductsGrid() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
@@ -111,21 +111,22 @@ function ProductsGrid() {
         },
         { field: "inStock", headerName: "In Stock", width: 50, type: "boolean" },
         {
-            field: "visible",
-            headerName: "Visible",
+            field: "status",
+            headerName: "Status",
             width: 100,
             type: "boolean",
+            valueGetter: (params) => params.row.status == "Published",
             renderCell: (params) => {
                 return (
                     <CrudVisibility
-                        visibility={params.row.visible}
-                        onUpdateVisibility={async (visible) => {
-                            await client.mutate<GQLUpdateProductVisibilityMutation, GQLUpdateProductVisibilityMutationVariables>({
-                                mutation: updateProductVisibilityMutation,
-                                variables: { id: params.row.id, visible },
+                        visibility={params.row.status == "Published"}
+                        onUpdateVisibility={async (status) => {
+                            await client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
+                                mutation: updateProductStatusMutation,
+                                variables: { id: params.row.id, status: status ? "Published" : "Unpublished" },
                                 optimisticResponse: {
                                     __typename: "Mutation",
-                                    updateProductVisibility: { __typename: "Product", id: params.row.id, visible },
+                                    updateProduct: { __typename: "Product", id: params.row.id, status: status ? "Published" : "Unpublished" },
                                 },
                             });
                         }}
@@ -159,10 +160,7 @@ function ProductsGrid() {
                                             type: input.type,
                                             category: input.category?.id,
                                             tags: input.tags.map((tag) => tag.id),
-                                            variants: input.variants.map((variant) => ({
-                                                name: variant.name,
-                                                image: DamImageBlock.state2Output(DamImageBlock.input2State(variant.image)),
-                                            })),
+                                            colors: input.colors,
                                             articleNumbers: input.articleNumbers,
                                             discounts: input.discounts,
                                             statistics: { views: 0 },
@@ -226,7 +224,7 @@ const productsFragment = gql`
         type
         inStock
         image
-        visible
+        status
         category {
             id
             title
@@ -235,9 +233,12 @@ const productsFragment = gql`
             id
             title
         }
-        variants {
-            image
+        colors {
             name
+            hexCode
+        }
+        variants {
+            id
         }
         articleNumbers
         discounts {
@@ -285,13 +286,11 @@ const createProductMutation = gql`
     }
 `;
 
-const updateProductVisibilityMutation = gql`
-    mutation UpdateProductVisibility($id: ID!, $visible: Boolean!) {
-        updateProductVisibility(id: $id, visible: $visible) {
+const updateProductStatusMutation = gql`
+    mutation UpdateProductStatus($id: ID!, $status: ProductStatus!) {
+        updateProduct(id: $id, input: { status: $status }) {
             id
-            visible
+            status
         }
     }
 `;
-
-export default ProductsGrid;

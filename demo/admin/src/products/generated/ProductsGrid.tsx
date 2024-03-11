@@ -40,7 +40,7 @@ const productsFragment = gql`
         id
         updatedAt
         title
-        visible
+        status
         slug
         description
         type
@@ -113,7 +113,16 @@ export function ProductsGrid(): React.ReactElement {
             width: 150,
         },
         { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }), width: 150 },
-        { field: "visible", headerName: intl.formatMessage({ id: "product.visible", defaultMessage: "Visible" }), type: "boolean", width: 150 },
+        {
+            field: "status",
+            headerName: intl.formatMessage({ id: "product.status", defaultMessage: "Status" }),
+            type: "singleSelect",
+            valueOptions: [
+                { value: "Published", label: intl.formatMessage({ id: "product.status.published", defaultMessage: "Published" }) },
+                { value: "Unpublished", label: intl.formatMessage({ id: "product.status.unpublished", defaultMessage: "Unpublished" }) },
+            ],
+            width: 150,
+        },
         { field: "slug", headerName: intl.formatMessage({ id: "product.slug", defaultMessage: "Slug" }), width: 150 },
         { field: "description", headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }), width: 150 },
         {
@@ -171,6 +180,7 @@ export function ProductsGrid(): React.ReactElement {
                                 const row = params.row;
                                 return {
                                     title: row.title,
+                                    status: row.status,
                                     slug: row.slug,
                                     description: row.description,
                                     type: row.type,

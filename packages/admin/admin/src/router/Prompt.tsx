@@ -21,7 +21,7 @@ interface IProps {
 export const RouterPrompt: React.FunctionComponent<IProps> = ({ message, saveAction, subRoutePath, children }) => {
     const id = useConstant<string>(() => uuid());
     const reactRouterContext = React.useContext(__RouterContext); // reactRouterContext can be undefined if no router is used, don't fail in that case
-    const path: string | undefined = reactRouterContext?.match.path;
+    const path: string | undefined = reactRouterContext?.match?.path;
     const context = React.useContext(RouterContext);
     React.useEffect(() => {
         if (context) {

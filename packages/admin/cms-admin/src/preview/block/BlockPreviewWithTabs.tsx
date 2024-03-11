@@ -8,10 +8,10 @@ interface Props {
     previewApi: BlockPreviewApi;
     children: AdminComponentPart[];
     previewState: unknown;
-    previewUrl: string;
+    previewPath: string;
 }
 
-function BlockPreviewWithTabs({ children, previewApi, previewState, previewUrl }: Props): React.ReactElement {
+function BlockPreviewWithTabs({ children, previewApi, previewState, previewPath }: Props): React.ReactElement {
     let pageContent = null;
 
     if (previewApi.minimized) {
@@ -23,8 +23,8 @@ function BlockPreviewWithTabs({ children, previewApi, previewState, previewUrl }
     }
 
     return (
-        <IFrameBridgeProvider key={previewUrl}>
-            <SplitPreview url={previewUrl} previewState={previewState} previewApi={previewApi}>
+        <IFrameBridgeProvider key={previewPath}>
+            <SplitPreview previewPath={previewPath} previewState={previewState} previewApi={previewApi}>
                 {pageContent}
             </SplitPreview>
         </IFrameBridgeProvider>

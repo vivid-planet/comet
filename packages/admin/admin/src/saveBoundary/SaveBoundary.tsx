@@ -45,13 +45,13 @@ export function SaveBoundary({ onAfterSave, ...props }: SaveBoundaryProps) {
         setHasErrors(false);
         setSaving(true);
         try {
-            const saveSuccess = !(
-                await Promise.all(
-                    Object.values(saveStates.current).map((state) => {
-                        return state.doSave();
-                    }),
-                )
-            ).some((saveSuccess) => !saveSuccess);
+            let saveSuccess = true;
+            for (const state of Object.values(saveStates.current)) {
+                const result = await state.doSave();
+                if (!result) {
+                    saveSuccess = false;
+                }
+            }
             if (!saveSuccess) {
                 setHasErrors(true);
             } else {

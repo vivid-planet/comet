@@ -1,4 +1,4 @@
-import { AffectedEntity, PageTreeNodeVisibility, PageTreeService, validateNotModified } from "@comet/cms-api";
+import { AffectedEntity, PageTreeNodeVisibility, PageTreeService, RequiredPermission, validateNotModified } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { UnauthorizedException } from "@nestjs/common";
@@ -8,6 +8,7 @@ import { LinkInput } from "./dto/link.input";
 import { Link } from "./entities/link.entity";
 
 @Resolver(() => Link)
+@RequiredPermission("pageTree")
 export class LinksResolver {
     constructor(@InjectRepository(Link) readonly repository: EntityRepository<Link>, private readonly pageTreeService: PageTreeService) {}
 

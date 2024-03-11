@@ -1,5 +1,6 @@
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
+import { GridColDef } from "@mui/x-data-grid";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
@@ -20,7 +21,7 @@ export type FormFieldConfig<T> = (
     | { type: "date" }
     // TODO | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
-    | { type: "asyncSelect"; values?: string[] }
+    | { type: "asyncSelect"; rootQuery: string; labelField?: string }
     | { type: "block"; block: ImportReference }
 ) & { name: keyof T; label?: string; required?: boolean; validate?: ImportReference; helperText?: string };
 
@@ -34,6 +35,8 @@ export type FormConfig<T extends { __typename?: string }> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
+type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex">;
+
 export type GridColumnConfig<T> = (
     | { type: "text" }
     | { type: "number" }
@@ -42,7 +45,7 @@ export type GridColumnConfig<T> = (
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
     | { type: "block"; block: ImportReference }
-) & { name: keyof T; headerName?: string; width?: number };
+) & { name: keyof T } & DataGridSettings;
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
