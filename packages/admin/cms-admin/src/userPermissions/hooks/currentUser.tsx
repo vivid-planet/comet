@@ -31,11 +31,7 @@ export const CurrentUserProvider: React.FC<{
                 id
                 name
                 email
-<<<<<<< HEAD
                 locale
-=======
-                language
->>>>>>> main
                 permissions {
                     permission
                     contentScopes
