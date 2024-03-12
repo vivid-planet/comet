@@ -41,6 +41,7 @@
         "@opentelemetry/api": "^1.4.0",
         "@types/get-image-colors": "^4.0.0",
         "base64url": "^3.0.0",
+        "change-case": "^4.1.2",
         "class-validator": "0.13.2",
         "commander": "^9.3.0",
         "cron-parser": "^3.0.0",

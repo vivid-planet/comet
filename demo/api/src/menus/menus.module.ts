@@ -9,6 +9,6 @@ import { MenusResolver } from "./menus.resolver";
 
 @Module({
     imports: [PagesModule, MikroOrmModule.forFeature([MainMenuItem])],
-    providers: [MenusResolver, MainMenuItemResolver, DependenciesResolverFactory.create(MainMenuItem)],
+    providers: [MenusResolver, MainMenuItemResolver, DependenciesResolverFactory.create({ classRef: MainMenuItem, requiredPermission: "pageTree" })],
 })
 export class MenusModule {}
