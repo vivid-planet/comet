@@ -48,7 +48,7 @@ export class PageTreeModule {
             PageTreeNodeCreateInput,
             PageTreeNodeUpdateInput,
         });
-        const PageTreeDependentsResolver = DependentsResolverFactory.create({ classRef: PageTreeNode, requiredPermission: "pageTree" });
+        const PageTreeDependentsResolver = DependentsResolverFactory.create({ entity: PageTreeNode, requiredPermission: "pageTree" });
 
         const repositoryProvider = {
             provide: PAGE_TREE_REPOSITORY,

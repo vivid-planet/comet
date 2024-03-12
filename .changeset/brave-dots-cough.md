@@ -9,5 +9,5 @@ To override the default behavior, pass the required permission as option in the 
 
 ```diff
 - DependentsResolverFactory.create(ProductVariant)
-+ DependentsResolverFactory.create({ classRef: ProductVariant, requiredPermission: "product" })
++ DependentsResolverFactory.create({ entity: ProductVariant, requiredPermission: "product" })
 ```

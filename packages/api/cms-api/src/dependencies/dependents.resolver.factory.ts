@@ -9,19 +9,19 @@ import { DependentsArgs } from "./dto/dependencies.args";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
 
 export class DependentsResolverFactory {
-    static create<T extends Type<AnyEntity<{ id: string }>>>(options: T | { classRef: T; requiredPermission: string[] | string }) {
-        let classRef: T;
+    static create<T extends Type<AnyEntity<{ id: string }>>>(options: T | { entity: T; requiredPermission: string[] | string }) {
+        let entity: T;
         let requiredPermission: string[] | string;
 
         if (typeof options === "object") {
-            classRef = options.classRef;
+            entity = options.entity;
             requiredPermission = options.requiredPermission;
         } else {
-            classRef = options;
-            requiredPermission = camelCase(classRef.name);
+            entity = options;
+            requiredPermission = camelCase(entity.name);
         }
 
-        @Resolver(() => classRef)
+        @Resolver(() => entity)
         @RequiredPermission(requiredPermission)
         class DependentsResolver {
             constructor(readonly dependenciesService: DependenciesService) {}

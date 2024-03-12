@@ -37,7 +37,7 @@ export class RedirectsModule {
         const Redirect = RedirectEntityFactory.create({ linkBlock, Scope });
         const RedirectInput = RedirectInputFactory.create({ linkBlock });
         const RedirectsResolver = createRedirectsResolver({ Redirect, RedirectInput, Scope });
-        const RedirectsDependenciesResolver = DependenciesResolverFactory.create({ classRef: Redirect, requiredPermission: "pageTree" });
+        const RedirectsDependenciesResolver = DependenciesResolverFactory.create({ entity: Redirect, requiredPermission: "pageTree" });
 
         const linkBlockProvider: ValueProvider<RedirectsLinkBlock> = {
             provide: REDIRECTS_LINK_BLOCK,

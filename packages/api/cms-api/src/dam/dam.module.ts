@@ -74,7 +74,7 @@ export class DamModule {
 
         const DamItemsResolver = createDamItemsResolver({ File, Folder, Scope });
         const FilesResolver = createFilesResolver({ File, Scope });
-        const FileDependentsResolver = DependentsResolverFactory.create({ classRef: File, requiredPermission: "dam" });
+        const FileDependentsResolver = DependentsResolverFactory.create({ entity: File, requiredPermission: "dam" });
         const FoldersResolver = createFoldersResolver({ Folder, Scope });
 
         if (Scope) {

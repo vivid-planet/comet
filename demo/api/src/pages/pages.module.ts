@@ -7,7 +7,7 @@ import { PagesResolver } from "./pages.resolver";
 
 @Module({
     imports: [MikroOrmModule.forFeature([Page]), forwardRef(() => BlocksModule), RedirectsModule],
-    providers: [PagesResolver, DependenciesResolverFactory.create({ classRef: Page, requiredPermission: "pageTree" })],
+    providers: [PagesResolver, DependenciesResolverFactory.create({ entity: Page, requiredPermission: "pageTree" })],
     exports: [MikroOrmModule],
 })
 export class PagesModule {}
