@@ -1,5 +1,5 @@
 ---
-"@comet/admin": minor
+"@comet/admin": patch
 ---
 
-The `disabled` prop for `Field` is now applied to all children
+Fix a bug where the `disabled` prop would not be applied to the children of `Field`
