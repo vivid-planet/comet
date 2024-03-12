@@ -27,7 +27,11 @@ export class IsLinkTargetConstraint implements ValidatorConstraintInterface {
             return false;
         }
 
-        if (value.startsWith("mailto:")) {
+        if (value.toLowerCase().includes("javascript:")) {
+            return false;
+        } else if (value.toLowerCase().includes("data:")) {
+            return false;
+        } else if (value.startsWith("mailto:")) {
             return isEmail(value.slice(7));
         } else if (value.startsWith("tel:")) {
             return PHONE_NUMBER_REGEX.test(value.slice(4));
