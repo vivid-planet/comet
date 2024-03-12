@@ -65,7 +65,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     }: FieldRenderProps<FieldValue, FieldElement> & { warning?: string; disabled?: boolean }) {
         function render() {
             if (component) {
-                return React.createElement(component, { ...rest, input, meta, disabled });
+                return React.createElement(component, { ...rest, input, meta });
             } else {
                 if (typeof children !== "function") {
                     throw new Error(`Warning: Must specify either a render function as children, or a component prop to ${name}`);
