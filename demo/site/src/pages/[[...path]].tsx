@@ -43,7 +43,7 @@ export const getStaticProps: GetStaticProps<PageProps, ParsedUrlQuery, PreviewDa
     const client = createGraphQLClient(previewData);
     const path = params?.path ?? "";
     const scope = { domain, language: locale };
-    //fetch pageType
+    //fetch documentType
     const data = await client.request<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(documentTypeQuery, {
         path: `/${Array.isArray(path) ? path.join("/") : path}`,
         scope,
@@ -55,7 +55,7 @@ export const getStaticProps: GetStaticProps<PageProps, ParsedUrlQuery, PreviewDa
     }
     const pageTreeNodeId = data.pageTreeNodeByPath.id;
 
-    //pageType dependent query
+    //documentType dependent query
     const { loader: loaderForPageType } = documentTypes[data.pageTreeNodeByPath.documentType];
     return {
         props: {
