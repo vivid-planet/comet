@@ -2,4 +2,4 @@
 "@comet/admin-theme": major
 ---
 
-Mobile theming for medium screen sizes (<900px) is added to `Typography` headlines
+Adapt `Typography` headlines for mobile devices (<900px)
