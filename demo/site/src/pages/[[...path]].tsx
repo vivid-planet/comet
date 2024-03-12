@@ -1,23 +1,22 @@
 import { PreviewData } from "@comet/cms-site";
 import { defaultLanguage, domain } from "@src/config";
-import { GQLPage } from "@src/graphql.generated";
+import { documentTypes } from "@src/documentTypes";
 import NotFound404 from "@src/pages/404";
-import PageTypePage, { loader as pageTypePageLoader } from "@src/pageTypes/Page";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
 import * as React from "react";
 
-import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTypeQuery, GQLPageTypeQueryVariables } from "./[[...path]].generated";
+import { GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables, GQLPagesQuery, GQLPagesQueryVariables } from "./[[...path]].generated";
 
-type PageProps = GQLPage & {
+type PageProps = {
     documentType: string;
     id: string;
-};
+} & Record<string, unknown>;
 
 export default function Page(props: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
-    if (!pageTypes[props.documentType]) {
+    if (!documentTypes[props.documentType]) {
         return (
             <NotFound404>
                 <div>
@@ -26,13 +25,13 @@ export default function Page(props: InferGetStaticPropsType<typeof getStaticProp
             </NotFound404>
         );
     }
-    const { component: Component } = pageTypes[props.documentType];
+    const { component: Component } = documentTypes[props.documentType];
 
     return <Component {...props} />;
 }
 
-const pageTypeQuery = gql`
-    query PageType($path: String!, $scope: PageTreeNodeScopeInput!) {
+const documentTypeQuery = gql`
+    query DocumentType($path: String!, $scope: PageTreeNodeScopeInput!) {
         pageTreeNodeByPath(path: $path, scope: $scope) {
             id
             documentType
@@ -40,19 +39,12 @@ const pageTypeQuery = gql`
     }
 `;
 
-const pageTypes = {
-    Page: {
-        component: PageTypePage,
-        loader: pageTypePageLoader,
-    },
-};
-
 export const getStaticProps: GetStaticProps<PageProps, ParsedUrlQuery, PreviewData> = async ({ params, previewData, locale = defaultLanguage }) => {
     const client = createGraphQLClient(previewData);
     const path = params?.path ?? "";
     const scope = { domain, language: locale };
-    //fetch pageType
-    const data = await client.request<GQLPageTypeQuery, GQLPageTypeQueryVariables>(pageTypeQuery, {
+    //fetch documentType
+    const data = await client.request<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(documentTypeQuery, {
         path: `/${Array.isArray(path) ? path.join("/") : path}`,
         scope,
     });
@@ -63,8 +55,8 @@ export const getStaticProps: GetStaticProps<PageProps, ParsedUrlQuery, PreviewDa
     }
     const pageTreeNodeId = data.pageTreeNodeByPath.id;
 
-    //pageType dependent query
-    const { loader: loaderForPageType } = pageTypes[data.pageTreeNodeByPath.documentType];
+    //documentType dependent query
+    const { loader: loaderForPageType } = documentTypes[data.pageTreeNodeByPath.documentType];
     return {
         props: {
             ...(await loaderForPageType({ client, scope, pageTreeNodeId })),
