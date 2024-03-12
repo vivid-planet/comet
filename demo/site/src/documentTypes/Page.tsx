@@ -2,12 +2,12 @@ import { SeoBlock } from "@comet/cms-site";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import Breadcrumbs, { breadcrumbsFragment } from "@src/components/Breadcrumbs";
 import { Header, headerFragment } from "@src/header/Header";
-import { DocumentTypeLoaderOptions, InferDocumentTypeLoaderPropsType } from "@src/pages/[[...path]]";
 import { topMenuPageTreeNodeFragment, TopNavigation } from "@src/topNavigation/TopNavigation";
 import { gql } from "graphql-request";
 import Head from "next/head";
 import * as React from "react";
 
+import { DocumentTypeLoaderOptions, InferDocumentTypeLoaderPropsType } from "./index";
 import { GQLPageQuery } from "./Page.generated";
 
 // @TODO: Scope for menu should also be of type PageTreeNodeScopeInput

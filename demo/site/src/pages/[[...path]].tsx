@@ -1,14 +1,13 @@
 import { defaultLanguage, domain } from "@src/config";
-import PageTypePage, { loader as pageTypePageLoader } from "@src/documentTypes/Page";
-import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
+import { documentTypes } from "@src/documentTypes";
 import NotFound404 from "@src/pages/404";
 import createGraphQLClient from "@src/util/createGraphQLClient";
-import { gql, GraphQLClient } from "graphql-request";
+import { gql } from "graphql-request";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
 import * as React from "react";
 
-import { GQLDocumentTypeQuery, GQLDocumentTypeVariables, GQLPagesQuery, GQLPagesQueryVariables } from "./[[...path]].generated";
+import { GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables, GQLPagesQuery, GQLPagesQueryVariables } from "./[[...path]].generated";
 import { PreviewData } from "./api/site-preview";
 
 type PageProps = {
@@ -40,25 +39,12 @@ const documentTypeQuery = gql`
     }
 `;
 
-export type DocumentTypeLoaderOptions = { client: GraphQLClient; pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput };
-export type InferDocumentTypeLoaderPropsType<T> = T extends (options: DocumentTypeLoaderOptions) => Promise<infer Return> ? Return : never;
-
-type DocumentLoader<T = Record<string, unknown>> = (options: DocumentTypeLoaderOptions) => Promise<T>;
-type DocumentType<T = Record<string, unknown>> = { component: React.ComponentType<T>; loader: DocumentLoader<T> };
-
-const documentTypes: Record<string, DocumentType> = {
-    Page: {
-        component: PageTypePage,
-        loader: pageTypePageLoader,
-    },
-};
-
 export const getStaticProps: GetStaticProps<PageProps, ParsedUrlQuery, PreviewData> = async ({ params, previewData, locale = defaultLanguage }) => {
     const client = createGraphQLClient(previewData);
     const path = params?.path ?? "";
     const scope = { domain, language: locale };
     //fetch pageType
-    const data = await client.request<GQLDocumentTypeQuery, GQLDocumentTypeVariables>(documentTypeQuery, {
+    const data = await client.request<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(documentTypeQuery, {
         path: `/${Array.isArray(path) ? path.join("/") : path}`,
         scope,
     });
