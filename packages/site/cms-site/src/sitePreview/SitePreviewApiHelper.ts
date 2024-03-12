@@ -1,4 +1,4 @@
-import { GraphQLClient } from "graphql-request";
+import { gql, GraphQLClient } from "graphql-request";
 import { NextApiRequest, NextApiResponse } from "next";
 
 type Scope = Record<string, unknown>;
@@ -30,7 +30,11 @@ async function getValidatedScope(req: NextApiRequest, res: NextApiResponse, grap
 
     graphQLClient.setHeader("authorization", req.headers["authorization"] || "");
     const { isAllowedSitePreview } = await graphQLClient.request<{ isAllowedSitePreview: boolean }>(
-        "query isAllowedSitePreview($scope: JSONObject!) { isAllowedSitePreview(scope: $scope) }",
+        gql`
+            query isAllowedSitePreview($scope: JSONObject!) {
+                isAllowedSitePreview(scope: $scope)
+            }
+        `,
         { scope },
     );
     if (!isAllowedSitePreview) {
