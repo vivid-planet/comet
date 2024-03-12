@@ -102,7 +102,8 @@ export { MainContent, MainContentClassKey, MainContentProps } from "./mui/MainCo
 export { MasterLayout, MasterLayoutProps } from "./mui/MasterLayout";
 export { MasterLayoutClassKey } from "./mui/MasterLayout.styles";
 export { MasterLayoutContext } from "./mui/MasterLayoutContext";
-export { MenuCollapsibleItem, MenuCollapsibleItemClassKey, MenuCollapsibleItemProps, MenuLevel } from "./mui/menu/CollapsibleItem";
+export { MenuCollapsibleItem, MenuCollapsibleItemProps, MenuLevel } from "./mui/menu/CollapsibleItem";
+export { MenuCollapsibleItemClassKey } from "./mui/menu/CollapsibleItem.styles";
 export { IMenuContext, IWithMenu, MenuContext, withMenu } from "./mui/menu/Context";
 export { MenuItem, MenuItemProps } from "./mui/menu/Item";
 export { MenuItemClassKey } from "./mui/menu/Item.styles";

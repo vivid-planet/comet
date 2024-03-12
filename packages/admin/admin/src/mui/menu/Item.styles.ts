@@ -3,7 +3,7 @@ import { createStyles } from "@mui/styles";
 
 import { MenuItemProps, MuiListItemProps } from "./Item";
 
-export type MenuItemClassKey = "root" | "level1" | "level2" | "level3" | "hasIcon" | "hasSecondaryText" | "hasSecondaryAction";
+export type MenuItemClassKey = "root" | "level1" | "level2" | "level3" | "hasIcon" | "hasSecondaryText" | "hasSecondaryAction" | "level3Enumeration";
 
 export const styles = (theme: Theme) => {
     const colors = {
@@ -24,23 +24,39 @@ export const styles = (theme: Theme) => {
             },
             "& [class*='MuiListItemIcon-root']": {
                 color: colors.textLevel1,
-                minWidth: 28,
+                minWidth: ({ isMenuOpen }) => (isMenuOpen ? 28 : 22),
+                margin: theme.spacing(0, "auto"),
             },
             "& [class*='MuiListItemText-inset']": {
-                paddingLeft: 28,
+                paddingLeft: ({ icon, level }) => (!!icon && level === 1 ? 28 : 0),
             },
-            "& [class*='MuiSvgIcon-root']": {
-                fontSize: 16,
+            "&[class*='Mui-selected']": {
+                "& [class*='MuiListItemText-secondary']": {
+                    color: "inherit",
+                },
             },
         },
         level1: {
             borderBottom: `1px solid ${theme.palette.grey[50]}`,
             boxSizing: "border-box",
             color: colors.textLevel1,
+            height: 60,
             paddingLeft: 20,
             paddingRight: 20,
             paddingTop: 16,
             paddingBottom: 16,
+            backgroundColor: ({ isCollapsibleOpen, isMenuOpen }) =>
+                !isMenuOpen && isCollapsibleOpen ? `${theme.palette.primary.main} !important` : `white !important`,
+            "& [class*='MuiListItemIcon-root']": {
+                color: ({ isMenuOpen, isCollapsibleOpen }) => (!isMenuOpen && isCollapsibleOpen ? `${theme.palette.common.white} !important` : ""),
+            },
+            "&:hover": {
+                backgroundColor: ({ isMenuOpen }) => (!isMenuOpen ? `${theme.palette.primary.main} !important` : ""),
+                color: ({ isMenuOpen }) => (!isMenuOpen ? `${theme.palette.common.white} !important` : ""),
+                "& [class*='MuiListItemIcon-root']": {
+                    color: ({ isMenuOpen }) => (!isMenuOpen ? `${theme.palette.common.white} !important` : ""),
+                },
+            },
             "&[class*='Mui-selected']": {
                 backgroundColor: theme.palette.grey[50],
                 color: theme.palette.primary.main,
@@ -49,6 +65,12 @@ export const styles = (theme: Theme) => {
                 },
                 "& [class*='MuiListItemIcon-root']": {
                     color: theme.palette.primary.main,
+                },
+                "&:hover": {
+                    color: ({ isMenuOpen }) => (!isMenuOpen ? theme.palette.common.white : theme.palette.primary.main),
+                    "& [class*='MuiListItemIcon-root']": {
+                        color: ({ isMenuOpen }) => (!isMenuOpen ? theme.palette.common.white : theme.palette.primary.main),
+                    },
                 },
             },
             "& [class*='MuiListItemText-primary']": {
@@ -59,26 +81,67 @@ export const styles = (theme: Theme) => {
         },
         level2: {
             color: colors.textLevel2,
-            paddingLeft: 20,
+            paddingLeft: ({ isMenuOpen }) => (isMenuOpen ? 48 : 20),
             paddingRight: 20,
             paddingTop: 10,
             paddingBottom: 10,
+            "& [class*='MuiListItemText-primary']": {
+                fontWeight: theme.typography.fontWeightRegular,
+                fontSize: 14,
+                lineHeight: "20px",
+            },
             "&:last-child": {
-                borderBottom: ({ level, hasSubitems, isCollapsibleOpen }) =>
-                    !hasSubitems || !isCollapsibleOpen ? `1px solid ${theme.palette.grey[50]}` : "initial",
+                borderBottom: ({ level, hasSubitems, isMenuOpen, isCollapsibleOpen }) =>
+                    level === 2 && isMenuOpen && (!hasSubitems || !isCollapsibleOpen) ? `1px solid ${theme.palette.grey[50]}` : "initial",
                 boxSizing: "border-box",
             },
             "&[class*='Mui-selected']": {
-                backgroundColor: theme.palette.primary.main,
-                color: "#fff",
+                backgroundColor: theme.palette.common.white,
+                color: theme.palette.primary.main,
+                fontWeight: theme.typography.fontWeightBold,
                 "&:after": {
-                    backgroundColor: theme.palette.primary.dark,
+                    backgroundColor: ({ isMenuOpen }) => (isMenuOpen ? theme.palette.primary.main : undefined),
                 },
                 "&:hover": {
-                    backgroundColor: theme.palette.primary.dark,
+                    backgroundColor: theme.palette.grey[50],
                 },
                 "& [class*='MuiListItemText-primary']": {
                     fontWeight: theme.typography.fontWeightBold,
+                },
+                "& [class*='MuiListItemIcon-root']": {
+                    color: theme.palette.primary.main,
+                },
+            },
+            "& [class*='MuiListItemText-root']": {
+                margin: 0,
+            },
+        },
+        level3: {
+            color: colors.textLevel2,
+            paddingLeft: ({ isMenuOpen }) => (isMenuOpen ? 50 : 20),
+            paddingRight: 20,
+            paddingTop: 0,
+            paddingBottom: 0,
+            position: "relative",
+            "& [class*='MuiListItemText-inset']": {
+                paddingLeft: 0,
+            },
+            "&:last-child": {
+                borderBottom: ({ isMenuOpen, level }) => (isMenuOpen && level !== 3 ? `1px solid ${theme.palette.grey[50]}` : "initial"),
+                boxSizing: "border-box",
+            },
+            "&[class*='Mui-selected']": {
+                backgroundColor: theme.palette.common.white,
+                color: theme.palette.primary.main,
+                fontWeight: theme.typography.fontWeightBold,
+                "&:hover": {
+                    backgroundColor: theme.palette.grey[50],
+                },
+                "& [class*='MuiListItemText-primary']": {
+                    fontWeight: theme.typography.fontWeightBold,
+                },
+                "& [class*='MuiListItemIcon-root']": {
+                    color: theme.palette.primary.main,
                 },
             },
             "& [class*='MuiListItemText-root']": {
@@ -88,15 +151,12 @@ export const styles = (theme: Theme) => {
                 fontWeight: theme.typography.fontWeightRegular,
                 fontSize: 14,
                 lineHeight: "20px",
+                paddingLeft: ({ isMenuOpen }) => (isMenuOpen ? 14 : 0),
+                paddingTop: 14,
+                paddingBottom: 14,
             },
         },
-        level3: {
-            color: colors.textLevel2,
-            paddingLeft: 20,
-            paddingRight: 20,
-            paddingTop: 0,
-            paddingBottom: 0,
-            position: "relative",
+        level3Enumeration: {
             "&:not(:last-child)": {
                 "& [class*='MuiListItemText-root']": {
                     position: "relative",
@@ -118,11 +178,22 @@ export const styles = (theme: Theme) => {
                         backgroundColor: theme.palette.grey[100],
                     },
                 },
+                "&[class*='Mui-selected']": {
+                    backgroundColor: theme.palette.common.white,
+                    "&:hover": {
+                        backgroundColor: theme.palette.grey[50],
+                    },
+                    "& [class*='MuiListItemText-root']": {
+                        "&:before": {
+                            backgroundColor: theme.palette.primary.main,
+                        },
+                        "&:after": {
+                            backgroundColor: theme.palette.primary.main,
+                        },
+                    },
+                },
             },
             "&:last-child": {
-                borderBottom: `1px solid ${theme.palette.grey[50]}`,
-                boxSizing: "border-box",
-
                 "& [class*='MuiListItemText-root']": {
                     position: "relative",
                     "&:before": {
@@ -143,30 +214,20 @@ export const styles = (theme: Theme) => {
                         backgroundColor: theme.palette.grey[100],
                     },
                 },
-            },
-            "&[class*='Mui-selected']": {
-                backgroundColor: theme.palette.primary.main,
-                color: "#fff",
-                "&:after": {
-                    backgroundColor: theme.palette.primary.dark,
+                "&[class*='Mui-selected']": {
+                    backgroundColor: theme.palette.common.white,
+                    "&:hover": {
+                        backgroundColor: theme.palette.grey[50],
+                    },
+                    "& [class*='MuiListItemText-root']": {
+                        "&:before": {
+                            backgroundColor: theme.palette.primary.main,
+                        },
+                        "&:after": {
+                            backgroundColor: theme.palette.primary.main,
+                        },
+                    },
                 },
-                "&:hover": {
-                    backgroundColor: theme.palette.primary.dark,
-                },
-                "& [class*='MuiListItemText-primary']": {
-                    fontWeight: theme.typography.fontWeightBold,
-                },
-            },
-            "& [class*='MuiListItemText-root']": {
-                margin: 0,
-            },
-            "& [class*='MuiListItemText-primary']": {
-                fontWeight: theme.typography.fontWeightRegular,
-                fontSize: 14,
-                lineHeight: "20px",
-                paddingLeft: 14,
-                paddingTop: 14,
-                paddingBottom: 14,
             },
         },
         hasIcon: {},

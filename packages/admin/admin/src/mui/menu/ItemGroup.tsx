@@ -1,11 +1,14 @@
-import { Box, ComponentsOverrides, Theme, Typography } from "@mui/material";
+import { Box, ComponentsOverrides, Theme, Tooltip, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
+import { useMemo } from "react";
 import { FormattedMessage, MessageDescriptor, useIntl } from "react-intl";
 
-import { Tooltip } from "../../common/Tooltip";
+import { MenuChild, MenuCollapsibleItemProps } from "./CollapsibleItem";
 import { MenuContext } from "./Context";
+import { MenuItemProps } from "./Item";
+import { MenuItemRouterLinkProps } from "./ItemRouterLink";
 
 export type MenuItemGroupClassKey = "root" | "title" | "titleMenuOpen" | "titleContainer" | "titleContainerMenuOpen";
 
@@ -15,16 +18,16 @@ const styles = (theme: Theme) =>
         title: {
             fontWeight: theme.typography.fontWeightBold,
             fontSize: 12,
-            border: `2px solid ${theme.palette.grey[100]}`,
+            border: `1px solid ${theme.palette.grey[100]}`,
             borderRadius: 20,
-            padding: theme.spacing(0.5, 2),
+            padding: theme.spacing(0, 1.5),
             lineHeight: "20px",
             color: `${theme.palette.grey[300]}`,
         },
         titleMenuOpen: {
             fontWeight: theme.typography.fontWeightBold,
             fontSize: 14,
-            border: `2px solid ${theme.palette.common.white}`,
+            border: `1px solid ${theme.palette.common.white}`,
             borderRadius: "initial",
             padding: 0,
             marginRight: theme.spacing(1),
@@ -90,6 +93,16 @@ const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & Me
         displayedTitle = shortTitle || getInitials(title);
     }
 
+    const childElements = useMemo(
+        () =>
+            React.Children.map(children, (child: MenuChild) => {
+                return React.cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
+                    isMenuOpen: menuOpen,
+                });
+            }),
+        [children, menuOpen],
+    );
+
     return (
         <Box className={classes.root}>
             <Tooltip placement="right" disableHoverListener={menuOpen} disableFocusListener={menuOpen} disableTouchListener={menuOpen} title={title}>
@@ -97,10 +110,10 @@ const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & Me
                     <Typography className={clsx(classes.title, menuOpen && classes.titleMenuOpen)} variant="h3">
                         {displayedTitle}
                     </Typography>
-                    {menuOpen && helperIcon}
+                    {menuOpen && !!helperIcon && helperIcon}
                 </Box>
             </Tooltip>
-            {children}
+            {childElements}
         </Box>
     );
 };
