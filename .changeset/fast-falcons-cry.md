@@ -2,4 +2,4 @@
 "@comet/cms-admin": patch
 ---
 
-`Language`-field of `CurrentUser`-object is evaluated correctly
+Correctly evaluate the `language`-field of the `CurrentUser`-object
