@@ -123,8 +123,11 @@ export async function generateCrudInput(
             decorators.push(`@Field(${fieldOptions})`);
             type = "number";
         } else if (prop.type === "DateType" || prop.type === "Date") {
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
+            const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             decorators.push("@IsDate()");
-            decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
+            decorators.push(`@Field(${fieldOptions})`);
             type = "Date";
         } else if (prop.type === "BooleanType" || prop.type === "boolean") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
