@@ -1,15 +1,15 @@
+import { PreviewData } from "@comet/cms-site";
 import { defaultLanguage, domain } from "@src/config";
 import { GQLPage } from "@src/graphql.generated";
 import NotFound404 from "@src/pages/404";
 import PageTypePage, { loader as pageTypePageLoader } from "@src/pageTypes/Page";
-import createGraphQLClient from "@src/util/createGraphQLClient";
+import { createGraphQLClient } from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
 import * as React from "react";
 
 import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTypeQuery, GQLPageTypeQueryVariables } from "./[[...path]].generated";
-import { PreviewData } from "./api/site-preview";
 
 type PageProps = GQLPage & {
     documentType: string;
@@ -48,7 +48,7 @@ const pageTypes = {
 };
 
 export const getStaticProps: GetStaticProps<PageProps, ParsedUrlQuery, PreviewData> = async ({ params, previewData, locale = defaultLanguage }) => {
-    const client = createGraphQLClient(previewData);
+    const client = createGraphQLClient({ previewData });
     const path = params?.path ?? "";
     const scope = { domain, language: locale };
     //fetch pageType
@@ -67,7 +67,7 @@ export const getStaticProps: GetStaticProps<PageProps, ParsedUrlQuery, PreviewDa
     const { loader: loaderForPageType } = pageTypes[data.pageTreeNodeByPath.documentType];
     return {
         props: {
-            ...(await loaderForPageType({ client, scope, pageTreeNodeId })),
+            ...(await loaderForPageType({ client, fetch, scope, pageTreeNodeId })),
             documentType: data.pageTreeNodeByPath.documentType,
             id: pageTreeNodeId,
         },

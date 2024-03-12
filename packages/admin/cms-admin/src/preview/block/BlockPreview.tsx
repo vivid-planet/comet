@@ -37,6 +37,12 @@ function BlockPreview({
     const sitesConfigContext = useSitesConfig();
     const initialPageUrl = `${sitesConfigContext.blockPreviewBaseUrl}${previewPath}`;
 
+    React.useEffect(() => {
+        if (iFrameBridge.iFrameReady) {
+            iFrameBridge.sendShowOnlyVisible(showOnlyVisible);
+        }
+    }, [iFrameBridge, showOnlyVisible]);
+
     const handleMinimizeClick = () => {
         setMinimized((minimized) => !minimized);
     };

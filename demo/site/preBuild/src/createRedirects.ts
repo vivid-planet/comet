@@ -3,7 +3,7 @@ import { Redirect } from "next/dist/lib/load-custom-routes";
 
 import { ExternalLinkBlockData, InternalLinkBlockData, NewsLinkBlockData, RedirectsLinkBlockData } from "../../src/blocks.generated";
 import { domain } from "../../src/config";
-import createGraphQLClient from "../../src/util/createGraphQLClient";
+import { createGraphQLClient } from "../../src/util/createGraphQLClient";
 import { GQLRedirectsQuery, GQLRedirectsQueryVariables } from "./createRedirects.generated";
 
 const createRedirects = async () => {

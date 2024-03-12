@@ -3,10 +3,13 @@ import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import Breadcrumbs, { breadcrumbsFragment } from "@src/components/Breadcrumbs";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { Header, headerFragment } from "@src/header/Header";
+import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
 import { topMenuPageTreeNodeFragment, TopNavigation } from "@src/topNavigation/TopNavigation";
 import { gql, GraphQLClient } from "graphql-request";
 import Head from "next/head";
 import * as React from "react";
+
+type Fetch = typeof fetch;
 
 import { GQLPageQuery } from "./Page.generated";
 
@@ -40,18 +43,37 @@ export const pageQuery = gql`
 
 export async function loader({
     client,
+    fetch,
     pageTreeNodeId,
     scope,
 }: {
     client: GraphQLClient;
+    fetch: Fetch;
     pageTreeNodeId: string;
     scope: GQLPageTreeNodeScopeInput;
 }): Promise<unknown> {
-    return client.request<GQLPageQuery>(pageQuery, {
+    const data = await client.request<GQLPageQuery>(pageQuery, {
         pageTreeNodeId,
         domain: scope.domain,
         language: scope.language,
     });
+    if (data.pageContent?.document?.__typename !== "Page") throw new Error("document type must be Page");
+
+    [data.pageContent.document.content, data.pageContent.document.seo] = await Promise.all([
+        recursivelyLoadBlockData({
+            blockType: "PageContent",
+            blockData: data.pageContent.document.content,
+            client,
+            fetch,
+        }),
+        recursivelyLoadBlockData({
+            blockType: "Seo",
+            blockData: data.pageContent.document.seo,
+            client,
+            fetch,
+        }),
+    ]);
+    return data;
 }
 
 export default function Page(props: GQLPageQuery): JSX.Element {
