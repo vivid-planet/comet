@@ -24,7 +24,6 @@ export const HeadlineBlock = createCompositeBlock(
         blocks: {
             eyebrow: {
                 block: createCompositeBlockTextField({
-                    defaultValue: "",
                     fieldProps: { label: "Eyebrow" },
                 }),
             },

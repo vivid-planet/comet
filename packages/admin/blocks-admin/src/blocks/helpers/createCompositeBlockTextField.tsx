@@ -5,11 +5,11 @@ import { BlocksFinalForm } from "../../form/BlocksFinalForm";
 import { createCompositeSetting } from "./composeBlocks/createCompositeSetting";
 
 interface Options {
-    defaultValue: string;
+    defaultValue?: string;
     fieldProps?: Partial<TextFieldProps>;
 }
 
-export function createCompositeBlockTextField({ defaultValue, fieldProps }: Options) {
+export function createCompositeBlockTextField({ defaultValue = "", fieldProps }: Options) {
     return createCompositeSetting<string>({
         defaultValue,
         AdminComponent: ({ state, updateState }) => (
