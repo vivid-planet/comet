@@ -2,7 +2,10 @@ import { GraphQLClient } from "graphql-request";
 
 import { PreviewData } from "../sitePreview/SitePreviewApiHelper";
 
-export function createGraphQLClient(url: string, previewData?: PreviewData): GraphQLClient {
+type RequestConfig = ConstructorParameters<typeof GraphQLClient>[1]; //graphql-request doesn't export RequestConfig
+
+export function createGraphQLClient(url: string, options?: RequestConfig & { previewData?: PreviewData }): GraphQLClient {
+    const { previewData, ...gqlOptions } = options ?? {};
     const { includeInvisibleBlocks, includeInvisiblePages, previewDamUrls } = {
         includeInvisiblePages: !!previewData,
         includeInvisibleBlocks: previewData && previewData.includeInvisible,
@@ -35,5 +38,6 @@ export function createGraphQLClient(url: string, previewData?: PreviewData): Gra
 
     return new GraphQLClient(url, {
         headers,
+        ...gqlOptions,
     });
 }

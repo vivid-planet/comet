@@ -2,7 +2,7 @@ import { PreviewData } from "@comet/cms-site";
 import { defaultLanguage, domain } from "@src/config";
 import { documentTypes } from "@src/documentTypes";
 import NotFound404 from "@src/pages/404";
-import createGraphQLClient from "@src/util/createGraphQLClient";
+import { createGraphQLClient, graphqlClient } from "@src/util/graphQLClient";
 import { gql } from "graphql-request";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
@@ -38,7 +38,7 @@ const documentTypeQuery = gql`
 `;
 
 export const getServerSideProps: GetServerSideProps<PageProps | NotFoundProps, ParsedUrlQuery, PreviewData> = async (context) => {
-    const client = createGraphQLClient(context.previewData);
+    const client = context.previewData ? createGraphQLClient({ previewData: context.previewData }) : graphqlClient;
     const locale = context.locale ?? defaultLanguage;
     const scope = { domain, language: locale };
     const path = context.params?.path ?? "";

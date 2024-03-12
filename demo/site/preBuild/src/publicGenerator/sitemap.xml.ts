@@ -1,10 +1,10 @@
 import { createWriteStream } from "fs";
-import { gql } from "graphql-request/dist";
+import { gql } from "graphql-request";
 import { resolve } from "path";
 import { SitemapStream } from "sitemap";
 
 import { SeoBlockData } from "../../../src/blocks.generated";
-import createGraphQLClient from "../../../src/util/createGraphQLClient";
+import { createGraphQLClient } from "../../../src/util/graphQLClient";
 import createPublicGeneratedDirectory from "./createPublicGeneratedDirectory";
 import { GQLSitemapPageDataQuery, GQLSitemapPageDataQueryVariables } from "./sitemap.xml.generated";
 
