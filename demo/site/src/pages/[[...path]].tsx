@@ -1,14 +1,14 @@
 import { defaultLanguage, domain } from "@src/config";
+import PageTypePage, { loader as pageTypePageLoader } from "@src/documentTypes/Page";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import NotFound404 from "@src/pages/404";
-import PageTypePage, { loader as pageTypePageLoader } from "@src/pageTypes/Page";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import { gql, GraphQLClient } from "graphql-request";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
 import * as React from "react";
 
-import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTypeQuery, GQLPageTypeQueryVariables } from "./[[...path]].generated";
+import { GQLDocumentTypeQuery, GQLDocumentTypeVariables, GQLPagesQuery, GQLPagesQueryVariables } from "./[[...path]].generated";
 import { PreviewData } from "./api/site-preview";
 
 type PageProps = {
@@ -17,7 +17,7 @@ type PageProps = {
 } & Record<string, unknown>;
 
 export default function Page(props: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
-    if (!pageTypes[props.documentType]) {
+    if (!documentTypes[props.documentType]) {
         return (
             <NotFound404>
                 <div>
@@ -26,13 +26,13 @@ export default function Page(props: InferGetStaticPropsType<typeof getStaticProp
             </NotFound404>
         );
     }
-    const { component: Component } = pageTypes[props.documentType];
+    const { component: Component } = documentTypes[props.documentType];
 
     return <Component {...props} />;
 }
 
-const pageTypeQuery = gql`
-    query PageType($path: String!, $scope: PageTreeNodeScopeInput!) {
+const documentTypeQuery = gql`
+    query DocumentType($path: String!, $scope: PageTreeNodeScopeInput!) {
         pageTreeNodeByPath(path: $path, scope: $scope) {
             id
             documentType
@@ -40,13 +40,13 @@ const pageTypeQuery = gql`
     }
 `;
 
-export type PageTypeLoaderOptions = { client: GraphQLClient; pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput };
-export type InferPageTypeLoaderPropsType<T> = T extends (options: PageTypeLoaderOptions) => Promise<infer Return> ? Return : never;
+export type DocumentTypeLoaderOptions = { client: GraphQLClient; pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput };
+export type InferDocumentTypeLoaderPropsType<T> = T extends (options: DocumentTypeLoaderOptions) => Promise<infer Return> ? Return : never;
 
-type PageLoader<T = Record<string, unknown>> = (options: PageTypeLoaderOptions) => Promise<T>;
-type PageType<T = Record<string, unknown>> = { component: React.ComponentType<T>; loader: PageLoader<T> };
+type DocumentLoader<T = Record<string, unknown>> = (options: DocumentTypeLoaderOptions) => Promise<T>;
+type DocumentType<T = Record<string, unknown>> = { component: React.ComponentType<T>; loader: DocumentLoader<T> };
 
-const pageTypes: Record<string, PageType> = {
+const documentTypes: Record<string, DocumentType> = {
     Page: {
         component: PageTypePage,
         loader: pageTypePageLoader,
@@ -58,7 +58,7 @@ export const getStaticProps: GetStaticProps<PageProps, ParsedUrlQuery, PreviewDa
     const path = params?.path ?? "";
     const scope = { domain, language: locale };
     //fetch pageType
-    const data = await client.request<GQLPageTypeQuery, GQLPageTypeQueryVariables>(pageTypeQuery, {
+    const data = await client.request<GQLDocumentTypeQuery, GQLDocumentTypeVariables>(documentTypeQuery, {
         path: `/${Array.isArray(path) ? path.join("/") : path}`,
         scope,
     });
@@ -70,7 +70,7 @@ export const getStaticProps: GetStaticProps<PageProps, ParsedUrlQuery, PreviewDa
     const pageTreeNodeId = data.pageTreeNodeByPath.id;
 
     //pageType dependent query
-    const { loader: loaderForPageType } = pageTypes[data.pageTreeNodeByPath.documentType];
+    const { loader: loaderForPageType } = documentTypes[data.pageTreeNodeByPath.documentType];
     return {
         props: {
             ...(await loaderForPageType({ client, scope, pageTreeNodeId })),

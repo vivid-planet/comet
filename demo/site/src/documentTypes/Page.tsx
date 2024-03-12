@@ -2,7 +2,7 @@ import { SeoBlock } from "@comet/cms-site";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import Breadcrumbs, { breadcrumbsFragment } from "@src/components/Breadcrumbs";
 import { Header, headerFragment } from "@src/header/Header";
-import { InferPageTypeLoaderPropsType, PageTypeLoaderOptions } from "@src/pages/[[...path]]";
+import { DocumentTypeLoaderOptions, InferDocumentTypeLoaderPropsType } from "@src/pages/[[...path]]";
 import { topMenuPageTreeNodeFragment, TopNavigation } from "@src/topNavigation/TopNavigation";
 import { gql } from "graphql-request";
 import Head from "next/head";
@@ -38,7 +38,7 @@ export const pageQuery = gql`
     ${topMenuPageTreeNodeFragment}
 `;
 
-export async function loader({ client, pageTreeNodeId, scope }: PageTypeLoaderOptions) {
+export async function loader({ client, pageTreeNodeId, scope }: DocumentTypeLoaderOptions) {
     return client.request<GQLPageQuery>(pageQuery, {
         pageTreeNodeId,
         domain: scope.domain,
@@ -46,7 +46,7 @@ export async function loader({ client, pageTreeNodeId, scope }: PageTypeLoaderOp
     });
 }
 
-export default function Page(props: InferPageTypeLoaderPropsType<typeof loader>): JSX.Element {
+export default function Page(props: InferDocumentTypeLoaderPropsType<typeof loader>): JSX.Element {
     if (!props.pageContent) throw new Error("Could not load page content");
     const document = props.pageContent?.document;
     if (document?.__typename != "Page") throw new Error("invalid document type");
