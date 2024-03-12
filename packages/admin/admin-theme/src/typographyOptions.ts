@@ -21,7 +21,6 @@ export const typographyOptions: TypographyOptions = {
         "@media (min-width: 900px)": {
             fontSize: 55,
             lineHeight: "64px",
-            fontWeight: fontWeights.fontWeightLight,
         },
     },
     h2: {
@@ -81,7 +80,6 @@ export const typographyOptions: TypographyOptions = {
         "@media (min-width: 900px)": {
             fontSize: 16,
             lineHeight: "20px",
-            fontWeight: fontWeights.fontWeightBold,
         },
     },
     body1: {
