@@ -8,7 +8,6 @@ import { RouteComponentProps, useHistory, useLocation } from "react-router";
 import { ExternalLinkBlockData } from "../../blocks.generated";
 import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
 import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
-import { useSitesConfig } from "../../sitesConfig/useSitesConfig";
 import { Device } from "../common/Device";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
@@ -97,8 +96,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
         }
     });
 
-    const sitesConfig = useSitesConfig();
-    const initialPageUrl = `${sitesConfig.sitePreviewApiUrl}?${new URLSearchParams({
+    const initialPageUrl = `${siteConfig.sitePreviewApiUrl}?${new URLSearchParams({
         scope: JSON.stringify(scope),
         path: initialPath,
         settings: JSON.stringify({

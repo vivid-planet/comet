@@ -1,3 +1,4 @@
+import { PreviewData } from "@comet/cms-site";
 import { defaultLanguage, domain } from "@src/config";
 import { documentTypes } from "@src/documentTypes";
 import NotFound404 from "@src/pages/404";
@@ -8,7 +9,6 @@ import { ParsedUrlQuery } from "querystring";
 import * as React from "react";
 
 import { GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables, GQLPagesQuery, GQLPagesQueryVariables } from "./[[...path]].generated";
-import { PreviewData } from "./api/site-preview";
 
 type PageProps = {
     documentType: string;
