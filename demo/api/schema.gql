@@ -276,11 +276,6 @@ input DependentFilter {
   rootColumnName: String
 }
 
-type PaginatedPages {
-  nodes: [Page!]!
-  totalCount: Int!
-}
-
 type PredefinedPage implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -605,7 +600,7 @@ type Query {
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
   link(linkId: ID!): Link
-  pages(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedPages!
+  page(id: ID!): Page!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
