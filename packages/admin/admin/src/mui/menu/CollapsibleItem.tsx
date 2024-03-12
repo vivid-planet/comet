@@ -49,10 +49,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
     const [isSubmenuOpen, setIsSubmenuOpen] = React.useState<boolean>(openByDefault || hasSelectedChild.current);
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | undefined>(undefined);
 
-    React.useEffect(() => {
-        // set open state manually to false to avoid a menu opening when isMenuOpen state changes
-        if (!isMenuOpen) setIsSubmenuOpen(false);
-    }, [isMenuOpen]);
+    if (!isMenuOpen) setIsSubmenuOpen(false);
 
     const childElements = useMemo(() => {
         function checkIfPathInLocation(child: React.ReactElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>) {
