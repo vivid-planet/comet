@@ -102,7 +102,7 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
 
     @Property({ type: types.decimal, nullable: true })
     @Field({ nullable: true })
-    price?: number;
+    price?: number = undefined;
 
     // eslint-disable-next-line @typescript-eslint/no-inferrable-types
     @Property({ type: types.boolean })
@@ -118,7 +118,7 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
 
     @Property({ type: types.date, nullable: true })
     @Field({ nullable: true })
-    availableSince?: Date;
+    availableSince?: Date = undefined;
 
     @Property({ customType: new RootBlockType(DamImageBlock) })
     @Field(() => RootBlockDataScalar(DamImageBlock))
@@ -190,5 +190,5 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     updatedAt: Date = new Date();
 
     @ManyToOne(() => Manufacturer, { nullable: true, index: true, ref: true })
-    manufacturer?: Ref<Manufacturer>;
+    manufacturer?: Ref<Manufacturer> = undefined;
 }
