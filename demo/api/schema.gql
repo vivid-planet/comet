@@ -1307,9 +1307,9 @@ input ProductInput {
   slug: String!
   description: String!
   type: ProductType!
-  price: Float
+  price: Float = null
   inStock: Boolean! = true
-  availableSince: DateTime
+  availableSince: DateTime = null
   image: DamImageBlockInput!
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
@@ -1318,7 +1318,7 @@ input ProductInput {
   colors: [ProductColorInput!]! = []
   category: ID = null
   tags: [ID!]! = []
-  manufacturer: ID
+  manufacturer: ID = null
 }
 
 input ProductStatisticsInput {
