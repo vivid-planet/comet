@@ -2,4 +2,4 @@
 "@comet/cms-api": patch
 ---
 
-Api Generator: correctly support default value for Date fields
+API Generator: Correctly support default value for date fields
