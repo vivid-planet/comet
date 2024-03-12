@@ -1,16 +1,16 @@
+import { gql, GraphQLClient } from "graphql-request";
 import { NextApiRequest, NextApiResponse } from "next";
 
 type Scope = Record<string, unknown>;
-type GraphQLClient = {
-    setHeader(key: string, value: string): unknown;
-    request(document: string, variables?: unknown): Promise<{ isAllowedSitePreview: boolean }>;
+
+export type PreviewData = {
+    includeInvisible: boolean;
 };
+
 export type SitePreviewParams = {
     scope: Scope;
     path: string;
-    settings: {
-        includeInvisible: boolean;
-    };
+    settings: PreviewData;
 };
 
 export async function getValidatedSitePreviewParams(
@@ -29,8 +29,12 @@ async function getValidatedScope(req: NextApiRequest, res: NextApiResponse, grap
     const scope = JSON.parse(req.query.scope?.toString() ?? "{}");
 
     graphQLClient.setHeader("authorization", req.headers["authorization"] || "");
-    const { isAllowedSitePreview } = await graphQLClient.request(
-        "query isAllowedSitePreview($scope: JSONObject!) { isAllowedSitePreview(scope: $scope) }",
+    const { isAllowedSitePreview } = await graphQLClient.request<{ isAllowedSitePreview: boolean }>(
+        gql`
+            query isAllowedSitePreview($scope: JSONObject!) {
+                isAllowedSitePreview(scope: $scope)
+            }
+        `,
         { scope },
     );
     if (!isAllowedSitePreview) {
