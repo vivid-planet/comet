@@ -14,11 +14,6 @@ export const IsLinkTarget = () => {
     };
 };
 
-/**
- * @deprecated The decorator `IsHref` will be removed in a future version. Please use `IsLinkTarget` instead.
- */
-export const IsHref = IsLinkTarget;
-
 @ValidatorConstraint({ name: "IsLinkTarget" })
 @Injectable()
 export class IsLinkTargetConstraint implements ValidatorConstraintInterface {
@@ -42,14 +37,5 @@ export class IsLinkTargetConstraint implements ValidatorConstraintInterface {
 
     defaultMessage(): string {
         return "Invalid link target";
-    }
-}
-
-/**
- * @deprecated The class `IsHrefConstraint` will be removed in a future version. Please use `IsLinkTargetConstraint` instead.
- */
-export class IsHrefConstraint extends IsLinkTargetConstraint {
-    constructor() {
-        super();
     }
 }
