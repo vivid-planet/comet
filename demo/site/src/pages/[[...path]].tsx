@@ -4,26 +4,24 @@ import { documentTypes } from "@src/documentTypes";
 import NotFound404 from "@src/pages/404";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
 import * as React from "react";
 
-import { GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables, GQLPagesQuery, GQLPagesQueryVariables } from "./[[...path]].generated";
+import { GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables } from "./[[...path]].generated";
 
 type PageProps = {
     documentType: string;
     id: string;
 } & Record<string, unknown>;
 
-export default function Page(props: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
-    if (!documentTypes[props.documentType]) {
-        return (
-            <NotFound404>
-                <div>
-                    unknown documentType: <em>{props.documentType}</em>
-                </div>
-            </NotFound404>
-        );
+export interface NotFoundProps {
+    notFound: true;
+}
+
+export default function Page(props: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
+    if ("notFound" in props || !documentTypes[props.documentType]) {
+        return <NotFound404 />;
     }
     const { component: Component } = documentTypes[props.documentType];
 
@@ -39,64 +37,42 @@ const documentTypeQuery = gql`
     }
 `;
 
-export const getStaticProps: GetStaticProps<PageProps, ParsedUrlQuery, PreviewData> = async ({ params, previewData, locale = defaultLanguage }) => {
-    const client = createGraphQLClient(previewData);
-    const path = params?.path ?? "";
+export const getServerSideProps: GetServerSideProps<PageProps | NotFoundProps, ParsedUrlQuery, PreviewData> = async (context) => {
+    const client = createGraphQLClient(context.previewData);
+    const locale = context.locale ?? defaultLanguage;
     const scope = { domain, language: locale };
+    const path = context.params?.path ?? "";
+
     //fetch documentType
     const data = await client.request<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(documentTypeQuery, {
         path: `/${Array.isArray(path) ? path.join("/") : path}`,
         scope,
     });
     if (!data.pageTreeNodeByPath?.documentType) {
-        // eslint-disable-next-line no-console
-        console.log("got no data from api", data, path);
-        return { notFound: true };
+        // next 404 page cannot be generated server-side, see: https://nextjs.org/docs/messages/404-get-initial-props
+        // (except when using next 13: https://nextjs.org/docs/app/api-reference/file-conventions/not-found)
+        // that's why we return a custom props object here for the 404 page which will render the custom 404 page
+
+        context.res.statusCode = 404;
+        return {
+            props: {
+                notFound: true,
+            },
+        };
     }
+
+    context.res.setHeader("Cache-Control", "s-maxage=900, stale-while-revalidate=86400");
+
     const pageTreeNodeId = data.pageTreeNodeByPath.id;
 
-    //documentType dependent query
+    //documentType dependent loader
     const { loader: loaderForPageType } = documentTypes[data.pageTreeNodeByPath.documentType];
+
     return {
         props: {
             ...(await loaderForPageType({ client, scope, pageTreeNodeId })),
             documentType: data.pageTreeNodeByPath.documentType,
             id: pageTreeNodeId,
         },
-    };
-};
-
-const pagesQuery = gql`
-    query Pages($scope: PageTreeNodeScopeInput!) {
-        pageTreeNodeList(scope: $scope) {
-            id
-            path
-            documentType
-        }
-    }
-`;
-
-export const getStaticPaths: GetStaticPaths = async ({ locales = [] }) => {
-    const paths: Array<{ params: { path: string[] }; locale: string }> = [];
-
-    for (const locale of locales) {
-        const data = await createGraphQLClient().request<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
-            scope: { domain, language: locale },
-        });
-
-        paths.push(
-            ...data.pageTreeNodeList
-                .filter((page) => page.documentType === "Page")
-                .map((page) => {
-                    const path = page.path.split("/");
-                    path.shift(); // Remove "" caused by leading slash
-                    return { params: { path }, locale };
-                }),
-        );
-    }
-
-    return {
-        paths,
-        fallback: false,
     };
 };
