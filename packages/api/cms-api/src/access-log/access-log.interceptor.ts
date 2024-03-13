@@ -81,7 +81,7 @@ export class AccessLogInterceptor implements NestInterceptor {
 
     private pushUserToRequestData(user: CurrentUser, requestData: string[]) {
         if (user) {
-            requestData.push(`user: ${user.id} (${user.name})`);
+            requestData.push(`user: ${user.id}`);
         }
     }
 }
