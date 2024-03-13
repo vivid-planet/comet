@@ -15,8 +15,3 @@ export function isLinkTarget(value: string): boolean {
         return isURL(value, { require_protocol: true, require_valid_protocol: false });
     }
 }
-
-/**
- * @deprecated The validator function `isHref` will be removed in a future version. Please use `isLinkTarget` instead.
- */
-export const isHref = isLinkTarget;
