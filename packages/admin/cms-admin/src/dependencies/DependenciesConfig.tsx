@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { DamFileDependency } from "./DamFileDependency";
 import { DependencyInterface } from "./types";
 
 export interface EntityDependencyMap {
@@ -13,16 +12,7 @@ export const DependenciesConfigProvider: React.FunctionComponent<{ entityDepende
     children,
     entityDependencyMap,
 }) => {
-    return (
-        <DependenciesConfigContext.Provider
-            value={{
-                DamFile: DamFileDependency,
-                ...entityDependencyMap,
-            }}
-        >
-            {children}
-        </DependenciesConfigContext.Provider>
-    );
+    return <DependenciesConfigContext.Provider value={entityDependencyMap}>{children}</DependenciesConfigContext.Provider>;
 };
 
 export const useDependenciesConfig = (): EntityDependencyMap => {

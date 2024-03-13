@@ -26,6 +26,7 @@ export class PagesResolver {
     ) {}
 
     @Query(() => Page)
+    @AffectedEntity(Page)
     async page(@Args("id", { type: () => ID }) id: string): Promise<Page> {
         return this.repository.findOneOrFail({ id });
     }
