@@ -2,7 +2,7 @@ import { ComponentsOverrides, Paper, Toolbar as MuiToolbar } from "@mui/material
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../../helpers/createSlot";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
 
@@ -22,7 +22,7 @@ type OwnerState = {
     headerHeight: number;
 };
 
-const Root = createSlot(Paper)<ToolbarClassKey, OwnerState>({
+const Root = createComponentSlot(Paper)<ToolbarClassKey, OwnerState>({
     componentName: "Toolbar",
     slotName: "root",
 })(
@@ -38,7 +38,7 @@ const Root = createSlot(Paper)<ToolbarClassKey, OwnerState>({
     `,
 );
 
-const StyledToolbar = createSlot(MuiToolbar)<ToolbarClassKey>({
+const StyledToolbar = createComponentSlot(MuiToolbar)<ToolbarClassKey>({
     componentName: "Toolbar",
     slotName: "muiToolbar",
 })(css`
@@ -47,7 +47,7 @@ const StyledToolbar = createSlot(MuiToolbar)<ToolbarClassKey>({
     align-items: stretch;
 `);
 
-const MainContentContainer = createSlot("div")<ToolbarClassKey>({
+const MainContentContainer = createComponentSlot("div")<ToolbarClassKey>({
     componentName: "Toolbar",
     slotName: "mainContentContainer",
 })(css`

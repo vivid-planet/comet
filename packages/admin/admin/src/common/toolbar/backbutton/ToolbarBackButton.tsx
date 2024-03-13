@@ -3,14 +3,14 @@ import { ComponentsOverrides, IconButton as MuiIconButton, Theme } from "@mui/ma
 import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../../../helpers/createSlot";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useStackApi } from "../../../stack/Api";
 import { ToolbarItem as CommonToolbarItem } from "../item/ToolbarItem";
 
 export type ToolbarBackButtonClassKey = "root" | "iconButton" | "toolbarItem";
 
-const Root = createSlot("div")<ToolbarBackButtonClassKey>({
+const Root = createComponentSlot("div")<ToolbarBackButtonClassKey>({
     componentName: "ToolbarBackButton",
     slotName: "root",
 })(
@@ -26,12 +26,12 @@ const Root = createSlot("div")<ToolbarBackButtonClassKey>({
     `,
 );
 
-const IconButton = createSlot(MuiIconButton)<ToolbarBackButtonClassKey>({
+const IconButton = createComponentSlot(MuiIconButton)<ToolbarBackButtonClassKey>({
     componentName: "ToolbarBackButton",
     slotName: "iconButton",
 })();
 
-const ToolbarItem = createSlot(CommonToolbarItem)<ToolbarBackButtonClassKey>({
+const ToolbarItem = createComponentSlot(CommonToolbarItem)<ToolbarBackButtonClassKey>({
     componentName: "ToolbarBackButton",
     slotName: "toolbarItem",
 })(css`

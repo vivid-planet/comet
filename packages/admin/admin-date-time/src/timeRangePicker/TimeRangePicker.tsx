@@ -1,4 +1,4 @@
-import { createSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides, FormControl, Theme, Typography } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
@@ -15,7 +15,7 @@ export type TimeRangePickerClassKey =
     | "endTimePicker"
     | "separator";
 
-const Root = createSlot("div")<TimeRangePickerClassKey>({
+const Root = createComponentSlot("div")<TimeRangePickerClassKey>({
     componentName: "TimeRangePicker",
     slotName: "root",
 })(css`
@@ -23,31 +23,31 @@ const Root = createSlot("div")<TimeRangePickerClassKey>({
     align-items: center;
 `);
 
-const StartFormControl = createSlot(FormControl)<TimeRangePickerClassKey>({
+const StartFormControl = createComponentSlot(FormControl)<TimeRangePickerClassKey>({
     componentName: "TimeRangePicker",
     slotName: "startFormControl",
 })(css`
     flex-grow: 1;
 `);
 
-const EndFormControl = createSlot(FormControl)<TimeRangePickerClassKey>({
+const EndFormControl = createComponentSlot(FormControl)<TimeRangePickerClassKey>({
     componentName: "TimeRangePicker",
     slotName: "endFormControl",
 })(css`
     flex-grow: 1;
 `);
 
-const StartTimePicker = createSlot(TimePickerBase)<TimeRangePickerClassKey>({
+const StartTimePicker = createComponentSlot(TimePickerBase)<TimeRangePickerClassKey>({
     componentName: "TimeRangePicker",
     slotName: "startTimePicker",
 })();
 
-const EndTimePicker = createSlot(TimePickerBase)<TimeRangePickerClassKey>({
+const EndTimePicker = createComponentSlot(TimePickerBase)<TimeRangePickerClassKey>({
     componentName: "TimeRangePicker",
     slotName: "endTimePicker",
 })();
 
-const Separator = createSlot(Typography)<TimeRangePickerClassKey>({
+const Separator = createComponentSlot(Typography)<TimeRangePickerClassKey>({
     componentName: "TimeRangePicker",
     slotName: "separator",
 })(

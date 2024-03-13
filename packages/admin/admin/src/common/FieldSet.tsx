@@ -6,7 +6,7 @@ import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface FieldSetProps
@@ -94,12 +94,12 @@ export function FieldSet(inProps: React.PropsWithChildren<FieldSetProps>): React
     );
 }
 
-const Root = createSlot(MuiAccordion)<FieldSetClassKey>({
+const Root = createComponentSlot(MuiAccordion)<FieldSetClassKey>({
     componentName: "FieldSet",
     slotName: "root",
 })();
 
-const Summary = createSlot(MuiAccordionSummary)<FieldSetClassKey>({
+const Summary = createComponentSlot(MuiAccordionSummary)<FieldSetClassKey>({
     componentName: "FieldSet",
     slotName: "summary",
 })(
@@ -115,7 +115,7 @@ const Summary = createSlot(MuiAccordionSummary)<FieldSetClassKey>({
     `,
 );
 
-const HeaderColumn = createSlot("div")<FieldSetClassKey>({
+const HeaderColumn = createComponentSlot("div")<FieldSetClassKey>({
     componentName: "FieldSet",
     slotName: "headerColumn",
 })(
@@ -132,7 +132,7 @@ const HeaderColumn = createSlot("div")<FieldSetClassKey>({
     `,
 );
 
-const Title = createSlot("div")<FieldSetClassKey>({
+const Title = createComponentSlot("div")<FieldSetClassKey>({
     componentName: "FieldSet",
     slotName: "title",
 })(
@@ -146,7 +146,7 @@ const Title = createSlot("div")<FieldSetClassKey>({
     `,
 );
 
-const SupportText = createSlot("div")<FieldSetClassKey>({
+const SupportText = createComponentSlot("div")<FieldSetClassKey>({
     componentName: "FieldSet",
     slotName: "supportText",
 })(
@@ -157,7 +157,7 @@ const SupportText = createSlot("div")<FieldSetClassKey>({
     `,
 );
 
-const Placeholder = createSlot("div")<FieldSetClassKey>({
+const Placeholder = createComponentSlot("div")<FieldSetClassKey>({
     componentName: "FieldSet",
     slotName: "placeholder",
 })(css`
@@ -166,7 +166,7 @@ const Placeholder = createSlot("div")<FieldSetClassKey>({
     user-select: none;
 `);
 
-const EndAdornment = createSlot("div")<FieldSetClassKey>({
+const EndAdornment = createComponentSlot("div")<FieldSetClassKey>({
     componentName: "FieldSet",
     slotName: "endAdornment",
 })(css`
@@ -174,7 +174,7 @@ const EndAdornment = createSlot("div")<FieldSetClassKey>({
     align-items: center;
 `);
 
-const Children = createSlot(MuiAccordionDetails)<FieldSetClassKey, OwnerState>({
+const Children = createComponentSlot(MuiAccordionDetails)<FieldSetClassKey, OwnerState>({
     componentName: "FieldSet",
     slotName: "children",
     classesResolver(ownerState) {

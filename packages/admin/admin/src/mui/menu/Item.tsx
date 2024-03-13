@@ -2,7 +2,7 @@ import { ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText } from 
 import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../../helpers/createSlot";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MenuLevel } from "./CollapsibleItem";
 import { MenuContext } from "./Context";
@@ -16,7 +16,7 @@ const colors = {
     textLevel2: "#17181A",
 };
 
-const Root = createSlot(ListItemButton)<MenuItemClassKey, OwnerState>({
+const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerState>({
     componentName: "MenuItem",
     slotName: "root",
     classesResolver(ownerState) {

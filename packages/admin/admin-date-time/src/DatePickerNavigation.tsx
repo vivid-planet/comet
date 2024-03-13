@@ -1,4 +1,4 @@
-import { createSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ArrowLeft, ArrowRight, ChevronDown } from "@comet/admin-icons";
 import { Box, Button, buttonClasses, ComponentsOverrides, IconButton, Menu, menuClasses, MenuItem } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
@@ -116,7 +116,7 @@ export type DatePickerNavigationClassKey =
     | "selectMonthMenu"
     | "selectYearMenu";
 
-const Root = createSlot("div")<DatePickerNavigationClassKey>({
+const Root = createComponentSlot("div")<DatePickerNavigationClassKey>({
     componentName: "DatePickerNavigation",
     slotName: "root",
 })(
@@ -131,7 +131,7 @@ const Root = createSlot("div")<DatePickerNavigationClassKey>({
     `,
 );
 
-const SelectMonthButton = createSlot(Button)<DatePickerNavigationClassKey>({
+const SelectMonthButton = createComponentSlot(Button)<DatePickerNavigationClassKey>({
     componentName: "DatePickerNavigation",
     slotName: "selectMonthButton",
     classesResolver() {
@@ -153,7 +153,7 @@ const SelectMonthButton = createSlot(Button)<DatePickerNavigationClassKey>({
     `,
 );
 
-const SelectYearButton = createSlot(Button)<DatePickerNavigationClassKey>({
+const SelectYearButton = createComponentSlot(Button)<DatePickerNavigationClassKey>({
     componentName: "DatePickerNavigation",
     slotName: "selectYearButton",
     classesResolver() {
@@ -175,7 +175,7 @@ const SelectYearButton = createSlot(Button)<DatePickerNavigationClassKey>({
     `,
 );
 
-const SelectMonthMenu = createSlot(Menu)<DatePickerNavigationClassKey>({
+const SelectMonthMenu = createComponentSlot(Menu)<DatePickerNavigationClassKey>({
     componentName: "DatePickerNavigation",
     slotName: "selectMonthMenu",
     classesResolver() {
@@ -188,7 +188,7 @@ const SelectMonthMenu = createSlot(Menu)<DatePickerNavigationClassKey>({
     }
 `);
 
-const SelectYearMenu = createSlot(Menu)<DatePickerNavigationClassKey>({
+const SelectYearMenu = createComponentSlot(Menu)<DatePickerNavigationClassKey>({
     componentName: "DatePickerNavigation",
     slotName: "selectYearMenu",
     classesResolver() {

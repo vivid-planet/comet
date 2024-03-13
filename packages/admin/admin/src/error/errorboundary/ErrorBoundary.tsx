@@ -5,7 +5,7 @@ import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { createSlot } from "../../helpers/createSlot";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export type ErrorBoundaryClassKey =
@@ -48,24 +48,24 @@ interface IErrorBoundaryState {
     showDetails?: boolean;
 }
 
-const Alert = createSlot(MuiAlert)<ErrorBoundaryClassKey>({
+const Alert = createComponentSlot(MuiAlert)<ErrorBoundaryClassKey>({
     componentName: "ErrorBoundary",
     slotName: "alert",
 })();
 
-const Message = createSlot(Typography)<ErrorBoundaryClassKey>({
+const Message = createComponentSlot(Typography)<ErrorBoundaryClassKey>({
     componentName: "ErrorBoundary",
     slotName: "message",
 })();
 
-const ExceptionDetails = createSlot("details")<ErrorBoundaryClassKey>({
+const ExceptionDetails = createComponentSlot("details")<ErrorBoundaryClassKey>({
     componentName: "ErrorBoundary",
     slotName: "exceptionDetails",
 })(css`
     white-space: pre-wrap;
 `);
 
-const ExceptionSummary = createSlot("summary")<ErrorBoundaryClassKey>({
+const ExceptionSummary = createComponentSlot("summary")<ErrorBoundaryClassKey>({
     componentName: "ErrorBoundary",
     slotName: "exceptionSummary",
 })(
@@ -82,7 +82,7 @@ const ExceptionSummary = createSlot("summary")<ErrorBoundaryClassKey>({
     `,
 );
 
-const ExceptionSummaryIconOpen = createSlot("div")<ErrorBoundaryClassKey, OwnerState>({
+const ExceptionSummaryIconOpen = createComponentSlot("div")<ErrorBoundaryClassKey, OwnerState>({
     componentName: "ErrorBoundary",
     slotName: "exceptionSummaryIconOpened",
     classesResolver() {
@@ -100,7 +100,7 @@ const ExceptionSummaryIconOpen = createSlot("div")<ErrorBoundaryClassKey, OwnerS
     `,
 );
 
-const ExceptionSummaryIconClosed = createSlot("div")<ErrorBoundaryClassKey, OwnerState>({
+const ExceptionSummaryIconClosed = createComponentSlot("div")<ErrorBoundaryClassKey, OwnerState>({
     componentName: "ErrorBoundary",
     slotName: "exceptionSummaryIconClosed",
     classesResolver() {
@@ -118,7 +118,7 @@ const ExceptionSummaryIconClosed = createSlot("div")<ErrorBoundaryClassKey, Owne
     `,
 );
 
-const ExceptionSummaryTitle = createSlot(Typography)<ErrorBoundaryClassKey>({
+const ExceptionSummaryTitle = createComponentSlot(Typography)<ErrorBoundaryClassKey>({
     componentName: "ErrorBoundary",
     slotName: "exceptionSummaryTitle",
 })(
@@ -128,7 +128,7 @@ const ExceptionSummaryTitle = createSlot(Typography)<ErrorBoundaryClassKey>({
     `,
 );
 
-const ExceptionStackTrace = createSlot(Typography)<ErrorBoundaryClassKey>({
+const ExceptionStackTrace = createComponentSlot(Typography)<ErrorBoundaryClassKey>({
     componentName: "ErrorBoundary",
     slotName: "exceptionStackTrace",
 })();

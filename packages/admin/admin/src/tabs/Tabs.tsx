@@ -4,7 +4,7 @@ import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
 import MuiTabs, { TabsProps as MuiTabsProps } from "@mui/material/Tabs";
 import * as React from "react";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { TabScrollButton } from "./TabScrollButton";
 
@@ -12,17 +12,17 @@ export type TabsClassKey = "root" | "tabs" | "content" | "contentHidden";
 
 type OwnerState = { contentHidden?: boolean };
 
-const Root = createSlot("div")<TabsClassKey>({
+const Root = createComponentSlot("div")<TabsClassKey>({
     componentName: "Tabs",
     slotName: "root",
 })();
 
-const StyledTabs = createSlot(MuiTabs)<TabsClassKey>({
+const StyledTabs = createComponentSlot(MuiTabs)<TabsClassKey>({
     componentName: "Tabs",
     slotName: "tabs",
 })();
 
-const Content = createSlot("div")<TabsClassKey, OwnerState>({
+const Content = createComponentSlot("div")<TabsClassKey, OwnerState>({
     componentName: "Tabs",
     slotName: "content",
     classesResolver(ownerState) {

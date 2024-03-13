@@ -1,6 +1,6 @@
 import {
     ClearInputAdornment,
-    createSlot,
+    createComponentSlot,
     InputWithPopper,
     InputWithPopperClassKey,
     InputWithPopperProps,
@@ -24,22 +24,22 @@ export type SlotProps = ThemedComponentBaseProps<{
     timeOptionItem: typeof MenuItem;
 }>["slotProps"];
 
-export const Root = createSlot(InputWithPopper)<TimePickerClassKey>({
+export const Root = createComponentSlot(InputWithPopper)<TimePickerClassKey>({
     componentName: "TimePicker",
     slotName: "root",
 })();
 
-const StartAdornment = createSlot(InputAdornment)<TimePickerClassKey>({
+const StartAdornment = createComponentSlot(InputAdornment)<TimePickerClassKey>({
     componentName: "TimePicker",
     slotName: "startAdornment",
 })();
 
-const TimeOptionsList = createSlot(MenuList)<TimePickerClassKey>({
+const TimeOptionsList = createComponentSlot(MenuList)<TimePickerClassKey>({
     componentName: "TimePicker",
     slotName: "timeOptionsList",
 })();
 
-const TimeOptionItem = createSlot(MenuItem)<TimePickerClassKey>({
+const TimeOptionItem = createComponentSlot(MenuItem)<TimePickerClassKey>({
     componentName: "TimePicker",
     slotName: "timeOptionItem",
 })(

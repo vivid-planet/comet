@@ -1,6 +1,6 @@
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
-import { createSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
 import {
     DraftBlockType,
@@ -339,7 +339,7 @@ export type RteClassKey = "root" | "disabled" | "editor";
 
 type OwnerState = Pick<RteProps, "disabled" | "minHeight">;
 
-const Root = createSlot("div")<RteClassKey, OwnerState>({
+const Root = createComponentSlot("div")<RteClassKey, OwnerState>({
     componentName: "Rte",
     slotName: "root",
     classesResolver(ownerState) {
@@ -353,7 +353,7 @@ const Root = createSlot("div")<RteClassKey, OwnerState>({
     `,
 );
 
-const Editor = createSlot("div")<RteClassKey, OwnerState>({
+const Editor = createComponentSlot("div")<RteClassKey, OwnerState>({
     componentName: "Rte",
     slotName: "editor",
     classesResolver(ownerState) {

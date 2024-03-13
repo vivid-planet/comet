@@ -2,7 +2,7 @@ import { ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../../../helpers/createSlot";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 
 export type ToolbarActionsClassKey = "root";
@@ -10,7 +10,7 @@ interface Props extends ThemedComponentBaseProps {
     children: React.ReactNode;
 }
 
-const Root = createSlot("div")<ToolbarActionsClassKey>({
+const Root = createComponentSlot("div")<ToolbarActionsClassKey>({
     componentName: "ToolbarActions",
     slotName: "root",
 })(css`

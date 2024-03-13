@@ -1,7 +1,7 @@
 import { ComponentsOverrides, css, Grow, Theme, useThemeProps } from "@mui/material";
 import * as React from "react";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface HoverActionsProps
@@ -32,12 +32,12 @@ export const HoverActions = (inProps: HoverActionsProps) => {
     );
 };
 
-const Root = createSlot("div")<HoverActionsClassKey>({
+const Root = createComponentSlot("div")<HoverActionsClassKey>({
     componentName: "HoverActions",
     slotName: "root",
 })();
 
-const HoverAreaExpansion = createSlot("div")<HoverActionsClassKey>({
+const HoverAreaExpansion = createComponentSlot("div")<HoverActionsClassKey>({
     componentName: "HoverActions",
     slotName: "hoverAreaExpansion",
 })(css`
@@ -50,7 +50,7 @@ const HoverAreaExpansion = createSlot("div")<HoverActionsClassKey>({
     left: 0;
 `);
 
-const Actions = createSlot("div")<HoverActionsClassKey>({
+const Actions = createComponentSlot("div")<HoverActionsClassKey>({
     componentName: "HoverActions",
     slotName: "actions",
 })(
@@ -68,7 +68,7 @@ const Actions = createSlot("div")<HoverActionsClassKey>({
     `,
 );
 
-const Children = createSlot("div")<HoverActionsClassKey>({
+const Children = createComponentSlot("div")<HoverActionsClassKey>({
     componentName: "HoverActions",
     slotName: "children",
 })(css`

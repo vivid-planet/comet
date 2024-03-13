@@ -2,7 +2,7 @@ import { ComponentsOverrides, Typography, TypographyTypeMap } from "@mui/materia
 import { Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../../../helpers/createSlot";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useStackApi } from "../../../stack/Api";
 import { ToolbarItem } from "../item/ToolbarItem";
@@ -18,7 +18,7 @@ export interface ToolbarAutomaticTitleItemProps
     typographyProps?: TypographyTypeMap["props"];
 }
 
-const Root = createSlot(ToolbarItem)<ToolbarAutomaticTitleItemClassKey>({
+const Root = createComponentSlot(ToolbarItem)<ToolbarAutomaticTitleItemClassKey>({
     componentName: "ToolbarAutomaticTitleItem",
     slotName: "root",
 })();

@@ -3,12 +3,12 @@ import { IconButton as MuiIconButton, Link as MuiLink, Typography } from "@mui/m
 import { css } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../../helpers/createSlot";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { BreadcrumbItem } from "../Stack";
 import { BreadcrumbLink } from "./BreadcrumbLink";
 import { BackButtonSeparator, StackBreadcrumbsClassKey, StackBreadcrumbsProps } from "./StackBreadcrumbs";
 
-const Link = createSlot(MuiLink)<StackBreadcrumbsClassKey>({
+const Link = createComponentSlot(MuiLink)<StackBreadcrumbsClassKey>({
     componentName: "StackBreadcrumbs",
     slotName: "link",
 })(
@@ -21,7 +21,7 @@ const Link = createSlot(MuiLink)<StackBreadcrumbsClassKey>({
     `,
 ) as typeof MuiLink;
 
-const DisabledLink = createSlot(Typography)<StackBreadcrumbsClassKey>({
+const DisabledLink = createComponentSlot(Typography)<StackBreadcrumbsClassKey>({
     componentName: "StackBreadcrumbs",
     slotName: "disabledLink",
     classesResolver() {
@@ -37,7 +37,7 @@ const DisabledLink = createSlot(Typography)<StackBreadcrumbsClassKey>({
     `,
 );
 
-const IconButton = createSlot(MuiIconButton)<StackBreadcrumbsClassKey>({
+const IconButton = createComponentSlot(MuiIconButton)<StackBreadcrumbsClassKey>({
     componentName: "StackBreadcrumbs",
     slotName: "backButton",
 })() as typeof MuiIconButton;

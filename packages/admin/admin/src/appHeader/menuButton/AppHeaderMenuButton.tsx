@@ -2,7 +2,7 @@ import { HamburgerClose, HamburgerOpen } from "@comet/admin-icons";
 import { ComponentsOverrides, css, IconButton, IconButtonClassKey, IconButtonProps, Theme, useThemeProps } from "@mui/material";
 import * as React from "react";
 
-import { createSlot } from "../../helpers/createSlot";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { MenuContext } from "../../mui/menu/Context";
 
 export type AppHeaderMenuButtonProps = IconButtonProps;
@@ -22,7 +22,7 @@ export const AppHeaderMenuButton = (inProps: AppHeaderMenuButtonProps) => {
     );
 };
 
-const Root = createSlot(IconButton)<AppHeaderMenuButtonClassKey>({
+const Root = createComponentSlot(IconButton)<AppHeaderMenuButtonClassKey>({
     componentName: "AppHeaderMenuButton",
     slotName: "root",
 })(

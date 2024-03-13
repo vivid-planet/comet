@@ -1,4 +1,4 @@
-import { createSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides, FormControl } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
@@ -10,7 +10,7 @@ import { getDateWithNewTime, getTimeStringFromDate } from "../utils/timePickerHe
 
 export type DateTimePickerClassKey = "root" | "dateFormControl" | "timeFormControl" | "datePicker" | "timePicker";
 
-const Root = createSlot("div")<DateTimePickerClassKey>({
+const Root = createComponentSlot("div")<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "root",
 })(css`
@@ -18,7 +18,7 @@ const Root = createSlot("div")<DateTimePickerClassKey>({
     align-items: center;
 `);
 
-const DateFormControl = createSlot(FormControl)<DateTimePickerClassKey>({
+const DateFormControl = createComponentSlot(FormControl)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "dateFormControl",
 })(
@@ -28,19 +28,19 @@ const DateFormControl = createSlot(FormControl)<DateTimePickerClassKey>({
     `,
 );
 
-const TimeFormControl = createSlot(FormControl)<DateTimePickerClassKey>({
+const TimeFormControl = createComponentSlot(FormControl)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "timeFormControl",
 })(css`
     flex-grow: 1;
 `);
 
-const DatePicker = createSlot(DatePickerBase)<DateTimePickerClassKey>({
+const DatePicker = createComponentSlot(DatePickerBase)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "datePicker",
 })();
 
-const TimePicker = createSlot(TimePickerBase)<DateTimePickerClassKey>({
+const TimePicker = createComponentSlot(TimePickerBase)<DateTimePickerClassKey>({
     componentName: "DateTimePicker",
     slotName: "timePicker",
 })();

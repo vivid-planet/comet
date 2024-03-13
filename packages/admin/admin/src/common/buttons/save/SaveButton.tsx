@@ -4,7 +4,7 @@ import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { createSlot } from "../../../helpers/createSlot";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { messages } from "../../../messages";
 import { useSplitButtonContext } from "../split/useSplitButtonContext";
 
@@ -12,7 +12,7 @@ export type SaveButtonClassKey = "saving" | "error" | "success" | "conflict" | B
 
 type OwnerState = Pick<SaveButtonProps, "variant" | "color"> & { displayState?: SaveButtonDisplayState };
 
-const Root = createSlot(Button)<SaveButtonClassKey, OwnerState>({
+const Root = createComponentSlot(Button)<SaveButtonClassKey, OwnerState>({
     componentName: "SaveButton",
     slotName: "root",
     classesResolver(ownerState) {

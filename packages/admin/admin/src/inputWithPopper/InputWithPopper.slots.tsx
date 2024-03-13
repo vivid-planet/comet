@@ -1,21 +1,21 @@
 import { InputBase as MuiInputBase, Paper as MuiPaper, Popper as MuiPopper } from "@mui/material";
 import { css } from "@mui/material/styles";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 
 export type InputWithPopperClassKey = "root" | "inputBase" | "popper" | "paper";
 
-export const Root = createSlot("div")<InputWithPopperClassKey>({
+export const Root = createComponentSlot("div")<InputWithPopperClassKey>({
     componentName: "InputWithPopper",
     slotName: "root",
 })();
 
-export const InputBase = createSlot(MuiInputBase)<InputWithPopperClassKey>({
+export const InputBase = createComponentSlot(MuiInputBase)<InputWithPopperClassKey>({
     componentName: "InputWithPopper",
     slotName: "inputBase",
 })();
 
-export const Popper = createSlot(MuiPopper)<InputWithPopperClassKey>({
+export const Popper = createComponentSlot(MuiPopper)<InputWithPopperClassKey>({
     componentName: "InputWithPopper",
     slotName: "popper",
 })(
@@ -24,7 +24,7 @@ export const Popper = createSlot(MuiPopper)<InputWithPopperClassKey>({
     `,
 );
 
-export const Paper = createSlot(MuiPaper)<InputWithPopperClassKey>({
+export const Paper = createComponentSlot(MuiPaper)<InputWithPopperClassKey>({
     componentName: "InputWithPopper",
     slotName: "paper",
 })(css`

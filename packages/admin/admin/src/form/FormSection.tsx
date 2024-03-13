@@ -2,14 +2,14 @@ import { ComponentsOverrides, Typography } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type FormSectionClassKey = "root" | "disableMarginBottom" | "title" | "children";
 
 type OwnerState = Pick<FormSectionProps, "disableMarginBottom">;
 
-const Root = createSlot("div")<FormSectionClassKey, OwnerState>({
+const Root = createComponentSlot("div")<FormSectionClassKey, OwnerState>({
     componentName: "FormSection",
     slotName: "root",
     classesResolver(ownerState) {
@@ -24,7 +24,7 @@ const Root = createSlot("div")<FormSectionClassKey, OwnerState>({
     `,
 );
 
-const Title = createSlot("div")<FormSectionClassKey>({
+const Title = createComponentSlot("div")<FormSectionClassKey>({
     componentName: "FormSection",
     slotName: "title",
 })(
@@ -33,7 +33,7 @@ const Title = createSlot("div")<FormSectionClassKey>({
     `,
 );
 
-const Children = createSlot("div")<FormSectionClassKey>({
+const Children = createComponentSlot("div")<FormSectionClassKey>({
     componentName: "FormSection",
     slotName: "children",
 })();

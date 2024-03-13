@@ -4,7 +4,7 @@ import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/st
 import * as React from "react";
 import { useHistory } from "react-router";
 
-import { createSlot } from "../../helpers/createSlot";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../MasterLayoutContext";
 import { MenuContext } from "./Context";
@@ -13,7 +13,7 @@ export type MenuClassKey = "drawer" | "permanentDrawer" | "temporaryDrawer" | "o
 
 type OwnerState = { open: boolean; drawerWidth: number };
 
-const PermanentDrawer = createSlot(Drawer)<MenuClassKey, OwnerState>({
+const PermanentDrawer = createComponentSlot(Drawer)<MenuClassKey, OwnerState>({
     componentName: "Menu",
     slotName: "permanentDrawer",
     classesResolver(ownerState) {
@@ -70,7 +70,7 @@ const PermanentDrawer = createSlot(Drawer)<MenuClassKey, OwnerState>({
     `,
 );
 
-const TemporaryDrawer = createSlot(Drawer)<MenuClassKey, OwnerState>({
+const TemporaryDrawer = createComponentSlot(Drawer)<MenuClassKey, OwnerState>({
     componentName: "Menu",
     slotName: "temporaryDrawer",
     classesResolver(ownerState) {

@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import * as React from "react";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface ClearInputAdornmentProps
@@ -56,7 +56,7 @@ export const ClearInputAdornment = (inProps: ClearInputAdornmentProps): React.Re
     );
 };
 
-const Root = createSlot(InputAdornment)<ClearInputAdornmentClassKey, OwnerState>({
+const Root = createComponentSlot(InputAdornment)<ClearInputAdornmentClassKey, OwnerState>({
     componentName: "ClearInputAdornment",
     slotName: "root",
 })(
@@ -82,7 +82,7 @@ const Root = createSlot(InputAdornment)<ClearInputAdornmentClassKey, OwnerState>
     `,
 );
 
-const Button = createSlot(ButtonBase)<ClearInputAdornmentClassKey>({
+const Button = createComponentSlot(ButtonBase)<ClearInputAdornmentClassKey>({
     componentName: "ClearInputAdornment",
     slotName: "buttonBase",
 })(

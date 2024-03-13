@@ -1,4 +1,4 @@
-import { createSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { MoreHoriz } from "@mui/icons-material";
 import { ListItemIcon as MuiListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
 import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
@@ -118,7 +118,7 @@ export function FeaturesButtonGroup(inProps: IProps) {
 
 export type RteFeaturesButtonGroupClassKey = "root" | "buttonWrapper" | "listItem" | "listItemIcon";
 
-const Root = createSlot("div")<RteFeaturesButtonGroupClassKey>({
+const Root = createComponentSlot("div")<RteFeaturesButtonGroupClassKey>({
     componentName: "RteFeaturesButtonGroup",
     slotName: "root",
 })(css`
@@ -126,7 +126,7 @@ const Root = createSlot("div")<RteFeaturesButtonGroupClassKey>({
     justify-content: flex-start;
 `);
 
-const ButtonWrapper = createSlot("div")<RteFeaturesButtonGroupClassKey>({
+const ButtonWrapper = createComponentSlot("div")<RteFeaturesButtonGroupClassKey>({
     componentName: "RteFeaturesButtonGroup",
     slotName: "buttonWrapper",
 })(css`
@@ -136,14 +136,14 @@ const ButtonWrapper = createSlot("div")<RteFeaturesButtonGroupClassKey>({
     }
 `);
 
-const ListItem = createSlot(MenuItem)<RteFeaturesButtonGroupClassKey>({
+const ListItem = createComponentSlot(MenuItem)<RteFeaturesButtonGroupClassKey>({
     componentName: "RteFeaturesButtonGroup",
     slotName: "listItem",
 })(css`
     justify-content: space-between;
 `);
 
-const ListItemIcon = createSlot(MuiListItemIcon)<RteFeaturesButtonGroupClassKey>({
+const ListItemIcon = createComponentSlot(MuiListItemIcon)<RteFeaturesButtonGroupClassKey>({
     componentName: "RteFeaturesButtonGroup",
     slotName: "listItemIcon",
 })(css`

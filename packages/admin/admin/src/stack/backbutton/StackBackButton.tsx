@@ -4,14 +4,14 @@ import { Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { createSlot } from "../../helpers/createSlot";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { messages } from "../../messages";
 import { StackApiContext } from "../Api";
 
 export type StackBackButtonClassKey = ButtonClassKey;
 export type StackBackButtonProps = ButtonProps;
 
-const Root = createSlot(Button)<StackBackButtonClassKey>({
+const Root = createComponentSlot(Button)<StackBackButtonClassKey>({
     componentName: "StackBackButton",
     slotName: "root",
 })();

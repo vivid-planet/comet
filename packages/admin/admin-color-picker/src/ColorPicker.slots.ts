@@ -1,4 +1,4 @@
-import { createSlot, InputWithPopper, ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, InputWithPopper, ThemedComponentBaseProps } from "@comet/admin";
 import { Box, ButtonBase, IconButton, InputAdornment as MuiInputAdornment, Typography } from "@mui/material";
 import { css, Theme } from "@mui/material/styles";
 import { HexColorPicker as HexColorPickerBase, RgbaStringColorPicker as RgbaStringColorPickerBase } from "react-colorful";
@@ -53,24 +53,24 @@ const getPopperSectionStyles = (theme: Theme) => css`
     }
 `;
 
-export const Root = createSlot(InputWithPopper)<ColorPickerClassKey>({
+export const Root = createComponentSlot(InputWithPopper)<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "root",
 })();
 
-export const InputAdornment = createSlot(MuiInputAdornment)<ColorPickerClassKey>({
+export const InputAdornment = createComponentSlot(MuiInputAdornment)<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "inputAdornment",
 })();
 
-export const PopperRoot = createSlot("div")<ColorPickerClassKey>({
+export const PopperRoot = createComponentSlot("div")<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "popperRoot",
 })(css`
     width: 300px;
 `);
 
-export const Header = createSlot("div")<ColorPickerClassKey>({
+export const Header = createComponentSlot("div")<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "header",
 })(
@@ -81,7 +81,7 @@ export const Header = createSlot("div")<ColorPickerClassKey>({
     `,
 );
 
-export const HeaderTitleText = createSlot(Typography)<ColorPickerClassKey>({
+export const HeaderTitleText = createComponentSlot(Typography)<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "headerTitleText",
 })(
@@ -90,7 +90,7 @@ export const HeaderTitleText = createSlot(Typography)<ColorPickerClassKey>({
     `,
 );
 
-export const HeaderCloseButton = createSlot(IconButton)<ColorPickerClassKey>({
+export const HeaderCloseButton = createComponentSlot(IconButton)<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "headerCloseButton",
 })(
@@ -102,7 +102,7 @@ export const HeaderCloseButton = createSlot(IconButton)<ColorPickerClassKey>({
     `,
 );
 
-export const ColorPickerWrapper = createSlot("div")<ColorPickerClassKey>({
+export const ColorPickerWrapper = createComponentSlot("div")<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "colorPickerWrapper",
     classesResolver() {
@@ -148,7 +148,7 @@ export const ColorPickerWrapper = createSlot("div")<ColorPickerClassKey>({
     `,
 );
 
-export const ColorPalette = createSlot("div")<ColorPickerClassKey>({
+export const ColorPalette = createComponentSlot("div")<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "colorPalette",
     classesResolver() {
@@ -167,7 +167,7 @@ type ColorPaletteItemProps = {
     colorValue: string;
 };
 
-export const ColorPaletteItem = createSlot(Box)<ColorPickerClassKey, ColorPaletteItemProps>({
+export const ColorPaletteItem = createComponentSlot(Box)<ColorPickerClassKey, ColorPaletteItemProps>({
     componentName: "ColorPicker",
     slotName: "colorPaletteItem",
 })(
@@ -183,7 +183,7 @@ export const ColorPaletteItem = createSlot(Box)<ColorPickerClassKey, ColorPalett
     `,
 );
 
-export const Footer = createSlot("div")<ColorPickerClassKey>({
+export const Footer = createComponentSlot("div")<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "footer",
     classesResolver() {
@@ -196,7 +196,7 @@ export const Footer = createSlot("div")<ColorPickerClassKey>({
     `,
 );
 
-export const FooterClearButton = createSlot(ButtonBase)<ColorPickerClassKey>({
+export const FooterClearButton = createComponentSlot(ButtonBase)<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "footerClearButton",
 })(
@@ -206,7 +206,7 @@ export const FooterClearButton = createSlot(ButtonBase)<ColorPickerClassKey>({
     `,
 );
 
-export const Preview = createSlot("div")<ColorPickerClassKey>({
+export const Preview = createComponentSlot("div")<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "preview",
 })(css`
@@ -227,7 +227,7 @@ export type PreviewIndicatorColorProps = {
     color: string;
 };
 
-export const PreviewIndicator = createSlot("div")<ColorPickerClassKey, PreviewIndicatorProps>({
+export const PreviewIndicator = createComponentSlot("div")<ColorPickerClassKey, PreviewIndicatorProps>({
     componentName: "ColorPicker",
     slotName: "previewIndicator",
     classesResolver({ type }) {
@@ -279,12 +279,12 @@ export const PreviewIndicator = createSlot("div")<ColorPickerClassKey, PreviewIn
     `,
 );
 
-export const HexColorPicker = createSlot(HexColorPickerBase)<ColorPickerClassKey>({
+export const HexColorPicker = createComponentSlot(HexColorPickerBase)<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "hexColorPicker",
 })();
 
-export const RgbaStringColorPicker = createSlot(RgbaStringColorPickerBase)<ColorPickerClassKey>({
+export const RgbaStringColorPicker = createComponentSlot(RgbaStringColorPickerBase)<ColorPickerClassKey>({
     componentName: "ColorPicker",
     slotName: "rgbaStringColorPicker",
 })();

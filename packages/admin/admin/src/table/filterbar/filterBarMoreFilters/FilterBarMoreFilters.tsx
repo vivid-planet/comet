@@ -4,7 +4,7 @@ import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { createSlot } from "../../../helpers/createSlot";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { FilterBarButton } from "../filterBarButton/FilterBarButton";
 
@@ -13,7 +13,7 @@ import { FilterBarButton } from "../filterBarButton/FilterBarButton";
  */
 export type FilterBarMoreFiltersClassKey = "root" | "button";
 
-const Root = createSlot("div")<FilterBarMoreFiltersClassKey>({
+const Root = createComponentSlot("div")<FilterBarMoreFiltersClassKey>({
     componentName: "FilterBarMoreFilters",
     slotName: "root",
 })(css`
@@ -21,7 +21,7 @@ const Root = createSlot("div")<FilterBarMoreFiltersClassKey>({
     margin-right: 6px;
 `);
 
-const StyledFilterBarButton = createSlot(FilterBarButton)<FilterBarMoreFiltersClassKey>({
+const StyledFilterBarButton = createComponentSlot(FilterBarButton)<FilterBarMoreFiltersClassKey>({
     componentName: "FilterBarMoreFilters",
     slotName: "button",
 })(

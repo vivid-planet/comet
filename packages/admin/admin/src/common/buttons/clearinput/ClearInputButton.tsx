@@ -3,11 +3,11 @@ import { ButtonBase, ButtonBaseProps, ComponentsOverrides, inputAdornmentClasses
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../../../helpers/createSlot";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 
 export type ClearInputButtonClassKey = "root" | "focusVisible";
 
-const Root = createSlot(ButtonBase)<ClearInputButtonClassKey>({
+const Root = createComponentSlot(ButtonBase)<ClearInputButtonClassKey>({
     componentName: "ClearInputButton",
     slotName: "root",
 })(

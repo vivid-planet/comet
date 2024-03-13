@@ -3,7 +3,7 @@ import { Link, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material"
 import { css } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../../helpers/createSlot";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { BreadcrumbItem } from "../Stack";
 import { BreadcrumbLink } from "./BreadcrumbLink";
 import { StackBreadcrumbsClassKey, StackBreadcrumbsProps } from "./StackBreadcrumbs";
@@ -14,7 +14,7 @@ interface BreadcrumbsOverflowProps {
     slotProps: StackBreadcrumbsProps["slotProps"];
 }
 
-const OverflowLink = createSlot(Link)<StackBreadcrumbsClassKey>({
+const OverflowLink = createComponentSlot(Link)<StackBreadcrumbsClassKey>({
     componentName: "StackBreadcrumbs",
     slotName: "overflowLink",
     classesResolver() {

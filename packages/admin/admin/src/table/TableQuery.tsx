@@ -5,7 +5,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Loading } from "../common/Loading";
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
 
@@ -29,14 +29,14 @@ export interface IDefaultVariables {}
  */
 export type TableQueryClassKey = "root" | "loadingContainer" | "loadingPaper";
 
-const Root = createSlot("div")<TableQueryClassKey>({
+const Root = createComponentSlot("div")<TableQueryClassKey>({
     componentName: "TableQuery",
     slotName: "root",
 })(css`
     position: relative;
 `);
 
-const LoadingContainer = createSlot("div")<TableQueryClassKey>({
+const LoadingContainer = createComponentSlot("div")<TableQueryClassKey>({
     componentName: "TableQuery",
     slotName: "loadingContainer",
 })(
@@ -49,7 +49,7 @@ const LoadingContainer = createSlot("div")<TableQueryClassKey>({
     `,
 );
 
-const LoadingPaper = createSlot(Paper)<TableQueryClassKey>({
+const LoadingPaper = createComponentSlot(Paper)<TableQueryClassKey>({
     componentName: "TableQuery",
     slotName: "loadingPaper",
 })(css`

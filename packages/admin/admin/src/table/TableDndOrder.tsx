@@ -6,7 +6,7 @@ import TableRow from "@mui/material/TableRow";
 import * as React from "react";
 import { DropTargetMonitor, useDrag, useDrop, XYCoord } from "react-dnd";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { IRow, ITableProps, ITableRowProps, Table, TableColumns, TableHeadColumns } from "./Table";
 import { TableBodyRow } from "./TableBodyRow";
@@ -120,12 +120,12 @@ function DndOrderRow<TRow extends IRow>(props: IDndOrderRowProps<TRow>) {
     );
 }
 
-const Root = createSlot(Table)<TableDndOrderClassKey>({
+const Root = createComponentSlot(Table)<TableDndOrderClassKey>({
     componentName: "TableDndOrder",
     slotName: "root",
 })();
 
-const DragCell = createSlot(TableCell)<TableDndOrderClassKey>({
+const DragCell = createComponentSlot(TableCell)<TableDndOrderClassKey>({
     componentName: "TableDndOrder",
     slotName: "dragCell",
 })(css`
@@ -134,7 +134,7 @@ const DragCell = createSlot(TableCell)<TableDndOrderClassKey>({
     padding-right: 0;
 `);
 
-const DragIconContainer = createSlot("div")<TableDndOrderClassKey>({
+const DragIconContainer = createComponentSlot("div")<TableDndOrderClassKey>({
     componentName: "TableDndOrder",
     slotName: "dragIconContainer",
 })(css`

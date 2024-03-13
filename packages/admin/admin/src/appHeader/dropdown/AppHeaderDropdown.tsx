@@ -3,7 +3,7 @@ import { ComponentsOverrides, Popover as MuiPopover, PopoverProps, Theme, useThe
 import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../../helpers/createSlot";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { AppHeaderButton, AppHeaderButtonProps } from "../button/AppHeaderButton";
 
@@ -24,19 +24,19 @@ export interface AppHeaderDropdownProps
     onOpenChange?: (open: boolean) => void;
 }
 
-const Root = createSlot("div")<AppHeaderDropdownClassKey>({
+const Root = createComponentSlot("div")<AppHeaderDropdownClassKey>({
     componentName: "AppHeaderDropdown",
     slotName: "root",
 })(css`
     height: 100%;
 `);
 
-const Button = createSlot(AppHeaderButton)<AppHeaderDropdownClassKey>({
+const Button = createComponentSlot(AppHeaderButton)<AppHeaderDropdownClassKey>({
     componentName: "AppHeaderDropdown",
     slotName: "button",
 })();
 
-const Popover = createSlot(MuiPopover)<AppHeaderDropdownClassKey>({
+const Popover = createComponentSlot(MuiPopover)<AppHeaderDropdownClassKey>({
     componentName: "AppHeaderDropdown",
     slotName: "popover",
 })();

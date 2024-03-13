@@ -1,7 +1,7 @@
 import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../../helpers/createSlot";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 /**
@@ -9,7 +9,7 @@ import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps
  */
 export type FilterBarClassKey = "root" | "barWrapper";
 
-const Root = createSlot("div")<FilterBarClassKey>({
+const Root = createComponentSlot("div")<FilterBarClassKey>({
     componentName: "FilterBar",
     slotName: "root",
 })(css`
@@ -18,7 +18,7 @@ const Root = createSlot("div")<FilterBarClassKey>({
     }
 `);
 
-const BarWrapper = createSlot("div")<FilterBarClassKey>({
+const BarWrapper = createComponentSlot("div")<FilterBarClassKey>({
     componentName: "FilterBar",
     slotName: "barWrapper",
 })(css`

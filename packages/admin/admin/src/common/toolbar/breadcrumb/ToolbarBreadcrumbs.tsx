@@ -3,7 +3,7 @@ import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
 
-import { createSlot } from "../../../helpers/createSlot";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { StackApiContext } from "../../../stack/Api";
 
@@ -13,7 +13,7 @@ type OwnerState = {
     active: boolean;
 };
 
-const Item = createSlot("div")<ToolbarBreadcrumbsClassKey>({
+const Item = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
     componentName: "ToolbarBreadcrumbs",
     slotName: "item",
 })(css`
@@ -22,7 +22,7 @@ const Item = createSlot("div")<ToolbarBreadcrumbsClassKey>({
     padding: 15px;
 `);
 
-const TypographyRoot = createSlot(MuiTypography)<ToolbarBreadcrumbsClassKey, OwnerState>({
+const TypographyRoot = createComponentSlot(MuiTypography)<ToolbarBreadcrumbsClassKey, OwnerState>({
     componentName: "ToolbarBreadcrumbs",
     slotName: "typographyRoot",
     classesResolver(ownerState) {
@@ -39,7 +39,7 @@ const TypographyRoot = createSlot(MuiTypography)<ToolbarBreadcrumbsClassKey, Own
     `,
 );
 
-const SeparatorContainer = createSlot("div")<ToolbarBreadcrumbsClassKey>({
+const SeparatorContainer = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
     componentName: "ToolbarBreadcrumbs",
     slotName: "separatorContainer",
 })(css`
@@ -51,7 +51,7 @@ const SeparatorContainer = createSlot("div")<ToolbarBreadcrumbsClassKey>({
     align-items: center;
 `);
 
-const Separator = createSlot("div")<ToolbarBreadcrumbsClassKey>({
+const Separator = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
     componentName: "ToolbarBreadcrumbs",
     slotName: "separator",
 })(

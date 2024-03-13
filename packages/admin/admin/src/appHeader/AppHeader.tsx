@@ -2,7 +2,7 @@ import { AppBar as MuiAppBar, AppBarClassKey, capitalize, ComponentsOverrides, c
 import { AppBarProps } from "@mui/material/AppBar";
 import * as React from "react";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { MasterLayoutContext } from "../mui/MasterLayoutContext";
 
 interface AppHeaderProps extends AppBarProps {
@@ -19,7 +19,7 @@ type OwnerState = {
     color: AppBarProps["color"];
 };
 
-const AppHeaderRoot = createSlot(MuiAppBar)<AppHeaderClassKey, OwnerState>({
+const AppHeaderRoot = createComponentSlot(MuiAppBar)<AppHeaderClassKey, OwnerState>({
     componentName: "AppHeader",
     slotName: "root",
     classesResolver(ownerState) {

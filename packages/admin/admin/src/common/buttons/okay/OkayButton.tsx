@@ -4,13 +4,13 @@ import { Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { createSlot } from "../../../helpers/createSlot";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { messages } from "../../../messages";
 
 export type OkayButtonClassKey = ButtonClassKey;
 export type OkayButtonProps = ButtonProps;
 
-const Root = createSlot(Button)<OkayButtonClassKey>({
+const Root = createComponentSlot(Button)<OkayButtonClassKey>({
     componentName: "OkayButton",
     slotName: "root",
 })();

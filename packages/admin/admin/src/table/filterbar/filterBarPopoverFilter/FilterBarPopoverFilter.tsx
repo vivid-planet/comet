@@ -5,7 +5,7 @@ import * as React from "react";
 import { Form, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { createSlot } from "../../../helpers/createSlot";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { messages } from "../../../messages";
 import { dirtyFieldsCount } from "../dirtyFieldsCount";
@@ -17,7 +17,7 @@ import { FilterBarButton, FilterBarButtonProps } from "../filterBarButton/Filter
  */
 export type FilterBarPopoverFilterClassKey = "root" | "fieldBarWrapper" | "popoverContentContainer" | "buttonsContainer" | "popover";
 
-const Root = createSlot("div")<FilterBarPopoverFilterClassKey>({
+const Root = createComponentSlot("div")<FilterBarPopoverFilterClassKey>({
     componentName: "FilterBarPopoverFilter",
     slotName: "root",
 })(
@@ -30,14 +30,14 @@ const Root = createSlot("div")<FilterBarPopoverFilterClassKey>({
     `,
 );
 
-const FieldBarWrapper = createSlot("div")<FilterBarPopoverFilterClassKey>({
+const FieldBarWrapper = createComponentSlot("div")<FilterBarPopoverFilterClassKey>({
     componentName: "FilterBarPopoverFilter",
     slotName: "fieldBarWrapper",
 })(css`
     position: relative;
 `);
 
-const PopoverContentContainer = createSlot("div")<FilterBarPopoverFilterClassKey>({
+const PopoverContentContainer = createComponentSlot("div")<FilterBarPopoverFilterClassKey>({
     componentName: "FilterBarPopoverFilter",
     slotName: "popoverContentContainer",
 })(css`
@@ -50,7 +50,7 @@ const PopoverContentContainer = createSlot("div")<FilterBarPopoverFilterClassKey
     }
 `);
 
-const ButtonsContainer = createSlot("div")<FilterBarPopoverFilterClassKey>({
+const ButtonsContainer = createComponentSlot("div")<FilterBarPopoverFilterClassKey>({
     componentName: "FilterBarPopoverFilter",
     slotName: "buttonsContainer",
 })(
@@ -64,7 +64,7 @@ const ButtonsContainer = createSlot("div")<FilterBarPopoverFilterClassKey>({
     `,
 );
 
-const Popover = createSlot(MuiPopover)<FilterBarPopoverFilterClassKey>({
+const Popover = createComponentSlot(MuiPopover)<FilterBarPopoverFilterClassKey>({
     componentName: "FilterBarPopoverFilter",
     slotName: "popover",
 })();

@@ -4,13 +4,13 @@ import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { createSlot } from "../../../helpers/createSlot";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { messages } from "../../../messages";
 
 export type DeleteButtonClassKey = ButtonClassKey;
 export type DeleteButtonProps = ButtonProps;
 
-const Root = createSlot(Button)<DeleteButtonClassKey>({
+const Root = createComponentSlot(Button)<DeleteButtonClassKey>({
     componentName: "DeleteButton",
     slotName: "root",
 })(

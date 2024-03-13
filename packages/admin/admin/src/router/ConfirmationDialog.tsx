@@ -4,7 +4,7 @@ import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { messages } from "../messages";
 
@@ -18,14 +18,14 @@ export type RouterConfirmationDialogClassKey =
     | "saveButton"
     | "discardButton";
 
-const StyledDialog = createSlot(Dialog)<RouterConfirmationDialogClassKey>({
+const StyledDialog = createComponentSlot(Dialog)<RouterConfirmationDialogClassKey>({
     componentName: "RouterConfirmationDialog",
     slotName: "root",
 })(css`
     z-index: 1301;
 `);
 
-const CloseButton = createSlot(IconButton)<RouterConfirmationDialogClassKey>({
+const CloseButton = createComponentSlot(IconButton)<RouterConfirmationDialogClassKey>({
     componentName: "RouterConfirmationDialog",
     slotName: "closeButton",
 })(css`
@@ -35,28 +35,28 @@ const CloseButton = createSlot(IconButton)<RouterConfirmationDialogClassKey>({
     color: #fff;
 `);
 
-const MessageWrapper = createSlot("div")<RouterConfirmationDialogClassKey>({
+const MessageWrapper = createComponentSlot("div")<RouterConfirmationDialogClassKey>({
     componentName: "RouterConfirmationDialog",
     slotName: "messageWrapper",
 })(css`
     display: flex;
 `);
 
-const StyledWarning = createSlot(Warning)<RouterConfirmationDialogClassKey>({
+const StyledWarning = createComponentSlot(Warning)<RouterConfirmationDialogClassKey>({
     componentName: "RouterConfirmationDialog",
     slotName: "messageWarningIcon",
 })(css`
     font-size: 20px;
 `);
 
-const MessageText = createSlot(Typography)<RouterConfirmationDialogClassKey>({
+const MessageText = createComponentSlot(Typography)<RouterConfirmationDialogClassKey>({
     componentName: "RouterConfirmationDialog",
     slotName: "messageText",
 })(css`
     padding-left: 10px;
 `);
 
-const SaveButton = createSlot(Button)<RouterConfirmationDialogClassKey>({
+const SaveButton = createComponentSlot(Button)<RouterConfirmationDialogClassKey>({
     componentName: "RouterConfirmationDialog",
     slotName: "saveButton",
     classesResolver() {
@@ -70,7 +70,7 @@ const SaveButton = createSlot(Button)<RouterConfirmationDialogClassKey>({
     `,
 );
 
-const DiscardButton = createSlot(Button)<RouterConfirmationDialogClassKey>({
+const DiscardButton = createComponentSlot(Button)<RouterConfirmationDialogClassKey>({
     componentName: "RouterConfirmationDialog",
     slotName: "discardButton",
     classesResolver() {

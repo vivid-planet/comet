@@ -4,7 +4,7 @@ import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/st
 import * as React from "react";
 import { matchPath, useLocation } from "react-router";
 
-import { createSlot } from "../../helpers/createSlot";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MenuItem, MenuItemProps } from "./Item";
 import { MenuItemRouterLinkProps } from "./ItemRouterLink";
@@ -13,7 +13,7 @@ export type MenuCollapsibleItemClassKey = "root" | "childSelected" | "listItem" 
 
 type OwnerState = { hasSelectedChild: boolean; open: boolean };
 
-const Root = createSlot("div")<MenuCollapsibleItemClassKey, OwnerState>({
+const Root = createComponentSlot("div")<MenuCollapsibleItemClassKey, OwnerState>({
     componentName: "MenuCollapsibleItem",
     slotName: "root",
     classesResolver(ownerState) {
@@ -28,7 +28,7 @@ const Root = createSlot("div")<MenuCollapsibleItemClassKey, OwnerState>({
     `,
 );
 
-const ListItem = createSlot("div")<MenuCollapsibleItemClassKey, OwnerState>({
+const ListItem = createComponentSlot("div")<MenuCollapsibleItemClassKey, OwnerState>({
     componentName: "MenuCollapsibleItem",
     slotName: "listItem",
 })(
@@ -45,7 +45,7 @@ const ListItem = createSlot("div")<MenuCollapsibleItemClassKey, OwnerState>({
     `,
 );
 
-const Item = createSlot(MenuItem)<MenuCollapsibleItemClassKey>({
+const Item = createComponentSlot(MenuItem)<MenuCollapsibleItemClassKey>({
     componentName: "MenuCollapsibleItem",
     slotName: "menuItem",
 })();

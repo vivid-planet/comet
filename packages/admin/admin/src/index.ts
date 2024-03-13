@@ -85,7 +85,7 @@ export { FormSection, FormSectionClassKey, FormSectionProps } from "./form/FormS
 export { FinalFormRadio, FinalFormRadioProps } from "./form/Radio";
 export { FinalFormSwitch, FinalFormSwitchProps } from "./form/Switch";
 export { FormMutation } from "./FormMutation";
-export { createSlot } from "./helpers/createSlot";
+export { createComponentSlot } from "./helpers/createComponentSlot";
 export { PrettyBytes } from "./helpers/PrettyBytes";
 export { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 export { IWindowSize, useWindowSize } from "./helpers/useWindowSize";

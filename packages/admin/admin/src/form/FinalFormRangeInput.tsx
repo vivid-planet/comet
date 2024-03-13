@@ -3,12 +3,12 @@ import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/st
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type FinalFormRangeInputClassKey = "root" | "inputsWrapper" | "inputFieldsSeparatorContainer" | "sliderWrapper" | "inputFieldContainer";
 
-const Root = createSlot("div")<FinalFormRangeInputClassKey>({
+const Root = createComponentSlot("div")<FinalFormRangeInputClassKey>({
     componentName: "FinalFormRangeInput",
     slotName: "root",
 })(css`
@@ -17,7 +17,7 @@ const Root = createSlot("div")<FinalFormRangeInputClassKey>({
     width: 100%;
 `);
 
-const InputsWrapper = createSlot("div")<FinalFormRangeInputClassKey>({
+const InputsWrapper = createComponentSlot("div")<FinalFormRangeInputClassKey>({
     componentName: "FinalFormRangeInput",
     slotName: "inputsWrapper",
 })(css`
@@ -27,7 +27,7 @@ const InputsWrapper = createSlot("div")<FinalFormRangeInputClassKey>({
     display: flex;
 `);
 
-const InputFieldsSeparatorContainer = createSlot("div")<FinalFormRangeInputClassKey>({
+const InputFieldsSeparatorContainer = createComponentSlot("div")<FinalFormRangeInputClassKey>({
     componentName: "FinalFormRangeInput",
     slotName: "inputFieldsSeparatorContainer",
 })(css`
@@ -35,12 +35,12 @@ const InputFieldsSeparatorContainer = createSlot("div")<FinalFormRangeInputClass
     min-width: 20%;
 `);
 
-const SliderWrapper = createSlot("div")<FinalFormRangeInputClassKey>({
+const SliderWrapper = createComponentSlot("div")<FinalFormRangeInputClassKey>({
     componentName: "FinalFormRangeInput",
     slotName: "sliderWrapper",
 })();
 
-const InputFieldContainer = createSlot("div")<FinalFormRangeInputClassKey>({
+const InputFieldContainer = createComponentSlot("div")<FinalFormRangeInputClassKey>({
     componentName: "FinalFormRangeInput",
     slotName: "inputFieldContainer",
 })(css`

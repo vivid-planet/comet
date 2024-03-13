@@ -64,7 +64,7 @@ E.g.: in this instance of `MyComponent`, the root should have a red border, and 
 See this as a working example in our [Storybook](https://storybook.comet-dxp.com/?path=/story/comet-admin-theming--themable-mycomponent).
 
 ```tsx
-import { ThemedComponentBaseProps, createSlot } from "@comet/admin";
+import { ThemedComponentBaseProps, createComponentSlot } from "@comet/admin";
 import { CometColor } from "@comet/admin-icons";
 import { ComponentsOverrides, Typography } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
@@ -87,7 +87,7 @@ type OwnerState = Pick<MyComponentProps, "shadow">;
 
 /**
  * Each element or sub-component of a Comet Admin component should be created as a "slot".
- * A slot is created by using the `createSlot` function and passing in the HTML element or component you want to be the base of your slot.
+ * A slot is created by using the `createComponentSlot` function and passing in the HTML element or component you want to be the base of your slot.
  * The slot's options require:
  * - `componentName`: This is used to reference the component in the theme, so it must be the same for every slot in the component. It will be automatically prefixed with `CometAdmin`.
  * - `slotName`: This name is used to reference the slot when overriding component styles or default-props in the theme, or when passing in slotProps to the component.
@@ -95,7 +95,7 @@ type OwnerState = Pick<MyComponentProps, "shadow">;
  *    The class-key of the `slotName`, e.g., `root` is always added to the slot automatically.
  *    If a slot has styles dependent on a value in the `ownerState`, e.g. from a `shadow` prop, then a class-key (e.g. `hasShadow`) should be returned to allow those styles to be overridden using the theme.
  */
-const Root = createSlot("div")<MyComponentClassKey, OwnerState>({
+const Root = createComponentSlot("div")<MyComponentClassKey, OwnerState>({
     componentName: "MyComponent",
     slotName: "root",
     classesResolver(ownerState) {
@@ -112,7 +112,7 @@ const Root = createSlot("div")<MyComponentClassKey, OwnerState>({
     `,
 );
 
-const Header = createSlot("div")<MyComponentClassKey>({
+const Header = createComponentSlot("div")<MyComponentClassKey>({
     componentName: "MyComponent",
     slotName: "header",
 })(
@@ -124,7 +124,7 @@ const Header = createSlot("div")<MyComponentClassKey>({
     `,
 );
 
-const Title = createSlot(Typography)<MyComponentClassKey, OwnerState>({
+const Title = createComponentSlot(Typography)<MyComponentClassKey, OwnerState>({
     componentName: "MyComponent",
     slotName: "title",
 })(
@@ -136,12 +136,12 @@ const Title = createSlot(Typography)<MyComponentClassKey, OwnerState>({
     `,
 );
 
-const Icon = createSlot(CometColor)<MyComponentClassKey>({
+const Icon = createComponentSlot(CometColor)<MyComponentClassKey>({
     componentName: "MyComponent",
     slotName: "icon",
 })();
 
-const Children = createSlot("div")<MyComponentClassKey>({
+const Children = createComponentSlot("div")<MyComponentClassKey>({
     componentName: "MyComponent",
     slotName: "children",
 })(

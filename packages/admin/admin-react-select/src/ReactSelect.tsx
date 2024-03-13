@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createSlot } from "@comet/admin";
+import { createComponentSlot } from "@comet/admin";
 import { SvgIconComponent } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -39,7 +39,7 @@ export type SelectClassKey =
     | "optionSelected"
     | "optionFocused";
 
-const NoOptionsMessageText = createSlot(Typography)<SelectClassKey>({
+const NoOptionsMessageText = createComponentSlot(Typography)<SelectClassKey>({
     componentName: "Select",
     slotName: "noOptionsMessage",
 })(
@@ -57,7 +57,7 @@ function inputComponent({ inputRef, ...props }: any) {
     return <div ref={inputRef} {...props} />;
 }
 
-const ControlInput = createSlot(InputBase)<SelectClassKey>({
+const ControlInput = createComponentSlot(InputBase)<SelectClassKey>({
     componentName: "Select",
     slotName: "input",
 })(css`
@@ -84,7 +84,7 @@ type OptionMenuItemState = {
     selected: boolean;
 };
 
-const OptionMenuItem = createSlot(MenuItem)<SelectClassKey, OptionMenuItemState>({
+const OptionMenuItem = createComponentSlot(MenuItem)<SelectClassKey, OptionMenuItemState>({
     componentName: "Select",
     slotName: "option",
     classesResolver(ownerState) {
@@ -120,7 +120,7 @@ function Option<OptionType extends OptionTypeBase, IsMulti extends boolean>(prop
     );
 }
 
-const PlaceholderSlot = createSlot("div")<SelectClassKey>({
+const PlaceholderSlot = createComponentSlot("div")<SelectClassKey>({
     componentName: "Select",
     slotName: "placeholder",
 })(
@@ -133,7 +133,7 @@ function Placeholder<OptionType extends OptionTypeBase, IsMulti extends boolean>
     return <PlaceholderSlot {...props.innerProps}>{props.children}</PlaceholderSlot>;
 }
 
-const SingleValueSlot = createSlot("div")<SelectClassKey>({
+const SingleValueSlot = createComponentSlot("div")<SelectClassKey>({
     componentName: "Select",
     slotName: "singleValue",
 })(css`
@@ -146,7 +146,7 @@ function SingleValue<OptionType extends OptionTypeBase>(props: SingleValueProps<
     return <SingleValueSlot {...props.innerProps}>{props.children}</SingleValueSlot>;
 }
 
-const ValueContainerSlot = createSlot("div")<SelectClassKey>({
+const ValueContainerSlot = createComponentSlot("div")<SelectClassKey>({
     componentName: "Select",
     slotName: "valueContainer",
 })(css`
@@ -161,7 +161,7 @@ function ValueContainer<OptionType extends OptionTypeBase, IsMulti extends boole
     return <ValueContainerSlot>{props.children}</ValueContainerSlot>;
 }
 
-const MultiValueChip = createSlot(Chip)<SelectClassKey, { focused: boolean }>({
+const MultiValueChip = createComponentSlot(Chip)<SelectClassKey, { focused: boolean }>({
     componentName: "Select",
     slotName: "chip",
     classesResolver(ownerState) {
@@ -190,7 +190,7 @@ function MultiValue<OptionType extends OptionTypeBase>(props: MultiValueProps<Op
     );
 }
 
-const MenuSlot = createSlot(Paper)<SelectClassKey>({
+const MenuSlot = createComponentSlot(Paper)<SelectClassKey>({
     componentName: "Select",
     slotName: "paper",
 })();
@@ -199,7 +199,7 @@ function Menu<OptionType extends OptionTypeBase, IsMulti extends boolean>(props:
     return <MenuSlot {...props.innerProps}>{props.children}</MenuSlot>;
 }
 
-const IndicatorsContainerSlot = createSlot("div")<SelectClassKey>({
+const IndicatorsContainerSlot = createComponentSlot("div")<SelectClassKey>({
     componentName: "Select",
     slotName: "indicatorsContainer",
 })(css`
@@ -210,7 +210,7 @@ function IndicatorsContainer<OptionType extends OptionTypeBase, IsMulti extends 
     return <IndicatorsContainerSlot>{props.children}</IndicatorsContainerSlot>;
 }
 
-const IndicatorSeparatorSlot = createSlot("span")<SelectClassKey>({
+const IndicatorSeparatorSlot = createComponentSlot("span")<SelectClassKey>({
     componentName: "Select",
     slotName: "indicatorSeparator",
 })(
@@ -225,7 +225,7 @@ function IndicatorSeparator<OptionType extends OptionTypeBase, IsMulti extends b
     return <IndicatorSeparatorSlot />;
 }
 
-const ClearIndicatorSlot = createSlot("div")<SelectClassKey>({
+const ClearIndicatorSlot = createComponentSlot("div")<SelectClassKey>({
     componentName: "Select",
     slotName: "clearIndicator",
     classesResolver() {
@@ -255,7 +255,7 @@ function ClearIndicator<OptionType extends OptionTypeBase, IsMulti extends boole
     );
 }
 
-const DropdownIndicatorSlot = createSlot("div")<SelectClassKey>({
+const DropdownIndicatorSlot = createComponentSlot("div")<SelectClassKey>({
     componentName: "Select",
     slotName: "dropdownIndicator",
     classesResolver() {

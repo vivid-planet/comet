@@ -3,7 +3,7 @@ import { Theme, useThemeProps } from "@mui/material/styles";
 import { TableRowProps } from "@mui/material/TableRow";
 import React from "react";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 /**
@@ -13,7 +13,7 @@ export type TableBodyRowClassKey = "root" | "even" | "odd";
 
 type OwnerState = { isOdd: boolean };
 
-const Root = createSlot(TableRow)<TableBodyRowClassKey, OwnerState>({
+const Root = createComponentSlot(TableRow)<TableBodyRowClassKey, OwnerState>({
     componentName: "TableBodyRow",
     slotName: "root",
     classesResolver(ownerState) {

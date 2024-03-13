@@ -12,7 +12,7 @@ import { useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { PropsWithChildren } from "react";
 
-import { createSlot } from "../../../helpers/createSlot";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useStoredState } from "../../../hooks/useStoredState";
 import { SplitButtonContext } from "./SplitButtonContext";
@@ -41,27 +41,27 @@ export interface SplitButtonProps
     popoverProps?: Partial<PopoverProps>;
 }
 
-const Root = createSlot(MuiButtonGroup)<SplitButtonClassKey>({
+const Root = createComponentSlot(MuiButtonGroup)<SplitButtonClassKey>({
     componentName: "SplitButton",
     slotName: "root",
 })();
 
-const ActiveButton = createSlot(Button)<SplitButtonClassKey>({
+const ActiveButton = createComponentSlot(Button)<SplitButtonClassKey>({
     componentName: "SplitButton",
     slotName: "activeButton",
 })();
 
-const Popover = createSlot(MuiPopover)<SplitButtonClassKey>({
+const Popover = createComponentSlot(MuiPopover)<SplitButtonClassKey>({
     componentName: "SplitButton",
     slotName: "popover",
 })();
 
-const MenuList = createSlot(MuiMenuList)<SplitButtonClassKey>({
+const MenuList = createComponentSlot(MuiMenuList)<SplitButtonClassKey>({
     componentName: "SplitButton",
     slotName: "menuList",
 })();
 
-const MenuItem = createSlot(MuiMenuItem)<SplitButtonClassKey>({
+const MenuItem = createComponentSlot(MuiMenuItem)<SplitButtonClassKey>({
     componentName: "SplitButton",
     slotName: "menuItem",
 })();

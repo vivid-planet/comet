@@ -1,4 +1,4 @@
-import { createSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides, css, Theme, Typography, TypographyProps, useThemeProps } from "@mui/material";
 import * as React from "react";
 
@@ -14,7 +14,7 @@ export type RteBlockElementClassKey = StylableBlockTypes | "root";
 
 type OwnerState = Pick<RteBlockElementProps, "type">;
 
-const Root = createSlot(Typography)<RteBlockElementClassKey, OwnerState>({
+const Root = createComponentSlot(Typography)<RteBlockElementClassKey, OwnerState>({
     componentName: "RteBlockElement",
     slotName: "root",
     classesResolver(ownerState) {

@@ -1,4 +1,4 @@
-import { createSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import {
     ComponentsOverrides,
     css,
@@ -27,7 +27,7 @@ interface Props
 
 export type RteBlockTypeControlsClassKey = "root" | "select";
 
-const Root = createSlot(FormControl)<RteBlockTypeControlsClassKey>({
+const Root = createComponentSlot(FormControl)<RteBlockTypeControlsClassKey>({
     componentName: "RteBlockTypeControls",
     slotName: "root",
 })(css`
@@ -49,7 +49,7 @@ const Root = createSlot(FormControl)<RteBlockTypeControlsClassKey>({
     }
 `);
 
-const Select = createSlot(MuiSelect)<RteBlockTypeControlsClassKey>({
+const Select = createComponentSlot(MuiSelect)<RteBlockTypeControlsClassKey>({
     componentName: "RteBlockTypeControls",
     slotName: "select",
 })(

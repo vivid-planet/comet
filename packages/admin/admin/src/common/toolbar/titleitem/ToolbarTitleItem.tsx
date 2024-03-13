@@ -2,7 +2,7 @@ import { ComponentsOverrides, Typography as MuiTypography, TypographyTypeMap } f
 import { Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../../../helpers/createSlot";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { ToolbarItem } from "../item/ToolbarItem";
 
@@ -20,12 +20,12 @@ export interface ToolbarTitleItemProps
     children?: React.ReactNode;
 }
 
-const Root = createSlot(ToolbarItem)<ToolbarTitleItemClassKey>({
+const Root = createComponentSlot(ToolbarItem)<ToolbarTitleItemClassKey>({
     componentName: "ToolbarTitleItem",
     slotName: "root",
 })();
 
-const Typography = createSlot(MuiTypography)<ToolbarTitleItemClassKey>({
+const Typography = createComponentSlot(MuiTypography)<ToolbarTitleItemClassKey>({
     componentName: "ToolbarTitleItem",
     slotName: "typography",
 })();

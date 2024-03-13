@@ -1,4 +1,4 @@
-import { createSlot, InputWithPopper, InputWithPopperClassKey, ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, InputWithPopper, InputWithPopperClassKey, ThemedComponentBaseProps } from "@comet/admin";
 import { InputAdornment } from "@mui/material";
 import { CSSProperties } from "@mui/material/styles/createMixins";
 import { deepmerge } from "@mui/utils";
@@ -14,17 +14,17 @@ export type SlotProps = ThemedComponentBaseProps<{
     calendar: typeof CalendarBase;
 }>["slotProps"];
 
-export const Root = createSlot(InputWithPopper)<DatePickerClassKey>({
+export const Root = createComponentSlot(InputWithPopper)<DatePickerClassKey>({
     componentName: "DatePicker",
     slotName: "root",
 })();
 
-export const StartAdornment = createSlot(InputAdornment)<DatePickerClassKey>({
+export const StartAdornment = createComponentSlot(InputAdornment)<DatePickerClassKey>({
     componentName: "DatePicker",
     slotName: "startAdornment",
 })();
 
-export const Calendar = createSlot(CalendarBase)<DatePickerClassKey>({
+export const Calendar = createComponentSlot(CalendarBase)<DatePickerClassKey>({
     componentName: "DatePicker",
     slotName: "calendar",
 })(({ theme }) =>

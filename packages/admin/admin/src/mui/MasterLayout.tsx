@@ -4,14 +4,14 @@ import * as React from "react";
 
 import { AppHeader } from "../appHeader/AppHeader";
 import { AppHeaderMenuButton } from "../appHeader/menuButton/AppHeaderMenuButton";
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "./MasterLayoutContext";
 import { MenuContext } from "./menu/Context";
 
 export type MasterLayoutClassKey = "root" | "header" | "contentWrapper";
 
-const Root = createSlot("div")<MasterLayoutClassKey>({
+const Root = createComponentSlot("div")<MasterLayoutClassKey>({
     componentName: "MasterLayout",
     slotName: "root",
 })(css`
@@ -19,7 +19,7 @@ const Root = createSlot("div")<MasterLayoutClassKey>({
     flex-wrap: nowrap;
 `);
 
-const Header = createSlot("div")<MasterLayoutClassKey>({
+const Header = createComponentSlot("div")<MasterLayoutClassKey>({
     componentName: "MasterLayout",
     slotName: "header",
 })(
@@ -28,7 +28,7 @@ const Header = createSlot("div")<MasterLayoutClassKey>({
     `,
 );
 
-const ContentWrapper = createSlot("div")<MasterLayoutClassKey>({
+const ContentWrapper = createComponentSlot("div")<MasterLayoutClassKey>({
     componentName: "MasterLayout",
     slotName: "contentWrapper",
 })(css`

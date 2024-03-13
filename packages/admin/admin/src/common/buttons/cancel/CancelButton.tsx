@@ -6,13 +6,13 @@ import { ComponentsOverrides } from "@mui/material/styles/overrides";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { createSlot } from "../../../helpers/createSlot";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { messages } from "../../../messages";
 
 export type CancelButtonProps = ButtonProps;
 export type CancelButtonClassKey = ButtonClassKey;
 
-const Root = createSlot(Button)<CancelButtonClassKey>({
+const Root = createComponentSlot(Button)<CancelButtonClassKey>({
     componentName: "CancelButton",
     slotName: "root",
 })();

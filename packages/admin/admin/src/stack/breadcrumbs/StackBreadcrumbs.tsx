@@ -4,7 +4,7 @@ import { ComponentsOverrides, css, Theme, useTheme, useThemeProps } from "@mui/m
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 
-import { createSlot } from "../../helpers/createSlot";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useStackApi } from "../Api";
 import { getElementOuterWidth, useItemsToRender, useObservedWidth } from "./utils";
@@ -20,14 +20,14 @@ export type StackBreadcrumbsClassKey =
     | "backButton"
     | "backButtonSeparator";
 
-const Root = createSlot("div")<StackBreadcrumbsClassKey>({
+const Root = createComponentSlot("div")<StackBreadcrumbsClassKey>({
     componentName: "StackBreadcrumbs",
     slotName: "root",
 })(css`
     position: relative;
 `);
 
-const Breadcrumbs = createSlot("div")<StackBreadcrumbsClassKey>({
+const Breadcrumbs = createComponentSlot("div")<StackBreadcrumbsClassKey>({
     componentName: "StackBreadcrumbs",
     slotName: "breadcrumbs",
 })(
@@ -41,7 +41,7 @@ const Breadcrumbs = createSlot("div")<StackBreadcrumbsClassKey>({
     `,
 );
 
-const ListItem = createSlot("div")<StackBreadcrumbsClassKey>({
+const ListItem = createComponentSlot("div")<StackBreadcrumbsClassKey>({
     componentName: "StackBreadcrumbs",
     slotName: "listItem",
 })(css`
@@ -51,7 +51,7 @@ const ListItem = createSlot("div")<StackBreadcrumbsClassKey>({
     white-space: nowrap;
 `);
 
-const Separator = createSlot("div")<StackBreadcrumbsClassKey>({
+const Separator = createComponentSlot("div")<StackBreadcrumbsClassKey>({
     componentName: "StackBreadcrumbs",
     slotName: "separator",
 })(css`
@@ -61,7 +61,7 @@ const Separator = createSlot("div")<StackBreadcrumbsClassKey>({
     margin-right: 8px;
 `);
 
-export const BackButtonSeparator = createSlot("div")<StackBreadcrumbsClassKey>({
+export const BackButtonSeparator = createComponentSlot("div")<StackBreadcrumbsClassKey>({
     componentName: "StackBreadcrumbs",
     slotName: "backButtonSeparator",
 })(

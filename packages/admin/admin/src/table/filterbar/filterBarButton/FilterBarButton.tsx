@@ -5,7 +5,7 @@ import { css, Theme } from "@mui/material/styles";
 import { useThemeProps } from "@mui/system";
 import * as React from "react";
 
-import { createSlot } from "../../../helpers/createSlot";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
 
@@ -16,7 +16,7 @@ export type FilterBarButtonClassKey = "root" | "open" | "hasDirtyFields" | "filt
 
 type OwnerState = { hasDirtyFields: boolean; openPopover: boolean | undefined };
 
-const Root = createSlot(Button)<FilterBarButtonClassKey, OwnerState>({
+const Root = createComponentSlot(Button)<FilterBarButtonClassKey, OwnerState>({
     componentName: "FilterBarButton",
     slotName: "root",
     classesResolver(ownerState) {
@@ -62,7 +62,7 @@ const Root = createSlot(Button)<FilterBarButtonClassKey, OwnerState>({
     `,
 );
 
-const FilterBadge = createSlot("span")<FilterBarButtonClassKey>({
+const FilterBadge = createComponentSlot("span")<FilterBarButtonClassKey>({
     componentName: "FilterBarButton",
     slotName: "filterBadge",
 })(css`

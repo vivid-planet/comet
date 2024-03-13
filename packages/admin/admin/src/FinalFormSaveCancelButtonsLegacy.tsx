@@ -5,7 +5,7 @@ import { useFormState } from "react-final-form";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
 import { SaveButton } from "./common/buttons/save/SaveButton";
-import { createSlot } from "./helpers/createSlot";
+import { createComponentSlot } from "./helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 import { useStackApi } from "./stack/Api";
 
@@ -21,12 +21,12 @@ export interface FinalFormSaveCancelButtonsLegacyProps
 
 export type FinalFormSaveCancelButtonsLegacyClassKey = "root" | "cancelButton" | "saveButton";
 
-const Root = createSlot("div")<FinalFormSaveCancelButtonsLegacyClassKey>({
+const Root = createComponentSlot("div")<FinalFormSaveCancelButtonsLegacyClassKey>({
     componentName: "FinalFormSaveCancelButtonsLegacy",
     slotName: "root",
 })();
 
-const StyledCancelButton = createSlot(CancelButton)<FinalFormSaveCancelButtonsLegacyClassKey>({
+const StyledCancelButton = createComponentSlot(CancelButton)<FinalFormSaveCancelButtonsLegacyClassKey>({
     componentName: "FinalFormSaveCancelButtonsLegacy",
     slotName: "cancelButton",
 })(
@@ -35,7 +35,7 @@ const StyledCancelButton = createSlot(CancelButton)<FinalFormSaveCancelButtonsLe
     `,
 );
 
-const StyledSaveButton = createSlot(SaveButton)<FinalFormSaveCancelButtonsLegacyClassKey>({
+const StyledSaveButton = createComponentSlot(SaveButton)<FinalFormSaveCancelButtonsLegacyClassKey>({
     componentName: "FinalFormSaveCancelButtonsLegacy",
     slotName: "saveButton",
 })(

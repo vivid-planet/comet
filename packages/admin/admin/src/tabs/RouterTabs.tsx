@@ -3,7 +3,7 @@ import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { Route, useHistory, useRouteMatch } from "react-router-dom";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { useSubRoutePrefix } from "../router/SubRoute";
 import { useStackApi } from "../stack/Api";
@@ -15,17 +15,17 @@ export type RouterTabsClassKey = "root" | "tabs" | "content" | "contentHidden";
 
 type OwnerState = { contentHidden?: boolean };
 
-const Root = createSlot("div")<RouterTabsClassKey>({
+const Root = createComponentSlot("div")<RouterTabsClassKey>({
     componentName: "RouterTabs",
     slotName: "root",
 })();
 
-const StyledTabs = createSlot(Tabs)<RouterTabsClassKey>({
+const StyledTabs = createComponentSlot(Tabs)<RouterTabsClassKey>({
     componentName: "RouterTabs",
     slotName: "tabs",
 })();
 
-const Content = createSlot("div")<RouterTabsClassKey, OwnerState>({
+const Content = createComponentSlot("div")<RouterTabsClassKey, OwnerState>({
     componentName: "RouterTabs",
     slotName: "content",
     classesResolver(ownerState) {

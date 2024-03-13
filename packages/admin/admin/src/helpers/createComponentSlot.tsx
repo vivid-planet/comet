@@ -24,7 +24,7 @@ type SlotStylesOrStylesFunction<OwnerState extends object | undefined> =
     | StylesStringOrObject
     | ((props: { theme: Theme } & OwnerStateObjectIfDefined<OwnerState>) => StylesStringOrObject);
 
-export const createSlot = <BaseComponent extends React.ElementType | keyof JSX.IntrinsicElements>(component: BaseComponent) => {
+export const createComponentSlot = <BaseComponent extends React.ElementType | keyof JSX.IntrinsicElements>(component: BaseComponent) => {
     return <ClassKey extends string, OwnerState extends object | undefined = undefined>(options: Options<ClassKey, OwnerState>) => {
         return (styles: SlotStylesOrStylesFunction<OwnerState> = css``) => {
             return withClassNameAndOwnerState(

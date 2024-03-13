@@ -11,7 +11,7 @@ import {
 import { css, useTheme, useThemeProps } from "@mui/material/styles";
 import React, { cloneElement } from "react";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 
 export interface TooltipProps extends MuiTooltipProps {
     trigger?: "hover" | "focus" | "click";
@@ -30,12 +30,12 @@ type OwnerState = {
     isRtl: boolean;
 };
 
-const TooltipRoot = createSlot(MuiTooltip)<TooltipClassKey, OwnerState>({
+const TooltipRoot = createComponentSlot(MuiTooltip)<TooltipClassKey, OwnerState>({
     componentName: "Tooltip",
     slotName: "root",
 })();
 
-const TooltipPopper = createSlot(MuiPopper)<TooltipClassKey, OwnerState>({
+const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState>({
     componentName: "Tooltip",
     slotName: "popper",
     classesResolver(ownerState) {

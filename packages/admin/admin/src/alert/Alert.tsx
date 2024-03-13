@@ -4,7 +4,7 @@ import { Alert as MuiAlert, alertClasses, AlertTitle, buttonClasses, IconButton,
 import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface AlertProps
@@ -66,7 +66,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>((inProps, ref)
     );
 });
 
-const Root = createSlot(MuiAlert)<AlertClassKey, OwnerState>({
+const Root = createComponentSlot(MuiAlert)<AlertClassKey, OwnerState>({
     componentName: "Alert",
     slotName: "root",
     classesResolver(ownerState) {
@@ -107,19 +107,19 @@ const Root = createSlot(MuiAlert)<AlertClassKey, OwnerState>({
     `,
 );
 
-const Title = createSlot(AlertTitle)<AlertClassKey>({
+const Title = createComponentSlot(AlertTitle)<AlertClassKey>({
     componentName: "Alert",
     slotName: "title",
 })();
 
-const Text = createSlot(Typography)<AlertClassKey>({
+const Text = createComponentSlot(Typography)<AlertClassKey>({
     componentName: "Alert",
     slotName: "text",
 })(css`
     flex-grow: 1;
 `);
 
-const Action = createSlot("div")<AlertClassKey, OwnerState>({
+const Action = createComponentSlot("div")<AlertClassKey, OwnerState>({
     componentName: "Alert",
     slotName: "action",
 })(
@@ -131,7 +131,7 @@ const Action = createSlot("div")<AlertClassKey, OwnerState>({
     `,
 );
 
-const CloseIcon = createSlot(IconButton)<AlertClassKey, OwnerState>({
+const CloseIcon = createComponentSlot(IconButton)<AlertClassKey, OwnerState>({
     componentName: "Alert",
     slotName: "closeIcon",
 })(

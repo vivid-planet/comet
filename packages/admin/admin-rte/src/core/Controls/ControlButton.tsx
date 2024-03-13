@@ -1,4 +1,4 @@
-import { createSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import { SvgIconProps } from "@mui/material/SvgIcon";
@@ -10,7 +10,7 @@ export type RteControlButtonClassKey = "root" | "selected" | "renderAsIcon";
 
 type OwnerState = Pick<IProps, "selected" | "Icon">;
 
-const Root = createSlot("button")<RteControlButtonClassKey, OwnerState>({
+const Root = createComponentSlot("button")<RteControlButtonClassKey, OwnerState>({
     componentName: "RteControlButton",
     slotName: "root",
     classesResolver(ownerState) {

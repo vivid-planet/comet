@@ -4,13 +4,13 @@ import { css, Theme, useThemeProps } from "@mui/material/styles";
 import isMobile from "is-mobile";
 import * as React from "react";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 
 export type TabScrollButtonClassKey = "root" | "vertical";
 
 type OwnerState = Pick<TabScrollButtonProps, "orientation">;
 
-const Root = createSlot(ButtonBase)<TabScrollButtonClassKey, OwnerState>({
+const Root = createComponentSlot(ButtonBase)<TabScrollButtonClassKey, OwnerState>({
     componentName: "TabScrollButton",
     slotName: "root",
     classesResolver(ownerState) {

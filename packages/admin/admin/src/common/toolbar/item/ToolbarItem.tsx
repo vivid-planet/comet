@@ -2,12 +2,12 @@ import { ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../../../helpers/createSlot";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 
 export type ToolbarItemClassKey = "root";
 
-const Root = createSlot("div")<ToolbarItemClassKey>({
+const Root = createComponentSlot("div")<ToolbarItemClassKey>({
     componentName: "ToolbarItem",
     slotName: "root",
 })(

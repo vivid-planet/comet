@@ -2,7 +2,7 @@ import { FormControl, FormHelperText, FormLabel, formLabelClasses, inputBaseClas
 import { ComponentsOverrides, css } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type FieldContainerProps = ThemedComponentBaseProps<{
@@ -49,7 +49,7 @@ type OwnerState = Pick<FieldContainerProps, "fullWidth" | "disabled" | "required
     hasWarning: boolean;
 };
 
-const Root = createSlot(FormControl)<FieldContainerClassKey, OwnerState>({
+const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState>({
     componentName: "FormFieldContainer",
     slotName: "root",
     classesResolver(ownerState) {
@@ -116,7 +116,7 @@ const Root = createSlot(FormControl)<FieldContainerClassKey, OwnerState>({
     `,
 );
 
-const Label = createSlot(FormLabel)<FieldContainerClassKey, OwnerState>({
+const Label = createComponentSlot(FormLabel)<FieldContainerClassKey, OwnerState>({
     componentName: "FormFieldContainer",
     slotName: "label",
 })(
@@ -150,7 +150,7 @@ const Label = createSlot(FormLabel)<FieldContainerClassKey, OwnerState>({
     `,
 );
 
-const InputContainer = createSlot("div")<FieldContainerClassKey, OwnerState>({
+const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerState>({
     componentName: "FormFieldContainer",
     slotName: "inputContainer",
 })(
@@ -163,12 +163,12 @@ const InputContainer = createSlot("div")<FieldContainerClassKey, OwnerState>({
     `,
 );
 
-const Error = createSlot(FormHelperText)<FieldContainerClassKey>({
+const Error = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     componentName: "FormFieldContainer",
     slotName: "error",
 })();
 
-const Warning = createSlot(FormHelperText)<FieldContainerClassKey>({
+const Warning = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     componentName: "FormFieldContainer",
     slotName: "warning",
 })(
@@ -177,7 +177,7 @@ const Warning = createSlot(FormHelperText)<FieldContainerClassKey>({
     `,
 );
 
-const HelperText = createSlot(FormHelperText)<FieldContainerClassKey>({
+const HelperText = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     componentName: "FormFieldContainer",
     slotName: "helperText",
 })(

@@ -1,11 +1,11 @@
-import { createSlot } from "@comet/admin";
+import { createComponentSlot } from "@comet/admin";
 import { css } from "@mui/material/styles";
 
 import getRteTheme from "../../utils/getRteTheme";
 
 export type RteToolbarClassKey = "root" | "slot";
 
-export const Root = createSlot("div")<RteToolbarClassKey>({
+export const Root = createComponentSlot("div")<RteToolbarClassKey>({
     componentName: "RteToolbar",
     slotName: "root",
 })(
@@ -24,7 +24,7 @@ export const Root = createSlot("div")<RteToolbarClassKey>({
         `,
 );
 
-export const Slot = createSlot("div")<RteToolbarClassKey>({
+export const Slot = createComponentSlot("div")<RteToolbarClassKey>({
     componentName: "RteToolbar",
     slotName: "slot",
 })(

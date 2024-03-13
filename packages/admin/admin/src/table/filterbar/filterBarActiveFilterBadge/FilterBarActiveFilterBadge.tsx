@@ -2,7 +2,7 @@ import { ComponentsOverrides, Typography } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../../../helpers/createSlot";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 
 /**
@@ -10,7 +10,7 @@ import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBasePr
  */
 export type FilterBarActiveFilterBadgeClassKey = "hasValueCount";
 
-const HasValueCount = createSlot("div")<FilterBarActiveFilterBadgeClassKey>({
+const HasValueCount = createComponentSlot("div")<FilterBarActiveFilterBadgeClassKey>({
     componentName: "FilterBarActiveFilterBadge",
     slotName: "hasValueCount",
 })(

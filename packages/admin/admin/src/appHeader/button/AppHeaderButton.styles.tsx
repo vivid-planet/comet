@@ -1,11 +1,11 @@
 import { ButtonBase, Typography } from "@mui/material";
 import { css } from "@mui/material/styles";
 
-import { createSlot } from "../../helpers/createSlot";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 
 export type AppHeaderButtonClassKey = "root" | "content" | "startIcon" | "endIcon" | "typography";
 
-export const Root = createSlot(ButtonBase)<AppHeaderButtonClassKey>({
+export const Root = createComponentSlot(ButtonBase)<AppHeaderButtonClassKey>({
     componentName: "AppHeaderButton",
     slotName: "root",
 })(css`
@@ -13,7 +13,7 @@ export const Root = createSlot(ButtonBase)<AppHeaderButtonClassKey>({
     border-left: 1px solid rgba(255, 255, 255, 0.2);
 `);
 
-export const Content = createSlot("div")<AppHeaderButtonClassKey>({
+export const Content = createComponentSlot("div")<AppHeaderButtonClassKey>({
     componentName: "AppHeaderButton",
     slotName: "content",
 })(
@@ -29,7 +29,7 @@ export const Content = createSlot("div")<AppHeaderButtonClassKey>({
     `,
 );
 
-export const StartIcon = createSlot("div")<AppHeaderButtonClassKey>({
+export const StartIcon = createComponentSlot("div")<AppHeaderButtonClassKey>({
     componentName: "AppHeaderButton",
     slotName: "startIcon",
 })(
@@ -43,7 +43,7 @@ export const StartIcon = createSlot("div")<AppHeaderButtonClassKey>({
     `,
 );
 
-export const EndIcon = createSlot("div")<AppHeaderButtonClassKey>({
+export const EndIcon = createComponentSlot("div")<AppHeaderButtonClassKey>({
     componentName: "AppHeaderButton",
     slotName: "endIcon",
 })(
@@ -57,7 +57,7 @@ export const EndIcon = createSlot("div")<AppHeaderButtonClassKey>({
     `,
 );
 
-export const Text = createSlot(Typography)<AppHeaderButtonClassKey>({
+export const Text = createComponentSlot(Typography)<AppHeaderButtonClassKey>({
     componentName: "AppHeaderButton",
     slotName: "typography",
 })() as typeof Typography;

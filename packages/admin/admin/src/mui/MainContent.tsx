@@ -1,7 +1,7 @@
 import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
 import * as React from "react";
 
-import { createSlot } from "../helpers/createSlot";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type MainContentClassKey = "root" | "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight";
@@ -10,7 +10,7 @@ type OwnerState = Pick<MainContentProps, "disablePaddingTop" | "disablePaddingBo
     topPosition: number;
 };
 
-const Root = createSlot("main")<MainContentClassKey, OwnerState>({
+const Root = createComponentSlot("main")<MainContentClassKey, OwnerState>({
     componentName: "MainContent",
     slotName: "root",
     classesResolver(ownerState) {

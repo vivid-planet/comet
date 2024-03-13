@@ -1,4 +1,4 @@
-import { createSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ButtonGroup, ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
 import * as React from "react";
 
@@ -34,12 +34,12 @@ function StyledLinkControls(inProps: RteLinkControlsProps) {
 
 export type RteLinkControlsClassKey = "root" | "item";
 
-const Root = createSlot(ButtonGroup)<RteLinkControlsClassKey>({
+const Root = createComponentSlot(ButtonGroup)<RteLinkControlsClassKey>({
     componentName: "RteLinkControls",
     slotName: "root",
 })();
 
-const Item = createSlot("div")<RteLinkControlsClassKey>({
+const Item = createComponentSlot("div")<RteLinkControlsClassKey>({
     componentName: "RteLinkControls",
     slotName: "item",
 })(css`

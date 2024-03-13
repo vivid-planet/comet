@@ -2,7 +2,7 @@ import { ComponentsOverrides, Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { createSlot } from "../../helpers/createSlot";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 export type AppHeaderFillSpaceClassKey = "root";
@@ -11,7 +11,7 @@ export type AppHeaderFillSpaceProps = ThemedComponentBaseProps<{
     root: "div";
 }>;
 
-const Root = createSlot("div")<AppHeaderFillSpaceClassKey>({
+const Root = createComponentSlot("div")<AppHeaderFillSpaceClassKey>({
     componentName: "AppHeaderFillSpace",
     slotName: "root",
 })(css`
