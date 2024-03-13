@@ -1,8 +1,10 @@
 import { EntityMetadata } from "@mikro-orm/core";
+import * as validator from "class-validator";
+import { Decorator } from "ts-morph";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
 import { buildNameVariants } from "./utils/build-name-variants";
-import { integerTypes } from "./utils/constants";
+import { classValidatorBaseImports, integerTypes } from "./utils/constants";
 import { generateImportsCode, Imports } from "./utils/generate-imports-code";
 import {
     findBlockImportPath,
@@ -37,12 +39,17 @@ function findReferenceTargetType(
     }
 }
 
+function isClassValidatorDecorator(decorator: Decorator): boolean {
+    return Object.keys(validator).includes(decorator.getName());
+}
+
 export async function generateCrudInput(
     generatorOptions: { targetDirectory: string },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata: EntityMetadata<any>,
     options: { nested: boolean; excludeFields: string[] } = { nested: false, excludeFields: [] },
 ): Promise<GeneratedFile[]> {
+    const classValidatorImports = classValidatorBaseImports;
     const generatedFiles: GeneratedFile[] = [];
 
     const props = metadata.props
@@ -59,6 +66,7 @@ export async function generateCrudInput(
     for (const prop of props) {
         let type = prop.type;
         const fieldName = prop.name;
+        const definedDecorators = morphTsProperty(prop.name, metadata).getDecorators();
         const decorators = [] as Array<string>;
         if (!prop.nullable) {
             decorators.push("@IsNotEmpty()");
@@ -310,6 +318,15 @@ export async function generateCrudInput(
             console.warn(`${prop.name}: unsupported type ${type}`);
             continue;
         }
+
+        definedDecorators
+            .filter(isClassValidatorDecorator)
+            .reverse()
+            .map((decorator) => {
+                decorators.includes(decorator.getText()) || decorators.unshift(decorator.getText());
+                classValidatorImports.includes(decorator.getName()) || classValidatorImports.push(decorator.getName());
+            });
+
         fieldsOut += `${decorators.join("\n")}
     ${fieldName}${prop.nullable ? "?" : ""}: ${type};
     
@@ -317,7 +334,7 @@ export async function generateCrudInput(
     }
     const inputOut = `import { Field, InputType, ID } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
+import { ${classValidatorImports.join(", ")} } from "class-validator";
 import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
