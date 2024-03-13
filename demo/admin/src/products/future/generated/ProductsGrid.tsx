@@ -152,6 +152,7 @@ export function ProductsGrid(): React.ReactElement {
                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                             <Edit color="primary" />
                         </IconButton>
+
                         <CrudContextMenu
                             copyData={() => {
                                 const row = params.row;

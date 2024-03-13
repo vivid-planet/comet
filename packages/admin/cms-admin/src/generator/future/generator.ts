@@ -50,9 +50,12 @@ export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
-    disableCopyPaste?: boolean;
-    readOnly?: boolean;
     columns: GridColumnConfig<T>[];
+    add?: boolean;
+    edit?: boolean;
+    delete?: boolean;
+    copyPaste?: boolean;
+    readOnly?: boolean;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

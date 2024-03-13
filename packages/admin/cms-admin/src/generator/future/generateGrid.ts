@@ -85,7 +85,12 @@ export function generateGrid(
     const hasDeleteMutation = !!findMutationType(`delete${gqlType}`, gqlIntrospection);
     const hasCreateMutation = !!createMutationType;
 
-    const allowCopyPaste = !config.disableCopyPaste && !config.readOnly && hasCreateMutation;
+    const allowCopyPaste = (typeof config.copyPaste === "undefined" || config.copyPaste === true) && !config.readOnly && hasCreateMutation;
+    const allowAdding = (typeof config.add === "undefined" || config.add === true) && !config.readOnly;
+    const allowEditing = (typeof config.edit === "undefined" || config.edit === true) && !config.readOnly;
+    const allowDeleting = (typeof config.delete === "undefined" || config.delete === true) && !config.readOnly && hasDeleteMutation;
+
+    const showActionsColumn = allowCopyPaste || allowEditing || allowDeleting;
 
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
     const hasFilter = !!filterArg;
@@ -294,7 +299,7 @@ export function generateGrid(
 
 
     ${
-        hasDeleteMutation && !config.readOnly
+        allowDeleting
             ? `const delete${gqlType}Mutation = gql\`
                 mutation Delete${gqlType}($id: ID!) {
                     delete${gqlType}(id: $id)
@@ -335,7 +340,7 @@ export function generateGrid(
                 }
                 <ToolbarFillSpace />
                 ${
-                    hasCreateMutation && !config.readOnly
+                    allowAdding
                         ? `<ToolbarActions>
                     <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
                         <FormattedMessage id="${instanceGqlType}.new${gqlType}" defaultMessage="New ${camelCaseToHumanReadable(gqlType)}" />
@@ -349,7 +354,7 @@ export function generateGrid(
 
 
     export function ${gqlTypePlural}Grid(): React.ReactElement {
-        ${config.readOnly ? "" : "const client = useApolloClient();"}
+        ${allowCopyPaste ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
@@ -391,7 +396,7 @@ export function generateGrid(
                 })
                 .join(",\n")},
                 ${
-                    !config.readOnly
+                    showActionsColumn
                         ? `{
                         field: "actions",
                         headerName: "",
@@ -402,51 +407,62 @@ export function generateGrid(
                         renderCell: (params) => {
                             return (
                                 <>
-                                    <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                                        <Edit color="primary" />
-                                    </IconButton>
-                                    <CrudContextMenu
-                                        ${
-                                            allowCopyPaste
-                                                ? `
-                                        copyData={() => {
-                                            const row = params.row;
-                                            return {
-                                                ${createMutationInputFields
-                                                    .map((field) => {
-                                                        if (rootBlocks[field.name]) {
-                                                            const blockName = rootBlocks[field.name].name;
-                                                            return `${field.name}: ${blockName}.state2Output(${blockName}.input2State(row.${field.name}))`;
-                                                        } else {
-                                                            return `${field.name}: row.${field.name}`;
-                                                        }
-                                                    })
-                                                    .join(",\n")}
-                                            };
-                                        }}
-                                        onPaste={async ({ input }) => {
-                                            await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
-                                                mutation: create${gqlType}Mutation,
-                                                variables: { ${hasScope ? `scope, ` : ""}input },
-                                            });
-                                        }}
-                                        `
-                                                : ""
-                                        }
-                                        ${
-                                            hasDeleteMutation
-                                                ? `
-                                        onDelete={async () => {
-                                            await client.mutate<GQLDelete${gqlType}Mutation, GQLDelete${gqlType}MutationVariables>({
-                                                mutation: delete${gqlType}Mutation,
-                                                variables: { id: params.row.id },
-                                            });
-                                        }}
-                                        `
-                                                : ""
-                                        }
-                                        refetchQueries={[${instanceGqlTypePlural}Query]}
-                                    />
+                                ${
+                                    allowEditing
+                                        ? `
+                                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
+                                            <Edit color="primary" />
+                                        </IconButton>`
+                                        : ""
+                                }
+                                ${
+                                    allowCopyPaste || allowDeleting
+                                        ? `
+                                        <CrudContextMenu
+                                            ${
+                                                allowCopyPaste
+                                                    ? `
+                                            copyData={() => {
+                                                const row = params.row;
+                                                return {
+                                                    ${createMutationInputFields
+                                                        .map((field) => {
+                                                            if (rootBlocks[field.name]) {
+                                                                const blockName = rootBlocks[field.name].name;
+                                                                return `${field.name}: ${blockName}.state2Output(${blockName}.input2State(row.${field.name}))`;
+                                                            } else {
+                                                                return `${field.name}: row.${field.name}`;
+                                                            }
+                                                        })
+                                                        .join(",\n")}
+                                                };
+                                            }}
+                                            onPaste={async ({ input }) => {
+                                                await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
+                                                    mutation: create${gqlType}Mutation,
+                                                    variables: { ${hasScope ? `scope, ` : ""}input },
+                                                });
+                                            }}
+                                            `
+                                                    : ""
+                                            }
+                                            ${
+                                                allowDeleting
+                                                    ? `
+                                            onDelete={async () => {
+                                                await client.mutate<GQLDelete${gqlType}Mutation, GQLDelete${gqlType}MutationVariables>({
+                                                    mutation: delete${gqlType}Mutation,
+                                                    variables: { id: params.row.id },
+                                                });
+                                            }}
+                                            `
+                                                    : ""
+                                            }
+                                            refetchQueries={[${instanceGqlTypePlural}Query]}
+                                        />
+                                    `
+                                        : ""
+                                }
                                 </>
                             );
                         },
