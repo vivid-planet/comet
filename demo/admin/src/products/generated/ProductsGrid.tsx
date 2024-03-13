@@ -40,13 +40,14 @@ const productsFragment = gql`
         id
         updatedAt
         title
-        visible
+        status
         slug
         description
         type
         price
         inStock
         soldCount
+        availableSince
         image
         createdAt
     }
@@ -112,7 +113,16 @@ export function ProductsGrid(): React.ReactElement {
             width: 150,
         },
         { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }), width: 150 },
-        { field: "visible", headerName: intl.formatMessage({ id: "product.visible", defaultMessage: "Visible" }), type: "boolean", width: 150 },
+        {
+            field: "status",
+            headerName: intl.formatMessage({ id: "product.status", defaultMessage: "Status" }),
+            type: "singleSelect",
+            valueOptions: [
+                { value: "Published", label: intl.formatMessage({ id: "product.status.published", defaultMessage: "Published" }) },
+                { value: "Unpublished", label: intl.formatMessage({ id: "product.status.unpublished", defaultMessage: "Unpublished" }) },
+            ],
+            width: 150,
+        },
         { field: "slug", headerName: intl.formatMessage({ id: "product.slug", defaultMessage: "Slug" }), width: 150 },
         { field: "description", headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }), width: 150 },
         {
@@ -129,6 +139,13 @@ export function ProductsGrid(): React.ReactElement {
         { field: "price", headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }), type: "number", width: 150 },
         { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }), type: "boolean", width: 150 },
         { field: "soldCount", headerName: intl.formatMessage({ id: "product.soldCount", defaultMessage: "Sold Count" }), type: "number", width: 150 },
+        {
+            field: "availableSince",
+            headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
+            type: "dateTime",
+            valueGetter: ({ value }) => value && new Date(value),
+            width: 150,
+        },
         {
             field: "image",
             headerName: intl.formatMessage({ id: "product.image", defaultMessage: "Image" }),
@@ -163,11 +180,13 @@ export function ProductsGrid(): React.ReactElement {
                                 const row = params.row;
                                 return {
                                     title: row.title,
+                                    status: row.status,
                                     slug: row.slug,
                                     description: row.description,
                                     type: row.type,
                                     price: row.price,
                                     inStock: row.inStock,
+                                    availableSince: row.availableSince,
                                     image: DamImageBlock.state2Output(DamImageBlock.input2State(row.image)),
                                 };
                             }}

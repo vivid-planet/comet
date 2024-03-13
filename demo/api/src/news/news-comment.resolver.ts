@@ -36,13 +36,8 @@ export class NewsCommentResolver {
     async updateNewsComment(
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => NewsCommentInput }) input: NewsCommentInput,
-        @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
     ): Promise<NewsComment> {
         const newsComment = await this.newsCommentRepository.findOneOrFail(id);
-        console.log(lastUpdatedAt);
-        if (lastUpdatedAt) {
-            //validateNotModified(newsComment, lastUpdatedAt);
-        }
         newsComment.assign({
             ...input,
         });

@@ -12,15 +12,10 @@ import { Device } from "../common/Device";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
 import { VisibilityToggle } from "../common/VisibilityToggle";
-import { buildPreviewUrl } from "./buildPreviewUrl";
 import { SitePrevewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 import { useSitePreviewIFrameBridge } from "./iframebridge/useSitePreviewIFrameBridge";
 import { OpenLinkDialog } from "./OpenLinkDialog";
 import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLinkWrapper } from "./SitePreview.sc";
-
-interface SitePreviewParams {
-    includeInvisibleBlocks: boolean;
-}
 
 //TODO v4 remove RouteComponentProps
 interface Props extends RouteComponentProps {
@@ -59,21 +54,11 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     const [showOnlyVisible, setShowOnlyVisible] = useSearchState("showOnlyVisible", (v) => !v || v === "true");
 
     const [linkToOpen, setLinkToOpen] = React.useState<ExternalLinkBlockData | undefined>(undefined);
-    const sitePreviewParams: SitePreviewParams = { includeInvisibleBlocks: !showOnlyVisible };
-    const formattedSitePreviewParams = JSON.stringify(sitePreviewParams);
 
     const { scope } = useContentScope();
     const siteConfig = useSiteConfig({ scope });
 
-    const [initialPageUrl, setInitialPageUrl] = React.useState(buildPreviewUrl(siteConfig.previewUrl, previewPath, formattedSitePreviewParams));
-
-    // update the initialPreviewUrl when previewParams changes
-    // the iframe is then force-rerendered with the new previewUrl
-    React.useEffect(() => {
-        // react-hooks/exhaustive-deps is disabled because the src-prop of iframe is uncontrolled
-        // the src-value is just the default value, the iframe keeps its own src-state (by clicking links inside the iframe)
-        setInitialPageUrl(buildPreviewUrl(siteConfig.previewUrl, previewPath, formattedSitePreviewParams));
-    }, [formattedSitePreviewParams]); // eslint-disable-line react-hooks/exhaustive-deps
+    const [initialPath, setInitialPath] = React.useState(previewPath); // prevents the iframe from reloading on every change
 
     const intl = useIntl();
 
@@ -81,17 +66,11 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     // we sync the location back to our admin-url, so we have it and can reload the page without loosing
     const handlePreviewLocationChange = React.useCallback(
         (message: SitePrevewIFrameLocationMessage) => {
-            const pathPrefix = new URL(siteConfig.previewUrl).pathname;
-            if (message.data.pathname.search(pathPrefix) === 0) {
-                // this is the original-pathname of the site, we extract it and keep it in "our" url as get-param
-                let normalizedPathname = message.data.pathname.substr(pathPrefix.length);
-                if (normalizedPathname == "") normalizedPathname = "/";
-                if (previewPath !== normalizedPathname) {
-                    setPreviewPath(normalizedPathname);
-                }
+            if (previewPath !== message.data.pathname) {
+                setPreviewPath(message.data.pathname);
             }
         },
-        [previewPath, setPreviewPath, siteConfig.previewUrl],
+        [previewPath, setPreviewPath],
     );
 
     const handleDeviceChange = (newDevice: Device) => {
@@ -101,6 +80,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     const handleShowOnlyVisibleChange = () => {
         const newShowOnlyVisible = !showOnlyVisible;
         setShowOnlyVisible(String(newShowOnlyVisible));
+        setInitialPath(previewPath);
     };
 
     const siteLink = `${siteConfig.url}${resolvePath ? resolvePath(previewPath, scope) : previewPath}`;
@@ -115,6 +95,14 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
                 break;
         }
     });
+
+    const initialPageUrl = `${siteConfig.sitePreviewApiUrl}?${new URLSearchParams({
+        scope: JSON.stringify(scope),
+        path: initialPath,
+        settings: JSON.stringify({
+            includeInvisible: showOnlyVisible ? false : true,
+        }),
+    }).toString()}`;
 
     return (
         <Root>

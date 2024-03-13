@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "admin-generator": "rimraf 'src/*/generated' && comet-admin-generator generate crud-generator-config.ts",
+        "admin-generator": "rimraf 'src/*/generated' && comet-admin-generator generate crud-generator-config.ts && comet-admin-generator future-generate",
         "build": "run-s intl:compile && run-p gql:types generate-block-types && cross-env BABEL_ENV=production webpack --config ./webpack.config.ts --env production --mode production --progress",
         "generate-block-types": "comet generate-block-types --inputs",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"npm run generate-block-types\"",
@@ -40,7 +40,6 @@
         "@mui/system": "^5.0.0",
         "@mui/x-data-grid": "^5.15.2",
         "@mui/x-data-grid-pro": "^5.15.2",
-        "axios": "^0.21.0",
         "change-case": "^5.2.0",
         "date-fns": "^2.0.0",
         "dnd-core": "^10.0.2",

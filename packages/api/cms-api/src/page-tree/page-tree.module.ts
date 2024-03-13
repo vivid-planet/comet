@@ -14,6 +14,7 @@ import { defaultReservedPaths, PAGE_TREE_CONFIG, PAGE_TREE_ENTITY, PAGE_TREE_REP
 import { PageTreeService } from "./page-tree.service";
 import { PageTreeNodeDocumentEntityScopeService } from "./page-tree-node-document-entity-scope.service";
 import { PageTreeReadApiService } from "./page-tree-read-api.service";
+import { SitePreviewResolver } from "./site-preview.resolver";
 import type { PageTreeNodeInterface, ScopeInterface } from "./types";
 import { PageExistsConstraint } from "./validators/page-exists.validator";
 
@@ -85,6 +86,7 @@ export class PageTreeModule {
                     inject: [PageTreeService],
                 },
                 documentSubscriber,
+                SitePreviewResolver,
                 PageTreeNodeDocumentEntityScopeService,
             ],
             exports: [PageTreeService, PageTreeReadApiService, AttachedDocumentLoaderService, PageTreeNodeDocumentEntityScopeService],

@@ -21,6 +21,7 @@ import {
     useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
+import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
@@ -110,7 +111,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             }
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.product?.updatedAt },
+                variables: { id, input: output },
             });
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
@@ -161,6 +162,18 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             label={<FormattedMessage id="product.title" defaultMessage="Title" />}
                         />
+                        <Field fullWidth name="status" label={<FormattedMessage id="product.status" defaultMessage="Status" />}>
+                            {(props) => (
+                                <FinalFormSelect {...props}>
+                                    <MenuItem value="Published">
+                                        <FormattedMessage id="product.status.published" defaultMessage="Published" />
+                                    </MenuItem>
+                                    <MenuItem value="Unpublished">
+                                        <FormattedMessage id="product.status.unpublished" defaultMessage="Unpublished" />
+                                    </MenuItem>
+                                </FinalFormSelect>
+                            )}
+                        </Field>
                         <Field
                             required
                             fullWidth
@@ -205,6 +218,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 />
                             )}
                         </Field>
+                        <Field
+                            fullWidth
+                            name="availableSince"
+                            component={FinalFormDatePicker}
+                            label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                        />
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>

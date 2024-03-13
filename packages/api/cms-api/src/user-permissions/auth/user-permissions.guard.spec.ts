@@ -47,7 +47,7 @@ describe("UserPermissionsGuard", () => {
                         id: "1",
                         name: "Admin",
                         email: "demo@comet-dxp.com",
-                        language: "en",
+                        locale: "en",
                         permissions: context.userPermissions,
                     } satisfies CurrentUser,
                     params: context.args,
