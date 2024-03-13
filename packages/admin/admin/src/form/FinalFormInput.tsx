@@ -22,7 +22,9 @@ export function FinalFormInput({
     disableContentTranslation,
     ...props
 }: FinalFormInputProps): React.ReactElement {
-    const { enabled, translate } = useContentTranslationService();
+    const type = props.type ?? input.type ?? "text";
+    const { enabled: translationEnabled, translate } = useContentTranslationService();
+    const isTranslatable = translationEnabled && !disableContentTranslation && type === "text";
 
     return (
         <InputBase
@@ -33,7 +35,7 @@ export function FinalFormInput({
                     {clearable && (
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
                     )}
-                    {enabled && !disableContentTranslation && (
+                    {isTranslatable && (
                         <Tooltip title={<FormattedMessage id="comet.translate" defaultMessage="Translate" />}>
                             <IconButton onClick={async () => input.onChange(await translate(input.value))}>
                                 <Translate />
