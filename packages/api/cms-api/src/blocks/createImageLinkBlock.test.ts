@@ -3,8 +3,8 @@ import { createImageLinkBlock } from "./createImageLinkBlock";
 
 describe("createImageLinkBlock", () => {
     it("should allow overriding the name", () => {
-        const MyCustomImageLinkBlock = createImageLinkBlock({ link: InternalLinkBlock }, "MyCustomImageLink");
+        expect(createImageLinkBlock({ link: InternalLinkBlock }).name).toEqual("ImageLink");
 
-        expect(MyCustomImageLinkBlock.name).toEqual("MyCustomImageLink");
+        expect(createImageLinkBlock({ link: InternalLinkBlock }, "MyCustomImageLink").name).toEqual("MyCustomImageLink");
     });
 });
