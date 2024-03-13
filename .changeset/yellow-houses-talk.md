@@ -82,5 +82,25 @@ Change the method of overriding the styling of Admin components
 -}
 ```
 
--   The required changes we made to the theming method of admin components may cause missing or broken styles when using `styleOverrides` in `createCometTheme()`.
+-   Class-keys originating from MUI components have been removed from Comet Admin components, causing certain class-names and `styleOverrides` to no longer be applied.
+    The components `root` class-key is not affected. Other class-keys will retain the class-names and `styleOverrides` from the underlying MUI component.
+    For example, in `ClearInputAdornment` (when used with `position="end"`) the class-name `CometAdminClearInputAdornment-positionEnd` and the `styleOverrides` for `CometAdminClearInputAdornment.positionEnd` will no longer be applied.
+    The component will retain the class-names `MuiInputAdornment-positionEnd`, `MuiInputAdornment-root`, and `CometAdminClearInputAdornment-root`.
+    Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
+
+    This affects the following components:
+
+    -   `AppHeader`
+    -   `AppHeaderMenuButton`
+    -   `ClearInputAdornment`
+    -   `Tooltip`
+    -   `CancelButton`
+    -   `DeleteButton`
+    -   `OkayButton`
+    -   `SaveButton`
+    -   `StackBackButton`
+    -   `DatePicker`
+    -   `DateRangePicker`
+    -   `TimePicker`
+
 -   For more details, see MUI's migration guide: https://mui.com/material-ui/migration/v5-style-changes/#mui-styles
