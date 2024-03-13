@@ -19,20 +19,22 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { GQLDamItemType } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
+import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
-import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { isFile } from "../helpers/isFile";
 import { isFolder } from "../helpers/isFolder";
 import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
 import DamContextMenu from "./DamContextMenu";
-import { useFileUpload } from "./fileUpload/useFileUpload";
+import { useDamFileUpload } from "./fileUpload/useDamFileUpload";
 import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
 import {
+    GQLDamFileTableFragment,
     GQLDamFolderQuery,
     GQLDamFolderQueryVariables,
+    GQLDamFolderTableFragment,
     GQLDamItemListPositionQuery,
     GQLDamItemListPositionQueryVariables,
     GQLDamItemsListQuery,
@@ -45,6 +47,7 @@ import { DamUploadFooter } from "./footer/UploadFooter";
 import { DamItemLabelColumn } from "./label/DamItemLabelColumn";
 import { useDamSelectionApi } from "./selection/DamSelectionContext";
 import { useDamSearchHighlighting } from "./useDamSearchHighlighting";
+
 export { damFolderQuery } from "./FolderDataGrid.gql";
 export { moveDamFilesMutation, moveDamFoldersMutation } from "./FolderDataGrid.gql";
 export {
@@ -84,6 +87,7 @@ const FolderDataGrid = ({
     const damSelectionActionsApi = useDamSelectionApi();
     const scope = useDamScope();
     const snackbarApi = useSnackbarApi();
+    const { importSources } = useDamConfig();
 
     const [redirectedToId, setRedirectedToId] = useStoredState<string | null>("FolderDataGrid-redirectedToId", null, window.sessionStorage);
 
@@ -135,12 +139,8 @@ const FolderDataGrid = ({
 
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
-    const fileUploadApi = useFileUpload({
+    const fileUploadApi = useDamFileUpload({
         acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
-        onAfterUpload: () => {
-            apolloClient.reFetchObservableQueries();
-            clearDamItemCache(apolloClient.cache);
-        },
     });
 
     React.useEffect(() => {
@@ -280,7 +280,7 @@ const FolderDataGrid = ({
             hideHoverStyles();
             hideUploadFooter();
 
-            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, currentFolderId);
+            await fileUploadApi.uploadFiles({ acceptedFiles, fileRejections }, { folderId: currentFolderId });
 
             // react-dropzone doesn't support folder drops natively
             // the only way to find out if an empty folder was dropped is if there are no rejected files and no accepted files
@@ -342,7 +342,7 @@ const FolderDataGrid = ({
         return "";
     };
 
-    const dataGridColumns: GridColumns = [
+    const dataGridColumns: GridColumns<GQLDamFileTableFragment | GQLDamFolderTableFragment> = [
         {
             field: "name",
             headerName: intl.formatMessage({
@@ -372,6 +372,22 @@ const FolderDataGrid = ({
                     />
                 );
             },
+            sortable: false,
+            hideSortIcons: true,
+            disableColumnMenu: true,
+        },
+        {
+            field: "importSourceType",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.importSourceType",
+                defaultMessage: "Source",
+            }),
+            renderCell: ({ row }) => {
+                if (isFile(row) && row.importSourceType && importSources?.[row.importSourceType]) {
+                    return importSources[row.importSourceType].label;
+                }
+            },
+            // TODO enable sorting/filtering in API
             sortable: false,
             hideSortIcons: true,
             disableColumnMenu: true,
@@ -444,7 +460,7 @@ const FolderDataGrid = ({
     ];
 
     return (
-        <div style={{ padding: "20px" }}>
+        <sc.FolderWrapper>
             <FolderHead
                 isSearching={isSearching}
                 numberItems={dataGridData?.damItemsList.totalCount ?? 0}
@@ -467,6 +483,7 @@ const FolderDataGrid = ({
                     selectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
                     onSelectionModelChange={handleSelectionModelChange}
                     autoHeight={true}
+                    initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                 />
             </sc.FolderOuterHoverHighlight>
             <DamSelectionFooter open={damSelectionActionsApi.selectionMap.size > 0} />
@@ -494,7 +511,7 @@ const FolderDataGrid = ({
                     closeMoveDialog();
                 }}
             />
-        </div>
+        </sc.FolderWrapper>
     );
 };
 

@@ -1,9 +1,11 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
+import { GraphQLResolveInfo } from "graphql";
 import { Observable } from "rxjs";
 
-import { ContentScopeService } from "../content-scope/content-scope.service";
+import { ContentScopeService } from "../user-permissions/content-scope.service";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { BuildsService } from "./builds.service";
 import { SKIP_BUILD_METADATA_KEY } from "./skip-build.decorator";
 
@@ -19,19 +21,53 @@ export class ChangesCheckerInterceptor implements NestInterceptor {
     async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
         if (context.getType().toString() === "graphql") {
             const gqlContext = GqlExecutionContext.create(context);
-            if (gqlContext.getInfo().operation.operation === "mutation") {
+            const { operation, parentType } = gqlContext.getInfo<GraphQLResolveInfo>();
+
+            if (parentType.name === "Mutation") {
                 const skipBuild =
                     this.reflector.get<string[]>(SKIP_BUILD_METADATA_KEY, context.getHandler()) ||
                     this.reflector.get<string[]>(SKIP_BUILD_METADATA_KEY, context.getClass());
 
                 if (!skipBuild) {
-                    const scope = await this.contentScopeService.inferScopeFromExecutionContext(context);
+                    let scopes: ContentScope[] | null;
+                    try {
+                        scopes = await this.contentScopeService.inferScopesFromExecutionContext(context);
+                    } catch (error) {
+                        // We might land here when an @AffectedEntity does not have a @ScopedEntity decorator
+                        // (this was formerly ignored but now throws an error because it's essential for the scope check)
+                        scopes = null;
+                    }
+                    if (scopes) {
+                        for (const scope of scopes) {
+                            if (process.env.NODE_ENV === "development" && this.changeAffectsAllScopes(scope)) {
+                                if (operation.name) {
+                                    console.warn(`Mutation "${operation.name.value}" affects all scopes. Are you sure this is correct?`);
+                                } else {
+                                    console.warn(`Unknown mutation affects all scopes. Are you sure this is correct?`);
+                                }
+                            }
 
-                    await this.buildsService.setChangesSinceLastBuild(scope);
+                            await this.buildsService.setChangesSinceLastBuild(scope);
+                        }
+                    } else {
+                        if (process.env.NODE_ENV === "development") {
+                            if (operation.name) {
+                                console.warn(`Mutation "${operation.name.value}" affects all scopes. Are you sure this is correct?`);
+                            } else {
+                                console.warn(`Unknown mutation affects all scopes. Are you sure this is correct?`);
+                            }
+                        }
+
+                        await this.buildsService.setChangesSinceLastBuild("all");
+                    }
                 }
             }
         }
 
         return next.handle();
+    }
+
+    private changeAffectsAllScopes(scope: ContentScope | undefined): boolean {
+        return !scope || Object.keys(scope).length === 0; // Caused by features with optional scoping, e.g. redirects
     }
 }

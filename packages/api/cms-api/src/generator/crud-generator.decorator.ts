@@ -1,5 +1,6 @@
 export interface CrudGeneratorOptions {
     targetDirectory: string;
+    requiredPermission?: string[] | string;
     create?: boolean;
     update?: boolean;
     delete?: boolean;
@@ -7,18 +8,20 @@ export interface CrudGeneratorOptions {
 
 export function CrudGenerator({
     targetDirectory,
+    requiredPermission,
     create = true,
     update = true,
     delete: deleteMutation = true,
 }: CrudGeneratorOptions): ClassDecorator {
     // eslint-disable-next-line @typescript-eslint/ban-types
     return function (target: Function) {
-        Reflect.defineMetadata(`data:crudGeneratorOptions`, { targetDirectory, create, update, delete: deleteMutation }, target);
+        Reflect.defineMetadata(`data:crudGeneratorOptions`, { targetDirectory, requiredPermission, create, update, delete: deleteMutation }, target);
     };
 }
 
 export interface CrudSingleGeneratorOptions {
     targetDirectory: string;
+    requiredPermission?: string[] | string;
 }
 
 export function CrudSingleGenerator(options: CrudSingleGeneratorOptions): ClassDecorator {
@@ -37,7 +40,7 @@ export interface CrudFieldOptions {
 }
 
 export function CrudField({
-    resolveField: output = true,
+    resolveField = true,
     search = true,
     filter = true,
     sort = true,
@@ -45,7 +48,7 @@ export function CrudField({
 }: CrudFieldOptions = {}): PropertyDecorator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (target: any, propertyKey: string | symbol) {
-        Reflect.defineMetadata(`data:crudField`, { output, search, filter, sort, input }, target.constructor, propertyKey);
+        Reflect.defineMetadata(`data:crudField`, { resolveField, search, filter, sort, input }, target.constructor, propertyKey);
     };
 }
 

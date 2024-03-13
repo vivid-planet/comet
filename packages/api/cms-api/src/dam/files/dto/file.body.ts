@@ -1,12 +1,20 @@
 import { Type } from "@nestjs/common";
-import { plainToInstance, Transform } from "class-transformer";
-import { IsOptional, IsString, ValidateNested } from "class-validator";
+import { plainToInstance, Transform, Type as ClassTransformerType } from "class-transformer";
+import { IsNotEmpty, IsOptional, IsString, ValidateIf, ValidateNested } from "class-validator";
 
+import { ImageCropAreaInput } from "../../images/dto/image-crop-area.input";
 import { DamScopeInterface } from "../../types";
+import { LicenseInput } from "./file.input";
 
 export interface UploadFileBodyInterface {
     scope: DamScopeInterface;
     folderId?: string;
+    title?: string;
+    altText?: string;
+    license?: LicenseInput;
+    imageCropArea?: ImageCropAreaInput;
+    importSourceId?: string;
+    importSourceType?: string;
 }
 
 export function createUploadFileBody({ Scope }: { Scope: Type<DamScopeInterface> }): Type<UploadFileBodyInterface> {
@@ -18,6 +26,36 @@ export function createUploadFileBody({ Scope }: { Scope: Type<DamScopeInterface>
         @IsOptional()
         @IsString()
         folderId?: string;
+
+        @IsOptional()
+        @IsString()
+        title?: string;
+
+        @IsOptional()
+        @IsString()
+        altText?: string;
+
+        @Transform(({ value }) => plainToInstance(LicenseInput, JSON.parse(value)))
+        @IsOptional()
+        @ClassTransformerType(() => LicenseInput)
+        @ValidateNested()
+        license?: LicenseInput;
+
+        @Transform(({ value }) => plainToInstance(ImageCropAreaInput, JSON.parse(value)))
+        @IsOptional()
+        @ClassTransformerType(() => ImageCropAreaInput)
+        @ValidateNested()
+        imageCropArea?: ImageCropAreaInput;
+
+        @IsString()
+        @IsNotEmpty()
+        @ValidateIf((input) => input.importSourceType !== undefined)
+        importSourceId?: string;
+
+        @IsString()
+        @IsNotEmpty()
+        @ValidateIf((input) => input.importSourceId !== undefined)
+        importSourceType?: string;
     }
 
     return UploadFileBody;

@@ -8,9 +8,5 @@
     "scripts": {
         "preserve": "envsubst < \"../build/index.html\" > \"/tmp/index.html\" && mv /tmp/index.html ../build/index.html",
         "serve": "node server.js"
-    },
-    "engines": {
-        "node": "18",
-        "npm": "9"
     }
 }

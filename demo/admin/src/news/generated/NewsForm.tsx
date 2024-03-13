@@ -9,6 +9,7 @@ import {
     FinalFormSaveSplitButton,
     FinalFormSelect,
     FinalFormSubmitEvent,
+    Loading,
     MainContent,
     Toolbar,
     ToolbarActions,
@@ -23,7 +24,7 @@ import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { CircularProgress, IconButton, MenuItem } from "@mui/material";
+import { IconButton, MenuItem } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -118,12 +119,12 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                 variables: { id, input: output, lastUpdatedAt: data?.news?.updatedAt },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<GQLCreateNewsMutation, GQLCreateNewsMutationVariables>({
+            const { data: mutationResponse } = await client.mutate<GQLCreateNewsMutation, GQLCreateNewsMutationVariables>({
                 mutation: createNewsMutation,
                 variables: { scope, input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createNews.id;
+                const id = mutationResponse?.createNews.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage("edit", id);
@@ -136,19 +137,11 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
     if (error) throw error;
 
     if (loading) {
-        return <CircularProgress />;
+        return <Loading behavior="fillPageHeight" />;
     }
 
     return (
-        <FinalForm<FormValues>
-            apiRef={formApiRef}
-            onSubmit={handleSubmit}
-            mode={mode}
-            initialValues={initialValues}
-            onAfterSubmit={(values, form) => {
-                //don't go back automatically
-            }}
-        >
+        <FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues}>
             {({ values }) => (
                 <EditPageLayout>
                     {saveConflict.dialogs}
@@ -163,7 +156,7 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <FinalFormSaveSplitButton />
+                            <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>

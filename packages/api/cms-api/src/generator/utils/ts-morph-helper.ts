@@ -1,14 +1,12 @@
 import { EntityMetadata } from "@mikro-orm/core";
 import * as path from "path";
-import { ClassDeclaration, ModuleKind, Project } from "ts-morph";
+import { ClassDeclaration, Project } from "ts-morph";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 const project = new Project({
-    compilerOptions: {
-        strictNullChecks: true,
-        module: ModuleKind.Node16,
-    },
+    tsConfigFilePath: "tsconfig.json",
+    skipAddingFilesFromTsConfig: true,
 });
 function morphTsSource(metadata: EntityMetadata<any>) {
     let tsSource = project.getSourceFile(metadata.path);
@@ -61,7 +59,11 @@ function findImportPath(importName: string, generatorOptions: { targetDirectory:
 
 export function findEnumName(propertyName: string, metadata: EntityMetadata<any>): string {
     const tsProp = morphTsProperty(propertyName, metadata);
-    return tsProp.getType().getText(tsProp);
+    return tsProp
+        .getType()
+        .getText(tsProp)
+        .replace(/ ?\| ?undefined$/, "")
+        .replace(/\[\]$/, "");
 }
 
 export function findEnumImportPath(enumName: string, generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): string {

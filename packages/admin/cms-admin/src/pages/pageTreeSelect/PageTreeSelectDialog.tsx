@@ -23,6 +23,7 @@ import { PageVisibilityIcon } from "../pageTree/PageVisibilityIcon";
 import { PageTreePage, usePageTree } from "../pageTree/usePageTree";
 import { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
 import * as sc from "./PageTreeSelectDialog.sc";
+
 export { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
 
 export const selectedPageFragment = gql`
@@ -96,7 +97,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     });
 
     useFocusAwarePolling({
-        pollInterval: process.env.NODE_ENV === "development" ? undefined : 10000,
+        pollInterval: 10000,
         skip: !open,
         refetch,
         startPolling,
@@ -222,7 +223,13 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
             </Toolbar>
             <DialogContent ref={refDialogContent}>
                 <PageTreeContext.Provider
-                    value={{ allCategories: pageTreeCategories, documentTypes: pageTreeDocumentTypes, tree, query: pagesQuery }}
+                    value={{
+                        allCategories: pageTreeCategories,
+                        currentCategory: category,
+                        documentTypes: pageTreeDocumentTypes,
+                        tree,
+                        query: pagesQuery,
+                    }}
                 >
                     <List
                         ref={refList}

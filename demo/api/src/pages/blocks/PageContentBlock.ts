@@ -9,8 +9,10 @@ import { ColumnsBlock } from "./columns.block";
 import { FullWidthImageBlock } from "./full-width-image.block";
 import { HeadlineBlock } from "./headline.block";
 import { MediaBlock } from "./media.block";
+import { TeaserBlock } from "./teaser.block";
 import { TextImageBlock } from "./TextImageBlock";
 import { TwoListsBlock } from "./two-lists.block";
+import { VideoBlock } from "./video.block";
 
 const supportedBlocks = {
     space: SpaceBlock,
@@ -20,12 +22,14 @@ const supportedBlocks = {
     textImage: TextImageBlock,
     damVideo: DamVideoBlock,
     youTubeVideo: YouTubeVideoBlock,
+    video: VideoBlock,
     linkList: LinkListBlock,
     fullWidthImage: FullWidthImageBlock,
     columns: ColumnsBlock,
     anchor: AnchorBlock,
     twoLists: TwoListsBlock,
     media: MediaBlock,
+    teaser: TeaserBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {

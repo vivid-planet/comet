@@ -78,9 +78,9 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
         @Field(() => [ID])
         mpath: string[];
 
-        @Property({ columnType: "boolean", default: false })
+        @Property({ columnType: "boolean" })
         @Field()
-        archived: boolean;
+        archived: boolean = false;
 
         @Property({ columnType: "boolean" })
         @Field()

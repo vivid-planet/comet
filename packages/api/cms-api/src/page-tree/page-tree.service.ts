@@ -18,6 +18,7 @@ import {
     PageTreeNodeVisibility as Visibility,
     ScopeInterface,
 } from "./types";
+
 export { PageTreeReadApi } from "./page-tree-read-api";
 
 @Injectable()
@@ -89,6 +90,10 @@ export class PageTreeService {
 
         const existingNode = await readApi.getNodeOrFail(id);
         if (!existingNode) throw new Error("Can't find page-tree-node with id");
+
+        if (existingNode.slug === "home" && input.slug !== "home") {
+            throw new Error(`Slug of page "home" cannot be changed`);
+        }
 
         if (input.createAutomaticRedirectsOnSlugChange && existingNode.slug != input.slug) {
             await this.redirectsService.createAutomaticRedirects(existingNode);
@@ -228,6 +233,10 @@ export class PageTreeService {
 
         const node = await pageTreeReadApi.getNodeOrFail(id);
 
+        if (node.slug === "home" && slug !== "home") {
+            throw new Error(`Slug of page "home" cannot be changed`);
+        }
+
         const requestedPath = await this.pathForParentAndSlug(node.parentId, slug);
         const nodeWithSamePath = await this.nodeWithSamePath(requestedPath, node.scope);
         if (nodeWithSamePath && nodeWithSamePath.id !== node.id) {
@@ -283,7 +292,8 @@ export class PageTreeService {
             if (attachedDocument.id) {
                 try {
                     const repository = this.em.getRepository(attachedDocument.type);
-                    await repository.removeAndFlush(attachedDocument);
+                    const document = await repository.findOneOrFail(attachedDocument.documentId);
+                    await repository.removeAndFlush(document);
                     await this.attachedDocumentsRepository.removeAndFlush(attachedDocument);
                 } catch {
                     throw new Error(`documentType ${attachedDocument.type} and documentId ${attachedDocument.id} cannot resolve`);

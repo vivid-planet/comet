@@ -1,40 +1,29 @@
 import {
-    OffsetBasedPaginationArgs,
+    AffectedEntity,
     PageTreeNodeInterface,
     PageTreeNodeVisibility,
     PageTreeService,
-    SortArgs,
-    SubjectEntity,
+    RequiredPermission,
     validateNotModified,
 } from "@comet/cms-api";
-import { FindOptions } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { UnauthorizedException } from "@nestjs/common";
-import { Args, ArgsType, ID, IntersectionType, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 
 import { PageInput } from "./dto/page.input";
-import { PaginatedPages } from "./dto/paginated-pages";
 import { Page } from "./entities/page.entity";
 
-@ArgsType()
-export class PagesArgs extends IntersectionType(OffsetBasedPaginationArgs, SortArgs) {}
-
 @Resolver(() => Page)
+@RequiredPermission(["pageTree"])
 export class PagesResolver {
     constructor(@InjectRepository(Page) private readonly repository: EntityRepository<Page>, private readonly pageTreeService: PageTreeService) {}
 
-    // TODO add scope argument (who uses this anyway? probably dashboard)
-    @Query(() => PaginatedPages)
-    async pages(@Args() { offset, limit, sortColumnName, sortDirection }: PagesArgs): Promise<PaginatedPages> {
-        const options: FindOptions<Page> = { offset, limit };
-        if (sortColumnName) {
-            options.orderBy = { [sortColumnName]: sortDirection };
-        }
-        const [pages, totalCount] = await this.repository.findAndCount({}, options);
-
-        return new PaginatedPages(pages, totalCount);
+    @Query(() => Page)
+    @AffectedEntity(Page)
+    async page(@Args("id", { type: () => ID }) id: string): Promise<Page> {
+        return this.repository.findOneOrFail({ id });
     }
 
     @ResolveField(() => PageTreeNode, { nullable: true })
@@ -43,7 +32,7 @@ export class PagesResolver {
     }
 
     @Mutation(() => Page)
-    @SubjectEntity(Page, { pageTreeNodeIdArg: "attachedPageTreeNodeId" })
+    @AffectedEntity(Page, { pageTreeNodeIdArg: "attachedPageTreeNodeId" })
     async savePage(
         @Args("pageId", { type: () => ID }) pageId: string,
         @Args("input", { type: () => PageInput }) input: PageInput,

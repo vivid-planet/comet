@@ -1,4 +1,13 @@
-import { StackPage, StackPageTitle, StackSwitch, StackSwitchApiContext, UndoSnackbar, useSnackbarApi } from "@comet/admin";
+import {
+    RowActionsItem,
+    RowActionsMenu,
+    StackPage,
+    StackPageTitle,
+    StackSwitch,
+    StackSwitchApiContext,
+    UndoSnackbar,
+    useSnackbarApi,
+} from "@comet/admin";
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
 import { Checkbox, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -21,7 +30,14 @@ import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDepende
 import { BlockDependency, BlockInterface, BlockState, DispatchSetStateAction, PreviewContent } from "../types";
 import { resolveNewState } from "../utils";
 
-interface BlocksBlockItem<T extends BlockInterface = BlockInterface> {
+// Using {} instead of Record<string, never> because never and unknown are incompatible.
+// eslint-disable-next-line @typescript-eslint/ban-types
+type DefaultAdditionalItemFields = {};
+
+type BlocksBlockItem<
+    T extends BlockInterface = BlockInterface,
+    AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields,
+> = {
     [key: string]: unknown;
     key: string;
     type: string;
@@ -29,63 +45,76 @@ interface BlocksBlockItem<T extends BlockInterface = BlockInterface> {
     selected: boolean;
     props: BlockState<T>;
     slideIn: boolean;
+} & AdditionalItemFields;
+
+type RemovedBlocksBlockItem<
+    T extends BlockInterface = BlockInterface,
+    AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields,
+> = BlocksBlockItem<T, AdditionalItemFields> & { removedAt: number };
+
+export interface BlocksBlockState<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields> {
+    blocks: BlocksBlockItem<BlockInterface, AdditionalItemFields>[];
 }
 
-type RemovedBlocksBlockItem = BlocksBlockItem & { removedAt: number };
-
-export interface BlocksBlockState {
-    blocks: BlocksBlockItem[];
+export interface BlocksBlockFragment<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields> {
+    blocks: Array<
+        {
+            [key: string]: unknown;
+            key: string;
+            type: string;
+            visible: boolean;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            props: any;
+        } & AdditionalItemFields
+    >;
 }
 
-export interface BlocksBlockFragment {
-    blocks: {
-        [key: string]: unknown;
-        key: string;
-        type: string;
-        visible: boolean;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        props: any;
-    }[];
-}
-
-export interface BlocksBlockOutput {
-    blocks: {
-        [key: string]: unknown;
-        key: string;
-        type: string;
-        visible: boolean;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        props: any;
-    }[];
+export interface BlocksBlockOutput<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields> {
+    blocks: Array<
+        {
+            [key: string]: unknown;
+            key: string;
+            type: string;
+            visible: boolean;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            props: any;
+        } & AdditionalItemFields
+    >;
 }
 
 type BlockType = string;
 
-interface AdditionalItemField<Value = unknown> {
+interface BlocksBlockAdditionalItemField<Value = unknown> {
     defaultValue: Value;
 }
 
-interface CreateBlocksBlockOptions {
+interface CreateBlocksBlockOptions<AdditionalItemFields extends Record<string, unknown>> {
     name: string;
     displayName?: React.ReactNode;
     supportedBlocks: Record<BlockType, BlockInterface>;
-    additionalItemFields?: Record<string, AdditionalItemField>;
+    additionalItemFields?: {
+        [Key in keyof AdditionalItemFields]: BlocksBlockAdditionalItemField<AdditionalItemFields[Key]>;
+    };
     AdditionalItemContextMenuItems?: React.FunctionComponent<{
-        item: BlocksBlockItem;
-        onChange: (item: BlocksBlockItem) => void;
+        item: BlocksBlockItem<BlockInterface, AdditionalItemFields>;
+        onChange: (item: BlocksBlockItem<BlockInterface, AdditionalItemFields>) => void;
         onMenuClose: () => void;
     }>;
-    AdditionalItemContent?: React.FunctionComponent<{ item: BlocksBlockItem }>;
+    AdditionalItemContent?: React.FunctionComponent<{ item: BlocksBlockItem<BlockInterface, AdditionalItemFields> }>;
 }
 
-export function createBlocksBlock({
+export function createBlocksBlock<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>({
     supportedBlocks,
     name,
     displayName = <FormattedMessage id="comet.blocks.blocks.name" defaultMessage="Blocks" />,
-    additionalItemFields = {},
+    additionalItemFields,
     AdditionalItemContextMenuItems,
     AdditionalItemContent,
-}: CreateBlocksBlockOptions): BlockInterface<BlocksBlockFragment, BlocksBlockState, BlocksBlockOutput> {
+}: CreateBlocksBlockOptions<AdditionalItemFields>): BlockInterface<
+    BlocksBlockFragment<AdditionalItemFields>,
+    BlocksBlockState<AdditionalItemFields>,
+    BlocksBlockOutput<AdditionalItemFields>
+> {
     if (Object.keys(supportedBlocks).length === 0) {
         throw new Error("Blocks block with no supported block is not allowed. Please specify at least two supported blocks.");
     }
@@ -102,7 +131,11 @@ export function createBlocksBlock({
         return Object.entries(supportedBlocks).find(([, block]) => block.name === targetBlock.name)?.[0] ?? null;
     }
 
-    const BlocksBlock: BlockInterface<BlocksBlockFragment, BlocksBlockState, BlocksBlockOutput> = {
+    const BlocksBlock: BlockInterface<
+        BlocksBlockFragment<AdditionalItemFields>,
+        BlocksBlockState<AdditionalItemFields>,
+        BlocksBlockOutput<AdditionalItemFields>
+    > = {
         ...createBlockSkeleton(),
 
         name,
@@ -112,21 +145,21 @@ export function createBlocksBlock({
         defaultValues: () => ({ blocks: [] }),
 
         input2State: (input) => {
-            const blocks: BlocksBlockItem[] = [];
+            const blocks: BlocksBlockItem<BlockInterface, AdditionalItemFields>[] = [];
 
-            for (const item of input.blocks) {
-                const block = blockForType(item.type);
+            for (const child of input.blocks) {
+                const block = blockForType(child.type);
 
                 if (!block) {
                     // eslint-disable-next-line no-console
-                    console.warn(`Unknown block type "${item.type}"`);
+                    console.warn(`Unknown block type "${child.type}"`);
                     continue;
                 }
 
                 blocks.push({
-                    ...item,
-                    props: block.input2State(item.props),
-                    ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: item[field] }), {}),
+                    ...child,
+                    props: block.input2State(child.props),
+                    ...Object.keys(additionalItemFields ?? {}).reduce((fields, field) => ({ ...fields, [field]: child[field] }), {}),
                     selected: false,
                     slideIn: false,
                 });
@@ -136,40 +169,45 @@ export function createBlocksBlock({
                 blocks,
             };
         },
-        state2Output: (s) => {
+
+        state2Output: (state) => {
             return {
-                blocks: s.blocks.map((c) => {
-                    const block = blockForType(c.type);
+                blocks: state.blocks.map((child) => {
+                    const block = blockForType(child.type);
                     if (!block) {
-                        throw new Error(`No Block found for type ${c.type}`); // for TS
+                        throw new Error(`No Block found for type ${child.type}`); // for TS
                     }
                     return {
-                        key: c.key,
-                        visible: c.visible,
-                        type: c.type,
-                        props: block.state2Output(c.props),
-                        ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
+                        key: child.key,
+                        visible: child.visible,
+                        type: child.type,
+                        props: block.state2Output(child.props),
+                        // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
+                        ...(Object.keys(additionalItemFields ?? {}).reduce(
+                            (fields, field) => ({ ...fields, [field]: child[field] }),
+                            {},
+                        ) as AdditionalItemFields),
                     };
                 }),
             };
         },
 
         output2State: async (output, context) => {
-            const state: BlocksBlockState = {
+            const state: BlocksBlockState<AdditionalItemFields> = {
                 blocks: [],
             };
 
-            for (const item of output.blocks) {
-                const block = blockForType(item.type);
+            for (const child of output.blocks) {
+                const block = blockForType(child.type);
 
                 if (!block) {
-                    throw new Error(`No Block found for type ${item.type}`);
+                    throw new Error(`No Block found for type ${child.type}`);
                 }
 
                 state.blocks.push({
                     slideIn: false,
-                    ...item,
-                    props: await block.output2State(item.props, context),
+                    ...child,
+                    props: await block.output2State(child.props, context),
                     selected: false,
                 });
             }
@@ -181,20 +219,24 @@ export function createBlocksBlock({
             return {
                 adminRoute: previewCtx.parentUrl,
                 blocks: state.blocks
-                    .filter((c) => (previewCtx.showVisibleOnly ? c.visible : true)) // depending on context show all blocks or only visible blocks
-                    .map((c) => {
-                        const blockAdminRoute = `${previewCtx.parentUrl}/${c.key}/blocks`;
-                        const block = blockForType(c.type);
+                    .filter((child) => (previewCtx.showVisibleOnly ? child.visible : true)) // depending on context show all blocks or only visible blocks
+                    .map((child) => {
+                        const blockAdminRoute = `${previewCtx.parentUrlSubRoute ?? previewCtx.parentUrl}/${child.key}/blocks`;
+                        const block = blockForType(child.type);
                         if (!block) {
-                            throw new Error(`No Block found for type ${c.type}`); // for TS
+                            throw new Error(`No Block found for type ${child.type}`); // for TS
                         }
                         return {
-                            key: c.key,
-                            visible: c.visible,
-                            type: c.type,
+                            key: child.key,
+                            visible: child.visible,
+                            type: child.type,
                             adminRoute: blockAdminRoute,
-                            props: block.createPreviewState(c.props, { ...previewCtx, parentUrl: blockAdminRoute }),
-                            ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
+                            props: block.createPreviewState(child.props, { ...previewCtx, parentUrl: blockAdminRoute }),
+                            // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
+                            ...(Object.keys(additionalItemFields ?? {}).reduce(
+                                (fields, field) => ({ ...fields, [field]: child[field] }),
+                                {},
+                            ) as AdditionalItemFields),
                         };
                     }),
                 adminMeta: { route: previewCtx.parentUrl },
@@ -233,15 +275,15 @@ export function createBlocksBlock({
         },
 
         replaceDependenciesInOutput: (output, replacements) => {
-            const newOutput: BlocksBlockOutput = { blocks: [] };
+            const newOutput: BlocksBlockOutput<AdditionalItemFields> = { blocks: [] };
 
-            for (const c of output.blocks) {
-                const block = blockForType(c.type);
+            for (const child of output.blocks) {
+                const block = blockForType(child.type);
                 if (!block) {
-                    throw new Error(`No Block found for type ${c.type}`);
+                    throw new Error(`No Block found for type ${child.type}`);
                 }
 
-                newOutput.blocks.push({ ...c, props: block.replaceDependenciesInOutput(c.props, replacements) });
+                newOutput.blocks.push({ ...child, props: block.replaceDependenciesInOutput(child.props, replacements) });
             }
 
             return newOutput;
@@ -279,7 +321,7 @@ export function createBlocksBlock({
             }, [state.blocks, updateState]);
 
             const handleUndoClick = React.useCallback(
-                (removedBlocks: RemovedBlocksBlockItem[] | undefined) => {
+                (removedBlocks: RemovedBlocksBlockItem<BlockInterface, AdditionalItemFields>[] | undefined) => {
                     if (!removedBlocks) {
                         return;
                     }
@@ -287,7 +329,9 @@ export function createBlocksBlock({
                     updateState((prevState) => {
                         const blocks = [...prevState.blocks];
                         removedBlocks?.forEach((removedBlock) => {
-                            const { removedAt, ...block } = removedBlock;
+                            const { removedAt } = removedBlock;
+                            const block: BlocksBlockItem<BlockInterface, AdditionalItemFields> = { ...removedBlock };
+                            delete block.removedAt;
                             blocks.splice(removedAt, 0, block);
                         });
 
@@ -362,14 +406,17 @@ export function createBlocksBlock({
                 if (!block) {
                     throw new Error(`No Block found for type ${type}`);
                 }
-                const newItem: BlocksBlockItem = {
+                const newItem: BlocksBlockItem<BlockInterface, AdditionalItemFields> = {
                     key,
                     type,
                     visible: true,
                     selected: false,
                     props: block.defaultValues(),
                     slideIn: true,
-                    ...Object.entries(additionalItemFields).reduce((fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }), {}),
+                    ...(Object.entries(additionalItemFields ?? {}).reduce(
+                        (fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }),
+                        {},
+                    ) as AdditionalItemFields),
                 };
 
                 const newBlocks = [...state.blocks];
@@ -416,7 +463,7 @@ export function createBlocksBlock({
                 const { content } = response;
 
                 updateState((prevState) => {
-                    const newBlocks: BlocksBlockItem[] = content.map((block) => {
+                    const newBlocks: BlocksBlockItem<BlockInterface, AdditionalItemFields>[] = content.map((block) => {
                         const type = typeForBlock(block);
 
                         if (!type) {
@@ -430,7 +477,8 @@ export function createBlocksBlock({
                             visible: block.visible,
                             props: block.state,
                             slideIn: true,
-                            ...block.additionalFields,
+                            // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
+                            ...(block.additionalFields as AdditionalItemFields),
                         };
                     });
 
@@ -491,7 +539,10 @@ export function createBlocksBlock({
                             name: blockInterface.name,
                             visible: block.visible,
                             state: block.props,
-                            additionalFields: Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: block[field] }), {}),
+                            additionalFields: Object.keys(additionalItemFields ?? {}).reduce(
+                                (fields, field) => ({ ...fields, [field]: block[field] }),
+                                {},
+                            ),
                         };
                     });
 
@@ -528,42 +579,46 @@ export function createBlocksBlock({
                                                             <div />
                                                         )}
                                                         <BlockListHeaderActionContainer>
-                                                            <IconButton
-                                                                onClick={() => {
-                                                                    handleToggleVisibilityOfAllSelectedBlocks(true);
-                                                                }}
-                                                                size="large"
-                                                                disabled={selectedCount === 0}
-                                                            >
-                                                                <Visible />
-                                                            </IconButton>
-                                                            <IconButton
-                                                                onClick={() => {
-                                                                    handleToggleVisibilityOfAllSelectedBlocks();
-                                                                }}
-                                                                size="large"
-                                                                disabled={selectedCount === 0}
-                                                            >
-                                                                <Invisible />
-                                                            </IconButton>
-                                                            <Separator />
-                                                            <IconButton
-                                                                onClick={handleDeleteAllSelectedBlocks}
-                                                                size="large"
-                                                                disabled={selectedCount === 0}
-                                                            >
-                                                                <Delete />
-                                                            </IconButton>
-                                                            <IconButton
-                                                                onClick={handleCopySelectedBlocks}
-                                                                size="large"
-                                                                disabled={selectedCount === 0}
-                                                            >
-                                                                <Copy />
-                                                            </IconButton>
-                                                            <IconButton onClick={() => pasteBlock(0)} size="large">
-                                                                <Paste />
-                                                            </IconButton>
+                                                            <RowActionsMenu>
+                                                                <RowActionsItem
+                                                                    icon={<Visible />}
+                                                                    disabled={selectedCount === 0}
+                                                                    onClick={() => handleToggleVisibilityOfAllSelectedBlocks(true)}
+                                                                >
+                                                                    <FormattedMessage
+                                                                        id="comet.blocks.list.action.visible"
+                                                                        defaultMessage="Make visible"
+                                                                    />
+                                                                </RowActionsItem>
+                                                                <RowActionsItem
+                                                                    icon={<Invisible />}
+                                                                    disabled={selectedCount === 0}
+                                                                    onClick={() => handleToggleVisibilityOfAllSelectedBlocks()}
+                                                                >
+                                                                    <FormattedMessage
+                                                                        id="comet.blocks.list.action.invisible"
+                                                                        defaultMessage="Make invisible"
+                                                                    />
+                                                                </RowActionsItem>
+                                                                <Separator />
+                                                                <RowActionsItem
+                                                                    icon={<Delete />}
+                                                                    disabled={selectedCount === 0}
+                                                                    onClick={handleDeleteAllSelectedBlocks}
+                                                                >
+                                                                    <FormattedMessage id="comet.blocks.list.action.delete" defaultMessage="Delete" />
+                                                                </RowActionsItem>
+                                                                <RowActionsItem
+                                                                    icon={<Copy />}
+                                                                    disabled={selectedCount === 0}
+                                                                    onClick={handleCopySelectedBlocks}
+                                                                >
+                                                                    <FormattedMessage id="comet.blocks.list.action.copy" defaultMessage="Copy" />
+                                                                </RowActionsItem>
+                                                                <RowActionsItem icon={<Paste />} onClick={() => pasteBlock(0)}>
+                                                                    <FormattedMessage id="comet.blocks.list.action.paste" defaultMessage="Paste" />
+                                                                </RowActionsItem>
+                                                            </RowActionsMenu>
                                                         </BlockListHeaderActionContainer>
                                                     </BlockListHeader>
                                                 </AdminComponentStickyHeader>
@@ -588,12 +643,13 @@ export function createBlocksBlock({
                                                                     onDeleteClick={() => {
                                                                         deleteBlocks([data.key]);
                                                                     }}
-                                                                    moveBlock={(dragIndex: number, hoverIndex: number) => {
-                                                                        const blocks = [...state.blocks];
-                                                                        const dragItem = state.blocks[dragIndex];
-                                                                        blocks[dragIndex] = state.blocks[hoverIndex];
-                                                                        blocks[hoverIndex] = dragItem;
-                                                                        updateState((prevState) => ({ ...prevState, blocks }));
+                                                                    moveBlock={(from, to) => {
+                                                                        updateState((prevState) => {
+                                                                            const blocks = [...prevState.blocks];
+                                                                            const blockToMove = blocks.splice(from, 1)[0];
+                                                                            blocks.splice(to, 0, blockToMove);
+                                                                            return { ...prevState, blocks };
+                                                                        });
                                                                     }}
                                                                     visibilityButton={
                                                                         <IconButton onClick={() => toggleVisible(data.key)} size="small">
@@ -612,7 +668,7 @@ export function createBlocksBlock({
                                                                                 name: block.name,
                                                                                 visible: data.visible,
                                                                                 state: data.props,
-                                                                                additionalFields: Object.keys(additionalItemFields).reduce(
+                                                                                additionalFields: Object.keys(additionalItemFields ?? {}).reduce(
                                                                                     (fields, field) => ({ ...fields, [field]: data[field] }),
                                                                                     {},
                                                                                 ),
@@ -758,6 +814,7 @@ const BlockListHeader = styled("div")`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: ${({ theme }) => theme.spacing(0, 1)};
 `;
 
 const BlockListHeaderActionContainer = styled("div")`
@@ -786,4 +843,6 @@ const Separator = styled("div")`
     background-color: ${(props) => props.theme.palette.grey["100"]};
     height: 22px;
     width: 1px;
+    margin-left: ${({ theme }) => theme.spacing(1)};
+    margin-right: ${({ theme }) => theme.spacing(1)};
 `;

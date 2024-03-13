@@ -17,15 +17,13 @@ import { FormattedMessage } from "react-intl";
 import { RichTextBlockData, RichTextBlockInput } from "../blocks.generated";
 import { createCmsLinkToolbarButton } from "./rte/extension/CmsLink/createCmsLinkToolbarButton";
 import { Decorator as CmsLinkDecorator } from "./rte/extension/CmsLink/Decorator";
-import { Decorator as SoftHyphenDecorator } from "./rte/extension/SoftHyphen/Decorator";
-import { ToolbarButton as SoftHyphenToolbarButton } from "./rte/extension/SoftHyphen/ToolbarButton";
 
 export interface RichTextBlockState {
     editorState: EditorState;
 }
 
 const [, { createEmptyState, createStateFromRawContent, convertStateToRawContent }] = makeRteApi<RawDraftContentState>({
-    decorators: [CmsLinkDecorator, SoftHyphenDecorator],
+    decorators: [CmsLinkDecorator],
     // @TODO: implement a compound decorator in rte
     // like https://jsfiddle.net/paulyoung85/2unzgt68/
     // https://github.com/facebook/draft-js/issues/542#issuecomment-275996606
@@ -119,6 +117,8 @@ export const createRichTextBlock = (
             "history",
             "link",
             "links-remove",
+            "non-breaking-space",
+            "soft-hyphen",
         ],
         draftJsProps: {
             spellCheck: true,
@@ -126,7 +126,6 @@ export const createRichTextBlock = (
         standardBlockType: "unstyled",
 
         overwriteLinkButton: CmsLinkToolbarButton,
-        customToolbarButtons: [SoftHyphenToolbarButton],
     };
     const LinkBlock = options.link;
     const rteOptions = { ...defaultRteOptions, ...(options.rte ?? {}) };

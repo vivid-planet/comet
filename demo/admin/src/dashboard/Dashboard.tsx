@@ -1,5 +1,5 @@
 import { MainContent, Stack } from "@comet/admin";
-import { DashboardHeader } from "@comet/cms-admin";
+import { DashboardHeader, LatestBuildsDashboardWidget, useUserPermissionCheck } from "@comet/cms-admin";
 import { Grid } from "@mui/material";
 import { ContentScopeIndicator } from "@src/common/ContentScopeIndicator";
 import * as React from "react";
@@ -7,12 +7,11 @@ import { useIntl } from "react-intl";
 
 import backgroundImage1x from "./dashboard-image@1x.jpg";
 import backgroundImage2x from "./dashboard-image@2x.jpg";
-import { LatestBuilds } from "./LatestBuilds";
 import { LatestContentUpdates } from "./LatestContentUpdates";
 
 const Dashboard: React.FC = () => {
     const intl = useIntl();
-
+    const isAllowed = useUserPermissionCheck();
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "dashboard", defaultMessage: "Dashboard" })}>
             <DashboardHeader
@@ -24,8 +23,8 @@ const Dashboard: React.FC = () => {
             <MainContent>
                 <ContentScopeIndicator global />
                 <Grid container direction="row" spacing={4}>
-                    <LatestContentUpdates />
-                    {process.env.NODE_ENV !== "development" && <LatestBuilds />}
+                    {isAllowed("pageTree") && <LatestContentUpdates />}
+                    {process.env.NODE_ENV !== "development" && <LatestBuildsDashboardWidget />}
                 </Grid>
             </MainContent>
         </Stack>

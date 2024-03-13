@@ -99,11 +99,15 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     \`;
     
     `;
-    writeGenerated(`${targetDirectory}/${entityName}Form.gql.tsx`, outGql);
+    writeGenerated(`${targetDirectory}/${entityName}Form.gql.ts`, outGql);
 
     const numberFields = formFields.filter((field) => {
         const type = field.type.kind === "NON_NULL" ? field.type.ofType : field.type;
         return type.kind == "SCALAR" && (type.name == "Float" || type.name == "Int");
+    });
+    const booleanFields = formFields.filter((field) => {
+        const type = field.type.kind === "NON_NULL" ? field.type.ofType : field.type;
+        return type.kind == "SCALAR" && type.name == "Boolean";
     });
 
     const out = `
@@ -115,6 +119,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         FinalFormSaveSplitButton,
         FinalFormSelect,
         FinalFormSubmitEvent,
+        Loading,
         MainContent,
         Toolbar,
         ToolbarActions,
@@ -130,7 +135,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     import { FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
     import { EditPageLayout, resolveHasSaveConflict, useFormSaveConflict, queryUpdatedAt } from "@comet/cms-admin";
-    import { CircularProgress, IconButton, FormControlLabel, MenuItem } from "@mui/material";
+    import { IconButton, FormControlLabel, MenuItem } from "@mui/material";
     import { FormApi } from "final-form";
     import { filter } from "graphql-anywhere";
     import isEqual from "lodash.isequal";
@@ -163,7 +168,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     
     type FormValues = ${
         numberFields.length > 0
-            ? `Omit<GQL${entityName}FormFragment, ${numberFields.map((field) => `"${field.name}"`).join(", ")}>`
+            ? `Omit<GQL${entityName}FormFragment, ${numberFields.map((field) => `"${field.name}"`).join(" | ")}>`
             : `GQL${entityName}FormFragment`
     } ${
         numberFields.length > 0 || Object.keys(rootBlocks).length > 0
@@ -201,6 +206,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                       .join("\n")}
               }
             : {
+                ${booleanFields.map((field) => `${field.name}: false,`).join("\n")}
                 ${Object.keys(rootBlocks)
                     .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.defaultValues(),`)
                     .join("\n")}
@@ -240,12 +246,12 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                     variables: { id, input: output, lastUpdatedAt: data?.${instanceEntityName}?.updatedAt },
                 });
             } else {
-                const { data: mutationReponse } = await client.mutate<GQLCreate${entityName}Mutation, GQLCreate${entityName}MutationVariables>({
+                const { data: mutationResponse } = await client.mutate<GQLCreate${entityName}Mutation, GQLCreate${entityName}MutationVariables>({
                     mutation: create${entityName}Mutation,
                     variables: { ${hasScope ? `scope, ` : ""}input: output },
                 });
                 if (!event.navigatingBack) {
-                    const id = mutationReponse?.create${entityName}.id;
+                    const id = mutationResponse?.create${entityName}.id;
                     if (id) {
                         setTimeout(() => {
                             stackSwitchApi.activatePage("edit", id);
@@ -258,7 +264,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         if (error) throw error;
     
         if (loading) {
-            return <CircularProgress />;
+            return <Loading behavior="fillPageHeight" />;
         }
     
         return (
@@ -267,9 +273,6 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                 onSubmit={handleSubmit}
                 mode={mode}
                 initialValues={initialValues}
-                onAfterSubmit={(values, form) => {
-                    //don't go back automatically
-                }}
             >
                 {({ values }) => (
                     <EditPageLayout>
@@ -287,7 +290,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                             </ToolbarTitleItem>
                             <ToolbarFillSpace />
                             <ToolbarActions>
-                                <FinalFormSaveSplitButton />
+                                <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
                             </ToolbarActions>
                         </Toolbar>
                         <MainContent>

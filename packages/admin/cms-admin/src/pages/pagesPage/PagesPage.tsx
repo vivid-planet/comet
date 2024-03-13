@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import {
+    Alert,
     Loading,
     LocalErrorScopeApolloContext,
     MainContent,
@@ -14,7 +15,7 @@ import {
     useStoredState,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Box, Button, FormControlLabel, Paper, Switch } from "@mui/material";
+import { Box, Button, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
 import withStyles from "@mui/styles/withStyles";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -78,7 +79,7 @@ export function PagesPage({
     });
 
     useFocusAwarePolling({
-        pollInterval: process.env.NODE_ENV === "development" ? undefined : 10000,
+        pollInterval: 10000,
         refetch,
         startPolling,
         stopPolling,
@@ -156,7 +157,7 @@ export function PagesPage({
                                 </Button>
                             </ToolbarActions>
                         </Toolbar>
-                        <PageTreeContext.Provider value={{ allCategories, documentTypes, tree, query: pagesQuery }}>
+                        <PageTreeContext.Provider value={{ allCategories, currentCategory: category, documentTypes, tree, query: pagesQuery }}>
                             <PageTreeContent fullHeight>
                                 <ActionToolbarBox>
                                     <PagesPageActionToolbar
@@ -180,18 +181,27 @@ export function PagesPage({
                                     />
                                 </ActionToolbarBox>
                                 <FullHeightPaper variant="outlined">
-                                    {loading ? (
+                                    {loading && isInitialLoad.current ? (
                                         <Loading behavior="fillParent" />
                                     ) : (
-                                        <PageTree
-                                            ref={refPageTree}
-                                            pages={pagesToRenderWithMatches}
-                                            editDialogApi={editDialogApi}
-                                            toggleExpand={toggleExpand}
-                                            onSelectChanged={onSelectChanged}
-                                            category={category}
-                                            siteUrl={siteConfig.url}
-                                        />
+                                        <>
+                                            <Divider />
+                                            {loading && !isInitialLoad.current ? (
+                                                <LinearProgress />
+                                            ) : (
+                                                /* Placeholder to avoid content jumping when the loading bar appears */
+                                                <Box sx={{ backgroundColor: "white", width: "100%", height: 2 }} />
+                                            )}
+                                            <PageTree
+                                                ref={refPageTree}
+                                                pages={pagesToRenderWithMatches}
+                                                editDialogApi={editDialogApi}
+                                                toggleExpand={toggleExpand}
+                                                onSelectChanged={onSelectChanged}
+                                                category={category}
+                                                siteUrl={siteConfig.url}
+                                            />
+                                        </>
                                     )}
                                 </FullHeightPaper>
                             </PageTreeContent>
@@ -210,12 +220,40 @@ export function PagesPage({
                         {(selectedId) => {
                             const page = data?.pages.find((page) => page.id == selectedId);
 
+                            if (loading && isInitialLoad.current) {
+                                return <Loading behavior="fillPageHeight" />;
+                            }
+
                             if (!page) {
-                                return null;
+                                return (
+                                    <MainContent>
+                                        <Alert
+                                            title={<FormattedMessage id="comet.pages.pages.notFound" defaultMessage="Not found" />}
+                                            severity="error"
+                                        >
+                                            <FormattedMessage
+                                                id="comet.pages.pages.documentDoesntExist"
+                                                defaultMessage="This document doesn't exist"
+                                            />
+                                        </Alert>
+                                    </MainContent>
+                                );
                             }
 
                             if (page.visibility === "Archived") {
-                                return <>403, not allowed</>;
+                                return (
+                                    <MainContent>
+                                        <Alert
+                                            title={<FormattedMessage id="comet.pages.pages.archived" defaultMessage="Archived" />}
+                                            severity="error"
+                                        >
+                                            <FormattedMessage
+                                                id="comet.pages.pages.documentHasBeenArchived"
+                                                defaultMessage="This document has been archived and can no longer be edited"
+                                            />
+                                        </Alert>
+                                    </MainContent>
+                                );
                             }
 
                             const documentType = documentTypes[page.documentType];
