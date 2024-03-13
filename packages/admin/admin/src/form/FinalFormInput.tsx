@@ -24,7 +24,7 @@ export function FinalFormInput({
 }: FinalFormInputProps): React.ReactElement {
     const type = props.type ?? input.type ?? "text";
     const { enabled: translationEnabled, translate } = useContentTranslationService();
-    const isTranslatable = translationEnabled && !disableContentTranslation && type === "text";
+    const isTranslatable = translationEnabled && !disableContentTranslation && type === "text" && !props.disabled;
 
     return (
         <InputBase
