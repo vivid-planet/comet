@@ -3,7 +3,7 @@ import * as React from "react";
 
 export interface DependencyInterface {
     displayName: React.ReactNode;
-    resolveUrl: ({
+    resolveRoute: ({
         rootColumnName,
         jsonPath,
         apolloClient,
