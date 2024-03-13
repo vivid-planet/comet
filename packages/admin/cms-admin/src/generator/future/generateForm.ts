@@ -150,7 +150,7 @@ export function generateForm(
     import React from "react";
     import { FormattedMessage } from "react-intl";
     ${generateImportsCode(imports)}
-    
+
     import {
         create${gqlType}Mutation,
         ${instanceGqlType}FormFragment,
@@ -184,7 +184,7 @@ export function generateForm(
     interface FormProps {
         id?: string;
     }
-    
+
     export function ${exportName}({ id }: FormProps): React.ReactElement {
         const stackApi = useStackApi();
         const client = useApolloClient();
@@ -192,14 +192,14 @@ export function generateForm(
         const formApiRef = useFormApiRef<FormValues>();
         const stackSwitchApi = useStackSwitchApi();
         ${requiresScope ? `const { scope } = useContentScope()` : ""};
-    
+
         const { data, error, loading, refetch } = useQuery<GQL${gqlType}Query, GQL${gqlType}QueryVariables>(
             ${instanceGqlType}Query,
             id ? { variables: { id${queryScopeParam ? `, scope` : ""} } } : { skip: true },
         );
-    
+
         const initialValues = ${generateInitialValuesValue({ config, fragmentName, rootBlocks, instanceGqlType })};
-    
+
         const saveConflict = useFormSaveConflict({
             checkConflict: async () => {
                 const updatedAt = await queryUpdatedAt(client, "${instanceGqlType}", id);
@@ -210,7 +210,7 @@ export function generateForm(
                 await refetch();
             },
         });
-    
+
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
             const output = ${generateOutputObject({ rootBlocks, config })};
@@ -235,13 +235,13 @@ export function generateForm(
                 }
             }
         };
-    
+
         if (error) throw error;
-    
+
         if (loading) {
             return <Loading behavior="fillPageHeight" />;
         }
-    
+
         return (
             <FinalForm<FormValues>
                 apiRef={formApiRef}

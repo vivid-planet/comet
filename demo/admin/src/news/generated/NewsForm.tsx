@@ -5,6 +5,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
     FinalForm,
+    FinalFormCheckbox,
     FinalFormInput,
     FinalFormSaveSplitButton,
     FinalFormSelect,
@@ -24,7 +25,7 @@ import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { IconButton, MenuItem } from "@mui/material";
+import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -81,6 +82,7 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                       content: rootBlocks.content.input2State(data.news.content),
                   }
                 : {
+                      visible: false,
                       image: rootBlocks.image.defaultValues(),
                       content: rootBlocks.content.defaultValues(),
                   },
@@ -174,6 +176,18 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             label={<FormattedMessage id="news.title" defaultMessage="Title" />}
                         />
+                        <Field fullWidth name="status" label={<FormattedMessage id="news.status" defaultMessage="Status" />}>
+                            {(props) => (
+                                <FinalFormSelect {...props}>
+                                    <MenuItem value="Active">
+                                        <FormattedMessage id="news.status.active" defaultMessage="Active" />
+                                    </MenuItem>
+                                    <MenuItem value="Deleted">
+                                        <FormattedMessage id="news.status.deleted" defaultMessage="Deleted" />
+                                    </MenuItem>
+                                </FinalFormSelect>
+                            )}
+                        </Field>
                         <Field
                             required
                             fullWidth
@@ -194,6 +208,14 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                                         <FormattedMessage id="news.category.awards" defaultMessage="Awards" />
                                     </MenuItem>
                                 </FinalFormSelect>
+                            )}
+                        </Field>
+                        <Field name="visible" label="" type="checkbox" fullWidth>
+                            {(props) => (
+                                <FormControlLabel
+                                    label={<FormattedMessage id="news.visible" defaultMessage="Visible" />}
+                                    control={<FinalFormCheckbox {...props} />}
+                                />
                             )}
                         </Field>
                         <Field name="image" isEqual={isEqual}>

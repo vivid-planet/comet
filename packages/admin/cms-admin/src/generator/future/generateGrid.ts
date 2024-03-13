@@ -111,6 +111,13 @@ export function generateGrid(
     const hasDeleteMutation = !!findMutationType(`delete${gqlType}`, gqlIntrospection);
     const hasCreateMutation = !!createMutationType;
 
+    const allowCopyPaste = (typeof config.copyPaste === "undefined" || config.copyPaste === true) && !config.readOnly && hasCreateMutation;
+    const allowAdding = (typeof config.add === "undefined" || config.add === true) && !config.readOnly;
+    const allowEditing = (typeof config.edit === "undefined" || config.edit === true) && !config.readOnly;
+    const allowDeleting = (typeof config.delete === "undefined" || config.delete === true) && !config.readOnly && hasDeleteMutation;
+
+    const showActionsColumn = allowCopyPaste || allowEditing || allowDeleting;
+
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
     const hasFilter = !!filterArg;
     let filterFields: string[] = [];
@@ -287,7 +294,7 @@ export function generateGrid(
         GQLCreate${gqlType}Mutation,
         GQLCreate${gqlType}MutationVariables,
         GQLDelete${gqlType}Mutation,
-        GQLDelete${gqlType}MutationVariables 
+        GQLDelete${gqlType}MutationVariables
     } from "./${gqlTypePlural}Grid.generated";
     import { filter } from "graphql-anywhere";
     import * as React from "react";
@@ -295,14 +302,14 @@ export function generateGrid(
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
         .join("\n")}
-    
+
     const ${instanceGqlTypePlural}Fragment = gql\`
         fragment ${fragmentName} on ${gqlType} {
             id
             ${fieldList}
         }
     \`;
-    
+
     const ${instanceGqlTypePlural}Query = gql\`
         query ${gqlTypePlural}Grid($offset: Int, $limit: Int${hasSort ? `, $sort: [${gqlType}Sort!]` : ""}${hasSearch ? `, $search: String` : ""}${
         hasFilter ? `, $filter: ${gqlType}Filter` : ""
@@ -321,7 +328,7 @@ export function generateGrid(
 
 
     ${
-        hasDeleteMutation
+        allowDeleting
             ? `const delete${gqlType}Mutation = gql\`
                 mutation Delete${gqlType}($id: ID!${
                   deleteMutationScopeParam ? `, $scope: ${generateGqlParamDefinition(deleteMutationScopeParam)}` : ""
@@ -333,7 +340,7 @@ export function generateGrid(
     }
 
     ${
-        hasCreateMutation
+        allowCopyPaste
             ? `const create${gqlType}Mutation = gql\`
         mutation Create${gqlType}(${
                   createMutationScopeParam ? `$scope: ${generateGqlParamDefinition(createMutationScopeParam)}, ` : ""
@@ -366,7 +373,7 @@ export function generateGrid(
                 }
                 <ToolbarFillSpace />
                 ${
-                    hasCreateMutation
+                    allowAdding
                         ? `<ToolbarActions>
                     <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
                         <FormattedMessage id="${instanceGqlType}.new${gqlType}" defaultMessage="New ${camelCaseToHumanReadable(gqlType)}" />
@@ -378,13 +385,13 @@ export function generateGrid(
         );
     }
 
-        
+
     export function ${gqlTypePlural}Grid(): React.ReactElement {
-        const client = useApolloClient();
+        ${allowCopyPaste ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${requiresScope ? `const { scope } = useContentScope();` : ""}
-    
+
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
                 .map((column) => {
@@ -421,7 +428,9 @@ export function generateGrid(
                     return tsCodeRecordToString(columnDefinition);
                 })
                 .join(",\n")},
-            {
+                ${
+                    showActionsColumn
+                        ? `{
                 field: "actions",
                 headerName: "",
                 sortable: false,
@@ -431,12 +440,20 @@ export function generateGrid(
                 renderCell: (params) => {
                     return (
                         <>
-                            <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                                <Edit color="primary" />
-                            </IconButton>
+                        ${
+                            allowEditing
+                                ? `
+                                <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
+                                    <Edit color="primary" />
+                                </IconButton>`
+                                : ""
+                        }
+                        ${
+                            allowCopyPaste || allowDeleting
+                                ? `
                             <CrudContextMenu
                                 ${
-                                    hasCreateMutation
+                                    allowCopyPaste
                                         ? `
                                 copyData={() => {
                                     const row = params.row;
@@ -456,14 +473,16 @@ export function generateGrid(
                                 onPaste={async ({ input }) => {
                                     await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                                         mutation: create${gqlType}Mutation,
-                                        variables: { ${createMutationScopeParam ? `scope, ` : ""}input: filter(${instanceGqlTypePlural}Fragment, input) },
+                                        variables: { ${
+                                            createMutationScopeParam ? `scope, ` : ""
+                                        }input: filter(${instanceGqlTypePlural}Fragment, input) },
                                     });
                                 }}
                                 `
                                         : ""
                                 }
                                 ${
-                                    hasDeleteMutation
+                                    allowDeleting
                                         ? `
                                 onDelete={async () => {
                                     await client.mutate<GQLDelete${gqlType}Mutation, GQLDelete${gqlType}MutationVariables>({
@@ -476,12 +495,17 @@ export function generateGrid(
                                 }
                                 refetchQueries={[${instanceGqlTypePlural}Query]}
                             />
+                            `
+                                : ""
+                        }
                         </>
                     );
                 },
-            },
+            },`
+                        : ""
+                }
         ];
-    
+
         ${
             hasFilter || hasSearch
                 ? `const { ${hasFilter ? `filter: gqlFilter, ` : ""}${
@@ -489,7 +513,7 @@ export function generateGrid(
                   } } = muiGridFilterToGql(columns, dataGridProps.filterModel);`
                 : ""
         }
-    
+
         const { data, loading, error } = useQuery<GQL${gqlTypePlural}GridQuery, GQL${gqlTypePlural}GridQueryVariables>(${instanceGqlTypePlural}Query, {
             variables: {
                 ${queryScopeParam ? `scope,` : ""}
@@ -503,7 +527,7 @@ export function generateGrid(
         const rowCount = useBufferedRowCount(data?.${gridQuery}.totalCount);
         if (error) throw error;
         const rows = data?.${gridQuery}.nodes ?? [];
-    
+
         return (
             <MainContent fullHeight disablePadding>
                 <DataGridPro

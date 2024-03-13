@@ -21,6 +21,7 @@ import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { filter } from "graphql-anywhere";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -123,14 +124,14 @@ export function ProductsGrid(): React.ReactElement {
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
             type: "date",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
             width: 140,
         },
         {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
             type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
             width: 170,
         },
         {
@@ -146,11 +147,13 @@ export function ProductsGrid(): React.ReactElement {
                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                             <Edit color="primary" />
                         </IconButton>
+
                         <CrudContextMenu
                             copyData={() => {
                                 const row = params.row;
                                 return {
                                     title: row.title,
+                                    status: row.status,
                                     slug: row.slug,
                                     description: row.description,
                                     type: row.type,
@@ -163,7 +166,7 @@ export function ProductsGrid(): React.ReactElement {
                             onPaste={async ({ input }) => {
                                 await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                                     mutation: createProductMutation,
-                                    variables: { input },
+                                    variables: { input: filter(productsFragment, input) },
                                 });
                             }}
                             onDelete={async () => {

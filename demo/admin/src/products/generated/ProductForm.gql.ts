@@ -6,6 +6,7 @@ import { gql } from "@apollo/client";
 export const productFormFragment = gql`
     fragment ProductForm on Product {
         title
+        status
         slug
         description
         type

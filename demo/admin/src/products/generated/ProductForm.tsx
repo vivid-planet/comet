@@ -162,6 +162,18 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             label={<FormattedMessage id="product.title" defaultMessage="Title" />}
                         />
+                        <Field fullWidth name="status" label={<FormattedMessage id="product.status" defaultMessage="Status" />}>
+                            {(props) => (
+                                <FinalFormSelect {...props}>
+                                    <MenuItem value="Published">
+                                        <FormattedMessage id="product.status.published" defaultMessage="Published" />
+                                    </MenuItem>
+                                    <MenuItem value="Unpublished">
+                                        <FormattedMessage id="product.status.unpublished" defaultMessage="Unpublished" />
+                                    </MenuItem>
+                                </FinalFormSelect>
+                            )}
+                        </Field>
                         <Field
                             required
                             fullWidth

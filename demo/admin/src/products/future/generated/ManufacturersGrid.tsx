@@ -113,7 +113,8 @@ export function ManufacturersGrid(): React.ReactElement {
             headerName: intl.formatMessage({ id: "manufacturer.id", defaultMessage: "ID" }),
             filterable: false,
             sortable: false,
-            width: 150,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "address.street",
@@ -121,7 +122,8 @@ export function ManufacturersGrid(): React.ReactElement {
             filterable: false,
             sortable: false,
             valueGetter: ({ row }) => row.address?.street,
-            width: 150,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "address.streetNumber",
@@ -129,7 +131,8 @@ export function ManufacturersGrid(): React.ReactElement {
             filterable: false,
             sortable: false,
             valueGetter: ({ row }) => row.address?.streetNumber,
-            width: 150,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "address.alternativeAddress.street",
@@ -137,7 +140,8 @@ export function ManufacturersGrid(): React.ReactElement {
             filterable: false,
             sortable: false,
             valueGetter: ({ row }) => row.address?.alternativeAddress?.street,
-            width: 150,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "address.alternativeAddress.streetNumber",
@@ -145,7 +149,8 @@ export function ManufacturersGrid(): React.ReactElement {
             filterable: false,
             sortable: false,
             valueGetter: ({ row }) => row.address?.alternativeAddress?.streetNumber,
-            width: 150,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "addressAsEmbeddable.street",
@@ -153,7 +158,8 @@ export function ManufacturersGrid(): React.ReactElement {
             filterable: false,
             sortable: false,
             valueGetter: ({ row }) => row.addressAsEmbeddable?.street,
-            width: 150,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "addressAsEmbeddable.streetNumber",
@@ -161,7 +167,8 @@ export function ManufacturersGrid(): React.ReactElement {
             filterable: false,
             sortable: false,
             valueGetter: ({ row }) => row.addressAsEmbeddable?.streetNumber,
-            width: 150,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "addressAsEmbeddable.alternativeAddress.street",
@@ -169,7 +176,8 @@ export function ManufacturersGrid(): React.ReactElement {
             filterable: false,
             sortable: false,
             valueGetter: ({ row }) => row.addressAsEmbeddable?.alternativeAddress?.street,
-            width: 150,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "addressAsEmbeddable.alternativeAddress.streetNumber",
@@ -180,7 +188,8 @@ export function ManufacturersGrid(): React.ReactElement {
             filterable: false,
             sortable: false,
             valueGetter: ({ row }) => row.addressAsEmbeddable?.alternativeAddress?.streetNumber,
-            width: 150,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "actions",
@@ -188,12 +197,14 @@ export function ManufacturersGrid(): React.ReactElement {
             sortable: false,
             filterable: false,
             type: "actions",
+            align: "right",
             renderCell: (params) => {
                 return (
                     <>
                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                             <Edit color="primary" />
                         </IconButton>
+
                         <CrudContextMenu
                             copyData={() => {
                                 const row = params.row;
