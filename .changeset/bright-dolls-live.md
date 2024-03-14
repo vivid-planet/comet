@@ -51,16 +51,12 @@ cdn: {
 },
 ```
 
-2. Add ExternalRequestWithoutHeaderGuard
+2. Add CdnGuard
 
 ```
 // if CDN is enabled, make sure all traffic is either coming from the CDN or internal sources
-if (config.cdn.enabled) {
-    if (!config.cdn.originCheck) {
-        throw new Error("CDN is enabled, but no origin check is configured");
-    }
-
-    app.useGlobalGuards(new ExternalRequestWithoutHeaderGuard({ headerName: "x-cdn-origin-check", headerValue: config.cdn.originCheck }));
+if (!config.cdn.originCheck) {
+    app.useGlobalGuards(new CdnGuard({ headerName: "x-cdn-origin-check", headerValue: config.cdn.originCheck }));
 }
 ```
 

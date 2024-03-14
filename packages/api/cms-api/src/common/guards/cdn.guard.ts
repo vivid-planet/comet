@@ -3,7 +3,7 @@ import { GqlExecutionContext } from "@nestjs/graphql";
 import { Request } from "express";
 
 @Injectable()
-export class ExternalRequestWithoutHeaderGuard implements CanActivate {
+export class CdnGuard implements CanActivate {
     private headerName: string;
     private headerValue: string;
 
