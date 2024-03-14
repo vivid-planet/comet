@@ -155,9 +155,14 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <TextField fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
-                        <TextField fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
-                        <TextField fullWidth name="description" label={<FormattedMessage id="product.description" defaultMessage="Description" />} />
+                        <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
+                        <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
+                        <TextField
+                            required
+                            fullWidth
+                            name="description"
+                            label={<FormattedMessage id="product.description" defaultMessage="Description" />}
+                        />
                         <Field fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
                             {(props) => (
                                 <FinalFormSelect {...props}>
