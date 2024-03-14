@@ -123,8 +123,8 @@ export class AppModule {
                 }),
                 DamModule.register({
                     damConfig: {
-                        privateApiUrl: config.privateApiUrl,
-                        publicApiUrl: config.publicApiUrl,
+                        filesBaseUrl: `${config.apiUrl}/dam/files`,
+                        imagesBaseUrl: `${config.apiUrl}/dam/images`,
                         secret: config.dam.secret,
                         allowedImageSizes: config.dam.allowedImageSizes,
                         allowedAspectRatios: config.dam.allowedImageAspectRatios,

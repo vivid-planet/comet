@@ -30,10 +30,7 @@ export class EnvironmentVariables {
     POSTGRESQL_PWD: string;
 
     @IsString()
-    PUBLIC_API_URL: string;
-
-    @IsString()
-    PRIVATE_API_URL: string;
+    API_URL: string;
 
     @IsString()
     ADMIN_URL: string;

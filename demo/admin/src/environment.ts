@@ -1,5 +1,5 @@
 export default [
-    "PRIVATE_API_URL",
+    "API_URL",
     "ADMIN_URL",
     "SITES_CONFIG",
     "SITE_PREVIEW_URL",

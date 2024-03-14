@@ -559,14 +559,20 @@ export class FilesService {
     async createFileUrl(file: FileInterface, previewDamUrls?: boolean): Promise<string> {
         const filename = parse(file.name).name;
 
-        const baseUrl = previewDamUrls
-            ? `${this.config.privateApiUrl}/dam/files/preview`
-            : `${this.config.publicApiUrl}/dam/files/${this.createHash({
-                  fileId: file.id,
-                  filename,
-              })}`;
+        const baseUrl = [this.config.filesBaseUrl];
 
-        return [baseUrl, file.id, filename].join("/");
+        if (previewDamUrls) {
+            baseUrl.push("preview");
+        } else {
+            const hash = this.createHash({
+                fileId: file.id,
+                filename,
+            });
+
+            baseUrl.push(hash);
+        }
+
+        return [...baseUrl, file.id, filename].join("/");
     }
 
     createHash(params: FileParams): string {
