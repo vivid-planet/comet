@@ -352,10 +352,14 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
                 )}
             </Field>`;
     } else if (type.kind === "SCALAR" && type.name === "String") {
-        return `<TextField fullWidth name="${field.name}"  label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}"/>} />`;
+        return `<TextField ${field.type.kind === "NON_NULL" ? "required" : ""} fullWidth name="${
+            field.name
+        }"  label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}"/>} />`;
     } else if (type.kind === "SCALAR" && type.name === "DateTime") {
         //TODO DateTime vs Date
-        return `<DateField fullWidth name="${field.name}"  label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}"/>} />`;
+        return `<DateField ${field.type.kind === "NON_NULL" ? "required" : ""} fullWidth name="${
+            field.name
+        }"  label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}"/>} />`;
     } else {
         let component;
         let additionalProps = "";
