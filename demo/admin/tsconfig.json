@@ -1,18 +1,31 @@
 {
+    "ts-node": {
+        "compilerOptions": {
+            "module": "CommonJS",
+            "types": ["node"]
+        }
+    },
     "compilerOptions": {
         "target": "ESNext",
-        "module": "CommonJS",
+        "module": "ESNext",
+        "moduleResolution": "node",
         "noImplicitAny": true,
         "strictNullChecks": true,
-        "jsx": "react",
+        "jsx": "react-jsx",
+        "jsxImportSource": "@emotion/react",
         "noEmit": true,
         "skipLibCheck": true,
         "baseUrl": "./",
         "paths": {
             "@src/*": ["src/*"]
         },
+        "esModuleInterop": true,
         "resolveJsonModule": true,
-        "allowSyntheticDefaultImports": true
+        "sourceRoot": "~/",
+        "allowSyntheticDefaultImports": true,
+        "sourceMap": true,
+        "inlineSources": true,
+        "types": ["vite/client"]
     },
     "include": ["src/**/*"]
 }

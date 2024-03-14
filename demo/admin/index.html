@@ -6,7 +6,7 @@
         <title>Comet Demo Admin</title>
         <script type="text/javascript">
             (function() {
-<%= environmentValues.map((env) => `window.EXTERNAL__${env.key}__ = '${env.value}';`).join("\n") %>
+                <%- environmentValues.map((env) => `window.EXTERNAL__${env.key}__ = ${env.value ? `'${env.value}'` : undefined};`).join("\n") %>
             })();
         </script>
     </head>
