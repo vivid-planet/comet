@@ -11,6 +11,7 @@ export const fontWeights = {
 };
 
 export const typographyOptions: TypographyOptions = {
+    fontFamily,
     ...fontWeights,
     h1: {
         fontFamily,
@@ -93,5 +94,12 @@ export const typographyOptions: TypographyOptions = {
         fontSize: 14,
         lineHeight: "20px",
         fontWeight: fontWeights.fontWeightRegular,
+    },
+    button: {
+        fontFamily,
+        fontWeight: fontWeights.fontWeightRegular,
+        fontsize: 16,
+        lineHeight: "16px",
+        letterSpacing: 0,
     },
 };
