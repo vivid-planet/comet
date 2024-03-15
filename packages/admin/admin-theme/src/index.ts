@@ -1,4 +1,4 @@
-export { bluePalette, errorPalette, greenPalette, infoPalette, neutrals, successPalette } from "./colors";
+export { errorPalette, greyPalette, infoPalette, primaryPalette, successPalette } from "./colors";
 export { createCometTheme } from "./createCometTheme";
 export { paletteOptions } from "./paletteOptions";
 export { shadows } from "./shadows";
