@@ -6,7 +6,7 @@ import { createBreakpoints, createSpacing } from "@mui/system";
 import { BreakpointsOptions } from "@mui/system/createTheme/createBreakpoints";
 import { deepmerge } from "@mui/utils";
 
-import { breakpointsOptions as cometBreakpointsOptions } from "./breakpoints";
+import { breakpointsOptions as cometBreakpointsOptions } from "./breakpointsOptions";
 import { getComponentsTheme } from "./componentsTheme/getComponentsTheme";
 import { paletteOptions as cometPaletteOptions } from "./paletteOptions";
 import { shadows } from "./shadows";
