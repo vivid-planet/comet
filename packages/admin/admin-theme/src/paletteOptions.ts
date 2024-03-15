@@ -22,4 +22,33 @@ export const paletteOptions: PaletteOptions = {
         active: greyPalette[400],
         disabled: greyPalette[200],
     },
+    highlight: {
+        purple: "#952F80",
+        green: "#80B50C",
+        orange: "#FFB31A",
+        yellow: "#FFEB3B",
+        red: "#D11700",
+    },
 };
+
+declare module "@mui/material/styles" {
+    interface Palette {
+        highlight: {
+            purple: string;
+            green: string;
+            orange: string;
+            yellow: string;
+            red: string;
+        };
+    }
+
+    interface PaletteOptions {
+        highlight?: {
+            purple: string;
+            green: string;
+            orange: string;
+            yellow: string;
+            red: string;
+        };
+    }
+}
