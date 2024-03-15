@@ -143,6 +143,12 @@ export function generateFormField(
         ) as IntrospectionEnumType | undefined;
         if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
         const values = enumType.enumValues.map((i) => i.name);
+
+        //TODO unset value when placeholder item is chosen
+        if (!config.required) {
+            values.unshift("Please select");
+        }
+
         code = `<Field
             fullWidth
             name="${name}"
