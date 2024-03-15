@@ -2,9 +2,11 @@ import { createTheme, Theme, ThemeOptions } from "@mui/material";
 import createPalette, { PaletteOptions } from "@mui/material/styles/createPalette";
 import createTypography, { TypographyOptions } from "@mui/material/styles/createTypography";
 import muiDefaultZIndex from "@mui/material/styles/zIndex";
-import { createSpacing } from "@mui/system";
+import { createBreakpoints, createSpacing } from "@mui/system";
+import { BreakpointsOptions } from "@mui/system/createTheme/createBreakpoints";
 import { deepmerge } from "@mui/utils";
 
+import { breakpointsOptions as cometBreakpointsOptions } from "./breakpoints";
 import { getComponentsTheme } from "./componentsTheme/getComponentsTheme";
 import { paletteOptions as cometPaletteOptions } from "./paletteOptions";
 import { shadows } from "./shadows";
@@ -16,8 +18,12 @@ export const createCometTheme = ({
     spacing: passedSpacingOptions = 5,
     components: passedComponentsOptions = {},
     zIndex: passedZIndexOptions = {},
+    breakpoints: passedBreakpointsOptions = {},
     ...restPassedOptions
 }: ThemeOptions | undefined = {}): Theme => {
+    const breakpointsOptions: BreakpointsOptions = deepmerge<BreakpointsOptions>(cometBreakpointsOptions, passedBreakpointsOptions);
+    const breakpoints = createBreakpoints(breakpointsOptions);
+
     const paletteOptions: PaletteOptions = deepmerge<PaletteOptions>(cometPaletteOptions, passedPaletteOptions);
     const palette = createPalette(paletteOptions);
 
@@ -42,7 +48,8 @@ export const createCometTheme = ({
         },
         shadows,
         zIndex,
-        components: getComponentsTheme(passedComponentsOptions, { palette, typography, spacing, zIndex, shadows }),
+        components: getComponentsTheme(passedComponentsOptions, { palette, typography, spacing, zIndex, shadows, breakpoints }),
+        breakpoints: breakpointsOptions,
     };
 
     const themeOptions = deepmerge<ThemeOptions>(cometThemeOptions, restPassedOptions);
