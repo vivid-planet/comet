@@ -73,3 +73,22 @@ export const typographyOptions: TypographyOptions = {
         paddingBottom: 4,
     },
 };
+
+declare module "@mui/material/styles" {
+    interface TypographyVariants {
+        list: React.CSSProperties;
+        listItem: React.CSSProperties;
+    }
+
+    interface TypographyVariantsOptions {
+        list?: React.CSSProperties;
+        listItem?: React.CSSProperties;
+    }
+}
+
+declare module "@mui/material/Typography" {
+    interface TypographyPropsVariantOverrides {
+        list: true;
+        listItem: true;
+    }
+}

@@ -7,7 +7,13 @@
         "paths": {
             // See https://testing-library.com/docs/react-testing-library/setup/#configuring-jest-with-test-utils
             "test-utils": ["./utils/test-utils"]
-        }
+        },
+        "types": [
+            "@comet/admin-theme",
+            "jest",
+            "node",
+            "@testing-library/jest-dom"
+        ]
     },
     "include": ["./src"],
     "exclude": []
