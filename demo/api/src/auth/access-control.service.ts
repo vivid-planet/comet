@@ -7,7 +7,10 @@ export class AccessControlService extends AbstractAccessControlService {
         if (user.email.endsWith("@comet-dxp.com")) {
             return UserPermissions.allPermissions;
         } else {
-            return [{ permission: "products" }, { permission: "news", contentScopes: [{ domain: "secondary", language: "en" }] }];
+            return [
+                { permission: "products" },
+                { permission: ["news.read", "news.update"], contentScopes: [{ domain: "secondary", language: "en" }] },
+            ];
         }
     }
     getContentScopesForUser(user: User): ContentScopesForUser {

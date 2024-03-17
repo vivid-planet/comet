@@ -93,13 +93,21 @@ export class UserPermissionsService {
                     permissionsByRule = availablePermissions.map((permission) => ({ permission }));
                 }
                 for (const p of permissionsByRule) {
-                    const permission = new UserPermission();
-                    permission.id = getUuid(JSON.stringify(p));
-                    permission.source = UserPermissionSource.BY_RULE;
-                    permission.userId = user.id;
-                    permission.overrideContentScopes = !!p.contentScopes;
-                    permission.assign(p);
-                    permissions.push(permission);
+                    if (!Array.isArray(p.permission)) {
+                        p.permission = [p.permission];
+                    }
+                    for (const permissionName of p.permission) {
+                        const permission = new UserPermission();
+                        permission.assign({
+                            ...p,
+                            permission: permissionName,
+                            id: getUuid(JSON.stringify(p)),
+                            source: UserPermissionSource.BY_RULE,
+                            userId: user.id,
+                            overrideContentScopes: !!p.contentScopes,
+                        });
+                        permissions.push(permission);
+                    }
                 }
             }
         }
