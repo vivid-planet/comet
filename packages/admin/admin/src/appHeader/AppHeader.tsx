@@ -18,6 +18,7 @@ const styles = ({ palette, zIndex }: Theme) => {
     return createStyles<AppHeaderClassKey, AppHeaderProps>({
         root: {
             backgroundColor: palette.grey["A400"],
+            color: "white",
             height: "var(--header-height)",
             flexDirection: "row",
             alignItems: "center",

@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
-import { ComponentsOverrides, Popover, PopoverProps, Theme, useTheme } from "@mui/material";
+import { ComponentsOverrides, Popover, PopoverProps, Theme } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
@@ -29,13 +29,11 @@ const styles = () => {
 };
 
 function DefaultArrowUp(): React.ReactElement {
-    const { palette } = useTheme();
-    return <ChevronUp htmlColor={palette.primary.contrastText} />;
+    return <ChevronUp />;
 }
 
 function DefaultArrowDown(): React.ReactElement {
-    const { palette } = useTheme();
-    return <ChevronDown htmlColor={palette.primary.contrastText} />;
+    return <ChevronDown />;
 }
 
 function Dropdown({
