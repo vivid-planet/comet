@@ -46,6 +46,7 @@
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
         "@comet/admin-babel-preset": "workspace:^6.4.0",
+        "@comet/admin-theme": "workspace:^6.4.0",
         "@comet/eslint-config": "workspace:^6.4.0",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
@@ -95,6 +96,7 @@
     },
     "peerDependencies": {
         "@apollo/client": "^3.7.0",
+        "@comet/admin-theme": "workspace:^6.4.0",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
         "@mui/icons-material": "^5.0.0",
