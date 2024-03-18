@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
+import { LegacyContentScopeIndicator } from "../contentScope/LegacyContentScopeIndicator";
 import { CronJobsGrid } from "./CronJobsGrid";
 import { JobsGrid } from "./JobsGrid";
 
@@ -29,14 +29,14 @@ export function CronJobsPage(): React.ReactElement {
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.cronJobs", defaultMessage: "Cron Jobs" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <ContentScopeIndicator variant="toolbar">
+                    <LegacyContentScopeIndicator variant="toolbar">
                         <ScopeIndicatorContent>
                             <Domain fontSize="small" />
                             <ScopeIndicatorLabelBold variant="body2">
                                 <FormattedMessage {...messages.globalContentScope} />
                             </ScopeIndicatorLabelBold>
                         </ScopeIndicatorContent>
-                    </ContentScopeIndicator>
+                    </LegacyContentScopeIndicator>
 
                     <CronJobsGrid />
                 </StackPage>

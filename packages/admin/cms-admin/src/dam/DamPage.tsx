@@ -6,7 +6,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { useRouteMatch } from "react-router";
 
-import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
+import { LegacyContentScopeIndicator } from "../contentScope/LegacyContentScopeIndicator";
 import { ContentScopeInterface, useContentScope } from "../contentScope/Provider";
 import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { DamScopeProvider } from "./config/DamScopeProvider";
@@ -22,14 +22,14 @@ type Props = {
 };
 
 const defaultRenderContentScopeIndicator = () => (
-    <ContentScopeIndicator variant="toolbar" global>
+    <LegacyContentScopeIndicator variant="toolbar" global>
         <ScopeIndicatorContent>
             <Domain fontSize="small" />
             <ScopeIndicatorLabelBold variant="body2">
                 <FormattedMessage {...messages.globalContentScope} />
             </ScopeIndicatorLabelBold>
         </ScopeIndicatorContent>
-    </ContentScopeIndicator>
+    </LegacyContentScopeIndicator>
 );
 
 const ScopeIndicatorLabelBold = styled(Typography)`

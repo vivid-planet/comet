@@ -8,7 +8,7 @@ import { parseISO } from "date-fns";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
+import { LegacyContentScopeIndicator } from "../contentScope/LegacyContentScopeIndicator";
 import { JobRuntime } from "../cronJobs/JobRuntime";
 import { PublishButton } from "./PublishButton";
 import { GQLBuildsQuery } from "./PublisherPage.generated";
@@ -54,14 +54,14 @@ export function PublisherPage(): React.ReactElement {
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.publisher", defaultMessage: "Publisher" })}>
-            <ContentScopeIndicator variant="toolbar">
+            <LegacyContentScopeIndicator variant="toolbar">
                 <ScopeIndicatorContent>
                     <Domain fontSize="small" />
                     <ScopeIndicatorLabelBold variant="body2">
                         <FormattedMessage {...messages.globalContentScope} />
                     </ScopeIndicatorLabelBold>
                 </ScopeIndicatorContent>
-            </ContentScopeIndicator>
+            </LegacyContentScopeIndicator>
             <Toolbar>
                 <ToolbarTitleItem>
                     <FormattedMessage id="comet.publisher.title" defaultMessage="Publisher" />

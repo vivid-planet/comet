@@ -1,6 +1,6 @@
 import { messages } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
-import { ContentScopeIndicator as ContentScopeIndicatorLibrary, ContentScopeInterface } from "@comet/cms-admin";
+import { ContentScopeInterface, LegacyContentScopeIndicator as ContentScopeIndicatorLibrary } from "@comet/cms-admin";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
