@@ -24,7 +24,7 @@ export type FormFieldConfig<T extends GeneratorEntity> = (
     | { type: "date" }
     // TODO | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
-    | { type: "asyncSelect"; values?: string[] }
+    | { type: "asyncSelect"; rootQuery: string; labelField?: string }
     | { type: "block"; block: ImportReference }
 ) & { name: UsableFields<T>; label?: string; required?: boolean; readOnly?: boolean; validate?: ImportReference; helperText?: string };
 
