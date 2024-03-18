@@ -24,30 +24,22 @@ If you want to enable the origin check:
 1. Set the following env vars for the API
 
 ```
-CDN_ENABLED="true"
-CDN_ORIGIN_CHECK="Use value from DAM_CDN_ORIGIN_HEADER to avoid downtime"
+CDN_ORIGIN_CHECK_SECRET="Use value from DAM_CDN_ORIGIN_HEADER to avoid downtime"
 ```
 
 _environment-variables.ts_
 
 ```
 @IsOptional()
-@IsBoolean()
-@Transform(({ value }) => value === "true")
-CDN_ENABLED: boolean;
-
 @IsString()
-@IsNotEmpty()
-@ValidateIf((v) => v.CDN_ENABLED)
-CDN_ORIGIN_CHECK: string;
+CDN_ORIGIN_CHECK_SECRET: string;
 ```
 
 _config.ts_
 
 ```
 cdn: {
-    enabled: envVars.CDN_ENABLED,
-    originCheck: envVars.CDN_ORIGIN_CHECK,
+    originCheckSecret: envVars.CDN_ORIGIN_CHECK_SECRET,
 },
 ```
 
@@ -55,8 +47,8 @@ cdn: {
 
 ```
 // if CDN is enabled, make sure all traffic is either coming from the CDN or internal sources
-if (!config.cdn.originCheck) {
-    app.useGlobalGuards(new CdnGuard({ headerName: "x-cdn-origin-check", headerValue: config.cdn.originCheck }));
+if (!config.cdn.originCheckSecret) {
+    app.useGlobalGuards(new CdnGuard({ headerName: "x-cdn-origin-check", headerValue: config.cdn.originCheckSecret }));
 }
 ```
 
