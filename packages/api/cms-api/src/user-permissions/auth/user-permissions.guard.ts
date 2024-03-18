@@ -33,7 +33,7 @@ export class UserPermissionsGuard implements CanActivate {
         if (!requiredPermission) throw new Error(`RequiredPermission decorator is missing in ${location}`);
         const requiredPermissions = requiredPermission.requiredPermission;
         if (requiredPermissions.length === 0) throw new Error(`RequiredPermission decorator has empty permissions in ${location}`);
-        if (requiredPermission.options?.skipScopeCheck) {
+        if (this.isResolvingGraphQLField(context) || requiredPermission.options?.skipScopeCheck) {
             // At least one permission is required
             return requiredPermissions.some((permission) => this.accessControlService.isAllowed(user, permission));
         } else {
