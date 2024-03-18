@@ -28,7 +28,7 @@ The access log allows to see who accessed what data and when. This can be useful
 
 :::caution
 
-When logging is active, all sensitive (confidential or personal) data must be encapsulated in an Input/Data object to ensure they do NOT appear in the logs.
+When logging is active, all sensitive (confidential or personal) data must be encapsulated in an `input` or `data` object to ensure they do NOT appear in the logs.
 
 :::
 
