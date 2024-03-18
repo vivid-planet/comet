@@ -1,4 +1,4 @@
-import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionQuery } from "graphql";
+import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
 import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
