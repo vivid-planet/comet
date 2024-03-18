@@ -182,6 +182,7 @@ export function generateFormField(
         if (!objectType) throw new Error(`Object type ${introspectionFieldType.name} not found for field ${name}`);
 
         //find labelField: 1. as configured
+        // @ts-expect-error TODO: Fix this
         let labelField = config.labelField;
 
         //find labelField: 2. common names (name or title)
@@ -206,6 +207,7 @@ export function generateFormField(
             })?.name;
         }
 
+        // @ts-expect-error TODO: Fix this
         const rootQuery = config.rootQuery; //TODO we should infer a default value from the gql schema
         const queryType = objectType.name;
         const queryVariableName = `${rootQuery}Query`;
