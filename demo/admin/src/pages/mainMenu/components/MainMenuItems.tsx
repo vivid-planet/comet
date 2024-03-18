@@ -39,7 +39,7 @@ const MainMenuItems: React.FunctionComponent = () => {
 
     return (
         <>
-            <ContentScopeIndicator scope={scope} variant="toolbar" />
+            <ContentScopeIndicator scope={scope} />
             <Toolbar>
                 <ToolbarAutomaticTitleItem />
             </Toolbar>

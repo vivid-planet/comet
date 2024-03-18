@@ -1,12 +1,8 @@
-import { messages } from "@comet/admin";
-import { Domain } from "@comet/admin-icons";
-import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
 import { useRouteMatch } from "react-router";
 
-import { LegacyContentScopeIndicator } from "../contentScope/LegacyContentScopeIndicator";
+import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { ContentScopeInterface, useContentScope } from "../contentScope/Provider";
 import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { DamScopeProvider } from "./config/DamScopeProvider";
@@ -21,29 +17,7 @@ type Props = {
     additionalToolbarItems?: React.ReactNode;
 };
 
-const defaultRenderContentScopeIndicator = () => (
-    <LegacyContentScopeIndicator variant="toolbar" global>
-        <ScopeIndicatorContent>
-            <Domain fontSize="small" />
-            <ScopeIndicatorLabelBold variant="body2">
-                <FormattedMessage {...messages.globalContentScope} />
-            </ScopeIndicatorLabelBold>
-        </ScopeIndicatorContent>
-    </LegacyContentScopeIndicator>
-);
-
-const ScopeIndicatorLabelBold = styled(Typography)`
-    && {
-        font-weight: 400;
-        padding: 0 8px 0 4px;
-        text-transform: uppercase;
-    }
-`;
-
-const ScopeIndicatorContent = styled("div")`
-    display: flex;
-    align-items: center;
-`;
+const defaultRenderContentScopeIndicator = () => <ContentScopeIndicator global />;
 
 const DamTableWrapper = styled("div")`
     display: grid;

@@ -72,7 +72,7 @@ export const masterMenuData: MasterMenuData = [
                         documentTypes={pageTreeDocumentTypes}
                         editPageNode={EditPageNode}
                         category={category}
-                        renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} variant="toolbar" />}
+                        renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} />}
                     />
                 );
             },
@@ -100,7 +100,7 @@ export const masterMenuData: MasterMenuData = [
             path: "/assets",
             render: () => (
                 <DamPage
-                    renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} domainOnly variant="toolbar" />}
+                    renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} domainOnly />}
                     additionalToolbarItems={<ImportFromUnsplash />}
                 />
             ),

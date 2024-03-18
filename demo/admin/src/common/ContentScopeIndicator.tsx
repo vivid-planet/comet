@@ -1,56 +1,38 @@
-import { messages } from "@comet/admin";
-import { Domain } from "@comet/admin-icons";
-import { ContentScopeInterface, LegacyContentScopeIndicator as ContentScopeIndicatorLibrary } from "@comet/cms-admin";
-import { Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { ContentScopeIndicator as ContentScopeIndicatorLibrary, ContentScopeInterface, ContentScopeValues, useContentScope } from "@comet/cms-admin";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
 
-type Props = React.ComponentProps<typeof ContentScopeIndicatorLibrary> & { scope?: ContentScopeInterface; domainOnly?: boolean };
+type Props = React.ComponentProps<typeof ContentScopeIndicatorLibrary> & {
+    scope?: ContentScopeInterface;
+    domainOnly?: boolean;
+};
 
-function ContentScopeIndicator({ variant, global, scope, domainOnly }: Props): JSX.Element {
+const capitalizeString = (string: string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+const findLabelForScope = (scope: string, value: string, values: ContentScopeValues) => {
+    const label = values[scope].find(({ value: val }) => val === value)?.label;
+    return label ?? capitalizeString(value);
+};
+
+function ContentScopeIndicator({ global, scope, domainOnly }: Props): JSX.Element {
+    const { values } = useContentScope();
+
     if (global) {
-        return (
-            <ContentScopeIndicatorLibrary global variant={variant}>
-                <Domain fontSize="small" />
-                <DomainLabel variant="body2">
-                    <FormattedMessage {...messages.globalContentScope} />
-                </DomainLabel>
-            </ContentScopeIndicatorLibrary>
-        );
+        return <ContentScopeIndicatorLibrary global />;
     }
 
     if (!scope) {
         throw new Error("Missing scope object for non-global content scope indicator");
     }
 
-    return (
-        <ContentScopeIndicatorLibrary variant={variant} global={global}>
-            <Domain fontSize="small" />
-            <DomainLabel variant="body2">{scope.domain}</DomainLabel>
-            {!domainOnly && (
-                <>
-                    {` | `}
-                    <LanguageLabel variant="body2">{scope.language}</LanguageLabel>
-                </>
-            )}
-        </ContentScopeIndicatorLibrary>
-    );
+    const scopes: React.ReactNode[] = [findLabelForScope("domain", scope.domain, values)];
+
+    if (!domainOnly) {
+        scopes.push(findLabelForScope("language", scope.language, values));
+    }
+
+    return <ContentScopeIndicatorLibrary scopes={scopes} />;
 }
-
-const DomainLabel = styled(Typography)`
-    && {
-        font-weight: 400;
-        padding: 0 8px 0 4px;
-        text-transform: uppercase;
-    }
-`;
-
-const LanguageLabel = styled(Typography)`
-    && {
-        padding-left: 8px;
-        text-transform: uppercase;
-    }
-`;
 
 export { ContentScopeIndicator };
