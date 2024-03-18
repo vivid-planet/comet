@@ -556,10 +556,13 @@ export class FilesService {
         }
     }
 
-    async createFileUrl(file: FileInterface, previewDamUrls?: boolean): Promise<string> {
+    async createFileUrl(
+        file: FileInterface,
+        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
+    ): Promise<string> {
         const filename = parse(file.name).name;
 
-        const baseUrl = [this.config.filesBaseUrl];
+        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}dam/files`];
 
         if (previewDamUrls) {
             baseUrl.push("preview");

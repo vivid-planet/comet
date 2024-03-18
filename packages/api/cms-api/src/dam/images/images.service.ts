@@ -22,11 +22,14 @@ export class ImagesService {
         return createHmac("sha1", this.config.secret).update([fileHash, cropHash].join(":")).digest("hex");
     }
 
-    createUrlTemplate({ file, cropArea }: ImageInterface, previewDamUrls?: boolean): string {
+    createUrlTemplate(
+        { file, cropArea }: ImageInterface,
+        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
+    ): string {
         const imageCropArea = cropArea !== undefined ? cropArea : file.image!.cropArea;
         const filename = parse(file.name).name;
 
-        const baseUrl = [this.config.imagesBaseUrl];
+        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}dam/images`];
 
         if (previewDamUrls) {
             baseUrl.push("preview");
