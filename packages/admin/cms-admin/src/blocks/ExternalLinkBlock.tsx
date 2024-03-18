@@ -69,6 +69,7 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
                         component={FinalFormInput}
                         fullWidth
                         validate={(url) => validateUrl(url)}
+                        disableContentTranslation
                     />
                     <Field name="openInNewWindow" type="checkbox">
                         {(props) => (
