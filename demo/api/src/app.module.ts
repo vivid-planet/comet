@@ -63,7 +63,6 @@ export class AppModule {
                         debug: config.debug,
                         playground: config.debug,
                         autoSchemaFile: "schema.gql",
-                        introspection: process.env.NODE_ENV === "development",
                         formatError: (error) => {
                             if (process.env.NODE_ENV !== "development") {
                                 if (error instanceof ValidationError) {
