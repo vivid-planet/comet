@@ -1,18 +1,14 @@
-import { ContentScopeIndicator as ContentScopeIndicatorLibrary, ContentScopeInterface, ContentScopeValues, useContentScope } from "@comet/cms-admin";
+import { ContentScopeIndicator as ContentScopeIndicatorLibrary, useContentScope } from "@comet/cms-admin";
+import { ContentScope } from "@src/common/ContentScopeProvider";
 import * as React from "react";
 
 type Props = React.ComponentProps<typeof ContentScopeIndicatorLibrary> & {
-    scope?: ContentScopeInterface;
+    scope?: ContentScope;
     domainOnly?: boolean;
 };
 
 const capitalizeString = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
-const findLabelForScope = (scope: string, value: string, values: ContentScopeValues) => {
-    const label = values[scope].find(({ value: val }) => val === value)?.label;
-    return label ?? capitalizeString(value);
 };
 
 function ContentScopeIndicator({ global, scope, domainOnly }: Props): JSX.Element {
@@ -26,13 +22,18 @@ function ContentScopeIndicator({ global, scope, domainOnly }: Props): JSX.Elemen
         throw new Error("Missing scope object for non-global content scope indicator");
     }
 
-    const scopes: React.ReactNode[] = [findLabelForScope("domain", scope.domain, values)];
+    const findLabelForScopePart = (scopePart: keyof ContentScope) => {
+        const label = values[scopePart].find(({ value }) => value === scope[scopePart])?.label;
+        return label ?? capitalizeString(scope[scopePart]);
+    };
+
+    const scopeLabels: React.ReactNode[] = [findLabelForScopePart("domain")];
 
     if (!domainOnly) {
-        scopes.push(findLabelForScope("language", scope.language, values));
+        scopeLabels.push(findLabelForScopePart("language"));
     }
 
-    return <ContentScopeIndicatorLibrary scopes={scopes} />;
+    return <ContentScopeIndicatorLibrary scopeLabels={scopeLabels} />;
 }
 
 export { ContentScopeIndicator };

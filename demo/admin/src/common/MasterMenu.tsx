@@ -9,6 +9,7 @@ import {
     PublisherPage,
     UserPermissionsPage,
 } from "@comet/cms-admin";
+import { ContentScope } from "@src/common/ContentScopeProvider";
 import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import Dashboard from "@src/dashboard/Dashboard";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
@@ -72,7 +73,7 @@ export const masterMenuData: MasterMenuData = [
                         documentTypes={pageTreeDocumentTypes}
                         editPageNode={EditPageNode}
                         category={category}
-                        renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} />}
+                        renderContentScopeIndicator={(scope: ContentScope) => <ContentScopeIndicator scope={scope} />}
                     />
                 );
             },
@@ -100,7 +101,7 @@ export const masterMenuData: MasterMenuData = [
             path: "/assets",
             render: () => (
                 <DamPage
-                    renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} domainOnly />}
+                    renderContentScopeIndicator={(scope: ContentScope) => <ContentScopeIndicator scope={scope} domainOnly />}
                     additionalToolbarItems={<ImportFromUnsplash />}
                 />
             ),

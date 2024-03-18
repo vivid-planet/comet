@@ -7,17 +7,17 @@ import { FormattedMessage } from "react-intl";
 
 interface ContentScopeIndicatorProps {
     global?: boolean;
-    scopes?: React.ReactNode[];
+    scopeLabels?: React.ReactNode[];
 }
 
-export const ContentScopeIndicator = ({ global = false, scopes = [] }: ContentScopeIndicatorProps) => {
+export const ContentScopeIndicator = ({ global = false, scopeLabels = [] }: ContentScopeIndicatorProps) => {
     const theme = useTheme();
 
     let content: React.ReactNode;
     if (global) {
         content = <FormattedMessage {...messages.globalContentScope} />;
     } else {
-        content = scopes?.reduce<React.ReactNode[]>((nodes, scope, idx, arr) => {
+        content = scopeLabels?.reduce<React.ReactNode[]>((nodes, scope, idx, arr) => {
             const key = String(idx);
             const ret = [...nodes, <span key={key}>{scope}</span>];
 
