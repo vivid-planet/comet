@@ -5,28 +5,42 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { ContentScopeInterface, useContentScope } from "./Provider";
+
+const capitalizeString = (string: string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
 interface ContentScopeIndicatorProps {
     global?: boolean;
-    scopeLabels?: React.ReactNode[];
+    scope?: ContentScopeInterface;
 }
 
-export const ContentScopeIndicator = ({ global = false, scopeLabels = [] }: ContentScopeIndicatorProps) => {
+export const ContentScopeIndicator = ({ global = false, scope: passedScope }: ContentScopeIndicatorProps) => {
     const theme = useTheme();
+    const { scope: contentScope, values } = useContentScope();
+    const scope = passedScope ?? contentScope;
+
+    const findLabelForScopePart = (scopePart: keyof ContentScopeInterface) => {
+        const label = values[scopePart].find(({ value }) => value === scope[scopePart])?.label;
+        return label ?? capitalizeString(scope[scopePart]);
+    };
 
     let content: React.ReactNode;
     if (global) {
         content = <FormattedMessage {...messages.globalContentScope} />;
     } else {
-        content = scopeLabels?.reduce<React.ReactNode[]>((nodes, scope, idx, arr) => {
-            const key = String(idx);
-            const ret = [...nodes, <span key={key}>{scope}</span>];
+        const scopeParts = Object.keys(scope);
+        content = scopeParts.map((scopePart, index, array) => {
+            const isLastPart = index === array.length - 1;
 
-            if (idx < arr.length - 1) {
-                ret.push(<span key={`${key}-/`}>/</span>);
+            const ret = [findLabelForScopePart(scopePart)];
+            if (!isLastPart) {
+                ret.push(" / ");
             }
 
             return ret;
-        }, []);
+        });
     }
 
     return (

@@ -7,6 +7,7 @@ import { ContentScopeInterface, useContentScope } from "../contentScope/Provider
 import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { DamScopeProvider } from "./config/DamScopeProvider";
 import { useDamConfig } from "./config/useDamConfig";
+import { useDamScope } from "./config/useDamScope";
 import { DamTable } from "./DamTable";
 
 type Props = {
@@ -17,7 +18,15 @@ type Props = {
     additionalToolbarItems?: React.ReactNode;
 };
 
-const defaultRenderContentScopeIndicator = () => <ContentScopeIndicator global />;
+const DefaultRenderContentScopeIndicator = () => {
+    const damScope = useDamScope();
+
+    if (Object.keys(damScope).length > 0) {
+        return <ContentScopeIndicator scope={damScope} />;
+    } else {
+        return <ContentScopeIndicator global />;
+    }
+};
 
 const DamTableWrapper = styled("div")`
     display: grid;
@@ -26,7 +35,7 @@ const DamTableWrapper = styled("div")`
     grid-template-rows: max-content;
 `;
 
-function DamPage({ renderContentScopeIndicator = defaultRenderContentScopeIndicator, additionalToolbarItems }: Props): React.ReactElement {
+function DamPage({ renderContentScopeIndicator, additionalToolbarItems }: Props): React.ReactElement {
     const { scope, match } = useContentScope();
     const routeMatch = useRouteMatch();
     const damRouteLocation = routeMatch.url.replace(match.url, "");
@@ -37,7 +46,7 @@ function DamPage({ renderContentScopeIndicator = defaultRenderContentScopeIndica
         <DamScopeProvider>
             <DamTableWrapper>
                 <DamTable
-                    contentScopeIndicator={renderContentScopeIndicator(scope)}
+                    contentScopeIndicator={renderContentScopeIndicator ? renderContentScopeIndicator(scope) : <DefaultRenderContentScopeIndicator />}
                     additionalToolbarItems={damConfig.additionalToolbarItems ?? additionalToolbarItems}
                 />
             </DamTableWrapper>

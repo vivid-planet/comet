@@ -1,5 +1,6 @@
 import { Assets, Dashboard as DashboardIcon, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
 import {
+    ContentScopeIndicator,
     createRedirectsPage,
     CronJobsPage,
     DamPage,
@@ -30,7 +31,6 @@ import { FormattedMessage } from "react-intl";
 import { Redirect, RouteComponentProps } from "react-router-dom";
 
 import { ComponentDemo } from "./ComponentDemo";
-import { ContentScopeIndicator } from "./ContentScopeIndicator";
 import { EditPageNode } from "./EditPageNode";
 
 export const pageTreeDocumentTypes = {
@@ -99,12 +99,7 @@ export const masterMenuData: MasterMenuData = [
         icon: <Assets />,
         route: {
             path: "/assets",
-            render: () => (
-                <DamPage
-                    renderContentScopeIndicator={(scope: ContentScope) => <ContentScopeIndicator scope={scope} domainOnly />}
-                    additionalToolbarItems={<ImportFromUnsplash />}
-                />
-            ),
+            render: () => <DamPage additionalToolbarItems={<ImportFromUnsplash />} />,
         },
         requiredPermission: "dam",
     },

@@ -1,7 +1,6 @@
 import { MainContent, Stack } from "@comet/admin";
-import { DashboardHeader, LatestBuildsDashboardWidget, useUserPermissionCheck } from "@comet/cms-admin";
+import { ContentScopeIndicator, DashboardHeader, LatestBuildsDashboardWidget, useUserPermissionCheck } from "@comet/cms-admin";
 import { Grid } from "@mui/material";
-import { ContentScopeIndicator } from "@src/common/ContentScopeIndicator";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
