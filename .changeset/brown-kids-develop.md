@@ -2,6 +2,6 @@
 "@comet/admin": major
 ---
 
-SaveBoundary now creates a subroute by default
+Create a subroute by default in `SaveBoundary`
 
-default path is ./save, change it using subRoutePath prop
+The default path is `./save`, you can change it using the `subRoutePath` prop.
