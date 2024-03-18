@@ -414,10 +414,9 @@ export function generateGrid(
                                             <Edit color="primary" />
                                         </IconButton>`
                                         : ""
-                                }
-                                ${
-                                    allowCopyPaste || allowDeleting
-                                        ? `
+                                }${
+                              allowCopyPaste || allowDeleting
+                                  ? `
                                         <CrudContextMenu
                                             ${
                                                 allowCopyPaste
@@ -461,8 +460,8 @@ export function generateGrid(
                                             refetchQueries={[${instanceGqlTypePlural}Query]}
                                         />
                                     `
-                                        : ""
-                                }
+                                  : ""
+                          }
                                 </>
                             );
                         },
