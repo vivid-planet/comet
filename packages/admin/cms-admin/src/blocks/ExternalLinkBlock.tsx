@@ -5,7 +5,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ExternalLinkBlockData, ExternalLinkBlockInput } from "../blocks.generated";
-import { isHref } from "../validation/isHref";
+import { isLinkTarget } from "../validation/isLinkTarget";
 import { validateUrl } from "../validation/validateUrl";
 
 type State = ExternalLinkBlockData;
@@ -40,11 +40,11 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
     },
 
     isValid: (state) => {
-        return state.targetUrl ? isHref(state.targetUrl) : true;
+        return state.targetUrl ? isLinkTarget(state.targetUrl) : true;
     },
 
     url2State: (url) => {
-        if (isHref(url)) {
+        if (isLinkTarget(url)) {
             return {
                 targetUrl: url,
                 openInNewWindow: false,
