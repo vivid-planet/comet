@@ -112,6 +112,47 @@ export const NewsDependency: DependencyInterface = {
 };
 ```
 
+You may also use the `createDependencyMethods` helper to simplify resolving the path to the entity/block. Use the `basePath` option to specify where the entity is located in the Admin.
+
+```tsx
+// NewsDependency.tsx
+import { createDependencyMethods } from "@comet/cms-admin";
+
+// ...
+
+export const NewsDependency: DependencyInterface = {
+    displayName: <FormattedMessage id="news.displayName" defaultMessage="News" />,
+    ...createDependencyMethods({
+        rootQueryName: "news",
+        rootBlocks: { content: { block: NewsContentBlock, path: "/form" }, image: DamImageBlock },
+        basePath: ({ id }) => `/structured-content/news/${id}/edit`,
+    }),
+};
+```
+
+For document types you may use the `createDocumentDependencyMethods` helper that also loads the page tree node the document is attached to:
+
+```tsx
+// Page.tsx
+import { createDocumentDependencyMethods } from "@comet/cms-admin";
+
+// ...
+
+export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageInput> &
+    DependencyInterface = {
+    // ...
+    ...createDocumentDependencyMethods({
+        rootQueryName: "page",
+        rootBlocks: {
+            content: PageContentBlock,
+            seo: { block: SeoBlock, path: "/config" },
+        },
+        basePath: ({ pageTreeNode }) =>
+            `/pages/pagetree/${categoryToUrlParam(pageTreeNode.category)}/${pageTreeNode.id}/edit`,
+    }),
+};
+```
+
 ### 3. Register the DependencyInterface at the DependenciesConfigProvider
 
 The key must be the name of the GraphQL object type associated with the entity.
