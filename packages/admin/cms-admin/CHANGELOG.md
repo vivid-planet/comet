@@ -1,5 +1,17 @@
 # @comet/cms-admin
 
+## 4.8.1
+
+### Patch Changes
+
+-   cbec8f63f: Prevent XSS attacks in `isLinkTarget()` validator
+    -   @comet/admin@4.8.1
+    -   @comet/admin-date-time@4.8.1
+    -   @comet/admin-icons@4.8.1
+    -   @comet/admin-rte@4.8.1
+    -   @comet/admin-theme@4.8.1
+    -   @comet/blocks-admin@4.8.1
+
 ## 4.8.0
 
 ### Patch Changes
