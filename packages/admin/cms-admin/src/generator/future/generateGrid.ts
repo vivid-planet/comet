@@ -87,28 +87,18 @@ export function generateGrid(
     const mutations = gqlIntrospection.__schema.types.find((type) => type.name === "Mutation");
     if (!mutations || mutations.kind !== "OBJECT") throw new Error(`Missing Mutation-Type in schema. Do any mutations exist?`);
 
-    const queryName = instanceGqlType;
-    const introspectedQueryField = queries.fields.find((field) => field.name === queryName);
-    if (!introspectedQueryField) throw new Error(`query "${queryName}" for ${gqlType} in schema not found`);
-    const queryScopeParam = introspectedQueryField.args.find((arg) => arg.name === gqlQueryScopeParamName);
-
-    const createMutationName = `create${gqlType}`;
-    const introspectedCreateMutationField = mutations.fields.find((field) => field.name === createMutationName);
-    if (!introspectedCreateMutationField) throw new Error(`create-mutation "${createMutationName}" for ${gqlType} in schema not found`);
-    const createMutationScopeParam = introspectedCreateMutationField.args.find((arg) => arg.name === gqlQueryScopeParamName);
-
-    const deleteMutationName = `delete${gqlType}`;
-    const introspectedDeleteMutationField = mutations.fields.find((field) => field.name === deleteMutationName);
-    if (!introspectedDeleteMutationField) throw new Error(`delete-mutation "${deleteMutationName}" for ${gqlType} in schema not found`);
-    const deleteMutationScopeParam = introspectedDeleteMutationField.args.find((arg) => arg.name === gqlQueryScopeParamName);
-
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
 
     const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
+    const queryScopeParam = gridQueryType?.args.find((arg) => arg.name === gqlQueryScopeParamName);
 
     const createMutationType = findMutationType(`create${gqlType}`, gqlIntrospection);
+    const createMutationScopeParam = createMutationType?.args.find((arg) => arg.name === gqlQueryScopeParamName);
 
-    const hasDeleteMutation = !!findMutationType(`delete${gqlType}`, gqlIntrospection);
+    const deleteMutationType = findMutationType(`delete${gqlType}`, gqlIntrospection);
+    const deleteMutationScopeParam = deleteMutationType?.args.find((arg) => arg.name === gqlQueryScopeParamName);
+
+    const hasDeleteMutation = !!deleteMutationType;
     const hasCreateMutation = !!createMutationType;
 
     const allowCopyPaste = (typeof config.copyPaste === "undefined" || config.copyPaste === true) && !config.readOnly && hasCreateMutation;
