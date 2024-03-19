@@ -78,7 +78,6 @@ export class AppModule {
                 AuthModule,
                 UserPermissionsModule.forRootAsync({
                     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
-                        availablePermissions: ["news", "products"],
                         availableContentScopes: [
                             { domain: "main", language: "de" },
                             { domain: "main", language: "en" },
@@ -117,7 +116,6 @@ export class AppModule {
                     Documents: [Page, Link, PredefinedPage],
                     Scope: PageTreeNodeScope,
                     reservedPaths: ["/events"],
-                    sitePreviewSecret: config.sitePreviewSecret,
                 }),
                 RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
                 BlobStorageModule.register({

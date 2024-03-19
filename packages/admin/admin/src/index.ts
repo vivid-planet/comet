@@ -41,6 +41,7 @@ export { ToolbarBreadcrumbs, ToolbarBreadcrumbsProps } from "./common/toolbar/br
 export { ToolbarBreadcrumbsClassKey } from "./common/toolbar/breadcrumb/ToolbarBreadcrumbs.styles";
 export { ToolbarFillSpace, ToolbarFillSpaceClassKey, ToolbarFillSpaceProps } from "./common/toolbar/fillspace/ToolbarFillSpace";
 export { ToolbarItem, ToolbarItemClassKey, ToolbarItemProps } from "./common/toolbar/item/ToolbarItem";
+export { StackToolbar } from "./common/toolbar/StackToolbar";
 export { ToolbarTitleItem, ToolbarTitleItemClassKey, ToolbarTitleItemProps } from "./common/toolbar/titleitem/ToolbarTitleItem";
 export { Toolbar, ToolbarClassKey, ToolbarProps } from "./common/toolbar/Toolbar";
 export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";
@@ -208,3 +209,5 @@ export { RouterTabsClassKey } from "./tabs/RouterTabs.styles";
 export { Tab, Tabs, TabsProps } from "./tabs/Tabs";
 export { TabsClassKey } from "./tabs/Tabs.styles";
 export { TabScrollButton, TabScrollButtonClassKey, TabScrollButtonProps } from "./tabs/TabScrollButton";
+export { ContentTranslationServiceProvider } from "./translator/ContentTranslationServiceProvider";
+export { useContentTranslationService } from "./translator/useContentTranslationService";

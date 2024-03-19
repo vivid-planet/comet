@@ -8,6 +8,12 @@ import { v4 as uuid } from "uuid";
 import { NewsContentBlock } from "../blocks/news-content.block";
 import { NewsComment } from "./news-comment.entity";
 
+export enum NewsStatus {
+    Active = "Active",
+    Deleted = "Deleted",
+}
+registerEnumType(NewsStatus, { name: "NewsStatus" });
+
 export enum NewsCategory {
     Events = "Events",
     Company = "Company",
@@ -39,7 +45,7 @@ export class NewsContentScope {
 @Entity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
 export class News extends BaseEntity<News, "id"> implements DocumentInterface {
-    [OptionalProps]?: "createdAt" | "updatedAt" | "category"; // TODO remove "category" once CRUD generator supports enums
+    [OptionalProps]?: "createdAt" | "updatedAt" | "category" | "status"; // TODO remove "category" once CRUD generator supports enums
 
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)
@@ -57,6 +63,10 @@ export class News extends BaseEntity<News, "id"> implements DocumentInterface {
     @Field()
     title: string;
 
+    @Enum({ items: () => NewsStatus })
+    @Field(() => NewsStatus)
+    status: NewsStatus = NewsStatus.Active;
+
     @Property()
     @Field()
     date: Date;
@@ -64,10 +74,6 @@ export class News extends BaseEntity<News, "id"> implements DocumentInterface {
     @Enum({ items: () => NewsCategory })
     @Field(() => NewsCategory)
     category: NewsCategory = NewsCategory.Awards; // TODO remove default value once CRUD generator supports enums
-
-    @Property()
-    @Field()
-    visible: boolean;
 
     @RootBlock(DamImageBlock)
     @Property({ customType: new RootBlockType(DamImageBlock) })

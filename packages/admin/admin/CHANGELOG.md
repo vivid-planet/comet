@@ -1,5 +1,71 @@
 # @comet/admin
 
+## 6.3.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.3.0
+
+## 6.2.1
+
+### Patch Changes
+
+-   @comet/admin-icons@6.2.1
+
+## 6.2.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.2.0
+
+## 6.1.0
+
+### Minor Changes
+
+-   b35bb8d1: Add basis for content translation
+
+    Wrap a component with a `ContentTranslationServiceProvider` to add support for content translation to all underlying `FinalFormInput` inputs.
+
+    ```tsx
+    <ContentTranslationServiceProvider
+        enabled={true}
+        translate={async function (text: string): Promise<string> {
+            return yourTranslationFnc(text);
+        }}
+    >
+        ...
+    </ContentTranslationServiceProvider>
+    ```
+
+    You can disable translation for a specific `FinalFormInput` by using the `disableContentTranslation` prop.
+
+    ```diff
+    <Field
+        required
+        fullWidth
+        name="myField"
+        component={FinalFormInput}
+        label={<FormattedMessage id="myField" defaultMessage="My Field" />}
+    +   disableContentTranslation
+    />
+    ```
+
+-   8eb13750: Add `SaveBoundary` and `SaveBoundarySaveButton` that helps implementing multiple forms with a centralized save button
+
+    Render a `Savable` Component anywhere below a `SaveBoundary`. For `FinalForm` this hasn't to be done manually.
+
+-   a4fac913: Rework `Alert` component
+
+    -   Use theme wherever possible
+    -   Move styles where they're more fitting
+    -   Fix some paddings
+
+### Patch Changes
+
+-   dcfa03ca: Fix a crash when using the `Alert` component inside a MUI `Snackbar`
+-   Updated dependencies [08e0da09]
+    -   @comet/admin-icons@6.1.0
+
 ## 6.0.0
 
 ### Major Changes

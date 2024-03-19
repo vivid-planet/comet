@@ -5,8 +5,11 @@ import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
 
+import { ProductStatus } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
 
+@InputType()
+class ProductStatusEnumFilter extends createEnumFilter(ProductStatus) {}
 @InputType()
 class ProductTypeEnumFilter extends createEnumFilter(ProductType) {}
 
@@ -18,11 +21,11 @@ export class ProductFilter {
     @Type(() => StringFilter)
     title?: StringFilter;
 
-    @Field(() => BooleanFilter, { nullable: true })
+    @Field(() => ProductStatusEnumFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => BooleanFilter)
-    visible?: BooleanFilter;
+    @Type(() => ProductStatusEnumFilter)
+    status?: ProductStatusEnumFilter;
 
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
@@ -83,6 +86,12 @@ export class ProductFilter {
     @IsOptional()
     @Type(() => DateFilter)
     updatedAt?: DateFilter;
+
+    @Field(() => ManyToOneFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => ManyToOneFilter)
+    manufacturer?: ManyToOneFilter;
 
     @Field(() => [ProductFilter], { nullable: true })
     @Type(() => ProductFilter)

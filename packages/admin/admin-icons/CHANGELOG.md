@@ -1,5 +1,17 @@
 # @comet/admin-icons
 
+## 6.3.0
+
+## 6.2.1
+
+## 6.2.0
+
+## 6.1.0
+
+### Patch Changes
+
+-   08e0da09: Fix icons inside tooltips by forwarding the ref
+
 ## 6.0.0
 
 ### Major Changes

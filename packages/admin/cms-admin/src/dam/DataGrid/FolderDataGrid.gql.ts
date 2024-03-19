@@ -31,6 +31,7 @@ export const damFileTableFragment = gql`
             ...DamFileThumbnail
         }
         updatedAt
+        importSourceType
     }
     ${damFileThumbnailFragment}
 `;

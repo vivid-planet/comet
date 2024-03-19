@@ -116,15 +116,15 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
             }
             await client.mutate<GQLUpdateNewsMutation, GQLUpdateNewsMutationVariables>({
                 mutation: updateNewsMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.news?.updatedAt },
+                variables: { id, input: output },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<GQLCreateNewsMutation, GQLCreateNewsMutationVariables>({
+            const { data: mutationResponse } = await client.mutate<GQLCreateNewsMutation, GQLCreateNewsMutationVariables>({
                 mutation: createNewsMutation,
                 variables: { scope, input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createNews.id;
+                const id = mutationResponse?.createNews.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage("edit", id);
@@ -174,6 +174,18 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             label={<FormattedMessage id="news.title" defaultMessage="Title" />}
                         />
+                        <Field fullWidth name="status" label={<FormattedMessage id="news.status" defaultMessage="Status" />}>
+                            {(props) => (
+                                <FinalFormSelect {...props}>
+                                    <MenuItem value="Active">
+                                        <FormattedMessage id="news.status.active" defaultMessage="Active" />
+                                    </MenuItem>
+                                    <MenuItem value="Deleted">
+                                        <FormattedMessage id="news.status.deleted" defaultMessage="Deleted" />
+                                    </MenuItem>
+                                </FinalFormSelect>
+                            )}
+                        </Field>
                         <Field
                             required
                             fullWidth

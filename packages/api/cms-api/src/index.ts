@@ -1,8 +1,6 @@
 import "reflect-metadata";
 
 export { AccessLogModule } from "./access-log/access-log.module";
-export { CurrentUserInterface } from "./auth/current-user/current-user";
-export { CURRENT_USER_LOADER, CurrentUserLoaderInterface } from "./auth/current-user/current-user-loader";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
 export { DisableGlobalGuard } from "./auth/decorators/global-guard-disable.decorator";
 export { PublicApi } from "./auth/decorators/public-api.decorator";
@@ -131,6 +129,7 @@ export { PageTreeNodeBase } from "./page-tree/entities/page-tree-node-base.entit
 export { PAGE_TREE_REPOSITORY } from "./page-tree/page-tree.constants";
 export { PageTreeModule } from "./page-tree/page-tree.module";
 export { PageTreeReadApi, PageTreeService } from "./page-tree/page-tree.service";
+export { PageTreeNodeDocumentEntityScopeService } from "./page-tree/page-tree-node-document-entity-scope.service";
 export { PageTreeReadApiService } from "./page-tree/page-tree-read-api.service";
 export { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility, ScopeInterface } from "./page-tree/types";
 export { PageExists, PageExistsConstraint } from "./page-tree/validators/page-exists.validator";
@@ -150,7 +149,6 @@ export { CurrentUser } from "./user-permissions/dto/current-user";
 export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
 export { User } from "./user-permissions/dto/user";
 export { ContentScope } from "./user-permissions/interfaces/content-scope.interface";
-export { Permission } from "./user-permissions/interfaces/user-permission.interface";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export {
     AccessControlServiceInterface,

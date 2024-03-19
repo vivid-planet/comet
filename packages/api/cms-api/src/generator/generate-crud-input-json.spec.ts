@@ -51,6 +51,15 @@ export class TestEntityWithEmbedded extends BaseEntity<TestEntityWithEmbedded, "
     @Embedded(() => TestEmbedded)
     foo: TestEmbedded;
 }
+
+@Entity()
+export class TestEntityWithRecord extends BaseEntity<TestEntityWithRecord, "id"> {
+    @PrimaryKey({ type: "uuid" })
+    id: string = uuid();
+
+    @Property({ type: "json" })
+    foo: Record<string, string>;
+}
 describe("GenerateCrudInputJson", () => {
     describe("input class literal array", () => {
         it("should be a valid generated ts file", async () => {
@@ -152,6 +161,44 @@ describe("GenerateCrudInputJson", () => {
                 expect(structure.properties?.length).toBe(1);
                 expect(structure.properties?.[0].name).toBe("foo");
                 expect(structure.properties?.[0].type).toBe("TestEmbedded");
+            }
+            {
+                const cls = classes[1]; //update dto
+                const structure = cls.getStructure();
+
+                expect(structure.properties?.length).toBe(0);
+            }
+
+            orm.close();
+        });
+    });
+
+    describe("input class record", () => {
+        it("should be a valid generated ts file", async () => {
+            LazyMetadataStorage.load();
+            const orm = await MikroORM.init({
+                type: "postgresql",
+                dbName: "test-db",
+                entities: [TestEntityWithRecord],
+            });
+
+            const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithRecord"));
+            const lintedOutput = await lintSource(out[0].content);
+            const source = parseSource(lintedOutput);
+
+            const classes = source.getClasses();
+            expect(classes.length).toBe(2);
+
+            {
+                const cls = classes[0];
+                const structure = cls.getStructure();
+
+                expect(structure.properties?.length).toBe(1);
+                expect(structure.properties?.[0].name).toBe("foo");
+                expect(structure.properties?.[0].type).toBe("Record<string, string>");
+                expect(structure.properties?.[0].decorators?.[0].name).toBe("IsNotEmpty");
+                expect(structure.properties?.[0].decorators?.[1].name).toBe("Field");
+                expect(structure.properties?.[0].decorators?.[1].arguments).toStrictEqual(["() => GraphQLJSONObject"]);
             }
             {
                 const cls = classes[1]; //update dto

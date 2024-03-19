@@ -6,10 +6,10 @@ import { Field, ID, InputType } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
 
-import { ProductDimensions, ProductDiscounts, ProductPackageDimensions } from "../../entities/product.entity";
+import { ProductDimensions, ProductDiscounts, ProductStatus } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
+import { ProductColorInput } from "./product-color.nested.input";
 import { ProductStatisticsInput } from "./product-statistics.nested.input";
-import { ProductVariantInput } from "./product-variant.nested.input";
 
 @InputType()
 export class ProductInput {
@@ -17,6 +17,11 @@ export class ProductInput {
     @IsString()
     @Field()
     title: string;
+
+    @IsNotEmpty()
+    @IsEnum(ProductStatus)
+    @Field(() => ProductStatus, { defaultValue: ProductStatus.Unpublished })
+    status: ProductStatus;
 
     @IsNotEmpty()
     @IsString()
@@ -36,7 +41,7 @@ export class ProductInput {
 
     @IsNullable()
     @IsNumber()
-    @Field({ nullable: true })
+    @Field({ nullable: true, defaultValue: null })
     price?: number;
 
     @IsNotEmpty()
@@ -46,7 +51,7 @@ export class ProductInput {
 
     @IsNullable()
     @IsDate()
-    @Field({ nullable: true })
+    @Field({ nullable: true, defaultValue: null })
     availableSince?: Date;
 
     @IsNotEmpty()
@@ -75,21 +80,15 @@ export class ProductInput {
     dimensions?: ProductDimensions;
 
     @IsNullable()
-    @ValidateNested()
-    @Type(() => ProductPackageDimensions)
-    @Field(() => ProductPackageDimensions, { nullable: true })
-    packageDimensions?: ProductPackageDimensions;
-
-    @IsNullable()
     @Field(() => ProductStatisticsInput, { nullable: true })
     @Type(() => ProductStatisticsInput)
     @ValidateNested()
     statistics?: ProductStatisticsInput;
 
-    @Field(() => [ProductVariantInput], { defaultValue: [] })
+    @Field(() => [ProductColorInput], { defaultValue: [] })
     @IsArray()
-    @Type(() => ProductVariantInput)
-    variants: ProductVariantInput[];
+    @Type(() => ProductColorInput)
+    colors: ProductColorInput[];
 
     @IsNullable()
     @Field(() => ID, { nullable: true, defaultValue: null })
@@ -100,6 +99,11 @@ export class ProductInput {
     @IsArray()
     @IsUUID(undefined, { each: true })
     tags: string[];
+
+    @IsNullable()
+    @Field(() => ID, { nullable: true, defaultValue: null })
+    @IsUUID()
+    manufacturer?: string;
 }
 
 @InputType()

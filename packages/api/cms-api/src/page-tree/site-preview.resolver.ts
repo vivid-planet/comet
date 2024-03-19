@@ -1,40 +1,21 @@
 import { Inject } from "@nestjs/common";
-import { Args, ArgsType, Field, InputType, Query, Resolver } from "@nestjs/graphql";
-import { Type } from "class-transformer";
-import { IsBoolean, IsString, ValidateNested } from "class-validator";
-import jsonwebtoken from "jsonwebtoken";
+import { Args, Query, Resolver } from "@nestjs/graphql";
+import { GraphQLJSONObject } from "graphql-type-json";
 
-import { SITE_PREVIEW_CONFIG } from "./page-tree.constants";
-
-@InputType()
-export class PreviewData {
-    @Field(() => Boolean)
-    @IsBoolean()
-    includeInvisible: boolean;
-}
-
-@ArgsType()
-class SitePreviewArgs {
-    @Field(() => String)
-    @IsString()
-    path: string;
-
-    @Field(() => PreviewData)
-    @ValidateNested()
-    @Type(() => PreviewData)
-    previewData: PreviewData;
-}
-
-export type SitePreviewConfig = {
-    secret: string;
-};
+import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
+import { CurrentUser } from "../user-permissions/dto/current-user";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
+import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
 
 @Resolver()
 export class SitePreviewResolver {
-    constructor(@Inject(SITE_PREVIEW_CONFIG) private readonly config: SitePreviewConfig) {}
+    constructor(@Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface) {}
 
-    @Query(() => String)
-    getSitePreviewJwt(@Args() args: SitePreviewArgs): string {
-        return jsonwebtoken.sign({ ...args }, this.config.secret, { expiresIn: 10 });
+    @Query(() => Boolean)
+    @RequiredPermission(["pageTree"], { skipScopeCheck: true })
+    isAllowedSitePreview(@GetCurrentUser() user: CurrentUser, @Args("scope", { type: () => GraphQLJSONObject }) scope: ContentScope): boolean {
+        return this.accessControlService.isAllowed(user, "pageTree", scope);
     }
 }

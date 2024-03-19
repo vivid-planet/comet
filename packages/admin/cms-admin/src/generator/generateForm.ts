@@ -88,8 +88,8 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     \`
     
     export const update${entityName}Mutation = gql\`
-        mutation Update${entityName}($id: ID!, $input: ${entityName}UpdateInput!, $lastUpdatedAt: DateTime) {
-            update${entityName}(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
+        mutation Update${entityName}($id: ID!, $input: ${entityName}UpdateInput!) {
+            update${entityName}(id: $id, input: $input) {
                 id
                 updatedAt
                 ...${entityName}Form
@@ -243,15 +243,15 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                 }
                 await client.mutate<GQLUpdate${entityName}Mutation, GQLUpdate${entityName}MutationVariables>({
                     mutation: update${entityName}Mutation,
-                    variables: { id, input: output, lastUpdatedAt: data?.${instanceEntityName}?.updatedAt },
+                    variables: { id, input: output },
                 });
             } else {
-                const { data: mutationReponse } = await client.mutate<GQLCreate${entityName}Mutation, GQLCreate${entityName}MutationVariables>({
+                const { data: mutationResponse } = await client.mutate<GQLCreate${entityName}Mutation, GQLCreate${entityName}MutationVariables>({
                     mutation: create${entityName}Mutation,
                     variables: { ${hasScope ? `scope, ` : ""}input: output },
                 });
                 if (!event.navigatingBack) {
-                    const id = mutationReponse?.create${entityName}.id;
+                    const id = mutationResponse?.create${entityName}.id;
                     if (id) {
                         setTimeout(() => {
                             stackSwitchApi.activatePage("edit", id);

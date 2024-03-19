@@ -1,5 +1,6 @@
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
+import { GridColDef } from "@mui/x-data-grid";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
@@ -8,7 +9,7 @@ import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
 import { writeGenerated } from "./utils/writeGenerated";
 
-type BlockReference = {
+type ImportReference = {
     name: string;
     import: string;
 };
@@ -20,9 +21,9 @@ export type FormFieldConfig<T> = (
     | { type: "date" }
     // TODO | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
-    | { type: "asyncSelect"; values?: string[] }
-    | { type: "block"; block: BlockReference }
-) & { name: keyof T; label?: string; required?: boolean; readOnly?: boolean };
+    | { type: "asyncSelect"; rootQuery: string; labelField?: string }
+    | { type: "block"; block: ImportReference }
+) & { name: keyof T; label?: string; required?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
 
 export type FormConfig<T extends { __typename?: string }> = {
     type: "form";
@@ -33,6 +34,8 @@ export type FormConfig<T extends { __typename?: string }> = {
 };
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
+type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex">;
+
 export type GridColumnConfig<T> = (
     | { type: "text" }
     | { type: "number" }
@@ -40,8 +43,8 @@ export type GridColumnConfig<T> = (
     | { type: "date" }
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
-    | { type: "block"; block: BlockReference }
-) & { name: keyof T; headerName?: string; width?: number };
+    | { type: "block"; block: ImportReference }
+) & { name: keyof T } & DataGridSettings;
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];

@@ -1,20 +1,22 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    CheckboxField,
     Field,
     FinalForm,
-    FinalFormCheckbox,
-    FinalFormInput,
     FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
     MainContent,
+    SelectField,
+    TextAreaField,
+    TextField,
     useAsyncOptionsProps,
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { FormControlLabel, MenuItem } from "@mui/material";
+import { MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -58,7 +60,7 @@ type FormValues = Omit<GQLProductFormManualFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
 
-function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -99,25 +101,23 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             type: formValues.type as GQLProductType,
             category: formValues.category?.id,
             tags: formValues.tags.map((i) => i.id),
-            variants: [],
             articleNumbers: [],
             discounts: [],
-            packageDimensions: { width: 0, height: 0, depth: 0 },
             statistics: { views: 0 },
         };
         if (mode === "edit") {
             if (!id) throw new Error();
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.product.updatedAt },
+                variables: { id, input: output },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
+            const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
                 variables: { input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createProduct.id;
+                const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage(`edit`, id);
@@ -136,9 +136,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         return tags.data.productTags.nodes;
     });
 
-    if (error) {
-        return <FormattedMessage id="common.error" defaultMessage="An error has occurred. Please try again at later" />;
-    }
+    if (error) throw error;
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;
@@ -157,38 +155,19 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                 <EditPageLayout>
                     {saveConflict.dialogs}
                     <MainContent>
-                        <Field
+                        <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
+                        <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
+                        <TextAreaField
                             required
                             fullWidth
-                            name="title"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.title" defaultMessage="Title" />}
-                        />
-                        <Field
-                            required
-                            fullWidth
-                            name="slug"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
-                        />
-                        <Field
-                            required
-                            fullWidth
-                            multiline
-                            rows={5}
                             name="description"
-                            component={FinalFormInput}
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
-                        <Field name="type" label="Type" required fullWidth>
-                            {(props) => (
-                                <FinalFormSelect {...props} fullWidth>
-                                    <MenuItem value="Cap">Cap</MenuItem>
-                                    <MenuItem value="Shirt">Shirt</MenuItem>
-                                    <MenuItem value="Tie">Tie</MenuItem>
-                                </FinalFormSelect>
-                            )}
-                        </Field>
+                        <SelectField name="type" label="Type" required fullWidth>
+                            <MenuItem value="Cap">Cap</MenuItem>
+                            <MenuItem value="Shirt">Shirt</MenuItem>
+                            <MenuItem value="Tie">Tie</MenuItem>
+                        </SelectField>
                         <Field
                             fullWidth
                             name="category"
@@ -206,14 +185,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             {...tagsSelectAsyncProps}
                             getOptionLabel={(option: GQLProductTagsSelectFragment) => option.title}
                         />
-                        <Field name="inStock" label="" type="checkbox" fullWidth>
-                            {(props) => (
-                                <FormControlLabel
-                                    label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />}
-                                    control={<FinalFormCheckbox {...props} />}
-                                />
-                            )}
-                        </Field>
+                        <CheckboxField name="inStock" label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />} fullWidth />
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
@@ -223,5 +195,3 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         </FinalForm>
     );
 }
-
-export default ProductForm;
