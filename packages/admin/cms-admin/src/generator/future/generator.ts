@@ -32,6 +32,7 @@ export type FormConfig<T extends { __typename?: string }> = {
     fields: FormFieldConfig<T>[];
     title?: string;
 };
+
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
 type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex">;

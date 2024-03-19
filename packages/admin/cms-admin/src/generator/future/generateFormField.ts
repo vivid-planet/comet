@@ -63,7 +63,6 @@ export function generateFormField(
         <${TextInputComponent}
             ${required ? "required" : ""}
             ${config.readOnly ? readOnlyPropsWithLock : ""}
-            ${config.multiline ? "multiline" : ""}
             fullWidth
             name="${name}"
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
