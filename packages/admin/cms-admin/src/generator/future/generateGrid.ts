@@ -354,7 +354,7 @@ export function generateGrid(
 
 
     export function ${gqlTypePlural}Grid(): React.ReactElement {
-        ${allowCopyPaste ? "const client = useApolloClient();" : ""}
+        ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
