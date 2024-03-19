@@ -1,5 +1,5 @@
-// NOTE: Everything below this line should be copied into the docs file when something is changed: internal-development/create-admin-components-with-theme-support.md
-import { ThemedComponentBaseProps, createComponentSlot } from "@comet/admin";
+// NOTE: Everything below this line should be copied into the docs file when something is changed: comet-core-development/create-admin-components-with-theme-support.md
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { CometColor } from "@comet/admin-icons";
 import { ComponentsOverrides, Typography } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
