@@ -71,13 +71,13 @@ export class FilesEntityInfoService implements EntityInfoServiceInterface<FileIn
 
 ### 2. Implement the DependencyInterface (Admin)
 
-The DependencyInterface requires a translatable `displayName` and a `getUrl()` method providing a URL to edit an entity or its blocks.
+The DependencyInterface requires a translatable `displayName` and a `resolvePath()` method providing a path to edit an entity or its blocks.
 
 ```ts
 // NewsDependency.tsx
 export const NewsDependency: DependencyInterface = {
     displayName: <FormattedMessage id="news.displayName" defaultMessage="News" />,
-    resolveRoute: async ({ apolloClient, id, rootColumnName, jsonPath }) => {
+    resolvePath: async ({ apolloClient, id, rootColumnName, jsonPath }) => {
         const { data, error } = await apolloClient.query<
             GQLNewsDependencyQuery,
             GQLNewsDependencyQueryVariables
@@ -99,15 +99,15 @@ export const NewsDependency: DependencyInterface = {
             throw new Error(`News.getUrl: Could not find a News with id ${id}`);
         }
 
-        let dependencyRoute = "";
+        let dependencyPath = "";
         if (rootColumnName === "content") {
-            dependencyRoute = `form/${NewsContentBlock.resolveDependencyRoute(
+            dependencyPath = `form/${NewsContentBlock.resolveDependencyPath(
                 NewsContentBlock.input2State(data.news.content),
                 jsonPath.substring("root.".length),
             )}`;
         }
 
-        return `/structured-content/news/${data.news.id}/edit/${dependencyRoute}`;
+        return `/structured-content/news/${data.news.id}/edit/${dependencyPath}`;
     },
 };
 ```

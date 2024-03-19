@@ -195,24 +195,24 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
 
                 return result;
             },
-            resolveDependencyRoute: (state, jsonPath) => {
+            resolveDependencyPath: (state, jsonPath) => {
                 const pathArr = jsonPath.split(".");
                 const key = pathArr[0];
                 const childJsonPath = pathArr.slice(1).join(".");
 
-                let dependencyRoute: string | undefined;
+                let dependencyPath: string | undefined;
                 applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
                     if (attr === key) {
                         const extractedData = extractData([block, options], attr, state);
-                        dependencyRoute = block.resolveDependencyRoute(extractedData, childJsonPath);
+                        dependencyPath = block.resolveDependencyPath(extractedData, childJsonPath);
                     }
                 });
 
-                if (dependencyRoute === undefined) {
+                if (dependencyPath === undefined) {
                     throw new Error(`CompositeBlock: Can't find block with key "${key}"`);
                 }
 
-                return dependencyRoute;
+                return dependencyPath;
             },
         },
         api: {
