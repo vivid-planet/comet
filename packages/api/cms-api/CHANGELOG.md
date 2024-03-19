@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 5.6.5
+
+### Patch Changes
+
+-   Updated dependencies [47276f84b]
+    -   @comet/blocks-api@5.6.5
+
 ## 5.6.4
 
 ### Patch Changes
