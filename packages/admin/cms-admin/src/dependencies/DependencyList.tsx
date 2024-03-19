@@ -1,15 +1,18 @@
-import { TypedDocumentNode, useQuery } from "@apollo/client";
+import { TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
 import { messages, Tooltip, useDataGridRemote } from "@comet/admin";
-import { Reload } from "@comet/admin-icons";
+import { ArrowRight, OpenNewTab, Reload } from "@comet/admin-icons";
 import { IconButton, LinearProgress, tablePaginationClasses } from "@mui/material";
 import { LabelDisplayedRowsArgs } from "@mui/material/TablePagination/TablePagination";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+import { useHistory } from "react-router";
 
+import { useContentScope } from "../contentScope/Provider";
 import { GQLDependency } from "../graphql.generated";
 import { useDependenciesConfig } from "./DependenciesConfig";
 import * as sc from "./DependencyList.sc";
+import { DependencyInterface } from "./types";
 
 export type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "rootColumnName" | "jsonPath"> & {
     id: string;
@@ -43,6 +46,9 @@ const pageSize = 10;
 export const DependencyList = ({ query, variables }: DependencyListProps) => {
     const intl = useIntl();
     const entityDependencyMap = useDependenciesConfig();
+    const contentScope = useContentScope();
+    const apolloClient = useApolloClient();
+    const history = useHistory();
 
     const dataGridProps = useDataGridRemote({ queryParamsPrefix: "dependencies", pageSize: pageSize });
 
@@ -74,6 +80,55 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
             headerName: intl.formatMessage({ id: "comet.dependencies.dataGrid.type", defaultMessage: "Type" }),
             sortable: false,
             renderCell: ({ row }) => <sc.StyledChip label={entityDependencyMap[row.graphqlObjectType]?.displayName ?? row.graphqlObjectType} />,
+        },
+        {
+            field: "actions",
+            headerName: "",
+            sortable: false,
+            renderCell: ({ row }) => {
+                const dependencyObject = entityDependencyMap[row.graphqlObjectType] as DependencyInterface | undefined;
+
+                if (dependencyObject === undefined) {
+                    if (process.env.NODE_ENV === "development") {
+                        console.warn(
+                            `Cannot load URL because no implementation of DependencyInterface for ${row.graphqlObjectType} was provided via the DependenciesConfig`,
+                        );
+                    }
+                    return <FormattedMessage id="comet.dependencies.dataGrid.cannotLoadUrl" defaultMessage="Cannot determine URL" />;
+                }
+
+                const loadUrl = async () => {
+                    const route = await dependencyObject.resolveRoute({
+                        rootColumnName: row.rootColumnName,
+                        jsonPath: row.jsonPath,
+                        apolloClient,
+                        id: row.id,
+                    });
+                    return contentScope.match.url + route;
+                };
+
+                return (
+                    <div style={{ display: "flex" }}>
+                        <IconButton
+                            onClick={async () => {
+                                const url = await loadUrl();
+                                window.open(url, "_blank");
+                            }}
+                        >
+                            <OpenNewTab />
+                        </IconButton>
+                        <IconButton
+                            onClick={async () => {
+                                const url = await loadUrl();
+
+                                history.push(url);
+                            }}
+                        >
+                            <ArrowRight />
+                        </IconButton>
+                    </div>
+                );
+            },
         },
     ];
 
