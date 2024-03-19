@@ -186,6 +186,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
 
                         <TextAreaField
                             required
+                            multiline
                             fullWidth
                             name="description"
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}

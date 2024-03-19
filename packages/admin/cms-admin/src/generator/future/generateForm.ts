@@ -59,16 +59,6 @@ export function generateForm(
         }
     `;
 
-    const updateMutationFragmentName = `${fragmentName}Update`;
-    gqlDocuments[`${instanceGqlType}FormUpdateMutationFragment`] = `
-    fragment ${updateMutationFragmentName} on ${gqlType} {
-        ${config.fields
-            .filter((field) => !field.readOnly)
-            .map((field) => field.name)
-            .join("\n")}
-    }
-    `;
-
     gqlDocuments[`${instanceGqlType}Query`] = `
         query ${gqlType}($id: ID!) {
             ${instanceGqlType}(id: $id) {
@@ -96,10 +86,10 @@ export function generateForm(
             update${gqlType}(id: $id, input: $input) {
                 id
                 updatedAt
-                ...${updateMutationFragmentName}
+                ...${fragmentName}
             }
         }
-        \${${`${instanceGqlType}FormUpdateMutationFragment`}}
+        \${${`${instanceGqlType}FormFragment`}}
     `;
 
     for (const name in gqlDocuments) {
