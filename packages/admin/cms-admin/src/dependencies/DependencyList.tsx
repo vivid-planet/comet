@@ -98,13 +98,13 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                 }
 
                 const loadUrl = async () => {
-                    const route = await dependencyObject.resolveRoute({
+                    const path = await dependencyObject.resolvePath({
                         rootColumnName: row.rootColumnName,
                         jsonPath: row.jsonPath,
                         apolloClient,
                         id: row.id,
                     });
-                    return contentScope.match.url + route;
+                    return contentScope.match.url + path;
                 };
 
                 return (

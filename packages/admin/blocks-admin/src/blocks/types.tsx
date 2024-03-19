@@ -84,7 +84,7 @@ export interface BlockMethods<
     anchors?: (state: State) => string[];
     dependencies?: (state: State) => BlockDependency[];
     replaceDependenciesInOutput: (output: OutputApi, replacements: ReplaceDependencyObject[]) => OutputApi;
-    resolveDependencyRoute: (state: State, jsonPath: string) => string;
+    resolveDependencyPath: (state: State, jsonPath: string) => string;
 }
 
 export interface AnonymousBlockInterface<

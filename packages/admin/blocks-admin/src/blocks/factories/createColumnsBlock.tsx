@@ -459,7 +459,7 @@ export function createColumnsBlock<T extends BlockInterface>({
             );
         },
 
-        resolveDependencyRoute: (state, jsonPath) => {
+        resolveDependencyPath: (state, jsonPath) => {
             if (!/^columns.\d+.props/.test(jsonPath)) {
                 throw new Error("ColumnsBlock: Invalid jsonPath");
             }
@@ -468,7 +468,7 @@ export function createColumnsBlock<T extends BlockInterface>({
             const num = Number(pathArr[1]);
             const blockItem = state.columns[num];
 
-            const childPath = contentBlock.resolveDependencyRoute(blockItem.props, pathArr.slice(3).join("."));
+            const childPath = contentBlock.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
             return `${blockItem.key}/edit/${childPath}`;
         },
     };

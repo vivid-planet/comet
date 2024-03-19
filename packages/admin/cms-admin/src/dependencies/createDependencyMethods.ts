@@ -20,9 +20,9 @@ export function createDependencyMethods<RootBlocks extends Record<string, BlockI
     rootQueryName: string;
     rootBlocks: { [Key in keyof RootBlocks]: RootBlocks[Key] | { block: RootBlocks[Key]; path?: string } };
     basePath: string | ((node: NonNullable<Query<RootBlocks>["node"]>) => string);
-}): Pick<DependencyInterface, "resolveRoute"> {
+}): Pick<DependencyInterface, "resolvePath"> {
     return {
-        resolveRoute: async ({ rootColumnName, jsonPath, apolloClient, id }) => {
+        resolvePath: async ({ rootColumnName, jsonPath, apolloClient, id }) => {
             const { data, error } = await apolloClient.query<Query<RootBlocks>, QueryVariables>({
                 query: gql`
                     query ${rootQueryName}Dependency($id: ID!) {
@@ -63,7 +63,7 @@ export function createDependencyMethods<RootBlocks extends Record<string, BlockI
                 }
 
                 url += `${path ?? ""}/`;
-                url += block.resolveDependencyRoute(block.input2State(data.node[rootColumnName]), jsonPath.substring("root.".length));
+                url += block.resolveDependencyPath(block.input2State(data.node[rootColumnName]), jsonPath.substring("root.".length));
             }
 
             return url;

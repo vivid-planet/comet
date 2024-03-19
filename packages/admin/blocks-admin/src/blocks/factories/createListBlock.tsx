@@ -494,7 +494,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                 return [...prev, ...nextPreviewContent];
             }, []);
         },
-        resolveDependencyRoute: (state, jsonPath) => {
+        resolveDependencyPath: (state, jsonPath) => {
             if (!/^blocks.\d+.props/.test(jsonPath)) {
                 throw new Error("ListBlock: Invalid jsonPath");
             }
@@ -503,7 +503,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
             const num = Number(pathArr[1]);
             const blockItem = state.blocks[num];
 
-            const childPath = block.resolveDependencyRoute(blockItem.props, pathArr.slice(3).join("."));
+            const childPath = block.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
             return `${blockItem.key}/edit/${childPath}`;
         },
     };

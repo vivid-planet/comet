@@ -288,19 +288,19 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                 </StackSwitch>
             );
         },
-        resolveDependencyRoute: (state, jsonPath) => {
+        resolveDependencyPath: (state, jsonPath) => {
             const key = jsonPath.split(".")[0];
 
             const route = [];
 
-            const childRoute = block.resolveDependencyRoute(state, jsonPath);
+            const childPath = block.resolveDependencyPath(state, jsonPath);
             if (blockConfigNormalized[key].nested) {
                 route.push(key, key);
-            } else if (childRoute.length > 0) {
+            } else if (childPath.length > 0) {
                 route.push(key);
             }
 
-            route.push(childRoute);
+            route.push(childPath);
 
             return route.join("/");
         },

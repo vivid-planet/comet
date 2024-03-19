@@ -806,7 +806,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 }
             }, []);
         },
-        resolveDependencyRoute: (state, jsonPath) => {
+        resolveDependencyPath: (state, jsonPath) => {
             if (!/^blocks.\d+.props/.test(jsonPath)) {
                 throw new Error("BlocksBlock: Invalid jsonPath");
             }
@@ -821,7 +821,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 throw new Error("BlocksBlock: Block is null");
             }
 
-            const childPath = block.resolveDependencyRoute(blockItem.props, pathArr.slice(3).join("."));
+            const childPath = block.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
             return `${blockItem.key}/blocks/${childPath}`;
         },
     };

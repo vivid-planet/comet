@@ -43,7 +43,7 @@ function common<InputApi, State, OutputApi>(): Omit<
         isValid: () => true,
         previewContent: () => [],
         replaceDependenciesInOutput: (output) => output,
-        resolveDependencyRoute: () => "",
+        resolveDependencyPath: () => "",
     };
 }
 
