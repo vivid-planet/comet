@@ -26,7 +26,6 @@
         "@fontsource/roboto": "^4.2.3",
         "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
-        "@mui/styles": "^5.0.0",
         "@mui/system": "^5.0.0",
         "@mui/x-data-grid": "^5.17.6",
         "@storybook/addon-actions": "^6.5.16",

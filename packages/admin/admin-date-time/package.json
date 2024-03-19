@@ -38,7 +38,6 @@
         "@comet/admin-babel-preset": "workspace:^6.3.0",
         "@comet/eslint-config": "workspace:^6.3.0",
         "@mui/material": "^5.0.0",
-        "@mui/styles": "^5.0.0",
         "@types/react": "^17.0",
         "@types/react-date-range": "^1.4.3",
         "@types/react-dom": "^17.0.0",
@@ -55,7 +54,6 @@
     },
     "peerDependencies": {
         "@mui/material": "^5.0.0",
-        "@mui/styles": "^5.0.0",
         "react": "^17.0",
         "react-dom": "^17.0",
         "react-final-form": "^6.5.7",
