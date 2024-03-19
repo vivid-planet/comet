@@ -39,20 +39,31 @@ import {
 } from "./ManufacturerForm.gql.generated";
 
 type FormValues = Omit<GQLManufacturerFormDetailsFragment, "address" | "addressAsEmbeddable"> & {
-    address: {
-        street: string;
-        streetNumber: string | null;
-        zip: string;
-        country: string;
-        alternativeAddress: { street: string; streetNumber: string | null; zip: string; country: string };
-    };
-    addressAsEmbeddable: {
-        street: string;
-        streetNumber: string | null;
-        zip: string;
-        country: string;
-        alternativeAddress: { street: string; streetNumber: string | null; zip: string; country: string };
-    };
+    address:
+        | (Omit<NonNullable<GQLManufacturerFormDetailsFragment["address"]>, "streetNumber" | "zip" | "alternativeAddress"> & {
+              streetNumber: string | null;
+              zip: string;
+              alternativeAddress:
+                  | (Omit<NonNullable<NonNullable<GQLManufacturerFormDetailsFragment["address"]>["alternativeAddress"]>, "streetNumber" | "zip"> & {
+                        streetNumber: string | null;
+                        zip: string;
+                    })
+                  | null;
+          })
+        | null;
+    addressAsEmbeddable:
+        | Omit<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>, "streetNumber" | "zip" | "alternativeAddress"> & {
+              streetNumber: string | null;
+              zip: string;
+              alternativeAddress:
+                  | Omit<
+                        NonNullable<NonNullable<GQLManufacturerFormDetailsFragment["addressAsEmbeddable"]>["alternativeAddress"]>,
+                        "streetNumber" | "zip"
+                    > & {
+                        streetNumber: string | null;
+                        zip: string;
+                    };
+          };
 };
 
 interface FormProps {
@@ -128,25 +139,29 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
-            address: {
-                ...formValues.address,
-                streetNumber: formValues.address.streetNumber ? parseInt(formValues.address.streetNumber) : null,
-                zip: parseInt(formValues.address.zip),
-                alternativeAddress: {
-                    ...formValues.address.alternativeAddress,
-                    streetNumber: formValues.address.alternativeAddress.streetNumber
-                        ? parseInt(formValues.address.alternativeAddress.streetNumber)
-                        : null,
-                    zip: parseInt(formValues.address.alternativeAddress.zip),
-                },
-            },
+            address: formValues.address
+                ? {
+                      ...formValues.address,
+                      streetNumber: formValues.address?.streetNumber ? parseInt(formValues.address.streetNumber) : null,
+                      zip: parseInt(formValues.address.zip),
+                      alternativeAddress: formValues.address?.alternativeAddress
+                          ? {
+                                ...formValues.address.alternativeAddress,
+                                streetNumber: formValues.address?.alternativeAddress.streetNumber
+                                    ? parseInt(formValues.address.alternativeAddress.streetNumber)
+                                    : null,
+                                zip: parseInt(formValues.address.alternativeAddress.zip),
+                            }
+                          : undefined,
+                  }
+                : undefined,
             addressAsEmbeddable: {
                 ...formValues.addressAsEmbeddable,
-                streetNumber: formValues.addressAsEmbeddable.streetNumber ? parseInt(formValues.addressAsEmbeddable.streetNumber) : null,
+                streetNumber: formValues.addressAsEmbeddable?.streetNumber ? parseInt(formValues.addressAsEmbeddable.streetNumber) : null,
                 zip: parseInt(formValues.addressAsEmbeddable.zip),
                 alternativeAddress: {
                     ...formValues.addressAsEmbeddable.alternativeAddress,
-                    streetNumber: formValues.addressAsEmbeddable.alternativeAddress.streetNumber
+                    streetNumber: formValues.addressAsEmbeddable?.alternativeAddress.streetNumber
                         ? parseInt(formValues.addressAsEmbeddable.alternativeAddress.streetNumber)
                         : null,
                     zip: parseInt(formValues.addressAsEmbeddable.alternativeAddress.zip),
