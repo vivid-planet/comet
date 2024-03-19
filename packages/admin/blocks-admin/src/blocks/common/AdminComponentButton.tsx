@@ -1,5 +1,4 @@
-import { Button as MuiButton } from "@mui/material";
-import { css, styled } from "@mui/material/styles";
+import { Button } from "@mui/material";
 import * as React from "react";
 
 import { AdminComponentPaper } from "./AdminComponentPaper";
@@ -16,19 +15,16 @@ interface Props {
 export function AdminComponentButton({ variant, size, ...buttonProps }: Props): React.ReactElement {
     return (
         <AdminComponentPaper disablePadding>
-            <Button fullWidth color={variant === "primary" ? "primary" : "info"} increasedPadding={size === "large"} {...buttonProps} />
+            <Button
+                fullWidth
+                color={variant === "primary" ? "primary" : "info"}
+                sx={({ spacing }) => ({
+                    ...(size === "large" && {
+                        padding: spacing(4),
+                    }),
+                })}
+                {...buttonProps}
+            />
         </AdminComponentPaper>
     );
 }
-
-type ButtonProps = {
-    increasedPadding: boolean;
-};
-
-const Button = styled(MuiButton)<ButtonProps>`
-    ${({ increasedPadding, theme }) =>
-        increasedPadding &&
-        css`
-            padding: ${theme.spacing(4)};
-        `}
-`;
