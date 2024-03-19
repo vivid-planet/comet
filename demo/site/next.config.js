@@ -37,10 +37,6 @@ const nextConfig = {
             },
         ];
     },
-    redirects: async () => {
-        var redirects = await require("./preBuild/build/preBuild/src/createRedirects").createRedirects();
-        return redirects;
-    },
     images: {
         deviceSizes: cometConfig.dam.allowedImageSizes,
     },
@@ -57,6 +53,9 @@ const nextConfig = {
     },
     eslint: {
         ignoreDuringBuilds: process.env.NODE_ENV === "production",
+    },
+    compiler: {
+        styledComponents: true,
     },
 };
 

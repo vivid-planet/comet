@@ -59,6 +59,16 @@
                 "peerDependencies": {
                     "react-live": "^2.4.1"
                 }
+            },
+            "next@14": {
+                "peerDependencies": {
+                    "@types/react": "^18.0.0"
+                }
+            },
+            "@types/styled-components": {
+                "peerDependencies": {
+                    "@types/react": "*"
+                }
             }
         }
     }

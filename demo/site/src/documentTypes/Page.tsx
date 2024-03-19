@@ -1,17 +1,20 @@
 import { SeoBlock } from "@comet/cms-site";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
-import Breadcrumbs, { breadcrumbsFragment } from "@src/components/Breadcrumbs";
-import { Header, headerFragment } from "@src/header/Header";
-import { topMenuPageTreeNodeFragment, TopNavigation } from "@src/topNavigation/TopNavigation";
-import { gql } from "graphql-request";
-import Head from "next/head";
+import Breadcrumbs from "@src/components/Breadcrumbs";
+import { breadcrumbsFragment } from "@src/components/Breadcrumbs.fragment";
+import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
+import { Header } from "@src/header/Header";
+import { headerFragment } from "@src/header/Header.fragment";
+import { TopNavigation } from "@src/topNavigation/TopNavigation";
+import { topMenuPageTreeNodeFragment } from "@src/topNavigation/TopNavigation.fragment";
+import createGraphQLClient from "@src/util/createGraphQLClient";
+import { notFound } from "next/navigation";
 import * as React from "react";
 
-import { DocumentTypeLoaderOptions, InferDocumentTypeLoaderPropsType } from "./index";
-import { GQLPageQuery } from "./Page.generated";
+import { GQLPageQuery, GQLPageQueryVariables } from "./Page.generated";
 
 // @TODO: Scope for menu should also be of type PageTreeNodeScopeInput
-export const pageQuery = gql`
+const pageQuery = `
     query Page($pageTreeNodeId: ID!, $domain: String!, $language: String!) {
         pageContent: pageTreeNode(id: $pageTreeNodeId) {
             document {
@@ -32,30 +35,30 @@ export const pageQuery = gql`
             ...TopMenuPageTreeNode
         }
     }
-
     ${breadcrumbsFragment}
     ${headerFragment}
     ${topMenuPageTreeNodeFragment}
 `;
 
-export async function loader({ client, pageTreeNodeId, scope }: DocumentTypeLoaderOptions) {
-    return client.request<GQLPageQuery>(pageQuery, {
+export default async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput }) {
+    const client = createGraphQLClient(/*{ previewData: context.previewData }*/);
+
+    const props = await client.request<GQLPageQuery, GQLPageQueryVariables>(pageQuery, {
         pageTreeNodeId,
         domain: scope.domain,
         language: scope.language,
     });
-}
 
-export default function Page(props: InferDocumentTypeLoaderPropsType<typeof loader>): JSX.Element {
     if (!props.pageContent) throw new Error("Could not load page content");
-    const document = props.pageContent?.document;
-    if (document?.__typename != "Page") throw new Error("invalid document type");
+    const document = props.pageContent.document;
+    if (!document) {
+        // no document attached to page
+        notFound(); //no return needed
+    }
+    if (document.__typename != "Page") throw new Error(`invalid document type, expected Page, got ${document.__typename}`);
 
     return (
         <>
-            <Head>
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
             <SeoBlock data={document.seo} title={props.pageContent.name} />
             <TopNavigation data={props.topMenu} />
             <Header header={props.header} />
