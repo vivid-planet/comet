@@ -148,6 +148,7 @@ export function ManufacturersGrid() {
                             }}
                             refetchQueries={["ManufacturersList"]}
                             copyData={() => {
+                                // return complete row, without filter, to include id-prop for pasting in different context as comet
                                 return params.row;
                             }}
                         />
