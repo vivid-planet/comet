@@ -28,6 +28,7 @@ export function generateForm(
 
     const numberFields = config.fields.filter((field) => field.type == "number");
     const booleanFields = config.fields.filter((field) => field.type == "boolean");
+    const readOnlyFields = config.fields.filter((field) => field.readOnly);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isOptional = (fieldConfig: FormFieldConfig<any>) => {
@@ -232,9 +233,10 @@ export function generateForm(
             };
             if (mode === "edit") {
                 if (!id) throw new Error();
+                const { ${readOnlyFields.map((field) => `${String(field.name)},`).join("")} ...updateInput } = output;
                 await client.mutate<GQLUpdate${gqlType}Mutation, GQLUpdate${gqlType}MutationVariables>({
                     mutation: update${gqlType}Mutation,
-                    variables: { id, input: output },
+                    variables: { id, input: updateInput },
                 });
             } else {
                 const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({

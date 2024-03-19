@@ -110,9 +110,10 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         };
         if (mode === "edit") {
             if (!id) throw new Error();
+            const { ...updateInput } = output;
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
-                variables: { id, input: output },
+                variables: { id, input: updateInput },
             });
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
