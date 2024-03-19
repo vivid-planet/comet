@@ -1,24 +1,25 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
 import { Collapse, List } from "@mui/material";
-import { ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { matchPath, useLocation } from "react-router";
 
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MenuItem, MenuItemProps } from "./Item";
 import { MenuItemRouterLinkProps } from "./ItemRouterLink";
 
-export type MenuCollapsibleItemClassKey = "root" | "childSelected" | "listItem" | "open";
+export type MenuCollapsibleItemClassKey = "root" | "childSelected" | "listItem" | "menuItem" | "open";
 
 type OwnerState = { hasSelectedChild: boolean; open: boolean };
 
-const Root = styled("div", {
-    name: "CometAdminMenuCollapsibleItem",
-    slot: "root",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.root, ownerState.hasSelectedChild && styles.childSelected, ownerState.open && styles.open];
+const Root = createComponentSlot("div")<MenuCollapsibleItemClassKey, OwnerState>({
+    componentName: "MenuCollapsibleItem",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [ownerState.hasSelectedChild && "childSelected", ownerState.open && "open"];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ theme, ownerState }) => css`
         ${ownerState.hasSelectedChild &&
         css`
@@ -27,13 +28,10 @@ const Root = styled("div", {
     `,
 );
 
-const ListItem = styled("div", {
-    name: "CometAdminMenuCollapsibleItem",
-    slot: "listItem",
-    overridesResolver(_, styles) {
-        return [styles.listItem];
-    },
-})<{ ownerState: OwnerState }>(
+const ListItem = createComponentSlot("div")<MenuCollapsibleItemClassKey, OwnerState>({
+    componentName: "MenuCollapsibleItem",
+    slotName: "listItem",
+})(
     ({ theme, ownerState }) => css`
         ${ownerState.hasSelectedChild &&
         css`
@@ -47,13 +45,10 @@ const ListItem = styled("div", {
     `,
 );
 
-const Item = styled(MenuItem, {
-    name: "CometAdminMenuCollapsibleItem",
-    slot: "menuItem",
-    overridesResolver(_, styles) {
-        return [styles.menuItem];
-    },
-})(css``);
+const Item = createComponentSlot(MenuItem)<MenuCollapsibleItemClassKey>({
+    componentName: "MenuCollapsibleItem",
+    slotName: "menuItem",
+})();
 
 export interface MenuLevel {
     level?: 1 | 2;

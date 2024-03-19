@@ -1,5 +1,5 @@
-import { ThemedComponentBaseProps } from "@comet/admin";
-import { ComponentsOverrides, css, styled, Theme, Typography, TypographyProps, useThemeProps } from "@mui/material";
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { ComponentsOverrides, css, Theme, Typography, TypographyProps, useThemeProps } from "@mui/material";
 import * as React from "react";
 
 import { SupportedThings } from "./Rte";
@@ -14,13 +14,13 @@ export type RteBlockElementClassKey = StylableBlockTypes | "root";
 
 type OwnerState = Pick<RteBlockElementProps, "type">;
 
-const Root = styled(Typography, {
-    name: "CometAdminRteBlockElement",
-    slot: "root",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.root, ownerState.type && styles[ownerState.type]];
+const Root = createComponentSlot(Typography)<RteBlockElementClassKey, OwnerState>({
+    componentName: "RteBlockElement",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [Boolean(ownerState.type) && ownerState.type];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ theme, ownerState }) => css`
         font-size: 16px;
         line-height: 20px;

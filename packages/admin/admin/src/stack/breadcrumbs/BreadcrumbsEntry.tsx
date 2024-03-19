@@ -1,18 +1,16 @@
 import { LevelUp } from "@comet/admin-icons";
 import { IconButton as MuiIconButton, Link as MuiLink, Typography } from "@mui/material";
-import { css, styled } from "@mui/material/styles";
+import { css } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { BreadcrumbItem } from "../Stack";
 import { BreadcrumbLink } from "./BreadcrumbLink";
-import { BackButtonSeparator, StackBreadcrumbsProps } from "./StackBreadcrumbs";
+import { BackButtonSeparator, StackBreadcrumbsClassKey, StackBreadcrumbsProps } from "./StackBreadcrumbs";
 
-const Link = styled(MuiLink, {
-    name: "CometAdminStackBreadcrumbs",
-    slot: "link",
-    overridesResolver(_, styles) {
-        return [styles.link];
-    },
+const Link = createComponentSlot(MuiLink)<StackBreadcrumbsClassKey>({
+    componentName: "StackBreadcrumbs",
+    slotName: "link",
 })(
     ({ theme }) => css`
         font-size: 13px;
@@ -23,11 +21,11 @@ const Link = styled(MuiLink, {
     `,
 ) as typeof MuiLink;
 
-const DisabledLink = styled(Typography, {
-    name: "CometAdminStackBreadcrumbs",
-    slot: "disabledLink",
-    overridesResolver(_, styles) {
-        return [styles.link, styles.disabledLink];
+const DisabledLink = createComponentSlot(Typography)<StackBreadcrumbsClassKey>({
+    componentName: "StackBreadcrumbs",
+    slotName: "disabledLink",
+    classesResolver() {
+        return ["link"];
     },
 })(
     ({ theme }) => css`
@@ -39,13 +37,10 @@ const DisabledLink = styled(Typography, {
     `,
 );
 
-const IconButton = styled(MuiIconButton, {
-    name: "CometAdminStackBreadcrumbs",
-    slot: "backButton",
-    overridesResolver(_, styles) {
-        return [styles.backButton];
-    },
-})(css``) as typeof MuiIconButton;
+const IconButton = createComponentSlot(MuiIconButton)<StackBreadcrumbsClassKey>({
+    componentName: "StackBreadcrumbs",
+    slotName: "backButton",
+})() as typeof MuiIconButton;
 
 interface BreadcrumbsEntryProps {
     item: BreadcrumbItem;

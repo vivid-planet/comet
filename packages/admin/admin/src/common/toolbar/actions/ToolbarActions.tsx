@@ -1,7 +1,8 @@
 import { ComponentsOverrides } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 
 export type ToolbarActionsClassKey = "root";
@@ -9,12 +10,9 @@ interface Props extends ThemedComponentBaseProps {
     children: React.ReactNode;
 }
 
-const Root = styled("div", {
-    name: "CometAdminToolbarActions",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createComponentSlot("div")<ToolbarActionsClassKey>({
+    componentName: "ToolbarActions",
+    slotName: "root",
 })(css`
     display: flex;
     align-items: center;

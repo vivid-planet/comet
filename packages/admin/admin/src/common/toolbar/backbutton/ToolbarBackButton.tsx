@@ -1,40 +1,39 @@
 import { ArrowLeft } from "@comet/admin-icons";
 import { ComponentsOverrides, IconButton as MuiIconButton, Theme } from "@mui/material";
-import { css, styled, useThemeProps } from "@mui/material/styles";
+import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useStackApi } from "../../../stack/Api";
 import { ToolbarItem as CommonToolbarItem } from "../item/ToolbarItem";
 
-export type ToolbarBackButtonClassKey = "root" | "iconButton";
+export type ToolbarBackButtonClassKey = "root" | "iconButton" | "toolbarItem";
 
-const Root = styled("div", {
-    name: "CometAdminToolbarBackButton",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css`
-    flex: 0;
-    display: flex;
-    align-items: stretch;
-`);
+const Root = createComponentSlot("div")<ToolbarBackButtonClassKey>({
+    componentName: "ToolbarBackButton",
+    slotName: "root",
+})(
+    ({ theme }) => css`
+        flex: 0;
+        display: flex;
+        align-items: stretch;
 
-const IconButton = styled(MuiIconButton, {
-    name: "CometAdminToolbarBackButton",
-    slot: "iconButton",
-    overridesResolver(_, styles) {
-        return [styles.iconButton];
-    },
-})(css``);
+        .CometAdminToolbarItem-root {
+            padding: 0;
+            padding-right: ${theme.spacing(3)};
+        }
+    `,
+);
 
-const ToolbarItem = styled(CommonToolbarItem, {
-    name: "CometAdminToolbarBackButton",
-    slot: "toolbarItem",
-    overridesResolver(_, styles) {
-        return [styles.toolbarItem];
-    },
+const IconButton = createComponentSlot(MuiIconButton)<ToolbarBackButtonClassKey>({
+    componentName: "ToolbarBackButton",
+    slotName: "iconButton",
+})();
+
+const ToolbarItem = createComponentSlot(CommonToolbarItem)<ToolbarBackButtonClassKey>({
+    componentName: "ToolbarBackButton",
+    slotName: "toolbarItem",
 })(css`
     flex: 0;
     display: flex;

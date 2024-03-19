@@ -1,22 +1,20 @@
 import { ArrowBack } from "@mui/icons-material";
 import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { messages } from "../../messages";
 import { StackApiContext } from "../Api";
 
 export type StackBackButtonClassKey = ButtonClassKey;
 export type StackBackButtonProps = ButtonProps;
 
-const Root = styled(Button, {
-    name: "CometAdminStackBackButton",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+const Root = createComponentSlot(Button)<StackBackButtonClassKey>({
+    componentName: "StackBackButton",
+    slotName: "root",
+})();
 
 export function StackBackButton(inProps: StackBackButtonProps) {
     const { startIcon = <ArrowBack />, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminStackBackButton" });

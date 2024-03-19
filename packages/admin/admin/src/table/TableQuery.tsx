@@ -1,10 +1,11 @@
 import { ApolloError } from "@apollo/client";
 import { ComponentsOverrides, Paper } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Loading } from "../common/Loading";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { ITableQueryApi, TableQueryContext } from "./TableQueryContext";
 
@@ -28,22 +29,16 @@ export interface IDefaultVariables {}
  */
 export type TableQueryClassKey = "root" | "loadingContainer" | "loadingPaper";
 
-const Root = styled("div", {
-    name: "CometAdminTableQuery",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createComponentSlot("div")<TableQueryClassKey>({
+    componentName: "TableQuery",
+    slotName: "root",
 })(css`
     position: relative;
 `);
 
-const LoadingContainer = styled("div", {
-    name: "CometAdminTableQuery",
-    slot: "loadingContainer",
-    overridesResolver(_, styles) {
-        return [styles.loadingContainer];
-    },
+const LoadingContainer = createComponentSlot("div")<TableQueryClassKey>({
+    componentName: "TableQuery",
+    slotName: "loadingContainer",
 })(
     ({ theme }) => css`
         position: sticky;
@@ -54,12 +49,9 @@ const LoadingContainer = styled("div", {
     `,
 );
 
-const LoadingPaper = styled(Paper, {
-    name: "CometAdminTableQuery",
-    slot: "loadingPaper",
-    overridesResolver(_, styles) {
-        return [styles.loadingPaper];
-    },
+const LoadingPaper = createComponentSlot(Paper)<TableQueryClassKey>({
+    componentName: "TableQuery",
+    slotName: "loadingPaper",
 })(css`
     display: flex;
     position: absolute;

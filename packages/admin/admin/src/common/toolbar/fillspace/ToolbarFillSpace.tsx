@@ -1,7 +1,8 @@
 import { ComponentsOverrides } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 
 export type ToolbarFillSpaceClassKey = "root";
@@ -10,12 +11,9 @@ export interface ToolbarFillSpaceProps extends ThemedComponentBaseProps {
     children?: React.ReactNode;
 }
 
-const Root = styled("div", {
-    name: "CometAdminToolbarFillSpace",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createComponentSlot("div")<ToolbarFillSpaceClassKey>({
+    componentName: "ToolbarFillSpace",
+    slotName: "root",
 })(css`
     flex-grow: 1;
 `);

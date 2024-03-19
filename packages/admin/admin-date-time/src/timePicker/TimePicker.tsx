@@ -1,7 +1,14 @@
-import { ClearInputAdornment, InputWithPopper, InputWithPopperClassKey, InputWithPopperProps, ThemedComponentBaseProps } from "@comet/admin";
+import {
+    ClearInputAdornment,
+    createComponentSlot,
+    InputWithPopper,
+    InputWithPopperClassKey,
+    InputWithPopperProps,
+    ThemedComponentBaseProps,
+} from "@comet/admin";
 import { Time } from "@comet/admin-icons";
 import { ComponentsOverrides, InputAdornment, ListItemText, MenuItem, MenuList } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import { format } from "date-fns";
 import * as React from "react";
 import { FormatDateOptions, FormattedTime, useIntl } from "react-intl";
@@ -17,36 +24,24 @@ export type SlotProps = ThemedComponentBaseProps<{
     timeOptionItem: typeof MenuItem;
 }>["slotProps"];
 
-export const Root = styled(InputWithPopper, {
-    name: "CometAdminTimePicker",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+export const Root = createComponentSlot(InputWithPopper)<TimePickerClassKey>({
+    componentName: "TimePicker",
+    slotName: "root",
+})();
 
-const StartAdornment = styled(InputAdornment, {
-    name: "CometAdminTimePicker",
-    slot: "startAdornment",
-    overridesResolver(_, styles) {
-        return [styles.startAdornment];
-    },
-})(css``);
+const StartAdornment = createComponentSlot(InputAdornment)<TimePickerClassKey>({
+    componentName: "TimePicker",
+    slotName: "startAdornment",
+})();
 
-const TimeOptionsList = styled(MenuList, {
-    name: "CometAdminTimePicker",
-    slot: "timeOptionsList",
-    overridesResolver(_, styles) {
-        return [styles.timeOptionsList];
-    },
-})(css``);
+const TimeOptionsList = createComponentSlot(MenuList)<TimePickerClassKey>({
+    componentName: "TimePicker",
+    slotName: "timeOptionsList",
+})();
 
-const TimeOptionItem = styled(MenuItem, {
-    name: "CometAdminTimePicker",
-    slot: "timeOptionItem",
-    overridesResolver(_, styles) {
-        return [styles.timeOptionItem];
-    },
+const TimeOptionItem = createComponentSlot(MenuItem)<TimePickerClassKey>({
+    componentName: "TimePicker",
+    slotName: "timeOptionItem",
 })(
     ({ theme }) => css`
         padding: ${theme.spacing(2)} ${theme.spacing(3)};

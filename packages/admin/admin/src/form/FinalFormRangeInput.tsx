@@ -1,30 +1,25 @@
 import { FormControl, InputBase, Slider, SliderProps } from "@mui/material";
-import { ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type FinalFormRangeInputClassKey = "root" | "inputsWrapper" | "inputFieldsSeparatorContainer" | "sliderWrapper" | "inputFieldContainer";
 
-const Root = styled("div", {
-    name: "CometAdminFinalFormRangeInput",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createComponentSlot("div")<FinalFormRangeInputClassKey>({
+    componentName: "FinalFormRangeInput",
+    slotName: "root",
 })(css`
     box-sizing: border-box;
     padding: 0 20px;
     width: 100%;
 `);
 
-const InputsWrapper = styled("div", {
-    name: "CometAdminFinalFormRangeInput",
-    slot: "inputsWrapper",
-    overridesResolver(_, styles) {
-        return [styles.inputsWrapper];
-    },
+const InputsWrapper = createComponentSlot("div")<FinalFormRangeInputClassKey>({
+    componentName: "FinalFormRangeInput",
+    slotName: "inputsWrapper",
 })(css`
     justify-content: space-between;
     margin-bottom: 15px;
@@ -32,31 +27,22 @@ const InputsWrapper = styled("div", {
     display: flex;
 `);
 
-const InputFieldsSeparatorContainer = styled("div", {
-    name: "CometAdminFinalFormRangeInput",
-    slot: "inputFieldsSeparatorContainer",
-    overridesResolver(_, styles) {
-        return [styles.inputFieldsSeparatorContainer];
-    },
+const InputFieldsSeparatorContainer = createComponentSlot("div")<FinalFormRangeInputClassKey>({
+    componentName: "FinalFormRangeInput",
+    slotName: "inputFieldsSeparatorContainer",
 })(css`
     text-align: center;
     min-width: 20%;
 `);
 
-const SliderWrapper = styled("div", {
-    name: "CometAdminFinalFormRangeInput",
-    slot: "sliderWrapper",
-    overridesResolver(_, styles) {
-        return [styles.sliderWrapper];
-    },
-})(css``);
+const SliderWrapper = createComponentSlot("div")<FinalFormRangeInputClassKey>({
+    componentName: "FinalFormRangeInput",
+    slotName: "sliderWrapper",
+})();
 
-const InputFieldContainer = styled("div", {
-    name: "CometAdminFinalFormRangeInput",
-    slot: "inputFieldContainer",
-    overridesResolver(_, styles) {
-        return [styles.inputFieldContainer];
-    },
+const InputFieldContainer = createComponentSlot("div")<FinalFormRangeInputClassKey>({
+    componentName: "FinalFormRangeInput",
+    slotName: "inputFieldContainer",
 })(css`
     text-align: center;
     flex-basis: 0;

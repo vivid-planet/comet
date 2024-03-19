@@ -1,7 +1,8 @@
 import { ComponentsOverrides, Typography, TypographyTypeMap } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useStackApi } from "../../../stack/Api";
 import { ToolbarItem } from "../item/ToolbarItem";
@@ -17,13 +18,10 @@ export interface ToolbarAutomaticTitleItemProps
     typographyProps?: TypographyTypeMap["props"];
 }
 
-const Root = styled(ToolbarItem, {
-    name: "CometAdminToolbarAutomaticTitleItem",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+const Root = createComponentSlot(ToolbarItem)<ToolbarAutomaticTitleItemClassKey>({
+    componentName: "ToolbarAutomaticTitleItem",
+    slotName: "root",
+})();
 
 export type ToolbarAutomaticTitleItemClassKey = "root" | "typography";
 

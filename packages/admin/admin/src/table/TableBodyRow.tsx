@@ -1,8 +1,9 @@
 import { ComponentsOverrides, TableRow } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { Theme, useThemeProps } from "@mui/material/styles";
 import { TableRowProps } from "@mui/material/TableRow";
 import React from "react";
 
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 /**
@@ -12,13 +13,13 @@ export type TableBodyRowClassKey = "root" | "even" | "odd";
 
 type OwnerState = { isOdd: boolean };
 
-const Root = styled(TableRow, {
-    name: "CometAdminTableBodyRow",
-    slot: "root",
-    overridesResolver({ ownerState: { isOdd } }: { ownerState: OwnerState }, styles) {
-        return [styles.root, !isOdd && styles.even, isOdd && styles.odd];
+const Root = createComponentSlot(TableRow)<TableBodyRowClassKey, OwnerState>({
+    componentName: "TableBodyRow",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [!ownerState.isOdd && "even", ownerState.isOdd && "odd"];
     },
-})<{ ownerState: OwnerState }>(css``);
+})();
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.

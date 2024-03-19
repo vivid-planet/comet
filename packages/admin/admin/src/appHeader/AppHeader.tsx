@@ -1,8 +1,8 @@
-import { AppBar as MuiAppBar, AppBarClassKey, capitalize, ComponentsOverrides, Theme, useThemeProps } from "@mui/material";
+import { AppBar as MuiAppBar, AppBarClassKey, capitalize, ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
 import { AppBarProps } from "@mui/material/AppBar";
-import { styled } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { MasterLayoutContext } from "../mui/MasterLayoutContext";
 
 interface AppHeaderProps extends AppBarProps {
@@ -19,24 +19,23 @@ type OwnerState = {
     color: AppBarProps["color"];
 };
 
-const AppHeaderRoot = styled(MuiAppBar, {
-    name: "CometAdminAppHeader",
-    slot: "root",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+const AppHeaderRoot = createComponentSlot(MuiAppBar)<AppHeaderClassKey, OwnerState>({
+    componentName: "AppHeader",
+    slotName: "root",
+    classesResolver(ownerState) {
         return [
-            styles.root,
-            ownerState.position && styles[`position${capitalize(ownerState.position)}`],
-            ownerState.color && styles[`color${capitalize(ownerState.color)}`],
-        ];
+            ownerState.position && `position${capitalize(ownerState.position)}`,
+            ownerState.color && `color${capitalize(ownerState.color)}`,
+        ] as AppHeaderClassKey[];
     },
-})<{ ownerState: OwnerState }>(({ theme }) => {
-    return {
-        backgroundColor: theme.palette.grey["A400"],
-        height: "var(--header-height)",
-        flexDirection: "row",
-        alignItems: "center",
-    };
-});
+})(
+    ({ theme }) => css`
+        background-color: ${theme.palette.grey.A400};
+        height: var(--header-height);
+        flex-direction: row;
+        align-items: center;
+    `,
+);
 
 export function AppHeader(inProps: AppHeaderProps): React.ReactElement {
     const props = useThemeProps({ props: inProps, name: "CometAdminAppHeader" });

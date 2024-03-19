@@ -1,11 +1,12 @@
 import { DragHandle } from "@comet/admin-icons";
 import { ComponentsOverrides } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import * as React from "react";
 import { DropTargetMonitor, useDrag, useDrop, XYCoord } from "react-dnd";
 
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { IRow, ITableProps, ITableRowProps, Table, TableColumns, TableHeadColumns } from "./Table";
 import { TableBodyRow } from "./TableBodyRow";
@@ -112,39 +113,30 @@ function DndOrderRow<TRow extends IRow>(props: IDndOrderRowProps<TRow>) {
     return (
         <TableBodyRow ref={refRow} {...rowProps} style={{ opacity }}>
             <DragCell ref={refDragHandle} {...slotProps?.dragCell}>
-                <DragItemContainer {...slotProps?.dragIconContainer}>{props.dragHandleIcon}</DragItemContainer>
+                <DragIconContainer {...slotProps?.dragIconContainer}>{props.dragHandleIcon}</DragIconContainer>
             </DragCell>
             <TableColumns columns={columns} row={row} />
         </TableBodyRow>
     );
 }
 
-const Root = styled(Table, {
-    name: "CometAdminTableDndOrder",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+const Root = createComponentSlot(Table)<TableDndOrderClassKey>({
+    componentName: "TableDndOrder",
+    slotName: "root",
+})();
 
-const DragCell = styled(TableCell, {
-    name: "CometAdminTableDndOrder",
-    slot: "dragCell",
-    overridesResolver(_, styles) {
-        return [styles.dragCell];
-    },
+const DragCell = createComponentSlot(TableCell)<TableDndOrderClassKey>({
+    componentName: "TableDndOrder",
+    slotName: "dragCell",
 })(css`
     cursor: grab;
     width: 20px;
     padding-right: 0;
 `);
 
-const DragItemContainer = styled("div", {
-    name: "CometAdminTableDndOrder",
-    slot: "dragItemContainer",
-    overridesResolver(_, styles) {
-        return [styles.dragItemContainer];
-    },
+const DragIconContainer = createComponentSlot("div")<TableDndOrderClassKey>({
+    componentName: "TableDndOrder",
+    slotName: "dragIconContainer",
 })(css`
     display: flex;
     align-items: center;

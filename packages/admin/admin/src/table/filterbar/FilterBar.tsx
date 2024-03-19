@@ -1,7 +1,7 @@
-import { ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { Root as FieldContainerRoot } from "../../form/FieldContainer";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 /**
@@ -9,24 +9,18 @@ import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps
  */
 export type FilterBarClassKey = "root" | "barWrapper";
 
-const Root = styled("div", {
-    name: "CometAdminFilterBar",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createComponentSlot("div")<FilterBarClassKey>({
+    componentName: "FilterBar",
+    slotName: "root",
 })(css`
-    & ${FieldContainerRoot} {
+    .CometAdminFormFieldContainer-root {
         margin-bottom: 0;
     }
 `);
 
-const BarWrapper = styled("div", {
-    name: "CometAdminFilterBar",
-    slot: "barWrapper",
-    overridesResolver(_, styles) {
-        return [styles.barWrapper];
-    },
+const BarWrapper = createComponentSlot("div")<FilterBarClassKey>({
+    componentName: "FilterBar",
+    slotName: "barWrapper",
 })(css`
     flex-wrap: wrap;
     display: flex;

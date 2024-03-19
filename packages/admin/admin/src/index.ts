@@ -85,6 +85,7 @@ export { FormSection, FormSectionClassKey, FormSectionProps } from "./form/FormS
 export { FinalFormRadio, FinalFormRadioProps } from "./form/Radio";
 export { FinalFormSwitch, FinalFormSwitchProps } from "./form/Switch";
 export { FormMutation } from "./FormMutation";
+export { createComponentSlot } from "./helpers/createComponentSlot";
 export { PrettyBytes } from "./helpers/PrettyBytes";
 export { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 export { IWindowSize, useWindowSize } from "./helpers/useWindowSize";
@@ -203,6 +204,3 @@ export { Tab, Tabs, TabsClassKey, TabsProps } from "./tabs/Tabs";
 export { TabScrollButton, TabScrollButtonClassKey, TabScrollButtonProps } from "./tabs/TabScrollButton";
 export { ContentTranslationServiceProvider } from "./translator/ContentTranslationServiceProvider";
 export { useContentTranslationService } from "./translator/useContentTranslationService";
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
-import emotionStyled from "@emotion/styled";

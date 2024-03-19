@@ -1,12 +1,13 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
 import { ComponentsOverrides, Popover as MuiPopover, PopoverProps, Theme, useTheme } from "@mui/material";
-import { css, styled, useThemeProps } from "@mui/material/styles";
+import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { AppHeaderButton, AppHeaderButtonProps } from "../button/AppHeaderButton";
 
-export type AppHeaderDropdownClassKey = "root" | "popover";
+export type AppHeaderDropdownClassKey = "root" | "popover" | "button";
 
 export interface AppHeaderDropdownProps
     extends Omit<AppHeaderButtonProps, "children" | "slotProps">,
@@ -23,31 +24,22 @@ export interface AppHeaderDropdownProps
     onOpenChange?: (open: boolean) => void;
 }
 
-const Root = styled("div", {
-    name: "CometAdminAppHeaderDropdown",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createComponentSlot("div")<AppHeaderDropdownClassKey>({
+    componentName: "AppHeaderDropdown",
+    slotName: "root",
 })(css`
     height: 100%;
 `);
 
-const Button = styled(AppHeaderButton, {
-    name: "CometAdminAppHeaderDropdown",
-    slot: "button",
-    overridesResolver(_, styles) {
-        return [styles.button];
-    },
-})(css``);
+const Button = createComponentSlot(AppHeaderButton)<AppHeaderDropdownClassKey>({
+    componentName: "AppHeaderDropdown",
+    slotName: "button",
+})();
 
-const Popover = styled(MuiPopover, {
-    name: "CometAdminAppHeaderDropdown",
-    slot: "popover",
-    overridesResolver(_, styles) {
-        return [styles.popover];
-    },
-})(css``);
+const Popover = createComponentSlot(MuiPopover)<AppHeaderDropdownClassKey>({
+    componentName: "AppHeaderDropdown",
+    slotName: "popover",
+})();
 
 function DefaultArrowUp(): React.ReactElement {
     const { palette } = useTheme();

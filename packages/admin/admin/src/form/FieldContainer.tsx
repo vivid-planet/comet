@@ -1,7 +1,8 @@
 import { FormControl, FormHelperText, FormLabel, formLabelClasses, inputBaseClasses, useThemeProps } from "@mui/material";
-import { ComponentsOverrides, css, styled } from "@mui/material/styles";
+import { ComponentsOverrides, css } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type FieldContainerProps = ThemedComponentBaseProps<{
@@ -48,25 +49,24 @@ type OwnerState = Pick<FieldContainerProps, "fullWidth" | "disabled" | "required
     hasWarning: boolean;
 };
 
-export const Root = styled(FormControl, {
-    name: "CometAdminFormFieldContainer",
-    slot: "root",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState>({
+    componentName: "FormFieldContainer",
+    slotName: "root",
+    classesResolver(ownerState) {
         return [
-            styles.root,
-            ownerState.variant === "vertical" && styles.vertical,
-            ownerState.variant === "horizontal" && styles.horizontal,
-            ownerState.fullWidth && styles.fullWidth,
-            ownerState.hasError && styles.hasError,
-            ownerState.hasWarning && styles.hasWarning,
-            ownerState.disabled && styles.disabled,
-            ownerState.required && styles.required,
-            ownerState.fieldMargin === "always" && styles.fieldMarginAlways,
-            ownerState.fieldMargin === "never" && styles.fieldMarginNever,
-            ownerState.fieldMargin === "onlyIfNotLast" && styles.fieldMarginOnlyIfNotLast,
+            ownerState.variant === "vertical" && "vertical",
+            ownerState.variant === "horizontal" && "horizontal",
+            ownerState.fullWidth && "fullWidth",
+            ownerState.hasError && "hasError",
+            ownerState.hasWarning && "hasWarning",
+            ownerState.disabled && "disabled",
+            ownerState.required && "required",
+            ownerState.fieldMargin === "always" && "fieldMarginAlways",
+            ownerState.fieldMargin === "never" && "fieldMarginNever",
+            ownerState.fieldMargin === "onlyIfNotLast" && "fieldMarginOnlyIfNotLast",
         ];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ theme, ownerState }) => css`
         ${ownerState.fieldMargin !== "never" &&
         css`
@@ -116,13 +116,10 @@ export const Root = styled(FormControl, {
     `,
 );
 
-const Label = styled(FormLabel, {
-    name: "CometAdminFormFieldContainer",
-    slot: "label",
-    overridesResolver(_, styles) {
-        return [styles.label];
-    },
-})<{ ownerState: OwnerState }>(
+const Label = createComponentSlot(FormLabel)<FieldContainerClassKey, OwnerState>({
+    componentName: "FormFieldContainer",
+    slotName: "label",
+})(
     ({ theme, ownerState }) => css`
         ${ownerState.variant === "horizontal" &&
         css`
@@ -153,13 +150,10 @@ const Label = styled(FormLabel, {
     `,
 );
 
-const InputContainer = styled("div", {
-    name: "CometAdminFormFieldContainer",
-    slot: "inputContainer",
-    overridesResolver(_, styles) {
-        return [styles.inputContainer];
-    },
-})<{ ownerState: OwnerState }>(
+const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerState>({
+    componentName: "FormFieldContainer",
+    slotName: "inputContainer",
+})(
     ({ ownerState }) => css`
         ${ownerState.variant === "horizontal" &&
         ownerState.fullWidth &&
@@ -169,32 +163,23 @@ const InputContainer = styled("div", {
     `,
 );
 
-const Error = styled(FormHelperText, {
-    name: "CometAdminFormFieldContainer",
-    slot: "error",
-    overridesResolver(_, styles) {
-        return [styles.error];
-    },
-})(css``);
+const Error = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
+    componentName: "FormFieldContainer",
+    slotName: "error",
+})();
 
-const Warning = styled(FormHelperText, {
-    name: "CometAdminFormFieldContainer",
-    slot: "warning",
-    overridesResolver(_, styles) {
-        return [styles.warning];
-    },
+const Warning = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
+    componentName: "FormFieldContainer",
+    slotName: "warning",
 })(
     ({ theme }) => css`
         color: ${theme.palette.warning.main};
     `,
 );
 
-const HelperText = styled(FormHelperText, {
-    name: "CometAdminFormFieldContainer",
-    slot: "helperText",
-    overridesResolver(_, styles) {
-        return [styles.helperText];
-    },
+const HelperText = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
+    componentName: "FormFieldContainer",
+    slotName: "helperText",
 })(
     ({ theme }) => css`
         color: ${theme.palette.grey[300]};

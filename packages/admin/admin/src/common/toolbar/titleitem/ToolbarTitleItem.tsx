@@ -1,7 +1,8 @@
 import { ComponentsOverrides, Typography as MuiTypography, TypographyTypeMap } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { ToolbarItem } from "../item/ToolbarItem";
 
@@ -19,21 +20,15 @@ export interface ToolbarTitleItemProps
     children?: React.ReactNode;
 }
 
-const Root = styled(ToolbarItem, {
-    name: "CometAdminToolbarTitleItem",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+const Root = createComponentSlot(ToolbarItem)<ToolbarTitleItemClassKey>({
+    componentName: "ToolbarTitleItem",
+    slotName: "root",
+})();
 
-const Typography = styled(MuiTypography, {
-    name: "CometAdminToolbarTitleItem",
-    slot: "typography",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+const Typography = createComponentSlot(MuiTypography)<ToolbarTitleItemClassKey>({
+    componentName: "ToolbarTitleItem",
+    slotName: "typography",
+})();
 
 export const ToolbarTitleItem = (inProps: ToolbarTitleItemProps) => {
     const { children, typographyProps = {}, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarTitleItem" });

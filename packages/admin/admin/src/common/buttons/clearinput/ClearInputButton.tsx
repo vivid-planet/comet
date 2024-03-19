@@ -1,16 +1,15 @@
 import { Clear } from "@comet/admin-icons";
 import { ButtonBase, ButtonBaseProps, ComponentsOverrides, inputAdornmentClasses } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
+
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 
 export type ClearInputButtonClassKey = "root" | "focusVisible";
 
-const Root = styled(ButtonBase, {
-    name: "CometAdminClearInputButton",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createComponentSlot(ButtonBase)<ClearInputButtonClassKey>({
+    componentName: "ClearInputButton",
+    slotName: "root",
 })(
     ({ theme }) => css`
         height: 100%;

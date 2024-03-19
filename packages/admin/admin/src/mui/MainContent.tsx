@@ -1,7 +1,7 @@
-import { ComponentsOverrides } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
 import * as React from "react";
 
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type MainContentClassKey = "root" | "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight";
@@ -10,19 +10,18 @@ type OwnerState = Pick<MainContentProps, "disablePaddingTop" | "disablePaddingBo
     topPosition: number;
 };
 
-const Root = styled("main", {
-    name: "CometAdminMainContent",
-    slot: "root",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+const Root = createComponentSlot("main")<MainContentClassKey, OwnerState>({
+    componentName: "MainContent",
+    slotName: "root",
+    classesResolver(ownerState) {
         return [
-            styles.root,
-            ownerState.disablePaddingTop && styles.disablePaddingTop,
-            ownerState.disablePaddingBottom && styles.disablePaddingBottom,
-            ownerState.disablePadding && styles.disablePadding,
-            ownerState.fullHeight && styles.fullHeight,
+            ownerState.disablePaddingTop && "disablePaddingTop",
+            ownerState.disablePaddingBottom && "disablePaddingBottom",
+            ownerState.disablePadding && "disablePadding",
+            ownerState.fullHeight && "fullHeight",
         ];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ theme, ownerState }) => css`
         position: relative;
         z-index: 5;
@@ -76,7 +75,7 @@ export function MainContent(inProps: MainContentProps) {
     };
 
     return (
-        <Root ownerState={ownerState} {...restProps} ref={mainRef}>
+        <Root ownerState={ownerState} ref={mainRef} {...restProps}>
             {children}
         </Root>
     );

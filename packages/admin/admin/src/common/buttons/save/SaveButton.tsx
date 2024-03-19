@@ -1,9 +1,10 @@
 import { Check, Error, Error as ErrorIcon, Save, ThreeDotSaving } from "@comet/admin-icons";
 import { Button, ButtonClassKey, buttonGroupClasses, ButtonProps, ComponentsOverrides } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { messages } from "../../../messages";
 import { useSplitButtonContext } from "../split/useSplitButtonContext";
 
@@ -11,19 +12,18 @@ export type SaveButtonClassKey = "saving" | "error" | "success" | "conflict" | B
 
 type OwnerState = Pick<SaveButtonProps, "variant" | "color"> & { displayState?: SaveButtonDisplayState };
 
-const Root = styled(Button, {
-    name: "CometAdminSaveButton",
-    slot: "root",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+const Root = createComponentSlot(Button)<SaveButtonClassKey, OwnerState>({
+    componentName: "SaveButton",
+    slotName: "root",
+    classesResolver(ownerState) {
         return [
-            styles.root,
-            ownerState.displayState === "saving" && styles.saving,
-            ownerState.displayState === "error" && styles.error,
-            ownerState.displayState === "success" && styles.success,
-            ownerState.displayState === "conflict" && styles.conflict,
+            ownerState.displayState === "saving" && "saving",
+            ownerState.displayState === "error" && "error",
+            ownerState.displayState === "success" && "success",
+            ownerState.displayState === "conflict" && "conflict",
         ];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ ownerState, theme }) => css`
         ${ownerState.displayState === "saving" &&
         css`

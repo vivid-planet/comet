@@ -1,9 +1,10 @@
 import { Close, Delete, Save, Warning } from "@comet/admin-icons";
 import { Button, ComponentsOverrides, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Theme, Typography } from "@mui/material";
-import { css, styled, useThemeProps } from "@mui/material/styles";
+import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { messages } from "../messages";
 
@@ -17,22 +18,16 @@ export type RouterConfirmationDialogClassKey =
     | "saveButton"
     | "discardButton";
 
-const StyledDialog = styled(Dialog, {
-    name: "CometAdminRouterConfirmationDialog",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const StyledDialog = createComponentSlot(Dialog)<RouterConfirmationDialogClassKey>({
+    componentName: "RouterConfirmationDialog",
+    slotName: "root",
 })(css`
     z-index: 1301;
 `);
 
-const CloseButton = styled(IconButton, {
-    name: "CometAdminRouterConfirmationDialog",
-    slot: "closeButton",
-    overridesResolver(_, styles) {
-        return [styles.closeButton];
-    },
+const CloseButton = createComponentSlot(IconButton)<RouterConfirmationDialogClassKey>({
+    componentName: "RouterConfirmationDialog",
+    slotName: "closeButton",
 })(css`
     position: absolute;
     right: 14px;
@@ -40,41 +35,32 @@ const CloseButton = styled(IconButton, {
     color: #fff;
 `);
 
-const MessageWrapper = styled("div", {
-    name: "CometAdminRouterConfirmationDialog",
-    slot: "messageWrapper",
-    overridesResolver(_, styles) {
-        return [styles.messageWrapper];
-    },
+const MessageWrapper = createComponentSlot("div")<RouterConfirmationDialogClassKey>({
+    componentName: "RouterConfirmationDialog",
+    slotName: "messageWrapper",
 })(css`
     display: flex;
 `);
 
-const StyledWarning = styled(Warning, {
-    name: "CometAdminRouterConfirmationDialog",
-    slot: "messageWarningIcon",
-    overridesResolver(_, styles) {
-        return [styles.messageWarningIcon];
-    },
+const StyledWarning = createComponentSlot(Warning)<RouterConfirmationDialogClassKey>({
+    componentName: "RouterConfirmationDialog",
+    slotName: "messageWarningIcon",
 })(css`
     font-size: 20px;
 `);
 
-const MessageText = styled(Typography, {
-    name: "CometAdminRouterConfirmationDialog",
-    slot: "messageText",
-    overridesResolver(_, styles) {
-        return [styles.messageText];
-    },
+const MessageText = createComponentSlot(Typography)<RouterConfirmationDialogClassKey>({
+    componentName: "RouterConfirmationDialog",
+    slotName: "messageText",
 })(css`
     padding-left: 10px;
 `);
 
-const SaveButton = styled(Button, {
-    name: "CometAdminRouterConfirmationDialog",
-    slot: "saveButton",
-    overridesResolver(_, styles) {
-        return [styles.actionButton, styles.saveButton];
+const SaveButton = createComponentSlot(Button)<RouterConfirmationDialogClassKey>({
+    componentName: "RouterConfirmationDialog",
+    slotName: "saveButton",
+    classesResolver() {
+        return ["actionButton"];
     },
 })(
     ({ theme }) => css`
@@ -84,11 +70,11 @@ const SaveButton = styled(Button, {
     `,
 );
 
-const DiscardButton = styled(Button, {
-    name: "CometAdminRouterConfirmationDialog",
-    slot: "discardButton",
-    overridesResolver(_, styles) {
-        return [styles.actionButton, styles.discardButton];
+const DiscardButton = createComponentSlot(Button)<RouterConfirmationDialogClassKey>({
+    componentName: "RouterConfirmationDialog",
+    slotName: "discardButton",
+    classesResolver() {
+        return ["actionButton"];
     },
 })(
     ({ theme }) => css`

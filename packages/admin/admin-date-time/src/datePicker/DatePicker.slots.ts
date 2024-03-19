@@ -1,6 +1,5 @@
-import { InputWithPopper, InputWithPopperClassKey, ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, InputWithPopper, InputWithPopperClassKey, ThemedComponentBaseProps } from "@comet/admin";
 import { InputAdornment } from "@mui/material";
-import { css, styled } from "@mui/material/styles";
 import { CSSProperties } from "@mui/material/styles/createMixins";
 import { deepmerge } from "@mui/utils";
 import { Calendar as CalendarBase } from "react-date-range";
@@ -15,28 +14,19 @@ export type SlotProps = ThemedComponentBaseProps<{
     calendar: typeof CalendarBase;
 }>["slotProps"];
 
-export const Root = styled(InputWithPopper, {
-    name: "CometAdminDatePicker",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+export const Root = createComponentSlot(InputWithPopper)<DatePickerClassKey>({
+    componentName: "DatePicker",
+    slotName: "root",
+})();
 
-export const StartAdornment = styled(InputAdornment, {
-    name: "CometAdminDatePicker",
-    slot: "startAdornment",
-    overridesResolver(_, styles) {
-        return [styles.startAdornment];
-    },
-})(css``);
+export const StartAdornment = createComponentSlot(InputAdornment)<DatePickerClassKey>({
+    componentName: "DatePicker",
+    slotName: "startAdornment",
+})();
 
-export const Calendar = styled(CalendarBase, {
-    name: "CometAdminDatePicker",
-    slot: "calendar",
-    overridesResolver(_, styles) {
-        return [styles.calendar];
-    },
+export const Calendar = createComponentSlot(CalendarBase)<DatePickerClassKey>({
+    componentName: "DatePicker",
+    slotName: "calendar",
 })(({ theme }) =>
     deepmerge<CSSProperties>(getReactDateRangeStyles(theme), {
         "& .rdrMonth:first-child:last-child .rdrMonthName": {

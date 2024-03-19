@@ -1,10 +1,11 @@
 import { ChevronDown } from "@comet/admin-icons";
 import { buttonClasses, ButtonProps, ComponentsOverrides, svgIconClasses } from "@mui/material";
 import Button from "@mui/material/Button";
-import { css, styled, Theme } from "@mui/material/styles";
+import { css, Theme } from "@mui/material/styles";
 import { useThemeProps } from "@mui/system";
 import * as React from "react";
 
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { FilterBarActiveFilterBadge, FilterBarActiveFilterBadgeProps } from "../filterBarActiveFilterBadge/FilterBarActiveFilterBadge";
 
@@ -15,13 +16,13 @@ export type FilterBarButtonClassKey = "root" | "open" | "hasDirtyFields" | "filt
 
 type OwnerState = { hasDirtyFields: boolean; openPopover: boolean | undefined };
 
-const Root = styled(Button, {
-    name: "CometAdminFilterBarButton",
-    slot: "root",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.root, ownerState.openPopover && styles.open, ownerState.hasDirtyFields && styles.hasDirtyFields];
+const Root = createComponentSlot(Button)<FilterBarButtonClassKey, OwnerState>({
+    componentName: "FilterBarButton",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [ownerState.openPopover && "open", ownerState.hasDirtyFields && "hasDirtyFields"];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ theme, ownerState }) => css`
         position: relative;
         cursor: pointer;
@@ -61,12 +62,9 @@ const Root = styled(Button, {
     `,
 );
 
-const FilterBadge = styled("span", {
-    name: "CometAdminFilterBarButton",
-    slot: "filterBadge",
-    overridesResolver(_, styles) {
-        return [styles.filterBadge];
-    },
+const FilterBadge = createComponentSlot("span")<FilterBarButtonClassKey>({
+    componentName: "FilterBarButton",
+    slotName: "filterBadge",
 })(css`
     margin-left: 6px;
 `);

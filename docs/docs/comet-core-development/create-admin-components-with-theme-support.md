@@ -64,10 +64,10 @@ E.g.: in this instance of `MyComponent`, the root should have a red border, and 
 See this as a working example in our [Storybook](https://storybook.comet-dxp.com/?path=/story/comet-admin-theming--themable-mycomponent).
 
 ```tsx
-import { ThemedComponentBaseProps } from "@comet/admin";
+import { ThemedComponentBaseProps, createComponentSlot } from "@comet/admin";
 import { CometColor } from "@comet/admin-icons";
 import { ComponentsOverrides, Typography } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import React from "react";
 
 /**
@@ -87,22 +87,21 @@ type OwnerState = Pick<MyComponentProps, "shadow">;
 
 /**
  * Each element or sub-component of a Comet Admin component should be created as a "slot".
- * A slot is created by using the `styled` function from `@mui/material/styles` and passing in the HTML element or component you want to be the base of your slot.
+ * A slot is created by using the `createComponentSlot` function and passing in the HTML element or component you want to be the base of your slot.
  * The slot's options require:
- * - `name`: The name of the component, prefixed by `CometAdmin`.
- *    This name is used to reference the component in the theme, so it must be the same for every slot in the component.
- * - `slot`: The name of the slot. This name is used to reference the slot when overriding component styles or default-props.
- * - `overridesResolver`: The function that applies the styles from the theme's styleOverrides to the slot.
- *    This should always return the styles of the slot's name, e.g. `styles.root` for the Root slot.
- *    If the slot has modifier styles, e.g. `styles.hasShadow`, then those should be returned as well when the modifier prop is set to `true`.
+ * - `componentName`: This is used to reference the component in the theme, so it must be the same for every slot in the component. It will be automatically prefixed with `CometAdmin`.
+ * - `slotName`: This name is used to reference the slot when overriding component styles or default-props in the theme, or when passing in slotProps to the component.
+ * - `classesResolver`: This function determines which class-key's `styleOverrides` and `className` to apply to the slot.
+ *    The class-key of the `slotName`, e.g., `root` is always added to the slot automatically.
+ *    If a slot has styles dependent on a value in the `ownerState`, e.g. from a `shadow` prop, then a class-key (e.g. `hasShadow`) should be returned to allow those styles to be overridden using the theme.
  */
-const Root = styled("div", {
-    name: "CometAdminMyComponent",
-    slot: "root",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.root, ownerState.shadow && styles.hasShadow];
+const Root = createComponentSlot("div")<MyComponentClassKey, OwnerState>({
+    componentName: "MyComponent",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [ownerState.shadow && "hasShadow"];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ theme, ownerState }) => css`
         background-color: ${theme.palette.background.paper};
 
@@ -113,12 +112,9 @@ const Root = styled("div", {
     `,
 );
 
-const Header = styled("div", {
-    name: "CometAdminMyComponent",
-    slot: "header",
-    overridesResolver(_, styles) {
-        return [styles.header];
-    },
+const Header = createComponentSlot("div")<MyComponentClassKey>({
+    componentName: "MyComponent",
+    slotName: "header",
 })(
     ({ theme }) => css`
         display: flex;
@@ -128,13 +124,10 @@ const Header = styled("div", {
     `,
 );
 
-const Title = styled(Typography, {
-    name: "CometAdminMyComponent",
-    slot: "title",
-    overridesResolver(_, styles) {
-        return [styles.title];
-    },
-})<{ ownerState: OwnerState }>(
+const Title = createComponentSlot(Typography)<MyComponentClassKey, OwnerState>({
+    componentName: "MyComponent",
+    slotName: "title",
+})(
     ({ ownerState }) => css`
         ${ownerState.shadow &&
         css`
@@ -143,20 +136,14 @@ const Title = styled(Typography, {
     `,
 );
 
-const Icon = styled(CometColor, {
-    name: "CometAdminMyComponent",
-    slot: "icon",
-    overridesResolver(_, styles) {
-        return [styles.icon];
-    },
+const Icon = createComponentSlot(CometColor)<MyComponentClassKey>({
+    componentName: "MyComponent",
+    slotName: "icon",
 })();
 
-const Children = styled("div", {
-    name: "CometAdminMyComponent",
-    slot: "children",
-    overridesResolver(_, styles) {
-        return [styles.children];
-    },
+const Children = createComponentSlot("div")<MyComponentClassKey>({
+    componentName: "MyComponent",
+    slotName: "children",
 })(
     ({ theme }) => css`
         padding: ${theme.spacing(4)};

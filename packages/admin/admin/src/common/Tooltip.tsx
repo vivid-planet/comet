@@ -8,8 +8,10 @@ import {
     TooltipClassKey as MuiTooltipClassKey,
     TooltipProps as MuiTooltipProps,
 } from "@mui/material";
-import { css, styled, useThemeProps } from "@mui/material/styles";
+import { css, useTheme, useThemeProps } from "@mui/material/styles";
 import React, { cloneElement } from "react";
+
+import { createComponentSlot } from "../helpers/createComponentSlot";
 
 export interface TooltipProps extends MuiTooltipProps {
     trigger?: "hover" | "focus" | "click";
@@ -25,30 +27,27 @@ type OwnerState = {
     disableInteractive: boolean | undefined;
     arrow: boolean | undefined;
     open: boolean | undefined;
+    isRtl: boolean;
 };
 
-const TooltipRoot = styled(MuiTooltip, {
-    name: "CometAdminTooltip",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+const TooltipRoot = createComponentSlot(MuiTooltip)<TooltipClassKey, OwnerState>({
+    componentName: "Tooltip",
+    slotName: "root",
+})();
 
-const TooltipPopper = styled(MuiPopper, {
-    name: "CometAdminTooltip",
-    slot: "popper",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState>({
+    componentName: "Tooltip",
+    slotName: "popper",
+    classesResolver(ownerState) {
         return [
-            styles.popper,
-            styles[ownerState.variant],
+            ownerState.variant,
             // Copied the following from MUIs default TooltipPopper: https://github.com/mui/material-ui/blob/a13c0c026692aafc303756998a78f1d6c2dd707d/packages/mui-material/src/Tooltip/Tooltip.js#L48
-            !ownerState.disableInteractive && styles.popperInteractive,
-            ownerState.arrow && styles.popperArrow,
-            !ownerState.open && styles.popperClose,
+            !ownerState.disableInteractive && "popperInteractive",
+            ownerState.arrow && "popperArrow",
+            !ownerState.open && "popperClose",
         ];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ theme, ownerState }) => css`
         ${ownerState.variant === "light" &&
         css`
@@ -168,6 +167,7 @@ export const Tooltip = (inProps: TooltipProps) => {
         children,
         ...props
     } = useThemeProps({ props: inProps, name: "CometAdminTooltip" });
+    const theme = useTheme();
 
     const [open, setOpen] = React.useState(false);
 
@@ -185,12 +185,14 @@ export const Tooltip = (inProps: TooltipProps) => {
         disableInteractive,
         arrow,
         open,
+        isRtl: theme.direction === "rtl",
     };
 
-    const commonTooltipProps = {
+    const commonTooltipProps: React.ComponentProps<typeof TooltipRoot> = {
         ...props,
         ownerState,
         slots: {
+            // @ts-expect-error The `ownerState` prop required by `TooltipPopper` does not exist in the type of MUIs `popper` slot in the `Tooltip` component but it is passed to the `TooltipPopper` component correctly.
             popper: TooltipPopper,
             ...props.slots,
         },

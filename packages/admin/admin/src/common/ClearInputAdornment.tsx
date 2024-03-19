@@ -8,12 +8,12 @@ import {
     InputAdornmentClassKey,
     InputAdornmentProps,
     selectClasses,
-    styled,
     Theme,
     useThemeProps,
 } from "@mui/material";
 import * as React from "react";
 
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface ClearInputAdornmentProps
@@ -56,13 +56,10 @@ export const ClearInputAdornment = (inProps: ClearInputAdornmentProps): React.Re
     );
 };
 
-const Root = styled(InputAdornment, {
-    name: "CometAdminClearInputAdornment",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})<{ ownerState: OwnerState }>(
+const Root = createComponentSlot(InputAdornment)<ClearInputAdornmentClassKey, OwnerState>({
+    componentName: "ClearInputAdornment",
+    slotName: "root",
+})(
     ({ theme, ownerState }) => css`
         ${ownerState.position === "start" &&
         css`
@@ -85,12 +82,9 @@ const Root = styled(InputAdornment, {
     `,
 );
 
-const Button = styled(ButtonBase, {
-    name: "CometAdminClearInputAdornment",
-    slot: "buttonBase",
-    overridesResolver(_, styles) {
-        return [styles.buttonBase];
-    },
+const Button = createComponentSlot(ButtonBase)<ClearInputAdornmentClassKey>({
+    componentName: "ClearInputAdornment",
+    slotName: "buttonBase",
 })(
     ({ theme }) => css`
         padding-left: 10px;

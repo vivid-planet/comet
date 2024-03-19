@@ -1,9 +1,10 @@
 import { ChevronRight } from "@comet/admin-icons";
 import { Link } from "@mui/material";
-import { ComponentsOverrides, css, styled, Theme, useTheme, useThemeProps } from "@mui/material/styles";
+import { ComponentsOverrides, css, Theme, useTheme, useThemeProps } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useStackApi } from "../Api";
 import { getElementOuterWidth, useItemsToRender, useObservedWidth } from "./utils";
@@ -19,22 +20,16 @@ export type StackBreadcrumbsClassKey =
     | "backButton"
     | "backButtonSeparator";
 
-const Root = styled("div", {
-    name: "CometAdminStackBreadcrumbs",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createComponentSlot("div")<StackBreadcrumbsClassKey>({
+    componentName: "StackBreadcrumbs",
+    slotName: "root",
 })(css`
     position: relative;
 `);
 
-const Breadcrumbs = styled("div", {
-    name: "CometAdminStackBreadcrumbs",
-    slot: "breadcrumbs",
-    overridesResolver(_, styles) {
-        return [styles.breadcrumbs];
-    },
+const Breadcrumbs = createComponentSlot("div")<StackBreadcrumbsClassKey>({
+    componentName: "StackBreadcrumbs",
+    slotName: "breadcrumbs",
 })(
     ({ theme }) => css`
         display: flex;
@@ -46,12 +41,9 @@ const Breadcrumbs = styled("div", {
     `,
 );
 
-const ListItem = styled("div", {
-    name: "CometAdminStackBreadcrumbs",
-    slot: "listItem",
-    overridesResolver(_, styles) {
-        return [styles.listItem];
-    },
+const ListItem = createComponentSlot("div")<StackBreadcrumbsClassKey>({
+    componentName: "StackBreadcrumbs",
+    slotName: "listItem",
 })(css`
     display: flex;
     align-items: center;
@@ -59,12 +51,9 @@ const ListItem = styled("div", {
     white-space: nowrap;
 `);
 
-const Separator = styled("div", {
-    name: "CometAdminStackBreadcrumbs",
-    slot: "separator",
-    overridesResolver(_, styles) {
-        return [styles.separator];
-    },
+const Separator = createComponentSlot("div")<StackBreadcrumbsClassKey>({
+    componentName: "StackBreadcrumbs",
+    slotName: "separator",
 })(css`
     font-size: 12px;
     line-height: 0;
@@ -72,12 +61,9 @@ const Separator = styled("div", {
     margin-right: 8px;
 `);
 
-export const BackButtonSeparator = styled("div", {
-    name: "CometAdminStackBreadcrumbs",
-    slot: "backButtonSeparator",
-    overridesResolver(_, styles) {
-        return [styles.backButtonSeparator];
-    },
+export const BackButtonSeparator = createComponentSlot("div")<StackBreadcrumbsClassKey>({
+    componentName: "StackBreadcrumbs",
+    slotName: "backButtonSeparator",
 })(
     ({ theme }) => css`
         height: 30px;

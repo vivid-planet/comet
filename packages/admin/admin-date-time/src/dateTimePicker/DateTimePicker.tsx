@@ -1,6 +1,6 @@
-import { ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides, FormControl } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
@@ -10,23 +10,17 @@ import { getDateWithNewTime, getTimeStringFromDate } from "../utils/timePickerHe
 
 export type DateTimePickerClassKey = "root" | "dateFormControl" | "timeFormControl" | "datePicker" | "timePicker";
 
-const Root = styled("div", {
-    name: "CometAdminDateTimePicker",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createComponentSlot("div")<DateTimePickerClassKey>({
+    componentName: "DateTimePicker",
+    slotName: "root",
 })(css`
     display: flex;
     align-items: center;
 `);
 
-const DateFormControl = styled(FormControl, {
-    name: "CometAdminDateTimePicker",
-    slot: "dateFormControl",
-    overridesResolver(_, styles) {
-        return [styles.dateFormControl];
-    },
+const DateFormControl = createComponentSlot(FormControl)<DateTimePickerClassKey>({
+    componentName: "DateTimePicker",
+    slotName: "dateFormControl",
 })(
     ({ theme }) => css`
         flex-grow: 1;
@@ -34,31 +28,22 @@ const DateFormControl = styled(FormControl, {
     `,
 );
 
-const TimeFormControl = styled(FormControl, {
-    name: "CometAdminDateTimePicker",
-    slot: "timeFormControl",
-    overridesResolver(_, styles) {
-        return [styles.timeFormControl];
-    },
+const TimeFormControl = createComponentSlot(FormControl)<DateTimePickerClassKey>({
+    componentName: "DateTimePicker",
+    slotName: "timeFormControl",
 })(css`
     flex-grow: 1;
 `);
 
-const DatePicker = styled(DatePickerBase, {
-    name: "CometAdminDateTimePicker",
-    slot: "datePicker",
-    overridesResolver(_, styles) {
-        return [styles.datePicker];
-    },
-})(css``);
+const DatePicker = createComponentSlot(DatePickerBase)<DateTimePickerClassKey>({
+    componentName: "DateTimePicker",
+    slotName: "datePicker",
+})();
 
-const TimePicker = styled(TimePickerBase, {
-    name: "CometAdminDateTimePicker",
-    slot: "timePicker",
-    overridesResolver(_, styles) {
-        return [styles.timePicker];
-    },
-})(css``);
+const TimePicker = createComponentSlot(TimePickerBase)<DateTimePickerClassKey>({
+    componentName: "DateTimePicker",
+    slotName: "timePicker",
+})();
 
 export interface DateTimePickerProps
     extends ThemedComponentBaseProps<{

@@ -1,8 +1,9 @@
 import { ComponentsOverrides, Tab as MuiTab, TabProps as MuiTabProps, Tabs, TabsProps } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { Route, useHistory, useRouteMatch } from "react-router-dom";
 
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { useSubRoutePrefix } from "../router/SubRoute";
 import { useStackApi } from "../stack/Api";
@@ -14,29 +15,23 @@ export type RouterTabsClassKey = "root" | "tabs" | "content" | "contentHidden";
 
 type OwnerState = { contentHidden?: boolean };
 
-const Root = styled("div", {
-    name: "CometAdminRouterTabs",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+const Root = createComponentSlot("div")<RouterTabsClassKey>({
+    componentName: "RouterTabs",
+    slotName: "root",
+})();
 
-const StyledTabs = styled(Tabs, {
-    name: "CometAdminRouterTabs",
-    slot: "tabs",
-    overridesResolver(_, styles) {
-        return [styles.tabs];
-    },
-})(css``);
+const StyledTabs = createComponentSlot(Tabs)<RouterTabsClassKey>({
+    componentName: "RouterTabs",
+    slotName: "tabs",
+})();
 
-const Content = styled("div", {
-    name: "CometAdminRouterTabs",
-    slot: "content",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.content, ownerState.contentHidden && styles.contentHidden];
+const Content = createComponentSlot("div")<RouterTabsClassKey, OwnerState>({
+    componentName: "RouterTabs",
+    slotName: "content",
+    classesResolver(ownerState) {
+        return [ownerState.contentHidden && "contentHidden"];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ ownerState }) => css`
         ${ownerState.contentHidden &&
         css`

@@ -1,7 +1,8 @@
 import { ComponentsOverrides, Paper, Toolbar as MuiToolbar } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
 
@@ -21,13 +22,10 @@ type OwnerState = {
     headerHeight: number;
 };
 
-const Root = styled(Paper, {
-    name: "CometAdminToolbar",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})<{ ownerState: OwnerState }>(
+const Root = createComponentSlot(Paper)<ToolbarClassKey, OwnerState>({
+    componentName: "Toolbar",
+    slotName: "root",
+})(
     ({ ownerState }) => css`
         position: sticky;
         z-index: 10;
@@ -40,24 +38,18 @@ const Root = styled(Paper, {
     `,
 );
 
-const StyledToolbar = styled(MuiToolbar, {
-    name: "CometAdminToolbar",
-    slot: "muiToolbar",
-    overridesResolver(_, styles) {
-        return [styles.toolbar];
-    },
+const StyledToolbar = createComponentSlot(MuiToolbar)<ToolbarClassKey>({
+    componentName: "Toolbar",
+    slotName: "muiToolbar",
 })(css`
     display: flex;
     flex: 1;
     align-items: stretch;
 `);
 
-const MainContentContainer = styled("div", {
-    name: "CometAdminToolbar",
-    slot: "mainContentContainer",
-    overridesResolver(_, styles) {
-        return [styles.mainContentContainer];
-    },
+const MainContentContainer = createComponentSlot("div")<ToolbarClassKey>({
+    componentName: "Toolbar",
+    slotName: "mainContentContainer",
 })(css`
     display: flex;
     flex: 1;

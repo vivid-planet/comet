@@ -1,8 +1,9 @@
 import { ComponentsOverrides, Link, Typography as MuiTypography, TypographyTypeMap } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
 
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { StackApiContext } from "../../../stack/Api";
 
@@ -12,25 +13,22 @@ type OwnerState = {
     active: boolean;
 };
 
-const Item = styled("div", {
-    name: "CometAdminToolbarBreadcrumbs",
-    slot: "item",
-    overridesResolver(_, styles) {
-        return [styles.item];
-    },
+const Item = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "item",
 })(css`
     display: flex;
     align-items: center;
     padding: 15px;
 `);
 
-const TypographyRoot = styled(MuiTypography, {
-    name: "CometAdminToolbarBreadcrumbs",
-    slot: "typographyRoot",
-    overridesResolver(ownerState: OwnerState, styles) {
-        return [styles.typographyRoot, ownerState.active && styles.typographyActiveRoot];
+const TypographyRoot = createComponentSlot(MuiTypography)<ToolbarBreadcrumbsClassKey, OwnerState>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "typographyRoot",
+    classesResolver(ownerState) {
+        return [ownerState.active && "typographyActiveRoot"];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ ownerState }) => css`
         font-size: 18px;
 
@@ -41,12 +39,9 @@ const TypographyRoot = styled(MuiTypography, {
     `,
 );
 
-const SeparatorContainer = styled("div", {
-    name: "CometAdminToolbarBreadcrumbs",
-    slot: "separatorContainer",
-    overridesResolver(_, styles) {
-        return [styles.separatorContainer];
-    },
+const SeparatorContainer = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "separatorContainer",
 })(css`
     height: 100%;
     padding-left: 15px;
@@ -56,12 +51,9 @@ const SeparatorContainer = styled("div", {
     align-items: center;
 `);
 
-const Separator = styled("div", {
-    name: "CometAdminToolbarBreadcrumbs",
-    slot: "separator",
-    overridesResolver(_, styles) {
-        return [styles.separator];
-    },
+const Separator = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "separator",
 })(
     ({ theme }) => css`
         height: 30px;

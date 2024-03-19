@@ -1,8 +1,7 @@
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
-import { ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import {
     DraftBlockType,
     DraftEditorCommand,
@@ -340,13 +339,13 @@ export type RteClassKey = "root" | "disabled" | "editor";
 
 type OwnerState = Pick<RteProps, "disabled" | "minHeight">;
 
-const Root = styled("div", {
-    name: "CometAdminRte",
-    slot: "root",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.root, ownerState.disabled && styles.disabled];
+const Root = createComponentSlot("div")<RteClassKey, OwnerState>({
+    componentName: "Rte",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [ownerState.disabled && "disabled"];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ theme }) => css`
         border: 1px solid ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors.border};
         border-top-width: 0;
@@ -354,13 +353,13 @@ const Root = styled("div", {
     `,
 );
 
-const Editor = styled("div", {
-    name: "CometAdminRte",
-    slot: "editor",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.editor, ownerState.disabled && styles.disabled];
+const Editor = createComponentSlot("div")<RteClassKey, OwnerState>({
+    componentName: "Rte",
+    slotName: "editor",
+    classesResolver(ownerState) {
+        return [ownerState.disabled && "disabled"];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ ownerState, theme }) => css`
         & .public-DraftEditor-content {
             min-height: 240px;

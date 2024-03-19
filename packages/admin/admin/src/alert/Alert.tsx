@@ -1,9 +1,10 @@
 import { Close } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
 import { Alert as MuiAlert, alertClasses, AlertTitle, buttonClasses, IconButton, Typography } from "@mui/material";
-import { css, styled, useThemeProps } from "@mui/material/styles";
+import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export interface AlertProps
@@ -65,13 +66,13 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>((inProps, ref)
     );
 });
 
-const Root = styled(MuiAlert, {
-    name: "CometAdminAlert",
-    slot: "root",
-    overridesResolver({ hasTitle, renderAsSingleRow }: OwnerState, styles) {
-        return [styles.root, hasTitle && styles.hasTitle, renderAsSingleRow && styles.singleRow];
+const Root = createComponentSlot(MuiAlert)<AlertClassKey, OwnerState>({
+    componentName: "Alert",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [ownerState.hasTitle && "hasTitle", ownerState.renderAsSingleRow && "singleRow"];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ theme, ownerState }) => css`
         padding: ${theme.spacing(4, "12px", 4, 4)};
 
@@ -106,31 +107,22 @@ const Root = styled(MuiAlert, {
     `,
 );
 
-const Title = styled(AlertTitle, {
-    name: "CometAdminAlert",
-    slot: "title",
-    overridesResolver(_, styles) {
-        return [styles.title];
-    },
-})(css``);
+const Title = createComponentSlot(AlertTitle)<AlertClassKey>({
+    componentName: "Alert",
+    slotName: "title",
+})();
 
-const Text = styled(Typography, {
-    name: "CometAdminAlert",
-    slot: "text",
-    overridesResolver(_, styles) {
-        return [styles.text];
-    },
+const Text = createComponentSlot(Typography)<AlertClassKey>({
+    componentName: "Alert",
+    slotName: "text",
 })(css`
     flex-grow: 1;
 `);
 
-const Action = styled("div", {
-    name: "CometAdminAlert",
-    slot: "action",
-    overridesResolver(_, styles) {
-        return [styles.action];
-    },
-})<{ ownerState: OwnerState }>(
+const Action = createComponentSlot("div")<AlertClassKey, OwnerState>({
+    componentName: "Alert",
+    slotName: "action",
+})(
     ({ theme, ownerState }) => css`
         ${ownerState.hasTitle &&
         css`
@@ -139,13 +131,10 @@ const Action = styled("div", {
     `,
 );
 
-const CloseIcon = styled(IconButton, {
-    name: "CometAdminAlert",
-    slot: "closeIcon",
-    overridesResolver(_, styles) {
-        return [styles.closeIcon];
-    },
-})<{ ownerState: OwnerState }>(
+const CloseIcon = createComponentSlot(IconButton)<AlertClassKey, OwnerState>({
+    componentName: "Alert",
+    slotName: "closeIcon",
+})(
     ({ ownerState }) => css`
         ${ownerState.hasTitle &&
         css`

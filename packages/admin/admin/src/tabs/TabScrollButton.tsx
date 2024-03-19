@@ -1,20 +1,22 @@
 import { ChevronLeft, ChevronRight } from "@comet/admin-icons";
 import { ButtonBase, ButtonBaseProps, ComponentsOverrides } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import isMobile from "is-mobile";
 import * as React from "react";
+
+import { createComponentSlot } from "../helpers/createComponentSlot";
 
 export type TabScrollButtonClassKey = "root" | "vertical";
 
 type OwnerState = Pick<TabScrollButtonProps, "orientation">;
 
-const Root = styled(ButtonBase, {
-    name: "CometAdminTabScrollButton",
-    slot: "root",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.root, ownerState.orientation === "vertical" && styles.vertical];
+const Root = createComponentSlot(ButtonBase)<TabScrollButtonClassKey, OwnerState>({
+    componentName: "TabScrollButton",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [ownerState.orientation === "vertical" && "vertical"];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ ownerState }) => css`
         width: 40px;
         flex-shrink: 0;

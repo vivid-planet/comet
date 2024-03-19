@@ -1,9 +1,10 @@
 import { ComponentsOverrides } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
 import MuiTabs, { TabsProps as MuiTabsProps } from "@mui/material/Tabs";
 import * as React from "react";
 
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { TabScrollButton } from "./TabScrollButton";
 
@@ -11,29 +12,23 @@ export type TabsClassKey = "root" | "tabs" | "content" | "contentHidden";
 
 type OwnerState = { contentHidden?: boolean };
 
-const Root = styled("div", {
-    name: "CometAdminTabs",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
-})(css``);
+const Root = createComponentSlot("div")<TabsClassKey>({
+    componentName: "Tabs",
+    slotName: "root",
+})();
 
-const StyledTabs = styled(MuiTabs, {
-    name: "CometAdminTabs",
-    slot: "tabs",
-    overridesResolver(_, styles) {
-        return [styles.tabs];
-    },
-})(css``);
+const StyledTabs = createComponentSlot(MuiTabs)<TabsClassKey>({
+    componentName: "Tabs",
+    slotName: "tabs",
+})();
 
-const Content = styled("div", {
-    name: "CometAdminTabs",
-    slot: "content",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.content, ownerState.contentHidden && styles.contentHidden];
+const Content = createComponentSlot("div")<TabsClassKey, OwnerState>({
+    componentName: "Tabs",
+    slotName: "content",
+    classesResolver(ownerState) {
+        return [ownerState.contentHidden && "contentHidden"];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ ownerState }) => css`
         ${ownerState.contentHidden &&
         css`

@@ -1,9 +1,10 @@
 import Drawer from "@mui/material/Drawer";
 import { PaperProps } from "@mui/material/Paper";
-import { ComponentsOverrides, css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { useHistory } from "react-router";
 
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../MasterLayoutContext";
 import { MenuContext } from "./Context";
@@ -12,13 +13,13 @@ export type MenuClassKey = "drawer" | "permanentDrawer" | "temporaryDrawer" | "o
 
 type OwnerState = { open: boolean; drawerWidth: number };
 
-const PermanentDrawer = styled(Drawer, {
-    name: "CometAdminMenu",
-    slot: "permanentDrawer",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.drawer, styles.permanentDrawer, ownerState.open && styles.open, !ownerState.open && styles.closed];
+const PermanentDrawer = createComponentSlot(Drawer)<MenuClassKey, OwnerState>({
+    componentName: "Menu",
+    slotName: "permanentDrawer",
+    classesResolver(ownerState) {
+        return ["drawer", ownerState.open && "open", !ownerState.open && "closed"];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ theme, ownerState }) => css`
         width: 0;
         [class*="MuiDrawer-paper"] {
@@ -69,13 +70,13 @@ const PermanentDrawer = styled(Drawer, {
     `,
 );
 
-const TemporaryDrawer = styled(Drawer, {
-    name: "CometAdminMenu",
-    slot: "temporaryDrawer",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.drawer, styles.temporaryDrawer, ownerState.open && styles.open, !ownerState.open && styles.closed];
+const TemporaryDrawer = createComponentSlot(Drawer)<MenuClassKey, OwnerState>({
+    componentName: "Menu",
+    slotName: "temporaryDrawer",
+    classesResolver(ownerState) {
+        return ["drawer", ownerState.open && "open", !ownerState.open && "closed"];
     },
-})<{ ownerState: OwnerState }>(css`
+})(css`
     [class*="MuiDrawer-paper"] {
         background-color: #fff;
     }

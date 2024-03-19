@@ -1,11 +1,12 @@
 import { ChevronRight } from "@comet/admin-icons";
 import { Link, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
-import { css, styled } from "@mui/material/styles";
+import { css } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { BreadcrumbItem } from "../Stack";
 import { BreadcrumbLink } from "./BreadcrumbLink";
-import { StackBreadcrumbsProps } from "./StackBreadcrumbs";
+import { StackBreadcrumbsClassKey, StackBreadcrumbsProps } from "./StackBreadcrumbs";
 
 interface BreadcrumbsOverflowProps {
     items: BreadcrumbItem[];
@@ -13,11 +14,11 @@ interface BreadcrumbsOverflowProps {
     slotProps: StackBreadcrumbsProps["slotProps"];
 }
 
-const OverflowLink = styled(Link, {
-    name: "CometAdminStackBreadcrumbs",
-    slot: "overflowLink",
-    overridesResolver(_, styles) {
-        return [styles.link, styles.overflowLink];
+const OverflowLink = createComponentSlot(Link)<StackBreadcrumbsClassKey>({
+    componentName: "StackBreadcrumbs",
+    slotName: "overflowLink",
+    classesResolver() {
+        return ["link"];
     },
 })(
     ({ theme }) => css`

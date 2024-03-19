@@ -1,17 +1,15 @@
 import { ComponentsOverrides } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 
 export type ToolbarItemClassKey = "root";
 
-const Root = styled("div", {
-    name: "CometAdminToolbarItem",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createComponentSlot("div")<ToolbarItemClassKey>({
+    componentName: "ToolbarItem",
+    slotName: "root",
 })(
     ({ theme }) => css`
         padding: 15px;
