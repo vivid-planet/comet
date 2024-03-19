@@ -12,7 +12,6 @@ All fields containing block data need to be annotated with `@RootBlock()`. The B
 //...
 @RootBlockEntity()
 export class News extends BaseEntity<News, "id"> implements DocumentInterface {
-    
     // ...
 
     @RootBlock(DamImageBlock)
@@ -78,8 +77,11 @@ The DependencyInterface requires a translatable `displayName` and a `getUrl()` m
 // NewsDependency.tsx
 export const NewsDependency: DependencyInterface = {
     displayName: <FormattedMessage id="news.displayName" defaultMessage="News" />,
-    getUrl: async ({ contentScopeUrl, apolloClient, id, rootColumnName, jsonPath }) => {
-        const { data, error } = await apolloClient.query<GQLNewsDependencyQuery, GQLNewsDependencyQueryVariables>({
+    resolveRoute: async ({ apolloClient, id, rootColumnName, jsonPath }) => {
+        const { data, error } = await apolloClient.query<
+            GQLNewsDependencyQuery,
+            GQLNewsDependencyQueryVariables
+        >({
             query: gql`
                 query NewsDependency($id: ID!) {
                     news(id: $id) {
@@ -105,7 +107,7 @@ export const NewsDependency: DependencyInterface = {
             )}`;
         }
 
-        return `${contentScopeUrl}/structured-content/news/${data.news.id}/edit/${dependencyRoute}`;
+        return `/structured-content/news/${data.news.id}/edit/${dependencyRoute}`;
     },
 };
 ```
@@ -120,12 +122,10 @@ The key must be the name of the GraphQL object type associated with the entity.
 <DependenciesConfigProvider
     entityDependencyMap={{
         // ...
-        News: NewsDependency
+        News: NewsDependency,
     }}
 >
-// ...
+    // ...
 </DependenciesConfigProvider>
 // ...
 ```
-
-
