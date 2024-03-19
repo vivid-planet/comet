@@ -2286,6 +2286,9 @@ importers:
       reflect-metadata:
         specifier: ^0.1.0
         version: 0.1.13
+      request-ip:
+        specifier: ^3.3.0
+        version: 3.3.0
       rimraf:
         specifier: ^3.0.0
         version: 3.0.2
@@ -2386,6 +2389,9 @@ importers:
       '@types/probe-image-size':
         specifier: ^7.0.0
         version: 7.2.0
+      '@types/request-ip':
+        specifier: ^0.0.41
+        version: 0.0.41
       '@types/rimraf':
         specifier: ^3.0.0
         version: 3.0.2
@@ -14415,6 +14421,12 @@ packages:
     dependencies:
       '@types/node': 18.15.3
     dev: false
+
+  /@types/request-ip@0.0.41:
+    resolution: {integrity: sha512-Qzz0PM2nSZej4lsLzzNfADIORZhhxO7PED0fXpg4FjXiHuJ/lMyUg+YFF5q8x9HPZH3Gl6N+NOM8QZjItNgGKg==}
+    dependencies:
+      '@types/node': 18.15.3
+    dev: true
 
   /@types/request@2.48.8:
     resolution: {integrity: sha512-whjk1EDJPcAR2kYHRbFl/lKeeKYTi05A15K9bnLInCVroNDCtXce57xKdI0/rQaA3K+6q0eFyUBPmqfSndUZdQ==}
@@ -28299,6 +28311,10 @@ packages:
       is-finite: 1.1.0
     dev: false
     optional: true
+
+  /request-ip@3.3.0:
+    resolution: {integrity: sha512-cA6Xh6e0fDBBBwH77SLJaJPBmD3nWVAcF9/XAcsrIHdjhFzFiB5aNQFytdjCGPezU3ROwrR11IddKAM08vohxA==}
+    dev: false
 
   /request@2.88.2:
     resolution: {integrity: sha512-MsvtOrfG9ZcrOwAW+Qi+F6HbD0CWXEh9ou77uOb7FM2WPhwT7smM833PzanhJLsgXjN89Ir6V2PczXNnMpwKhw==}
