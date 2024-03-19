@@ -1,3 +1,4 @@
+import { StyledComponent } from "@emotion/styled";
 import { css, generateUtilityClass, styled, Theme } from "@mui/material";
 import { CSSProperties } from "@mui/material/styles/createMixins";
 import React from "react";
@@ -27,38 +28,33 @@ type SlotStylesOrStylesFunction<OwnerState extends object | undefined> =
 export const createComponentSlot = <BaseComponent extends React.ElementType | keyof JSX.IntrinsicElements>(component: BaseComponent) => {
     return <ClassKey extends string, OwnerState extends object | undefined = undefined>(options: Options<ClassKey, OwnerState>) => {
         return (styles: SlotStylesOrStylesFunction<OwnerState> = css``) => {
-            return withClassNameAndOwnerState(
-                // @ts-expect-error TODO: Fix the type. ...
+            return withClassNameOwnerStateAndRef(
+                // @ts-expect-error MUIs `styled` supports the individual types of the `BaseComponent` union type but due to the way the component/tag parameter is typed in `CreateMUIStyled` a union type does not match.
                 styled(component, {
                     name: `${classNamePrefix}${options.componentName}`,
                     slot: options.slotName,
-                    overridesResolver({ ownerState }, styles) {
+                    overridesResolver({ ownerState }, themeStyleOverrides) {
                         const resolvedClasses = getResolvedClasses<ClassKey, OwnerState>(options, ownerState);
                         const allClasses = [options.slotName, ...resolvedClasses].filter(Boolean);
-                        return allClasses.map((classKey) => styles[classKey]);
+                        return allClasses.map((classKey) => themeStyleOverrides[classKey]);
                     },
-                })<OwnerStateObjectIfDefined<OwnerState>>(
-                    // @ts-expect-error TODO: Fix the type. ...
-                    typeof styles === "function" ? ({ theme, ownerState }) => styles({ theme, ownerState }) : styles,
-                ),
+                })<OwnerStateObjectIfDefined<OwnerState>>(styles),
                 options,
             );
         };
     };
 };
 
-function withClassNameAndOwnerState<BaseComponent extends React.ElementType | keyof JSX.IntrinsicElements>(
-    Component: BaseComponent,
+function withClassNameOwnerStateAndRef<Props extends object>(
+    Component: StyledComponent<Props & { className?: string; ownerState?: object }>,
     options: Options<string, object | undefined>,
 ) {
-    const WithClassName = React.forwardRef<unknown, React.ComponentProps<BaseComponent>>(({ className, ownerState, ...restProps }, ref) => {
+    return React.forwardRef<unknown, React.PropsWithChildren<React.ComponentProps<typeof Component>>>((props, ref) => {
+        const { className, ownerState } = props;
         const resolvedClassNames = getResolvedClassNames(options, ownerState);
         const customClassName = [className, ...resolvedClassNames].filter(Boolean).join(" ");
-        // @ts-expect-error TODO: Fix the type. ...
-        return <Component {...restProps} ownerState={ownerState} className={customClassName} ref={ref} />;
+        return <Component {...props} className={customClassName} ownerState={ownerState} ref={ref} />;
     });
-
-    return WithClassName;
 }
 
 const getResolvedClasses = <ClassKey extends string, OwnerState extends object | undefined>(
