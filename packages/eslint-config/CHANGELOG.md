@@ -1,5 +1,11 @@
 # @comet/eslint-config
 
+## 5.6.5
+
+### Patch Changes
+
+-   @comet/eslint-plugin@5.6.5
+
 ## 5.6.4
 
 ### Patch Changes
