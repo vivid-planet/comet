@@ -1,5 +1,11 @@
 # @comet/blocks-api
 
+## 6.4.0
+
+### Patch Changes
+
+-   0efae68ff: Prevent XSS attacks in `@IsLinkTarget()` validator
+
 ## 6.3.0
 
 ## 6.2.1
