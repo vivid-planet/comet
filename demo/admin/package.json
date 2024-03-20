@@ -17,7 +17,7 @@
         "lint:eslint": "eslint --max-warnings 0  --config ./.eslintrc.cli.js --ext .ts,.tsx,.js,.jsx,.json,.md src/ package.json",
         "lint:tsc": "tsc --project .",
         "lint:generated-files-not-modified": "$npm_execpath admin-generator && git diff --exit-code HEAD --",
-        "start": "run-s intl:compile && run-p gql:types generate-block-types && chokidar --initial  -s \"../../packages/admin/*/src/**\" -c \"kill-port 8000 && dotenv -- vite --force\""
+        "start": "run-s intl:compile && run-p gql:types generate-block-types && dotenv -- chokidar --initial -s \"../../packages/admin/*/src/**\" -c \"kill-port $ADMIN_PORT && vite --force\""
     },
     "dependencies": {
         "@apollo/client": "^3.7.0",
