@@ -3,7 +3,7 @@ import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
 import {} from "@emotion/react";
 import { ButtonBase, css, ListItemText, Menu, MenuItem, styled, Theme, Typography } from "@mui/material";
 import React from "react";
-import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 import { useStackApi } from "../../stack/Api";
 import { useObservedWidth } from "../../stack/breadcrumbs/utils"; // TODO: Update import when merged: https://github.com/vivid-planet/comet/pull/1755
@@ -23,10 +23,6 @@ const __DEBUG__dummyStackPages = [
 ];
 const __DEBUG__usedNumberOfStackPages = __DEBUG__dummyStackPages.slice(0, __DEBUG__numberOfPages);
 const __DEBUG__useDebugBreadcrumbData = false;
-
-const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(({ to, ...rest }, ref) => (
-    <RouterLink innerRef={ref} to={to} {...rest} />
-));
 
 export type ToolbarBreadcrumbsProps = {
     scopeIndicator?: React.ReactNode;
@@ -74,7 +70,7 @@ export const ToolbarBreadcrumbs = ({ scopeIndicator }: ToolbarBreadcrumbsProps) 
                                 ) : (
                                     <>
                                         {/* @ts-expect-error TODO: Fix this. May be fixed when creating the component with `createComponentSlot()` from #1809 */}
-                                        <Item {...commonItemProps} component={BreadcrumbLink} to={url}>
+                                        <Item {...commonItemProps} component={RouterLink} to={url}>
                                             {title}
                                         </Item>
                                         <ItemSeparator>
@@ -130,7 +126,7 @@ export const ToolbarBreadcrumbs = ({ scopeIndicator }: ToolbarBreadcrumbsProps) 
                     const isCurrentPage = nestingLevel === breadcrumbs.length - 1;
 
                     return (
-                        <MobileMenuItem key={nestingLevel} onClick={toggleMobileMenu} selected={isCurrentPage} to={url} component={BreadcrumbLink}>
+                        <MobileMenuItem key={nestingLevel} onClick={toggleMobileMenu} selected={isCurrentPage} component={RouterLink} to={url}>
                             {nestingLevel > 0 && <MenuItemNestingIndicator nestingLevel={nestingLevel} />}
                             <ListItemText
                                 primary={title}
