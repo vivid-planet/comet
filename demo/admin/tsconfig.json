@@ -1,14 +1,13 @@
 {
     "ts-node": {
         "compilerOptions": {
-            "module": "CommonJS",
-            "types": ["node"]
+            "module": "commonjs"
         }
     },
     "compilerOptions": {
         "target": "ESNext",
         "module": "ESNext",
-        "moduleResolution": "node",
+        "moduleResolution": "Node",
         "noImplicitAny": true,
         "strictNullChecks": true,
         "jsx": "react-jsx",
@@ -21,11 +20,9 @@
         },
         "esModuleInterop": true,
         "resolveJsonModule": true,
-        "sourceRoot": "~/",
         "allowSyntheticDefaultImports": true,
         "sourceMap": true,
-        "inlineSources": true,
-        "types": ["vite/client"]
+        "inlineSources": true
     },
     "include": ["src/**/*"]
 }

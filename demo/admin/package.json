@@ -5,6 +5,7 @@
     "scripts": {
         "admin-generator": "rimraf 'src/*/generated' && comet-admin-generator generate crud-generator-config.ts",
         "build": "run-s intl:compile && run-p gql:types generate-block-types && NODE_ENV=production vite build",
+        "preview": "npm run build && vite preview",
         "generate-block-types": "comet generate-block-types --inputs",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"npm run generate-block-types\"",
         "gql:types": "graphql-codegen",
