@@ -6,8 +6,9 @@ import * as React from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { useObservedWidth } from "../../utils/useObservedWidth";
 import { useStackApi } from "../Api";
-import { getElementOuterWidth, useItemsToRender, useObservedWidth } from "./utils";
+import { getElementOuterWidth, useItemsToRender } from "./utils";
 
 export type StackBreadcrumbsClassKey =
     | "root"
