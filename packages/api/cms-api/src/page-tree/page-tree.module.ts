@@ -12,6 +12,7 @@ import { AttachedDocument } from "./entities/attached-document.entity";
 import { PageTreeNodeBase } from "./entities/page-tree-node-base.entity";
 import { defaultReservedPaths, PAGE_TREE_CONFIG, PAGE_TREE_ENTITY, PAGE_TREE_REPOSITORY } from "./page-tree.constants";
 import { PageTreeService } from "./page-tree.service";
+import { PageTreeNodeDocumentEntityInfoService } from "./page-tree-node-document-entity-info.service";
 import { PageTreeNodeDocumentEntityScopeService } from "./page-tree-node-document-entity-scope.service";
 import { PageTreeReadApiService } from "./page-tree-read-api.service";
 import type { PageTreeNodeInterface, ScopeInterface } from "./types";
@@ -85,6 +86,7 @@ export class PageTreeModule {
                     inject: [PageTreeService],
                 },
                 documentSubscriber,
+                PageTreeNodeDocumentEntityInfoService,
                 PageTreeNodeDocumentEntityScopeService,
             ],
             exports: [PageTreeService, PageTreeReadApiService, AttachedDocumentLoaderService, PageTreeNodeDocumentEntityScopeService],
