@@ -84,7 +84,7 @@ export async function* getRedirects() {
                 }
             }
 
-            return { ...redirect, source, destination };
+            return { ...redirect, source, destination, has };
         });
 
         if (offset + limit >= paginatedRedirects.totalCount) {
@@ -119,14 +119,14 @@ const createApiRedirects = async (): Promise<Redirect[]> => {
     const redirects: Redirect[] = [];
 
     for await (const redirect of getRedirects()) {
-        const { source, destination } = redirect;
+        const { source, destination, has } = redirect;
         if (source?.toLowerCase() === destination?.toLowerCase()) {
             console.warn(`Skipping redirect loop ${source} -> ${destination}`);
             continue;
         }
 
         if (source && destination) {
-            redirects.push({ source, destination, permanent: true });
+            redirects.push({ source, destination, has, permanent: true });
         }
     }
 
