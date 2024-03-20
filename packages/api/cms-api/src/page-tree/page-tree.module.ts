@@ -87,11 +87,8 @@ export class PageTreeModule {
                     inject: [PageTreeService],
                 },
                 documentSubscriber,
-<<<<<<< HEAD
                 SitePreviewResolver,
-=======
                 PageTreeNodeDocumentEntityInfoService,
->>>>>>> main
                 PageTreeNodeDocumentEntityScopeService,
             ],
             exports: [PageTreeService, PageTreeReadApiService, AttachedDocumentLoaderService, PageTreeNodeDocumentEntityScopeService],

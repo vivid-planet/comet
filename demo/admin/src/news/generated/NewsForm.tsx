@@ -160,21 +160,8 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-<<<<<<< HEAD
-                        <Field
-                            required
-                            fullWidth
-                            name="slug"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="news.slug" defaultMessage="Slug" />}
-                        />
-                        <Field
-                            required
-                            fullWidth
-                            name="title"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="news.title" defaultMessage="Title" />}
-                        />
+                        <TextField required fullWidth name="slug" label={<FormattedMessage id="news.slug" defaultMessage="Slug" />} />
+                        <TextField required fullWidth name="title" label={<FormattedMessage id="news.title" defaultMessage="Title" />} />
                         <Field fullWidth name="status" label={<FormattedMessage id="news.status" defaultMessage="Status" />}>
                             {(props) => (
                                 <FinalFormSelect {...props}>
@@ -187,18 +174,7 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                                 </FinalFormSelect>
                             )}
                         </Field>
-                        <Field
-                            required
-                            fullWidth
-                            name="date"
-                            component={FinalFormDatePicker}
-                            label={<FormattedMessage id="news.date" defaultMessage="Date" />}
-                        />
-=======
-                        <TextField required fullWidth name="slug" label={<FormattedMessage id="news.slug" defaultMessage="Slug" />} />
-                        <TextField required fullWidth name="title" label={<FormattedMessage id="news.title" defaultMessage="Title" />} />
                         <DateField required fullWidth name="date" label={<FormattedMessage id="news.date" defaultMessage="Date" />} />
->>>>>>> main
                         <Field fullWidth name="category" label={<FormattedMessage id="news.category" defaultMessage="Category" />}>
                             {(props) => (
                                 <FinalFormSelect {...props}>
