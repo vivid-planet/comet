@@ -83,15 +83,19 @@ export const ToolbarBreadcrumbs = ({ scopeIndicator }: ToolbarBreadcrumbsProps) 
                     })}
                 </DesktopBreadcrumbs>
                 <MobileBreadrumbs onClick={toggleMobileMenu} disableRipple>
-                    <Typography
-                        variant="body2"
-                        sx={{
-                            textDecoration: "underline",
-                        }}
-                    >
-                        ...
-                    </Typography>
-                    <ChevronRight />
+                    {breadcrumbs.length > 1 && (
+                        <>
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    textDecoration: "underline",
+                                }}
+                            >
+                                ...
+                            </Typography>
+                            <ChevronRight />
+                        </>
+                    )}
                     <LastItem variant="body2">{lastBreadcrumb.title}</LastItem>
                     <MobileMenuButtonWrapper>{showMobileMenu ? <ChevronUp /> : <ChevronDown />}</MobileMenuButtonWrapper>
                 </MobileBreadrumbs>
