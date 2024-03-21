@@ -1,8 +1,9 @@
 import { CallHandler, ExecutionContext, Inject, Injectable, Logger, NestInterceptor, Optional } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
+import { getClientIp } from "request-ip";
 
-import { CurrentUserInterface } from "../auth/current-user/current-user";
+import { CurrentUser } from "../user-permissions/dto/current-user";
 import { SHOULD_LOG_REQUEST } from "./access-log.constants";
 import { ShouldLogRequest } from "./access-log.module";
 
@@ -34,7 +35,8 @@ export class AccessLogInterceptor implements NestInterceptor {
                 ignored = true;
             }
 
-            requestData.push(`ip: ${graphqlContext.req.ip}`);
+            const ipAddress = getClientIp(graphqlContext.req);
+            requestData.push(`ip: ${ipAddress}`);
             this.pushUserToRequestData(graphqlContext.req.user, requestData);
 
             const gqlArgs = { ...graphqlExecutionContext.getArgs() };
@@ -64,7 +66,8 @@ export class AccessLogInterceptor implements NestInterceptor {
                 ignored = true;
             }
 
-            requestData.push(`ip: ${httpRequest.ip}`);
+            const ipAddress = getClientIp(httpRequest);
+            requestData.push(`ip: ${ipAddress}`);
             this.pushUserToRequestData(httpRequest.user, requestData);
 
             requestData.push(
@@ -79,9 +82,9 @@ export class AccessLogInterceptor implements NestInterceptor {
         return next.handle();
     }
 
-    private pushUserToRequestData(user: CurrentUserInterface, requestData: string[]) {
+    private pushUserToRequestData(user: CurrentUser, requestData: string[]) {
         if (user) {
-            requestData.push(`user: ${user.id} (${user.name})`);
+            requestData.push(`user: ${user.id}`);
         }
     }
 }

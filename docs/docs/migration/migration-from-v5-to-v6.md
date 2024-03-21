@@ -5,20 +5,18 @@ sidebar_position: 1
 
 # Migrating from v5 to v6
 
-First, execute `npx @comet/upgrade@latest v6` in the root of your project. 
-It automatically installs the new versions of all `@comet` libraries and handles some of the necessary renames.
+First, execute `npx @comet/upgrade@latest v6` in the root of your project.
+It automatically installs the new versions of all `@comet` libraries, runs an ESLint autofix and handles some of the necessary renames.
 
 <details>
 
 <summary>Renames handled by @comet/upgrade</summary>
 
-- `JobStatus` -> `KubernetesJobStatus` in API
-- `@SubjectEntity` -> `@AffectedEntity` in API
-- `BuildRuntime` -> `JobRuntime` in Admin
+-   `JobStatus` -> `KubernetesJobStatus` in API
+-   `@SubjectEntity` -> `@AffectedEntity` in API
+-   `BuildRuntime` -> `JobRuntime` in Admin
 
 </details>
-
-
 
 ## API
 
@@ -54,6 +52,13 @@ It automatically installs the new versions of all `@comet` libraries and handles
       }),
     ```
 
+    Furthermore, it's not necessary anymore to provide the CurrentUser
+
+    ```diff
+      createAuthResolver({
+    -      currentUser: CurrentUser,
+    ```
+
     Change imports of removed classes
 
     ```diff
@@ -61,33 +66,16 @@ It automatically installs the new versions of all `@comet` libraries and handles
     + import { CurrentUser } from "@comet/cms-api";
     ```
 
-    It shouldn't be necessary to override these classes anymore. However, if you really need it, provide the CurrentUserLoader with `CURRENT_USER_LOADER`.
+    Replace occurrences of CurrentUserInterface
 
-3. Create interface for `availablePermissions` similar to the already existing interface `interface ContentScope`
-
-    ```ts
-    declare module "@comet/cms-api" {
-        interface Permission {
-            // e.g. `products: string;`
-        }
-    }
-    export {};
+    ```diff
+    - @GetCurrentUser() user: CurrentUserInterface;
+    + @GetCurrentUser() user: CurrentUser;
     ```
 
-4. Create necessary services for the `UserPermissionsModule` (either in a new module or where it fits best)
+    It is not possible anymore to use a custom CurrentUserLoader neither to augment/use the CurrentUserInterface.
 
-    ```ts
-    // Attention: might already being provided by the library which syncs the users
-    @Injectable()
-    export class UserService implements UserPermissionsUserServiceInterface {
-        getUser(id: string): User {
-            ...
-        }
-        findUsers(args: FindUsersArgs): Users {
-            ...
-        }
-    }
-    ```
+3. Create the `AccessControlService` for the `UserPermissionsModule` (either in a new module or where it fits best)
 
     ```ts
     @Injectable()
@@ -101,9 +89,9 @@ It automatically installs the new versions of all `@comet` libraries and handles
     }
     ```
 
-5. Replace `ContentScopeModule` with `UserPermissionsModule`
+4. Replace `ContentScopeModule` with `UserPermissionsModule`
 
-   Remove `ContentScopeModule`:
+    Remove `ContentScopeModule`:
 
     ```diff
     - ContentScopeModule.forRoot({
@@ -111,22 +99,20 @@ It automatically installs the new versions of all `@comet` libraries and handles
     - }),
     ```
 
-   Add `UserPermissionsModule`:
+    Add `UserPermissionsModule`:
 
     ```ts
     UserPermissionsModule.forRootAsync({
-        useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
-            availablePermissions: [/* Array of strings defined in interface Permission */],
+        useFactory: (accessControlService: AccessControlService) => ({
             availableContentScopes: [/* Array of content Scopes */],
-            userService,
             accessControlService,
         }),
-        inject: [UserService, AccessControlService],
+        inject: [AccessControlService],
         imports: [/* Modules which provide the services injected in useFactory */],
     }),
     ```
 
-6. Adapt decorators
+5. Adapt decorators
 
     Add `@RequiredPermission` to resolvers and controllers
 
@@ -139,6 +125,39 @@ It automatically installs the new versions of all `@comet` libraries and handles
 
     ```diff
     - @AllowForRole(...)
+    ```
+
+6. Optional: Add the `UserService` (required for Administration Panel, see Admin)
+
+    Create a `UserService`:
+
+    ```ts
+    // Attention: might already being provided by the library which syncs the users
+    @Injectable()
+    export class UserService implements UserPermissionsUserServiceInterface {
+        getUser(id: string): User {
+        ...
+        }
+        findUsers(args: FindUsersArgs): Users {
+        ...
+        }
+    }
+    ```
+
+    Add it to the `UserPermissionsModule`:
+
+    ```diff
+      UserPermissionsModule.forRootAsync({
+    +     useFactory: (accessControlService: AccessControlService, userService: UserService) => ({
+    -     useFactory: (accessControlService: AccessControlService) => ({
+              availableContentScopes: [/* Array of content Scopes */],
+    +         userService,
+              accessControlService,
+          }),
+    +     inject: [AccessControlService, UserService],
+    -     inject: [AccessControlService],
+          imports: [/* Modules which provide the services injected in useFactory */],
+      }),
     ```
 
 ## Admin
@@ -172,18 +191,24 @@ It automatically installs the new versions of all `@comet` libraries and handles
     + const allowedUserDomains = user.allowedContentScopes.map((contentScope) => contentScope.domain);
     ```
 
-3. Add the `UserPermissionsPage`
+3. Optional: Add the Adminstration Panel
 
     ```tsx
     <MenuItemRouterLink
-        primary={intl.formatMessage({ id: "menu.userPermissions", defaultMessage: "User Permissions" })}
+        primary={intl.formatMessage({
+            id: "menu.userPermissions",
+            defaultMessage: "User Permissions",
+        })}
         icon={<Snips />}
         to={`${match.url}/user-permissions`}
     />
     ```
 
     ```tsx
-    <RouteWithErrorBoundary path={`${match.path}/user-permissions`} component={UserPermissionsPage} />
+    <RouteWithErrorBoundary
+        path={`${match.path}/user-permissions`}
+        component={UserPermissionsPage}
+    />
     ```
 
 ### Sites Config
@@ -269,20 +294,3 @@ This was removed because it was often unwanted and overridden.
 The icons `Betrieb`, `LogischeFilter`, `Pool`, `Pool2`, `Vignette1`, `Vignette2`, `StateGreen`, `StateGreenRing`, `StateOrange`, `StateOrangeRing`, `StateRed` and `StateRedRing` were removed.
 
 If you used any of these icons in your app, you must add them to your project. You can download them [here](https://github.com/vivid-planet/comet/tree/76e50aa86fd69b1df79825967c6c5c50e2cb6df7/packages/admin/admin-icons/icons/deprecated).
-
-## ESLint
-
-**Both new rules are auto-fixable.** All errors can be fixed by executing `npm run lint:eslint -- --fix` in `/api`, `/admin` and `/site`.
-
-### @comet/no-other-module-relative-import
-
-The `@comet/no-other-module-relative-import` rule is now enabled by default. It enforces absolute imports when importing from other modules.
-
-```diff
-- import { AThingInModuleA } from "../moduleA/AThingInModuleA"
-+ import { AThingInModuleA } from "@src/moduleA/AThingInModuleA"
-```
-
-### import/newline-after-import
-
-The `import/newline-after-import` rule is now enabled by default. It enforces adding a blank line between imports and code.

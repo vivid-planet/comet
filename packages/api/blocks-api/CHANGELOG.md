@@ -1,5 +1,25 @@
 # @comet/blocks-api
 
+## 6.4.0
+
+### Patch Changes
+
+-   0efae68ff: Prevent XSS attacks in `@IsLinkTarget()` validator
+
+## 6.3.0
+
+## 6.2.1
+
+## 6.2.0
+
+### Minor Changes
+
+-   75865caa: Deprecate `isHref` validator, `IsHref` decorator and `IsHrefConstraint` class.
+
+    New versions `isLinkTarget`, `IsLinkTarget` and `IsLinkTargetConstraint` are added as replacement.
+
+## 6.1.0
+
 ## 6.0.0
 
 ## 5.6.0

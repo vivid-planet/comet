@@ -708,7 +708,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
-    import { FindOptions, Reference } from "@mikro-orm/core";
+    import { FindOptions, ObjectQuery, Reference } from "@mikro-orm/core";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     import { extractGraphqlFields, SortDirection, RequiredPermission, AffectedEntity, validateNotModified } from "@comet/cms-api";
     import { GraphQLResolveInfo } from "graphql";
@@ -912,10 +912,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function generateCrud(generatorOptions: CrudGeneratorOptions, metadata: EntityMetadata<any>): Promise<GeneratedFile[]> {
-    generatorOptions.update = generatorOptions.update ?? true;
-    generatorOptions.create = generatorOptions.create ?? true;
-    generatorOptions.delete = generatorOptions.delete ?? true;
+export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, metadata: EntityMetadata<any>): Promise<GeneratedFile[]> {
+    const generatorOptions = {
+        ...generatorOptionsParam,
+        create: generatorOptionsParam.create ?? true,
+        update: generatorOptionsParam.update ?? true,
+        delete: generatorOptionsParam.delete ?? true,
+    };
 
     const generatedFiles: GeneratedFile[] = [];
 
@@ -979,5 +982,8 @@ export async function generateCrud(generatorOptions: CrudGeneratorOptions, metad
         return generatedFiles;
     }
 
-    return [...(await generateCrudInput(generatorOptions, metadata)), ...(await generateCrudResolver())];
+    const crudInput = await generateCrudInput(generatorOptions, metadata);
+    const crudResolver = await generateCrudResolver();
+
+    return generatorOptions.create || generatorOptions.update ? [...crudInput, ...crudResolver] : [...crudResolver];
 }

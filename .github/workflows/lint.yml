@@ -6,7 +6,6 @@ on:
             - opened
             - synchronize
             - reopened
-            - closed
     push:
         branches:
             - main
@@ -57,7 +56,7 @@ jobs:
               run: pnpm run copy-schema-files
 
             - name: Build
-              run: pnpm run build:lib
+              run: pnpm run build:packages
 
             - name: Lint
               run: |

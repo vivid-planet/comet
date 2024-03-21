@@ -2,6 +2,47 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type CurrentUserPermission {
+  permission: String!
+  contentScopes: [JSONObject!]!
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type CurrentUser {
+  id: String!
+  name: String!
+  email: String!
+  language: String!
+  permissions: [CurrentUserPermission!]!
+}
+
+type UserPermission {
+  id: ID!
+  source: UserPermissionSource!
+  permission: String!
+  validFrom: DateTime
+  validTo: DateTime
+  reason: String
+  requestedBy: String
+  approvedBy: String
+  overrideContentScopes: Boolean!
+  contentScopes: [JSONObject!]!
+}
+
+enum UserPermissionSource {
+  MANUAL
+  BY_RULE
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Dependency {
   rootId: String!
   rootGraphqlObjectType: String!
@@ -10,6 +51,8 @@ type Dependency {
   visible: Boolean!
   targetGraphqlObjectType: String!
   targetId: String!
+  name: String
+  secondaryInformation: String
 }
 
 type PaginatedDependencies {
@@ -44,11 +87,6 @@ type DamFileImage {
   url(width: Int!, height: Int!): String
 }
 
-"""
-The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
 type DamFileLicense {
   type: LicenseType
   details: String
@@ -68,11 +106,6 @@ enum LicenseType {
   ROYALTY_FREE
   RIGHTS_MANAGED
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type BuildTemplate {
   id: ID!
@@ -144,42 +177,11 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
-type CurrentUserPermission {
-  permission: String!
-  contentScopes: [JSONObject!]!
-}
-
-type CurrentUser {
-  id: String!
-  name: String!
-  email: String!
-  language: String!
-  permissions: [CurrentUserPermission!]!
-}
-
 type User {
   id: String!
   name: String!
   email: String!
   language: String!
-}
-
-type UserPermission {
-  id: ID!
-  source: UserPermissionSource!
-  permission: String!
-  validFrom: DateTime
-  validTo: DateTime
-  reason: String
-  requestedBy: String
-  approvedBy: String
-  overrideContentScopes: Boolean!
-  contentScopes: [JSONObject!]!
-}
-
-enum UserPermissionSource {
-  MANUAL
-  BY_RULE
 }
 
 type PaginatedUserList {
@@ -192,6 +194,7 @@ type Link implements DocumentInterface {
   updatedAt: DateTime!
   content: LinkBlockData!
   createdAt: DateTime!
+  pageTreeNode: PageTreeNode
 }
 
 interface DocumentInterface {
@@ -274,11 +277,6 @@ input DependentFilter {
   rootGraphqlObjectType: String
   rootId: String
   rootColumnName: String
-}
-
-type PaginatedPages {
-  nodes: [Page!]!
-  totalCount: Int!
 }
 
 type PredefinedPage implements DocumentInterface {
@@ -452,12 +450,6 @@ type ProductDimensions {
   depth: Float!
 }
 
-type ProductPackageDimensions {
-  width: Float!
-  height: Float!
-  depth: Float!
-}
-
 type Product implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -473,7 +465,6 @@ type Product implements DocumentInterface {
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
   dimensions: ProductDimensions
-  packageDimensions: ProductPackageDimensions
   statistics: ProductStatistics
   createdAt: DateTime!
   category: ProductCategory
@@ -595,12 +586,6 @@ input ProductDimensionsInput {
   depth: Float!
 }
 
-input ProductPackageDimensionsInput {
-  width: Float!
-  height: Float!
-  depth: Float!
-}
-
 input RedirectScopeInput {
   domain: String!
 }
@@ -618,7 +603,7 @@ type Query {
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
   link(linkId: ID!): Link
-  pages(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedPages!
+  page(id: ID!): Page!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
@@ -1148,7 +1133,6 @@ input ProductInput {
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
   dimensions: ProductDimensionsInput
-  packageDimensions: ProductPackageDimensionsInput
   statistics: ProductStatisticsInput
   variants: [ProductVariantInput!]! = []
   category: ID = null
@@ -1175,7 +1159,6 @@ input ProductUpdateInput {
   discounts: [ProductDiscountsInput!]
   articleNumbers: [String!]
   dimensions: ProductDimensionsInput
-  packageDimensions: ProductPackageDimensionsInput
   statistics: ProductStatisticsInput
   variants: [ProductVariantInput!]
   category: ID

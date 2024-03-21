@@ -23,7 +23,7 @@ import {
 } from "../block";
 import { AnnotationBlockMeta, BlockField } from "../decorators/field";
 import { TransformDependencies } from "../dependencies";
-import { NameOrOptions } from "./types";
+import { BlockFactoryNameOrOptions } from "./types";
 
 type BaseBlockMap = Record<string, Block<BlockDataInterface, BlockInputInterface>>;
 
@@ -265,7 +265,7 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
         OneOfBlockData = BaseOneOfBlockData({ supportedBlocks, OneOfBlockItemData }),
         OneOfBlockInput = BaseOneOfBlockInput({ supportedBlocks, allowEmpty, OneOfBlockData, OneOfBlockItemInput }),
     }: CreateOneOfBlockOptions<BlockMap>,
-    nameOrOptions: NameOrOptions,
+    nameOrOptions: BlockFactoryNameOrOptions,
 ): OneOfBlock<BlockMap> {
     class Meta extends AnnotationBlockMeta {
         get fields(): BlockMetaField[] {

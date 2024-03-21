@@ -1,5 +1,131 @@
 # @comet/cms-api
 
+## 6.4.0
+
+### Minor Changes
+
+-   9ff9d9840: Support using a service in `@ScopedEntity()` decorator
+
+    This can be useful when an entity's scope cannot be derived directly from the passed entity.
+    For example, a `Page` document's scope is derived by the `PageTreeNode` the document is attached to, but there is no database relation between the two entities.
+
+    For page tree document types you can use the provided `PageTreeNodeDocumentEntityScopeService`.
+
+-   955182b09: Make permission-check for field-resolvers optional
+-   322da3831: Add `@EntityInfo()` decorator
+
+    Adding `@EntityInfo()` to an entity is necessary to correctly display dependencies in the admin application.
+    You can find more information in [the docs](https://docs.comet-dxp.com/docs/dependencies/).
+
+-   1910551c7: Log the correct user IP even if the app is behind a proxy
+
+    The package [request-ip](https://www.npmjs.com/package/request-ip) is now used to get the actual user IP even if the app runs behind a proxy. Previously, the proxy's IP was logged.
+
+-   2d1b9467a: createImageLinkBlock: Allow overriding name
+
+    This allows using two different `ImageLink` blocks in one application.
+
+    Perform the following steps to override the name:
+
+    1. API: Add the name as second argument in the `createImageLinkBlock` factory:
+
+        ```diff
+        const MyCustomImageLinkBlock = createImageLinkBlock(
+            { link: InternalLinkBlock },
+        +   "MyCustomImageLink"
+        );
+        ```
+
+    2. Admin: Set the `name` option in the `createImageLinkBlock` factory:
+
+        ```diff
+        const MyCustomImageLinkBlock = createImageLinkBlock({
+            link: InternalLinkBlock,
+        +   name: "MyCustomImageLink"
+        });
+        ```
+
+### Patch Changes
+
+-   8568153d8: API Generator: Add missing `ObjectQuery` import
+-   1910551c7: Remove user name from access log
+
+    We decided to remove the user name because of privacy concerns.
+
+-   bfc1a4614: API Generator: Correctly support default value for date fields
+-   b478a8b71: Don't fail in ChangesCheckerInterceptor because of stricter content scope check
+-   Updated dependencies [0efae68ff]
+    -   @comet/blocks-api@6.4.0
+
+## 6.3.0
+
+### Minor Changes
+
+-   fc1b16fe: Allow overriding the block context in `BlocksTransformerService#transformToPlain`
+
+### Patch Changes
+
+-   e2e2114b: Fix parsing of `contentScopeAnnotation` in `KubernetesService#getContentScope`
+    -   @comet/blocks-api@6.3.0
+
+## 6.2.1
+
+### Patch Changes
+
+-   f1457306: Ignore user permissions when using system user
+
+    The `UserPermissionsGuard` didn't allow requests when using a system user (e.g., basic authorization during site build).
+
+    -   @comet/blocks-api@6.2.1
+
+## 6.2.0
+
+### Minor Changes
+
+-   beeea1dd: Remove `availablePermissions`-option in `UserPermissionsModule`
+
+    Simply remove the `Permission` interface module augmentation and the `availablePermissions`-option from the application.
+
+-   151e1218: Support multiple `@AffectedEntity()`-decorators for a single function
+
+### Patch Changes
+
+-   04afb3ee: Fix attached document deletion when deleting a page tree node
+-   ad153c99: Always use preview DAM URLs in the admin application
+
+    This fixes a bug where the PDF preview in the DAM wouldn't work because the file couldn't be included in an iFrame on the admin domain.
+
+    We already intended to use preview URLs everywhere in [v5.3.0](https://github.com/vivid-planet/comet/releases/tag/v5.3.0#:~:text=Always%20use%20the%20/preview%20file%20URLs%20in%20the%20admin%20application). However, the `x-preview-dam-urls` header wasn't passed correctly to the `createFileUrl()` method everywhere. As a result, preview URLs were only used in blocks but not in the DAM. Now, the DAM uses preview URLs as well.
+
+-   Updated dependencies [75865caa]
+    -   @comet/blocks-api@6.2.0
+
+## 6.1.0
+
+### Minor Changes
+
+-   7ea43eb3: Make the `UserService`-option of the `UserPermissionsModule` optional.
+
+    The service is still necessary though for the Administration-Panel.
+
+-   86cd5c63: Allow a callback for the `availableContentScopes`-option of the `UserPermissionsModule`
+
+    Please be aware that when using this possibility to make sure to cache the
+    response properly as this is called for every request to the API.
+
+-   737ab3b9: Allow returning multiple content scopes in `ScopedEntity`-decorator
+-   f416510b: Remove `CurrentUserLoader` and `CurrentUserInterface`
+
+    Overriding the the current user in the application isn't supported anymore when using the new `UserPermissionsModule`, which provides the current user DTO itself.
+
+### Patch Changes
+
+-   ef84331f: Fix type of @RequiredPermission to accept a non-array string for a single permission
+-   8e158f8d: Add missing `@RequiredPermission()` decorator to `FileLicensesResolver`
+-   50184410: API Generator: Add missing `scope` argument and filter to `<entity>BySlug` query
+-   1f6c58e8: API Generator: support GraphQLJSONObject input for fields that are not a InputType class
+    -   @comet/blocks-api@6.1.0
+
 ## 6.0.0
 
 ### Major Changes

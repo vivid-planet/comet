@@ -57,7 +57,7 @@ export {
     OneOfBlock,
 } from "./blocks/factories/createOneOfBlock";
 export { createOptionalBlock, OptionalBlockInputInterface } from "./blocks/factories/createOptionalBlock";
-export { NameOrOptions } from "./blocks/factories/types";
+export type { BlockFactoryNameOrOptions } from "./blocks/factories/types";
 export { getMostSignificantPreviewImageUrlTemplate, getPreviewImageUrlTemplates } from "./blocks/get-preview-image-url-templates";
 export { composeBlocks } from "./blocks/helpers/composeBlocks";
 export { strictBlockDataFactoryDecorator } from "./blocks/helpers/strictBlockDataFactoryDecorator";

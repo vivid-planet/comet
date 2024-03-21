@@ -5,18 +5,18 @@ import {
     BaseOneOfBlockItemInput,
     Block,
     BlockDataInterface,
+    BlockFactoryNameOrOptions,
     BlockField,
     BlockInputInterface,
     createOneOfBlock,
     CreateOneOfBlockOptions,
-    NameOrOptions,
     OneOfBlock,
 } from "@comet/blocks-api";
 import { IsOptional, IsString } from "class-validator";
 
 function createLinkBlock<BlockMap extends Record<string, Block<BlockDataInterface, BlockInputInterface>>>(
     { supportedBlocks, allowEmpty = false }: CreateOneOfBlockOptions<BlockMap>,
-    nameOrOptions: NameOrOptions = "Link",
+    nameOrOptions: BlockFactoryNameOrOptions = "Link",
 ): OneOfBlock<BlockMap> {
     class LinkBlockItemData extends BaseOneOfBlockItemData({ supportedBlocks }) {}
 
