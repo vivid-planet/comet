@@ -12,7 +12,7 @@ export class CdnGuard implements CanActivate {
         this.headerValue = headerValue;
     }
 
-    private isRequestInternal(request: Request): boolean {
+    private isInternalRequest(request: Request): boolean {
         // This check is only ok when the application is behind a trusted proxy
         return !request.header("x-forwarded-for");
     }
