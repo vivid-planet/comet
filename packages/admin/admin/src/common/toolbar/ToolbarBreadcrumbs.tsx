@@ -82,7 +82,7 @@ export const ToolbarBreadcrumbs = ({ scopeIndicator }: ToolbarBreadcrumbsProps) 
                         );
                     })}
                 </DesktopBreadcrumbs>
-                <MobileBreadrumbs onClick={toggleMobileMenu} disableRipple>
+                <MobileBreadcrumbs onClick={toggleMobileMenu} disableRipple>
                     {breadcrumbs.length > 1 && (
                         <>
                             <Typography
@@ -98,7 +98,7 @@ export const ToolbarBreadcrumbs = ({ scopeIndicator }: ToolbarBreadcrumbsProps) 
                     )}
                     <LastItem variant="body2">{lastBreadcrumb.title}</LastItem>
                     <MobileMenuButtonWrapper>{showMobileMenu ? <ChevronUp /> : <ChevronDown />}</MobileMenuButtonWrapper>
-                </MobileBreadrumbs>
+                </MobileBreadcrumbs>
             </Root>
             <Menu
                 open={showMobileMenu}
@@ -173,7 +173,7 @@ const DesktopBreadcrumbs = styled("div")(
     `,
 );
 
-const MobileBreadrumbs = styled(ButtonBase)(
+const MobileBreadcrumbs = styled(ButtonBase)(
     ({ theme }) => css`
         display: flex;
         align-items: center;
