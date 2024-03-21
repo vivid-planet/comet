@@ -25,7 +25,7 @@ export class CdnGuard implements CanActivate {
 
     canActivate(context: ExecutionContext): boolean {
         const request = this.getRequest(context);
-        if (this.isRequestInternal(request)) {
+        if (this.isInternalRequest(request)) {
             // Internal requests (e.g. BFF) are allowed
             return true;
         }
