@@ -59,6 +59,7 @@ export type GridConfig<T extends GeneratorEntity> = {
     delete?: boolean;
     copyPaste?: boolean;
     readOnly?: boolean;
+    exposeFilters?: boolean;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

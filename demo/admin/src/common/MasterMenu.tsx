@@ -22,6 +22,7 @@ import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
 import { ManufacturersPage } from "@src/products/future/ManufacturersPage";
 import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
+import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
 import { ProductsPage } from "@src/products/generated/ProductsPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
@@ -178,6 +179,13 @@ export const masterMenuData: MasterMenuData = [
                 route: {
                     path: "/manufacturers-future",
                     component: ManufacturersPage,
+                },
+            },
+            {
+                primary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products with low price Future" />,
+                route: {
+                    path: "/products-with-low-price-future",
+                    component: FutureProductsWithLowPricePage,
                 },
             },
             {

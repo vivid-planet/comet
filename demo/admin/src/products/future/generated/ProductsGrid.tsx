@@ -190,7 +190,7 @@ export function ProductsGrid({ baseFilter }: Props): React.ReactElement {
 
     const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
         variables: {
-            filter: { ...gqlFilter, ...baseFilter },
+            filter: { and: [gqlFilter, ...(baseFilter ? [baseFilter] : [])] },
             search: gqlSearch,
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
