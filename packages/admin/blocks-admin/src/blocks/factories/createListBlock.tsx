@@ -108,6 +108,19 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
             `${name}: The property 'minVisibleBlocks' (value: ${minVisibleBlocks}) must be equal to or smaller than 'maxVisibleBlocks' (value: ${maxVisibleBlocks})`,
         );
 
+    const gefDefaultListEntry = () => ({
+        key: uuid(),
+        visible: true,
+        props: block.defaultValues(),
+        selected: false,
+        slideIn: false,
+        // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
+        ...(Object.entries(additionalItemFields ?? {}).reduce(
+            (fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }),
+            {},
+        ) as AdditionalItemFields),
+    });
+
     const BlockListBlock: BlockInterface<
         ListBlockFragment<AdditionalItemFields>,
         ListBlockState<T, AdditionalItemFields>,
@@ -120,22 +133,12 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
         displayName,
 
         defaultValues: () => ({
-            blocks: createDefaultListEntry
-                ? [
-                      {
-                          key: uuid(),
-                          visible: true,
-                          props: block.defaultValues(),
-                          selected: false,
-                          slideIn: false,
-                          // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
-                          ...(Object.entries(additionalItemFields ?? {}).reduce(
-                              (fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }),
-                              {},
-                          ) as AdditionalItemFields),
-                      },
-                  ]
-                : [],
+            blocks:
+                minVisibleBlocks !== undefined
+                    ? Array.from({ length: minVisibleBlocks }, () => gefDefaultListEntry())
+                    : createDefaultListEntry
+                    ? [gefDefaultListEntry()]
+                    : [],
         }),
 
         category: block.category,
