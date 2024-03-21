@@ -1,5 +1,5 @@
-import { ComponentsOverrides, Theme, Typography, TypographyProps } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { ComponentsOverrides, css, Theme, Typography, TypographyProps, useThemeProps } from "@mui/material";
 import * as React from "react";
 
 import { SupportedThings } from "./Rte";
@@ -12,81 +12,112 @@ type StylableBlockTypes = Extract<
 
 export type RteBlockElementClassKey = StylableBlockTypes | "root";
 
-export interface RteBlockElementProps extends TypographyProps {
+type OwnerState = Pick<RteBlockElementProps, "type">;
+
+const Root = createComponentSlot(Typography)<RteBlockElementClassKey, OwnerState>({
+    componentName: "RteBlockElement",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [Boolean(ownerState.type) && ownerState.type];
+    },
+})(
+    ({ theme, ownerState }) => css`
+        font-size: 16px;
+        line-height: 20px;
+        font-weight: 300;
+        color: ${theme.palette.grey[800]};
+        margin-bottom: 10px;
+
+        ${ownerState.type === "header-one" &&
+        css`
+            font-size: 30px;
+            line-height: 1.2;
+            font-weight: 500;
+        `}
+
+        ${ownerState.type === "header-two" &&
+        css`
+            font-size: 28px;
+            line-height: 1.2;
+            font-weight: 500;
+        `}
+
+        ${ownerState.type === "header-three" &&
+        css`
+            font-size: 26px;
+            line-height: 1.2;
+            font-weight: 500;
+        `}
+
+        ${ownerState.type === "header-four" &&
+        css`
+            font-size: 22px;
+            line-height: 1.2;
+            font-weight: 500;
+        `}
+
+        ${ownerState.type === "header-five" &&
+        css`
+            font-size: 20px;
+            line-height: 1.2;
+            font-weight: 500;
+        `}
+
+        ${ownerState.type === "header-six" &&
+        css`
+            font-size: 18px;
+            line-height: 1.2;
+            font-weight: 500;
+        `}
+
+        ${ownerState.type === "ordered-list" &&
+        css`
+            padding-left: 0;
+        `}
+
+        ${ownerState.type === "unordered-list" &&
+        css`
+            padding-left: 0;
+        `}
+
+        ${ownerState.type === "blockquote" &&
+        css`
+            display: block;
+            position: relative;
+            padding-left: 20px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+
+            &:before {
+                content: "";
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 2px;
+                width: 4px;
+                background-color: ${theme.palette.grey[200]};
+                border-radius: 2px;
+            }
+        `}
+    `,
+);
+
+export interface RteBlockElementProps
+    extends ThemedComponentBaseProps<{
+            root: typeof Typography;
+        }>,
+        TypographyProps {
     type?: StylableBlockTypes;
     component?: React.ElementType;
 }
 
-const RteBlockElement = ({ classes, type, ...restProps }: RteBlockElementProps & WithStyles<typeof styles>) => {
-    return <Typography component="div" classes={{ root: `${classes.root} ${type ? classes[type] : ""}` }} {...restProps} />;
-};
-
-const styles = ({ palette }: Theme) => {
-    return createStyles<RteBlockElementClassKey, RteBlockElementProps>({
-        root: {
-            fontSize: 16,
-            lineHeight: "20px",
-            fontWeight: 300,
-            color: palette.grey[800],
-            marginBottom: 10,
-        },
-        "header-one": {
-            fontSize: 30,
-            lineHeight: 1.2,
-            fontWeight: 500,
-        },
-        "header-two": {
-            fontSize: 28,
-            lineHeight: 1.2,
-            fontWeight: 500,
-        },
-        "header-three": {
-            fontSize: 26,
-            lineHeight: 1.2,
-            fontWeight: 500,
-        },
-        "header-four": {
-            fontSize: 22,
-            lineHeight: 1.2,
-            fontWeight: 500,
-        },
-        "header-five": {
-            fontSize: 20,
-            lineHeight: 1.2,
-            fontWeight: 500,
-        },
-        "header-six": {
-            fontSize: 18,
-            lineHeight: 1.2,
-            fontWeight: 500,
-        },
-        "ordered-list": {
-            paddingLeft: 0,
-        },
-        "unordered-list": {
-            paddingLeft: 0,
-        },
-        blockquote: {
-            display: "block",
-            position: "relative",
-            paddingLeft: 20,
-            paddingTop: 5,
-            paddingBottom: 5,
-            "&:before": {
-                content: '""',
-                position: "absolute",
-                top: 0,
-                bottom: 0,
-                left: 2,
-                width: 4,
-                backgroundColor: palette.grey[200],
-                borderRadius: 2,
-            },
-        },
-    });
-};
-
-export const BlockElement = withStyles(styles, { name: "CometAdminRteBlockElement" })(RteBlockElement);
+export function BlockElement(inProps: RteBlockElementProps) {
+    const { type, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminRteBlockElement" });
+    const ownerState: OwnerState = {
+        type,
+    };
+    return <Root component="div" ownerState={ownerState} {...slotProps?.root} {...restProps} />;
+}
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -99,7 +130,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminRteBlockElement?: {
-            defaultProps?: ComponentsPropsList["CometAdminRteBlockElement"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminRteBlockElement"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminRteBlockElement"];
         };
     }

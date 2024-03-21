@@ -1,4 +1,3 @@
-import { gql, useQuery } from "@apollo/client";
 import { CometColor } from "@comet/admin-icons";
 import { Public, VpnLock } from "@mui/icons-material";
 import { Grid, Tooltip, Typography } from "@mui/material";
@@ -16,7 +15,6 @@ import { VisibilityToggle } from "../common/VisibilityToggle";
 import { SitePrevewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 import { useSitePreviewIFrameBridge } from "./iframebridge/useSitePreviewIFrameBridge";
 import { OpenLinkDialog } from "./OpenLinkDialog";
-import { GQLGetSitePreviewJwtQuery } from "./SitePreview.generated";
 import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLinkWrapper } from "./SitePreview.sc";
 
 //TODO v4 remove RouteComponentProps
@@ -83,7 +81,6 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
         const newShowOnlyVisible = !showOnlyVisible;
         setShowOnlyVisible(String(newShowOnlyVisible));
         setInitialPath(previewPath);
-        refetch();
     };
 
     const siteLink = `${siteConfig.url}${resolvePath ? resolvePath(previewPath, scope) : previewPath}`;
@@ -99,25 +96,13 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
         }
     });
 
-    const { data, error, refetch } = useQuery<GQLGetSitePreviewJwtQuery>(
-        gql`
-            query GetSitePreviewJwt($path: String!, $previewData: PreviewData!) {
-                getSitePreviewJwt(path: $path, previewData: $previewData)
-            }
-        `,
-        {
-            fetchPolicy: "network-only",
-            variables: {
-                path: initialPath,
-                previewData: {
-                    includeInvisible: showOnlyVisible ? false : true,
-                },
-            },
-        },
-    );
-    if (error) throw new Error(error.message);
-    if (!data) return <></>;
-    const initialPageUrl = `${siteConfig.url}/api/preview?jwt=${data.getSitePreviewJwt}`;
+    const initialPageUrl = `${siteConfig.sitePreviewApiUrl}?${new URLSearchParams({
+        scope: JSON.stringify(scope),
+        path: initialPath,
+        settings: JSON.stringify({
+            includeInvisible: showOnlyVisible ? false : true,
+        }),
+    }).toString()}`;
 
     return (
         <Root>

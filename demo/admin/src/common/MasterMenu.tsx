@@ -20,6 +20,7 @@ import { Page } from "@src/pages/Page";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
+import { ManufacturersPage } from "@src/products/future/ManufacturersPage";
 import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
 import { ProductsPage } from "@src/products/generated/ProductsPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
@@ -31,7 +32,6 @@ import { Redirect, RouteComponentProps } from "react-router-dom";
 import { ComponentDemo } from "./ComponentDemo";
 import { ContentScopeIndicator } from "./ContentScopeIndicator";
 import { EditPageNode } from "./EditPageNode";
-import { ManufacturersPage } from "@src/products/future/ManufacturersPage";
 
 export const pageTreeDocumentTypes = {
     Page,

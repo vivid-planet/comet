@@ -1,6 +1,8 @@
 import { IntrospectionField, IntrospectionQuery, IntrospectionType } from "graphql";
 import objectPath from "object-path";
 
+import { FormFieldConfig, GridColumnConfig } from "../generator";
+
 type FieldsObjectType = { [key: string]: FieldsObjectType | boolean | string };
 const recursiveStringify = (obj: FieldsObjectType): string => {
     let ret = "";
@@ -27,9 +29,21 @@ export function getRootProps(fields: string[]): string[] {
     return Object.keys(fieldsObject);
 }
 
-export function generateFieldListGqlString(fields: string[]) {
-    const fieldsObject: FieldsObjectType = fields.reduce((acc, fieldName) => {
-        objectPath.set(acc, fieldName, true);
+export function generateFieldListGqlString(fields: FormFieldConfig<any>[]) {
+    const fieldsObject: FieldsObjectType = fields.reduce((acc, field) => {
+        if (field.type === "asyncSelect") {
+            objectPath.set(acc, field.name, " { id ${labelField} }");
+        } else {
+            objectPath.set(acc, field.name, true);
+        }
+        return acc;
+    }, {});
+    return recursiveStringify(fieldsObject);
+}
+
+export function generateFieldListGqlStringForGrid(fields: GridColumnConfig<any>[]) {
+    const fieldsObject: FieldsObjectType = fields.reduce((acc, field) => {
+        objectPath.set(acc, field.name, true);
         return acc;
     }, {});
     return recursiveStringify(fieldsObject);

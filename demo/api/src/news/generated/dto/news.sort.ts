@@ -10,7 +10,6 @@ export enum NewsSortField {
     status = "status",
     date = "date",
     category = "category",
-    visible = "visible",
     createdAt = "createdAt",
     updatedAt = "updatedAt",
 }

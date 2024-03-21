@@ -7,6 +7,7 @@ type GqlLeaves<T> = T extends any
         : never
     : never;
 
+// TODO fix excluding paths
 type FieldNames<T> = {
     [K in keyof T]: `${Exclude<K, symbol>}${FieldNames<T[K]> extends never ? "" : `.${FieldNames<T[K]>}`}`;
 }[keyof T];

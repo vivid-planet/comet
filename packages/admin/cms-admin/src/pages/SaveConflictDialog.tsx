@@ -2,7 +2,6 @@ import { Alert, messages } from "@comet/admin";
 import { Clear, Delete, OpenNewTab } from "@comet/admin-icons";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -12,26 +11,7 @@ interface SaveConflictDialogProps {
     onDiscardChangesPressed: () => void;
 }
 
-export const useStyles = makeStyles((theme) => ({
-    iconContainer: {
-        marginRight: 10,
-    },
-    fillSpace: {
-        display: "flex",
-        flex: 1,
-    },
-    discardButtonRoot: {
-        backgroundColor: theme.palette.error.main,
-        color: theme.palette.error.contrastText,
-        "&:hover": {
-            backgroundColor: theme.palette.error.dark,
-        },
-    },
-}));
-
 function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: SaveConflictDialogProps): React.ReactElement {
-    const styles = useStyles();
-
     return (
         <Dialog open={open} onClose={onClosePressed} maxWidth="md">
             <DialogTitle>
@@ -120,19 +100,18 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                 <Button onClick={onClosePressed} startIcon={<Clear />} color="info">
                     <FormattedMessage {...messages.close} />
                 </Button>
-                <div className={styles.fillSpace} />
-                <Button
+                <DialogActionsSpacer />
+                <DiscardButton
                     startIcon={<Delete />}
                     onClick={() => {
                         onClosePressed();
                         onDiscardChangesPressed();
                     }}
                     variant="contained"
-                    classes={{ root: styles.discardButtonRoot }}
                     color="info"
                 >
                     <FormattedMessage id="comet.saveConflictDialog.actionButtons.discardChanges" defaultMessage="Discard your changes" />
-                </Button>
+                </DiscardButton>
                 <Button
                     startIcon={<OpenNewTab />}
                     onClick={() => {
@@ -160,6 +139,19 @@ const StyledList = styled(List)`
 const StyledListItem = styled(ListItem)`
     display: list-item;
     padding-left: 0;
+`;
+
+const DialogActionsSpacer = styled("div")`
+    flex: 1;
+`;
+
+const DiscardButton = styled(Button)`
+    background-color: ${({ theme }) => theme.palette.error.main};
+    color: ${({ theme }) => theme.palette.error.contrastText};
+
+    &:hover {
+        background-color: ${({ theme }) => theme.palette.error.dark};
+    }
 `;
 
 export { SaveConflictDialog };

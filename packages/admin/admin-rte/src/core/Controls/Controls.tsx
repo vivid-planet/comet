@@ -9,7 +9,7 @@ import LinkControls from "./LinkControls";
 import ListsControls from "./ListsControls";
 import ListsIndentControls from "./ListsIndentControls";
 import SpecialCharactersControls from "./SpecialCharactersControls";
-import Toolbar from "./Toolbar";
+import { Toolbar } from "./Toolbar/Toolbar";
 import TranslationControls from "./TranslationControls";
 
 export default function Controls(p: IControlProps) {

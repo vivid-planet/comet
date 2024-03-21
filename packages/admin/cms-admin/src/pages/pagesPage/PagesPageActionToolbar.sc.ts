@@ -1,22 +1,23 @@
+import { FormControlLabel, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
 
-export const useStyles = makeStyles(() => ({
-    root: {
-        minHeight: 51,
-        display: "flex",
-        alignItems: "center",
-    },
-    selectAllFromControlLabel: {
-        padding: "15px 10px 15px 7px",
-        display: "flex",
-        alignItems: "center",
-    },
-    centerContainer: {
-        display: "flex",
-        alignItems: "center",
-    },
-}));
+export const Root = styled(Grid)`
+    min-height: 51px;
+    display: flex;
+    align-items: center;
+`;
+
+export const SelectAllLabel = styled(FormControlLabel)`
+    padding: 15px 10px 15px 7px;
+    display: flex;
+    align-items: center;
+`;
+
+export const CenterContainer = styled(Grid)`
+    display: flex;
+    align-items: center;
+`;
+
 export const Separator = styled("div")`
     display: inline-flex;
     width: 1px;

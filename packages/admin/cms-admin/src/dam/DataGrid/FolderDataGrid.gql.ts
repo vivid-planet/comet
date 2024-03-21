@@ -31,6 +31,8 @@ export const damFileTableFragment = gql`
             ...DamFileThumbnail
         }
         updatedAt
+        createdAt
+        importSourceType
     }
     ${damFileThumbnailFragment}
 `;
@@ -48,6 +50,7 @@ export const damFolderTableFragment = gql`
         numberOfChildFolders
         isInboxFromOtherScope
         updatedAt
+        createdAt
     }
 `;
 

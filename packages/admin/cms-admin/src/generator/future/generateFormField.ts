@@ -4,6 +4,7 @@ import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { generateFieldListFromIntrospection } from "./utils/generateFieldList";
 import { Imports } from "./utils/generateImportsCode";
+import { isFieldOptional } from "./utils/isFieldOptional";
 
 export function generateFormField(
     { gqlIntrospection }: { gqlIntrospection: IntrospectionQuery },
@@ -29,9 +30,7 @@ export function generateFormField(
     const introspectionField = introspectionFieldWithPath.field;
     const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
 
-    const requiredByIntrospection = introspectionField.type.kind == "NON_NULL";
-
-    const required = config.required ?? requiredByIntrospection; //if undefined default to requiredByIntrospection
+    const required = !isFieldOptional({ config, gqlIntrospection, gqlType });
 
     //TODO verify introspectionField.type is compatbile with config.type
 
@@ -97,7 +96,11 @@ export function generateFormField(
                 ${validateCode}
             />`;
         //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
-        formValueToGqlInputCode = `${name}: parseFloat(formValues.${name}),`;
+        let assignment = `parseFloat(formValues.${String(name)})`;
+        if (isFieldOptional({ config, gqlIntrospection: gqlIntrospection, gqlType: gqlType })) {
+            assignment = `formValues.${name} ? ${assignment} : null`;
+        }
+        formValueToGqlInputCode = `${name}: ${assignment},`;
     } else if (config.type == "boolean") {
         code = `<Field name="${name}" label="" type="checkbox" fullWidth ${validateCode}>
             {(props) => (
@@ -121,7 +124,7 @@ export function generateFormField(
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 fullWidth
                 name="${name}"
-                {!required ? "clearable" : ""}
+                ${!required ? "clearable" : ""}
                 component={FinalFormDatePicker}
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
                 ${

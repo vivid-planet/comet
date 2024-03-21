@@ -20,20 +20,13 @@ import {
     Grid,
     MenuItem,
     Paper,
-    Theme,
     ThemeProvider,
     Typography,
 } from "@mui/material";
 import { styled, StyledEngineProvider } from "@mui/material/styles";
-import withStyles from "@mui/styles/withStyles";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
-
-declare module "@mui/styles/defaultTheme" {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface DefaultTheme extends Theme {}
-}
 
 const fooBarOptions = [
     { value: "foo", label: "Foo" },
@@ -54,22 +47,18 @@ storiesOf("stories/form/Layout", module)
             justify-content: stretch;
         `;
 
-        const Content = withStyles({
-            root: {
-                flexGrow: 1,
-                marginRight: 40,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-            },
-        })(Paper);
+        const Content = styled(Paper)`
+            flex-grow: 1;
+            margin-right: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `;
 
-        const ContentText = withStyles({
-            root: {
-                fontSize: 54,
-                opacity: 0.25,
-            },
-        })(Typography);
+        const ContentText = styled(Typography)`
+            font-size: 54px;
+            opacity: 0.25;
+        `;
 
         const Sidebar = styled("div")`
             max-width: 350px;

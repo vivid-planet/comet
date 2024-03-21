@@ -1,32 +1,33 @@
-import { ComponentsOverrides, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides } from "@mui/material";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
+
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 
 export type ToolbarItemClassKey = "root";
 
-export interface ToolbarItemProps {
+const Root = createComponentSlot("div")<ToolbarItemClassKey>({
+    componentName: "ToolbarItem",
+    slotName: "root",
+})(
+    ({ theme }) => css`
+        padding: 15px;
+        display: flex;
+        justify-items: center;
+        align-items: center;
+        border-right: 1px solid ${theme.palette.grey[50]};
+    `,
+);
+
+export interface ToolbarItemProps extends ThemedComponentBaseProps {
     children: React.ReactNode;
 }
 
-const styles = ({ palette }: Theme) => {
-    return createStyles<ToolbarItemClassKey, ToolbarItemProps>({
-        root: {
-            padding: 15,
-            display: "flex",
-            justifyItems: "center",
-            alignItems: "center",
-            borderRight: 1,
-            borderRightStyle: "solid",
-            borderRightColor: palette.grey[50],
-        },
-    });
+export const ToolbarItem = (inProps: ToolbarItemProps) => {
+    const { children, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarItem" });
+    return <Root {...restProps}>{children}</Root>;
 };
-
-function Item({ children, classes }: ToolbarItemProps & WithStyles<typeof styles>): React.ReactElement {
-    return <div className={classes.root}>{children}</div>;
-}
-
-export const ToolbarItem = withStyles(styles, { name: "CometAdminToolbarItem" })(Item);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -39,7 +40,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminToolbarItem?: {
-            defaultProps?: ComponentsPropsList["CometAdminToolbarItem"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminToolbarItem"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminToolbarItem"];
         };
     }

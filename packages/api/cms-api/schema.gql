@@ -47,6 +47,8 @@ type Dependency {
   visible: Boolean!
   targetGraphqlObjectType: String!
   targetId: String!
+  name: String
+  secondaryInformation: String
 }
 
 type PaginatedDependencies {
@@ -355,7 +357,7 @@ type Query {
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
   currentUser: CurrentUser!
-  getSitePreviewJwt(path: String!, previewData: PreviewData!): String!
+  isAllowedSitePreview(scope: JSONObject!): Boolean!
   userPermissionsUserById(id: String!): User!
   userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
@@ -470,10 +472,6 @@ enum SlugAvailability {
   Available
   Taken
   Reserved
-}
-
-input PreviewData {
-  includeInvisible: Boolean!
 }
 
 input UserFilter {

@@ -95,7 +95,7 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
             if (!id) throw new Error();
             await client.mutate<GQLProductCategoryFormUpdateProductCategoryMutation, GQLProductCategoryFormUpdateProductCategoryMutationVariables>({
                 mutation: updateProductCategoryMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.productCategory.updatedAt },
+                variables: { id, input: output },
             });
         } else {
             const { data: mutationResponse } = await client.mutate<

@@ -41,17 +41,19 @@ export function SaveBoundary({ onAfterSave, ...props }: SaveBoundaryProps) {
     const saveStates = React.useRef<Record<string, SavableProps>>({});
     const intl = useIntl();
 
+    const subRoutePath = props.subRoutePath ?? "./save";
+
     const save = React.useCallback(async (): Promise<SaveActionSuccess> => {
         setHasErrors(false);
         setSaving(true);
         try {
-            const saveSuccess = !(
-                await Promise.all(
-                    Object.values(saveStates.current).map((state) => {
-                        return state.doSave();
-                    }),
-                )
-            ).some((saveSuccess) => !saveSuccess);
+            let saveSuccess = true;
+            for (const state of Object.values(saveStates.current)) {
+                const result = await state.doSave();
+                if (!result) {
+                    saveSuccess = false;
+                }
+            }
             if (!saveSuccess) {
                 setHasErrors(true);
             } else {
@@ -95,7 +97,7 @@ export function SaveBoundary({ onAfterSave, ...props }: SaveBoundaryProps) {
                 return true;
             }}
             saveAction={save}
-            subRoutePath={props.subRoutePath}
+            subRoutePath={subRoutePath}
         >
             <SavableContext.Provider
                 value={{

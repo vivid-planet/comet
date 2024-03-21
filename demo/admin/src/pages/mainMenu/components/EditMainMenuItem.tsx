@@ -175,7 +175,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
             )}
             <MainContent>
                 <IFrameBridgeProvider>
-                    <SplitPreview url={`${siteConfig.previewUrl}/admin/main-menu`} previewState={previewState} previewApi={previewApi}>
+                    <SplitPreview url={`${siteConfig.blockPreviewBaseUrl}/main-menu`} previewState={previewState} previewApi={previewApi}>
                         <div>
                             {content ? (
                                 <AdminComponentRoot title={intl.formatMessage({ id: "mainMenu.menuItem", defaultMessage: "Menu item" })}>

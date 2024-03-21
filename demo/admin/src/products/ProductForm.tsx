@@ -3,7 +3,6 @@ import {
     CheckboxField,
     Field,
     FinalForm,
-    FinalFormInput,
     FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
@@ -57,12 +56,11 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormManualFragment, "image" | "price"> & {
-    price: string;
+type FormValues = Omit<GQLProductFormManualFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
 
-function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -76,7 +74,6 @@ function ProductForm({ id }: FormProps): React.ReactElement {
     const initialValues: Partial<FormValues> = data?.product
         ? {
               ...filter<GQLProductFormManualFragment>(productFormFragment, data.product),
-              price: String(data.product.price),
               image: rootBlocks.image.input2State(data.product.image),
           }
         : {
@@ -104,17 +101,15 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             type: formValues.type as GQLProductType,
             category: formValues.category?.id,
             tags: formValues.tags.map((i) => i.id),
-            variants: [],
             articleNumbers: [],
             discounts: [],
             statistics: { views: 0 },
-            price: parseFloat(formValues.price),
         };
         if (mode === "edit") {
             if (!id) throw new Error();
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.product.updatedAt },
+                variables: { id, input: output },
             });
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
@@ -141,9 +136,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         return tags.data.productTags.nodes;
     });
 
-    if (error) {
-        return <FormattedMessage id="common.error" defaultMessage="An error has occurred. Please try again at later" />;
-    }
+    if (error) throw error;
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;
@@ -192,13 +185,6 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             {...tagsSelectAsyncProps}
                             getOptionLabel={(option: GQLProductTagsSelectFragment) => option.title}
                         />
-                        <Field
-                            fullWidth
-                            name="price"
-                            component={FinalFormInput}
-                            type="number"
-                            label={<FormattedMessage id="product.price" defaultMessage="Price" />}
-                        />
                         <CheckboxField name="inStock" label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />} fullWidth />
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
@@ -209,5 +195,3 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         </FinalForm>
     );
 }
-
-export default ProductForm;

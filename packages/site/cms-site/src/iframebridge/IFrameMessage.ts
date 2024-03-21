@@ -7,6 +7,7 @@ export enum IFrameMessageType {
     Ready = "Ready",
     SelectComponent = "SelectComponent",
     HoverComponent = "HoverComponent",
+    ContentScope = "ContentScope",
     /**
      * @deprecated Use SitePreviewIFrameMessageType.OpenLink instead
      */
@@ -65,6 +66,7 @@ export enum AdminMessageType {
     Block = "Block",
     SelectComponent = "SelectComponent",
     HoverComponent = "HoverComponent",
+    ContentScope = "ContentScope",
 }
 export interface IAdminBlockMessage {
     cometType: AdminMessageType.Block;
@@ -87,4 +89,11 @@ export interface IAdminHoverComponentMessage {
     };
 }
 
-export type AdminMessage = IAdminBlockMessage | IAdminSelectComponentMessage | IAdminHoverComponentMessage;
+export interface IAdminContentScopeMessage {
+    cometType: AdminMessageType.ContentScope;
+    data: {
+        contentScope: unknown;
+    };
+}
+
+export type AdminMessage = IAdminBlockMessage | IAdminSelectComponentMessage | IAdminHoverComponentMessage | IAdminContentScopeMessage;

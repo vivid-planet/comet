@@ -65,6 +65,7 @@ export enum AdminMessageType {
     Block = "Block",
     SelectComponent = "SelectComponent",
     HoverComponent = "HoverComponent",
+    ContentScope = "ContentScope",
 }
 export interface IAdminBlockMessage {
     cometType: AdminMessageType.Block;
@@ -88,4 +89,12 @@ export interface IAdminHoverComponentMessage {
     };
 }
 
-export type AdminMessage = IAdminBlockMessage | IAdminSelectComponentMessage | IAdminHoverComponentMessage;
+export interface IAdminContentScopeMessage {
+    cometType: AdminMessageType.ContentScope;
+    data: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        contentScope: any;
+    };
+}
+
+export type AdminMessage = IAdminBlockMessage | IAdminSelectComponentMessage | IAdminHoverComponentMessage | IAdminContentScopeMessage;

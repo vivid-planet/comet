@@ -1,4 +1,4 @@
-import { DocumentInterface } from "@comet/cms-api";
+import { DocumentInterface, PageTreeNodeDocumentEntityScopeService, ScopedEntity } from "@comet/cms-api";
 import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
@@ -7,6 +7,7 @@ import { v4 as uuid } from "uuid";
 @ObjectType({
     implements: () => [DocumentInterface],
 })
+@ScopedEntity(PageTreeNodeDocumentEntityScopeService)
 export class PredefinedPage extends BaseEntity<PredefinedPage, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 

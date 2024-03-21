@@ -21,6 +21,7 @@ import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { GQLProductFilter } from "@src/graphql.generated";
 import { filter } from "graphql-anywhere";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -93,7 +94,10 @@ function ProductsGridToolbar() {
     );
 }
 
-export function ProductsGrid(): React.ReactElement {
+type Props = {
+    baseFilter?: GQLProductFilter;
+};
+export function ProductsGrid({ baseFilter }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
@@ -147,7 +151,6 @@ export function ProductsGrid(): React.ReactElement {
                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                             <Edit color="primary" />
                         </IconButton>
-
                         <CrudContextMenu
                             copyData={() => {
                                 const row = params.row;
@@ -187,7 +190,7 @@ export function ProductsGrid(): React.ReactElement {
 
     const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
         variables: {
-            filter: gqlFilter,
+            filter: { ...gqlFilter, ...baseFilter },
             search: gqlSearch,
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,

@@ -1,5 +1,5 @@
 import { createWriteStream } from "fs";
-import { gql } from "graphql-request/dist";
+import { gql } from "graphql-request";
 import { resolve } from "path";
 import { SitemapStream } from "sitemap";
 

@@ -16,7 +16,6 @@ import {
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Box, Button, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
-import withStyles from "@mui/styles/withStyles";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -158,8 +157,8 @@ export function PagesPage({
                             </ToolbarActions>
                         </Toolbar>
                         <PageTreeContext.Provider value={{ allCategories, currentCategory: category, documentTypes, tree, query: pagesQuery }}>
-                            <PageTreeContent fullHeight>
-                                <ActionToolbarBox>
+                            <MainContent fullHeight sx={{ display: "flex", flexDirection: "column" }}>
+                                <Box>
                                     <PagesPageActionToolbar
                                         selectedState={selectState}
                                         onSelectAllPressed={() => {
@@ -179,8 +178,8 @@ export function PagesPage({
                                             setExpandedIds([]);
                                         }}
                                     />
-                                </ActionToolbarBox>
-                                <FullHeightPaper variant="outlined">
+                                </Box>
+                                <Paper variant="outlined" sx={{ flex: 1 }}>
                                     {loading && isInitialLoad.current ? (
                                         <Loading behavior="fillParent" />
                                     ) : (
@@ -203,8 +202,8 @@ export function PagesPage({
                                             />
                                         </>
                                     )}
-                                </FullHeightPaper>
-                            </PageTreeContent>
+                                </Paper>
+                            </MainContent>
                         </PageTreeContext.Provider>
 
                         <EditDialog>
@@ -272,24 +271,3 @@ export function PagesPage({
         </DamScopeProvider>
     );
 }
-
-const PageTreeContent = withStyles({
-    root: {
-        display: "flex",
-        flexDirection: "column",
-    },
-})(MainContent);
-
-const FullHeightPaper = withStyles({
-    root: {
-        flex: 1,
-    },
-})(Paper);
-
-const ActionToolbarBox = withStyles({
-    root: {
-        width: "100%",
-        paddingLeft: 24,
-        paddingRight: 50,
-    },
-})(Box);

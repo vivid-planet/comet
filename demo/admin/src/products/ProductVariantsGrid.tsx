@@ -1,6 +1,8 @@
 import { useQuery } from "@apollo/client";
 import {
     GridFilterButton,
+    muiGridFilterToGql,
+    muiGridSortToGql,
     StackLink,
     Toolbar,
     ToolbarAutomaticTitleItem,
@@ -49,9 +51,9 @@ function ProductVariantsGridToolbar() {
     );
 }
 
-function ProductVariantsGrid({ productId }: { productId: string }) {
+export function ProductVariantsGrid({ productId }: { productId: string }) {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductVariantsGrid") };
-    //const sortModel = dataGridProps.sortModel;
+    const sortModel = dataGridProps.sortModel;
     //const client = useApolloClient();
 
     const columns: GridColDef<GQLProductVariantsListFragment>[] = [
@@ -105,17 +107,15 @@ function ProductVariantsGrid({ productId }: { productId: string }) {
 
     const { data, loading, error } = useQuery<GQLProductVariantsListQuery, GQLProductVariantsListQueryVariables>(productVariantsQuery, {
         variables: {
-            productId,
-            /*
+            product: productId,
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
             sort: muiGridSortToGql(sortModel),
-            */
         },
     });
-    const rows = data?.product.variants ?? [];
-    const rowCount = useBufferedRowCount(data?.product.variants.length);
+    const rows = data?.productVariants.nodes ?? [];
+    const rowCount = useBufferedRowCount(data?.productVariants.totalCount);
 
     return (
         <Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
@@ -134,7 +134,6 @@ function ProductVariantsGrid({ productId }: { productId: string }) {
         </Box>
     );
 }
-
 const productVariantsFragment = gql`
     fragment ProductVariantsList on ProductVariant {
         id
@@ -143,11 +142,19 @@ const productVariantsFragment = gql`
 `;
 
 const productVariantsQuery = gql`
-    query ProductVariantsList($productId: ID!) {
-        product(id: $productId) {
-            variants {
+    query ProductVariantsList(
+        $product: ID!
+        $offset: Int
+        $limit: Int
+        $sort: [ProductVariantSort!]
+        $filter: ProductVariantFilter
+        $search: String
+    ) {
+        productVariants(product: $product, offset: $offset, limit: $limit, sort: $sort, filter: $filter, search: $search) {
+            nodes {
                 ...ProductVariantsList
             }
+            totalCount
         }
     }
     ${productVariantsFragment}
@@ -158,7 +165,6 @@ const deleteProductMutation = gql`
         deleteProduct(id: $id)
     }
 `;
-
 const createProductMutation = gql`
     mutation CreateProductVariant($input: ProductVariantInput!) {
         createProduct(input: $input) {
@@ -177,5 +183,3 @@ const updateProductVisibilityMutation = gql`
     }
 `;
 */
-
-export default ProductVariantsGrid;

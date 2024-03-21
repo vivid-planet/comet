@@ -6,6 +6,7 @@ export interface DamConfig {
     enableLicenseFeature?: boolean;
     requireLicense?: boolean;
     additionalToolbarItems?: React.ReactNode;
+    importSources?: Record<string, { label: React.ReactNode }>;
 }
 
 export const DamConfigContext = React.createContext<DamConfig | undefined>(undefined);

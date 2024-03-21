@@ -1,25 +1,31 @@
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import { ComponentsOverrides, Theme } from "@mui/material";
-import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
-import MuiAccordionDetails, { AccordionDetailsProps } from "@mui/material/AccordionDetails";
-import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
-import clsx from "clsx";
+import MuiAccordion from "@mui/material/Accordion";
+import MuiAccordionDetails from "@mui/material/AccordionDetails";
+import MuiAccordionSummary from "@mui/material/AccordionSummary";
+import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-interface FieldSetComponentsProps {
-    root?: Partial<AccordionProps>;
-    summary?: Partial<AccordionSummaryProps>;
-    details?: Partial<AccordionDetailsProps>;
-}
-export interface FieldSetProps {
+import { createComponentSlot } from "../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+
+export interface FieldSetProps
+    extends ThemedComponentBaseProps<{
+        root: typeof MuiAccordion;
+        summary: typeof MuiAccordionSummary;
+        headerColumn: "div";
+        title: "div";
+        supportText: "div";
+        placeholder: "div";
+        endAdornment: "div";
+        children: typeof MuiAccordionDetails;
+    }> {
     title: React.ReactNode;
     supportText?: React.ReactNode;
     endAdornment?: React.ReactNode;
     collapsible?: boolean;
     initiallyExpanded?: boolean;
     disablePadding?: boolean;
-    componentsProps?: FieldSetComponentsProps;
 }
 
 export type FieldSetClassKey =
@@ -33,81 +39,34 @@ export type FieldSetClassKey =
     | "children"
     | "disablePadding";
 
-const styles = (theme: Theme) =>
-    createStyles<FieldSetClassKey, FieldSetProps>({
-        root: {},
-        summary: {
-            display: "flex",
-            flexDirection: "row-reverse",
-            padding: "0 10px",
-            height: "80px",
-            [theme.breakpoints.up("sm")]: {
-                padding: "0 20px",
-            },
-        },
-        headerColumn: {
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            alignContent: "center",
-            padding: "0px",
-            [theme.breakpoints.up("sm")]: {
-                padding: "10px",
-            },
-        },
-        title: {
-            display: "flex",
-            alignItems: "center",
-            fontWeight: theme.typography.fontWeightMedium,
-            fontSize: "16px",
-            textTransform: "uppercase",
-            color: theme.palette.text.primary,
-        },
-        supportText: {
-            fontSize: "12px",
-            lineHeight: "18px",
-            color: theme.palette.text.secondary,
-        },
-        endAdornment: { display: "flex", alignItems: "center" },
-        placeholder: {
-            flexGrow: 1,
-            boxSizing: "inherit",
-            userSelect: "none",
-        },
-        children: {
-            display: "flex",
-            flexDirection: "column",
-            borderTop: `1px solid ${theme.palette.divider}`,
-            padding: "20px",
-            [theme.breakpoints.up("sm")]: {
-                padding: "40px",
-            },
-            "&$disablePadding": {
-                padding: "0px",
-            },
-        },
-        disablePadding: {},
-    });
+type OwnerState = {
+    disablePadding: boolean;
+};
 
-function FieldSet({
-    title,
-    supportText,
-    endAdornment,
-    children,
-    collapsible = true,
-    initiallyExpanded = true,
-    disablePadding = false,
-    componentsProps,
-    classes,
-}: React.PropsWithChildren<FieldSetProps> & WithStyles<typeof styles>): React.ReactElement {
+export function FieldSet(inProps: React.PropsWithChildren<FieldSetProps>): React.ReactElement {
+    const {
+        title,
+        supportText,
+        endAdornment,
+        children,
+        collapsible = true,
+        initiallyExpanded = true,
+        disablePadding = false,
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminFieldSet" });
     const [expanded, setExpanded] = React.useState(initiallyExpanded);
 
     const handleChange = (event: React.SyntheticEvent, isExpanded: boolean) => {
         setExpanded(isExpanded);
     };
 
+    const ownerState: OwnerState = {
+        disablePadding,
+    };
+
     return (
-        <MuiAccordion
+        <Root
             expanded={expanded}
             onChange={
                 collapsible
@@ -116,31 +75,132 @@ function FieldSet({
                           /* do nothing */
                       }
             }
-            className={classes.root}
-            {...componentsProps?.root}
+            {...slotProps?.root}
+            {...restProps}
         >
-            <MuiAccordionSummary
-                classes={{ root: classes.summary }}
-                expandIcon={collapsible && <ArrowForwardIosSharpIcon />}
-                {...componentsProps?.summary}
-            >
-                <div className={classes.headerColumn}>
-                    <div className={classes.title}>{title}</div>
-                    <div className={classes.supportText}>{supportText}</div>
-                </div>
-                <div className={classes.placeholder} />
-                <div className={classes.endAdornment}>{endAdornment}</div>
-            </MuiAccordionSummary>
-            <MuiAccordionDetails className={clsx(classes.children, disablePadding && classes.disablePadding)} {...componentsProps?.details}>
+            <Summary expandIcon={collapsible && <ArrowForwardIosSharpIcon />} {...slotProps?.summary}>
+                <HeaderColumn {...slotProps?.headerColumn}>
+                    <Title {...slotProps?.title}>{title}</Title>
+                    <SupportText {...slotProps?.supportText}>{supportText}</SupportText>
+                </HeaderColumn>
+                <Placeholder {...slotProps?.placeholder} />
+                <EndAdornment {...slotProps?.endAdornment}>{endAdornment}</EndAdornment>
+            </Summary>
+            <Children ownerState={ownerState} {...slotProps?.children}>
+                {disablePadding ? "disablePadding" : "not disablePadding"}
                 {children}
-            </MuiAccordionDetails>
-        </MuiAccordion>
+            </Children>
+        </Root>
     );
 }
 
-const FieldSetWithStyles = withStyles(styles, { name: "CometAdminFieldSet" })(FieldSet);
+const Root = createComponentSlot(MuiAccordion)<FieldSetClassKey>({
+    componentName: "FieldSet",
+    slotName: "root",
+})();
 
-export { FieldSetWithStyles as FieldSet };
+const Summary = createComponentSlot(MuiAccordionSummary)<FieldSetClassKey>({
+    componentName: "FieldSet",
+    slotName: "summary",
+})(
+    ({ theme }) => css`
+        display: flex;
+        flex-direction: row-reverse;
+        padding: 0 10px;
+        height: 80px;
+
+        ${theme.breakpoints.up("sm")} {
+            padding: 0 20px;
+        }
+    `,
+);
+
+const HeaderColumn = createComponentSlot("div")<FieldSetClassKey>({
+    componentName: "FieldSet",
+    slotName: "headerColumn",
+})(
+    ({ theme }) => css`
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        align-content: center;
+        padding: 0px;
+
+        ${theme.breakpoints.up("sm")} {
+            padding: 10px;
+        }
+    `,
+);
+
+const Title = createComponentSlot("div")<FieldSetClassKey>({
+    componentName: "FieldSet",
+    slotName: "title",
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        font-weight: ${theme.typography.fontWeightMedium};
+        font-size: 16px;
+        text-transform: uppercase;
+        color: ${theme.palette.text.primary};
+    `,
+);
+
+const SupportText = createComponentSlot("div")<FieldSetClassKey>({
+    componentName: "FieldSet",
+    slotName: "supportText",
+})(
+    ({ theme }) => css`
+        font-size: 12px;
+        line-height: 18px;
+        color: ${theme.palette.text.secondary};
+    `,
+);
+
+const Placeholder = createComponentSlot("div")<FieldSetClassKey>({
+    componentName: "FieldSet",
+    slotName: "placeholder",
+})(css`
+    flex-grow: 1;
+    box-sizing: inherit;
+    user-select: none;
+`);
+
+const EndAdornment = createComponentSlot("div")<FieldSetClassKey>({
+    componentName: "FieldSet",
+    slotName: "endAdornment",
+})(css`
+    display: flex;
+    align-items: center;
+`);
+
+const Children = createComponentSlot(MuiAccordionDetails)<FieldSetClassKey, OwnerState>({
+    componentName: "FieldSet",
+    slotName: "children",
+    classesResolver(ownerState) {
+        return [ownerState.disablePadding && "disablePadding"];
+    },
+})(
+    ({ theme, ownerState }) => css`
+        display: flex;
+        flex-direction: column;
+        border-top: 1px solid ${theme.palette.divider};
+        padding: 20px;
+
+        ${theme.breakpoints.up("sm")} {
+            padding: 40px;
+        }
+
+        ${ownerState.disablePadding &&
+        css`
+            padding: 0;
+
+            ${theme.breakpoints.up("sm")} {
+                padding: 0;
+            }
+        `}
+    `,
+);
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
@@ -153,7 +213,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminFieldSet?: {
-            defaultProps?: ComponentsPropsList["CometAdminFieldSet"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFieldSet"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFieldSet"];
         };
     }

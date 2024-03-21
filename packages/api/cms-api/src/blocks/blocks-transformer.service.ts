@@ -42,7 +42,7 @@ export class BlocksTransformerService {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async transformToPlain(block: BlockDataInterface): Promise<any> {
-        return transformToPlain(block, this.dependencies, this.blockContext);
+    async transformToPlain(block: BlockDataInterface, context?: BlockContext): Promise<any> {
+        return transformToPlain(block, this.dependencies, context ?? this.blockContext);
     }
 }

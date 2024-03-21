@@ -8,6 +8,14 @@ export const productFormFragment = gql`
         slug
         description
         type
+        category {
+            id
+        }
+        manufacturer {
+            address {
+                country
+            }
+        }
         price
         inStock
         availableSince
@@ -20,6 +28,14 @@ export const productFormUpdateMutationFragment = gql`
         slug
         description
         type
+        category {
+            id
+        }
+        manufacturer {
+            address {
+                country
+            }
+        }
         price
         inStock
         availableSince
@@ -47,8 +63,8 @@ export const createProductMutation = gql`
     ${productFormFragment}
 `;
 export const updateProductMutation = gql`
-    mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!, $lastUpdatedAt: DateTime) {
-        updateProduct(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
+    mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!) {
+        updateProduct(id: $id, input: $input) {
             id
             updatedAt
             ...ProductFormDetailsUpdate

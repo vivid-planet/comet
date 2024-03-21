@@ -3,7 +3,7 @@ import { Translate } from "@comet/admin-icons";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import ControlButton from "../Controls/ControlButton";
+import { ControlButton } from "../Controls/ControlButton";
 import { IControlProps } from "../types";
 import { htmlToState } from "./htmlToState";
 import { stateToHtml } from "./stateToHtml";

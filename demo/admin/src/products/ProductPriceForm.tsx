@@ -22,10 +22,10 @@ interface FormProps {
 }
 
 type FormValues = Omit<GQLProductPriceFormFragment, "price"> & {
-    price: string;
+    price?: string;
 };
 
-function ProductPriceForm({ id }: FormProps): React.ReactElement {
+export function ProductPriceForm({ id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const formApiRef = useFormApiRef<FormValues>();
 
@@ -36,7 +36,7 @@ function ProductPriceForm({ id }: FormProps): React.ReactElement {
     const initialValues: Partial<FormValues> = data?.product
         ? {
               ...filter<GQLProductPriceFormFragment>(productPriceFormFragment, data.product),
-              price: String(data.product.price),
+              price: data.product.price ? String(data.product.price) : undefined,
           }
         : {};
 
@@ -55,11 +55,11 @@ function ProductPriceForm({ id }: FormProps): React.ReactElement {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
-            price: parseFloat(formValues.price),
+            price: formValues.price ? parseFloat(formValues.price) : null,
         };
         await client.mutate<GQLProductPriceFormUpdateProductMutation, GQLProductPriceFormUpdateProductMutationVariables>({
             mutation: updateProductPriceFormMutation,
-            variables: { id, input: output, lastUpdatedAt: data?.product.updatedAt },
+            variables: { id, input: output },
         });
     };
 
@@ -100,5 +100,3 @@ function ProductPriceForm({ id }: FormProps): React.ReactElement {
         </FinalForm>
     );
 }
-
-export default ProductPriceForm;

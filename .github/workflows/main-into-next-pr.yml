@@ -38,7 +38,7 @@ jobs:
             - name: Create pull request
               uses: peter-evans/create-pull-request@v6
               with:
-                  token: ${{ secrets.GITHUB_TOKEN }}
+                  token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}
                   title: ${{ env.PR_TITLE }}
                   body: ${{ env.PR_BODY }}
                   base: next

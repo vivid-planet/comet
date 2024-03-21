@@ -4,6 +4,7 @@ import { Grid, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 
+import { useContentScope } from "../../contentScope/Provider";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
 import { VisibilityToggle } from "../common/VisibilityToggle";
@@ -21,12 +22,16 @@ function BlockPreview({
     previewApi: { device, setDevice, showOnlyVisible, setShowOnlyVisible, setMinimized },
 }: Props): React.ReactElement {
     const iFrameBridge = useIFrameBridge();
+    const { scope } = useContentScope();
 
     React.useEffect(() => {
         if (iFrameBridge.iFrameReady) {
             iFrameBridge.sendBlockState(previewState);
         }
-    }, [iFrameBridge, previewState]);
+        if (iFrameBridge.iFrameReady) {
+            iFrameBridge.sendContentScope(scope);
+        }
+    }, [iFrameBridge, previewState, scope]);
 
     const handleMinimizeClick = () => {
         setMinimized((minimized) => !minimized);

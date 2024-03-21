@@ -51,6 +51,8 @@ type Dependency {
   visible: Boolean!
   targetGraphqlObjectType: String!
   targetId: String!
+  name: String
+  secondaryInformation: String
 }
 
 type PaginatedDependencies {
@@ -192,6 +194,7 @@ type Link implements DocumentInterface {
   updatedAt: DateTime!
   content: LinkBlockData!
   createdAt: DateTime!
+  pageTreeNode: PageTreeNode
 }
 
 interface DocumentInterface {
@@ -274,11 +277,6 @@ input DependentFilter {
   rootGraphqlObjectType: String
   rootId: String
   rootColumnName: String
-}
-
-type PaginatedPages {
-  nodes: [Page!]!
-  totalCount: Int!
 }
 
 type PredefinedPage implements DocumentInterface {
@@ -384,7 +382,6 @@ type News implements DocumentInterface {
   status: NewsStatus!
   date: DateTime!
   category: NewsCategory!
-  visible: Boolean!
   image: DamImageBlockData!
   content: NewsContentBlockData!
   createdAt: DateTime!
@@ -466,6 +463,14 @@ type ProductCategory implements DocumentInterface {
   products: [Product!]!
 }
 
+type ProductColor implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  name: String!
+  hexCode: String!
+  createdAt: DateTime!
+}
+
 type ProductStatistics {
   id: ID!
   views: Float!
@@ -487,6 +492,7 @@ type ProductVariant implements DocumentInterface {
   name: String!
   image: DamImageBlockData!
   createdAt: DateTime!
+  product: Product!
 }
 
 type ProductDiscounts {
@@ -520,6 +526,7 @@ type Product implements DocumentInterface {
   createdAt: DateTime!
   category: ProductCategory
   manufacturer: Manufacturer
+  colors: [ProductColor!]!
   variants: [ProductVariant!]!
   tags: [ProductTag!]!
 }
@@ -547,6 +554,11 @@ type PaginatedProductCategories {
 
 type PaginatedProductTags {
   nodes: [ProductTag!]!
+  totalCount: Int!
+}
+
+type PaginatedProductVariants {
+  nodes: [ProductVariant!]!
   totalCount: Int!
 }
 
@@ -690,13 +702,13 @@ type Query {
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
   link(linkId: ID!): Link
-  pages(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedPages!
+  page(id: ID!): Page!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   paginatedPageTreeNodes(scope: PageTreeNodeScopeInput!, category: String, sort: [PageTreeNodeSort!], offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
-  getSitePreviewJwt(path: String!, previewData: PreviewData!): String!
+  isAllowedSitePreview(scope: JSONObject!): Boolean!
   redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection! = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
   paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int! = 0, limit: Int! = 25): PaginatedRedirects!
   redirect(id: ID!): Redirect!
@@ -732,6 +744,8 @@ type Query {
   productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
   productTag(id: ID!): ProductTag!
   productTags(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductTagFilter, sort: [ProductTagSort!]): PaginatedProductTags!
+  productVariant(id: ID!): ProductVariant!
+  productVariants(offset: Int! = 0, limit: Int! = 25, product: ID!, search: String, filter: ProductVariantFilter, sort: [ProductVariantSort!]): PaginatedProductVariants!
   manufacturer(id: ID!): Manufacturer!
   manufacturers(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerFilter, sort: [ManufacturerSort!]): PaginatedManufacturers!
 }
@@ -784,10 +798,6 @@ enum SlugAvailability {
   Available
   Taken
   Reserved
-}
-
-input PreviewData {
-  includeInvisible: Boolean!
 }
 
 input RedirectFilter {
@@ -862,7 +872,6 @@ input NewsFilter {
   status: NewsStatusEnumFilter
   date: DateFilter
   category: NewsCategoryEnumFilter
-  visible: BooleanFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   and: [NewsFilter!]
@@ -892,7 +901,6 @@ enum NewsSortField {
   status
   date
   category
-  visible
   createdAt
   updatedAt
 }
@@ -1003,6 +1011,26 @@ enum ProductTagSortField {
   updatedAt
 }
 
+input ProductVariantFilter {
+  name: StringFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+  and: [ProductVariantFilter!]
+  or: [ProductVariantFilter!]
+}
+
+input ProductVariantSort {
+  field: ProductVariantSortField!
+  direction: SortDirection! = ASC
+}
+
+enum ProductVariantSortField {
+  name
+  product
+  createdAt
+  updatedAt
+}
+
 input ManufacturerFilter {
   addressAsEmbeddable_street: StringFilter
   addressAsEmbeddable_streetNumber: NumberFilter
@@ -1070,26 +1098,29 @@ type Mutation {
   moveDamFolders(folderIds: [ID!]!, targetFolderId: ID, scope: DamScopeInput!): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!
   createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
-  updateNews(id: ID!, input: NewsUpdateInput!, lastUpdatedAt: DateTime): News!
+  updateNews(id: ID!, input: NewsUpdateInput!): News!
   deleteNews(id: ID!): Boolean!
   createNewsComment(newsId: ID!, input: NewsCommentInput!): NewsComment!
-  updateNewsComment(id: ID!, input: NewsCommentInput!, lastUpdatedAt: DateTime): NewsComment!
+  updateNewsComment(id: ID!, input: NewsCommentInput!): NewsComment!
   deleteNewsComment(id: ID!): Boolean!
   updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
-  saveFooter(scope: FooterContentScopeInput!, input: FooterInput!, lastUpdatedAt: DateTime): Footer!
+  saveFooter(scope: FooterContentScopeInput!, input: FooterInput!): Footer!
   savePredefinedPage(id: ID!, input: PredefinedPageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): PredefinedPage!
   triggerKubernetesCronJob(name: String!): KubernetesJob!
   createProduct(input: ProductInput!): Product!
-  updateProduct(id: ID!, input: ProductUpdateInput!, lastUpdatedAt: DateTime): Product!
+  updateProduct(id: ID!, input: ProductUpdateInput!): Product!
   deleteProduct(id: ID!): Boolean!
   createProductCategory(input: ProductCategoryInput!): ProductCategory!
-  updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!, lastUpdatedAt: DateTime): ProductCategory!
+  updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!): ProductCategory!
   deleteProductCategory(id: ID!): Boolean!
   createProductTag(input: ProductTagInput!): ProductTag!
-  updateProductTag(id: ID!, input: ProductTagUpdateInput!, lastUpdatedAt: DateTime): ProductTag!
+  updateProductTag(id: ID!, input: ProductTagUpdateInput!): ProductTag!
   deleteProductTag(id: ID!): Boolean!
+  createProductVariant(product: ID!, input: ProductVariantInput!): ProductVariant!
+  updateProductVariant(id: ID!, input: ProductVariantUpdateInput!): ProductVariant!
+  deleteProductVariant(id: ID!): Boolean!
   createManufacturer(input: ManufacturerInput!): Manufacturer!
-  updateManufacturer(id: ID!, input: ManufacturerUpdateInput!, lastUpdatedAt: DateTime): Manufacturer!
+  updateManufacturer(id: ID!, input: ManufacturerUpdateInput!): Manufacturer!
   deleteManufacturer(id: ID!): Boolean!
 }
 
@@ -1226,7 +1257,6 @@ input NewsInput {
   status: NewsStatus! = Active
   date: DateTime!
   category: NewsCategory! = Awards
-  visible: Boolean!
   image: DamImageBlockInput!
   content: NewsContentBlockInput!
 }
@@ -1243,7 +1273,6 @@ input NewsUpdateInput {
   status: NewsStatus
   date: DateTime
   category: NewsCategory
-  visible: Boolean
   image: DamImageBlockInput
   content: NewsContentBlockInput
 }
@@ -1276,27 +1305,27 @@ input ProductInput {
   slug: String!
   description: String!
   type: ProductType!
-  price: Float
+  price: Float = null
   inStock: Boolean! = true
-  availableSince: DateTime
+  availableSince: DateTime = null
   image: DamImageBlockInput!
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
   dimensions: ProductDimensionsInput
   statistics: ProductStatisticsInput
-  variants: [ProductVariantInput!]! = []
+  colors: [ProductColorInput!]! = []
   category: ID = null
   tags: [ID!]! = []
-  manufacturer: ID
+  manufacturer: ID = null
 }
 
 input ProductStatisticsInput {
   views: Float!
 }
 
-input ProductVariantInput {
+input ProductColorInput {
   name: String!
-  image: DamImageBlockInput!
+  hexCode: String!
 }
 
 input ProductUpdateInput {
@@ -1313,7 +1342,7 @@ input ProductUpdateInput {
   articleNumbers: [String!]
   dimensions: ProductDimensionsInput
   statistics: ProductStatisticsInput
-  variants: [ProductVariantInput!]
+  colors: [ProductColorInput!]
   category: ID
   tags: [ID!]
   manufacturer: ID
@@ -1322,13 +1351,11 @@ input ProductUpdateInput {
 input ProductCategoryInput {
   title: String!
   slug: String!
-  products: [ID!]! = []
 }
 
 input ProductCategoryUpdateInput {
   title: String
   slug: String
-  products: [ID!]
 }
 
 input ProductTagInput {
@@ -1339,6 +1366,16 @@ input ProductTagInput {
 input ProductTagUpdateInput {
   title: String
   products: [ID!]
+}
+
+input ProductVariantInput {
+  name: String!
+  image: DamImageBlockInput!
+}
+
+input ProductVariantUpdateInput {
+  name: String
+  image: DamImageBlockInput
 }
 
 input ManufacturerInput {

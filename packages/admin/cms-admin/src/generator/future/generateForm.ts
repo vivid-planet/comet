@@ -28,11 +28,10 @@ export function generateForm(
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
 
-    const fieldNamesFromConfig: string[] = config.fields.map((field) => field.name);
-    const fieldList = generateFieldListGqlString(fieldNamesFromConfig);
+    const fieldList = generateFieldListGqlString(config.fields);
 
-    const updateMutationFieldNamesFromConfig = config.fields.filter((field) => !field.readOnly).map<string>((field) => field.name);
-    const updateMutationFieldList = generateFieldListGqlString(updateMutationFieldNamesFromConfig);
+    const updateMutationFields = config.fields.filter((field) => !field.readOnly);
+    const updateMutationFieldList = generateFieldListGqlString(updateMutationFields);
 
     const queries = gqlIntrospection.__schema.types.find((type) => type.name === "Query");
     if (!queries || queries.kind !== "OBJECT") throw new Error(`Missing Query-Type in schema. Do any queries exist?`);
@@ -58,6 +57,18 @@ export function generateForm(
 
     // TODO make RootBlocks configurable (from config)
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
+
+    let hooksCode = "";
+
+    config.fields.map((field) => {
+        const generated = generateFormField({ gqlIntrospection }, field, config);
+        for (const name in generated.gqlDocuments) {
+            gqlDocuments[name] = generated.gqlDocuments[name];
+        }
+        imports.push(...generated.imports);
+        hooksCode += generated.hooksCode;
+        return generated.code;
+    });
 
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
@@ -179,7 +190,7 @@ export function generateForm(
             : ""
     }
 
-    type FormValues = ${generateFormValuesTypeDefinition({ fragmentName, rootBlocks, config })};
+    type FormValues = ${generateFormValuesTypeDefinition({ fragmentName, rootBlocks, config, gqlType, gqlIntrospection })};
 
     interface FormProps {
         id?: string;
@@ -198,7 +209,7 @@ export function generateForm(
             id ? { variables: { id${queryScopeParam ? `, scope` : ""} } } : { skip: true },
         );
 
-        const initialValues = ${generateInitialValuesValue({ config, fragmentName, rootBlocks, instanceGqlType })};
+        const initialValues = ${generateInitialValuesValue({ config, fragmentName, rootBlocks, instanceGqlType, gqlIntrospection, gqlType })};
 
         const saveConflict = useFormSaveConflict({
             checkConflict: async () => {
@@ -235,6 +246,8 @@ export function generateForm(
                 }
             }
         };
+
+        ${hooksCode}
 
         if (error) throw error;
 

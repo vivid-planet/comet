@@ -20,7 +20,6 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
 
         const scopeProp = metadata.props.find((prop) => prop.name == "scope");
         if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
-        const hasUpdatedAt = metadata.props.some((prop) => prop.name == "updatedAt");
         const blockProps = metadata.props.filter((prop) => {
             return hasFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
         });
@@ -80,8 +79,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         @Mutation(() => ${metadata.className})
         async save${classNameSingular}(
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
-            @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input,
-            ${hasUpdatedAt ? `@Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,` : ""}
+            @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
             let ${instanceNameSingular} = await this.repository.findOne({${scopeProp ? `scope` : ""}});
 
@@ -90,16 +88,12 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
                     ...input,
                     ${scopeProp ? `scope,` : ""} 
                 });
-            } else if (lastUpdatedAt) {
-                if (lastUpdatedAt) {
-                    validateNotModified(${instanceNameSingular}, lastUpdatedAt);
-                }
-    
-                ${instanceNameSingular}.assign({
-                    ...input,
-                    ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
-                });
             }
+
+            ${instanceNameSingular}.assign({
+                ...input,
+                ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
+            });
     
             await this.entityManager.flush();
     

@@ -11,8 +11,10 @@ import { plural } from "pluralize";
 import { GeneratorReturn, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
-import { generateFieldListGqlString } from "./utils/generateFieldList";
+import { generateFieldListGqlStringForGrid } from "./utils/generateFieldList";
 import { generateGqlParamDefinition } from "./utils/generateGqlParamDefinition";
+import { generateGridProps, generateGridPropsType, hasGridPropBaseFilter } from "./utils/generateGridProps";
+import { findInputObjectType, findQueryTypeOrThrow, getFilterGQLTypeString } from "./utils/introspectionHelpers";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 
@@ -23,40 +25,11 @@ function tsCodeRecordToString(object: TsCodeRecordToStringObject) {
         .join("\n")}}`;
 }
 
-function findQueryType(queryName: string, schema: IntrospectionQuery) {
-    const queryType = schema.__schema.types.find((type) => type.name === schema.__schema.queryType.name) as IntrospectionObjectType | undefined;
-    if (!queryType) throw new Error("Can't find Query type in gql schema");
-    const ret = queryType.fields.find((field) => field.name === queryName);
-    if (!ret) throw new Error(`Can't find query ${queryName} in gql schema`);
-    return ret;
-}
-
-function findQueryTypeOrThrow(queryName: string, schema: IntrospectionQuery) {
-    const ret = findQueryType(queryName, schema);
-    if (!ret) throw new Error(`Can't find query ${queryName} in gql schema`);
-    return ret;
-}
-
 function findMutationType(mutationName: string, schema: IntrospectionQuery) {
     if (!schema.__schema.mutationType) throw new Error("Schema has no Mutation type");
     const queryType = schema.__schema.types.find((type) => type.name === schema.__schema.mutationType?.name) as IntrospectionObjectType | undefined;
     if (!queryType) throw new Error("Can't find Mutation type in gql schema");
     return queryType.fields.find((field) => field.name === mutationName);
-}
-
-function findInputObjectType(input: IntrospectionInputValue, schema: IntrospectionQuery) {
-    let type = input.type;
-    if (type.kind == "NON_NULL") {
-        type = type.ofType;
-    }
-    if (type.kind !== "INPUT_OBJECT") {
-        throw new Error("must be INPUT_OBJECT");
-    }
-    const typeName = type.name;
-    const filterType = schema.__schema.types.find((type) => type.kind === "INPUT_OBJECT" && type.name === typeName) as
-        | IntrospectionInputObjectType
-        | undefined;
-    return filterType;
 }
 
 export function generateGrid(
@@ -79,8 +52,7 @@ export function generateGrid(
     const gqlDocuments: Record<string, string> = {};
     //const imports: Imports = [];
 
-    const fieldNamesFromConfig: string[] = config.columns.map((field) => String(field.name));
-    const fieldList = generateFieldListGqlString(fieldNamesFromConfig.filter((fieldName) => fieldName !== "id")); // exclude id as it's always fetched
+    const fieldList = generateFieldListGqlStringForGrid(config.columns.filter((column) => String(column.name) !== "id")); // exclude id as it's always fetched
 
     const queries = gqlIntrospection.__schema.types.find((type) => type.name === "Query");
     if (!queries || queries.kind !== "OBJECT") throw new Error(`Missing Query-Type in schema. Do any queries exist?`);
@@ -276,6 +248,7 @@ export function generateGrid(
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton } from "@mui/material";
     import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { ${getFilterGQLTypeString({ gridQuery, gqlIntrospection }) ?? ""} } from "@src/graphql.generated";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
@@ -375,8 +348,8 @@ export function generateGrid(
         );
     }
 
-
-    export function ${gqlTypePlural}Grid(): React.ReactElement {
+    ${generateGridPropsType({ gridQuery, gqlIntrospection }) ?? ""}
+    export function ${gqlTypePlural}Grid(${generateGridProps({ gridQuery, gqlIntrospection }) ?? ""}): React.ReactElement {
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
@@ -506,7 +479,7 @@ export function generateGrid(
         const { data, loading, error } = useQuery<GQL${gqlTypePlural}GridQuery, GQL${gqlTypePlural}GridQueryVariables>(${instanceGqlTypePlural}Query, {
             variables: {
                 ${queryScopeParam ? `scope,` : ""}
-                ${hasFilter ? `filter: gqlFilter,` : ""}
+                filter: { ${hasFilter ? `...gqlFilter,` : ""} ${hasGridPropBaseFilter({ gridQuery, gqlIntrospection }) ? `...baseFilter,` : ""} },
                 ${hasSearch ? `search: gqlSearch,` : ""}
                 offset: dataGridProps.page * dataGridProps.pageSize,
                 limit: dataGridProps.pageSize,

@@ -1,7 +1,7 @@
 import { Close } from "@comet/admin-icons";
-import { Dialog, DialogContent, DialogTitle, IconButton, Link, Modal, Typography } from "@mui/material";
+import { Dialog, DialogContent as MuiDialogContent, DialogTitle, IconButton, Link, Modal as MuiModal, Typography } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 
@@ -9,68 +9,33 @@ import { version } from "../../..";
 import { useBuildInformation } from "./build-information/useBuildInformation";
 import { CometDigitalExperienceLogo } from "./CometDigitalExperienceLogo";
 
-const useStyles = makeStyles(() => ({
-    content: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-    },
-    modal: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    dialogTitle: {
-        display: "flex",
-        flexDirection: "row",
-        flex: 1,
-        alignItems: "center",
-    },
-    spaceBetween: {
-        display: "flex",
-        flex: 1,
-    },
-    versionContainer: {
-        display: "flex",
-        alignItems: "center",
-        flexDirection: "column",
-        marginTop: 40,
-        marginBottom: 40,
-    },
-    version: {
-        fontWeight: 500,
-    },
-}));
-
 interface AboutModalProps {
     onClose?: () => void;
     open: boolean;
     logo?: React.ReactElement;
 }
-function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo /> }: AboutModalProps): React.ReactElement {
-    const classes = useStyles();
+
+export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo /> }: AboutModalProps): React.ReactElement {
     const buildInformation = useBuildInformation();
 
     return (
-        <Modal className={classes.modal} open={open} onClose={onClose} closeAfterTransition BackdropComponent={Backdrop}>
+        <Modal open={open} onClose={onClose} closeAfterTransition BackdropComponent={Backdrop}>
             <Dialog open onClose={onClose}>
                 <DialogTitle>
-                    <div className={classes.dialogTitle}>
+                    <DialogTitleContent>
                         <Typography>
                             <FormattedMessage id="comet.about.dialog.title" defaultMessage="About" />
                         </Typography>
-
-                        <div className={classes.spaceBetween} />
+                        <DialogTitleSpace />
                         <IconButton onClick={onClose} color="inherit" size="large">
                             <Close />
                         </IconButton>
-                    </div>
+                    </DialogTitleContent>
                 </DialogTitle>
-                <DialogContent classes={{ root: classes.content }}>
+                <DialogContent>
                     {logo}
-                    <div className={classes.versionContainer}>
-                        <Typography classes={{ root: classes.version }}>{`v${version}`}</Typography>
+                    <VersionContainer>
+                        <Typography fontWeight={500}>{`v${version}`}</Typography>
                         {buildInformation?.number && buildInformation.commitHash && (
                             <Typography>
                                 <FormattedMessage
@@ -88,7 +53,7 @@ function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo /> }: Ab
                                 <FormattedDate value={buildInformation.date} /> <FormattedTime value={buildInformation.date} />
                             </Typography>
                         )}
-                    </div>
+                    </VersionContainer>
                     <Typography>
                         <FormattedMessage id="comet.about.dialog.copyright" defaultMessage="Copyright © Vivid Planet Software GmbH" />
                     </Typography>
@@ -103,4 +68,35 @@ function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo /> }: Ab
     );
 }
 
-export { AboutModal };
+const Modal = styled(MuiModal)`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+const DialogTitleContent = styled("div")`
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    align-items: center;
+`;
+
+const DialogTitleSpace = styled("div")`
+    display: flex;
+    flex: 1;
+`;
+
+const DialogContent = styled(MuiDialogContent)`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+`;
+
+const VersionContainer = styled("div")`
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 40px;
+    margin-bottom: 40px;
+`;

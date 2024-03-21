@@ -1,40 +1,54 @@
-import { ComponentsOverrides, TableRow, Theme } from "@mui/material";
+import { ComponentsOverrides, TableRow } from "@mui/material";
+import { Theme, useThemeProps } from "@mui/material/styles";
 import { TableRowProps } from "@mui/material/TableRow";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
-import * as React from "react";
+import React from "react";
+
+import { createComponentSlot } from "../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
 export type TableBodyRowClassKey = "root" | "even" | "odd";
 
+type OwnerState = { isOdd: boolean };
+
+const Root = createComponentSlot(TableRow)<TableBodyRowClassKey, OwnerState>({
+    componentName: "TableBodyRow",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [!ownerState.isOdd && "even", ownerState.isOdd && "odd"];
+    },
+})();
+
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export interface TableBodyRowProps extends TableRowProps {
+export interface TableBodyRowProps
+    extends ThemedComponentBaseProps<{
+            root: typeof TableRow;
+        }>,
+        TableRowProps {
     index?: number;
     hideTableHead?: boolean;
 }
 
-const styles = () => {
-    return createStyles<TableBodyRowClassKey, TableBodyRowProps>({
-        root: {},
-        even: {},
-        odd: {},
-    });
-};
-
-const Row = React.forwardRef<HTMLTableRowElement, TableBodyRowProps & WithStyles<typeof styles>>(
-    ({ index, hideTableHead, classes, ...otherProps }, ref) => {
-        const isOdd = ((index || 0) + (hideTableHead ? 1 : 0)) % 2 === 1;
-        return <TableRow ref={ref} classes={{ root: `${classes.root} ${isOdd ? classes.odd : classes.even}` }} {...otherProps} />;
-    },
-);
-
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export const TableBodyRow = withStyles(styles, { name: "CometAdminTableBodyRow" })(Row);
+export function TableBodyRow(inProps: TableBodyRowProps) {
+    const { title, children, index, hideTableHead, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminTableBodyRow" });
+
+    const ownerState: OwnerState = {
+        isOdd: ((index || 0) + (hideTableHead ? 1 : 0)) % 2 === 1,
+    };
+
+    return (
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
+            {children}
+        </Root>
+    );
+}
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -47,7 +61,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminTableBodyRow?: {
-            defaultProps?: ComponentsPropsList["CometAdminTableBodyRow"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminTableBodyRow"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminTableBodyRow"];
         };
     }

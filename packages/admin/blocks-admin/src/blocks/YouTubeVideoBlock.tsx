@@ -69,6 +69,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
                             name="youtubeIdentifier"
                             component={FinalFormInput}
                             fullWidth
+                            disableContentTranslation
                         />
                         <FieldContainer label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.aspectRatio", defaultMessage: "Aspect Ratio" })}>
                             <Field name="aspectRatio" type="radio" value="16X9">

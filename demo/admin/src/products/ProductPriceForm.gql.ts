@@ -18,8 +18,8 @@ export const productPriceFormQuery = gql`
 `;
 
 export const updateProductPriceFormMutation = gql`
-    mutation ProductPriceFormUpdateProduct($id: ID!, $input: ProductUpdateInput!, $lastUpdatedAt: DateTime) {
-        updateProduct(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
+    mutation ProductPriceFormUpdateProduct($id: ID!, $input: ProductUpdateInput!) {
+        updateProduct(id: $id, input: $input) {
             id
             updatedAt
             ...ProductPriceForm

@@ -46,7 +46,6 @@ const newsFragment = gql`
         status
         date
         category
-        visible
         image
         content
         createdAt
@@ -143,7 +142,6 @@ export function NewsGrid(): React.ReactElement {
             ],
             width: 150,
         },
-        { field: "visible", headerName: intl.formatMessage({ id: "news.visible", defaultMessage: "Visible" }), type: "boolean", width: 150 },
         {
             field: "image",
             headerName: intl.formatMessage({ id: "news.image", defaultMessage: "Image" }),
@@ -192,7 +190,6 @@ export function NewsGrid(): React.ReactElement {
                                     status: row.status,
                                     date: row.date,
                                     category: row.category,
-                                    visible: row.visible,
                                     image: DamImageBlock.state2Output(DamImageBlock.input2State(row.image)),
                                     content: NewsContentBlock.state2Output(NewsContentBlock.input2State(row.content)),
                                 };

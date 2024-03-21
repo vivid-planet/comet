@@ -3,7 +3,6 @@ import { Toolbar, ToolbarActions, ToolbarFillSpace, useFocusAwarePolling } from 
 import { ArrowRight, Close, Delete } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Select } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { FixedSizeList as List, ListChildComponentProps } from "react-window";
@@ -68,13 +67,6 @@ interface PageTreeSelectProps {
     defaultCategory: string;
 }
 
-const useStyles = makeStyles({
-    dialogPaper: {
-        minHeight: "80vh",
-        maxHeight: "80vh",
-    },
-});
-
 export default function PageTreeSelectDialog({ value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
     const { pageTreeCategories, pageTreeDocumentTypes, additionalPageTreeNodeFragment } = useCmsBlockContext();
     const { scope } = useContentScope();
@@ -83,7 +75,6 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     const [height, setHeight] = React.useState(200);
     const refDialogContent = React.useRef<HTMLDivElement>(null);
     const selectedPageId = value?.id;
-    const classes = useStyles();
 
     const pagesQuery = React.useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
 
@@ -183,7 +174,12 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
 
     return (
         <Dialog
-            classes={{ paper: classes.dialogPaper }}
+            PaperProps={{
+                sx: {
+                    minHeight: "80vh",
+                    maxHeight: "80vh",
+                },
+            }}
             open={open}
             onClose={onClose}
             fullWidth

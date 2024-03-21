@@ -160,6 +160,19 @@ export class KubernetesService {
 
     getContentScope(resource: V1Job | V1CronJob): ContentScope | null {
         const contentScopeAnnotation = resource.metadata?.annotations?.[CONTENT_SCOPE_ANNOTATION];
-        return contentScopeAnnotation ? JSON.parse(contentScopeAnnotation) : null;
+
+        if (contentScopeAnnotation) {
+            let json = JSON.parse(contentScopeAnnotation);
+
+            // the contentScopeAnnotation is an escaped json string (e.g. "{ \"domain\": \"main\", \"language\": \"en\" }")
+            // therefore JSON.parse() must be executed twice (https://stackoverflow.com/a/25721227)
+            if (typeof json !== "object") {
+                json = JSON.parse(json);
+            }
+
+            return json;
+        }
+
+        return null;
     }
 }

@@ -22,7 +22,7 @@ import {
 } from "../block";
 import { AnnotationBlockMeta, BlockField } from "../decorators/field";
 import { TransformDependencies } from "../dependencies";
-import { NameOrOptions } from "./types";
+import { BlockFactoryNameOrOptions } from "./types";
 
 type BaseBlockMap = Record<string, Block<BlockDataInterface, BlockInputInterface>>;
 
@@ -59,7 +59,7 @@ export type OneOfBlock<BlockMap extends BaseBlockMap> = Block<OneOfBlockDataInte
 
 export function createOneOfBlock<BlockMap extends BaseBlockMap>(
     { supportedBlocks, allowEmpty = true }: Options<BlockMap>,
-    nameOrOptions: NameOrOptions,
+    nameOrOptions: BlockFactoryNameOrOptions,
 ): OneOfBlock<BlockMap> {
     const supportedBlockTypes: Array<keyof BlockMap | null> = Object.keys(supportedBlocks);
 
