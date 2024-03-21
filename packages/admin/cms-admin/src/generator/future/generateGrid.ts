@@ -326,8 +326,8 @@ export function generateGrid(
         );
     }
 
-    ${generateGridPropsType({ gridQuery, gqlIntrospection }) ?? ""}
-    export function ${gqlTypePlural}Grid(${generateGridProps({ gridQuery, gqlIntrospection }) ?? ""}): React.ReactElement {
+    ${generateGridPropsType({ config, gridQuery, gqlIntrospection }) ?? ""}
+    export function ${gqlTypePlural}Grid(${generateGridProps({ config, gridQuery, gqlIntrospection }) ?? ""}): React.ReactElement {
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
@@ -455,7 +455,9 @@ export function generateGrid(
         const { data, loading, error } = useQuery<GQL${gqlTypePlural}GridQuery, GQL${gqlTypePlural}GridQueryVariables>(${instanceGqlTypePlural}Query, {
             variables: {
                 ${hasScope ? `scope,` : ""}
-                filter: { ${hasFilter ? `...gqlFilter,` : ""} ${hasGridPropBaseFilter({ gridQuery, gqlIntrospection }) ? `...baseFilter,` : ""} },
+                filter: { and: [${hasFilter ? `gqlFilter,` : ""} ${
+        hasGridPropBaseFilter({ config, gridQuery, gqlIntrospection }) ? `...(baseFilter ? [baseFilter] : []),` : "" // TODO handle disable GUI-element for filter defined in baseFilter
+    }] },
                 ${hasSearch ? `search: gqlSearch,` : ""}
                 offset: dataGridProps.page * dataGridProps.pageSize,
                 limit: dataGridProps.pageSize,
