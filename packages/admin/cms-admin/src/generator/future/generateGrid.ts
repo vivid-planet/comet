@@ -327,6 +327,7 @@ export function generateGrid(
     }
 
     ${generateGridPropsType({ config, gridQuery, gqlIntrospection }) ?? ""}
+
     export function ${gqlTypePlural}Grid(${generateGridProps({ config, gridQuery, gqlIntrospection }) ?? ""}): React.ReactElement {
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
