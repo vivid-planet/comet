@@ -47,7 +47,7 @@ cdn: {
 
 ```
 // if CDN is enabled, make sure all traffic is either coming from the CDN or internal sources
-if (!config.cdn.originCheckSecret) {
+if (config.cdn.originCheckSecret) {
     app.useGlobalGuards(new CdnGuard({ headerName: "x-cdn-origin-check", headerValue: config.cdn.originCheckSecret }));
 }
 ```
