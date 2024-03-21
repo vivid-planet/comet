@@ -7,7 +7,6 @@ import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
-import { ContentScopeInterface, useContentScope } from "../contentScope/Provider";
 import { JobRuntime } from "../cronJobs/JobRuntime";
 import { PublishButton } from "./PublishButton";
 import { GQLBuildsQuery } from "./PublisherPage.generated";
@@ -31,14 +30,7 @@ const DataGridContainer = styled("div")`
     height: calc(100vh - var(--comet-admin-master-layout-content-top-spacing));
 `;
 
-interface PublisherPageProps {
-    renderContentScopeIndicator?: (scope: ContentScopeInterface) => React.ReactNode;
-}
-
-const defaultRenderContentScopeIndicator = () => <ContentScopeIndicator global />;
-
-export function PublisherPage({ renderContentScopeIndicator = defaultRenderContentScopeIndicator }: PublisherPageProps): React.ReactElement {
-    const { scope } = useContentScope();
+export function PublisherPage(): React.ReactElement {
     const intl = useIntl();
 
     const { data, loading, error } = useQuery<GQLBuildsQuery, undefined>(buildsQuery);
@@ -47,7 +39,7 @@ export function PublisherPage({ renderContentScopeIndicator = defaultRenderConte
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.publisher", defaultMessage: "Publisher" })}>
-            {renderContentScopeIndicator(scope)}
+            <ContentScopeIndicator global />
             <Toolbar>
                 <ToolbarTitleItem>
                     <FormattedMessage id="comet.publisher.title" defaultMessage="Publisher" />
