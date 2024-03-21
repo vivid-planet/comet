@@ -1,31 +1,54 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
-import { Collapse, ComponentsOverrides, List, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { Collapse, List } from "@mui/material";
+import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { matchPath, useLocation } from "react-router";
 
+import { createComponentSlot } from "../../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MenuItem, MenuItemProps } from "./Item";
 import { MenuItemRouterLinkProps } from "./ItemRouterLink";
 
-export type MenuCollapsibleItemClassKey = "root" | "childSelected" | "listItem" | "open";
+export type MenuCollapsibleItemClassKey = "root" | "childSelected" | "listItem" | "menuItem" | "open";
 
-const styles = (theme: Theme) =>
-    createStyles<MenuCollapsibleItemClassKey, MenuCollapsibleItemProps>({
-        root: {},
-        childSelected: {
-            color: theme.palette.primary.main,
-            "& $listItem": {
-                "& [class*='MuiListItemText-root']": {
-                    color: theme.palette.primary.main,
-                },
-                "& [class*='MuiListItemIcon-root']": {
-                    color: theme.palette.primary.main,
-                },
-            },
-        },
-        listItem: {},
-        open: {},
-    });
+type OwnerState = { hasSelectedChild: boolean; open: boolean };
+
+const Root = createComponentSlot("div")<MenuCollapsibleItemClassKey, OwnerState>({
+    componentName: "MenuCollapsibleItem",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [ownerState.hasSelectedChild && "childSelected", ownerState.open && "open"];
+    },
+})(
+    ({ theme, ownerState }) => css`
+        ${ownerState.hasSelectedChild &&
+        css`
+            color: ${theme.palette.primary.main};
+        `}
+    `,
+);
+
+const ListItem = createComponentSlot("div")<MenuCollapsibleItemClassKey, OwnerState>({
+    componentName: "MenuCollapsibleItem",
+    slotName: "listItem",
+})(
+    ({ theme, ownerState }) => css`
+        ${ownerState.hasSelectedChild &&
+        css`
+            [class*="MuiListItemText-root"] {
+                color: ${theme.palette.primary.main};
+            }
+            && [class*="MuiListItemIcon-root"] {
+                color: ${theme.palette.primary.main};
+            }
+        `}
+    `,
+);
+
+const Item = createComponentSlot(MenuItem)<MenuCollapsibleItemClassKey>({
+    componentName: "MenuCollapsibleItem",
+    slotName: "menuItem",
+})();
 
 export interface MenuLevel {
     level?: 1 | 2;
@@ -33,25 +56,33 @@ export interface MenuLevel {
 
 type MenuChild = React.ReactElement<MenuItemRouterLinkProps>;
 
-export interface MenuCollapsibleItemProps extends MenuItemProps {
+export interface MenuCollapsibleItemProps
+    extends Omit<MenuItemProps, "slotProps">,
+        ThemedComponentBaseProps<{
+            root: "div";
+            listItem: "div";
+            menuItem: typeof MenuItem;
+        }> {
     children: MenuChild | MenuChild[];
     openByDefault?: boolean;
     openedIcon?: React.ReactNode;
     closedIcon?: React.ReactNode;
 }
 
-const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemProps> = ({
-    classes,
-    level,
-    primary,
-    secondary,
-    icon,
-    openByDefault = false,
-    openedIcon = <ChevronUp />,
-    closedIcon = <ChevronDown />,
-    children,
-    ...otherProps
-}) => {
+export function MenuCollapsibleItem(inProps: MenuCollapsibleItemProps) {
+    const {
+        level,
+        primary,
+        secondary,
+        icon,
+        openByDefault = false,
+        openedIcon = <ChevronUp />,
+        closedIcon = <ChevronDown />,
+        children,
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminMenuCollapsibleItem" });
+
     const itemLevel: 1 | 2 = level ? level : 1;
     let hasSelectedChild = false;
     const location = useLocation();
@@ -70,30 +101,30 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
 
     const [open, setOpen] = React.useState<boolean>(openByDefault || hasSelectedChild);
 
-    const listClasses = [classes.root];
-    if (hasSelectedChild) listClasses.push(classes.childSelected);
-    if (open) listClasses.push(classes.open);
+    const ownerState: OwnerState = {
+        hasSelectedChild,
+        open,
+    };
 
     return (
-        <div {...otherProps} className={listClasses.join(" ")}>
-            <div className={classes.listItem}>
-                <MenuItem
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
+            <ListItem ownerState={ownerState} {...slotProps?.listItem}>
+                <Item
                     primary={primary}
                     secondary={secondary}
                     icon={icon}
                     level={level}
                     onClick={() => setOpen(!open)}
                     secondaryAction={open ? openedIcon : closedIcon}
+                    {...slotProps?.menuItem}
                 />
-            </div>
+            </ListItem>
             <Collapse in={open} timeout="auto" unmountOnExit>
                 <List disablePadding>{childElements}</List>
             </Collapse>
-        </div>
+        </Root>
     );
-};
-
-export const MenuCollapsibleItem = withStyles(styles, { name: "CometAdminMenuCollapsibleItem" })(CollapsibleItem);
+}
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -106,7 +137,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminMenuCollapsibleItem?: {
-            defaultProps?: ComponentsPropsList["CometAdminMenuCollapsibleItem"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminMenuCollapsibleItem"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenuCollapsibleItem"];
         };
     }

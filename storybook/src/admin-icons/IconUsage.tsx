@@ -1,18 +1,9 @@
 import { Cookie, Error, ThreeDotSaving } from "@comet/admin-icons";
 import { Card, CardContent, Grid, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-const useStyles = makeStyles(() => ({
-    largeIcon: {
-        fontSize: 100,
-    },
-}));
-
 function Story() {
-    const classes = useStyles();
-
     return (
         <Grid container spacing={4}>
             <Grid item xs={12}>
@@ -40,7 +31,7 @@ function Story() {
                             Large: <Cookie fontSize="large" />
                         </Typography>
                         <Typography>
-                            Custom Size (100) <Cookie className={classes.largeIcon} /> icon.
+                            Custom Size (100) <Cookie sx={{ fontSize: 100 }} /> icon.
                         </Typography>
                     </CardContent>
                 </Card>
