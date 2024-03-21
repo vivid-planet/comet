@@ -18,7 +18,7 @@ type Props = {
     additionalToolbarItems?: React.ReactNode;
 };
 
-const DefaultRenderContentScopeIndicator = () => {
+const DefaultContentScopeIndicator = () => {
     const damScope = useDamScope();
 
     if (Object.keys(damScope).length > 0) {
@@ -46,7 +46,7 @@ function DamPage({ renderContentScopeIndicator, additionalToolbarItems }: Props)
         <DamScopeProvider>
             <DamTableWrapper>
                 <DamTable
-                    contentScopeIndicator={renderContentScopeIndicator ? renderContentScopeIndicator(scope) : <DefaultRenderContentScopeIndicator />}
+                    contentScopeIndicator={renderContentScopeIndicator ? renderContentScopeIndicator(scope) : <DefaultContentScopeIndicator />}
                     additionalToolbarItems={damConfig.additionalToolbarItems ?? additionalToolbarItems}
                 />
             </DamTableWrapper>
