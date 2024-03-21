@@ -14,15 +14,9 @@ const capitalizeString = (string: string) => {
 interface ContentScopeIndicatorProps {
     global?: boolean;
     scope?: ContentScopeInterface;
-    icon?: React.ReactNode;
 }
 
-export const ContentScopeIndicator = ({
-    global = false,
-    scope: passedScope,
-    icon = <DomainIcon />,
-    children,
-}: React.PropsWithChildren<ContentScopeIndicatorProps>) => {
+export const ContentScopeIndicator = ({ global = false, scope: passedScope, children }: React.PropsWithChildren<ContentScopeIndicatorProps>) => {
     const theme = useTheme();
     const { scope: contentScope, values } = useContentScope();
     const scope = passedScope ?? contentScope;
@@ -52,7 +46,7 @@ export const ContentScopeIndicator = ({
     return (
         <Wrapper>
             <ScopeIndicator global={global}>
-                {icon}
+                <DomainIcon />
                 {children ?? content}
             </ScopeIndicator>
             <Triangle fill={global ? theme.palette.primary.dark : theme.palette.grey.A100} />
