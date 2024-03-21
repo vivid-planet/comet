@@ -82,44 +82,41 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const filteredData = data ? filter<GQLManufacturerFormDetailsFragment>(manufacturerFormFragment, data.manufacturer) : undefined;
-    const initialValues = React.useMemo<Partial<FormValues>>(
-        () =>
-            filteredData
+    const initialValues = React.useMemo<Partial<FormValues>>(() => {
+        const filteredData = data ? filter<GQLManufacturerFormDetailsFragment>(manufacturerFormFragment, data.manufacturer) : undefined;
+        if (!filteredData) return {};
+        return {
+            ...filteredData,
+            address: filteredData.address
                 ? {
-                      ...filteredData,
-                      address: filteredData.address
+                      ...filteredData.address,
+                      streetNumber: filteredData.address.streetNumber ? String(filteredData.address.streetNumber) : null,
+                      zip: String(filteredData.address.zip),
+                      alternativeAddress: filteredData.address.alternativeAddress
                           ? {
-                                ...filteredData.address,
-                                streetNumber: filteredData.address.streetNumber ? String(filteredData.address.streetNumber) : null,
-                                zip: String(filteredData.address.zip),
-                                alternativeAddress: filteredData.address.alternativeAddress
-                                    ? {
-                                          ...filteredData.address.alternativeAddress,
-                                          streetNumber: filteredData.address.alternativeAddress.streetNumber
-                                              ? String(filteredData.address.alternativeAddress.streetNumber)
-                                              : null,
-                                          zip: String(filteredData.address.alternativeAddress.zip),
-                                      }
-                                    : undefined,
+                                ...filteredData.address.alternativeAddress,
+                                streetNumber: filteredData.address.alternativeAddress.streetNumber
+                                    ? String(filteredData.address.alternativeAddress.streetNumber)
+                                    : null,
+                                zip: String(filteredData.address.alternativeAddress.zip),
                             }
                           : undefined,
-                      addressAsEmbeddable: {
-                          ...filteredData.addressAsEmbeddable,
-                          streetNumber: filteredData.addressAsEmbeddable.streetNumber ? String(filteredData.addressAsEmbeddable.streetNumber) : null,
-                          zip: String(filteredData.addressAsEmbeddable.zip),
-                          alternativeAddress: {
-                              ...filteredData.addressAsEmbeddable.alternativeAddress,
-                              streetNumber: filteredData.addressAsEmbeddable.alternativeAddress.streetNumber
-                                  ? String(filteredData.addressAsEmbeddable.alternativeAddress.streetNumber)
-                                  : null,
-                              zip: String(filteredData.addressAsEmbeddable.alternativeAddress.zip),
-                          },
-                      },
                   }
-                : {},
-        [filteredData],
-    );
+                : undefined,
+            addressAsEmbeddable: {
+                ...filteredData.addressAsEmbeddable,
+                streetNumber: filteredData.addressAsEmbeddable.streetNumber ? String(filteredData.addressAsEmbeddable.streetNumber) : null,
+                zip: String(filteredData.addressAsEmbeddable.zip),
+                alternativeAddress: {
+                    ...filteredData.addressAsEmbeddable.alternativeAddress,
+                    streetNumber: filteredData.addressAsEmbeddable.alternativeAddress.streetNumber
+                        ? String(filteredData.addressAsEmbeddable.alternativeAddress.streetNumber)
+                        : null,
+                    zip: String(filteredData.addressAsEmbeddable.alternativeAddress.zip),
+                },
+            },
+        };
+    }, [data]);
 
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
