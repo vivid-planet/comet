@@ -7,19 +7,13 @@ import { FormattedMessage } from "react-intl";
 
 import { useContentScope } from "../../contentScope/Provider";
 import { serializeInitialValues } from "../../form/serializeInitialValues";
-import {
-    GQLDeletePageTreeNodeMutation,
-    GQLDeletePageTreeNodeMutationVariables,
-    GQLPageTreePageFragment,
-    namedOperations,
-} from "../../graphql.generated";
 import { openSitePreviewWindow } from "../../preview/openSitePreviewWindow";
 import { CopyPasteMenuItem } from "./CopyPasteMenuItem";
 import { MovePageMenuItem } from "./MovePageMenuItem";
-import { deletePageMutation } from "./Page.gql";
+import { deletePageMutation, GQLDeletePageTreeNodeMutation, GQLDeletePageTreeNodeMutationVariables } from "./Page";
 import { PageDeleteDialog } from "./PageDeleteDialog";
 import { subTreeFromNode, traverse } from "./treemap/TreeMapUtils";
-import { PageTreePage } from "./usePageTree";
+import { GQLPageTreePageFragment, PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
 
 interface Props {
@@ -53,7 +47,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
             await client.mutate<GQLDeletePageTreeNodeMutation, GQLDeletePageTreeNodeMutationVariables>({
                 mutation: deletePageMutation,
                 variables: { id: node.id },
-                refetchQueries: [namedOperations.Query.Pages],
+                refetchQueries: ["Pages"],
             });
         }
         setDeleteDialogOpen(false);
@@ -91,15 +85,6 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                 ]}
                 <RowActionsMenu>
                     {page.visibility !== "Archived" && [
-                        <RowActionsItem
-                            key="edit"
-                            icon={<Edit />}
-                            onClick={() => {
-                                stackSwitchApi.activatePage("edit", String(page.id));
-                            }}
-                        >
-                            <FormattedMessage id="comet.pages.pages.page.editContent" defaultMessage="Edit content" />
-                        </RowActionsItem>,
                         <RowActionsItem
                             key="pageProperties"
                             icon={<Settings />}

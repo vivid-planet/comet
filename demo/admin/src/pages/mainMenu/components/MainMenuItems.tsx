@@ -1,13 +1,13 @@
 import { gql } from "@apollo/client";
-import { MainContent, Table, TableQuery, Toolbar, ToolbarAutomaticTitleItem, useStackSwitchApi, useTableQuery } from "@comet/admin";
-import { Domain, Edit } from "@comet/admin-icons";
-import { ContentScopeIndicator } from "@comet/cms-admin";
+import { MainContent, StackLink, Table, TableQuery, Toolbar, ToolbarAutomaticTitleItem, useTableQuery } from "@comet/admin";
+import { Edit } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import { ScopeIndicatorContent, ScopeIndicatorLabel, ScopeIndicatorLabelBold } from "@src/common/ContentScopeIndicatorStyles";
+import { ContentScopeIndicator } from "@src/common/ContentScopeIndicator";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import { GQLMainMenuQuery, GQLMainMenuQueryVariables } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
+
+import { GQLMainMenuQuery, GQLMainMenuQueryVariables } from "./MainMenuItems.generated";
 
 const mainMenuQuery = gql`
     query MainMenu($contentScope: PageTreeNodeScopeInput!) {
@@ -25,7 +25,6 @@ const mainMenuQuery = gql`
 `;
 
 const MainMenuItems: React.FunctionComponent = () => {
-    const stackApi = useStackSwitchApi();
     const { scope } = useContentScope();
 
     const { tableData, api, loading, error } = useTableQuery<GQLMainMenuQuery, GQLMainMenuQueryVariables>()(mainMenuQuery, {
@@ -40,14 +39,7 @@ const MainMenuItems: React.FunctionComponent = () => {
 
     return (
         <>
-            <ContentScopeIndicator variant="toolbar">
-                <ScopeIndicatorContent>
-                    <Domain fontSize="small" />
-                    <ScopeIndicatorLabelBold variant="body2">{scope.domain}</ScopeIndicatorLabelBold>
-                </ScopeIndicatorContent>
-                {` | `}
-                <ScopeIndicatorLabel variant="body2">{scope.language}</ScopeIndicatorLabel>
-            </ContentScopeIndicator>
+            <ContentScopeIndicator scope={scope} variant="toolbar" />
             <Toolbar>
                 <ToolbarAutomaticTitleItem />
             </Toolbar>
@@ -71,7 +63,7 @@ const MainMenuItems: React.FunctionComponent = () => {
                                     header: "",
                                     cellProps: { align: "right" },
                                     render: (item) => (
-                                        <IconButton color="primary" onClick={() => stackApi.activatePage("edit", item.node.id)}>
+                                        <IconButton component={StackLink} color="primary" pageName="edit" payload={item.node.id}>
                                             <Edit />
                                         </IconButton>
                                     ),

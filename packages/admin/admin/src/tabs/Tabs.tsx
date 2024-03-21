@@ -20,8 +20,11 @@ interface ITabsState {
     setValue: (value: number) => void;
 }
 
+type TabsChild = React.ReactElement<TabProps> | boolean | null | undefined;
+type TabsChildren = TabsChild | Array<TabsChild | Array<TabsChild>>;
+
 export interface TabsProps extends MuiTabsProps {
-    children: Array<React.ReactElement<TabProps> | boolean | null | undefined> | React.ReactElement<TabProps>;
+    children: TabsChildren;
     tabComponent?: React.ComponentType<MuiTabProps>;
     defaultIndex?: number;
     tabsState?: ITabsState;
@@ -70,6 +73,8 @@ function TabsComponent({
                 value={value}
                 onChange={handleChange}
                 ScrollButtonComponent={ScrollButtonComponent}
+                scrollButtons="auto"
+                variant="scrollable"
                 {...restProps}
             >
                 {React.Children.map(children, (child: React.ReactElement<TabProps>) => {

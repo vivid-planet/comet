@@ -2,9 +2,11 @@ import { gql } from "@apollo/client";
 import { useStoredState } from "@comet/admin";
 import * as React from "react";
 
-import { GQLPageTreePageFragment } from "../../graphql.generated";
 import { PageSearchMatch } from "../pageSearch/usePageSearch";
 import { arrayToTreeMap, subTreeFromNodes, TreeMap } from "./treemap/TreeMapUtils";
+import { GQLPageTreePageFragment } from "./usePageTree.generated";
+
+export { GQLPageTreePageFragment } from "./usePageTree.generated";
 
 export const pageTreePageFragment = gql`
     fragment PageTreePage on PageTreeNode {

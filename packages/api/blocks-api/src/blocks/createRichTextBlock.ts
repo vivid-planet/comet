@@ -13,11 +13,10 @@ import {
     BlockInputFactory,
     BlockInputInterface,
     ExtractBlockInput,
-    MigrateOptions,
     registerBlock,
 } from "./block";
 import { AnnotationBlockMeta, BlockField } from "./decorators/field";
-import { lookupPath } from "./helpers/lookupPath";
+import { BlockFactoryNameOrOptions } from "./factories/types";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
 
@@ -68,17 +67,14 @@ export interface RichTextBlockInputInterface<LinkBlockInput extends BlockInputIn
     draftContent: DraftJsInput<LinkBlockInput>;
 }
 
-export function createRichTextBlock<LinkBlock extends Block>({
-    link: LinkBlock,
-    indexSearchText = true,
-}: CreateRichTextBlockOptions): Block<RichTextBlockDataInterface, RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>>> {
-    const BLOCK_NAME = "RichText";
-    const MIGRATE: MigrateOptions = {
-        migrations: [],
-        version: 0,
-    }; // Placeholder for future migrations
+export function createRichTextBlock<LinkBlock extends Block>(
+    { link: LinkBlock, indexSearchText = true }: CreateRichTextBlockOptions,
+    nameOrOptions: BlockFactoryNameOrOptions = "RichText",
+): Block<RichTextBlockDataInterface, RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>>> {
+    const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
+    const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
-    @BlockDataMigrationVersion(MIGRATE.version)
+    @BlockDataMigrationVersion(migrate.version)
     class RichTextBlockData extends BlockData {
         @BlockField({ type: "json" })
         draftContent: RawDraftContentState;
@@ -175,8 +171,8 @@ export function createRichTextBlock<LinkBlock extends Block>({
 
     // Decorate BlockDataFactory
     let decorateBlockDataFactory = blockDataFactory;
-    if (MIGRATE.migrations) {
-        const blockDataFactoryDecorator1 = createAppliedMigrationsBlockDataFactoryDecorator(MIGRATE.migrations, BLOCK_NAME);
+    if (migrate.migrations) {
+        const blockDataFactoryDecorator1 = createAppliedMigrationsBlockDataFactoryDecorator(migrate.migrations, blockName);
         decorateBlockDataFactory = blockDataFactoryDecorator1(decorateBlockDataFactory);
     }
     decorateBlockDataFactory = strictBlockDataFactoryDecorator(decorateBlockDataFactory);
@@ -185,12 +181,11 @@ export function createRichTextBlock<LinkBlock extends Block>({
     const decorateBlockInputFactory = strictBlockInputFactoryDecorator(blockInputFactory);
 
     const RichTextBlock: Block<RichTextBlockData, RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>>> = {
-        name: BLOCK_NAME,
+        name: blockName,
         blockDataFactory: decorateBlockDataFactory,
         blockInputFactory: decorateBlockInputFactory,
         blockMeta: new AnnotationBlockMeta(RichTextBlockData),
         blockInputMeta: new AnnotationBlockMeta(RichTextBlockInput),
-        path: lookupPath(),
     };
 
     registerBlock(RichTextBlock);

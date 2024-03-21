@@ -7,7 +7,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { GQLDamFileDuplicatesQuery, GQLDamFileDuplicatesQueryVariables } from "../../graphql.generated";
+import { GQLDamFileDuplicatesQuery, GQLDamFileDuplicatesQueryVariables } from "./Duplicates.generated";
 
 export const damFileDuplicatesQuery = gql`
     query DamFileDuplicates($id: ID!) {

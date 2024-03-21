@@ -23,7 +23,7 @@ export class IsValidRedirectSourceConstraint implements ValidatorConstraintInter
         const sourceType = validationArguments.object.sourceType;
 
         if (sourceType === RedirectSourceTypeValues.path) {
-            return /^\/([a-zA-Z0-9-._~/]|%[0-9a-fA-F]{2})+$/.test(value);
+            return /^\/([a-zA-Z0-9-._~/:?=&]|%[0-9a-fA-F]{2})+$/.test(value);
         } else {
             return isURL(value);
         }

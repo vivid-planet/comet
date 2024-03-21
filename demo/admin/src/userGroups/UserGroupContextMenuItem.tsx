@@ -1,4 +1,4 @@
-import { Field, FinalFormSelect, messages } from "@comet/admin";
+import { messages, SelectField } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, MenuItem } from "@mui/material";
 import { GQLUserGroup } from "@src/graphql.generated";
@@ -62,17 +62,13 @@ function UserGroupContextMenuItem({ item, onChange, onMenuClose }: Props): JSX.E
                     {({ handleSubmit }) => (
                         <form onSubmit={handleSubmit}>
                             <DialogContent>
-                                <Field name="userGroup" fullWidth required>
-                                    {(props) => (
-                                        <FinalFormSelect {...props}>
-                                            {userGroupOptions.map((option) => (
-                                                <MenuItem key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </MenuItem>
-                                            ))}
-                                        </FinalFormSelect>
-                                    )}
-                                </Field>
+                                <SelectField name="userGroup" fullWidth required>
+                                    {userGroupOptions.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </SelectField>
                             </DialogContent>
                             <DialogActions>
                                 <Button
@@ -84,7 +80,7 @@ function UserGroupContextMenuItem({ item, onChange, onMenuClose }: Props): JSX.E
                                 >
                                     <FormattedMessage {...messages.cancel} />
                                 </Button>
-                                <Button type="submit">
+                                <Button type="submit" variant="contained">
                                     <FormattedMessage {...messages.ok} />
                                 </Button>
                             </DialogActions>

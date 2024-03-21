@@ -1,4 +1,4 @@
-import { StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
+import { StackPage, StackSwitch, StackSwitchApiContext, SubRoute, useSubRoutePrefix } from "@comet/admin";
 import { Divider } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -14,7 +14,7 @@ import { BlockInterfaceWithOptions } from "../helpers/composeBlocks/types";
 import { normalizedBlockConfig } from "../helpers/composeBlocks/utils";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { isBlockInterface } from "../helpers/isBlockInterface";
-import { BlockCategory, BlockInputApi, BlockInterface, BlockOutputApi, BlockState } from "../types";
+import { BlockCategory, BlockInputApi, BlockInterface, BlockOutputApi, BlockState, CustomBlockCategory } from "../types";
 
 interface BlockConfiguration {
     title?: React.ReactNode;
@@ -41,7 +41,7 @@ interface CreateCompositeBlockOptionsBase {
     /**
      * @deprecated Use override instead to adapt the factored block
      */
-    category?: BlockCategory;
+    category?: BlockCategory | CustomBlockCategory;
     adminLayout?: "stacked";
     blocks: Record<string, BlockConfiguration>;
 }
@@ -132,13 +132,17 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
                     (blockPreviewState as any)[attr] = extractedBlock.createPreviewState(blockState, {
                         ...previewContext,
-                        parentUrl: `${previewContext.parentUrl}/${attr}/${attr}`,
+                        parentUrl: `${previewContext.parentUrlSubRoute ?? previewContext.parentUrl}/${attr}/${attr}`,
                     });
                 } else if ((block.nested == null || !block.nested) && isBlockInterface(extractedBlock)) {
                     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
                     const blockState: any = (state as any)[attr];
 
-                    const embeddedBlockState = extractedBlock.createPreviewState(blockState, previewContext);
+                    const embeddedBlockState = extractedBlock.createPreviewState(blockState, {
+                        ...previewContext,
+                        parentUrlSubRoute: `${previewContext.parentUrl}/${attr}`,
+                        parentUrl: `${previewContext.parentUrl}`,
+                    });
                     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
                     (blockPreviewState as any)[attr] = { ...embeddedBlockState, adminMeta: { route: `${previewContext.parentUrl}#${attr}` } };
                 }
@@ -147,6 +151,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
             return { ...(blockPreviewState as any), adminMeta: { route: previewContext.parentUrl } };
         },
         AdminComponent: ({ state, updateState }) => {
+            const urlPrefix = useSubRoutePrefix();
             const isInPaper = useAdminComponentPaper();
             const blockAdminComponents = adminComponents({ state, updateState });
             const blockPreviews = previews(state);
@@ -195,7 +200,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                 } else {
                     children = (
                         <HoverPreviewComponent key={blockKey} componentSlug={`#${blockKey}`}>
-                            {blockAdminComponents[blockKey]}
+                            <SubRoute path={`${urlPrefix}/${blockKey}`}>{blockAdminComponents[blockKey]}</SubRoute>
                         </HoverPreviewComponent>
                     );
                 }

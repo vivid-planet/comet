@@ -1,10 +1,9 @@
 import { gql } from "@apollo/client";
 import { Loading, Selected, Stack, StackPage, StackSwitch } from "@comet/admin";
-import { GQLEditMainMenuItemFragment } from "@src/graphql.generated";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
-import EditMainMenuItem, { editMainMenuItemFragment } from "./components/EditMainMenuItem";
+import EditMainMenuItem, { editMainMenuItemFragment, GQLEditMainMenuItemFragment } from "./components/EditMainMenuItem";
 import MainMenuItems from "./components/MainMenuItems";
 
 const MAIN_MENU_ITEM_QUERY = gql`

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, MessageDescriptor } from "react-intl";
 
 export type SetStateFn<S> = (prevState: S) => S;
 export type SetStateAction<S> = S | SetStateFn<S>;
@@ -7,6 +7,7 @@ export type DispatchSetStateAction<S> = (setStateAction: SetStateAction<S>) => v
 export interface IPreviewContext {
     showVisibleOnly?: boolean;
     parentUrl: string;
+    parentUrlSubRoute?: string;
 }
 
 interface AdminMetaInterface {
@@ -57,6 +58,10 @@ export function isPreviewContentImageRule(content: PreviewContent): content is P
 
 export type PreviewContent = PreviewContentImage | PreviewContentText;
 
+export type BlockDependency = { targetGraphqlObjectType: string; id: string; data?: unknown };
+
+export type ReplaceDependencyObject = { originalId: string; replaceWithId: string | undefined; type: string };
+
 export interface BlockMethods<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     InputApi = any,
@@ -77,6 +82,8 @@ export interface BlockMethods<
     previewContent: (state: State, context?: BlockContext) => PreviewContent[];
     dynamicDisplayName?: (state: State) => React.ReactNode;
     anchors?: (state: State) => string[];
+    dependencies?: (state: State) => BlockDependency[];
+    replaceDependenciesInOutput: (output: OutputApi, replacements: ReplaceDependencyObject[]) => OutputApi;
 }
 
 export interface AnonymousBlockInterface<
@@ -104,7 +111,7 @@ export interface BlockInterface<
 > extends AnonymousBlockInterface<InputApi, State, OutputApi, PreviewState> {
     name: string;
     displayName: React.ReactNode;
-    category: BlockCategory;
+    category: BlockCategory | CustomBlockCategory;
 }
 
 export interface RootBlockInterface<
@@ -143,6 +150,8 @@ export enum BlockCategory {
     Form = "Form",
     Other = "Other",
 }
+
+export type CustomBlockCategory = { id: string; label: string | React.ReactElement<MessageDescriptor>; insertBefore?: BlockCategory };
 
 export const blockCategoryLabels = {
     [BlockCategory.TextAndContent]: <FormattedMessage id="comet.blocks.category.textAndContent" defaultMessage="Text & Content" />,

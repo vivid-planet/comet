@@ -11,15 +11,17 @@ import {
     IPreviewContext,
     SelectPreviewComponent,
 } from "@comet/blocks-admin";
+import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { Box, Divider, Grid, Typography } from "@mui/material";
+import { deepClone } from "@mui/x-data-grid/utils/utils";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { FileField, useDamAcceptedMimeTypes } from "..";
 import { SvgImageBlockData, SvgImageBlockInput } from "../blocks.generated";
 import { DamPathLazy } from "../form/file/DamPathLazy";
-import { GQLSvgImageBlockDamFileQuery, GQLSvgImageBlockDamFileQueryVariables } from "../graphql.generated";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
+import { GQLSvgImageBlockDamFileQuery, GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
 import { useCmsBlockContext } from "./useCmsBlockContext";
 
 export type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
@@ -88,6 +90,33 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
         const damFile = data.damFile as unknown as SvgImageBlockData["damFile"];
 
         return { damFile };
+    },
+
+    dependencies: (state) => {
+        const dependencies: BlockDependency[] = [];
+
+        if (state.damFile?.id) {
+            dependencies.push({
+                targetGraphqlObjectType: "DamFile",
+                id: state.damFile.id,
+                data: {
+                    damFile: state.damFile,
+                },
+            });
+        }
+
+        return dependencies;
+    },
+
+    replaceDependenciesInOutput: (output, replacements) => {
+        const clonedOutput: SvgImageBlockInput = deepClone(output);
+        const replacement = replacements.find((replacement) => replacement.type === "DamFile" && replacement.originalId === output.damFileId);
+
+        if (replacement) {
+            clonedOutput.damFileId = replacement.replaceWithId;
+        }
+
+        return clonedOutput;
     },
 
     definesOwnPadding: true,

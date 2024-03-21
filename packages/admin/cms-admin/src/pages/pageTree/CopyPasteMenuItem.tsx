@@ -13,11 +13,12 @@ interface Props {
 }
 
 export const CopyPasteMenuItem = ({ page }: Props): React.ReactElement => {
-    const { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages } = useCopyPastePages();
+    const { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages, progressDialog } = useCopyPastePages();
     const { tree } = usePageTreeContext();
 
     return (
         <>
+            {progressDialog}
             <RowActionsItem
                 icon={<Copy />}
                 onClick={async () => {
@@ -39,17 +40,6 @@ export const CopyPasteMenuItem = ({ page }: Props): React.ReactElement => {
                 }}
             >
                 <FormattedMessage id="comet.pages.pages.page.paste" defaultMessage="Paste" />
-            </RowActionsItem>
-            <RowActionsItem
-                icon={<Copy />}
-                onClick={async () => {
-                    const subTree = subTreeFromNode(page, tree);
-                    const pagesAsArray = treeMapToArray(subTree, "root");
-                    const pages = await prepareForClipboard(pagesAsArray);
-                    await sendPages(page.parentId, pages, { targetPos: page.pos + 1 });
-                }}
-            >
-                <FormattedMessage id="comet.pageTree.duplicate" defaultMessage="Duplicate" />
             </RowActionsItem>
         </>
     );

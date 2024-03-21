@@ -1,5 +1,5 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Palette } from "@mui/material";
+import { inputAdornmentClasses, inputBaseClasses, Palette } from "@mui/material";
 
 export const commonSelectDefaultProps = {
     IconComponent: ChevronDown,
@@ -11,6 +11,17 @@ export const commonSelectStyleOverrides = {
 
     "&:focus": {
         backgroundColor: "transparent",
+    },
+
+    [`&.${inputBaseClasses.inputAdornedEnd}`]: {
+        paddingRight: 42,
+    },
+
+    [`& ~ .${inputAdornmentClasses.positionEnd}`]: {
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        right: 26,
     },
 };
 

@@ -36,7 +36,7 @@ export { ChildBlock } from "./blocks/decorators/child-block";
 export { ChildBlockInput } from "./blocks/decorators/child-block-input";
 export { AnnotationBlockMeta, BlockField, getFieldKeys } from "./blocks/decorators/field";
 export { RootBlock } from "./blocks/decorators/root-block";
-export { RootBlockEntity, RootBlockEntityOptions } from "./blocks/decorators/root-block-entity";
+export { RootBlockEntity } from "./blocks/decorators/root-block-entity";
 export { TransformDependencies } from "./blocks/dependencies";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { ColumnsBlockFactory } from "./blocks/factories/columns-block.factory";
@@ -49,6 +49,7 @@ export {
 export { BaseListBlockItemData, BaseListBlockItemInput, createListBlock } from "./blocks/factories/createListBlock";
 export { createOneOfBlock, OneOfBlock } from "./blocks/factories/createOneOfBlock";
 export { createOptionalBlock, OptionalBlockInputInterface } from "./blocks/factories/createOptionalBlock";
+export type { BlockFactoryNameOrOptions } from "./blocks/factories/types";
 export { getMostSignificantPreviewImageUrlTemplate, getPreviewImageUrlTemplates } from "./blocks/get-preview-image-url-templates";
 export { composeBlocks } from "./blocks/helpers/composeBlocks";
 export { strictBlockDataFactoryDecorator } from "./blocks/helpers/strictBlockDataFactoryDecorator";

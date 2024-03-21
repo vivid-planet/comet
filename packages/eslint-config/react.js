@@ -34,9 +34,15 @@ module.exports = {
                         importNames: ["styled"],
                         message: "Please use styled from @mui/material/styles instead.",
                     },
+                    {
+                        name: "@mui/material",
+                        importNames: ["Alert"],
+                        message: "Please use Alert from @comet/admin instead",
+                    },
                 ],
             },
         ],
+        "@comet/no-private-sibling-import": ["error", ["gql", "sc", "gql.generated"]],
     },
     overrides: [
         {

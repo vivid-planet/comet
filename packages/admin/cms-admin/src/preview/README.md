@@ -47,7 +47,6 @@ EditPage: previewApi, created with useBlockPreview: State containing showOnlyVis
         - highlights blocks with matching hoveredSiteRoute (with useIFrameBridge)
         - sends SelectComponent on block admin render (using SelectPreviewComponent[blocks-admin] with useIFrameBridge)
         - sends HoverComponent on block preview hover (using HoverPreviewComponent[blocks-admin] with useIFrameBridge)
-
 ```
 
 ### Site: States, Contexts and Components
@@ -87,6 +86,10 @@ Similar to real site but live rendered (SSR) and optionally with invisible block
 
 ### iframe messages: site -> admin
 
+        Expand All
+
+    @@ -96,7 +99,6 @@ Similar to real site but live rendered (SSR) and optionally with invisible block
+
     - OpenLink: user clicked an external link and admin should ask the user if it should be opened in a new tab
     - SitePreviewLocation: user navigated in the page and the url changed, admin should update the current url
 
@@ -100,6 +103,17 @@ SitePreview: state from Url (get params): path, device, showOnlyVisible
     - handles incoming messages (with useSitePreviewIFrameBridge)
   IFrameViewer[common] (prop drilling: device)
     - does scale the iframe according to device (+the device around the iframe)
+
+
+
+
+
+
+
+        Expand All
+
+    @@ -106,16 +108,11 @@ SitePreview: state from Url (get params): path, device, showOnlyVisible
+
     - renders the actual iframe
 ```
 

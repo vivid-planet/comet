@@ -7,7 +7,7 @@ export { AdminComponentSectionGroup } from "./blocks/common/AdminComponentSectio
 export { AdminTabLabel } from "./blocks/common/AdminTabLabel";
 export type { AdminTabsProps } from "./blocks/common/AdminTabs";
 export { AdminTabs } from "./blocks/common/AdminTabs";
-export { BlockPreview } from "./blocks/common/blockRow/BlockPreview";
+export { BlockPreviewContent } from "./blocks/common/blockRow/BlockPreviewContent";
 export { BlockRow } from "./blocks/common/blockRow/BlockRow";
 export { HiddenInSubroute } from "./blocks/common/HiddenInSubroute";
 export { ColumnsLayoutPreview, ColumnsLayoutPreviewContent, ColumnsLayoutPreviewSpacing } from "./blocks/factories/columnsBlock/ColumnsLayoutPreview";
@@ -27,6 +27,8 @@ export { composeBlocks } from "./blocks/helpers/composeBlocks/composeBlocks";
 export { createCompositeSetting } from "./blocks/helpers/composeBlocks/createCompositeSetting";
 export { createCompositeSettings } from "./blocks/helpers/composeBlocks/createCompositeSettings";
 export { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
+export { createCompositeBlockSelectField } from "./blocks/helpers/createCompositeBlockSelectField";
+export { createCompositeBlockTextField } from "./blocks/helpers/createCompositeBlockTextField";
 export { default as decomposeUpdateStateAction } from "./blocks/helpers/decomposeUpdateStateAction";
 export { withAdditionalBlockAttributes } from "./blocks/helpers/withAdditionalBlockAttributes";
 export { SpaceBlock } from "./blocks/SpaceBlock";
@@ -34,6 +36,7 @@ export type {
     AdminComponentPart,
     BindBlockAdminComponent,
     BlockAdminComponent,
+    BlockDependency,
     BlockInputApi,
     BlockInterface,
     BlockMethods,
@@ -43,10 +46,12 @@ export type {
     IPreviewContext,
     LinkBlockInterface,
     PreviewStateInterface,
+    ReplaceDependencyObject,
     RootBlockInterface,
     SetStateAction,
     SetStateFn,
 } from "./blocks/types";
+export type { CustomBlockCategory } from "./blocks/types";
 export { BlockCategory, blockCategoryLabels } from "./blocks/types";
 export { resolveNewState } from "./blocks/utils";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";

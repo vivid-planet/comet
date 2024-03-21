@@ -2,9 +2,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react";
 
-import { BlockPreview } from "../../common/blockRow/BlockPreview";
-import { BlockContext, BlockInterface, BlockMethods, DispatchSetStateAction, PreviewContent, SetStateAction } from "../../types";
+import { BlockPreviewContent } from "../../common/blockRow/BlockPreviewContent";
+import { BlockContext, BlockDependency, BlockInterface, BlockMethods, DispatchSetStateAction, PreviewContent, SetStateAction } from "../../types";
 import { resolveNewState } from "../../utils";
+import { deduplicateBlockDependencies } from "../deduplicateBlockDependencies";
 import { isBlockInterface } from "../isBlockInterface";
 import {
     AdminComponentPropsMap,
@@ -126,16 +127,20 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
                     { flatten: true },
                 ),
 
-            createPreviewState: (s, previewCtx) =>
-                applyToCompositeBlocks(
-                    compositeBlocks,
-                    ([block, options], attr) => {
-                        const extractedState = extractData([block, options], attr, s);
-                        return block.createPreviewState(extractedState, previewCtx);
-                    },
-                    { flatten: true },
-                ),
-
+            createPreviewState: (s, previewCtx) => {
+                return {
+                    adminRoute: previewCtx.parentUrl,
+                    adminMeta: { route: previewCtx.parentUrl },
+                    ...applyToCompositeBlocks(
+                        compositeBlocks,
+                        ([block, options], attr) => {
+                            const extractedState = extractData([block, options], attr, s);
+                            return block.createPreviewState(extractedState, previewCtx);
+                        },
+                        { flatten: true },
+                    ),
+                };
+            },
             isValid: async (state) => {
                 const isValidPromises: Promise<boolean>[] = Object.values(
                     applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
@@ -156,6 +161,30 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
                 });
                 return Object.values(anchorsPerBlock).reduce((anchors, blockAnchors) => [...anchors, ...blockAnchors], []);
             },
+            dependencies: (state): BlockDependency[] => {
+                const dependenciesPerBlock: Record<keyof C, BlockDependency[]> = applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
+                    const extractedState = extractData([block, options], attr, state);
+                    return block.dependencies?.(extractedState) ?? [];
+                });
+                const mergedDependencies = Object.values(dependenciesPerBlock).reduce(
+                    (dependencies, blockDependencies) => [...dependencies, ...blockDependencies],
+                    [],
+                );
+                return deduplicateBlockDependencies(mergedDependencies);
+            },
+            replaceDependenciesInOutput: (output, replacements) => {
+                const copiedBlocks = applyToCompositeBlocks(
+                    compositeBlocks,
+                    ([block, options], attr) => {
+                        const extractedOutputData = extractData([block, options], attr, output);
+
+                        return block.replaceDependenciesInOutput(extractedOutputData, replacements);
+                    },
+                    { flatten: true },
+                );
+
+                return { ...output, ...copiedBlocks };
+            },
             previewContent: (state, ctx) => {
                 const previewContents = applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
                     const extractedData = extractData([block, options], attr, state);
@@ -175,7 +204,7 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
                 return applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
                     if (isBlockInterface(block)) {
                         const extractedData = extractData([block, options], attr, state);
-                        return <BlockPreview title={null} content={block.previewContent(extractedData, ctx)} />;
+                        return <BlockPreviewContent title={null} block={block} state={extractedData} />;
                     } else {
                         return null; // No preview component for AnonymousBlock
                     }

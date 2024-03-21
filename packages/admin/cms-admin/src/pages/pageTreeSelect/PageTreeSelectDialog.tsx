@@ -10,10 +10,10 @@ import { FixedSizeList as List, ListChildComponentProps } from "react-window";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { useContentScope } from "../../contentScope/Provider";
-import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment, GQLSelectedPageFragment, Maybe } from "../../graphql.generated";
+import { Maybe } from "../../graphql.generated";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
-import { createPagesQuery } from "../pagesPage/createPagesQuery";
+import { createPagesQuery, GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "../pagesPage/createPagesQuery";
 import { PageTreeTableRow } from "../pageTree/common/PageTreeTableRow";
 import PageInfo from "../pageTree/PageInfo";
 import PageLabel from "../pageTree/PageLabel";
@@ -21,7 +21,10 @@ import { PageTreeContext } from "../pageTree/PageTreeContext";
 import { PageTreeRowDivider } from "../pageTree/PageTreeRowDivider";
 import { PageVisibilityIcon } from "../pageTree/PageVisibilityIcon";
 import { PageTreePage, usePageTree } from "../pageTree/usePageTree";
+import { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
 import * as sc from "./PageTreeSelectDialog.sc";
+
+export { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
 
 export const selectedPageFragment = gql`
     fragment SelectedPage on PageTreeNode {
@@ -94,7 +97,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     });
 
     useFocusAwarePolling({
-        pollInterval: process.env.NODE_ENV === "development" ? undefined : 10000,
+        pollInterval: 10000,
         skip: !open,
         refetch,
         startPolling,
@@ -220,7 +223,13 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
             </Toolbar>
             <DialogContent ref={refDialogContent}>
                 <PageTreeContext.Provider
-                    value={{ allCategories: pageTreeCategories, documentTypes: pageTreeDocumentTypes, tree, query: pagesQuery }}
+                    value={{
+                        allCategories: pageTreeCategories,
+                        currentCategory: category,
+                        documentTypes: pageTreeDocumentTypes,
+                        tree,
+                        query: pagesQuery,
+                    }}
                 >
                     <List
                         ref={refList}

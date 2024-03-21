@@ -1,46 +1,46 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy, Type } from "@nestjs/passport";
+import { JwtPayload } from "jsonwebtoken";
 import { passportJwtSecret } from "jwks-rsa";
-import { ExtractJwt, Strategy } from "passport-jwt";
+import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 
-import { CurrentUserInterface, CurrentUserLoaderInterface } from "../current-user/current-user";
+import { CurrentUser } from "../../user-permissions/dto/current-user";
+import { UserPermissionsService } from "../../user-permissions/user-permissions.service";
 
 interface AuthProxyJwtStrategyConfig {
     jwksUri: string;
-    currentUserLoader?: CurrentUserLoaderInterface;
+    strategyName?: string;
+    audience?: string;
+    strategyOptions?: Omit<StrategyOptions, "jwtFromRequest">;
 }
 
-class CurrentUserLoader implements CurrentUserLoaderInterface {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async load(data: any): Promise<CurrentUserInterface> {
-        return {
-            id: data.sub,
-            name: data.name,
-            email: data.email,
-            language: data.language,
-            role: data.ext?.role,
-            rights: data.ext?.rights,
-        };
-    }
-}
-
-export function createAuthProxyJwtStrategy(config: AuthProxyJwtStrategyConfig): Type {
+export function createAuthProxyJwtStrategy({
+    jwksUri,
+    audience,
+    strategyOptions,
+    strategyName = "auth-proxy-jwt",
+}: AuthProxyJwtStrategyConfig): Type {
     @Injectable()
-    class AuthProxyJwtStrategy extends PassportStrategy(Strategy, "auth-proxy-jwt") {
-        constructor() {
+    class AuthProxyJwtStrategy extends PassportStrategy(Strategy, strategyName) {
+        constructor(private readonly service: UserPermissionsService) {
             super({
                 jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
                 secretOrKeyProvider: passportJwtSecret({
-                    jwksUri: config.jwksUri,
+                    jwksUri,
                 }),
-                ignoreExpiration: true, // https://github.com/oauth2-proxy/oauth2-proxy/issues/1836
+                audience,
+                ...strategyOptions,
             });
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        async validate(data: any): Promise<CurrentUserInterface> {
-            const userLoader = config.currentUserLoader ? config.currentUserLoader : new CurrentUserLoader();
-            return userLoader.load(data);
+        async validate(data: JwtPayload): Promise<CurrentUser> {
+            if (!data.sub) throw new Error("JwtPayload does not contain sub.");
+            return this.service.createCurrentUser({
+                id: data.sub,
+                name: data.name,
+                email: data.email,
+                language: data.locale || data.language,
+            });
         }
     }
     return AuthProxyJwtStrategy;

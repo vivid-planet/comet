@@ -4,11 +4,11 @@ import { GraphQLJSONObject } from "graphql-type-json";
 import { v4 as uuid } from "uuid";
 
 import { ImageCropArea } from "../../images/entities/image-crop-area.entity";
-import { File } from "./file.entity";
+import { FileInterface } from "./file.entity";
 
 @Entity({ tableName: "DamFileImage" })
 @ObjectType("DamFileImage")
-export class FileImage extends BaseEntity<FileImage, "id"> {
+export class DamFileImage extends BaseEntity<DamFileImage, "id"> {
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
     id: string = uuid();
@@ -33,6 +33,6 @@ export class FileImage extends BaseEntity<FileImage, "id"> {
     @Field(() => ImageCropArea)
     cropArea: ImageCropArea;
 
-    @OneToOne({ entity: () => File, mappedBy: (file) => file.image, onDelete: "CASCADE" })
-    file: File;
+    @OneToOne({ entity: "DamFile", mappedBy: (file: FileInterface) => file.image, onDelete: "CASCADE" })
+    file: FileInterface;
 }

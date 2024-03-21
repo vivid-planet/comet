@@ -1,11 +1,11 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { CancelButton, LocalErrorScopeApolloContext } from "@comet/admin";
-import { Alert, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Alert, CancelButton, LocalErrorScopeApolloContext } from "@comet/admin";
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { DataGrid, GridSelectionModel } from "@mui/x-data-grid";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLBuildTemplatesQuery, GQLCreateBuildsMutation, GQLCreateBuildsMutationVariables, namedOperations } from "../graphql.generated";
+import { GQLBuildTemplatesQuery, GQLCreateBuildsMutation, GQLCreateBuildsMutationVariables } from "./StartBuildsDialog.generated";
 
 const buildTemplatesQuery = gql`
     query BuildTemplates {
@@ -37,7 +37,7 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
         context: LocalErrorScopeApolloContext,
     });
     const [startBuilds, { loading }] = useMutation<GQLCreateBuildsMutation, GQLCreateBuildsMutationVariables>(createBuildsMutation, {
-        refetchQueries: [namedOperations.Query.Builds],
+        refetchQueries: ["Builds"],
     });
 
     const [selectionModel, setSelectionModel] = React.useState<GridSelectionModel>([]);

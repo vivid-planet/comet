@@ -3,6 +3,7 @@ import { Field, FinalFormSelect } from "@comet/admin";
 import {
     AdminComponentPaper,
     BlockCategory,
+    BlockDependency,
     BlockInterface,
     BlocksFinalForm,
     createBlockSkeleton,
@@ -10,14 +11,15 @@ import {
     SelectPreviewComponent,
 } from "@comet/blocks-admin";
 import { Box, Divider, MenuItem } from "@mui/material";
+import { deepClone } from "@mui/x-data-grid/utils/utils";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { InternalLinkBlockData, InternalLinkBlockInput } from "../blocks.generated";
-import { GQLLinkBlockTargetPageQuery, GQLLinkBlockTargetPageQueryVariables } from "../graphql.generated";
 import FinalFormPageTreeSelect from "../pages/pageTreeSelect/FinalFormPageTreeSelect";
 import { usePageTreeNodeDocumentAnchors } from "../pages/usePageTreeDocumentAnchors";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
+import { GQLLinkBlockTargetPageQuery, GQLLinkBlockTargetPageQueryVariables } from "./InternalLinkBlock.generated";
 
 type State = InternalLinkBlockData;
 
@@ -69,6 +71,30 @@ export const InternalLinkBlock: BlockInterface<InternalLinkBlockData, State, Int
     isValid: () => {
         // TODO internal link validation
         return true;
+    },
+
+    dependencies: (state) => {
+        const dependencies: BlockDependency[] = [];
+
+        if (state.targetPage?.id) {
+            dependencies.push({
+                targetGraphqlObjectType: "PageTreeNode",
+                id: state.targetPage.id,
+            });
+        }
+
+        return dependencies;
+    },
+
+    replaceDependenciesInOutput: (output, replacements) => {
+        const clonedOutput: InternalLinkBlockInput = deepClone(output);
+        const replacement = replacements.find((replacement) => replacement.type === "PageTreeNode" && replacement.originalId === output.targetPageId);
+
+        if (replacement) {
+            clonedOutput.targetPageId = replacement.replaceWithId;
+        }
+
+        return clonedOutput;
     },
 
     definesOwnPadding: true,

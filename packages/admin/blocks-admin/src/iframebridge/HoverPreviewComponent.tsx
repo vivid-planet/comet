@@ -4,6 +4,7 @@ import scrollIntoView from "scroll-into-view-if-needed";
 
 import * as sc from "./HoverPreviewComponent.sc";
 import { useIFrameBridge } from "./useIFrameBridge";
+
 interface IHoverPreviewComponentProps {
     componentSlug: string;
 }

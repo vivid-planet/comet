@@ -6,12 +6,18 @@ import mime from "mime";
 import fetch from "node-fetch";
 import { PassThrough } from "stream";
 
-import { BlobStorageBackendService } from "../..";
+import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
+import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
+import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
+import { CurrentUser } from "../../user-permissions/dto/current-user";
+import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
+import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { ScaledImagesCacheService } from "../cache/scaled-images-cache.service";
 import { FocalPoint } from "../common/enums/focal-point.enum";
 import { CDN_ORIGIN_CHECK_HEADER, DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
+import { FileInterface } from "../files/entities/file.entity";
 import { FilesService } from "../files/files.service";
 import { createHashedPath } from "../files/files.utils";
 import { Extension, Gravity, ResizingType } from "../imgproxy/imgproxy.enum";
@@ -36,6 +42,7 @@ const smartImageUrl = `:fileId/crop::focalPoint([A-Z]{5,9})/resize::resizeWidth:
 const focusImageUrl = `:fileId/crop::cropWidth::cropHeight::focalPoint::cropX::cropY/resize::resizeWidth::resizeHeight/:filename`;
 
 @Controller("dam/images")
+@RequiredPermission(["dam"], { skipScopeCheck: true }) // Scopes are checked in Code
 export class ImagesController {
     constructor(
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
@@ -44,26 +51,57 @@ export class ImagesController {
         private readonly imagesService: ImagesService,
         private readonly cacheService: ScaledImagesCacheService,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
+        @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
     ) {}
 
     @Get(`/preview/${smartImageUrl}`)
-    async previewSmartCroppedImage(@Param() params: ImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
+    async previewSmartCroppedImage(
+        @Param() params: ImageParams,
+        @Headers("Accept") accept: string,
+        @Res() res: Response,
+        @GetCurrentUser() user: CurrentUser,
+    ): Promise<void> {
         if (params.cropArea.focalPoint !== FocalPoint.SMART) {
             throw new NotFoundException();
         }
 
-        return this.getCroppedImage(params, accept, res, {
+        const file = await this.filesService.findOneById(params.fileId);
+
+        if (file === null) {
+            throw new NotFoundException();
+        }
+
+        if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+            throw new ForbiddenException();
+        }
+
+        return this.getCroppedImage(file, params, accept, res, {
             "cache-control": "private",
         });
     }
 
     @Get(`/preview/${focusImageUrl}`)
-    async previewFocusCroppedImage(@Param() params: ImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
+    async previewFocusCroppedImage(
+        @Param() params: ImageParams,
+        @Headers("Accept") accept: string,
+        @Res() res: Response,
+        @GetCurrentUser() user: CurrentUser,
+    ): Promise<void> {
         if (params.cropArea.focalPoint === FocalPoint.SMART) {
             throw new NotFoundException();
         }
 
-        return this.getCroppedImage(params, accept, res, {
+        const file = await this.filesService.findOneById(params.fileId);
+
+        if (file === null) {
+            throw new NotFoundException();
+        }
+
+        if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+            throw new ForbiddenException();
+        }
+
+        return this.getCroppedImage(file, params, accept, res, {
             "cache-control": "private",
         });
     }
@@ -82,7 +120,13 @@ export class ImagesController {
             throw new NotFoundException();
         }
 
-        return this.getCroppedImage(params, accept, res);
+        const file = await this.filesService.findOneById(params.fileId);
+
+        if (file === null) {
+            throw new NotFoundException();
+        }
+
+        return this.getCroppedImage(file, params, accept, res);
     }
 
     @DisableGlobalGuard()
@@ -99,7 +143,13 @@ export class ImagesController {
             throw new NotFoundException();
         }
 
-        return this.getCroppedImage(params, accept, res);
+        const file = await this.filesService.findOneById(params.fileId);
+
+        if (file === null) {
+            throw new NotFoundException();
+        }
+
+        return this.getCroppedImage(file, params, accept, res);
     }
 
     private isValidHash({ hash, ...imageParams }: HashImageParams): boolean {
@@ -115,13 +165,15 @@ export class ImagesController {
     }
 
     private async getCroppedImage(
-        { fileId, cropArea, resizeWidth, resizeHeight, focalPoint }: ImageParams,
+        file: FileInterface,
+        { cropArea, resizeWidth, resizeHeight, focalPoint }: ImageParams,
         accept: string,
         res: Response,
         overrideHeaders?: OutgoingHttpHeaders,
     ): Promise<void> {
-        const file = await this.filesService.findOneById(fileId);
-        if (!file || !file.image) throw new NotFoundException();
+        if (!file.image) {
+            throw new NotFoundException();
+        }
 
         let cropWidth: number;
         let cropHeight: number;

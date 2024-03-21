@@ -24,17 +24,20 @@ import isEqual from "lodash.isequal";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { GQLRedirectSourceTypeValues } from "../graphql.generated";
+import { GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
+import { redirectDetailQuery } from "./RedirectForm.gql";
 import {
     GQLCreateRedirectMutation,
     GQLRedirectDetailFragment,
     GQLRedirectDetailQuery,
     GQLRedirectDetailQueryVariables,
-    GQLRedirectSourceAvailableQuery,
-    GQLRedirectSourceAvailableQueryVariables,
-    GQLRedirectSourceTypeValues,
-} from "../graphql.generated";
-import { redirectDetailQuery } from "./RedirectForm.gql";
+} from "./RedirectForm.gql.generated";
 import { useSubmitMutation } from "./submitMutation";
+
+export { GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
+export { createRedirectMutation, updateRedirectMutation } from "./RedirectForm.gql";
+export { GQLCreateRedirectMutation, GQLUpdateRedirectMutation } from "./RedirectForm.gql.generated";
 
 interface Props {
     id?: string;
@@ -111,9 +114,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
         if (allValues.sourceType === "path") {
             if (!value.startsWith("/")) {
                 return <FormattedMessage id="comet.pages.redirects.validate.path.error" defaultMessage="Needs to start with /" />;
-            } else if (value.includes("?")) {
-                return <FormattedMessage id="comet.pages.redirects.validate.path.queryStringError" defaultMessage="Must not contain ?" />;
-            } else if (!/^\/([a-zA-Z0-9-._~/]|%[0-9a-fA-F]{2})+$/.test(value)) {
+            } else if (!/^\/([a-zA-Z0-9-._~/:?=&]|%[0-9a-fA-F]{2})+$/.test(value)) {
                 return <FormattedMessage id="comet.pages.redirects.validate.path.invalidPathError" defaultMessage="Invalid path" />;
             }
 
@@ -253,6 +254,8 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                             validate={validateSource as any}
                                             fullWidth
+                                            placeholder="/example-path"
+                                            disableContentTranslation
                                         />
                                     </Grid>
                                     <Grid item xs={3}>

@@ -1,155 +1,277 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { NotFoundException } from "@nestjs/common";
-import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Inject, NotFoundException, Type } from "@nestjs/common";
+import { Args, Context, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { IncomingMessage } from "http";
 import { basename, extname } from "path";
 
+import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { SkipBuild } from "../../builds/skip-build.decorator";
+import { CometValidationException } from "../../common/errors/validation.exception";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
-import { FileArgs } from "./dto/file.args";
+import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
+import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
+import { CurrentUser } from "../../user-permissions/dto/current-user";
+import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
+import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
+import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
+import { DamScopeInterface } from "../types";
+import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
+import { EmptyDamScope } from "./dto/empty-dam-scope";
+import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.args";
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
-import { File } from "./entities/file.entity";
+import { createFindCopiesOfFileInScopeArgs, FindCopiesOfFileInScopeArgsInterface } from "./dto/find-copies-of-file-in-scope.args";
+import { FileInterface } from "./entities/file.entity";
+import { FolderInterface } from "./entities/folder.entity";
+import { FileUploadService } from "./file-upload.service";
+import { FileValidationService } from "./file-validation.service";
 import { FilesService } from "./files.service";
 import { slugifyFilename } from "./files.utils";
 
-@ObjectType()
-export class PaginatedDamFiles extends PaginatedResponseFactory.create(File) {}
+export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<FileInterface>; Scope?: Type<DamScopeInterface> }): Type<unknown> {
+    const Scope = PassedScope ?? EmptyDamScope;
+    const hasNonEmptyScope = PassedScope != null;
 
-@Resolver(() => File)
-export class FilesResolver {
-    constructor(private readonly filesService: FilesService, @InjectRepository(File) private readonly filesRepository: EntityRepository<File>) {}
-
-    @Query(() => PaginatedDamFiles)
-    async damFilesList(@Args() args: FileArgs): Promise<PaginatedDamFiles> {
-        const [files, totalCount] = await this.filesService.findAndCount(args);
-        return new PaginatedDamFiles(files, totalCount);
+    function nonEmptyScopeOrNothing(scope: DamScopeInterface): DamScopeInterface | undefined {
+        // GraphQL sends the scope object with a null prototype ([Object: null prototype] { <key>: <value> }), but MikroORM uses the
+        // object's hasOwnProperty method internally, resulting in a "object.hasOwnProperty is not a function" error. To fix this, we
+        // create a "real" JavaScript object by using the spread operator.
+        // See https://github.com/mikro-orm/mikro-orm/issues/2846 for more information.
+        return hasNonEmptyScope ? { ...scope } : undefined;
     }
 
-    @Query(() => File)
-    async damFile(@Args("id", { type: () => ID }) id: string): Promise<File> {
-        const file = await this.filesService.findOneById(id);
-        if (!file) {
-            throw new NotFoundException(id);
-        }
-        return file;
-    }
+    const FileArgs = createFileArgs({ Scope });
+    const CopyFilesResponse = createCopyFilesResponseType({ File });
+    const FindCopiesOfFileInScopeArgs = createFindCopiesOfFileInScopeArgs({ Scope, hasNonEmptyScope });
 
-    @Mutation(() => File)
-    async updateDamFile(
-        @Args("id", { type: () => ID }) id: string,
-        @Args("input", { type: () => UpdateFileInput }) input: UpdateFileInput,
-    ): Promise<File> {
-        return this.filesService.updateById(id, input);
-    }
+    @ObjectType()
+    class PaginatedDamFiles extends PaginatedResponseFactory.create(File) {}
 
-    @Mutation(() => [File])
-    @SkipBuild()
-    async moveDamFiles(
-        @Args("fileIds", { type: () => [ID] }) fileIds: string[],
-        @Args("targetFolderId", { type: () => ID, nullable: true }) targetFolderId: string,
-    ): Promise<File[]> {
-        return this.filesService.moveBatch(fileIds, targetFolderId);
-    }
+    @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
+    @Resolver(() => File)
+    class FilesResolver {
+        constructor(
+            private readonly filesService: FilesService,
+            @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
+            @InjectRepository("DamFolder") private readonly foldersRepository: EntityRepository<FolderInterface>,
+            @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
+            @Inject(DAM_FILE_VALIDATION_SERVICE) private readonly fileValidationService: FileValidationService,
+            private readonly fileUploadService: FileUploadService,
+        ) {}
 
-    @Mutation(() => File)
-    @SkipBuild()
-    async archiveDamFile(@Args("id", { type: () => ID }) id: string): Promise<File> {
-        const entity = await this.filesRepository.findOneOrFail(id);
-        entity.archived = true;
-
-        await this.filesRepository.persistAndFlush(entity);
-        return entity;
-    }
-
-    @Mutation(() => [File])
-    @SkipBuild()
-    async archiveDamFiles(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<File[]> {
-        const entities = await this.filesRepository.find({ id: { $in: ids } });
-
-        for (const entity of entities) {
-            entity.archived = true;
+        @Query(() => PaginatedDamFiles)
+        async damFilesList(@Args({ type: () => FileArgs }) args: FileArgsInterface): Promise<PaginatedDamFiles> {
+            const [files, totalCount] = await this.filesService.findAndCount(args, nonEmptyScopeOrNothing(args.scope));
+            return new PaginatedDamFiles(files, totalCount);
         }
 
-        await this.filesRepository.flush();
-        return entities;
-    }
-
-    @Mutation(() => File)
-    @SkipBuild()
-    async restoreDamFile(@Args("id", { type: () => ID }) id: string): Promise<File> {
-        const entity = await this.filesRepository.findOneOrFail(id);
-        entity.archived = false;
-
-        await this.filesRepository.persistAndFlush(entity);
-        return entity;
-    }
-
-    @Mutation(() => [File])
-    @SkipBuild()
-    async restoreDamFiles(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<File[]> {
-        const entities = await this.filesRepository.find({ id: { $in: ids } });
-
-        for (const entity of entities) {
-            entity.archived = false;
+        @Query(() => File)
+        @AffectedEntity(File)
+        async damFile(@Args("id", { type: () => ID }) id: string): Promise<FileInterface> {
+            const file = await this.filesService.findOneById(id);
+            if (!file) {
+                throw new NotFoundException(id);
+            }
+            return file;
         }
 
-        await this.filesRepository.flush();
-        return entities;
-    }
+        @Query(() => [File])
+        //@ AffectedEntity is not required here
+        async findCopiesOfFileInScope(
+            @Args({ type: () => FindCopiesOfFileInScopeArgs }) { id, scope, imageCropArea }: FindCopiesOfFileInScopeArgsInterface,
+        ): Promise<FileInterface[]> {
+            return this.filesService.findCopiesOfFileInScope(id, imageCropArea, scope);
+        }
 
-    @Mutation(() => Boolean)
-    @SkipBuild()
-    async deleteDamFile(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
-        return this.filesService.delete(id);
-    }
+        @Mutation(() => File)
+        @AffectedEntity(File)
+        async updateDamFile(
+            @Args("id", { type: () => ID }) id: string,
+            @Args("input", { type: () => UpdateFileInput }) input: UpdateFileInput,
+        ): Promise<FileInterface> {
+            return this.filesService.updateById(id, input);
+        }
 
-    @Query(() => Boolean)
-    async damIsFilenameOccupied(@Args("filename") filename: string, @Args("folderId", { nullable: true }) folderId?: string): Promise<boolean> {
-        const extension = extname(filename);
-        const name = basename(filename, extension);
-        const slugifiedName = slugifyFilename(name, extension);
+        @Mutation(() => File)
+        @SkipBuild()
+        async importDamFileByDownload(
+            @Args("url", { type: () => String }) url: string,
+            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
+            @Args("input", { type: () => UpdateFileInput }) { image: imageInput, ...input }: UpdateFileInput,
+        ): Promise<FileInterface> {
+            const file = await this.fileUploadService.createFileUploadInputFromUrl(url);
+            const validationResult = await this.fileValidationService.validateFile(file);
+            if (validationResult !== undefined) {
+                throw new CometValidationException(validationResult);
+            }
 
-        return (await this.filesService.findOneByFilenameAndFolder(slugifiedName, folderId)) !== null;
-    }
-
-    @Query(() => [FilenameResponse])
-    async damAreFilenamesOccupied(
-        @Args("filenames", { type: () => [FilenameInput] }) filenames: Array<FilenameInput>,
-    ): Promise<Array<FilenameResponse>> {
-        const response: Array<FilenameResponse> = [];
-
-        for (const { name, folderId } of filenames) {
-            const extension = extname(name);
-            const filename = basename(name, extension);
-            const slugifiedName = slugifyFilename(filename, extension);
-
-            const existingFile = await this.filesService.findOneByFilenameAndFolder(slugifiedName, folderId);
-            const isOccupied = existingFile !== null;
-
-            response.push({
-                name,
-                folderId,
-                isOccupied,
+            const uploadedFile = await this.filesService.upload(file, {
+                ...input,
+                imageCropArea: imageInput?.cropArea,
+                folderId: input.folderId ? input.folderId : undefined,
+                scope,
             });
+            return uploadedFile;
         }
 
-        return response;
+        @Mutation(() => [File])
+        @SkipBuild()
+        async moveDamFiles(
+            @Args({ type: () => MoveDamFilesArgs }) { fileIds, targetFolderId }: MoveDamFilesArgs,
+            @GetCurrentUser() user: CurrentUser,
+        ): Promise<FileInterface[]> {
+            let targetFolder = null;
+            if (targetFolderId !== null) {
+                targetFolder = await this.foldersRepository.findOneOrFail(targetFolderId);
+
+                if (targetFolder.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", targetFolder.scope)) {
+                    throw new Error("Can't access parent folder");
+                }
+            }
+
+            const files = [];
+
+            for (const id of fileIds) {
+                const file = await this.filesRepository.findOneOrFail(id);
+
+                if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+                    throw new Error("Can't access file");
+                }
+
+                files.push(file);
+            }
+
+            return this.filesService.moveBatch(files, targetFolder);
+        }
+
+        @Mutation(() => CopyFilesResponse)
+        @SkipBuild()
+        async copyFilesToScope(
+            @GetCurrentUser() user: CurrentUser,
+            @Args("fileIds", { type: () => [ID] }) fileIds: string[],
+            @Args("inboxFolderId", {
+                type: () => ID,
+            })
+            inboxFolderId: string,
+        ): Promise<CopyFilesResponseInterface> {
+            return this.filesService.copyFilesToScope({ fileIds, inboxFolderId, user });
+        }
+
+        @Mutation(() => File)
+        @AffectedEntity(File)
+        @SkipBuild()
+        async archiveDamFile(@Args("id", { type: () => ID }) id: string): Promise<FileInterface> {
+            const entity = await this.filesRepository.findOneOrFail(id);
+            entity.archived = true;
+
+            await this.filesRepository.persistAndFlush(entity);
+            return entity;
+        }
+
+        @Mutation(() => [File])
+        @SkipBuild()
+        async archiveDamFiles(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<FileInterface[]> {
+            const entities = await this.filesRepository.find({ id: { $in: ids } });
+
+            for (const entity of entities) {
+                entity.archived = true;
+            }
+
+            await this.filesRepository.flush();
+            return entities;
+        }
+
+        @Mutation(() => File)
+        @AffectedEntity(File)
+        @SkipBuild()
+        async restoreDamFile(@Args("id", { type: () => ID }) id: string): Promise<FileInterface> {
+            const entity = await this.filesRepository.findOneOrFail(id);
+            entity.archived = false;
+
+            await this.filesRepository.persistAndFlush(entity);
+            return entity;
+        }
+
+        @Mutation(() => [File])
+        @SkipBuild()
+        async restoreDamFiles(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<FileInterface[]> {
+            const entities = await this.filesRepository.find({ id: { $in: ids } });
+
+            for (const entity of entities) {
+                entity.archived = false;
+            }
+
+            await this.filesRepository.flush();
+            return entities;
+        }
+
+        @Mutation(() => Boolean)
+        @AffectedEntity(File)
+        @SkipBuild()
+        async deleteDamFile(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
+            return this.filesService.delete(id);
+        }
+
+        @Query(() => Boolean)
+        async damIsFilenameOccupied(
+            @Args("filename") filename: string,
+            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
+            @Args("folderId", { nullable: true }) folderId?: string,
+        ): Promise<boolean> {
+            const extension = extname(filename);
+            const name = basename(filename, extension);
+            const slugifiedName = slugifyFilename(name, extension);
+
+            return (
+                (await this.filesService.findOneByFilenameAndFolder({ filename: slugifiedName, folderId }, nonEmptyScopeOrNothing(scope))) !== null
+            );
+        }
+
+        @Query(() => [FilenameResponse])
+        async damAreFilenamesOccupied(
+            @Args("filenames", { type: () => [FilenameInput] }) filenames: Array<FilenameInput>,
+            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
+        ): Promise<Array<FilenameResponse>> {
+            const response: Array<FilenameResponse> = [];
+
+            for (const { name, folderId } of filenames) {
+                const extension = extname(name);
+                const filename = basename(name, extension);
+                const slugifiedName = slugifyFilename(filename, extension);
+
+                const existingFile = await this.filesService.findOneByFilenameAndFolder(
+                    { filename: slugifiedName, folderId },
+                    nonEmptyScopeOrNothing(scope),
+                );
+                const isOccupied = existingFile !== null;
+
+                response.push({
+                    name,
+                    folderId,
+                    isOccupied,
+                });
+            }
+
+            return response;
+        }
+
+        @ResolveField(() => String)
+        async fileUrl(@Parent() file: FileInterface, @Context("req") req: IncomingMessage): Promise<string> {
+            return this.filesService.createFileUrl(file, Boolean(req.headers["x-preview-dam-urls"]));
+        }
+
+        @ResolveField(() => [File])
+        async duplicates(@Parent() file: FileInterface): Promise<FileInterface[]> {
+            const files = await this.filesService.findAllByHash(file.contentHash);
+            return files.filter((f) => f.id !== file.id);
+        }
+
+        @ResolveField(() => String)
+        async damPath(@Parent() file: FileInterface): Promise<string> {
+            return this.filesService.getDamPath(file);
+        }
     }
 
-    @ResolveField(() => String)
-    async fileUrl(@Parent() file: File): Promise<string> {
-        return this.filesService.createFileUrl(file);
-    }
-
-    @ResolveField(() => [File])
-    async duplicates(@Parent() file: File): Promise<File[]> {
-        const files = await this.filesService.findAllByHash(file.contentHash);
-        return files.filter((f) => f.id !== file.id);
-    }
-
-    @ResolveField(() => String)
-    async damPath(@Parent() file: File): Promise<string> {
-        return this.filesService.getDamPath(file);
-    }
+    return FilesResolver;
 }

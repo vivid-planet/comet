@@ -4,9 +4,9 @@ import { addMinutes, differenceInMinutes } from "date-fns";
 import fs from "fs";
 
 import { CONTENT_SCOPE_ANNOTATION } from "../builds/builds.constants";
-import { ContentScope } from "../common/decorators/content-scope.interface";
-import { JobStatus } from "./job-status.enum";
-import { KUBERNETES_CONFIG } from "./kubernetes.constants";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { KubernetesJobStatus } from "./job-status.enum";
+import { KUBERNETES_CONFIG, PARENT_CRON_JOB_LABEL } from "./kubernetes.constants";
 import { KubernetesConfig } from "./kubernetes.module";
 
 @Injectable()
@@ -85,6 +85,15 @@ export class KubernetesService {
         return body.items.sort((a, b) => (b.metadata?.creationTimestamp?.getTime() || 0) - (a.metadata?.creationTimestamp?.getTime() || 0));
     }
 
+    async getAllJobsForCronJob(cronJob: string) {
+        return this.getAllJobs(`${PARENT_CRON_JOB_LABEL}=${cronJob}`);
+    }
+
+    async getLatestJobForCronJob(cronJob: string) {
+        const jobs = await this.getAllJobsForCronJob(cronJob);
+        return jobs.shift();
+    }
+
     async createJobFromCronJob(cronJob: V1CronJob, overwriteJobMetaData: V1ObjectMeta): Promise<V1Job> {
         const { response, body } = await this.batchApi.createNamespacedJob(this.namespace, {
             apiVersion: "batch/v1",
@@ -99,18 +108,18 @@ export class KubernetesService {
         return body;
     }
 
-    getStatusForKubernetesJob(job: V1Job): JobStatus {
-        let status = JobStatus.pending;
+    getStatusForKubernetesJob(job: V1Job): KubernetesJobStatus {
+        let status = KubernetesJobStatus.pending;
         if (job.status?.active ?? 0 > 0) {
-            status = JobStatus.active;
+            status = KubernetesJobStatus.active;
         }
         // A job can have both succeeded = 1 and failed = 1 states. This may happend due to a job's restart policy. For instance, a job may fail on
         // the first attempt (failed = 1) and succeed on the second attempt (succeeded = 1). We therefore check the succeeded status before the failed
         // status.
         else if (job.status?.succeeded ?? 0 > 0) {
-            status = JobStatus.succeeded;
+            status = KubernetesJobStatus.succeeded;
         } else if (job.status?.failed ?? 0 > 0) {
-            status = JobStatus.failed;
+            status = KubernetesJobStatus.failed;
         }
         return status;
     }
@@ -121,7 +130,7 @@ export class KubernetesService {
      */
     async estimateJobCompletionTime(job: V1Job, labelSelector: string): Promise<Date | undefined> {
         const jobStatus = this.getStatusForKubernetesJob(job);
-        if (jobStatus === JobStatus.failed || jobStatus === JobStatus.succeeded) {
+        if (jobStatus === KubernetesJobStatus.failed || jobStatus === KubernetesJobStatus.succeeded) {
             return;
         }
 
@@ -149,8 +158,21 @@ export class KubernetesService {
         return estimatedCompletionTime;
     }
 
-    getContentScope(resource: V1Job | V1CronJob): ContentScope {
+    getContentScope(resource: V1Job | V1CronJob): ContentScope | null {
         const contentScopeAnnotation = resource.metadata?.annotations?.[CONTENT_SCOPE_ANNOTATION];
-        return contentScopeAnnotation ? JSON.parse(contentScopeAnnotation) : {};
+
+        if (contentScopeAnnotation) {
+            let json = JSON.parse(contentScopeAnnotation);
+
+            // the contentScopeAnnotation is an escaped json string (e.g. "{ \"domain\": \"main\", \"language\": \"en\" }")
+            // therefore JSON.parse() must be executed twice (https://stackoverflow.com/a/25721227)
+            if (typeof json !== "object") {
+                json = JSON.parse(json);
+            }
+
+            return json;
+        }
+
+        return null;
     }
 }

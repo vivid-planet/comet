@@ -1,4 +1,4 @@
-import { PageTreeNodeVisibility, PageTreeService, SubjectEntity, validateNotModified } from "@comet/cms-api";
+import { AffectedEntity, PageTreeNodeVisibility, PageTreeService, RequiredPermission, validateNotModified } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { UnauthorizedException } from "@nestjs/common";
@@ -8,17 +8,18 @@ import { LinkInput } from "./dto/link.input";
 import { Link } from "./entities/link.entity";
 
 @Resolver(() => Link)
+@RequiredPermission("pageTree")
 export class LinksResolver {
     constructor(@InjectRepository(Link) readonly repository: EntityRepository<Link>, private readonly pageTreeService: PageTreeService) {}
 
     @Query(() => Link, { nullable: true })
-    @SubjectEntity(Link, { idArg: "linkId" })
+    @AffectedEntity(Link, { idArg: "linkId" })
     async link(@Args("linkId", { type: () => ID }) linkId: string): Promise<Link | null> {
         return this.repository.findOne(linkId);
     }
 
     @Mutation(() => Link)
-    @SubjectEntity(Link, { pageTreeNodeIdArg: "attachedPageTreeNodeId" })
+    @AffectedEntity(Link, { pageTreeNodeIdArg: "attachedPageTreeNodeId" })
     async saveLink(
         @Args("linkId", { type: () => ID }) linkId: string,
         @Args("input", { type: () => LinkInput }) input: LinkInput,

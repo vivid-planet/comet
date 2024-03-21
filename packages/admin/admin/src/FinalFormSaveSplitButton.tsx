@@ -1,31 +1,52 @@
+import { ChevronDown } from "@comet/admin-icons";
 import * as React from "react";
 import { PropsWithChildren } from "react";
 import { useForm, useFormState } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { SaveButton } from "./common/buttons/save/SaveButton";
-import { SplitButton } from "./common/buttons/split/SplitButton";
+import { SplitButton, SplitButtonProps } from "./common/buttons/split/SplitButton";
+import { FinalFormSubmitEvent } from "./FinalForm";
 import { messages } from "./messages";
 import { useStackApi } from "./stack/Api";
 
 export interface FormSaveButtonProps {
     localStorageKey?: string;
+    hasConflict?: boolean;
 }
 
-export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton" }: PropsWithChildren<FormSaveButtonProps>) => {
+export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton", hasConflict = false }: PropsWithChildren<FormSaveButtonProps>) => {
     const stackApi = useStackApi();
     const form = useForm();
     const { pristine, hasValidationErrors, submitting, hasSubmitErrors } = useFormState();
 
+    const setSubmitEvent = form.mutators.setSubmitEvent
+        ? form.mutators.setSubmitEvent
+        : () => {
+              // eslint-disable-next-line no-console
+              console.warn(`Can't set submitEvent, as the setSubmitEvent mutator is missing. Did you forget to add the mutator to the form?`);
+          };
+
+    const splitButtonProps: Partial<SplitButtonProps> = {};
+    if (hasConflict) {
+        splitButtonProps.selectIcon = <ChevronDown sx={{ color: (theme) => theme.palette.error.contrastText }} />;
+    }
+
     return (
-        <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey={localStorageKey}>
+        <SplitButton {...splitButtonProps} disabled={pristine || hasValidationErrors || submitting} localStorageKey={localStorageKey}>
             <SaveButton
-                color="primary"
+                // setting the color to "error" is only necessary for the SplitButton and doesn't affect the SaveButton
+                color={hasConflict ? "error" : "primary"}
                 variant="contained"
                 saving={submitting}
                 hasErrors={hasSubmitErrors}
-                onClick={() => {
-                    form.submit();
+                hasConflict={hasConflict}
+                onClick={async (clickEvent) => {
+                    const event = new FinalFormSubmitEvent("submit");
+                    event.navigatingBack = false;
+                    setSubmitEvent(event);
+                    await form.submit();
+                    setSubmitEvent(undefined);
                 }}
             >
                 <FormattedMessage {...messages.save} />
@@ -36,9 +57,13 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton" }
                 saving={submitting}
                 hasErrors={hasSubmitErrors}
                 onClick={async () => {
-                    const submitResult = await form.submit();
-                    const error = submitResult !== undefined;
-                    if (!error) {
+                    const event = new FinalFormSubmitEvent("submit");
+                    event.navigatingBack = true;
+                    setSubmitEvent(event);
+                    const submitReturn = await form.submit();
+                    setSubmitEvent(undefined);
+                    const successful = submitReturn === undefined || Object.keys(submitReturn).length == 0;
+                    if (successful) {
                         stackApi?.goBack();
                     }
                 }}

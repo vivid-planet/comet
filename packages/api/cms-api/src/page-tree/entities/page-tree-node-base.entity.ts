@@ -36,9 +36,9 @@ export abstract class PageTreeNodeBase extends BaseEntity<PageTreeNodeBase, "id"
     @Field()
     slug: string;
 
-    @Enum({ items: () => PageTreeNodeVisibility, default: PageTreeNodeVisibility.Unpublished })
+    @Enum({ items: () => PageTreeNodeVisibility })
     @Field(() => PageTreeNodeVisibility)
-    visibility: PageTreeNodeVisibility;
+    visibility: PageTreeNodeVisibility = PageTreeNodeVisibility.Unpublished;
 
     @Property({ columnType: "text" })
     @Field()
@@ -47,9 +47,16 @@ export abstract class PageTreeNodeBase extends BaseEntity<PageTreeNodeBase, "id"
     // @Column({ type: "json" })
     // scope?: Record<string, unknown>;
 
-    @Property({ default: false })
+    @Property()
     @Field()
-    hideInMenu: boolean;
+    hideInMenu: boolean = false;
 
     category: PageTreeNodeCategory;
+
+    @Property({
+        columnType: "timestamp with time zone",
+        onUpdate: () => new Date(),
+    })
+    @Field()
+    updatedAt: Date = new Date();
 }

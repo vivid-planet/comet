@@ -1,5 +1,4 @@
-import FormatIndentDecreaseIcon from "@mui/icons-material/FormatIndentDecrease";
-import FormatIndentIncreaseIcon from "@mui/icons-material/FormatIndentIncrease";
+import { RteIndentDecrease, RteIndentIncrease } from "@comet/admin-icons";
 import { BlockMap, ContentState, EditorState } from "draft-js";
 import * as React from "react";
 import { useIntl } from "react-intl";
@@ -113,7 +112,7 @@ export default function useListIndent({ editorState, setEditorState, supportedTh
                       label: "",
                       disabled: !canIndentRight,
                       onButtonClick: handleListIndentRightClick,
-                      icon: FormatIndentIncreaseIcon,
+                      icon: RteIndentIncrease,
                       tooltipText: intl.formatMessage({ id: "comet.rte.controls.listIndent.right.tooltip", defaultMessage: "Tab" }),
                   },
                   {
@@ -121,7 +120,7 @@ export default function useListIndent({ editorState, setEditorState, supportedTh
                       label: "",
                       disabled: !canIndentLeft,
                       onButtonClick: handleListIndentLeftClick,
-                      icon: FormatIndentDecreaseIcon,
+                      icon: RteIndentDecrease,
                       tooltipText: intl.formatMessage({ id: "comet.rte.controls.listIndent.left.tooltip", defaultMessage: "Shift+Tab" }),
                   },
               ]

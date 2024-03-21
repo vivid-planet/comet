@@ -1,5 +1,6 @@
 import { ApolloError, gql, TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
-import { messages, SaveButton, SaveButtonProps, SplitButton, useStackApi } from "@comet/admin";
+import { messages, SaveButton, SaveButtonProps, SplitButton, SplitButtonProps, useStackApi } from "@comet/admin";
+import { ChevronDown } from "@comet/admin-icons";
 import {
     BindBlockAdminComponent,
     BlockInterface,
@@ -13,7 +14,8 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables, GQLDocumentInterface } from "../graphql.generated";
+import { GQLDocumentInterface } from "../graphql.generated";
+import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables } from "./createUsePage.generated";
 import { LocalPageTreeNodeDocumentAnchorsProvider } from "./LocalPageTreeNodeDocumentAnchors";
 import { resolveHasSaveConflict } from "./resolveHasSaveConflict";
 import { useSaveConflictQuery } from "./useSaveConflictQuery";
@@ -207,10 +209,11 @@ export const createUsePage: CreateUsePage =
                 await refetch();
             };
 
-            const { dialogs, checkForConflicts: checkForSaveConflict } = useSaveConflictQuery<
-                GQLCheckForChangesQuery,
-                GQLCheckForChangesQueryVariables
-            >(
+            const {
+                dialogs,
+                checkForConflicts: checkForSaveConflict,
+                hasConflict,
+            } = useSaveConflictQuery<GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables>(
                 checkForChangesQuery,
                 {
                     variables: {
@@ -219,6 +222,7 @@ export const createUsePage: CreateUsePage =
                     resolveHasConflict: (data) => {
                         return resolveHasSaveConflict(pageState?.document?.updatedAt, data?.page?.document?.updatedAt);
                     },
+                    skip: saving,
                 },
                 {
                     hasChanges: hasChanges ?? false,
@@ -298,6 +302,8 @@ export const createUsePage: CreateUsePage =
                                 },
                                 attachedPageTreeNodeId: pageId,
                             } as GQLUpdatePageMutationVariables,
+                            refetchQueries: [getQuery],
+                            awaitRefetchQueries: true,
                             update(cache) {
                                 // update reference to pageTreeNode
                                 // needed for newly created pageTreeNodes
@@ -394,8 +400,16 @@ export const createUsePage: CreateUsePage =
             }, [pageState, createHandleUpdate, pageId]);
 
             const pageSaveButton = React.useMemo<JSX.Element>(
-                () => <PageSaveButton hasChanges={hasChanges} handleSavePage={handleSavePage} saveError={saveError} saving={saving} />,
-                [hasChanges, handleSavePage, saveError, saving],
+                () => (
+                    <PageSaveButton
+                        hasConflict={hasConflict}
+                        hasChanges={hasChanges}
+                        handleSavePage={handleSavePage}
+                        saveError={saveError}
+                        saving={saving}
+                    />
+                ),
+                [hasConflict, hasChanges, handleSavePage, saveError, saving],
             );
 
             return {
@@ -429,10 +443,11 @@ const checkForChangesQuery = gql`
 interface PageSaveButtonProps {
     handleSavePage: () => Promise<void>;
     hasChanges?: boolean;
+    hasConflict: boolean;
     saving: boolean;
     saveError: "invalid" | "conflict" | "error" | undefined;
 }
-function PageSaveButton({ handleSavePage, hasChanges, saving, saveError }: PageSaveButtonProps): JSX.Element {
+function PageSaveButton({ handleSavePage, hasChanges, hasConflict, saving, saveError }: PageSaveButtonProps): JSX.Element {
     const stackApi = useStackApi();
 
     const saveButtonProps: Omit<SaveButtonProps, "children | onClick"> = {
@@ -440,6 +455,7 @@ function PageSaveButton({ handleSavePage, hasChanges, saving, saveError }: PageS
         variant: "contained",
         saving,
         hasErrors: !!saveError,
+        hasConflict,
         errorItem:
             saveError == "invalid" ? (
                 <FormattedMessage {...messages.invalidData} />
@@ -448,8 +464,15 @@ function PageSaveButton({ handleSavePage, hasChanges, saving, saveError }: PageS
             ) : undefined,
     };
 
+    const splitButtonProps: Partial<SplitButtonProps> = {};
+    if (hasConflict) {
+        // setting the color to "error" is only necessary for the SplitButton and doesn't affect the SaveButton
+        saveButtonProps.color = "error";
+        splitButtonProps.selectIcon = <ChevronDown sx={{ color: (theme) => theme.palette.error.contrastText }} />;
+    }
+
     return (
-        <SplitButton localStorageKey="SaveSplitButton" disabled={!hasChanges}>
+        <SplitButton {...splitButtonProps} localStorageKey="SaveSplitButton" disabled={!hasChanges}>
             <SaveButton onClick={handleSavePage} {...saveButtonProps}>
                 <FormattedMessage {...messages.save} />
             </SaveButton>

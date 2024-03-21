@@ -13,7 +13,9 @@ export interface ContentScopeSelectProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onChange: (newValue: any) => void;
     defaultLabel?: string;
-    icon?: (p: SvgIconProps) => JSX.Element;
+    icon?:
+        | React.ComponentType<SvgIconProps>
+        | React.ForwardRefExoticComponent<React.PropsWithoutRef<SvgIconProps> & React.RefAttributes<SVGSVGElement>>;
     disabled?: boolean;
     searchable?: boolean;
 }
@@ -34,7 +36,11 @@ export default function ContentScopeSelect({
 
     const [searchValue, setSearchValue] = React.useState<string>("");
 
-    const filteredValues = searchable ? values.filter((item) => item.value.toLowerCase().includes(searchValue.toLowerCase())) : values;
+    const filteredValues = searchable
+        ? values.filter(
+              (item) => item.value.toLowerCase().includes(searchValue.toLowerCase()) || item.label?.toLowerCase().includes(searchValue.toLowerCase()),
+          )
+        : values;
 
     return (
         <AppHeaderDropdown buttonChildren={value ? value.label || value.value.toUpperCase() : defaultLabel} startIcon={Icon ? <Icon /> : undefined}>

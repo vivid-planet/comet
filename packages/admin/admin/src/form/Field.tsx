@@ -16,6 +16,7 @@ const composeValidators =
 export interface FieldProps<FieldValue = any, T extends HTMLElement = HTMLElement> {
     name: string;
     label?: React.ReactNode;
+    helperText?: React.ReactNode;
     component?: React.ComponentType<any> | string;
     children?: (props: FieldRenderProps<FieldValue, T>) => React.ReactNode;
     required?: boolean;
@@ -34,6 +35,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     component,
     name,
     label,
+    helperText,
     required,
     validate,
     validateWarning,
@@ -51,9 +53,9 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     const validateError = required ? (validate ? composeValidators(requiredValidator, validate) : requiredValidator) : validate;
 
     const finalFormContext = useFinalFormContext();
-    const shouldShowError = passedShouldShowError || finalFormContext.shouldShowFieldError;
-    const shouldShowWarning = passedShouldShowWarning || finalFormContext.shouldShowFieldWarning;
-    const shouldScrollToField = passedShouldScrollTo || finalFormContext.shouldScrollToField;
+    const shouldShowError = passedShouldShowError ?? finalFormContext.shouldShowFieldError;
+    const shouldShowWarning = passedShouldShowWarning ?? finalFormContext.shouldShowFieldWarning;
+    const shouldScrollToField = passedShouldScrollTo ?? finalFormContext.shouldScrollToField;
 
     function renderField({ input, meta, fieldContainerProps, ...rest }: FieldRenderProps<FieldValue, FieldElement> & { warning?: string }) {
         function render() {
@@ -71,11 +73,12 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 label={label}
                 required={required}
                 disabled={disabled}
-                error={shouldShowError({ fieldMeta: meta }) && (meta.error || meta.submitError)}
-                warning={shouldShowWarning({ fieldMeta: meta }) && meta.data?.warning}
+                error={shouldShowError(meta) && (meta.error || meta.submitError)}
+                warning={shouldShowWarning(meta) && meta.data?.warning}
+                helperText={helperText}
                 variant={variant}
                 fullWidth={fullWidth}
-                scrollTo={shouldScrollToField({ fieldMeta: meta })}
+                scrollTo={shouldScrollToField(meta)}
                 {...fieldContainerProps}
             >
                 {render()}

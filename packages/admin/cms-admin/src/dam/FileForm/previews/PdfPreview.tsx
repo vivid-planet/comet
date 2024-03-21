@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 import React from "react";
 
-import { GQLDamFileDetailFragment } from "../../../graphql.generated";
+import { DamFileDetails } from "../EditFile";
 
 const PdfPreviewWrapper = styled("div")`
     width: 100%;
@@ -15,7 +15,7 @@ const PdfPreviewIFrame = styled("iframe")`
 `;
 
 interface PdfPreviewProps {
-    file: GQLDamFileDetailFragment;
+    file: DamFileDetails;
 }
 
 export const PdfPreview = ({ file }: PdfPreviewProps): React.ReactElement => {
