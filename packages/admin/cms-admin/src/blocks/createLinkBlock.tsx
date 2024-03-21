@@ -39,12 +39,6 @@ function createLinkBlock({
     return {
         ...OneOfBlock,
         defaultValues: () => ({ ...OneOfBlock.defaultValues(), title: undefined }),
-        input2State: ({ title, ...oneOfBlockInput }) => ({ ...OneOfBlock.input2State(oneOfBlockInput), title }),
-        state2Output: ({ title, ...oneOfBlockState }) => ({ ...OneOfBlock.state2Output(oneOfBlockState), title }),
-        output2State: async ({ title, ...oneOfBlockOutput }, context) => {
-            const oneOfBlockState = await OneOfBlock.output2State(oneOfBlockOutput, context);
-            return { ...oneOfBlockState, title };
-        },
         AdminComponent: ({ state, updateState }) => {
             const isInPaper = useAdminComponentPaper();
 
