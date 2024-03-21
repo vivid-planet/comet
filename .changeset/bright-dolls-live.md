@@ -8,6 +8,8 @@ It was a bad idea to introduce this in the first place, because `@comet/cms-api`
 
 Modern applications require all traffic to be routed through a CDN. Cloudflare offers a tunnel, which made the origin-check obsolete, so we introduced a flag to disable the origin check.
 
+Also changes the behavior of the `FilesService::createFileUrl()`-method which now expects an options-object as second argument.
+
 ## How to migrate (only required if CDN is used):
 
 Remove the following env vars from the API
