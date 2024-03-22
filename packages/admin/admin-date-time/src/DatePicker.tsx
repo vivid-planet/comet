@@ -25,6 +25,7 @@ export interface DatePickerProps extends Omit<InputWithPopperProps, "children" |
     formatDateOptions?: FormatDateOptions;
     componentsProps?: DatePickerComponentsProps;
     clearable?: boolean;
+    required?: boolean;
     monthsToShow?: number;
     maxDate?: Date;
     minDate?: Date;
@@ -38,6 +39,7 @@ function DatePicker({
     formatDateOptions,
     endAdornment,
     clearable,
+    required,
     placeholder,
     monthsToShow,
     minDate = defaultMinDate,
@@ -62,8 +64,9 @@ function DatePicker({
             {...inputWithPopperProps}
             componentsProps={inputWithPopperComponentsProps}
             readOnly
+            required={required}
             endAdornment={
-                clearable ? (
+                !required || clearable ? (
                     <>
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange && onChange(undefined)} />
                         {endAdornment}
