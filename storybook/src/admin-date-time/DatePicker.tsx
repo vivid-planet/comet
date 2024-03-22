@@ -9,11 +9,13 @@ const Story = () => {
     interface Values {
         dateOne?: Date | null;
         dateTwo?: Date | null;
+        dateThree?: Date | null;
     }
 
     const initialValues: Partial<Values> = {
-        dateOne: null,
+        dateOne: new Date(),
         dateTwo: new Date(),
+        dateThree: new Date(),
     };
 
     return (
@@ -24,7 +26,8 @@ const Story = () => {
                         <Card>
                             <CardContent>
                                 <Field name="dateOne" label="Date" fullWidth component={FinalFormDatePicker} />
-                                <Field name="dateTwo" label="Clearable" fullWidth clearable component={FinalFormDatePicker} />
+                                <Field name="dateTwo" label="Required" fullWidth required component={FinalFormDatePicker} />
+                                <Field name="dateThree" label="Clearable" fullWidth clearable component={FinalFormDatePicker} />
                             </CardContent>
                         </Card>
                         <pre>{JSON.stringify(values, null, 4)}</pre>
