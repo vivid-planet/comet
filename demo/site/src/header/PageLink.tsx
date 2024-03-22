@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
 
-import { GQLPageLinkFragment } from "./PageLink.generated";
+import { GQLPageLinkFragment } from "./PageLink.fragment.generated";
 
 interface Props {
     page: GQLPageLinkFragment;

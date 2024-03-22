@@ -8,13 +8,14 @@ import { headerFragment } from "@src/header/Header.fragment";
 import { TopNavigation } from "@src/topNavigation/TopNavigation";
 import { topMenuPageTreeNodeFragment } from "@src/topNavigation/TopNavigation.fragment";
 import createGraphQLClient from "@src/util/createGraphQLClient";
+import { gql } from "graphql-request";
 import { notFound } from "next/navigation";
 import * as React from "react";
 
 import { GQLPageQuery, GQLPageQueryVariables } from "./Page.generated";
 
 // @TODO: Scope for menu should also be of type PageTreeNodeScopeInput
-const pageQuery = `
+const pageQuery = gql`
     query Page($pageTreeNodeId: ID!, $domain: String!, $language: String!) {
         pageContent: pageTreeNode(id: $pageTreeNodeId) {
             document {

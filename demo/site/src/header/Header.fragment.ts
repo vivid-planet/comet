@@ -1,6 +1,8 @@
+import { gql } from "graphql-request";
+
 import { pageLinkFragment } from "./PageLink.fragment";
 
-export const headerFragment = /* GraphQL */ `
+export const headerFragment = gql`
     fragment Header on MainMenu {
         items {
             id

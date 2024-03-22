@@ -3,7 +3,7 @@ import { GridRoot } from "@src/components/common/GridRoot";
 import Link from "next/link";
 import * as React from "react";
 
-import { GQLBreadcrumbsFragment } from "./Breadcrumbs.generated";
+import { GQLBreadcrumbsFragment } from "./Breadcrumbs.fragment.generated";
 import * as sc from "./Breadcrumbs.sc";
 
 const Breadcrumbs: React.FunctionComponent<GQLBreadcrumbsFragment> = ({ name, path, parentNodes }) => {

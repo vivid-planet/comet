@@ -1,4 +1,6 @@
-export const pageLinkFragment = /* GraphQL */ `
+import { gql } from "graphql-request";
+
+export const pageLinkFragment = gql`
     fragment PageLink on PageTreeNode {
         path
         documentType

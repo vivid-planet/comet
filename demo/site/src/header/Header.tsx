@@ -2,7 +2,7 @@
 import * as React from "react";
 import styled from "styled-components";
 
-import { GQLHeaderFragment } from "./Header.generated";
+import { GQLHeaderFragment } from "./Header.fragment.generated";
 import { PageLink } from "./PageLink";
 
 interface Props {
