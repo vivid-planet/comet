@@ -1,10 +1,9 @@
 import { ContentOverflow } from "@comet/admin";
 import { Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/ContentOverflow", module).add("In DataGrid", () => {
+function Story() {
     const gridRows = Array.from({ length: 4 }).map((_, index) => ({
         id: index + 1,
         firstName: "Lorem",
@@ -49,4 +48,6 @@ storiesOf("stories/components/ContentOverflow", module).add("In DataGrid", () =>
     ];
 
     return <DataGrid autoHeight rows={gridRows} columns={gridColumns} rowHeight={100} disableSelectionOnClick />;
-});
+}
+
+export default Story;
