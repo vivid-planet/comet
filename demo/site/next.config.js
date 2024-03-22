@@ -29,6 +29,14 @@ if (process.env.SITE_IS_PREVIEW !== "true") {
  * @type {import('next').NextConfig}
  **/
 const nextConfig = {
+    async rewrites() {
+        return [
+            {
+                source: "/dam/:path*",
+                destination: process.env.API_URL + "/dam/:path*",
+            },
+        ];
+    },
     redirects: async () => {
         var redirects = await require("./preBuild/build/preBuild/src/createRedirects").createRedirects();
         return redirects;

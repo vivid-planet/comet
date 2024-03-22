@@ -1,37 +1,63 @@
-import { ComponentsOverrides, FormControl, InputBase, Slider, SliderProps, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { FormControl, InputBase, Slider, SliderProps } from "@mui/material";
+import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
+import { createComponentSlot } from "../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+
 export type FinalFormRangeInputClassKey = "root" | "inputsWrapper" | "inputFieldsSeparatorContainer" | "sliderWrapper" | "inputFieldContainer";
 
-const styles = () => {
-    return createStyles<FinalFormRangeInputClassKey, FinalFormRangeInputProps>({
-        root: {
-            boxSizing: "border-box",
-            padding: "0 20px",
-            width: "100%",
-        },
-        inputsWrapper: {
-            justifyContent: "space-between",
-            marginBottom: "15px",
-            alignItems: "center",
-            display: "flex",
-        },
-        inputFieldsSeparatorContainer: {
-            textAlign: "center",
-            minWidth: "20%",
-        },
-        sliderWrapper: {},
-        inputFieldContainer: {
-            textAlign: "center",
-            flexBasis: 0,
-            flexGrow: 1,
-        },
-    });
-};
+const Root = createComponentSlot("div")<FinalFormRangeInputClassKey>({
+    componentName: "FinalFormRangeInput",
+    slotName: "root",
+})(css`
+    box-sizing: border-box;
+    padding: 0 20px;
+    width: 100%;
+`);
 
-export interface FinalFormRangeInputProps extends FieldRenderProps<{ min: number; max: number }, HTMLInputElement> {
+const InputsWrapper = createComponentSlot("div")<FinalFormRangeInputClassKey>({
+    componentName: "FinalFormRangeInput",
+    slotName: "inputsWrapper",
+})(css`
+    justify-content: space-between;
+    margin-bottom: 15px;
+    align-items: center;
+    display: flex;
+`);
+
+const InputFieldsSeparatorContainer = createComponentSlot("div")<FinalFormRangeInputClassKey>({
+    componentName: "FinalFormRangeInput",
+    slotName: "inputFieldsSeparatorContainer",
+})(css`
+    text-align: center;
+    min-width: 20%;
+`);
+
+const SliderWrapper = createComponentSlot("div")<FinalFormRangeInputClassKey>({
+    componentName: "FinalFormRangeInput",
+    slotName: "sliderWrapper",
+})();
+
+const InputFieldContainer = createComponentSlot("div")<FinalFormRangeInputClassKey>({
+    componentName: "FinalFormRangeInput",
+    slotName: "inputFieldContainer",
+})(css`
+    text-align: center;
+    flex-basis: 0;
+    flex-grow: 1;
+`);
+
+export interface FinalFormRangeInputProps
+    extends FieldRenderProps<{ min: number; max: number }, HTMLInputElement>,
+        ThemedComponentBaseProps<{
+            root: "div";
+            inputsWrapper: "div";
+            inputFieldsSeparatorContainer: "div";
+            sliderWrapper: "div";
+            inputFieldContainer: "div";
+        }> {
     min: number;
     max: number;
     startAdornment?: React.ReactNode;
@@ -39,15 +65,18 @@ export interface FinalFormRangeInputProps extends FieldRenderProps<{ min: number
     sliderProps?: Omit<SliderProps, "min" | "max">;
 }
 
-const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof styles> & FinalFormRangeInputProps> = ({
-    classes,
-    min,
-    max,
-    sliderProps,
-    startAdornment,
-    endAdornment,
-    input: { name, onChange, value: fieldValue },
-}) => {
+export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
+    const {
+        min,
+        max,
+        sliderProps,
+        startAdornment,
+        endAdornment,
+        input: { name, onChange, value: fieldValue },
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminFinalFormRangeInput" });
+
     const [internalMinInput, setInternalMinInput] = React.useState(fieldValue.min || undefined);
     const [internalMaxInput, setInternalMaxInput] = React.useState(fieldValue.max || undefined);
 
@@ -61,9 +90,9 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
     }, [fieldValue]);
 
     return (
-        <div className={classes.root}>
-            <div className={classes.inputsWrapper}>
-                <div className={classes.inputFieldContainer}>
+        <Root {...slotProps?.root} {...restProps}>
+            <InputsWrapper {...slotProps?.inputsWrapper}>
+                <InputFieldContainer {...slotProps?.inputFieldContainer}>
                     <FormControl fullWidth>
                         <InputBase
                             name={`${name}.min`}
@@ -94,9 +123,9 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                             }}
                         />
                     </FormControl>
-                </div>
-                <div className={classes.inputFieldsSeparatorContainer}>-</div>
-                <div className={classes.inputFieldContainer}>
+                </InputFieldContainer>
+                <InputFieldsSeparatorContainer {...slotProps?.inputFieldsSeparatorContainer}>-</InputFieldsSeparatorContainer>
+                <InputFieldContainer {...slotProps?.inputFieldContainer}>
                     <FormControl fullWidth>
                         <InputBase
                             name={`${name}.max`}
@@ -127,9 +156,9 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                             }}
                         />
                     </FormControl>
-                </div>
-            </div>
-            <div className={classes.sliderWrapper}>
+                </InputFieldContainer>
+            </InputsWrapper>
+            <SliderWrapper {...slotProps?.sliderWrapper}>
                 <Slider
                     min={min}
                     max={max}
@@ -137,12 +166,10 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                     onChange={handleSliderChange}
                     {...sliderProps}
                 />
-            </div>
-        </div>
+            </SliderWrapper>
+        </Root>
     );
-};
-
-export const FinalFormRangeInput = withStyles(styles, { name: "CometAdminFinalFormRangeInput" })(FinalFormRangeInputComponent);
+}
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

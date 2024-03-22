@@ -6,7 +6,7 @@ import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 import { useStackApi } from "../../stack/Api";
-import { useObservedWidth } from "../../stack/breadcrumbs/utils"; // TODO: Update import when merged: https://github.com/vivid-planet/comet/pull/1755
+import { useObservedWidth } from "../../utils/useObservedWidth";
 
 // TODO: Remove debug code when we have stories for the new Toolbar to simulate a large stack
 const __DEBUG__numberOfPages = 6;
