@@ -29,7 +29,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Date-Time Picker", module
                         <DateTimePicker
                             value={dateTimeThree}
                             onChange={setDateTimeThree}
-                            componentsProps={{
+                            slotProps={{
                                 datePicker: { placeholder: "Date placeholder" },
                                 timePicker: { placeholder: "Time Placeholder" },
                             }}
@@ -41,7 +41,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Date-Time Picker", module
                         <DateTimePicker
                             value={dateTimeFour}
                             onChange={setDateFour}
-                            componentsProps={{
+                            slotProps={{
                                 datePicker: {
                                     formatDateOptions: {
                                         month: "long",

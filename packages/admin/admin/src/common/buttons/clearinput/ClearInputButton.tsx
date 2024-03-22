@@ -1,47 +1,54 @@
 import { Clear } from "@comet/admin-icons";
-import { ButtonBase, ButtonBaseClassKey, ButtonBaseProps, ComponentsOverrides, inputAdornmentClasses, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { ButtonBase, ButtonBaseProps, ComponentsOverrides, inputAdornmentClasses } from "@mui/material";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-export type ClearInputButtonClassKey = ButtonBaseClassKey;
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
+
+export type ClearInputButtonClassKey = "root" | "focusVisible";
+
+const Root = createComponentSlot(ButtonBase)<ClearInputButtonClassKey>({
+    componentName: "ClearInputButton",
+    slotName: "root",
+})(
+    ({ theme }) => css`
+        height: 100%;
+        width: 40px;
+        color: ${theme.palette.action.active};
+
+        ${`.${inputAdornmentClasses.positionEnd}`}:last-child & {
+            margin-right: ${theme.spacing(-2)};
+        }
+
+        ${`.${inputAdornmentClasses.positionStart}`}:first-child & {
+            margin-left: ${theme.spacing(-2)};
+        }
+
+        &:disabled {
+            color: ${theme.palette.action.disabled};
+        }
+    `,
+);
+
 export interface ClearInputButtonProps extends ButtonBaseProps {
     icon?: React.ReactNode;
 }
 
-const styles = ({ palette, spacing }: Theme) => {
-    return createStyles<ClearInputButtonClassKey, ClearInputButtonProps>({
-        root: {
-            height: "100%",
-            width: 40,
-            color: palette.action.active,
-
-            [`.${inputAdornmentClasses.positionEnd}:last-child &`]: {
-                marginRight: spacing(-2),
-            },
-
-            [`.${inputAdornmentClasses.positionStart}:first-child &`]: {
-                marginLeft: spacing(-2),
-            },
-        },
-        disabled: {
-            color: palette.action.disabled,
-        },
-        focusVisible: {},
+export function ClearInputButton(inProps: ClearInputButtonProps) {
+    const { icon = <Clear />, ...restProps } = useThemeProps({
+        props: inProps,
+        name: "CometAdminClearInputButton",
     });
-};
-
-const ClearInputBtn: React.FC<WithStyles<typeof styles> & ClearInputButtonProps> = ({ icon = <Clear />, ...restProps }) => {
     return (
-        <ButtonBase tabIndex={-1} {...restProps}>
+        <Root tabIndex={-1} {...restProps}>
             {icon}
-        </ButtonBase>
+        </Root>
     );
-};
+}
 
 /**
  * @deprecated Use `ClearInputAdornment` directly as the InputAdornment instead
  */
-export const ClearInputButton = withStyles(styles, { name: "CometAdminClearInputButton" })(ClearInputBtn);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -54,7 +61,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminClearInputButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminClearInputButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminClearInputButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminClearInputButton"];
         };
     }

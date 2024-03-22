@@ -308,6 +308,7 @@ export function createEditPageNode({
                                                         fieldRenderProps.input.onChange(event.target.value);
                                                     }}
                                                     fullWidth
+                                                    disableContentTranslation
                                                 />
                                             );
                                         }}

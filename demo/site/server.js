@@ -7,9 +7,7 @@ const fs = require("fs");
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
 const port = process.env.APP_PORT ?? 3000;
-const cdnEnabled = process.env.CDN_ENABLED === "true";
-const disableCdnOriginHeaderCheck = process.env.DISABLE_CDN_ORIGIN_HEADER_CHECK === "true";
-const cdnOriginHeader = process.env.CDN_ORIGIN_HEADER;
+const cdnOriginCheckSecret = process.env.CDN_ORIGIN_CHECK_SECRET;
 
 // when using middleware `hostname` and `port` must be provided below
 const app = next({ dev, hostname, port });
@@ -26,9 +24,8 @@ app.prepare()
                 // This tells it to parse the query portion of the URL.
                 const parsedUrl = parse(req.url, true);
 
-                if (cdnEnabled && !disableCdnOriginHeaderCheck) {
-                    const incomingCdnOriginHeader = req.headers["x-cdn-origin-check"];
-                    if (cdnOriginHeader !== incomingCdnOriginHeader) {
+                if (cdnOriginCheckSecret) {
+                    if (req.headers["x-cdn-origin-check"] !== cdnOriginCheckSecret) {
                         res.statusCode = 403;
                         res.end();
                         return;

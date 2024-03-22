@@ -32,6 +32,7 @@ export function createGraphQLClient(url: string, previewData?: PreviewData): Gra
     if (previewDamUrls) {
         headers["x-preview-dam-urls"] = "1";
     }
+    headers["x-relative-dam-urls"] = "1";
 
     return new GraphQLClient(url, {
         headers,

@@ -1,18 +1,27 @@
 import { DragHandle } from "@comet/admin-icons";
+import { ComponentsOverrides } from "@mui/material";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import { ClassKeyOfStyles, ClassNameMap, createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { DropTargetMonitor, useDrag, useDrop, XYCoord } from "react-dnd";
 
+import { createComponentSlot } from "../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { IRow, ITableProps, ITableRowProps, Table, TableColumns, TableHeadColumns } from "./Table";
 import { TableBodyRow } from "./TableBodyRow";
 
-interface IDndOrderRowProps<TRow extends IRow> extends ITableRowProps<TRow> {
+export type TableDndOrderClassKey = "root" | "dragCell" | "dragIconContainer";
+
+interface IDndOrderRowProps<TRow extends IRow>
+    extends ThemedComponentBaseProps<{
+            dragCell: typeof TableCell;
+            dragIconContainer: "div";
+        }>,
+        ITableRowProps<TRow> {
     moveRow: (dragIndex: number, hoverIndex: number) => void;
     onDragEnd?: () => void;
     dragHandleIcon: React.ReactNode;
-    classes: ClassNameMap<ClassKeyOfStyles<typeof styles>>;
 }
 
 interface DragItem {
@@ -21,7 +30,7 @@ interface DragItem {
 }
 
 function DndOrderRow<TRow extends IRow>(props: IDndOrderRowProps<TRow>) {
-    const { columns, row, rowProps, classes } = props;
+    const { columns, row, rowProps, slotProps } = props;
 
     const refDragHandle = React.useRef<HTMLTableCellElement>(null);
     const refRow = React.useRef<HTMLTableRowElement>(null);
@@ -103,27 +112,72 @@ function DndOrderRow<TRow extends IRow>(props: IDndOrderRowProps<TRow>) {
 
     return (
         <TableBodyRow ref={refRow} {...rowProps} style={{ opacity }}>
-            <TableCell ref={refDragHandle} className={classes.dragCell}>
-                <div className={classes.dragIconContainer}>{props.dragHandleIcon}</div>
-            </TableCell>
+            <DragCell ref={refDragHandle} {...slotProps?.dragCell}>
+                <DragIconContainer {...slotProps?.dragIconContainer}>{props.dragHandleIcon}</DragIconContainer>
+            </DragCell>
             <TableColumns columns={columns} row={row} />
         </TableBodyRow>
     );
 }
 
-interface TableDndOrderProps<TRow extends IRow> extends ITableProps<TRow> {
+const Root = createComponentSlot(Table)<TableDndOrderClassKey>({
+    componentName: "TableDndOrder",
+    slotName: "root",
+})();
+
+const DragCell = createComponentSlot(TableCell)<TableDndOrderClassKey>({
+    componentName: "TableDndOrder",
+    slotName: "dragCell",
+})(css`
+    cursor: grab;
+    width: 20px;
+    padding-right: 0;
+`);
+
+const DragIconContainer = createComponentSlot("div")<TableDndOrderClassKey>({
+    componentName: "TableDndOrder",
+    slotName: "dragIconContainer",
+})(css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    :after {
+        // Increase clickable area to include the padding-left of the next cell.
+        content: "";
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        right: -20px;
+        bottom: 0;
+        left: 0;
+    }
+`);
+
+interface TableDndOrderProps<TRow extends IRow>
+    extends ThemedComponentBaseProps<{
+            root: typeof Table;
+            dragCell: typeof TableCell;
+            dragIconContainer: "div";
+        }>,
+        ITableProps<TRow> {
     moveRow: (dragIndex: number, hoverIndex: number) => void;
     onDragEnd?: () => void;
     dragHandleIcon?: React.ReactNode;
 }
 
-function TableDndOrder<TRow extends IRow>({
-    moveRow,
-    onDragEnd,
-    dragHandleIcon = <DragHandle />,
-    classes,
-    ...rest
-}: TableDndOrderProps<TRow> & WithStyles<typeof styles>): JSX.Element {
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
+export function TableDndOrder<TRow extends IRow>(inProps: TableDndOrderProps<TRow>) {
+    const {
+        moveRow,
+        onDragEnd,
+        dragHandleIcon = <DragHandle />,
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminTableDndOrder" });
+
     const renderHeadTableRow = React.useCallback<NonNullable<ITableProps<TRow>["renderHeadTableRow"]>>((ownProps) => {
         return (
             <TableRow>
@@ -134,53 +188,18 @@ function TableDndOrder<TRow extends IRow>({
     }, []);
     const renderTableRow = React.useCallback<NonNullable<ITableProps<TRow>["renderTableRow"]>>(
         (ownProps) => {
-            return <DndOrderRow moveRow={moveRow} onDragEnd={onDragEnd} dragHandleIcon={dragHandleIcon} classes={classes} {...ownProps} />;
+            return <DndOrderRow dragHandleIcon={dragHandleIcon} moveRow={moveRow} onDragEnd={onDragEnd} {...ownProps} />;
         },
-        [moveRow, onDragEnd, dragHandleIcon, classes],
+        [dragHandleIcon, moveRow, onDragEnd],
     );
 
-    const tableProps: ITableProps<TRow> = {
-        ...rest,
+    const tableProps = {
         renderTableRow,
         renderHeadTableRow,
     };
 
-    return <Table className={classes.root} {...tableProps} />;
+    return <Root {...slotProps?.root} {...restProps} {...tableProps} />;
 }
-
-export type TableDndOrderClassKey = "root" | "dragCell" | "dragIconContainer";
-
-const styles = () =>
-    createStyles<TableDndOrderClassKey, TableDndOrderProps<IRow>>({
-        root: {},
-        dragCell: {
-            cursor: "grab",
-            width: 20,
-            paddingRight: 0,
-        },
-        dragIconContainer: {
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-
-            "&:after": {
-                // Increase clickable area to include the padding-left of the next cell.
-                content: '""',
-                position: "absolute",
-                zIndex: 1,
-                top: 0,
-                right: -20,
-                bottom: 0,
-                left: 0,
-            },
-        },
-    });
-
-/**
- * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
- */
-const TableDndOrderWithStyles = withStyles(styles, { name: "CometAdminTableDndOrder" })(TableDndOrder);
-export { TableDndOrderWithStyles as TableDndOrder };
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
@@ -193,8 +212,8 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminTableDndOrder?: {
-            defaultProps?: ComponentsPropsList["CometAdminTableDndOrder"];
-            styleOverrides?: ComponentNameToClassKey["CometAdminTableDndOrder"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminTableDndOrder"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminTableDndOrder"];
         };
     }
 }

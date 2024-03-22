@@ -41,6 +41,8 @@ export function SaveBoundary({ onAfterSave, ...props }: SaveBoundaryProps) {
     const saveStates = React.useRef<Record<string, SavableProps>>({});
     const intl = useIntl();
 
+    const subRoutePath = props.subRoutePath ?? "./save";
+
     const save = React.useCallback(async (): Promise<SaveActionSuccess> => {
         setHasErrors(false);
         setSaving(true);
@@ -95,7 +97,7 @@ export function SaveBoundary({ onAfterSave, ...props }: SaveBoundaryProps) {
                 return true;
             }}
             saveAction={save}
-            subRoutePath={props.subRoutePath}
+            subRoutePath={subRoutePath}
         >
             <SavableContext.Provider
                 value={{

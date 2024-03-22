@@ -1,5 +1,5 @@
 import { Translate } from "@comet/admin-icons";
-import { Button, InputBase, InputBaseProps, Tooltip } from "@mui/material";
+import { IconButton, InputBase, InputBaseProps, Tooltip } from "@mui/material";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -22,7 +22,9 @@ export function FinalFormInput({
     disableContentTranslation,
     ...props
 }: FinalFormInputProps): React.ReactElement {
-    const { enabled, translate } = useContentTranslationService();
+    const type = props.type ?? input.type ?? "text";
+    const { enabled: translationEnabled, translate } = useContentTranslationService();
+    const isTranslatable = translationEnabled && !disableContentTranslation && type === "text" && !props.disabled;
 
     return (
         <InputBase
@@ -33,11 +35,11 @@ export function FinalFormInput({
                     {clearable && (
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
                     )}
-                    {enabled && !disableContentTranslation && (
+                    {isTranslatable && (
                         <Tooltip title={<FormattedMessage id="comet.translate" defaultMessage="Translate" />}>
-                            <Button onClick={async () => input.onChange(await translate(input.value))}>
+                            <IconButton onClick={async () => input.onChange(await translate(input.value))}>
                                 <Translate />
-                            </Button>
+                            </IconButton>
                         </Tooltip>
                     )}
                     {endAdornment}
