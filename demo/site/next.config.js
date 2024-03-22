@@ -40,13 +40,6 @@ const nextConfig = {
     images: {
         deviceSizes: cometConfig.dam.allowedImageSizes,
     },
-    webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-        var path = require("path");
-
-        config.resolve.alias["@src"] = path.resolve(__dirname, "src/");
-
-        return config;
-    },
     i18n,
     typescript: {
         ignoreBuildErrors: process.env.NODE_ENV === "production",
