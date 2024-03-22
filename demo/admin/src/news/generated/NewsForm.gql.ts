@@ -46,8 +46,8 @@ export const createNewsMutation = gql`
 `;
 
 export const updateNewsMutation = gql`
-    mutation UpdateNews($id: ID!, $input: NewsUpdateInput!) {
-        updateNews(id: $id, input: $input) {
+    mutation UpdateNews($id: ID!, $input: NewsUpdateInput!, $lastUpdatedAt: DateTime) {
+        updateNews(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
             id
             updatedAt
             ...NewsForm

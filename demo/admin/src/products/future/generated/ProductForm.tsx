@@ -112,7 +112,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             if (!id) throw new Error();
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
-                variables: { id, input: output },
+                variables: { id, input: output, lastUpdatedAt: data?.product.updatedAt },
             });
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
@@ -190,12 +190,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             name="description"
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
-                        <Field fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />} placeholder="Please select">
+                        <Field fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
                             {(props) => (
                                 <FinalFormSelect {...props}>
-                                    <MenuItem value="Please select">
-                                        <FormattedMessage id="product.type.please select" defaultMessage="Please Select" />
-                                    </MenuItem>
                                     <MenuItem value="Cap">
                                         <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
                                     </MenuItem>
@@ -237,6 +234,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field
                             fullWidth
                             name="availableSince"
+                            clearable
                             component={FinalFormDatePicker}
                             label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
                         />

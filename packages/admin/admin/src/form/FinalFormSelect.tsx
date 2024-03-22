@@ -88,11 +88,15 @@ export const FinalFormSelect = <T,>({
             }
             onChange={(event) => {
                 const value = event.target.value;
+                // if (value === "Please Select") {
+                //     onChange(undefined);
+                // } else {
                 onChange(
                     Array.isArray(value)
                         ? value.map((v) => options.find((i) => getOptionValue(i) == v))
                         : options.find((i) => getOptionValue(i) == value),
                 );
+                // }
             }}
             value={Array.isArray(value) ? value.map((i) => getOptionValue(i)) : getOptionValue(value)}
         >

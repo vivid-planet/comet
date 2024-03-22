@@ -160,7 +160,19 @@ export function generateFormField(
             }
             ${validateCode}
             {(props) => 
-                <FinalFormSelect {...props}>
+                <FinalFormSelect {...props} onChange={(event) => {
+                const value = event.target.value;
+                if (value === "Please Select") {
+                    onChange(undefined);
+                } else {
+                    onChange(
+                        Array.isArray(value)
+                            ? value.map((v) => options.find((i) => getOptionValue(i) == v))
+                            : options.find((i) => getOptionValue(i) == value),
+                    );
+                }
+            }} >
+            //TODO !required logic here, add independantly of values
                 ${values
                     .map((value) => {
                         const id = `${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`;

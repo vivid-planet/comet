@@ -164,6 +164,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
                         <SelectField name="type" label="Type" required fullWidth>
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
                             <MenuItem value="Cap">Cap</MenuItem>
                             <MenuItem value="Shirt">Shirt</MenuItem>
                             <MenuItem value="Tie">Tie</MenuItem>
