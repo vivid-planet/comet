@@ -29,7 +29,7 @@ export class ImagesService {
         const imageCropArea = cropArea !== undefined ? cropArea : file.image!.cropArea;
         const filename = parse(file.name).name;
 
-        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}dam/images`];
+        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/images`];
 
         if (previewDamUrls) {
             baseUrl.push("preview");

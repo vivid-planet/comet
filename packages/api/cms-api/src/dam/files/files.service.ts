@@ -562,7 +562,7 @@ export class FilesService {
     ): Promise<string> {
         const filename = parse(file.name).name;
 
-        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}dam/files`];
+        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/files`];
 
         if (previewDamUrls) {
             baseUrl.push("preview");
