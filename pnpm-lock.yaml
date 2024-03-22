@@ -676,9 +676,6 @@ importers:
       graphql:
         specifier: ^15.0.0
         version: 15.8.0
-      graphql-request:
-        specifier: ^3.0.0
-        version: 3.7.0(graphql@15.8.0)
       graphql-tag:
         specifier: ^2.12.6
         version: 2.12.6(graphql@15.8.0)
@@ -20673,6 +20670,7 @@ packages:
   /extract-files@9.0.0:
     resolution: {integrity: sha512-CvdFfHkC95B4bBBk36hcEmvdR2awOdhhVUYH6S/zrVj3477zven/fJMYg7121h4T1xHZC+tetUpubpAhxwI7hQ==}
     engines: {node: ^10.17.0 || ^12.0.0 || >= 13.7.0}
+    dev: true
 
   /extsprintf@1.3.0:
     resolution: {integrity: sha512-11Ndz7Nv+mvAC1j0ktTa7fAb0vLyGGX+rMHNBYQviQDGU0Hw7lhctJANqbPhu9nV9/izT/IntTgZ7Im/9LJs9g==}
@@ -21968,6 +21966,7 @@ packages:
       graphql: 15.8.0
     transitivePeerDependencies:
       - encoding
+    dev: true
 
   /graphql-request@5.1.0(graphql@15.8.0):
     resolution: {integrity: sha512-0OeRVYigVwIiXhNmqnPDt+JhMzsjinxHE7TVy3Lm6jUzav0guVcL0lfSbi6jVTRAxcbwgyr6yrZioSHxf9gHzw==}

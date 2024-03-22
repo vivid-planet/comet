@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@src/util/graphQLClient";
 
 export const pageLinkFragment = gql`
     fragment PageLink on PageTreeNode {

@@ -1,4 +1,5 @@
 import { SeoBlock } from "@comet/cms-site";
+import { PreviewData } from "@src/app/api/site-preview/route";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import Breadcrumbs from "@src/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/components/Breadcrumbs.fragment";
@@ -7,8 +8,8 @@ import { Header } from "@src/header/Header";
 import { headerFragment } from "@src/header/Header.fragment";
 import { TopNavigation } from "@src/topNavigation/TopNavigation";
 import { topMenuPageTreeNodeFragment } from "@src/topNavigation/TopNavigation.fragment";
-import createGraphQLClient from "@src/util/createGraphQLClient";
-import { gql } from "graphql-request";
+import { createGraphlFetchWithPreviewHeaders, gql } from "@src/util/graphQLClient";
+import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import * as React from "react";
 
@@ -42,13 +43,21 @@ const pageQuery = gql`
 `;
 
 export default async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput }) {
-    const client = createGraphQLClient(/*{ previewData: context.previewData }*/);
+    let previewData: PreviewData | undefined = undefined;
+    if (draftMode().isEnabled) {
+        previewData = { includeInvisible: false };
+    }
+    const graphqlFetch = createGraphlFetchWithPreviewHeaders(fetch, previewData);
 
-    const props = await client.request<GQLPageQuery, GQLPageQueryVariables>(pageQuery, {
-        pageTreeNodeId,
-        domain: scope.domain,
-        language: scope.language,
-    });
+    const props = await graphqlFetch<GQLPageQuery, GQLPageQueryVariables>(
+        pageQuery,
+        {
+            pageTreeNodeId,
+            domain: scope.domain,
+            language: scope.language,
+        },
+        { next: { revalidate: 3 } },
+    );
 
     if (!props.pageContent) throw new Error("Could not load page content");
     const document = props.pageContent.document;
