@@ -1,4 +1,4 @@
-import { getValidatedSitePreviewParams } from "@comet/cms-site";
+import { getValidatedSitePreviewParams, SitePreviewParams } from "@comet/cms-site";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 
 export default async function handler(req, res) {
@@ -9,3 +9,5 @@ export default async function handler(req, res) {
 
     res.redirect(params.path);
 }
+
+export type PreviewData = SitePreviewParams["settings"];
