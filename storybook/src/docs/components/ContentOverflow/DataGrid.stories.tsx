@@ -1,10 +1,10 @@
-import { OverflowDialog } from "@comet/admin";
+import { ContentOverflow } from "@comet/admin";
 import { Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/OverflowDialog", module).add("In DataGrid", () => {
+storiesOf("stories/components/ContentOverflow", module).add("In DataGrid", () => {
     const gridRows = Array.from({ length: 4 }).map((_, index) => ({
         id: index + 1,
         firstName: "Lorem",
@@ -31,7 +31,7 @@ storiesOf("stories/components/OverflowDialog", module).add("In DataGrid", () => 
             renderCell: () => {
                 const paragraphsCount = 10;
                 return (
-                    <OverflowDialog>
+                    <ContentOverflow>
                         <Typography fontWeight={600} gutterBottom>
                             Ornare Inceptos Egestas Bibendum
                         </Typography>
@@ -42,7 +42,7 @@ storiesOf("stories/components/OverflowDialog", module).add("In DataGrid", () => 
                                 justo sit amet risus.
                             </Typography>
                         ))}
-                    </OverflowDialog>
+                    </ContentOverflow>
                 );
             },
         },

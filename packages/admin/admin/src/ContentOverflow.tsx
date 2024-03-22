@@ -6,7 +6,7 @@ import { css, styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-export type OverflowDialogProps = React.PropsWithChildren<{
+export type ContentOverflowProps = React.PropsWithChildren<{
     dialogTitle?: React.ReactNode;
     expandIcon?: React.ElementType<React.ComponentProps<typeof SvgIcon>>;
 }>;
@@ -102,11 +102,11 @@ const InnerDialogContent = styled("div")(
     `,
 );
 
-export const OverflowDialog = ({
+export const ContentOverflow = ({
     children,
     expandIcon: ExpandIcon = Maximize,
-    dialogTitle = <FormattedMessage id="comet.overflowDialog.dialogTitle" defaultMessage="Preview" />,
-}: OverflowDialogProps) => {
+    dialogTitle = <FormattedMessage id="comet.contentOverflow.dialogTitle" defaultMessage="Preview" />,
+}: ContentOverflowProps) => {
     const [open, setOpen] = React.useState(false);
 
     return (

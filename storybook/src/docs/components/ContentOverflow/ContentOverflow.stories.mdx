@@ -1,16 +1,14 @@
 import { Meta, Story, Canvas } from "@storybook/addon-docs";
 
-<Meta title="Docs/Components/OverflowDialog" />
+<Meta title="Docs/Components/ContentOverflow" />
 
-# OverflowDialog
+# ContentOverflow
 
-Use `OverflowDialog` to wrap content that may be too large to fit its container. <br />
+Use `ContentOverflow` to wrap content that may be too large to fit its container. <br />
 If the content is too large, it will be truncated. When clicked, the entire content will be displayed in a dialog.
 
 ```tsx
-<OverflowDialog>
-    {/* Lots of content ... */}
-</OverflowDialog>
+<ContentOverflow>{/* Lots of content ... */}</ContentOverflow>
 ```
 
 ## Use Cases
@@ -20,20 +18,18 @@ If used outside a `DataGrid`, the height must be limited by a parent container, 
 
 ```tsx
 <Box sx={{ height: 100 }}>
-    <OverflowDialog>
-        {/* Lots of content ... */}
-    </OverflowDialog>
+    <ContentOverflow>{/* Lots of content ... */}</ContentOverflow>
 </Box>
 ```
 
 ## Basic Usage
 
 <Canvas>
-    <Story id="stories-components-overflowdialog--basic-usage" />
+    <Story id="stories-components-contentoverflow--basic-usage" />
 </Canvas>
 
 ## Usage inside `DataGrid`
 
 <Canvas>
-    <Story id="stories-components-overflowdialog--in-datagrid" />
+    <Story id="stories-components-contentoverflow--in-datagrid" />
 </Canvas>

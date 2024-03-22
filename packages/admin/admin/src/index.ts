@@ -44,6 +44,7 @@ export { ToolbarItem, ToolbarItemClassKey, ToolbarItemProps } from "./common/too
 export { ToolbarTitleItem, ToolbarTitleItemClassKey, ToolbarTitleItemProps } from "./common/toolbar/titleitem/ToolbarTitleItem";
 export { Toolbar, ToolbarClassKey, ToolbarProps } from "./common/toolbar/Toolbar";
 export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";
+export { ContentOverflow, ContentOverflowProps } from "./ContentOverflow";
 export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
@@ -111,7 +112,6 @@ export { MenuItemRouterLink, MenuItemRouterLinkProps } from "./mui/menu/ItemRout
 export { Menu, MenuProps } from "./mui/menu/Menu";
 export { MenuClassKey, styles } from "./mui/menu/Menu.styles";
 export { MuiThemeProvider } from "./mui/ThemeProvider";
-export { OverflowDialog, OverflowDialogProps } from "./OverflowDialog";
 export { RouterBrowserRouter } from "./router/BrowserRouter";
 export { RouterConfirmationDialog } from "./router/ConfirmationDialog";
 export { RouterConfirmationDialogClassKey } from "./router/ConfirmationDialog.styles";
