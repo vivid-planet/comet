@@ -136,7 +136,10 @@ export function ManufacturersGrid() {
                                 await client.mutate<GQLCreateManufacturerMutation, GQLCreateManufacturerMutationVariables>({
                                     mutation: createManufacturerMutation,
                                     variables: {
-                                        input: filter(manufacturersFragment, input),
+                                        input: {
+                                            address: input.address,
+                                            addressAsEmbeddable: input.addressAsEmbeddable,
+                                        },
                                     },
                                 });
                             }}
@@ -148,8 +151,7 @@ export function ManufacturersGrid() {
                             }}
                             refetchQueries={["ManufacturersList"]}
                             copyData={() => {
-                                // return complete row, without filter, to include id-prop for pasting in different context as comet
-                                return params.row;
+                                return filter(manufacturersFragment, params.row);
                             }}
                         />
                     </>
