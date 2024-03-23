@@ -556,11 +556,13 @@ export class FilesService {
         }
     }
 
-    async createFileUrl(file: FileInterface, previewDamUrls?: boolean): Promise<string> {
+    async createFileUrl(
+        file: FileInterface,
+        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
+    ): Promise<string> {
         const filename = parse(file.name).name;
 
-        // Use CDN url only if available and not in preview as preview requires auth
-        const baseUrl = [this.config.cdnEnabled && !previewDamUrls ? `${this.config.cdnDomain}/files` : this.config.filesBaseUrl];
+        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}dam/files`];
 
         if (previewDamUrls) {
             baseUrl.push("preview");

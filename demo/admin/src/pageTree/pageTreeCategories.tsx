@@ -19,7 +19,7 @@ const isCategory = (category: string): category is GQLPageTreeNodeCategory => {
     return pageTreeCategories.some((c) => c.category === category);
 };
 
-export function categoryToUrlParam(category: GQLPageTreeNodeCategory): string {
+export function categoryToUrlParam(category: GQLPageTreeNodeCategory | string): string {
     return kebabCase(category);
 }
 
