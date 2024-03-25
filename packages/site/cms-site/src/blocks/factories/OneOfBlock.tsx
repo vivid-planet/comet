@@ -11,6 +11,7 @@ interface Props {
         };
     };
     supportedBlocks: SupportedBlocks;
+    children?: React.ReactNode;
 }
 
 export const OneOfBlock: React.FC<Props> = ({ data: { block }, supportedBlocks, children }) => {

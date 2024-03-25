@@ -43,9 +43,9 @@ const newsFragment = gql`
         updatedAt
         slug
         title
+        status
         date
         category
-        visible
         image
         content
         createdAt
@@ -115,6 +115,16 @@ export function NewsGrid(): React.ReactElement {
         { field: "slug", headerName: intl.formatMessage({ id: "news.slug", defaultMessage: "Slug" }), width: 150 },
         { field: "title", headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }), width: 150 },
         {
+            field: "status",
+            headerName: intl.formatMessage({ id: "news.status", defaultMessage: "Status" }),
+            type: "singleSelect",
+            valueOptions: [
+                { value: "Active", label: intl.formatMessage({ id: "news.status.active", defaultMessage: "Active" }) },
+                { value: "Deleted", label: intl.formatMessage({ id: "news.status.deleted", defaultMessage: "Deleted" }) },
+            ],
+            width: 150,
+        },
+        {
             field: "date",
             headerName: intl.formatMessage({ id: "news.date", defaultMessage: "Date" }),
             type: "dateTime",
@@ -132,7 +142,6 @@ export function NewsGrid(): React.ReactElement {
             ],
             width: 150,
         },
-        { field: "visible", headerName: intl.formatMessage({ id: "news.visible", defaultMessage: "Visible" }), type: "boolean", width: 150 },
         {
             field: "image",
             headerName: intl.formatMessage({ id: "news.image", defaultMessage: "Image" }),
@@ -178,6 +187,7 @@ export function NewsGrid(): React.ReactElement {
                                 return {
                                     slug: row.slug,
                                     title: row.title,
+                                    status: row.status,
                                     date: row.date,
                                     category: row.category,
                                     image: DamImageBlock.state2Output(DamImageBlock.input2State(row.image)),

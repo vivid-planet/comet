@@ -88,8 +88,8 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     \`
     
     export const update${entityName}Mutation = gql\`
-        mutation Update${entityName}($id: ID!, $input: ${entityName}UpdateInput!, $lastUpdatedAt: DateTime) {
-            update${entityName}(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
+        mutation Update${entityName}($id: ID!, $input: ${entityName}UpdateInput!) {
+            update${entityName}(id: $id, input: $input) {
                 id
                 updatedAt
                 ...${entityName}Form
@@ -113,6 +113,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     const out = `
     import { useApolloClient, useQuery } from "@apollo/client";
     import {
+        DateTimeField,
         Field,
         FinalForm,
         FinalFormInput,
@@ -121,6 +122,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         FinalFormSubmitEvent,
         Loading,
         MainContent,
+        TextField,
         Toolbar,
         ToolbarActions,
         ToolbarFillSpace,
@@ -131,8 +133,8 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         useStackSwitchApi,
         FinalFormCheckbox,
     } from "@comet/admin";
+    import { DateField } from "@comet/admin-date-time";
     import { ArrowLeft } from "@comet/admin-icons";
-    import { FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
     import { EditPageLayout, resolveHasSaveConflict, useFormSaveConflict, queryUpdatedAt } from "@comet/cms-admin";
     import { IconButton, FormControlLabel, MenuItem } from "@mui/material";
@@ -243,7 +245,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                 }
                 await client.mutate<GQLUpdate${entityName}Mutation, GQLUpdate${entityName}MutationVariables>({
                     mutation: update${entityName}Mutation,
-                    variables: { id, input: output, lastUpdatedAt: data?.${instanceEntityName}?.updatedAt },
+                    variables: { id, input: output },
                 });
             } else {
                 const { data: mutationResponse } = await client.mutate<GQLCreate${entityName}Mutation, GQLCreate${entityName}MutationVariables>({
@@ -349,15 +351,19 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
                     />
                 )}
             </Field>`;
+    } else if (type.kind === "SCALAR" && type.name === "String") {
+        return `<TextField ${field.type.kind === "NON_NULL" ? "required" : ""} fullWidth name="${
+            field.name
+        }"  label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}"/>} />`;
+    } else if (type.kind === "SCALAR" && type.name === "DateTime") {
+        //TODO DateTime vs Date
+        return `<DateField ${field.type.kind === "NON_NULL" ? "required" : ""} fullWidth name="${
+            field.name
+        }"  label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}"/>} />`;
     } else {
         let component;
         let additionalProps = "";
-        if (type.kind === "SCALAR" && type.name === "DateTime") {
-            //TODO DateTime vs Date
-            component = "FinalFormDatePicker";
-        } else if (type.kind === "SCALAR" && type.name === "String") {
-            component = "FinalFormInput";
-        } else if (type.kind === "SCALAR" && type.name === "Float") {
+        if (type.kind === "SCALAR" && type.name === "Float") {
             component = "FinalFormInput";
             additionalProps += 'type="number"';
             //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot

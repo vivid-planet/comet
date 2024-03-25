@@ -158,6 +158,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
                                     component={FinalFormInput}
                                     disabled={disabled}
                                     label={<FormattedMessage id="comet.userPermissions.reason" defaultMessage="Reason" />}
+                                    disableContentTranslation
                                 />
                                 <Field
                                     fullWidth
@@ -165,6 +166,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
                                     component={FinalFormInput}
                                     disabled={disabled}
                                     label={<FormattedMessage id="comet.userPermissions.requestedBy" defaultMessage="Requested by" />}
+                                    disableContentTranslation
                                 />
                                 <Field
                                     fullWidth
@@ -172,6 +174,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
                                     component={FinalFormInput}
                                     disabled={disabled}
                                     label={<FormattedMessage id="comet.userPermissions.approvedBy" defaultMessage="Approved by" />}
+                                    disableContentTranslation
                                 />
                             </FormSection>
                         </DialogContent>

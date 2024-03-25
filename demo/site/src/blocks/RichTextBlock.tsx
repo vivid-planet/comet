@@ -1,3 +1,4 @@
+"use client";
 import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData, withPreview } from "@comet/cms-site";
 import { LinkBlockData, RichTextBlockData } from "@src/blocks.generated";
 import { useColorTheme } from "@src/blocks/ColorThemeContext";
@@ -9,7 +10,7 @@ import styled from "styled-components";
 import { LinkBlock } from "./LinkBlock";
 import * as sc from "./RichTextBlock.sc";
 
-const GreenCustomHeader: React.FC = ({ children }) => <h3 style={{ color: "green" }}>{children}</h3>;
+const GreenCustomHeader: React.FC<{ children: React.ReactNode }> = ({ children }) => <h3 style={{ color: "green" }}>{children}</h3>;
 
 export const DefaultStyleLink = styled.a`
     color: ${({ theme }) => theme.colors.primary};
@@ -123,7 +124,7 @@ const RichTextBlock: React.FC<RichTextBlockProps> = ({ data, renderers = default
 
     return (
         <PreviewSkeleton title={"RichText"} type={"rows"} hasContent={hasRichTextBlockContent(data)}>
-            <sc.Wrapper colorTheme={colorTheme}>{rendered}</sc.Wrapper>
+            <sc.Wrapper $colorTheme={colorTheme}>{rendered}</sc.Wrapper>
         </PreviewSkeleton>
     );
 };

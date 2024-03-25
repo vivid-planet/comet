@@ -8,14 +8,31 @@ import { generateCrudInput } from "./generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";
 import { generateImportsCode, Imports } from "./utils/generate-imports-code";
-import { findEnumImportPath, findEnumName } from "./utils/ts-morph-helper";
+import { findEnumImportPath, findEnumName, morphTsProperty } from "./utils/ts-morph-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
+// TODO move into own file
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function buildOptions(metadata: EntityMetadata<any>) {
+export function buildOptions(metadata: EntityMetadata<any>) {
     const { classNameSingular, classNamePlural, fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
 
+    const rootArgProps = metadata.props.filter((prop) => {
+        if (prop.reference == "m:1") {
+            if (!prop.targetMeta) throw new Error("targetMeta is not set for relation");
+            for (const innerProp of prop.targetMeta.props) {
+                if (innerProp.reference == "1:m" && innerProp.targetMeta == metadata && innerProp.mappedBy == prop.name) {
+                    const hasOwnCrudGenerator = Reflect.getMetadata(`data:crudGeneratorOptions`, prop.targetMeta.class);
+                    if (hasOwnCrudGenerator && innerProp.orphanRemoval) {
+                        //if the back relation has its own crud generator and has orphan removal, it's a root arg
+                        return true;
+                    }
+                }
+            }
+        }
+    });
+
     const crudSearchPropNames = metadata.props
+        .filter((prop) => prop.name != "status")
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "search") && !prop.name.startsWith("scope_"))
         .reduce((acc, prop) => {
             if (prop.type === "string" || prop.type === "text") {
@@ -37,6 +54,32 @@ function buildOptions(metadata: EntityMetadata<any>) {
         }, [] as string[]);
     const hasSearchArg = crudSearchPropNames.length > 0;
 
+    let statusProp = metadata.props.find((prop) => prop.name == "status");
+    if (statusProp) {
+        if (!statusProp.enum) {
+            console.warn(`${metadata.className} status prop must be an enum to be supported by crud generator`);
+            statusProp = undefined;
+        } else if (statusProp.nullable) {
+            console.warn(`${metadata.className} status prop must not be nullable to be supported by crud generator`);
+            statusProp = undefined;
+        } else if (morphTsProperty(statusProp.name, metadata).getInitializer()?.getText() == "") {
+            console.warn(`${metadata.className} status prop must have a default value to be supported by crud generator`);
+            statusProp = undefined;
+        }
+    }
+    let statusActiveItems: Array<string | number> | undefined = undefined;
+    if (statusProp) {
+        if (!statusProp.items) throw new Error("Status enum prop has not items");
+        statusActiveItems = statusProp.items.filter((item) => {
+            if (typeof item == "number") {
+                console.warn(`${metadata.className} status prop must not have numeric items to be supported by crud generator`);
+                return false;
+            }
+            return ["Active", "Visible", "Invisible", "Published", "Unpublished"].includes(item);
+        });
+    }
+    const hasStatusFilter = statusProp && statusActiveItems && statusActiveItems.length != statusProp.items?.length; //if all items are active ones, no need for status filter
+
     const crudFilterProps = metadata.props.filter(
         (prop) =>
             hasFieldFeature(metadata.class, prop.name, "filter") &&
@@ -51,7 +94,8 @@ function buildOptions(metadata: EntityMetadata<any>) {
                 prop.type === "boolean" ||
                 prop.type === "DateType" ||
                 prop.type === "Date" ||
-                prop.reference === "m:1"),
+                prop.reference === "m:1") &&
+            !rootArgProps.some((rootArgProp) => rootArgProp.name == prop.name),
     );
     const hasFilterArg = crudFilterProps.length > 0;
     const crudSortProps = metadata.props.filter(
@@ -72,10 +116,9 @@ function buildOptions(metadata: EntityMetadata<any>) {
     const hasSortArg = crudSortProps.length > 0;
 
     const hasSlugProp = metadata.props.some((prop) => prop.name == "slug");
-    const hasVisibleProp = metadata.props.some((prop) => prop.name == "visible");
+
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
     if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
-    const hasUpdatedAt = metadata.props.some((prop) => prop.name == "updatedAt");
     const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
     const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
 
@@ -91,12 +134,14 @@ function buildOptions(metadata: EntityMetadata<any>) {
         crudSortProps,
         hasSortArg,
         hasSlugProp,
-        hasVisibleProp,
+        statusProp,
+        statusActiveItems,
+        hasStatusFilter,
         scopeProp,
-        hasUpdatedAt,
         argsClassName,
         argsFileName,
         blockProps,
+        rootArgProps,
     };
 }
 
@@ -111,7 +156,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
     crudFilterProps.map((prop) => {
         if (prop.enum) {
             const enumName = findEnumName(prop.name, metadata);
-            const importPath = findEnumImportPath(enumName, generatorOptions, metadata);
+            const importPath = findEnumImportPath(enumName, `${generatorOptions.targetDirectory}/dto`, metadata);
             if (!generatedEnumNames.has(enumName)) {
                 generatedEnumNames.add(enumName);
                 enumFiltersOut += `@InputType()
@@ -252,20 +297,51 @@ function generatePaginatedDto({ generatorOptions, metadata }: { generatorOptions
 
 function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
-    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg } = buildOptions(metadata);
+    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, statusProp, statusActiveItems, hasStatusFilter, rootArgProps } =
+        buildOptions(metadata);
     const imports: Imports = [];
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`));
     }
 
-    const argsOut = `import { ArgsType, Field, IntersectionType } from "@nestjs/graphql";
+    let statusFilterClassName: string | undefined = undefined;
+    let statusFilterDefaultValue;
+    let statusFilterItems: Array<string | number> | undefined = undefined;
+    if (hasStatusFilter && statusProp) {
+        if (statusActiveItems && statusActiveItems.length > 1) {
+            //more than one active status, create enum that compresses them into single "Active"
+            statusFilterItems = ["Active", ...(statusProp.items?.filter((item) => !statusActiveItems.includes(item)) ?? [])];
+            statusFilterClassName = `${classNameSingular}StatusFilter`;
+            statusFilterDefaultValue = `${statusFilterClassName}.Active`;
+        } else {
+            statusFilterClassName = findEnumName(statusProp.name, metadata);
+            statusFilterDefaultValue = morphTsProperty(statusProp.name, metadata).getInitializer()?.getText();
+            imports.push({
+                name: statusFilterClassName,
+                importPath: findEnumImportPath(statusFilterClassName, `${generatorOptions.targetDirectory}/dto`, metadata),
+            });
+        }
+    }
+
+    const argsOut = `import { ArgsType, Field, IntersectionType, registerEnumType, ID } from "@nestjs/graphql";
     import { Type } from "class-transformer";
-    import { IsOptional, IsString, ValidateNested } from "class-validator";
+    import { IsOptional, IsString, ValidateNested, IsEnum, IsUUID } from "class-validator";
     import { OffsetBasedPaginationArgs } from "@comet/cms-api";
     import { ${classNameSingular}Filter } from "./${fileNameSingular}.filter";
     import { ${classNameSingular}Sort } from "./${fileNameSingular}.sort";
 
     ${generateImportsCode(imports)}
+
+    ${
+        statusFilterItems && statusFilterClassName
+            ? `
+    export enum ${statusFilterClassName} {
+        ${statusFilterItems.map((item) => `${item} = "${item}",`).join("\n")}
+        }
+    registerEnumType(${statusFilterClassName}, { name: "${statusFilterClassName}" });
+    `
+            : ""
+    }
 
     @ArgsType()
     export class ${argsClassName} extends OffsetBasedPaginationArgs {
@@ -276,6 +352,31 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         @ValidateNested()
         @Type(() => ${scopeProp.type})
         scope: ${scopeProp.type};
+        `
+                : ""
+        }
+
+        ${rootArgProps
+            .map((rootArgProp) => {
+                if (integerTypes.includes(rootArgProp.type)) {
+                    return `@Field(() => ID)
+                    @Transform(({ value }) => value.map((id: string) => parseInt(id)))
+                    @IsInt()
+                    ${rootArgProp.name}: number;`;
+                } else {
+                    return `@Field(() => ID)
+                    @IsUUID()
+                    ${rootArgProp.name}: string;`;
+                }
+            })
+            .join("")}
+
+        ${
+            hasStatusFilter
+                ? `
+        @Field(() => ${statusFilterClassName}, { defaultValue: ${statusFilterDefaultValue} })
+        @IsEnum(${statusFilterClassName})
+        status: ${statusFilterClassName};
         `
                 : ""
         }
@@ -382,7 +483,7 @@ function generateInputHandling(
     metadata: EntityMetadata<any>,
 ): string {
     const { instanceNameSingular } = buildNameVariants(metadata);
-    const { blockProps, hasVisibleProp, scopeProp } = buildOptions(metadata);
+    const { blockProps, scopeProp, rootArgProps } = buildOptions(metadata);
 
     const props = metadata.props.filter((prop) => !options.excludeFields || !options.excludeFields.includes(prop.name));
 
@@ -393,6 +494,10 @@ function generateInputHandling(
 
     const inputRelationManyToOneProps = relationManyToOneProps
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
+        .filter((prop) => {
+            //filter out props that are rootArgProps
+            return !rootArgProps.some((rootArgProps) => rootArgProps.name === prop.name);
+        })
         .map((prop) => {
             return {
                 name: prop.name,
@@ -442,8 +547,18 @@ function generateInputHandling(
     }
     ${options.assignEntityCode}
     ...${noAssignProps.length ? `assignInput` : options.inputName},
-        ${options.mode == "create" && hasVisibleProp ? `visible: false,` : ""}
         ${options.mode == "create" && scopeProp ? `scope,` : ""}
+        ${
+            options.mode == "create"
+                ? rootArgProps
+                      .map((rootArgProp) => {
+                          return `${rootArgProp.name}: Reference.create(await this.${classNameToInstanceName(
+                              rootArgProp.type,
+                          )}Repository.findOneOrFail(${rootArgProp.name})), `;
+                      })
+                      .join("")
+                : ""
+        }
         ${
             options.mode == "create" || options.mode == "updateNested"
                 ? inputRelationManyToOneProps
@@ -669,8 +784,19 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
 function generateResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular, instanceNameSingular, classNamePlural, fileNamePlural, instanceNamePlural } =
         buildNameVariants(metadata);
-    const { scopeProp, argsClassName, argsFileName, hasSlugProp, hasSearchArg, hasSortArg, hasFilterArg, hasVisibleProp, hasUpdatedAt } =
-        buildOptions(metadata);
+    const {
+        scopeProp,
+        argsClassName,
+        argsFileName,
+        hasSlugProp,
+        hasSearchArg,
+        hasSortArg,
+        hasFilterArg,
+        statusProp,
+        statusActiveItems,
+        hasStatusFilter,
+        rootArgProps,
+    } = buildOptions(metadata);
 
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
     const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
@@ -690,6 +816,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         .forEach((prop) => {
             injectRepositories.add(prop.type);
         });
+    rootArgProps.forEach((prop) => {
+        injectRepositories.add(prop.type);
+    });
 
     const {
         imports: relationsFieldResolverImports,
@@ -706,9 +835,26 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         imports.push(generateEntityImport(scopeProp.targetMeta, generatorOptions.targetDirectory));
     }
 
+    if (statusProp) {
+        const enumName = findEnumName(statusProp.name, metadata);
+        const importPath = findEnumImportPath(enumName, generatorOptions.targetDirectory, metadata);
+        imports.push({
+            name: enumName,
+            importPath,
+        });
+    }
+
+    function generateIdArg(name: string, metadata: EntityMetadata<any>): string {
+        if (integerTypes.includes(metadata.properties[name].type)) {
+            return `@Args("${name}", { type: () => ID }, { transform: (value) => parseInt(value) }) ${name}: number`;
+        } else {
+            return `@Args("${name}", { type: () => ID }) ${name}: string`;
+        }
+    }
+
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
-    import { FindOptions, Reference } from "@mikro-orm/core";
+    import { FindOptions, ObjectQuery, Reference } from "@mikro-orm/core";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     import { extractGraphqlFields, SortDirection, RequiredPermission, AffectedEntity, validateNotModified } from "@comet/cms-api";
     import { GraphQLResolveInfo } from "graphql";
@@ -733,11 +879,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
         @Query(() => ${metadata.className})
         @AffectedEntity(${metadata.className})
-        async ${instanceNameSingular}(${
-        integerTypes.includes(metadata.properties.id.type)
-            ? `@Args("id", { type: () => ID }, { transform: (value) => parseInt(value) }) id: number`
-            : `@Args("id", { type: () => ID }) id: string`
-    }): Promise<${metadata.className}> {
+        async ${instanceNameSingular}(${generateIdArg("id", metadata)}): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
             return ${instanceNameSingular};
         }
@@ -759,17 +901,51 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
 
         @Query(() => Paginated${classNamePlural})
+        ${rootArgProps
+            .map((rootArgProp) => {
+                return `@AffectedEntity(${rootArgProp.targetMeta?.className}, { idArg: "${rootArgProp.name}" })`;
+            })
+            .join("")}
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
-            @Args() { ${scopeProp ? `scope, ` : ""}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${
-        hasSortArg ? `sort, ` : ""
-    }offset, limit }: ${argsClassName}${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
+            @Args() {${Object.entries({
+                scope: !!scopeProp,
+                ...rootArgProps.reduce((acc, rootArgProp) => {
+                    acc[rootArgProp.name] = true;
+                    return acc;
+                }, {} as Record<string, boolean>),
+                status: !!hasStatusFilter,
+                search: !!hasSearchArg,
+                filter: !!hasFilterArg,
+                sort: !!hasSortArg,
+                offset: true,
+                limit: true,
+            })
+                .filter(([key, use]) => use)
+                .map(([key]) => key)
+                .join(", ")}}: ${argsClassName}
+            ${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
         ): Promise<Paginated${classNamePlural}> {
             const where${
                 hasSearchArg || hasFilterArg
                     ? ` = this.${instanceNamePlural}Service.getFindCondition({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} });`
                     : `: ObjectQuery<${metadata.className}> = {}`
             }
+            ${
+                hasStatusFilter && statusActiveItems && statusActiveItems.length > 1
+                    ? `if (status == "Active") {
+                where.status = { $in: [${statusActiveItems.map((item) => `"${item}"`).join(", ")}] };
+            } else {
+                where.status = status;
+            }`
+                    : ""
+            }
+            ${hasStatusFilter && statusActiveItems && statusActiveItems.length <= 1 ? `where.status = status;` : ""}
             ${scopeProp ? `where.scope = scope;` : ""}
+            ${rootArgProps
+                .map((rootArgProp) => {
+                    return `where.${rootArgProp.name} = ${rootArgProp.name};`;
+                })
+                .join("\n")}
 
             ${
                 hasOutputRelations
@@ -813,9 +989,17 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
 
         @Mutation(() => ${metadata.className})
+        ${rootArgProps
+            .map((rootArgProp) => {
+                return `@AffectedEntity(${rootArgProp.targetMeta?.className}, { idArg: "${rootArgProp.name}" })`;
+            })
+            .join("")}
         async create${classNameSingular}(
-            ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
-            @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
+            ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}${rootArgProps
+                      .map((rootArgProp) => {
+                          return `${generateIdArg(rootArgProp.name, metadata)}, `;
+                      })
+                      .join("")}@Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
 
             ${generateInputHandling(
@@ -837,22 +1021,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         @Mutation(() => ${metadata.className})
         @AffectedEntity(${metadata.className})
         async update${classNameSingular}(
-            ${
-                integerTypes.includes(metadata.properties.id.type)
-                    ? `@Args("id", { type: () => ID }, { transform: (value) => parseInt(value) }) id: number,`
-                    : `@Args("id", { type: () => ID }) id: string,`
-            }
-            @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput,
-            ${hasUpdatedAt ? `@Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,` : ""}
+            ${generateIdArg("id", metadata)},
+            @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput
         ): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
-            ${
-                hasUpdatedAt
-                    ? `if (lastUpdatedAt) {
-                validateNotModified(${instanceNameSingular}, lastUpdatedAt);
-            }`
-                    : ""
-            }
             ${generateInputHandling({ mode: "update", inputName: "input", assignEntityCode: `${instanceNameSingular}.assign({` }, metadata)}
 
             await this.entityManager.flush();
@@ -868,37 +1040,11 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
         @Mutation(() => Boolean)
         @AffectedEntity(${metadata.className})
-        async delete${metadata.className}(${
-                      integerTypes.includes(metadata.properties.id.type)
-                          ? `@Args("id", { type: () => ID }, { transform: (value) => parseInt(value) }) id: number`
-                          : `@Args("id", { type: () => ID }) id: string`
-                  }): Promise<boolean> {
+        async delete${metadata.className}(${generateIdArg("id", metadata)}): Promise<boolean> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
             await this.entityManager.remove(${instanceNameSingular});
             await this.entityManager.flush();
             return true;
-        }
-        `
-                : ""
-        }
-
-        ${
-            hasVisibleProp && generatorOptions.update
-                ? `
-        @Mutation(() => ${metadata.className})
-        @AffectedEntity(${metadata.className})
-        async update${classNameSingular}Visibility(
-            @Args("id", { type: () => ID }) id: string,
-            @Args("visible", { type: () => Boolean }) visible: boolean,
-        ): Promise<${metadata.className}> {
-            const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
-
-            ${instanceNameSingular}.assign({
-                visible,
-            });
-            await this.entityManager.flush();
-
-            return ${instanceNameSingular};
         }
         `
                 : ""
@@ -963,7 +1109,16 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
         });
 
         metadata.props
-            .filter((prop) => prop.reference === "1:m" && prop.orphanRemoval)
+            .filter((prop) => {
+                if (prop.reference === "1:m" && prop.orphanRemoval) {
+                    if (!prop.targetMeta) throw new Error(`Target metadata not set`);
+                    const hasOwnCrudGenerator = Reflect.getMetadata(`data:crudGeneratorOptions`, prop.targetMeta.class);
+                    if (!hasOwnCrudGenerator) {
+                        //generate nested resolver only if target entity has no own crud generator
+                        return true;
+                    }
+                }
+            })
             .forEach((prop) => {
                 if (!prop.targetMeta) throw new Error(`Target metadata not set`);
                 const { fileNameSingular } = buildNameVariants(prop.targetMeta);
