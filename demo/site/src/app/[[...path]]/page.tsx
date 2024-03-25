@@ -1,4 +1,4 @@
-import { PreviewData } from "@comet/cms-site";
+import { PreviewData } from "@src/app/api/site-preview/route";
 import { defaultLanguage, domain } from "@src/config";
 import { documentTypes } from "@src/documentTypes";
 import createGraphQLClient from "@src/util/createGraphQLClient";
