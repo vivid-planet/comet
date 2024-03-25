@@ -1,6 +1,7 @@
 "use client";
 import { DamImageBlock } from "@src/blocks/DamImageBlock";
 import Link from "next/link";
+import { FormattedDate } from "react-intl";
 import styled from "styled-components";
 
 import { GQLNewsListFragment } from "./NewsList.fragment.generated";
@@ -15,7 +16,9 @@ export function NewsList({ newsList }: { newsList: GQLNewsListFragment }) {
                         <Card>
                             <DamImageBlock data={news.image} aspectRatio="4x3" />
                             <h2>{news.title}</h2>
-                            {/* <p><FormattedDate value={news.createdAt} /></p> */}
+                            <p>
+                                <FormattedDate value={news.createdAt} />
+                            </p>
                         </Card>
                     </Link>
                 ))}

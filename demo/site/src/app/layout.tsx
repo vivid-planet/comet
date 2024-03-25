@@ -1,3 +1,4 @@
+import { IntlProvider } from "@src/util/IntlProvider";
 import StyledComponentsRegistry from "@src/util/StyledComponentsRegistry";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -16,7 +17,9 @@ export default function RootLayout({
     return (
         <html>
             <body className={inter.className}>
-                <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+                <IntlProvider>
+                    <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+                </IntlProvider>
             </body>
         </html>
     );
