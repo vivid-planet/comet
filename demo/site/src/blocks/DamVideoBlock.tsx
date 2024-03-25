@@ -1,3 +1,4 @@
+"use client";
 import { PreviewSkeleton, PropsWithData, withPreview } from "@comet/cms-site";
 import { DamVideoBlockData } from "@src/blocks.generated";
 import * as React from "react";
