@@ -3,7 +3,6 @@ import "reflect-metadata";
 export { AccessLogModule } from "./access-log/access-log.module";
 export { DisableCometGuards } from "./auth/decorators/disable-comet-guards.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
-export { PublicApi } from "./auth/decorators/public-api.decorator";
 export { createCometAuthGuard } from "./auth/guards/comet.guard";
 export { createAuthResolver } from "./auth/resolver/auth.resolver";
 export { createAuthProxyJwtStrategy } from "./auth/strategies/auth-proxy-jwt.strategy";

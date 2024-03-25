@@ -5,7 +5,6 @@ import { IncomingMessage } from "http";
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { GetCurrentUser } from "../decorators/get-current-user.decorator";
-import { PublicApi } from "../decorators/public-api.decorator";
 
 interface AuthResolverConfig {
     currentUser?: Type<CurrentUser>; // TODO Remove in future version as it is not used and here for backwards compatibility
@@ -15,7 +14,6 @@ interface AuthResolverConfig {
 
 export function createAuthResolver(config?: AuthResolverConfig): Type<unknown> {
     @Resolver(() => CurrentUser)
-    @PublicApi()
     class AuthResolver {
         @Query(() => CurrentUser)
         async currentUser(@GetCurrentUser() user: CurrentUser): Promise<CurrentUser> {

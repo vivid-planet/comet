@@ -20,7 +20,7 @@ export class UserPermissionsGuard implements CanActivate {
         const location = `${context.getClass().name}::${context.getHandler().name}()`;
 
         if (this.getDecorator(context, "disableCometGuards")) return true;
-        if (this.getDecorator(context, "publicApi")) return true;
+        if (context.getClass().name === "AuthResolver") return true;
 
         const user = this.getUser(context);
         if (!user) return false;
