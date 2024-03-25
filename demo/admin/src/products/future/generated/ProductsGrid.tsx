@@ -102,6 +102,7 @@ function ProductsGridToolbar() {
 type Props = {
     baseFilter?: GQLProductFilter;
 };
+
 export function ProductsGrid({ baseFilter }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
