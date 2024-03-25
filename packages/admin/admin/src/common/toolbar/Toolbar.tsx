@@ -6,7 +6,7 @@ import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
 
-export type ToolbarClassKey = "root" | "muiToolbar" | "mainContentContainer";
+export type ToolbarClassKey = "root" | "topBar" | "muiToolbar" | "mainContentContainer";
 
 export interface ToolbarProps
     extends ThemedComponentBaseProps<{
@@ -34,18 +34,39 @@ const Root = createComponentSlot(Paper)<ToolbarClassKey, OwnerState>({
         justify-content: center;
         top: ${ownerState.headerHeight}px;
         padding: 0;
-        min-height: 80px;
     `,
 );
+
+const TopBar = createComponentSlot("div")<ToolbarClassKey>({
+    componentName: "Toolbar",
+    slotName: "topBar",
+})(css`
+    min-height: 40px;
+`);
 
 const StyledToolbar = createComponentSlot(MuiToolbar)<ToolbarClassKey>({
     componentName: "Toolbar",
     slotName: "muiToolbar",
-})(css`
-    display: flex;
-    flex: 1;
-    align-items: stretch;
-`);
+})(
+    ({ theme }) => css`
+        display: flex;
+        flex: 1;
+        align-items: stretch;
+        border-top: solid 1px ${theme.palette.grey["50"]};
+        box-sizing: border-box;
+        min-height: 60px;
+        padding: 0 5px;
+
+        ${theme.breakpoints.up("sm")} {
+            min-height: 60px;
+            padding: 0 10px;
+        }
+
+        @media (min-width: 0px) and (orientation: landscape) {
+            min-height: 60px;
+        }
+    `,
+);
 
 const MainContentContainer = createComponentSlot("div")<ToolbarClassKey>({
     componentName: "Toolbar",
@@ -65,6 +86,7 @@ export const Toolbar = (inProps: ToolbarProps) => {
 
     return (
         <Root elevation={elevation} ownerState={ownerState} {...slotProps?.root} {...restProps}>
+            <TopBar />
             <StyledToolbar {...slotProps?.muiToolbar}>
                 <MainContentContainer {...slotProps?.mainContentContainer}>{children}</MainContentContainer>
             </StyledToolbar>

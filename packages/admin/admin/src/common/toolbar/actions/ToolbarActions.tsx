@@ -13,10 +13,17 @@ interface Props extends ThemedComponentBaseProps {
 const Root = createComponentSlot("div")<ToolbarActionsClassKey>({
     componentName: "ToolbarActions",
     slotName: "root",
-})(css`
-    display: flex;
-    align-items: center;
-`);
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        gap: ${theme.spacing(2)};
+
+        ${theme.breakpoints.up("md")} {
+            gap: 0 ${theme.spacing(4)};
+        }
+    `,
+);
 
 export const ToolbarActions = (inProps: Props) => {
     const { children, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarActions" });
