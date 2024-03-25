@@ -5,7 +5,7 @@ import { PreviewContext } from "../preview/PreviewContext";
 import { sendSitePreviewIFrameMessage } from "./iframebridge/sendSitePreviewIFrameMessage";
 import { SitePreviewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 
-const SitePreview: React.FunctionComponent = ({ children }) => {
+const SitePreview: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
     const router = useRouter();
 
     React.useEffect(() => {
@@ -38,7 +38,7 @@ const SitePreview: React.FunctionComponent = ({ children }) => {
     );
 };
 
-export const SitePreviewProvider: React.FunctionComponent = ({ children }) => {
+export const SitePreviewProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
     const router = useRouter();
     return <>{router.isPreview ? <SitePreview>{children}</SitePreview> : children}</>;
 };

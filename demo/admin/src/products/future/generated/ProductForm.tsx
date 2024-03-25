@@ -24,10 +24,10 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { ArrowLeft } from "@comet/admin-icons";
+import { ArrowLeft, Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, PixelImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
+import { FormControlLabel, IconButton, InputAdornment, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
@@ -110,9 +110,10 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         };
         if (mode === "edit") {
             if (!id) throw new Error();
+            const { createdAt, ...updateInput } = output;
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
-                variables: { id, input: output },
+                variables: { id, input: updateInput },
             });
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
@@ -183,6 +184,20 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         />
 
                         <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
+
+                        <Field
+                            readOnly
+                            disabled
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <Lock />
+                                </InputAdornment>
+                            }
+                            fullWidth
+                            name="createdAt"
+                            component={FinalFormDatePicker}
+                            label={<FormattedMessage id="product.createdAt" defaultMessage="Created" />}
+                        />
 
                         <TextAreaField
                             required

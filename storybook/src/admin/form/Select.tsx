@@ -86,9 +86,9 @@ function Story() {
                                         )}
                                     </Field>
 
-                                    <Field name="flavorDisabled" label="Disabled Flavor" fullWidth>
+                                    <Field name="flavorDisabled" label="Disabled Flavor" fullWidth disabled>
                                         {(props) => (
-                                            <FinalFormSelect {...props} fullWidth disabled>
+                                            <FinalFormSelect {...props} fullWidth>
                                                 {options.map((option) => (
                                                     <MenuItem value={option.value} key={option.value}>
                                                         {option.label}

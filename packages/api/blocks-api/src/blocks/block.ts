@@ -292,6 +292,7 @@ export function getRegisteredBlocks(): Block[] {
 export interface BlockContext {
     includeInvisibleContent?: boolean;
     previewDamUrls?: boolean;
+    relativeDamUrls?: boolean;
 }
 
 export function transformToSave(block: BlockDataInterface): TraversableTransformResponse {

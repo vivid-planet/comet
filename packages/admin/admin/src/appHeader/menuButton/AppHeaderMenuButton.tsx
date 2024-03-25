@@ -1,51 +1,37 @@
 import { HamburgerClose, HamburgerOpen } from "@comet/admin-icons";
-import { ComponentsOverrides, IconButton, IconButtonClassKey, IconButtonProps, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides, css, IconButton, IconButtonClassKey, IconButtonProps, Theme, useThemeProps } from "@mui/material";
 import * as React from "react";
 
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { MenuContext } from "../../mui/menu/Context";
 
 export type AppHeaderMenuButtonProps = IconButtonProps;
 
 export type AppHeaderMenuButtonClassKey = IconButtonClassKey;
 
-const styles = ({ spacing }: Theme) => {
-    return createStyles<AppHeaderMenuButtonClassKey, AppHeaderMenuButtonProps>({
-        root: {
-            color: "#fff",
-            marginLeft: spacing(2),
-            marginRight: spacing(2),
-        },
-        edgeStart: {},
-        edgeEnd: {},
-        colorInherit: {},
-        colorPrimary: {},
-        colorSecondary: {},
-        disabled: {},
-        sizeSmall: {},
-        sizeMedium: {},
-        sizeLarge: {},
-        colorError: {},
-        colorInfo: {},
-        colorSuccess: {},
-        colorWarning: {},
-    });
-};
-
-function MenuButton({ children, classes, ...restProps }: AppHeaderMenuButtonProps & WithStyles<typeof styles>): React.ReactElement {
+export const AppHeaderMenuButton = (inProps: AppHeaderMenuButtonProps) => {
+    const { children: propChildren, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminAppHeaderMenuButton" });
     const { toggleOpen, open } = React.useContext(MenuContext);
-    if (!children) {
-        children = open ? <HamburgerClose fontSize="large" /> : <HamburgerOpen fontSize="large" />;
-    }
+
+    const children = !propChildren ? open ? <HamburgerClose fontSize="large" /> : <HamburgerOpen fontSize="large" /> : propChildren;
 
     return (
-        <IconButton classes={classes} onClick={toggleOpen} {...restProps} size="large">
+        <Root onClick={toggleOpen} size="large" {...restProps}>
             {children}
-        </IconButton>
+        </Root>
     );
-}
+};
 
-export const AppHeaderMenuButton = withStyles(styles, { name: "CometAdminAppHeaderMenuButton" })(MenuButton);
+const Root = createComponentSlot(IconButton)<AppHeaderMenuButtonClassKey>({
+    componentName: "AppHeaderMenuButton",
+    slotName: "root",
+})(
+    ({ theme }) => css`
+        color: #fff;
+        margin-left: ${theme.spacing(2)};
+        margin-right: ${theme.spacing(2)};
+    `,
+);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -58,7 +44,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminAppHeaderMenuButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminAppHeaderMenuButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminAppHeaderMenuButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminAppHeaderMenuButton"];
         };
     }

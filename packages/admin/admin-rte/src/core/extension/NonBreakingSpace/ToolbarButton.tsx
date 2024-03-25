@@ -4,7 +4,7 @@ import { EditorState, Modifier } from "draft-js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import ControlButton from "../../Controls/ControlButton";
+import { ControlButton } from "../../Controls/ControlButton";
 import { IControlProps } from "../../types";
 
 const NO_BREAK_SPACE_UNICODE_CHAR = 0x00a0;
