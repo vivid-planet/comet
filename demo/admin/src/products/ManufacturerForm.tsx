@@ -166,7 +166,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
             if (!id) throw new Error();
             await client.mutate<GQLUpdateManufacturerMutation, GQLUpdateManufacturerMutationVariables>({
                 mutation: updateManufacturerMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.manufacturer.updatedAt },
+                variables: { id, input: output },
             });
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateManufacturerMutation, GQLCreateManufacturerMutationVariables>({

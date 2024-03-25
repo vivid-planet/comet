@@ -49,8 +49,8 @@ export const createManufacturerMutation = gql`
     ${manufacturerFormFragment}
 `;
 export const updateManufacturerMutation = gql`
-    mutation UpdateManufacturer($id: ID!, $input: ManufacturerUpdateInput!, $lastUpdatedAt: DateTime) {
-        updateManufacturer(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
+    mutation UpdateManufacturer($id: ID!, $input: ManufacturerUpdateInput!) {
+        updateManufacturer(id: $id, input: $input) {
             id
             updatedAt
             ...ManufacturerFormDetails
