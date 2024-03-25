@@ -19,7 +19,7 @@ export class UserPermissionsGuard implements CanActivate {
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const location = `${context.getClass().name}::${context.getHandler().name}()`;
 
-        if (this.getDecorator(context, "disableGlobalGuard")) return true;
+        if (this.getDecorator(context, "disableCometGuards")) return true;
         if (this.getDecorator(context, "publicApi")) return true;
 
         const user = this.getUser(context);

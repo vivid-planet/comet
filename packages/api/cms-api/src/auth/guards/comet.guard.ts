@@ -30,7 +30,7 @@ export function createCometAuthGuard(type?: string | string[]): Type<IAuthGuard>
         }
 
         async canActivate(context: ExecutionContext): Promise<boolean> {
-            if (this.reflector.getAllAndOverride("disableGlobalGuard", [context.getHandler(), context.getClass()])) {
+            if (this.reflector.getAllAndOverride("disableCometGuards", [context.getHandler(), context.getClass()])) {
                 return true;
             }
 
