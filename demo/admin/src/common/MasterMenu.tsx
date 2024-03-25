@@ -1,5 +1,6 @@
 import { Assets, Dashboard as DashboardIcon, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
 import {
+    ContentScopeIndicator,
     createRedirectsPage,
     CronJobsPage,
     DamPage,
@@ -9,6 +10,7 @@ import {
     PublisherPage,
     UserPermissionsPage,
 } from "@comet/cms-admin";
+import { ContentScope } from "@src/common/ContentScopeProvider";
 import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import Dashboard from "@src/dashboard/Dashboard";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
@@ -29,7 +31,6 @@ import { FormattedMessage } from "react-intl";
 import { Redirect, RouteComponentProps } from "react-router-dom";
 
 import { ComponentDemo } from "./ComponentDemo";
-import { ContentScopeIndicator } from "./ContentScopeIndicator";
 import { EditPageNode } from "./EditPageNode";
 
 export const pageTreeDocumentTypes = {
@@ -72,7 +73,7 @@ export const masterMenuData: MasterMenuData = [
                         documentTypes={pageTreeDocumentTypes}
                         editPageNode={EditPageNode}
                         category={category}
-                        renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} variant="toolbar" />}
+                        renderContentScopeIndicator={(scope: ContentScope) => <ContentScopeIndicator scope={scope} />}
                     />
                 );
             },
@@ -98,12 +99,7 @@ export const masterMenuData: MasterMenuData = [
         icon: <Assets />,
         route: {
             path: "/assets",
-            render: () => (
-                <DamPage
-                    renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} domainOnly variant="toolbar" />}
-                    additionalToolbarItems={<ImportFromUnsplash />}
-                />
-            ),
+            render: () => <DamPage additionalToolbarItems={<ImportFromUnsplash />} />,
         },
         requiredPermission: "dam",
     },
