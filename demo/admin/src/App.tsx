@@ -6,14 +6,7 @@ import "material-design-icons/iconfont/material-icons.css";
 import "typeface-open-sans";
 
 import { ApolloProvider } from "@apollo/client";
-import {
-    ContentGenerationServiceProvider,
-    ErrorDialogHandler,
-    MasterLayout,
-    MuiThemeProvider,
-    RouterBrowserRouter,
-    SnackbarProvider,
-} from "@comet/admin";
+import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import {
     CmsBlockContextProvider,
     createHttpClient,
@@ -81,6 +74,10 @@ class App extends React.Component {
                                         label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
                                     },
                                 },
+                                contentGeneration: {
+                                    generateAltText: true,
+                                    generateImageTitle: true,
+                                },
                             }}
                         >
                             <IntlProvider locale="en" messages={getMessages()}>
@@ -101,33 +98,31 @@ class App extends React.Component {
                                                         pageTreeDocumentTypes={pageTreeDocumentTypes}
                                                         additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
                                                     >
-                                                        <ContentGenerationServiceProvider config={{ image: true, imageAdvanced: true }}>
-                                                            <React.Fragment>
-                                                                <GlobalStyle />
-                                                                <ContentScopeProvider>
-                                                                    {({ match }) => (
-                                                                        <Switch>
-                                                                            {/* @TODO: add preview to contentScope once site is capable of contentScope */}
-                                                                            <Route
-                                                                                path={`${match.path}/preview`}
-                                                                                render={(props) => <SitePreview {...props} />}
-                                                                            />
-                                                                            <Route
-                                                                                render={() => (
-                                                                                    <MasterLayout
-                                                                                        headerComponent={MasterHeader}
-                                                                                        menuComponent={MasterMenu}
-                                                                                    >
-                                                                                        <MasterMenuRoutes menu={masterMenuData} />
-                                                                                    </MasterLayout>
-                                                                                )}
-                                                                            />
-                                                                        </Switch>
-                                                                    )}
-                                                                </ContentScopeProvider>
-                                                                <ErrorDialogHandler />
-                                                            </React.Fragment>
-                                                        </ContentGenerationServiceProvider>
+                                                        <React.Fragment>
+                                                            <GlobalStyle />
+                                                            <ContentScopeProvider>
+                                                                {({ match }) => (
+                                                                    <Switch>
+                                                                        {/* @TODO: add preview to contentScope once site is capable of contentScope */}
+                                                                        <Route
+                                                                            path={`${match.path}/preview`}
+                                                                            render={(props) => <SitePreview {...props} />}
+                                                                        />
+                                                                        <Route
+                                                                            render={() => (
+                                                                                <MasterLayout
+                                                                                    headerComponent={MasterHeader}
+                                                                                    menuComponent={MasterMenu}
+                                                                                >
+                                                                                    <MasterMenuRoutes menu={masterMenuData} />
+                                                                                </MasterLayout>
+                                                                            )}
+                                                                        />
+                                                                    </Switch>
+                                                                )}
+                                                            </ContentScopeProvider>
+                                                            <ErrorDialogHandler />
+                                                        </React.Fragment>
                                                     </CmsBlockContextProvider>
                                                 </SnackbarProvider>
                                             </DndProvider>

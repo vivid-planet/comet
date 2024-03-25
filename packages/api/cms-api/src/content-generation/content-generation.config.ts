@@ -1,7 +1,7 @@
-import { ContentGenerationRequest, ModelType } from "./content-generation.types";
-
-export interface ContentGenerationConfig {
-    models: {
-        [key in ModelType]?: (request: ContentGenerationRequest) => Promise<string>;
+export type OpenAiContentGenerationConfig<T> = {
+    [K in keyof T]: {
+        deploymentId: string;
+        apiKey: string;
+        apiUrl: string;
     };
-}
+};

@@ -28,6 +28,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         contentGeneration: {
             apiKey: envVars.CONTENT_GENERATION_API_KEY,
             url: envVars.CONTENT_GENERATION_API_URL,
+            deploymentId: envVars.CONTENT_GENERATION_DEPLOYMENT_ID,
         },
         dam: {
             ...cometConfig.dam,

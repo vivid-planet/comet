@@ -103,4 +103,8 @@ export class EnvironmentVariables {
     @IsString()
     @IsOptional()
     CONTENT_GENERATION_API_KEY?: string;
+
+    @IsString()
+    @IsOptional()
+    CONTENT_GENERATION_DEPLOYMENT_ID?: string;
 }

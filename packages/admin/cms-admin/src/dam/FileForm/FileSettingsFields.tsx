@@ -1,6 +1,5 @@
 import { gql, useApolloClient, useMutation } from "@apollo/client";
 import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading } from "@comet/admin";
-import { useContentGenerationService } from "@comet/admin/lib/contentGeneration/useContentGenerationService";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArtificialIntelligence, Calendar } from "@comet/admin-icons";
 import { IconButton, InputAdornment } from "@mui/material";
@@ -51,9 +50,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
     const scope = useDamScope();
     const damConfig = useDamConfig();
     const formApi = useForm();
-    const {
-        config: { image: ContentGenerationEnabled },
-    } = useContentGenerationService();
+    const { contentGeneration } = useDamConfig();
     const damIsFilenameOccupied = React.useCallback(
         async (filename: string): Promise<boolean> => {
             const { data } = await apollo.query<GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables>({
@@ -124,7 +121,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                     component={FinalFormInput}
                     fullWidth
                     endAdornment={
-                        ContentGenerationEnabled && (
+                        contentGeneration?.generateAltText && (
                             <IconButton
                                 color="primary"
                                 onClick={async () => {
@@ -146,7 +143,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                     component={FinalFormInput}
                     fullWidth
                     endAdornment={
-                        ContentGenerationEnabled && (
+                        contentGeneration?.generateImageTitle && (
                             <IconButton
                                 color="primary"
                                 onClick={async () => {
