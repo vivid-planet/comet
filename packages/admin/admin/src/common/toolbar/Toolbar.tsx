@@ -5,6 +5,7 @@ import * as React from "react";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
+import { ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";
 
 export type ToolbarClassKey = "root" | "topBar" | "muiToolbar" | "mainContentContainer";
 
@@ -13,9 +14,13 @@ export interface ToolbarProps
         root: typeof Paper;
         muiToolbar: typeof MuiToolbar;
         mainContentContainer: "div";
+        topBar: "div";
     }> {
     elevation?: number;
     children?: React.ReactNode;
+    scopeIndicator?: React.ReactNode;
+    hideTopBar?: boolean;
+    hideBottomBar?: boolean;
 }
 
 type OwnerState = {
@@ -77,7 +82,15 @@ const MainContentContainer = createComponentSlot("div")<ToolbarClassKey>({
 `);
 
 export const Toolbar = (inProps: ToolbarProps) => {
-    const { children, elevation = 1, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbar" });
+    const {
+        children,
+        hideTopBar = false,
+        hideBottomBar = false,
+        elevation = 1,
+        slotProps,
+        scopeIndicator,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminToolbar" });
     const { headerHeight } = React.useContext(MasterLayoutContext);
 
     const ownerState: OwnerState = {
@@ -86,10 +99,16 @@ export const Toolbar = (inProps: ToolbarProps) => {
 
     return (
         <Root elevation={elevation} ownerState={ownerState} {...slotProps?.root} {...restProps}>
-            <TopBar />
-            <StyledToolbar {...slotProps?.muiToolbar}>
-                <MainContentContainer {...slotProps?.mainContentContainer}>{children}</MainContentContainer>
-            </StyledToolbar>
+            {!hideTopBar && (
+                <TopBar>
+                    <ToolbarBreadcrumbs scopeIndicator={scopeIndicator} />
+                </TopBar>
+            )}
+            {!hideBottomBar && (
+                <StyledToolbar {...slotProps?.muiToolbar}>
+                    <MainContentContainer {...slotProps?.mainContentContainer}>{children}</MainContentContainer>
+                </StyledToolbar>
+            )}
         </Root>
     );
 };

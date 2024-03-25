@@ -39,8 +39,7 @@ const MainMenuItems: React.FunctionComponent = () => {
 
     return (
         <>
-            <ContentScopeIndicator />
-            <Toolbar>
+            <Toolbar scopeIndicator={<ContentScopeIndicator />}>
                 <ToolbarAutomaticTitleItem />
             </Toolbar>
 

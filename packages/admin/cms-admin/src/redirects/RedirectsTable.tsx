@@ -23,6 +23,7 @@ import { DataGrid, getGridSingleSelectOperators, GridColDef, GridToolbarQuickFil
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import RedirectActiveness from "./RedirectActiveness";
 import { deleteRedirectMutation, paginatedRedirectsQuery } from "./RedirectsTable.gql";
 import { GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables, namedOperations } from "./RedirectsTable.gql.generated";
@@ -34,7 +35,7 @@ interface Props {
 
 function RedirectsTableToolbar() {
     return (
-        <Toolbar>
+        <Toolbar scopeIndicator={<ContentScopeIndicator />}>
             <ToolbarAutomaticTitleItem />
             <ToolbarItem>
                 <GridToolbarQuickFilter />
