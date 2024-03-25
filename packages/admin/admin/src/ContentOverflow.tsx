@@ -1,14 +1,17 @@
 // TODO: Implement themability after theming-refactor is merged (https://github.com/vivid-planet/comet/pull/1376)
 
 import { Close, Maximize } from "@comet/admin-icons";
-import { ButtonBase, Dialog, DialogContent as MuiDialogContent, DialogTitle as MuiDialogTitle, IconButton, Paper, SvgIcon } from "@mui/material";
+import { ButtonBase, Dialog, DialogContent as MuiDialogContent, DialogTitle as MuiDialogTitle, IconButton, Paper } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 export type ContentOverflowProps = React.PropsWithChildren<{
     dialogTitle?: React.ReactNode;
-    expandIcon?: React.ElementType<React.ComponentProps<typeof SvgIcon>>;
+    iconMapping?: {
+        openDialog?: React.ReactNode;
+        closeDialog?: React.ReactNode;
+    };
 }>;
 
 const Root = styled("div")(
@@ -104,26 +107,25 @@ const InnerDialogContent = styled("div")(
 
 export const ContentOverflow = ({
     children,
-    expandIcon: ExpandIcon = Maximize,
+    iconMapping = {},
     dialogTitle = <FormattedMessage id="comet.contentOverflow.dialogTitle" defaultMessage="Preview" />,
 }: ContentOverflowProps) => {
     const [open, setOpen] = React.useState(false);
+    const { openDialog: openDialogIcon = <Maximize fontSize="inherit" />, closeDialog: closeDialogIcon = <Close /> } = iconMapping;
 
     return (
         <>
             <Root>
                 <ClickableContent onClick={() => setOpen(true)}>
                     <ContentContainer>{children}</ContentContainer>
-                    <Icon>
-                        <ExpandIcon fontSize="inherit" />
-                    </Icon>
+                    <Icon>{openDialogIcon}</Icon>
                 </ClickableContent>
             </Root>
             <Dialog open={open} onClose={() => setOpen(false)} PaperComponent={DialogPaper}>
                 <DialogTitle>
                     {dialogTitle}
                     <IconButton color="inherit" onClick={() => setOpen(false)}>
-                        <Close />
+                        {closeDialogIcon}
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
