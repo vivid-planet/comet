@@ -55,11 +55,17 @@ jobs:
               with:
                   cwd: "./demo/admin/lang/comet-lang"
 
-            - name: "Demo: Extract i18n strings"
+            - name: "Demo Admin: Extract i18n strings"
               run: |
                   cd demo/admin
                   pnpm run intl:extract
-                  cp -r lang-extracted/* lang/comet-demo-lang
+                  cp -r lang-extracted/* lang/comet-demo-lang/admin
+
+            - name: "Demo Site: Extract i18n strings"
+              run: |
+                  cd demo/site
+                  pnpm run intl:extract
+                  cp -r lang-extracted/* lang/comet-demo-lang/site
 
             - name: "Demo: Update translateable strings"
               uses: EndBug/add-and-commit@v9
