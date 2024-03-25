@@ -29,6 +29,7 @@ if (process.env.SITE_IS_PREVIEW !== "true") {
  * @type {import('next').NextConfig}
  **/
 const nextConfig = {
+<<<<<<< HEAD
     async rewrites() {
         return [
             {
@@ -36,6 +37,17 @@ const nextConfig = {
                 destination: process.env.API_URL + "/dam/:path*",
             },
         ];
+=======
+    rewrites: async () => {
+        if (process.env.NEXT_PUBLIC_SITE_IS_PREVIEW === "true") return [];
+        var rewrites = await require("./preBuild/build/preBuild/src/createRewrites").createRewrites();
+        return rewrites;
+    },
+    redirects: async () => {
+        if (process.env.NEXT_PUBLIC_SITE_IS_PREVIEW === "true") return [];
+        var redirects = await require("./preBuild/build/preBuild/src/createRedirects").createRedirects();
+        return redirects;
+>>>>>>> main
     },
     images: {
         deviceSizes: cometConfig.dam.allowedImageSizes,
