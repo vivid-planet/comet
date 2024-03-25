@@ -1,4 +1,4 @@
-import { IEditDialogApi, useStackSwitchApi } from "@comet/admin";
+import { IEditDialogApi } from "@comet/admin";
 import { Checkbox } from "@mui/material";
 import React from "react";
 import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
@@ -65,7 +65,6 @@ const PageTreeRow = ({
     const [hover, setHover] = React.useState(false);
 
     const [hoverState, setHoverState] = React.useState<DropInfo | undefined>();
-    const { activatePage } = useStackSwitchApi();
     const { documentTypes } = usePageTreeContext();
     const isEditable = !!(page.visibility !== "Archived" && documentTypes[page.documentType].editComponent);
 
@@ -184,12 +183,6 @@ const PageTreeRow = ({
     const topDividerHighlighted = hoverState?.dropTarget === "ADD_BEFORE" || topInBetweenButtonHovered;
     const bottomDividerHighlighted = hoverState?.dropTarget === "ADD_AFTER" || bottomInBetweenButtonHovered;
 
-    const onRowClick = () => {
-        if (isEditable) {
-            activatePage("edit", page.id);
-        }
-    };
-
     const _onSelectChanged = React.useCallback(() => {
         onSelectChanged(page.id, !page.selected);
     }, [page, onSelectChanged]);
@@ -230,7 +223,7 @@ const PageTreeRow = ({
             </sc.SelectPageCell>
             <sc.PageInfoCell component="div" title={page.name}>
                 <PageInfo page={page} toggleExpand={toggleExpand}>
-                    <PageLabel page={page} onClick={onRowClick} />
+                    <PageLabel page={page} isEditable={isEditable} />
                 </PageInfo>
             </sc.PageInfoCell>
             <sc.PageVisibilityCell component="div">
@@ -239,7 +232,7 @@ const PageTreeRow = ({
             <sc.PageActionsCell component="div">
                 <PageActions page={page} editDialog={editDialogApi} siteUrl={siteUrl} />
             </sc.PageActionsCell>
-            <sc.RowClickContainer onClick={onRowClick} />
+            {isEditable && <sc.RowClickStackLink pageName="edit" payload={page.id} tabIndex={-1} />}
 
             {hover && (
                 <sc.AddContainer>
