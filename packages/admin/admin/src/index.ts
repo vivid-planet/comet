@@ -44,6 +44,7 @@ export { ToolbarItem, ToolbarItemClassKey, ToolbarItemProps } from "./common/too
 export { ToolbarTitleItem, ToolbarTitleItemClassKey, ToolbarTitleItemProps } from "./common/toolbar/titleitem/ToolbarTitleItem";
 export { Toolbar, ToolbarClassKey, ToolbarProps } from "./common/toolbar/Toolbar";
 export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";
+export { ContentOverflow, ContentOverflowProps } from "./ContentOverflow";
 export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
