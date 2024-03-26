@@ -96,11 +96,4 @@ export const createTypographyOptions = (breakpoints: Breakpoints): TypographyOpt
         lineHeight: "20px",
         fontWeight: fontWeights.fontWeightRegular,
     },
-    button: {
-        fontFamily,
-        fontWeight: fontWeights.fontWeightRegular,
-        fontsize: 16,
-        lineHeight: "16px",
-        letterSpacing: 0,
-    },
 });
