@@ -22,7 +22,7 @@ interface ContentScopeControlsProps<S extends ContentScopeInterface = ContentSco
 export type ContentScopeCombinations = {
     mapping: string[];
     grouping?: ContentScopeInterface;
-    values: ContentScopeInterface[] | ContentScopeInterface[][];
+    values: ContentScopeInterface[];
 }[];
 
 // A standard control form for scope
@@ -50,7 +50,7 @@ export function ContentScopeControls<S extends ContentScopeInterface = ContentSc
         if (Object.keys(scopeValues).length == 1) {
             return groupDim.map((grouping) => ({
                 mapping: Object.keys(scopeValues),
-                values: [grouping],
+                values: [[grouping]],
             }));
         }
 

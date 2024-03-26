@@ -46,12 +46,22 @@ export default function ContentScopeSelect({
 
     const [searchValue, setSearchValue] = React.useState<string>("");
 
-    const filteredValues = searchable
-        ? values.map((item) => ({
-              ...item,
-              values: item.values.filter((value) => wrapInArray(value).join().toLowerCase().includes(searchValue.toLowerCase())),
-          }))
-        : values;
+    const filterBySearchValue = (searchValue: string) => {
+        if (!searchValue) return values;
+        const groupValues = values.filter((scopeVal) => scopeVal.grouping?.value.includes(searchValue.toLowerCase()));
+
+        const valuesWithSearch = values
+            .filter((scopeVal) => !scopeVal.grouping?.value.includes(searchValue.toLowerCase()))
+            .map((scopeVal) => ({
+                ...scopeVal,
+                values: scopeVal.values.filter((val) => val.some(({ value }: { value: string }) => value.includes(searchValue.toLowerCase()))),
+            }))
+            .filter((scopeVal) => scopeVal.values.length > 0);
+
+        return [...groupValues, ...valuesWithSearch];
+    };
+
+    const filteredValues = searchable ? filterBySearchValue(searchValue) : values;
     return (
         <AppHeaderDropdown buttonChildren={label} startIcon={Icon ? <Icon /> : undefined}>
             {(hideDropdown) => (
@@ -78,7 +88,7 @@ export default function ContentScopeSelect({
                     )}
                     {filteredValues.map(({ grouping, mapping, values }) => {
                         return (
-                            <React.Fragment key={`${grouping}${values}`}>
+                            <React.Fragment key={JSON.stringify({ grouping, values })}>
                                 {grouping && <ListSubheader>{grouping.label ? grouping.label : grouping.value}</ListSubheader>}
                                 {values.map((scopeVal, index) => (
                                     <ListItemButton
