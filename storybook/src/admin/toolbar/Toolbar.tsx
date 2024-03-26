@@ -50,10 +50,6 @@ function Story() {
                 <ToolbarActionButton startIcon={<Save />} variant="contained">
                     Primary button
                 </ToolbarActionButton>
-                {/*<Button startIcon={<ArrowRight />}>Secondary button</Button>*/}
-                {/*<Button startIcon={<Save />} variant="contained">*/}
-                {/*    Primary button*/}
-                {/*</Button>*/}
             </ToolbarActions>
         </Toolbar>
     );
