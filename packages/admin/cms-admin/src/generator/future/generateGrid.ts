@@ -8,7 +8,7 @@ import {
 } from "graphql";
 import { plural } from "pluralize";
 
-import { GeneratorReturn, GridConfig } from "./generator";
+import { GeneratorReturn, GridColumnConfig, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
 import { generateFieldListGqlStringForGrid } from "./utils/generateFieldList";
@@ -17,6 +17,11 @@ import { generateGridProps, generateGridPropsType, hasGridPropBaseFilter } from 
 import { findInputObjectType, findQueryTypeOrThrow, getFilterGQLTypeString } from "./utils/introspectionHelpers";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SimpleGridColumnConfig = GridColumnConfig<any> & { name: string };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SimpleGridConfig = Omit<GridConfig<any>, "columns"> & { columns: SimpleGridColumnConfig[] };
 
 function tsCodeRecordToString(object: TsCodeRecordToStringObject) {
     return `{${Object.entries(object)
@@ -40,7 +45,7 @@ export function generateGrid(
         gqlIntrospection,
     }: { exportName: string; baseOutputFilename: string; targetDirectory: string; gqlIntrospection: IntrospectionQuery },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: GridConfig<any>,
+    config: SimpleGridConfig,
 ): GeneratorReturn {
     const gqlQueryScopeParamName = "scope";
     const gqlType = config.gqlType;

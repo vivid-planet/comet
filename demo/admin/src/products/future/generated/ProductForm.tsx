@@ -104,7 +104,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         const output = {
             ...formValues,
 
-            price: parseFloat(formValues.price),
+            price: formValues.price ? parseFloat(formValues.price) : null,
             image: rootBlocks.image.state2Output(formValues.image),
         };
         if (mode === "edit") {

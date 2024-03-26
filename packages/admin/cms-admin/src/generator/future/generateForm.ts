@@ -1,7 +1,7 @@
 import { IntrospectionQuery } from "graphql";
 
 import { generateFormField } from "./generateFormField";
-import { FormConfig, GeneratorReturn } from "./generator";
+import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
 import { generateFieldListGqlString } from "./utils/generateFieldList";
@@ -11,6 +11,11 @@ import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 import { generateInitialValuesValue } from "./utils/generateInitialValuesValue";
 import { generateOutputObject } from "./utils/generateOutputObject";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SimpleFormFieldConfig = FormFieldConfig<any> & { name: string };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SimpleFormConfig = Omit<FormConfig<any>, "fields"> & { fields: SimpleFormFieldConfig[] };
+
 export function generateForm(
     {
         exportName,
@@ -18,8 +23,7 @@ export function generateForm(
         targetDirectory,
         gqlIntrospection,
     }: { exportName: string; baseOutputFilename: string; targetDirectory: string; gqlIntrospection: IntrospectionQuery },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: FormConfig<any>,
+    config: SimpleFormConfig,
 ): GeneratorReturn {
     const gqlQueryScopeParamName = "scope";
     const gqlType = config.gqlType;
@@ -28,7 +32,7 @@ export function generateForm(
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
 
-    const fieldList = generateFieldListGqlString(config.fields);
+    const fieldList = generateFieldListGqlString(config.fields, gqlType, gqlIntrospection);
 
     const queries = gqlIntrospection.__schema.types.find((type) => type.name === "Query");
     if (!queries || queries.kind !== "OBJECT") throw new Error(`Missing Query-Type in schema. Do any queries exist?`);
@@ -56,18 +60,25 @@ export function generateForm(
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
 
     const readOnlyFields = config.fields.filter((field) => field.readOnly);
+    readOnlyFields.forEach((field) => {
+        if (field.name.includes(".")) {
+            throw new Error(`Readonly is currently not support for nested fields.`);
+        }
+    });
 
     let hooksCode = "";
 
-    config.fields.map((field) => {
-        const generated = generateFormField({ gqlIntrospection }, field, config);
-        for (const name in generated.gqlDocuments) {
-            gqlDocuments[name] = generated.gqlDocuments[name];
-        }
-        imports.push(...generated.imports);
-        hooksCode += generated.hooksCode;
-        return generated.code;
-    });
+    const fieldsCode = config.fields
+        .map<string>((field) => {
+            const generated = generateFormField({ gqlIntrospection }, field, config);
+            for (const name in generated.gqlDocuments) {
+                gqlDocuments[name] = generated.gqlDocuments[name];
+            }
+            imports.push(...generated.imports);
+            hooksCode += generated.hooksCode;
+            return generated.code;
+        })
+        .join("\n");
 
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
@@ -108,17 +119,6 @@ export function generateForm(
         }
         \${${`${instanceGqlType}FormFragment`}}
     `;
-
-    const fieldsCode = config.fields
-        .map((field) => {
-            const generated = generateFormField({ gqlIntrospection }, field, config);
-            for (const name in generated.gqlDocuments) {
-                gqlDocuments[name] = generated.gqlDocuments[name];
-            }
-            imports.push(...generated.imports);
-            return generated.code;
-        })
-        .join("\n");
 
     const code = `import { useApolloClient, useQuery } from "@apollo/client";
     import {
@@ -200,9 +200,9 @@ export function generateForm(
             ${instanceGqlType}Query,
             id ? { variables: { id${queryScopeParam ? `, scope` : ""} } } : { skip: true },
         );
-
-        const initialValues = ${generateInitialValuesValue({ config, fragmentName, rootBlocks, instanceGqlType, gqlIntrospection, gqlType })};
-
+    
+        const initialValues = ${generateInitialValuesValue({ config, fragmentName, rootBlocks, instanceGqlType, gqlType, gqlIntrospection })};
+    
         const saveConflict = useFormSaveConflict({
             checkConflict: async () => {
                 const updatedAt = await queryUpdatedAt(client, "${instanceGqlType}", id);

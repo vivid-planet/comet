@@ -7,6 +7,11 @@ import { RootBlocks } from "./findRootBlocks";
 import { getRootProps } from "./generateFieldList";
 import { isFieldOptional } from "./isFieldOptional";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SimpleFormFieldConfig = FormFieldConfig<any> & { name: string };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SimpleFormConfig = Omit<FormConfig<any>, "fields"> & { fields: SimpleFormFieldConfig[] };
+
 export function generateInitialValuesValue({
     instanceGqlType,
     fragmentName,
@@ -17,8 +22,7 @@ export function generateInitialValuesValue({
 }: {
     instanceGqlType: string;
     fragmentName: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: FormConfig<any>;
+    config: SimpleFormConfig;
     rootBlocks: RootBlocks;
     gqlIntrospection: IntrospectionQuery;
     gqlType: string;

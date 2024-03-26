@@ -7,6 +7,11 @@ import { RootBlocks } from "./findRootBlocks";
 import { getRootProps } from "./generateFieldList";
 import { isFieldOptional } from "./isFieldOptional";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SimpleFormFieldConfig = FormFieldConfig<any> & { name: string };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SimpleFormConfig = Omit<FormConfig<any>, "fields"> & { fields: SimpleFormFieldConfig[] };
+
 export function generateFormValuesTypeDefinition({
     config,
     rootBlocks,
@@ -14,8 +19,7 @@ export function generateFormValuesTypeDefinition({
     gqlIntrospection,
     gqlType,
 }: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: FormConfig<any>;
+    config: SimpleFormConfig;
     rootBlocks: RootBlocks;
     fragmentName: string;
     gqlIntrospection: IntrospectionQuery;
@@ -44,7 +48,7 @@ export function generateFormValuesTypeDefinition({
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function generateFieldTypesStructureForRootProp(
     rootProp: string,
-    fields: FormFieldConfig<any>[],
+    fields: SimpleFormFieldConfig[],
     gqlIntrospection: IntrospectionQuery,
     gqlType: string,
 ) {

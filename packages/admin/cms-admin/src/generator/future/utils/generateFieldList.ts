@@ -1,7 +1,10 @@
-import { IntrospectionField, IntrospectionQuery, IntrospectionType } from "graphql";
+import { IntrospectionField, IntrospectionObjectType, IntrospectionQuery, IntrospectionType } from "graphql";
 import objectPath from "object-path";
 
 import { FormFieldConfig, GridColumnConfig } from "../generator";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SimpleGridColumnConfig = GridColumnConfig<any> & { name: string };
 
 type FieldsObjectType = { [key: string]: FieldsObjectType | boolean | string };
 const recursiveStringify = (obj: FieldsObjectType): string => {
@@ -29,10 +32,48 @@ export function getRootProps(fields: string[]): string[] {
     return Object.keys(fieldsObject);
 }
 
-export function generateFieldListGqlString(fields: FormFieldConfig<any>[]) {
-    const fieldsObject: FieldsObjectType = fields.reduce((acc, field) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function generateFieldListGqlString(fields: FormFieldConfig<any>[], gqlType: string, gqlIntrospection: IntrospectionQuery) {
+    const fieldsObject: FieldsObjectType = fields.reduce<FieldsObjectType>((acc, field) => {
         if (field.type === "asyncSelect") {
-            objectPath.set(acc, field.name, " { id ${labelField} }");
+            const name = String(field.name);
+            const introspectedFields = generateFieldListFromIntrospection(gqlIntrospection, gqlType);
+            const introspectionFieldWithPath = introspectedFields.find((field) => field.path === name);
+            if (!introspectionFieldWithPath) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
+            const introspectionField = introspectionFieldWithPath.field;
+            const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
+
+            if (introspectionFieldType.kind !== "OBJECT") throw new Error(`asyncSelect only supports OBJECT types`);
+            const objectType = gqlIntrospection.__schema.types.find((t) => t.kind === "OBJECT" && t.name === introspectionFieldType.name) as
+                | IntrospectionObjectType
+                | undefined;
+            if (!objectType) throw new Error(`Object type ${introspectionFieldType.name} not found for field ${name}`);
+
+            //find labelField: 1. as configured
+            let labelField = field.labelField;
+
+            //find labelField: 2. common names (name or title)
+            if (!labelField) {
+                labelField = objectType.fields.find((field) => {
+                    let type = field.type;
+                    if (type.kind == "NON_NULL") type = type.ofType;
+                    if ((field.name == "name" || field.name == "title") && type.kind == "SCALAR" && type.name == "String") {
+                        return true;
+                    }
+                })?.name;
+            }
+
+            //find labelField: 3. first string field
+            if (!labelField) {
+                labelField = objectType.fields.find((field) => {
+                    let type = field.type;
+                    if (type.kind == "NON_NULL") type = type.ofType;
+                    if (field.type.kind == "SCALAR" && field.type.name == "String") {
+                        return true;
+                    }
+                })?.name;
+            }
+            objectPath.set(acc, field.name, ` { id ${labelField} }`);
         } else {
             objectPath.set(acc, field.name, true);
         }
@@ -41,9 +82,9 @@ export function generateFieldListGqlString(fields: FormFieldConfig<any>[]) {
     return recursiveStringify(fieldsObject);
 }
 
-export function generateFieldListGqlStringForGrid(fields: GridColumnConfig<any>[]) {
+export function generateFieldListGqlStringForGrid(fields: SimpleGridColumnConfig[]) {
     const fieldsObject: FieldsObjectType = fields.reduce((acc, field) => {
-        objectPath.set(acc, field.name, true);
+        objectPath.set(acc, String(field.name), true);
         return acc;
     }, {});
     return recursiveStringify(fieldsObject);
@@ -65,6 +106,7 @@ function fieldListFromIntrospectionTypeRecursive(
         }
         if (outputType.kind === "OBJECT") {
             const subFields = fieldListFromIntrospectionTypeRecursive(types, outputType.name, path);
+            acc.push({ path: path, field: field });
             acc.push(...subFields);
         } else {
             acc.push({
