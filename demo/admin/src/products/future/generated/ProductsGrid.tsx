@@ -22,7 +22,7 @@ import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
-import { filter } from "graphql-anywhere";
+import { filter as objectFilter } from "graphql-anywhere";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -170,7 +170,7 @@ export function ProductsGrid({ filter }: Props): React.ReactElement {
                             onPaste={async ({ input }) => {
                                 await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                                     mutation: createProductMutation,
-                                    variables: { input: filter(productsFragment, input) },
+                                    variables: { input: objectFilter(productsFragment, input) },
                                 });
                             }}
                             onDelete={async () => {

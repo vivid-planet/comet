@@ -20,7 +20,7 @@ import {
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { filter } from "graphql-anywhere";
+import { filter as objectFilter } from "graphql-anywhere";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -212,7 +212,7 @@ export function ManufacturersGrid(): React.ReactElement {
                             onPaste={async ({ input }) => {
                                 await client.mutate<GQLCreateManufacturerMutation, GQLCreateManufacturerMutationVariables>({
                                     mutation: createManufacturerMutation,
-                                    variables: { input: filter(manufacturersFragment, input) },
+                                    variables: { input: objectFilter(manufacturersFragment, input) },
                                 });
                             }}
                             onDelete={async () => {

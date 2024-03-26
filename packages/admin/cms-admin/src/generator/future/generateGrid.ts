@@ -1,5 +1,6 @@
 import {
     IntrospectionEnumType,
+    IntrospectionField,
     IntrospectionInputObjectType,
     IntrospectionInputValue,
     IntrospectionNamedTypeRef,
@@ -64,8 +65,37 @@ function findInputObjectType(input: IntrospectionInputValue, schema: Introspecti
     return filterType;
 }
 
-function getFilterGQLTypeString({ gridQuery, gqlIntrospection }: { gridQuery: string; gqlIntrospection: IntrospectionQuery }): string | undefined {
-    const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
+function getRequiredQueryArgs({ gridQueryType }: { gridQueryType: IntrospectionField }) {
+    const skipParams = ["offset", "limit", "sort", "search", "filter", "scope"];
+    const requiredParams: IntrospectionInputValue[] = [];
+    gridQueryType.args.forEach((arg) => {
+        if (skipParams.includes(arg.name)) return;
+        if (arg.type.kind === "NON_NULL") {
+            requiredParams.push(arg);
+        }
+    });
+    return requiredParams;
+}
+
+function getRequiredMutationArgs({ createMutationType }: { createMutationType: IntrospectionField }) {
+    const skipParams = ["input"];
+    const requiredParams: IntrospectionInputValue[] = [];
+    createMutationType.args.forEach((arg) => {
+        if (skipParams.includes(arg.name)) return;
+        if (arg.type.kind === "NON_NULL") {
+            requiredParams.push(arg);
+        }
+    });
+    return requiredParams;
+}
+
+function getFilterGQLTypeString({
+    gridQueryType,
+    gqlIntrospection,
+}: {
+    gridQueryType: IntrospectionField;
+    gqlIntrospection: IntrospectionQuery;
+}): string | undefined {
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
     if (!filterArg) return;
 
@@ -77,32 +107,132 @@ function getFilterGQLTypeString({ gridQuery, gqlIntrospection }: { gridQuery: st
 
 function hasGridPropFilter({
     config,
-    gridQuery,
+    gridQueryType,
     gqlIntrospection,
 }: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: GridConfig<any>;
-    gridQuery: string;
+    gridQueryType: IntrospectionField;
     gqlIntrospection: IntrospectionQuery;
 }) {
-    return config.filterProp && !!getFilterGQLTypeString({ gridQuery, gqlIntrospection });
+    return config.filterProp && !!getFilterGQLTypeString({ gridQueryType, gqlIntrospection });
+}
+
+function getRequiredGqlArgs({
+    config,
+    gridQueryType,
+    createMutationType,
+    gqlIntrospection,
+}: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: GridConfig<any>;
+    gridQueryType: IntrospectionField;
+    createMutationType?: IntrospectionField;
+    gqlIntrospection: IntrospectionQuery;
+}) {
+    const params: IntrospectionInputValue[] = [];
+    getRequiredQueryArgs({ gridQueryType }).forEach((param) => {
+        params.push(param);
+    });
+    if (createMutationType) {
+        getRequiredMutationArgs({ createMutationType }).forEach((arg) => {
+            // skip similar params
+            if (params.find((addedArg) => addedArg.name === arg.name)) return;
+            params.push(arg);
+        });
+    }
+
+    const requiredParams: { type: string; name: string }[] = [];
+    params.forEach((arg) => {
+        if (arg.type.kind !== "NON_NULL") return;
+
+        if (arg.type.ofType.kind === "SCALAR") {
+            const nativeScalars = ["ID", "String", "Boolean", "Int", "Float", "DateTime", "JSONObject"];
+            if (!nativeScalars.includes(arg.type.ofType.name)) {
+                // probably just add to requiredParams-array, but needs to be tested
+                console.warn(
+                    `Currently not supported special SCALAR of type ${arg.type.ofType.name} in required param ${arg.name} of ${gridQueryType.name}${
+                        createMutationType ? ` or ${createMutationType.name}` : ``
+                    }`,
+                );
+            } else {
+                requiredParams.push({ type: arg.type.ofType.name, name: arg.name });
+            }
+        } else if (arg.type.ofType.kind === "INPUT_OBJECT") {
+            requiredParams.push({ type: arg.type.ofType.name, name: arg.name });
+        } else if (arg.type.ofType.kind === "LIST") {
+            console.warn(
+                `Currently not supported kind LIST in required param ${arg.name} of ${gridQueryType.name}${
+                    createMutationType ? ` or ${createMutationType.name}` : ``
+                }`,
+            );
+        } else if (arg.type.ofType.kind === "ENUM") {
+            console.warn(
+                `Currently not  supported kind ENUM in required param ${arg.name} of ${gridQueryType.name}${
+                    createMutationType ? ` or ${createMutationType.name}` : ``
+                }`,
+            );
+        } else {
+            throw new Error(`Not supported kind ${arg.type.ofType.kind}`);
+        }
+    });
+    return requiredParams;
+}
+function getRequiredGqlArgTypesForImport({
+    config,
+    gridQueryType,
+    createMutationType,
+    gqlIntrospection,
+}: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: GridConfig<any>;
+    gridQueryType: IntrospectionField;
+    createMutationType?: IntrospectionField;
+    gqlIntrospection: IntrospectionQuery;
+}) {
+    const types: string[] = [];
+    const filterType = getFilterGQLTypeString({ gridQueryType, gqlIntrospection });
+    if (filterType) {
+        types.push(filterType);
+    }
+    getRequiredGqlArgs({ config, gridQueryType, createMutationType, gqlIntrospection }).forEach((arg) => {
+        const nativeScalars = ["ID", "String", "Boolean", "Int", "Float", "DateTime", "JSONObject"];
+        if (nativeScalars.includes(arg.type)) return;
+        types.push(arg.type);
+    });
+    return types;
 }
 
 function generateGridPropsType({
     config,
-    gridQuery,
+    gridQueryType,
+    createMutationType,
     gqlIntrospection,
 }: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: GridConfig<any>;
-    gridQuery: string;
     gqlIntrospection: IntrospectionQuery;
+    gridQueryType: IntrospectionField;
+    createMutationType?: IntrospectionField;
 }) {
     const props: string[] = [];
-    if (hasGridPropFilter({ config, gridQuery, gqlIntrospection })) {
-        const filterType = getFilterGQLTypeString({ gridQuery, gqlIntrospection });
+    if (hasGridPropFilter({ config, gridQueryType, gqlIntrospection })) {
+        const filterType = getFilterGQLTypeString({ gridQueryType, gqlIntrospection });
         props.push(`filter?: ${filterType};`);
     }
+    getRequiredGqlArgs({ config, gridQueryType, createMutationType, gqlIntrospection }).forEach((arg) => {
+        let type = arg.type;
+        if (arg.type === "ID" || arg.type === "String" || arg.type === "DateTime") {
+            type = "string";
+        } else if (arg.type === "Boolean") {
+            type = "boolean";
+        } else if (arg.type === "Int" || arg.type === "Float") {
+            type = "number";
+        } else if (arg.type === "JSONObject") {
+            type = "unknown"; // because any needs eslint-disable
+        }
+        props.push(`${arg.name}: ${type};`);
+    });
     return props.length
         ? `type Props = {
         ${props.join("\n")}
@@ -112,16 +242,21 @@ function generateGridPropsType({
 
 function generateGridProps({
     config,
-    gridQuery,
+    gridQueryType,
+    createMutationType,
     gqlIntrospection,
 }: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: GridConfig<any>;
-    gridQuery: string;
+    gridQueryType: IntrospectionField;
+    createMutationType?: IntrospectionField;
     gqlIntrospection: IntrospectionQuery;
 }) {
     const props: string[] = [];
-    if (hasGridPropFilter({ config, gridQuery, gqlIntrospection })) {
+    getRequiredGqlArgs({ config, gridQueryType, createMutationType, gqlIntrospection }).forEach((requiredParam) => {
+        props.push(requiredParam.name);
+    });
+    if (hasGridPropFilter({ config, gridQueryType, gqlIntrospection })) {
         props.push("filter");
     }
     return props.length ? `{${props.join(", ")}}: Props` : undefined;
@@ -343,7 +478,11 @@ export function generateGrid(
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton } from "@mui/material";
     import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-    import { ${getFilterGQLTypeString({ gridQuery, gqlIntrospection }) ?? ""} } from "@src/graphql.generated";
+
+    ${(() => {
+        const types = getRequiredGqlArgTypesForImport({ config, createMutationType, gqlIntrospection, gridQueryType });
+        return types.length ? `import { ${types.join(", ")} }  from "@src/graphql.generated";` : ``;
+    })()}
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
@@ -354,7 +493,7 @@ export function generateGrid(
         GQLDelete${gqlType}Mutation,
         GQLDelete${gqlType}MutationVariables
     } from "./${gqlTypePlural}Grid.generated";
-    import { filter } from "graphql-anywhere";
+    import { filter as objectFilter } from "graphql-anywhere";
     import * as React from "react";
     import { FormattedMessage, useIntl } from "react-intl";
     ${Object.entries(rootBlocks)
@@ -369,10 +508,28 @@ export function generateGrid(
     \`;
 
     const ${instanceGqlTypePlural}Query = gql\`
-        query ${gqlTypePlural}Grid($offset: Int, $limit: Int${hasSort ? `, $sort: [${gqlType}Sort!]` : ""}${hasSearch ? `, $search: String` : ""}${
+        query ${gqlTypePlural}Grid(${getRequiredQueryArgs({ gridQueryType }).reduce((acc, arg) => {
+        let introspectionType = arg.type;
+        let isRequired = false;
+        if (arg.type.kind === "NON_NULL") {
+            isRequired = true;
+            introspectionType = arg.type.ofType;
+        }
+        let type = "";
+        if (introspectionType.kind === "SCALAR") {
+            type = introspectionType.name;
+        } else {
+            throw new Error(`Non scalar types not yet supported in required query params. Query: ${gqlTypePlural}Grid, Arg: ${arg.name}`);
+        }
+        if (!type) return acc;
+
+        return `${acc}$${arg.name}: ${type}${isRequired ? "!" : ""},`;
+    }, "")}$offset: Int, $limit: Int${hasSort ? `, $sort: [${gqlType}Sort!]` : ""}${hasSearch ? `, $search: String` : ""}${
         hasFilter ? `, $filter: ${gqlType}Filter` : ""
     }${queryScopeParam ? `, $scope: ${generateGqlParamDefinition(queryScopeParam)}` : ""}) {
-            ${gridQuery}(offset: $offset, limit: $limit${hasSort ? `, sort: $sort` : ""}${hasSearch ? `, search: $search` : ""}${
+            ${gridQuery}(${getRequiredQueryArgs({ gridQueryType }).reduce((acc, arg) => {
+        return `${acc}${arg.name}: $${arg.name}, `;
+    }, "")}offset: $offset, limit: $limit${hasSort ? `, sort: $sort` : ""}${hasSearch ? `, search: $search` : ""}${
         hasFilter ? `, filter: $filter` : ""
     }${queryScopeParam ? `, scope: $scope` : ""}) {
                 nodes {
@@ -400,10 +557,26 @@ export function generateGrid(
     ${
         allowCopyPaste
             ? `const create${gqlType}Mutation = gql\`
-        mutation Create${gqlType}(${
-                  createMutationScopeParam ? `$scope: ${generateGqlParamDefinition(createMutationScopeParam)}, ` : ""
-              }$input: ${gqlType}Input!) {
-            create${gqlType}(${createMutationScopeParam ? `scope: $scope, ` : ""}input: $input) {
+        mutation Create${gqlType}(${getRequiredMutationArgs({ createMutationType }).reduce((acc, arg) => {
+                  let introspectionType = arg.type;
+                  let isRequired = false;
+                  if (arg.type.kind === "NON_NULL") {
+                      isRequired = true;
+                      introspectionType = arg.type.ofType;
+                  }
+                  let type = "";
+                  if (introspectionType.kind === "SCALAR") {
+                      type = introspectionType.name;
+                  } else {
+                      throw new Error(`Non scalar types not yet supported in required mutation params. Mutation: create${gqlType}, Arg: ${arg.name}`);
+                  }
+                  if (!type) return acc;
+
+                  return `${acc}$${arg.name}: ${type}${isRequired ? "!" : ""},`;
+              }, "")}${createMutationScopeParam ? `$scope: ${generateGqlParamDefinition(createMutationScopeParam)}, ` : ""}$input: ${gqlType}Input!) {
+            create${gqlType}(${getRequiredQueryArgs({ gridQueryType }).reduce((acc, arg) => {
+                  return `${acc}${arg.name}: $${arg.name}, `;
+              }, "")}${createMutationScopeParam ? `scope: $scope, ` : ""}input: $input) {
                 id
             }
         }
@@ -443,9 +616,11 @@ export function generateGrid(
         );
     }
 
-    ${generateGridPropsType({ config, gridQuery, gqlIntrospection }) ?? ""}
+    ${generateGridPropsType({ config, gridQueryType, createMutationType, gqlIntrospection }) ?? ""}
 
-    export function ${gqlTypePlural}Grid(${generateGridProps({ config, gridQuery, gqlIntrospection }) ?? ""}): React.ReactElement {
+    export function ${gqlTypePlural}Grid(${
+        generateGridProps({ config, gridQueryType, createMutationType, gqlIntrospection }) ?? ""
+    }): React.ReactElement {
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
@@ -509,51 +684,53 @@ export function generateGrid(
                         }${
                               allowCopyPaste || allowDeleting
                                   ? `
-                            <CrudContextMenu
-                                ${
-                                    allowCopyPaste
-                                        ? `
-                                copyData={() => {
-                                    const row = params.row;
-                                    return {
-                                        ${createMutationInputFields
-                                            .map((field) => {
-                                                if (rootBlocks[field.name]) {
-                                                    const blockName = rootBlocks[field.name].name;
-                                                    return `${field.name}: ${blockName}.state2Output(${blockName}.input2State(row.${field.name}))`;
-                                                } else {
-                                                    return `${field.name}: row.${field.name}`;
-                                                }
-                                            })
-                                            .join(",\n")}
-                                    };
-                                }}
-                                onPaste={async ({ input }) => {
-                                    await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
-                                        mutation: create${gqlType}Mutation,
-                                        variables: { ${
-                                            createMutationScopeParam ? `scope, ` : ""
-                                        }input: filter(${instanceGqlTypePlural}Fragment, input) },
-                                    });
-                                }}
-                                `
-                                        : ""
-                                }
-                                ${
-                                    allowDeleting
-                                        ? `
-                                onDelete={async () => {
-                                    await client.mutate<GQLDelete${gqlType}Mutation, GQLDelete${gqlType}MutationVariables>({
-                                        mutation: delete${gqlType}Mutation,
-                                        variables: { id: params.row.id${deleteMutationScopeParam ? `, scope` : ""} },
-                                    });
-                                }}
-                                `
-                                        : ""
-                                }
-                                refetchQueries={[${instanceGqlTypePlural}Query]}
-                            />
-                            `
+                                        <CrudContextMenu
+                                            ${
+                                                allowCopyPaste
+                                                    ? `
+                                            copyData={() => {
+                                                const row = params.row;
+                                                return {
+                                                    ${createMutationInputFields
+                                                        .map((field) => {
+                                                            if (rootBlocks[field.name]) {
+                                                                const blockName = rootBlocks[field.name].name;
+                                                                return `${field.name}: ${blockName}.state2Output(${blockName}.input2State(row.${field.name}))`;
+                                                            } else {
+                                                                return `${field.name}: row.${field.name}`;
+                                                            }
+                                                        })
+                                                        .join(",\n")}
+                                                };
+                                            }}
+                                            onPaste={async ({ input }) => {
+                                                await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
+                                                    mutation: create${gqlType}Mutation,
+                                                    variables: { ${[
+                                                        ...getRequiredMutationArgs({ createMutationType }).map((arg) => arg.name),
+                                                        ...(createMutationScopeParam ? [`scope`] : []),
+                                                        ...[`input: objectFilter(${instanceGqlTypePlural}Fragment, input)`],
+                                                    ].join(", ")} }
+                                                });
+                                            }}
+                                            `
+                                                    : ""
+                                            }
+                                            ${
+                                                allowDeleting
+                                                    ? `
+                                            onDelete={async () => {
+                                                await client.mutate<GQLDelete${gqlType}Mutation, GQLDelete${gqlType}MutationVariables>({
+                                                    mutation: delete${gqlType}Mutation,
+                                                    variables: { id: params.row.id${deleteMutationScopeParam ? `, scope` : ""} },
+                                                });
+                                            }}
+                                            `
+                                                    : ""
+                                            }
+                                            refetchQueries={[${instanceGqlTypePlural}Query]}
+                                        />
+                                    `
                                   : ""
                           }
                         </>
@@ -574,14 +751,19 @@ export function generateGrid(
 
         const { data, loading, error } = useQuery<GQL${gqlTypePlural}GridQuery, GQL${gqlTypePlural}GridQueryVariables>(${instanceGqlTypePlural}Query, {
             variables: {
-                ${queryScopeParam ? `scope,` : ""}
-                filter: { and: [${hasFilter ? `gqlFilter,` : ""} ${
-        hasGridPropFilter({ config, gridQuery, gqlIntrospection }) ? `...(filter ? [filter] : []),` : "" // TODO handle disable GUI-element for filter defined in filter
-    }] },
-                ${hasSearch ? `search: gqlSearch,` : ""}
-                offset: dataGridProps.page * dataGridProps.pageSize,
-                limit: dataGridProps.pageSize,
-                sort: muiGridSortToGql(dataGridProps.sortModel),
+                ${[
+                    ...getRequiredQueryArgs({ gridQueryType }).map((arg) => arg.name),
+                    ...(queryScopeParam ? ["scope"] : []),
+                    `filter: { and: [${hasFilter ? `gqlFilter,` : ""} ${
+                        hasGridPropFilter({ config, gridQueryType, gqlIntrospection }) ? `...(filter ? [filter] : []),` : "" // TODO handle disable GUI-element for filter defined in filter
+                    }] }`,
+                    ...(hasSearch ? ["search: gqlSearch"] : []),
+                    ...[
+                        `offset: dataGridProps.page * dataGridProps.pageSize`,
+                        `limit: dataGridProps.pageSize`,
+                        `sort: muiGridSortToGql(dataGridProps.sortModel)`,
+                    ],
+                ].join(", ")}
             },
         });
         const rowCount = useBufferedRowCount(data?.${gridQuery}.totalCount);
