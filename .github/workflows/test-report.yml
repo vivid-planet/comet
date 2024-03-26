@@ -1,7 +1,7 @@
 name: "Test Report"
 on:
     workflow_run:
-        workflows: ["Lint"]
+        workflows: ["Test"]
         types:
             - completed
 jobs:

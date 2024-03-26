@@ -1,4 +1,4 @@
-name: Lint
+name: Test
 
 on:
     pull_request:
@@ -12,8 +12,8 @@ on:
             - next
 
 jobs:
-    lint:
-        name: Lint
+    test:
+        name: Test
         runs-on: ubuntu-latest
         steps:
             - run: echo "${{ github.actor }}"
@@ -24,20 +24,6 @@ jobs:
             - run: |
                   git config user.name github-actions
                   git config user.email github-actions@github.com
-
-            - name: "Library: Clone translations"
-              uses: actions/checkout@v3
-              with:
-                  repository: vivid-planet/comet-lang
-                  token: ${{ secrets.GITHUB_TOKEN }}
-                  path: "demo/admin/lang/comet-lang"
-
-            - name: "Demo: Clone translations"
-              uses: actions/checkout@v3
-              with:
-                  repository: vivid-planet/comet-demo-lang
-                  token: ${{ secrets.GITHUB_TOKEN }}
-                  path: "demo/admin/lang/comet-demo-lang"
 
             - uses: pnpm/action-setup@v2
               with:
@@ -52,15 +38,18 @@ jobs:
 
             - run: pnpm install --frozen-lockfile
 
-            - name: Copy schema files
-              run: pnpm run copy-schema-files
+            # - name: Copy schema files
+            #   run: pnpm run copy-schema-files
 
-            - name: Build
-              run: pnpm run build:packages
+            # - name: Build
+            #   run: pnpm run build:packages
 
-            - name: Lint
-              run: |
-                  pnpm exec prettier --check "./*.{js,json,md,yml}"
-                  pnpm run lint
-                  # check for duplicate ids of formatted messages
-                  pnpm run intl:extract
+            - name: Test
+              run: pnpm run test
+
+            - name: Upload test results
+              uses: actions/upload-artifact@v3
+              if: success() || failure()
+              with:
+                  name: test-results
+                  path: packages/**/junit.xml
