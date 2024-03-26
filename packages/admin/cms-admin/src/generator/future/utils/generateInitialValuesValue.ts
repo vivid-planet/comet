@@ -25,6 +25,7 @@ export function generateInitialValuesValue({
 }) {
     const booleanFields = config.fields.filter((field) => field.type == "boolean");
     const numberFields = config.fields.filter((field) => field.type == "number" && !field.name.includes("."));
+    const dateFields = config.fields.filter((field) => field.type == "date");
     const nestedNumberFields = config.fields.filter((field) => field.type === "number" && field.name.includes("."));
     const rootPropsContainingNumberField = getRootProps(nestedNumberFields.map((field) => field.name));
 
@@ -60,6 +61,14 @@ export function generateInitialValuesValue({
                     }
                     return `${String(field.name)}: ${assignment},`;
                 })
+                .join("\n")}
+            ${dateFields
+                .map(
+                    (field) =>
+                        `${String(field.name)}: data.${instanceGqlType}.${String(field.name)} ? new Date(data.${instanceGqlType}.${String(
+                            field.name,
+                        )}) : undefined,`,
+                )
                 .join("\n")}
             ${Object.keys(rootBlocks)
                 .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.input2State(data.${instanceGqlType}.${rootBlockKey}),`)
