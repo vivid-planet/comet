@@ -30,9 +30,6 @@ export function generateForm(
 
     const fieldList = generateFieldListGqlString(config.fields);
 
-    const updateMutationFields = config.fields.filter((field) => !field.readOnly);
-    const updateMutationFieldList = generateFieldListGqlString(updateMutationFields);
-
     const queries = gqlIntrospection.__schema.types.find((type) => type.name === "Query");
     if (!queries || queries.kind !== "OBJECT") throw new Error(`Missing Query-Type in schema. Do any queries exist?`);
     const mutations = gqlIntrospection.__schema.types.find((type) => type.name === "Mutation");
@@ -77,11 +74,6 @@ export function generateForm(
         fragment ${fragmentName} on ${gqlType} { ${fieldList} }
     `;
 
-    const updateMutationFragmentName = `${fragmentName}Update`;
-    gqlDocuments[`${instanceGqlType}FormUpdateMutationFragment`] = `
-        fragment ${updateMutationFragmentName} on ${gqlType} { ${updateMutationFieldList} }
-    `;
-
     gqlDocuments[`${instanceGqlType}Query`] = `
         query ${gqlType}($id: ID!${queryScopeParam ? `, $scope: ${generateGqlParamDefinition(queryScopeParam)}` : ""}) {
             ${queryName}(id: $id${queryScopeParam ? `, scope: $scope` : ""}) {
@@ -107,16 +99,14 @@ export function generateForm(
     `;
 
     gqlDocuments[`update${gqlType}Mutation`] = `
-        mutation Update${gqlType}($id: ID!, $input: ${gqlType}UpdateInput!, $lastUpdatedAt: DateTime${
-        updateMutationScopeParam ? `, $scope: ${generateGqlParamDefinition(updateMutationScopeParam)}` : ""
-    }) {
-            ${updateMutationName}(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt${updateMutationScopeParam ? `, scope: $scope` : ""}) {
+        mutation Update${gqlType}($id: ID!, $input: ${gqlType}UpdateInput!) {
+            update${gqlType}(id: $id, input: $input) {
                 id
                 updatedAt
-                ...${updateMutationFragmentName}
+                ...${fragmentName}
             }
         }
-        \${${`${instanceGqlType}FormUpdateMutationFragment`}}
+        \${${`${instanceGqlType}FormFragment`}}
     `;
 
     const fieldsCode = config.fields
