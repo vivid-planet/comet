@@ -17,7 +17,8 @@ export const ProductForm: FormConfig<GQLProduct> = {
         { type: "date", name: "createdAt", label: "Created", readOnly: true },
         { type: "text", name: "description", label: "Description", multiline: true },
         { type: "staticSelect", name: "type", label: "Type" /*, values: from gql schema (TODO overridable)*/ },
-        { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
+        // TODO: Fix "category" - does not work because of the `UsableFields` type
+        // { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
         { type: "number", name: "price", helperText: "Enter price in this format: 123,45" },
         { type: "boolean", name: "inStock" },
         { type: "date", name: "availableSince" },
