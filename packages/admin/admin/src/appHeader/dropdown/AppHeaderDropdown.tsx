@@ -28,18 +28,10 @@ const styles = () => {
     });
 };
 
-function DefaultArrowUp(): React.ReactElement {
-    return <ChevronUp />;
-}
-
-function DefaultArrowDown(): React.ReactElement {
-    return <ChevronDown />;
-}
-
 function Dropdown({
     children,
     buttonChildren,
-    dropdownArrow = (isOpen) => (isOpen ? <DefaultArrowUp /> : <DefaultArrowDown />),
+    dropdownArrow = (isOpen) => (isOpen ? <ChevronUp /> : <ChevronDown />),
     popoverProps,
     open,
     onOpenChange,
