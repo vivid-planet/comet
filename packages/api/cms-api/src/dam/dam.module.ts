@@ -18,6 +18,7 @@ import { FileValidationService } from "./files/file-validation.service";
 import { createFilesController } from "./files/files.controller";
 import { createFilesResolver } from "./files/files.resolver";
 import { FilesService } from "./files/files.service";
+import { FilesEntityInfoService } from "./files/files-entity-info.service";
 import { FoldersController } from "./files/folders.controller";
 import { createFoldersResolver } from "./files/folders.resolver";
 import { FoldersService } from "./files/folders.service";
@@ -108,6 +109,7 @@ export class DamModule {
                 ImgproxyService,
                 FilesResolver,
                 FileDependentsResolver,
+                FilesEntityInfoService,
                 FilesService,
                 FileLicensesResolver,
                 FoldersResolver,

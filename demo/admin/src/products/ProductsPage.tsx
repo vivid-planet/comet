@@ -6,7 +6,7 @@ import {
     Stack,
     StackPage,
     StackSwitch,
-    Toolbar,
+    StackToolbar,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
@@ -15,10 +15,11 @@ import {
 import React from "react";
 import { useIntl } from "react-intl";
 
-import ProductForm from "./ProductForm";
-import ProductPriceForm from "./ProductPriceForm";
-import ProductsGrid from "./ProductsGrid";
-import ProductVariantsGrid from "./ProductVariantsGrid";
+import { ProductForm } from "./ProductForm";
+import { ProductPriceForm } from "./ProductPriceForm";
+import { ProductsGrid } from "./ProductsGrid";
+import { ProductVariantForm } from "./ProductVariantForm";
+import { ProductVariantsGrid } from "./ProductVariantsGrid";
 
 const ProductsPage: React.FC = () => {
     const intl = useIntl();
@@ -30,47 +31,69 @@ const ProductsPage: React.FC = () => {
                     <ProductsGrid />
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit product" })}>
-                    {(selectedId) => (
+                    {(selectedProductId) => (
                         <SaveBoundary>
-                            <Toolbar>
+                            <StackToolbar>
                                 <ToolbarBackButton />
                                 <ToolbarAutomaticTitleItem />
                                 <ToolbarFillSpace />
                                 <ToolbarActions>
                                     <SaveBoundarySaveButton />
                                 </ToolbarActions>
-                            </Toolbar>
+                            </StackToolbar>
                             <RouterTabs>
                                 <RouterTab
                                     forceRender={true}
                                     path=""
                                     label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
                                 >
-                                    <ProductForm id={selectedId} />
+                                    <ProductForm id={selectedProductId} />
                                 </RouterTab>
                                 <RouterTab
                                     forceRender={true}
                                     path="/price"
                                     label={intl.formatMessage({ id: "products.price", defaultMessage: "Price" })}
                                 >
-                                    <ProductPriceForm id={selectedId} />
+                                    <ProductPriceForm id={selectedProductId} />
                                 </RouterTab>
                                 <RouterTab path="/variants" label={intl.formatMessage({ id: "products.variants", defaultMessage: "Variants" })}>
                                     <StackSwitch initialPage="table">
                                         <StackPage name="table">
-                                            <ProductVariantsGrid productId={selectedId} />
+                                            <ProductVariantsGrid productId={selectedProductId} />
                                         </StackPage>
                                         <StackPage
                                             name="edit"
                                             title={intl.formatMessage({ id: "products.editProductVariant", defaultMessage: "Edit Product Variant" })}
                                         >
-                                            {(selectedId) => <>TODO: edit variant {selectedId}</>}
+                                            {(selectedProductVariantId) => (
+                                                <SaveBoundary>
+                                                    <StackToolbar>
+                                                        <ToolbarBackButton />
+                                                        <ToolbarAutomaticTitleItem />
+                                                        <ToolbarFillSpace />
+                                                        <ToolbarActions>
+                                                            <SaveBoundarySaveButton />
+                                                        </ToolbarActions>
+                                                    </StackToolbar>
+                                                    <ProductVariantForm productId={selectedProductId} id={selectedProductVariantId} />
+                                                </SaveBoundary>
+                                            )}
                                         </StackPage>
                                         <StackPage
                                             name="add"
                                             title={intl.formatMessage({ id: "products.addProductVariant", defaultMessage: "Add Product Variant" })}
                                         >
-                                            TODO: add variant
+                                            <SaveBoundary>
+                                                <StackToolbar>
+                                                    <ToolbarBackButton />
+                                                    <ToolbarAutomaticTitleItem />
+                                                    <ToolbarFillSpace />
+                                                    <ToolbarActions>
+                                                        <SaveBoundarySaveButton />
+                                                    </ToolbarActions>
+                                                </StackToolbar>
+                                                <ProductVariantForm productId={selectedProductId} />
+                                            </SaveBoundary>
                                         </StackPage>
                                     </StackSwitch>
                                 </RouterTab>
@@ -79,7 +102,17 @@ const ProductsPage: React.FC = () => {
                     )}
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add product" })}>
-                    <ProductForm />
+                    <SaveBoundary>
+                        <StackToolbar>
+                            <ToolbarBackButton />
+                            <ToolbarAutomaticTitleItem />
+                            <ToolbarFillSpace />
+                            <ToolbarActions>
+                                <SaveBoundarySaveButton />
+                            </ToolbarActions>
+                        </StackToolbar>
+                        <ProductForm />
+                    </SaveBoundary>
                 </StackPage>
             </StackSwitch>
         </Stack>

@@ -19,6 +19,7 @@ export class BlocksTransformerService {
     ) {
         let includeInvisibleBlocks: boolean | undefined = false;
         let previewDamUrls = false;
+        let relativeDamUrls = false;
         if (context) {
             let headers;
             if (context.req) {
@@ -32,9 +33,10 @@ export class BlocksTransformerService {
 
             includeInvisibleBlocks = ctx.includeInvisibleBlocks;
             previewDamUrls = ctx.previewDamUrls;
+            relativeDamUrls = ctx.relativeDamUrls;
         }
 
-        this.blockContext = { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls };
+        this.blockContext = { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls, relativeDamUrls };
         this.dependencies = {
             ...dependencies,
             pageTreeReadApi: pageTreeReadApi,
@@ -42,7 +44,7 @@ export class BlocksTransformerService {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async transformToPlain(block: BlockDataInterface): Promise<any> {
-        return transformToPlain(block, this.dependencies, this.blockContext);
+    async transformToPlain(block: BlockDataInterface, context?: BlockContext): Promise<any> {
+        return transformToPlain(block, this.dependencies, context ?? this.blockContext);
     }
 }

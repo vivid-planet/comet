@@ -12,7 +12,7 @@ type CurrentUser {
   id: String!
   name: String!
   email: String!
-  language: String!
+  locale: String!
   permissions: [CurrentUserPermission!]!
 }
 
@@ -47,6 +47,8 @@ type Dependency {
   visible: Boolean!
   targetGraphqlObjectType: String!
   targetId: String!
+  name: String
+  secondaryInformation: String
 }
 
 type PaginatedDependencies {
@@ -175,7 +177,7 @@ type User {
   id: String!
   name: String!
   email: String!
-  language: String!
+  locale: String!
 }
 
 type PaginatedUserList {
@@ -355,7 +357,7 @@ type Query {
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
   currentUser: CurrentUser!
-  getSitePreviewJwt(path: String!, previewData: PreviewData!): String!
+  isAllowedSitePreview(scope: JSONObject!): Boolean!
   userPermissionsUserById(id: String!): User!
   userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
@@ -472,15 +474,11 @@ enum SlugAvailability {
   Reserved
 }
 
-input PreviewData {
-  includeInvisible: Boolean!
-}
-
 input UserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
-  language: StringFilter
+  locale: StringFilter
   and: [UserFilter!]
   or: [UserFilter!]
 }
@@ -494,7 +492,7 @@ enum UserSortField {
   name
   email
   status
-  language
+  locale
 }
 
 type Mutation {

@@ -1,5 +1,6 @@
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
+import { GridColDef } from "@mui/x-data-grid";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
@@ -23,9 +24,9 @@ export type FormFieldConfig<T extends GeneratorEntity> = (
     | { type: "date" }
     // TODO | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
-    | { type: "asyncSelect"; values?: string[] }
+    | { type: "asyncSelect"; rootQuery: string; labelField?: string }
     | { type: "block"; block: ImportReference }
-) & { name: UsableFields<T>; label?: string; required?: boolean; validate?: ImportReference; helperText?: string };
+) & { name: UsableFields<T>; label?: string; required?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
 
 export type FormConfig<T extends GeneratorEntity> = {
     type: "form";
@@ -37,6 +38,8 @@ export type FormConfig<T extends GeneratorEntity> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
+type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex">;
+
 export type GridColumnConfig<T extends GeneratorEntity> = (
     | { type: "text" }
     | { type: "number" }
@@ -45,12 +48,17 @@ export type GridColumnConfig<T extends GeneratorEntity> = (
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
     | { type: "block"; block: ImportReference }
-) & { name: keyof T; headerName?: string; width?: number };
+) & { name: keyof T } & DataGridSettings;
 export type GridConfig<T extends GeneratorEntity> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
     columns: GridColumnConfig<T>[];
+    add?: boolean;
+    edit?: boolean;
+    delete?: boolean;
+    copyPaste?: boolean;
+    readOnly?: boolean;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

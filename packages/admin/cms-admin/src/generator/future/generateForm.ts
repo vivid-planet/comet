@@ -1,7 +1,7 @@
 import { IntrospectionQuery } from "graphql";
 
 import { generateFormField } from "./generateFormField";
-import { FormConfig, GeneratorReturn } from "./generator";
+import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
 import { generateFieldListGqlString } from "./utils/generateFieldList";
@@ -10,6 +10,11 @@ import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 import { generateInitialValuesValue } from "./utils/generateInitialValuesValue";
 import { generateOutputObject } from "./utils/generateOutputObject";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SimpleFormFieldConfig = FormFieldConfig<any> & { name: string };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SimpleFormConfig = Omit<FormConfig<any>, "fields"> & { fields: SimpleFormFieldConfig[] };
+
 export function generateForm(
     {
         exportName,
@@ -17,8 +22,7 @@ export function generateForm(
         targetDirectory,
         gqlIntrospection,
     }: { exportName: string; baseOutputFilename: string; targetDirectory: string; gqlIntrospection: IntrospectionQuery },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: FormConfig<any>,
+    config: SimpleFormConfig,
 ): GeneratorReturn {
     const gqlType = config.gqlType;
     const title = config.title ?? camelCaseToHumanReadable(gqlType);
@@ -26,11 +30,31 @@ export function generateForm(
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
 
-    const fieldNamesFromConfig: string[] = config.fields.map((field) => field.name);
-    const fieldList = generateFieldListGqlString(fieldNamesFromConfig);
+    const fieldList = generateFieldListGqlString(config.fields, gqlType, gqlIntrospection);
 
     // TODO make RootBlocks configurable (from config)
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
+
+    const readOnlyFields = config.fields.filter((field) => field.readOnly);
+    readOnlyFields.forEach((field) => {
+        if (field.name.includes(".")) {
+            throw new Error(`Readonly is currently not support for nested fields.`);
+        }
+    });
+
+    let hooksCode = "";
+
+    const fieldsCode = config.fields
+        .map<string>((field) => {
+            const generated = generateFormField({ gqlIntrospection }, field, config);
+            for (const name in generated.gqlDocuments) {
+                gqlDocuments[name] = generated.gqlDocuments[name];
+            }
+            imports.push(...generated.imports);
+            hooksCode += generated.hooksCode;
+            return generated.code;
+        })
+        .join("\n");
 
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
@@ -60,8 +84,8 @@ export function generateForm(
     `;
 
     gqlDocuments[`update${gqlType}Mutation`] = `
-        mutation Update${gqlType}($id: ID!, $input: ${gqlType}UpdateInput!, $lastUpdatedAt: DateTime) {
-            update${gqlType}(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
+        mutation Update${gqlType}($id: ID!, $input: ${gqlType}UpdateInput!) {
+            update${gqlType}(id: $id, input: $input) {
                 id
                 updatedAt
                 ...${fragmentName}
@@ -70,16 +94,25 @@ export function generateForm(
         \${${`${instanceGqlType}FormFragment`}}
     `;
 
-    const fieldsCode = config.fields
-        .map((field) => {
-            const generated = generateFormField({ gqlIntrospection }, field, config);
-            for (const name in generated.gqlDocuments) {
-                gqlDocuments[name] = generated.gqlDocuments[name];
-            }
-            imports.push(...generated.imports);
-            return generated.code;
-        })
-        .join("\n");
+    for (const name in gqlDocuments) {
+        const gqlDocument = gqlDocuments[name];
+        imports.push({
+            name: name,
+            importPath: `./${baseOutputFilename}.gql`,
+        });
+        const match = gqlDocument.match(/^\s*(query|mutation|fragment)\s+(\w+)/);
+        if (!match) throw new Error(`Could not find query or mutation name in ${gqlDocument}`);
+        const type = match[1];
+        const documentName = match[2];
+        imports.push({
+            name: `GQL${documentName}${type[0].toUpperCase() + type.substring(1)}`,
+            importPath: `./${baseOutputFilename}.gql.generated`,
+        });
+        imports.push({
+            name: `GQL${documentName}${type[0].toUpperCase() + type.substring(1)}Variables`,
+            importPath: `./${baseOutputFilename}.gql.generated`,
+        });
+    }
 
     const code = `import { useApolloClient, useQuery } from "@apollo/client";
     import {
@@ -103,11 +136,11 @@ export function generateForm(
         useStackApi,
         useStackSwitchApi,
     } from "@comet/admin";
-    import { ArrowLeft } from "@comet/admin-icons";
+    import { ArrowLeft, Lock } from "@comet/admin-icons";
     import { FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
     import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-    import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
+    import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
     import { FormApi } from "final-form";
     import { filter } from "graphql-anywhere";
     import isEqual from "lodash.isequal";
@@ -115,21 +148,6 @@ export function generateForm(
     import { FormattedMessage } from "react-intl";
     ${generateImportsCode(imports)}
     
-    import {
-        create${gqlType}Mutation,
-        ${instanceGqlType}FormFragment,
-        ${instanceGqlType}Query,
-        update${gqlType}Mutation,
-    } from "./${baseOutputFilename}.gql";
-    import {
-        GQLCreate${gqlType}Mutation,
-        GQLCreate${gqlType}MutationVariables,
-        GQL${fragmentName}Fragment,
-        GQL${gqlType}Query,
-        GQL${gqlType}QueryVariables,
-        GQLUpdate${gqlType}Mutation,
-        GQLUpdate${gqlType}MutationVariables,
-    } from "./${baseOutputFilename}.gql.generated";
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
         .join("\n")}
@@ -142,7 +160,7 @@ export function generateForm(
             : ""
     }
 
-    type FormValues = ${generateFormValuesTypeDefinition({ fragmentName, rootBlocks, config })};
+    type FormValues = ${generateFormValuesTypeDefinition({ fragmentName, rootBlocks, config, gqlType, gqlIntrospection })};
 
     interface FormProps {
         id?: string;
@@ -160,7 +178,7 @@ export function generateForm(
             id ? { variables: { id } } : { skip: true },
         );
     
-        const initialValues = ${generateInitialValuesValue({ config, fragmentName, rootBlocks, instanceGqlType })};
+        const initialValues = ${generateInitialValuesValue({ config, fragmentName, rootBlocks, instanceGqlType, gqlType, gqlIntrospection })};
     
         const saveConflict = useFormSaveConflict({
             checkConflict: async () => {
@@ -178,9 +196,10 @@ export function generateForm(
             const output = ${generateOutputObject({ rootBlocks, config })};
             if (mode === "edit") {
                 if (!id) throw new Error();
+                const { ${readOnlyFields.map((field) => `${String(field.name)},`).join("")} ...updateInput } = output;
                 await client.mutate<GQLUpdate${gqlType}Mutation, GQLUpdate${gqlType}MutationVariables>({
                     mutation: update${gqlType}Mutation,
-                    variables: { id, input: output, lastUpdatedAt: data?.${instanceGqlType}.updatedAt },
+                    variables: { id, input: updateInput },
                 });
             } else {
                 const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
@@ -197,6 +216,8 @@ export function generateForm(
                 }
             }
         };
+
+        ${hooksCode}
     
         if (error) throw error;
     

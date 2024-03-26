@@ -95,10 +95,10 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
             if (!id) throw new Error();
             await client.mutate<GQLProductCategoryFormUpdateProductCategoryMutation, GQLProductCategoryFormUpdateProductCategoryMutationVariables>({
                 mutation: updateProductCategoryMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.productCategory.updatedAt },
+                variables: { id, input: output },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<
+            const { data: mutationResponse } = await client.mutate<
                 GQLProductCategoryFormCreateProductCategoryMutation,
                 GQLProductCategoryFormCreateProductCategoryMutationVariables
             >({
@@ -106,7 +106,7 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
                 variables: { input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createProductCategory.id;
+                const id = mutationResponse?.createProductCategory.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage(`edit`, id);

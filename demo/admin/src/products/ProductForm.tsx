@@ -60,7 +60,7 @@ type FormValues = Omit<GQLProductFormManualFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
 
-function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -101,7 +101,6 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             type: formValues.type as GQLProductType,
             category: formValues.category?.id,
             tags: formValues.tags.map((i) => i.id),
-            variants: [],
             articleNumbers: [],
             discounts: [],
             statistics: { views: 0 },
@@ -110,15 +109,15 @@ function ProductForm({ id }: FormProps): React.ReactElement {
             if (!id) throw new Error();
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.product.updatedAt },
+                variables: { id, input: output },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
+            const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
                 variables: { input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createProduct.id;
+                const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage(`edit`, id);
@@ -137,9 +136,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         return tags.data.productTags.nodes;
     });
 
-    if (error) {
-        return <FormattedMessage id="common.error" defaultMessage="An error has occurred. Please try again at later" />;
-    }
+    if (error) throw error;
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;
@@ -198,5 +195,3 @@ function ProductForm({ id }: FormProps): React.ReactElement {
         </FinalForm>
     );
 }
-
-export default ProductForm;
