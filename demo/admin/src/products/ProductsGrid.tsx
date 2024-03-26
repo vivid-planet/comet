@@ -17,7 +17,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
-import { DamImageBlock } from "@comet/cms-admin";
+import { ContentScopeIndicator, DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton, Typography } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { filter } from "graphql-anywhere";
@@ -41,7 +41,7 @@ import {
 
 function ProductsGridToolbar() {
     return (
-        <Toolbar>
+        <Toolbar scopeIndicator={<ContentScopeIndicator global />}>
             <ToolbarAutomaticTitleItem />
             <ToolbarItem>
                 <GridToolbarQuickFilter />
