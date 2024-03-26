@@ -19,7 +19,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { BlockPreviewContent } from "@comet/blocks-admin";
-import { DamImageBlock } from "@comet/cms-admin";
+import { ContentScopeIndicator, DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useContentScope } from "@src/common/ContentScopeProvider";
@@ -80,7 +80,7 @@ const createNewsMutation = gql`
 
 function NewsGridToolbar() {
     return (
-        <Toolbar>
+        <Toolbar scopeIndicator={<ContentScopeIndicator />}>
             <ToolbarAutomaticTitleItem />
             <ToolbarItem>
                 <GridToolbarQuickFilter />

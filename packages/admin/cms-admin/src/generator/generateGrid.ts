@@ -220,6 +220,7 @@ export async function writeCrudGrid(
     } from "@comet/admin";
     import { Add as AddIcon, Edit } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
+    import { ContentScopeIndicator } from "@comet/cms-admin";
     import { Alert, Button, Box, IconButton } from "@mui/material";
     import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
@@ -285,7 +286,7 @@ export async function writeCrudGrid(
 
     function ${classNamePlural}GridToolbar() {
         return (
-            <Toolbar>
+            <Toolbar scopeIndicator={<ContentScopeIndicator ${!hasScope ? "global" : ""} />}>
                 <ToolbarAutomaticTitleItem />
                 ${
                     hasSearch
