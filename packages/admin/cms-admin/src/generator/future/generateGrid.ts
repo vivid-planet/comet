@@ -29,7 +29,7 @@ function findMutationType(mutationName: string, schema: IntrospectionQuery) {
     return queryType.fields.find((field) => field.name === mutationName);
 }
 
-function hasGridPropBaseFilter({
+function hasGridPropFilter({
     config,
     gridQuery,
     gqlIntrospection,
@@ -39,7 +39,7 @@ function hasGridPropBaseFilter({
     gridQuery: string;
     gqlIntrospection: IntrospectionQuery;
 }) {
-    return config.exposeFilters && !!getFilterGQLTypeString({ gridQuery, gqlIntrospection });
+    return config.filterProp && !!getFilterGQLTypeString({ gridQuery, gqlIntrospection });
 }
 
 function generateGridPropsType({
@@ -53,9 +53,9 @@ function generateGridPropsType({
     gqlIntrospection: IntrospectionQuery;
 }) {
     const props: string[] = [];
-    if (hasGridPropBaseFilter({ config, gridQuery, gqlIntrospection })) {
-        const baseFilterType = getFilterGQLTypeString({ gridQuery, gqlIntrospection });
-        props.push(`baseFilter?: ${baseFilterType};`);
+    if (hasGridPropFilter({ config, gridQuery, gqlIntrospection })) {
+        const filterType = getFilterGQLTypeString({ gridQuery, gqlIntrospection });
+        props.push(`filter?: ${filterType};`);
     }
     return props.length
         ? `type Props = {
@@ -75,8 +75,8 @@ function generateGridProps({
     gqlIntrospection: IntrospectionQuery;
 }) {
     const props: string[] = [];
-    if (hasGridPropBaseFilter({ config, gridQuery, gqlIntrospection })) {
-        props.push("baseFilter");
+    if (hasGridPropFilter({ config, gridQuery, gqlIntrospection })) {
+        props.push("filter");
     }
     return props.length ? `{${props.join(", ")}}: Props` : undefined;
 }
@@ -508,7 +508,7 @@ export function generateGrid(
             variables: {
                 ${hasScope ? `scope,` : ""}
                 filter: { and: [${hasFilter ? `gqlFilter,` : ""} ${
-        hasGridPropBaseFilter({ config, gridQuery, gqlIntrospection }) ? `...(baseFilter ? [baseFilter] : []),` : "" // TODO handle disable GUI-element for filter defined in baseFilter
+        hasGridPropFilter({ config, gridQuery, gqlIntrospection }) ? `...(filter ? [filter] : []),` : "" // TODO handle disable GUI-element for filter defined in filter
     }] },
                 ${hasSearch ? `search: gqlSearch,` : ""}
                 offset: dataGridProps.page * dataGridProps.pageSize,

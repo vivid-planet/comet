@@ -100,10 +100,10 @@ function ProductsGridToolbar() {
 }
 
 type Props = {
-    baseFilter?: GQLProductFilter;
+    filter?: GQLProductFilter;
 };
 
-export function ProductsGrid({ baseFilter }: Props): React.ReactElement {
+export function ProductsGrid({ filter }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
@@ -196,7 +196,7 @@ export function ProductsGrid({ baseFilter }: Props): React.ReactElement {
 
     const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
         variables: {
-            filter: { and: [gqlFilter, ...(baseFilter ? [baseFilter] : [])] },
+            filter: { and: [gqlFilter, ...(filter ? [filter] : [])] },
             search: gqlSearch,
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
