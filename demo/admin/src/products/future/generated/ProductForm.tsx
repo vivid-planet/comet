@@ -18,7 +18,6 @@ import {
     ToolbarFillSpace,
     ToolbarItem,
     ToolbarTitleItem,
-    useAsyncOptionsProps,
     useFormApiRef,
     useStackApi,
     useStackSwitchApi,
@@ -35,13 +34,10 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
-import { createProductMutation, productCategoriesQuery, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
+import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
-    GQLProductCategoriesSelectQuery,
-    GQLProductCategoriesSelectQueryVariables,
-    GQLProductCategorySelectFragment,
     GQLProductFormDetailsFragment,
     GQLProductQuery,
     GQLProductQueryVariables,
@@ -79,6 +75,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             data?.product
                 ? {
                       ...filter<GQLProductFormDetailsFragment>(productFormFragment, data.product),
+
                       price: data.product.price ? String(data.product.price) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
@@ -104,8 +101,8 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
-            category: formValues.category?.id,
-            price: formValues.price ? parseFloat(formValues.price) : null,
+
+            price: parseFloat(formValues.price),
             image: rootBlocks.image.state2Output(formValues.image),
         };
         if (mode === "edit") {
@@ -130,13 +127,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             }
         }
     };
-
-    const categorySelectAsyncProps = useAsyncOptionsProps(async () => {
-        const result = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-            query: productCategoriesQuery,
-        });
-        return result.data.productCategories.nodes;
-    });
 
     if (error) throw error;
 
@@ -195,6 +185,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             }
                             fullWidth
                             name="createdAt"
+                            clearable
                             component={FinalFormDatePicker}
                             label={<FormattedMessage id="product.createdAt" defaultMessage="Created" />}
                         />
@@ -220,14 +211,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 </FinalFormSelect>
                             )}
                         </Field>
-                        <Field
-                            fullWidth
-                            name="category"
-                            label={<FormattedMessage id="product.category" defaultMessage="Category" />}
-                            component={FinalFormSelect}
-                            {...categorySelectAsyncProps}
-                            getOptionLabel={(option: GQLProductCategorySelectFragment) => option.title}
-                        />
 
                         <Field
                             fullWidth
@@ -249,6 +232,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field
                             fullWidth
                             name="availableSince"
+                            clearable
                             component={FinalFormDatePicker}
                             label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
                         />

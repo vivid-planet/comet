@@ -9,34 +9,6 @@ export const productFormFragment = gql`
         createdAt
         description
         type
-        category {
-            id
-        }
-        manufacturer {
-            address {
-                country
-            }
-        }
-        price
-        inStock
-        availableSince
-        image
-    }
-`;
-export const productFormUpdateMutationFragment = gql`
-    fragment ProductFormDetailsUpdate on Product {
-        title
-        slug
-        description
-        type
-        category {
-            id
-        }
-        manufacturer {
-            address {
-                country
-            }
-        }
         price
         inStock
         availableSince
@@ -68,8 +40,8 @@ export const updateProductMutation = gql`
         updateProduct(id: $id, input: $input) {
             id
             updatedAt
-            ...ProductFormDetailsUpdate
+            ...ProductFormDetails
         }
     }
-    ${productFormUpdateMutationFragment}
+    ${productFormFragment}
 `;

@@ -20,7 +20,6 @@ import {
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { GQLManufacturerFilter } from "@src/graphql.generated";
 import { filter } from "graphql-anywhere";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -103,10 +102,7 @@ function ManufacturersGridToolbar() {
     );
 }
 
-type Props = {
-    baseFilter?: GQLManufacturerFilter;
-};
-export function ManufacturersGrid({ baseFilter }: Props): React.ReactElement {
+export function ManufacturersGrid(): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ManufacturersGrid") };
@@ -210,6 +206,7 @@ export function ManufacturersGrid({ baseFilter }: Props): React.ReactElement {
                         </IconButton>
                         <CrudContextMenu
                             copyData={() => {
+                                const row = params.row;
                                 return {};
                             }}
                             onPaste={async ({ input }) => {
@@ -236,7 +233,7 @@ export function ManufacturersGrid({ baseFilter }: Props): React.ReactElement {
 
     const { data, loading, error } = useQuery<GQLManufacturersGridQuery, GQLManufacturersGridQueryVariables>(manufacturersQuery, {
         variables: {
-            filter: { ...gqlFilter, ...baseFilter },
+            filter: { and: [gqlFilter] },
             search: gqlSearch,
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
