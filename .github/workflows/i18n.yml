@@ -25,12 +25,19 @@ jobs:
                   token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}
                   path: "demo/admin/lang/comet-lang"
 
-            - name: "Demo: Clone translations"
+            - name: "Demo Admin: Clone translations"
               uses: actions/checkout@v3
               with:
                   repository: vivid-planet/comet-demo-lang
                   token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}
                   path: "demo/admin/lang/comet-demo-lang"
+
+            - name: "Demo Site: Clone translations"
+              uses: actions/checkout@v3
+              with:
+                  repository: vivid-planet/comet-demo-lang
+                  token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}
+                  path: "demo/site/lang/comet-demo-lang"
 
             - uses: pnpm/action-setup@v2
               with:
@@ -50,7 +57,7 @@ jobs:
                   pnpm run intl:extract
                   cp -r lang/* demo/admin/lang/comet-lang/
 
-            - name: "Library: Update translateable strings"
+            - name: "Library: Update translatable strings"
               uses: EndBug/add-and-commit@v9
               with:
                   cwd: "./demo/admin/lang/comet-lang"
@@ -67,7 +74,12 @@ jobs:
                   pnpm run intl:extract
                   cp -r lang-extracted/* lang/comet-demo-lang/site
 
-            - name: "Demo: Update translateable strings"
+            - name: "Demo Admin: Update translatable strings"
               uses: EndBug/add-and-commit@v9
               with:
                   cwd: "./demo/admin/lang/comet-demo-lang"
+
+            - name: "Demo Site: Update translatable strings"
+              uses: EndBug/add-and-commit@v9
+              with:
+                  cwd: "./demo/site/lang/comet-demo-lang"
