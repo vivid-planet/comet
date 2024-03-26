@@ -23,7 +23,7 @@ export type FormFieldConfig<T> = (
     | { type: "staticSelect"; values?: string[] }
     | { type: "asyncSelect"; rootQuery: string; labelField?: string }
     | { type: "block"; block: ImportReference }
-) & { name: keyof T; label?: string; required?: boolean; validate?: ImportReference; helperText?: string };
+) & { name: keyof T; label?: string; required?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
 
 export type FormConfig<T extends { __typename?: string }> = {
     type: "form";
@@ -51,6 +51,11 @@ export type GridConfig<T extends { __typename?: string }> = {
     gqlType: T["__typename"];
     fragmentName?: string;
     columns: GridColumnConfig<T>[];
+    add?: boolean;
+    edit?: boolean;
+    delete?: boolean;
+    copyPaste?: boolean;
+    readOnly?: boolean;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

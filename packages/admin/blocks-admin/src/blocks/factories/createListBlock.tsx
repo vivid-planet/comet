@@ -494,6 +494,18 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                 return [...prev, ...nextPreviewContent];
             }, []);
         },
+        resolveDependencyPath: (state, jsonPath) => {
+            if (!/^blocks.\d+.props/.test(jsonPath)) {
+                throw new Error("ListBlock: Invalid jsonPath");
+            }
+
+            const pathArr = jsonPath.split(".");
+            const num = Number(pathArr[1]);
+            const blockItem = state.blocks[num];
+
+            const childPath = block.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
+            return `${blockItem.key}/edit/${childPath}`;
+        },
     };
     return BlockListBlock;
 }

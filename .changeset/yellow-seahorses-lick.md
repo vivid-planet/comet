@@ -29,4 +29,4 @@ Requires following changes to site:
 
 Requires following changes to admin
 
--   The `SitesConfigProvider` needs the absolute URL to the site preview API-Route
+-   The `SitesConfig` must provide a `sitePreviewApiUrl`

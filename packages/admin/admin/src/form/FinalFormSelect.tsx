@@ -36,29 +36,26 @@ export const FinalFormSelect = <T,>({
         }
     },
     children,
-    endAdornment,
     clearable,
     ...rest
-}: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input">) => {
+}: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
     // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
     // 1. <Field component={FinalFormSelect} multiple /> -> multiple is in restInput
     // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
     const multiple = restInput.multiple ?? rest.multiple;
 
-    const selectEndAdornment = clearable ? (
+    const endAdornment = clearable ? (
         <ClearInputAdornment
             position="end"
             hasClearableContent={Boolean(multiple ? (Array.isArray(value) ? value.length : value) : value)}
             onClick={() => onChange(multiple ? [] : undefined)}
         />
-    ) : (
-        endAdornment
-    );
+    ) : null;
 
     const selectProps = {
         ...rest,
         multiple,
-        endAdornment: selectEndAdornment,
+        endAdornment,
         name,
         onChange,
         onFocus,
@@ -83,7 +80,7 @@ export const FinalFormSelect = <T,>({
                             <CircularProgress size={16} color="inherit" />
                         </InputAdornment>
                     )}
-                    {selectEndAdornment}
+                    {endAdornment}
                 </>
             }
             onChange={(event) => {
