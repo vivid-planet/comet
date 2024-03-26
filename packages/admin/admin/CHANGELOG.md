@@ -1,5 +1,12 @@
 # @comet/admin
 
+## 5.6.6
+
+### Patch Changes
+
+-   47630cc64: Fix a crash when using the `Alert` component inside a MUI `Snackbar`
+    -   @comet/admin-icons@5.6.6
+
 ## 5.6.5
 
 ### Patch Changes
