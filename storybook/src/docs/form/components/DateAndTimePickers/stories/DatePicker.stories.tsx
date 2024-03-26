@@ -26,7 +26,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Date Picker", module)
                 </Grid>
                 <Grid item xs={6} md={3}>
                     <FieldContainer label="Clearable" fullWidth>
-                        <DatePicker fullWidth value={dateThree} onChange={setDateThree} clearable />
+                        <DatePicker fullWidth value={dateThree} onChange={setDateThree} />
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={6} md={3}>

@@ -13,7 +13,7 @@ const Story = () => {
     }
 
     const initialValues: Partial<Values> = {
-        dateOne: new Date(),
+        dateOne: undefined,
         dateTwo: new Date(),
         dateThree: new Date(),
     };
@@ -27,7 +27,7 @@ const Story = () => {
                             <CardContent>
                                 <Field name="dateOne" label="Date" fullWidth component={FinalFormDatePicker} />
                                 <Field name="dateTwo" label="Required" fullWidth required component={FinalFormDatePicker} />
-                                <Field name="dateThree" label="Clearable" fullWidth clearable component={FinalFormDatePicker} />
+                                <Field name="dateThree" label="Clearable" fullWidth component={FinalFormDatePicker} />
                             </CardContent>
                         </Card>
                         <pre>{JSON.stringify(values, null, 4)}</pre>
