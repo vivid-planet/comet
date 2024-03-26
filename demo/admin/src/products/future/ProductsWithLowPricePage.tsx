@@ -11,7 +11,7 @@ export function ProductsWithLowPricePage(): React.ReactElement {
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <ProductsGrid baseFilter={{ price: { lowerThan: 10 } }} />
+                    <ProductsGrid filter={{ price: { lowerThan: 10 } }} />
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>
                     {(selectedId) => <ProductForm id={selectedId} />}
