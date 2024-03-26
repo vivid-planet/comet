@@ -1,3 +1,4 @@
+"use client";
 import { PixelImageBlock, PreviewSkeleton, PropsWithData, SvgImageBlock, withPreview } from "@comet/cms-site";
 import { DamImageBlockData, PixelImageBlockData, SvgImageBlockData } from "@src/blocks.generated";
 import { NextImageBottomPaddingFix } from "@src/components/common/NextImageBottomPaddingFix";
@@ -5,7 +6,7 @@ import { ImageProps } from "next/image";
 import * as React from "react";
 
 type Props = PropsWithData<DamImageBlockData> &
-    Omit<ImageProps, "src" | "width" | "height"> & {
+    Omit<ImageProps, "src" | "width" | "height" | "alt"> & {
         aspectRatio?: string | "inherit";
     } & (
         | { layout?: "fixed" | "intrinsic" }

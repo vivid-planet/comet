@@ -14,6 +14,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
             validate: { name: "validateTitle", import: "./validateTitle" },
         },
         { type: "text", name: "slug" },
+        { type: "date", name: "createdAt", label: "Created", readOnly: true },
         { type: "text", name: "description", label: "Description", multiline: true },
         { type: "staticSelect", name: "type", label: "Type" /*, values: from gql schema (TODO overridable)*/ },
         { type: "asyncSelect", name: "category", rootQuery: "productCategories" },

@@ -1,9 +1,11 @@
 import { TypographyVariant } from "@src/components/common/Typography";
 import { Theme } from "@src/theme";
-import { css, FlattenSimpleInterpolation } from "styled-components";
+import { css } from "styled-components";
 
 type TypographyStyles = {
-    [key in TypographyVariant]: (theme: Theme, disableMargin?: boolean) => FlattenSimpleInterpolation;
+    // TODO styled-components v6 update type fix
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key in TypographyVariant]: (theme: Theme, disableMargin?: boolean) => any;
 };
 
 export const typographyStyles: TypographyStyles = {

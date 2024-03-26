@@ -6,6 +6,7 @@ export const productFormFragment = gql`
     fragment ProductFormDetails on Product {
         title
         slug
+        createdAt
         description
         type
         category {

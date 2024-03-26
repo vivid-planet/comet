@@ -18,7 +18,7 @@ export class FileImagesResolver {
     ): Promise<string | undefined> {
         const file = await this.filesService.findOneByImageId(fileImage.id);
         if (file) {
-            const urlTemplate = this.imagesService.createUrlTemplate({ file });
+            const urlTemplate = this.imagesService.createUrlTemplate({ file }, {});
             return urlTemplate.replace("$resizeWidth", String(width)).replace("$resizeHeight", String(height));
         }
     }

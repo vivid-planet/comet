@@ -12,7 +12,14 @@ export const isFieldOptional = ({
     gqlIntrospection: IntrospectionQuery;
     gqlType: string;
 }): boolean => {
-    if (config.required) return false;
+    if (config.required !== undefined) {
+        return !config.required;
+    }
+
+    if (config.readOnly) {
+        return true;
+    }
+
     const schemaEntity = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType);
     if (!schemaEntity) throw new Error(`didn't find entity ${gqlType} in schema types`);
     if (schemaEntity.kind !== "OBJECT") throw new Error(`kind of ${gqlType} is not object, but should be.`); // this should not happen

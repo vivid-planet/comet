@@ -1,3 +1,4 @@
+"use client";
 import { useColorTheme } from "@src/blocks/ColorThemeContext";
 import { typographyStyles } from "@src/components/common/Typography.styles";
 import * as React from "react";

@@ -1,21 +1,10 @@
+"use client";
 import { GridRoot } from "@src/components/common/GridRoot";
-import { gql } from "graphql-request";
 import Link from "next/link";
 import * as React from "react";
 
-import { GQLBreadcrumbsFragment } from "./Breadcrumbs.generated";
+import { GQLBreadcrumbsFragment } from "./Breadcrumbs.fragment.generated";
 import * as sc from "./Breadcrumbs.sc";
-
-export const breadcrumbsFragment = gql`
-    fragment Breadcrumbs on PageTreeNode {
-        name
-        path
-        parentNodes {
-            name
-            path
-        }
-    }
-`;
 
 const Breadcrumbs: React.FunctionComponent<GQLBreadcrumbsFragment> = ({ name, path, parentNodes }) => {
     return (

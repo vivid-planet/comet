@@ -18,15 +18,16 @@ import {
     ToolbarFillSpace,
     ToolbarItem,
     ToolbarTitleItem,
+    useAsyncOptionsProps,
     useFormApiRef,
     useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { ArrowLeft } from "@comet/admin-icons";
+import { ArrowLeft, Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, PixelImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
+import { FormControlLabel, IconButton, InputAdornment, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
@@ -34,10 +35,13 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
-import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
+import { createProductMutation, productCategoriesQuery, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
+    GQLProductCategoriesSelectQuery,
+    GQLProductCategoriesSelectQueryVariables,
+    GQLProductCategorySelectFragment,
     GQLProductFormDetailsFragment,
     GQLProductQuery,
     GQLProductQueryVariables,
@@ -75,7 +79,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             data?.product
                 ? {
                       ...filter<GQLProductFormDetailsFragment>(productFormFragment, data.product),
-
                       price: data.product.price ? String(data.product.price) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
@@ -101,15 +104,16 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
-
-            price: parseFloat(formValues.price),
+            category: formValues.category?.id,
+            price: formValues.price ? parseFloat(formValues.price) : null,
             image: rootBlocks.image.state2Output(formValues.image),
         };
         if (mode === "edit") {
             if (!id) throw new Error();
+            const { createdAt, ...updateInput } = output;
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.product.updatedAt },
+                variables: { id, input: updateInput },
             });
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
@@ -126,6 +130,13 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             }
         }
     };
+
+    const categorySelectAsyncProps = useAsyncOptionsProps(async () => {
+        const result = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
+            query: productCategoriesQuery,
+        });
+        return result.data.productCategories.nodes;
+    });
 
     if (error) throw error;
 
@@ -174,6 +185,20 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
 
                         <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
 
+                        <Field
+                            readOnly
+                            disabled
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <Lock />
+                                </InputAdornment>
+                            }
+                            fullWidth
+                            name="createdAt"
+                            component={FinalFormDatePicker}
+                            label={<FormattedMessage id="product.createdAt" defaultMessage="Created" />}
+                        />
+
                         <TextAreaField
                             required
                             fullWidth
@@ -195,19 +220,13 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 </FinalFormSelect>
                             )}
                         </Field>
-
-                        <TextField
-                            required
+                        <Field
                             fullWidth
-                            name="category.id"
-                            label={<FormattedMessage id="product.category.id" defaultMessage="Category Id" />}
-                        />
-
-                        <TextField
-                            required
-                            fullWidth
-                            name="manufacturer.address.country"
-                            label={<FormattedMessage id="product.manufacturer.address.country" defaultMessage="Manufacturer Address Country" />}
+                            name="category"
+                            label={<FormattedMessage id="product.category" defaultMessage="Category" />}
+                            component={FinalFormSelect}
+                            {...categorySelectAsyncProps}
+                            getOptionLabel={(option: GQLProductCategorySelectFragment) => option.title}
                         />
 
                         <Field
@@ -230,7 +249,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field
                             fullWidth
                             name="availableSince"
-                            clearable
                             component={FinalFormDatePicker}
                             label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
                         />

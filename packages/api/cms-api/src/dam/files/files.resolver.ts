@@ -258,7 +258,10 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
 
         @ResolveField(() => String)
         async fileUrl(@Parent() file: FileInterface, @Context("req") req: IncomingMessage): Promise<string> {
-            return this.filesService.createFileUrl(file, Boolean(req.headers["x-preview-dam-urls"]));
+            return this.filesService.createFileUrl(file, {
+                previewDamUrls: Boolean(req.headers["x-preview-dam-urls"]),
+                relativeDamUrls: Boolean(req.headers["x-relative-dam-urls"]),
+            });
         }
 
         @ResolveField(() => [File])

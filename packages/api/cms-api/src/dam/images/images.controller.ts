@@ -15,7 +15,7 @@ import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { ScaledImagesCacheService } from "../cache/scaled-images-cache.service";
 import { FocalPoint } from "../common/enums/focal-point.enum";
-import { CDN_ORIGIN_CHECK_HEADER, DamConfig } from "../dam.config";
+import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { FileInterface } from "../files/entities/file.entity";
 import { FilesService } from "../files/files.service";
@@ -108,14 +108,7 @@ export class ImagesController {
 
     @DisableGlobalGuard()
     @Get(`/:hash/${smartImageUrl}`)
-    async smartCroppedImage(
-        @Param() params: HashImageParams,
-        @Headers("Accept") accept: string,
-        @Headers(CDN_ORIGIN_CHECK_HEADER) cdnOriginCheck: string,
-        @Res() res: Response,
-    ): Promise<void> {
-        this.checkCdnOrigin(cdnOriginCheck);
-
+    async smartCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
         if (!this.isValidHash(params) || params.cropArea.focalPoint !== FocalPoint.SMART) {
             throw new NotFoundException();
         }
@@ -131,14 +124,7 @@ export class ImagesController {
 
     @DisableGlobalGuard()
     @Get(`/:hash/${focusImageUrl}`)
-    async focusCroppedImage(
-        @Param() params: HashImageParams,
-        @Headers("Accept") accept: string,
-        @Headers(CDN_ORIGIN_CHECK_HEADER) cdnOriginCheck: string,
-        @Res() res: Response,
-    ): Promise<void> {
-        this.checkCdnOrigin(cdnOriginCheck);
-
+    async focusCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
         if (!this.isValidHash(params) || params.cropArea.focalPoint === FocalPoint.SMART) {
             throw new NotFoundException();
         }
@@ -154,14 +140,6 @@ export class ImagesController {
 
     private isValidHash({ hash, ...imageParams }: HashImageParams): boolean {
         return hash === this.imagesService.createHash(imageParams);
-    }
-
-    private checkCdnOrigin(incomingCdnOriginHeader: string): void {
-        if (this.config.cdnEnabled && !this.config.disableCdnOriginHeaderCheck) {
-            if (incomingCdnOriginHeader !== this.config.cdnOriginHeader) {
-                throw new ForbiddenException();
-            }
-        }
     }
 
     private async getCroppedImage(

@@ -1,8 +1,8 @@
+"use client";
 import { PageLink } from "@src/header/PageLink";
-import { gql } from "graphql-request";
 import styled from "styled-components";
 
-import { GQLTopMenuPageTreeNodeFragment } from "./TopNavigation.generated";
+import { GQLTopMenuPageTreeNodeFragment } from "./TopNavigation.fragment.generated";
 
 interface Props {
     data: GQLTopMenuPageTreeNodeFragment[];
@@ -28,20 +28,6 @@ export function TopNavigation({ data }: Props): JSX.Element {
         </TopLevelNavigation>
     );
 }
-
-export const topMenuPageTreeNodeFragment = gql`
-    fragment TopMenuPageTreeNode on PageTreeNode {
-        id
-        name
-        ...PageLink
-
-        childNodes {
-            id
-            name
-            ...PageLink
-        }
-    }
-`;
 
 const TopLevelNavigation = styled.ol`
     display: flex;

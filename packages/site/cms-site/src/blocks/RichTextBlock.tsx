@@ -1,3 +1,4 @@
+"use client";
 import { RawDraftContentState } from "draft-js";
 
 import { RichTextBlockData } from "../blocks.generated";

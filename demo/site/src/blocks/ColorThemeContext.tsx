@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 
 export type ColorTheme = "Default" | "GreyN1" | "GreyN2" | "GreyN3" | "DarkBlue";

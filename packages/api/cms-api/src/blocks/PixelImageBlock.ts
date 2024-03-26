@@ -29,7 +29,7 @@ class PixelImageBlockData extends BlockData {
 
     async transformToPlain(
         { filesService, imagesService }: { filesService: FilesService; imagesService: ImagesService },
-        { previewDamUrls, includeInvisibleContent }: BlockContext,
+        { previewDamUrls, relativeDamUrls, includeInvisibleContent }: BlockContext,
     ): Promise<TraversableTransformResponse> {
         if (!this.damFileId) {
             return {};
@@ -44,7 +44,7 @@ class PixelImageBlockData extends BlockData {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { createdAt, updatedAt, folder, license, copyOf, copies, ...data } = file;
 
-        const fileUrl = includeInvisibleContent ? await filesService.createFileUrl(file, previewDamUrls) : undefined;
+        const fileUrl = includeInvisibleContent ? await filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }) : undefined;
 
         return {
             damFile: {
@@ -60,13 +60,13 @@ class PixelImageBlockData extends BlockData {
                 fileUrl,
             },
             cropArea: this.cropArea ? { ...this.cropArea } : undefined,
-            urlTemplate: imagesService.createUrlTemplate({ file, cropArea: this.cropArea }, previewDamUrls),
+            urlTemplate: imagesService.createUrlTemplate({ file, cropArea: this.cropArea }, { previewDamUrls, relativeDamUrls }),
         };
     }
 
     async previewImageUrlTemplate(
         { filesService, imagesService }: { filesService: FilesService; imagesService: ImagesService },
-        { previewDamUrls }: BlockContext,
+        { previewDamUrls, relativeDamUrls }: BlockContext,
     ): Promise<string | undefined> {
         if (!this.damFileId) {
             return undefined;
@@ -78,7 +78,7 @@ class PixelImageBlockData extends BlockData {
             return undefined;
         }
 
-        return imagesService.createUrlTemplate({ file, cropArea: this.cropArea }, previewDamUrls);
+        return imagesService.createUrlTemplate({ file, cropArea: this.cropArea }, { previewDamUrls, relativeDamUrls });
     }
 
     indexData(): BlockIndexData {

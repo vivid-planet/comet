@@ -31,7 +31,7 @@ class DamVideoBlockData extends BlockData {
 
     async transformToPlain(
         { filesService }: { filesService: FilesService },
-        { previewDamUrls }: BlockContext,
+        { previewDamUrls, relativeDamUrls }: BlockContext,
     ): Promise<TraversableTransformResponse> {
         if (!this.damFileId) {
             return {};
@@ -50,7 +50,7 @@ class DamVideoBlockData extends BlockData {
             damFile: {
                 ...data,
                 license: {},
-                fileUrl: await filesService.createFileUrl(file, previewDamUrls),
+                fileUrl: await filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
             },
             autoplay: this.autoplay,
             loop: this.loop,

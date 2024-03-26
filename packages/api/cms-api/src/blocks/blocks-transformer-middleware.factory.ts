@@ -12,7 +12,9 @@ export class BlocksTransformerMiddlewareFactory {
             const fieldValue = await next();
 
             if (isBlockDataInterface(fieldValue)) {
-                const { includeInvisibleBlocks, previewDamUrls, includeInvisiblePages } = getRequestContextHeadersFromRequest(context.req);
+                const { includeInvisibleBlocks, previewDamUrls, relativeDamUrls, includeInvisiblePages } = getRequestContextHeadersFromRequest(
+                    context.req,
+                );
                 return transformToPlain(
                     fieldValue,
                     {
@@ -21,7 +23,7 @@ export class BlocksTransformerMiddlewareFactory {
                             visibility: [PageTreeNodeVisibility.Published, ...(includeInvisiblePages || [])],
                         }),
                     },
-                    { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls },
+                    { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls, relativeDamUrls },
                 );
             } else {
                 return fieldValue;

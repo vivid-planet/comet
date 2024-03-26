@@ -22,7 +22,7 @@ const config: CodegenConfig = {
             },
         },
         "./src/": {
-            documents: ["./src/**/!(*.generated).{tsx,ts}", "preBuild/src/**/!(*.generated).{ts,tsx}"],
+            documents: ["./src/**/!(*.generated).{tsx,ts}"],
             preset: "near-operation-file",
             presetConfig: {
                 extension: ".generated.ts",

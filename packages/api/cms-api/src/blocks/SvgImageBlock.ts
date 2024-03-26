@@ -21,7 +21,7 @@ class SvgImageBlockData extends BlockData {
 
     async transformToPlain(
         { filesService }: { filesService: FilesService },
-        { previewDamUrls }: BlockContext,
+        { previewDamUrls, relativeDamUrls }: BlockContext,
     ): Promise<TraversableTransformResponse> {
         if (!this.damFileId) {
             return {};
@@ -41,7 +41,7 @@ class SvgImageBlockData extends BlockData {
                 ...data,
                 image: {},
                 license: {},
-                fileUrl: await filesService.createFileUrl(file, previewDamUrls),
+                fileUrl: await filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
             },
         };
     }

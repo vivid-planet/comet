@@ -58,6 +58,8 @@ export function generateForm(
     // TODO make RootBlocks configurable (from config)
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
 
+    const readOnlyFields = config.fields.filter((field) => field.readOnly);
+
     let hooksCode = "";
 
     config.fields.map((field) => {
@@ -227,9 +229,10 @@ export function generateForm(
             const output = ${generateOutputObject({ rootBlocks, config })};
             if (mode === "edit") {
                 if (!id) throw new Error();
+                const { ${readOnlyFields.map((field) => `${String(field.name)},`).join("")} ...updateInput } = output;
                 await client.mutate<GQLUpdate${gqlType}Mutation, GQLUpdate${gqlType}MutationVariables>({
                     mutation: update${gqlType}Mutation,
-                    variables: { id, input: output, lastUpdatedAt: data?.${instanceGqlType}.updatedAt${updateMutationScopeParam ? `, scope` : ""} },
+                    variables: { id, input: updateInput },
                 });
             } else {
                 const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({

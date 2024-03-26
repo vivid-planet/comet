@@ -34,16 +34,12 @@ function Story() {
                                             <Field name="checked" type="checkbox" fullWidth>
                                                 {(props) => <FormControlLabel label="Checked" control={<FinalFormCheckbox {...props} />} />}
                                             </Field>
-                                            <Field name="disabledUnchecked" type="checkbox" fullWidth>
-                                                {(props) => <FormControlLabel label="Disabled" disabled control={<FinalFormCheckbox {...props} />} />}
+                                            <Field name="disabledUnchecked" type="checkbox" fullWidth disabled>
+                                                {(props) => <FormControlLabel label="Disabled" control={<FinalFormCheckbox {...props} />} />}
                                             </Field>
-                                            <Field name="disabledChecked" type="checkbox" fullWidth>
+                                            <Field name="disabledChecked" type="checkbox" fullWidth disabled>
                                                 {(props) => (
-                                                    <FormControlLabel
-                                                        label="Disabled & Checked"
-                                                        disabled
-                                                        control={<FinalFormCheckbox {...props} />}
-                                                    />
+                                                    <FormControlLabel label="Disabled & Checked" control={<FinalFormCheckbox {...props} />} />
                                                 )}
                                             </Field>
                                         </FieldContainer>
@@ -67,21 +63,16 @@ function Story() {
                                                     <FormControlLabel label="Checked" control={<FinalFormCheckbox {...props} color="secondary" />} />
                                                 )}
                                             </Field>
-                                            <Field name="disabledUncheckedSecondary" type="checkbox" fullWidth>
+                                            <Field name="disabledUncheckedSecondary" type="checkbox" fullWidth disabled>
                                                 {(props) => (
-                                                    <FormControlLabel
-                                                        label="Disabled"
-                                                        control={<FinalFormCheckbox {...props} color="secondary" />}
-                                                        disabled
-                                                    />
+                                                    <FormControlLabel label="Disabled" control={<FinalFormCheckbox {...props} color="secondary" />} />
                                                 )}
                                             </Field>
-                                            <Field name="disabledCheckedSecondary" type="checkbox" fullWidth>
+                                            <Field name="disabledCheckedSecondary" type="checkbox" fullWidth disabled>
                                                 {(props) => (
                                                     <FormControlLabel
                                                         label="Disabled & Checked"
                                                         control={<FinalFormCheckbox {...props} color="secondary" />}
-                                                        disabled
                                                     />
                                                 )}
                                             </Field>

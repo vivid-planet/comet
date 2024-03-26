@@ -1,3 +1,4 @@
+"use client";
 // eslint-disable-next-line no-restricted-imports
 import NextImage, { ImageProps } from "next/image";
 import * as React from "react";
@@ -8,7 +9,7 @@ import { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { PropsWithData } from "./PropsWithData";
 
-interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<ImageProps, "src" | "width" | "height"> {
+interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<ImageProps, "src" | "width" | "height" | "alt"> {
     aspectRatio?: string | "inherit";
     layout: "fill" | "fixed" | "intrinsic" | "responsive";
     // Workaround to prevent flicker on already loaded images.
@@ -43,7 +44,7 @@ export const PixelImageBlock = withPreview(
                     loader={(loaderProps) => generateImageUrl(loaderProps, usedAspectRatio)}
                     src={urlTemplate}
                     layout="fill"
-                    alt={damFile.altText}
+                    alt={damFile.altText ?? ""}
                     {...nextImageProps}
                 />
             );
@@ -81,7 +82,7 @@ export const PixelImageBlock = withPreview(
                     height={dimensions.height}
                     layout={layout}
                     priority
-                    alt={damFile.altText}
+                    alt={damFile.altText ?? ""}
                     {...nextImageProps}
                 />
             );
@@ -97,7 +98,7 @@ export const PixelImageBlock = withPreview(
                 layout={layout}
                 placeholder="blur"
                 blurDataURL={blurDataUrl}
-                alt={damFile.altText}
+                alt={damFile.altText ?? ""}
                 {...nextImageProps}
             />
         );
