@@ -67,6 +67,7 @@ const StyledToolbar = createComponentSlot(MuiToolbar)<ToolbarClassKey>({
             padding: 0 10px;
         }
 
+        // necessary to override strange MUI default styling
         @media (min-width: 0px) and (orientation: landscape) {
             min-height: 60px;
         }
