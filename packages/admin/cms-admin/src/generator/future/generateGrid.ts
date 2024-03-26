@@ -11,7 +11,6 @@ import { plural } from "pluralize";
 import { GeneratorReturn, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
-import { generateGridProps, generateGridPropsType, hasGridPropBaseFilter } from "./utils/generateGridProps";
 import { findInputObjectType, findQueryTypeOrThrow, getFilterGQLTypeString } from "./utils/introspectionHelpers";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
@@ -28,6 +27,58 @@ function findMutationType(mutationName: string, schema: IntrospectionQuery) {
     const queryType = schema.__schema.types.find((type) => type.name === schema.__schema.mutationType?.name) as IntrospectionObjectType | undefined;
     if (!queryType) throw new Error("Can't find Mutation type in gql schema");
     return queryType.fields.find((field) => field.name === mutationName);
+}
+
+function hasGridPropBaseFilter({
+    config,
+    gridQuery,
+    gqlIntrospection,
+}: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: GridConfig<any>;
+    gridQuery: string;
+    gqlIntrospection: IntrospectionQuery;
+}) {
+    return config.exposeFilters && !!getFilterGQLTypeString({ gridQuery, gqlIntrospection });
+}
+
+function generateGridPropsType({
+    config,
+    gridQuery,
+    gqlIntrospection,
+}: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: GridConfig<any>;
+    gridQuery: string;
+    gqlIntrospection: IntrospectionQuery;
+}) {
+    const props: string[] = [];
+    if (hasGridPropBaseFilter({ config, gridQuery, gqlIntrospection })) {
+        const baseFilterType = getFilterGQLTypeString({ gridQuery, gqlIntrospection });
+        props.push(`baseFilter?: ${baseFilterType};`);
+    }
+    return props.length
+        ? `type Props = {
+        ${props.join("\n")}
+    };`
+        : undefined;
+}
+
+function generateGridProps({
+    config,
+    gridQuery,
+    gqlIntrospection,
+}: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: GridConfig<any>;
+    gridQuery: string;
+    gqlIntrospection: IntrospectionQuery;
+}) {
+    const props: string[] = [];
+    if (hasGridPropBaseFilter({ config, gridQuery, gqlIntrospection })) {
+        props.push("baseFilter");
+    }
+    return props.length ? `{${props.join(", ")}}: Props` : undefined;
 }
 
 export function generateGrid(
