@@ -51,7 +51,10 @@ function findInputObjectType(input: IntrospectionInputValue, schema: Introspecti
         throw new Error("must be INPUT_OBJECT");
     }
     const typeName = type.name;
-    return schema.__schema.types.find((type) => type.kind === "INPUT_OBJECT" && type.name === typeName) as IntrospectionInputObjectType | undefined;
+    const filterType = schema.__schema.types.find((type) => type.kind === "INPUT_OBJECT" && type.name === typeName) as
+        | IntrospectionInputObjectType
+        | undefined;
+    return filterType;
 }
 
 function getFilterGQLTypeString({ gridQuery, gqlIntrospection }: { gridQuery: string; gqlIntrospection: IntrospectionQuery }): string | undefined {
