@@ -203,14 +203,14 @@ export function generateForm(
                     return `${String(field.name)}: ${assignment},`;
                 })
                 .join("\n")}
-                ${dateFields
-                    .map(
-                        (field) =>
-                            `${String(field.name)}: data.${instanceGqlType}.${String(field.name)} ? new Date(data.${instanceGqlType}.${String(
-                                field.name,
-                            )}) : undefined,`,
-                    )
-                    .join("\n")}
+            ${dateFields
+                .map(
+                    (field) =>
+                        `${String(field.name)}: data.${instanceGqlType}.${String(field.name)} ? new Date(data.${instanceGqlType}.${String(
+                            field.name,
+                        )}) : undefined,`,
+                )
+                .join("\n")}
             ${Object.keys(rootBlocks)
                 .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.input2State(data.${instanceGqlType}.${rootBlockKey}),`)
                 .join("\n")}
