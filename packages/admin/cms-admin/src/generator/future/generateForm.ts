@@ -28,6 +28,7 @@ export function generateForm(
 
     const numberFields = config.fields.filter((field) => field.type == "number");
     const booleanFields = config.fields.filter((field) => field.type == "boolean");
+    const dateFields = config.fields.filter((field) => field.type == "date");
     const readOnlyFields = config.fields.filter((field) => field.readOnly);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -202,6 +203,14 @@ export function generateForm(
                     return `${String(field.name)}: ${assignment},`;
                 })
                 .join("\n")}
+                ${dateFields
+                    .map(
+                        (field) =>
+                            `${String(field.name)}: data.${instanceGqlType}.${String(field.name)} ? new Date(data.${instanceGqlType}.${String(
+                                field.name,
+                            )}) : undefined,`,
+                    )
+                    .join("\n")}
             ${Object.keys(rootBlocks)
                 .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.input2State(data.${instanceGqlType}.${rootBlockKey}),`)
                 .join("\n")}

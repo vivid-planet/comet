@@ -80,6 +80,8 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                 ? {
                       ...filter<GQLProductFormDetailsFragment>(productFormFragment, data.product),
                       price: data.product.price ? String(data.product.price) : undefined,
+                      createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
+                      availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {
