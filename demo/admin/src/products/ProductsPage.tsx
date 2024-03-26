@@ -12,6 +12,7 @@ import {
     ToolbarBackButton,
     ToolbarFillSpace,
 } from "@comet/admin";
+import { ContentScopeIndicator } from "@comet/cms-admin";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -33,7 +34,7 @@ const ProductsPage: React.FC = () => {
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit product" })}>
                     {(selectedProductId) => (
                         <SaveBoundary>
-                            <StackToolbar>
+                            <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
                                 <ToolbarBackButton />
                                 <ToolbarAutomaticTitleItem />
                                 <ToolbarFillSpace />
