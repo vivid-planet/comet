@@ -12,15 +12,10 @@ Rework colors
 - Change `text` colors 
 - Add `highlight` colors `purple`, `green`, `orange`, `yellow` and `red` to palette
 
-Hint: To use the `highlight` colors without getting a type error, you must adjust the `tsconfig.json` in your project:
+Hint: To use the `highlight` colors without getting a type error, you must adjust the `vendors.d.ts` in your project:
 
 ```diff
-{
-    // ...
-    "compilerOptions": {
-        // ...
-+       "types": ["@comet/admin-theme"]
-    },
-    // ...
-}
++ /// <reference types="@comet/admin-theme" />
+
+// ...
 ```
