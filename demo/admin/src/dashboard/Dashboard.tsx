@@ -19,7 +19,7 @@ const Dashboard: React.FC = () => {
                     "2x": backgroundImage2x,
                 }}
             />
-            <Toolbar scopeIndicator={<ContentScopeIndicator global />} hideBottomBar />
+            <Toolbar scopeIndicator={<ContentScopeIndicator global />} />
             <MainContent>
                 <Grid container direction="row" spacing={4}>
                     {isAllowed("pageTree") && <LatestContentUpdates />}

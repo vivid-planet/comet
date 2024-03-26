@@ -85,13 +85,14 @@ export const Toolbar = (inProps: ToolbarProps) => {
     const {
         children,
         hideTopBar = false,
-        hideBottomBar = false,
+        hideBottomBar: passedHideBottomBar,
         elevation = 1,
         slotProps,
         scopeIndicator,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminToolbar" });
     const { headerHeight } = React.useContext(MasterLayoutContext);
+    const hideBottomBar = passedHideBottomBar ?? React.Children.count(children) === 0 ?? false;
 
     const ownerState: OwnerState = {
         headerHeight,
