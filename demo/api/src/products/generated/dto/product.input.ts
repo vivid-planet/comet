@@ -54,6 +54,11 @@ export class ProductInput {
     @Field({ nullable: true, defaultValue: null })
     availableSince?: Date;
 
+    @IsNullable()
+    @IsDate()
+    @Field({ nullable: true, defaultValue: null })
+    availableSince2?: Date;
+
     @IsNotEmpty()
     @Field(() => RootBlockInputScalar(DamImageBlock))
     @Transform(({ value }) => (isBlockInputInterface(value) ? value : DamImageBlock.blockInputFactory(value)), { toClassOnly: true })

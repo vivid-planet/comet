@@ -518,6 +518,7 @@ type Product implements DocumentInterface {
   inStock: Boolean!
   soldCount: Float
   availableSince: DateTime
+  availableSince2: DateTime
   image: DamImageBlockData!
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
@@ -965,6 +966,7 @@ enum ProductSortField {
   inStock
   soldCount
   availableSince
+  availableSince2
   category
   createdAt
   updatedAt
@@ -1308,6 +1310,7 @@ input ProductInput {
   price: Float = null
   inStock: Boolean! = true
   availableSince: DateTime = null
+  availableSince2: DateTime = null
   image: DamImageBlockInput!
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
@@ -1337,6 +1340,7 @@ input ProductUpdateInput {
   price: Float
   inStock: Boolean
   availableSince: DateTime
+  availableSince2: DateTime
   image: DamImageBlockInput
   discounts: [ProductDiscountsInput!]
   articleNumbers: [String!]

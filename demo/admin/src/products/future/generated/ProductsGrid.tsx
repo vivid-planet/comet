@@ -47,6 +47,7 @@ const productsFragment = gql`
         inStock
         soldCount
         availableSince
+        availableSince2
         image
         createdAt
     }
@@ -164,6 +165,7 @@ export function ProductsGrid(): React.ReactElement {
                                     price: row.price,
                                     inStock: row.inStock,
                                     availableSince: row.availableSince,
+                                    availableSince2: row.availableSince2,
                                     image: DamImageBlock.state2Output(DamImageBlock.input2State(row.image)),
                                 };
                             }}

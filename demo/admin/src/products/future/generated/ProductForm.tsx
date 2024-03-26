@@ -82,6 +82,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                       price: data.product.price ? String(data.product.price) : undefined,
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
                       availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
+                      availableSince2: data.product.availableSince2 ? new Date(data.product.availableSince2) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {
@@ -252,7 +253,14 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             fullWidth
                             name="availableSince"
                             component={FinalFormDatePicker}
-                            label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                            label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since (Date in DB)" />}
+                        />
+
+                        <Field
+                            fullWidth
+                            name="availableSince2"
+                            component={FinalFormDatePicker}
+                            label={<FormattedMessage id="product.availableSince2" defaultMessage="Available Since (DateTime in DB)" />}
                         />
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(PixelImageBlock)}

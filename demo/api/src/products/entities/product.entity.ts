@@ -120,6 +120,10 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Field({ nullable: true })
     availableSince?: Date = undefined;
 
+    @Property({ type: types.datetime, nullable: true })
+    @Field({ nullable: true })
+    availableSince2?: Date = undefined;
+
     @Property({ customType: new RootBlockType(DamImageBlock) })
     @Field(() => RootBlockDataScalar(DamImageBlock))
     @RootBlock(DamImageBlock)

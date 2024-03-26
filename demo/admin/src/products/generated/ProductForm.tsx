@@ -211,6 +211,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             name="availableSince"
                             label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
                         />
+                        <DateField
+                            fullWidth
+                            name="availableSince2"
+                            label={<FormattedMessage id="product.availableSince2" defaultMessage="Available Since" />}
+                        />
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>

@@ -20,7 +20,8 @@ export const ProductForm: FormConfig<GQLProduct> = {
         { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
         { type: "number", name: "price", helperText: "Enter price in this format: 123,45" },
         { type: "boolean", name: "inStock" },
-        { type: "date", name: "availableSince" },
+        { type: "date", name: "availableSince", label: "Available Since (Date in DB)" },
+        { type: "date", name: "availableSince2", label: "Available Since (DateTime in DB)" },
         { type: "block", name: "image", label: "Image", block: { name: "PixelImageBlock", import: "@comet/cms-admin" } },
     ],
 };
