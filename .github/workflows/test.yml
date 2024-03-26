@@ -38,11 +38,11 @@ jobs:
 
             - run: pnpm install --frozen-lockfile
 
-            # - name: Copy schema files
-            #   run: pnpm run copy-schema-files
+            - name: Copy schema files
+              run: pnpm run copy-schema-files
 
-            # - name: Build
-            #   run: pnpm run build:packages
+            - name: Build
+              run: pnpm run build:packages
 
             - name: Test
               run: pnpm run test
