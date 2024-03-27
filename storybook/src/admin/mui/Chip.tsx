@@ -1,3 +1,4 @@
+import { ChevronDown } from "@comet/admin-icons";
 import { Card, CardContent, Chip, Grid, Stack, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -8,26 +9,29 @@ function Story() {
             <Card>
                 <CardContent>
                     <Typography variant="h3" gutterBottom>
-                        Small Chips
+                        Chips
                     </Typography>
                     <Grid container spacing={2}>
                         <Grid item>
-                            <Chip size="small" label="Filled Default" />
+                            <Chip
+                                color="primary"
+                                clickable
+                                icon={<ChevronDown />}
+                                label="Chip text"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
                         </Grid>
                         <Grid item>
-                            <Chip size="small" color="primary" label="Filled Primary" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" color="secondary" label="Filled Secondary" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" variant="outlined" label="Outlined Default" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" variant="outlined" color="primary" label="Outlined Primary" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" variant="outlined" color="secondary" label="Outlined Secondary" />
+                            <Chip
+                                icon={<ChevronDown />}
+                                label="Chip text"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                                disabled
+                            />
                         </Grid>
                     </Grid>
                     <br />
