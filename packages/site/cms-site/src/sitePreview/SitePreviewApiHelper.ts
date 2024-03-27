@@ -1,10 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { getValidatedScope, GraphQLClient, Scope } from "../util/getValidatedScope";
 
-type Scope = Record<string, unknown>;
-type GraphQLClient = {
-    setHeader(key: string, value: string): unknown;
-    request(document: string, variables?: unknown): Promise<{ isAllowedSitePreview: boolean }>;
-};
 export type SitePreviewParams = {
     scope: Scope;
     path: string;
@@ -13,29 +8,29 @@ export type SitePreviewParams = {
     };
 };
 
-export async function getValidatedSitePreviewParams(
-    req: NextApiRequest,
-    res: NextApiResponse,
-    graphQLClient: GraphQLClient,
-): Promise<SitePreviewParams> {
-    return {
-        scope: await getValidatedScope(req, res, graphQLClient),
-        path: req.query.path as string,
-        settings: JSON.parse(req.query.settings as string),
-    };
-}
-
-async function getValidatedScope(req: NextApiRequest, res: NextApiResponse, graphQLClient: GraphQLClient): Promise<Scope> {
-    const scope = JSON.parse(req.query.scope?.toString() ?? "{}");
-
-    graphQLClient.setHeader("authorization", req.headers["authorization"] || "");
-    const { isAllowedSitePreview } = await graphQLClient.request(
-        "query isAllowedSitePreview($scope: JSONObject!) { isAllowedSitePreview(scope: $scope) }",
-        { scope },
-    );
-    if (!isAllowedSitePreview) {
-        res.status(403).end("Preview is not allowed");
+export async function getValidatedSitePreviewParams(request: Request, graphQLClient: GraphQLClient): Promise<SitePreviewParams> {
+    const { searchParams } = new URL(request.url);
+    const settings: SitePreviewParams["settings"] = { includeInvisible: false };
+    if (searchParams.get("settings")) {
+        try {
+            const data = JSON.parse(searchParams.get("settings") || "{}");
+            if (data.includeInvisible) {
+                settings.includeInvisible = true;
+            }
+        } catch (e) {
+            throw new Error("Invalid settings query parameter");
+        }
     }
 
-    return scope;
+    let path: string;
+    try {
+        path = new URL(`http://comet-dxp.com${searchParams.get("path")}`).pathname;
+    } catch (e) {
+        path = "/";
+    }
+    return {
+        scope: await getValidatedScope(request, graphQLClient, "pageTree"),
+        path,
+        settings,
+    };
 }

@@ -1,19 +1,22 @@
-import { SitePreviewParams } from "@comet/cms-site";
+import { getValidatedSitePreviewParams, SitePreviewParams } from "@comet/cms-site";
+import createGraphQLClient from "@src/util/createGraphQLClient";
 import { draftMode } from "next/headers";
 import { redirect } from "next/navigation";
-import { type NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: NextRequest) {
-    const params = request.nextUrl.searchParams;
-
-    //TODO const params = await getValidatedSitePreviewParams(req, res, createGraphQLClient());
+export async function GET(request: Request) {
+    let params: SitePreviewParams;
+    try {
+        params = await getValidatedSitePreviewParams(request, createGraphQLClient());
+    } catch (e) {
+        return new Response(e.message, { status: 403 });
+    }
 
     // You might want to store params.scope now
     draftMode().enable();
 
-    redirect(params.get("path") || "/");
+    redirect(params.path);
 }
 
 export type PreviewData = SitePreviewParams["settings"];

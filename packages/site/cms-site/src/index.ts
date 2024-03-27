@@ -26,3 +26,4 @@ export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePre
 export type { SitePreviewParams } from "./sitePreview/SitePreviewApiHelper";
 export { getValidatedSitePreviewParams } from "./sitePreview/SitePreviewApiHelper";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
+export { getValidatedScope } from "./util/getValidatedScope";

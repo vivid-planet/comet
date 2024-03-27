@@ -79,7 +79,7 @@ export class AppModule {
                 UserPermissionsModule.forRootAsync({
                     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
                         availableContentScopes: [
-                            { domain: "main", language: "de" },
+                            { domain: "main", language: "de1" },
                             { domain: "main", language: "en" },
                             { domain: "secondary", language: "en" },
                         ],

@@ -52,6 +52,7 @@ export class UserPermissionsService {
                     ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
                 ]
                     .flatMap((p) => p.meta.requiredPermission)
+                    .concat(["prelogin"])
                     .filter((p) => p !== DisablePermissionCheck)
                     .sort(),
             ),
