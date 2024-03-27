@@ -30,10 +30,9 @@ export function createCometAuthGuard(type?: string | string[]): Type<IAuthGuard>
         }
 
         async canActivate(context: ExecutionContext): Promise<boolean> {
-            if (this.reflector.getAllAndOverride("disableCometGuards", [context.getHandler(), context.getClass()])) {
-                if (this.getRequest(context).headers["x-include-invisible-content"]) {
-                    return false;
-                }
+            const disableCometGuard = this.reflector.getAllAndOverride("disableCometGuards", [context.getHandler(), context.getClass()]);
+            const hasIncludeInvisibleContentHeader = !!this.getRequest(context).headers["x-include-invisible-content"];
+            if (disableCometGuard && !hasIncludeInvisibleContentHeader) {
                 return true;
             }
 
