@@ -7,4 +7,4 @@ Refactor auth-decorators
 -   Remove `@PublicApi()`-decorator
 -   Rename `@DisableGlobalGuard()`-decorator to `@DisableCometGuards()`
 
-When using the `@DisableCometGuards()`-decorator it's not allowed to send a `x-include-invisible-content`-header.
+The `@DisableCometGuards()`-decorator will only disable the AuthGuard when no `x-include-invisible-content`-header is set.
