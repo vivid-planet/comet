@@ -11,7 +11,7 @@ export class OpenAiContentGenerationService implements ContentGenerationServiceI
 
     async generateAltText(fileUrl: string): Promise<string> {
         if (!this.config.generateAltText) {
-            return "Model not defined";
+            throw new Error("Model not defined");
         }
 
         const client = new OpenAIClient(this.config.generateAltText.apiUrl, new AzureKeyCredential(this.config.generateAltText.apiKey));
@@ -40,7 +40,7 @@ export class OpenAiContentGenerationService implements ContentGenerationServiceI
 
     async generateImageTitle(fileUrl: string): Promise<string> {
         if (typeof this.config.generateImageTitle === "undefined") {
-            return "Model not defined";
+            throw new Error("Model not defined");
         }
 
         const client = new OpenAIClient(this.config.generateImageTitle.apiUrl, new AzureKeyCredential(this.config.generateImageTitle.apiKey));
