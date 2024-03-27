@@ -85,9 +85,9 @@ const DiscardButton = createComponentSlot(Button)<RouterConfirmationDialogClassK
 );
 
 export enum PromptAction {
-    Cancel,
-    Discard,
-    Save,
+    Cancel = "Cancel",
+    Discard = "Discard",
+    Save = "Save",
 }
 
 export interface RouterConfirmationDialogProps
