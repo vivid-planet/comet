@@ -3,7 +3,7 @@ import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 
 import { ContentScopeService } from "../content-scope.service";
-import { RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
+import { DisablePermissionCheck, RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
 import { CurrentUser } from "../dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions.constants";
 import { AccessControlServiceInterface, SystemUser } from "../user-permissions.types";
@@ -20,7 +20,6 @@ export class UserPermissionsGuard implements CanActivate {
         const location = `${context.getClass().name}::${context.getHandler().name}()`;
 
         if (this.getDecorator(context, "disableCometGuards")) return true;
-        if (context.getClass().name === "AuthResolver") return true;
 
         const user = this.getUser(context);
         if (!user) return false;
@@ -32,6 +31,7 @@ export class UserPermissionsGuard implements CanActivate {
         if (!requiredPermission && this.isResolvingGraphQLField(context)) return true;
         if (!requiredPermission) throw new Error(`RequiredPermission decorator is missing in ${location}`);
         const requiredPermissions = requiredPermission.requiredPermission;
+        if (requiredPermissions.includes(DisablePermissionCheck)) return true;
         if (requiredPermissions.length === 0) throw new Error(`RequiredPermission decorator has empty permissions in ${location}`);
         if (this.isResolvingGraphQLField(context) || requiredPermission.options?.skipScopeCheck) {
             // At least one permission is required

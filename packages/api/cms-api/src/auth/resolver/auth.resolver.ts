@@ -3,6 +3,7 @@ import { Context, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { IncomingMessage } from "http";
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
+import { DisablePermissionCheck, RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { GetCurrentUser } from "../decorators/get-current-user.decorator";
 
@@ -14,6 +15,7 @@ interface AuthResolverConfig {
 
 export function createAuthResolver(config?: AuthResolverConfig): Type<unknown> {
     @Resolver(() => CurrentUser)
+    @RequiredPermission(DisablePermissionCheck)
     class AuthResolver {
         @Query(() => CurrentUser)
         async currentUser(@GetCurrentUser() user: CurrentUser): Promise<CurrentUser> {

@@ -6,7 +6,7 @@ import { isFuture, isPast } from "date-fns";
 import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
 
-import { RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
+import { DisablePermissionCheck, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
 import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
@@ -52,6 +52,7 @@ export class UserPermissionsService {
                     ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
                 ]
                     .flatMap((p) => p.meta.requiredPermission)
+                    .filter((p) => p !== DisablePermissionCheck)
                     .sort(),
             ),
         ];
