@@ -2,6 +2,7 @@ import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectTy
 
 import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
+import { generateFieldListFromIntrospection } from "./utils/generateFieldList";
 import { Imports } from "./utils/generateImportsCode";
 import { isFieldOptional } from "./utils/isFieldOptional";
 
@@ -11,20 +12,22 @@ export function generateFormField(
     config: FormFieldConfig<any>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formConfig: FormConfig<any>,
-): GeneratorReturn & { imports: Imports; hooksCode: string; formFragmentField: string; formValueToGqlInputCode: string } {
+): GeneratorReturn & { imports: Imports; hooksCode: string } {
     const gqlType = formConfig.gqlType;
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
 
     const name = String(config.name);
     const label = config.label ?? camelCaseToHumanReadable(name);
 
-    const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
-        | IntrospectionObjectType
-        | undefined;
-    if (!introspectionObject) throw new Error(`didn't find object ${gqlType} in gql introspection`);
+    const introspectedTypes = gqlIntrospection.__schema.types;
+    const introspectionObject = introspectedTypes.find((type) => type.kind === "OBJECT" && type.name === gqlType);
+    if (!introspectionObject || introspectionObject.kind !== "OBJECT") throw new Error(`didn't find object ${gqlType} in gql introspection`);
 
-    const introspectionField = introspectionObject.fields.find((field) => field.name === name);
-    if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
+    const introspectedFields = generateFieldListFromIntrospection(gqlIntrospection, gqlType);
+
+    const introspectionFieldWithPath = introspectedFields.find((field) => field.path === name);
+    if (!introspectionFieldWithPath) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
+    const introspectionField = introspectionFieldWithPath.field;
     const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
 
     const required = !isFieldOptional({ config, gqlIntrospection, gqlType });
@@ -55,8 +58,6 @@ export function generateFormField(
     }
 
     let code = "";
-    let formValueToGqlInputCode = "";
-    let formFragmentField = name;
     if (config.type == "text") {
         const TextInputComponent = config.multiline ? "TextAreaField" : "TextField";
         code = `
@@ -97,7 +98,6 @@ export function generateFormField(
         if (isFieldOptional({ config, gqlIntrospection: gqlIntrospection, gqlType: gqlType })) {
             assignment = `formValues.${name} ? ${assignment} : null`;
         }
-        formValueToGqlInputCode = `${name}: ${assignment},`;
     } else if (config.type == "boolean") {
         code = `<Field name="${name}" label="" type="checkbox" fullWidth ${validateCode}>
             {(props) => (
@@ -140,7 +140,6 @@ export function generateFormField(
         code = `<Field name="${name}" isEqual={isEqual}>
             {createFinalFormBlock(${config.block.name})}
         </Field>`;
-        formValueToGqlInputCode = `${name}: rootBlocks.${name}.state2Output(formValues.${name}),`;
     } else if (config.type == "staticSelect") {
         if (config.values) {
             throw new Error("custom values for staticSelect is not yet supported"); // TODO add support
@@ -211,8 +210,6 @@ export function generateFormField(
         const fragmentVariableName = `${rootQuery}SelectFragment`;
         const fragmentName = `${objectType.name}Select`;
 
-        formFragmentField = `${name} { id ${labelField} }`;
-
         gqlDocuments[fragmentVariableName] = `
             fragment ${fragmentName} on ${queryType} {
                 id
@@ -238,7 +235,6 @@ export function generateFormField(
             return result.data.${rootQuery}.nodes;
         });`;
 
-        formValueToGqlInputCode = `${name}: formValues.${name}?.id,`;
 
         code = `<Field
                 fullWidth
@@ -254,8 +250,6 @@ export function generateFormField(
     return {
         code,
         hooksCode,
-        formValueToGqlInputCode,
-        formFragmentField,
         gqlDocuments,
         imports,
     };

@@ -79,6 +79,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             data?.product
                 ? {
                       ...filter<GQLProductFormDetailsFragment>(productFormFragment, data.product),
+
                       price: data.product.price ? String(data.product.price) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
@@ -105,6 +106,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         const output = {
             ...formValues,
             category: formValues.category?.id,
+
             price: formValues.price ? parseFloat(formValues.price) : null,
             image: rootBlocks.image.state2Output(formValues.image),
         };

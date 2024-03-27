@@ -7,6 +7,7 @@ import { basename, dirname } from "path";
 
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
+import { UsableFields } from "./utils/usableFields";
 import { writeGenerated } from "./utils/writeGenerated";
 
 type ImportReference = {
@@ -14,7 +15,9 @@ type ImportReference = {
     import: string;
 };
 
-export type FormFieldConfig<T> = (
+export type GeneratorEntity = { __typename?: string };
+
+export type FormFieldConfig<T extends GeneratorEntity> = (
     | { type: "text"; multiline?: boolean }
     | { type: "number" }
     | { type: "boolean" }
@@ -23,9 +26,9 @@ export type FormFieldConfig<T> = (
     | { type: "staticSelect"; values?: string[] }
     | { type: "asyncSelect"; rootQuery: string; labelField?: string }
     | { type: "block"; block: ImportReference }
-) & { name: keyof T; label?: string; required?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
+) & { name: UsableFields<T>; label?: string; required?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
 
-export type FormConfig<T extends { __typename?: string }> = {
+export type FormConfig<T extends GeneratorEntity> = {
     type: "form";
     gqlType: T["__typename"];
     fragmentName?: string;
@@ -37,7 +40,7 @@ export type TabsConfig = { type: "tabs"; tabs: { name: string; content: Generato
 
 type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex">;
 
-export type GridColumnConfig<T> = (
+export type GridColumnConfig<T extends GeneratorEntity> = (
     | { type: "text" }
     | { type: "number" }
     | { type: "boolean" }
@@ -46,7 +49,7 @@ export type GridColumnConfig<T> = (
     | { type: "staticSelect"; values?: string[] }
     | { type: "block"; block: ImportReference }
 ) & { name: keyof T } & DataGridSettings;
-export type GridConfig<T extends { __typename?: string }> = {
+export type GridConfig<T extends GeneratorEntity> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
