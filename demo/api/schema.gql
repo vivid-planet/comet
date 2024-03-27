@@ -51,6 +51,8 @@ type Dependency {
   visible: Boolean!
   targetGraphqlObjectType: String!
   targetId: String!
+  name: String
+  secondaryInformation: String
 }
 
 type PaginatedDependencies {
@@ -192,6 +194,7 @@ type Link implements DocumentInterface {
   updatedAt: DateTime!
   content: LinkBlockData!
   createdAt: DateTime!
+  pageTreeNode: PageTreeNode
 }
 
 interface DocumentInterface {
@@ -274,11 +277,6 @@ input DependentFilter {
   rootGraphqlObjectType: String
   rootId: String
   rootColumnName: String
-}
-
-type PaginatedPages {
-  nodes: [Page!]!
-  totalCount: Int!
 }
 
 type PredefinedPage implements DocumentInterface {
@@ -605,7 +603,7 @@ type Query {
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
   link(linkId: ID!): Link
-  pages(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedPages!
+  page(id: ID!): Page!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!

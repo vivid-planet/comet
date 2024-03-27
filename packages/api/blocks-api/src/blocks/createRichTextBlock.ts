@@ -16,7 +16,7 @@ import {
     registerBlock,
 } from "./block";
 import { AnnotationBlockMeta, BlockField } from "./decorators/field";
-import { NameOrOptions } from "./factories/types";
+import { BlockFactoryNameOrOptions } from "./factories/types";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
 
@@ -69,7 +69,7 @@ export interface RichTextBlockInputInterface<LinkBlockInput extends BlockInputIn
 
 export function createRichTextBlock<LinkBlock extends Block>(
     { link: LinkBlock, indexSearchText = true }: CreateRichTextBlockOptions,
-    nameOrOptions: NameOrOptions = "RichText",
+    nameOrOptions: BlockFactoryNameOrOptions = "RichText",
 ): Block<RichTextBlockDataInterface, RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>>> {
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
     const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
