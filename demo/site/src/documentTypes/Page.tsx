@@ -1,4 +1,4 @@
-import { SeoBlock } from "@comet/cms-site";
+import { previewParams, SeoBlock } from "@comet/cms-site";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import Breadcrumbs from "@src/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/components/Breadcrumbs.fragment";
@@ -42,7 +42,8 @@ const pageQuery = gql`
 `;
 
 export default async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput }) {
-    const client = createGraphQLClient(/*{ previewData: context.previewData }*/);
+    const { previewData } = previewParams() || { previewData: undefined };
+    const client = createGraphQLClient(previewData);
 
     const props = await client.request<GQLPageQuery, GQLPageQueryVariables>(pageQuery, {
         pageTreeNodeId,

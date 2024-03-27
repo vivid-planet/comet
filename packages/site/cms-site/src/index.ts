@@ -24,5 +24,4 @@ export { PreviewSkeleton } from "./previewskeleton/PreviewSkeleton";
 export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSitePreviewIFrameMessage";
 export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePreviewIFrameMessage";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
-export type { SitePreviewParams } from "./sitePreview/SitePreviewUtils";
-export { getPreviewScopeFromContext, getValidatedSitePreviewParams } from "./sitePreview/SitePreviewUtils";
+export { previewParams, SitePreviewData, SitePreviewParams, sitePreviewRoute } from "./sitePreview/SitePreviewUtils";

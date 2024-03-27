@@ -1,7 +1,7 @@
-import { PreviewData } from "@src/app/api/site-preview/route";
+import { SitePreviewData } from "@comet/cms-site";
 import { GraphQLClient } from "graphql-request";
 
-export default function createGraphQLClient(previewData?: PreviewData): GraphQLClient {
+export default function createGraphQLClient(previewData?: SitePreviewData): GraphQLClient {
     const { includeInvisibleBlocks, includeInvisiblePages, previewDamUrls } = {
         includeInvisiblePages: !!previewData,
         includeInvisibleBlocks: previewData && previewData.includeInvisible,
