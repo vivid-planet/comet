@@ -5,4 +5,6 @@
 
 All `FinalFormField` components now support the `required` prop
 
-The `clearable` prop is set per default in `FinalFormDatePicker` when `required` is not set
+The `clearable` prop is removed from `FinalFormDatePicker`
+
+The clear button in `FinalFormDatePicker` is visible for all non-`required` fields
