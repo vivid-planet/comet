@@ -2,12 +2,23 @@ import { AzureKeyCredential, ChatRequestMessage, OpenAIClient } from "@azure/ope
 import { Injectable } from "@nestjs/common";
 import fetch from "node-fetch";
 
-import { OpenAiContentGenerationConfig } from "./content-generation.config";
-import { ContentGenerationServiceInterface } from "./content-generation.service.interface";
+import { ContentGenerationServiceInterface } from "./content-generation-service.interface";
+
+export type OpenAiContentGenerationConfig<T> = {
+    [K in keyof T]: {
+        deploymentId: string;
+        apiKey: string;
+        apiUrl: string;
+    };
+};
 
 @Injectable()
 export class OpenAiContentGenerationService implements ContentGenerationServiceInterface {
-    constructor(private readonly config: OpenAiContentGenerationConfig<ContentGenerationServiceInterface>) {}
+    config: OpenAiContentGenerationConfig<ContentGenerationServiceInterface>;
+
+    init(config: OpenAiContentGenerationConfig<ContentGenerationServiceInterface>): void {
+        this.config = config;
+    }
 
     async generateAltText(fileUrl: string): Promise<string> {
         if (!this.config.generateAltText) {
