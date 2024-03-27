@@ -28,6 +28,8 @@ export const FinalFormAutocomplete = <
     isAsync = false,
     clearable,
     popupIcon = <ChevronDown />,
+    endAdornmentIcon,
+    disabledEndAdornmentIcon,
     ...rest
 }: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>) => {
     return (
@@ -50,14 +52,18 @@ export const FinalFormAutocomplete = <
                     {...params}
                     {...params.InputProps}
                     endAdornment={
-                        loading || clearable ? (
+                        rest.disabled && disabledEndAdornmentIcon ? (
+                            disabledEndAdornmentIcon
+                        ) : loading || clearable ? (
                             <>
                                 {loading && <CircularProgress color="inherit" size={16} />}
                                 {clearable && (
                                     <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />
                                 )}
-                                {params.InputProps.endAdornment}
+                                {endAdornmentIcon ? endAdornmentIcon : params.InputProps.endAdornment}
                             </>
+                        ) : endAdornmentIcon ? (
+                            endAdornmentIcon
                         ) : (
                             params.InputProps.endAdornment
                         )

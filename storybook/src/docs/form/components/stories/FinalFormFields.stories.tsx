@@ -12,6 +12,7 @@ import {
     FinalFormSwitch,
     useAsyncOptionsProps,
 } from "@comet/admin";
+import { Calendar, Locked } from "@comet/admin-icons";
 import { Button, FormControlLabel } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -76,6 +77,8 @@ storiesOf("stories/form/FinalForm Fields", module)
             // Case 2: the initial values are hardcoded => hardcode them outside of React Component => useMemo() not necessary
             () => ({
                 autocomplete: { value: "strawberry", label: "Strawberry" },
+                autocompleteWithEndAdornment: { value: "strawberry", label: "Strawberry" },
+                autocompleteWithDisabledEndAdornment: { value: "strawberry", label: "Strawberry" },
                 autocompleteAsync: { value: "strawberry", label: "Strawberry" },
                 autocompleteMultiple: [{ value: "strawberry", label: "Strawberry" }],
             }),
@@ -102,6 +105,27 @@ storiesOf("stories/form/FinalForm Fields", module)
                     name="autocomplete"
                     label="Autocomplete"
                     fullWidth
+                />
+                <Field
+                    component={FinalFormAutocomplete}
+                    getOptionLabel={(option: Option) => option.label}
+                    isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
+                    options={options}
+                    name="autocompleteWithEndAdornment"
+                    label="Autocomplete with custom Icon"
+                    fullWidth
+                    endAdornmentIcon={<Calendar />}
+                />
+                <Field
+                    component={FinalFormAutocomplete}
+                    getOptionLabel={(option: Option) => option.label}
+                    isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
+                    options={options}
+                    name="autocompleteWithDisabledEndAdornment"
+                    label="Autocomplete with custom Icon when disabled"
+                    fullWidth
+                    disabledEndAdornmentIcon={<Locked color="disabled" />}
+                    disabled
                 />
                 <Field
                     component={FinalFormAutocomplete}
