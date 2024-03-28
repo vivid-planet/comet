@@ -1,5 +1,5 @@
 import { File, Folder, FolderCopy, Pdf } from "@comet/admin-icons";
-import { Fade, Popper } from "@mui/material";
+import { Fade, Popper, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 
@@ -49,6 +49,7 @@ interface DamThumbnailProps {
 
 export const DamThumbnail = ({ asset }: DamThumbnailProps): React.ReactElement => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const theme = useTheme();
 
     const open = Boolean(anchorEl);
 
@@ -93,7 +94,7 @@ export const DamThumbnail = ({ asset }: DamThumbnailProps): React.ReactElement =
         }
     } else if (asset.__typename === "DamFolder") {
         if (asset.isInboxFromOtherScope) {
-            thumbnail = <FolderCopy htmlColor={inboxFolderColor} />;
+            thumbnail = <FolderCopy htmlColor={theme.palette.highlight.purple} />;
         } else {
             thumbnail = <Folder />;
         }
