@@ -25,7 +25,7 @@ import {
 import { DateField } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -139,7 +139,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
     return (
         <FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues}>
             {({ values }) => (
-                <EditPageLayout>
+                <>
                     {saveConflict.dialogs}
                     <Toolbar>
                         <ToolbarItem>
@@ -215,7 +215,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
                     </MainContent>
-                </EditPageLayout>
+                </>
             )}
         </FinalForm>
     );

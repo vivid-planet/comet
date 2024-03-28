@@ -1,6 +1,6 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { Field, FinalForm, FinalFormInput, FinalFormSubmitEvent, MainContent, useFormApiRef } from "@comet/admin";
-import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { CircularProgress } from "@mui/material";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -84,7 +84,7 @@ export function ProductPriceForm({ id }: FormProps): React.ReactElement {
             subscription={{}}
         >
             {() => (
-                <EditPageLayout>
+                <>
                     {saveConflict.dialogs}
                     <MainContent>
                         <Field
@@ -95,7 +95,7 @@ export function ProductPriceForm({ id }: FormProps): React.ReactElement {
                             label={<FormattedMessage id="product.price" defaultMessage="Price" />}
                         />
                     </MainContent>
-                </EditPageLayout>
+                </>
             )}
         </FinalForm>
     );

@@ -139,7 +139,7 @@ export function generateForm(
     import { ArrowLeft, Lock } from "@comet/admin-icons";
     import { FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-    import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+    import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
     import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
     import { FormApi } from "final-form";
     import { filter } from "graphql-anywhere";
@@ -281,7 +281,7 @@ export function generateForm(
                 subscription={{}}
             >
                 {() => (
-                    <EditPageLayout>
+                    <>
                         {saveConflict.dialogs}
                         <Toolbar>
                             <ToolbarItem>
@@ -304,7 +304,7 @@ export function generateForm(
                         <MainContent>
                             ${fieldsCode}
                         </MainContent>
-                    </EditPageLayout>
+                    </>
                 )}
             </FinalForm>
         );

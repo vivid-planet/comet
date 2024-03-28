@@ -19,7 +19,7 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
-import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -200,7 +200,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
             subscription={{}}
         >
             {() => (
-                <EditPageLayout>
+                <>
                     {saveConflict.dialogs}
                     <Toolbar>
                         <ToolbarItem>
@@ -372,7 +372,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
                             />
                         </FieldSet>
                     </MainContent>
-                </EditPageLayout>
+                </>
             )}
         </FinalForm>
     );
