@@ -22,10 +22,11 @@ function PageLink({ page, children }: Props): JSX.Element | null {
             return null;
         }
 
+        // TODO how to use language prefix in InternalLinkBlock?
         return <LinkBlock data={page.document.content}>{typeof children === "function" ? children(active) : children}</LinkBlock>;
     } else if (page.documentType === "Page") {
         return (
-            <Link href={page.path} passHref legacyBehavior>
+            <Link href={`/${page.scope.language}${page.path}`} passHref legacyBehavior>
                 {typeof children === "function" ? children(active) : children}
             </Link>
         );
@@ -37,7 +38,7 @@ function PageLink({ page, children }: Props): JSX.Element | null {
         const type = (page.document as GQLPredefinedPage).type;
 
         return (
-            <Link href={type && predefinedPagePaths[type] ? predefinedPagePaths[type] : ""} passHref legacyBehavior>
+            <Link href={type && predefinedPagePaths[type] ? `/${page.scope.language}${predefinedPagePaths[type]}` : ""} passHref legacyBehavior>
                 {typeof children === "function" ? children(active) : children}
             </Link>
         );

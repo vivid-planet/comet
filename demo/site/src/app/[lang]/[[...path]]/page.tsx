@@ -1,5 +1,5 @@
 import { PreviewData } from "@src/app/api/site-preview/route";
-import { defaultLanguage, domain } from "@src/config";
+import { domain } from "@src/config";
 import { documentTypes } from "@src/documentTypes";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
@@ -17,14 +17,13 @@ const documentTypeQuery = gql`
     }
 `;
 
-export default async function Page({ params }: { params: { path: string[] } }) {
+export default async function Page({ params }: { params: { path: string[]; lang: string } }) {
     let previewData: PreviewData | undefined = undefined;
     if (draftMode().isEnabled) {
         previewData = { includeInvisible: false };
     }
     const client = createGraphQLClient(previewData);
-    const locale = /*context.locale ??*/ defaultLanguage;
-    const scope = { domain, language: locale };
+    const scope = { domain, language: params.lang };
 
     //fetch documentType
     const data = await client.request<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(documentTypeQuery, {

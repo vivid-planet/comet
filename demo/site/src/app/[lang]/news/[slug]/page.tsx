@@ -1,6 +1,6 @@
 import { PreviewData } from "@src/app/api/site-preview/route";
 import { DamImageBlock } from "@src/blocks/DamImageBlock";
-import { defaultLanguage, domain } from "@src/config";
+import { domain } from "@src/config";
 import { NewsContentBlock } from "@src/news/blocks/NewsContentBlock";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
@@ -9,14 +9,13 @@ import { notFound } from "next/navigation";
 
 import { GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables } from "./page.generated";
 
-export default async function NewsDetailPage({ params }: { params: { slug: string } }) {
+export default async function NewsDetailPage({ params }: { params: { slug: string; lang: string } }) {
     let previewData: PreviewData | undefined = undefined;
     if (draftMode().isEnabled) {
         previewData = { includeInvisible: false };
     }
     const client = createGraphQLClient(previewData);
-    const locale = /*context.locale ??*/ defaultLanguage;
-    const scope = { domain, language: locale };
+    const scope = { domain, language: params.lang };
 
     const data = await client.request<GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables>(
         gql`

@@ -69,6 +69,11 @@
                 "peerDependencies": {
                     "@types/react": "*"
                 }
+            },
+            "react-intl": {
+                "peerDependencies": {
+                    "@types/react": "*"
+                }
             }
         }
     }
