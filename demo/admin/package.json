@@ -3,14 +3,9 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-<<<<<<< HEAD
         "admin-generator": "rimraf 'src/*/generated' && comet-admin-generator generate crud-generator-config.ts && comet-admin-generator future-generate",
-        "build": "run-s intl:compile && run-p gql:types generate-block-types && cross-env BABEL_ENV=production webpack --config ./webpack.config.ts --env production --mode production --progress",
-=======
-        "admin-generator": "rimraf 'src/*/generated' && comet-admin-generator generate crud-generator-config.ts",
         "build": "run-s intl:compile && run-p gql:types generate-block-types && NODE_ENV=production vite build",
         "preview": "npm run build && vite preview",
->>>>>>> main
         "generate-block-types": "comet generate-block-types --inputs",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"npm run generate-block-types\"",
         "gql:types": "graphql-codegen",
