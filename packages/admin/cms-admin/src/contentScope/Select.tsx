@@ -1,18 +1,28 @@
 import { AppHeaderDropdown, ClearInputAdornment } from "@comet/admin";
 import { Search } from "@comet/admin-icons";
-import { InputAdornment, InputBase, List, ListItemButton, ListItemIcon as MuiListItemIcon, ListItemText, SvgIconProps } from "@mui/material";
+import {
+    InputAdornment,
+    InputBase,
+    List,
+    ListItemButton,
+    ListItemIcon as MuiListItemIcon,
+    ListItemText,
+    ListSubheader,
+    SvgIconProps,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { useIntl } from "react-intl";
 
+import { wrapInArray } from "./ContentScope.utils";
+import { ContentScopeCombinations } from "./Controls";
+import { ContentScopeInterface } from "./Provider";
+
 export interface ContentScopeSelectProps {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    value: { value: any; label?: string };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    values: Array<{ value: any; label?: string }>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onChange: (newValue: any) => void;
-    defaultLabel?: string;
+    values: ContentScopeCombinations;
+    value: ContentScopeInterface;
+    onChange: (selectedScopes: ContentScopeInterface[], mapping: string[]) => void;
+    label: string;
     icon?:
         | React.ComponentType<SvgIconProps>
         | React.ForwardRefExoticComponent<React.PropsWithoutRef<SvgIconProps> & React.RefAttributes<SVGSVGElement>>;
@@ -21,11 +31,11 @@ export interface ContentScopeSelectProps {
 }
 
 export default function ContentScopeSelect({
-    value,
     onChange,
     values,
-    defaultLabel = "",
+    value,
     icon,
+    label,
     disabled,
     searchable = false,
 }: ContentScopeSelectProps): JSX.Element {
@@ -36,14 +46,24 @@ export default function ContentScopeSelect({
 
     const [searchValue, setSearchValue] = React.useState<string>("");
 
-    const filteredValues = searchable
-        ? values.filter(
-              (item) => item.value.toLowerCase().includes(searchValue.toLowerCase()) || item.label?.toLowerCase().includes(searchValue.toLowerCase()),
-          )
-        : values;
+    const filterBySearchValue = (searchValue: string) => {
+        if (!searchValue) return values;
+        const groupValues = values.filter((scopeVal) => scopeVal.grouping?.value.includes(searchValue.toLowerCase()));
 
+        const valuesWithSearch = values
+            .filter((scopeVal) => !scopeVal.grouping?.value.includes(searchValue.toLowerCase()))
+            .map((scopeVal) => ({
+                ...scopeVal,
+                values: scopeVal.values.filter((val) => val.some(({ value }: { value: string }) => value.includes(searchValue.toLowerCase()))),
+            }))
+            .filter((scopeVal) => scopeVal.values.length > 0);
+
+        return [...groupValues, ...valuesWithSearch];
+    };
+
+    const filteredValues = searchable ? filterBySearchValue(searchValue) : values;
     return (
-        <AppHeaderDropdown buttonChildren={value ? value.label || value.value.toUpperCase() : defaultLabel} startIcon={Icon ? <Icon /> : undefined}>
+        <AppHeaderDropdown buttonChildren={label} startIcon={Icon ? <Icon /> : undefined}>
             {(hideDropdown) => (
                 <List>
                     {searchable && (
@@ -66,25 +86,34 @@ export default function ContentScopeSelect({
                             autoFocus
                         />
                     )}
-                    {filteredValues.map(({ value: v, label: l }) => (
-                        <ListItemButton
-                            key={v}
-                            disabled={disabled}
-                            selected={value.value === v}
-                            onClick={() => {
-                                hideDropdown();
-                                onChange(v);
-                                setSearchValue("");
-                            }}
-                        >
-                            {Icon ? (
-                                <ListItemIcon>
-                                    <Icon />
-                                </ListItemIcon>
-                            ) : null}
-                            <ListItemText primary={l || v.toUpperCase()} />
-                        </ListItemButton>
-                    ))}
+                    {filteredValues.map(({ grouping, mapping, values }) => {
+                        return (
+                            <React.Fragment key={JSON.stringify({ grouping, values })}>
+                                {grouping && <ListSubheader>{grouping.label ? grouping.label : grouping.value}</ListSubheader>}
+                                {values.map((scopeVal, index) => (
+                                    <ListItemButton
+                                        key={index}
+                                        disabled={disabled}
+                                        selected={value.value === scopeVal}
+                                        onClick={() => {
+                                            hideDropdown();
+                                            onChange([...(grouping ? [grouping, ...wrapInArray(scopeVal)] : [...wrapInArray(scopeVal)])], mapping);
+                                            setSearchValue("");
+                                        }}
+                                    >
+                                        {Icon ? (
+                                            <ListItemIcon>
+                                                <Icon />
+                                            </ListItemIcon>
+                                        ) : null}
+                                        <ListItemText
+                                            primary={Array.isArray(scopeVal) ? scopeVal.map(({ value }) => value).join(" - ") : scopeVal.value}
+                                        />
+                                    </ListItemButton>
+                                ))}
+                            </React.Fragment>
+                        );
+                    })}
                 </List>
             )}
         </AppHeaderDropdown>
