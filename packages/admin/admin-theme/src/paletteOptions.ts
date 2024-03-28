@@ -1,9 +1,10 @@
 import { PaletteOptions } from "@mui/material/styles";
 
-import { errorPalette, greyPalette, infoPalette, primaryPalette, successPalette, warningPalette } from "./colors";
+import { errorPalette, greyPalette, infoPalette, primaryPalette, secondaryPalette, successPalette, warningPalette } from "./colors";
 
 export const paletteOptions: PaletteOptions = {
     primary: primaryPalette,
+    secondary: secondaryPalette,
     error: errorPalette,
     warning: warningPalette,
     info: infoPalette,
