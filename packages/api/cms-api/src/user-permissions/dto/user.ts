@@ -13,4 +13,6 @@ export class User {
 
     @Field()
     language: string;
+
+    additionalData?: unknown;
 }
