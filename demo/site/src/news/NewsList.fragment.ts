@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from "@comet/cms-site";
 
 export const newsListFragment = gql`
     fragment NewsList on PaginatedNews {
