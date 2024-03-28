@@ -1,17 +1,94 @@
-// TODO: Implement themability after theming-refactor is merged (https://github.com/vivid-planet/comet/pull/1376)
-
 import { Close, Maximize } from "@comet/admin-icons";
-import { ButtonBase, Dialog, DialogContent as MuiDialogContent, DialogTitle as MuiDialogTitle, IconButton, Paper, SvgIcon } from "@mui/material";
-import { css, styled } from "@mui/material/styles";
+import {
+    ButtonBase,
+    ComponentsOverrides,
+    css,
+    Dialog as MuiDialog,
+    DialogContent as MuiDialogContent,
+    DialogTitle as MuiDialogTitle,
+    IconButton,
+    Paper,
+    Theme,
+    useThemeProps,
+} from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-export type ContentOverflowProps = React.PropsWithChildren<{
-    dialogTitle?: React.ReactNode;
-    expandIcon?: React.ElementType<React.ComponentProps<typeof SvgIcon>>;
-}>;
+import { createComponentSlot } from "./helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
 
-const Root = styled("div")(
+export type ContentOverflowClassKey =
+    | "root"
+    | "clickableContent"
+    | "contentContainer"
+    | "openDialogIcon"
+    | "dialog"
+    | "dialogPaper"
+    | "dialogTitle"
+    | "closeDialogButton"
+    | "dialogContent"
+    | "innerDialogContent";
+
+export interface ContentOverflowProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        clickableContent: typeof ButtonBase;
+        contentContainer: "div";
+        openDialogIcon: "div";
+        dialog: typeof MuiDialog;
+        dialogPaper: typeof Paper;
+        dialogTitle: typeof MuiDialogTitle;
+        closeDialogButton: typeof IconButton;
+        dialogContent: typeof MuiDialogContent;
+        innerDialogContent: "div";
+    }> {
+    dialogTitle?: React.ReactNode;
+    children?: React.ReactNode;
+    iconMapping?: {
+        openDialog?: React.ReactNode;
+        closeDialog?: React.ReactNode;
+    };
+}
+
+export const ContentOverflow = (inProps: ContentOverflowProps) => {
+    const {
+        children,
+        dialogTitle = <FormattedMessage id="comet.contentOverflow.dialogTitle" defaultMessage="Preview" />,
+        iconMapping = {},
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminContentOverflow" });
+    const { openDialog: openDialogIcon = <Maximize fontSize="inherit" />, closeDialog: closeDialogIcon = <Close /> } = iconMapping;
+
+    const [open, setOpen] = React.useState(false);
+
+    return (
+        <>
+            <Root {...slotProps?.root} {...restProps}>
+                <ClickableContent {...slotProps?.clickableContent} onClick={() => setOpen(true)}>
+                    <ContentContainer {...slotProps?.contentContainer}>{children}</ContentContainer>
+                    <OpenDialogIcon {...slotProps?.openDialogIcon}>{openDialogIcon}</OpenDialogIcon>
+                </ClickableContent>
+            </Root>
+            <Dialog PaperComponent={DialogPaper} {...slotProps?.dialog} open={open} onClose={() => setOpen(false)}>
+                <DialogTitle {...slotProps?.dialogTitle}>
+                    {dialogTitle}
+                    <CloseDialogButton color="inherit" {...slotProps?.closeDialogButton} onClick={() => setOpen(false)}>
+                        {closeDialogIcon}
+                    </CloseDialogButton>
+                </DialogTitle>
+                <DialogContent {...slotProps?.dialogContent}>
+                    <InnerDialogContent {...slotProps?.innerDialogContent}>{children}</InnerDialogContent>
+                </DialogContent>
+            </Dialog>
+        </>
+    );
+};
+
+const Root = createComponentSlot("div")<ContentOverflowClassKey>({
+    componentName: "ContentOverflow",
+    slotName: "root",
+})(
     ({ theme }) => css`
         padding: ${theme.spacing(2)};
         width: 100%;
@@ -20,7 +97,10 @@ const Root = styled("div")(
     `,
 );
 
-const ClickableContent = styled(ButtonBase)(
+const ClickableContent = createComponentSlot(ButtonBase)<ContentOverflowClassKey>({
+    componentName: "ContentOverflow",
+    slotName: "clickableContent",
+})(
     ({ theme }) => css`
         position: relative;
         width: 100%;
@@ -34,7 +114,10 @@ const ClickableContent = styled(ButtonBase)(
     `,
 );
 
-const ContentContainer = styled("div")(css`
+const ContentContainer = createComponentSlot("div")<ContentOverflowClassKey>({
+    componentName: "ContentOverflow",
+    slotName: "contentContainer",
+})(css`
     width: 100%;
     height: 100%;
     text-align: left;
@@ -46,7 +129,10 @@ const ContentContainer = styled("div")(css`
     pointer-events: none;
 `);
 
-const Icon = styled("div")(css`
+const OpenDialogIcon = createComponentSlot("div")<ContentOverflowClassKey>({
+    componentName: "ContentOverflow",
+    slotName: "openDialogIcon",
+})(css`
     position: absolute;
     top: 0;
     right: 0;
@@ -57,7 +143,15 @@ const Icon = styled("div")(css`
     border-bottom-left-radius: 3px;
 `);
 
-const DialogPaper = styled(Paper)(
+const Dialog = createComponentSlot(MuiDialog)<ContentOverflowClassKey>({
+    componentName: "ContentOverflow",
+    slotName: "dialog",
+})();
+
+const DialogPaper = createComponentSlot(Paper)<ContentOverflowClassKey>({
+    componentName: "ContentOverflow",
+    slotName: "dialogPaper",
+})(
     css`
         overflow: hidden;
 
@@ -70,7 +164,10 @@ const DialogPaper = styled(Paper)(
     `,
 );
 
-const DialogTitle = styled(MuiDialogTitle)(
+const DialogTitle = createComponentSlot(MuiDialogTitle)<ContentOverflowClassKey>({
+    componentName: "ContentOverflow",
+    slotName: "dialogTitle",
+})(
     css`
         display: flex;
         align-items: center;
@@ -78,7 +175,15 @@ const DialogTitle = styled(MuiDialogTitle)(
     `,
 );
 
-const DialogContent = styled(MuiDialogContent)(
+const CloseDialogButton = createComponentSlot(IconButton)<ContentOverflowClassKey>({
+    componentName: "ContentOverflow",
+    slotName: "closeDialogButton",
+})();
+
+const DialogContent = createComponentSlot(MuiDialogContent)<ContentOverflowClassKey>({
+    componentName: "ContentOverflow",
+    slotName: "dialogContent",
+})(
     ({ theme }) => css`
         min-height: 0;
         box-sizing: border-box;
@@ -90,7 +195,10 @@ const DialogContent = styled(MuiDialogContent)(
     `,
 );
 
-const InnerDialogContent = styled("div")(
+const InnerDialogContent = createComponentSlot("div")<ContentOverflowClassKey>({
+    componentName: "ContentOverflow",
+    slotName: "innerDialogContent",
+})(
     ({ theme }) => css`
         background-color: white;
         border: 1px dashed ${theme.palette.grey[100]};
@@ -102,34 +210,19 @@ const InnerDialogContent = styled("div")(
     `,
 );
 
-export const ContentOverflow = ({
-    children,
-    expandIcon: ExpandIcon = Maximize,
-    dialogTitle = <FormattedMessage id="comet.contentOverflow.dialogTitle" defaultMessage="Preview" />,
-}: ContentOverflowProps) => {
-    const [open, setOpen] = React.useState(false);
+declare module "@mui/material/styles" {
+    interface ComponentNameToClassKey {
+        CometAdminContentOverflow: ContentOverflowClassKey;
+    }
 
-    return (
-        <>
-            <Root>
-                <ClickableContent onClick={() => setOpen(true)}>
-                    <ContentContainer>{children}</ContentContainer>
-                    <Icon>
-                        <ExpandIcon fontSize="inherit" />
-                    </Icon>
-                </ClickableContent>
-            </Root>
-            <Dialog open={open} onClose={() => setOpen(false)} PaperComponent={DialogPaper}>
-                <DialogTitle>
-                    {dialogTitle}
-                    <IconButton color="inherit" onClick={() => setOpen(false)}>
-                        <Close />
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent>
-                    <InnerDialogContent>{children}</InnerDialogContent>
-                </DialogContent>
-            </Dialog>
-        </>
-    );
-};
+    interface ComponentsPropsList {
+        CometAdminContentOverflow: ContentOverflowProps;
+    }
+
+    interface Components {
+        CometAdminContentOverflow?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminContentOverflow"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminContentOverflow"];
+        };
+    }
+}
