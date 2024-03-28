@@ -1,5 +1,6 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Autocomplete, AutocompleteProps, AutocompleteRenderInputParams, CircularProgress, InputBase } from "@mui/material";
+import { Autocomplete, AutocompleteProps, AutocompleteRenderInputParams, InputBase } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
@@ -28,8 +29,7 @@ export const FinalFormAutocomplete = <
     isAsync = false,
     clearable,
     popupIcon = <ChevronDown />,
-    endAdornmentIcon,
-    disabledEndAdornmentIcon,
+    endAdornment,
     ...rest
 }: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>) => {
     return (
@@ -52,18 +52,16 @@ export const FinalFormAutocomplete = <
                     {...params}
                     {...params.InputProps}
                     endAdornment={
-                        rest.disabled && disabledEndAdornmentIcon ? (
-                            disabledEndAdornmentIcon
-                        ) : loading || clearable ? (
+                        loading || clearable ? (
                             <>
                                 {loading && <CircularProgress color="inherit" size={16} />}
                                 {clearable && (
                                     <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />
                                 )}
-                                {endAdornmentIcon ? endAdornmentIcon : params.InputProps.endAdornment}
+                                {endAdornment ? endAdornment : params.InputProps.endAdornment}
                             </>
-                        ) : endAdornmentIcon ? (
-                            endAdornmentIcon
+                        ) : endAdornment ? (
+                            endAdornment
                         ) : (
                             params.InputProps.endAdornment
                         )

@@ -12,8 +12,8 @@ import {
     FinalFormSwitch,
     useAsyncOptionsProps,
 } from "@comet/admin";
-import { Calendar, Locked } from "@comet/admin-icons";
-import { Button, FormControlLabel } from "@mui/material";
+import { Music } from "@comet/admin-icons";
+import { Button, FormControlLabel, InputAdornment } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -78,9 +78,9 @@ storiesOf("stories/form/FinalForm Fields", module)
             () => ({
                 autocomplete: { value: "strawberry", label: "Strawberry" },
                 autocompleteWithEndAdornment: { value: "strawberry", label: "Strawberry" },
-                autocompleteWithDisabledEndAdornment: { value: "strawberry", label: "Strawberry" },
                 autocompleteAsync: { value: "strawberry", label: "Strawberry" },
                 autocompleteMultiple: [{ value: "strawberry", label: "Strawberry" }],
+                autocompleteMultipleWithEndAdornment: [{ value: "strawberry", label: "Strawberry" }],
             }),
             [],
         );
@@ -112,20 +112,13 @@ storiesOf("stories/form/FinalForm Fields", module)
                     isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
                     options={options}
                     name="autocompleteWithEndAdornment"
-                    label="Autocomplete with custom Icon"
+                    label="Autocomplete with end adornment"
                     fullWidth
-                    endAdornmentIcon={<Calendar />}
-                />
-                <Field
-                    component={FinalFormAutocomplete}
-                    getOptionLabel={(option: Option) => option.label}
-                    isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
-                    options={options}
-                    name="autocompleteWithDisabledEndAdornment"
-                    label="Autocomplete with custom Icon when disabled"
-                    fullWidth
-                    disabledEndAdornmentIcon={<Locked color="disabled" />}
-                    disabled
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <Music />
+                        </InputAdornment>
+                    }
                 />
                 <Field
                     component={FinalFormAutocomplete}
@@ -145,6 +138,21 @@ storiesOf("stories/form/FinalForm Fields", module)
                     name="autocompleteMultiple"
                     label="Autocomplete multiple select"
                     fullWidth
+                />
+                <Field
+                    component={FinalFormAutocomplete}
+                    multiple
+                    getOptionLabel={(option: Option) => option.label}
+                    isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
+                    options={options}
+                    name="autocompleteMultipleWithEndAdornment"
+                    label="Autocomplete multiple select with end adornment"
+                    fullWidth
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <Music />
+                        </InputAdornment>
+                    }
                 />
                 <Button color="primary" variant="contained" type="submit">
                     Submit
