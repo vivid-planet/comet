@@ -136,8 +136,7 @@ export function PagesPage({
             <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.pages", defaultMessage: "Pages" })}>
                 <StackSwitch>
                     <StackPage name="table">
-                        {renderContentScopeIndicator(scope)}
-                        <Toolbar>
+                        <Toolbar scopeIndicator={renderContentScopeIndicator(scope)}>
                             <PageSearch query={query} onQueryChange={setQuery} pageSearchApi={pageSearchApi} />
                             <FormControlLabel
                                 control={<Switch checked={showArchive} color="primary" onChange={handleArchiveToggleClick} />}

@@ -14,7 +14,7 @@ import {
 } from "@comet/admin";
 import { Add, Delete, Preview, Save } from "@comet/admin-icons";
 import { AdminComponentRoot, BlockOutputApi, BlockState, HiddenInSubroute, IFrameBridgeProvider, resolveNewState } from "@comet/blocks-admin";
-import { EditPageLayout, openSitePreviewWindow, SplitPreview, useBlockPreview, useCmsBlockContext, useSiteConfig } from "@comet/cms-admin";
+import { ContentScopeIndicator, openSitePreviewWindow, SplitPreview, useBlockPreview, useCmsBlockContext, useSiteConfig } from "@comet/cms-admin";
 import { Button } from "@mui/material";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
@@ -121,8 +121,8 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
     };
 
     return (
-        <EditPageLayout>
-            <Toolbar>
+        <>
+            <Toolbar scopeIndicator={<ContentScopeIndicator />}>
                 <ToolbarBackButton />
                 <ToolbarTitleItem>{item?.node?.name}</ToolbarTitleItem>
                 <ToolbarFillSpace />
@@ -200,7 +200,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                     </SplitPreview>
                 </IFrameBridgeProvider>
             </MainContent>
-        </EditPageLayout>
+        </>
     );
 };
 
