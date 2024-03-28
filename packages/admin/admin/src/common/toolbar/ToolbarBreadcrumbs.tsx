@@ -1,10 +1,10 @@
-// TODO: Add theming and support for `sx` and `slotProps` when #1809 is merged: https://github.com/vivid-planet/comet/pull/1809
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
-import {} from "@emotion/react";
-import { ButtonBase, css, ListItemText, Menu, MenuItem, styled, Theme, Typography } from "@mui/material";
+import { ButtonBase, ComponentsOverrides, css, ListItemText, Menu, MenuItem, Theme, Typography, useThemeProps } from "@mui/material";
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 
+import { createComponentSlot } from "../../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useStackApi } from "../../stack/Api";
 import { useObservedWidth } from "../../utils/useObservedWidth";
 
@@ -24,11 +24,52 @@ const __DEBUG__dummyStackPages = [
 const __DEBUG__usedNumberOfStackPages = __DEBUG__dummyStackPages.slice(0, __DEBUG__numberOfPages);
 const __DEBUG__useDebugBreadcrumbData = false;
 
-export type ToolbarBreadcrumbsProps = {
-    scopeIndicator?: React.ReactNode;
-};
+type ToolbarBreadcrumbsClassKey =
+    | "root"
+    | "scopeIndicator"
+    | "breadcrumbsList"
+    | "mobileBreadcrumbsButton"
+    | "currentBreadcrumbsItem"
+    | "breadcrumbsItem"
+    | "breadcrumbsItemSeparator"
+    | "breadcrumbsEllipsisItem"
+    | "mobileMenu"
+    | "mobileMenuIcon"
+    | "mobileMenuItem"
+    | "mobileMenuItemText"
+    | "mobileMenuItemNestingIndicator";
 
-export const ToolbarBreadcrumbs = ({ scopeIndicator }: ToolbarBreadcrumbsProps) => {
+interface ToolbarBreadcrumbsProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        scopeIndicator: "div";
+        breadcrumbsList: "div";
+        mobileBreadcrumbsButton: typeof ButtonBase;
+        currentBreadcrumbsItem: typeof Typography;
+        breadcrumbsItem: typeof Typography;
+        breadcrumbsItemSeparator: "div";
+        breadcrumbsEllipsisItem: typeof Typography;
+        mobileMenu: typeof Menu;
+        mobileMenuIcon: "div";
+        mobileMenuItem: typeof MenuItem;
+        mobileMenuItemText: typeof ListItemText;
+        mobileMenuItemNestingIndicator: "div";
+    }> {
+    scopeIndicator?: React.ReactNode;
+    iconMapping?: {
+        itemSeparator?: React.ReactNode;
+        openMobileMenu?: React.ReactNode;
+        closeMobileMenu?: React.ReactNode;
+    };
+}
+
+export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
+    const { scopeIndicator, iconMapping = {}, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarBreadcrumbs" });
+    const {
+        itemSeparator: itemSeparatorIcon = <ChevronRight />,
+        openMobileMenu: openMobileMenuIcon = <ChevronDown />,
+        closeMobileMenu: closeMobileMenuIcon = <ChevronUp />,
+    } = iconMapping;
     const [showMobileMenu, setShowMobileMenu] = React.useState(false);
     const rootRef = React.useRef<HTMLDivElement>(null);
     const stackApi = useStackApi();
@@ -46,83 +87,85 @@ export const ToolbarBreadcrumbs = ({ scopeIndicator }: ToolbarBreadcrumbsProps) 
         setShowMobileMenu((val) => !val);
     };
 
+    const itemSeparator = <BreadcrumbsItemSeparator>{itemSeparatorIcon}</BreadcrumbsItemSeparator>;
+
     return (
         <>
-            <Root ref={rootRef}>
-                {Boolean(scopeIndicator) && scopeIndicator}
-                <DesktopBreadcrumbs>
-                    <EllipsisItem variant="body2" onClick={toggleMobileMenu}>
-                        ...
-                    </EllipsisItem>
+            <Root ref={rootRef} {...slotProps?.root} {...restProps}>
+                {Boolean(scopeIndicator) && <ScopeIndicator {...slotProps?.scopeIndicator}>{scopeIndicator}</ScopeIndicator>}
+                <BreadcrumbsList {...slotProps?.breadcrumbsList}>
                     {breadcrumbs.map(({ title, url }, index) => {
                         const isCurrentPage = index === breadcrumbs.length - 1;
 
                         const commonItemProps = {
                             variant: "body2",
-                            title,
+                            title: typeof title === "string" ? title : undefined,
                         } as const;
 
                         return (
                             <React.Fragment key={index}>
                                 {isCurrentPage ? (
-                                    // @ts-expect-error TODO: Fix this. May be fixed when creating the component with `createComponentSlot()` from #1809
-                                    <LastItem {...commonItemProps}>{title}</LastItem>
+                                    <CurrentBreadcrumbsItem {...commonItemProps} {...slotProps?.currentBreadcrumbsItem}>
+                                        {title}
+                                    </CurrentBreadcrumbsItem>
                                 ) : (
                                     <>
-                                        {/* @ts-expect-error TODO: Fix this. May be fixed when creating the component with `createComponentSlot()` from #1809 */}
-                                        <Item {...commonItemProps} component={RouterLink} to={url}>
+                                        <BreadcrumbsItem
+                                            {...commonItemProps}
+                                            {...slotProps?.breadcrumbsItem}
+                                            // @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop
+                                            component={RouterLink}
+                                            to={url}
+                                        >
                                             {title}
-                                        </Item>
-                                        <ItemSeparator>
-                                            <ChevronRight />
-                                        </ItemSeparator>
+                                        </BreadcrumbsItem>
+                                        {itemSeparator}
                                     </>
                                 )}
                             </React.Fragment>
                         );
                     })}
-                </DesktopBreadcrumbs>
-                <MobileBreadcrumbs onClick={toggleMobileMenu} disableRipple>
+                </BreadcrumbsList>
+                <MobileBreadcrumbsButton disableRipple {...slotProps?.mobileBreadcrumbsButton} onClick={toggleMobileMenu}>
                     {breadcrumbs.length > 1 && (
                         <>
-                            <Typography
-                                variant="body2"
-                                sx={{
-                                    textDecoration: "underline",
-                                }}
-                            >
+                            <BreadcrumbsEllipsisItem variant="body2" {...slotProps?.breadcrumbsEllipsisItem}>
                                 ...
-                            </Typography>
-                            <ChevronRight />
+                            </BreadcrumbsEllipsisItem>
+                            {itemSeparator}
                         </>
                     )}
-                    <LastItem variant="body2">{lastBreadcrumb.title}</LastItem>
-                    <MobileMenuButtonWrapper>{showMobileMenu ? <ChevronUp /> : <ChevronDown />}</MobileMenuButtonWrapper>
-                </MobileBreadcrumbs>
+                    <CurrentBreadcrumbsItem variant="body2" {...slotProps?.currentBreadcrumbsItem}>
+                        {lastBreadcrumb.title}
+                    </CurrentBreadcrumbsItem>
+                    <MobileMenuIcon {...slotProps?.mobileMenuIcon}>{showMobileMenu ? closeMobileMenuIcon : openMobileMenuIcon}</MobileMenuIcon>
+                </MobileBreadcrumbsButton>
             </Root>
-            <Menu
+            <MobileMenu
                 open={showMobileMenu}
                 anchorEl={rootRef.current}
                 onClose={toggleMobileMenu}
+                {...slotProps?.mobileMenu}
                 anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "center",
+                    ...slotProps?.mobileMenu?.anchorOrigin,
                 }}
                 transformOrigin={{
                     vertical: "top",
                     horizontal: "center",
+                    ...slotProps?.mobileMenu?.transformOrigin,
                 }}
                 MenuListProps={{
                     // @ts-expect-error This works but the `component` prop seems to be missing in the type definitions
                     component: "div",
-                    sx: {
-                        paddingTop: 3,
-                        paddingBottom: 3,
-                    },
+                    ...slotProps?.mobileMenu?.MenuListProps,
                 }}
                 PaperProps={{
+                    ...slotProps?.mobileMenu?.PaperProps,
                     sx: {
                         width: menuWidth,
+                        ...slotProps?.mobileMenu?.PaperProps?.sx,
                     },
                 }}
             >
@@ -130,27 +173,31 @@ export const ToolbarBreadcrumbs = ({ scopeIndicator }: ToolbarBreadcrumbsProps) 
                     const isCurrentPage = nestingLevel === breadcrumbs.length - 1;
 
                     return (
-                        <MobileMenuItem key={nestingLevel} onClick={toggleMobileMenu} selected={isCurrentPage} component={RouterLink} to={url}>
-                            {nestingLevel > 0 && <MenuItemNestingIndicator nestingLevel={nestingLevel} />}
-                            <ListItemText
-                                primary={title}
-                                primaryTypographyProps={{
-                                    sx: {
-                                        fontWeight: isCurrentPage ? 600 : 300,
-                                        textOverflow: "ellipsis",
-                                        overflow: "hidden",
-                                    },
-                                }}
-                            />
+                        <MobileMenuItem
+                            {...slotProps?.mobileMenuItem}
+                            key={nestingLevel}
+                            onClick={toggleMobileMenu}
+                            selected={isCurrentPage}
+                            // @ts-expect-error The component prop does not work properly with MUIs `styled()`, see: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop
+                            component={RouterLink}
+                            to={url}
+                        >
+                            {nestingLevel > 0 && (
+                                <MobileMenuItemNestingIndicator {...slotProps?.mobileMenuItemNestingIndicator} ownerState={{ nestingLevel }} />
+                            )}
+                            <MobileMenuItemText {...slotProps?.mobileMenuItemText} primary={title} ownerState={{ isCurrentPage }} />
                         </MobileMenuItem>
                     );
                 })}
-            </Menu>
+            </MobileMenu>
         </>
     );
 };
 
-const Root = styled("div")(
+const Root = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "root",
+})(
     ({ theme }) => css`
         display: flex;
         align-items: center;
@@ -160,7 +207,15 @@ const Root = styled("div")(
     `,
 );
 
-const DesktopBreadcrumbs = styled("div")(
+const ScopeIndicator = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "scopeIndicator",
+})();
+
+const BreadcrumbsList = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "breadcrumbsList",
+})(
     ({ theme }) => css`
         display: none;
         align-items: center;
@@ -173,7 +228,10 @@ const DesktopBreadcrumbs = styled("div")(
     `,
 );
 
-const MobileBreadcrumbs = styled(ButtonBase)(
+const MobileBreadcrumbsButton = createComponentSlot(ButtonBase)<ToolbarBreadcrumbsClassKey>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "mobileBreadcrumbsButton",
+})(
     ({ theme }) => css`
         display: flex;
         align-items: center;
@@ -201,7 +259,20 @@ const getCommonItemStyles = (theme: Theme) => css`
     }
 `;
 
-const Item = styled(Typography)(
+const CurrentBreadcrumbsItem = createComponentSlot(Typography)<ToolbarBreadcrumbsClassKey>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "currentBreadcrumbsItem",
+})(
+    ({ theme }) => css`
+        ${getCommonItemStyles(theme)}
+        font-weight: 600;
+    `,
+) as typeof Typography;
+
+const BreadcrumbsItem = createComponentSlot(Typography)<ToolbarBreadcrumbsClassKey>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "breadcrumbsItem",
+})(
     ({ theme }) => css`
         ${getCommonItemStyles(theme)}
 
@@ -209,36 +280,12 @@ const Item = styled(Typography)(
             display: block;
         }
     `,
-) as typeof Typography;
+);
 
-const LastItem = styled(Typography)(
-    ({ theme }) => css`
-        ${getCommonItemStyles(theme)}
-        font-weight: 600;
-    `,
-) as typeof Typography;
-
-const EllipsisItem = styled(Typography)(
-    ({ theme }) => css`
-        color: ${theme.palette.grey[900]};
-        text-decoration: underline;
-        padding: ${theme.spacing(1)};
-        margin-left: ${theme.spacing(-1)};
-        margin-right: ${theme.spacing(-1)};
-        cursor: pointer;
-
-        ${theme.breakpoints.up("md")} {
-            display: none;
-        }
-    `,
-) as typeof Typography;
-
-const MobileMenuButtonWrapper = styled("div")`
-    margin-left: auto;
-    line-height: 0;
-`;
-
-const ItemSeparator = styled("div")(
+const BreadcrumbsItemSeparator = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "breadcrumbsItemSeparator",
+})(
     ({ theme }) => css`
         line-height: 0;
         display: none;
@@ -253,7 +300,48 @@ const ItemSeparator = styled("div")(
     `,
 );
 
-const MobileMenuItem = styled(MenuItem)(
+const BreadcrumbsEllipsisItem = createComponentSlot(Typography)<ToolbarBreadcrumbsClassKey>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "breadcrumbsEllipsisItem",
+})(
+    ({ theme }) => css`
+        color: ${theme.palette.grey[900]};
+        text-decoration: underline;
+        padding: ${theme.spacing(1)};
+        margin-left: ${theme.spacing(-1)};
+        margin-right: ${theme.spacing(-1)};
+        cursor: pointer;
+
+        ${theme.breakpoints.up("md")} {
+            display: none;
+        }
+    `,
+);
+
+const MobileMenu = createComponentSlot(Menu)<ToolbarBreadcrumbsClassKey>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "mobileMenu",
+})(
+    ({ theme }) => css`
+        .MuiMenu-list {
+            padding-top: ${theme.spacing(3)};
+            padding-bottom: ${theme.spacing(3)};
+        }
+    `,
+);
+
+const MobileMenuIcon = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "mobileMenuIcon",
+})(css`
+    margin-left: auto;
+    line-height: 0;
+`);
+
+const MobileMenuItem = createComponentSlot(MenuItem)<ToolbarBreadcrumbsClassKey>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "mobileMenuItem",
+})(
     ({ theme }) => css`
         position: relative;
         min-height: auto;
@@ -270,12 +358,28 @@ const MobileMenuItem = styled(MenuItem)(
             background-color: ${theme.palette.grey[50]};
         }
     `,
-) as typeof MenuItem;
+);
 
-const MenuItemNestingIndicator = styled("div")<{ nestingLevel: number }>(
-    ({ theme, nestingLevel }) => css`
+const MobileMenuItemText = createComponentSlot(ListItemText)<ToolbarBreadcrumbsClassKey, { isCurrentPage: boolean }>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "mobileMenuItemText",
+})(
+    ({ ownerState }) => css`
+        .MuiListItemText-primary {
+            font-weight: ${ownerState.isCurrentPage ? 600 : 300};
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    `,
+);
+
+const MobileMenuItemNestingIndicator = createComponentSlot("div")<ToolbarBreadcrumbsClassKey, { nestingLevel: number }>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "mobileMenuItemNestingIndicator",
+})(
+    ({ theme, ownerState }) => css`
         position: relative;
-        margin-left: ${17 * nestingLevel}px;
+        margin-left: ${17 * ownerState.nestingLevel}px;
         width: 12px;
         flex-shrink: 0;
 
@@ -293,3 +397,20 @@ const MenuItemNestingIndicator = styled("div")<{ nestingLevel: number }>(
         }
     `,
 );
+
+declare module "@mui/material/styles" {
+    interface ComponentNameToClassKey {
+        CometAdminToolbarBreadcrumbs: ToolbarBreadcrumbsClassKey;
+    }
+
+    interface ComponentsPropsList {
+        CometAdminToolbarBreadcrumbs: ToolbarBreadcrumbsProps;
+    }
+
+    interface Components {
+        CometAdminToolbarBreadcrumbs?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminToolbarBreadcrumbs"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminToolbarBreadcrumbs"];
+        };
+    }
+}
