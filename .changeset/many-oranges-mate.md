@@ -2,4 +2,4 @@
 "@comet/cms-admin": major
 ---
 
-`Deleted EditPageLayout`
+Remove `EditPageLayout`
