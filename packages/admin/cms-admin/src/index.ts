@@ -37,6 +37,7 @@ export { useSaveState } from "./common/useSaveState";
 export { ContentScopeIndicator } from "./contentScope/ContentScopeIndicator";
 export type { ContentScopeControlsConfig } from "./contentScope/Controls";
 export { ContentScopeControls } from "./contentScope/Controls";
+export { LegacyContentScopeIndicator } from "./contentScope/LegacyContentScopeIndicator";
 export type { ContentScopeInterface, ContentScopeProviderProps, ContentScopeValues, UseContentScopeApi } from "./contentScope/Provider";
 export { ContentScopeProvider, useContentScope } from "./contentScope/Provider";
 export type { ContentScopeConfigProps } from "./contentScope/useContentScopeConfig";

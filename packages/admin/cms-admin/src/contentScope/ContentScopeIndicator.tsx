@@ -1,71 +1,93 @@
-import { css } from "@mui/material";
+import { messages } from "@comet/admin";
+import { Domain } from "@comet/admin-icons";
+import { SvgIconProps, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
+import { FormattedMessage } from "react-intl";
+
+import { ContentScopeInterface, useContentScope } from "./Provider";
+
+const capitalizeString = (string: string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+};
 
 interface ContentScopeIndicatorProps {
-    variant?: "default" | "toolbar";
     global?: boolean;
+    scope?: ContentScopeInterface;
 }
 
-export const ContentScopeIndicator: React.FunctionComponent<ContentScopeIndicatorProps> = ({ children, variant = "default", global = false }) => {
+export const ContentScopeIndicator = ({ global = false, scope: passedScope, children }: React.PropsWithChildren<ContentScopeIndicatorProps>) => {
+    const theme = useTheme();
+    const { scope: contentScope, values } = useContentScope();
+    const scope = passedScope ?? contentScope;
+
+    const findLabelForScopePart = (scopePart: keyof ContentScopeInterface) => {
+        const label = values[scopePart].find(({ value }) => value === scope[scopePart])?.label;
+        return label ?? capitalizeString(scope[scopePart]);
+    };
+
+    let content: React.ReactNode;
+    if (global) {
+        content = <FormattedMessage {...messages.globalContentScope} />;
+    } else {
+        const scopeParts = Object.keys(scope);
+        content = scopeParts.map((scopePart, index, array) => {
+            const isLastPart = index === array.length - 1;
+
+            const ret = [findLabelForScopePart(scopePart)];
+            if (!isLastPart) {
+                ret.push(" / ");
+            }
+
+            return ret;
+        });
+    }
+
     return (
-        <ScopeIndicator global={global} variant={variant}>
-            <Content global={global}>{children}</Content>
-            {variant === "toolbar" && <ToolbarIndicator global={global} />}
-        </ScopeIndicator>
+        <Wrapper>
+            <ScopeIndicator global={global}>
+                <DomainIcon />
+                {children ?? content}
+            </ScopeIndicator>
+            <Triangle fill={global ? theme.palette.primary.dark : theme.palette.grey.A100} />
+        </Wrapper>
     );
 };
 
+const Wrapper = styled("div")`
+    display: inline-flex;
+    height: 24px;
+    align-items: center;
+    flex-shrink: 0;
+`;
+
 interface ScopeIndicatorProps {
-    variant: "default" | "toolbar";
     global: boolean;
 }
 
 const ScopeIndicator = styled("div", { shouldForwardProp: (prop) => prop !== "global" })<ScopeIndicatorProps>`
-    position: ${({ variant }) => (variant === "toolbar" ? "fixed" : "absolute")};
-    top: -12px;
-    left: 0;
-    z-index: ${({ theme }) => theme.zIndex.drawer - 1};
-    background: ${({ theme, global }) => (global ? theme.palette.primary.main : "#596980")};
-    border-top-left-radius: 12px;
-    border-bottom-right-radius: 12px;
-    padding: 2px 12px;
-    color: white;
     display: flex;
+    height: 24px;
+    padding: 0 5px 0 12px;
     align-items: center;
+    gap: 5px;
 
-    ${({ variant, theme, global }) =>
-        variant === "toolbar" &&
-        css`
-            top: 48px;
-            left: auto;
+    border-radius: 4px 0 0 4px;
+    background: ${({ theme, global }) => (global ? theme.palette.primary.dark : theme.palette.grey.A100)};
 
-            &:before {
-                content: "";
-                position: absolute;
-                top: 8px;
-                bottom: 0;
-                right: 0;
-                left: 0;
-                width: 4px;
-                height: 85px;
-                background-color: ${global ? theme.palette.primary.main : "#596980"};
-            }
-        `}
+    color: #fff;
+    font-size: 12px;
+    font-weight: ${({ global }) => (global ? 600 : 400)};
+    line-height: 16px;
+    text-transform: ${({ global }) => (global ? "uppercase" : "none")};
 `;
 
-const ToolbarIndicator = styled("div", { shouldForwardProp: (prop) => prop !== "global" })<{ global: boolean }>`
-    width: 4px;
-    height: 100%;
-    background-color: ${({ theme, global }) => (global ? theme.palette.primary.main : "#596980")};
+const DomainIcon = styled(Domain)`
+    font-size: 12px;
 `;
 
-const Content = styled("div", { shouldForwardProp: (prop) => prop !== "global" })<{ global: boolean }>`
-    background: ${({ theme, global }) => (global ? theme.palette.primary.main : "#596980")};
-    border-top-left-radius: 12px;
-    border-bottom-right-radius: 12px;
-    padding: 2px 12px;
-    color: white;
-    display: flex;
-    align-items: center;
-`;
+const Triangle = (props: SvgIconProps) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="8" height="24" viewBox="0 0 8 24" fill="currentColor" {...props}>
+        <path d="m0 0 7.26 10.89a2 2 0 0 1 0 2.22L0 24V0Z" />
+    </svg>
+);
