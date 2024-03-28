@@ -3,17 +3,8 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-<<<<<<< HEAD
-        "build": "run-p gql:types generate-block-types",
-        "dev": "run-p gql:types generate-block-types && NODE_OPTIONS='--inspect=localhost:9230' node server.js",
-=======
-        "build": "run-s intl:compile && run-p gql:types generate-block-types && $npm_execpath build:preBuild",
-        "build:preBuild": "run-s clear:preBuild build:preBuild:tsc",
-        "build:preBuild:tsc": "tsc --project tsconfig.preBuild.json",
-        "build:publicGenerated": "node preBuild/build/preBuild/src/publicGenerator/generate.js",
-        "clear:preBuild": "rimraf preBuild/build",
-        "dev": "run-s intl:compile && run-p gql:types generate-block-types && $npm_execpath build:preBuild && NODE_OPTIONS='--inspect=localhost:9230' node server.js",
->>>>>>> main
+        "build": "run-s intl:compile && run-p gql:types generate-block-types",
+        "dev": "run-s intl:compile && run-p gql:types generate-block-types && NODE_OPTIONS='--inspect=localhost:9230' node server.js",
         "export": "next export",
         "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"$npm_execpath generate-block-types\"",

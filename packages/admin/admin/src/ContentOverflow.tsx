@@ -1,5 +1,4 @@
 import { Close, Maximize } from "@comet/admin-icons";
-<<<<<<< HEAD
 import {
     ButtonBase,
     ComponentsOverrides,
@@ -17,20 +16,6 @@ import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "./helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "./helpers/ThemedComponentBaseProps";
-=======
-import { ButtonBase, Dialog, DialogContent as MuiDialogContent, DialogTitle as MuiDialogTitle, IconButton, Paper } from "@mui/material";
-import { css, styled } from "@mui/material/styles";
-import * as React from "react";
-import { FormattedMessage } from "react-intl";
-
-export type ContentOverflowProps = React.PropsWithChildren<{
-    dialogTitle?: React.ReactNode;
-    iconMapping?: {
-        openDialog?: React.ReactNode;
-        closeDialog?: React.ReactNode;
-    };
-}>;
->>>>>>> main
 
 export type ContentOverflowClassKey =
     | "root"
@@ -225,7 +210,6 @@ const InnerDialogContent = createComponentSlot("div")<ContentOverflowClassKey>({
     `,
 );
 
-<<<<<<< HEAD
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminContentOverflow: ContentOverflowClassKey;
@@ -242,35 +226,3 @@ declare module "@mui/material/styles" {
         };
     }
 }
-=======
-export const ContentOverflow = ({
-    children,
-    iconMapping = {},
-    dialogTitle = <FormattedMessage id="comet.contentOverflow.dialogTitle" defaultMessage="Preview" />,
-}: ContentOverflowProps) => {
-    const [open, setOpen] = React.useState(false);
-    const { openDialog: openDialogIcon = <Maximize fontSize="inherit" />, closeDialog: closeDialogIcon = <Close /> } = iconMapping;
-
-    return (
-        <>
-            <Root>
-                <ClickableContent onClick={() => setOpen(true)}>
-                    <ContentContainer>{children}</ContentContainer>
-                    <Icon>{openDialogIcon}</Icon>
-                </ClickableContent>
-            </Root>
-            <Dialog open={open} onClose={() => setOpen(false)} PaperComponent={DialogPaper}>
-                <DialogTitle>
-                    {dialogTitle}
-                    <IconButton color="inherit" onClick={() => setOpen(false)}>
-                        {closeDialogIcon}
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent>
-                    <InnerDialogContent>{children}</InnerDialogContent>
-                </DialogContent>
-            </Dialog>
-        </>
-    );
-};
->>>>>>> main
