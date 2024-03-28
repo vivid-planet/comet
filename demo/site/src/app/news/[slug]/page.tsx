@@ -1,7 +1,7 @@
 import { PreviewData } from "@src/app/api/site-preview/route";
-import { DamImageBlock } from "@src/blocks/DamImageBlock";
 import { defaultLanguage, domain } from "@src/config";
-import { NewsContentBlock } from "@src/news/blocks/NewsContentBlock";
+import { NewsDetail } from "@src/news/NewsDetail";
+import { newsDetailFragment } from "@src/news/NewsDetail.fragment";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
 import { draftMode } from "next/headers";
@@ -22,13 +22,11 @@ export default async function NewsDetailPage({ params }: { params: { slug: strin
         gql`
             query NewsDetailPage($slug: String!, $scope: NewsContentScopeInput!) {
                 newsBySlug(slug: $slug, scope: $scope) {
-                    id
-                    title
-                    image
-                    createdAt
-                    content
+                    ...NewsDetail
                 }
             }
+
+            ${newsDetailFragment}
         `,
         { slug: params.slug, scope },
     );
@@ -39,13 +37,5 @@ export default async function NewsDetailPage({ params }: { params: { slug: strin
 
     const { newsBySlug: news } = data;
 
-    return (
-        <div>
-            <DamImageBlock data={news.image} layout="responsive" sizes="100vw" aspectRatio="16x9" />
-            <h1>{news.title}</h1>
-            {/*<p><FormattedDate value={news.createdAt} /></p>*/}
-            <hr />
-            <NewsContentBlock data={news.content} />
-        </div>
-    );
+    return <NewsDetail news={news} />;
 }

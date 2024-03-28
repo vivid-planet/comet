@@ -15,6 +15,7 @@ import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import { Link } from "@src/links/Link";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import { NewsPage } from "@src/news/generated/NewsPage";
+import { NewsPage as HandmadeNewsPage } from "@src/news/handmade/NewsPage";
 import MainMenu from "@src/pages/mainMenu/MainMenu";
 import { Page } from "@src/pages/Page";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
@@ -89,6 +90,13 @@ export const masterMenuData: MasterMenuData = [
                 route: {
                     path: "/structured-content/news",
                     component: NewsPage,
+                },
+            },
+            {
+                primary: <FormattedMessage id="menu.news.handmade" defaultMessage="News (Handmade)" />,
+                route: {
+                    path: "/structured-content/news-handmade",
+                    component: HandmadeNewsPage,
                 },
             },
         ],
