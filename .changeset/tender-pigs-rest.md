@@ -4,7 +4,7 @@
 
 Add custom `Typography` variants for displaying inline lists
 
-```
+```tsx
 <Typography variant="list">
     <Typography variant="listItem">Lorem ipsum</Typography>
     <Typography variant="listItem">Lorem ipsum</Typography>
