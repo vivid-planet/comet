@@ -22,6 +22,7 @@ interface InternalLinkBlockTransformResponse extends TransformResponse {
         name: string;
         path: string;
         documentType: string;
+        scope: Record<string, string> | null;
     } | null;
     targetPageAnchor?: string;
 }
@@ -56,6 +57,7 @@ class InternalLinkBlockData extends BlockData {
                 id: node.id,
                 name: node.name,
                 path: await pageTreeReadApi.nodePath(node),
+                scope: node.scope ? node.scope : null,
                 documentType: node.documentType,
             },
             targetPageAnchor: this.targetPageAnchor,
@@ -119,6 +121,11 @@ class Meta extends AnnotationBlockMeta {
                             name: "path",
                             kind: BlockMetaFieldKind.String,
                             nullable: false,
+                        },
+                        {
+                            name: "scope",
+                            kind: BlockMetaFieldKind.Json,
+                            nullable: true,
                         },
                         {
                             name: "documentType",
