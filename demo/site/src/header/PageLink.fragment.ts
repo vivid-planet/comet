@@ -1,4 +1,4 @@
-import { gql } from "@src/util/graphQLClient";
+import { gql } from "@comet/cms-site";
 
 export const pageLinkFragment = gql`
     fragment PageLink on PageTreeNode {

@@ -1,4 +1,4 @@
-import { gql } from "@src/util/graphQLClient";
+import { gql } from "@comet/cms-site";
 
 import { pageLinkFragment } from "./PageLink.fragment";
 
