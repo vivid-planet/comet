@@ -1,22 +1,17 @@
-import { PreviewData } from "@src/app/api/site-preview/route";
+import { previewParams } from "@comet/cms-site";
 import { DamImageBlock } from "@src/blocks/DamImageBlock";
 import { defaultLanguage, domain } from "@src/config";
+import { GQLNewsContentScopeInput } from "@src/graphql.generated";
 import { NewsContentBlock } from "@src/news/blocks/NewsContentBlock";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
-import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables } from "./page.generated";
 
 export default async function NewsDetailPage({ params }: { params: { slug: string } }) {
-    let previewData: PreviewData | undefined = undefined;
-    if (draftMode().isEnabled) {
-        previewData = { includeInvisible: false };
-    }
+    const { scope, previewData } = previewParams() || { scope: { domain, language: defaultLanguage }, previewData: undefined };
     const client = createGraphQLClient(previewData);
-    const locale = /*context.locale ??*/ defaultLanguage;
-    const scope = { domain, language: locale };
 
     const data = await client.request<GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables>(
         gql`
@@ -30,7 +25,7 @@ export default async function NewsDetailPage({ params }: { params: { slug: strin
                 }
             }
         `,
-        { slug: params.slug, scope },
+        { slug: params.slug, scope: scope as GQLNewsContentScopeInput },
     );
 
     if (data.newsBySlug === null) {
