@@ -18,6 +18,8 @@ import {
     PageTreeNodeCategory,
 } from "./src";
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
+import { GenerateAltTextResolver } from "./src/content-generation/generate-alt-text.resolver";
+import { GenerateImageTitleResolver } from "./src/content-generation/generate-image-title.resolver";
 import { CronJobsResolver } from "./src/cron-jobs/cron-jobs.resolver";
 import { JobsResolver } from "./src/cron-jobs/jobs.resolver";
 import { createDamItemsResolver } from "./src/dam/files/dam-items.resolver";
@@ -94,6 +96,8 @@ async function generateSchema(): Promise<void> {
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,
+        GenerateAltTextResolver,
+        GenerateImageTitleResolver,
     ]);
 
     await writeFile("schema.gql", printSchema(schema));
