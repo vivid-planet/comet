@@ -1,3 +1,8 @@
+---
+title: Dependencies
+sidebar_position: 15
+---
+
 # Dependencies
 
 ## Register fields to be added to the block index
