@@ -1,7 +1,8 @@
-import { PreviewData } from "@src/app/api/site-preview/route";
+import { gql } from "@comet/cms-site";
+import { SitePreviewData } from "@src/app/api/site-preview/route";
 import { defaultLanguage, domain } from "@src/config";
 import { documentTypes } from "@src/documentTypes";
-import { createGraphlFetchWithPreviewHeaders, gql } from "@src/util/graphQLClient";
+import { createGraphQLFetchWithPreviewHeaders } from "@src/util/graphQLClient";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
@@ -17,11 +18,11 @@ const documentTypeQuery = gql`
 `;
 
 export default async function Page({ params }: { params: { path: string[] } }) {
-    let previewData: PreviewData | undefined = undefined;
+    let previewData: SitePreviewData | undefined = undefined;
     if (draftMode().isEnabled) {
         previewData = { includeInvisible: false };
     }
-    const graphqlFetch = createGraphlFetchWithPreviewHeaders(fetch, previewData);
+    const graphqlFetch = createGraphQLFetchWithPreviewHeaders(fetch, previewData);
 
     const locale = /*context.locale ??*/ defaultLanguage;
     const scope = { domain, language: locale };

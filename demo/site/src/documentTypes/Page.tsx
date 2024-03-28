@@ -1,5 +1,5 @@
-import { SeoBlock } from "@comet/cms-site";
-import { PreviewData } from "@src/app/api/site-preview/route";
+import { gql, SeoBlock } from "@comet/cms-site";
+import { SitePreviewData } from "@src/app/api/site-preview/route";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import Breadcrumbs from "@src/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/components/Breadcrumbs.fragment";
@@ -8,7 +8,7 @@ import { Header } from "@src/header/Header";
 import { headerFragment } from "@src/header/Header.fragment";
 import { TopNavigation } from "@src/topNavigation/TopNavigation";
 import { topMenuPageTreeNodeFragment } from "@src/topNavigation/TopNavigation.fragment";
-import { createGraphlFetchWithPreviewHeaders, gql } from "@src/util/graphQLClient";
+import { createGraphQLFetchWithPreviewHeaders } from "@src/util/graphQLClient";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import * as React from "react";
@@ -43,11 +43,11 @@ const pageQuery = gql`
 `;
 
 export default async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput }) {
-    let previewData: PreviewData | undefined = undefined;
+    let previewData: SitePreviewData | undefined = undefined;
     if (draftMode().isEnabled) {
         previewData = { includeInvisible: false };
     }
-    const graphqlFetch = createGraphlFetchWithPreviewHeaders(fetch, previewData);
+    const graphqlFetch = createGraphQLFetchWithPreviewHeaders(fetch, previewData);
 
     const props = await graphqlFetch<GQLPageQuery, GQLPageQueryVariables>(
         pageQuery,
