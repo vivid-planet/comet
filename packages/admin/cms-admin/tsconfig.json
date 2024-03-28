@@ -3,12 +3,7 @@
     "compilerOptions": {
         "outDir": "lib",
         "rootDir": "src",
-        "strict": true,
-        "types": [
-            "@comet/admin-theme",
-            "jest",
-            "node"
-        ],
+        "strict": true
     },
     "include": ["./src"],
     "exclude": []
