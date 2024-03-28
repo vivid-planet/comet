@@ -49,15 +49,11 @@ export default async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: 
     }
     const graphqlFetch = createGraphQLFetchWithPreviewHeaders(previewData);
 
-    const props = await graphqlFetch<GQLPageQuery, GQLPageQueryVariables>(
-        pageQuery,
-        {
-            pageTreeNodeId,
-            domain: scope.domain,
-            language: scope.language,
-        },
-        { next: { revalidate: 3 } },
-    );
+    const props = await graphqlFetch<GQLPageQuery, GQLPageQueryVariables>(pageQuery, {
+        pageTreeNodeId,
+        domain: scope.domain,
+        language: scope.language,
+    });
 
     if (!props.pageContent) throw new Error("Could not load page content");
     const document = props.pageContent.document;

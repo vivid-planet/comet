@@ -31,7 +31,6 @@ export default async function NewsDetailPage({ params }: { params: { slug: strin
             }
         `,
         { slug: params.slug, scope },
-        { next: { revalidate: 3 } },
     );
 
     if (data.newsBySlug === null) {

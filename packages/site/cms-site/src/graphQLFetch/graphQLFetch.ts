@@ -38,10 +38,22 @@ export const gql = (chunks: TemplateStringsArray, ...variables: unknown[]): stri
 
 export function createFetchWithPreviewHeaders(fetch: Fetch, previewData?: SitePreviewData) {
     const defaultHeaders = graphQLHeaders(previewData);
+    return createFetchWithDefaults(fetch, { headers: defaultHeaders });
+}
+
+export function createFetchWithDefaults(fetch: Fetch, defaults: RequestInit) {
     return async function (input: RequestInfo, init?: RequestInit): Promise<Response> {
         return fetch(input, {
+            ...defaults,
             ...init,
-            headers: { ...defaultHeaders, ...init?.headers },
+            headers: {
+                ...defaults.headers,
+                ...init?.headers,
+            },
+            next: {
+                ...defaults.next,
+                ...init?.next,
+            },
         });
     };
 }

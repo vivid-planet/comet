@@ -28,14 +28,10 @@ export default async function Page({ params }: { params: { path: string[] } }) {
     const scope = { domain, language: locale };
 
     //fetch documentType
-    const data = await graphqlFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
-        documentTypeQuery,
-        {
-            path: `/${(params.path ?? []).join("/")}`,
-            scope,
-        },
-        { next: { revalidate: 3 } },
-    );
+    const data = await graphqlFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(documentTypeQuery, {
+        path: `/${(params.path ?? []).join("/")}`,
+        scope,
+    });
 
     if (!data.pageTreeNodeByPath?.documentType) {
         notFound();
