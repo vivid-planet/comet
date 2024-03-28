@@ -47,17 +47,6 @@ export async function sitePreviewRoute(request: NextRequest, graphQLClient: Grap
 
     const data: SitePreviewParams = { scope, previewData };
     cookies().set("__comet_preview", jsonwebtoken.sign(data, previewScopeSigningKey));
-    /*
-    TODO is next-cookie needed?
-    setCookie("__comet_preview_scope", jsonwebtoken.sign(data, previewScopeSigningKey), {
-        req,
-        res,
-        httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV !== "development",
-        path: "/",
-    });
-    */
 
     draftMode().enable();
 
