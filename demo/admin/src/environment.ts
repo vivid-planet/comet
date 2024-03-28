@@ -1,4 +1,4 @@
-export default [
+export const environment = [
     "API_URL",
     "ADMIN_URL",
     "SITES_CONFIG",

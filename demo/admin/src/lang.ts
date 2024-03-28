@@ -17,7 +17,7 @@ const cometDemoMessages = {
 
 export const getMessages = (): ResolvedIntlConfig["messages"] => {
     // in dev mode we use the default messages to have immediate changes
-    if (process.env.NODE_ENV === "development") {
+    if (import.meta.env.MODE === "development") {
         return {};
     }
 

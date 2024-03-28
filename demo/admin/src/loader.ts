@@ -1,10 +1,10 @@
 import App from "./App";
 
 const loadHtml = () => {
-    const baseEl = document.querySelector<HTMLElement>("comet-demo-admin");
-    if (!baseEl) return false;
+    const rootElement = document.querySelector<HTMLElement>("#root");
+    if (!rootElement) return false;
 
-    App.render(baseEl);
+    App.render(rootElement);
 };
 
 if (["interactive", "complete"].indexOf(document.readyState) !== -1) {

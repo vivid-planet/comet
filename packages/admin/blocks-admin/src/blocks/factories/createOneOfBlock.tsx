@@ -32,6 +32,11 @@ export interface OneOfBlockFragment {
         props: any;
     }[];
     activeType?: string;
+    block?: {
+        type: string;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        props: any;
+    };
 }
 
 export interface OneOfBlockPreviewState extends PreviewStateInterface {
@@ -140,12 +145,14 @@ export const createOneOfBlock = <T extends boolean = boolean>({
             }
         },
 
-        input2State: (input) => {
-            const activeType = input.activeType && supportedBlocks[input.activeType] ? input.activeType : undefined;
+        input2State: ({ attachedBlocks, activeType, block, ...additionalFields }) => {
+            const state: OneOfBlockState = {
+                ...additionalFields,
+                attachedBlocks: [],
+                activeType: activeType && supportedBlocks[activeType] ? activeType : undefined,
+            };
 
-            const attachedBlocks: OneOfBlockItem[] = [];
-
-            for (const item of input.attachedBlocks) {
+            for (const item of attachedBlocks) {
                 const block = blockForType(item.type);
 
                 if (!block) {
@@ -154,17 +161,15 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                     continue;
                 }
 
-                attachedBlocks.push({ ...item, props: block.input2State(item.props) });
+                state.attachedBlocks.push({ ...item, props: block.input2State(item.props) });
             }
 
-            return {
-                activeType,
-                attachedBlocks,
-            };
+            return state;
         },
-        state2Output: (s) => {
+        state2Output: ({ attachedBlocks, activeType, ...additionalFields }) => {
             return {
-                attachedBlocks: s.attachedBlocks.map((c) => {
+                ...additionalFields,
+                attachedBlocks: attachedBlocks.map((c) => {
                     const block = blockForType(c.type);
                     if (!block) {
                         throw new Error(`No Block found for type ${c.type}`); // for TS
@@ -174,17 +179,17 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                         props: block.state2Output(c.props),
                     };
                 }),
-                activeType: s.activeType,
+                activeType,
             } as OneOfBlockOutput<T>;
         },
 
-        output2State: async (output, context) => {
+        output2State: async ({ attachedBlocks, activeType, ...additionalFields }, context) => {
             const state: OneOfBlockState = {
                 attachedBlocks: [],
-                activeType: output.activeType,
+                activeType,
             };
 
-            for (const item of output.attachedBlocks) {
+            for (const item of attachedBlocks) {
                 const block = blockForType(item.type);
 
                 if (!block) {
@@ -202,8 +207,10 @@ export const createOneOfBlock = <T extends boolean = boolean>({
 
         createPreviewState: (state, previewCtx) => {
             const { state: blockState, block } = getActiveBlock(state);
+            const { attachedBlocks, activeType, ...additionalFields } = state;
 
             return {
+                ...additionalFields,
                 block: blockState
                     ? {
                           type: blockState.type,

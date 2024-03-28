@@ -7,15 +7,21 @@ import { PropsWithData } from "./PropsWithData";
 
 interface InternalLinkBlockProps extends PropsWithData<InternalLinkBlockData> {
     children: React.ReactNode;
+    title?: string;
 }
 
-export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, children }: InternalLinkBlockProps) {
+export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, children, title }: InternalLinkBlockProps): React.ReactElement {
     if (!targetPage) {
         return <>{children}</>;
     }
 
     return (
-        <Link href={targetPageAnchor !== undefined ? `${targetPage.path}#${targetPageAnchor}` : targetPage.path} passHref legacyBehavior>
+        <Link
+            href={targetPageAnchor !== undefined ? `${targetPage.path}#${targetPageAnchor}` : targetPage.path}
+            passHref
+            title={title}
+            legacyBehavior
+        >
             {children}
         </Link>
     );
