@@ -1,17 +1,15 @@
 // eslint-disable-next-line no-restricted-imports
-import NextLink, { LinkProps as NextLinkProps } from "next/link";
+import NextLink from "next/link";
 import * as React from "react";
 
 import { usePreview } from "../preview/usePreview";
 
-export type LinkProps = React.PropsWithChildren<NextLinkProps>;
-
-export const Link = ({ children, href, ...restProps }: LinkProps): JSX.Element => {
+export const Link = ({ children, href, ...restProps }: React.ComponentProps<typeof NextLink>): JSX.Element => {
     const { pathToPreviewPath } = usePreview();
 
     return (
         <NextLink {...restProps} href={pathToPreviewPath(href)}>
-            {children}
+            {React.isValidElement<{ title?: string }>(children) ? React.cloneElement(children, { title: restProps.title }) : children}
         </NextLink>
     );
 };
