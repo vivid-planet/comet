@@ -24,17 +24,10 @@ You can use them to display lists in continuous text:
 
 ### TypeScript
 
-You must tell TypeScript to include the type overrides defined in `@comet/admin-theme`. Otherwise, you will get a type error when trying to use the custom variants.
+You must tell TypeScript to include the type overrides defined in `@comet/admin-theme`.
+Otherwise, you will get a type error when trying to use the custom variants.
+You can do that by adding the following snippet to your `src/vendors.d.ts` file:
 
-You can do that by adding following code to your `tsconfig.json`:
-
-```json
-{
-    // ...
-    "compilerOptions": {
-        // ...
-        "typeRoots": ["node_modules/@types", "node_modules/@comet/admin-theme"],
-    },
-    // ...
-}
+```ts
+/// <reference types="@comet/admin-theme" />
 ```
