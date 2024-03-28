@@ -1,26 +1,27 @@
-import { ComponentsOverrides, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides } from "@mui/material";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
+
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 
 export type ToolbarFillSpaceClassKey = "root";
 
-export interface ToolbarFillSpaceProps {
+export interface ToolbarFillSpaceProps extends ThemedComponentBaseProps {
     children?: React.ReactNode;
 }
 
-const styles = () => {
-    return createStyles<ToolbarFillSpaceClassKey, ToolbarFillSpaceProps>({
-        root: {
-            flexGrow: 1,
-        },
-    });
+const Root = createComponentSlot("div")<ToolbarFillSpaceClassKey>({
+    componentName: "ToolbarFillSpace",
+    slotName: "root",
+})(css`
+    flex-grow: 1;
+`);
+
+export const ToolbarFillSpace = (inProps: ToolbarFillSpaceProps) => {
+    const { children, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarFillSpace" });
+    return <Root {...restProps}>{children}</Root>;
 };
-
-function FillSpace({ children, classes }: ToolbarFillSpaceProps & WithStyles<typeof styles>): React.ReactElement {
-    return <div className={classes.root}>{children}</div>;
-}
-
-export const ToolbarFillSpace = withStyles(styles, { name: "CometAdminToolbarFillSpace" })(FillSpace);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -33,7 +34,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminToolbarFillSpace?: {
-            defaultProps?: ComponentsPropsList["CometAdminToolbarFillSpace"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminToolbarFillSpace"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminToolbarFillSpace"];
         };
     }

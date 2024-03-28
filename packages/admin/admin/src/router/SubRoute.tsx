@@ -23,6 +23,10 @@ export function SubRouteIndexRoute({ children }: { children: React.ReactNode }) 
 }
 
 export function SubRoute({ children, path }: { children: React.ReactNode; path: string }) {
+    const subRoutePrefix = useSubRoutePrefix();
+    if (path.startsWith("./")) {
+        path = subRoutePrefix + path.substring(1);
+    }
     return <SubRoutesContext.Provider value={{ path }}>{children}</SubRoutesContext.Provider>;
 }
 
