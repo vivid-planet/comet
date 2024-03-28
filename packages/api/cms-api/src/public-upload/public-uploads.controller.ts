@@ -9,7 +9,6 @@ import { PublicUploadFileInterceptor } from "./public-upload-file.interceptor";
 import { PublicUploadsService } from "./public-uploads.service";
 
 @Controller("public-upload/files")
-@DisableCometGuards()
 export class PublicUploadsController {
     constructor(private readonly publicUploadsService: PublicUploadsService, private readonly entityManager: EntityManager) {}
 
