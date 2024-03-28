@@ -649,6 +649,9 @@ importers:
       '@comet/cms-site':
         specifier: workspace:*
         version: link:../../packages/site/cms-site
+      '@formatjs/cli':
+        specifier: ^6.2.8
+        version: 6.2.8
       '@googlemaps/js-api-loader':
         specifier: ^1.0.0
         version: 1.15.1
@@ -8460,6 +8463,17 @@ packages:
     transitivePeerDependencies:
       - ts-jest
     dev: true
+
+  /@formatjs/cli@6.2.8:
+    resolution: {integrity: sha512-sGtFehlHpNL5xbCkP5/zz5lgIVPPdQFqhY6Pcc9+whpBawln6VDzbaGA5ttWjtBDVVKZbEukiCFk8HW2H0OVxQ==}
+    engines: {node: '>= 16'}
+    hasBin: true
+    peerDependencies:
+      vue: ^3.3.4
+    peerDependenciesMeta:
+      vue:
+        optional: true
+    dev: false
 
   /@formatjs/ecma402-abstract@1.11.4:
     resolution: {integrity: sha512-EBikYFp2JCdIfGEb5G9dyCkTGDmC57KSHhRQOC3aYxoPWVZvfWCDjZwkGYHN7Lis/fmuWl906bnNTJifDQ3sXw==}
