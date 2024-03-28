@@ -913,7 +913,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "heading": "Headline",
+                                "headline": "Headline",
                                 "richtext": "RichText",
                                 "image": "DamImage",
                                 "textImage": "TextImage"
@@ -950,7 +950,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "heading": "Headline",
+                                "headline": "Headline",
                                 "richtext": "RichText",
                                 "image": "DamImage",
                                 "textImage": "TextImage"

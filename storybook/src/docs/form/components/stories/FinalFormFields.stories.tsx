@@ -192,6 +192,20 @@ storiesOf("stories/form/FinalForm Fields", module)
                     label="Select multiple values"
                     fullWidth
                 />
+
+                <Field
+                    component={FinalFormSelect}
+                    getOptionLabel={(option: Option) => option.label}
+                    getOptionSelected={(option: Option, value: Option) => {
+                        return option.value === value.value;
+                    }}
+                    options={options}
+                    name="selectDisabled"
+                    label="Select disabled"
+                    fullWidth
+                    disabled
+                />
+
                 <Button color="primary" variant="contained" type="submit">
                     Submit
                 </Button>
@@ -209,6 +223,9 @@ storiesOf("stories/form/FinalForm Fields", module)
                 <Field name="checkbox" label="FinalFormCheckbox" type="checkbox" fullWidth>
                     {(props) => <FormControlLabel label="Confirm" control={<FinalFormCheckbox {...props} />} />}
                 </Field>
+                <Field name="checkboxDisabled" label="FinalFormCheckbox disabled" type="checkbox" fullWidth disabled>
+                    {(props) => <FormControlLabel label="Confirm" control={<FinalFormCheckbox {...props} />} />}
+                </Field>
                 <Button color="primary" variant="contained" type="submit">
                     Submit
                 </Button>
@@ -224,6 +241,9 @@ storiesOf("stories/form/FinalForm Fields", module)
                 }}
             >
                 <Field name="switch" label="FinalFormSwitch" fullWidth>
+                    {(props) => <FormControlLabel label={props.input.value ? "On" : "Off"} control={<FinalFormSwitch {...props} />} />}
+                </Field>
+                <Field name="switchDisabled" label="FinalFormSwitch disabled" fullWidth disabled>
                     {(props) => <FormControlLabel label={props.input.value ? "On" : "Off"} control={<FinalFormSwitch {...props} />} />}
                 </Field>
                 <Button color="primary" variant="contained" type="submit">
@@ -246,6 +266,14 @@ storiesOf("stories/form/FinalForm Fields", module)
                     </Field>
                     <Field name="radio" type="radio" value="option2">
                         {(props) => <FormControlLabel label="Option 2" control={<FinalFormRadio {...props} />} />}
+                    </Field>
+                </FieldContainer>
+                <FieldContainer label="FinalFormRadio disabled" fullWidth disabled>
+                    <Field name="radio" type="radio" value="disabledOption1" disabled>
+                        {(props) => <FormControlLabel label="Disabled Option 1" control={<FinalFormRadio {...props} />} />}
+                    </Field>
+                    <Field name="radio" type="radio" value="disabledOption2" disabled>
+                        {(props) => <FormControlLabel label="Disabled Option 2" control={<FinalFormRadio {...props} />} />}
                     </Field>
                 </FieldContainer>
                 <Button color="primary" variant="contained" type="submit">
