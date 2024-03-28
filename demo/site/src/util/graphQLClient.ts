@@ -15,7 +15,7 @@ function graphQLHeaders(previewData?: PreviewData) {
     if (includeInvisibleBlocks) {
         includeInvisibleContentHeaderEntries.push("Blocks:Invisible");
     }
-    // tells api to send invisble content
+    // tells api to send invisible content
     // authentication is required when this header is used
     if (includeInvisibleContentHeaderEntries.length > 0) {
         headers["x-include-invisible-content"] = includeInvisibleContentHeaderEntries.join(",");
@@ -40,7 +40,7 @@ export function createFetchWithPreviewHeaders(fetch: Fetch, previewData?: Previe
     };
 }
 
-//from graphql-request
+//from graphql-request https://github.com/jasonkuhrt/graphql-request/blob/main/src/raw/functions/gql.ts
 export const gql = (chunks: TemplateStringsArray, ...variables: unknown[]): string => {
     return chunks.reduce((acc, chunk, index) => `${acc}${chunk}${index in variables ? String(variables[index]) : ``}`, ``);
 };
