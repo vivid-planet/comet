@@ -13,8 +13,8 @@ Add GraphQL fetch client
 Example helper in application:
 ```
 export const graphQLApiUrl = `${typeof window === "undefined" ? process.env.API_URL_INTERNAL : process.env.NEXT_PUBLIC_API_URL}/graphql`;
-export function createGraphQLFetchWithPreviewHeaders(previewData?: SitePreviewData) {
-    return createGraphQLFetch(
+export function createGraphQLFetch(previewData?: SitePreviewData) {
+    return createGraphQLFetchLibrary(
         createFetchWithDefaults(createFetchWithPreviewHeaders(fetch, previewData), { next: { revalidate: 15 * 60 } }),
         graphQLApiUrl,
     );
@@ -24,7 +24,7 @@ export function createGraphQLFetchWithPreviewHeaders(previewData?: SitePreviewDa
 
 Usage example:
 ```
-const graphqlFetch = createGraphQLFetchWithPreviewHeaders(previewData);
+const graphqlFetch = createGraphQLFetch(previewData);
 const data = await graphqlFetch<GQLExampleQuery, GQLExampleQueryVariables>(
     exampleQuery,
     {

@@ -2,7 +2,7 @@ import { gql } from "@comet/cms-site";
 import { SitePreviewData } from "@src/app/api/site-preview/route";
 import { defaultLanguage, domain } from "@src/config";
 import { documentTypes } from "@src/documentTypes";
-import { createGraphQLFetchWithPreviewHeaders } from "@src/util/graphQLClient";
+import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
@@ -22,7 +22,7 @@ export default async function Page({ params }: { params: { path: string[] } }) {
     if (draftMode().isEnabled) {
         previewData = { includeInvisible: false };
     }
-    const graphqlFetch = createGraphQLFetchWithPreviewHeaders(previewData);
+    const graphqlFetch = createGraphQLFetch(previewData);
 
     const locale = /*context.locale ??*/ defaultLanguage;
     const scope = { domain, language: locale };

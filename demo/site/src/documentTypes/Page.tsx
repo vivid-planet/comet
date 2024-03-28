@@ -8,7 +8,7 @@ import { Header } from "@src/header/Header";
 import { headerFragment } from "@src/header/Header.fragment";
 import { TopNavigation } from "@src/topNavigation/TopNavigation";
 import { topMenuPageTreeNodeFragment } from "@src/topNavigation/TopNavigation.fragment";
-import { createGraphQLFetchWithPreviewHeaders } from "@src/util/graphQLClient";
+import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import * as React from "react";
@@ -47,7 +47,7 @@ export default async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: 
     if (draftMode().isEnabled) {
         previewData = { includeInvisible: false };
     }
-    const graphqlFetch = createGraphQLFetchWithPreviewHeaders(previewData);
+    const graphqlFetch = createGraphQLFetch(previewData);
 
     const props = await graphqlFetch<GQLPageQuery, GQLPageQueryVariables>(pageQuery, {
         pageTreeNodeId,
