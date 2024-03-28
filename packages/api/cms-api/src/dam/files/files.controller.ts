@@ -19,8 +19,8 @@ import { validate } from "class-validator";
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
 
+import { DisableCometGuards } from "../../auth/decorators/disable-comet-guards.decorator";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
-import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
@@ -111,7 +111,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return this.streamFile(file, res, { range, overrideHeaders: { "Cache-control": "private" } });
         }
 
-        @DisableGlobalGuard()
+        @DisableCometGuards()
         @Get(`/:hash/${fileUrl}`)
         async hashedFileUrl(@Param() { hash, ...params }: HashFileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
             if (!this.isValidHash(hash, params)) {
