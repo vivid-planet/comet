@@ -12,8 +12,7 @@
         "target": "es5",
         "declarationMap": true,
         "outDir": "lib",
-        "rootDirs": ["src", ".storybook"],
-        "types": ["@comet/admin-theme"]
+        "rootDirs": ["src", ".storybook"]
     },
     "include": ["./src"]
 }
