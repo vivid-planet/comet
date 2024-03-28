@@ -3,5 +3,4 @@ export interface User {
     name: string;
     email: string;
     language: string;
-    additionalData?: unknown;
 }

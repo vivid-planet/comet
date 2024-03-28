@@ -2,4 +2,4 @@
 "@comet/cms-api": minor
 ---
 
-Add `additionalData`-field to `User`-object
+Provide a `User`-interface that allows module augmentation and hence storing additional data.
