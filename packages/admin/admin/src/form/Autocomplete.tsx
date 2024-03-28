@@ -1,5 +1,6 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Autocomplete, AutocompleteProps, AutocompleteRenderInputParams, CircularProgress, InputBase } from "@mui/material";
+import { Autocomplete, AutocompleteProps, AutocompleteRenderInputParams, InputBase } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
@@ -28,6 +29,7 @@ export const FinalFormAutocomplete = <
     isAsync = false,
     clearable,
     popupIcon = <ChevronDown />,
+    endAdornment,
     ...rest
 }: FinalFormAutocompleteProps<T, Multiple, DisableClearable, FreeSolo>) => {
     return (
@@ -56,8 +58,10 @@ export const FinalFormAutocomplete = <
                                 {clearable && (
                                     <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange("")} />
                                 )}
-                                {params.InputProps.endAdornment}
+                                {endAdornment ? endAdornment : params.InputProps.endAdornment}
                             </>
+                        ) : endAdornment ? (
+                            endAdornment
                         ) : (
                             params.InputProps.endAdornment
                         )

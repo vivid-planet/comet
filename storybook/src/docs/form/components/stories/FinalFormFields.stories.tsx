@@ -12,7 +12,8 @@ import {
     FinalFormSwitch,
     useAsyncOptionsProps,
 } from "@comet/admin";
-import { Button, FormControlLabel } from "@mui/material";
+import { Music } from "@comet/admin-icons";
+import { Button, FormControlLabel, InputAdornment } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -76,8 +77,10 @@ storiesOf("stories/form/FinalForm Fields", module)
             // Case 2: the initial values are hardcoded => hardcode them outside of React Component => useMemo() not necessary
             () => ({
                 autocomplete: { value: "strawberry", label: "Strawberry" },
+                autocompleteWithEndAdornment: { value: "strawberry", label: "Strawberry" },
                 autocompleteAsync: { value: "strawberry", label: "Strawberry" },
                 autocompleteMultiple: [{ value: "strawberry", label: "Strawberry" }],
+                autocompleteMultipleWithEndAdornment: [{ value: "strawberry", label: "Strawberry" }],
             }),
             [],
         );
@@ -105,6 +108,20 @@ storiesOf("stories/form/FinalForm Fields", module)
                 />
                 <Field
                     component={FinalFormAutocomplete}
+                    getOptionLabel={(option: Option) => option.label}
+                    isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
+                    options={options}
+                    name="autocompleteWithEndAdornment"
+                    label="Autocomplete with end adornment"
+                    fullWidth
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <Music />
+                        </InputAdornment>
+                    }
+                />
+                <Field
+                    component={FinalFormAutocomplete}
                     {...acAsyncProps}
                     getOptionLabel={(option: Option) => option.label}
                     isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
@@ -121,6 +138,21 @@ storiesOf("stories/form/FinalForm Fields", module)
                     name="autocompleteMultiple"
                     label="Autocomplete multiple select"
                     fullWidth
+                />
+                <Field
+                    component={FinalFormAutocomplete}
+                    multiple
+                    getOptionLabel={(option: Option) => option.label}
+                    isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
+                    options={options}
+                    name="autocompleteMultipleWithEndAdornment"
+                    label="Autocomplete multiple select with end adornment"
+                    fullWidth
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <Music />
+                        </InputAdornment>
+                    }
                 />
                 <Button color="primary" variant="contained" type="submit">
                     Submit
