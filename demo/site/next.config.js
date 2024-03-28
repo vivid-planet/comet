@@ -29,7 +29,13 @@ if (process.env.SITE_IS_PREVIEW !== "true") {
  * @type {import('next').NextConfig}
  **/
 const nextConfig = {
+    rewrites: async () => {
+        if (process.env.NEXT_PUBLIC_SITE_IS_PREVIEW === "true") return [];
+        var rewrites = await require("./preBuild/build/preBuild/src/createRewrites").createRewrites();
+        return rewrites;
+    },
     redirects: async () => {
+        if (process.env.NEXT_PUBLIC_SITE_IS_PREVIEW === "true") return [];
         var redirects = await require("./preBuild/build/preBuild/src/createRedirects").createRedirects();
         return redirects;
     },

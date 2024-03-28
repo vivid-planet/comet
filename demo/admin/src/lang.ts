@@ -1,7 +1,7 @@
 import { ResolvedIntlConfig } from "react-intl";
 
-import comet_demo_messages_de from "../lang-compiled/comet-demo-lang/de.json";
-import comet_demo_messages_en from "../lang-compiled/comet-demo-lang/en.json";
+import comet_demo_messages_de from "../lang-compiled/comet-demo-lang-admin/de.json";
+import comet_demo_messages_en from "../lang-compiled/comet-demo-lang-admin/en.json";
 import comet_messages_de from "../lang-compiled/comet-lang/de.json";
 import comet_messages_en from "../lang-compiled/comet-lang/en.json";
 
@@ -17,7 +17,7 @@ const cometDemoMessages = {
 
 export const getMessages = (): ResolvedIntlConfig["messages"] => {
     // in dev mode we use the default messages to have immediate changes
-    if (process.env.NODE_ENV === "development") {
+    if (import.meta.env.MODE === "development") {
         return {};
     }
 

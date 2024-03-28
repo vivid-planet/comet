@@ -51,6 +51,8 @@ type Dependency {
   visible: Boolean!
   targetGraphqlObjectType: String!
   targetId: String!
+  name: String
+  secondaryInformation: String
 }
 
 type PaginatedDependencies {
@@ -192,6 +194,7 @@ type Link implements DocumentInterface {
   updatedAt: DateTime!
   content: LinkBlockData!
   createdAt: DateTime!
+  pageTreeNode: PageTreeNode
 }
 
 interface DocumentInterface {

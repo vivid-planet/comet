@@ -393,10 +393,33 @@ const FolderDataGrid = ({
             disableColumnMenu: true,
         },
         {
-            field: "size",
+            field: "type",
             headerName: intl.formatMessage({
-                id: "comet.dam.file.size",
-                defaultMessage: "Size",
+                id: "comet.dam.file.fileType",
+                defaultMessage: "Type/Format",
+            }),
+            headerAlign: "left",
+            align: "left",
+            minWidth: 140,
+            renderCell: ({ row }) => {
+                if (isFile(row) && row.mimetype) {
+                    return row.mimetype;
+                } else if (isFolder(row)) {
+                    return intl.formatMessage({
+                        id: "comet.dam.file.fileType.folder",
+                        defaultMessage: "Folder",
+                    });
+                }
+            },
+            sortable: false,
+            hideSortIcons: true,
+            disableColumnMenu: true,
+        },
+        {
+            field: "info",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.info",
+                defaultMessage: "Info",
             }),
             headerAlign: "right",
             align: "right",
@@ -421,13 +444,33 @@ const FolderDataGrid = ({
             disableColumnMenu: true,
         },
         {
+            field: "createdAt",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.creationDate",
+                defaultMessage: "Creation",
+            }),
+            headerAlign: "left",
+            align: "left",
+            minWidth: 180,
+            renderCell: ({ row }) => (
+                <div>
+                    <FormattedDate value={row.createdAt} day="2-digit" month="2-digit" year="numeric" />
+                    {", "}
+                    <FormattedTime value={row.createdAt} />
+                </div>
+            ),
+            sortable: false,
+            hideSortIcons: true,
+            disableColumnMenu: true,
+        },
+        {
             field: "updatedAt",
             headerName: intl.formatMessage({
                 id: "comet.dam.file.changeDate",
-                defaultMessage: "Change date",
+                defaultMessage: "Latest change",
             }),
-            headerAlign: "right",
-            align: "right",
+            headerAlign: "left",
+            align: "left",
             minWidth: 180,
             renderCell: ({ row }) => (
                 <div>

@@ -2,7 +2,7 @@ import { IsBoolean, IsOptional } from "class-validator";
 
 import { BlockData, BlockInput, createBlock, inputToData } from "./block";
 import { BlockField } from "./decorators/field";
-import { IsLinkTarget } from "./externalLinkBlock/is-href.validator";
+import { IsLinkTarget } from "./externalLinkBlock/is-link-target.validator";
 
 class ExternalLinkBlockData extends BlockData {
     @BlockField({ nullable: true })

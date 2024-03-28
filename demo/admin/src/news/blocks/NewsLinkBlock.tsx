@@ -17,7 +17,7 @@ const NewsLinkBlock: BlockInterface<NewsLinkBlockData, State, NewsLinkBlockInput
     AdminComponent: ({ state, updateState }) => {
         return (
             <BlocksFinalForm onSubmit={updateState} initialValues={state}>
-                <TextField name="id" label="ID" fullWidth />
+                <TextField name="id" label="ID" fullWidth disableContentTranslation />
             </BlocksFinalForm>
         );
     },

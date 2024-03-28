@@ -5,12 +5,12 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
     FinalForm,
-    FinalFormInput,
     FinalFormSaveSplitButton,
     FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
     MainContent,
+    TextField,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
@@ -20,7 +20,7 @@ import {
     useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
-import { FinalFormDatePicker } from "@comet/admin-date-time";
+import { DateField } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
@@ -160,27 +160,9 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <Field
-                            required
-                            fullWidth
-                            name="slug"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="news.slug" defaultMessage="Slug" />}
-                        />
-                        <Field
-                            required
-                            fullWidth
-                            name="title"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="news.title" defaultMessage="Title" />}
-                        />
-                        <Field
-                            required
-                            fullWidth
-                            name="date"
-                            component={FinalFormDatePicker}
-                            label={<FormattedMessage id="news.date" defaultMessage="Date" />}
-                        />
+                        <TextField required fullWidth name="slug" label={<FormattedMessage id="news.slug" defaultMessage="Slug" />} />
+                        <TextField required fullWidth name="title" label={<FormattedMessage id="news.title" defaultMessage="Title" />} />
+                        <DateField required fullWidth name="date" label={<FormattedMessage id="news.date" defaultMessage="Date" />} />
                         <Field fullWidth name="category" label={<FormattedMessage id="news.category" defaultMessage="Category" />}>
                             {(props) => (
                                 <FinalFormSelect {...props}>

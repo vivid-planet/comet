@@ -1,13 +1,17 @@
 import { AnyEntity, Connection, QueryOrder } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository, Knex } from "@mikro-orm/postgresql";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger, Type } from "@nestjs/common";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
+import { ModuleRef } from "@nestjs/core";
 import { subMinutes } from "date-fns";
 import { v4 } from "uuid";
 
-import { Dependency } from "./dependency";
+import { EntityInfoGetter, EntityInfoServiceInterface } from "./decorators/entity-info.decorator";
 import { DiscoverService } from "./discover.service";
+import { BaseDependencyInterface } from "./dto/base-dependency.interface";
 import { DependencyFilter, DependentFilter } from "./dto/dependencies.filter";
+import { Dependency } from "./dto/dependency";
 import { PaginatedDependencies } from "./dto/paginated-dependencies";
 import { BlockIndexRefresh } from "./entities/block-index-refresh.entity";
 
@@ -19,15 +23,15 @@ interface PGStatActivity {
 
 @Injectable()
 export class DependenciesService {
-    private entityManager: EntityManager;
     private connection: Connection;
+    private readonly logger = new Logger(DependenciesService.name);
 
     constructor(
         @InjectRepository(BlockIndexRefresh) private readonly refreshRepository: EntityRepository<BlockIndexRefresh>,
         private readonly discoverService: DiscoverService,
-        entityManager: EntityManager,
+        private entityManager: EntityManager,
+        private readonly moduleRef: ModuleRef,
     ) {
-        this.entityManager = entityManager;
         this.connection = entityManager.getConnection();
     }
 
@@ -92,13 +96,16 @@ export class DependenciesService {
     async refreshViews(options?: { force?: boolean; awaitRefresh?: boolean }): Promise<void> {
         const refresh = async (options?: { concurrently: boolean }) => {
             const uuid = v4();
+            // Before forking the entity manager, race conditions occurred frequently
+            // when executing the refresh asynchronous
+            const forkedEntityManager = this.entityManager.fork();
             console.time(`refresh materialized block dependency ${uuid}`);
             const blockIndexRefresh = this.refreshRepository.create({ startedAt: new Date() });
-            await this.refreshRepository.getEntityManager().persistAndFlush(blockIndexRefresh);
+            await forkedEntityManager.persistAndFlush(blockIndexRefresh);
 
-            await this.connection.execute(`REFRESH MATERIALIZED VIEW ${options?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
+            await forkedEntityManager.execute(`REFRESH MATERIALIZED VIEW ${options?.concurrently ? "CONCURRENTLY" : ""} block_index_dependencies`);
 
-            await this.refreshRepository.getEntityManager().persistAndFlush(Object.assign(blockIndexRefresh, { finishedAt: new Date() }));
+            await forkedEntityManager.persistAndFlush(Object.assign(blockIndexRefresh, { finishedAt: subMinutes(new Date(), 5) }));
             console.timeEnd(`refresh materialized block dependency ${uuid}`);
         };
 
@@ -187,12 +194,25 @@ export class DependenciesService {
             paginationArgs,
         );
 
-        const results: Dependency[] = await qb;
+        const results: BaseDependencyInterface[] = await qb;
+        const ret: Dependency[] = [];
+
+        for (const result of results) {
+            const repository = this.entityManager.getRepository(result.rootEntityName);
+            const instance = await repository.findOne({ [result.rootPrimaryKey]: result.rootId });
+
+            let dependency: Dependency = result;
+            if (instance) {
+                const entityInfo = await this.getEntityInfo(instance);
+                dependency = { ...dependency, ...entityInfo };
+            }
+            ret.push(dependency);
+        }
 
         const countResult = await this.withCount(qb).select("rootId").groupBy(["rootId", "rootEntityName"]);
         const totalCount = countResult[0]?.count ?? 0;
 
-        return new PaginatedDependencies(results, Number(totalCount));
+        return new PaginatedDependencies(ret, Number(totalCount));
     }
 
     async getDependencies(
@@ -216,12 +236,50 @@ export class DependenciesService {
             paginationArgs,
         );
 
-        const results: Dependency[] = await qb;
+        const results: BaseDependencyInterface[] = await qb;
+        const ret: Dependency[] = [];
+
+        for (const result of results) {
+            const repository = this.entityManager.getRepository(result.targetEntityName);
+            const instance = await repository.findOne({ [result.targetPrimaryKey]: result.targetId });
+
+            let dependency: Dependency = result;
+            if (instance) {
+                const entityInfo = await this.getEntityInfo(instance);
+                dependency = { ...dependency, ...entityInfo };
+            }
+            ret.push(dependency);
+        }
 
         const countResult: Array<{ count: string | number }> = await this.withCount(qb).select("rootId").groupBy(["rootId", "rootEntityName"]);
         const totalCount = countResult[0]?.count ?? 0;
 
-        return new PaginatedDependencies(results, Number(totalCount));
+        return new PaginatedDependencies(ret, Number(totalCount));
+    }
+
+    private async getEntityInfo(instance: object) {
+        const entityInfoGetter: EntityInfoGetter | undefined = Reflect.getMetadata(`data:entityInfo`, instance.constructor);
+
+        if (entityInfoGetter === undefined) {
+            this.logger.warn(
+                `Warning: ${instance.constructor.name} doesn't provide any entity info. You should add a @EntityInfo() decorator to the class. Otherwise it won't be displayed correctly as a dependency.`,
+            );
+            return {};
+        }
+
+        if (this.isService(entityInfoGetter)) {
+            const service = this.moduleRef.get(entityInfoGetter, { strict: false });
+            const { name, secondaryInformation } = await service.getEntityInfo(instance);
+            return { name, secondaryInformation };
+        } else {
+            const { name, secondaryInformation } = await entityInfoGetter(instance);
+            return { name, secondaryInformation };
+        }
+    }
+
+    private isService(entityInfoGetter: EntityInfoGetter): entityInfoGetter is Type<EntityInfoServiceInterface> {
+        // Check if class has @Injectable() decorator -> if true it's a service class else it's a function
+        return Reflect.hasMetadata(INJECTABLE_WATERMARK, entityInfoGetter);
     }
 
     private getQueryBuilderWithFilters(

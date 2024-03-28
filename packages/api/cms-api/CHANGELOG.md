@@ -1,5 +1,62 @@
 # @comet/cms-api
 
+## 6.4.0
+
+### Minor Changes
+
+-   9ff9d9840: Support using a service in `@ScopedEntity()` decorator
+
+    This can be useful when an entity's scope cannot be derived directly from the passed entity.
+    For example, a `Page` document's scope is derived by the `PageTreeNode` the document is attached to, but there is no database relation between the two entities.
+
+    For page tree document types you can use the provided `PageTreeNodeDocumentEntityScopeService`.
+
+-   955182b09: Make permission-check for field-resolvers optional
+-   322da3831: Add `@EntityInfo()` decorator
+
+    Adding `@EntityInfo()` to an entity is necessary to correctly display dependencies in the admin application.
+    You can find more information in [the docs](https://docs.comet-dxp.com/docs/dependencies/).
+
+-   1910551c7: Log the correct user IP even if the app is behind a proxy
+
+    The package [request-ip](https://www.npmjs.com/package/request-ip) is now used to get the actual user IP even if the app runs behind a proxy. Previously, the proxy's IP was logged.
+
+-   2d1b9467a: createImageLinkBlock: Allow overriding name
+
+    This allows using two different `ImageLink` blocks in one application.
+
+    Perform the following steps to override the name:
+
+    1. API: Add the name as second argument in the `createImageLinkBlock` factory:
+
+        ```diff
+        const MyCustomImageLinkBlock = createImageLinkBlock(
+            { link: InternalLinkBlock },
+        +   "MyCustomImageLink"
+        );
+        ```
+
+    2. Admin: Set the `name` option in the `createImageLinkBlock` factory:
+
+        ```diff
+        const MyCustomImageLinkBlock = createImageLinkBlock({
+            link: InternalLinkBlock,
+        +   name: "MyCustomImageLink"
+        });
+        ```
+
+### Patch Changes
+
+-   8568153d8: API Generator: Add missing `ObjectQuery` import
+-   1910551c7: Remove user name from access log
+
+    We decided to remove the user name because of privacy concerns.
+
+-   bfc1a4614: API Generator: Correctly support default value for date fields
+-   b478a8b71: Don't fail in ChangesCheckerInterceptor because of stricter content scope check
+-   Updated dependencies [0efae68ff]
+    -   @comet/blocks-api@6.4.0
+
 ## 6.3.0
 
 ### Minor Changes
