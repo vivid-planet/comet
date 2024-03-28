@@ -47,7 +47,7 @@ export default async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: 
     if (draftMode().isEnabled) {
         previewData = { includeInvisible: false };
     }
-    const graphqlFetch = createGraphQLFetchWithPreviewHeaders(fetch, previewData);
+    const graphqlFetch = createGraphQLFetchWithPreviewHeaders(previewData);
 
     const props = await graphqlFetch<GQLPageQuery, GQLPageQueryVariables>(
         pageQuery,

@@ -22,7 +22,7 @@ export default async function Page({ params }: { params: { path: string[] } }) {
     if (draftMode().isEnabled) {
         previewData = { includeInvisible: false };
     }
-    const graphqlFetch = createGraphQLFetchWithPreviewHeaders(fetch, previewData);
+    const graphqlFetch = createGraphQLFetchWithPreviewHeaders(previewData);
 
     const locale = /*context.locale ??*/ defaultLanguage;
     const scope = { domain, language: locale };
