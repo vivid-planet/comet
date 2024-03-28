@@ -6,9 +6,9 @@ export const getMuiTypography: GetMuiComponentTheme<"MuiTypography"> = (componen
     defaultProps: {
         ...component?.defaultProps,
         variantMapping: {
-            ...component?.defaultProps?.variantMapping,
             list: "ul",
             listItem: "li",
+            ...component?.defaultProps?.variantMapping,
         },
     },
     styleOverrides: mergeOverrideStyles<"MuiTypography">(component?.styleOverrides, {
