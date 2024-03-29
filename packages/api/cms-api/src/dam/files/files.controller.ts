@@ -17,11 +17,11 @@ import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
-import { PublicApi } from "src/auth/decorators/public-api.decorator";
 
 import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
+import { PublicApi } from "../../auth/decorators/public-api.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { ContentScopeService } from "../../content-scope/content-scope.service";
