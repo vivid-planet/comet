@@ -138,7 +138,7 @@ export function generateFormField(
             importPath: config.block.import,
         });
         code = `<Field name="${name}" isEqual={isEqual}>
-            {createFinalFormBlock(${config.block.name})}
+            {createFinalFormBlock(rootBlocks.${String(config.name)})}
         </Field>`;
         formValueToGqlInputCode = `${name}: rootBlocks.${name}.state2Output(formValues.${name}),`;
     } else if (config.type == "staticSelect") {
