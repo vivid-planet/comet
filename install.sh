@@ -38,6 +38,7 @@ ln -sf ../../api/src/comet-config.json ./demo/site/src/comet-config.json
 
 # Lang install
 sh ./demo/admin/intl-update.sh
+sh ./demo/site/intl-update.sh
 
 # Build the packages CLI and eslint-plugin to be used for dev startup
 pnpm --filter '@comet/cli' --filter '@comet/eslint-plugin' run build
