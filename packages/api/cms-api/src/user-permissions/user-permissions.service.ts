@@ -10,6 +10,7 @@ import { RequiredPermissionMetadata } from "./decorators/required-permission.dec
 import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
+import { LogUserPermission } from "./entities/log-user-permission.entity";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
@@ -29,6 +30,7 @@ export class UserPermissionsService {
         @Inject(ACCESS_CONTROL_SERVICE) private readonly accessControlService: AccessControlServiceInterface,
         @InjectRepository(UserPermission) private readonly permissionRepository: EntityRepository<UserPermission>,
         @InjectRepository(UserContentScopes) private readonly contentScopeRepository: EntityRepository<UserContentScopes>,
+        @InjectRepository(LogUserPermission) private readonly logUserPermissionRepository: EntityRepository<LogUserPermission>,
         private readonly discoveryService: DiscoveryService,
     ) {}
 
@@ -160,6 +162,27 @@ export class UserPermissionsService {
                 p.contentScopes = this.normalizeContentScopes(p.contentScopes, availableContentScopes);
                 return p;
             });
+
+        const logEntity = await this.logUserPermissionRepository.findOne({ userId: user.id }, { orderBy: { lastUsedAt: "desc" } });
+        const permissionsString = JSON.stringify(permissions);
+        const currentDate = new Date();
+        if (!logEntity || logEntity.name != user.name || logEntity.email != user.email || logEntity.permissions !== permissionsString) {
+            await this.logUserPermissionRepository.persistAndFlush(
+                this.logUserPermissionRepository.create({
+                    userId: user.id,
+                    name: user.name,
+                    email: user.email,
+                    permissions: permissionsString,
+                    firstUsedAt: currentDate,
+                    lastUsedAt: currentDate,
+                    usages: 1,
+                }),
+            );
+        } else {
+            logEntity.lastUsedAt = currentDate;
+            logEntity.usages++;
+            await this.logUserPermissionRepository.persistAndFlush(logEntity);
+        }
 
         return {
             ...user,

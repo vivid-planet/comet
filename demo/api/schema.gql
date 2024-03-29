@@ -20,6 +20,19 @@ type CurrentUser {
   permissions: [CurrentUserPermission!]!
 }
 
+type LogUserPermission {
+  id: ID!
+  permissions: String!
+  firstUsedAt: DateTime!
+  lastUsedAt: DateTime!
+  usages: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type UserPermission {
   id: ID!
   source: UserPermissionSource!
@@ -37,11 +50,6 @@ enum UserPermissionSource {
   MANUAL
   BY_RULE
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Dependency {
   rootId: String!
@@ -184,8 +192,26 @@ type User {
   language: String!
 }
 
+type LogUser {
+  userId: String!
+  name: String!
+  email: String!
+  usages: Float!
+  lastseen: DateTime!
+}
+
 type PaginatedUserList {
   nodes: [User!]!
+  totalCount: Int!
+}
+
+type PaginatedUserLog {
+  nodes: [LogUser!]!
+  totalCount: Int!
+}
+
+type PaginatedPermissionLog {
+  nodes: [LogUserPermission!]!
   totalCount: Int!
 }
 
@@ -599,6 +625,8 @@ type Query {
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
+  userPermissionsLogUserList(offset: Int! = 0, limit: Int! = 25): PaginatedUserLog!
+  userPermissionsLogPermissionsList(offset: Int! = 0, limit: Int! = 25, userId: String!): PaginatedPermissionLog!
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!

@@ -31,6 +31,7 @@ import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.
 import { UserResolver } from "./src/user-permissions/user.resolver";
 import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
 import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
+import { UserPermissionsLogResolver } from "./src/user-permissions/user-permissions-log.resolver";
 
 @ObjectType()
 class PageTreeNode extends PageTreeNodeBase {
@@ -94,6 +95,7 @@ async function generateSchema(): Promise<void> {
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,
+        UserPermissionsLogResolver,
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

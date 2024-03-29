@@ -5,6 +5,8 @@ import { APP_GUARD } from "@nestjs/core";
 
 import { UserPermissionsGuard } from "./auth/user-permissions.guard";
 import { ContentScopeService } from "./content-scope.service";
+import { LogUser } from "./entities/log-user.entity";
+import { LogUserPermission } from "./entities/log-user-permission.entity";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission } from "./entities/user-permission.entity";
 import { UserResolver } from "./user.resolver";
@@ -18,15 +20,17 @@ import {
     UserPermissionsModuleSyncOptions,
     UserPermissionsOptionsFactory,
 } from "./user-permissions.types";
+import { UserPermissionsLogResolver } from "./user-permissions-log.resolver";
 
 @Global()
 @Module({
-    imports: [MikroOrmModule.forFeature([UserPermission, UserContentScopes]), DiscoveryModule],
+    imports: [MikroOrmModule.forFeature([UserPermission, UserContentScopes, LogUserPermission, LogUser]), DiscoveryModule],
     providers: [
         UserPermissionsService,
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,
+        UserPermissionsLogResolver,
         ContentScopeService,
         {
             provide: APP_GUARD,
