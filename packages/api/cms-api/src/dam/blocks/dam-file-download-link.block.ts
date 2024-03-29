@@ -3,6 +3,7 @@ import {
     BlockContext,
     BlockData,
     BlockField,
+    BlockIndexData,
     BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
@@ -14,6 +15,7 @@ import { IsEnum, IsUUID } from "class-validator";
 import { FilesService } from "src/dam/files/files.service";
 
 import { IsUndefinable } from "../../common/validators/is-undefinable";
+import { FILE_ENTITY } from "../../dam/files/entities/file.entity";
 
 export enum OpenFileTypeMethod {
     NEW_TAB = "NEW_TAB",
@@ -49,6 +51,21 @@ class DamFileDownloadLinkBlockData extends BlockData {
         }
 
         return ret;
+    }
+
+    indexData(): BlockIndexData {
+        if (this.fileId === undefined) {
+            return {};
+        }
+
+        return {
+            dependencies: [
+                {
+                    targetEntityName: FILE_ENTITY,
+                    id: this.fileId,
+                },
+            ],
+        };
     }
 }
 
