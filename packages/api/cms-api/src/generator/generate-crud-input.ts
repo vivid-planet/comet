@@ -1,10 +1,9 @@
 import { EntityMetadata } from "@mikro-orm/core";
-import * as validator from "class-validator";
-import { Decorator } from "ts-morph";
+import { getMetadataStorage } from "class-validator";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
 import { buildNameVariants } from "./utils/build-name-variants";
-import { classValidatorBaseImports, integerTypes } from "./utils/constants";
+import { integerTypes } from "./utils/constants";
 import { generateImportsCode, Imports } from "./utils/generate-imports-code";
 import {
     findBlockImportPath,
@@ -13,6 +12,7 @@ import {
     findEnumName,
     findInputClassImportPath,
     morphTsProperty,
+    morphTsSource,
 } from "./utils/ts-morph-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
@@ -39,17 +39,18 @@ function findReferenceTargetType(
     }
 }
 
-function isClassValidatorDecorator(decorator: Decorator): boolean {
-    return Object.keys(validator).includes(decorator.getName());
-}
-
 export async function generateCrudInput(
     generatorOptions: { targetDirectory: string },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata: EntityMetadata<any>,
     options: { nested: boolean; excludeFields: string[] } = { nested: false, excludeFields: [] },
 ): Promise<GeneratedFile[]> {
-    const classValidatorImports = classValidatorBaseImports;
+    // TODO: move to ts-morph-helper
+    const allImports = morphTsSource(metadata).getImportDeclarations();
+    function getImportPath(importName: string) {
+        return allImports.find((i) => i.getNamedImports().some((ni) => ni.getName() === importName))?.getModuleSpecifierValue();
+    }
+
     const generatedFiles: GeneratedFile[] = [];
 
     const props = metadata.props
@@ -319,13 +320,29 @@ export async function generateCrudInput(
             continue;
         }
 
-        definedDecorators
-            .filter(isClassValidatorDecorator)
-            .reverse()
-            .map((decorator) => {
-                decorators.includes(decorator.getText()) || decorators.unshift(decorator.getText());
-                classValidatorImports.includes(decorator.getName()) || classValidatorImports.push(decorator.getName());
-            });
+        const classValidatorValidators = getMetadataStorage().getTargetValidationMetadatas(metadata.class, prop.name, false, false, undefined);
+
+        for (const validator of classValidatorValidators) {
+            if (validator.propertyName !== prop.name) continue;
+            const constraints = getMetadataStorage().getTargetValidatorConstraints(validator.constraintCls);
+
+            for (const constraint of constraints) {
+                const constraintImportName = constraint.name.charAt(0).toUpperCase() + constraint.name.slice(1);
+                const decorator = definedDecorators.find((decorator) => decorator.getName() === constraintImportName)?.getText();
+
+                if (decorator) {
+                    // TODO: check relative import path correct ../?
+                    const importPath = getImportPath(constraintImportName);
+                    if (importPath) {
+                        imports.push({ name: constraintImportName, importPath });
+                        decorators.includes(decorator) || decorators.unshift(decorator);
+                    }
+                } else {
+                    // Length -> IsLength TODO: what to do ?
+                    console.warn(`Decorator ${constraintImportName} not found`);
+                }
+            }
+        }
 
         fieldsOut += `${decorators.join("\n")}
     ${fieldName}${prop.nullable ? "?" : ""}: ${type};
@@ -334,8 +351,7 @@ export async function generateCrudInput(
     }
     const inputOut = `import { Field, InputType, ID } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { ${classValidatorImports.join(", ")} } from "class-validator";
-import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";
+import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
 ${generateImportsCode(imports)}

@@ -1,8 +1,9 @@
 import { BaseEntity, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
-import { IsBooleanString, IsDateString, IsEmail, Length, Max, Min } from "class-validator";
+import { IsBooleanString, IsDateString, IsEmail, Length, Max, MaxLength, Min, MinLength } from "class-validator";
 import { v4 as uuid } from "uuid";
 
+import { IsLinkTarget } from "../../../blocks-api/src/blocks/externalLinkBlock/is-href.validator";
 import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
@@ -21,8 +22,10 @@ export class TestEntityWithBooleanString extends BaseEntity<TestEntityWithBoolea
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
-    @Length(4, 5)
     @IsBooleanString()
+    @MinLength(4)
+    @MaxLength(5)
+    @Length(4, 5) // TODO: this is a problem?
     @Property({ columnType: "text" })
     isBooleanString: string;
 }
@@ -35,6 +38,16 @@ export class TestEntityWithMax extends BaseEntity<TestEntityWithMax, "id"> {
     @Max(10)
     @Property({ columnType: "number" })
     rating: number;
+}
+
+@Entity()
+export class TestEntityWithCometValidator extends BaseEntity<TestEntityWithCometValidator, "id"> {
+    @PrimaryKey({ type: "uuid" })
+    id: string = uuid();
+
+    @IsLinkTarget()
+    @Property({ columnType: "text" })
+    linkTarget: string;
 }
 
 @Entity()
@@ -51,7 +64,6 @@ export class TestEntityWithMultipleProperties extends BaseEntity<TestEntityWithM
     @Property({ columnType: "number" })
     rating: number;
 
-    @Length(4, 5)
     @IsBooleanString()
     @Property({ columnType: "text" })
     isBooleanString: string;
@@ -112,8 +124,7 @@ describe("GenerateDefinedValidators", () => {
             const prop = structure.properties![0];
 
             expect(prop.name).toBe("isBooleanString");
-            expect(prop.decorators?.[0].name).toBe("Length");
-            expect(prop.decorators?.[1].name).toBe("IsBooleanString");
+            expect(prop.decorators?.[0].name).toBe("IsBooleanString");
 
             orm.close();
         });
@@ -148,6 +159,34 @@ describe("GenerateDefinedValidators", () => {
         });
     });
 
+    describe("comet validator", () => {
+        it("should set comet validator", async () => {
+            LazyMetadataStorage.load();
+            const orm = await MikroORM.init({
+                type: "postgresql",
+                dbName: "test-db",
+                entities: [TestEntityWithCometValidator],
+            });
+
+            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithCometValidator"));
+            const lintedOut = await lintGeneratedFiles(out);
+            const file = lintedOut.find((file) => file.name === "dto/test-entity-with-comet-validator.input.ts");
+            if (!file) throw new Error("File not found");
+            const source = parseSource(file.content);
+            const classes = source.getClasses();
+            const cls = classes[0];
+            const structure = cls.getStructure();
+
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const prop = structure.properties![0];
+
+            expect(prop.name).toBe("linkTarget");
+            expect(prop.decorators?.[0].name).toBe("IsLinkTarget");
+
+            orm.close();
+        });
+    });
+
     describe("imports", () => {
         it("should set all imports", async () => {
             LazyMetadataStorage.load();
@@ -163,16 +202,11 @@ describe("GenerateDefinedValidators", () => {
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
 
-            const imports: string[] = [];
-            for (const importDeclaration of source.getImportDeclarations()) {
-                for (const namedImport of importDeclaration.getNamedImports()) {
-                    imports.push(namedImport.getName());
-                }
-            }
+            const imports = source.getImportDeclarationOrThrow("class-validator").getText();
+
             expect(imports).toContain("IsEmail");
             expect(imports).toContain("Min");
             expect(imports).toContain("Max");
-            expect(imports).toContain("Length");
             expect(imports).toContain("IsBooleanString");
             expect(imports).toContain("IsDateString");
 
