@@ -75,7 +75,7 @@ function generateOutputObjectStringForNestedObject({
                 if (fieldConfig.type === "number") {
                     assignment = `parseInt(${path}.${key})`;
                 } else if (fieldConfig.type === "asyncSelect") {
-                    assignment = `${path}.${key}?.id`;
+                    assignment = `${path}.${key}.id`;
                 } else {
                     throw new Error(`Field of type ${fieldConfig.type} currently not supported.`);
                 }

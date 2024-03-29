@@ -107,7 +107,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
-            category: formValues.category ? formValues.category?.id : null,
+            category: formValues.category ? formValues.category.id : null,
             price: formValues.price ? parseInt(formValues.price) : null,
             image: rootBlocks.image.state2Output(formValues.image),
         };
