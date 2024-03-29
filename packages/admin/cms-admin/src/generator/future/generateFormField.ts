@@ -1,8 +1,8 @@
 import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
+import { generateFieldListFromIntrospection } from "./generateFormField/generateFieldList";
 import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
-import { generateFieldListFromIntrospection } from "./utils/generateFieldList";
 import { Imports } from "./utils/generateImportsCode";
 import { isFieldOptional } from "./utils/isFieldOptional";
 

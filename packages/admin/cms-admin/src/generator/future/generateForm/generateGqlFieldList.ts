@@ -1,28 +1,20 @@
-import { IntrospectionField, IntrospectionObjectType, IntrospectionQuery, IntrospectionType } from "graphql";
+import { IntrospectionObjectType, IntrospectionQuery } from "graphql";
 import objectPath from "object-path";
 
+import { generateFieldListFromIntrospection } from "../generateFormField/generateFieldList";
 import { FormFieldConfig } from "../generator";
 
 type FieldsObjectType = { [key: string]: FieldsObjectType | boolean | string };
-const recursiveStringify = (obj: FieldsObjectType): string => {
-    let ret = "";
-    let prefixField = "";
-    for (const key in obj) {
-        const valueForKey = obj[key];
-        if (typeof valueForKey === "boolean") {
-            ret += `${prefixField}${key}`;
-        } else if (typeof valueForKey === "string") {
-            ret += `${prefixField}${key}${valueForKey}`;
-        } else {
-            ret += `${prefixField}${key} { ${recursiveStringify(valueForKey)} }`;
-        }
-        prefixField = " ";
-    }
-    return ret;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function generateFieldListGqlString(fields: FormFieldConfig<any>[], gqlType: string, gqlIntrospection: IntrospectionQuery) {
+export function generateGqlFieldList({
+    fields,
+    gqlType,
+    gqlIntrospection,
+}: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fields: FormFieldConfig<any>[];
+    gqlType: string;
+    gqlIntrospection: IntrospectionQuery;
+}) {
     const fieldsObject: FieldsObjectType = fields.reduce<FieldsObjectType>((acc, field) => {
         if (field.type === "asyncSelect") {
             const name = String(field.name);
@@ -71,36 +63,19 @@ export function generateFieldListGqlString(fields: FormFieldConfig<any>[], gqlTy
     return recursiveStringify(fieldsObject);
 }
 
-function fieldListFromIntrospectionTypeRecursive(
-    types: readonly IntrospectionType[],
-    type: string,
-    parentPath?: string,
-): { path: string; field: IntrospectionField }[] {
-    const typeDef = types.find((typeDef) => typeDef.name === type);
-    if (!typeDef || typeDef.kind !== "OBJECT") return [];
-
-    return typeDef.fields.reduce<{ path: string; field: IntrospectionField }[]>((acc, field) => {
-        const path = `${parentPath ? `${parentPath}.` : ""}${field.name}`;
-        let outputType = field.type;
-        if (outputType.kind === "NON_NULL") {
-            outputType = outputType.ofType;
-        }
-        if (outputType.kind === "OBJECT") {
-            const subFields = fieldListFromIntrospectionTypeRecursive(types, outputType.name, path);
-            acc.push({ path: path, field: field });
-            acc.push(...subFields);
+const recursiveStringify = (obj: FieldsObjectType): string => {
+    let ret = "";
+    let prefixField = "";
+    for (const key in obj) {
+        const valueForKey = obj[key];
+        if (typeof valueForKey === "boolean") {
+            ret += `${prefixField}${key}`;
+        } else if (typeof valueForKey === "string") {
+            ret += `${prefixField}${key}${valueForKey}`;
         } else {
-            acc.push({
-                path: path,
-                field: field,
-            });
+            ret += `${prefixField}${key} { ${recursiveStringify(valueForKey)} }`;
         }
-        return acc;
-    }, []);
-}
-export function generateFieldListFromIntrospection(
-    gqlIntrospection: IntrospectionQuery,
-    type: string,
-): { path: string; field: IntrospectionField }[] {
-    return fieldListFromIntrospectionTypeRecursive(gqlIntrospection.__schema.types, type);
-}
+        prefixField = " ";
+    }
+    return ret;
+};

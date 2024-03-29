@@ -1,13 +1,13 @@
 import { IntrospectionQuery } from "graphql";
 
 import { generateFormValuesTypeDefinition } from "./generateForm/generateFormValuesTypeDefinition";
+import { generateGqlFieldList } from "./generateForm/generateGqlFieldList";
 import { generateInitialValuesValue } from "./generateForm/generateInitialValuesValue";
 import { generateOutputObject } from "./generateForm/generateOutputObject";
 import { generateFormField } from "./generateFormField";
 import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
-import { generateFieldListGqlString } from "./utils/generateFieldList";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
 // Retype FormFieldConfig and FormConfig to fix "Type instantiation is excessively deep and possibly infinite."
@@ -30,8 +30,6 @@ export function generateForm(
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
-
-    const fieldList = generateFieldListGqlString(config.fields, gqlType, gqlIntrospection);
 
     // TODO make RootBlocks configurable (from config)
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
@@ -59,7 +57,7 @@ export function generateForm(
 
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
-        fragment ${fragmentName} on ${gqlType} { ${fieldList} }
+        fragment ${fragmentName} on ${gqlType} { ${generateGqlFieldList({ fields: config.fields, gqlType, gqlIntrospection })} }
     `;
 
     gqlDocuments[`${instanceGqlType}Query`] = `
