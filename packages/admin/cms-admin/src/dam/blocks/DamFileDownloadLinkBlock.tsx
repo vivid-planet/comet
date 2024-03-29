@@ -6,10 +6,10 @@ import { Box, Divider, MenuItem, Typography } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput } from "../blocks.generated";
-import { DamPathLazy } from "../form/file/DamPathLazy";
-import { FileField } from "../form/file/FileField";
-import { CmsBlockContext } from "./CmsBlockContextProvider";
+import { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput } from "../../blocks.generated";
+import { CmsBlockContext } from "../../blocks/CmsBlockContextProvider";
+import { DamPathLazy } from "../../form/file/DamPathLazy";
+import { FileField } from "../../form/file/FileField";
 import { GQLDamFileDownloadLinkFileQuery, GQLDamFileDownloadLinkFileQueryVariables } from "./DamFileDownloadLinkBlock.generated";
 
 export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput> = {
@@ -47,7 +47,6 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                     damFile(id: $id) {
                         id
                         name
-                        damPath
                         fileUrl
                     }
                 }
@@ -60,7 +59,6 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
         ret.file = {
             id: damFile.id,
             name: damFile.name,
-            damPath: damFile.damPath,
             fileUrl: damFile.fileUrl,
         };
 

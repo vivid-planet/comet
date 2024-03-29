@@ -104,11 +104,6 @@ class Meta extends AnnotationBlockMeta {
                             nullable: false,
                         },
                         {
-                            name: "damPath",
-                            kind: BlockMetaFieldKind.String,
-                            nullable: false,
-                        },
-                        {
                             name: "fileUrl",
                             kind: BlockMetaFieldKind.String,
                             nullable: false,
