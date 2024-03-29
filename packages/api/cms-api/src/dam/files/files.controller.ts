@@ -17,6 +17,7 @@ import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
+import { PublicApi } from "src/auth/decorators/public-api.decorator";
 
 import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
@@ -100,22 +101,15 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return this.streamFile(file, res, { range, overrideHeaders: { "Cache-control": "private" } });
         }
 
+        @PublicApi()
         @Get(`/download/${fileUrl}`)
-        async downloadFile(
-            @Param() { fileId }: FileParams,
-            @Res() res: Response,
-            @GetCurrentUser() user: CurrentUserInterface,
-            @Headers("range") range?: string,
-        ): Promise<void> {
+        async downloadFile(@Param() { fileId }: FileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
             const file = await this.filesService.findOneById(fileId);
 
             if (file === null) {
                 throw new NotFoundException();
             }
 
-            if (file.scope !== undefined && !this.contentScopeService.canAccessScope(file.scope, user)) {
-                throw new ForbiddenException();
-            }
             res.setHeader("Content-Disposition", "attachment");
             return this.streamFile(file, res, { range });
         }
