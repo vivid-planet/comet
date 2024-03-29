@@ -1,14 +1,14 @@
 import { IntrospectionQuery } from "graphql";
 
+import { generateFormValuesTypeDefinition } from "./generateForm/generateFormValuesTypeDefinition";
+import { generateInitialValuesValue } from "./generateForm/generateInitialValuesValue";
+import { generateOutputObject } from "./generateForm/generateOutputObject";
 import { generateFormField } from "./generateFormField";
 import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
 import { generateFieldListGqlString } from "./utils/generateFieldList";
-import { generateFormValuesTypeDefinition } from "./utils/generateFormValuesTypeDefinition";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
-import { generateInitialValuesValue } from "./utils/generateInitialValuesValue";
-import { generateOutputObject } from "./utils/generateOutputObject";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SimpleFormFieldConfig = FormFieldConfig<any> & { name: string };

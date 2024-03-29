@@ -2,7 +2,7 @@ import { IntrospectionQuery, IntrospectionTypeRef } from "graphql";
 import objectPath from "object-path";
 
 import { FormConfig, FormFieldConfig } from "../generator";
-import { RootBlocks } from "./findRootBlocks";
+import { RootBlocks } from "../utils/findRootBlocks";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SimpleFormFieldConfig = FormFieldConfig<any> & { name: string };
