@@ -72,12 +72,7 @@ const useInitialValues = (id: string) => {
     const { loading, data, error } = useQuery<GQLDamFileDetailQuery, GQLDamFileDetailQueryVariables>(damFileDetailQuery, {
         variables: { id: id },
         skip: !id,
-        context: {
-            headers: {
-                "x-preview-dam-urls": 0,
-            },
-            ...LocalErrorScopeApolloContext,
-        },
+        context: LocalErrorScopeApolloContext,
     });
     return { loading, data, error };
 };
