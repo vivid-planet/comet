@@ -3,6 +3,7 @@ import objectPath from "object-path";
 
 import { FormConfig, FormFieldConfig } from "../generator";
 
+// Retype FormFieldConfig and FormConfig to fix "Type instantiation is excessively deep and possibly infinite."
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SimpleFormFieldConfig = FormFieldConfig<any>;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

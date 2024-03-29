@@ -10,8 +10,9 @@ import { findRootBlocks } from "./utils/findRootBlocks";
 import { generateFieldListGqlString } from "./utils/generateFieldList";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
+// Retype FormFieldConfig and FormConfig to fix "Type instantiation is excessively deep and possibly infinite."
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type SimpleFormFieldConfig = FormFieldConfig<any> & { name: string };
+type SimpleFormFieldConfig = FormFieldConfig<any>;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SimpleFormConfig = Omit<FormConfig<any>, "fields"> & { fields: SimpleFormFieldConfig[] };
 
@@ -45,7 +46,7 @@ export function generateForm(
     let hooksCode = "";
 
     const fieldsCode = config.fields
-        .map<string>((field) => {
+        .map((field) => {
             const generated = generateFormField({ gqlIntrospection }, field, config);
             for (const name in generated.gqlDocuments) {
                 gqlDocuments[name] = generated.gqlDocuments[name];
