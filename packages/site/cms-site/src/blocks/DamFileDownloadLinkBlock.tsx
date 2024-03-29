@@ -1,4 +1,3 @@
-import { saveAs } from "file-saver";
 import * as React from "react";
 
 import { DamFileDownloadLinkBlockData } from "../blocks.generated";
@@ -17,11 +16,7 @@ export const DamFileDownloadLinkBlock = withPreview(
         }
 
         if (openFileType === "DOWNLOAD") {
-            return (
-                <a href="#" onClick={() => saveAs(file.fileUrl, file.name)}>
-                    {children}
-                </a>
-            );
+            return <a href={`${process.env.API_URL}/dam/files/download/${file.id}/${file.name}`}>{children}</a>;
         } else if (openFileType === "NEW_TAB") {
             return (
                 <a href={file.fileUrl} target="_blank" rel="noreferrer">

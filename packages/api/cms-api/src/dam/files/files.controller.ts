@@ -100,6 +100,26 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return this.streamFile(file, res, { range, overrideHeaders: { "Cache-control": "private" } });
         }
 
+        @Get(`/download/${fileUrl}`)
+        async downloadFile(
+            @Param() { fileId }: FileParams,
+            @Res() res: Response,
+            @GetCurrentUser() user: CurrentUserInterface,
+            @Headers("range") range?: string,
+        ): Promise<void> {
+            const file = await this.filesService.findOneById(fileId);
+
+            if (file === null) {
+                throw new NotFoundException();
+            }
+
+            if (file.scope !== undefined && !this.contentScopeService.canAccessScope(file.scope, user)) {
+                throw new ForbiddenException();
+            }
+            res.setHeader("Content-Disposition", "attachment");
+            return this.streamFile(file, res, { range });
+        }
+
         @DisableGlobalGuard()
         @Get(`/:hash/${fileUrl}`)
         async hashedFileUrl(
