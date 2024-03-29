@@ -53,8 +53,8 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormDetailsFragment, "price"> & {
-    price?: string;
+type FormValues = Omit<GQLProductFormDetailsFragment, "price" | "image"> & {
+    price: string | null;
     image: BlockState<typeof rootBlocks.image>;
 };
 
@@ -74,21 +74,23 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues = React.useMemo<Partial<FormValues>>(
-        () =>
-            data?.product
-                ? {
-                      ...filter<GQLProductFormDetailsFragment>(productFormFragment, data.product),
+    const initialValues = React.useMemo<Partial<FormValues>>(() => {
+        const filteredData = data ? filter<GQLProductFormDetailsFragment>(productFormFragment, data.product) : undefined;
+        if (!filteredData) {
+            return {
+                inStock: false,
+                image: rootBlocks.image.defaultValues(),
+            };
+        }
 
-                      price: data.product.price ? String(data.product.price) : undefined,
-                      image: rootBlocks.image.input2State(data.product.image),
-                  }
-                : {
-                      inStock: false,
-                      image: rootBlocks.image.defaultValues(),
-                  },
-        [data],
-    );
+        return {
+            ...filteredData,
+            createdAt: new Date(filteredData.createdAt),
+            price: filteredData.price ? String(filteredData.price) : null,
+            availableSince: filteredData.availableSince ? new Date(filteredData.availableSince) : null,
+            image: rootBlocks.image.input2State(filteredData.image),
+        };
+    }, [data]);
 
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
@@ -105,9 +107,8 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
-            category: formValues.category?.id,
-
-            price: formValues.price ? parseFloat(formValues.price) : null,
+            category: formValues.category ? formValues.category?.id : null,
+            price: formValues.price ? parseInt(formValues.price) : null,
             image: rootBlocks.image.state2Output(formValues.image),
         };
         if (mode === "edit") {

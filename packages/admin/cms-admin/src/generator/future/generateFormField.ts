@@ -94,10 +94,6 @@ export function generateFormField(
                 ${validateCode}
             />`;
         //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
-        let assignment = `parseFloat(formValues.${String(name)})`;
-        if (isFieldOptional({ config, gqlIntrospection: gqlIntrospection, gqlType: gqlType })) {
-            assignment = `formValues.${name} ? ${assignment} : null`;
-        }
     } else if (config.type == "boolean") {
         code = `<Field name="${name}" label="" type="checkbox" fullWidth ${validateCode}>
             {(props) => (
@@ -234,7 +230,6 @@ export function generateFormField(
             const result = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({ query: ${queryVariableName} });
             return result.data.${rootQuery}.nodes;
         });`;
-
 
         code = `<Field
                 fullWidth

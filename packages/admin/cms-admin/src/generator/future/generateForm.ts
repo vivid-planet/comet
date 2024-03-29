@@ -160,7 +160,7 @@ export function generateForm(
             : ""
     }
 
-    type FormValues = ${generateFormValuesTypeDefinition({ fragmentName, rootBlocks, config, gqlType, gqlIntrospection })};
+    type FormValues = ${generateFormValuesTypeDefinition({ config, fragmentName, gqlType, gqlIntrospection })};
 
     interface FormProps {
         id?: string;
@@ -193,7 +193,7 @@ export function generateForm(
     
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
             if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-            const output = ${generateOutputObject({ rootBlocks, config })};
+            const output = ${generateOutputObject({ config, rootBlocks, gqlType, gqlIntrospection })};
             if (mode === "edit") {
                 if (!id) throw new Error();
                 const { ${readOnlyFields.map((field) => `${String(field.name)},`).join("")} ...updateInput } = output;
