@@ -11,6 +11,7 @@ import { plural } from "pluralize";
 import { GeneratorReturn, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
+import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 
@@ -74,9 +75,31 @@ export function generateGrid(
     const instanceGqlTypePlural = gqlTypePlural[0].toLowerCase() + gqlTypePlural.substring(1);
     const gridQuery = instanceGqlType != instanceGqlTypePlural ? instanceGqlTypePlural : `${instanceGqlTypePlural}List`;
     const gqlDocuments: Record<string, string> = {};
-    //const imports: Imports = [];
+    const imports: Imports = [];
 
+    // all root blocks including those we don't have columns for (required for copy/paste)
+    // this is not configured in the grid config, it's just an heuristics
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
+
+    const rootBlockColumns = config.columns
+        .filter((column) => column.type == "block")
+        .map((column) => {
+            // map is for ts to infer block type correctly
+            if (column.type !== "block") throw new Error("Field is not a block field");
+            return column;
+        });
+
+    rootBlockColumns.forEach((field) => {
+        imports.push({
+            name: field.block.name,
+            importPath: field.block.import,
+        });
+        if (rootBlocks[String(field.name)]) {
+            // update rootBlocks if they are also used in columns
+            rootBlocks[String(field.name)].import = field.block.import;
+            rootBlocks[String(field.name)].name = field.block.name;
+        }
+    });
 
     const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
 
@@ -168,12 +191,10 @@ export function generateGrid(
         } else if (type == "date") {
             valueGetter = `({ value }) => value && new Date(value)`;
             gridType = "date";
-        } else if (type == "block") {
-            if (rootBlocks[name]) {
-                renderCell = `(params) => {
-                        return <BlockPreviewContent block={${rootBlocks[name].name}} input={params.row.${name}} />;
-                    }`;
-            }
+        } else if (column.type == "block") {
+            renderCell = `(params) => {
+                    return <BlockPreviewContent block={${column.block.name}} input={params.row.${name}} />;
+                }`;
         } else if (type == "staticSelect") {
             if (column.values) {
                 throw new Error("custom values for staticSelect is not yet supported"); // TODO add support
@@ -270,9 +291,7 @@ export function generateGrid(
     } from "./${gqlTypePlural}Grid.generated";
     import * as React from "react";
     import { FormattedMessage, useIntl } from "react-intl";
-    ${Object.entries(rootBlocks)
-        .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
-        .join("\n")}
+    ${generateImportsCode(imports)}
 
     const ${instanceGqlTypePlural}Fragment = gql\`
         fragment ${fragmentName} on ${gqlType} {

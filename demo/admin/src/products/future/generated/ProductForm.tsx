@@ -26,7 +26,7 @@ import {
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArrowLeft, Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, EditPageLayout, PixelImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { EditPageLayout, PixelImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { FormControlLabel, IconButton, InputAdornment, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -50,7 +50,7 @@ import {
 } from "./ProductForm.gql.generated";
 
 const rootBlocks = {
-    image: DamImageBlock,
+    image: PixelImageBlock,
 };
 
 type FormValues = Omit<GQLProductFormDetailsFragment, "price"> & {
