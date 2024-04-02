@@ -90,15 +90,17 @@ export function generateGrid(
         });
 
     rootBlockColumns.forEach((field) => {
-        imports.push({
-            name: field.block.name,
-            importPath: field.block.import,
-        });
         if (rootBlocks[String(field.name)]) {
             // update rootBlocks if they are also used in columns
             rootBlocks[String(field.name)].import = field.block.import;
             rootBlocks[String(field.name)].name = field.block.name;
         }
+    });
+    Object.values(rootBlocks).forEach((block) => {
+        imports.push({
+            name: block.name,
+            importPath: block.import,
+        });
     });
 
     const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
