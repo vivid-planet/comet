@@ -1,8 +1,7 @@
 // NOTE: Everything below this line should be copied into the docs file when something is changed: comet-core-development/create-admin-components-with-theme-support.md
 import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { CometColor } from "@comet/admin-icons";
-import { ComponentsOverrides, Typography } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
+import { ComponentsOverrides, css, Theme, Typography, useThemeProps } from "@mui/material";
 import React from "react";
 
 /**
@@ -11,7 +10,7 @@ import React from "react";
  * - `header` in this case would be the header element of the component.
  * - `hasShadow` would be a modifier class added to the root element when the `shadow` prop is set to `true`.
  */
-export type MyComponentClassKey = "root" | "header" | "title" | "typography" | "icon" | "children" | "hasShadow";
+export type MyComponentClassKey = "root" | "header" | "title" | "typography" | "children" | "hasShadow";
 
 /**
  * The `OwnerState` is an object that includes all values that should impact the component's styling.
@@ -71,11 +70,6 @@ const Title = createComponentSlot(Typography)<MyComponentClassKey, OwnerState>({
     `,
 );
 
-const Icon = createComponentSlot(CometColor)<MyComponentClassKey>({
-    componentName: "MyComponent",
-    slotName: "icon",
-})();
-
 const Children = createComponentSlot("div")<MyComponentClassKey>({
     componentName: "MyComponent",
     slotName: "children",
@@ -95,9 +89,11 @@ export interface MyComponentProps
         root: "div";
         header: "div";
         title: typeof Typography;
-        icon: typeof CometColor;
         children: "div";
     }> {
+    iconMapping?: {
+        header?: React.ReactNode;
+    };
     title: React.ReactNode;
     children?: React.ReactNode;
     shadow?: boolean;
@@ -108,7 +104,8 @@ export function MyComponent(inProps: MyComponentProps) {
      * A component should never use the passed-in props directly but get them through the `useThemeProps` hook.
      * This merges the components `defaultProps` from the theme with the passed-in props.
      */
-    const { title, children, shadow, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminMyComponent" });
+    const { title, children, shadow, iconMapping = {}, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminMyComponent" });
+    const { header: headerIcon = <CometColor /> } = iconMapping;
 
     const ownerState: OwnerState = {
         shadow,
@@ -124,7 +121,7 @@ export function MyComponent(inProps: MyComponentProps) {
                 <Title ownerState={ownerState} variant="h4" {...slotProps?.title}>
                     {title}
                 </Title>
-                <Icon {...slotProps?.icon} />
+                {headerIcon}
             </Header>
             <Children {...slotProps?.children}>{children}</Children>
         </Root>
