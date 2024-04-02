@@ -1,5 +1,4 @@
 ---
-"@comet/admin-date-time": major
 "@comet/admin": major
 ---
 
