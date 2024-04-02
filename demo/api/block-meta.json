@@ -921,7 +921,8 @@
                                 "headline": "Headline",
                                 "richtext": "RichText",
                                 "image": "DamImage",
-                                "textImage": "TextImage"
+                                "textImage": "TextImage",
+                                "linkList": "LinkList"
                             },
                             "nullable": false
                         }
@@ -958,7 +959,8 @@
                                 "headline": "Headline",
                                 "richtext": "RichText",
                                 "image": "DamImage",
-                                "textImage": "TextImage"
+                                "textImage": "TextImage",
+                                "linkList": "LinkList"
                             },
                             "nullable": false
                         }
