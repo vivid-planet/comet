@@ -16,18 +16,19 @@ import {
 } from "@comet/admin";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { MenuItem } from "@mui/material";
+import { MenuItem, Select } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
-import React from "react";
+import React, { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
     createProductMutation,
     productCategoriesQuery,
     productFormFragment,
+    productManufacturersQuery,
     productQuery,
     productTagsQuery,
     updateProductMutation,
@@ -39,6 +40,9 @@ import {
     GQLProductCategoriesQueryVariables,
     GQLProductCategorySelectFragment,
     GQLProductFormManualFragment,
+    GQLProductManufacturerSelectFragment,
+    GQLProductManufacturersQuery,
+    GQLProductManufacturersQueryVariables,
     GQLProductQuery,
     GQLProductQueryVariables,
     GQLProductTagsQuery,
@@ -50,6 +54,7 @@ import {
 
 interface FormProps {
     id?: string;
+    manufacturerSelectVariables?: GQLProductManufacturersQueryVariables; // Used to restrict options in different cases. manufacturerSelectVariables should be required if there are any required vars
 }
 
 const rootBlocks = {
@@ -60,7 +65,7 @@ type FormValues = Omit<GQLProductFormManualFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
 
-export function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ id, manufacturerSelectVariables }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -70,6 +75,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         productQuery,
         id ? { variables: { id } } : { skip: true },
     );
+    const [manufacturerCountrySelectValue, setManufacturerCountrySelectValue] = useState<string | undefined>(undefined);
 
     const initialValues: Partial<FormValues> = data?.product
         ? {
@@ -100,6 +106,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             image: rootBlocks.image.state2Output(formValues.image),
             type: formValues.type as GQLProductType,
             category: formValues.category?.id,
+            manufacturer: formValues.manufacturer?.id,
             tags: formValues.tags.map((i) => i.id),
             articleNumbers: [],
             discounts: [],
@@ -134,6 +141,22 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
     const tagsSelectAsyncProps = useAsyncOptionsProps(async () => {
         const tags = await client.query<GQLProductTagsQuery, GQLProductTagsQueryVariables>({ query: productTagsQuery });
         return tags.data.productTags.nodes;
+    });
+
+    const { refetch: manufacturerSelectAsyncPropsRefetch, ...manufacturerSelectAsyncProps } = useAsyncOptionsProps(async () => {
+        const manufacturers = await client.query<GQLProductManufacturersQuery, GQLProductManufacturersQueryVariables>({
+            query: productManufacturersQuery,
+            variables: {
+                ...manufacturerSelectVariables,
+                filter: {
+                    and: [
+                        ...(manufacturerSelectVariables?.filter ? [manufacturerSelectVariables.filter] : []),
+                        { addressAsEmbeddable_country: { equal: manufacturerCountrySelectValue } },
+                    ],
+                },
+            },
+        });
+        return manufacturers.data.manufacturers.nodes;
     });
 
     if (error) throw error;
@@ -184,6 +207,37 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             multiple
                             {...tagsSelectAsyncProps}
                             getOptionLabel={(option: GQLProductTagsSelectFragment) => option.title}
+                        />
+                        {!manufacturerSelectVariables && (
+                            <>
+                                <Select
+                                    name="country"
+                                    label="Country"
+                                    value={manufacturerCountrySelectValue ?? data?.product.manufacturer?.address?.country}
+                                    fullWidth
+                                    onChange={(event) => {
+                                        setManufacturerCountrySelectValue(event.target.value);
+                                        formApiRef?.current?.change("manufacturer", null); // reset select-value on change
+                                        manufacturerSelectAsyncPropsRefetch();
+                                    }}
+                                >
+                                    <MenuItem value="">
+                                        <FormattedMessage id="product.manufacturer.country.noSelection" defaultMessage="No selection" />
+                                    </MenuItem>
+                                    <MenuItem value="AT">AT</MenuItem>
+                                    <MenuItem value="DE">DE</MenuItem>
+                                </Select>
+                            </>
+                        )}
+                        <Field
+                            fullWidth
+                            name="manufacturer"
+                            label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
+                            component={FinalFormSelect}
+                            {...manufacturerSelectAsyncProps}
+                            getOptionLabel={(option: GQLProductManufacturerSelectFragment) =>
+                                option.address?.street ? option.address?.street : "unknown"
+                            }
                         />
                         <CheckboxField name="inStock" label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />} fullWidth />
                         <Field name="image" isEqual={isEqual}>

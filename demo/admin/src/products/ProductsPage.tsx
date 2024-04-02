@@ -12,14 +12,14 @@ import {
     ToolbarBackButton,
     ToolbarFillSpace,
 } from "@comet/admin";
+import { ProductPriceForm } from "@src/products/ProductPriceForm";
+import { ProductVariantForm } from "@src/products/ProductVariantForm";
+import { ProductVariantsGrid } from "@src/products/ProductVariantsGrid";
 import React from "react";
 import { useIntl } from "react-intl";
 
 import { ProductForm } from "./ProductForm";
-import { ProductPriceForm } from "./ProductPriceForm";
 import { ProductsGrid } from "./ProductsGrid";
-import { ProductVariantForm } from "./ProductVariantForm";
-import { ProductVariantsGrid } from "./ProductVariantsGrid";
 
 const ProductsPage: React.FC = () => {
     const intl = useIntl();
@@ -47,7 +47,10 @@ const ProductsPage: React.FC = () => {
                                     path=""
                                     label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
                                 >
-                                    <ProductForm id={selectedProductId} />
+                                    <ProductForm
+                                        id={selectedProductId}
+                                        // manufacturerSelectVariables={{ filter: { addressAsEmbeddable_country: { equal: "AT" } } }}
+                                    />
                                 </RouterTab>
                                 <RouterTab
                                     forceRender={true}

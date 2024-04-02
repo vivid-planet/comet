@@ -7,11 +7,14 @@ export interface AsyncOptionsProps<T> {
     loading?: boolean;
     onOpen: (event: React.ChangeEvent) => void;
     onClose: (event: React.ChangeEvent) => void;
+    refetch: () => void;
 }
 export function useAsyncOptionsProps<T>(loadOptions: () => Promise<T[]>): AsyncOptionsProps<T> {
     const [open, setOpen] = React.useState(false);
     const [options, setOptions] = React.useState<T[]>([]);
-    const loading = open && options.length === 0;
+    const [refetch, setRefetch] = React.useState(true);
+    const loading = open && refetch;
+
     React.useEffect(() => {
         let active = true;
         if (!loading) {
@@ -20,6 +23,7 @@ export function useAsyncOptionsProps<T>(loadOptions: () => Promise<T[]>): AsyncO
         (async () => {
             const response = await loadOptions();
             if (active) {
+                setRefetch(false);
                 setOptions(response);
             }
         })();
@@ -34,5 +38,6 @@ export function useAsyncOptionsProps<T>(loadOptions: () => Promise<T[]>): AsyncO
         loading,
         onOpen: () => setOpen(true),
         onClose: () => setOpen(false),
+        refetch: () => setRefetch(true),
     };
 }

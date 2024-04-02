@@ -12,6 +12,13 @@ export const productFormFragment = gql`
             id
             title
         }
+        manufacturer {
+            id
+            address {
+                street
+                country
+            }
+        }
         tags {
             id
             title
@@ -68,6 +75,25 @@ export const productCategoriesQuery = gql`
         }
     }
     ${productCategorySelectFragment}
+`;
+
+export const productManufacturerSelectFragment = gql`
+    fragment ProductManufacturerSelect on Manufacturer {
+        id
+        address {
+            street
+        }
+    }
+`;
+export const productManufacturersQuery = gql`
+    query ProductManufacturers($filter: ManufacturerFilter) {
+        manufacturers(filter: $filter) {
+            nodes {
+                ...ProductManufacturerSelect
+            }
+        }
+    }
+    ${productManufacturerSelectFragment}
 `;
 
 export const productTagsSelectFragment = gql`
