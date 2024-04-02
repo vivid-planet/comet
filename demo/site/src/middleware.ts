@@ -97,11 +97,6 @@ async function* fetchApiRedirects(scope: GQLRedirectScope) {
 }
 
 const createApiRedirects = async (redirects: Map<string, Redirect>, scope: GQLRedirectScope): Promise<void> => {
-    const apiUrl = process.env.API_URL_INTERNAL;
-    if (!apiUrl) {
-        console.error("No Environment Variable API_URL_INTERNAL available. Can not perform redirect config");
-    }
-
     function replaceRegexCharacters(value: string): string {
         // escape ":" and "?", otherwise it is used for next.js regex path matching  (https://nextjs.org/docs/pages/api-reference/next-config-js/redirects#regex-path-matching)
         return value.replace(/[:?]/g, "\\$&");
