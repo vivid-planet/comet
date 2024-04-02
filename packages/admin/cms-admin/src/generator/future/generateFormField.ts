@@ -133,10 +133,6 @@ export function generateFormField(
                 ${validateCode}
             />`;
     } else if (config.type == "block") {
-        imports.push({
-            name: config.block.name,
-            importPath: config.block.import,
-        });
         code = `<Field name="${name}" isEqual={isEqual}>
             {createFinalFormBlock(rootBlocks.${String(config.name)})}
         </Field>`;
