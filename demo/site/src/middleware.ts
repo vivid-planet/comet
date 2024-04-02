@@ -246,5 +246,5 @@ export const config = {
         "/((?!api|_next/static|_next/image|favicon.ico|favicon.svg|favicon.png|manifest.json).*)",
     ],
     // TODO find a better solution for this (https://nextjs.org/docs/messages/edge-dynamic-code-evaluation)
-    unstable_allowDynamic: ["/node_modules/graphql/**", "/node_modules/@vivid/groupcms-blocks-utils/**"],
+    unstable_allowDynamic: ["/node_modules/graphql/**"],
 };
