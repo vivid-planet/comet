@@ -2,6 +2,6 @@
 "@comet/admin-date-time": major
 ---
 
-The `clearable` prop is removed from `FinalFormDatePicker`
+Remove `clearable` prop from `FinalFormDatePicker`
 
-The clear button in `FinalFormDatePicker` is visible for all non-`required` fields
+The clear button will automatically be shown for all optional fields.

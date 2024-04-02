@@ -1,5 +1,5 @@
 ---
-"@comet/admin": major
+"@comet/admin": minor
 ---
 
-All `FinalFormField` components now support the `required` prop
+Pass `required` prop to children of `Field` component
