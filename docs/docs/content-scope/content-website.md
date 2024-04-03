@@ -3,8 +3,9 @@ title: Content websites
 sidebar_position: 1
 ---
 
-In a content website, the content scope can be used to separate multiple areas of content, such as website (domain) or language. Each area stores its content independently of the others. Not all modules might use the same scope - for example, the DAM might not be scoped at all. Most of Comet's scope features will work out of the box for this use case.
+In a content website, the content scope can be used to separate multiple areas of content, such as different websites (domains) or languages. Each area stores its content independently of the others.
 
+Different modules can use different scopes and some modules might not use a scope at all. For example, the DAM might only be scoped by domain while the PageTree is scoped by domain and language. Or it might not use a scope at all, resulting in a shared DAM across all content scopes. Most of COMET's features will work out-of-the-box even without a scope.
 
 ### API: Database
 
@@ -37,15 +38,19 @@ export class News extends BaseEntity<News, "id"> {
 ### API: GraphQL API
 
 The GraphQL API will have a scope argument (where it makes sense). For example, a query for the `News` from above might look like this:
+
 ```
 newsList(scope: NewsContentScopeInput!, offset: Int! = 0, limit: Int! = 25, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
 ```
 
 ### Admin: Scope Selector
+
 In the Admin, you need a `ContentScopeProvider` and `ContentScopeControls` in the `MasterHeader` component.
 
 You can then use `useContentScope()` to access the currently selected scope, which you will then usually pass through to API requests.
 
 ### API: User permissions
 
-User permissions will validate `scope` arguments of GraphQL operations and check if a user has access to the scope of an entity (the column name needs to be `scope`). You additionally need `@ScopedEntity` (at entity level) for nested entities and `@AffectedEntity` (at resolver level) for operations without a `scope` argument.
+COMET's user permission feature will automatically validate `scope` arguments of GraphQL operations and check if a user has access to the entity's scope. The column must be named `scope` for this to work.
+
+You additionally need `@ScopedEntity` (at entity level) for nested entities. And, for operations without a `scope` argument, you must add `@AffectedEntity` at resolver level.
