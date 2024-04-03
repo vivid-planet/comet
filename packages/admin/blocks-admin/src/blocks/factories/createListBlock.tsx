@@ -365,7 +365,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                                                                                     isMaxVisibleBlocksMet && !data.visible ? (
                                                                                         <FormattedMessage
                                                                                             id="comet.blocks.list.maxVisibleBlocks"
-                                                                                            defaultMessage="Max. visible blocks: {maxVisibleBlocks}"
+                                                                                            defaultMessage="Max. visible blocks allowed: {maxVisibleBlocks}"
                                                                                             values={{ maxVisibleBlocks }}
                                                                                         />
                                                                                     ) : !isMinVisibleBlocksMet ||
