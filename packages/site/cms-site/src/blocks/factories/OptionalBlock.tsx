@@ -8,6 +8,7 @@ interface Props {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         block?: any;
     };
+    children?: React.ReactNode;
 }
 
 export const OptionalBlock: React.FC<Props> = ({ block: blockFunction, data: { visible, block }, children }) => {

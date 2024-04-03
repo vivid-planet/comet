@@ -97,5 +97,6 @@ export class EnvironmentVariables {
     S3_BUCKET: string;
 
     @IsString()
-    SITE_PREVIEW_SECRET: string;
+    @ValidateIf(() => process.env.NODE_ENV === "production")
+    CDN_ORIGIN_CHECK_SECRET: string;
 }

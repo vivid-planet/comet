@@ -116,7 +116,6 @@ export class AppModule {
                     Documents: [Page, Link, PredefinedPage],
                     Scope: PageTreeNodeScope,
                     reservedPaths: ["/events"],
-                    sitePreviewSecret: config.sitePreviewSecret,
                 }),
                 RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
                 BlobStorageModule.register({
@@ -124,8 +123,7 @@ export class AppModule {
                 }),
                 DamModule.register({
                     damConfig: {
-                        filesBaseUrl: `${config.apiUrl}/dam/files`,
-                        imagesBaseUrl: `${config.apiUrl}/dam/images`,
+                        apiUrl: config.apiUrl,
                         secret: config.dam.secret,
                         allowedImageSizes: config.dam.allowedImageSizes,
                         allowedAspectRatios: config.dam.allowedImageAspectRatios,

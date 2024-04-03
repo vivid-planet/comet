@@ -22,6 +22,7 @@ export const productFormFragment = gql`
     fragment ProductFormDetails on Product {
         title
         slug
+        createdAt
         description
         type
         category {
@@ -55,8 +56,8 @@ export const createProductMutation = gql`
     ${productFormFragment}
 `;
 export const updateProductMutation = gql`
-    mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!, $lastUpdatedAt: DateTime) {
-        updateProduct(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
+    mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!) {
+        updateProduct(id: $id, input: $input) {
             id
             updatedAt
             ...ProductFormDetails

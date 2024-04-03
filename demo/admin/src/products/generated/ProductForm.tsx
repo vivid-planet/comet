@@ -12,6 +12,7 @@ import {
     FinalFormSubmitEvent,
     Loading,
     MainContent,
+    TextField,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
@@ -21,7 +22,7 @@ import {
     useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
-import { FinalFormDatePicker } from "@comet/admin-date-time";
+import { DateField } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
@@ -111,7 +112,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             }
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.product?.updatedAt },
+                variables: { id, input: output },
             });
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
@@ -155,13 +156,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <Field
-                            required
-                            fullWidth
-                            name="title"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.title" defaultMessage="Title" />}
-                        />
+                        <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
                         <Field fullWidth name="status" label={<FormattedMessage id="product.status" defaultMessage="Status" />}>
                             {(props) => (
                                 <FinalFormSelect {...props}>
@@ -174,18 +169,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 </FinalFormSelect>
                             )}
                         </Field>
-                        <Field
-                            required
-                            fullWidth
-                            name="slug"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
-                        />
-                        <Field
+                        <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
+                        <TextField
                             required
                             fullWidth
                             name="description"
-                            component={FinalFormInput}
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
                         <Field fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
@@ -218,10 +206,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 />
                             )}
                         </Field>
-                        <Field
+                        <DateField
                             fullWidth
                             name="availableSince"
-                            component={FinalFormDatePicker}
                             label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
                         />
                         <Field name="image" isEqual={isEqual}>

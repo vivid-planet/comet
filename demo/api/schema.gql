@@ -51,6 +51,8 @@ type Dependency {
   visible: Boolean!
   targetGraphqlObjectType: String!
   targetId: String!
+  name: String
+  secondaryInformation: String
 }
 
 type PaginatedDependencies {
@@ -192,6 +194,7 @@ type Link implements DocumentInterface {
   updatedAt: DateTime!
   content: LinkBlockData!
   createdAt: DateTime!
+  pageTreeNode: PageTreeNode
 }
 
 interface DocumentInterface {
@@ -274,11 +277,6 @@ input DependentFilter {
   rootGraphqlObjectType: String
   rootId: String
   rootColumnName: String
-}
-
-type PaginatedPages {
-  nodes: [Page!]!
-  totalCount: Int!
 }
 
 type PredefinedPage implements DocumentInterface {
@@ -384,7 +382,6 @@ type News implements DocumentInterface {
   status: NewsStatus!
   date: DateTime!
   category: NewsCategory!
-  visible: Boolean!
   image: DamImageBlockData!
   content: NewsContentBlockData!
   createdAt: DateTime!
@@ -705,13 +702,13 @@ type Query {
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
   link(linkId: ID!): Link
-  pages(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedPages!
+  page(id: ID!): Page!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   paginatedPageTreeNodes(scope: PageTreeNodeScopeInput!, category: String, sort: [PageTreeNodeSort!], offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
-  getSitePreviewJwt(path: String!, previewData: PreviewData!): String!
+  isAllowedSitePreview(scope: JSONObject!): Boolean!
   redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection! = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
   paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int! = 0, limit: Int! = 25): PaginatedRedirects!
   redirect(id: ID!): Redirect!
@@ -803,10 +800,6 @@ enum SlugAvailability {
   Reserved
 }
 
-input PreviewData {
-  includeInvisible: Boolean!
-}
-
 input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
@@ -879,7 +872,6 @@ input NewsFilter {
   status: NewsStatusEnumFilter
   date: DateFilter
   category: NewsCategoryEnumFilter
-  visible: BooleanFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   and: [NewsFilter!]
@@ -909,7 +901,6 @@ enum NewsSortField {
   status
   date
   category
-  visible
   createdAt
   updatedAt
 }
@@ -1107,29 +1098,29 @@ type Mutation {
   moveDamFolders(folderIds: [ID!]!, targetFolderId: ID, scope: DamScopeInput!): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!
   createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
-  updateNews(id: ID!, input: NewsUpdateInput!, lastUpdatedAt: DateTime): News!
+  updateNews(id: ID!, input: NewsUpdateInput!): News!
   deleteNews(id: ID!): Boolean!
   createNewsComment(newsId: ID!, input: NewsCommentInput!): NewsComment!
-  updateNewsComment(id: ID!, input: NewsCommentInput!, lastUpdatedAt: DateTime): NewsComment!
+  updateNewsComment(id: ID!, input: NewsCommentInput!): NewsComment!
   deleteNewsComment(id: ID!): Boolean!
   updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
-  saveFooter(scope: FooterContentScopeInput!, input: FooterInput!, lastUpdatedAt: DateTime): Footer!
+  saveFooter(scope: FooterContentScopeInput!, input: FooterInput!): Footer!
   savePredefinedPage(id: ID!, input: PredefinedPageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): PredefinedPage!
   triggerKubernetesCronJob(name: String!): KubernetesJob!
   createProduct(input: ProductInput!): Product!
-  updateProduct(id: ID!, input: ProductUpdateInput!, lastUpdatedAt: DateTime): Product!
+  updateProduct(id: ID!, input: ProductUpdateInput!): Product!
   deleteProduct(id: ID!): Boolean!
   createProductCategory(input: ProductCategoryInput!): ProductCategory!
-  updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!, lastUpdatedAt: DateTime): ProductCategory!
+  updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!): ProductCategory!
   deleteProductCategory(id: ID!): Boolean!
   createProductTag(input: ProductTagInput!): ProductTag!
-  updateProductTag(id: ID!, input: ProductTagUpdateInput!, lastUpdatedAt: DateTime): ProductTag!
+  updateProductTag(id: ID!, input: ProductTagUpdateInput!): ProductTag!
   deleteProductTag(id: ID!): Boolean!
   createProductVariant(product: ID!, input: ProductVariantInput!): ProductVariant!
-  updateProductVariant(id: ID!, input: ProductVariantUpdateInput!, lastUpdatedAt: DateTime): ProductVariant!
+  updateProductVariant(id: ID!, input: ProductVariantUpdateInput!): ProductVariant!
   deleteProductVariant(id: ID!): Boolean!
   createManufacturer(input: ManufacturerInput!): Manufacturer!
-  updateManufacturer(id: ID!, input: ManufacturerUpdateInput!, lastUpdatedAt: DateTime): Manufacturer!
+  updateManufacturer(id: ID!, input: ManufacturerUpdateInput!): Manufacturer!
   deleteManufacturer(id: ID!): Boolean!
 }
 
@@ -1266,7 +1257,6 @@ input NewsInput {
   status: NewsStatus! = Active
   date: DateTime!
   category: NewsCategory! = Awards
-  visible: Boolean!
   image: DamImageBlockInput!
   content: NewsContentBlockInput!
 }
@@ -1283,7 +1273,6 @@ input NewsUpdateInput {
   status: NewsStatus
   date: DateTime
   category: NewsCategory
-  visible: Boolean
   image: DamImageBlockInput
   content: NewsContentBlockInput
 }
@@ -1316,9 +1305,9 @@ input ProductInput {
   slug: String!
   description: String!
   type: ProductType!
-  price: Float
+  price: Float = null
   inStock: Boolean! = true
-  availableSince: DateTime
+  availableSince: DateTime = null
   image: DamImageBlockInput!
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
@@ -1327,7 +1316,7 @@ input ProductInput {
   colors: [ProductColorInput!]! = []
   category: ID = null
   tags: [ID!]! = []
-  manufacturer: ID
+  manufacturer: ID = null
 }
 
 input ProductStatisticsInput {

@@ -1,9 +1,8 @@
 import "reflect-metadata";
 
 export { AccessLogModule } from "./access-log/access-log.module";
+export { DisableCometGuards } from "./auth/decorators/disable-comet-guards.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
-export { DisableGlobalGuard } from "./auth/decorators/global-guard-disable.decorator";
-export { PublicApi } from "./auth/decorators/public-api.decorator";
 export { createCometAuthGuard } from "./auth/guards/comet.guard";
 export { createAuthResolver } from "./auth/resolver/auth.resolver";
 export { createAuthProxyJwtStrategy } from "./auth/strategies/auth-proxy-jwt.strategy";
@@ -22,6 +21,7 @@ export { BlocksModule, BlocksModuleOptions } from "./blocks/blocks.module";
 export { BlocksTransformerService } from "./blocks/blocks-transformer.service";
 export { BlocksTransformerMiddlewareFactory } from "./blocks/blocks-transformer-middleware.factory";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
+export { createLinkBlock } from "./blocks/createLinkBlock";
 export { createSeoBlock, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/createSeoBlock";
 export { createTextImageBlock, ImagePosition } from "./blocks/createTextImageBlock";
 export { DamVideoBlock } from "./blocks/dam-video.block";
@@ -52,6 +52,7 @@ export { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "./common/filter/m
 export { NumberFilter } from "./common/filter/number.filter";
 export { StringFilter } from "./common/filter/string.filter";
 export { extractGraphqlFields } from "./common/graphql/extract-graphql-fields";
+export { CdnGuard } from "./common/guards/cdn.guard";
 export { PartialType } from "./common/helper/partial-type.helper";
 export { OffsetBasedPaginationArgs } from "./common/pagination/offset-based.args";
 export { PaginatedResponseFactory } from "./common/pagination/paginated-response.factory";
@@ -92,11 +93,13 @@ export { IsAllowedImageSize, IsAllowedImageSizeConstraint } from "./dam/images/v
 export { IsValidImageAspectRatio, IsValidImageAspectRatioConstraint } from "./dam/images/validators/is-valid-aspect-ratio.validator";
 export { Extension, Gravity, ResizingType } from "./dam/imgproxy/imgproxy.enum";
 export { ImgproxyConfig, ImgproxyService } from "./dam/imgproxy/imgproxy.service";
+export { EntityInfo, EntityInfoServiceInterface } from "./dependencies/decorators/entity-info.decorator";
 export { DependenciesModule } from "./dependencies/dependencies.module";
 export { DependenciesResolverFactory } from "./dependencies/dependencies.resolver.factory";
 export { DependenciesService } from "./dependencies/dependencies.service";
-export { Dependency } from "./dependencies/dependency";
 export { DependentsResolverFactory } from "./dependencies/dependents.resolver.factory";
+export { BaseDependencyInterface } from "./dependencies/dto/base-dependency.interface";
+export { Dependency } from "./dependencies/dto/dependency";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
@@ -129,6 +132,8 @@ export { PageTreeNodeBase } from "./page-tree/entities/page-tree-node-base.entit
 export { PAGE_TREE_REPOSITORY } from "./page-tree/page-tree.constants";
 export { PageTreeModule } from "./page-tree/page-tree.module";
 export { PageTreeReadApi, PageTreeService } from "./page-tree/page-tree.service";
+export { PageTreeNodeDocumentEntityInfoService } from "./page-tree/page-tree-node-document-entity-info.service";
+export { PageTreeNodeDocumentEntityScopeService } from "./page-tree/page-tree-node-document-entity-scope.service";
 export { PageTreeReadApiService } from "./page-tree/page-tree-read-api.service";
 export { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility, ScopeInterface } from "./page-tree/types";
 export { PageExists, PageExistsConstraint } from "./page-tree/validators/page-exists.validator";

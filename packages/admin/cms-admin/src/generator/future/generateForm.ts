@@ -28,6 +28,8 @@ export function generateForm(
 
     const numberFields = config.fields.filter((field) => field.type == "number");
     const booleanFields = config.fields.filter((field) => field.type == "boolean");
+    const dateFields = config.fields.filter((field) => field.type == "date");
+    const readOnlyFields = config.fields.filter((field) => field.readOnly);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isOptional = (fieldConfig: FormFieldConfig<any>) => {
@@ -82,8 +84,8 @@ export function generateForm(
     `;
 
     gqlDocuments[`update${gqlType}Mutation`] = `
-        mutation Update${gqlType}($id: ID!, $input: ${gqlType}UpdateInput!, $lastUpdatedAt: DateTime) {
-            update${gqlType}(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
+        mutation Update${gqlType}($id: ID!, $input: ${gqlType}UpdateInput!) {
+            update${gqlType}(id: $id, input: $input) {
                 id
                 updatedAt
                 ...${fragmentName}
@@ -134,11 +136,11 @@ export function generateForm(
         useStackApi,
         useStackSwitchApi,
     } from "@comet/admin";
-    import { ArrowLeft } from "@comet/admin-icons";
+    import { ArrowLeft, Lock } from "@comet/admin-icons";
     import { FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
     import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-    import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
+    import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
     import { FormApi } from "final-form";
     import { filter } from "graphql-anywhere";
     import isEqual from "lodash.isequal";
@@ -201,6 +203,14 @@ export function generateForm(
                     return `${String(field.name)}: ${assignment},`;
                 })
                 .join("\n")}
+            ${dateFields
+                .map(
+                    (field) =>
+                        `${String(field.name)}: data.${instanceGqlType}.${String(field.name)} ? new Date(data.${instanceGqlType}.${String(
+                            field.name,
+                        )}) : undefined,`,
+                )
+                .join("\n")}
             ${Object.keys(rootBlocks)
                 .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.input2State(data.${instanceGqlType}.${rootBlockKey}),`)
                 .join("\n")}
@@ -232,9 +242,10 @@ export function generateForm(
             };
             if (mode === "edit") {
                 if (!id) throw new Error();
+                const { ${readOnlyFields.map((field) => `${String(field.name)},`).join("")} ...updateInput } = output;
                 await client.mutate<GQLUpdate${gqlType}Mutation, GQLUpdate${gqlType}MutationVariables>({
                     mutation: update${gqlType}Mutation,
-                    variables: { id, input: output, lastUpdatedAt: data?.${instanceGqlType}.updatedAt },
+                    variables: { id, input: updateInput },
                 });
             } else {
                 const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({

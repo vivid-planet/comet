@@ -1,7 +1,7 @@
 import { SiteConfig } from "@comet/cms-admin";
 
 import cometConfig from "./comet-config.json";
-import environment from "./environment";
+import { environment } from "./environment";
 
 export function createConfig() {
     const environmentVariables = {} as Record<(typeof environment)[number], string>;
@@ -21,6 +21,7 @@ export function createConfig() {
         apiUrl: environmentVariables.API_URL,
         adminUrl: environmentVariables.ADMIN_URL,
         sitesConfig: JSON.parse(environmentVariables.SITES_CONFIG) as SitesConfig,
+        sitePreviewUrl: environmentVariables.SITE_PREVIEW_URL,
     };
 }
 

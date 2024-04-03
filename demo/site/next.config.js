@@ -29,19 +29,16 @@ if (process.env.SITE_IS_PREVIEW !== "true") {
  * @type {import('next').NextConfig}
  **/
 const nextConfig = {
-    redirects: async () => {
-        var redirects = await require("./preBuild/build/preBuild/src/createRedirects").createRedirects();
-        return redirects;
+    async rewrites() {
+        return [
+            {
+                source: "/dam/:path*",
+                destination: process.env.API_URL + "/dam/:path*",
+            },
+        ];
     },
     images: {
         deviceSizes: cometConfig.dam.allowedImageSizes,
-    },
-    webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-        var path = require("path");
-
-        config.resolve.alias["@src"] = path.resolve(__dirname, "src/");
-
-        return config;
     },
     i18n,
     typescript: {
@@ -49,6 +46,9 @@ const nextConfig = {
     },
     eslint: {
         ignoreDuringBuilds: process.env.NODE_ENV === "production",
+    },
+    compiler: {
+        styledComponents: true,
     },
 };
 

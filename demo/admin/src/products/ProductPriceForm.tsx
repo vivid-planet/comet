@@ -25,7 +25,7 @@ type FormValues = Omit<GQLProductPriceFormFragment, "price"> & {
     price?: string;
 };
 
-function ProductPriceForm({ id }: FormProps): React.ReactElement {
+export function ProductPriceForm({ id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const formApiRef = useFormApiRef<FormValues>();
 
@@ -59,7 +59,7 @@ function ProductPriceForm({ id }: FormProps): React.ReactElement {
         };
         await client.mutate<GQLProductPriceFormUpdateProductMutation, GQLProductPriceFormUpdateProductMutationVariables>({
             mutation: updateProductPriceFormMutation,
-            variables: { id, input: output, lastUpdatedAt: data?.product.updatedAt },
+            variables: { id, input: output },
         });
     };
 
@@ -100,5 +100,3 @@ function ProductPriceForm({ id }: FormProps): React.ReactElement {
         </FinalForm>
     );
 }
-
-export default ProductPriceForm;

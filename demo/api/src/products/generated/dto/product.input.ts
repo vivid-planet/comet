@@ -41,7 +41,7 @@ export class ProductInput {
 
     @IsNullable()
     @IsNumber()
-    @Field({ nullable: true })
+    @Field({ nullable: true, defaultValue: null })
     price?: number;
 
     @IsNotEmpty()
@@ -51,7 +51,7 @@ export class ProductInput {
 
     @IsNullable()
     @IsDate()
-    @Field({ nullable: true })
+    @Field({ nullable: true, defaultValue: null })
     availableSince?: Date;
 
     @IsNotEmpty()
@@ -101,7 +101,7 @@ export class ProductInput {
     tags: string[];
 
     @IsNullable()
-    @Field(() => ID, { nullable: true })
+    @Field(() => ID, { nullable: true, defaultValue: null })
     @IsUUID()
     manufacturer?: string;
 }

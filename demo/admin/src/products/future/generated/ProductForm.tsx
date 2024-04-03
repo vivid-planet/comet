@@ -24,10 +24,10 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { ArrowLeft } from "@comet/admin-icons";
+import { ArrowLeft, Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, PixelImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
+import { FormControlLabel, IconButton, InputAdornment, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
@@ -80,6 +80,8 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                 ? {
                       ...filter<GQLProductFormDetailsFragment>(productFormFragment, data.product),
                       price: data.product.price ? String(data.product.price) : undefined,
+                      createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
+                      availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {
@@ -110,9 +112,10 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         };
         if (mode === "edit") {
             if (!id) throw new Error();
+            const { createdAt, ...updateInput } = output;
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.product.updatedAt },
+                variables: { id, input: updateInput },
             });
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
@@ -183,6 +186,20 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         />
 
                         <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
+
+                        <Field
+                            readOnly
+                            disabled
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <Lock />
+                                </InputAdornment>
+                            }
+                            fullWidth
+                            name="createdAt"
+                            component={FinalFormDatePicker}
+                            label={<FormattedMessage id="product.createdAt" defaultMessage="Created" />}
+                        />
 
                         <TextAreaField
                             required

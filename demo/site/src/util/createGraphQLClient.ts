@@ -1,4 +1,4 @@
-import { PreviewData } from "@comet/cms-site";
+import { PreviewData } from "@src/app/api/site-preview/route";
 import { GraphQLClient } from "graphql-request";
 
 export default function createGraphQLClient(previewData?: PreviewData): GraphQLClient {
