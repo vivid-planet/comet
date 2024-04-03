@@ -52,7 +52,7 @@ export class UserPermissionsService {
                     ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
                 ]
                     .flatMap((p) => p.meta.requiredPermission)
-                    .concat(["prelogin"])
+                    .concat(["prelogin"]) // Add permission to allow checking if a specific user has access to a site where preloginEnabled is true
                     .filter((p) => p !== DisablePermissionCheck)
                     .sort(),
             ),
