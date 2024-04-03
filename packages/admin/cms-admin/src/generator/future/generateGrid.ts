@@ -135,6 +135,11 @@ export function generateGrid(
     imports.push(...forwardedGqlArgsImports);
     props.push(...forwardedGqlArgsProps);
 
+    const actionsColumnProps = ['field: "actions"', 'headerName: ""', "sortable: false", "filterable: false", 'type: "actions"', 'align: "right"'];
+    if (typeof config.actions?.columnWidth !== "undefined") {
+        actionsColumnProps.push(`width: ${config.actions.columnWidth}`);
+    }
+
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
     const hasFilter = !!filterArg;
     let hasFilterProp = false;
@@ -335,6 +340,7 @@ export function generateGrid(
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
         .join("\n")}
+    ${config.actions?.componentImport ? `import { ${config.actions.componentImport.name} } from "${config.actions.componentImport.import}";` : ""}
 
     const ${instanceGqlTypePlural}Fragment = gql\`
         fragment ${fragmentName} on ${gqlType} {
@@ -487,23 +493,22 @@ export function generateGrid(
                 ${
                     showActionsColumn
                         ? `{
-                        field: "actions",
-                        headerName: "",
-                        sortable: false,
-                        filterable: false,
-                        type: "actions",
-                        align: "right",
+                        ${actionsColumnProps.join(",\n")},
                         renderCell: (params) => {
                             return (
                                 <>
                                 ${
-                                    allowEditing
-                                        ? `
+                                    config.actions?.componentImport?.name
+                                        ? `<${config.actions.componentImport.name} renderCellParams={params} />`
+                                        : ""
+                                }${
+                              allowEditing
+                                  ? `
                                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                                             <Edit color="primary" />
                                         </IconButton>`
-                                        : ""
-                                }${
+                                  : ""
+                          }${
                               allowCopyPaste || allowDeleting
                                   ? `
                                         <CrudContextMenu
