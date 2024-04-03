@@ -35,6 +35,7 @@ export const FinalFormAutocomplete = <
     return (
         <Autocomplete
             popupIcon={popupIcon}
+            forcePopupIcon={endAdornment ? false : undefined}
             disableClearable
             isOptionEqualToValue={(option: T, value: T) => {
                 if (!value) return false;
