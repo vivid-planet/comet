@@ -202,7 +202,7 @@ type LogUser {
   name: String!
   email: String!
   usages: Float!
-  lastseen: DateTime!
+  lastSeen: DateTime!
 }
 
 type PaginatedUserList {

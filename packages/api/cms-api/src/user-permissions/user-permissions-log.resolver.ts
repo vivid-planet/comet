@@ -29,7 +29,7 @@ export class UserPermissionsLogResolver {
         const entities = await this.logUserRepository.find(
             {},
             {
-                orderBy: { lastseen: "desc" },
+                orderBy: { lastSeen: "desc" },
                 offset,
                 limit,
             },
