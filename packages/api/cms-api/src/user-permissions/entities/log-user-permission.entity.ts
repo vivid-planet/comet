@@ -1,6 +1,9 @@
 import { Entity, Index, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { GraphQLJSONObject } from "graphql-type-json";
 import { v4 as uuid } from "uuid";
+
+import { ContentScope } from "../interfaces/content-scope.interface";
 
 @Entity({ tableName: "CometUserPermissionsLog" })
 @ObjectType()
@@ -20,9 +23,9 @@ export class LogUserPermission {
     @Property()
     email: string;
 
-    @Property()
-    @Field()
-    permissions: string;
+    @Property({ type: "json" })
+    @Field(() => [LogUserPermissionPermission])
+    permissions: LogUserPermissionPermission[];
 
     @Property()
     @Field()
@@ -35,4 +38,15 @@ export class LogUserPermission {
     @Property()
     @Field()
     usages: number;
+}
+
+@ObjectType()
+export class LogUserPermissionPermission {
+    @Property()
+    @Field()
+    permission: string;
+
+    @Property({ type: "json" })
+    @Field(() => [GraphQLJSONObject])
+    contentScopes: ContentScope[] = [];
 }

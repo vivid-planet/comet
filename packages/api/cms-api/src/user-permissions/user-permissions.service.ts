@@ -164,15 +164,19 @@ export class UserPermissionsService {
             });
 
         const logEntity = await this.logUserPermissionRepository.findOne({ userId: user.id }, { orderBy: { lastUsedAt: "desc" } });
-        const permissionsString = JSON.stringify(permissions);
         const currentDate = new Date();
-        if (!logEntity || logEntity.name != user.name || logEntity.email != user.email || logEntity.permissions !== permissionsString) {
+        if (
+            !logEntity ||
+            logEntity.name != user.name ||
+            logEntity.email != user.email ||
+            JSON.stringify(logEntity.permissions) !== JSON.stringify(permissions)
+        ) {
             await this.logUserPermissionRepository.persistAndFlush(
                 this.logUserPermissionRepository.create({
                     userId: user.id,
                     name: user.name,
                     email: user.email,
-                    permissions: permissionsString,
+                    permissions: permissions,
                     firstUsedAt: currentDate,
                     lastUsedAt: currentDate,
                     usages: 1,

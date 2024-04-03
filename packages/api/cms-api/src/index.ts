@@ -152,6 +152,7 @@ export { ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/sc
 export { CurrentUser } from "./user-permissions/dto/current-user";
 export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
 export { User } from "./user-permissions/dto/user";
+export { LogUserPermission } from "./user-permissions/entities/log-user-permission.entity";
 export { ContentScope } from "./user-permissions/interfaces/content-scope.interface";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export {
