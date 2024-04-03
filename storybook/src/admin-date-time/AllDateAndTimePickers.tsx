@@ -7,7 +7,7 @@ import { Form } from "react-final-form";
 
 const Story = () => {
     type FormValues = {
-        date: Date;
+        date: string;
         dateRange: DateRange;
         dateTime: Date;
         time: string;
@@ -21,10 +21,10 @@ const Story = () => {
                 initialValues={
                     boolean("Show Initial Values", false)
                         ? {
-                              date: new Date(),
+                              date: "2024-03-01",
                               dateRange: {
-                                  start: new Date(),
-                                  end: new Date(),
+                                  start: "2024-03-01",
+                                  end: "2024-03-05",
                               },
                               dateTime: new Date(),
                               time: "11:30",
