@@ -163,20 +163,27 @@ export class UserPermissionsService {
                 return p;
             });
 
-        const logEntity = await this.logUserPermissionRepository.findOne({ userId: user.id }, { orderBy: { lastUsedAt: "desc" } });
+        return {
+            ...user,
+            permissions,
+        };
+    }
+
+    async logUserPermissions(currentUser: CurrentUser): Promise<void> {
+        const logEntity = await this.logUserPermissionRepository.findOne({ userId: currentUser.id }, { orderBy: { lastUsedAt: "desc" } });
         const currentDate = new Date();
         if (
             !logEntity ||
-            logEntity.name != user.name ||
-            logEntity.email != user.email ||
-            JSON.stringify(logEntity.permissions) !== JSON.stringify(permissions)
+            logEntity.name != currentUser.name ||
+            logEntity.email != currentUser.email ||
+            JSON.stringify(logEntity.permissions) !== JSON.stringify(currentUser.permissions)
         ) {
             await this.logUserPermissionRepository.persistAndFlush(
                 this.logUserPermissionRepository.create({
-                    userId: user.id,
-                    name: user.name,
-                    email: user.email,
-                    permissions: permissions,
+                    userId: currentUser.id,
+                    name: currentUser.name,
+                    email: currentUser.email,
+                    permissions: currentUser.permissions,
                     firstUsedAt: currentDate,
                     lastUsedAt: currentDate,
                     usages: 1,
@@ -187,10 +194,5 @@ export class UserPermissionsService {
             logEntity.usages++;
             await this.logUserPermissionRepository.persistAndFlush(logEntity);
         }
-
-        return {
-            ...user,
-            permissions,
-        };
     }
 }

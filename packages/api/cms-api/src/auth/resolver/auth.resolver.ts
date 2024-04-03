@@ -4,6 +4,7 @@ import { IncomingMessage } from "http";
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
+import { UserPermissionsService } from "../../user-permissions/user-permissions.service";
 import { GetCurrentUser } from "../decorators/get-current-user.decorator";
 import { PublicApi } from "../decorators/public-api.decorator";
 
@@ -17,8 +18,11 @@ export function createAuthResolver(config?: AuthResolverConfig): Type<unknown> {
     @Resolver(() => CurrentUser)
     @PublicApi()
     class AuthResolver {
+        constructor(private userPermissionsService: UserPermissionsService) {}
+
         @Query(() => CurrentUser)
         async currentUser(@GetCurrentUser() user: CurrentUser): Promise<CurrentUser> {
+            await this.userPermissionsService.logUserPermissions(user);
             return user;
         }
 
