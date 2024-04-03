@@ -25,7 +25,6 @@ type LogUserPermission {
   permissions: [LogUserPermissionPermission!]!
   firstUsedAt: DateTime!
   lastUsedAt: DateTime!
-  usages: Float!
 }
 
 """
@@ -201,7 +200,6 @@ type LogUser {
   userId: String!
   name: String!
   email: String!
-  usages: Float!
   lastSeen: DateTime!
 }
 

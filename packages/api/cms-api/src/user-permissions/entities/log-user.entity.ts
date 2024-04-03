@@ -9,7 +9,7 @@ import { LogUserPermission } from "./log-user-permission.entity";
     expression: (em: EntityManager) => {
         return em
             .createQueryBuilder(LogUserPermission)
-            .select(["userId", "name", "email", "sum(usages) as usages", 'max("lastUsedAt") as "lastSeen"'])
+            .select(["userId", "name", "email", 'max("lastUsedAt") as "lastSeen"'])
             .groupBy(["userId", "name", "email"]);
     },
 })
@@ -25,10 +25,6 @@ export class LogUser {
     @Field()
     @Property()
     email: string;
-
-    @Field()
-    @Property()
-    usages: number;
 
     @Property({
         columnType: "timestamp with time zone",

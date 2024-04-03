@@ -34,10 +34,6 @@ export class LogUserPermission {
     @Property()
     @Field()
     lastUsedAt: Date = new Date();
-
-    @Property()
-    @Field()
-    usages: number;
 }
 
 @ObjectType()

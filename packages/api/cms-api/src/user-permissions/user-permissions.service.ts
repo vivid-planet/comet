@@ -186,12 +186,10 @@ export class UserPermissionsService {
                     permissions: currentUser.permissions,
                     firstUsedAt: currentDate,
                     lastUsedAt: currentDate,
-                    usages: 1,
                 }),
             );
         } else {
             logEntity.lastUsedAt = currentDate;
-            logEntity.usages++;
             await this.logUserPermissionRepository.persistAndFlush(logEntity);
         }
     }
