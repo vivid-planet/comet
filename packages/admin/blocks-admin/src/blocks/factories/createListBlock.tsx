@@ -108,7 +108,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
             `${name}: The property 'minVisibleBlocks' (value: ${minVisibleBlocks}) must be equal to or smaller than 'maxVisibleBlocks' (value: ${maxVisibleBlocks})`,
         );
 
-    const gefDefaultListEntry = () => ({
+    const getDefaultListEntry = () => ({
         key: uuid(),
         visible: true,
         props: block.defaultValues(),
@@ -135,9 +135,9 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
         defaultValues: () => ({
             blocks:
                 minVisibleBlocks !== undefined
-                    ? Array.from({ length: minVisibleBlocks }, () => gefDefaultListEntry())
+                    ? Array.from({ length: minVisibleBlocks }, () => getDefaultListEntry())
                     : createDefaultListEntry
-                    ? [gefDefaultListEntry()]
+                    ? [getDefaultListEntry()]
                     : [],
         }),
 
