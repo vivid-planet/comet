@@ -169,9 +169,17 @@ export function RouterTabs(inProps: Props) {
 
                             if (match && !foundFirstMatch) {
                                 foundFirstMatch = true;
-                                ret = <Content ownerState={{ contentHidden: false }}>{child.props.children}</Content>;
+                                ret = (
+                                    <Content ownerState={{ contentHidden: false }} {...slotProps?.content}>
+                                        {child.props.children}
+                                    </Content>
+                                );
                             } else if (child.props.forceRender) {
-                                ret = <Content ownerState={{ contentHidden: true }}>{child.props.children}</Content>;
+                                ret = (
+                                    <Content ownerState={{ contentHidden: true }} {...slotProps?.content}>
+                                        {child.props.children}
+                                    </Content>
+                                );
                             } else {
                                 // don't render tab contents, return early as we don't need StackBreadcrumb either
                                 return null;
