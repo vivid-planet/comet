@@ -1,7 +1,7 @@
 import { SvgIconProps } from "@mui/material";
 import React from "react";
 
-import { capitalizeString, combineObjects } from "./ContentScope.utils";
+import { capitalizeString, combineContentScopes } from "./ContentScope.utils";
 import { ContentScopeInterface, ContentScopeValues, useContentScope } from "./Provider";
 import ContentScopeSelect from "./Select";
 
@@ -47,6 +47,7 @@ export function ContentScopeControls<S extends ContentScopeInterface = ContentSc
                 label,
             })),
         );
+
         if (Object.keys(scopeValues).length == 1) {
             return groupDim.map((grouping) => ({
                 mapping: Object.keys(scopeValues),
@@ -57,7 +58,7 @@ export function ContentScopeControls<S extends ContentScopeInterface = ContentSc
         return groupDim.map((grouping) => ({
             mapping: Object.keys(scopeValues),
             grouping,
-            values: combineObjects(restDim),
+            values: combineContentScopes(restDim),
         }));
     };
 

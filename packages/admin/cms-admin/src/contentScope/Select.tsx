@@ -14,7 +14,7 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import { useIntl } from "react-intl";
 
-import { wrapInArray } from "./ContentScope.utils";
+import { capitalizeString, showLabelIfAvailable, wrapInArray } from "./ContentScope.utils";
 import { ContentScopeCombinations } from "./Controls";
 import { ContentScopeInterface } from "./Provider";
 
@@ -64,7 +64,7 @@ export default function ContentScopeSelect({
     const filteredValues = searchable ? filterBySearchValue(searchValue) : values;
     return (
         <AppHeaderDropdown buttonChildren={label} startIcon={Icon ? <Icon /> : undefined}>
-            {(hideDropdown) => (
+            {(hideDropdown: () => void) => (
                 <List>
                     {searchable && (
                         <InputBase
@@ -89,28 +89,37 @@ export default function ContentScopeSelect({
                     {filteredValues.map(({ grouping, mapping, values }) => {
                         return (
                             <React.Fragment key={JSON.stringify({ grouping, values })}>
-                                {grouping && <ListSubheader>{grouping.label ? grouping.label : grouping.value}</ListSubheader>}
-                                {values.map((scopeVal, index) => (
-                                    <ListItemButton
-                                        key={index}
-                                        disabled={disabled}
-                                        selected={value.value === scopeVal}
-                                        onClick={() => {
-                                            hideDropdown();
-                                            onChange([...(grouping ? [grouping, ...wrapInArray(scopeVal)] : [...wrapInArray(scopeVal)])], mapping);
-                                            setSearchValue("");
-                                        }}
-                                    >
-                                        {Icon ? (
-                                            <ListItemIcon>
-                                                <Icon />
-                                            </ListItemIcon>
-                                        ) : null}
-                                        <ListItemText
-                                            primary={Array.isArray(scopeVal) ? scopeVal.map(({ value }) => value).join(" - ") : scopeVal.value}
-                                        />
-                                    </ListItemButton>
-                                ))}
+                                {grouping && <ListSubheader>{capitalizeString(showLabelIfAvailable(grouping))}</ListSubheader>}
+                                {values.map((scopeVal, index) => {
+                                    return (
+                                        <ListItemButton
+                                            key={index}
+                                            disabled={disabled}
+                                            selected={value.value === scopeVal}
+                                            onClick={() => {
+                                                hideDropdown();
+                                                onChange(
+                                                    [...(grouping ? [grouping, ...wrapInArray(scopeVal)] : [...wrapInArray(scopeVal)])],
+                                                    mapping,
+                                                );
+                                                setSearchValue("");
+                                            }}
+                                        >
+                                            {Icon ? (
+                                                <ListItemIcon>
+                                                    <Icon />
+                                                </ListItemIcon>
+                                            ) : null}
+                                            <ListItemText
+                                                primary={
+                                                    Array.isArray(scopeVal)
+                                                        ? scopeVal.map((val) => showLabelIfAvailable(val)).join(" - ")
+                                                        : showLabelIfAvailable(scopeVal)
+                                                }
+                                            />
+                                        </ListItemButton>
+                                    );
+                                })}
                             </React.Fragment>
                         );
                     })}
