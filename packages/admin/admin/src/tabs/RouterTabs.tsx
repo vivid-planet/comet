@@ -35,7 +35,7 @@ const Content = createComponentSlot("div")<RouterTabsClassKey, OwnerState>({
     ({ ownerState }) => css`
         ${ownerState.contentHidden &&
         css`
-            display: "none";
+            display: none;
         `}
     `,
 );
@@ -165,17 +165,13 @@ export function RouterTabs(inProps: Props) {
                 return (
                     <Route path={path}>
                         {({ match }) => {
-                            const ownerState: OwnerState = {
-                                contentHidden: !(match && !foundFirstMatch) && child.props.forceRender,
-                            };
                             let ret = null;
-                            if ((match && !foundFirstMatch) || child.props.forceRender) {
+
+                            if (match && !foundFirstMatch) {
                                 foundFirstMatch = true;
-                                ret = (
-                                    <Content ownerState={ownerState} {...slotProps?.content}>
-                                        {child.props.children}
-                                    </Content>
-                                );
+                                ret = <Content ownerState={{ contentHidden: false }}>{child.props.children}</Content>;
+                            } else if (child.props.forceRender) {
+                                ret = <Content ownerState={{ contentHidden: true }}>{child.props.children}</Content>;
                             } else {
                                 // don't render tab contents, return early as we don't need StackBreadcrumb either
                                 return null;
