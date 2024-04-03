@@ -382,7 +382,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                                                                                     <IconButton
                                                                                         onClick={() => canToggleVisibility && toggleVisible(data.key)}
                                                                                         size="small"
-                                                                                        disabled={isMaxVisibleBlocksMet && !data.visible}
+                                                                                        disabled={!canToggleVisibility}
                                                                                     >
                                                                                         {data.visible ? (
                                                                                             <Visible color="secondary" />
