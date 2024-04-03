@@ -547,7 +547,7 @@ export function generateGrid(
             variables: {
                 ${hasScope ? `scope,` : ""}
                 filter: { and: [${hasFilter ? `gqlFilter,` : ""} ${
-        hasGridPropFilter({ config, gridQuery, gqlIntrospection }) ? `...(filter ? [filter] : []),` : "" // TODO handle disable GUI-element for filter defined in filter
+        hasGridPropFilter({ config, gridQuery, gqlIntrospection }) ? `...(filter ? [filter] : []),` : ""
     }] },
                 ${hasSearch ? `search: gqlSearch,` : ""}
                 offset: dataGridProps.page * dataGridProps.pageSize,
