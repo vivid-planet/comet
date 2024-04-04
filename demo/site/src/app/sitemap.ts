@@ -1,13 +1,13 @@
+import { gql } from "@comet/cms-site";
 import { defaultLanguage, domain } from "@src/config";
-import createGraphQLClient from "@src/util/createGraphQLClient";
-import { gql } from "graphql-request";
+import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { MetadataRoute } from "next";
 
 import { GQLPrebuildPageDataListSitemapQuery, GQLPrebuildPageDataListSitemapQueryVariables } from "./sitemap.generated";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const sitemap: MetadataRoute.Sitemap = [];
-    const client = createGraphQLClient();
+    const graphqlFetch = createGraphQLFetch();
 
     const scope = { domain, language: defaultLanguage }; // TODO support multiple languages (earch it's own sitemap?)
 
@@ -15,7 +15,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     let currentCount = 0;
 
     do {
-        const { paginatedPageTreeNodes } = await client.request<GQLPrebuildPageDataListSitemapQuery, GQLPrebuildPageDataListSitemapQueryVariables>(
+        const { paginatedPageTreeNodes } = await graphqlFetch<GQLPrebuildPageDataListSitemapQuery, GQLPrebuildPageDataListSitemapQueryVariables>(
             pageDataListQuery,
             {
                 scope,
