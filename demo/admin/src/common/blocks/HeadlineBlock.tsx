@@ -1,10 +1,7 @@
-import { TextField } from "@comet/admin";
-import { BlockCategory, BlocksFinalForm, createCompositeBlock, createCompositeSetting } from "@comet/blocks-admin";
-import { createCompositeBlockSelectField } from "@comet/blocks-admin/lib/blocks/helpers/createCompositeBlockSelectField";
+import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField, createCompositeBlockTextField } from "@comet/blocks-admin";
 import { createRichTextBlock } from "@comet/cms-admin";
 import { HeadlineBlockData } from "@src/blocks.generated";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
-import * as React from "react";
 
 const RichTextBlock = createRichTextBlock({
     link: LinkBlock,
@@ -22,16 +19,8 @@ export const HeadlineBlock = createCompositeBlock(
         displayName: "Headline",
         blocks: {
             eyebrow: {
-                block: createCompositeSetting<HeadlineBlockData["eyebrow"]>({
-                    defaultValue: undefined,
-                    AdminComponent: ({ state, updateState }) => (
-                        <BlocksFinalForm<Pick<HeadlineBlockData, "eyebrow">>
-                            onSubmit={({ eyebrow }) => updateState(eyebrow)}
-                            initialValues={{ eyebrow: state }}
-                        >
-                            <TextField name="eyebrow" label="Eyebrow" fullWidth />
-                        </BlocksFinalForm>
-                    ),
+                block: createCompositeBlockTextField({
+                    fieldProps: { label: "Eyebrow" },
                 }),
             },
             headline: {

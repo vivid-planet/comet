@@ -31,6 +31,10 @@ export function generateFormField(
 
     //TODO verify introspectionField.type is compatbile with config.type
 
+    const endAdornmentWithLockIconProp = `endAdornment={<InputAdornment position="end"><Lock /></InputAdornment>}`;
+    const readOnlyProps = `readOnly disabled`;
+    const readOnlyPropsWithLock = `${readOnlyProps} ${endAdornmentWithLockIconProp}`;
+
     const imports: Imports = [];
 
     const gqlDocuments: Record<string, string> = {};
@@ -58,6 +62,7 @@ export function generateFormField(
         code = `
         <${TextInputComponent}
             ${required ? "required" : ""}
+            ${config.readOnly ? readOnlyPropsWithLock : ""}
             fullWidth
             name="${name}"
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
@@ -72,6 +77,7 @@ export function generateFormField(
         code = `
             <Field
                 ${required ? "required" : ""}
+                ${config.readOnly ? readOnlyPropsWithLock : ""}
                 fullWidth
                 name="${name}"
                 component={FinalFormInput}
@@ -97,7 +103,7 @@ export function generateFormField(
             {(props) => (
                 <FormControlLabel
                     label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
-                    control={<FinalFormCheckbox {...props} />}
+                    control={<FinalFormCheckbox ${config.readOnly ? readOnlyProps : ""} {...props} />}
                     ${
                         config.helperText
                             ? `helperText={<FormattedMessage id=` +
@@ -112,6 +118,7 @@ export function generateFormField(
         code = `
             <Field
                 ${required ? "required" : ""}
+                ${config.readOnly ? readOnlyPropsWithLock : ""}
                 fullWidth
                 name="${name}"
                 component={FinalFormDatePicker}
@@ -126,12 +133,8 @@ export function generateFormField(
                 ${validateCode}
             />`;
     } else if (config.type == "block") {
-        imports.push({
-            name: config.block.name,
-            importPath: config.block.import,
-        });
         code = `<Field name="${name}" isEqual={isEqual}>
-            {createFinalFormBlock(${config.block.name})}
+            {createFinalFormBlock(rootBlocks.${String(config.name)})}
         </Field>`;
         formValueToGqlInputCode = `${name}: rootBlocks.${name}.state2Output(formValues.${name}),`;
     } else if (config.type == "staticSelect") {
@@ -153,8 +156,8 @@ export function generateFormField(
                     : ""
             }
             ${validateCode}
-            {(props) => 
-                <FinalFormSelect {...props}>
+            {(props) =>
+                <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
                 ${values
                     .map((value) => {
                         const id = `${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`;

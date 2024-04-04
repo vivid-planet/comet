@@ -1,27 +1,27 @@
 import { Field, FinalForm, FinalFormInput } from "@comet/admin";
 import { BeachAccess as BeachAccessIcon } from "@mui/icons-material";
 import { Box, Button, Card, CardContent } from "@mui/material";
-import withStyles from "@mui/styles/withStyles";
+import { styled } from "@mui/material/styles";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { useFormState } from "react-final-form";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 
-const StyledButton = withStyles({
-    root: {
-        textTransform: "capitalize",
-        backgroundColor: "#006699",
-        color: "white",
-        "&:disabled": {
-            color: "lightgrey",
-            backgroundColor: "slategrey",
-        },
-        "&:hover": {
-            backgroundColor: "#006699",
-        },
-    },
-})(Button);
+const StyledButton = styled(Button)`
+    text-transform: capitalize;
+    background-color: #006699;
+    color: white;
+
+    &:disabled {
+        color: lightgrey;
+        background-color: slategrey;
+    }
+
+    &:hover {
+        background-color: #006699;
+    }
+`;
 
 const CustomButtons: React.FC = () => {
     const { values, pristine, hasValidationErrors, submitting } = useFormState();

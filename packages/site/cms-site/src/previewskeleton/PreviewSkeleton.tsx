@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 
 import { usePreview } from "../preview/usePreview";
@@ -11,6 +12,7 @@ interface SkeletonProps {
     color?: string;
     title?: React.ReactNode;
     customContainer?: React.ReactNode;
+    children?: React.ReactNode;
 }
 
 const PreviewSkeleton: React.FunctionComponent<SkeletonProps> = ({

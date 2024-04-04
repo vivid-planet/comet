@@ -680,6 +680,11 @@
         "name": "Link",
         "fields": [
             {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "attachedBlocks",
                 "kind": "NestedObjectList",
                 "object": {
@@ -738,6 +743,11 @@
                 "name": "activeType",
                 "kind": "String",
                 "nullable": false
+            },
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -908,7 +918,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "heading": "Headline",
+                                "headline": "Headline",
                                 "richtext": "RichText",
                                 "image": "DamImage",
                                 "textImage": "TextImage"
@@ -945,7 +955,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "heading": "Headline",
+                                "headline": "Headline",
                                 "richtext": "RichText",
                                 "image": "DamImage",
                                 "textImage": "TextImage"

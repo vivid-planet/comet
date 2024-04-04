@@ -78,7 +78,7 @@ export function ProductVariantForm({ id, productId }: FormProps): React.ReactEle
             if (!id) throw new Error();
             await client.mutate<GQLUpdateProductVariantMutation, GQLUpdateProductVariantMutationVariables>({
                 mutation: updateProductVariantFormMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.productVariant.updatedAt },
+                variables: { id, input: output },
             });
         } else {
             const { data: mutationReponse } = await client.mutate<GQLCreateProductVariantMutation, GQLCreateProductVariantMutationVariables>({

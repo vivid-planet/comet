@@ -5,7 +5,6 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 
 import { useContentScope } from "../../contentScope/Provider";
-import { useSitesConfig } from "../../sitesConfig/useSitesConfig";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
 import { VisibilityToggle } from "../common/VisibilityToggle";
@@ -13,12 +12,12 @@ import { BlockPreviewApi } from "./useBlockPreview";
 
 interface Props {
     previewApi: BlockPreviewApi;
-    previewPath: string;
+    url: string;
     previewState: unknown;
 }
 
 function BlockPreview({
-    previewPath,
+    url,
     previewState,
     previewApi: { device, setDevice, showOnlyVisible, setShowOnlyVisible, setMinimized },
 }: Props): React.ReactElement {
@@ -63,7 +62,7 @@ function BlockPreview({
                     </Grid>
                 </Grid>
             </ActionsContainer>
-            <IFrameViewer ref={iFrameBridge.iFrameRef} device={device} initialPageUrl={initialPageUrl} />
+            <IFrameViewer ref={iFrameBridge.iFrameRef} device={device} initialPageUrl={url} />
         </Root>
     );
 }

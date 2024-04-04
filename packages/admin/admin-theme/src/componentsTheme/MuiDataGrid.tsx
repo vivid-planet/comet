@@ -12,7 +12,7 @@ import {
     TextField,
     TextFieldProps,
 } from "@mui/material";
-import { getDataGridUtilityClass, GRID_DEFAULT_LOCALE_TEXT } from "@mui/x-data-grid";
+import { getDataGridUtilityClass, GRID_DEFAULT_LOCALE_TEXT, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 import React from "react";
 
@@ -93,6 +93,13 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             height: "20px",
             marginRight: "10px",
         },
+        panelContent: {
+            [`& .${gridClasses.filterForm}:first-child .${gridClasses.filterFormLinkOperatorInput}`]: {
+                ["@media (max-width: 900px)"]: {
+                    display: "none",
+                },
+            },
+        },
         filterForm: {
             padding: spacing(4),
 
@@ -105,6 +112,17 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             [`& .${inputAdornmentClasses.root}`]: {
                 padding: spacing(0, 1, 0, 0),
             },
+
+            ["@media (max-width: 900px)"]: {
+                flexDirection: "column",
+                padding: 0,
+            },
+        },
+        filterFormLinkOperatorInput: {
+            ["@media (max-width: 900px)"]: {
+                padding: spacing(2, 4),
+                width: "100%",
+            },
         },
         filterFormDeleteIcon: {
             justifyContent: "center",
@@ -113,12 +131,34 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 width: 16,
                 height: 16,
             },
+
+            ["@media (max-width: 900px)"]: {
+                marginTop: spacing(4),
+                marginRight: spacing(4),
+                alignItems: "flex-end",
+            },
         },
         filterFormColumnInput: {
-            margin: spacing(0, 4),
+            marginRight: spacing(4),
+
+            ["@media (max-width: 900px)"]: {
+                padding: spacing(2, 4),
+                width: "100%",
+            },
         },
         filterFormOperatorInput: {
             margin: spacing(0, 4, 0, 0),
+
+            ["@media (max-width: 900px)"]: {
+                padding: spacing(2, 4),
+                width: "100%",
+            },
+        },
+        filterFormValueInput: {
+            ["@media (max-width: 900px)"]: {
+                padding: spacing(2, 4),
+                width: "100%",
+            },
         },
         paper: {
             boxShadow: shadows[1],

@@ -12,7 +12,7 @@ export type { PropsWithData } from "./blocks/PropsWithData";
 export { hasRichTextBlockContent } from "./blocks/RichTextBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
-export { buildGraphqlClientHeaders, createGraphQLClient, inMemoryCachingFetch, useBlockPreviewGraphQLClient } from "./graphql/graphqlClient";
+export { createFetchWithDefaults, createFetchWithPreviewHeaders, createGraphQLFetch, gql, GraphQLFetch } from "./graphQLFetch/graphQLFetch";
 export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
 export { IFrameMessageType } from "./iframebridge/IFrameMessage";
 export { Preview } from "./iframebridge/Preview";

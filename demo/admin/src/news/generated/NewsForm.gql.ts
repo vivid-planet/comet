@@ -10,7 +10,6 @@ export const newsFormFragment = gql`
         status
         date
         category
-        visible
         image
         content
     }

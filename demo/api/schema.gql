@@ -51,6 +51,8 @@ type Dependency {
   visible: Boolean!
   targetGraphqlObjectType: String!
   targetId: String!
+  name: String
+  secondaryInformation: String
 }
 
 type PaginatedDependencies {
@@ -192,6 +194,7 @@ type Link implements DocumentInterface {
   updatedAt: DateTime!
   content: LinkBlockData!
   createdAt: DateTime!
+  pageTreeNode: PageTreeNode
 }
 
 interface DocumentInterface {
@@ -379,7 +382,6 @@ type News implements DocumentInterface {
   status: NewsStatus!
   date: DateTime!
   category: NewsCategory!
-  visible: Boolean!
   image: DamImageBlockData!
   content: NewsContentBlockData!
   createdAt: DateTime!
@@ -870,7 +872,6 @@ input NewsFilter {
   status: NewsStatusEnumFilter
   date: DateFilter
   category: NewsCategoryEnumFilter
-  visible: BooleanFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   and: [NewsFilter!]
@@ -900,7 +901,6 @@ enum NewsSortField {
   status
   date
   category
-  visible
   createdAt
   updatedAt
 }
@@ -1257,7 +1257,6 @@ input NewsInput {
   status: NewsStatus! = Active
   date: DateTime!
   category: NewsCategory! = Awards
-  visible: Boolean!
   image: DamImageBlockInput!
   content: NewsContentBlockInput!
 }
@@ -1274,7 +1273,6 @@ input NewsUpdateInput {
   status: NewsStatus
   date: DateTime
   category: NewsCategory
-  visible: Boolean
   image: DamImageBlockInput
   content: NewsContentBlockInput
 }
@@ -1307,9 +1305,9 @@ input ProductInput {
   slug: String!
   description: String!
   type: ProductType!
-  price: Float
+  price: Float = null
   inStock: Boolean! = true
-  availableSince: DateTime
+  availableSince: DateTime = null
   image: DamImageBlockInput!
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
@@ -1318,7 +1316,7 @@ input ProductInput {
   colors: [ProductColorInput!]! = []
   category: ID = null
   tags: [ID!]! = []
-  manufacturer: ID
+  manufacturer: ID = null
 }
 
 input ProductStatisticsInput {
