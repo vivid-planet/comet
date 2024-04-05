@@ -22,6 +22,7 @@ import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
+import { CellText } from "../CellText";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -100,6 +101,20 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
 
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
         { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
+        {
+            field: "overview",
+            headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => (
+                <CellText
+                    primary={row.title}
+                    secondary={[row.type, row.price, row.inStock ? "Available" : "Not available"].filter(Boolean).join(" • ")}
+                />
+            ),
+            flex: 1,
+            minWidth: 150,
+        },
         { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, maxWidth: 250, minWidth: 200 },
         {
             field: "description",

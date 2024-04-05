@@ -10,6 +10,14 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
     rowActionProp: true,
     columns: [
         { type: "boolean", name: "inStock", headerName: "In stock", width: 90 },
+        {
+            type: "combination",
+            // @ts-expect-error TODO: Allow custom name for combination columns
+            name: "overview",
+            headerName: "Overview",
+            primaryValue: (row) => row.title,
+            secondaryValue: (row) => [row.type, row.price, row.inStock ? "Available" : "Not available"].filter(Boolean).join(" • "),
+        },
         { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250 },
         { type: "text", name: "description", headerName: "Description" },
         { type: "number", name: "price", headerName: "Price", maxWidth: 150 },
