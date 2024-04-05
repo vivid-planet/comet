@@ -8,7 +8,7 @@ import {
 } from "graphql";
 import { plural } from "pluralize";
 
-import { GeneratorReturn, GridConfig } from "./generator";
+import { GeneratorReturn, GridConfig, GridConfigCombinationColumn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
 
@@ -56,6 +56,28 @@ function findInputObjectType(input: IntrospectionInputValue, schema: Introspecti
         | undefined;
     return filterType;
 }
+
+// TODO: Is there a better way??
+const createWeiredRenderFunctionString = (
+    fn: GridConfigCombinationColumn<unknown>["primaryValue"] | GridConfigCombinationColumn<unknown>["secondaryValue"],
+    type: "primaryValue" | "secondaryValue",
+) => {
+    if (!fn) return undefined;
+
+    const primaryRenderFn: string = fn.toString();
+
+    if (!primaryRenderFn.includes("=>")) {
+        throw new Error(`Function "${type}" value must be an arrow function`);
+    }
+
+    const functionParts = primaryRenderFn.split("=>").map((fnPart) => fnPart.trim());
+
+    if (functionParts[0] !== "(row)") {
+        throw new Error(`Function "${type}" value must start exactly with "(row) =>"`);
+    }
+
+    return functionParts[1];
+};
 
 export function generateGrid(
     {
@@ -209,7 +231,7 @@ export function generateGrid(
 
         //TODO suppoort n:1 relation with singleSelect
 
-        return {
+        const genericData = {
             name,
             headerName: column.headerName,
             type,
@@ -221,6 +243,16 @@ export function generateGrid(
             maxWidth: column.maxWidth,
             flex: column.flex,
         };
+
+        if (column.type == "combination") {
+            return {
+                ...genericData,
+                primaryValue: column.primaryValue,
+                secondaryValue: column.secondaryValue,
+            };
+        }
+
+        return genericData;
     });
 
     let createMutationInputFields: readonly IntrospectionInputValue[] = [];
@@ -270,6 +302,7 @@ export function generateGrid(
     } from "./${gqlTypePlural}Grid.generated";
     import * as React from "react";
     import { FormattedMessage, useIntl } from "react-intl";
+    import { CellText } from "../CellText";
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
         .join("\n")}
@@ -362,6 +395,17 @@ export function generateGrid(
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
                 .map((column) => {
+                    let renderCell = column.renderCell;
+
+                    if (column.type === "combination") {
+                        renderCell = `({ row }) => (
+                            <CellText
+                                primary={${createWeiredRenderFunctionString(column.primaryValue, "primaryValue")}}
+                                secondary={${createWeiredRenderFunctionString(column.secondaryValue, "secondaryValue")}}
+                            />
+                        )`;
+                    }
+
                     const columnDefinition: TsCodeRecordToStringObject = {
                         field: `"${column.name}"`,
                         headerName: `intl.formatMessage({ id: "${instanceGqlType}.${column.name}",  defaultMessage: "${
@@ -372,7 +416,7 @@ export function generateGrid(
                         sortable: !sortFields.includes(column.name) ? `false` : undefined,
                         valueGetter: column.valueGetter,
                         valueOptions: column.valueOptions,
-                        renderCell: column.renderCell,
+                        renderCell,
                         width: column.width,
                         flex: column.flex,
                     };

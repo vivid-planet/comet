@@ -24,6 +24,7 @@ import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-gri
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { CellText } from "../CellText";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -104,6 +105,20 @@ export function ProductsGrid(): React.ReactElement {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
+        {
+            field: "overview",
+            headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => (
+                <CellText
+                    primary={row.title}
+                    secondary={[row.type, row.price, row.inStock ? "Available" : "Not available"].filter(Boolean).join(" • ")}
+                />
+            ),
+            flex: 1,
+            minWidth: 150,
+        },
         { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, maxWidth: 250, minWidth: 200 },
         {
             field: "description",
