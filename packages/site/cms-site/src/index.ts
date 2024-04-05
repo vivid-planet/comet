@@ -27,5 +27,5 @@ export { PreviewSkeleton } from "./previewskeleton/PreviewSkeleton";
 export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSitePreviewIFrameMessage";
 export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePreviewIFrameMessage";
 export type { SitePreviewParams } from "./sitePreview/SitePreviewApiHelper";
-export { getValidatedSitePreviewParams, PreviewData } from "./sitePreview/SitePreviewApiHelper";
+export { getValidatedSitePreviewParams } from "./sitePreview/SitePreviewApiHelper";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";

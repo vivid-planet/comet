@@ -1,15 +1,16 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 type Scope = Record<string, unknown>;
-
-export type PreviewData = {
-    includeInvisible: boolean;
+type GraphQLClient = {
+    setHeader(key: string, value: string): unknown;
+    request(document: string, variables?: unknown): Promise<{ isAllowedSitePreview: boolean }>;
 };
-
 export type SitePreviewParams = {
     scope: Scope;
     path: string;
-    settings: PreviewData;
+    settings: {
+        includeInvisible: boolean;
+    };
 };
 
 export async function getValidatedSitePreviewParams(
@@ -28,7 +29,7 @@ async function getValidatedScope(req: NextApiRequest, res: NextApiResponse, grap
     const scope = JSON.parse(req.query.scope?.toString() ?? "{}");
 
     graphQLClient.setHeader("authorization", req.headers["authorization"] || "");
-    const { isAllowedSitePreview } = await graphQLClient.request<{ isAllowedSitePreview: boolean }>(
+    const { isAllowedSitePreview } = await graphQLClient.request(
         "query isAllowedSitePreview($scope: JSONObject!) { isAllowedSitePreview(scope: $scope) }",
         { scope },
     );
