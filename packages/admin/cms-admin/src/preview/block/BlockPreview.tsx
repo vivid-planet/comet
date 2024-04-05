@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 
 import { useContentScope } from "../../contentScope/Provider";
+import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
 import { VisibilityToggle } from "../common/VisibilityToggle";
@@ -33,8 +34,8 @@ function BlockPreview({
         }
     }, [iFrameBridge, previewState, scope]);
 
-    const sitesConfigContext = useSitesConfig();
-    const initialPageUrl = `${sitesConfigContext.blockPreviewBaseUrl}${previewPath}`;
+    const siteConfig = useSiteConfig({ scope });
+    const initialPageUrl = `${siteConfig.blockPreviewBaseUrl}${url}`;
 
     React.useEffect(() => {
         if (iFrameBridge.iFrameReady) {
@@ -62,7 +63,7 @@ function BlockPreview({
                     </Grid>
                 </Grid>
             </ActionsContainer>
-            <IFrameViewer ref={iFrameBridge.iFrameRef} device={device} initialPageUrl={url} />
+            <IFrameViewer ref={iFrameBridge.iFrameRef} device={device} initialPageUrl={initialPageUrl} />
         </Root>
     );
 }
