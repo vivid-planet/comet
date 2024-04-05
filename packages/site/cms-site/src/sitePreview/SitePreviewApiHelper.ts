@@ -1,4 +1,3 @@
-import { GraphQLClient } from "graphql-request";
 import { NextApiRequest, NextApiResponse } from "next";
 
 type Scope = Record<string, unknown>;
