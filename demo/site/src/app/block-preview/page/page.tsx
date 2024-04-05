@@ -1,14 +1,16 @@
 "use client";
-import { BlockPreviewProvider, IFrameBridgeProvider, inMemoryCachingFetch, useBlockPreviewGraphQLClient, useIFrameBridge } from "@comet/cms-site";
+import { BlockPreviewProvider, IFrameBridgeProvider, useBlockPreviewFetch, useIFrameBridge } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
-import { graphqlApiUrl } from "@src/util/createGraphQLClient";
+import { graphQLApiUrl } from "@src/util/graphQLClient";
 import * as React from "react";
 
 const PreviewPage: React.FunctionComponent = () => {
     const iFrameBridge = useIFrameBridge();
-    const client = useBlockPreviewGraphQLClient(graphqlApiUrl);
+
+    const { fetch, graphQLFetch } = useBlockPreviewFetch(graphQLApiUrl);
+
     const [blockData, setBlockData] = React.useState<PageContentBlockData>();
     React.useEffect(() => {
         async function load() {
@@ -19,13 +21,13 @@ const PreviewPage: React.FunctionComponent = () => {
             const newData = await recursivelyLoadBlockData({
                 blockType: "PageContent",
                 blockData: iFrameBridge.block,
-                client,
-                fetch: inMemoryCachingFetch,
+                graphQLFetch,
+                fetch,
             });
             setBlockData(newData);
         }
         load();
-    }, [iFrameBridge.block, client]);
+    }, [iFrameBridge.block, fetch, graphQLFetch]);
 
     return <div>{blockData && <PageContentBlock data={blockData} />}</div>;
 };

@@ -1,6 +1,5 @@
-import { PropsWithData, registerBlock } from "@comet/cms-site";
+import { gql, PropsWithData, registerBlock } from "@comet/cms-site";
 import { NewsLinkBlockData } from "@src/blocks.generated";
-import { gql } from "graphql-request";
 import * as React from "react";
 
 import { GQLNewsBlockDetailQuery, GQLNewsBlockDetailQueryVariables } from "./NewsDetailBlock.generated";
@@ -27,9 +26,9 @@ function NewsDetailBlock({
 export { NewsDetailBlock };
 
 registerBlock<NewsLinkBlockData>("NewsDetail", {
-    async loader({ blockData, client }): Promise<LoadedData | null> {
+    async loader({ blockData, graphQLFetch }): Promise<LoadedData | null> {
         if (!blockData.id) return null;
-        const data = await client.request<GQLNewsBlockDetailQuery, GQLNewsBlockDetailQueryVariables>(
+        const data = await graphQLFetch<GQLNewsBlockDetailQuery, GQLNewsBlockDetailQueryVariables>(
             gql`
                 query NewsBlockDetail($id: ID!) {
                     news(id: $id) {

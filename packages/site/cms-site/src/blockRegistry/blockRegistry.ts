@@ -1,4 +1,4 @@
-import type { GraphQLClient } from "graphql-request";
+import { GraphQLFetch } from "../graphQLFetch/graphQLFetch";
 
 type BlockMetaField = {
     name: string;
@@ -62,7 +62,7 @@ interface BetterBlockMetaNestedObject {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface RegisterBlockOptions<BlockData> {
-    loader: (options: { blockData: BlockData; client: GraphQLClient; fetch: typeof fetch }) => Promise<any> | any;
+    loader: (options: { blockData: BlockData; graphQLFetch: GraphQLFetch; fetch: typeof fetch }) => Promise<any> | any;
 }
 const blocks: Record<string, RegisterBlockOptions<any>> = {};
 export function registerBlock<BlockData = unknown>(blockName: string, options: RegisterBlockOptions<BlockData>) {
@@ -72,13 +72,13 @@ export function registerBlock<BlockData = unknown>(blockName: string, options: R
 export async function recursivelyLoadBlockData({
     blockType,
     blockData,
-    client,
+    graphQLFetch,
     fetch: fetchFunction,
     blocksMeta,
 }: {
     blockType: string;
     blockData: unknown;
-    client: GraphQLClient;
+    graphQLFetch: GraphQLFetch;
     fetch: typeof fetch;
     blocksMeta: BlockMeta[];
 }) {
@@ -117,7 +117,7 @@ export async function recursivelyLoadBlockData({
 
         const newBlockData = iterateField(block, blockData);
         if (blocks[blockType]) {
-            newBlockData.loaded = blocks[blockType].loader({ blockData, client, fetch: fetchFunction }); // return unresolved promise
+            newBlockData.loaded = blocks[blockType].loader({ blockData, graphQLFetch, fetch: fetchFunction }); // return unresolved promise
             loadedBlockData.push(newBlockData);
         }
         return newBlockData;

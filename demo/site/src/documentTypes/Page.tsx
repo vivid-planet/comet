@@ -48,44 +48,45 @@ export default async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: 
     if (draftMode().isEnabled) {
         previewData = { includeInvisible: false };
     }
-    const graphqlFetch = createGraphQLFetch(previewData);
+    const graphQLFetch = createGraphQLFetch(previewData);
 
-    const props = await graphqlFetch<GQLPageQuery, GQLPageQueryVariables>(pageQuery, {
+    const props = await graphQLFetch<GQLPageQuery, GQLPageQueryVariables>(pageQuery, {
         pageTreeNodeId,
         domain: scope.domain,
         language: scope.language,
     });
 
     if (!props.pageContent) throw new Error("Could not load page content");
-    const document = props.pageContent.document;
-    if (!document) {
+    if (!props.pageContent.document) {
         // no document attached to page
         notFound(); //no return needed
     }
-    if (document.__typename != "Page") throw new Error(`invalid document type, expected Page, got ${document.__typename}`);
+    if (props.pageContent.document?.__typename != "Page") throw new Error(`invalid document type`);
 
     [props.pageContent.document.content, props.pageContent.document.seo] = await Promise.all([
         recursivelyLoadBlockData({
             blockType: "PageContent",
             blockData: props.pageContent.document.content,
-            graphqlFetch,
+            graphQLFetch,
             fetch,
         }),
         recursivelyLoadBlockData({
             blockType: "Seo",
             blockData: props.pageContent.document.seo,
-            graphqlFetch,
+            graphQLFetch,
             fetch,
         }),
     ]);
 
     return (
         <>
-            <SeoBlock data={document.seo} title={props.pageContent.name} />
+            <SeoBlock data={props.pageContent.document.seo} title={props.pageContent.name} />
             <TopNavigation data={props.topMenu} />
             <Header header={props.header} />
             <Breadcrumbs {...props.pageContent} />
-            <div>{document.content && <PageContentBlock data={document.content} />}</div>
+            <div>
+                <PageContentBlock data={props.pageContent.document.content} />
+            </div>
         </>
     );
 }
