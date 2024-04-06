@@ -60,14 +60,8 @@ interface BetterBlockMetaNestedObject {
     fields: BetterBlockMetaField[];
 }
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export interface RegisterBlockOptions<BlockData> {
-    loader: (options: { blockData: BlockData; graphQLFetch: GraphQLFetch; fetch: typeof fetch }) => Promise<any> | any;
-}
-const blocks: Record<string, RegisterBlockOptions<any>> = {};
-export function registerBlock<BlockData = unknown>(blockName: string, options: RegisterBlockOptions<BlockData>) {
-    blocks[blockName] = options;
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type BlockLoader<BlockData = any> = (options: { blockData: BlockData; graphQLFetch: GraphQLFetch; fetch: typeof fetch }) => Promise<any> | any;
 
 export async function recursivelyLoadBlockData({
     blockType,
@@ -75,12 +69,14 @@ export async function recursivelyLoadBlockData({
     graphQLFetch,
     fetch: fetchFunction,
     blocksMeta,
+    loaders,
 }: {
     blockType: string;
     blockData: unknown;
     graphQLFetch: GraphQLFetch;
     fetch: typeof fetch;
     blocksMeta: BlockMeta[];
+    loaders: Record<string, BlockLoader>;
 }) {
     function iterateField(block: BetterBlockMeta | BetterBlockMetaNestedObject, passedBlockData: any) {
         const blockData = { ...passedBlockData };
@@ -116,8 +112,8 @@ export async function recursivelyLoadBlockData({
         if (!block) throw new Error("invalid blockType");
 
         const newBlockData = iterateField(block, blockData);
-        if (blocks[blockType]) {
-            newBlockData.loaded = blocks[blockType].loader({ blockData, graphQLFetch, fetch: fetchFunction }); // return unresolved promise
+        if (loaders[blockType]) {
+            newBlockData.loaded = loaders[blockType]({ blockData, graphQLFetch, fetch: fetchFunction }); // return unresolved promise
             loadedBlockData.push(newBlockData);
         }
         return newBlockData;

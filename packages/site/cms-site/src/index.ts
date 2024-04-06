@@ -1,4 +1,4 @@
-export { recursivelyLoadBlockData, registerBlock } from "./blockRegistry/blockRegistry";
+export { BlockLoader, recursivelyLoadBlockData } from "./blockLoader/blockLoader";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { BlocksBlock } from "./blocks/factories/BlocksBlock";
 export { ListBlock } from "./blocks/factories/ListBlock";
