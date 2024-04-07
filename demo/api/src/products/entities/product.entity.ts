@@ -65,13 +65,8 @@ export class ProductDimensions {
 @Entity()
 @RootBlockEntity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-<<<<<<< HEAD
-export class Product extends BaseEntity<Product, "id"> implements DocumentInterface {
-    [OptionalProps]?: "createdAt" | "updatedAt" | "status";
-=======
 export class Product extends BaseEntity<Product, "id"> {
-    [OptionalProps]?: "createdAt" | "updatedAt";
->>>>>>> main
+    [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)

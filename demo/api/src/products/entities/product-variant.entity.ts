@@ -1,9 +1,5 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-<<<<<<< HEAD
-import { CrudField, CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
-=======
-import { CrudField, DamImageBlock, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
->>>>>>> main
+import { CrudField, CrudGenerator, DamImageBlock, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Entity, ManyToOne, OptionalProps, PrimaryKey, Property, Ref } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
@@ -13,12 +9,8 @@ import { Product } from "./product.entity";
 @ObjectType()
 @Entity()
 @RootBlockEntity()
-<<<<<<< HEAD
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: "products" })
-export class ProductVariant extends BaseEntity<ProductVariant, "id"> implements DocumentInterface {
-=======
 export class ProductVariant extends BaseEntity<ProductVariant, "id"> {
->>>>>>> main
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })

@@ -412,7 +412,6 @@ type PaginatedNews {
   totalCount: Int!
 }
 
-<<<<<<< HEAD
 type AlternativeAddress {
   street: String!
   streetNumber: Float
@@ -455,10 +454,7 @@ type PaginatedManufacturers {
   totalCount: Int!
 }
 
-type ProductCategory implements DocumentInterface {
-=======
 type ProductCategory {
->>>>>>> main
   id: ID!
   title: String!
   slug: String!
@@ -495,11 +491,8 @@ type ProductVariant {
   name: String!
   image: DamImageBlockData!
   createdAt: DateTime!
-<<<<<<< HEAD
-  product: Product!
-=======
   updatedAt: DateTime!
->>>>>>> main
+  product: Product!
 }
 
 type ProductDiscounts {
