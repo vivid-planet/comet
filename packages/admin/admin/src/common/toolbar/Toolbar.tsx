@@ -7,12 +7,12 @@ import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps
 import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
 import { ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";
 
-export type ToolbarClassKey = "root" | "topBar" | "muiToolbar" | "mainContentContainer";
+export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer";
 
 export interface ToolbarProps
     extends ThemedComponentBaseProps<{
         root: typeof Paper;
-        muiToolbar: typeof MuiToolbar;
+        bottomBar: typeof MuiToolbar;
         mainContentContainer: "div";
         topBar: "div";
     }> {
@@ -49,9 +49,9 @@ const TopBar = createComponentSlot("div")<ToolbarClassKey>({
     min-height: 40px;
 `);
 
-const StyledToolbar = createComponentSlot(MuiToolbar)<ToolbarClassKey>({
+const BottomBar = createComponentSlot(MuiToolbar)<ToolbarClassKey>({
     componentName: "Toolbar",
-    slotName: "muiToolbar",
+    slotName: "bottomBar",
 })(
     ({ theme }) => css`
         display: flex;
@@ -107,9 +107,9 @@ export const Toolbar = (inProps: ToolbarProps) => {
                 </TopBar>
             )}
             {!hideBottomBar && (
-                <StyledToolbar {...slotProps?.muiToolbar}>
+                <BottomBar {...slotProps?.bottomBar}>
                     <MainContentContainer {...slotProps?.mainContentContainer}>{children}</MainContentContainer>
-                </StyledToolbar>
+                </BottomBar>
             )}
         </Root>
     );
