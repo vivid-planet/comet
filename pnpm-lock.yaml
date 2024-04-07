@@ -1744,9 +1744,6 @@ importers:
       '@comet/admin-rte':
         specifier: workspace:^6.4.0
         version: link:../admin-rte
-      '@comet/admin-theme':
-        specifier: workspace:^6.4.0
-        version: link:../admin-theme
       '@comet/blocks-admin':
         specifier: workspace:^6.4.0
         version: link:../blocks-admin
@@ -1874,6 +1871,9 @@ importers:
       '@comet/admin-babel-preset':
         specifier: workspace:^6.4.0
         version: link:../admin-babel-preset
+      '@comet/admin-theme':
+        specifier: workspace:^6.4.0
+        version: link:../admin-theme
       '@comet/cli':
         specifier: workspace:^6.4.0
         version: link:../../cli
