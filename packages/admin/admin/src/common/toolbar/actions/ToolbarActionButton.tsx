@@ -58,9 +58,12 @@ const StyledIconButton = createComponentSlot(IconButton)<ToolbarActionButtonClas
     `,
 );
 
-const StyledButton = createComponentSlot(Button)<ToolbarActionButtonClassKey>({
+const StyledButton = createComponentSlot(Button)<ToolbarActionButtonClassKey, OwnerState>({
     componentName: "ToolbarActionButton",
     slotName: "button",
+    classesResolver(ownerState) {
+        return [ownerState.variant];
+    },
 })();
 
 export const ToolbarActionButton = (props: ToolbarActionButtonProps) => {
@@ -72,15 +75,16 @@ export const ToolbarActionButton = (props: ToolbarActionButtonProps) => {
     const useIconButton: boolean = windowSize.width < theme.breakpoints.values.sm;
 
     const icon = restProps.startIcon ?? restProps.endIcon;
+    const ownerState = { variant: restProps.variant ?? "text" };
 
     return useIconButton && icon ? (
         <StyledTooltip title={children} {...tooltipProps}>
-            <StyledIconButton ownerState={{ variant: restProps.variant ?? "text" }} {...iconButtonProps}>
+            <StyledIconButton ownerState={ownerState} {...iconButtonProps}>
                 {icon}
             </StyledIconButton>
         </StyledTooltip>
     ) : (
-        <StyledButton {...restProps} {...buttonProps}>
+        <StyledButton ownerState={ownerState} {...restProps} {...buttonProps}>
             {children}
         </StyledButton>
     );
