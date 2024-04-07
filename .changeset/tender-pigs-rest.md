@@ -12,15 +12,10 @@ Add custom `Typography` variants for displaying inline lists
 </Typography>
 ```
 
-Hint: To use the custom variants without getting a type error, you must adjust the `tsconfig.json` in your project:
+Hint: To use the custom variants without getting a type error, you must adjust the `vendors.d.ts` in your project:
 
 ```diff
-{
-    // ...
-    "compilerOptions": {
-        // ...
-+       "typeRoots": ["node_modules/@types", "node_modules/@comet/admin-theme"],
-    },
-    // ...
-}
++ /// <reference types="@comet/admin-theme" />
+
+// ...
 ```
