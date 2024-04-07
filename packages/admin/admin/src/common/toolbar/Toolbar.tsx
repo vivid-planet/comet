@@ -102,7 +102,7 @@ export const Toolbar = (inProps: ToolbarProps) => {
     return (
         <Root elevation={elevation} ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {!hideTopBar && (
-                <TopBar>
+                <TopBar {...slotProps?.topBar}>
                     <ToolbarBreadcrumbs scopeIndicator={scopeIndicator} />
                 </TopBar>
             )}
