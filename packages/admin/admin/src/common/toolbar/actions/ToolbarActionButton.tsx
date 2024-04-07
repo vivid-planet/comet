@@ -91,12 +91,15 @@ export const ToolbarActionButton = (props: ToolbarActionButtonProps) => {
 };
 
 declare module "@mui/material/styles" {
+    interface ComponentsPropsList {
+        CometAdminToolbarActionButton: ToolbarActionButtonProps;
+    }
     interface ComponentNameToClassKey {
         CometAdminToolbarActionButton: ToolbarActionButtonClassKey;
     }
-
     interface Components {
         CometAdminToolbarActionButton?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminToolbarActionButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminToolbarActionButton"];
         };
     }
