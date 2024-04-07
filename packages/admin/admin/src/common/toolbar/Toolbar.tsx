@@ -7,7 +7,7 @@ import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps
 import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
 import { ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";
 
-export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer";
+export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer" | "breadcrumbs";
 
 export interface ToolbarProps
     extends ThemedComponentBaseProps<{
@@ -15,6 +15,7 @@ export interface ToolbarProps
         bottomBar: typeof MuiToolbar;
         mainContentContainer: "div";
         topBar: "div";
+        breadcrumbs: typeof ToolbarBreadcrumbs;
     }> {
     elevation?: number;
     children?: React.ReactNode;
@@ -82,6 +83,11 @@ const MainContentContainer = createComponentSlot("div")<ToolbarClassKey>({
     flex: 1;
 `);
 
+const Breadcrumbs = createComponentSlot(ToolbarBreadcrumbs)<ToolbarClassKey>({
+    componentName: "Toolbar",
+    slotName: "breadcrumbs",
+})();
+
 export const Toolbar = (inProps: ToolbarProps) => {
     const {
         children,
@@ -103,7 +109,7 @@ export const Toolbar = (inProps: ToolbarProps) => {
         <Root elevation={elevation} ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {!hideTopBar && (
                 <TopBar {...slotProps?.topBar}>
-                    <ToolbarBreadcrumbs scopeIndicator={scopeIndicator} />
+                    <Breadcrumbs scopeIndicator={scopeIndicator} {...slotProps?.breadcrumbs} />
                 </TopBar>
             )}
             {!hideBottomBar && (
