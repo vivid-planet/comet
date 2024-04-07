@@ -63,8 +63,8 @@ const StyledButton = createComponentSlot(Button)<ToolbarActionButtonClassKey>({
     slotName: "button",
 })();
 
-export const ToolbarActionButton = ({ slotProps = {}, ...inProps }: ToolbarActionButtonProps) => {
-    const { children, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarActionButton" });
+export const ToolbarActionButton = (props: ToolbarActionButtonProps) => {
+    const { children, slotProps = {}, ...restProps } = useThemeProps({ props, name: "CometAdminToolbarActionButton" });
     const { iconButton: iconButtonProps, tooltip: tooltipProps, button: buttonProps } = slotProps;
 
     const windowSize = useWindowSize();
