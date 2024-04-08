@@ -1,7 +1,7 @@
 import { Delete, Info, Select } from "@comet/admin-icons";
-import { Button, Chip, ComponentsOverrides, FormHelperText, IconButton, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
-import clsx from "clsx";
+import { Button, Chip, ComponentsOverrides, FormHelperText, IconButton } from "@mui/material";
+import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { ThemedComponentBaseProps } from "helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { Accept, useDropzone } from "react-dropzone";
 import { FieldRenderProps } from "react-final-form";
@@ -23,104 +23,205 @@ export type FinalFormChooseFileFieldClassKey =
     | "error"
     | "fileListText";
 
-const styles = ({ palette }: Theme) => {
-    return createStyles<FinalFormChooseFileFieldClassKey, FinalFormChooseFileFieldProps>({
-        root: {
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: "10px",
-            minWidth: "350px",
-        },
-        droppableArea: {
-            position: "relative",
-            display: "flex",
-            height: "80px",
-            padding: "10px",
-            justifyContent: "center",
-            alignItems: "center",
-            alignSelf: "stretch",
-            borderRadius: "4px",
-            border: `1px dashed ${palette.text.secondary}`,
-            cursor: "pointer",
-            minWidth: "250px",
-            "&$disabled": {
-                cursor: "default",
-            },
-            "&$error": {
-                border: `1px dashed ${palette.error.main}`,
-            },
-        },
-        droppableAreaCaption: {
-            color: palette.text.secondary,
-            fontSize: "14px",
-            fontStyle: "normal",
-            fontWeight: "300",
-            lineHeight: "20px",
-        },
-        droppableAreaError: {
-            float: "right",
-            position: "absolute",
-            top: 0,
-            right: 0,
-            padding: "10px",
-            color: palette.error.main,
-        },
-        fileList: {
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: "2px",
-            width: "100%",
-        },
-        fileListItem: {
-            display: "flex",
-            padding: "8px 7px 8px 15px",
-            alignItems: "center",
-            gap: "10px",
-            borderRadius: "4px",
-            background: palette.background.default,
-            justifyContent: "space-between",
-            minWidth: "250px",
-            width: "100%",
-            boxSizing: "border-box",
-        },
-        fileListItemInfos: {
-            display: "flex",
-            justifyContent: "end",
-            gap: "10px",
-        },
-        rejectedFileListItem: {
-            display: "flex",
-            padding: "8px 7px 8px 15px",
-            alignItems: "center",
-            gap: "10px",
-            borderRadius: "4px",
-            background: palette.background.default,
-            justifyContent: "space-between",
-            minWidth: "250px",
-            border: `1px dashed ${palette.error.main}`,
-            color: palette.error.main,
-            width: "100%",
-            boxSizing: "border-box",
-        },
-        errorMessage: {
-            display: "flex",
-            alignItems: "center",
-            color: palette.error.main,
-            gap: "5px",
-        },
-        disabled: {},
-        error: {},
-        fileListText: {
-            textOverflow: "ellipsis",
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-        },
-    });
-};
+type OwnerState = { disabled: boolean; error: boolean };
 
-export interface FinalFormChooseFileFieldProps extends FieldRenderProps<File | File[], HTMLInputElement> {
+const Root = styled("div", {
+    name: "CometAdminFinalFormChooseFileField",
+    slot: "root",
+    overridesResolver(_, styles) {
+        return [styles.root];
+    },
+})(
+    () => css`
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        min-width: 350px;
+    `,
+);
+
+const DroppableArea = styled("div", {
+    name: "CometAdminFinalFormChooseFileField",
+    slot: "droppableArea",
+    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+        return [styles.droppableArea];
+    },
+})<{ ownerState: OwnerState }>(
+    ({ theme, ownerState }) => css`
+        position: relative;
+        display: flex;
+        height: 80px;
+        padding: 10px;
+        justify-content: center;
+        align-items: center;
+        align-self: stretch;
+        border-radius: 4px;
+        border: 1px dashed ${theme.palette.text.secondary};
+        cursor: pointer;
+        min-width: 250px;
+
+        ${ownerState.disabled &&
+        css`
+            cursor: default;
+        `}
+        ${ownerState.error &&
+        css`
+            border: 1px dashed ${theme.palette.error.main};
+        `}
+    `,
+);
+
+const DroppableAreaCaption = styled("div", {
+    name: "CometAdminFinalFormChooseFileField",
+    slot: "droppableAreaCaption",
+    overridesResolver(_, styles) {
+        return [styles.droppableAreaCaption];
+    },
+})(
+    ({ theme }) => css`
+        color: ${theme.palette.text.secondary};
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: 20px;
+    `,
+);
+
+const DroppableAreaError = styled("div", {
+    name: "CometAdminFinalFormChooseFileField",
+    slot: "droppableAreaError",
+    overridesResolver(_, styles) {
+        return [styles.droppableAreaError];
+    },
+})(
+    ({ theme }) => css`
+        float: right;
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 10px;
+        color: ${theme.palette.error.main};
+    `,
+);
+
+const FileList = styled("div", {
+    name: "CometAdminFinalFormChooseFileField",
+    slot: "fileList",
+    overridesResolver(_, styles) {
+        return [styles.fileList];
+    },
+})(
+    () => css`
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        width: 100%;
+    `,
+);
+
+const FileListItem = styled("div", {
+    name: "CometAdminFinalFormChooseFileField",
+    slot: "fileListItem",
+    overridesResolver(_, styles) {
+        return [styles.fileListItem];
+    },
+})(
+    ({ theme }) => css`
+        display: flex;
+        padding: 8px 7px 8px 15px;
+        align-items: center;
+        gap: 10px;
+        border-radius: 4px;
+        background: ${theme.palette.background.default};
+        justify-content: space-between;
+        min-width: 250px;
+        width: 100%;
+        box-sizing: border-box;
+    `,
+);
+
+const FileListItemInfos = styled("div", {
+    name: "CometAdminFinalFormChooseFileField",
+    slot: "fileListItemInfos",
+    overridesResolver(_, styles) {
+        return [styles.fileListItemInfos];
+    },
+})(
+    () => css`
+        display: flex;
+        justify-content: end;
+        gap: 10px;
+    `,
+);
+
+const RejectedFileListItem = styled("div", {
+    name: "CometAdminFinalFormChooseFileField",
+    slot: "rejectedFileListItem",
+    overridesResolver(_, styles) {
+        return [styles.rejectedFileListItem];
+    },
+})(
+    ({ theme }) => css`
+        display: flex;
+        padding: 8px 7px 8px 15px;
+        align-items: center;
+        gap: 10px;
+        border-radius: 4px;
+        background: ${theme.palette.background.default};
+        justify-content: space-between;
+        min-width: 250px;
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px dashed ${theme.palette.error.main};
+        color: ${theme.palette.error.main};
+    `,
+);
+
+const ErrorMessage = styled("div", {
+    name: "CometAdminFinalFormChooseFileField",
+    slot: "errorMessage",
+    overridesResolver(_, styles) {
+        return [styles.errorMessage];
+    },
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: ${theme.palette.error.main};
+    `,
+);
+
+const FileListText = styled("div", {
+    name: "CometAdminFinalFormChooseFileField",
+    slot: "fileListText",
+    overridesResolver(_, styles) {
+        return [styles.fileListText];
+    },
+})(
+    () => css`
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    `,
+);
+
+export interface FinalFormChooseFileFieldProps
+    extends FieldRenderProps<File | File[], HTMLInputElement>,
+        ThemedComponentBaseProps<{
+            root: "div";
+            droppableArea: "div";
+            droppableAreaCaption: "div";
+            droppableAreaError: "div";
+            fileList: "div";
+            fileListItem: "div";
+            fileListItemInfos: "div";
+            rejectedFileListItem: "div";
+            errorMessage: "div";
+            fileListText: "div";
+        }> {
     disableDropzone?: boolean;
     disableButton?: boolean;
     accept: Accept;
@@ -128,16 +229,21 @@ export interface FinalFormChooseFileFieldProps extends FieldRenderProps<File | F
     maxFiles?: number;
 }
 
-const FinalFormChooseFileFieldComponent: React.FunctionComponent<WithStyles<typeof styles> & FinalFormChooseFileFieldProps> = ({
-    classes,
-    disabled,
-    disableDropzone,
-    disableButton,
-    accept,
-    maxSize = 50 * 1024 * 1024,
-    maxFiles,
-    input: { onChange, value: fieldValue, multiple: multipleFiles },
-}) => {
+export function FinalFormChooseFileField(inProps: FinalFormChooseFileFieldProps) {
+    const {
+        disabled,
+        disableDropzone,
+        disableButton,
+        accept,
+        maxSize = 50 * 1024 * 1024,
+        maxFiles,
+        input: { onChange, value: fieldValue, multiple: multipleFiles },
+        ...restProps
+    } = useThemeProps({
+        props: inProps,
+        name: "CometAdminFinalFormChooseFileField",
+    });
+
     const onDrop = React.useCallback(
         (acceptedFiles: File[]) => {
             multipleFiles && Array.isArray(fieldValue)
@@ -163,6 +269,11 @@ const FinalFormChooseFileFieldComponent: React.FunctionComponent<WithStyles<type
         maxFiles,
     });
 
+    const ownerState: OwnerState = {
+        disabled,
+        error: isDragReject,
+    };
+
     // list of the accepted files
     let files: File[];
 
@@ -177,67 +288,65 @@ const FinalFormChooseFileFieldComponent: React.FunctionComponent<WithStyles<type
     const rejectedFiles =
         fileRejections.length > 0 &&
         fileRejections.map((rejectedFile) => (
-            <div key={rejectedFile.file.name} className={classes.rejectedFileListItem}>
-                <div className={classes.fileListText}>{rejectedFile.file.name}</div>
+            <RejectedFileListItem key={rejectedFile.file.name}>
+                <FileListText>{rejectedFile.file.name}</FileListText>
                 <IconButton color="error">
                     <Info />
                 </IconButton>
-            </div>
+            </RejectedFileListItem>
         ));
 
     return (
-        <div className={classes.root}>
-            <div {...getRootProps()} className={classes.root}>
+        <Root {...restProps}>
+            <Root {...getRootProps()} {...restProps}>
                 <input {...getInputProps()} />
                 {!disableDropzone && (
-                    <div className={clsx(classes.droppableArea, disabled && classes.disabled, isDragReject && classes.error)}>
+                    <DroppableArea ownerState={ownerState}>
                         {isDragReject && (
-                            <div className={classes.droppableAreaError}>
+                            <DroppableAreaError>
                                 <Info />
-                            </div>
+                            </DroppableAreaError>
                         )}
-                        <div className={classes.droppableAreaCaption}>
+                        <DroppableAreaCaption>
                             <FormattedMessage id="comet.finalFormChooseFileField.dropfiles" defaultMessage="Drop files here to upload" />
-                        </div>
-                    </div>
+                        </DroppableAreaCaption>
+                    </DroppableArea>
                 )}
                 {!disableButton && (
                     <Button disabled={disabled} variant="contained" color="primary" startIcon={<Select />}>
                         <FormattedMessage id="comet.finalFormChooseFileField.selectfile" defaultMessage="Select file" />
                     </Button>
                 )}
-            </div>
+            </Root>
             {files.length > 0 && (
-                <div className={classes.fileList}>
+                <FileList>
                     {files.map((file) => (
-                        <div key={file.name} className={classes.fileListItem}>
-                            <div className={classes.fileListText}>{file.name}</div>
-                            <div className={classes.fileListItemInfos}>
+                        <FileListItem key={file.name}>
+                            <FileListText>{file.name}</FileListText>
+                            <FileListItemInfos>
                                 <Chip label={<PrettyBytes value={file.size} />} />
                                 <IconButton onClick={removeFile(file)}>
                                     <Delete />
                                 </IconButton>
-                            </div>
-                        </div>
+                            </FileListItemInfos>
+                        </FileListItem>
                     ))}
-                </div>
+                </FileList>
             )}
-            {fileRejections.length > 0 && <div className={classes.fileList}>{rejectedFiles}</div>}
+            {fileRejections.length > 0 && <FileList>{rejectedFiles}</FileList>}
             {(fileRejections.length > 0 || isDragReject) && (
-                <div className={classes.errorMessage}>
+                <ErrorMessage>
                     <Info color="error" />
                     <FormattedMessage id="comet.finalFormChooseFileField.errors.unknownError" defaultMessage="Something went wrong." />
-                </div>
+                </ErrorMessage>
             )}
             <FormHelperText>
                 <FormattedMessage id="comet.finalFormChooseFileField.maximumFileSize" defaultMessage="Maximum file size" />{" "}
                 <PrettyBytes value={maxSize} />
             </FormHelperText>
-        </div>
+        </Root>
     );
-};
-
-export const FinalFormChooseFileField = withStyles(styles, { name: "CometAdminFinalFormChooseFileField" })(FinalFormChooseFileFieldComponent);
+}
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
