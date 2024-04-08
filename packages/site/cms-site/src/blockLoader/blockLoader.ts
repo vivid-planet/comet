@@ -78,6 +78,7 @@ export async function recursivelyLoadBlockData({
     blocksMeta: BlockMeta[];
     loaders: Record<string, BlockLoader>;
 }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function iterateField(block: BetterBlockMeta | BetterBlockMetaNestedObject, passedBlockData: any) {
         const blockData = { ...passedBlockData };
         for (const field of block.fields) {
@@ -85,6 +86,7 @@ export async function recursivelyLoadBlockData({
                 //null
                 continue;
             } else if (field.kind == "NestedObjectList") {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 blockData[field.name] = blockData[field.name].map((i: any) => {
                     return iterateField(field.object, i);
                 });
@@ -106,6 +108,7 @@ export async function recursivelyLoadBlockData({
         }
         return blockData;
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const loadedBlockData: any[] = [];
     function iterateBlock({ blockType, blockData }: { blockType: string; blockData: unknown }) {
         const block = blocksMeta.find((block) => block.name === blockType) as BetterBlockMeta;
