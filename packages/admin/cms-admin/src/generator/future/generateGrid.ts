@@ -12,7 +12,7 @@ import { findInputObjectType } from "./generateGrid/findInputObjectType";
 import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
 import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
-import { GeneratorReturn, GridConfig } from "./generator";
+import { GeneratorReturn, GridColumnConfig, GridCombinationColumnConfig, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findMutationType } from "./utils/findMutationType";
 import { findRootBlocks } from "./utils/findRootBlocks";
@@ -145,7 +145,13 @@ export function generateGrid(
     imports.push(...forwardedGqlArgsImports);
     props.push(...forwardedGqlArgsProps);
 
-    const hasCombinationColumns = config.columns.some((column) => column.type === "combination");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const isCombinationColumn = (column: GridColumnConfig<any>): column is GridCombinationColumnConfig<unknown> => {
+        return column.type === "combination";
+    };
+
+    // @ts-expect-error TODO: Make this type work
+    const combinationColumns: GridCombinationColumnConfig<unknown>[] = config.columns.filter((column) => isCombinationColumn(column));
 
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
     const hasFilter = !!filterArg;
@@ -294,6 +300,8 @@ export function generateGrid(
             minWidth: column.minWidth,
             maxWidth: column.maxWidth,
             flex: column.flex,
+            getPrimaryText: column.type === "combination" ? column.getPrimaryText : undefined,
+            getSecondaryText: column.type === "combination" ? column.getSecondaryText : undefined,
         };
     });
 
@@ -472,6 +480,13 @@ export function generateGrid(
     }
 
     ${gridPropsTypeCode}
+    ${
+        combinationColumns.length
+            ? `
+        type GetCombinationTextFunction = (row: GQL${fragmentName}Fragment) => string | undefined;
+    `
+            : ""
+    }
 
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
@@ -480,8 +495,8 @@ export function generateGrid(
         ${hasScope ? `const { scope } = useContentScope();` : ""}
 
         ${
-            hasCombinationColumns &&
-            `
+            combinationColumns.length
+                ? `
         const combinationColumnConfigs: Record<
             GridCombinationColumnConfig<GQL${fragmentName}Fragment>["name"],
             GridCombinationColumnConfig<GQL${fragmentName}Fragment>
@@ -492,7 +507,22 @@ export function generateGrid(
                 combinationColumnConfigs[columnConfig.name] = columnConfig;
             }
         }
+
+        ${combinationColumns
+            .map((column) => {
+                const columnNameUpperCase = column.name.charAt(0).toUpperCase() + column.name.slice(1);
+                const hasSecondaryText = column.getSecondaryText;
+
+                const primaryFunctionString = `const get${columnNameUpperCase}PrimaryText: GetCombinationTextFunction = ${column.getPrimaryText.toString()};`;
+                const secondaryFunctionString = `const get${columnNameUpperCase}SecondaryText: GetCombinationTextFunction = ${
+                    column.getSecondaryText?.toString() ?? "() => undefined"
+                };`;
+
+                return [primaryFunctionString, hasSecondaryText && secondaryFunctionString].filter(Boolean).join("");
+            })
+            .join("")}
         `
+                : ""
         }
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
@@ -501,10 +531,14 @@ export function generateGrid(
                     let renderCell = column.renderCell;
 
                     if (column.type === "combination") {
+                        const columnNameUpperCase = column.name.charAt(0).toUpperCase() + column.name.slice(1);
+                        const hasSecondaryText = Boolean((column as GridCombinationColumnConfig<unknown>).getSecondaryText);
+                        const secondaryProp = hasSecondaryText ? `secondary={get${columnNameUpperCase}SecondaryText(row)}` : "";
+
                         renderCell = `({ row }) => (
                             <GridCellText
-                                primary={combinationColumnConfigs["${column.name}"].getPrimaryText(row)}
-                                secondary={combinationColumnConfigs["${column.name}"].getSecondaryText?.(row)}
+                                primary={get${columnNameUpperCase}PrimaryText(row)}
+                                ${secondaryProp}
                             />
                         )`;
                     }

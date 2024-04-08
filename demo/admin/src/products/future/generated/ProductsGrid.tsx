@@ -88,6 +88,8 @@ function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNod
     );
 }
 
+type GetCombinationTextFunction = (row: GQLProductsGridFutureFragment) => string | undefined;
+
 type Props = {
     filter?: GQLProductFilter;
     toolbarAction?: React.ReactNode;
@@ -111,6 +113,11 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
         }
     }
 
+    const getOverviewPrimaryText: GetCombinationTextFunction = ({ title }) => title;
+    const getOverviewSecondaryText: GetCombinationTextFunction = (row) =>
+        [row.type, row.price, row.inStock ? "Available" : "Not available"].filter(Boolean).join(" • ");
+    const getOverview2PrimaryText: GetCombinationTextFunction = ({ title, type }) => `${title} | ${type}`;
+
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
         { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
         {
@@ -118,12 +125,16 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),
             filterable: false,
             sortable: false,
-            renderCell: ({ row }) => (
-                <GridCellText
-                    primary={combinationColumnConfigs["overview"].getPrimaryText(row)}
-                    secondary={combinationColumnConfigs["overview"].getSecondaryText?.(row)}
-                />
-            ),
+            renderCell: ({ row }) => <GridCellText primary={getOverviewPrimaryText(row)} secondary={getOverviewSecondaryText(row)} />,
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "overview2",
+            headerName: intl.formatMessage({ id: "product.overview2", defaultMessage: "Overview 2" }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => <GridCellText primary={getOverview2PrimaryText(row)} />,
             flex: 1,
             minWidth: 150,
         },
