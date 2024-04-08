@@ -17,13 +17,12 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { DamImageBlock, future_GridCombinationColumnConfig as GridCombinationColumnConfig } from "@comet/cms-admin";
+import { DamImageBlock } from "@comet/cms-admin";
 import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { IntlShape, useIntl } from "react-intl";
 
-import { ProductsGrid as GridConfig } from "../ProductsGrid.cometGen";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -101,17 +100,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
-
-    const combinationColumnConfigs: Record<
-        GridCombinationColumnConfig<GQLProductsGridFutureFragment>["name"],
-        GridCombinationColumnConfig<GQLProductsGridFutureFragment>
-    > = {};
-
-    for (const columnConfig of GridConfig.columns) {
-        if (columnConfig.type === "combination") {
-            combinationColumnConfigs[columnConfig.name] = columnConfig;
-        }
-    }
 
     const getOverviewPrimaryText: GetCombinationTextFunction = ({ title }) => title;
     const getOverviewSecondaryText: GetCombinationTextFunction = (row, intl) =>
