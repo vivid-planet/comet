@@ -11,7 +11,7 @@ All fields containing block data need to be annotated with `@RootBlock()`. The B
 ```ts
 //...
 @RootBlockEntity()
-export class News extends BaseEntity<News, "id"> implements DocumentInterface {
+export class News extends BaseEntity<News, "id"> {
     // ...
 
     @RootBlock(DamImageBlock)

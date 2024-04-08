@@ -26,7 +26,7 @@ import {
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArrowLeft, Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, EditPageLayout, PixelImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { FormControlLabel, IconButton, InputAdornment, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
@@ -80,6 +80,8 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                 ? {
                       ...filter<GQLProductFormDetailsFragment>(productFormFragment, data.product),
                       price: data.product.price ? String(data.product.price) : undefined,
+                      createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
+                      availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {
@@ -253,7 +255,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
                         />
                         <Field name="image" isEqual={isEqual}>
-                            {createFinalFormBlock(PixelImageBlock)}
+                            {createFinalFormBlock(rootBlocks.image)}
                         </Field>
                     </MainContent>
                 </EditPageLayout>

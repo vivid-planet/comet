@@ -23,7 +23,7 @@ const Dashboard: React.FC = () => {
                 <ContentScopeIndicator global />
                 <Grid container direction="row" spacing={4}>
                     {isAllowed("pageTree") && <LatestContentUpdates />}
-                    {process.env.NODE_ENV !== "development" && <LatestBuildsDashboardWidget />}
+                    {import.meta.env.MODE !== "development" && <LatestBuildsDashboardWidget />}
                 </Grid>
             </MainContent>
         </Stack>

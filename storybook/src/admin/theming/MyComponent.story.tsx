@@ -1,4 +1,5 @@
 import { MuiThemeProvider } from "@comet/admin";
+import { Favorite } from "@comet/admin-icons";
 import { createCometTheme } from "@comet/admin-theme";
 import { Card, CardContent, Link, Stack, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
@@ -52,6 +53,16 @@ function Story() {
             <MuiThemeProvider theme={theme}>
                 <MyComponent shadow title="With Custom Theme" />
             </MuiThemeProvider>
+            <Typography variant="h3" sx={{ pt: 8 }}>
+                MyComponent with custom icon
+            </Typography>
+            <MyComponent title="Default" />
+            <MyComponent
+                title="With Custom Icon"
+                iconMapping={{
+                    header: <Favorite htmlColor="#FFD700" fontSize="large" />,
+                }}
+            />
         </Stack>
     );
 }

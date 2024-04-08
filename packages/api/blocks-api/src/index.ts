@@ -47,7 +47,15 @@ export {
     createBlocksBlock,
 } from "./blocks/factories/createBlocksBlock";
 export { BaseListBlockItemData, BaseListBlockItemInput, createListBlock } from "./blocks/factories/createListBlock";
-export { createOneOfBlock, OneOfBlock } from "./blocks/factories/createOneOfBlock";
+export {
+    BaseOneOfBlockData,
+    BaseOneOfBlockInput,
+    BaseOneOfBlockItemData,
+    BaseOneOfBlockItemInput,
+    createOneOfBlock,
+    CreateOneOfBlockOptions,
+    OneOfBlock,
+} from "./blocks/factories/createOneOfBlock";
 export { createOptionalBlock, OptionalBlockInputInterface } from "./blocks/factories/createOptionalBlock";
 export type { BlockFactoryNameOrOptions } from "./blocks/factories/types";
 export { getMostSignificantPreviewImageUrlTemplate, getPreviewImageUrlTemplates } from "./blocks/get-preview-image-url-templates";

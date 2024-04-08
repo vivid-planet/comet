@@ -24,6 +24,7 @@ import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
 import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
 import { ProductsPage } from "@src/products/generated/ProductsPage";
+import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
 import * as React from "react";
@@ -194,6 +195,13 @@ export const masterMenuData: MasterMenuData = [
                 route: {
                     path: "/products-handmade",
                     component: ProductsHandmadePage,
+                },
+            },
+            {
+                primary: <FormattedMessage id="menu.manufacturersHandmade" defaultMessage="Manufacturers Handmade" />,
+                route: {
+                    path: "/manufacturers-handmade",
+                    component: ManufacturersHandmadePage,
                 },
             },
         ],
