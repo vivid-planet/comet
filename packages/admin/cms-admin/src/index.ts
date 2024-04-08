@@ -82,6 +82,7 @@ export type {
     FormFieldConfig as future_FormFieldConfig,
     GeneratorConfig as future_GeneratorConfig,
     GridColumnConfig as future_GridColumnConfig,
+    GridCombinationColumnConfig as future_GridCombinationColumnConfig,
     GridConfig as future_GridConfig,
 } from "./generator/future/generator";
 export { CrudGeneratorConfig } from "./generator/types";

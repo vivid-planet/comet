@@ -12,7 +12,7 @@ import { findInputObjectType } from "./generateGrid/findInputObjectType";
 import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
 import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
-import { GeneratorReturn, GridConfig, GridConfigCombinationColumn } from "./generator";
+import { GeneratorReturn, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findMutationType } from "./utils/findMutationType";
 import { findRootBlocks } from "./utils/findRootBlocks";
@@ -74,28 +74,6 @@ function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; grid
         gridPropsParamsCode: `{${uniqueProps.map((prop) => prop.name).join(", ")}}: Props`,
     };
 }
-
-// TODO: Is there a better way??
-const createWeiredRenderFunctionString = (
-    fn: GridConfigCombinationColumn<unknown>["primaryValue"] | GridConfigCombinationColumn<unknown>["secondaryValue"],
-    type: "primaryValue" | "secondaryValue",
-) => {
-    if (!fn) return undefined;
-
-    const primaryRenderFn: string = fn.toString();
-
-    if (!primaryRenderFn.includes("=>")) {
-        throw new Error(`Function "${type}" value must be an arrow function`);
-    }
-
-    const functionParts = primaryRenderFn.split("=>").map((fnPart) => fnPart.trim());
-
-    if (functionParts[0] !== "(row)") {
-        throw new Error(`Function "${type}" value must start exactly with "(row) =>"`);
-    }
-
-    return functionParts[1];
-};
 
 export function generateGrid(
     {
@@ -166,6 +144,8 @@ export function generateGrid(
     } = getForwardedGqlArgs([gridQueryType, ...(createMutationType ? [createMutationType] : [])]);
     imports.push(...forwardedGqlArgsImports);
     props.push(...forwardedGqlArgsProps);
+
+    const hasCombinationColumns = config.columns.some((column) => column.type === "combination");
 
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
     const hasFilter = !!filterArg;
@@ -303,7 +283,7 @@ export function generateGrid(
 
         //TODO suppoort n:1 relation with singleSelect
 
-        const genericData = {
+        return {
             name,
             headerName: column.headerName,
             type,
@@ -315,16 +295,6 @@ export function generateGrid(
             maxWidth: column.maxWidth,
             flex: column.flex,
         };
-
-        if (column.type == "combination") {
-            return {
-                ...genericData,
-                primaryValue: column.primaryValue,
-                secondaryValue: column.secondaryValue,
-            };
-        }
-
-        return genericData;
     });
 
     let createMutationInputFields: readonly IntrospectionInputValue[] = [];
@@ -385,6 +355,9 @@ export function generateGrid(
     } from "./${baseOutputFilename}.generated";
     import * as React from "react";
     import { FormattedMessage, useIntl } from "react-intl";
+    import { future_GridCombinationColumnConfig as GridCombinationColumnConfig } from "@comet/cms-admin";
+    import { ${exportName} as GridConfig } from "../${baseOutputFilename}.cometGen";
+    // TODO: Import this from \`@comet/admin\`
     import { CellText } from "../CellText";
     ${generateImportsCode(imports)}
     ${Object.entries(rootBlocks)
@@ -504,6 +477,22 @@ export function generateGrid(
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
 
+        ${
+            hasCombinationColumns &&
+            `
+        const combinationColumnConfigs: Record<
+            GridCombinationColumnConfig<GQL${fragmentName}Fragment>["name"],
+            GridCombinationColumnConfig<GQL${fragmentName}Fragment>
+        > = {};
+
+        for (const columnConfig of GridConfig.columns) {
+            if (columnConfig.type === "combination") {
+                combinationColumnConfigs[columnConfig.name] = columnConfig;
+            }
+        }
+        `
+        }
+
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
                 .map((column) => {
@@ -512,8 +501,8 @@ export function generateGrid(
                     if (column.type === "combination") {
                         renderCell = `({ row }) => (
                             <CellText
-                                primary={${createWeiredRenderFunctionString(column.primaryValue, "primaryValue")}}
-                                secondary={${createWeiredRenderFunctionString(column.secondaryValue, "secondaryValue")}}
+                                primary={combinationColumnConfigs["${column.name}"].getPrimaryText(row)}
+                                secondary={combinationColumnConfigs["${column.name}"].getSecondaryText?.(row)}
                             />
                         )`;
                     }

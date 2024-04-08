@@ -57,11 +57,11 @@ export type TabsConfig = { type: "tabs"; tabs: { name: string; content: Generato
 
 type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex">;
 
-export type GridConfigCombinationColumn<T> = {
+export type GridCombinationColumnConfig<T> = {
     type: "combination";
     name: string;
-    primaryValue: (row: T) => string;
-    secondaryValue?: (row: T) => string;
+    getPrimaryText: (row: T) => string;
+    getSecondaryText?: (row: T) => string;
 };
 
 export type GridColumnConfig<T> = (
@@ -72,7 +72,7 @@ export type GridColumnConfig<T> = (
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
     | { type: "block"; block: ImportReference }
-    | GridConfigCombinationColumn<T>
+    | GridCombinationColumnConfig<T>
 ) & { name: UsableFields<T> } & DataGridSettings;
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";

@@ -16,13 +16,15 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { DamImageBlock } from "@comet/cms-admin";
+import { DamImageBlock, future_GridCombinationColumnConfig as GridCombinationColumnConfig } from "@comet/cms-admin";
 import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
+// TODO: Import this from `@comet/admin`
 import { CellText } from "../CellText";
+import { ProductsGrid as GridConfig } from "../ProductsGrid.cometGen";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -99,6 +101,17 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 
+    const combinationColumnConfigs: Record<
+        GridCombinationColumnConfig<GQLProductsGridFutureFragment>["name"],
+        GridCombinationColumnConfig<GQLProductsGridFutureFragment>
+    > = {};
+
+    for (const columnConfig of GridConfig.columns) {
+        if (columnConfig.type === "combination") {
+            combinationColumnConfigs[columnConfig.name] = columnConfig;
+        }
+    }
+
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
         { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
         {
@@ -108,8 +121,8 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             sortable: false,
             renderCell: ({ row }) => (
                 <CellText
-                    primary={row.title}
-                    secondary={[row.type, row.price, row.inStock ? "Available" : "Not available"].filter(Boolean).join(" • ")}
+                    primary={combinationColumnConfigs["overview"].getPrimaryText(row)}
+                    secondary={combinationColumnConfigs["overview"].getSecondaryText?.(row)}
                 />
             ),
             flex: 1,
