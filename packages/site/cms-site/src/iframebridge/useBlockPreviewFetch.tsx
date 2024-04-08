@@ -9,17 +9,17 @@ const cachingFetch = createFetchInMemoryCache(fetch);
 export function useBlockPreviewFetch(graphqlApiUrl: string) {
     const iFrameBridge = useIFrameBridge();
 
-    const clientRef = React.useRef(
+    const graphQLFetchRef = React.useRef(
         createGraphQLFetch(createFetchWithPreviewHeaders(cachingFetch, { includeInvisible: !iFrameBridge.showOnlyVisible }), graphqlApiUrl),
     );
     React.useEffect(() => {
-        clientRef.current = createGraphQLFetch(
+        graphQLFetchRef.current = createGraphQLFetch(
             createFetchWithPreviewHeaders(cachingFetch, { includeInvisible: !iFrameBridge.showOnlyVisible }),
             graphqlApiUrl,
         );
     }, [iFrameBridge.showOnlyVisible, graphqlApiUrl]);
     return {
-        graphQLFetch: clientRef.current,
+        graphQLFetch: graphQLFetchRef.current,
         fetch: cachingFetch,
     };
 }
