@@ -3,6 +3,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    GridCellText,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -24,8 +25,6 @@ import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-gri
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-// TODO: Import this from `@comet/admin`
-import { CellText } from "../CellText";
 import { ProductsGrid as GridConfig } from "../ProductsGrid.cometGen";
 import {
     GQLCreateProductMutation,
@@ -124,7 +123,7 @@ export function ProductsGrid(): React.ReactElement {
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => (
-                <CellText
+                <GridCellText
                     primary={combinationColumnConfigs["overview"].getPrimaryText(row)}
                     secondary={combinationColumnConfigs["overview"].getSecondaryText?.(row)}
                 />

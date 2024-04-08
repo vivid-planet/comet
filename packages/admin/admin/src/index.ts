@@ -40,6 +40,7 @@ export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";
 export { ContentOverflow, ContentOverflowClassKey, ContentOverflowProps } from "./ContentOverflow";
 export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
+export { GridCellText, GridCellTextClassKey, GridCellTextProps } from "./dataGrid/GridCellText";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";

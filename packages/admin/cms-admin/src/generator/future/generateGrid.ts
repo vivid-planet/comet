@@ -243,6 +243,7 @@ export function generateGrid(
     import {
         CrudContextMenu,
         GridFilterButton,
+        GridCellText,
         MainContent,
         muiGridFilterToGql,
         muiGridSortToGql,
@@ -274,8 +275,6 @@ export function generateGrid(
     import { FormattedMessage, useIntl } from "react-intl";
     import { future_GridCombinationColumnConfig as GridCombinationColumnConfig } from "@comet/cms-admin";
     import { ${exportName} as GridConfig } from "../${baseOutputFilename}.cometGen";
-    // TODO: Import this from \`@comet/admin\`
-    import { CellText } from "../CellText";
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
         .join("\n")}
@@ -388,7 +387,7 @@ export function generateGrid(
 
                     if (column.type === "combination") {
                         renderCell = `({ row }) => (
-                            <CellText
+                            <GridCellText
                                 primary={combinationColumnConfigs["${column.name}"].getPrimaryText(row)}
                                 secondary={combinationColumnConfigs["${column.name}"].getSecondaryText?.(row)}
                             />
