@@ -281,7 +281,6 @@ export function generateGrid(
     } from "./${gqlTypePlural}Grid.generated";
     import * as React from "react";
     import { FormattedMessage, useIntl, IntlShape } from "react-intl";
-    import { future_GridCombinationColumnConfig as GridCombinationColumnConfig } from "@comet/cms-admin";
     import { ${exportName} as GridConfig } from "../${baseOutputFilename}.cometGen";
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
@@ -379,20 +378,6 @@ export function generateGrid(
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
 
-        ${
-            combinationColumns.length
-                ? `
-        const combinationColumnConfigs: Record<
-            GridCombinationColumnConfig<GQL${fragmentName}Fragment>["name"],
-            GridCombinationColumnConfig<GQL${fragmentName}Fragment>
-        > = {};
-
-        for (const columnConfig of GridConfig.columns) {
-            if (columnConfig.type === "combination") {
-                combinationColumnConfigs[columnConfig.name] = columnConfig;
-            }
-        }
-
         ${combinationColumns
             .map((column) => {
                 const columnNameUpperCase = column.name.charAt(0).toUpperCase() + column.name.slice(1);
@@ -406,9 +391,6 @@ export function generateGrid(
                 return [primaryFunctionString, hasSecondaryText && secondaryFunctionString].filter(Boolean).join("");
             })
             .join("")}
-        `
-                : ""
-        }
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
