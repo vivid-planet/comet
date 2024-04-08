@@ -11,7 +11,7 @@ interface InternalLinkBlockProps extends PropsWithData<InternalLinkBlockData> {
 }
 
 /**
- * @deprecated There should be a copy of this component in the application for flexibility (eg. multi langauge support)
+ * @deprecated There should be a copy of this component in the application for flexibility (e.g. multi language support)
  */
 export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, children, title }: InternalLinkBlockProps): React.ReactElement {
     if (!targetPage) {
