@@ -4,6 +4,7 @@ import { loadSchema } from "@graphql-tools/load";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
+import { IntlShape } from "react-intl";
 
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
@@ -60,8 +61,8 @@ type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "
 export type GridCombinationColumnConfig<T> = {
     type: "combination";
     name: string;
-    getPrimaryText: (row: T) => string;
-    getSecondaryText?: (row: T) => string;
+    getPrimaryText: (row: T, intl: IntlShape) => string;
+    getSecondaryText?: (row: T, intl: IntlShape) => string;
 };
 
 export type GridColumnConfig<T> = (

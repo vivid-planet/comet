@@ -15,8 +15,16 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             name: "overview",
             headerName: "Overview",
             getPrimaryText: ({ title }) => title,
-            // TODO: Can we make strings translatable here? (`intl` as second parameter?)
-            getSecondaryText: (row) => [row.type, row.price, row.inStock ? "Available" : "Not available"].filter(Boolean).join(" • "),
+            getSecondaryText: (row, intl) =>
+                [
+                    row.type,
+                    row.price,
+                    row.inStock
+                        ? intl.formatMessage({ id: "product.available", defaultMessage: "Available" })
+                        : intl.formatMessage({ id: "product.notAvailable", defaultMessage: "Not available" }),
+                ]
+                    .filter(Boolean)
+                    .join(" • "),
         },
         { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250 },
         { type: "text", name: "description", headerName: "Description" },

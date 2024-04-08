@@ -21,7 +21,7 @@ import { DamImageBlock, future_GridCombinationColumnConfig as GridCombinationCol
 import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { IntlShape, useIntl } from "react-intl";
 
 import { ProductsGrid as GridConfig } from "../ProductsGrid.cometGen";
 import {
@@ -88,7 +88,7 @@ function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNod
     );
 }
 
-type GetCombinationTextFunction = (row: GQLProductsGridFutureFragment) => string | undefined;
+type GetCombinationTextFunction = (row: GQLProductsGridFutureFragment, intl: IntlShape) => string | undefined;
 
 type Props = {
     filter?: GQLProductFilter;
@@ -114,9 +114,16 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
     }
 
     const getOverviewPrimaryText: GetCombinationTextFunction = ({ title }) => title;
-    const getOverviewSecondaryText: GetCombinationTextFunction = (row) =>
-        [row.type, row.price, row.inStock ? "Available" : "Not available"].filter(Boolean).join(" • ");
-    const getOverview2PrimaryText: GetCombinationTextFunction = ({ title, type }) => `${title} | ${type}`;
+    const getOverviewSecondaryText: GetCombinationTextFunction = (row, intl) =>
+        [
+            row.type,
+            row.price,
+            row.inStock
+                ? intl.formatMessage({ id: "product.available", defaultMessage: "Available" })
+                : intl.formatMessage({ id: "product.notAvailable", defaultMessage: "Not available" }),
+        ]
+            .filter(Boolean)
+            .join(" • ");
 
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
         { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
@@ -125,16 +132,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),
             filterable: false,
             sortable: false,
-            renderCell: ({ row }) => <GridCellText primary={getOverviewPrimaryText(row)} secondary={getOverviewSecondaryText(row)} />,
-            flex: 1,
-            minWidth: 150,
-        },
-        {
-            field: "overview2",
-            headerName: intl.formatMessage({ id: "product.overview2", defaultMessage: "Overview 2" }),
-            filterable: false,
-            sortable: false,
-            renderCell: ({ row }) => <GridCellText primary={getOverview2PrimaryText(row)} />,
+            renderCell: ({ row }) => <GridCellText primary={getOverviewPrimaryText(row, intl)} secondary={getOverviewSecondaryText(row, intl)} />,
             flex: 1,
             minWidth: 150,
         },

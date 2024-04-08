@@ -364,7 +364,7 @@ export function generateGrid(
         GQLDelete${gqlType}MutationVariables
     } from "./${baseOutputFilename}.generated";
     import * as React from "react";
-    import { FormattedMessage, useIntl } from "react-intl";
+    import { FormattedMessage, useIntl, IntlShape } from "react-intl";
     import { future_GridCombinationColumnConfig as GridCombinationColumnConfig } from "@comet/cms-admin";
     import { ${exportName} as GridConfig } from "../${baseOutputFilename}.cometGen";
     // TODO: Import this from \`@comet/admin\`
@@ -483,7 +483,7 @@ export function generateGrid(
     ${
         combinationColumns.length
             ? `
-        type GetCombinationTextFunction = (row: GQL${fragmentName}Fragment) => string | undefined;
+        type GetCombinationTextFunction = (row: GQL${fragmentName}Fragment, intl: IntlShape) => string | undefined;
     `
             : ""
     }
@@ -533,11 +533,11 @@ export function generateGrid(
                     if (column.type === "combination") {
                         const columnNameUpperCase = column.name.charAt(0).toUpperCase() + column.name.slice(1);
                         const hasSecondaryText = Boolean((column as GridCombinationColumnConfig<unknown>).getSecondaryText);
-                        const secondaryProp = hasSecondaryText ? `secondary={get${columnNameUpperCase}SecondaryText(row)}` : "";
+                        const secondaryProp = hasSecondaryText ? `secondary={get${columnNameUpperCase}SecondaryText(row, intl)}` : "";
 
                         renderCell = `({ row }) => (
                             <GridCellText
-                                primary={get${columnNameUpperCase}PrimaryText(row)}
+                                primary={get${columnNameUpperCase}PrimaryText(row, intl)}
                                 ${secondaryProp}
                             />
                         )`;
