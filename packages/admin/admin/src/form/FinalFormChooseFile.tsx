@@ -9,13 +9,14 @@ import { FormattedMessage } from "react-intl";
 
 import { PrettyBytes } from "../helpers/PrettyBytes";
 
-export type FinalFormFileUploadClassKey =
+export type FinalFormChooseFileFieldClassKey =
     | "root"
     | "droppableArea"
     | "droppableAreaCaption"
     | "droppableAreaError"
     | "fileList"
     | "fileListItem"
+    | "fileListItemInfos"
     | "rejectedFileListItem"
     | "errorMessage"
     | "disabled"
@@ -23,7 +24,7 @@ export type FinalFormFileUploadClassKey =
     | "fileListText";
 
 const styles = ({ palette }: Theme) => {
-    return createStyles<FinalFormFileUploadClassKey, FinalFormFileUploadProps>({
+    return createStyles<FinalFormChooseFileFieldClassKey, FinalFormChooseFileFieldProps>({
         root: {
             display: "flex",
             flexDirection: "column",
@@ -84,6 +85,11 @@ const styles = ({ palette }: Theme) => {
             width: "100%",
             boxSizing: "border-box",
         },
+        fileListItemInfos: {
+            display: "flex",
+            justifyContent: "end",
+            gap: "10px",
+        },
         rejectedFileListItem: {
             display: "flex",
             padding: "8px 7px 8px 15px",
@@ -114,27 +120,33 @@ const styles = ({ palette }: Theme) => {
     });
 };
 
-export interface FinalFormFileUploadProps extends FieldRenderProps<File | File[], HTMLInputElement> {
+export interface FinalFormChooseFileFieldProps extends FieldRenderProps<File | File[], HTMLInputElement> {
     disableDropzone?: boolean;
     disableButton?: boolean;
     accept: Accept;
     maxSize: number;
+    maxFiles?: number;
 }
 
-const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof styles> & FinalFormFileUploadProps> = ({
+const FinalFormChooseFileFieldComponent: React.FunctionComponent<WithStyles<typeof styles> & FinalFormChooseFileFieldProps> = ({
     classes,
     disabled,
     disableDropzone,
     disableButton,
     accept,
     maxSize = 50 * 1024 * 1024,
+    maxFiles,
     input: { onChange, value: fieldValue, multiple: multipleFiles },
 }) => {
     const onDrop = React.useCallback(
         (acceptedFiles: File[]) => {
-            multipleFiles && Array.isArray(fieldValue) ? onChange([...fieldValue, ...acceptedFiles]) : onChange([...acceptedFiles]);
+            multipleFiles && Array.isArray(fieldValue)
+                ? maxFiles && fieldValue.length < maxFiles && fieldValue.length + acceptedFiles.length <= maxFiles
+                    ? onChange([...fieldValue, ...acceptedFiles])
+                    : onChange([...acceptedFiles])
+                : onChange([...acceptedFiles]);
         },
-        [fieldValue, multipleFiles, onChange],
+        [fieldValue, multipleFiles, onChange, maxFiles],
     );
 
     const removeFile = (removedFile: File) => () => {
@@ -145,9 +157,10 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
     const { fileRejections, getRootProps, getInputProps, isDragReject } = useDropzone({
         onDrop,
         accept,
-        disabled,
+        disabled: disabled || (maxFiles && fieldValue.length === maxFiles),
         multiple: multipleFiles,
         maxSize: maxSize,
+        maxFiles,
     });
 
     // list of the accepted files
@@ -184,13 +197,13 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
                             </div>
                         )}
                         <div className={classes.droppableAreaCaption}>
-                            <FormattedMessage id="comet.finalformfileupload.dropfiles" defaultMessage="Drop files here to upload" />
+                            <FormattedMessage id="comet.finalFormChooseFileField.dropfiles" defaultMessage="Drop files here to upload" />
                         </div>
                     </div>
                 )}
                 {!disableButton && (
                     <Button disabled={disabled} variant="contained" color="primary" startIcon={<Select />}>
-                        <FormattedMessage id="comet.finalformfileupload.selectfile" defaultMessage="Select file" />
+                        <FormattedMessage id="comet.finalFormChooseFileField.selectfile" defaultMessage="Select file" />
                     </Button>
                 )}
             </div>
@@ -199,10 +212,12 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
                     {files.map((file) => (
                         <div key={file.name} className={classes.fileListItem}>
                             <div className={classes.fileListText}>{file.name}</div>
-                            <Chip label={<PrettyBytes value={file.size} />} />
-                            <IconButton onClick={removeFile(file)}>
-                                <Delete />
-                            </IconButton>
+                            <div className={classes.fileListItemInfos}>
+                                <Chip label={<PrettyBytes value={file.size} />} />
+                                <IconButton onClick={removeFile(file)}>
+                                    <Delete />
+                                </IconButton>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -211,26 +226,27 @@ const FinalFormFileUploadComponent: React.FunctionComponent<WithStyles<typeof st
             {(fileRejections.length > 0 || isDragReject) && (
                 <div className={classes.errorMessage}>
                     <Info color="error" />
-                    <FormattedMessage id="comet.finalformfileupload.errors.unknownError" defaultMessage="Something went wrong." />
+                    <FormattedMessage id="comet.finalFormChooseFileField.errors.unknownError" defaultMessage="Something went wrong." />
                 </div>
             )}
             <FormHelperText>
-                <FormattedMessage id="comet.finalformfileupload.maximumFileSize" defaultMessage="Maximum file size" /> <PrettyBytes value={maxSize} />
+                <FormattedMessage id="comet.finalFormChooseFileField.maximumFileSize" defaultMessage="Maximum file size" />{" "}
+                <PrettyBytes value={maxSize} />
             </FormHelperText>
         </div>
     );
 };
 
-export const FinalFormFileUpload = withStyles(styles, { name: "CometAdminFinalFormFileUpload" })(FinalFormFileUploadComponent);
+export const FinalFormChooseFileField = withStyles(styles, { name: "CometAdminFinalFormChooseFileField" })(FinalFormChooseFileFieldComponent);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminFinalFormFileUpload: FinalFormFileUploadClassKey;
+        CometAdminFinalFormChooseFileField: FinalFormChooseFileFieldClassKey;
     }
 
     interface Components {
-        CometAdminFinalFormFileUpload?: {
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFinalFormFileUpload"];
+        CometAdminFinalFormChooseFileField?: {
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFinalFormChooseFileField"];
         };
     }
 }
