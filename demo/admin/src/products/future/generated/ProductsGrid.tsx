@@ -100,6 +100,8 @@ function ProductsGridToolbar() {
     );
 }
 
+type GetCombinationTextFunction = (row: GQLProductsGridFutureFragment) => string | undefined;
+
 export function ProductsGrid(): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
@@ -116,18 +118,27 @@ export function ProductsGrid(): React.ReactElement {
         }
     }
 
+    const getOverviewPrimaryText: GetCombinationTextFunction = ({ title }) => title;
+    const getOverviewSecondaryText: GetCombinationTextFunction = (row) =>
+        [row.type, row.price, row.inStock ? "Available" : "Not available"].filter(Boolean).join(" • ");
+    const getOverview2PrimaryText: GetCombinationTextFunction = ({ title, type }) => `${title} | ${type}`;
+
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
         {
             field: "overview",
             headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),
             filterable: false,
             sortable: false,
-            renderCell: ({ row }) => (
-                <GridCellText
-                    primary={combinationColumnConfigs["overview"].getPrimaryText(row)}
-                    secondary={combinationColumnConfigs["overview"].getSecondaryText?.(row)}
-                />
-            ),
+            renderCell: ({ row }) => <GridCellText primary={getOverviewPrimaryText(row)} secondary={getOverviewSecondaryText(row)} />,
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "overview2",
+            headerName: intl.formatMessage({ id: "product.overview2", defaultMessage: "Overview 2" }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => <GridCellText primary={getOverview2PrimaryText(row)} />,
             flex: 1,
             minWidth: 150,
         },
