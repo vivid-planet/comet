@@ -9,6 +9,7 @@ export const fontWeights = {
     fontWeightRegular: 300,
     fontWeightMedium: 400,
     fontWeightBold: 500,
+    fontWeightVeryBold: 600,
 };
 
 export const createTypographyOptions = (breakpoints: Breakpoints): TypographyOptions => ({
@@ -84,6 +85,18 @@ export const createTypographyOptions = (breakpoints: Breakpoints): TypographyOpt
             lineHeight: "20px",
         },
     },
+    subtitle1: {
+        fontFamily,
+        fontSize: 16,
+        lineHeight: "20px",
+        fontWeight: fontWeights.fontWeightVeryBold,
+    },
+    subtitle2: {
+        fontFamily,
+        fontSize: 14,
+        lineHeight: "20px",
+        fontWeight: fontWeights.fontWeightVeryBold,
+    },
     body1: {
         fontFamily,
         fontSize: 16,
@@ -95,5 +108,17 @@ export const createTypographyOptions = (breakpoints: Breakpoints): TypographyOpt
         fontSize: 14,
         lineHeight: "20px",
         fontWeight: fontWeights.fontWeightRegular,
+    },
+    caption: {
+        fontFamily,
+        fontSize: 12,
+        lineHeight: "16px",
+        fontWeight: fontWeights.fontWeightMedium,
+    },
+    overline: {
+        fontFamily,
+        fontSize: 12,
+        lineHeight: "16px",
+        fontWeight: fontWeights.fontWeightVeryBold,
     },
 });
