@@ -86,15 +86,6 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                 <RowActionsMenu>
                     {page.visibility !== "Archived" && [
                         <RowActionsItem
-                            key="edit"
-                            icon={<Edit />}
-                            onClick={() => {
-                                stackSwitchApi.activatePage("edit", String(page.id));
-                            }}
-                        >
-                            <FormattedMessage id="comet.pages.pages.page.editContent" defaultMessage="Edit content" />
-                        </RowActionsItem>,
-                        <RowActionsItem
                             key="pageProperties"
                             icon={<Settings />}
                             onClick={() => {

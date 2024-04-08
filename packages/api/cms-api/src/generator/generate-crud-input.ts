@@ -12,13 +12,7 @@ import {
     findInputClassImportPath,
     morphTsProperty,
 } from "./utils/ts-morph-helper";
-import { GeneratedFile, writeGeneratedFiles } from "./utils/write-generated-files";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function writeCrudInput(generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): Promise<void> {
-    const files = await generateCrudInput(generatorOptions, metadata);
-    await writeGeneratedFiles(files, generatorOptions);
-}
+import { GeneratedFile } from "./utils/write-generated-files";
 
 function tsCodeRecordToString(object: Record<string, string | undefined>) {
     const filteredEntries = Object.entries(object).filter(([key, value]) => value !== undefined);
@@ -84,6 +78,19 @@ export async function generateCrudInput(
             decorators.push(`@IsEnum(${enumName})`);
             decorators.push(`@Field(() => ${enumName}, ${fieldOptions})`);
             type = enumName;
+        } else if (prop.type === "EnumArrayType") {
+            if (prop.nullable) {
+                console.warn(`${prop.name}: Nullable enum arrays are not supported`);
+            }
+            decorators.length = 0; //remove @IsNotEmpty
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const fieldOptions = tsCodeRecordToString({ defaultValue: initializer });
+            const enumName = findEnumName(prop.name, metadata);
+            const importPath = findEnumImportPath(enumName, generatorOptions, metadata);
+            imports.push({ name: enumName, importPath });
+            decorators.push(`@IsEnum(${enumName}, { each: true })`);
+            decorators.push(`@Field(() => [${enumName}], ${fieldOptions})`);
+            type = `${enumName}[]`;
         } else if (prop.type === "string" || prop.type === "text") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
@@ -96,6 +103,7 @@ export async function generateCrudInput(
                 decorators.push("@IsSlug()");
             }
             decorators.push(`@Field(${fieldOptions})`);
+            type = "string";
         } else if (prop.type === "DecimalType" || prop.type == "BigIntType" || prop.type === "number") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
@@ -108,8 +116,11 @@ export async function generateCrudInput(
             decorators.push(`@Field(${fieldOptions})`);
             type = "number";
         } else if (prop.type === "DateType" || prop.type === "Date") {
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
+            const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             decorators.push("@IsDate()");
-            decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
+            decorators.push(`@Field(${fieldOptions})`);
             type = "Date";
         } else if (prop.type === "BooleanType" || prop.type === "boolean") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
@@ -238,7 +249,7 @@ export async function generateCrudInput(
             decorators.push(`@Type(() => ${inputName})`);
             decorators.push("@ValidateNested()");
             type = `${inputName}`;
-        } else if (prop.type == "JsonType" || prop.embeddable) {
+        } else if (prop.type == "JsonType" || prop.embeddable || prop.type == "ArrayType") {
             const tsProp = morphTsProperty(prop.name, metadata);
 
             let tsType = tsProp.getType();
@@ -266,21 +277,27 @@ export async function generateCrudInput(
                 } else if (type == "boolean[]") {
                     decorators.push(`@Field(() => [Boolean], ${fieldOptions})`);
                     decorators.push("@IsBoolean({ each: true })");
-                } else {
+                } else if (tsType.getArrayElementTypeOrThrow().isClass()) {
                     const nestedClassName = tsType.getArrayElementTypeOrThrow().getText(tsProp);
                     const importPath = findInputClassImportPath(nestedClassName, generatorOptions, metadata);
                     imports.push({ name: nestedClassName, importPath });
                     decorators.push(`@ValidateNested()`);
                     decorators.push(`@Type(() => ${nestedClassName})`);
                     decorators.push(`@Field(() => [${nestedClassName}], ${fieldOptions})`);
+                } else {
+                    decorators.push(`@Field(() => [GraphQLJSONObject], ${fieldOptions}) // Warning: this input is not validated properly`);
                 }
-            } else {
+            } else if (tsType.isClass()) {
                 const nestedClassName = tsType.getText(tsProp);
                 const importPath = findInputClassImportPath(nestedClassName, generatorOptions, metadata);
                 imports.push({ name: nestedClassName, importPath });
                 decorators.push(`@ValidateNested()`);
                 decorators.push(`@Type(() => ${nestedClassName})`);
                 decorators.push(`@Field(() => ${nestedClassName}${prop.nullable ? ", { nullable: true }" : ""})`);
+            } else {
+                decorators.push(
+                    `@Field(() => GraphQLJSONObject${prop.nullable ? ", { nullable: true }" : ""}) // Warning: this input is not validated properly`,
+                );
             }
         } else if (prop.type == "uuid") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();

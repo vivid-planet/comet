@@ -13,6 +13,7 @@ export interface FieldContainerProps {
     warning?: string;
     scrollTo?: boolean;
     fieldMargin?: "always" | "never" | "onlyIfNotLast";
+    helperText?: React.ReactNode;
 }
 
 export type FieldContainerClassKey =
@@ -30,7 +31,8 @@ export type FieldContainerClassKey =
     | "hasError"
     | "error"
     | "hasWarning"
-    | "warning";
+    | "warning"
+    | "helperText";
 
 const styles = (theme: Theme) => {
     return createStyles<FieldContainerClassKey, FieldContainerProps>({
@@ -99,6 +101,9 @@ const styles = (theme: Theme) => {
         warning: {
             color: theme.palette.warning.main,
         },
+        helperText: {
+            color: theme.palette.grey["300"],
+        },
     });
 };
 
@@ -115,6 +120,7 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles> & Field
     warning,
     scrollTo = false,
     fieldMargin = "onlyIfNotLast",
+    helperText,
 }) => {
     const hasError = !!error;
     const hasWarning = !!warning;
@@ -156,6 +162,7 @@ export const FieldContainerComponent: React.FC<WithStyles<typeof styles> & Field
                         </FormHelperText>
                     )}
                     {hasWarning && !hasError && <FormHelperText classes={{ root: classes.warning }}>{warning}</FormHelperText>}
+                    {helperText && !hasError && !hasWarning && <FormHelperText classes={{ root: classes.helperText }}>{helperText}</FormHelperText>}
                 </div>
             </>
         </FormControl>

@@ -1,16 +1,14 @@
-import { CrudField, CrudGenerator, DocumentInterface } from "@comet/cms-api";
+import { CrudField, CrudGenerator } from "@comet/cms-api";
 import { BaseEntity, Collection, Entity, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 import { Product } from "./product.entity";
 
-@ObjectType({
-    implements: () => [DocumentInterface],
-})
+@ObjectType()
 @Entity()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class ProductCategory extends BaseEntity<ProductCategory, "id"> implements DocumentInterface {
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["products"] })
+export class ProductCategory extends BaseEntity<ProductCategory, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })

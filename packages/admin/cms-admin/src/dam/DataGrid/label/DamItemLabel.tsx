@@ -33,7 +33,6 @@ interface DamItemLabelProps {
     showPath?: boolean;
     matches?: TextMatch[];
     showLicenseWarnings?: boolean;
-    isInboxFromOtherScope?: boolean;
 }
 
 const getFilePath = (file: GQLDamFileTableFragment) => {
@@ -55,13 +54,7 @@ const getFolderPath = (folder: GQLDamFolderTableFragment) => {
     return `/${pathArr.join("/")}`;
 };
 
-const DamItemLabel = ({
-    asset,
-    showPath = false,
-    matches,
-    showLicenseWarnings = false,
-    isInboxFromOtherScope = false,
-}: DamItemLabelProps): React.ReactElement => {
+const DamItemLabel = ({ asset, showPath = false, matches, showLicenseWarnings = false }: DamItemLabelProps): React.ReactElement => {
     return (
         <LabelWrapper>
             <DamThumbnail asset={asset} />

@@ -1,13 +1,11 @@
 import {
+    AccessLogModule,
     BlobStorageModule,
     BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
     BlocksModule,
     BlocksTransformerMiddlewareFactory,
     BuildsModule,
-    ContentScope,
-    ContentScopeModule,
     CronJobsModule,
-    CurrentUserInterface,
     DamModule,
     DependenciesModule,
     FilesService,
@@ -30,6 +28,7 @@ import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { Request } from "express";
 
+import { AccessControlService } from "./auth/access-control.service";
 import { AuthModule } from "./auth/auth.module";
 import { UserService } from "./auth/user.service";
 import { DamScope } from "./dam/dto/dam-scope";
@@ -77,23 +76,17 @@ export class AppModule {
                     inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
                 }),
                 AuthModule,
-                ContentScopeModule.forRoot({
-                    canAccessScope(requestScope: ContentScope, user: CurrentUserInterface) {
-                        if (!user.domains) return true; //all domains
-                        return user.domains.includes(requestScope.domain);
-                    },
-                }),
                 UserPermissionsModule.forRootAsync({
-                    useFactory: (userService: UserService) => ({
-                        availablePermissions: ["news", "products"],
+                    useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
                         availableContentScopes: [
                             { domain: "main", language: "de" },
                             { domain: "main", language: "en" },
                             { domain: "secondary", language: "en" },
                         ],
                         userService,
+                        accessControlService,
                     }),
-                    inject: [UserService],
+                    inject: [UserService, AccessControlService],
                     imports: [AuthModule],
                 }),
                 BlocksModule.forRoot({
@@ -156,6 +149,7 @@ export class AppModule {
                 PredefinedPageModule,
                 CronJobsModule,
                 ProductsModule,
+                AccessLogModule,
             ],
         };
     }

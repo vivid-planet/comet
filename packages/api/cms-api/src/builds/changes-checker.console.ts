@@ -1,9 +1,9 @@
 import { MikroORM, UseRequestContext } from "@mikro-orm/core";
 import { Injectable } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
-import { ContentScope } from "src/common/decorators/content-scope.interface";
 
 import { KubernetesService } from "../kubernetes/kubernetes.service";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { BuildTemplatesService } from "./build-templates.service";
 import { BuildsService } from "./builds.service";
 
@@ -39,7 +39,7 @@ export class ChangesCheckerConsole {
                         // Check if scopes match partially. For instance, a job's scope may be { "domain": "main" }, but the change was in
                         // { "domain": "main", "language": "en" }. Or the job's scope may be { "domain": "main", "language": "en" }, but the change
                         // was in { "domain": "main" }. In both cases, the job should still be started.
-                        if (Object.entries(cronJobScope).some(([key, value]) => (scope as Record<string, unknown>)[key] === value)) {
+                        if (Object.entries(cronJobScope ?? {}).some(([key, value]) => (scope as Record<string, unknown>)[key] === value)) {
                             return cronJob;
                         }
                     }

@@ -1,3 +1,5 @@
+import helmet from "helmet";
+
 if (process.env.TRACING_ENABLED) {
     require("./tracing");
 }
@@ -10,6 +12,7 @@ import { AppModule } from "@src/app.module";
 import { useContainer } from "class-validator";
 import compression from "compression";
 import cookieParser from "cookie-parser";
+import { json } from "express";
 
 import { createConfig } from "./config/config";
 
@@ -38,6 +41,19 @@ async function bootstrap(): Promise<void> {
         }),
     );
 
+    app.use(
+        helmet({
+            contentSecurityPolicy: {
+                useDefaults: false,
+                directives: {
+                    "default-src": helmet.contentSecurityPolicy.dangerouslyDisableDefaultSrc,
+                    // locally: allow localhost in frame-ancestors to enable including files from the API in iframes in admin
+                    "frame-ancestors": `'self' ${process.env.NODE_ENV === "development" ? config.adminUrl : ""}`,
+                },
+            },
+        }),
+    );
+    app.use(json({ limit: "1mb" })); // increase default limit of 100kb for saving large pages
     app.use(compression());
     app.use(cookieParser());
 

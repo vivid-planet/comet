@@ -1,5 +1,7 @@
-import cometConfig from "../comet-config.json";
-import environment from "./environment";
+import { SiteConfig } from "@comet/cms-admin";
+
+import cometConfig from "./comet-config.json";
+import { environment } from "./environment";
 
 export function createConfig() {
     const environmentVariables = {} as Record<(typeof environment)[number], string>;
@@ -18,8 +20,10 @@ export function createConfig() {
         ...cometConfig,
         apiUrl: environmentVariables.API_URL,
         adminUrl: environmentVariables.ADMIN_URL,
-        sitesConfig: JSON.parse(environmentVariables.SITES_CONFIG),
+        sitesConfig: JSON.parse(environmentVariables.SITES_CONFIG) as SitesConfig,
     };
 }
+
+export type SitesConfig = Record<string, SiteConfig>;
 
 export type Config = ReturnType<typeof createConfig>;

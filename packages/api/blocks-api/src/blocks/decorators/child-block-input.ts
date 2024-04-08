@@ -5,6 +5,11 @@ import { Block, isBlockInputInterface } from "../block";
 import { BlockField } from "./field";
 
 interface ChildBlockInputOptions {
+    /**
+     * @deprecated Nullable child blocks are not correctly supported in
+     * the Admin, for instance, in `createCompositeBlock`. Save a
+     * block's default values instead.
+     */
     nullable?: boolean;
     disableValidateNested?: boolean; // Useful when a custom validation strategy is needed
 }
