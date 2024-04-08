@@ -329,6 +329,8 @@ export function generateGrid(
         filterByFragment,
         GridFilterButton,
         GridColDef,
+        GridCellText,
+        MainContent,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,
@@ -500,7 +502,7 @@ export function generateGrid(
 
                     if (column.type === "combination") {
                         renderCell = `({ row }) => (
-                            <CellText
+                            <GridCellText
                                 primary={combinationColumnConfigs["${column.name}"].getPrimaryText(row)}
                                 secondary={combinationColumnConfigs["${column.name}"].getSecondaryText?.(row)}
                             />

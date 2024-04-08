@@ -5,6 +5,7 @@ import {
     CrudContextMenu,
     DataGridToolbar,
     filterByFragment,
+    GridCellText,
     GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
@@ -22,8 +23,6 @@ import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
-// TODO: Import this from `@comet/admin`
-import { CellText } from "../CellText";
 import { ProductsGrid as GridConfig } from "../ProductsGrid.cometGen";
 import {
     GQLCreateProductMutation,
@@ -120,7 +119,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => (
-                <CellText
+                <GridCellText
                     primary={combinationColumnConfigs["overview"].getPrimaryText(row)}
                     secondary={combinationColumnConfigs["overview"].getSecondaryText?.(row)}
                 />
