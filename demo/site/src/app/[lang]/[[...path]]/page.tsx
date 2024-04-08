@@ -1,6 +1,6 @@
 import { gql } from "@comet/cms-site";
 import { SitePreviewData } from "@src/app/api/site-preview/route";
-import { domain } from "@src/config";
+import { domain, languages } from "@src/config";
 import { documentTypes } from "@src/documentTypes";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { draftMode } from "next/headers";
@@ -23,6 +23,10 @@ export default async function Page({ params }: { params: { path: string[]; lang:
         previewData = { includeInvisible: false };
     }
     const graphqlFetch = createGraphQLFetch(previewData);
+
+    if (!languages.includes(params.lang)) {
+        notFound();
+    }
 
     const scope = { domain, language: params.lang };
 

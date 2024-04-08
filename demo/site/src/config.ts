@@ -7,3 +7,5 @@ if (!process.env.NEXT_PUBLIC_SITE_DOMAIN) {
 } else {
     domain = process.env.NEXT_PUBLIC_SITE_DOMAIN;
 }
+
+export const languages = ["en", "de"];
