@@ -1,4 +1,4 @@
-import { previewParams, SeoBlock } from "@comet/cms-site";
+import { gql, previewParams, SeoBlock } from "@comet/cms-site";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import Breadcrumbs from "@src/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/components/Breadcrumbs.fragment";
@@ -7,8 +7,7 @@ import { Header } from "@src/header/Header";
 import { headerFragment } from "@src/header/Header.fragment";
 import { TopNavigation } from "@src/topNavigation/TopNavigation";
 import { topMenuPageTreeNodeFragment } from "@src/topNavigation/TopNavigation.fragment";
-import createGraphQLClient from "@src/util/createGraphQLClient";
-import { gql } from "graphql-request";
+import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { notFound } from "next/navigation";
 import * as React from "react";
 
@@ -43,9 +42,9 @@ const pageQuery = gql`
 
 export default async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput }) {
     const { previewData } = previewParams() || { previewData: undefined };
-    const client = createGraphQLClient(previewData);
+    const graphqlFetch = createGraphQLFetch(previewData);
 
-    const props = await client.request<GQLPageQuery, GQLPageQueryVariables>(pageQuery, {
+    const props = await graphqlFetch<GQLPageQuery, GQLPageQueryVariables>(pageQuery, {
         pageTreeNodeId,
         domain: scope.domain,
         language: scope.language,

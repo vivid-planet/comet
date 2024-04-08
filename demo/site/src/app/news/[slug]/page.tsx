@@ -1,19 +1,18 @@
-import { previewParams } from "@comet/cms-site";
+import { gql, previewParams } from "@comet/cms-site";
 import { DamImageBlock } from "@src/blocks/DamImageBlock";
 import { defaultLanguage, domain } from "@src/config";
 import { GQLNewsContentScopeInput } from "@src/graphql.generated";
 import { NewsContentBlock } from "@src/news/blocks/NewsContentBlock";
-import createGraphQLClient from "@src/util/createGraphQLClient";
-import { gql } from "graphql-request";
+import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { notFound } from "next/navigation";
 
 import { GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables } from "./page.generated";
 
 export default async function NewsDetailPage({ params }: { params: { slug: string } }) {
     const { scope, previewData } = previewParams() || { scope: { domain, language: defaultLanguage }, previewData: undefined };
-    const client = createGraphQLClient(previewData);
+    const graphqlFetch = createGraphQLFetch(previewData);
 
-    const data = await client.request<GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables>(
+    const data = await graphqlFetch<GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables>(
         gql`
             query NewsDetailPage($slug: String!, $scope: NewsContentScopeInput!) {
                 newsBySlug(slug: $slug, scope: $scope) {
