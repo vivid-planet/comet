@@ -8,7 +8,7 @@ import {
 } from "graphql";
 import { plural } from "pluralize";
 
-import { GeneratorReturn, GridColumnConfig, GridCombinationColumnConfig, GridConfig } from "./generator";
+import { GeneratorReturn, GridCombinationColumnConfig, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
 
@@ -92,13 +92,7 @@ export function generateGrid(
 
     const showActionsColumn = allowCopyPaste || allowEditing || allowDeleting;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isCombinationColumn = (column: GridColumnConfig<any>): column is GridCombinationColumnConfig<unknown> => {
-        return column.type === "combination";
-    };
-
-    // @ts-expect-error TODO: Make this type work
-    const combinationColumns: GridCombinationColumnConfig<unknown>[] = config.columns.filter((column) => isCombinationColumn(column));
+    const combinationColumns = config.columns.filter((column): column is GridCombinationColumnConfig<unknown> => column.type === "combination");
 
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
     const hasFilter = !!filterArg;
