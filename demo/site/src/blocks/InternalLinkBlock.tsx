@@ -15,13 +15,16 @@ export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, chil
         return <>{children}</>;
     }
 
+    let href = targetPageAnchor !== undefined ? `${targetPage.path}#${targetPageAnchor}` : targetPage.path;
+    if (targetPage.scope) {
+        const language = (targetPage.scope as Record<string, string>).language;
+        if (language) {
+            href = `/${language}${href}`;
+        }
+    }
+
     return (
-        <Link
-            href={targetPageAnchor !== undefined ? `${targetPage.path}#${targetPageAnchor}` : targetPage.path}
-            passHref
-            title={title}
-            legacyBehavior
-        >
+        <Link href={href} passHref title={title} legacyBehavior>
             {children}
         </Link>
     );
