@@ -12,7 +12,7 @@ import { findInputObjectType } from "./generateGrid/findInputObjectType";
 import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
 import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
-import { GeneratorReturn, GridColumnConfig, GridCombinationColumnConfig, GridConfig } from "./generator";
+import { GeneratorReturn, GridCombinationColumnConfig, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findMutationType } from "./utils/findMutationType";
 import { findRootBlocks } from "./utils/findRootBlocks";
@@ -145,13 +145,7 @@ export function generateGrid(
     imports.push(...forwardedGqlArgsImports);
     props.push(...forwardedGqlArgsProps);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isCombinationColumn = (column: GridColumnConfig<any>): column is GridCombinationColumnConfig<unknown> => {
-        return column.type === "combination";
-    };
-
-    // @ts-expect-error TODO: Make this type work
-    const combinationColumns: GridCombinationColumnConfig<unknown>[] = config.columns.filter((column) => isCombinationColumn(column));
+    const combinationColumns = config.columns.filter((column): column is GridCombinationColumnConfig<unknown> => column.type === "combination");
 
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
     const hasFilter = !!filterArg;
