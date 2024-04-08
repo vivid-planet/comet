@@ -3,12 +3,11 @@ import { cookies, draftMode } from "next/headers";
 import { redirect } from "next/navigation";
 import { type NextRequest } from "next/server";
 
+import { GraphQLFetch } from "../graphQLFetch/graphQLFetch";
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Scope = Record<string, any>;
-type GraphQLClient = {
-    setHeader(key: string, value: string): unknown;
-    request(document: string, variables?: unknown): Promise<{ isAllowedSitePreview: boolean }>;
-};
+
 export type SitePreviewData = {
     includeInvisible: boolean;
 };
@@ -19,7 +18,7 @@ export type SitePreviewParams = {
 
 const previewScopeSigningKey = "random"; // TODO improve randomness
 
-export async function sitePreviewRoute(request: NextRequest, graphQLClient: GraphQLClient) {
+export async function sitePreviewRoute(request: NextRequest, graphQLFetch: GraphQLFetch) {
     const params = request.nextUrl.searchParams;
     const settingsParam = params.get("settings");
     const scopeParam = params.get("scope");
@@ -30,14 +29,18 @@ export async function sitePreviewRoute(request: NextRequest, graphQLClient: Grap
     const previewData = JSON.parse(settingsParam);
     const scope = JSON.parse(scopeParam);
 
-    graphQLClient.setHeader("authorization", request.headers.get("authorization") || ""); // TODO don't modify the client
-    const { isAllowedSitePreview } = await graphQLClient.request(
+    const { isAllowedSitePreview } = await graphQLFetch<{ isAllowedSitePreview: boolean }, { scope: unknown }>(
         `
             query isAllowedSitePreview($scope: JSONObject!) {
                 isAllowedSitePreview(scope: $scope)
             }
         `,
         { scope },
+        {
+            headers: {
+                authorization: request.headers.get("authorization") || "",
+            },
+        },
     );
     if (!isAllowedSitePreview) {
         return new Response("Preview is not allowed", {
