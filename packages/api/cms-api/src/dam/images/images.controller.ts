@@ -6,8 +6,8 @@ import mime from "mime";
 import fetch from "node-fetch";
 import { PassThrough } from "stream";
 
+import { DisableCometGuards } from "../../auth/decorators/disable-comet-guards.decorator";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
-import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
@@ -106,7 +106,7 @@ export class ImagesController {
         });
     }
 
-    @DisableGlobalGuard()
+    @DisableCometGuards()
     @Get(`/:hash/${smartImageUrl}`)
     async smartCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
         if (!this.isValidHash(params) || params.cropArea.focalPoint !== FocalPoint.SMART) {
@@ -122,7 +122,7 @@ export class ImagesController {
         return this.getCroppedImage(file, params, accept, res);
     }
 
-    @DisableGlobalGuard()
+    @DisableCometGuards()
     @Get(`/:hash/${focusImageUrl}`)
     async focusCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
         if (!this.isValidHash(params) || params.cropArea.focalPoint === FocalPoint.SMART) {

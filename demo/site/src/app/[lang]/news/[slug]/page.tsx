@@ -1,23 +1,23 @@
-import { PreviewData } from "@src/app/api/site-preview/route";
+import { gql } from "@comet/cms-site";
+import { SitePreviewData } from "@src/app/api/site-preview/route";
 import { DamImageBlock } from "@src/blocks/DamImageBlock";
 import { domain } from "@src/config";
 import { NewsContentBlock } from "@src/news/blocks/NewsContentBlock";
-import createGraphQLClient from "@src/util/createGraphQLClient";
-import { gql } from "graphql-request";
+import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables } from "./page.generated";
 
 export default async function NewsDetailPage({ params }: { params: { slug: string; lang: string } }) {
-    let previewData: PreviewData | undefined = undefined;
+    let previewData: SitePreviewData | undefined = undefined;
     if (draftMode().isEnabled) {
         previewData = { includeInvisible: false };
     }
-    const client = createGraphQLClient(previewData);
+    const graphqlFetch = createGraphQLFetch(previewData);
     const scope = { domain, language: params.lang };
 
-    const data = await client.request<GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables>(
+    const data = await graphqlFetch<GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables>(
         gql`
             query NewsDetailPage($slug: String!, $scope: NewsContentScopeInput!) {
                 newsBySlug(slug: $slug, scope: $scope) {

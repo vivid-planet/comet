@@ -654,11 +654,6 @@
                             "nullable": false
                         },
                         {
-                            "name": "scope",
-                            "kind": "Json",
-                            "nullable": true
-                        },
-                        {
                             "name": "documentType",
                             "kind": "String",
                             "nullable": false
@@ -684,6 +679,11 @@
     {
         "name": "Link",
         "fields": [
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
+            },
             {
                 "name": "attachedBlocks",
                 "kind": "NestedObjectList",
@@ -743,6 +743,11 @@
                 "name": "activeType",
                 "kind": "String",
                 "nullable": false
+            },
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },

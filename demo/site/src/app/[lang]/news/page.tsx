@@ -1,22 +1,22 @@
-import { PreviewData } from "@src/app/api/site-preview/route";
+import { gql } from "@comet/cms-site";
+import { SitePreviewData } from "@src/app/api/site-preview/route";
 import { domain } from "@src/config";
 import { NewsList } from "@src/news/NewsList";
 import { newsListFragment } from "@src/news/NewsList.fragment";
-import createGraphQLClient from "@src/util/createGraphQLClient";
-import { gql } from "graphql-request";
+import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { draftMode } from "next/headers";
 
 import { GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables } from "./page.generated";
 
 export default async function NewsIndexPage({ params }: { params: { lang: string } }) {
-    let previewData: PreviewData | undefined = undefined;
+    let previewData: SitePreviewData | undefined = undefined;
     if (draftMode().isEnabled) {
         previewData = { includeInvisible: false };
     }
-    const client = createGraphQLClient(previewData);
+    const graphqlFetch = createGraphQLFetch(previewData);
     const scope = { domain, language: params.lang };
 
-    const { newsList } = await client.request<GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables>(
+    const { newsList } = await graphqlFetch<GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables>(
         gql`
             query NewsIndexPage($scope: NewsContentScopeInput!, $sort: [NewsSort!]!) {
                 newsList(scope: $scope, sort: $sort) {
