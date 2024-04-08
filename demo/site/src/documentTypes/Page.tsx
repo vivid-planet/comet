@@ -50,29 +50,29 @@ export default async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: 
     }
     const graphQLFetch = createGraphQLFetch(previewData);
 
-    const props = await graphQLFetch<GQLPageQuery, GQLPageQueryVariables>(pageQuery, {
+    const data = await graphQLFetch<GQLPageQuery, GQLPageQueryVariables>(pageQuery, {
         pageTreeNodeId,
         domain: scope.domain,
         language: scope.language,
     });
 
-    if (!props.pageContent) throw new Error("Could not load page content");
-    if (!props.pageContent.document) {
+    if (!data.pageContent) throw new Error("Could not load page content");
+    if (!data.pageContent.document) {
         // no document attached to page
         notFound(); //no return needed
     }
-    if (props.pageContent.document?.__typename != "Page") throw new Error(`invalid document type`);
+    if (data.pageContent.document?.__typename != "Page") throw new Error(`invalid document type`);
 
-    [props.pageContent.document.content, props.pageContent.document.seo] = await Promise.all([
+    [data.pageContent.document.content, data.pageContent.document.seo] = await Promise.all([
         recursivelyLoadBlockData({
             blockType: "PageContent",
-            blockData: props.pageContent.document.content,
+            blockData: data.pageContent.document.content,
             graphQLFetch,
             fetch,
         }),
         recursivelyLoadBlockData({
             blockType: "Seo",
-            blockData: props.pageContent.document.seo,
+            blockData: data.pageContent.document.seo,
             graphQLFetch,
             fetch,
         }),
@@ -80,12 +80,12 @@ export default async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: 
 
     return (
         <>
-            <SeoBlock data={props.pageContent.document.seo} title={props.pageContent.name} />
-            <TopNavigation data={props.topMenu} />
-            <Header header={props.header} />
-            <Breadcrumbs {...props.pageContent} />
+            <SeoBlock data={data.pageContent.document.seo} title={data.pageContent.name} />
+            <TopNavigation data={data.topMenu} />
+            <Header header={data.header} />
+            <Breadcrumbs {...data.pageContent} />
             <div>
-                <PageContentBlock data={props.pageContent.document.content} />
+                <PageContentBlock data={data.pageContent.document.content} />
             </div>
         </>
     );
