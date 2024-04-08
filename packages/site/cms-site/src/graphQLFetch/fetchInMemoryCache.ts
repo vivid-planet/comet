@@ -11,10 +11,17 @@ export function createFetchInMemoryCache(fetch: Fetch): Fetch {
             //cache all get requests
             cacheKey = input.toString();
         } else if (init?.body) {
-            const body = JSON.parse(init.body.toString());
-            if (body.query && body.variables) {
-                //looks like a gql query, cache any method
-                cacheKey = `${input.toString()}#${init.body.toString()}`;
+            const bodyString = init.body.toString();
+            if (bodyString.startsWith("{")) {
+                try {
+                    const body = JSON.parse(init.body.toString());
+                    if (body.query && body.variables) {
+                        //looks like a gql query, cache any method
+                        cacheKey = `${input.toString()}#${init.body.toString()}`;
+                    }
+                } catch (e) {
+                    //not a valid json
+                }
             }
         }
         if (!cacheKey) {
