@@ -37,23 +37,24 @@ export type TabsConfig = { type: "tabs"; tabs: { name: string; content: Generato
 
 type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex">;
 
-export type GridConfigCombinationColumn<T> = {
+export type GridCombinationColumnConfig<T> = {
     type: "combination";
     name: string;
-    primaryValue: (row: T) => string;
-    secondaryValue?: (row: T) => string;
+    getPrimaryText: (row: T) => string;
+    getSecondaryText?: (row: T) => string;
 };
 
 export type GridColumnConfig<T> = (
-    | { type: "text" }
-    | { type: "number" }
-    | { type: "boolean" }
-    | { type: "date" }
-    | { type: "dateTime" }
-    | { type: "staticSelect"; values?: string[] }
-    | { type: "block"; block: ImportReference }
-    | GridConfigCombinationColumn<T>
-) & { name: keyof T } & DataGridSettings;
+    | { type: "text"; name: keyof T }
+    | { type: "number"; name: keyof T }
+    | { type: "boolean"; name: keyof T }
+    | { type: "date"; name: keyof T }
+    | { type: "dateTime"; name: keyof T }
+    | { type: "staticSelect"; values?: string[]; name: keyof T }
+    | { type: "block"; block: ImportReference; name: keyof T }
+    | GridCombinationColumnConfig<T>
+) &
+    DataGridSettings;
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];

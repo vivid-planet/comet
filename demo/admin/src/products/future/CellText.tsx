@@ -12,9 +12,9 @@ type OwnerState = {
 };
 
 export const CellText = ({ primary, secondary }: CellTextProps) => {
-    const ownerState = {
+    const ownerState: OwnerState = {
         hasSecondaryValue: Boolean(secondary),
-    } satisfies OwnerState;
+    };
 
     return (
         <Root>
