@@ -57,6 +57,10 @@ function findInputObjectType(input: IntrospectionInputValue, schema: Introspecti
     return filterType;
 }
 
+function capitalizeFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 export function generateGrid(
     {
         exportName,
@@ -374,7 +378,7 @@ export function generateGrid(
 
         ${combinationColumns
             .map((column) => {
-                const columnNameUpperCase = column.name.charAt(0).toUpperCase() + column.name.slice(1);
+                const columnNameUpperCase = capitalizeFirstLetter(column.name);
                 const hasSecondaryText = column.getSecondaryText;
 
                 const primaryFunctionString = `const get${columnNameUpperCase}PrimaryText: GetCombinationTextFunction = ${column.getPrimaryText.toString()};`;
@@ -392,7 +396,7 @@ export function generateGrid(
                     let renderCell = column.renderCell;
 
                     if (column.type === "combination") {
-                        const columnNameUpperCase = column.name.charAt(0).toUpperCase() + column.name.slice(1);
+                        const columnNameUpperCase = capitalizeFirstLetter(column.name);
                         const hasSecondaryText = Boolean((column as GridCombinationColumnConfig<unknown>).getSecondaryText);
                         const secondaryProp = hasSecondaryText ? `secondary={get${columnNameUpperCase}SecondaryText(row, intl)}` : "";
 
