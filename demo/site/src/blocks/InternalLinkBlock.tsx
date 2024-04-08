@@ -1,18 +1,15 @@
 "use client";
+import { PropsWithData } from "@comet/cms-site";
 import Link from "next/link";
 import * as React from "react";
 
 import { InternalLinkBlockData } from "../blocks.generated";
-import { PropsWithData } from "./PropsWithData";
 
 interface InternalLinkBlockProps extends PropsWithData<InternalLinkBlockData> {
     children: React.ReactNode;
     title?: string;
 }
 
-/**
- * @deprecated There should be a copy of this component in the application for flexibility (eg. multi langauge support)
- */
 export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, children, title }: InternalLinkBlockProps): React.ReactElement {
     if (!targetPage) {
         return <>{children}</>;
