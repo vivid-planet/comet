@@ -1,5 +1,5 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudField, CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
+import { CrudField, CrudGenerator, DamImageBlock, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
 import {
     BaseEntity,
     Collection,
@@ -53,13 +53,11 @@ export class ProductDimensions {
     depth: number;
 }
 
-@ObjectType({
-    implements: () => [DocumentInterface],
-})
+@ObjectType()
 @Entity()
 @RootBlockEntity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class Product extends BaseEntity<Product, "id"> implements DocumentInterface {
+export class Product extends BaseEntity<Product, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })
