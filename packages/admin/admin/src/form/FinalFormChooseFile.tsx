@@ -11,6 +11,7 @@ import { PrettyBytes } from "../helpers/PrettyBytes";
 
 export type FinalFormChooseFileFieldClassKey =
     | "root"
+    | "dropzone"
     | "droppableArea"
     | "droppableAreaCaption"
     | "droppableAreaError"
@@ -19,8 +20,8 @@ export type FinalFormChooseFileFieldClassKey =
     | "fileListItemInfos"
     | "rejectedFileListItem"
     | "errorMessage"
-    | "disabled"
-    | "error"
+    | "droppableAreaIsDisabled"
+    | "droppableAreaHasError"
     | "fileListText";
 
 const styles = ({ palette }: Theme) => {
@@ -31,6 +32,13 @@ const styles = ({ palette }: Theme) => {
             alignItems: "flex-start",
             gap: "10px",
             minWidth: "350px",
+        },
+        dropzone: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: "10px",
+            width: "100%",
         },
         droppableArea: {
             position: "relative",
@@ -44,10 +52,10 @@ const styles = ({ palette }: Theme) => {
             border: `1px dashed ${palette.text.secondary}`,
             cursor: "pointer",
             minWidth: "250px",
-            "&$disabled": {
+            "&$droppableAreaIsDisabled": {
                 cursor: "default",
             },
-            "&$error": {
+            "&$droppableAreaHasError": {
                 border: `1px dashed ${palette.error.main}`,
             },
         },
@@ -110,8 +118,8 @@ const styles = ({ palette }: Theme) => {
             color: palette.error.main,
             gap: "5px",
         },
-        disabled: {},
-        error: {},
+        droppableAreaIsDisabled: {},
+        droppableAreaHasError: {},
         fileListText: {
             textOverflow: "ellipsis",
             overflow: "hidden",
@@ -122,22 +130,30 @@ const styles = ({ palette }: Theme) => {
 
 export interface FinalFormChooseFileFieldProps extends FieldRenderProps<File | File[], HTMLInputElement> {
     disableDropzone?: boolean;
-    disableButton?: boolean;
+    disableSelectFileButton?: boolean;
     accept: Accept;
     maxSize: number;
     maxFiles?: number;
+    iconMapping?: {
+        delete?: React.ReactNode;
+        info?: React.ReactNode;
+        select?: React.ReactNode;
+    };
 }
 
 const FinalFormChooseFileFieldComponent: React.FunctionComponent<WithStyles<typeof styles> & FinalFormChooseFileFieldProps> = ({
     classes,
     disabled,
     disableDropzone,
-    disableButton,
+    disableSelectFileButton,
     accept,
     maxSize = 50 * 1024 * 1024,
     maxFiles,
     input: { onChange, value: fieldValue, multiple: multipleFiles },
+    iconMapping = {},
 }) => {
+    const { delete: deleteIcon = <Delete />, info: infoIcon = <Info />, select: selectIcon = <Select /> } = iconMapping;
+
     const onDrop = React.useCallback(
         (acceptedFiles: File[]) => {
             multipleFiles && Array.isArray(fieldValue)
@@ -174,35 +190,33 @@ const FinalFormChooseFileFieldComponent: React.FunctionComponent<WithStyles<type
         files = [];
     }
 
-    const rejectedFiles =
-        fileRejections.length > 0 &&
-        fileRejections.map((rejectedFile) => (
-            <div key={rejectedFile.file.name} className={classes.rejectedFileListItem}>
-                <div className={classes.fileListText}>{rejectedFile.file.name}</div>
-                <IconButton color="error">
-                    <Info />
-                </IconButton>
-            </div>
-        ));
+    const rejectedFiles = fileRejections.map((rejectedFile) => (
+        <div key={rejectedFile.file.name} className={classes.rejectedFileListItem}>
+            <div className={classes.fileListText}>{rejectedFile.file.name}</div>
+            <IconButton color="error">{infoIcon}</IconButton>
+        </div>
+    ));
 
     return (
         <div className={classes.root}>
-            <div {...getRootProps()} className={classes.root}>
+            <div {...getRootProps()} className={classes.dropzone}>
                 <input {...getInputProps()} />
                 {!disableDropzone && (
-                    <div className={clsx(classes.droppableArea, disabled && classes.disabled, isDragReject && classes.error)}>
-                        {isDragReject && (
-                            <div className={classes.droppableAreaError}>
-                                <Info />
-                            </div>
+                    <div
+                        className={clsx(
+                            classes.droppableArea,
+                            disabled && classes.droppableAreaIsDisabled,
+                            isDragReject && classes.droppableAreaHasError,
                         )}
+                    >
+                        {isDragReject && <div className={classes.droppableAreaError}>{infoIcon}</div>}
                         <div className={classes.droppableAreaCaption}>
                             <FormattedMessage id="comet.finalFormChooseFileField.dropfiles" defaultMessage="Drop files here to upload" />
                         </div>
                     </div>
                 )}
-                {!disableButton && (
-                    <Button disabled={disabled} variant="contained" color="primary" startIcon={<Select />}>
+                {!disableSelectFileButton && (
+                    <Button disabled={disabled} variant="contained" color="primary" startIcon={selectIcon}>
                         <FormattedMessage id="comet.finalFormChooseFileField.selectfile" defaultMessage="Select file" />
                     </Button>
                 )}
@@ -214,9 +228,7 @@ const FinalFormChooseFileFieldComponent: React.FunctionComponent<WithStyles<type
                             <div className={classes.fileListText}>{file.name}</div>
                             <div className={classes.fileListItemInfos}>
                                 <Chip label={<PrettyBytes value={file.size} />} />
-                                <IconButton onClick={removeFile(file)}>
-                                    <Delete />
-                                </IconButton>
+                                <IconButton onClick={removeFile(file)}>{deleteIcon}</IconButton>
                             </div>
                         </div>
                     ))}
@@ -244,8 +256,13 @@ declare module "@mui/material/styles" {
         CometAdminFinalFormChooseFileField: FinalFormChooseFileFieldClassKey;
     }
 
+    interface ComponentsPropsList {
+        CometAdminFinalFormChooseFileField: FinalFormChooseFileFieldProps;
+    }
+
     interface Components {
         CometAdminFinalFormChooseFileField?: {
+            defaultProps?: ComponentsPropsList["CometAdminFinalFormChooseFileField"];
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFinalFormChooseFileField"];
         };
     }

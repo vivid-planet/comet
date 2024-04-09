@@ -27,7 +27,7 @@ function Story() {
                                         <Field
                                             name="uploadMultipleDisabled"
                                             label="File upload (dropzone only, multiple, max file size 5 MB), max 5 files"
-                                            disableButton
+                                            disableSelectFileButton
                                             component={FinalFormChooseFileField}
                                             maxSize={5 * 1024 * 1024}
                                             multiple
