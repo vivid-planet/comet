@@ -35,7 +35,7 @@ const Content = createComponentSlot("div")<RouterTabsClassKey, OwnerState>({
     ({ ownerState }) => css`
         ${ownerState.contentHidden &&
         css`
-            display: "none";
+            display: none;
         `}
     `,
 );
@@ -165,14 +165,18 @@ export function RouterTabs(inProps: Props) {
                 return (
                     <Route path={path}>
                         {({ match }) => {
-                            const ownerState: OwnerState = {
-                                contentHidden: !(match && !foundFirstMatch) && child.props.forceRender,
-                            };
                             let ret = null;
-                            if ((match && !foundFirstMatch) || child.props.forceRender) {
+
+                            if (match && !foundFirstMatch) {
                                 foundFirstMatch = true;
                                 ret = (
-                                    <Content ownerState={ownerState} {...slotProps?.content}>
+                                    <Content ownerState={{ contentHidden: false }} {...slotProps?.content}>
+                                        {child.props.children}
+                                    </Content>
+                                );
+                            } else if (child.props.forceRender) {
+                                ret = (
+                                    <Content ownerState={{ contentHidden: true }} {...slotProps?.content}>
                                         {child.props.children}
                                     </Content>
                                 );

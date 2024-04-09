@@ -1,9 +1,8 @@
 import "reflect-metadata";
 
 export { AccessLogModule } from "./access-log/access-log.module";
+export { DisableCometGuards } from "./auth/decorators/disable-comet-guards.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
-export { DisableGlobalGuard } from "./auth/decorators/global-guard-disable.decorator";
-export { PublicApi } from "./auth/decorators/public-api.decorator";
 export { createCometAuthGuard } from "./auth/guards/comet.guard";
 export { createAuthResolver } from "./auth/resolver/auth.resolver";
 export { createAuthProxyJwtStrategy } from "./auth/strategies/auth-proxy-jwt.strategy";
@@ -22,6 +21,7 @@ export { BlocksModule, BlocksModuleOptions } from "./blocks/blocks.module";
 export { BlocksTransformerService } from "./blocks/blocks-transformer.service";
 export { BlocksTransformerMiddlewareFactory } from "./blocks/blocks-transformer-middleware.factory";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
+export { createLinkBlock } from "./blocks/createLinkBlock";
 export { createSeoBlock, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/createSeoBlock";
 export { createTextImageBlock, ImagePosition } from "./blocks/createTextImageBlock";
 export { DamVideoBlock } from "./blocks/dam-video.block";
@@ -151,8 +151,8 @@ export { RequiredPermission } from "./user-permissions/decorators/required-permi
 export { ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
 export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
-export { User } from "./user-permissions/dto/user";
 export { ContentScope } from "./user-permissions/interfaces/content-scope.interface";
+export { User } from "./user-permissions/interfaces/user";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export {
     AccessControlServiceInterface,
