@@ -16,7 +16,10 @@ export type SitePreviewParams = {
     previewData?: SitePreviewData;
 };
 
-const previewScopeSigningKey = "random"; // TODO improve randomness
+if (!process.env.SITE_PREVIEW_SECRET && process.env.NODE_ENV === "production") {
+    throw new Error("SITE_PREVIEW_SECRET environment variable is required in production mode");
+}
+const previewScopeSigningKey = process.env.SITE_PREVIEW_SECRET || "secret";
 
 export async function sitePreviewRoute(request: NextRequest, graphQLFetch: GraphQLFetch) {
     const params = request.nextUrl.searchParams;
