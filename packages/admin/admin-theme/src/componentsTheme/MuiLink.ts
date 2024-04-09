@@ -11,7 +11,7 @@ export const getMuiLink: GetMuiComponentTheme<"MuiLink"> = (component, { palette
     styleOverrides: mergeOverrideStyles<"MuiLink">(component?.styleOverrides, {
         root: {
             color: palette.grey[600],
-            fontWeight: fontWeights.light,
+            fontWeight: fontWeights.fontWeightLight,
             fontSize: 16,
             lineHeight: "16px",
             letterSpacing: 0,
