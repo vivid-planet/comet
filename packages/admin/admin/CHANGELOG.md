@@ -1,5 +1,22 @@
 # @comet/admin
 
+## 6.5.0
+
+### Minor Changes
+
+-   6cb2f9046: Add `ContentOverflow` component
+
+    Used to wrap content that may be too large to fit its container.
+    If the content is too large, it will be truncated. When clicked, the entire content will be displayed in a dialog.
+
+    ```tsx
+    <ContentOverflow>{/* Lots of content ... */}</ContentOverflow>
+    ```
+
+### Patch Changes
+
+-   @comet/admin-icons@6.5.0
+
 ## 6.4.0
 
 ### Minor Changes

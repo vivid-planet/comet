@@ -1,3 +1,4 @@
+import { Breakpoints } from "@mui/material";
 import { TypographyOptions } from "@mui/material/styles/createTypography";
 
 const fontFamily = "Roboto, Helvetica, Arial, sans-serif";
@@ -17,7 +18,8 @@ const body1Styles = {
     fontWeight: fontWeights.fontWeightRegular,
 };
 
-export const typographyOptions: TypographyOptions = {
+export const createTypographyOptions = (breakpoints: Breakpoints): TypographyOptions => ({
+    fontFamily,
     ...fontWeights,
     h1: {
         fontFamily,
@@ -25,7 +27,7 @@ export const typographyOptions: TypographyOptions = {
         lineHeight: "42px",
         fontWeight: fontWeights.fontWeightLight,
 
-        "@media (min-width: 900px)": {
+        [breakpoints.up("md")]: {
             fontSize: 55,
             lineHeight: "64px",
         },
@@ -36,7 +38,7 @@ export const typographyOptions: TypographyOptions = {
         lineHeight: "38px",
         fontWeight: fontWeights.fontWeightSemiLight,
 
-        "@media (min-width: 900px)": {
+        [breakpoints.up("md")]: {
             fontSize: 44,
             lineHeight: "52px",
             fontWeight: fontWeights.fontWeightLight,
@@ -48,7 +50,7 @@ export const typographyOptions: TypographyOptions = {
         lineHeight: "28px",
         fontWeight: fontWeights.fontWeightRegular,
 
-        "@media (min-width: 900px)": {
+        [breakpoints.up("md")]: {
             fontSize: 33,
             lineHeight: "39px",
             fontWeight: fontWeights.fontWeightLight,
@@ -60,7 +62,7 @@ export const typographyOptions: TypographyOptions = {
         lineHeight: "26px",
         fontWeight: fontWeights.fontWeightRegular,
 
-        "@media (min-width: 900px)": {
+        [breakpoints.up("md")]: {
             fontSize: 24,
             lineHeight: "28px",
             fontWeight: fontWeights.fontWeightSemiLight,
@@ -72,7 +74,7 @@ export const typographyOptions: TypographyOptions = {
         lineHeight: "20px",
         fontWeight: fontWeights.fontWeightMedium,
 
-        "@media (min-width: 900px)": {
+        [breakpoints.up("md")]: {
             fontSize: 18,
             lineHeight: "21px",
             fontWeight: fontWeights.fontWeightRegular,
@@ -84,7 +86,7 @@ export const typographyOptions: TypographyOptions = {
         lineHeight: "18px",
         fontWeight: fontWeights.fontWeightBold,
 
-        "@media (min-width: 900px)": {
+        [breakpoints.up("md")]: {
             fontSize: 16,
             lineHeight: "20px",
         },
@@ -107,7 +109,7 @@ export const typographyOptions: TypographyOptions = {
         paddingTop: 4,
         paddingBottom: 4,
     },
-};
+});
 
 declare module "@mui/material/styles" {
     interface TypographyVariants {

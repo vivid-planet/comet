@@ -1,3 +1,4 @@
+/// <reference types="@comet/admin-theme" />
 /// <reference types="vite/client" />
 /// <reference types="@comet/admin-theme" />
 
