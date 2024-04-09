@@ -1,5 +1,5 @@
+import { gql } from "@comet/cms-site";
 import { ExternalLinkBlockData, InternalLinkBlockData, LinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
-import { gql, GraphQLClient } from "graphql-request";
 import { Rewrite, RouteHas } from "next/dist/lib/load-custom-routes";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -12,6 +12,7 @@ import {
     GQLRedirectsQuery,
     GQLRedirectsQueryVariables,
 } from "./middleware.generated";
+import { createGraphQLFetch } from "./util/graphQLClient";
 
 const redirectsQuery = gql`
     query Redirects($scope: RedirectScopeInput!, $filter: RedirectFilter, $sort: [RedirectSort!], $offset: Int!, $limit: Int!) {
@@ -26,22 +27,8 @@ const redirectsQuery = gql`
     }
 `;
 
-function createGraphQLClient() {
-    const headers: Record<string, string> = {
-        authorization: `Basic ${Buffer.from(`vivid:${process.env.API_PASSWORD}`).toString("base64")}`,
-    };
-
-    return new GraphQLClient(`${process.env.API_URL_INTERNAL}/graphql`, {
-        headers,
-        fetch, // use fetch, because XMLHttpRequest is not available for Next.js Middleware (https://github.com/jasonkuhrt/graphql-request/issues/399)
-    });
-}
-
-let client: GraphQLClient;
-
+const graphQLFetch = createGraphQLFetch();
 export async function middleware(request: NextRequest) {
-    client = createGraphQLClient();
-
     const { pathname } = new URL(request.url);
 
     const scope = { domain, language: defaultLanguage };
@@ -78,7 +65,7 @@ async function* fetchApiRedirects(scope: GQLRedirectScope) {
     const limit = 100;
 
     while (true) {
-        const { paginatedRedirects } = await client.request<GQLRedirectsQuery, GQLRedirectsQueryVariables>(redirectsQuery, {
+        const { paginatedRedirects } = await graphQLFetch<GQLRedirectsQuery, GQLRedirectsQueryVariables>(redirectsQuery, {
             filter: { active: { equal: true } },
             sort: { field: "createdAt", direction: "DESC" },
             offset,
@@ -183,7 +170,7 @@ const createLinkRedirects = async (redirects: Map<string, Redirect>, scope: GQLP
             }
         }
     `;
-    const { pageTreeNodeList } = await client.request<GQLPageTreeNodeListRedirectsQuery, GQLPageTreeNodeListRedirectsQueryVariables>(query, {
+    const { pageTreeNodeList } = await graphQLFetch<GQLPageTreeNodeListRedirectsQuery, GQLPageTreeNodeListRedirectsQueryVariables>(query, {
         scope,
     });
 
