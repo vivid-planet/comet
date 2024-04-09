@@ -1,17 +1,12 @@
 import { gql } from "@comet/cms-site";
-import { ExternalLinkBlockData, InternalLinkBlockData, LinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
+import { ExternalLinkBlockData, InternalLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
 import { Rewrite, RouteHas } from "next/dist/lib/load-custom-routes";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { defaultLanguage, domain } from "./config";
 import { GQLPageTreeNodeScope, GQLRedirectScope } from "./graphql.generated";
-import {
-    GQLPageTreeNodeListRedirectsQuery,
-    GQLPageTreeNodeListRedirectsQueryVariables,
-    GQLRedirectsQuery,
-    GQLRedirectsQueryVariables,
-} from "./middleware.generated";
+import { GQLRedirectsQuery, GQLRedirectsQueryVariables } from "./middleware.generated";
 import { createGraphQLFetch } from "./util/graphQLClient";
 
 const redirectsQuery = gql`
@@ -139,51 +134,6 @@ const createApiRedirects = async (redirects: Map<string, Redirect>, scope: GQLRe
 
 type Redirect = { destination: string; permanent: boolean; has?: RouteHas[] | undefined };
 
-async function createLinkRedirectDestination(content: LinkBlockData) {
-    switch (content.block?.type) {
-        case "internal":
-            return (content.block.props as InternalLinkBlockData).targetPage?.path;
-
-        case "external":
-            return (content.block.props as ExternalLinkBlockData).targetUrl;
-
-        default:
-            return null;
-    }
-}
-
-const createLinkRedirects = async (redirects: Map<string, Redirect>, scope: GQLPageTreeNodeScope): Promise<void> => {
-    const query = gql`
-        query PageTreeNodeListRedirects($scope: PageTreeNodeScopeInput!) {
-            pageTreeNodeList(scope: $scope) {
-                documentType
-                path
-                childNodes {
-                    path
-                }
-                document {
-                    __typename
-                    ... on Link {
-                        content
-                    }
-                }
-            }
-        }
-    `;
-    const { pageTreeNodeList } = await graphQLFetch<GQLPageTreeNodeListRedirectsQuery, GQLPageTreeNodeListRedirectsQueryVariables>(query, {
-        scope,
-    });
-
-    for (const pageTreeNode of pageTreeNodeList) {
-        if (pageTreeNode.document?.__typename === "Link") {
-            const destination = await createLinkRedirectDestination(pageTreeNode.document.content);
-            if (destination) {
-                redirects.set(pageTreeNode.path, { destination, permanent: false });
-            }
-        }
-    }
-};
-
 const REDIRECTS_CACHE_TTL = 15 * 60 * 1000; // 15 minutes
 
 type RedirectsMap = Map<string, Redirect>;
@@ -200,7 +150,6 @@ const createRedirects = async (scope: GQLPageTreeNodeScope) => {
     const redirectsMap = new Map<string, Redirect>();
     await createApiRedirects(redirectsMap, { domain: scope.domain });
     await createInternalRedirects(redirectsMap);
-    await createLinkRedirects(redirectsMap, scope);
 
     redirectsCache.set(key, redirectsMap);
     redirectsCacheLastUpdate.set(key, Date.now());
