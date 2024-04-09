@@ -37,7 +37,6 @@ import {
 const productsFragment = gql`
     fragment ProductsGridFuture on Product {
         id
-        updatedAt
         title
         status
         slug
@@ -49,6 +48,7 @@ const productsFragment = gql`
         availableSince
         image
         createdAt
+        updatedAt
     }
 `;
 

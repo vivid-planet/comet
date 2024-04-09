@@ -255,7 +255,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
                         />
                         <Field name="image" isEqual={isEqual}>
-                            {createFinalFormBlock(DamImageBlock)}
+                            {createFinalFormBlock(rootBlocks.image)}
                         </Field>
                     </MainContent>
                 </EditPageLayout>

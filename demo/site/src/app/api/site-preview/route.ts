@@ -16,4 +16,4 @@ export async function GET(request: NextRequest) {
     redirect(params.get("path") || "/");
 }
 
-export type PreviewData = SitePreviewParams["settings"];
+export type SitePreviewData = SitePreviewParams["settings"];
