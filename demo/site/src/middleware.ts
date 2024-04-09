@@ -45,7 +45,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
 }
 
-const createInternalRedirects = async (redirectsMap: Map<string, Redirect>): Promise<void> => {
+const createInternalRedirects = async (): Promise<Map<string, Redirect>> => {
+    const redirectsMap = new Map<string, Redirect>();
     const adminUrl = process.env.ADMIN_URL;
 
     if (!adminUrl) {
@@ -53,6 +54,7 @@ const createInternalRedirects = async (redirectsMap: Map<string, Redirect>): Pro
     }
 
     redirectsMap.set("/admin", { destination: adminUrl, permanent: false });
+    return redirectsMap;
 };
 
 async function* fetchApiRedirects(scope: GQLRedirectScope) {
@@ -78,7 +80,8 @@ async function* fetchApiRedirects(scope: GQLRedirectScope) {
     }
 }
 
-const createApiRedirects = async (redirects: Map<string, Redirect>, scope: GQLRedirectScope): Promise<void> => {
+const createApiRedirects = async (scope: GQLRedirectScope): Promise<Map<string, Redirect>> => {
+    const redirects = new Map<string, Redirect>();
     function replaceRegexCharacters(value: string): string {
         // escape ":" and "?", otherwise it is used for next.js regex path matching  (https://nextjs.org/docs/pages/api-reference/next-config-js/redirects#regex-path-matching)
         return value.replace(/[:?]/g, "\\$&");
@@ -130,6 +133,7 @@ const createApiRedirects = async (redirects: Map<string, Redirect>, scope: GQLRe
             redirects.set(source, { destination, permanent: true });
         }
     }
+    return redirects;
 };
 
 type Redirect = { destination: string; permanent: boolean; has?: RouteHas[] | undefined };
@@ -147,9 +151,10 @@ const createRedirects = async (scope: GQLRedirectScope) => {
         return redirectsCache.get(key) as RedirectsMap;
     }
 
-    const redirectsMap = new Map<string, Redirect>();
-    await createApiRedirects(redirectsMap, { domain: scope.domain });
-    await createInternalRedirects(redirectsMap);
+    const redirectsMap = new Map<string, Redirect>([
+        ...Array.from(await createApiRedirects({ domain: scope.domain })),
+        ...Array.from(await createInternalRedirects()),
+    ]);
 
     redirectsCache.set(key, redirectsMap);
     redirectsCacheLastUpdate.set(key, Date.now());
