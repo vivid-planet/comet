@@ -96,7 +96,7 @@
     },
     "peerDependencies": {
         "@apollo/client": "^3.7.0",
-        "@comet/admin-theme": "workspace:^6.4.0",
+        "@comet/admin-theme": "workspace:*",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
         "@mui/icons-material": "^5.0.0",
