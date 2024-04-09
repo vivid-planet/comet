@@ -64,6 +64,7 @@ export class AppModule {
                         playground: config.debug,
                         autoSchemaFile: "schema.gql",
                         formatError: (error) => {
+                            // Disable GraphQL field suggestions in production
                             if (process.env.NODE_ENV !== "development") {
                                 if (error instanceof ValidationError) {
                                     return new ValidationError("Invalid request.");
