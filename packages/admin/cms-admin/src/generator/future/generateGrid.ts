@@ -8,7 +8,7 @@ import {
 } from "graphql";
 import { plural } from "pluralize";
 
-import { GeneratorReturn, GridConfig } from "./generator";
+import { GeneratorReturn, GridCombinationColumnConfig, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
 
@@ -120,6 +120,10 @@ function generateGridProps({
     return props.length ? `{${props.join(", ")}}: Props` : undefined;
 }
 
+function capitalizeFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 export function generateGrid(
     {
         exportName,
@@ -154,6 +158,8 @@ export function generateGrid(
     const allowDeleting = (typeof config.delete === "undefined" || config.delete === true) && !config.readOnly && hasDeleteMutation;
 
     const showActionsColumn = allowCopyPaste || allowEditing || allowDeleting;
+
+    const combinationColumns = config.columns.filter((column): column is GridCombinationColumnConfig<unknown> => column.type === "combination");
 
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
     const hasFilter = !!filterArg;
@@ -283,6 +289,8 @@ export function generateGrid(
             minWidth: column.minWidth,
             maxWidth: column.maxWidth,
             flex: column.flex,
+            getPrimaryText: column.type === "combination" ? column.getPrimaryText : undefined,
+            getSecondaryText: column.type === "combination" ? column.getSecondaryText : undefined,
         };
     });
 
@@ -304,6 +312,7 @@ export function generateGrid(
     import {
         CrudContextMenu,
         GridFilterButton,
+        GridCellText,
         MainContent,
         muiGridFilterToGql,
         muiGridSortToGql,
@@ -333,7 +342,8 @@ export function generateGrid(
         GQLDelete${gqlType}MutationVariables
     } from "./${gqlTypePlural}Grid.generated";
     import * as React from "react";
-    import { FormattedMessage, useIntl } from "react-intl";
+    import { FormattedMessage, useIntl, IntlShape } from "react-intl";
+    import { ${exportName} as GridConfig } from "../${baseOutputFilename}.cometGen";
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
         .join("\n")}
@@ -418,15 +428,49 @@ export function generateGrid(
 
     ${generateGridPropsType({ config, gridQuery, gqlIntrospection }) ?? ""}
 
+    ${
+        combinationColumns.length
+            ? `
+        type GetCombinationTextFunction = (row: GQL${fragmentName}Fragment, intl: IntlShape) => string | undefined;
+    `
+            : ""
+    }
+
     export function ${gqlTypePlural}Grid(${generateGridProps({ config, gridQuery, gqlIntrospection }) ?? ""}): React.ReactElement {
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
 
+        ${combinationColumns
+            .map((column) => {
+                const columnNameUpperCase = capitalizeFirstLetter(column.name);
+                const hasSecondaryText = column.getSecondaryText;
+                const primaryFunctionString = `const get${columnNameUpperCase}PrimaryText: GetCombinationTextFunction = ${column.getPrimaryText.toString()};`;
+                const secondaryFunctionString = `const get${columnNameUpperCase}SecondaryText: GetCombinationTextFunction = ${
+                    column.getSecondaryText?.toString() ?? "() => undefined"
+                };`;
+                return [primaryFunctionString, hasSecondaryText && secondaryFunctionString].filter(Boolean).join("");
+            })
+            .join("")}
+
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
                 .map((column) => {
+                    let renderCell = column.renderCell;
+
+                    if (column.type === "combination") {
+                        const columnNameUpperCase = capitalizeFirstLetter(column.name);
+                        const hasSecondaryText = Boolean((column as GridCombinationColumnConfig<unknown>).getSecondaryText);
+                        const secondaryProp = hasSecondaryText ? `secondary={get${columnNameUpperCase}SecondaryText(row, intl)}` : "";
+                        renderCell = `({ row }) => (
+                            <GridCellText
+                                primary={get${columnNameUpperCase}PrimaryText(row, intl)}
+                                ${secondaryProp}
+                            />
+                        )`;
+                    }
+
                     const columnDefinition: TsCodeRecordToStringObject = {
                         field: `"${column.name}"`,
                         headerName: `intl.formatMessage({ id: "${instanceGqlType}.${column.name}",  defaultMessage: "${
@@ -437,7 +481,7 @@ export function generateGrid(
                         sortable: !sortFields.includes(column.name) ? `false` : undefined,
                         valueGetter: column.valueGetter,
                         valueOptions: column.valueOptions,
-                        renderCell: column.renderCell,
+                        renderCell,
                         width: column.width,
                         flex: column.flex,
                     };

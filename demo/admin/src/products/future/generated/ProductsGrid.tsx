@@ -3,6 +3,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    GridCellText,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -23,7 +24,7 @@ import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage, IntlShape, useIntl } from "react-intl";
 
 import {
     GQLCreateProductMutation,
@@ -103,12 +104,35 @@ type Props = {
     filter?: GQLProductFilter;
 };
 
+type GetCombinationTextFunction = (row: GQLProductsGridFutureFragment, intl: IntlShape) => string | undefined;
+
 export function ProductsGrid({ filter }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 
+    const getOverviewPrimaryText: GetCombinationTextFunction = ({ title }) => title;
+    const getOverviewSecondaryText: GetCombinationTextFunction = (row, intl) =>
+        [
+            row.type,
+            row.price,
+            row.inStock
+                ? intl.formatMessage({ id: "product.available", defaultMessage: "Available" })
+                : intl.formatMessage({ id: "product.notAvailable", defaultMessage: "Not available" }),
+        ]
+            .filter(Boolean)
+            .join(" • ");
+
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
+        {
+            field: "overview",
+            headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => <GridCellText primary={getOverviewPrimaryText(row, intl)} secondary={getOverviewSecondaryText(row, intl)} />,
+            flex: 1,
+            minWidth: 150,
+        },
         { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, maxWidth: 250, minWidth: 200 },
         {
             field: "description",

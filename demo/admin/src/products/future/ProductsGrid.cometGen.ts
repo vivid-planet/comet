@@ -7,6 +7,22 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
     fragmentName: "ProductsGridFuture", // configurable as it must be unique across project
     filterProp: true,
     columns: [
+        {
+            type: "combination",
+            name: "overview",
+            headerName: "Overview",
+            getPrimaryText: ({ title }) => title,
+            getSecondaryText: (row, intl) =>
+                [
+                    row.type,
+                    row.price,
+                    row.inStock
+                        ? intl.formatMessage({ id: "product.available", defaultMessage: "Available" })
+                        : intl.formatMessage({ id: "product.notAvailable", defaultMessage: "Not available" }),
+                ]
+                    .filter(Boolean)
+                    .join(" • "),
+        },
         { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250 },
         { type: "text", name: "description", headerName: "Description" },
         { type: "number", name: "price", headerName: "Price", maxWidth: 150 },
