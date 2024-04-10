@@ -46,10 +46,11 @@ export type GridColumnConfig<T> = (
     | { type: "staticSelect"; values?: string[] }
     | { type: "block"; block: ImportReference }
 ) & { name: keyof T } & DataGridSettings;
-export type GridConfig<T extends { __typename?: string }> = {
+export type GridConfig<T extends { __typename?: string }, Queries extends { __typename?: "Query" } = { __typename: "Query" }> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
+    query?: keyof Omit<Queries, "__typename">;
     columns: GridColumnConfig<T>[];
     add?: boolean;
     edit?: boolean;
