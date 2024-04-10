@@ -56,6 +56,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     delete?: boolean;
     copyPaste?: boolean;
     readOnly?: boolean;
+    filterProp?: boolean;
     actions?: {
         columnWidth?: number;
         componentImport?: ImportReference;

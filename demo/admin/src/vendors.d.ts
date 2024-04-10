@@ -1,3 +1,4 @@
+/// <reference types="@comet/admin-theme" />
 /// <reference types="vite/client" />
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
