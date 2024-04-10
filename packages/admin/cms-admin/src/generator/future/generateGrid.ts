@@ -57,6 +57,69 @@ function findInputObjectType(input: IntrospectionInputValue, schema: Introspecti
     return filterType;
 }
 
+function getFilterGQLTypeString({ gridQuery, gqlIntrospection }: { gridQuery: string; gqlIntrospection: IntrospectionQuery }): string | undefined {
+    const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
+    const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
+    if (!filterArg) return;
+
+    const filterType = findInputObjectType(filterArg, gqlIntrospection);
+    if (!filterType) return;
+
+    return `GQL${filterType.name}`;
+}
+
+function hasGridPropFilter({
+    config,
+    gridQuery,
+    gqlIntrospection,
+}: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: GridConfig<any>;
+    gridQuery: string;
+    gqlIntrospection: IntrospectionQuery;
+}) {
+    return config.filterProp && !!getFilterGQLTypeString({ gridQuery, gqlIntrospection });
+}
+
+function generateGridPropsType({
+    config,
+    gridQuery,
+    gqlIntrospection,
+}: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: GridConfig<any>;
+    gridQuery: string;
+    gqlIntrospection: IntrospectionQuery;
+}) {
+    const props: string[] = [];
+    if (hasGridPropFilter({ config, gridQuery, gqlIntrospection })) {
+        const filterType = getFilterGQLTypeString({ gridQuery, gqlIntrospection });
+        props.push(`filter?: ${filterType};`);
+    }
+    return props.length
+        ? `type Props = {
+        ${props.join("\n")}
+    };`
+        : undefined;
+}
+
+function generateGridProps({
+    config,
+    gridQuery,
+    gqlIntrospection,
+}: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: GridConfig<any>;
+    gridQuery: string;
+    gqlIntrospection: IntrospectionQuery;
+}) {
+    const props: string[] = [];
+    if (hasGridPropFilter({ config, gridQuery, gqlIntrospection })) {
+        props.push("filter");
+    }
+    return props.length ? `{${props.join(", ")}}: Props` : undefined;
+}
+
 function capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -267,6 +330,7 @@ export function generateGrid(
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton } from "@mui/material";
     import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { ${getFilterGQLTypeString({ gridQuery, gqlIntrospection }) ?? ""} } from "@src/graphql.generated";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
@@ -362,6 +426,8 @@ export function generateGrid(
         );
     }
 
+    ${generateGridPropsType({ config, gridQuery, gqlIntrospection }) ?? ""}
+
     ${
         combinationColumns.length
             ? `
@@ -370,7 +436,7 @@ export function generateGrid(
             : ""
     }
 
-    export function ${gqlTypePlural}Grid(): React.ReactElement {
+    export function ${gqlTypePlural}Grid(${generateGridProps({ config, gridQuery, gqlIntrospection }) ?? ""}): React.ReactElement {
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
@@ -380,12 +446,10 @@ export function generateGrid(
             .map((column) => {
                 const columnNameUpperCase = capitalizeFirstLetter(column.name);
                 const hasSecondaryText = column.getSecondaryText;
-
                 const primaryFunctionString = `const get${columnNameUpperCase}PrimaryText: GetCombinationTextFunction = ${column.getPrimaryText.toString()};`;
                 const secondaryFunctionString = `const get${columnNameUpperCase}SecondaryText: GetCombinationTextFunction = ${
                     column.getSecondaryText?.toString() ?? "() => undefined"
                 };`;
-
                 return [primaryFunctionString, hasSecondaryText && secondaryFunctionString].filter(Boolean).join("");
             })
             .join("")}
@@ -399,7 +463,6 @@ export function generateGrid(
                         const columnNameUpperCase = capitalizeFirstLetter(column.name);
                         const hasSecondaryText = Boolean((column as GridCombinationColumnConfig<unknown>).getSecondaryText);
                         const secondaryProp = hasSecondaryText ? `secondary={get${columnNameUpperCase}SecondaryText(row, intl)}` : "";
-
                         renderCell = `({ row }) => (
                             <GridCellText
                                 primary={get${columnNameUpperCase}PrimaryText(row, intl)}
@@ -527,7 +590,9 @@ export function generateGrid(
         const { data, loading, error } = useQuery<GQL${gqlTypePlural}GridQuery, GQL${gqlTypePlural}GridQueryVariables>(${instanceGqlTypePlural}Query, {
             variables: {
                 ${hasScope ? `scope,` : ""}
-                ${hasFilter ? `filter: gqlFilter,` : ""}
+                filter: { and: [${hasFilter ? `gqlFilter,` : ""} ${
+        hasGridPropFilter({ config, gridQuery, gqlIntrospection }) ? `...(filter ? [filter] : []),` : ""
+    }] },
                 ${hasSearch ? `search: gqlSearch,` : ""}
                 offset: dataGridProps.page * dataGridProps.pageSize,
                 limit: dataGridProps.pageSize,

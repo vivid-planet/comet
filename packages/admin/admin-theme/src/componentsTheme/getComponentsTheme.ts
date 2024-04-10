@@ -1,4 +1,4 @@
-import { ComponentNameToClassKey, ThemeOptions } from "@mui/material";
+import { Breakpoints, ComponentNameToClassKey, ThemeOptions } from "@mui/material";
 import { Components, Palette } from "@mui/material/styles";
 import { Typography } from "@mui/material/styles/createTypography";
 import { Shadows } from "@mui/material/styles/shadows";
@@ -54,6 +54,7 @@ type ThemeData = {
     spacing: Spacing;
     zIndex: ZIndex;
     shadows: Shadows;
+    breakpoints: Breakpoints;
 };
 
 export type GetMuiComponentTheme<ClassesName extends keyof ComponentNameToClassKey> = (

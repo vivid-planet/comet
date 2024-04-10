@@ -1,5 +1,5 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
+import { RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Entity, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
@@ -9,7 +9,7 @@ import { v4 as uuid } from "uuid";
 @Entity()
 @ObjectType()
 @RootBlockEntity()
-export class MainMenuItem extends BaseEntity<MainMenuItem, "id"> implements DocumentInterface {
+export class MainMenuItem extends BaseEntity<MainMenuItem, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ columnType: "uuid" })

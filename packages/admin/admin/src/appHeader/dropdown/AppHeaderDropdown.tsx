@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
-import { ComponentsOverrides, Popover as MuiPopover, PopoverProps, Theme, useTheme } from "@mui/material";
+import { ComponentsOverrides, Popover as MuiPopover, PopoverProps, Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
@@ -41,21 +41,11 @@ const Popover = createComponentSlot(MuiPopover)<AppHeaderDropdownClassKey>({
     slotName: "popover",
 })();
 
-function DefaultArrowUp(): React.ReactElement {
-    const { palette } = useTheme();
-    return <ChevronUp htmlColor={palette.primary.contrastText} />;
-}
-
-function DefaultArrowDown(): React.ReactElement {
-    const { palette } = useTheme();
-    return <ChevronDown htmlColor={palette.primary.contrastText} />;
-}
-
 export function AppHeaderDropdown(inProps: AppHeaderDropdownProps) {
     const {
         children,
         buttonChildren,
-        dropdownArrow = (isOpen: boolean) => (isOpen ? <DefaultArrowUp /> : <DefaultArrowDown />),
+        dropdownArrow = (isOpen: boolean) => (isOpen ? <ChevronUp /> : <ChevronDown />),
         popoverProps,
         open,
         onOpenChange,

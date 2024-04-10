@@ -2,14 +2,17 @@ import { ModuleMetadata, Type } from "@nestjs/common";
 
 import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
-import { User } from "./dto/user";
 import { UserPermission } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
+import { User } from "./interfaces/user";
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with PascalCase
 export enum UserPermissions {
     allContentScopes = "all-content-scopes",
     allPermissions = "all-permissions",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
 export type Users = [User[], number];
 

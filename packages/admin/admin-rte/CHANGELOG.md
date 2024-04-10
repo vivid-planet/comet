@@ -1,5 +1,13 @@
 # @comet/admin-rte
 
+## 6.5.0
+
+### Patch Changes
+
+-   Updated dependencies [6cb2f9046]
+    -   @comet/admin@6.5.0
+    -   @comet/admin-icons@6.5.0
+
 ## 6.4.0
 
 ### Patch Changes

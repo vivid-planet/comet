@@ -40,7 +40,6 @@ import {
 const newsFragment = gql`
     fragment NewsList on News {
         id
-        updatedAt
         slug
         title
         status
@@ -49,6 +48,7 @@ const newsFragment = gql`
         image
         content
         createdAt
+        updatedAt
     }
 `;
 
@@ -105,13 +105,6 @@ export function NewsGrid(): React.ReactElement {
     const { scope } = useContentScope();
 
     const columns: GridColDef<GQLNewsListFragment>[] = [
-        {
-            field: "updatedAt",
-            headerName: intl.formatMessage({ id: "news.updatedAt", defaultMessage: "Updated At" }),
-            type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
-            width: 150,
-        },
         { field: "slug", headerName: intl.formatMessage({ id: "news.slug", defaultMessage: "Slug" }), width: 150 },
         { field: "title", headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }), width: 150 },
         {
@@ -165,6 +158,13 @@ export function NewsGrid(): React.ReactElement {
         {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "news.createdAt", defaultMessage: "Created At" }),
+            type: "dateTime",
+            valueGetter: ({ value }) => value && new Date(value),
+            width: 150,
+        },
+        {
+            field: "updatedAt",
+            headerName: intl.formatMessage({ id: "news.updatedAt", defaultMessage: "Updated At" }),
             type: "dateTime",
             valueGetter: ({ value }) => value && new Date(value),
             width: 150,

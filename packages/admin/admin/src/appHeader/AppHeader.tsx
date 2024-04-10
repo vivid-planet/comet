@@ -31,6 +31,7 @@ const AppHeaderRoot = createComponentSlot(MuiAppBar)<AppHeaderClassKey, OwnerSta
 })(
     ({ theme }) => css`
         background-color: ${theme.palette.grey.A400};
+        color: white;
         height: var(--header-height);
         flex-direction: row;
         align-items: center;

@@ -13,7 +13,8 @@ export const getMuiButton: GetMuiComponentTheme<"MuiButton"> = (component, { pal
         root: {
             position: "relative",
             fontSize: 16,
-            lineHeight: 1,
+            lineHeight: "16px",
+            letterSpacing: 0,
             textTransform: "none",
             fontWeight: typography.fontWeightRegular,
 

@@ -6,6 +6,7 @@ import { breadcrumbsFragment } from "@src/components/Breadcrumbs.fragment";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { Header } from "@src/header/Header";
 import { headerFragment } from "@src/header/Header.fragment";
+import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
 import { TopNavigation } from "@src/topNavigation/TopNavigation";
 import { topMenuPageTreeNodeFragment } from "@src/topNavigation/TopNavigation.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
@@ -47,29 +48,45 @@ export default async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: 
     if (draftMode().isEnabled) {
         previewData = { includeInvisible: false };
     }
-    const graphqlFetch = createGraphQLFetch(previewData);
+    const graphQLFetch = createGraphQLFetch(previewData);
 
-    const props = await graphqlFetch<GQLPageQuery, GQLPageQueryVariables>(pageQuery, {
+    const data = await graphQLFetch<GQLPageQuery, GQLPageQueryVariables>(pageQuery, {
         pageTreeNodeId,
         domain: scope.domain,
         language: scope.language,
     });
 
-    if (!props.pageContent) throw new Error("Could not load page content");
-    const document = props.pageContent.document;
-    if (!document) {
+    if (!data.pageContent) throw new Error("Could not load page content");
+    if (!data.pageContent.document) {
         // no document attached to page
         notFound(); //no return needed
     }
-    if (document.__typename != "Page") throw new Error(`invalid document type, expected Page, got ${document.__typename}`);
+    if (data.pageContent.document?.__typename != "Page") throw new Error(`invalid document type`);
+
+    [data.pageContent.document.content, data.pageContent.document.seo] = await Promise.all([
+        recursivelyLoadBlockData({
+            blockType: "PageContent",
+            blockData: data.pageContent.document.content,
+            graphQLFetch,
+            fetch,
+        }),
+        recursivelyLoadBlockData({
+            blockType: "Seo",
+            blockData: data.pageContent.document.seo,
+            graphQLFetch,
+            fetch,
+        }),
+    ]);
 
     return (
         <>
-            <SeoBlock data={document.seo} title={props.pageContent.name} />
-            <TopNavigation data={props.topMenu} />
-            <Header header={props.header} />
-            <Breadcrumbs {...props.pageContent} />
-            <div>{document.content && <PageContentBlock data={document.content} />}</div>
+            <SeoBlock data={data.pageContent.document.seo} title={data.pageContent.name} />
+            <TopNavigation data={data.topMenu} />
+            <Header header={data.header} />
+            <Breadcrumbs {...data.pageContent} />
+            <div>
+                <PageContentBlock data={data.pageContent.document.content} />
+            </div>
         </>
     );
 }
