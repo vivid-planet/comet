@@ -11,7 +11,15 @@ export enum UserPermissions {
     allPermissions = "all-permissions",
 }
 
-export type Users = [User[], number];
+export type Users = [
+    {
+        id: string;
+        name: string;
+        email: string;
+        language: string;
+    }[],
+    number,
+];
 
 export type SystemUser = true;
 
