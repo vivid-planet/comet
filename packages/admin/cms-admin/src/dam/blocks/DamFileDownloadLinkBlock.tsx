@@ -85,7 +85,9 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                         openFileType: state.openFileType ?? "DOWNLOAD",
                     }}
                 >
-                    {state.file !== undefined ? (
+                    {state.file === undefined ? (
+                        <Field name="file" component={FileField} fullWidth />
+                    ) : (
                         <AdminComponentPaper disablePadding>
                             <Box padding={3}>
                                 <Typography variant="subtitle1">{state.file.name}</Typography>
@@ -94,12 +96,10 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                                 </Typography>
                             </Box>
                             <Divider />
-                            <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ file: undefined, openFileType: "NEW_TAB" })}>
+                            <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ ...state, file: undefined })}>
                                 <FormattedMessage {...messages.empty} />
                             </AdminComponentButton>
                         </AdminComponentPaper>
-                    ) : (
-                        <Field name="file" component={FileField} fullWidth />
                     )}
 
                     <Divider />
@@ -107,16 +107,13 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                         <Field
                             name="openFileType"
                             fullWidth
-                            label={<FormattedMessage id="blocks.damFileDownloadLink.openFileType" defaultMessage="Open File Type" />}
+                            label={<FormattedMessage id="blocks.damFileDownloadLink.openFileType" defaultMessage="Open file" />}
                         >
                             {(props) => (
                                 <>
                                     <FinalFormSelect {...props}>
-                                        {openFileTypeOptions.map((item, index) => (
-                                            <MenuItem value={item.value} key={index}>
-                                                {item.name}
-                                            </MenuItem>
-                                        ))}
+                                        <MenuItem value={openFileTypeOptions[0].value}>{openFileTypeOptions[0].name}</MenuItem>
+                                        <MenuItem value={openFileTypeOptions[1].value}>{openFileTypeOptions[1].name}</MenuItem>
                                     </FinalFormSelect>
                                 </>
                             )}
@@ -135,10 +132,10 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
 const openFileTypeOptions = [
     {
         value: "DOWNLOAD",
-        name: <FormattedMessage id="blocks.damFileDownloadLink.openFileType.download" defaultMessage="Download" />,
+        name: <FormattedMessage id="blocks.damFileDownloadLink.openFileType.download" defaultMessage="as a download" />,
     },
     {
         value: "NEW_TAB",
-        name: <FormattedMessage id="blocks.damFileDownloadLink.openFileType.newTab" defaultMessage="Open in a new tab" />,
+        name: <FormattedMessage id="blocks.damFileDownloadLink.openFileType.newTab" defaultMessage="in a new tab" />,
     },
 ];
