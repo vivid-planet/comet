@@ -2,7 +2,7 @@ import { createFetchWithDefaults, createFetchWithPreviewHeaders, createGraphQLFe
 import { SitePreviewData } from "@src/app/api/site-preview/route";
 
 const isServerSide = typeof window === "undefined";
-const graphQLApiUrl = `${isServerSide ? process.env.API_URL_INTERNAL : process.env.NEXT_PUBLIC_API_URL}/graphql`;
+export const graphQLApiUrl = `${isServerSide ? process.env.API_URL_INTERNAL : process.env.NEXT_PUBLIC_API_URL}/graphql`;
 export function createGraphQLFetch(previewData?: SitePreviewData) {
     const headers = isServerSide
         ? {
