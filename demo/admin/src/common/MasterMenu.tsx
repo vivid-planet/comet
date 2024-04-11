@@ -1,6 +1,7 @@
 import { Menu, MenuCollapsibleItem, MenuContext, MenuItemGroup, MenuItemRouterLink, useWindowSize } from "@comet/admin";
 import { Assets, Dashboard, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
 import { useContentScope } from "@comet/cms-admin";
+import { capitalize } from "@mui/material";
 import * as React from "react";
 import { useEffect } from "react";
 import { useIntl } from "react-intl";
@@ -33,9 +34,10 @@ const MasterMenu: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
 
-    const sectionScopeTitle = `${scope?.domain.charAt(0).toUpperCase() + scope?.domain.slice(1)} - ${
-        values.language[0].label ?? scope?.language?.toUpperCase()
-    }`;
+    const scopeLangLabel = values.language.find(({ value }) => value === scope?.language)?.label;
+    const capitalizedScopeDomain = capitalize(scope?.domain);
+    const scopeLang = scopeLangLabel ?? scope?.language?.toUpperCase();
+    const sectionScopeTitle = `${capitalizedScopeDomain} - ${scopeLang}`;
 
     return (
         <Menu variant={drawerVariant}>
