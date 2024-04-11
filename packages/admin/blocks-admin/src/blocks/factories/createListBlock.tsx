@@ -323,12 +323,12 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                                                         {state.blocks.map((data, blockIndex) => {
                                                             const isMinVisibleBlocksMet =
                                                                 !!minVisibleBlocks && totalVisibleBlocks >= minVisibleBlocks;
-                                                            const isMaxVisibleBlocksMet =
+                                                            const isMaxVisibleBlocksReached =
                                                                 !!maxVisibleBlocks && totalVisibleBlocks >= maxVisibleBlocks;
 
-                                                            const canToggleVisibility = isMaxVisibleBlocksMet ? data.visible : true;
+                                                            const canToggleVisibility = isMaxVisibleBlocksReached ? data.visible : true;
 
-                                                            const showMaxBlocksAllowedMessage = isMaxVisibleBlocksMet && !data.visible;
+                                                            const showMaxBlocksAllowedMessage = isMaxVisibleBlocksReached && !data.visible;
                                                             const showMinBlocksRequiredMessage =
                                                                 !isMinVisibleBlocksMet || (minVisibleBlocks === totalVisibleBlocks && data.visible);
 
