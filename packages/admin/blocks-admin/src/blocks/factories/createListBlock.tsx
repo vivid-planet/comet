@@ -326,12 +326,6 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                                                             const isMaxVisibleBlocksMet =
                                                                 !!maxVisibleBlocks && totalVisibleBlocks >= maxVisibleBlocks;
 
-                                                            const disableTooltipHoverListener =
-                                                                isMinVisibleBlocksMet &&
-                                                                totalVisibleBlocks !== minVisibleBlocks &&
-                                                                ((!isMaxVisibleBlocksMet && !data.visible) ||
-                                                                    (isMaxVisibleBlocksMet && data.visible));
-
                                                             const canToggleVisibility = isMaxVisibleBlocksMet ? data.visible : true;
 
                                                             return (
@@ -358,7 +352,6 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                                                                         }}
                                                                         visibilityButton={
                                                                             <Tooltip
-                                                                                disableHoverListener={disableTooltipHoverListener}
                                                                                 title={
                                                                                     isMaxVisibleBlocksMet && !data.visible ? (
                                                                                         <FormattedMessage
