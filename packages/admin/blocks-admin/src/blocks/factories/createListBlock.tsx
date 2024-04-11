@@ -218,12 +218,10 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                 adminMeta: { route: previewCtx.parentUrl },
             };
         },
-        isValid: async (state) =>
-            parallelAsyncEvery(
-                state.blocks,
-                async (c) =>
-                    block.isValid(c.props) && (minVisibleBlocks ? minVisibleBlocks <= state.blocks.filter((block) => block.visible).length : true),
-            ),
+        isValid: async (state) => {
+            const blockValidityResult = await parallelAsyncEvery(state.blocks, async (c) => block.isValid(c.props));
+            return blockValidityResult && (minVisibleBlocks ? minVisibleBlocks <= state.blocks.filter((block) => block.visible).length : true);
+        },
 
         childBlockCount: (state) => state.blocks.length,
 
