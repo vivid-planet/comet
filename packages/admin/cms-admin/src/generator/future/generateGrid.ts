@@ -231,6 +231,10 @@ export function generateGrid(
         } else if (type == "date") {
             valueGetter = `({ value }) => value && new Date(value)`;
             gridType = "date";
+        } else if (type == "number") {
+            gridType = "number";
+        } else if (type == "boolean") {
+            gridType = "boolean";
         } else if (type == "block") {
             if (rootBlocks[name]) {
                 renderCell = `(params) => {
