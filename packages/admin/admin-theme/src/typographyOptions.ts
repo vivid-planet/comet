@@ -1,7 +1,7 @@
 import { Breakpoints } from "@mui/material";
 import { TypographyOptions } from "@mui/material/styles/createTypography";
 
-const fontFamily = "Roboto, Helvetica, Arial, sans-serif";
+const fontFamily = "Roboto Flex Variable, Helvetica, Arial, sans-serif";
 
 // https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#common_weight_name_mapping
 export const fontWeights = {
