@@ -60,7 +60,6 @@ export { SortDirection } from "./common/sorting/sort-direction.enum";
 export { IsNullable } from "./common/validators/is-nullable";
 export { IsSlug } from "./common/validators/is-slug";
 export { IsUndefinable } from "./common/validators/is-undefinable";
-export { CONTENT_GENERATION_CONFIG } from "./content-generation/content-generation.constants";
 export { ContentGenerationModule } from "./content-generation/content-generation.module";
 export { ContentGenerationServiceInterface } from "./content-generation/content-generation-service.interface";
 export { OpenAiContentGenerationConfig, OpenAiContentGenerationService } from "./content-generation/openai-content-generation.service";

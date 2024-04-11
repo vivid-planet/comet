@@ -6,14 +6,12 @@ import {
     BlocksTransformerMiddlewareFactory,
     BuildsModule,
     ContentGenerationModule,
-    ContentGenerationServiceInterface,
     CronJobsModule,
     DamModule,
     DependenciesModule,
     FilesService,
     ImagesService,
     KubernetesModule,
-    OpenAiContentGenerationConfig,
     PageTreeModule,
     PageTreeService,
     PublicUploadModule,
@@ -147,21 +145,9 @@ export class AppModule {
                     directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
                     acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
                 }),
-                ...(config.contentGeneration.apiKey && config.contentGeneration.url && config.contentGeneration.deploymentId
+                ...(config.contentGeneration.apiKey && config.contentGeneration.apiUrl && config.contentGeneration.deploymentId
                     ? [
-                          ContentGenerationModule.register<OpenAiContentGenerationConfig<ContentGenerationServiceInterface>>({
-                              config: {
-                                  generateAltText: {
-                                      apiUrl: config.contentGeneration.url,
-                                      apiKey: config.contentGeneration.apiKey,
-                                      deploymentId: config.contentGeneration.deploymentId,
-                                  },
-                                  generateImageTitle: {
-                                      apiUrl: config.contentGeneration.url,
-                                      apiKey: config.contentGeneration.apiKey,
-                                      deploymentId: config.contentGeneration.deploymentId,
-                                  },
-                              },
+                          ContentGenerationModule.register({
                               Service: ContentGenerationService,
                           }),
                       ]

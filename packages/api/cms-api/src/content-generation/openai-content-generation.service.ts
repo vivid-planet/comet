@@ -2,30 +2,16 @@ import { AzureKeyCredential, ChatRequestMessage, OpenAIClient } from "@azure/ope
 import { Injectable } from "@nestjs/common";
 import fetch from "node-fetch";
 
-import { ContentGenerationServiceInterface } from "./content-generation-service.interface";
-
-export type OpenAiContentGenerationConfig<T> = {
-    [K in keyof T]: {
-        deploymentId: string;
-        apiKey: string;
-        apiUrl: string;
-    };
+export type OpenAiContentGenerationConfig = {
+    deploymentId: string;
+    apiKey: string;
+    apiUrl: string;
 };
 
 @Injectable()
-export class OpenAiContentGenerationService implements ContentGenerationServiceInterface {
-    config: OpenAiContentGenerationConfig<ContentGenerationServiceInterface>;
-
-    init(config: OpenAiContentGenerationConfig<ContentGenerationServiceInterface>): void {
-        this.config = config;
-    }
-
-    async generateAltText(fileUrl: string): Promise<string> {
-        if (!this.config.generateAltText) {
-            throw new Error("Model not defined");
-        }
-
-        const client = new OpenAIClient(this.config.generateAltText.apiUrl, new AzureKeyCredential(this.config.generateAltText.apiKey));
+export class OpenAiContentGenerationService {
+    async generateAltText(fileUrl: string, config: OpenAiContentGenerationConfig): Promise<string> {
+        const client = new OpenAIClient(config.apiUrl, new AzureKeyCredential(config.apiKey));
         const prompt: ChatRequestMessage[] = [
             {
                 role: "system",
@@ -45,16 +31,12 @@ export class OpenAiContentGenerationService implements ContentGenerationServiceI
                 ],
             },
         ];
-        const result = await client.getChatCompletions(this.config.generateAltText.deploymentId, prompt, { maxTokens: 300 });
+        const result = await client.getChatCompletions(config.deploymentId, prompt, { maxTokens: 300 });
         return result.choices[0].message?.content ?? "";
     }
 
-    async generateImageTitle(fileUrl: string): Promise<string> {
-        if (typeof this.config.generateImageTitle === "undefined") {
-            throw new Error("Model not defined");
-        }
-
-        const client = new OpenAIClient(this.config.generateImageTitle.apiUrl, new AzureKeyCredential(this.config.generateImageTitle.apiKey));
+    async generateImageTitle(fileUrl: string, config: OpenAiContentGenerationConfig): Promise<string> {
+        const client = new OpenAIClient(config.apiUrl, new AzureKeyCredential(config.apiKey));
 
         const prompt: ChatRequestMessage[] = [
             {
@@ -75,7 +57,7 @@ export class OpenAiContentGenerationService implements ContentGenerationServiceI
                 ],
             },
         ];
-        const result = await client.getChatCompletions(this.config.generateImageTitle.deploymentId, prompt, { maxTokens: 300 });
+        const result = await client.getChatCompletions(config.deploymentId, prompt, { maxTokens: 300 });
         return result.choices[0].message?.content ?? "";
     }
 
