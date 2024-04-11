@@ -328,6 +328,10 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
 
                                                             const canToggleVisibility = isMaxVisibleBlocksMet ? data.visible : true;
 
+                                                            const showMaxBlocksAllowedMessage = isMaxVisibleBlocksMet && !data.visible;
+                                                            const showMinBlocksRequiredMessage =
+                                                                !isMinVisibleBlocksMet || (minVisibleBlocks === totalVisibleBlocks && data.visible);
+
                                                             return (
                                                                 <HoverPreviewComponent key={data.key} componentSlug={`${data.key}/edit`}>
                                                                     <BlockRow
@@ -353,14 +357,13 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                                                                         visibilityButton={
                                                                             <Tooltip
                                                                                 title={
-                                                                                    isMaxVisibleBlocksMet && !data.visible ? (
+                                                                                    showMaxBlocksAllowedMessage ? (
                                                                                         <FormattedMessage
                                                                                             id="comet.blocks.list.maxVisibleBlocks"
                                                                                             defaultMessage="Max. visible blocks allowed: {maxVisibleBlocks}"
                                                                                             values={{ maxVisibleBlocks }}
                                                                                         />
-                                                                                    ) : !isMinVisibleBlocksMet ||
-                                                                                      (minVisibleBlocks === totalVisibleBlocks && data.visible) ? (
+                                                                                    ) : showMinBlocksRequiredMessage ? (
                                                                                         <FormattedMessage
                                                                                             id="comet.blocks.list.minVisibleBlocks"
                                                                                             defaultMessage="Min. visible blocks required: {minVisibleBlocks}"
