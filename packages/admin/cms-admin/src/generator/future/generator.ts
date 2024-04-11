@@ -7,6 +7,7 @@ import { basename, dirname } from "path";
 
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
+import { UsableFields } from "./generateGrid/usableFields";
 import { writeGenerated } from "./utils/writeGenerated";
 
 type ImportReference = {
@@ -45,7 +46,7 @@ export type GridColumnConfig<T> = (
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
     | { type: "block"; block: ImportReference }
-) & { name: keyof T } & DataGridSettings;
+) & { name: UsableFields<T> } & DataGridSettings;
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];

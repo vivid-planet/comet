@@ -22,6 +22,7 @@ import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
+import { filter as objectFilter } from "graphql-anywhere";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -39,17 +40,11 @@ const productsFragment = gql`
     fragment ProductsGridFuture on Product {
         id
         title
-        status
-        slug
         description
-        type
         price
-        inStock
-        soldCount
+        type
         availableSince
-        image
         createdAt
-        updatedAt
     }
 `;
 
@@ -134,14 +129,14 @@ export function ProductsGrid({ filter }: Props): React.ReactElement {
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
             type: "date",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
             width: 140,
         },
         {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
             type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
             width: 170,
         },
         {
@@ -159,17 +154,11 @@ export function ProductsGrid({ filter }: Props): React.ReactElement {
                         </IconButton>
                         <CrudContextMenu
                             copyData={() => {
-                                const row = params.row;
+                                // Don't copy id, because we want to create a new entity with this data
+                                const { id, ...filteredData } = objectFilter(productsFragment, params.row);
                                 return {
-                                    title: row.title,
-                                    status: row.status,
-                                    slug: row.slug,
-                                    description: row.description,
-                                    type: row.type,
-                                    price: row.price,
-                                    inStock: row.inStock,
-                                    availableSince: row.availableSince,
-                                    image: DamImageBlock.state2Output(DamImageBlock.input2State(row.image)),
+                                    ...filteredData,
+                                    image: DamImageBlock.state2Output(DamImageBlock.input2State(filteredData.image)),
                                 };
                             }}
                             onPaste={async ({ input }) => {
