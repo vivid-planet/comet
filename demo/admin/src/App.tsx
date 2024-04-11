@@ -61,35 +61,36 @@ class App extends React.Component {
     public render(): JSX.Element {
         return (
             <ApolloProvider client={apolloClient}>
-                <CurrentUserProvider>
-                    <SitesConfigProvider
+                <SitesConfigProvider
+                    value={{
+                        configs: config.sitesConfig,
+                        resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
+                    }}
+                >
+                    <DamConfigProvider
                         value={{
-                            configs: config.sitesConfig,
-                            resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
+                            scopeParts: ["domain"],
+                            additionalToolbarItems: <ImportFromUnsplash />,
+                            importSources: {
+                                unsplash: {
+                                    label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
+                                },
+                            },
                         }}
                     >
-                        <DamConfigProvider
-                            value={{
-                                scopeParts: ["domain"],
-                                additionalToolbarItems: <ImportFromUnsplash />,
-                                importSources: {
-                                    unsplash: {
-                                        label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
-                                    },
-                                },
+                        <DependenciesConfigProvider
+                            entityDependencyMap={{
+                                Page,
+                                Link,
+                                News: NewsDependency,
+                                DamFile: createDamFileDependency(),
                             }}
                         >
-                            <DependenciesConfigProvider
-                                entityDependencyMap={{
-                                    Page,
-                                    Link,
-                                    News: NewsDependency,
-                                    DamFile: createDamFileDependency(),
-                                }}
-                            >
-                                <IntlProvider locale="en" messages={getMessages()}>
-                                    <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
-                                        <MuiThemeProvider theme={theme}>
+                            <IntlProvider locale="en" messages={getMessages()}>
+                                <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
+                                    <MuiThemeProvider theme={theme}>
+                                        <ErrorDialogHandler />
+                                        <CurrentUserProvider>
                                             <RouterBrowserRouter>
                                                 <DndProvider backend={HTML5Backend}>
                                                     <SnackbarProvider>
@@ -128,19 +129,18 @@ class App extends React.Component {
                                                                         </Switch>
                                                                     )}
                                                                 </ContentScopeProvider>
-                                                                <ErrorDialogHandler />
                                                             </React.Fragment>
                                                         </CmsBlockContextProvider>
                                                     </SnackbarProvider>
                                                 </DndProvider>
                                             </RouterBrowserRouter>
-                                        </MuiThemeProvider>
-                                    </LocaleProvider>
-                                </IntlProvider>
-                            </DependenciesConfigProvider>
-                        </DamConfigProvider>
-                    </SitesConfigProvider>
-                </CurrentUserProvider>
+                                        </CurrentUserProvider>
+                                    </MuiThemeProvider>
+                                </LocaleProvider>
+                            </IntlProvider>
+                        </DependenciesConfigProvider>
+                    </DamConfigProvider>
+                </SitesConfigProvider>
             </ApolloProvider>
         );
     }
