@@ -39,8 +39,7 @@ export function PublisherPage(): React.ReactElement {
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.publisher", defaultMessage: "Publisher" })}>
-            <ContentScopeIndicator global />
-            <Toolbar>
+            <Toolbar scopeIndicator={<ContentScopeIndicator global />}>
                 <ToolbarTitleItem>
                     <FormattedMessage id="comet.publisher.title" defaultMessage="Publisher" />
                 </ToolbarTitleItem>

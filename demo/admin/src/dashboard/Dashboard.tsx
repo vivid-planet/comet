@@ -1,4 +1,4 @@
-import { MainContent, Stack } from "@comet/admin";
+import { MainContent, Stack, Toolbar } from "@comet/admin";
 import { ContentScopeIndicator, DashboardHeader, LatestBuildsDashboardWidget, useUserPermissionCheck } from "@comet/cms-admin";
 import { Grid } from "@mui/material";
 import * as React from "react";
@@ -19,8 +19,8 @@ const Dashboard: React.FC = () => {
                     "2x": backgroundImage2x,
                 }}
             />
+            <Toolbar scopeIndicator={<ContentScopeIndicator global />} />
             <MainContent>
-                <ContentScopeIndicator global />
                 <Grid container direction="row" spacing={4}>
                     {isAllowed("pageTree") && <LatestContentUpdates />}
                     {import.meta.env.MODE !== "development" && <LatestBuildsDashboardWidget />}
