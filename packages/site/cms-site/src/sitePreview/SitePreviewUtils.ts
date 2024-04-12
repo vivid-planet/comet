@@ -1,3 +1,5 @@
+//TODO add import "server-only"; once this file gets correctly tree-shaked out of the client bundle
+
 import jsonwebtoken from "jsonwebtoken";
 import { cookies, draftMode } from "next/headers";
 import { redirect } from "next/navigation";
