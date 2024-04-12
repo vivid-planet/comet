@@ -69,12 +69,14 @@ export default async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: 
             blockData: data.pageContent.document.content,
             graphQLFetch,
             fetch,
+            pageTreeNodeId,
         }),
         recursivelyLoadBlockData({
             blockType: "Seo",
             blockData: data.pageContent.document.seo,
             graphQLFetch,
             fetch,
+            pageTreeNodeId,
         }),
     ]);
 
