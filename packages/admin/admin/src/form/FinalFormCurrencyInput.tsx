@@ -24,10 +24,10 @@ export function FinalFormCurrencyInput({
 
     function getFormattedValue(value: number, intl: IntlShape, currencySignPosition: string) {
         if (currencySignPosition === "before") {
-            const formattedValue = `${currencySign} ${value ? intl.formatNumber(value) : ""}`;
+            const formattedValue = `${currencySign} ${value ? intl.formatNumber(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ""}`;
             return formattedValue;
         } else {
-            const formattedValue = `${value ? intl.formatNumber(value) : ""} ${currencySign}`;
+            const formattedValue = `${value ? intl.formatNumber(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ""} ${currencySign}`;
             return formattedValue;
         }
     }
