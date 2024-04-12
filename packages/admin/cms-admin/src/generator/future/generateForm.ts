@@ -120,20 +120,13 @@ export function generateForm(
         FinalForm,
         FinalFormCheckbox,
         FinalFormInput,
-        FinalFormSaveSplitButton,
         FinalFormSelect,
         FinalFormSubmitEvent,
         Loading,
         MainContent,
         TextAreaField,
         TextField,
-        Toolbar,
-        ToolbarActions,
-        ToolbarFillSpace,
-        ToolbarItem,
-        ToolbarTitleItem,
         useFormApiRef,
-        useStackApi,
         useStackSwitchApi,
     } from "@comet/admin";
     import { ArrowLeft, Lock } from "@comet/admin-icons";
@@ -180,7 +173,6 @@ export function generateForm(
     }
     
     export function ${exportName}({ id }: FormProps): React.ReactElement {
-        const stackApi = useStackApi();
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
@@ -283,24 +275,6 @@ export function generateForm(
                 {() => (
                     <EditPageLayout>
                         {saveConflict.dialogs}
-                        <Toolbar>
-                            <ToolbarItem>
-                                <IconButton onClick={stackApi?.goBack}>
-                                    <ArrowLeft />
-                                </IconButton>
-                            </ToolbarItem>
-                            <ToolbarTitleItem>
-                                <Field name="title">
-                                    {({ input }) =>
-                                        input.value ? input.value : <FormattedMessage id="${instanceGqlType}.${instanceGqlType}Detail" defaultMessage="${title} Detail" />
-                                    }
-                                </Field>
-                            </ToolbarTitleItem>
-                            <ToolbarFillSpace />
-                            <ToolbarActions>
-                                <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
-                            </ToolbarActions>
-                        </Toolbar>
                         <MainContent>
                             ${fieldsCode}
                         </MainContent>
