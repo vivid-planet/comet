@@ -32,9 +32,9 @@ class DamFileDownloadLinkBlockData extends BlockData {
         { filesService }: { filesService: FilesService },
         { previewDamUrls }: BlockContext,
     ): Promise<TraversableTransformResponse> {
-        const ret: TraversableTransformResponse = {};
-
-        ret.openFileType = this.openFileType;
+        const ret: TraversableTransformResponse = {
+            openFileType: this.openFileType,
+        };
 
         if (this.fileId === undefined) {
             return ret;
