@@ -47,8 +47,8 @@
                 "name": "openFileType",
                 "kind": "Enum",
                 "enum": [
-                    "NEW_TAB",
-                    "DOWNLOAD"
+                    "NewTab",
+                    "Download"
                 ],
                 "nullable": false
             }
@@ -63,8 +63,8 @@
                 "name": "openFileType",
                 "kind": "Enum",
                 "enum": [
-                    "NEW_TAB",
-                    "DOWNLOAD"
+                    "NewTab",
+                    "Download"
                 ],
                 "nullable": false
             }

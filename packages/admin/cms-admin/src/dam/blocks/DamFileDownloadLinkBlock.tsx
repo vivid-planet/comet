@@ -24,7 +24,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
     category: BlockCategory.Media,
 
     defaultValues: () => ({
-        openFileType: "DOWNLOAD",
+        openFileType: "Download",
     }),
 
     state2Output: (state) => ({
@@ -82,7 +82,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                     }}
                     initialValues={{
                         file: state.file,
-                        openFileType: state.openFileType ?? "DOWNLOAD",
+                        openFileType: state.openFileType ?? "Download",
                     }}
                 >
                     {state.file === undefined ? (
@@ -131,11 +131,11 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
 
 const openFileTypeOptions = [
     {
-        value: "DOWNLOAD",
+        value: "Download",
         name: <FormattedMessage id="blocks.damFileDownloadLink.openFileType.download" defaultMessage="as a download" />,
     },
     {
-        value: "NEW_TAB",
+        value: "NewTab",
         name: <FormattedMessage id="blocks.damFileDownloadLink.openFileType.newTab" defaultMessage="in a new tab" />,
     },
 ];

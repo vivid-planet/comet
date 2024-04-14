@@ -18,8 +18,8 @@ import { IsUndefinable } from "../../common/validators/is-undefinable";
 import { FILE_ENTITY } from "../../dam/files/entities/file.entity";
 
 export enum OpenFileTypeMethod {
-    NEW_TAB = "NEW_TAB",
-    DOWNLOAD = "DOWNLOAD",
+    NewTab = "NewTab",
+    Download = "Download",
 }
 
 class DamFileDownloadLinkBlockData extends BlockData {
