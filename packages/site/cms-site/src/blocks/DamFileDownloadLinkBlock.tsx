@@ -16,7 +16,7 @@ export const DamFileDownloadLinkBlock = withPreview(
         }
 
         if (openFileType === "Download") {
-            return <a href={`${process.env.API_URL}/dam/files/download/${file.id}/${file.name}`}>{children}</a>;
+            return <a href={file.fileUrl}>{children}</a>;
         } else if (openFileType === "NewTab") {
             return (
                 <a href={file.fileUrl} target="_blank" rel="noreferrer">

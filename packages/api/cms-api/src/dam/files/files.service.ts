@@ -576,6 +576,15 @@ export class FilesService {
         return [...baseUrl, file.id, filename].join("/");
     }
 
+    async createFileDownloadUrl(file: FileInterface): Promise<string> {
+        const filename = parse(file.name).name;
+
+        // Use CDN url only if available and not in preview as preview requires auth
+        const baseUrl = [this.config.cdnEnabled ? `${this.config.cdnDomain}/files/download` : `${this.config.filesBaseUrl}/download`];
+
+        return [...baseUrl, file.id, filename].join("/");
+    }
+
     createHash(params: FileParams): string {
         const fileHash = `file:${params.fileId}:${params.filename}`;
         return createHmac("sha1", this.config.secret).update(fileHash).digest("hex");

@@ -42,11 +42,17 @@ class DamFileDownloadLinkBlockData extends BlockData {
 
         const file = await filesService.findOneById(this.fileId);
 
-        if (file) {
+        if (file && this.openFileType === "NewTab") {
             ret.file = {
                 id: file.id,
                 name: file.name,
                 fileUrl: await filesService.createFileUrl(file, previewDamUrls),
+            };
+        } else if (file && this.openFileType === "Download") {
+            ret.file = {
+                id: file.id,
+                name: file.name,
+                fileUrl: await filesService.createFileDownloadUrl(file),
             };
         }
 
