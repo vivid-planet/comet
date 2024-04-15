@@ -6,7 +6,7 @@ import { useIntl } from "react-intl";
 
 import { DatePicker as DatePickerBase } from "../datePicker/DatePicker";
 import { TimePicker as TimePickerBase } from "../timePicker/TimePicker";
-import { getDateString } from "../utils/datePickerHelpers";
+import { getIsoDateString } from "../utils/datePickerHelpers";
 import { getDateWithNewTime, getTimeStringFromDate } from "../utils/timePickerHelpers";
 
 export type DateTimePickerClassKey = "root" | "dateFormControl" | "timeFormControl" | "datePicker" | "timePicker";
@@ -103,7 +103,7 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
             <DateFormControl {...slotProps?.dateFormControl}>
                 <DatePicker
                     inputRef={datePickerRef}
-                    value={value ? getDateString(value) : undefined}
+                    value={value ? getIsoDateString(value) : undefined}
                     onChange={onChangeDate}
                     fullWidth
                     clearable={clearable}

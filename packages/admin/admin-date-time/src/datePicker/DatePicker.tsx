@@ -10,7 +10,7 @@ import { FormatDateOptions, useIntl } from "react-intl";
 
 import { DatePickerNavigation } from "../DatePickerNavigation";
 import { useDateFnsLocale } from "../utils/DateFnsLocaleProvider";
-import { defaultMaxDate, defaultMinDate, getDateString } from "../utils/datePickerHelpers";
+import { defaultMaxDate, defaultMinDate, getIsoDateString } from "../utils/datePickerHelpers";
 import { Calendar, DatePickerClassKey, Root, SlotProps, StartAdornment } from "./DatePicker.slots";
 
 export interface DatePickerProps extends Omit<InputWithPopperProps, "children" | "value" | "onChange" | "slotProps"> {
@@ -80,7 +80,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
                     date={dateValue}
                     onChange={(date) => {
                         closePopper(true);
-                        onChange?.(getDateString(date));
+                        onChange?.(getIsoDateString(date));
                     }}
                     {...slotProps?.calendar}
                 />

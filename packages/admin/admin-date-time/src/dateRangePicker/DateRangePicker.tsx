@@ -11,7 +11,7 @@ import { FormatDateOptions, useIntl } from "react-intl";
 
 import { DatePickerNavigation } from "../DatePickerNavigation";
 import { useDateFnsLocale } from "../utils/DateFnsLocaleProvider";
-import { defaultMaxDate, defaultMinDate, getDateString } from "../utils/datePickerHelpers";
+import { defaultMaxDate, defaultMinDate, getIsoDateString } from "../utils/datePickerHelpers";
 import { DateRange, DateRangePickerClassKey, Root, SlotProps, StartAdornment } from "./DateRangePicker.slots";
 
 export type DateRange = {
@@ -135,8 +135,8 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
                         const pickedRange = ranges[rangeKey];
                         if (pickedRange.startDate && pickedRange.endDate) {
                             onChange?.({
-                                start: getDateString(pickedRange.startDate),
-                                end: getDateString(pickedRange.endDate),
+                                start: getIsoDateString(pickedRange.startDate),
+                                end: getIsoDateString(pickedRange.endDate),
                             });
                         }
                     }}
