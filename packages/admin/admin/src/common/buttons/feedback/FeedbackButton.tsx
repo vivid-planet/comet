@@ -53,7 +53,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         ...restProps
     } = useThemeProps({
         props: inProps,
-        name: "CometAdminSaveButton",
+        name: "CometAdminFeedbackButton",
     });
 
     const [displayState, setDisplayState] = React.useState<FeedbackButtonDisplayState>("idle");
