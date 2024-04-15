@@ -1,9 +1,9 @@
 import { BaseEntity, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
-import { IsBooleanString, IsDateString, IsEmail, Length, Max, MaxLength, Min, MinLength } from "class-validator";
+import { IsEmail, IsISO8601, IsString, Length } from "class-validator";
 import { v4 as uuid } from "uuid";
 
-import { IsLinkTarget } from "../../../blocks-api/src/blocks/externalLinkBlock/is-href.validator";
+import { IsValidRedirectSource } from "../redirects/validators/isValidRedirectSource";
 import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
@@ -13,67 +13,42 @@ export class TestEntityWithEmail extends BaseEntity<TestEntityWithEmail, "id"> {
     id: string = uuid();
 
     @IsEmail()
+    @IsString()
     @Property({ columnType: "text" })
     email: string;
 }
 
 @Entity()
-export class TestEntityWithBooleanString extends BaseEntity<TestEntityWithBooleanString, "id"> {
+export class TestEntityWithCaseSensitiveConstraintName extends BaseEntity<TestEntityWithCaseSensitiveConstraintName, "id"> {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
-    @IsBooleanString()
-    @MinLength(4)
-    @MaxLength(5)
-    @Length(4, 5) // TODO: this is a problem?
+    @IsISO8601()
     @Property({ columnType: "text" })
-    isBooleanString: string;
+    dateAsString: string;
 }
 
 @Entity()
-export class TestEntityWithMax extends BaseEntity<TestEntityWithMax, "id"> {
+export class TestEntityWithShortenedDecoratorName extends BaseEntity<TestEntityWithShortenedDecoratorName, "id"> {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
-    @Max(10)
-    @Property({ columnType: "number" })
-    rating: number;
+    @Length(2, 5)
+    @Property({ columnType: "text" })
+    dateAsString: string;
 }
 
 @Entity()
-export class TestEntityWithCometValidator extends BaseEntity<TestEntityWithCometValidator, "id"> {
+export class TestEntityWithRelativeImportDecorator extends BaseEntity<TestEntityWithRelativeImportDecorator, "id"> {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
-    @IsLinkTarget()
+    @IsValidRedirectSource()
     @Property({ columnType: "text" })
-    linkTarget: string;
+    source: string;
 }
 
-@Entity()
-export class TestEntityWithMultipleProperties extends BaseEntity<TestEntityWithMultipleProperties, "id"> {
-    @PrimaryKey({ type: "uuid" })
-    id: string = uuid();
-
-    @IsEmail()
-    @Property({ columnType: "text" })
-    email: string;
-
-    @Min(2)
-    @Max(10)
-    @Property({ columnType: "number" })
-    rating: number;
-
-    @IsBooleanString()
-    @Property({ columnType: "text" })
-    isBooleanString: string;
-
-    @IsDateString()
-    @Property({ columnType: "text" })
-    date: string;
-}
-
-describe("GenerateDefinedValidators", () => {
+describe("GenerateDefinedValidatorDecorators", () => {
     describe("simple validator", () => {
         it("should set IsEmail decorator", async () => {
             LazyMetadataStorage.load();
@@ -95,122 +70,159 @@ describe("GenerateDefinedValidators", () => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const prop = structure.properties![0];
             expect(prop.name).toBe("email");
-            const decorators = prop.decorators?.map((i) => i.name);
+
+            const decorators = prop.decorators?.map((decorator) => decorator.name);
             expect(decorators).toContain("IsEmail");
 
-            orm.close();
-        });
-    });
-
-    describe("multiple validators", () => {
-        it("should set Length, IsBooleanString decorator", async () => {
-            LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithBooleanString],
-            });
-
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithBooleanString"));
-            const lintedOut = await lintGeneratedFiles(out);
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-with-boolean-string.input.ts");
-            if (!file) throw new Error("File not found");
-            const source = parseSource(file.content);
-            const classes = source.getClasses();
-            const cls = classes[0];
-            const structure = cls.getStructure();
-
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const prop = structure.properties![0];
-
-            expect(prop.name).toBe("isBooleanString");
-            expect(prop.decorators?.[0].name).toBe("IsBooleanString");
+            const importDeclarations = source.getImportDeclarations();
+            const isEmailImport = importDeclarations.find((getImportDeclaration) =>
+                getImportDeclaration.getNamedImports().some((namedImport) => namedImport.getName() === "IsEmail"),
+            );
+            expect(isEmailImport).toBeDefined();
+            expect(isEmailImport?.getModuleSpecifierValue()).toBe("class-validator");
 
             orm.close();
         });
-    });
 
-    describe("validators with arguments", () => {
-        it("should set Max decorator with correct arguments", async () => {
-            LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithMax],
+        describe("case sensitive validator", () => {
+            it("should set IsISO8601 decorator", async () => {
+                LazyMetadataStorage.load();
+                const orm = await MikroORM.init({
+                    type: "postgresql",
+                    dbName: "test-db",
+                    entities: [TestEntityWithCaseSensitiveConstraintName],
+                });
+
+                const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithCaseSensitiveConstraintName"));
+                const lintedOut = await lintGeneratedFiles(out);
+                const file = lintedOut.find((file) => file.name === "dto/test-entity-with-case-sensitive-constraint-name.input.ts");
+                if (!file) throw new Error("File not found");
+                const source = parseSource(file.content);
+                const classes = source.getClasses();
+                const cls = classes[0];
+                const structure = cls.getStructure();
+
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const prop = structure.properties![0];
+                expect(prop.name).toBe("dateAsString");
+                const decorators = prop.decorators?.map((i) => i.name);
+                expect(decorators).toContain("IsISO8601");
+
+                const importDeclarations = source.getImportDeclarations();
+                const isIsoImport = importDeclarations.find((getImportDeclaration) =>
+                    getImportDeclaration.getNamedImports().some((namedImport) => namedImport.getName() === "IsISO8601"),
+                );
+                expect(isIsoImport).toBeDefined();
+                expect(isIsoImport?.getModuleSpecifierValue()).toBe("class-validator");
+
+                orm.close();
             });
-
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithMax"));
-            const lintedOut = await lintGeneratedFiles(out);
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-with-max.input.ts");
-            if (!file) throw new Error("File not found");
-            const source = parseSource(file.content);
-            const classes = source.getClasses();
-            const cls = classes[0];
-            const structure = cls.getStructure();
-
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const prop = structure.properties![0];
-
-            expect(prop.name).toBe("rating");
-            expect(prop.decorators?.[0].name).toBe("Max");
-            expect(prop.decorators?.[0].arguments).toContain("10");
-
-            orm.close();
         });
-    });
 
-    describe("comet validator", () => {
-        it("should set comet validator", async () => {
-            LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithCometValidator],
+        describe("shortened decorator name", () => {
+            it("should set Length decorator", async () => {
+                LazyMetadataStorage.load();
+                const orm = await MikroORM.init({
+                    type: "postgresql",
+                    dbName: "test-db",
+                    entities: [TestEntityWithShortenedDecoratorName],
+                });
+
+                const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithShortenedDecoratorName"));
+                const lintedOut = await lintGeneratedFiles(out);
+                const file = lintedOut.find((file) => file.name === "dto/test-entity-with-shortened-decorator-name.input.ts");
+                if (!file) throw new Error("File not found");
+                const source = parseSource(file.content);
+                const classes = source.getClasses();
+                const cls = classes[0];
+                const structure = cls.getStructure();
+
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const prop = structure.properties![0];
+                expect(prop.name).toBe("dateAsString");
+                const decorators = prop.decorators?.map((decorator) => decorator.name);
+                expect(decorators).toContain("Length");
+
+                const importDeclarations = source.getImportDeclarations();
+                const lengthImport = importDeclarations.find((getImportDeclaration) =>
+                    getImportDeclaration.getNamedImports().some((namedImport) => namedImport.getName() === "Length"),
+                );
+                expect(lengthImport).toBeDefined();
+                expect(lengthImport?.getModuleSpecifierValue()).toBe("class-validator");
+
+                orm.close();
             });
-
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithCometValidator"));
-            const lintedOut = await lintGeneratedFiles(out);
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-with-comet-validator.input.ts");
-            if (!file) throw new Error("File not found");
-            const source = parseSource(file.content);
-            const classes = source.getClasses();
-            const cls = classes[0];
-            const structure = cls.getStructure();
-
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const prop = structure.properties![0];
-
-            expect(prop.name).toBe("linkTarget");
-            expect(prop.decorators?.[0].name).toBe("IsLinkTarget");
-
-            orm.close();
         });
-    });
 
-    describe("imports", () => {
-        it("should set all imports", async () => {
-            LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithMultipleProperties],
+        describe("decorator with arguments", () => {
+            it("should set defined arguments", async () => {
+                LazyMetadataStorage.load();
+                const orm = await MikroORM.init({
+                    type: "postgresql",
+                    dbName: "test-db",
+                    entities: [TestEntityWithShortenedDecoratorName],
+                });
+
+                const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithShortenedDecoratorName"));
+                const lintedOut = await lintGeneratedFiles(out);
+                const file = lintedOut.find((file) => file.name === "dto/test-entity-with-shortened-decorator-name.input.ts");
+                if (!file) throw new Error("File not found");
+                const source = parseSource(file.content);
+                const classes = source.getClasses();
+                const cls = classes[0];
+                const structure = cls.getStructure();
+
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const prop = structure.properties![0];
+                expect(prop.name).toBe("dateAsString");
+                const lengthDecorator = prop.decorators?.find((decorator) => decorator.name === "Length");
+                expect(lengthDecorator).toBeDefined();
+                expect(lengthDecorator?.arguments).toEqual(["2", "5"]);
+
+                const importDeclarations = source.getImportDeclarations();
+                const lengthImport = importDeclarations.find((getImportDeclaration) =>
+                    getImportDeclaration.getNamedImports().some((namedImport) => namedImport.getName() === "Length"),
+                );
+                expect(lengthImport).toBeDefined();
+                expect(lengthImport?.getModuleSpecifierValue()).toBe("class-validator");
+
+                orm.close();
             });
+        });
 
-            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithMultipleProperties"));
-            const lintedOut = await lintGeneratedFiles(out);
-            const file = lintedOut.find((file) => file.name === "dto/test-entity-with-multiple-properties.input.ts");
-            if (!file) throw new Error("File not found");
-            const source = parseSource(file.content);
+        describe("relative path", () => {
+            it("should set IsValidRedirectSource decorator", async () => {
+                LazyMetadataStorage.load();
+                const orm = await MikroORM.init({
+                    type: "postgresql",
+                    dbName: "test-db",
+                    entities: [TestEntityWithRelativeImportDecorator],
+                });
 
-            const imports = source.getImportDeclarationOrThrow("class-validator").getText();
+                const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithRelativeImportDecorator"));
+                const lintedOut = await lintGeneratedFiles(out);
+                const file = lintedOut.find((file) => file.name === "dto/test-entity-with-relative-import-decorator.input.ts");
+                if (!file) throw new Error("File not found");
+                const source = parseSource(file.content);
+                const classes = source.getClasses();
+                const cls = classes[0];
+                const structure = cls.getStructure();
 
-            expect(imports).toContain("IsEmail");
-            expect(imports).toContain("Min");
-            expect(imports).toContain("Max");
-            expect(imports).toContain("IsBooleanString");
-            expect(imports).toContain("IsDateString");
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const prop = structure.properties![0];
+                expect(prop.name).toBe("source");
+                const decorators = prop.decorators?.map((i) => i.name);
+                expect(decorators).toContain("IsValidRedirectSource");
 
-            orm.close();
+                const importDeclarations = source.getImportDeclarations();
+                const isSlugImport = importDeclarations.find((getImportDeclaration) =>
+                    getImportDeclaration.getNamedImports().some((namedImport) => namedImport.getName() === "IsValidRedirectSource"),
+                );
+                expect(isSlugImport).toBeDefined();
+                expect(isSlugImport?.getModuleSpecifierValue()).toBe("../../redirects/validators/isValidRedirectSource");
+
+                orm.close();
+            });
         });
     });
 });
