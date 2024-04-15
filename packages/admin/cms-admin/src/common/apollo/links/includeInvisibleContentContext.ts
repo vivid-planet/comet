@@ -14,7 +14,7 @@ export const includeInvisibleContentContext = setContext((request, prevContext: 
     const xPreviewDamUrlsEvaluatesToFalse = xPreviewDamUrlsIsOverridden && !overrideHeaders["x-preview-dam-urls"];
     delete overrideHeaders["x-preview-dam-urls"];
 
-    if (xPreviewDamUrlsIsOverridden && xPreviewDamUrlsEvaluatesToFalse) {
+    if (xPreviewDamUrlsEvaluatesToFalse) {
         delete headers["x-preview-dam-urls"];
     }
 
