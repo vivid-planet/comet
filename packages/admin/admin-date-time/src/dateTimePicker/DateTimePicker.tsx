@@ -6,6 +6,7 @@ import { useIntl } from "react-intl";
 
 import { DatePicker as DatePickerBase } from "../datePicker/DatePicker";
 import { TimePicker as TimePickerBase } from "../timePicker/TimePicker";
+import { getIsoDateString } from "../utils/datePickerHelpers";
 import { getDateWithNewTime, getTimeStringFromDate } from "../utils/timePickerHelpers";
 
 export type DateTimePickerClassKey = "root" | "dateFormControl" | "timeFormControl" | "datePicker" | "timePicker";
@@ -67,13 +68,13 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
     const datePickerRef = React.useRef<HTMLElement>(null);
     const timePickerRef = React.useRef<HTMLElement>(null);
 
-    const onChangeDate = (newDate?: Date) => {
+    const onChangeDate = (newDate?: string) => {
         if (newDate === undefined) {
             onChange?.(undefined);
         } else {
             const timePickerShouldBeFocused = !value;
             const time = getTimeStringFromDate(value ? value : new Date());
-            const newDateTime = getDateWithNewTime(newDate, time);
+            const newDateTime = getDateWithNewTime(new Date(newDate), time);
             onChange?.(newDateTime);
 
             if (timePickerShouldBeFocused) {
@@ -102,7 +103,7 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
             <DateFormControl {...slotProps?.dateFormControl}>
                 <DatePicker
                     inputRef={datePickerRef}
-                    value={value}
+                    value={value ? getIsoDateString(value) : undefined}
                     onChange={onChangeDate}
                     fullWidth
                     clearable={clearable}

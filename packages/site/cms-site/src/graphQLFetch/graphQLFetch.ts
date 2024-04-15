@@ -35,13 +35,13 @@ export const gql = (chunks: TemplateStringsArray, ...variables: unknown[]): stri
     return chunks.reduce((acc, chunk, index) => `${acc}${chunk}${index in variables ? String(variables[index]) : ``}`, ``);
 };
 
-export function createFetchWithPreviewHeaders(fetch: Fetch, previewData?: SitePreviewData) {
+export function createFetchWithPreviewHeaders(fetch: Fetch, previewData?: SitePreviewData): Fetch {
     const defaultHeaders = graphQLHeaders(previewData);
     return createFetchWithDefaults(fetch, { headers: defaultHeaders });
 }
 
-export function createFetchWithDefaults(fetch: Fetch, defaults: RequestInit) {
-    return async function (input: RequestInfo, init?: RequestInit): Promise<Response> {
+export function createFetchWithDefaults(fetch: Fetch, defaults: RequestInit): Fetch {
+    return async function (input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
         return fetch(input, {
             ...defaults,
             ...init,

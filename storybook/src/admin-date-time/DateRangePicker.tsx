@@ -7,22 +7,19 @@ import { Form } from "react-final-form";
 
 const Story = () => {
     interface Values {
-        dateRangeOne?: DateRange | null;
-        dateRangeTwo?: DateRange | null;
+        dateRangeOne: DateRange;
+        dateRangeTwo: DateRange;
     }
-
-    const today = new Date();
-    const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
-
-    const initialValues: Partial<Values> = {
-        dateRangeOne: null,
-        dateRangeTwo: { start: today, end: tomorrow },
-    };
 
     return (
         <div style={{ width: 500 }}>
-            <Form<Values> onSubmit={() => {}} initialValues={initialValues}>
-                {({ values, form: { change } }) => (
+            <Form<Values>
+                onSubmit={() => {}}
+                initialValues={{
+                    dateRangeTwo: { start: "2024-02-10", end: "2024-02-20" },
+                }}
+            >
+                {({ values }) => (
                     <form>
                         <Card>
                             <CardContent>

@@ -7,10 +7,10 @@ import { Form } from "react-final-form";
 
 storiesOf("stories/form/components/Date & Time Pickers/Date Picker", module)
     .add("Basic", () => {
-        const [dateOne, setDateOne] = React.useState<Date | undefined>();
-        const [dateTwo, setDateTwo] = React.useState<Date | undefined>();
-        const [dateThree, setDateThree] = React.useState<Date | undefined>(new Date());
-        const [dateFour, setDateFour] = React.useState<Date | undefined>(new Date());
+        const [dateOne, setDateOne] = React.useState<string | undefined>();
+        const [dateTwo, setDateTwo] = React.useState<string | undefined>();
+        const [dateThree, setDateThree] = React.useState<string | undefined>("2024-03-10");
+        const [dateFour, setDateFour] = React.useState<string | undefined>("2024-03-10");
 
         return (
             <Grid container spacing={4}>
@@ -44,14 +44,14 @@ storiesOf("stories/form/components/Date & Time Pickers/Date Picker", module)
     })
     .add("Final Form", () => {
         type Values = {
-            dateOne?: Date;
-            dateTwo?: Date;
-            dateThree?: Date;
-            dateFour?: Date;
+            dateOne: string;
+            dateTwo: string;
+            dateThree: string;
+            dateFour: string;
         };
 
         return (
-            <Form<Values> initialValues={{ dateThree: new Date(), dateFour: new Date() }} onSubmit={() => {}}>
+            <Form<Values> initialValues={{ dateThree: "2024-03-10", dateFour: "2024-03-10" }} onSubmit={() => {}}>
                 {() => (
                     <Grid container spacing={4}>
                         <Grid item xs={6} md={3}>

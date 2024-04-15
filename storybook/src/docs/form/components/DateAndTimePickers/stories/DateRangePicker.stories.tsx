@@ -8,8 +8,8 @@ import { Form } from "react-final-form";
 storiesOf("stories/form/components/Date & Time Pickers/Date-Range Picker", module)
     .add("Basic", () => {
         const [dateOne, setDateOne] = React.useState<DateRange | undefined>();
-        const [dateTwo, setDateTwo] = React.useState<DateRange | undefined>({ start: new Date(), end: new Date() });
-        const [dateThree, setDateThree] = React.useState<DateRange | undefined>({ start: new Date(), end: new Date() });
+        const [dateTwo, setDateTwo] = React.useState<DateRange | undefined>({ start: "2024-03-10", end: "2024-03-16" });
+        const [dateThree, setDateThree] = React.useState<DateRange | undefined>({ start: "2024-03-10", end: "2024-03-16" });
 
         return (
             <Grid container spacing={4}>
@@ -45,7 +45,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Date-Range Picker", modul
 
         return (
             <Form<Values>
-                initialValues={{ dateTwo: { start: new Date(), end: new Date() }, dateThree: { start: new Date(), end: new Date() } }}
+                initialValues={{ dateTwo: { start: "2024-03-10", end: "2024-03-16" }, dateThree: { start: "2024-03-10", end: "2024-03-16" } }}
                 onSubmit={() => {}}
             >
                 {() => (
