@@ -1,13 +1,13 @@
 import { gql } from "@apollo/client";
 
 export const generateAltTextMutation = gql`
-    mutation GenerateAltText($fileUrl: String!) {
-        generateAltText(fileUrl: $fileUrl)
+    mutation GenerateAltText($fileId: String!) {
+        generateAltText(fileId: $fileId)
     }
 `;
 
 export const generateImageTitleMutation = gql`
-    mutation GenerateImageTitle($fileUrl: String!) {
-        generateImageTitle(fileUrl: $fileUrl)
+    mutation GenerateImageTitle($fileId: String!) {
+        generateImageTitle(fileId: $fileId)
     }
 `;

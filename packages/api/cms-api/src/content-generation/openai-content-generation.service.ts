@@ -1,6 +1,7 @@
 import { AzureKeyCredential, ChatRequestMessage, OpenAIClient } from "@azure/openai";
 import { Injectable } from "@nestjs/common";
-import fetch from "node-fetch";
+
+import { FilesService } from "../dam/files/files.service";
 
 export type OpenAiContentGenerationConfig = {
     deploymentId: string;
@@ -10,7 +11,15 @@ export type OpenAiContentGenerationConfig = {
 
 @Injectable()
 export class OpenAiContentGenerationService {
-    async generateAltText(fileUrl: string, config: OpenAiContentGenerationConfig): Promise<string> {
+    constructor(private readonly filesService: FilesService) {}
+
+    async generateAltText(fileId: string, config: OpenAiContentGenerationConfig): Promise<string> {
+        const file = await this.filesService.findOneById(fileId);
+
+        if (file === null) {
+            throw new Error("File doesn't exist");
+        }
+
         const client = new OpenAIClient(config.apiUrl, new AzureKeyCredential(config.apiKey));
         const prompt: ChatRequestMessage[] = [
             {
@@ -24,7 +33,7 @@ export class OpenAiContentGenerationService {
                     {
                         type: "image_url",
                         imageUrl: {
-                            url: await this.loadImageAsBase64(fileUrl),
+                            url: await this.filesService.getFileAsBase64String(file),
                             detail: "low",
                         },
                     },
@@ -35,9 +44,14 @@ export class OpenAiContentGenerationService {
         return result.choices[0].message?.content ?? "";
     }
 
-    async generateImageTitle(fileUrl: string, config: OpenAiContentGenerationConfig): Promise<string> {
-        const client = new OpenAIClient(config.apiUrl, new AzureKeyCredential(config.apiKey));
+    async generateImageTitle(fileId: string, config: OpenAiContentGenerationConfig): Promise<string> {
+        const file = await this.filesService.findOneById(fileId);
 
+        if (file === null) {
+            throw new Error("File doesn't exist");
+        }
+
+        const client = new OpenAIClient(config.apiUrl, new AzureKeyCredential(config.apiKey));
         const prompt: ChatRequestMessage[] = [
             {
                 role: "system",
@@ -50,7 +64,7 @@ export class OpenAiContentGenerationService {
                     {
                         type: "image_url",
                         imageUrl: {
-                            url: await this.loadImageAsBase64(fileUrl),
+                            url: await this.filesService.getFileAsBase64String(file),
                             detail: "low",
                         },
                     },
@@ -59,13 +73,5 @@ export class OpenAiContentGenerationService {
         ];
         const result = await client.getChatCompletions(config.deploymentId, prompt, { maxTokens: 300 });
         return result.choices[0].message?.content ?? "";
-    }
-
-    private async loadImageAsBase64(url: string) {
-        const response = await fetch(url);
-        const buffer = await response.buffer();
-        const base64String = buffer.toString("base64");
-        const mimeType = response.headers.get("content-type");
-        return `data:${mimeType};base64,${base64String}`;
     }
 }

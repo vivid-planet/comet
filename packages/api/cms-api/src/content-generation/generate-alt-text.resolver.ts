@@ -11,8 +11,8 @@ export class GenerateAltTextResolver {
 
     @RequiredPermission(["dam"], { skipScopeCheck: true })
     @Mutation(() => String)
-    async generateAltText(@Args("fileUrl", { type: () => String }) fileUrl: string): Promise<string> {
-        const altText = await this.contentGenerationService.generateAltText?.(fileUrl);
+    async generateAltText(@Args("fileId", { type: () => String }) fileId: string): Promise<string> {
+        const altText = await this.contentGenerationService.generateAltText?.(fileId);
         if (!altText) throw new Error("Alt text generation failed or is not supported");
         return altText;
     }

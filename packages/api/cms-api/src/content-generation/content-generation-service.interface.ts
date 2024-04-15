@@ -1,4 +1,4 @@
 export interface ContentGenerationServiceInterface {
-    generateAltText?(fileUrl: string): Promise<string>;
-    generateImageTitle?(fileUrl: string): Promise<string>;
+    generateAltText?(fileId: string): Promise<string>;
+    generateImageTitle?(fileId: string): Promise<string>;
 }
