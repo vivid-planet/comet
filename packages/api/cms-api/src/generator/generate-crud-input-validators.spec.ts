@@ -1,11 +1,43 @@
 import { BaseEntity, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
-import { IsEmail, IsISO8601, IsString, Length } from "class-validator";
+import {
+    IsEmail,
+    IsISO8601,
+    IsString,
+    Length,
+    registerDecorator,
+    ValidationOptions,
+    ValidatorConstraint,
+    ValidatorConstraintInterface,
+} from "class-validator";
 import { v4 as uuid } from "uuid";
 
 import { IsValidRedirectSource } from "../redirects/validators/isValidRedirectSource";
 import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
+
+export const IsTrueAsString = (validationOptions?: ValidationOptions) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (object: Record<string, any>, propertyName: string): void => {
+        registerDecorator({
+            target: object.constructor,
+            propertyName,
+            options: validationOptions,
+            validator: IsSlugConstraint,
+        });
+    };
+};
+
+@ValidatorConstraint({ name: "IsTrueAsString", async: true })
+class IsSlugConstraint implements ValidatorConstraintInterface {
+    async validate(value: string): Promise<boolean> {
+        return value === "true";
+    }
+
+    defaultMessage(): string {
+        return "string is not 'true'";
+    }
+}
 
 @Entity()
 export class TestEntityWithEmail extends BaseEntity<TestEntityWithEmail, "id"> {
@@ -46,6 +78,16 @@ export class TestEntityWithRelativeImportDecorator extends BaseEntity<TestEntity
     @IsValidRedirectSource()
     @Property({ columnType: "text" })
     source: string;
+}
+
+@Entity()
+export class TestEntityWithValidatorDefinedInFile extends BaseEntity<TestEntityWithValidatorDefinedInFile, "id"> {
+    @PrimaryKey({ type: "uuid" })
+    id: string = uuid();
+
+    @IsTrueAsString()
+    @Property({ columnType: "text" })
+    trueString: string;
 }
 
 describe("GenerateDefinedValidatorDecorators", () => {
@@ -223,6 +265,41 @@ describe("GenerateDefinedValidatorDecorators", () => {
 
                 orm.close();
             });
+        });
+    });
+
+    describe("validator defined in file", () => {
+        it("should set IsTrueAsString decorator", async () => {
+            LazyMetadataStorage.load();
+            const orm = await MikroORM.init({
+                type: "postgresql",
+                dbName: "test-db",
+                entities: [TestEntityWithValidatorDefinedInFile],
+            });
+
+            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithValidatorDefinedInFile"));
+            const lintedOut = await lintGeneratedFiles(out);
+            const file = lintedOut.find((file) => file.name === "dto/test-entity-with-validator-defined-in-file.input.ts");
+            if (!file) throw new Error("File not found");
+            const source = parseSource(file.content);
+            const classes = source.getClasses();
+            const cls = classes[0];
+            const structure = cls.getStructure();
+
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const prop = structure.properties![0];
+            expect(prop.name).toBe("trueString");
+            const decorators = prop.decorators?.map((i) => i.name);
+            expect(decorators).toContain("IsTrueAsString");
+
+            const importDeclarations = source.getImportDeclarations();
+            const isTrueAsStringImport = importDeclarations.find((getImportDeclaration) =>
+                getImportDeclaration.getNamedImports().some((namedImport) => namedImport.getName() === "IsTrueAsString"),
+            );
+            expect(isTrueAsStringImport).toBeDefined();
+            expect(isTrueAsStringImport?.getModuleSpecifierValue()).toBe("../generate-crud-input-validators.spec");
+
+            orm.close();
         });
     });
 });
