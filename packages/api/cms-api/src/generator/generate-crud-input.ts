@@ -11,8 +11,8 @@ import {
     findEnumImportPath,
     findEnumName,
     findInputClassImportPath,
+    findValidatorImportPath,
     morphTsProperty,
-    morphTsSource,
 } from "./utils/ts-morph-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
@@ -45,12 +45,6 @@ export async function generateCrudInput(
     metadata: EntityMetadata<any>,
     options: { nested: boolean; excludeFields: string[] } = { nested: false, excludeFields: [] },
 ): Promise<GeneratedFile[]> {
-    // TODO: move to ts-morph-helper
-    const allImports = morphTsSource(metadata).getImportDeclarations();
-    function getImportPath(importName: string) {
-        return allImports.find((i) => i.getNamedImports().some((ni) => ni.getName() === importName))?.getModuleSpecifierValue();
-    }
-
     const generatedFiles: GeneratedFile[] = [];
 
     const props = metadata.props
@@ -327,19 +321,24 @@ export async function generateCrudInput(
             const constraints = getMetadataStorage().getTargetValidatorConstraints(validator.constraintCls);
 
             for (const constraint of constraints) {
-                const constraintImportName = constraint.name.charAt(0).toUpperCase() + constraint.name.slice(1);
-                const decorator = definedDecorators.find((decorator) => decorator.getName() === constraintImportName)?.getText();
+                // ignore casing since class validator is inconsistent with casing
+                const decorator = definedDecorators.find((decorator) => {
+                    return (
+                        decorator.getName().toUpperCase() === constraint.name.toUpperCase() ||
+                        // some class validator decorators have a prefix "Is" but not in the constraint name
+                        `Is${decorator.getName()}`.toUpperCase() === constraint.name.toUpperCase()
+                    );
+                });
 
                 if (decorator) {
-                    // TODO: check relative import path correct ../?
-                    const importPath = getImportPath(constraintImportName);
+                    const importPath = findValidatorImportPath(decorator.getName(), generatorOptions, metadata);
                     if (importPath) {
-                        imports.push({ name: constraintImportName, importPath });
-                        decorators.includes(decorator) || decorators.unshift(decorator);
+                        imports.push({ name: decorator.getName(), importPath });
+
+                        decorators.includes(decorator.getText()) || decorators.unshift(decorator.getText());
                     }
                 } else {
-                    // Length -> IsLength TODO: what to do ?
-                    console.warn(`Decorator ${constraintImportName} not found`);
+                    console.warn(`Decorator for constraint ${constraint.name} not found - skipping for input generation`);
                 }
             }
         }

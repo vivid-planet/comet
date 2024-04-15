@@ -81,6 +81,12 @@ export function findEnumImportPath(enumName: string, generatorOptions: { targetD
     }
 }
 
+export function findValidatorImportPath(validatorName: string, generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): string {
+    // TODO: validator is defined in same file as entity
+    const { importPath } = findImportPath(validatorName, generatorOptions, metadata);
+    return importPath;
+}
+
 export function findBlockName(propertyName: string, metadata: EntityMetadata<any>): string {
     const tsProp = morphTsProperty(propertyName, metadata);
     if (!tsProp) throw new Error("property not found");
