@@ -1,5 +1,69 @@
 # @comet/blocks-admin
 
+## 6.5.0
+
+### Minor Changes
+
+-   2f64daa9b: Add `title` field to link block
+
+    Perform the following steps to use it in an application:
+
+    1. API: Use the new `createLinkBlock` factory to create the LinkBlock:
+
+        ```ts
+        import { createLinkBlock } from "@comet/cms-api";
+
+        // ...
+
+        const LinkBlock = createLinkBlock({
+            supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, news: NewsLinkBlock },
+        });
+        ```
+
+    2. Site: Pass the `title` prop to LinkBlock's child blocks:
+
+    ```diff
+    const supportedBlocks: SupportedBlocks = {
+    -   internal: ({ children, ...props }) => <InternalLinkBlock data={props}>{children}</InternalLinkBlock>,
+    +   internal: ({ children, title, ...props }) => <InternalLinkBlock data={props} title={title}>{children}</InternalLinkBlock>,
+        // ...
+    };
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [6cb2f9046]
+    -   @comet/admin@6.5.0
+    -   @comet/admin-icons@6.5.0
+
+## 6.4.0
+
+### Minor Changes
+
+-   30d9e0dee: Add `createCompositeBlockSelectField` helper function
+
+    To simplify the creation of a select field blocks by hiding the verbose definition of `Form`, `Field` and items.
+
+-   322da3831: Add `resolveDependencyPath()` to `BlockMethods` interface
+
+    Blocks must now offer a `resolveDependencyPath()` method that returns a URL path based on the block's `state` and `jsonPath`.
+    It can be used to build the URL to a block's edit view.
+
+    For most cases, the default implementation of this method should be sufficient, so you don't have to implement it yourself.
+    You must only override it manually if your block's admin component contains special routing logic (e.g. `RouterTabs`).
+
+-   887365c76: Add `createCompositeBlockTextField` helper function
+
+    To simplify the creation of a text block field by hiding the verbose definition of `Form` and `Field`.
+
+### Patch Changes
+
+-   811903e60: Disable the content translation feature for input fields where it doesn't make sense
+-   Updated dependencies [8ce21f34b]
+-   Updated dependencies [811903e60]
+    -   @comet/admin@6.4.0
+    -   @comet/admin-icons@6.4.0
+
 ## 6.3.0
 
 ### Patch Changes

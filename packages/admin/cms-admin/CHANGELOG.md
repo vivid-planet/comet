@@ -1,5 +1,108 @@
 # @comet/cms-admin
 
+## 6.5.0
+
+### Minor Changes
+
+-   2f64daa9b: Add `title` field to link block
+
+    Perform the following steps to use it in an application:
+
+    1. API: Use the new `createLinkBlock` factory to create the LinkBlock:
+
+        ```ts
+        import { createLinkBlock } from "@comet/cms-api";
+
+        // ...
+
+        const LinkBlock = createLinkBlock({
+            supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, news: NewsLinkBlock },
+        });
+        ```
+
+    2. Site: Pass the `title` prop to LinkBlock's child blocks:
+
+    ```diff
+    const supportedBlocks: SupportedBlocks = {
+    -   internal: ({ children, ...props }) => <InternalLinkBlock data={props}>{children}</InternalLinkBlock>,
+    +   internal: ({ children, title, ...props }) => <InternalLinkBlock data={props} title={title}>{children}</InternalLinkBlock>,
+        // ...
+    };
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [2f64daa9b]
+-   Updated dependencies [6cb2f9046]
+    -   @comet/blocks-admin@6.5.0
+    -   @comet/admin@6.5.0
+    -   @comet/admin-date-time@6.5.0
+    -   @comet/admin-icons@6.5.0
+    -   @comet/admin-rte@6.5.0
+    -   @comet/admin-theme@6.5.0
+
+## 6.4.0
+
+### Minor Changes
+
+-   2d1b9467a: createImageLinkBlock: Allow overriding name
+
+    This allows using two different `ImageLink` blocks in one application.
+
+    Perform the following steps to override the name:
+
+    1. API: Add the name as second argument in the `createImageLinkBlock` factory:
+
+        ```diff
+        const MyCustomImageLinkBlock = createImageLinkBlock(
+            { link: InternalLinkBlock },
+        +   "MyCustomImageLink"
+        );
+        ```
+
+    2. Admin: Set the `name` option in the `createImageLinkBlock` factory:
+
+        ```diff
+        const MyCustomImageLinkBlock = createImageLinkBlock({
+            link: InternalLinkBlock,
+        +   name: "MyCustomImageLink"
+        });
+        ```
+
+-   322da3831: Add `DependencyInterface`
+
+    The `DependencyInterface` must be implemented for entities to be displayed correctly in the `DependencyList`.
+    The implementation must then be passed to the `DependenciesConfigProvider`.
+
+    You can use one of the helper methods to implement the `resolvePath()` method required by `DependencyInterface`:
+
+    -   `createDocumentDependencyMethods()` for documents
+    -   `createDependencyMethods()` for all other entities
+
+    You can find more information in [the docs](https://docs.comet-dxp.com/docs/dependencies/).
+
+-   322da3831: Add `DependencyList` that can be used to display the dependencies of an entity in the admin
+
+    The `DependencyList` is intended to be used in `Tabs` (as done in the DAM).
+
+### Patch Changes
+
+-   f6c972e59: Correctly evaluate the `language`-field of the `CurrentUser`-object
+-   811903e60: Disable the content translation feature for input fields where it doesn't make sense
+-   0efae68ff: Prevent XSS attacks in `isLinkTarget()` validator
+-   Updated dependencies [30d9e0dee]
+-   Updated dependencies [811903e60]
+-   Updated dependencies [8ce21f34b]
+-   Updated dependencies [322da3831]
+-   Updated dependencies [811903e60]
+-   Updated dependencies [887365c76]
+    -   @comet/blocks-admin@6.4.0
+    -   @comet/admin@6.4.0
+    -   @comet/admin-date-time@6.4.0
+    -   @comet/admin-icons@6.4.0
+    -   @comet/admin-rte@6.4.0
+    -   @comet/admin-theme@6.4.0
+
 ## 6.3.0
 
 ### Minor Changes

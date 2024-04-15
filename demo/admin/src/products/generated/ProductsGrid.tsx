@@ -38,7 +38,6 @@ import {
 const productsFragment = gql`
     fragment ProductsList on Product {
         id
-        updatedAt
         title
         visible
         slug
@@ -49,6 +48,7 @@ const productsFragment = gql`
         soldCount
         image
         createdAt
+        updatedAt
     }
 `;
 
@@ -104,13 +104,6 @@ export function ProductsGrid(): React.ReactElement {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 
     const columns: GridColDef<GQLProductsListFragment>[] = [
-        {
-            field: "updatedAt",
-            headerName: intl.formatMessage({ id: "product.updatedAt", defaultMessage: "Updated At" }),
-            type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
-            width: 150,
-        },
         { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }), width: 150 },
         { field: "visible", headerName: intl.formatMessage({ id: "product.visible", defaultMessage: "Visible" }), type: "boolean", width: 150 },
         { field: "slug", headerName: intl.formatMessage({ id: "product.slug", defaultMessage: "Slug" }), width: 150 },
@@ -142,6 +135,13 @@ export function ProductsGrid(): React.ReactElement {
         {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
+            type: "dateTime",
+            valueGetter: ({ value }) => value && new Date(value),
+            width: 150,
+        },
+        {
+            field: "updatedAt",
+            headerName: intl.formatMessage({ id: "product.updatedAt", defaultMessage: "Updated At" }),
             type: "dateTime",
             valueGetter: ({ value }) => value && new Date(value),
             width: 150,

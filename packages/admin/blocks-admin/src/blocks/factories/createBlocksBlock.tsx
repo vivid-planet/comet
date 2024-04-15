@@ -806,6 +806,24 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 }
             }, []);
         },
+        resolveDependencyPath: (state, jsonPath) => {
+            if (!/^blocks.\d+.props/.test(jsonPath)) {
+                throw new Error("BlocksBlock: Invalid jsonPath");
+            }
+
+            const pathArr = jsonPath.split(".");
+            const num = Number(pathArr[1]);
+            const blockItem = state.blocks[num];
+
+            const block = blockForType(blockItem.type);
+
+            if (block === null) {
+                throw new Error("BlocksBlock: Block is null");
+            }
+
+            const childPath = block.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
+            return `${blockItem.key}/blocks/${childPath}`;
+        },
     };
     return BlocksBlock;
 }

@@ -1,5 +1,5 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudField, CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
+import { CrudField, CrudGenerator, DamImageBlock, EntityInfo, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Collection, Embeddable, Embedded, Entity, Enum, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
@@ -32,13 +32,12 @@ export class NewsContentScope {
     language: string;
 }
 
+@EntityInfo<News>((news) => ({ name: news.title, secondaryInformation: news.slug }))
 @RootBlockEntity()
-@ObjectType({
-    implements: () => [DocumentInterface],
-})
+@ObjectType()
 @Entity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class News extends BaseEntity<News, "id"> implements DocumentInterface {
+export class News extends BaseEntity<News, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt" | "category"; // TODO remove "category" once CRUD generator supports enums
 
     @PrimaryKey({ type: "uuid" })

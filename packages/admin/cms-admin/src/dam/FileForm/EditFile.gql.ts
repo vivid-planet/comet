@@ -57,3 +57,22 @@ export const updateDamFileMutation = gql`
     }
     ${damFileDetailFragment}
 `;
+
+export const damFileDependentsQuery = gql`
+    query DamFileDependencies($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false) {
+        item: damFile(id: $id) {
+            id
+            dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh) {
+                nodes {
+                    rootGraphqlObjectType
+                    rootId
+                    rootColumnName
+                    jsonPath
+                    name
+                    secondaryInformation
+                }
+                totalCount
+            }
+        }
+    }
+`;

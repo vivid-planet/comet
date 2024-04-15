@@ -26,7 +26,7 @@ export const DamTableFilter = ({ filterApi, hideArchiveFilter }: DamTableFilterP
     return (
         <TableFilterFinalForm filterApi={filterApi}>
             <FilterBar>
-                <Field name="searchText" component={FinalFormSearchTextField} clearable />
+                <Field name="searchText" component={FinalFormSearchTextField} clearable disableContentTranslation />
                 {!hideArchiveFilter && (
                     <FilterBarPopoverFilter label={intl.formatMessage({ id: "comet.pages.dam.archived", defaultMessage: "Archived" })}>
                         <Field name="archived" type="checkbox">
