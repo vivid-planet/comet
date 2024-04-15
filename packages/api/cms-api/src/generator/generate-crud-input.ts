@@ -315,11 +315,9 @@ export async function generateCrudInput(
         }
 
         const classValidatorValidators = getMetadataStorage().getTargetValidationMetadatas(metadata.class, prop.name, false, false, undefined);
-
         for (const validator of classValidatorValidators) {
             if (validator.propertyName !== prop.name) continue;
             const constraints = getMetadataStorage().getTargetValidatorConstraints(validator.constraintCls);
-
             for (const constraint of constraints) {
                 // ignore casing since class validator is inconsistent with casing
                 const decorator = definedDecorators.find((decorator) => {
@@ -329,16 +327,14 @@ export async function generateCrudInput(
                         `Is${decorator.getName()}`.toUpperCase() === constraint.name.toUpperCase()
                     );
                 });
-
                 if (decorator) {
                     const importPath = findValidatorImportPath(decorator.getName(), generatorOptions, metadata);
                     if (importPath) {
                         imports.push({ name: decorator.getName(), importPath });
-
                         decorators.includes(decorator.getText()) || decorators.unshift(decorator.getText());
                     }
                 } else {
-                    console.warn(`Decorator for constraint ${constraint.name} not found - skipping for input generation`);
+                    console.warn(`Decorator import for constraint ${constraint.name} not found`);
                 }
             }
         }
