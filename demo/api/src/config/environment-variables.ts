@@ -96,15 +96,15 @@ export class EnvironmentVariables {
     @IsString()
     S3_BUCKET: string;
 
+    @ValidateIf((v) => v.CONTENT_GENERATION_API_KEY || v.CONTENT_GENERATION_DEPLOYMENT_ID)
     @IsString()
-    @IsOptional()
     CONTENT_GENERATION_API_URL?: string;
 
+    @ValidateIf((v) => v.CONTENT_GENERATION_API_URL || v.CONTENT_GENERATION_DEPLOYMENT_ID)
     @IsString()
-    @IsOptional()
     CONTENT_GENERATION_API_KEY?: string;
 
+    @ValidateIf((v) => v.CONTENT_GENERATION_API_URL || v.CONTENT_GENERATION_API_KEY)
     @IsString()
-    @IsOptional()
     CONTENT_GENERATION_DEPLOYMENT_ID?: string;
 }
