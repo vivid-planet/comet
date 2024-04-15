@@ -28,6 +28,8 @@ storiesOf("stories/components/Toolbar/Feedback Button", module)
                             }, 1000);
                         }}
                         startIcon={<Assets />}
+                        tooltipSuccessMessage="Saving was successful"
+                        tooltipErrorMessage="Error while saving"
                     >
                         <FormattedMessage id="comet.feedback" defaultMessage="Feedback" />
                     </FeedbackButton>

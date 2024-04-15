@@ -29,6 +29,8 @@ export interface FeedbackButtonProps extends ButtonProps {
     loadingIcon?: React.ReactNode;
     startIcon?: React.ReactNode;
     endIcon?: React.ReactNode;
+    tooltipSuccessMessage?: string;
+    tooltipErrorMessage?: string;
 }
 
 export type FeedbackButtonDisplayState = "idle" | "loading" | "success" | "fail";
@@ -45,6 +47,8 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         loadingIcon = <ThreeDotSaving />,
         startIcon,
         endIcon,
+        tooltipSuccessMessage,
+        tooltipErrorMessage,
 
         ...restProps
     } = useThemeProps({
@@ -127,7 +131,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             startIcon={
                 startIcon && (
                     <Tooltip
-                        title="Tooltip"
+                        title={tooltipSuccessMessage}
                         open={displayState === "fail" || (displayState === "success" && true)}
                         placement="top-start"
                         variant={resolveTooltipForDisplayState(displayState)}
@@ -139,7 +143,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             endIcon={
                 endIcon && !startIcon ? (
                     <Tooltip
-                        title="Tooltip"
+                        title={tooltipErrorMessage}
                         open={displayState === "fail" || (displayState === "success" && true)}
                         placement="top-end"
                         variant={resolveTooltipForDisplayState(displayState)}
