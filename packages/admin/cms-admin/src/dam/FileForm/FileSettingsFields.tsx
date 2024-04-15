@@ -121,6 +121,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                     component={FinalFormInput}
                     fullWidth
                     endAdornment={
+                        isImage &&
                         contentGeneration?.generateAltText && (
                             <IconButton
                                 color="primary"
@@ -143,6 +144,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                     component={FinalFormInput}
                     fullWidth
                     endAdornment={
+                        isImage &&
                         contentGeneration?.generateImageTitle && (
                             <IconButton
                                 color="primary"
