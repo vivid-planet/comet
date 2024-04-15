@@ -2,11 +2,11 @@
 title: Content Generation
 ---
 
-COMET DXP supports some features for generating content with third party tools (e.g. ChatGPT).
+COMET DXP supports some features for generating content with third party tools (e.g., ChatGPT).
 
 ## DAM: Generating alt texts and titles for images
 
-To enable this feature, follow the following steps:
+To enable this feature, perform the following steps:
 
 ### 1) API: Implement the `ContentGenerationServiceInterface`
 
