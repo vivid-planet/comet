@@ -63,7 +63,7 @@ export class ProductDimensions {
 
 @ObjectType()
 @Entity()
-@RootBlockEntity<Product>({ isVisible: (product) => product.visible })
+@RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
 export class Product extends BaseEntity<Product, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
