@@ -3,17 +3,17 @@ import { Injectable } from "@nestjs/common";
 
 import { FilesService } from "../dam/files/files.service";
 
-export type OpenAiContentGenerationConfig = {
+export type AzureOpenAiContentGenerationConfig = {
     deploymentId: string;
     apiKey: string;
     apiUrl: string;
 };
 
 @Injectable()
-export class OpenAiContentGenerationService {
+export class AzureOpenAiContentGenerationService {
     constructor(private readonly filesService: FilesService) {}
 
-    async generateAltText(fileId: string, config: OpenAiContentGenerationConfig): Promise<string> {
+    async generateAltText(fileId: string, config: AzureOpenAiContentGenerationConfig): Promise<string> {
         const file = await this.filesService.findOneById(fileId);
 
         if (file === null) {
@@ -44,7 +44,7 @@ export class OpenAiContentGenerationService {
         return result.choices[0].message?.content ?? "";
     }
 
-    async generateImageTitle(fileId: string, config: OpenAiContentGenerationConfig): Promise<string> {
+    async generateImageTitle(fileId: string, config: AzureOpenAiContentGenerationConfig): Promise<string> {
         const file = await this.filesService.findOneById(fileId);
 
         if (file === null) {

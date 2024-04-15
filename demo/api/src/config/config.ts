@@ -13,11 +13,15 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
     }
 
     let contentGeneration = undefined;
-    if (envVars.CONTENT_GENERATION_API_KEY && envVars.CONTENT_GENERATION_API_URL && envVars.CONTENT_GENERATION_DEPLOYMENT_ID) {
+    if (
+        envVars.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY &&
+        envVars.AZURE_OPEN_AI_CONTENT_GENERATION_API_URL &&
+        envVars.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID
+    ) {
         contentGeneration = {
-            apiKey: envVars.CONTENT_GENERATION_API_KEY,
-            apiUrl: envVars.CONTENT_GENERATION_API_URL,
-            deploymentId: envVars.CONTENT_GENERATION_DEPLOYMENT_ID,
+            apiKey: envVars.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY,
+            apiUrl: envVars.AZURE_OPEN_AI_CONTENT_GENERATION_API_URL,
+            deploymentId: envVars.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID,
         };
     }
 

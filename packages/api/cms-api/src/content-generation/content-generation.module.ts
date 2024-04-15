@@ -1,10 +1,10 @@
 import { DynamicModule, Global, Module, ModuleMetadata, Type } from "@nestjs/common";
 
+import { AzureOpenAiContentGenerationService } from "./azure-open-ai-content-generation.service";
 import { CONTENT_GENERATION_SERVICE } from "./content-generation.constants";
 import { ContentGenerationServiceInterface } from "./content-generation-service.interface";
 import { GenerateAltTextResolver } from "./generate-alt-text.resolver";
 import { GenerateImageTitleResolver } from "./generate-image-title.resolver";
-import { OpenAiContentGenerationService } from "./openai-content-generation.service";
 
 export interface ContentGenerationModuleOptions {
     Service: Type<ContentGenerationServiceInterface>;
@@ -31,7 +31,7 @@ export class ContentGenerationModule {
                     provide: CONTENT_GENERATION_SERVICE,
                     useClass: Service,
                 },
-                OpenAiContentGenerationService,
+                AzureOpenAiContentGenerationService,
                 ...providers,
             ],
             imports,
