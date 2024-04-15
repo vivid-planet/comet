@@ -296,12 +296,20 @@ export function generateGrid(
     \`;
 
     const ${instanceGqlTypePlural}Query = gql\`
-        query ${gqlTypePlural}Grid($offset: Int, $limit: Int${hasSort ? `, $sort: [${gqlType}Sort!]` : ""}${hasSearch ? `, $search: String` : ""}${
-        hasFilter ? `, $filter: ${gqlType}Filter` : ""
-    }${hasScope ? `, $scope: ${gqlType}ContentScopeInput!` : ""}) {
-            ${gridQuery}(offset: $offset, limit: $limit${hasSort ? `, sort: $sort` : ""}${hasSearch ? `, search: $search` : ""}${
-        hasFilter ? `, filter: $filter` : ""
-    }${hasScope ? `, scope: $scope` : ""}) {
+        query ${gqlTypePlural}Grid(${[
+        ...[`$offset: Int`, `$limit: Int`],
+        ...(hasSort ? [`$sort: [${gqlType}Sort!]`] : []),
+        ...(hasSearch ? [`$search: String`] : []),
+        ...(hasFilter ? [`$filter: ${gqlType}Filter`] : []),
+        ...(hasScope ? [`$scope: ${gqlType}ContentScopeInput!`] : []),
+    ].join(", ")}) {
+    ${gridQuery}(${[
+        ...[`offset: $offset`, `limit: $limit`],
+        ...(hasSort ? [`sort: $sort`] : []),
+        ...(hasSearch ? [`search: $search`] : []),
+        ...(hasFilter ? [`filter: $filter`] : []),
+        ...(hasScope ? [`scope: $scope`] : []),
+    ].join(", ")}) {
                 nodes {
                     ...${fragmentName}
                 }
@@ -325,8 +333,8 @@ export function generateGrid(
     ${
         allowCopyPaste
             ? `const create${gqlType}Mutation = gql\`
-        mutation Create${gqlType}(${hasScope ? `$scope: ${gqlType}ContentScopeInput!, ` : ""}$input: ${gqlType}Input!) {
-            create${gqlType}(${hasScope ? `scope: $scope, ` : ""}input: $input) {
+        mutation Create${gqlType}(${[...(hasScope ? [`$scope: ${gqlType}ContentScopeInput!`] : []), ...[`$input: ${gqlType}Input!`]].join(", ")}) {
+            create${gqlType}(${[...(hasScope ? [`scope: $scope`] : []), ...[`input: $input`]].join(", ")}) {
                 id
             }
         }
@@ -454,7 +462,7 @@ export function generateGrid(
                                             onPaste={async ({ input }) => {
                                                 await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                                                     mutation: create${gqlType}Mutation,
-                                                    variables: { ${hasScope ? `scope, ` : ""}input },
+                                                    variables: { ${[...(hasScope ? [`scope`] : []), ...["input"]].join(", ")} },
                                                 });
                                             }}
                                             `
