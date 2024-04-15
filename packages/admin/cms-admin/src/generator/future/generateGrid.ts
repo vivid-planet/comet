@@ -13,7 +13,7 @@ import { getXxxForFilterProp } from "./generateGrid/getXxxForFilterProp";
 import { GeneratorReturn, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
-import { generateImportsCode } from "./utils/generateImportsCode";
+import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 
@@ -73,16 +73,14 @@ export function generateGrid(
     const instanceGqlTypePlural = gqlTypePlural[0].toLowerCase() + gqlTypePlural.substring(1);
     const gridQuery = instanceGqlType != instanceGqlTypePlural ? instanceGqlTypePlural : `${instanceGqlTypePlural}List`;
     const gqlDocuments: Record<string, string> = {};
-    //const imports: Imports = [];
+    const imports: Imports = [];
+    const props: Prop[] = [];
 
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
 
     const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
 
     const createMutationType = findMutationType(`create${gqlType}`, gqlIntrospection);
-
-    const { hasFilterProp, imports, props } = getXxxForFilterProp({ config, gridQueryType, gqlIntrospection });
-    const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
 
     const hasDeleteMutation = !!findMutationType(`delete${gqlType}`, gqlIntrospection);
     const hasCreateMutation = !!createMutationType;
@@ -96,12 +94,20 @@ export function generateGrid(
 
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
     const hasFilter = !!filterArg;
+    let hasFilterProp = false;
     let filterFields: string[] = [];
     if (filterArg) {
         const filterType = findInputObjectType(filterArg, gqlIntrospection);
         if (!filterType) throw new Error("Can't find filter type");
         filterFields = filterType.inputFields.map((f) => f.name);
+
+        const { hasFilterProp: tempHasFilterProp, imports: filterPropImports, props: filterPropProps } = getXxxForFilterProp({ config, filterType });
+        hasFilterProp = tempHasFilterProp;
+        imports.push(...filterPropImports);
+        props.push(...filterPropProps);
     }
+
+    const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
 
     const sortArg = gridQueryType.args.find((arg) => arg.name === "sort");
     const hasSort = !!sortArg;

@@ -1,19 +1,16 @@
-import { IntrospectionField, IntrospectionQuery } from "graphql";
+import { IntrospectionInputObjectType } from "graphql";
 
 import { Prop } from "../generateGrid";
 import { GridConfig } from "../generator";
 import { Imports } from "../utils/generateImportsCode";
-import { findInputObjectType } from "./findInputObjectType";
 
 export function getXxxForFilterProp({
     config,
-    gridQueryType,
-    gqlIntrospection,
+    filterType,
 }: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: GridConfig<any>;
-    gridQueryType: IntrospectionField;
-    gqlIntrospection: IntrospectionQuery;
+    filterType: IntrospectionInputObjectType;
 }): {
     hasFilterProp: boolean;
     imports: Imports;
@@ -21,28 +18,11 @@ export function getXxxForFilterProp({
 } {
     if (!config.filterProp) return { hasFilterProp: false, imports: [], props: [] };
 
-    const filterType = getFilterGQLTypeString({ gridQueryType, gqlIntrospection });
-    if (!filterType) return { hasFilterProp: false, imports: [], props: [] };
+    const filterTypeName = `GQL${filterType.name}`;
 
     return {
         hasFilterProp: true,
-        imports: [{ name: filterType, importPath: "@src/graphql.generated" }],
-        props: [{ name: "filter", optional: true, type: filterType }],
+        imports: [{ name: filterTypeName, importPath: "@src/graphql.generated" }],
+        props: [{ name: "filter", optional: true, type: filterTypeName }],
     };
-}
-
-function getFilterGQLTypeString({
-    gridQueryType,
-    gqlIntrospection,
-}: {
-    gridQueryType: IntrospectionField;
-    gqlIntrospection: IntrospectionQuery;
-}): string | undefined {
-    const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
-    if (!filterArg) return;
-
-    const filterType = findInputObjectType(filterArg, gqlIntrospection);
-    if (!filterType) return;
-
-    return `GQL${filterType.name}`;
 }
