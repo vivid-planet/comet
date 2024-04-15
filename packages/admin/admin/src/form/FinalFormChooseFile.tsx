@@ -9,7 +9,7 @@ import { FormattedMessage } from "react-intl";
 
 import { PrettyBytes } from "../helpers/PrettyBytes";
 
-export type FinalFormChooseFileFieldClassKey =
+export type FinalFormChooseFileClassKey =
     | "root"
     | "dropzone"
     | "droppableArea"
@@ -25,7 +25,7 @@ export type FinalFormChooseFileFieldClassKey =
     | "fileListText";
 
 const styles = ({ palette }: Theme) => {
-    return createStyles<FinalFormChooseFileFieldClassKey, FinalFormChooseFileFieldProps>({
+    return createStyles<FinalFormChooseFileClassKey, FinalFormChooseFileProps>({
         root: {
             display: "flex",
             flexDirection: "column",
@@ -128,7 +128,7 @@ const styles = ({ palette }: Theme) => {
     });
 };
 
-export interface FinalFormChooseFileFieldProps extends FieldRenderProps<File | File[], HTMLInputElement> {
+export interface FinalFormChooseFileProps extends FieldRenderProps<File | File[], HTMLInputElement> {
     disableDropzone?: boolean;
     disableSelectFileButton?: boolean;
     accept: Accept;
@@ -141,7 +141,7 @@ export interface FinalFormChooseFileFieldProps extends FieldRenderProps<File | F
     };
 }
 
-const FinalFormChooseFileFieldComponent: React.FunctionComponent<WithStyles<typeof styles> & FinalFormChooseFileFieldProps> = ({
+const FinalFormChooseFileComponent: React.FunctionComponent<WithStyles<typeof styles> & FinalFormChooseFileProps> = ({
     classes,
     disabled,
     disableDropzone,
@@ -154,13 +154,14 @@ const FinalFormChooseFileFieldComponent: React.FunctionComponent<WithStyles<type
 }) => {
     const { delete: deleteIcon = <Delete />, info: infoIcon = <Info />, select: selectIcon = <Select /> } = iconMapping;
 
+    // For multipleFiles, if maxFiles is not set, or if maxFiles is set and the number of the files in the current fieldValue together with the acceptedFiles is equal or less then maxFiles, add acceptedFiles to the current fieldValue. Else replace the fieldValue with acceptedFiles
     const onDrop = React.useCallback(
         (acceptedFiles: File[]) => {
-            multipleFiles && Array.isArray(fieldValue)
-                ? maxFiles && fieldValue.length < maxFiles && fieldValue.length + acceptedFiles.length <= maxFiles
-                    ? onChange([...fieldValue, ...acceptedFiles])
-                    : onChange([...acceptedFiles])
-                : onChange([...acceptedFiles]);
+            if (multipleFiles && Array.isArray(fieldValue)) {
+                if (!maxFiles || (maxFiles && fieldValue.length < maxFiles && fieldValue.length + acceptedFiles.length <= maxFiles)) {
+                    onChange([...fieldValue, ...acceptedFiles]);
+                } else onChange([...acceptedFiles]);
+            } else onChange([...acceptedFiles]);
         },
         [fieldValue, multipleFiles, onChange, maxFiles],
     );
@@ -211,13 +212,13 @@ const FinalFormChooseFileFieldComponent: React.FunctionComponent<WithStyles<type
                     >
                         {isDragReject && <div className={classes.droppableAreaError}>{infoIcon}</div>}
                         <div className={classes.droppableAreaCaption}>
-                            <FormattedMessage id="comet.finalFormChooseFileField.dropfiles" defaultMessage="Drop files here to upload" />
+                            <FormattedMessage id="comet.finalFormChooseFile.dropfiles" defaultMessage="Drop files here to upload" />
                         </div>
                     </div>
                 )}
                 {!disableSelectFileButton && (
                     <Button disabled={disabled} variant="contained" color="primary" startIcon={selectIcon}>
-                        <FormattedMessage id="comet.finalFormChooseFileField.selectfile" defaultMessage="Select file" />
+                        <FormattedMessage id="comet.finalFormChooseFile.selectfile" defaultMessage="Select file" />
                     </Button>
                 )}
             </div>
@@ -238,32 +239,31 @@ const FinalFormChooseFileFieldComponent: React.FunctionComponent<WithStyles<type
             {(fileRejections.length > 0 || isDragReject) && (
                 <div className={classes.errorMessage}>
                     <Info color="error" />
-                    <FormattedMessage id="comet.finalFormChooseFileField.errors.unknownError" defaultMessage="Something went wrong." />
+                    <FormattedMessage id="comet.finalFormChooseFile.errors.unknownError" defaultMessage="Something went wrong." />
                 </div>
             )}
             <FormHelperText>
-                <FormattedMessage id="comet.finalFormChooseFileField.maximumFileSize" defaultMessage="Maximum file size" />{" "}
-                <PrettyBytes value={maxSize} />
+                <FormattedMessage id="comet.finalFormChooseFile.maximumFileSize" defaultMessage="Maximum file size" /> <PrettyBytes value={maxSize} />
             </FormHelperText>
         </div>
     );
 };
 
-export const FinalFormChooseFileField = withStyles(styles, { name: "CometAdminFinalFormChooseFileField" })(FinalFormChooseFileFieldComponent);
+export const FinalFormChooseFile = withStyles(styles, { name: "CometAdminFinalFormChooseFile" })(FinalFormChooseFileComponent);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
-        CometAdminFinalFormChooseFileField: FinalFormChooseFileFieldClassKey;
+        CometAdminFinalFormChooseFile: FinalFormChooseFileClassKey;
     }
 
     interface ComponentsPropsList {
-        CometAdminFinalFormChooseFileField: FinalFormChooseFileFieldProps;
+        CometAdminFinalFormChooseFile: FinalFormChooseFileProps;
     }
 
     interface Components {
-        CometAdminFinalFormChooseFileField?: {
-            defaultProps?: ComponentsPropsList["CometAdminFinalFormChooseFileField"];
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFinalFormChooseFileField"];
+        CometAdminFinalFormChooseFile?: {
+            defaultProps?: ComponentsPropsList["CometAdminFinalFormChooseFile"];
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminFinalFormChooseFile"];
         };
     }
 }

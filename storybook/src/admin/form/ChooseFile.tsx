@@ -1,4 +1,4 @@
-import { Field, FinalFormChooseFileField } from "@comet/admin";
+import { Field, FinalFormChooseFile } from "@comet/admin";
 import { Card, CardContent, Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -17,7 +17,7 @@ function Story() {
                             <Grid item xs={6}>
                                 <Card variant="outlined">
                                     <CardContent>
-                                        <Field name="uploadDefault" label="File upload (default)" component={FinalFormChooseFileField} />
+                                        <Field name="uploadDefault" label="File upload (default)" component={FinalFormChooseFile} />
                                     </CardContent>
                                 </Card>
                             </Grid>
@@ -28,7 +28,7 @@ function Story() {
                                             name="uploadMultipleDisabled"
                                             label="File upload (dropzone only, multiple, max file size 5 MB), max 5 files"
                                             disableSelectFileButton
-                                            component={FinalFormChooseFileField}
+                                            component={FinalFormChooseFile}
                                             maxSize={5 * 1024 * 1024}
                                             multiple
                                             maxFiles={5}
@@ -44,7 +44,7 @@ function Story() {
                                             label="File upload (button only, accept only images)"
                                             accept={{ "image/*": [] }}
                                             disableDropzone
-                                            component={FinalFormChooseFileField}
+                                            component={FinalFormChooseFile}
                                         />
                                     </CardContent>
                                 </Card>
@@ -52,7 +52,7 @@ function Story() {
                             <Grid item xs={6}>
                                 <Card variant="outlined">
                                     <CardContent>
-                                        <Field name="uploadDisabled" label="File upload (disabled)" disabled component={FinalFormChooseFileField} />
+                                        <Field name="uploadDisabled" label="File upload (disabled)" disabled component={FinalFormChooseFile} />
                                     </CardContent>
                                 </Card>
                             </Grid>
