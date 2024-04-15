@@ -319,9 +319,9 @@ export async function generateCrudInput(
             if (validator.propertyName !== prop.name) continue;
             const constraints = getMetadataStorage().getTargetValidatorConstraints(validator.constraintCls);
             for (const constraint of constraints) {
-                // ignore casing since class validator is inconsistent with casing
                 const decorator = definedDecorators.find((decorator) => {
                     return (
+                        // ignore casing since class validator is inconsistent with casing
                         decorator.getName().toUpperCase() === constraint.name.toUpperCase() ||
                         // some class validator decorators have a prefix "Is" but not in the constraint name
                         `Is${decorator.getName()}`.toUpperCase() === constraint.name.toUpperCase()
