@@ -18,12 +18,12 @@ import {
     RedirectsModule,
     UserPermissionsModule,
 } from "@comet/cms-api";
-import { OpenAiContentGenerationService } from "@comet/cms-api/lib/content-generation/openai-content-generation.service";
 import { ApolloDriver } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
 import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
+import { ContentGenerationService } from "@src/content-generation/content-generation.service";
 import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
@@ -145,22 +145,11 @@ export class AppModule {
                     directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
                     acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
                 }),
-                ...(config.contentGeneration.apiKey && config.contentGeneration.url && config.contentGeneration.deploymentId
+                ...(config.contentGeneration.apiKey && config.contentGeneration.apiUrl && config.contentGeneration.deploymentId
                     ? [
-                          ContentGenerationModule.register(
-                              new OpenAiContentGenerationService({
-                                  generateAltText: {
-                                      apiUrl: config.contentGeneration.url,
-                                      apiKey: config.contentGeneration.apiKey,
-                                      deploymentId: config.contentGeneration.deploymentId,
-                                  },
-                                  generateImageTitle: {
-                                      apiUrl: config.contentGeneration.url,
-                                      apiKey: config.contentGeneration.apiKey,
-                                      deploymentId: config.contentGeneration.deploymentId,
-                                  },
-                              }),
-                          ),
+                          ContentGenerationModule.register({
+                              Service: ContentGenerationService,
+                          }),
                       ]
                     : []),
                 NewsModule,

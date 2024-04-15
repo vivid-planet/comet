@@ -1,19 +1,26 @@
-import { DynamicModule, Global, Module } from "@nestjs/common";
+import { DynamicModule, Global, Module, ModuleMetadata, Type } from "@nestjs/common";
 
 import { CONTENT_GENERATION_SERVICE } from "./content-generation.constants";
-import { ContentGenerationServiceInterface } from "./content-generation.service.interface";
+import { ContentGenerationServiceInterface } from "./content-generation-service.interface";
 import { GenerateAltTextResolver } from "./generate-alt-text.resolver";
 import { GenerateImageTitleResolver } from "./generate-image-title.resolver";
+import { OpenAiContentGenerationService } from "./openai-content-generation.service";
+
+export interface ContentGenerationModuleOptions {
+    Service: Type<ContentGenerationServiceInterface>;
+    imports?: ModuleMetadata["imports"];
+}
 
 @Global()
 @Module({})
 export class ContentGenerationModule {
-    static register(service: ContentGenerationServiceInterface): DynamicModule {
+    static register({ Service, imports }: ContentGenerationModuleOptions): DynamicModule {
+        const methods = Object.getOwnPropertyNames(Service.prototype);
         const providers = [];
-        if (service.generateImageTitle) {
+        if (methods.includes("generateImageTitle")) {
             providers.push(GenerateImageTitleResolver);
         }
-        if (service.generateAltText) {
+        if (methods.includes("generateAltText")) {
             providers.push(GenerateAltTextResolver);
         }
 
@@ -22,10 +29,12 @@ export class ContentGenerationModule {
             providers: [
                 {
                     provide: CONTENT_GENERATION_SERVICE,
-                    useValue: service,
+                    useClass: Service,
                 },
+                OpenAiContentGenerationService,
                 ...providers,
             ],
+            imports,
         };
     }
 }
