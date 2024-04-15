@@ -2,11 +2,11 @@
 "@comet/admin": minor
 ---
 
-Add optional `initalFilter` Prop for useDataGridRemote hook
+Add optional `initalFilter` prop for useDataGridRemote hook
 
 **Example usage:**
 
-```diff
+```tsx
 const dataGridProps = useDataGridRemote({
     initialFilter: { items: [{ columnField: "description", operatorValue: "contains", value: "text" }] },
 });
