@@ -11,6 +11,7 @@ import { plural } from "pluralize";
 import { GeneratorReturn, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
+import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 
@@ -57,6 +58,69 @@ function findInputObjectType(input: IntrospectionInputValue, schema: Introspecti
     return filterType;
 }
 
+function getFilterGQLTypeString({ gridQuery, gqlIntrospection }: { gridQuery: string; gqlIntrospection: IntrospectionQuery }): string | undefined {
+    const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
+    const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
+    if (!filterArg) return;
+
+    const filterType = findInputObjectType(filterArg, gqlIntrospection);
+    if (!filterType) return;
+
+    return `GQL${filterType.name}`;
+}
+
+function hasGridPropFilter({
+    config,
+    gridQuery,
+    gqlIntrospection,
+}: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: GridConfig<any>;
+    gridQuery: string;
+    gqlIntrospection: IntrospectionQuery;
+}) {
+    return config.filterProp && !!getFilterGQLTypeString({ gridQuery, gqlIntrospection });
+}
+
+function generateGridPropsType({
+    config,
+    gridQuery,
+    gqlIntrospection,
+}: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: GridConfig<any>;
+    gridQuery: string;
+    gqlIntrospection: IntrospectionQuery;
+}) {
+    const props: string[] = [];
+    if (hasGridPropFilter({ config, gridQuery, gqlIntrospection })) {
+        const filterType = getFilterGQLTypeString({ gridQuery, gqlIntrospection });
+        props.push(`filter?: ${filterType};`);
+    }
+    return props.length
+        ? `type Props = {
+        ${props.join("\n")}
+    };`
+        : undefined;
+}
+
+function generateGridProps({
+    config,
+    gridQuery,
+    gqlIntrospection,
+}: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: GridConfig<any>;
+    gridQuery: string;
+    gqlIntrospection: IntrospectionQuery;
+}) {
+    const props: string[] = [];
+    if (hasGridPropFilter({ config, gridQuery, gqlIntrospection })) {
+        props.push("filter");
+    }
+    return props.length ? `{${props.join(", ")}}: Props` : undefined;
+}
+
 export function generateGrid(
     {
         exportName,
@@ -74,9 +138,33 @@ export function generateGrid(
     const instanceGqlTypePlural = gqlTypePlural[0].toLowerCase() + gqlTypePlural.substring(1);
     const gridQuery = instanceGqlType != instanceGqlTypePlural ? instanceGqlTypePlural : `${instanceGqlTypePlural}List`;
     const gqlDocuments: Record<string, string> = {};
-    //const imports: Imports = [];
+    const imports: Imports = [];
 
+    // all root blocks including those we don't have columns for (required for copy/paste)
+    // this is not configured in the grid config, it's just an heuristics
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
+
+    const rootBlockColumns = config.columns
+        .filter((column) => column.type == "block")
+        .map((column) => {
+            // map is for ts to infer block type correctly
+            if (column.type !== "block") throw new Error("Field is not a block field");
+            return column;
+        });
+
+    rootBlockColumns.forEach((field) => {
+        if (rootBlocks[String(field.name)]) {
+            // update rootBlocks if they are also used in columns
+            rootBlocks[String(field.name)].import = field.block.import;
+            rootBlocks[String(field.name)].name = field.block.name;
+        }
+    });
+    Object.values(rootBlocks).forEach((block) => {
+        imports.push({
+            name: block.name,
+            importPath: block.import,
+        });
+    });
 
     const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
 
@@ -168,12 +256,14 @@ export function generateGrid(
         } else if (type == "date") {
             valueGetter = `({ value }) => value && new Date(value)`;
             gridType = "date";
-        } else if (type == "block") {
-            if (rootBlocks[name]) {
-                renderCell = `(params) => {
-                        return <BlockPreviewContent block={${rootBlocks[name].name}} input={params.row.${name}} />;
-                    }`;
-            }
+        } else if (type == "number") {
+            gridType = "number";
+        } else if (type == "boolean") {
+            gridType = "boolean";
+        } else if (column.type == "block") {
+            renderCell = `(params) => {
+                    return <BlockPreviewContent block={${column.block.name}} input={params.row.${name}} />;
+                }`;
         } else if (type == "staticSelect") {
             if (column.values) {
                 throw new Error("custom values for staticSelect is not yet supported"); // TODO add support
@@ -258,6 +348,7 @@ export function generateGrid(
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton } from "@mui/material";
     import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { ${getFilterGQLTypeString({ gridQuery, gqlIntrospection }) ?? ""} } from "@src/graphql.generated";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
@@ -270,9 +361,7 @@ export function generateGrid(
     } from "./${gqlTypePlural}Grid.generated";
     import * as React from "react";
     import { FormattedMessage, useIntl } from "react-intl";
-    ${Object.entries(rootBlocks)
-        .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
-        .join("\n")}
+    ${generateImportsCode(imports)}
 
     const ${instanceGqlTypePlural}Fragment = gql\`
         fragment ${fragmentName} on ${gqlType} {
@@ -352,8 +441,9 @@ export function generateGrid(
         );
     }
 
+    ${generateGridPropsType({ config, gridQuery, gqlIntrospection }) ?? ""}
 
-    export function ${gqlTypePlural}Grid(): React.ReactElement {
+    export function ${gqlTypePlural}Grid(${generateGridProps({ config, gridQuery, gqlIntrospection }) ?? ""}): React.ReactElement {
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
@@ -481,7 +571,9 @@ export function generateGrid(
         const { data, loading, error } = useQuery<GQL${gqlTypePlural}GridQuery, GQL${gqlTypePlural}GridQueryVariables>(${instanceGqlTypePlural}Query, {
             variables: {
                 ${hasScope ? `scope,` : ""}
-                ${hasFilter ? `filter: gqlFilter,` : ""}
+                filter: { and: [${hasFilter ? `gqlFilter,` : ""} ${
+        hasGridPropFilter({ config, gridQuery, gqlIntrospection }) ? `...(filter ? [filter] : []),` : ""
+    }] },
                 ${hasSearch ? `search: gqlSearch,` : ""}
                 offset: dataGridProps.page * dataGridProps.pageSize,
                 limit: dataGridProps.pageSize,

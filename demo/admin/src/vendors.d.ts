@@ -1,4 +1,6 @@
+/// <reference types="@comet/admin-theme" />
 /// <reference types="vite/client" />
+/// <reference types="@comet/admin-theme" />
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 declare module "*.svg" {

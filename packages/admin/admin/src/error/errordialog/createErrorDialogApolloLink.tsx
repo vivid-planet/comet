@@ -10,7 +10,7 @@ import { ErrorType } from "./ErrorDialog";
 import { errorDialogVar } from "./errorDialogVar";
 import { ErrorScope, errorScopeForOperationContext } from "./ErrorScope";
 
-export const createErrorDialogApolloLink = () => {
+export const createErrorDialogApolloLink = (config?: { signInUrl?: string }) => {
     return onError(({ graphQLErrors, networkError, operation }) => {
         const errorScope = errorScopeForOperationContext(operation.getContext());
 
@@ -56,7 +56,7 @@ export const createErrorDialogApolloLink = () => {
                     <Typography gutterBottom>
                         <FormattedMessage id="comet.errorDialog.sessionExpired.message" defaultMessage="Your login-session has expired." />
                     </Typography>
-                    <Button href="/" color="info" variant="outlined">
+                    <Button href={config?.signInUrl ?? "/"} color="info" variant="outlined">
                         <FormattedMessage id="comet.errorDialog.sessionExpired.button" defaultMessage="Re-login" />
                     </Button>
                 </>

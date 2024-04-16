@@ -1,3 +1,4 @@
+export { BlockLoader, BlockLoaderDependencies, recursivelyLoadBlockData } from "./blockLoader/blockLoader";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { BlocksBlock } from "./blocks/factories/BlocksBlock";
 export { ListBlock } from "./blocks/factories/ListBlock";
@@ -15,6 +16,7 @@ export { createFetchWithDefaults, createFetchWithPreviewHeaders, createGraphQLFe
 export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
 export { IFrameMessageType } from "./iframebridge/IFrameMessage";
 export { Preview } from "./iframebridge/Preview";
+export { useBlockPreviewFetch } from "./iframebridge/useBlockPreviewFetch";
 export { useIFrameBridge } from "./iframebridge/useIFrameBridge";
 export { isWithPreviewPropsData, withPreview, WithPreviewProps } from "./iframebridge/withPreview";
 export type { ImageDimensions } from "./image/Image";
