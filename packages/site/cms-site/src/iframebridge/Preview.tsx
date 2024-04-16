@@ -13,14 +13,11 @@ interface Props {
     children: React.ReactNode;
 }
 
-const NestingLevelContext = React.createContext<number>(0);
-
 export const Preview: React.FunctionComponent<Props> = ({ adminRoute, children, label, enabledAutoScrolling = true }) => {
     const iFrameBridge = useIFrameBridge();
     const isSelected = adminRoute === iFrameBridge.selectedAdminRoute;
     const isHovered = adminRoute === iFrameBridge.hoveredAdminRoute;
     const previewElementContainerRef = React.useRef<HTMLDivElement>(null);
-    const nestingLevel = React.useContext(NestingLevelContext);
 
     React.useEffect(() => {
         const previewElement = previewElementContainerRef.current
@@ -28,7 +25,6 @@ export const Preview: React.FunctionComponent<Props> = ({ adminRoute, children, 
                   label,
                   adminRoute,
                   element: previewElementContainerRef.current,
-                  nestingLevel,
               }
             : null;
 
@@ -66,11 +62,9 @@ export const Preview: React.FunctionComponent<Props> = ({ adminRoute, children, 
 
     if (iFrameBridge.hasBridge) {
         return (
-            <NestingLevelContext.Provider value={nestingLevel + 1}>
-                <PreviewElementContainer ref={previewElementContainerRef} {...{ [BLOCK_PREVIEW_CONTAINER_DATA_ATTRIBUTE]: "" }}>
-                    {children}
-                </PreviewElementContainer>
-            </NestingLevelContext.Provider>
+            <PreviewElementContainer ref={previewElementContainerRef} {...{ [BLOCK_PREVIEW_CONTAINER_DATA_ATTRIBUTE]: "" }}>
+                {children}
+            </PreviewElementContainer>
         );
     }
 

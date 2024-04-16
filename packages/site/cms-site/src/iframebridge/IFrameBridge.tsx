@@ -11,7 +11,6 @@ export type PreviewElement = {
     element: HTMLElement;
     adminRoute: string;
     label: string;
-    nestingLevel: number;
 };
 
 export type OverlayElementData = {
@@ -106,22 +105,36 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
     }, [triggerRecalculationOfPreviewData]);
 
     const calculatedPreviewElementsData: OverlayElementData[] = React.useMemo(() => {
-        return previewElements.map((previewElement) => {
-            const childNodes = getRecursiveChildrenOfPreviewElement(previewElement.element);
-            const positioning = getCombinedPositioningOfElements(childNodes);
+        return previewElements
+            .map((previewElement) => {
+                const childNodes = getRecursiveChildrenOfPreviewElement(previewElement.element);
+                const positioning = getCombinedPositioningOfElements(childNodes);
 
-            return {
-                adminRoute: previewElement.adminRoute,
-                label: previewElement.label,
-                position: {
-                    zIndex: previewElement.nestingLevel + 1,
-                    top: positioning.top,
-                    left: positioning.left,
-                    width: positioning.width,
-                    height: positioning.height,
-                },
-            };
-        });
+                return {
+                    adminRoute: previewElement.adminRoute,
+                    label: previewElement.label,
+                    position: {
+                        top: positioning.top,
+                        left: positioning.left,
+                        width: positioning.width,
+                        height: positioning.height,
+                    },
+                };
+            })
+            .sort((previousElementData, nextElementData) => {
+                const previousSize = previousElementData.position.width * previousElementData.position.height;
+                const nextSize = nextElementData.position.width * nextElementData.position.height;
+                return nextSize - previousSize;
+            })
+            .map((elementData, index) => {
+                return {
+                    ...elementData,
+                    position: {
+                        ...elementData.position,
+                        zIndex: index + 1,
+                    },
+                };
+            });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [previewElements, recalculatePreviewDataIndex]);
 
