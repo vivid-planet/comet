@@ -64,9 +64,8 @@ export async function runFutureGenerate(specificFile?: string) {
     });
     const gqlIntrospection = introspectionFromSchema(schema);
 
-    const files = await glob("src/**/*.cometGen.ts");
+    const files: string[] = specificFile ? [specificFile] : await glob("src/**/*.cometGen.ts");
     for (const file of files) {
-        if (specificFile && file !== specificFile) continue;
         let outputCode = "";
         let gqlDocumentsOutputCode = "";
         const targetDirectory = `${dirname(file)}/generated`;
