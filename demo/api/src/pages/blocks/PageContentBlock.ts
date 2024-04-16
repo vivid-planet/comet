@@ -1,7 +1,5 @@
 import { BaseBlocksBlockItemData, BaseBlocksBlockItemInput, BlockField, createBlocksBlock, SpaceBlock, YouTubeVideoBlock } from "@comet/blocks-api";
 import { AnchorBlock, DamImageBlock, DamVideoBlock } from "@comet/cms-api";
-import { DebugBlock } from "@src/common/blocks/debug.block";
-import { DebugListBlock } from "@src/common/blocks/debug-list.block";
 import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { NewsDetailBlock } from "@src/news/blocks/news-detail.block";
@@ -34,8 +32,6 @@ const supportedBlocks = {
     media: MediaBlock,
     teaser: TeaserBlock,
     newsDetail: NewsDetailBlock,
-    debug: DebugBlock,
-    debugList: DebugListBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {
