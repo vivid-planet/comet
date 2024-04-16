@@ -6,6 +6,7 @@ import {
     BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
+    BlockTransformerService,
     createBlock,
     inputToData,
     TraversableTransformResponse,
@@ -30,7 +31,7 @@ class PixelImageBlockData extends BlockData {
 
     async transformToPlain(): Promise<TraversableTransformResponse> {
         return {
-            service: PixelImageBlockTransformerService,
+            [BlockTransformerService]: PixelImageBlockTransformerService,
         };
     }
 

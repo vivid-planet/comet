@@ -1,4 +1,4 @@
-import { BlockContext, BlockDataInterface, isBlockDataInterface } from "@comet/blocks-api";
+import { BlockContext, BlockDataInterface, BlockTransformerService, isBlockDataInterface } from "@comet/blocks-api";
 import { ModuleRef } from "@nestjs/core";
 import opentelemetry from "@opentelemetry/api";
 
@@ -22,24 +22,20 @@ function createAsyncTraverse(methodName: string, argsArray: any[], isTargetObjec
         if (Array.isArray(jsonObj)) {
             return Promise.all(jsonObj.map(traverse));
         } else if (jsonObj !== null && typeof jsonObj === "object") {
-            const entries = Object.entries(
-                isTargetObject(jsonObj) && typeof jsonObj[methodName] === "function" ? await jsonObj[methodName](...argsArray) : jsonObj,
-            );
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const mappedEntries = entries.map(async ([k, i]: [string, any]) => {
-                const returnValue = await traverse(i);
+            const object = isTargetObject(jsonObj) && typeof jsonObj[methodName] === "function" ? await jsonObj[methodName](...argsArray) : jsonObj;
+            const mappedEntries = Reflect.ownKeys(object).map(async (key) => {
+                const value = object[key];
+                const returnValue = await traverse(value);
 
-                if (typeof returnValue === "object" && returnValue !== null && "service" in returnValue) {
-                    const service = await moduleRef.get(returnValue.service, { strict: false });
+                if (typeof returnValue === "object" && returnValue !== null && BlockTransformerService in returnValue) {
+                    const service = await moduleRef.get(returnValue[BlockTransformerService], { strict: false });
                     // TODO fix context
-                    return [k, await service.transformToPlain(i, argsArray[1])];
+                    return [key, await service.transformToPlain(value, argsArray[1])];
                 }
 
-                return [k, returnValue];
-
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            }) as any;
-            return Object.fromEntries(await Promise.all(mappedEntries));
+                return [key, returnValue];
+            });
+            return (await Promise.all(mappedEntries)).reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
         } else {
             // keep literal as it is
             return jsonObj;
