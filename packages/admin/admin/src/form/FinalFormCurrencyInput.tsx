@@ -20,8 +20,7 @@ export function FinalFormCurrencyInput({
     const [formattedCurrencyValue, setFormattedCurrencyValue] = React.useState("");
 
     function getFormattedValue(value: number, intl: IntlShape, currencySignPosition: string) {
-        const formattedValueWithoutCurrencySign =
-            value !== 0 ? intl.formatNumber(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0,00";
+        const formattedValueWithoutCurrencySign = value !== 0 ? intl.formatNumber(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0;
         if (currencySignPosition === "before") {
             return `${currencySign} ${formattedValueWithoutCurrencySign}`;
         }
