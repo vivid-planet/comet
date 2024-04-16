@@ -17,7 +17,7 @@ export interface DatePickerProps extends Omit<InputWithPopperProps, "children" |
     onChange?: (date?: string) => void;
     value?: string;
     formatDateOptions?: FormatDateOptions;
-    clearable?: boolean;
+    required?: boolean;
     monthsToShow?: number;
     maxDate?: Date;
     minDate?: Date;
@@ -30,7 +30,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
         value,
         formatDateOptions,
         endAdornment,
-        clearable,
+        required,
         placeholder,
         monthsToShow,
         minDate = defaultMinDate,
@@ -54,8 +54,9 @@ export const DatePicker = (inProps: DatePickerProps) => {
             {...slotProps?.root}
             {...inputWithPopperProps}
             readOnly
+            required={required}
             endAdornment={
-                clearable ? (
+                !required ? (
                     <>
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange && onChange(undefined)} />
                         {endAdornment}
