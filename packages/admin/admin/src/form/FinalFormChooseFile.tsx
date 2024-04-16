@@ -1,5 +1,5 @@
 import { Delete, Info, Select } from "@comet/admin-icons";
-import { Button, Chip, ComponentsOverrides, FormHelperText, IconButton, Theme } from "@mui/material";
+import { Button, Chip, ComponentsOverrides, FormHelperText, IconButton, Theme, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
 import * as React from "react";
@@ -61,13 +61,8 @@ const styles = ({ palette }: Theme) => {
         },
         droppableAreaCaption: {
             color: palette.text.secondary,
-            fontSize: "14px",
-            fontStyle: "normal",
-            fontWeight: "300",
-            lineHeight: "20px",
         },
         droppableAreaError: {
-            float: "right",
             position: "absolute",
             top: 0,
             right: 0,
@@ -152,7 +147,7 @@ const FinalFormChooseFileComponent: React.FunctionComponent<WithStyles<typeof st
     input: { onChange, value: fieldValue, multiple: multipleFiles },
     iconMapping = {},
 }) => {
-    const { delete: deleteIcon = <Delete />, info: infoIcon = <Info />, select: selectIcon = <Select /> } = iconMapping;
+    const { delete: deleteIcon = <Delete />, info: infoIcon = <Info color="error" />, select: selectIcon = <Select /> } = iconMapping;
 
     const onDrop = React.useCallback(
         (acceptedFiles: File[]) => {
@@ -179,15 +174,12 @@ const FinalFormChooseFileComponent: React.FunctionComponent<WithStyles<typeof st
         maxFiles,
     });
 
-    // list of the accepted files
-    let files: File[];
+    let acceptedFiles: File[] = [];
 
     if (Array.isArray(fieldValue)) {
-        files = fieldValue;
+        acceptedFiles = fieldValue;
     } else if (fieldValue.name !== undefined) {
-        files = [fieldValue];
-    } else {
-        files = [];
+        acceptedFiles = [fieldValue];
     }
 
     const rejectedFiles = fileRejections.map((rejectedFile) => (
@@ -210,9 +202,9 @@ const FinalFormChooseFileComponent: React.FunctionComponent<WithStyles<typeof st
                         )}
                     >
                         {isDragReject && <div className={classes.droppableAreaError}>{infoIcon}</div>}
-                        <div className={classes.droppableAreaCaption}>
+                        <Typography variant="body2" className={classes.droppableAreaCaption}>
                             <FormattedMessage id="comet.finalFormChooseFile.dropfiles" defaultMessage="Drop files here to upload" />
-                        </div>
+                        </Typography>
                     </div>
                 )}
                 {!disableSelectFileButton && (
@@ -221,9 +213,9 @@ const FinalFormChooseFileComponent: React.FunctionComponent<WithStyles<typeof st
                     </Button>
                 )}
             </div>
-            {files.length > 0 && (
+            {acceptedFiles.length > 0 && (
                 <div className={classes.fileList}>
-                    {files.map((file) => (
+                    {acceptedFiles.map((file) => (
                         <div key={file.name} className={classes.fileListItem}>
                             <div className={classes.fileListText}>{file.name}</div>
                             <div className={classes.fileListItemInfos}>
@@ -237,7 +229,7 @@ const FinalFormChooseFileComponent: React.FunctionComponent<WithStyles<typeof st
             {fileRejections.length > 0 && <div className={classes.fileList}>{rejectedFiles}</div>}
             {(fileRejections.length > 0 || isDragReject) && (
                 <div className={classes.errorMessage}>
-                    <Info color="error" />
+                    {infoIcon}
                     <FormattedMessage id="comet.finalFormChooseFile.errors.unknownError" defaultMessage="Something went wrong." />
                 </div>
             )}
