@@ -6,20 +6,20 @@ import * as React from "react";
 import { Form } from "react-final-form";
 
 const Story = () => {
-    interface Values {
-        dateOne?: Date | null;
-        dateTwo?: Date | null;
-    }
-
-    const initialValues: Partial<Values> = {
-        dateOne: new Date(),
-        dateTwo: new Date(),
+    type Values = {
+        dateOne: string;
+        dateTwo: string;
     };
 
     return (
         <div style={{ width: 500 }}>
-            <Form<Values> onSubmit={() => {}} initialValues={initialValues}>
-                {({ values, form: { change } }) => (
+            <Form<Values>
+                onSubmit={() => {}}
+                initialValues={{
+                    dateTwo: "2024-04-01",
+                }}
+            >
+                {({ values }) => (
                     <form>
                         <Card>
                             <CardContent>

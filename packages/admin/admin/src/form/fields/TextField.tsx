@@ -5,6 +5,6 @@ import { FinalFormInput } from "../FinalFormInput";
 
 export type TextFieldProps = FieldProps<string, HTMLInputElement>;
 
-export const TextField = ({ ...restProps }: TextFieldProps): React.ReactElement => {
-    return <Field component={FinalFormInput} {...restProps} />;
+export const TextField = (props: TextFieldProps): React.ReactElement => {
+    return <Field component={FinalFormInput} {...props} />;
 };

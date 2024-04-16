@@ -10,12 +10,12 @@ import { FormatDateOptions, useIntl } from "react-intl";
 
 import { DatePickerNavigation } from "../DatePickerNavigation";
 import { useDateFnsLocale } from "../utils/DateFnsLocaleProvider";
-import { defaultMaxDate, defaultMinDate } from "../utils/datePickerHelpers";
+import { defaultMaxDate, defaultMinDate, getIsoDateString } from "../utils/datePickerHelpers";
 import { Calendar, DatePickerClassKey, Root, SlotProps, StartAdornment } from "./DatePicker.slots";
 
 export interface DatePickerProps extends Omit<InputWithPopperProps, "children" | "value" | "onChange" | "slotProps"> {
-    onChange?: (date?: Date) => void;
-    value?: Date;
+    onChange?: (date?: string) => void;
+    value?: string;
     formatDateOptions?: FormatDateOptions;
     required?: boolean;
     monthsToShow?: number;
@@ -40,6 +40,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
     } = useThemeProps({ props: inProps, name: "CometAdminDatePicker" });
     const intl = useIntl();
     const dateFnsLocale = useDateFnsLocale();
+    const dateValue = value ? new Date(value) : undefined;
 
     return (
         <Root
@@ -77,10 +78,10 @@ export const DatePicker = (inProps: DatePickerProps) => {
                     navigatorRenderer={(focusedDate, changeShownDate) => (
                         <DatePickerNavigation focusedDate={focusedDate} changeShownDate={changeShownDate} minDate={minDate} maxDate={maxDate} />
                     )}
-                    date={value}
+                    date={dateValue}
                     onChange={(date) => {
                         closePopper(true);
-                        onChange && onChange(date);
+                        onChange?.(getIsoDateString(date));
                     }}
                     {...slotProps?.calendar}
                 />

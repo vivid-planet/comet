@@ -1,8 +1,8 @@
-import { PreviewData } from "@src/app/api/site-preview/route";
+import { gql } from "@comet/cms-site";
+import { SitePreviewData } from "@src/app/api/site-preview/route";
 import { defaultLanguage, domain } from "@src/config";
 import { documentTypes } from "@src/documentTypes";
-import createGraphQLClient from "@src/util/createGraphQLClient";
-import { gql } from "graphql-request";
+import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
@@ -18,16 +18,17 @@ const documentTypeQuery = gql`
 `;
 
 export default async function Page({ params }: { params: { path: string[] } }) {
-    let previewData: PreviewData | undefined = undefined;
+    let previewData: SitePreviewData | undefined = undefined;
     if (draftMode().isEnabled) {
         previewData = { includeInvisible: false };
     }
-    const client = createGraphQLClient(previewData);
+    const graphqlFetch = createGraphQLFetch(previewData);
+
     const locale = /*context.locale ??*/ defaultLanguage;
     const scope = { domain, language: locale };
 
     //fetch documentType
-    const data = await client.request<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(documentTypeQuery, {
+    const data = await graphqlFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(documentTypeQuery, {
         path: `/${(params.path ?? []).join("/")}`,
         scope,
     });

@@ -21,7 +21,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
         { type: "number", name: "price", helperText: "Enter price in this format: 123,45" },
         { type: "boolean", name: "inStock" },
         { type: "date", name: "availableSince" },
-        { type: "block", name: "image", label: "Image", block: { name: "PixelImageBlock", import: "@comet/cms-admin" } },
+        { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },
     ],
 };
 
