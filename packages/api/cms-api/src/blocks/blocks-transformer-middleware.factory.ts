@@ -1,4 +1,5 @@
 import { isBlockDataInterface } from "@comet/blocks-api";
+import { ModuleRef } from "@nestjs/core";
 import { FieldMiddleware, MiddlewareContext, NextFn } from "@nestjs/graphql";
 
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
@@ -7,7 +8,7 @@ import { PageTreeNodeVisibility } from "../page-tree/types";
 import { transformToPlain } from "./blocks-transformer";
 
 export class BlocksTransformerMiddlewareFactory {
-    static create(dependencies: Record<string, unknown>): FieldMiddleware {
+    static create(dependencies: Record<string, unknown>, moduleRef: ModuleRef): FieldMiddleware {
         return async ({ context }: MiddlewareContext, next: NextFn) => {
             const fieldValue = await next();
 
@@ -24,6 +25,7 @@ export class BlocksTransformerMiddlewareFactory {
                         }),
                     },
                     { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls, relativeDamUrls },
+                    moduleRef,
                 );
             } else {
                 return fieldValue;

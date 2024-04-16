@@ -3,6 +3,7 @@ import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/comm
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
 import { BlobStorageModule, defaultDamAcceptedMimetypes, DependentsResolverFactory } from "..";
+import { PixelImageBlockTransformerService } from "../blocks/pixel-image-block-transformer.service";
 import { ScaledImagesCacheService } from "./cache/scaled-images-cache.service";
 import { DamConfig } from "./dam.config";
 import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE, IMGPROXY_CONFIG } from "./dam.constants";
@@ -122,9 +123,19 @@ export class DamModule {
                 CalculateDominantImageColor,
                 FileValidationService,
                 FileUploadService,
+                PixelImageBlockTransformerService,
             ],
             controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
-            exports: [ImgproxyService, FilesService, FoldersService, ImagesService, ScaledImagesCacheService, damConfigProvider, FileUploadService],
+            exports: [
+                ImgproxyService,
+                FilesService,
+                FoldersService,
+                ImagesService,
+                ScaledImagesCacheService,
+                damConfigProvider,
+                FileUploadService,
+                PixelImageBlockTransformerService,
+            ],
         };
     }
 }

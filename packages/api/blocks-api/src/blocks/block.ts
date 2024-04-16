@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Type } from "@nestjs/common";
 import { ClassConstructor, instanceToPlain, plainToInstance } from "class-transformer";
 
 import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator";
@@ -10,6 +11,10 @@ import { TransformDependencies } from "./dependencies";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
 
+export interface BlockTransformerServiceInterface<Block extends BlockDataInterface = BlockDataInterface, T = any> {
+    transformToPlain(block: Block, context: BlockContext): T | Promise<T>;
+}
+
 export interface TraversableTransformResponse {
     [member: string]:
         | string
@@ -19,7 +24,8 @@ export interface TraversableTransformResponse {
         | undefined
         | BlockDataInterface
         | TraversableTransformResponseArray
-        | TraversableTransformResponse;
+        | TraversableTransformResponse
+        | Type<BlockTransformerServiceInterface>;
 }
 export type TraversableTransformResponseArray = Array<
     string | number | boolean | null | undefined | BlockDataInterface | TraversableTransformResponseArray | TraversableTransformResponse
@@ -305,6 +311,7 @@ export function transformToSave(block: BlockDataInterface): TraversableTransform
             const entries = Object.entries(isBlockDataInterface(jsonObj) ? jsonObj.transformToSave() : jsonObj);
             const mappedEntries = entries
                 .map(([k, i]) => {
+                    // @ts-expect-error TODO usage of TraversableTransformResponse is incorrect here?
                     return [k, traverse(i)];
                 })
                 .filter(([, value]) => value !== undefined);

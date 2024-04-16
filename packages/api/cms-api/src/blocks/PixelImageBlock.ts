@@ -19,6 +19,7 @@ import { FilesService } from "../dam/files/files.service";
 import { ImageCropAreaInput } from "../dam/images/dto/image-crop-area.input";
 import { ImageCropArea } from "../dam/images/entities/image-crop-area.entity";
 import { ImagesService } from "../dam/images/images.service";
+import { PixelImageBlockTransformerService } from "./pixel-image-block-transformer.service";
 
 // @TODO: make factory to support flexible validation
 class PixelImageBlockData extends BlockData {
@@ -27,40 +28,9 @@ class PixelImageBlockData extends BlockData {
     @Type(() => ImageCropArea)
     cropArea?: ImageCropArea;
 
-    async transformToPlain(
-        { filesService, imagesService }: { filesService: FilesService; imagesService: ImagesService },
-        { previewDamUrls, relativeDamUrls, includeInvisibleContent }: BlockContext,
-    ): Promise<TraversableTransformResponse> {
-        if (!this.damFileId) {
-            return {};
-        }
-
-        const file = await filesService.findOneById(this.damFileId);
-
-        if (!file) {
-            return {};
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { createdAt, updatedAt, folder, license, copyOf, copies, ...data } = file;
-
-        const fileUrl = includeInvisibleContent ? await filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }) : undefined;
-
+    async transformToPlain(): Promise<TraversableTransformResponse> {
         return {
-            damFile: {
-                ...data,
-                image: file.image
-                    ? {
-                          width: file.image.width,
-                          height: file.image.height,
-                          cropArea: { ...file.image.cropArea },
-                          dominantColor: file.image.dominantColor,
-                      }
-                    : undefined,
-                fileUrl,
-            },
-            cropArea: this.cropArea ? { ...this.cropArea } : undefined,
-            urlTemplate: imagesService.createUrlTemplate({ file, cropArea: this.cropArea }, { previewDamUrls, relativeDamUrls }),
+            service: PixelImageBlockTransformerService,
         };
     }
 

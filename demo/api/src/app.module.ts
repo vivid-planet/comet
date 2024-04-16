@@ -19,6 +19,7 @@ import {
 } from "@comet/cms-api";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
+import { ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
 import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
@@ -59,7 +60,7 @@ export class AppModule {
                 GraphQLModule.forRootAsync<ApolloDriverConfig>({
                     driver: ApolloDriver,
                     imports: [BlocksModule],
-                    useFactory: (dependencies: Record<string, unknown>) => ({
+                    useFactory: (dependencies: Record<string, unknown>, moduleRef: ModuleRef) => ({
                         debug: config.debug,
                         playground: config.debug,
                         autoSchemaFile: "schema.gql",
@@ -78,12 +79,12 @@ export class AppModule {
                             origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
                         },
                         buildSchemaOptions: {
-                            fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(dependencies)],
+                            fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(dependencies, moduleRef)],
                         },
                         // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
                         fieldResolverEnhancers: ["guards", "interceptors", "filters"] as Enhancer[],
                     }),
-                    inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
+                    inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES, ModuleRef],
                 }),
                 AuthModule,
                 UserPermissionsModule.forRootAsync({

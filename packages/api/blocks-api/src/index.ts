@@ -14,6 +14,7 @@ export {
     BlockMetaFieldKind,
     BlockMetaInterface,
     BlockMetaLiteralFieldKind,
+    BlockTransformerServiceInterface,
     createBlock,
     ExtractBlockData,
     ExtractBlockInput,

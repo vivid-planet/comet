@@ -1,5 +1,6 @@
 import { BlockContext, BlockDataInterface } from "@comet/blocks-api";
 import { Inject, Injectable, Optional } from "@nestjs/common";
+import { ModuleRef } from "@nestjs/core";
 import { CONTEXT } from "@nestjs/graphql";
 
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
@@ -15,6 +16,7 @@ export class BlocksTransformerService {
         @Inject(BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES) dependencies: Record<string, unknown>,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         @Inject(CONTEXT) context: any,
+        private readonly moduleRef: ModuleRef,
         @Optional() pageTreeReadApi?: PageTreeReadApiService,
     ) {
         let includeInvisibleBlocks: boolean | undefined = false;
@@ -45,6 +47,6 @@ export class BlocksTransformerService {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async transformToPlain(block: BlockDataInterface, context?: BlockContext): Promise<any> {
-        return transformToPlain(block, this.dependencies, context ?? this.blockContext);
+        return transformToPlain(block, this.dependencies, context ?? this.blockContext, this.moduleRef);
     }
 }
