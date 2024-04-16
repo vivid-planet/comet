@@ -27,7 +27,7 @@ storiesOf("stories/components/Toolbar/Feedback Button", module)
                                 setLoading(false);
                             }, 1000);
                         }}
-                        startIcon={<Assets />}
+                        endIcon={<Assets />}
                         tooltipSuccessMessage="Saving was successful"
                         tooltipErrorMessage="Error while saving"
                     >

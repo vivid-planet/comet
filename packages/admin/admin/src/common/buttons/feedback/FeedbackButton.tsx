@@ -131,7 +131,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             startIcon={
                 startIcon && (
                     <Tooltip
-                        title={tooltipSuccessMessage}
+                        title={displayState === "fail" ? tooltipErrorMessage : tooltipSuccessMessage}
                         open={displayState === "fail" || (displayState === "success" && true)}
                         placement="top-start"
                         variant={resolveTooltipForDisplayState(displayState)}
@@ -143,8 +143,8 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             endIcon={
                 endIcon && !startIcon ? (
                     <Tooltip
-                        title={tooltipErrorMessage}
-                        open={displayState === "fail" || (displayState === "success" && true)}
+                        title={displayState === "fail" ? tooltipErrorMessage : tooltipSuccessMessage}
+                        open={(displayState === "fail" || displayState === "success") && true}
                         placement="top-end"
                         variant={resolveTooltipForDisplayState(displayState)}
                     >
