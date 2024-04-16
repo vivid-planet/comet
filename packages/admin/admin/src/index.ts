@@ -47,6 +47,8 @@ export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";
 export { ContentOverflow, ContentOverflowProps } from "./ContentOverflow";
 export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
+export { DataGridExcelExportButton } from "./dataGrid/excelExport/DataGridExcelExportButton";
+export { DataGridExcelExportOptions, ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDataGridExcelExport";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";

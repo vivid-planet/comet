@@ -14,6 +14,8 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
+import { DataGridExcelExportButton } from "../../../../../packages/admin/admin/src/dataGrid/excelExport/DataGridExcelExportButton";
+import { useDataGridExcelExport } from "../../../../../packages/admin/admin/src/dataGrid/excelExport/useDataGridExcelExport";
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
 import { storyRouterDecorator } from "../../../story-router.decorator";
 
@@ -230,6 +232,111 @@ storiesOf("stories/components/DataGrid", module)
         return (
             <Box sx={{ height: 400, width: "100%" }}>
                 <DataGrid rows={exampleRows} columns={columns} />
+            </Box>
+        );
+    })
+    .add("useDataGridExcelExport", () => {
+        const dataGridProps = useDataGridRemote();
+
+        const variables = {
+            limit: dataGridProps.pageSize,
+            offset: dataGridProps.page * dataGridProps.pageSize,
+            sort: dataGridProps.sortModel[0]?.field,
+            order: dataGridProps.sortModel[0]?.sort,
+        };
+
+        const columns: GridColDef[] = [
+            {
+                field: "mission_name",
+                headerName: "Mission Name",
+            },
+            {
+                field: "launch_date_local",
+                headerName: "Launch Date",
+                type: "dateTime",
+            },
+        ];
+
+        type Launch = {
+            id: string;
+            mission_name: string;
+            launch_date_local: Date;
+        };
+
+        interface LaunchesPastResultData {
+            data: Launch[];
+            result: { totalCount: number };
+        }
+
+        interface QueryVariables {
+            offset: number;
+            limit: number;
+            sort?: string;
+            order?: string | null;
+        }
+
+        interface GQLQuery {
+            __typename?: "Query";
+            launchesPastResult: LaunchesPastResultData;
+        }
+
+        const query = gql`
+            query LaunchesPast($limit: Int, $offset: Int, $sort: String, $order: String) {
+                launchesPastResult(limit: $limit, offset: $offset, sort: $sort, order: $order) {
+                    data {
+                        id
+                        mission_name
+                        launch_date_local
+                    }
+                    result {
+                        totalCount
+                    }
+                }
+            }
+        `;
+
+        const { data, loading, error } = useQuery<GQLQuery, QueryVariables | undefined>(query, {
+            variables,
+        });
+
+        const exportApi = useDataGridExcelExport<Launch, GQLQuery, QueryVariables>({
+            columns,
+            variables,
+            query,
+            resolveQueryNodes: (data) => data.launchesPastResult.data,
+            totalCount: data?.launchesPastResult.result.totalCount ?? 0,
+            exportOptions: {
+                fileName: "ExampleName",
+            },
+        });
+
+        const rows = data?.launchesPastResult.data ?? [];
+        const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
+
+        function DemoToolbar() {
+            return (
+                <Toolbar>
+                    <ToolbarFillSpace />
+                    <ToolbarItem>
+                        <DataGridExcelExportButton exportApi={exportApi} />
+                    </ToolbarItem>
+                </Toolbar>
+            );
+        }
+
+        return (
+            <Box sx={{ height: 400, width: "100%" }}>
+                <DataGrid
+                    {...dataGridProps}
+                    rows={rows}
+                    columns={columns}
+                    rowCount={rowCount}
+                    loading={loading}
+                    error={error}
+                    components={{
+                        Toolbar: DemoToolbar,
+                    }}
+                />
             </Box>
         );
     });
