@@ -2,7 +2,7 @@
 "@comet/admin": minor
 ---
 
-Add optional `initalFilter` prop for useDataGridRemote hook
+useDataGridRemote: Add `initialFilter` option
 
 **Example usage:**
 
