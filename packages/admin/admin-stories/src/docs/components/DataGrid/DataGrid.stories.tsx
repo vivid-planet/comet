@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     GridFilterButton,
+    muiGridFilterToGql,
     Toolbar,
     ToolbarFillSpace,
     ToolbarItem,
@@ -127,6 +128,58 @@ storiesOf("stories/components/DataGrid", module)
                     offset: dataGridProps.page * dataGridProps.pageSize,
                     sort: dataGridProps.sortModel[0]?.field,
                     order: dataGridProps.sortModel[0]?.sort,
+                },
+            },
+        );
+
+        const rows = data?.launchesPastResult.data ?? [];
+        const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
+
+        return (
+            <Box sx={{ height: 200, width: "100%" }}>
+                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
+            </Box>
+        );
+    })
+    .add("useDataGridRemoteInitialFilter", () => {
+        const columns: GridColDef[] = [
+            {
+                field: "mission_name",
+                headerName: "Mission Name",
+                flex: 1,
+            },
+            {
+                field: "launch_date_local",
+                headerName: "Launch Date",
+                type: "dateTime",
+                flex: 1,
+            },
+        ];
+
+        const dataGridProps = useDataGridRemote({
+            initialFilter: { items: [{ columnField: "mission_name", operatorValue: "contains", value: "able" }] },
+        });
+
+        const { data, loading, error } = useQuery(
+            gql`
+                query LaunchesPast($limit: Int, $offset: Int, $filter: LaunchesPastFilter) {
+                    launchesPastResult(limit: $limit, offset: $offset, filter: $filter) {
+                        data {
+                            id
+                            mission_name
+                            launch_date_local
+                        }
+                        result {
+                            totalCount
+                        }
+                    }
+                }
+            `,
+            {
+                variables: {
+                    limit: dataGridProps.pageSize,
+                    offset: dataGridProps.page * dataGridProps.pageSize,
+                    filter: muiGridFilterToGql(columns, dataGridProps.filterModel).filter,
                 },
             },
         );
