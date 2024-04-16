@@ -112,8 +112,12 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                             {(props) => (
                                 <>
                                     <FinalFormSelect {...props}>
-                                        <MenuItem value={openFileTypeOptions[0].value}>{openFileTypeOptions[0].name}</MenuItem>
-                                        <MenuItem value={openFileTypeOptions[1].value}>{openFileTypeOptions[1].name}</MenuItem>
+                                        <MenuItem value="Download">
+                                            <FormattedMessage id="blocks.damFileDownloadLink.openFileType.download" defaultMessage="as a download" />
+                                        </MenuItem>
+                                        <MenuItem value="NewTab">
+                                            <FormattedMessage id="blocks.damFileDownloadLink.openFileType.newTab" defaultMessage="in a new tab" />
+                                        </MenuItem>
                                     </FinalFormSelect>
                                 </>
                             )}
@@ -128,14 +132,3 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
         return !!state.file;
     },
 };
-
-const openFileTypeOptions = [
-    {
-        value: "Download",
-        name: <FormattedMessage id="blocks.damFileDownloadLink.openFileType.download" defaultMessage="as a download" />,
-    },
-    {
-        value: "NewTab",
-        name: <FormattedMessage id="blocks.damFileDownloadLink.openFileType.newTab" defaultMessage="in a new tab" />,
-    },
-];
