@@ -1,10 +1,8 @@
-import { Translate } from "@comet/admin-icons";
-import { Button, InputBase, Tooltip } from "@mui/material";
+import { InputBase } from "@mui/material";
 import * as React from "react";
-import { FormattedMessage, IntlShape, useIntl } from "react-intl";
+import { IntlShape, useIntl } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { useContentTranslationService } from "../translator/useContentTranslationService";
 import { FinalFormInputProps } from "./FinalFormInput";
 
 export function FinalFormCurrencyInput({
@@ -18,7 +16,6 @@ export function FinalFormCurrencyInput({
     currencySignPosition,
     ...props
 }: FinalFormInputProps): React.ReactElement {
-    const { enabled, translate } = useContentTranslationService();
     const intl = useIntl();
     const [formattedCurrencyValue, setFormattedCurrencyValue] = React.useState("");
 
@@ -54,13 +51,6 @@ export function FinalFormCurrencyInput({
                 <>
                     {clearable && (
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
-                    )}
-                    {enabled && !disableContentTranslation && (
-                        <Tooltip title={<FormattedMessage id="comet.translate" defaultMessage="Translate" />}>
-                            <Button onClick={async () => input.onChange(await translate(input.value))}>
-                                <Translate />
-                            </Button>
-                        </Tooltip>
                     )}
                     {endAdornment}
                 </>
