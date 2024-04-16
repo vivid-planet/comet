@@ -21,8 +21,19 @@ export function generateForm(
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
 
-    // TODO make RootBlocks configurable (from config)
-    const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
+    const rootBlockFields = config.fields
+        .filter((field) => field.type == "block")
+        .map((field) => {
+            // map is for ts to infer block type correctly
+            if (field.type !== "block") throw new Error("Field is not a block field");
+            return field;
+        });
+    rootBlockFields.forEach((field) => {
+        imports.push({
+            name: field.block.name,
+            importPath: field.block.import,
+        });
+    });
 
     const numberFields = config.fields.filter((field) => field.type == "number");
     const booleanFields = config.fields.filter((field) => field.type == "boolean");
@@ -138,15 +149,10 @@ export function generateForm(
     import React from "react";
     import { FormattedMessage } from "react-intl";
     ${generateImportsCode(imports)}
-    
-    ${Object.entries(rootBlocks)
-        .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
-        .join("\n")}
-
     ${
-        Object.keys(rootBlocks).length > 0
+        rootBlockFields.length > 0
             ? `const rootBlocks = {
-                ${Object.entries(rootBlocks).map(([rootBlockKey, rootBlock]) => `${rootBlockKey}: ${rootBlock.name}`)}
+                ${rootBlockFields.map((field) => `${String(field.name)}: ${field.block.name}`)}
                 };`
             : ""
     }
@@ -156,12 +162,10 @@ export function generateForm(
             ? `Omit<GQL${fragmentName}Fragment, ${numberFields.map((field) => `"${String(field.name)}"`).join(" | ")}>`
             : `GQL${fragmentName}Fragment`
     } ${
-        numberFields.length > 0 || Object.keys(rootBlocks).length > 0
+        numberFields.length > 0 || rootBlockFields.length > 0
             ? `& {
         ${numberFields.map((field) => `${String(field.name)}${isOptional(field) ? `?` : ``}: string;`).join("\n")}
-        ${Object.keys(rootBlocks)
-            .map((rootBlockKey) => `${rootBlockKey}: BlockState<typeof rootBlocks.${rootBlockKey}>;`)
-            .join("\n")}
+        ${rootBlockFields.map((field) => `${String(field.name)}: BlockState<typeof rootBlocks.${String(field.name)}>;`).join("\n")}
     }`
             : ""
     };
@@ -201,15 +205,13 @@ export function generateForm(
                         )}) : undefined,`,
                 )
                 .join("\n")}
-            ${Object.keys(rootBlocks)
-                .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.input2State(data.${instanceGqlType}.${rootBlockKey}),`)
+            ${rootBlockFields
+                .map((field) => `${String(field.name)}: rootBlocks.${String(field.name)}.input2State(data.${instanceGqlType}.${String(field.name)}),`)
                 .join("\n")}
         }
         : {
             ${booleanFields.map((field) => `${String(field.name)}: false,`).join("\n")}
-            ${Object.keys(rootBlocks)
-                .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.defaultValues(),`)
-                .join("\n")}
+            ${rootBlockFields.map((field) => `${String(field.name)}: rootBlocks.${String(field.name)}.defaultValues(),`).join("\n")}
         }
     , [data]);
     

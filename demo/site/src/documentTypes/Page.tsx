@@ -43,7 +43,7 @@ const pageQuery = gql`
     ${topMenuPageTreeNodeFragment}
 `;
 
-export default async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput }) {
+export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput }) {
     let previewData: SitePreviewData | undefined = undefined;
     if (draftMode().isEnabled) {
         previewData = { includeInvisible: false };
@@ -69,12 +69,14 @@ export default async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: 
             blockData: data.pageContent.document.content,
             graphQLFetch,
             fetch,
+            pageTreeNodeId,
         }),
         recursivelyLoadBlockData({
             blockType: "Seo",
             blockData: data.pageContent.document.seo,
             graphQLFetch,
             fetch,
+            pageTreeNodeId,
         }),
     ]);
 

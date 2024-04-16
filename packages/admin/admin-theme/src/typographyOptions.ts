@@ -11,6 +11,13 @@ export const fontWeights = {
     fontWeightBold: 500,
 };
 
+const body1Styles = {
+    fontFamily,
+    fontSize: 16,
+    lineHeight: "20px",
+    fontWeight: fontWeights.fontWeightRegular,
+};
+
 export const createTypographyOptions = (breakpoints: Breakpoints): TypographyOptions => ({
     fontFamily,
     ...fontWeights,
@@ -84,16 +91,41 @@ export const createTypographyOptions = (breakpoints: Breakpoints): TypographyOpt
             lineHeight: "20px",
         },
     },
-    body1: {
-        fontFamily,
-        fontSize: 16,
-        lineHeight: "20px",
-        fontWeight: fontWeights.fontWeightRegular,
-    },
+    body1: body1Styles,
     body2: {
         fontFamily,
         fontSize: 14,
         lineHeight: "20px",
         fontWeight: fontWeights.fontWeightRegular,
     },
+    list: {
+        paddingInlineStart: 30,
+        paddingTop: 8,
+        paddingBottom: 8,
+    },
+    listItem: {
+        ...body1Styles,
+        paddingLeft: 0,
+        paddingTop: 4,
+        paddingBottom: 4,
+    },
 });
+
+declare module "@mui/material/styles" {
+    interface TypographyVariants {
+        list: React.CSSProperties;
+        listItem: React.CSSProperties;
+    }
+
+    interface TypographyVariantsOptions {
+        list?: React.CSSProperties;
+        listItem?: React.CSSProperties;
+    }
+}
+
+declare module "@mui/material/Typography" {
+    interface TypographyPropsVariantOverrides {
+        list: true;
+        listItem: true;
+    }
+}

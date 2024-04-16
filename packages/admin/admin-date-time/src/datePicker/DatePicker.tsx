@@ -10,14 +10,14 @@ import { FormatDateOptions, useIntl } from "react-intl";
 
 import { DatePickerNavigation } from "../DatePickerNavigation";
 import { useDateFnsLocale } from "../utils/DateFnsLocaleProvider";
-import { defaultMaxDate, defaultMinDate } from "../utils/datePickerHelpers";
+import { defaultMaxDate, defaultMinDate, getIsoDateString } from "../utils/datePickerHelpers";
 import { Calendar, DatePickerClassKey, Root, SlotProps, StartAdornment } from "./DatePicker.slots";
 
 export interface DatePickerProps extends Omit<InputWithPopperProps, "children" | "value" | "onChange" | "slotProps"> {
-    onChange?: (date?: Date) => void;
-    value?: Date;
+    onChange?: (date?: string) => void;
+    value?: string;
     formatDateOptions?: FormatDateOptions;
-    clearable?: boolean;
+    required?: boolean;
     monthsToShow?: number;
     maxDate?: Date;
     minDate?: Date;
@@ -30,7 +30,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
         value,
         formatDateOptions,
         endAdornment,
-        clearable,
+        required,
         placeholder,
         monthsToShow,
         minDate = defaultMinDate,
@@ -40,6 +40,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
     } = useThemeProps({ props: inProps, name: "CometAdminDatePicker" });
     const intl = useIntl();
     const dateFnsLocale = useDateFnsLocale();
+    const dateValue = value ? new Date(value) : undefined;
 
     return (
         <Root
@@ -53,8 +54,9 @@ export const DatePicker = (inProps: DatePickerProps) => {
             {...slotProps?.root}
             {...inputWithPopperProps}
             readOnly
+            required={required}
             endAdornment={
-                clearable ? (
+                !required ? (
                     <>
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange && onChange(undefined)} />
                         {endAdornment}
@@ -76,10 +78,10 @@ export const DatePicker = (inProps: DatePickerProps) => {
                     navigatorRenderer={(focusedDate, changeShownDate) => (
                         <DatePickerNavigation focusedDate={focusedDate} changeShownDate={changeShownDate} minDate={minDate} maxDate={maxDate} />
                     )}
-                    date={value}
+                    date={dateValue}
                     onChange={(date) => {
                         closePopper(true);
-                        onChange && onChange(date);
+                        onChange?.(getIsoDateString(date));
                     }}
                     {...slotProps?.calendar}
                 />
