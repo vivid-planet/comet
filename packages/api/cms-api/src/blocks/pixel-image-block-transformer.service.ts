@@ -1,8 +1,8 @@
 import { BlockContext, BlockTransformerServiceInterface, ExtractBlockData } from "@comet/blocks-api";
 import { Injectable } from "@nestjs/common";
 
-import { DamFileImage } from "../dam/files/entities/file-image.entity";
 import { FilesService } from "../dam/files/files.service";
+import { ImageCropArea } from "../dam/images/entities/image-crop-area.entity";
 import { ImagesService } from "../dam/images/images.service";
 import { DamScopeInterface } from "../dam/types";
 import { PixelImageBlock } from "./PixelImageBlock";
@@ -17,11 +17,19 @@ type TransformReturn = {
         title?: string;
         altText?: string;
         archived: boolean;
-        image?: DamFileImage;
         scope?: DamScopeInterface;
         importSourceId?: string;
         importSourceType?: string;
+        image?: {
+            width: number;
+            height: number;
+            cropArea: ImageCropArea;
+            dominantColor?: string;
+        };
+        fileUrl?: string;
     };
+    cropArea?: ImageCropArea;
+    urlTemplate?: string;
 };
 
 @Injectable()
@@ -30,7 +38,6 @@ export class PixelImageBlockTransformerService
 {
     constructor(private readonly filesService: FilesService, private readonly imagesService: ImagesService) {}
 
-    // @ts-expect-error Some type inconsistencies I'll fix later
     async transformToPlain(
         block: ExtractBlockData<typeof PixelImageBlock>,
         { includeInvisibleContent, previewDamUrls, relativeDamUrls }: BlockContext,
