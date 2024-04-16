@@ -1,5 +1,35 @@
 # @comet/cms-admin
 
+## 6.6.0
+
+### Patch Changes
+
+-   c76666503: Make headers in `includeInvisibleContentContext` overridable in query
+
+    You can now override the headers `x-include-invisible-content` and `x-preview-dam-urls` in your query like this:
+
+    ```tsx
+    const { loading, data, error } = useQuery(exampleQuery, {
+        // ...
+        context: {
+            headers: {
+                "x-include-invisible-content": [],
+                "x-preview-dam-urls": 0,
+            },
+        },
+    });
+    ```
+
+-   Updated dependencies [95b97d768]
+-   Updated dependencies [a65679ba3]
+-   Updated dependencies [6b04ac9a4]
+    -   @comet/admin@6.6.0
+    -   @comet/blocks-admin@6.6.0
+    -   @comet/admin-date-time@6.6.0
+    -   @comet/admin-icons@6.6.0
+    -   @comet/admin-rte@6.6.0
+    -   @comet/admin-theme@6.6.0
+
 ## 6.5.0
 
 ### Minor Changes
