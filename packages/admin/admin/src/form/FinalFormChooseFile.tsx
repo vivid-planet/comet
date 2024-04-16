@@ -154,7 +154,6 @@ const FinalFormChooseFileComponent: React.FunctionComponent<WithStyles<typeof st
 }) => {
     const { delete: deleteIcon = <Delete />, info: infoIcon = <Info />, select: selectIcon = <Select /> } = iconMapping;
 
-    // For multipleFiles, if maxFiles is not set, or if maxFiles is set and the number of the files in the current fieldValue together with the acceptedFiles is equal or less then maxFiles, add acceptedFiles to the current fieldValue. Else replace the fieldValue with acceptedFiles
     const onDrop = React.useCallback(
         (acceptedFiles: File[]) => {
             if (multipleFiles && Array.isArray(fieldValue)) {
@@ -174,7 +173,7 @@ const FinalFormChooseFileComponent: React.FunctionComponent<WithStyles<typeof st
     const { fileRejections, getRootProps, getInputProps, isDragReject } = useDropzone({
         onDrop,
         accept,
-        disabled: disabled || (maxFiles && fieldValue.length === maxFiles),
+        disabled: disabled || (maxFiles && fieldValue.length >= maxFiles),
         multiple: multipleFiles,
         maxSize: maxSize,
         maxFiles,
@@ -243,7 +242,13 @@ const FinalFormChooseFileComponent: React.FunctionComponent<WithStyles<typeof st
                 </div>
             )}
             <FormHelperText>
-                <FormattedMessage id="comet.finalFormChooseFile.maximumFileSize" defaultMessage="Maximum file size" /> <PrettyBytes value={maxSize} />
+                <FormattedMessage
+                    id="comet.finalFormChooseFile.maximumFileSize"
+                    defaultMessage="Maximum file size {fileSize}"
+                    values={{
+                        fileSize: <PrettyBytes value={maxSize} />,
+                    }}
+                />
             </FormHelperText>
         </div>
     );
