@@ -1,5 +1,23 @@
 # @comet/admin
 
+## 5.7.0
+
+### Minor Changes
+
+-   fd8beeabd: useDataGridRemote: Add `initialFilter` option
+
+    **Example usage:**
+
+    ```tsx
+    const dataGridProps = useDataGridRemote({
+        initialFilter: { items: [{ columnField: "description", operatorValue: "contains", value: "text" }] },
+    });
+    ```
+
+### Patch Changes
+
+-   @comet/admin-icons@5.7.0
+
 ## 5.6.6
 
 ### Patch Changes
