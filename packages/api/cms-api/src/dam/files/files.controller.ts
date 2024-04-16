@@ -21,7 +21,6 @@ import { OutgoingHttpHeaders } from "http";
 
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
 import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
-import { PublicApi } from "../../auth/decorators/public-api.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
@@ -108,10 +107,21 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return this.streamFile(file, res, { range, overrideHeaders: { "Cache-control": "private" } });
         }
 
-        @PublicApi()
-        @Get(`/download/${fileUrl}`)
-        async downloadFile(@Param() { fileId }: FileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
-            const file = await this.filesService.findOneById(fileId);
+        @DisableGlobalGuard()
+        @Get(`/download/:hash/${fileUrl}`)
+        async downloadFile(
+            @Param() { hash, ...params }: HashFileParams,
+            @Res() res: Response,
+            @Headers(CDN_ORIGIN_CHECK_HEADER) cdnOriginCheck: string,
+            @Headers("range") range?: string,
+        ): Promise<void> {
+            this.checkCdnOrigin(cdnOriginCheck);
+
+            if (!this.isValidHash(hash, params)) {
+                throw new NotFoundException();
+            }
+
+            const file = await this.filesService.findOneById(params.fileId);
 
             if (file === null) {
                 throw new NotFoundException();
