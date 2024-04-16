@@ -335,7 +335,7 @@ export function generateGrid(
         GQLDelete${gqlType}Mutation,
         GQLDelete${gqlType}MutationVariables
     } from "./${gqlTypePlural}Grid.generated";
-    import { filter as objectFilter } from "graphql-anywhere";
+    import { filter as filterByFragment } from "graphql-anywhere";
     import * as React from "react";
     import { FormattedMessage, useIntl } from "react-intl";
     ${Object.entries(rootBlocks)
@@ -494,7 +494,7 @@ export function generateGrid(
                                                 // Don't copy id, because we want to create a new entity with this data
                                                 ${
                                                     createMutationInputFields.filter((field) => rootBlocks[field.name]).length
-                                                        ? `const { id, ...filteredData } = objectFilter(${instanceGqlTypePlural}Fragment, params.row);
+                                                        ? `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
                                                         return {
                                                             ...filteredData,
                                                             ${createMutationInputFields
@@ -507,7 +507,7 @@ export function generateGrid(
                                                                 })
                                                                 .join(",\n")}
                                                         };`
-                                                        : `const { id, ...filteredData } = objectFilter(${instanceGqlTypePlural}Fragment, params.row);
+                                                        : `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
                                                         return filteredData;`
                                                 }
                                             }}

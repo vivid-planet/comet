@@ -20,7 +20,7 @@ import {
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { filter as objectFilter } from "graphql-anywhere";
+import { filter as filterByFragment } from "graphql-anywhere";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -199,7 +199,7 @@ export function ManufacturersGrid(): React.ReactElement {
                         <CrudContextMenu
                             copyData={() => {
                                 // Don't copy id, because we want to create a new entity with this data
-                                const { id, ...filteredData } = objectFilter(manufacturersFragment, params.row);
+                                const { id, ...filteredData } = filterByFragment(manufacturersFragment, params.row);
                                 return filteredData;
                             }}
                             onPaste={async ({ input }) => {
