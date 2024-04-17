@@ -4,6 +4,7 @@ import { matchPath, Prompt } from "react-router";
 
 import { PromptAction, RouterConfirmationDialog } from "./ConfirmationDialog";
 import { RouterContext } from "./Context";
+import { PromptRoutes } from "./Prompt";
 
 interface PromptHandlerState {
     showConfirmationDialog: boolean;
@@ -40,12 +41,15 @@ function InnerPromptHandler({
         for (const id of Object.keys(registeredMessages.current)) {
             const path = registeredMessages.current[id].path;
             const subRoutePath = registeredMessages.current[id].subRoutePath;
-            // allow transition if location is below path where prompt was rendered
-            if (subRoutePath && location.pathname.startsWith(subRoutePath)) {
-                //subRoutePath matches with location, allow transition
-            } else if (matchPath(location.pathname, { path, exact: true })) {
-                // path matches with location, allow transition
-            } else {
+            const promptRoutes = registeredMessages.current[id].promptRoutes?.current ?? {};
+
+            const promptRouteMatches = Object.values(promptRoutes).some((route) => {
+                return matchPath(location.pathname, { path: route.path, exact: true });
+            });
+            const subRouteMatches = subRoutePath && location.pathname.startsWith(subRoutePath);
+            const pathMatches = matchPath(location.pathname, { path, exact: true });
+
+            if (promptRouteMatches || (!subRouteMatches && !pathMatches)) {
                 const message = registeredMessages.current[id].message(location, action);
                 if (message !== true) {
                     return message;
@@ -95,6 +99,7 @@ interface PromptMessages {
         path: string;
         subRoutePath?: string;
         saveAction?: SaveAction;
+        promptRoutes?: React.MutableRefObject<PromptRoutes>;
     };
 }
 interface Props {
@@ -113,14 +118,16 @@ export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, 
         saveAction,
         path,
         subRoutePath,
+        promptRoutes,
     }: {
         id: string;
         message: (location: History.Location, action: History.Action) => string | boolean;
         saveAction?: SaveAction;
         path: string;
         subRoutePath?: string;
+        promptRoutes?: React.MutableRefObject<PromptRoutes>;
     }) => {
-        registeredMessages.current[id] = { message, path, subRoutePath, saveAction };
+        registeredMessages.current[id] = { message, path, subRoutePath, saveAction, promptRoutes };
         // If saveAction is passed it has to be passed for all registered components
         if (saveAction && Object.values(registeredMessages.current).some((registeredMessage) => !registeredMessage.saveAction)) {
             // eslint-disable-next-line no-console
