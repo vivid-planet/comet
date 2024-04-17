@@ -977,7 +977,7 @@ importers:
         specifier: workspace:^6.6.1
         version: link:../admin-babel-preset
       '@comet/admin-theme':
-        specifier: workspace:^6.5.0
+        specifier: workspace:^6.6.1
         version: link:../admin-theme
       '@comet/eslint-config':
         specifier: workspace:^6.6.1

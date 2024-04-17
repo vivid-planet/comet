@@ -32,13 +32,9 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-<<<<<<< HEAD
         "@aws-sdk/client-s3": "^3.256.0",
         "@azure/storage-blob": "^12.17.0",
-        "@comet/blocks-api": "workspace:^6.5.0",
-=======
         "@comet/blocks-api": "workspace:^6.6.1",
->>>>>>> main
         "@golevelup/nestjs-discovery": "^3.0.0",
         "@hapi/accept": "^5.0.2",
         "@nestjs/jwt": "^9.0.0",
@@ -85,12 +81,7 @@
     },
     "devDependencies": {
         "@aws-sdk/types": "^3.47.0",
-<<<<<<< HEAD
-        "@comet/eslint-config": "workspace:^6.5.0",
-=======
-        "@azure/storage-blob": "^12.0.0",
         "@comet/eslint-config": "workspace:^6.6.1",
->>>>>>> main
         "@golevelup/ts-jest": "^0.4.0",
         "@kubernetes/client-node": "^0.18.1",
         "@mikro-orm/core": "^5.7.1",
