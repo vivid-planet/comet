@@ -11,7 +11,7 @@ type OwnerState = Pick<FeedbackButtonProps, "variant" | "color"> & { displayStat
 
 const Button = styled(MuiButton, {
     name: "CometAdminFeedbackButton",
-    slot: "button",
+    slot: "root",
     overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
         return [
             styles.root,
