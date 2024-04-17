@@ -36,6 +36,8 @@ When logging is active, all sensitive (confidential or personal) data must be en
 
 The `shouldLogRequest` callback can be used to prevent logging for specific requests. For example, requests executed during a build should not be logged. In this function, you have access to the user and the request object. If the function returns `false`, no log will be emitted for this request.
 
+The optional `userToLog` callback can be used to log additional user info (e.g. session-id). The default format is `user: ${user.id}`
+
 There are two ways to integrate logging into an application:
 
 **First option: Use the default implementation**
@@ -58,6 +60,7 @@ imports: [
             // do something
             return true; //or false
         },
+        userToLog: (user: CurrentUser) => `user: ${user.id}`,
     }),
     ...
 ]
