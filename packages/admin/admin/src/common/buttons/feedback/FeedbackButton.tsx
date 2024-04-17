@@ -1,17 +1,18 @@
 import { ThreeDotSaving } from "@comet/admin-icons";
 import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
 import { Theme, useThemeProps } from "@mui/material/styles";
-import { createComponentSlot } from "helpers/createComponentSlot";
 import * as React from "react";
 
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { Tooltip } from "../../Tooltip";
 
-export type FeedbackButtonClassKey = "idle" | "loading" | "success" | "fail" | ButtonClassKey;
+export type FeedbackButtonClassKey = "idle" | "loading" | "success" | "fail" | "successTooltip" | "errorTooltip" | ButtonClassKey;
 
 type OwnerState = Pick<FeedbackButtonProps, "variant" | "color"> & { displayState?: FeedbackButtonDisplayState };
 
 const Root = createComponentSlot(Button)<FeedbackButtonClassKey, OwnerState>({
-    componentName: "CometAdminFeedbackButton",
+    componentName: "FeedbackButton",
     slotName: "root",
     classesResolver(ownerState) {
         return [
@@ -23,7 +24,23 @@ const Root = createComponentSlot(Button)<FeedbackButtonClassKey, OwnerState>({
     },
 })();
 
-export interface FeedbackButtonProps extends ButtonProps {
+const SuccessTooltip = createComponentSlot(Tooltip)<FeedbackButtonClassKey>({
+    componentName: "FeedbackButton",
+    slotName: "successTooltip",
+})();
+
+const ErrorTooltip = createComponentSlot(Tooltip)<FeedbackButtonClassKey>({
+    componentName: "FeedbackButton",
+    slotName: "errorTooltip",
+})();
+
+export interface FeedbackButtonProps
+    extends ThemedComponentBaseProps<{
+            root: typeof Button;
+            successTooltip: typeof Tooltip;
+            errorTooltip: typeof Tooltip;
+        }>,
+        ButtonProps {
     loading?: boolean;
     hasErrors?: boolean;
     loadingIcon?: React.ReactNode;
@@ -49,6 +66,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         endIcon,
         tooltipSuccessMessage,
         tooltipErrorMessage,
+        slotProps,
 
         ...restProps
     } = useThemeProps({
@@ -127,29 +145,32 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
     return (
         <Root
             ownerState={ownerState}
+            {...slotProps}
             {...restProps}
             startIcon={
                 startIcon && (
-                    <Tooltip
+                    <SuccessTooltip
                         title={displayState === "fail" ? tooltipErrorMessage : tooltipSuccessMessage}
                         open={displayState === "fail" || (displayState === "success" && true)}
                         placement="top-start"
                         variant={resolveTooltipForDisplayState(displayState)}
+                        {...slotProps?.successTooltip}
                     >
                         {resolveIconForDisplayState(displayState)}
-                    </Tooltip>
+                    </SuccessTooltip>
                 )
             }
             endIcon={
                 endIcon && !startIcon ? (
-                    <Tooltip
+                    <ErrorTooltip
                         title={displayState === "fail" ? tooltipErrorMessage : tooltipSuccessMessage}
                         open={(displayState === "fail" || displayState === "success") && true}
                         placement="top-end"
                         variant={resolveTooltipForDisplayState(displayState)}
+                        {...slotProps?.errorTooltip}
                     >
                         {resolveIconForDisplayState(displayState)}
-                    </Tooltip>
+                    </ErrorTooltip>
                 ) : (
                     <>{endIcon && resolveIconForDisplayState(displayState)}</>
                 )
