@@ -30,7 +30,6 @@ export type FormConfig<T extends { __typename?: string }> = {
     gqlType: T["__typename"];
     fragmentName?: string;
     fields: FormFieldConfig<T>[];
-    title?: string;
 };
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
