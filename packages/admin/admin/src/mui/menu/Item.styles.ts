@@ -6,11 +6,6 @@ import { MenuItemProps, MuiListItemProps } from "./Item";
 export type MenuItemClassKey = "root" | "level1" | "level2" | "level3" | "hasIcon" | "hasSecondaryText" | "hasSecondaryAction" | "level3MenuOpen";
 
 export const styles = (theme: Theme) => {
-    const colors = {
-        textLevel1: theme.palette.grey[800],
-        textLevel2: theme.palette.grey[900],
-    };
-
     return createStyles<MenuItemClassKey, MenuItemProps & MuiListItemProps>({
         root: {
             flexShrink: 0,
@@ -23,12 +18,12 @@ export const styles = (theme: Theme) => {
                 width: 2,
             },
             "& [class*='MuiListItemIcon-root']": {
-                color: colors.textLevel1,
+                color: theme.palette.common.black,
                 minWidth: ({ isMenuOpen }) => (isMenuOpen ? 28 : 22),
                 margin: theme.spacing(0, "auto"),
             },
             "& [class*='MuiListItemText-inset']": {
-                paddingLeft: ({ icon, level }) => (!!icon && level === 1 ? 28 : 0),
+                paddingLeft: ({ icon, level }) => (!!icon && level === 1 ? 30 : 0),
             },
             "& [class*='Mui-selected']": {
                 "& [class*='MuiListItemText-secondary']": {
@@ -44,7 +39,7 @@ export const styles = (theme: Theme) => {
         level1: {
             borderBottom: `1px solid ${theme.palette.grey[50]}`,
             boxSizing: "border-box",
-            color: colors.textLevel1,
+            color: theme.palette.common.black,
             height: 60,
             paddingLeft: 20,
             paddingRight: 20,
@@ -79,21 +74,19 @@ export const styles = (theme: Theme) => {
                 },
             },
             "& [class*='MuiListItemText-primary']": {
-                fontWeight: theme.typography.fontWeightMedium,
                 fontSize: 16,
                 lineHeight: "20px",
             },
         },
         level2: {
-            color: colors.textLevel2,
-            paddingLeft: ({ isMenuOpen }) => (isMenuOpen ? 48 : 20),
-            paddingRight: 20,
-            paddingTop: 10,
-            paddingBottom: 10,
+            color: theme.palette.common.black,
+            paddingLeft: ({ isMenuOpen }) => (isMenuOpen ? 48 : 30),
+            paddingRight: 15,
+            paddingTop: 8,
+            paddingBottom: 8,
             width: ({ isMenuOpen }) => (isMenuOpen ? "initial" : 240),
             "& [class*='MuiListItemText-primary']": {
-                fontWeight: theme.typography.fontWeightRegular,
-                fontSize: 14,
+                fontSize: 16,
                 lineHeight: "20px",
             },
             "&:last-child": {
@@ -104,7 +97,7 @@ export const styles = (theme: Theme) => {
             "&[class*='Mui-selected']": {
                 backgroundColor: theme.palette.common.white,
                 color: theme.palette.primary.main,
-                fontWeight: theme.typography.fontWeightBold,
+                fontWeight: 600,
                 "&:after": {
                     backgroundColor: ({ isMenuOpen }) => (isMenuOpen ? theme.palette.primary.main : undefined),
                 },
@@ -112,7 +105,7 @@ export const styles = (theme: Theme) => {
                     backgroundColor: theme.palette.grey[50],
                 },
                 "& [class*='MuiListItemText-primary']": {
-                    fontWeight: theme.typography.fontWeightBold,
+                    fontWeight: 600,
                 },
                 "& [class*='MuiListItemIcon-root']": {
                     color: theme.palette.primary.main,
@@ -123,16 +116,13 @@ export const styles = (theme: Theme) => {
             },
         },
         level3: {
-            color: colors.textLevel2,
-            paddingLeft: ({ isMenuOpen }) => (isMenuOpen ? 50 : 20),
-            paddingRight: 20,
+            color: theme.palette.common.black,
+            paddingLeft: ({ isMenuOpen }) => (isMenuOpen ? 50 : 30),
+            paddingRight: 15,
             paddingTop: 0,
             paddingBottom: 0,
             position: "relative",
             width: ({ isMenuOpen }) => (isMenuOpen ? "initial" : 240),
-            "& [class*='MuiListItemText-inset']": {
-                paddingLeft: 0,
-            },
             "&:last-child": {
                 borderBottom: ({ isMenuOpen, level }) => (isMenuOpen && level !== 3 ? `1px solid ${theme.palette.grey[50]}` : "initial"),
                 boxSizing: "border-box",
@@ -140,12 +130,12 @@ export const styles = (theme: Theme) => {
             "&[class*='Mui-selected']": {
                 backgroundColor: theme.palette.common.white,
                 color: theme.palette.primary.main,
-                fontWeight: theme.typography.fontWeightBold,
+                fontWeight: 600,
                 "&:hover": {
                     backgroundColor: theme.palette.grey[50],
                 },
                 "& [class*='MuiListItemText-primary']": {
-                    fontWeight: theme.typography.fontWeightBold,
+                    fontWeight: 600,
                 },
                 "& [class*='MuiListItemIcon-root']": {
                     color: theme.palette.primary.main,
@@ -155,12 +145,11 @@ export const styles = (theme: Theme) => {
                 margin: 0,
             },
             "& [class*='MuiListItemText-primary']": {
-                fontWeight: theme.typography.fontWeightRegular,
-                fontSize: 14,
+                fontSize: 16,
                 lineHeight: "20px",
-                paddingLeft: ({ isMenuOpen }) => (isMenuOpen ? 14 : 0),
-                paddingTop: 14,
-                paddingBottom: 14,
+                paddingLeft: 15,
+                paddingTop: 8,
+                paddingBottom: 8,
             },
         },
         level3MenuOpen: {
@@ -203,6 +192,7 @@ export const styles = (theme: Theme) => {
             "&:last-child": {
                 "& [class*='MuiListItemText-root']": {
                     position: "relative",
+                    paddingRight: 10,
                     "&:before": {
                         content: "''",
                         position: "absolute",
