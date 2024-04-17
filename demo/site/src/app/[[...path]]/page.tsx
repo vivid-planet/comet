@@ -1,7 +1,8 @@
-import { gql } from "@comet/cms-site";
+import { gql, GraphQLFetch } from "@comet/cms-site";
 import { SitePreviewData } from "@src/app/api/site-preview/route";
 import { defaultLanguage, domain } from "@src/config";
 import { documentTypes } from "@src/documentTypes";
+import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import type { Metadata, ResolvingMetadata } from "next";
 import { draftMode } from "next/headers";
@@ -18,6 +19,17 @@ const documentTypeQuery = gql`
     }
 `;
 
+function fetchPageTreeNode(graphqlFetch: GraphQLFetch, options: { path: string[]; scope: GQLPageTreeNodeScopeInput }) {
+    return graphqlFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
+        documentTypeQuery,
+        {
+            path: `/${(options.path ?? []).join("/")}`,
+            scope: options.scope,
+        },
+        { method: "GET" }, //for request memoization
+    );
+}
+
 type Props = {
     params: { path: string[] };
 };
@@ -27,20 +39,12 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     if (draftMode().isEnabled) {
         previewData = { includeInvisible: false };
     }
-    const graphqlFetch = createGraphQLFetch(previewData);
+    const graphQLFetch = createGraphQLFetch(previewData);
 
     const locale = /*context.locale ??*/ defaultLanguage;
     const scope = { domain, language: locale };
 
-    //fetch documentType
-    const data = await graphqlFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
-        documentTypeQuery,
-        {
-            path: `/${(params.path ?? []).join("/")}`,
-            scope,
-        },
-        { method: "GET" }, //for request memoization
-    );
+    const data = await fetchPageTreeNode(graphQLFetch, { path: params.path, scope });
 
     if (!data.pageTreeNodeByPath?.documentType) {
         return {};
@@ -62,20 +66,12 @@ export default async function Page({ params }: Props) {
     if (draftMode().isEnabled) {
         previewData = { includeInvisible: false };
     }
-    const graphqlFetch = createGraphQLFetch(previewData);
+    const graphQLFetch = createGraphQLFetch(previewData);
 
     const locale = /*context.locale ??*/ defaultLanguage;
     const scope = { domain, language: locale };
 
-    //fetch documentType
-    const data = await graphqlFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
-        documentTypeQuery,
-        {
-            path: `/${(params.path ?? []).join("/")}`,
-            scope,
-        },
-        { method: "GET" }, //for request memoization
-    );
+    const data = await fetchPageTreeNode(graphQLFetch, { path: params.path, scope });
 
     if (!data.pageTreeNodeByPath?.documentType) {
         notFound();
