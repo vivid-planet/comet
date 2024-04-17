@@ -30,10 +30,15 @@ export const styles = (theme: Theme) => {
             "& [class*='MuiListItemText-inset']": {
                 paddingLeft: ({ icon, level }) => (!!icon && level === 1 ? 28 : 0),
             },
-            "&[class*='Mui-selected']": {
+            "& [class*='Mui-selected']": {
                 "& [class*='MuiListItemText-secondary']": {
                     color: "inherit",
                 },
+            },
+            "& [class*='MuiListItemText-primary']": {
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
             },
         },
         level1: {
@@ -85,6 +90,7 @@ export const styles = (theme: Theme) => {
             paddingRight: 20,
             paddingTop: 10,
             paddingBottom: 10,
+            width: ({ isMenuOpen }) => (isMenuOpen ? "initial" : 240),
             "& [class*='MuiListItemText-primary']": {
                 fontWeight: theme.typography.fontWeightRegular,
                 fontSize: 14,
@@ -123,6 +129,7 @@ export const styles = (theme: Theme) => {
             paddingTop: 0,
             paddingBottom: 0,
             position: "relative",
+            width: ({ isMenuOpen }) => (isMenuOpen ? "initial" : 240),
             "& [class*='MuiListItemText-inset']": {
                 paddingLeft: 0,
             },
