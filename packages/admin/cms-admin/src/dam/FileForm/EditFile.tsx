@@ -27,6 +27,7 @@ import { Link as RouterLink } from "react-router-dom";
 import ReactSplit from "react-split";
 
 import { useContentScope } from "../../contentScope/Provider";
+import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
 import { DependencyList } from "../../dependencies/DependencyList";
 import { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
 import { useDamConfig } from "../config/useDamConfig";
@@ -117,6 +118,7 @@ interface EditFileInnerProps {
 }
 
 const EditFileInner = ({ file, id }: EditFileInnerProps) => {
+    const dependencyMap = useDependenciesConfig();
     const intl = useIntl();
     const stackApi = useStackApi();
     const damConfig = useDamConfig();
@@ -279,18 +281,20 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                                 >
                                     <Duplicates fileId={file.id} />
                                 </RouterTab>
-                                <RouterTab
-                                    key="dependents"
-                                    label={intl.formatMessage({ id: "comet.dam.file.dependents", defaultMessage: "Dependents" })}
-                                    path="/dependents"
-                                >
-                                    <DependencyList
-                                        query={damFileDependentsQuery}
-                                        variables={{
-                                            id: id,
-                                        }}
-                                    />
-                                </RouterTab>
+                                {Object.keys(dependencyMap).length > 0 && (
+                                    <RouterTab
+                                        key="dependents"
+                                        label={intl.formatMessage({ id: "comet.dam.file.dependents", defaultMessage: "Dependents" })}
+                                        path="/dependents"
+                                    >
+                                        <DependencyList
+                                            query={damFileDependentsQuery}
+                                            variables={{
+                                                id: id,
+                                            }}
+                                        />
+                                    </RouterTab>
+                                )}
                             </RouterTabs>
                         </ReactSplit>
                     </MainContent>
