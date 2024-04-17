@@ -111,13 +111,13 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         }
 
         // Display Error
-        else if (displayState === "loading" && hasErrors === true) {
+        else if (displayState === "loading" && hasErrors) {
             timeoutId = window.setTimeout(() => {
                 setDisplayState("fail");
             }, 500);
         }
         // Display Success
-        else if (displayState === "loading" && loading === false && hasErrors === false) {
+        else if (displayState === "loading" && loading === false && !hasErrors) {
             timeoutId = window.setTimeout(() => {
                 setDisplayState("success");
             }, 500);
