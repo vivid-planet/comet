@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 6.6.1
+
+### Patch Changes
+
+-   890795fda: Fix calculation of `totalCount` in `DependenciesService#getDependents`
+    -   @comet/blocks-api@6.6.1
+
 ## 6.6.0
 
 ### Minor Changes
