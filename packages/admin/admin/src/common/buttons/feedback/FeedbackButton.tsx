@@ -82,7 +82,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         color,
     };
 
-    const resolveIconForDisplayState = (displayState: FeedbackButtonDisplayState): any => {
+    const resolveIconForDisplayState = (displayState: FeedbackButtonDisplayState) => {
         if (startIcon && displayState !== "loading") {
             return startIcon;
         } else if (endIcon && displayState !== "loading") {
@@ -93,7 +93,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         }
     };
 
-    const resolveTooltipForDisplayState = (displayState: FeedbackButtonDisplayState): any => {
+    const resolveTooltipForDisplayState = (displayState: FeedbackButtonDisplayState) => {
         if (displayState === "success") {
             return "success";
         } else if (displayState === "fail") {
@@ -156,7 +156,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
                         variant={resolveTooltipForDisplayState(displayState)}
                         {...slotProps?.successTooltip}
                     >
-                        {resolveIconForDisplayState(displayState)}
+                        <>{resolveIconForDisplayState(displayState)}</>
                     </SuccessTooltip>
                 )
             }
@@ -169,7 +169,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
                         variant={resolveTooltipForDisplayState(displayState)}
                         {...slotProps?.errorTooltip}
                     >
-                        {resolveIconForDisplayState(displayState)}
+                        <>{resolveIconForDisplayState(displayState)}</>
                     </ErrorTooltip>
                 ) : (
                     <>{endIcon && resolveIconForDisplayState(displayState)}</>
