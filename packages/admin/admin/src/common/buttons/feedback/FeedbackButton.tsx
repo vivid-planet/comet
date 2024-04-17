@@ -1,6 +1,7 @@
 import { ThreeDotSaving } from "@comet/admin-icons";
-import { Button as MuiButton, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
-import { styled, Theme, useThemeProps } from "@mui/material/styles";
+import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
+import { Theme, useThemeProps } from "@mui/material/styles";
+import { createComponentSlot } from "helpers/createComponentSlot";
 import * as React from "react";
 
 import { Tooltip } from "../../Tooltip";
@@ -9,19 +10,18 @@ export type FeedbackButtonClassKey = "idle" | "loading" | "success" | "fail" | B
 
 type OwnerState = Pick<FeedbackButtonProps, "variant" | "color"> & { displayState?: FeedbackButtonDisplayState };
 
-const Button = styled(MuiButton, {
-    name: "CometAdminFeedbackButton",
-    slot: "root",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
+const Root = createComponentSlot(Button)<FeedbackButtonClassKey, OwnerState>({
+    componentName: "CometAdminFeedbackButton",
+    slotName: "root",
+    classesResolver(ownerState) {
         return [
-            styles.root,
-            ownerState.displayState === "idle" && styles.idle,
-            ownerState.displayState === "fail" && styles.fail,
-            ownerState.displayState === "success" && styles.success,
-            ownerState.displayState === "loading" && styles.loading,
+            ownerState.displayState === "idle" && "idle",
+            ownerState.displayState === "fail" && "fail",
+            ownerState.displayState === "success" && "success",
+            ownerState.displayState === "loading" && "loading",
         ];
     },
-})<{ ownerState: OwnerState }>();
+})();
 
 export interface FeedbackButtonProps extends ButtonProps {
     loading?: boolean;
@@ -125,7 +125,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
     }, [displayState, loading, hasErrors]);
 
     return (
-        <Button
+        <Root
             ownerState={ownerState}
             {...restProps}
             startIcon={
@@ -159,7 +159,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             disabled={disabled || displayState === "loading"}
         >
             {children}
-        </Button>
+        </Root>
     );
 }
 
