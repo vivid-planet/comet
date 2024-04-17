@@ -1,5 +1,11 @@
 # @comet/admin-react-select
 
+## 6.6.1
+
+### Patch Changes
+
+-   @comet/admin@6.6.1
+
 ## 6.6.0
 
 ### Patch Changes
