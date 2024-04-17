@@ -3,7 +3,7 @@ import { Button as MuiButton, ButtonClassKey, ButtonProps, ComponentsOverrides }
 import { styled, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { Tooltip, TooltipClassKey } from "../../Tooltip";
+import { Tooltip } from "../../Tooltip";
 
 export type FeedbackButtonClassKey = "idle" | "loading" | "success" | "fail" | ButtonClassKey;
 
@@ -75,7 +75,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         }
     };
 
-    const resolveTooltipForDisplayState = (displayState: FeedbackButtonDisplayState): TooltipClassKey => {
+    const resolveTooltipForDisplayState = (displayState: FeedbackButtonDisplayState): any => {
         if (displayState === "success") {
             return "success";
         } else if (displayState === "fail") {
