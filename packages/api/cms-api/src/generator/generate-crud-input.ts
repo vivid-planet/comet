@@ -334,7 +334,9 @@ export async function generateCrudInput(
                     const importPath = findValidatorImportPath(decorator.getName(), generatorOptions, metadata);
                     if (importPath) {
                         imports.push({ name: decorator.getName(), importPath });
-                        decorators.includes(decorator.getText()) || decorators.unshift(decorator.getText());
+                        if (!decorators.includes(decorator.getText())) {
+                            decorators.unshift(decorator.getText());
+                        }
                     }
                 } else {
                     console.warn(`Decorator import for constraint ${constraint.name} not found`);
