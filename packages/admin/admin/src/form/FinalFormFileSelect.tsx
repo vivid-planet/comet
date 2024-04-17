@@ -93,7 +93,7 @@ const styles = ({ palette }: Theme) => {
         },
         rejectedFileListItem: {
             display: "flex",
-            padding: "8px 7px 8px 15px",
+            padding: "14px 15px",
             alignItems: "center",
             gap: "10px",
             borderRadius: "4px",
