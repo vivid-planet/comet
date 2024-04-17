@@ -28,6 +28,7 @@ import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
+import { AzureAITranslatorResolver } from "./src/translation/azure-ai-translator.resolver";
 import { UserResolver } from "./src/user-permissions/user.resolver";
 import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
 import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
@@ -94,6 +95,7 @@ async function generateSchema(): Promise<void> {
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,
+        AzureAITranslatorResolver,
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

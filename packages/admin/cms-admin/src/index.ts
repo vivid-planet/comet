@@ -32,6 +32,7 @@ export { MasterMenuRoutes, useRoutePropsFromMasterMenuData } from "./common/Mast
 export type { PageListItem } from "./common/PageList";
 export { PageList } from "./common/PageList";
 export { PageName } from "./common/PageName";
+export { AzureAITranslatorProvider } from "./common/translation/AzureAITranslatorProvider";
 export { useEditState } from "./common/useEditState";
 export { useSaveState } from "./common/useSaveState";
 export { ContentScopeIndicator } from "./contentScope/ContentScopeIndicator";

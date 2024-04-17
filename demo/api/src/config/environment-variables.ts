@@ -67,6 +67,7 @@ export class EnvironmentVariables {
 
     @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "azure")
     @IsString()
+    @IsOptional()
     AZURE_ACCOUNT_NAME: string;
 
     @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "azure")
@@ -95,4 +96,16 @@ export class EnvironmentVariables {
     @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
     @IsString()
     S3_BUCKET: string;
+
+    @IsString()
+    @IsOptional()
+    AZURE_AI_TRANSLATOR_ENDPOINT: string;
+
+    @IsString()
+    @IsOptional()
+    AZURE_AI_TRANSLATOR_KEY: string;
+
+    @IsString()
+    @IsOptional()
+    AZURE_AI_TRANSLATOR_REGION: string;
 }

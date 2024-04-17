@@ -364,6 +364,7 @@ type Query {
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
+  translate(input: TranslationInput!): String!
 }
 
 input RedirectScopeInput {
@@ -492,6 +493,11 @@ enum UserSortField {
   email
   status
   language
+}
+
+input TranslationInput {
+  text: String!
+  targetLanguage: String!
 }
 
 type Mutation {
