@@ -3,7 +3,7 @@ import { createStyles } from "@mui/styles";
 
 import { MenuItemProps, MuiListItemProps } from "./Item";
 
-export type MenuItemClassKey = "root" | "level1" | "level2" | "level3" | "hasIcon" | "hasSecondaryText" | "hasSecondaryAction" | "level3Enumeration";
+export type MenuItemClassKey = "root" | "level1" | "level2" | "level3" | "hasIcon" | "hasSecondaryText" | "hasSecondaryAction" | "level3MenuOpen";
 
 export const styles = (theme: Theme) => {
     const colors = {
@@ -163,7 +163,7 @@ export const styles = (theme: Theme) => {
                 paddingBottom: 14,
             },
         },
-        level3Enumeration: {
+        level3MenuOpen: {
             "&:not(:last-child)": {
                 "& [class*='MuiListItemText-root']": {
                     position: "relative",

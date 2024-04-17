@@ -38,7 +38,7 @@ const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProp
     if (level === 1) listItemClasses.push(classes.level1);
     if (level === 2) listItemClasses.push(classes.level2);
     if (level === 3) listItemClasses.push(classes.level3);
-    if (level === 3 && isMenuOpen) listItemClasses.push(classes.level3Enumeration);
+    if (level === 3 && isMenuOpen) listItemClasses.push(classes.level3MenuOpen);
     if (showIcon) listItemClasses.push(classes.hasIcon);
     if (secondary) listItemClasses.push(classes.hasSecondaryText);
     if (secondaryAction) listItemClasses.push(classes.hasSecondaryAction);
