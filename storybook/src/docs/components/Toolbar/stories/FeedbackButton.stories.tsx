@@ -2,7 +2,6 @@ import { FeedbackButton, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarTitle
 import { Assets } from "@comet/admin-icons";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
 
 import { storyRouterDecorator } from "../../../../story-router.decorator";
 import { toolbarDecorator } from "../toolbar.decorator";
@@ -31,7 +30,7 @@ storiesOf("stories/components/Toolbar/Feedback Button", module)
                         tooltipSuccessMessage="Saving was successful"
                         tooltipErrorMessage="Error while saving"
                     >
-                        <FormattedMessage id="comet.feedback" defaultMessage="Feedback" />
+                        Feedback
                     </FeedbackButton>
                 </ToolbarActions>
             </Toolbar>
