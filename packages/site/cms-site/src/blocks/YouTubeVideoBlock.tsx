@@ -7,13 +7,13 @@ import { withPreview } from "../iframebridge/withPreview";
 import { PropsWithData } from "./PropsWithData";
 
 interface VideoContainerProps {
-    heightInPercent: number;
+    $heightInPercent: number;
 }
 
 const VideoContainer = styled.div<VideoContainerProps>`
     height: 0;
     overflow: hidden;
-    padding-top: ${({ heightInPercent }) => heightInPercent}%;
+    padding-top: ${({ $heightInPercent }) => $heightInPercent}%;
     position: relative;
 
     iframe {
@@ -67,7 +67,7 @@ export const YouTubeVideoBlock = withPreview(
         youtubeUrl.search = searchParams.toString();
 
         return (
-            <VideoContainer heightInPercent={getHeightInPercentForAspectRatio(aspectRatio)}>
+            <VideoContainer $heightInPercent={getHeightInPercentForAspectRatio(aspectRatio)}>
                 <iframe src={youtubeUrl.toString()} style={{ border: 0 }} />
             </VideoContainer>
         );
