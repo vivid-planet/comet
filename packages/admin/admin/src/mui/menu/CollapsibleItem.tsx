@@ -110,13 +110,20 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
     if (hasSelectedChild.current) listClasses.push(classes.childSelected);
     if (isSubmenuOpen) listClasses.push(classes.open);
 
+    let itemId,
+        mouseOverMenuId = undefined;
+    if (typeof primary === "string") {
+        itemId = `menu-item-${primary?.replace(/\s/g, "-").toLowerCase()}`;
+        mouseOverMenuId = `item-hover-menu-${primary?.replace(/\s/g, "-").toLowerCase()}`;
+    }
+
     return (
         <div {...otherProps}>
             <div
-                id="menu-item"
+                id={itemId}
                 className={classes.listItem}
                 aria-haspopup="true"
-                aria-controls={isSubmenuOpen ? "mouse-over-menu" : undefined}
+                aria-controls={isSubmenuOpen ? mouseOverMenuId : undefined}
                 aria-expanded={isSubmenuOpen ? "true" : undefined}
                 onMouseOver={handlePopoverOpen}
                 onMouseLeave={handlePopoverClose}
@@ -154,9 +161,9 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
             </div>
             {!isMenuOpen && drawerVariant === "permanent" ? (
                 <Menu
-                    id="mouse-over-menu"
+                    id={mouseOverMenuId}
                     MenuListProps={{
-                        "aria-labelledby": "menu-item",
+                        "aria-labelledby": itemId,
                         onMouseLeave: closeMenu,
                         style: { pointerEvents: "auto" },
                     }}
