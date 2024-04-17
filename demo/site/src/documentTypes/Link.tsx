@@ -1,9 +1,7 @@
-import { gql } from "@comet/cms-site";
-import { SitePreviewData } from "@src/app/api/site-preview/route";
+import { gql, previewParams } from "@comet/cms-site";
 import { ExternalLinkBlockData, InternalLinkBlockData } from "@src/blocks.generated";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
-import { draftMode } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
 import { GQLLinkRedirectQuery, GQLLinkRedirectQueryVariables } from "./Link.generated";
@@ -27,10 +25,7 @@ interface Props {
 }
 
 export async function Link({ pageTreeNodeId }: Props): Promise<JSX.Element> {
-    let previewData: SitePreviewData | undefined = undefined;
-    if (draftMode().isEnabled) {
-        previewData = { includeInvisible: false };
-    }
+    const { previewData } = previewParams() || { previewData: undefined };
     const graphqlFetch = createGraphQLFetch(previewData);
 
     const { pageTreeNode } = await graphqlFetch<GQLLinkRedirectQuery, GQLLinkRedirectQueryVariables>(linkRedirectQuery, {

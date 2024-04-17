@@ -1,5 +1,4 @@
-import { gql, SeoBlock } from "@comet/cms-site";
-import { SitePreviewData } from "@src/app/api/site-preview/route";
+import { gql, previewParams, SeoBlock } from "@comet/cms-site";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import Breadcrumbs from "@src/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/components/Breadcrumbs.fragment";
@@ -10,7 +9,6 @@ import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
 import { TopNavigation } from "@src/topNavigation/TopNavigation";
 import { topMenuPageTreeNodeFragment } from "@src/topNavigation/TopNavigation.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
-import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import * as React from "react";
 
@@ -44,10 +42,7 @@ const pageQuery = gql`
 `;
 
 export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput }) {
-    let previewData: SitePreviewData | undefined = undefined;
-    if (draftMode().isEnabled) {
-        previewData = { includeInvisible: false };
-    }
+    const { previewData } = previewParams() || { previewData: undefined };
     const graphQLFetch = createGraphQLFetch(previewData);
 
     const data = await graphQLFetch<GQLPageQuery, GQLPageQueryVariables>(pageQuery, {
