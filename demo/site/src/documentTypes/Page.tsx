@@ -1,16 +1,15 @@
-import { generateImageUrl, gql } from "@comet/cms-site";
-import { SitePreviewData } from "@src/app/api/site-preview/route";
+import { generateImageUrl, gql, previewParams } from "@comet/cms-site";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import Breadcrumbs from "@src/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/components/Breadcrumbs.fragment";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { Header } from "@src/header/Header";
 import { headerFragment } from "@src/header/Header.fragment";
+import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
 import { TopNavigation } from "@src/topNavigation/TopNavigation";
 import { topMenuPageTreeNodeFragment } from "@src/topNavigation/TopNavigation.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import type { Metadata, ResolvingMetadata } from "next";
-import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import * as React from "react";
 
@@ -46,13 +45,10 @@ const pageQuery = gql`
 type Props = { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput };
 
 async function fetchData({ pageTreeNodeId, scope }: Props) {
-    let previewData: SitePreviewData | undefined = undefined;
-    if (draftMode().isEnabled) {
-        previewData = { includeInvisible: false };
-    }
-    const graphqlFetch = createGraphQLFetch(previewData);
+    const { previewData } = previewParams() || { previewData: undefined };
+    const graphQLFetch = createGraphQLFetch(previewData);
 
-    const props = await graphqlFetch<GQLPageQuery, GQLPageQueryVariables>(
+    const props = await graphQLFetch<GQLPageQuery, GQLPageQueryVariables>(
         pageQuery,
         {
             pageTreeNodeId,
@@ -111,14 +107,34 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
     };
 }
 
-export default async function Page({ pageTreeNodeId, scope }: Props) {
+export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput }) {
+    const { previewData } = previewParams() || { previewData: undefined };
+    const graphQLFetch = createGraphQLFetch(previewData);
+
     const data = await fetchData({ pageTreeNodeId, scope });
     const document = data?.pageContent?.document;
     if (!document) {
         // no document attached to page
         notFound(); //no return needed
     }
-    if (document.__typename != "Page") throw new Error(`invalid document type, expected Page, got ${document.__typename}`);
+    if (data.pageContent.document?.__typename != "Page") throw new Error(`invalid document type`);
+
+    [data.pageContent.document.content, data.pageContent.document.seo] = await Promise.all([
+        recursivelyLoadBlockData({
+            blockType: "PageContent",
+            blockData: data.pageContent.document.content,
+            graphQLFetch,
+            fetch,
+            pageTreeNodeId,
+        }),
+        recursivelyLoadBlockData({
+            blockType: "Seo",
+            blockData: data.pageContent.document.seo,
+            graphQLFetch,
+            fetch,
+            pageTreeNodeId,
+        }),
+    ]);
 
     return (
         <>
@@ -128,7 +144,9 @@ export default async function Page({ pageTreeNodeId, scope }: Props) {
             <TopNavigation data={data.topMenu} />
             <Header header={data.header} />
             <Breadcrumbs {...data.pageContent} />
-            <div>{document.content && <PageContentBlock data={document.content} />}</div>
+            <div>
+                <PageContentBlock data={data.pageContent.document.content} />
+            </div>
         </>
     );
 }

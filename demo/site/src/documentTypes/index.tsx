@@ -1,4 +1,5 @@
-import PageTypePage, { generateMetadata as generateMetadataPage } from "@src/documentTypes/Page";
+import { Link } from "./Link";
+import { generateMetadata as generateMetadataPage, Page } from "./Page";
 
 // TODO fix type for async component
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -6,7 +7,10 @@ type DocumentType = any; //{ component: React.ComponentType<{ pageTreeNodeId: st
 
 export const documentTypes: Record<string, DocumentType> = {
     Page: {
-        component: PageTypePage,
+        component: Page,
         generateMetadata: generateMetadataPage,
+    },
+    Link: {
+        component: Link,
     },
 };

@@ -3,10 +3,13 @@ import { IsBoolean, IsEnum, IsOptional, IsString } from "class-validator";
 import { BlockData, BlockDataInterface, BlockInput, createBlock, inputToData } from "./block";
 import { BlockField } from "./decorators/field";
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with PascalCase
 enum AspectRatio {
     "16X9" = "16X9",
     "4X3" = "4X3",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
 class YouTubeVideoBlockData extends BlockData {
     @BlockField()

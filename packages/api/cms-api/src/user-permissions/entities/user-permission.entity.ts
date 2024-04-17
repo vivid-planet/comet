@@ -5,10 +5,13 @@ import { v4 } from "uuid";
 
 import { ContentScope } from "../interfaces/content-scope.interface";
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with PascalCase
 export enum UserPermissionSource {
     MANUAL = "MANUAL",
     BY_RULE = "BY_RULE",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(UserPermissionSource, {
     name: "UserPermissionSource",
 });
