@@ -1,6 +1,5 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
-import { Collapse, ComponentsOverrides, Fade, List, Menu, Theme, Typography } from "@mui/material";
-import { SvgIconProps } from "@mui/material/SvgIcon";
+import { Collapse, ComponentsOverrides, Fade, List, Menu, SvgIconProps, Theme, Typography } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 import { useMemo, useRef } from "react";
@@ -135,13 +134,17 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
                         itemLevel === 1 && isSubmenuOpen ? (
                             <OpenedIcon
                                 className={`${classes.collapsibleIcon} ${
-                                    !isMenuOpen && isSubmenuOpen && itemLevel === 1 ? classes.colorWhite : classes.colorGrey
+                                    !isMenuOpen && isSubmenuOpen && itemLevel === 1
+                                        ? classes.collapsibleIconLevelOne
+                                        : classes.collapsibleIconLevelTwo
                                 }`}
                             />
                         ) : (
                             <ClosedIcon
                                 className={`${classes.collapsibleIcon} ${
-                                    !isMenuOpen && isSubmenuOpen && itemLevel === 1 ? classes.colorWhite : classes.colorGrey
+                                    !isMenuOpen && isSubmenuOpen && itemLevel === 1
+                                        ? classes.collapsibleIconLevelOne
+                                        : classes.collapsibleIconLevelTwo
                                 }`}
                             />
                         )

@@ -11,8 +11,8 @@ export type MenuCollapsibleItemClassKey =
     | "collapsedMenuParentTitle"
     | "itemTitle"
     | "collapsibleIcon"
-    | "colorGrey"
-    | "colorWhite"
+    | "collapsibleIconLevelTwo"
+    | "collapsibleIconLevelOne"
     | "collapsibleOpen";
 
 export const styles = (theme: Theme) =>
@@ -57,11 +57,11 @@ export const styles = (theme: Theme) =>
             fontSize: 12,
             color: theme.palette.grey[200],
         },
-        colorGrey: {
-            color: theme.palette.grey[200],
-        },
-        colorWhite: {
+        collapsibleIconLevelOne: {
             color: theme.palette.common.white,
+        },
+        collapsibleIconLevelTwo: {
+            color: theme.palette.grey[200],
         },
         listItem: {},
         open: {},
