@@ -183,14 +183,12 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
                     }}
                     onClose={handlePopoverClose}
                 >
-                    <List disablePadding>
-                        {itemLevel === 1 && (
-                            <Typography className={classes.itemTitle} variant="h3">
-                                {primary}
-                            </Typography>
-                        )}
-                        {childElements}
-                    </List>
+                    {itemLevel === 1 && (
+                        <Typography className={classes.itemTitle} variant="h3">
+                            {primary}
+                        </Typography>
+                    )}
+                    <List disablePadding>{childElements}</List>
                 </Menu>
             ) : (
                 <Collapse in={isSubmenuOpen} timeout="auto" unmountOnExit>
