@@ -8,7 +8,7 @@ const project = new Project({
     tsConfigFilePath: "tsconfig.json",
     skipAddingFilesFromTsConfig: true,
 });
-export function morphTsSource(metadata: EntityMetadata<any>) {
+function morphTsSource(metadata: EntityMetadata<any>) {
     let tsSource = project.getSourceFile(metadata.path);
     if (!tsSource) tsSource = project.addSourceFileAtPath(metadata.path);
     return tsSource;
