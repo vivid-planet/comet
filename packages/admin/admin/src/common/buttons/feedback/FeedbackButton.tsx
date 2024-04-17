@@ -156,7 +156,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
                         variant={resolveTooltipForDisplayState(displayState)}
                         {...slotProps?.successTooltip}
                     >
-                        <>{resolveIconForDisplayState(displayState)}</>
+                        <span>{resolveIconForDisplayState(displayState)}</span>
                     </SuccessTooltip>
                 )
             }
@@ -172,7 +172,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
                         <>{resolveIconForDisplayState(displayState)}</>
                     </ErrorTooltip>
                 ) : (
-                    <>{endIcon && resolveIconForDisplayState(displayState)}</>
+                    <span>{endIcon && resolveIconForDisplayState(displayState)}</span>
                 )
             }
             variant={variant}
