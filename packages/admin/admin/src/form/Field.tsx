@@ -62,7 +62,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
         meta,
         fieldContainerProps,
         ...rest
-    }: FieldRenderProps<FieldValue, FieldElement> & { warning?: string; disabled?: boolean }) {
+    }: FieldRenderProps<FieldValue, FieldElement> & { warning?: string; disabled?: boolean; required?: boolean }) {
         function render() {
             if (component) {
                 return React.createElement(component, { ...rest, input, meta });
@@ -96,6 +96,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
             <FinalFormField<FieldValue, FieldElement, FieldValue, FieldRenderProps<FieldValue, FieldElement>>
                 name={name}
                 validate={validateError}
+                required={required}
                 {...otherProps}
             >
                 {renderField}
