@@ -1,4 +1,4 @@
-import { gql, GraphQLFetch, previewParams } from "@comet/cms-site";
+import { gql, previewParams } from "@comet/cms-site";
 import { defaultLanguage, domain } from "@src/config";
 import { documentTypes } from "@src/documentTypes";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
@@ -17,12 +17,14 @@ const documentTypeQuery = gql`
     }
 `;
 
-function fetchPageTreeNode(graphqlFetch: GraphQLFetch, options: { path: string[]; scope: GQLPageTreeNodeScopeInput }) {
-    return graphqlFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
+function fetchPageTreeNode(options: { path: string[] }) {
+    const { scope, previewData } = previewParams() || { scope: { domain, language: defaultLanguage }, previewData: undefined };
+    const graphQLFetch = createGraphQLFetch(previewData);
+    return graphQLFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
         documentTypeQuery,
         {
             path: `/${(options.path ?? []).join("/")}`,
-            scope: options.scope,
+            scope: scope as GQLPageTreeNodeScopeInput, //TODO fix type, the scope from previewParams() is not compatible with GQLPageTreeNodeScopeInput
         },
         { method: "GET" }, //for request memoization
     );
@@ -34,11 +36,9 @@ type Props = {
 
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
     // TODO support multiple domains, get domain by Host header
-    const { scope, previewData } = previewParams() || { scope: { domain, language: defaultLanguage }, previewData: undefined };
+    const { scope } = previewParams() || { scope: { domain, language: defaultLanguage } };
 
-    const graphQLFetch = createGraphQLFetch(previewData);
-
-    const data = await fetchPageTreeNode(graphQLFetch, { path: params.path, scope: scope as GQLPageTreeNodeScopeInput }); //TODO fix type, the scope from previewParams() is not compatible with GQLPageTreeNodeScopeInput
+    const data = await fetchPageTreeNode({ path: params.path });
 
     if (!data.pageTreeNodeByPath?.documentType) {
         return {};
@@ -58,10 +58,9 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 
 export default async function Page({ params }: Props) {
     // TODO support multiple domains, get domain by Host header
-    const { scope, previewData } = previewParams() || { scope: { domain, language: defaultLanguage }, previewData: undefined };
-    const graphQLFetch = createGraphQLFetch(previewData);
+    const { scope } = previewParams() || { scope: { domain, language: defaultLanguage } };
 
-    const data = await fetchPageTreeNode(graphQLFetch, { path: params.path, scope: scope as GQLPageTreeNodeScopeInput }); //TODO fix type, the scope from previewParams() is not compatible with GQLPageTreeNodeScopeInput
+    const data = await fetchPageTreeNode({ path: params.path });
 
     if (!data.pageTreeNodeByPath?.documentType) {
         notFound();
