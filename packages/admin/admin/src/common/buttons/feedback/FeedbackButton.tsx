@@ -33,7 +33,7 @@ export interface FeedbackButtonProps extends ButtonProps {
     tooltipErrorMessage?: string;
 }
 
-export type FeedbackButtonDisplayState = "idle" | "loading" | "success" | "fail";
+type FeedbackButtonDisplayState = "idle" | "loading" | "success" | "fail";
 
 export function FeedbackButton(inProps: FeedbackButtonProps) {
     const {
