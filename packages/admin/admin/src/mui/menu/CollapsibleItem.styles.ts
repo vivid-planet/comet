@@ -23,7 +23,7 @@ export const styles = (theme: Theme) =>
                 "& [class*='MuiListItemText-root']": {
                     color: theme.palette.primary.main,
                     "& [class*='MuiListItemText-primary']": {
-                        fontWeight: ({ level }) => level === 2 || (level === 3 && theme.typography.fontWeightBold),
+                        fontWeight: ({ level }) => (level === 2 || level === 3) && 600,
                     },
                 },
                 "& [class*='MuiListItemIcon-root']": {

@@ -165,8 +165,8 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
                     MenuListProps={{
                         "aria-labelledby": itemId,
                         onMouseLeave: closeMenu,
-                        style: { pointerEvents: "auto" },
-                        disablePadding: true,
+                        style: { pointerEvents: "auto", paddingBottom: itemLevel == 1 ? 10 : undefined },
+                        disablePadding: itemLevel !== 2,
                     }}
                     sx={{
                         pointerEvents: "none",
