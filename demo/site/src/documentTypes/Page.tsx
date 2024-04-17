@@ -1,4 +1,4 @@
-import { gql } from "@comet/cms-site";
+import { generateImageUrl, gql } from "@comet/cms-site";
 import { SitePreviewData } from "@src/app/api/site-preview/route";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import Breadcrumbs from "@src/components/Breadcrumbs";
@@ -93,7 +93,9 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
             description: document.seo.openGraphDescription,
             type: "website",
             url: document.seo.canonicalUrl, //support passedCanonicalUrl
-            // TODO image: generateImageUrl({ src: openGraphImageUrlTemplate, width: 1024 }, 1 / 1),
+            images: document.seo.openGraphImage.block?.urlTemplate
+                ? generateImageUrl({ src: document.seo.openGraphImage.block?.urlTemplate, width: 1024 }, 1 / 1)
+                : undefined,
         },
         // TODO structuredData (must be part of Page component)
         robots: {
