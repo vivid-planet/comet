@@ -117,7 +117,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             }, 500);
         }
         // Display Success
-        else if (displayState === "loading" && loading === false && !hasErrors) {
+        else if (displayState === "loading" && !loading && !hasErrors) {
             timeoutId = window.setTimeout(() => {
                 setDisplayState("success");
             }, 500);
@@ -151,7 +151,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
                 startIcon && (
                     <SuccessTooltip
                         title={displayState === "fail" ? tooltipErrorMessage : tooltipSuccessMessage}
-                        open={displayState === "fail" || (displayState === "success" && true)}
+                        open={(displayState === "fail" || displayState === "success") && true}
                         placement="top-start"
                         variant={resolveTooltipForDisplayState(displayState)}
                         {...slotProps?.successTooltip}
