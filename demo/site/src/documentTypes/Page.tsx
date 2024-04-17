@@ -122,6 +122,9 @@ export default async function Page({ pageTreeNodeId, scope }: Props) {
 
     return (
         <>
+            {document.seo.structuredData && document.seo.structuredData.length > 0 && (
+                <script type="application/ld+json">{document.seo.structuredData}</script>
+            )}
             <TopNavigation data={data.topMenu} />
             <Header header={data.header} />
             <Breadcrumbs {...data.pageContent} />
