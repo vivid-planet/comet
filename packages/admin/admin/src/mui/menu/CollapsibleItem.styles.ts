@@ -39,9 +39,9 @@ export const styles = (theme: Theme) =>
                 level === 1 && !isMenuOpen && isCollapsibleOpen ? theme.palette.primary.main : theme.palette.grey[50],
         },
         itemTitle: {
-            fontWeight: theme.typography.fontWeightBold,
+            fontWeight: 600,
             fontSize: 12,
-            padding: "15px 15px 20px 15px",
+            padding: "20px 15px 20px 15px",
             lineHeight: "16px",
             color: theme.palette.grey[500],
         },

@@ -166,6 +166,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
                         "aria-labelledby": itemId,
                         onMouseLeave: closeMenu,
                         style: { pointerEvents: "auto" },
+                        disablePadding: true,
                     }}
                     sx={{
                         pointerEvents: "none",
@@ -188,7 +189,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
                             {primary}
                         </Typography>
                     )}
-                    <List disablePadding>{childElements}</List>
+                    {childElements}
                 </Menu>
             ) : (
                 <Collapse in={isSubmenuOpen} timeout="auto" unmountOnExit>
