@@ -37,8 +37,8 @@ export type FeedbackButtonDisplayState = "idle" | "loading" | "success" | "fail"
 
 export function FeedbackButton(inProps: FeedbackButtonProps) {
     const {
-        loading = false,
-        hasErrors = false,
+        loading,
+        hasErrors,
         children,
         variant = "contained",
         color = "primary",
