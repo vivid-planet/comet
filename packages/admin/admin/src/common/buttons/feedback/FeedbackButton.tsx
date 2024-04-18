@@ -5,9 +5,9 @@ import * as React from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
-import { Tooltip } from "../../Tooltip";
+import { Tooltip as CometTooltip } from "../../Tooltip";
 
-export type FeedbackButtonClassKey = "idle" | "loading" | "success" | "fail" | "successTooltip" | "errorTooltip" | ButtonClassKey;
+export type FeedbackButtonClassKey = "idle" | "loading" | "success" | "fail" | "tooltip" | ButtonClassKey;
 
 type OwnerState = { displayState: FeedbackButtonDisplayState };
 
@@ -24,21 +24,15 @@ const Root = createComponentSlot(Button)<FeedbackButtonClassKey, OwnerState>({
     },
 })();
 
-const SuccessTooltip = createComponentSlot(Tooltip)<FeedbackButtonClassKey>({
+const Tooltip = createComponentSlot(CometTooltip)<FeedbackButtonClassKey>({
     componentName: "FeedbackButton",
-    slotName: "successTooltip",
-})();
-
-const ErrorTooltip = createComponentSlot(Tooltip)<FeedbackButtonClassKey>({
-    componentName: "FeedbackButton",
-    slotName: "errorTooltip",
+    slotName: "tooltip",
 })();
 
 export interface FeedbackButtonProps
     extends ThemedComponentBaseProps<{
             root: typeof Button;
-            successTooltip: typeof Tooltip;
-            errorTooltip: typeof Tooltip;
+            tooltip: typeof CometTooltip;
         }>,
         ButtonProps {
     loading?: boolean;
@@ -138,28 +132,28 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             {...restProps}
             startIcon={
                 startIcon && (
-                    <SuccessTooltip
+                    <Tooltip
                         title={displayState === "fail" ? tooltipErrorMessage : tooltipSuccessMessage}
                         open={(displayState === "fail" || displayState === "success") && true}
                         placement="top-start"
                         variant={resolveTooltipForDisplayState(displayState)}
-                        {...slotProps?.successTooltip}
+                        {...slotProps?.tooltip}
                     >
                         <span>{resolveIconForDisplayState(displayState)}</span>
-                    </SuccessTooltip>
+                    </Tooltip>
                 )
             }
             endIcon={
                 endIcon && !startIcon ? (
-                    <ErrorTooltip
+                    <Tooltip
                         title={displayState === "fail" ? tooltipErrorMessage : tooltipSuccessMessage}
                         open={(displayState === "fail" || displayState === "success") && true}
                         placement="top-end"
                         variant={resolveTooltipForDisplayState(displayState)}
-                        {...slotProps?.errorTooltip}
+                        {...slotProps?.tooltip}
                     >
                         <>{resolveIconForDisplayState(displayState)}</>
-                    </ErrorTooltip>
+                    </Tooltip>
                 ) : (
                     <span>{endIcon && resolveIconForDisplayState(displayState)}</span>
                 )
