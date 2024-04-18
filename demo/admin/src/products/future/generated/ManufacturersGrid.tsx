@@ -128,6 +128,7 @@ export function ManufacturersGrid(): React.ReactElement {
         {
             field: "address_streetNumber",
             headerName: intl.formatMessage({ id: "manufacturer.address.streetNumber", defaultMessage: "Street number" }),
+            type: "number",
             filterable: false,
             sortable: false,
             valueGetter: ({ row }) => row.address?.streetNumber,
@@ -146,6 +147,7 @@ export function ManufacturersGrid(): React.ReactElement {
         {
             field: "address_alternativeAddress_streetNumber",
             headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.streetNumber", defaultMessage: "Alt-Street number" }),
+            type: "number",
             filterable: false,
             sortable: false,
             valueGetter: ({ row }) => row.address?.alternativeAddress?.streetNumber,
@@ -162,6 +164,7 @@ export function ManufacturersGrid(): React.ReactElement {
         {
             field: "addressAsEmbeddable_streetNumber",
             headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.streetNumber", defaultMessage: "Street number 2" }),
+            type: "number",
             valueGetter: ({ row }) => row.addressAsEmbeddable?.streetNumber,
             flex: 1,
             minWidth: 150,
@@ -179,6 +182,7 @@ export function ManufacturersGrid(): React.ReactElement {
                 id: "manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber",
                 defaultMessage: "Alt-Street number 2",
             }),
+            type: "number",
             valueGetter: ({ row }) => row.addressAsEmbeddable?.alternativeAddress?.streetNumber,
             flex: 1,
             minWidth: 150,

@@ -39,6 +39,7 @@ import {
 const productsFragment = gql`
     fragment ProductsGridFuture on Product {
         id
+        inStock
         title
         description
         price
