@@ -8,6 +8,7 @@ import {
 } from "graphql";
 import { plural } from "pluralize";
 
+import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
 import { GeneratorReturn, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
@@ -140,6 +141,8 @@ export function generateGrid(
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
 
+    const fieldList = generateGqlFieldList({ columns: config.columns.filter((column) => column.name !== "id") }); // exclude id because it's always required
+
     // all root blocks including those we don't have columns for (required for copy/paste)
     // this is not configured in the grid config, it's just an heuristics
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
@@ -191,7 +194,7 @@ export function generateGrid(
     if (filterArg) {
         const filterType = findInputObjectType(filterArg, gqlIntrospection);
         if (!filterType) throw new Error("Can't find filter type");
-        filterFields = filterType.inputFields.map((f) => f.name);
+        filterFields = filterType.inputFields.map((f) => f.name.replace(/_/g, "."));
     }
 
     const sortArg = gridQueryType.args.find((arg) => arg.name === "sort");
@@ -221,7 +224,7 @@ export function generateGrid(
             | IntrospectionEnumType
             | undefined;
         if (!sortInputEnum) throw new Error("Can't find sortInputEnum");
-        sortFields = sortInputEnum.enumValues.map((v) => v.name);
+        sortFields = sortInputEnum.enumValues.map((v) => v.name.replace(/_/g, "."));
     }
 
     const hasSearch = gridQueryType.args.some((arg) => arg.name === "search");
@@ -251,15 +254,15 @@ export function generateGrid(
         const name = String(column.name);
 
         let renderCell: string | undefined = undefined;
-        let valueGetter: string | undefined = undefined;
+        let valueGetter: string | undefined = name.includes(".") ? `({ row }) => row.${name.replace(/\./g, "?.")}` : undefined;
 
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
 
         if (type == "dateTime") {
-            valueGetter = `({ value }) => value && new Date(value)`;
+            valueGetter = `({ row }) => row.${name} && new Date(row.${name})`;
             gridType = "dateTime";
         } else if (type == "date") {
-            valueGetter = `({ value }) => value && new Date(value)`;
+            valueGetter = `({ row }) => row.${name} && new Date(row.${name})`;
             gridType = "date";
         } else if (type == "number") {
             gridType = "number";
@@ -364,6 +367,7 @@ export function generateGrid(
         GQLDelete${gqlType}Mutation,
         GQLDelete${gqlType}MutationVariables
     } from "./${gqlTypePlural}Grid.generated";
+    import { filter as filterByFragment } from "graphql-anywhere";
     import * as React from "react";
     import { FormattedMessage, useIntl } from "react-intl";
     ${generateImportsCode(imports)}
@@ -376,7 +380,7 @@ export function generateGrid(
     const ${instanceGqlTypePlural}Fragment = gql\`
         fragment ${fragmentName} on ${gqlType} {
             id
-            ${fieldsToLoad.map((field) => field.name).join("\n")}
+            ${fieldList}
         }
     \`;
 
@@ -463,7 +467,7 @@ export function generateGrid(
             ${gridColumnFields
                 .map((column) => {
                     const columnDefinition: TsCodeRecordToStringObject = {
-                        field: `"${column.name}"`,
+                        field: `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
                         headerName: `intl.formatMessage({ id: "${instanceGqlType}.${column.name}",  defaultMessage: "${
                             column.headerName || camelCaseToHumanReadable(column.name)
                         }" })`,
@@ -521,19 +525,25 @@ export function generateGrid(
                                                 allowCopyPaste
                                                     ? `
                                             copyData={() => {
-                                                const row = params.row;
-                                                return {
-                                                    ${createMutationInputFields
-                                                        .map((field) => {
-                                                            if (rootBlocks[field.name]) {
-                                                                const blockName = rootBlocks[field.name].name;
-                                                                return `${field.name}: ${blockName}.state2Output(${blockName}.input2State(row.${field.name}))`;
-                                                            } else {
-                                                                return `${field.name}: row.${field.name}`;
-                                                            }
-                                                        })
-                                                        .join(",\n")}
-                                                };
+                                                // Don't copy id, because we want to create a new entity with this data
+                                                ${
+                                                    createMutationInputFields.filter((field) => rootBlocks[field.name]).length
+                                                        ? `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
+                                                        return {
+                                                            ...filteredData,
+                                                            ${createMutationInputFields
+                                                                .filter((field) => rootBlocks[field.name])
+                                                                .map((field) => {
+                                                                    if (rootBlocks[field.name]) {
+                                                                        const blockName = rootBlocks[field.name].name;
+                                                                        return `${field.name}: ${blockName}.state2Output(${blockName}.input2State(filteredData.${field.name}))`;
+                                                                    }
+                                                                })
+                                                                .join(",\n")}
+                                                        };`
+                                                        : `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
+                                                        return filteredData;`
+                                                }
                                             }}
                                             onPaste={async ({ input }) => {
                                                 await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
