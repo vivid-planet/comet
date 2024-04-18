@@ -106,28 +106,19 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
 
         if (displayState === "idle" && loading) {
             setDisplayState("loading");
-        }
-
-        // Display Error
-        else if (displayState === "loading" && hasErrors) {
+        } else if (displayState === "loading" && hasErrors) {
             timeoutId = window.setTimeout(() => {
                 setDisplayState("fail");
             }, 500);
-        }
-        // Display Success
-        else if (displayState === "loading" && !loading && !hasErrors) {
+        } else if (displayState === "loading" && !loading && !hasErrors) {
             timeoutId = window.setTimeout(() => {
                 setDisplayState("success");
             }, 500);
-        }
-        // Return to idle
-        else if (displayState === "fail") {
+        } else if (displayState === "fail") {
             timeoutId = window.setTimeout(() => {
                 setDisplayState("idle");
             }, 5000);
-        }
-        // Return to idle
-        else if (displayState === "success") {
+        } else if (displayState === "success") {
             timeoutId = window.setTimeout(() => {
                 setDisplayState("idle");
             }, 2000);
