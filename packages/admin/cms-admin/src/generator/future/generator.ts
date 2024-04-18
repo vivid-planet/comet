@@ -57,6 +57,10 @@ export type GridConfig<T extends { __typename?: string }> = {
     copyPaste?: boolean;
     readOnly?: boolean;
     filterProp?: boolean;
+    actions?: {
+        columnWidth?: number;
+        componentImport?: ImportReference;
+    };
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
