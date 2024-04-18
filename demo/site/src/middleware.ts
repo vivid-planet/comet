@@ -4,8 +4,8 @@ import { Rewrite, RouteHas } from "next/dist/lib/load-custom-routes";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { defaultLanguage, domain } from "./config";
-import { GQLPageTreeNodeScope, GQLRedirectScope } from "./graphql.generated";
+import { domain } from "./config";
+import { GQLRedirectScope } from "./graphql.generated";
 import { GQLRedirectsQuery, GQLRedirectsQueryVariables } from "./middleware.generated";
 import { createGraphQLFetch } from "./util/graphQLClient";
 
@@ -26,7 +26,7 @@ const graphQLFetch = createGraphQLFetch();
 export async function middleware(request: NextRequest) {
     const { pathname } = new URL(request.url);
 
-    const scope = { domain, language: defaultLanguage };
+    const scope = { domain };
 
     const redirects = await createRedirects(scope);
 
@@ -140,7 +140,7 @@ type RedirectsMap = Map<string, Redirect>;
 const redirectsCache = new Map<string, RedirectsMap>();
 const redirectsCacheLastUpdate = new Map<string, number>();
 
-const createRedirects = async (scope: GQLPageTreeNodeScope) => {
+const createRedirects = async (scope: GQLRedirectScope) => {
     const key = JSON.stringify(scope);
     const lastUpdate = redirectsCacheLastUpdate.get(key);
     if (lastUpdate && Date.now() - lastUpdate < REDIRECTS_CACHE_TTL) {

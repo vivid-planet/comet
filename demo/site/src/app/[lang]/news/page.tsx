@@ -1,5 +1,5 @@
 import { gql, previewParams } from "@comet/cms-site";
-import { defaultLanguage, domain } from "@src/config";
+import { domain } from "@src/config";
 import { GQLNewsContentScopeInput } from "@src/graphql.generated";
 import { NewsList } from "@src/news/NewsList";
 import { newsListFragment } from "@src/news/NewsList.fragment";
@@ -7,9 +7,9 @@ import { createGraphQLFetch } from "@src/util/graphQLClient";
 
 import { GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables } from "./page.generated";
 
-export default async function NewsIndexPage() {
+export default async function NewsIndexPage({ params }: { params: { lang: string } }) {
     // TODO support multiple domains, get domain by Host header
-    const { scope, previewData } = previewParams() || { scope: { domain, language: defaultLanguage }, previewData: undefined };
+    const { scope, previewData } = previewParams() || { scope: { domain, language: params.lang }, previewData: undefined };
     const graphqlFetch = createGraphQLFetch(previewData);
 
     const { newsList } = await graphqlFetch<GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables>(
