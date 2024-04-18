@@ -16,9 +16,10 @@ export const styles = (theme: Theme) => {
                 right: 0,
                 bottom: 0,
                 width: 2,
+                display: ({ isMenuOpen }) => (!isMenuOpen ? "none" : "initial"),
             },
             "& [class*='MuiListItemIcon-root']": {
-                color: theme.palette.common.black,
+                color: theme.palette.grey[900],
                 minWidth: ({ isMenuOpen }) => (isMenuOpen ? 28 : 22),
                 margin: theme.spacing(0, "auto"),
             },
@@ -39,7 +40,7 @@ export const styles = (theme: Theme) => {
         level1: {
             borderBottom: `1px solid ${theme.palette.grey[50]}`,
             boxSizing: "border-box",
-            color: theme.palette.common.black,
+            color: theme.palette.grey[900],
             height: 60,
             paddingLeft: 20,
             paddingRight: 20,
@@ -79,25 +80,27 @@ export const styles = (theme: Theme) => {
             },
         },
         level2: {
-            color: theme.palette.common.black,
+            color: theme.palette.grey[900],
             paddingLeft: ({ isMenuOpen }) => (isMenuOpen ? 48 : 30),
             paddingRight: 15,
             paddingTop: 8,
             paddingBottom: 8,
             width: ({ isMenuOpen }) => (isMenuOpen ? "initial" : 240),
             "& [class*='MuiListItemText-primary']": {
-                fontSize: 16,
+                fontSize: 14,
                 lineHeight: "20px",
             },
             "&:last-child": {
                 borderBottom: ({ level, hasSubitems, isMenuOpen, isCollapsibleOpen }) =>
-                    level === 2 && isMenuOpen && (!hasSubitems || !isCollapsibleOpen) ? `1px solid ${theme.palette.grey[50]}` : "initial",
+                    level === 2 && isMenuOpen && (!hasSubitems || !isCollapsibleOpen)
+                        ? `1px solid ${theme.palette.grey[50]}`
+                        : `1px solid ${theme.palette.common.white}`,
                 boxSizing: "border-box",
             },
             "&[class*='Mui-selected']": {
                 backgroundColor: theme.palette.common.white,
                 color: theme.palette.primary.main,
-                fontWeight: 600,
+                fontWeight: theme.typography.fontWeightMedium,
                 "&:after": {
                     backgroundColor: ({ isMenuOpen }) => (isMenuOpen ? theme.palette.primary.main : undefined),
                 },
@@ -105,7 +108,7 @@ export const styles = (theme: Theme) => {
                     backgroundColor: theme.palette.grey[50],
                 },
                 "& [class*='MuiListItemText-primary']": {
-                    fontWeight: 600,
+                    fontWeight: theme.typography.fontWeightMedium,
                 },
                 "& [class*='MuiListItemIcon-root']": {
                     color: theme.palette.primary.main,
@@ -116,7 +119,7 @@ export const styles = (theme: Theme) => {
             },
         },
         level3: {
-            color: theme.palette.common.black,
+            color: theme.palette.grey[900],
             paddingLeft: ({ isMenuOpen }) => (isMenuOpen ? 50 : 30),
             paddingRight: 15,
             paddingTop: 0,
@@ -130,12 +133,12 @@ export const styles = (theme: Theme) => {
             "&[class*='Mui-selected']": {
                 backgroundColor: theme.palette.common.white,
                 color: theme.palette.primary.main,
-                fontWeight: 600,
+                fontWeight: theme.typography.fontWeightMedium,
                 "&:hover": {
                     backgroundColor: theme.palette.grey[50],
                 },
                 "& [class*='MuiListItemText-primary']": {
-                    fontWeight: 600,
+                    fontWeight: theme.typography.fontWeightMedium,
                 },
                 "& [class*='MuiListItemIcon-root']": {
                     color: theme.palette.primary.main,
@@ -145,9 +148,9 @@ export const styles = (theme: Theme) => {
                 margin: 0,
             },
             "& [class*='MuiListItemText-primary']": {
-                fontSize: 16,
+                fontSize: 14,
                 lineHeight: "20px",
-                paddingLeft: 15,
+                paddingLeft: ({ isMenuOpen }) => (isMenuOpen ? 15 : 0),
                 paddingTop: 8,
                 paddingBottom: 8,
             },

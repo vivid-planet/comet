@@ -142,16 +142,16 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
                             <OpenedIcon
                                 className={`${classes.collapsibleIcon} ${
                                     !isMenuOpen && isSubmenuOpen && itemLevel === 1
-                                        ? classes.collapsibleIconLevelOne
-                                        : classes.collapsibleIconLevelTwo
+                                        ? classes.collapsibleIconColorWhite
+                                        : classes.collapsibleIconColorGrey
                                 }`}
                             />
                         ) : (
                             <ClosedIcon
                                 className={`${classes.collapsibleIcon} ${
                                     !isMenuOpen && isSubmenuOpen && itemLevel === 1
-                                        ? classes.collapsibleIconLevelOne
-                                        : classes.collapsibleIconLevelTwo
+                                        ? classes.collapsibleIconColorWhite
+                                        : classes.collapsibleIconColorGrey
                                 }`}
                             />
                         )

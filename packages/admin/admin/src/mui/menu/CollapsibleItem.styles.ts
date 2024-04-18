@@ -11,14 +11,15 @@ export type MenuCollapsibleItemClassKey =
     | "collapsedMenuParentTitle"
     | "itemTitle"
     | "collapsibleIcon"
-    | "collapsibleIconLevelTwo"
-    | "collapsibleIconLevelOne";
+    | "collapsibleIconColorGrey"
+    | "collapsibleIconColorWhite";
 
 export const styles = (theme: Theme) =>
     createStyles<MenuCollapsibleItemClassKey, MenuCollapsibleItemProps>({
         root: {},
         childSelected: {
             color: theme.palette.primary.main,
+            fontWeight: theme.typography.fontWeightMedium,
             "& $listItem": {
                 "& [class*='MuiListItemText-root']": {
                     color: theme.palette.primary.main,
@@ -46,14 +47,13 @@ export const styles = (theme: Theme) =>
             color: theme.palette.grey[500],
         },
         collapsibleIcon: {
-            fontSize: 12,
-            color: theme.palette.grey[200],
+            fontSize: ({ isMenuOpen, level }) => (isMenuOpen || level === 2 || level === 3 ? 16 : 12),
         },
-        collapsibleIconLevelOne: {
+        collapsibleIconColorWhite: {
             color: theme.palette.common.white,
         },
-        collapsibleIconLevelTwo: {
-            color: theme.palette.grey[200],
+        collapsibleIconColorGrey: {
+            color: ({ isMenuOpen, level }) => (isMenuOpen || level === 2 || level === 3 ? theme.palette.grey[900] : theme.palette.grey[200]),
         },
         listItem: {},
         open: {},

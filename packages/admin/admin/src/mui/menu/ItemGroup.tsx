@@ -16,22 +16,18 @@ const styles = (theme: Theme) =>
     createStyles<MenuItemGroupClassKey, MenuItemGroupProps>({
         root: { marginTop: theme.spacing(8) },
         title: {
-            fontWeight: theme.typography.fontWeightBold,
-            fontSize: 12,
             border: `1px solid ${theme.palette.grey[100]}`,
             borderRadius: 20,
-            padding: theme.spacing(0, 1.5),
-            lineHeight: "20px",
-            color: `${theme.palette.grey[300]}`,
+            color: theme.palette.grey[300],
+            padding: "2px 7px",
+            textAlign: "center",
         },
         titleMenuOpen: {
-            fontWeight: theme.typography.fontWeightBold,
-            fontSize: 14,
-            border: `1px solid ${theme.palette.common.white}`,
+            border: `1px solid ${theme.palette.common.white}`, // change border to white instead of removing it to avoid jumping
             borderRadius: "initial",
             padding: 0,
+            color: theme.palette.grey[900],
             marginRight: theme.spacing(1),
-            color: theme.palette.common.black,
         },
         titleContainer: {
             borderBottom: `1px solid ${theme.palette.grey[50]}`,
@@ -107,7 +103,7 @@ const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & Me
         <Box className={classes.root}>
             <Tooltip placement="right" disableHoverListener={menuOpen} disableFocusListener={menuOpen} disableTouchListener={menuOpen} title={title}>
                 <Box className={clsx(classes.titleContainer, menuOpen && classes.titleContainerMenuOpen)}>
-                    <Typography className={clsx(classes.title, menuOpen && classes.titleMenuOpen)} variant="h3">
+                    <Typography className={clsx(classes.title, menuOpen && classes.titleMenuOpen)} variant={menuOpen ? "subtitle2" : "overline"}>
                         {displayedTitle}
                     </Typography>
                     {menuOpen && !!helperIcon && helperIcon}
