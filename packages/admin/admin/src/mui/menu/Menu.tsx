@@ -32,8 +32,15 @@ const MenuDrawer: React.FC<WithStyles<typeof styles> & MenuProps> = ({
     permanentDrawerPaperProps = {},
 }) => {
     const history = useHistory();
-    const { open, toggleOpen } = React.useContext(MenuContext);
+    const { open, toggleOpen, setDrawerVariant, drawerVariant } = React.useContext(MenuContext);
     const initialRender = React.useRef(true);
+
+    // useEffect needed to avoid a React error stating that a bad setState call was made.
+    React.useEffect(() => {
+        if (drawerVariant !== variant) {
+            setDrawerVariant(variant);
+        }
+    }, [drawerVariant, setDrawerVariant, variant]);
 
     // Close the menu on initial render if it is temporary to prevent a page-overlay when initially loading the page.
     React.useEffect(() => {

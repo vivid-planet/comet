@@ -4,7 +4,7 @@ export interface IMenuContext {
     open: boolean;
     toggleOpen: () => void;
     drawerVariant: "temporary" | "permanent";
-    setDrawerVariant: React.Dispatch<React.SetStateAction<string>>;
+    setDrawerVariant: React.Dispatch<React.SetStateAction<"temporary" | "permanent">>;
 }
 
 export interface IWithMenu {

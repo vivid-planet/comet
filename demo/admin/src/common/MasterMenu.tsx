@@ -3,27 +3,18 @@ import { Assets, Dashboard, Data, PageTree, Snips, Wrench } from "@comet/admin-i
 import { useContentScope } from "@comet/cms-admin";
 import { capitalize } from "@mui/material";
 import * as React from "react";
-import { useEffect } from "react";
 import { useIntl } from "react-intl";
 import { useRouteMatch } from "react-router";
 
-const permanentMenuMinWidth = 1024;
+const PERMANENT_MENU_MIN_WIDTH = 1024;
 
 const MasterMenu: React.FC = () => {
-    const { open, toggleOpen, setDrawerVariant, drawerVariant } = React.useContext(MenuContext);
+    const { open, toggleOpen } = React.useContext(MenuContext);
     const windowSize = useWindowSize();
     const intl = useIntl();
     const match = useRouteMatch();
     const { scope, values } = useContentScope();
-    const useTemporaryMenu: boolean = windowSize.width < permanentMenuMinWidth;
-
-    useEffect(() => {
-        if (useTemporaryMenu) {
-            setDrawerVariant("temporary");
-        } else {
-            setDrawerVariant("permanent");
-        }
-    }, [setDrawerVariant, useTemporaryMenu]);
+    const useTemporaryMenu: boolean = windowSize.width < PERMANENT_MENU_MIN_WIDTH;
 
     // Open menu when changing to permanent variant and close when changing to temporary variant.
     React.useEffect(() => {
@@ -40,7 +31,7 @@ const MasterMenu: React.FC = () => {
     const sectionScopeTitle = `${capitalizedScopeDomain} - ${scopeLang}`;
 
     return (
-        <Menu variant={drawerVariant}>
+        <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
             <MenuItemGroup title={sectionScopeTitle}>
                 <MenuItemRouterLink
                     primary={intl.formatMessage({ id: "menu.dashboard", defaultMessage: "Dashboard" })}
