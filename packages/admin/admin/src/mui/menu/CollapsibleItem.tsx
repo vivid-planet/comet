@@ -106,7 +106,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
         closeMenu();
     };
 
-    const listClasses = [];
+    const listClasses = [classes.root];
     if (hasSelectedChild.current) listClasses.push(classes.childSelected);
     if (isSubmenuOpen) listClasses.push(classes.open);
 
@@ -118,7 +118,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
     }
 
     return (
-        <div {...otherProps}>
+        <div {...otherProps} className={listClasses.join(" ")}>
             <div
                 id={itemId}
                 className={classes.listItem}
@@ -156,7 +156,6 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
                             />
                         )
                     }
-                    className={listClasses.join(" ")}
                 />
             </div>
             {!isMenuOpen && drawerVariant === "permanent" ? (
