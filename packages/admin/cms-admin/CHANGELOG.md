@@ -1,5 +1,22 @@
 # @comet/cms-admin
 
+## 6.6.2
+
+### Patch Changes
+
+-   0758d2339: Hide the "Dependents" tab in the DAM if the `DependenciesConfigProvider` is not configured
+
+    Previously, the tab was always shown, even if the feature wasn't configured. Though it didn't cause an error, the tab showed no valuable information.
+
+    Now, we hide the tab if no configuration is passed via the `DependenciesConfigProvider`.
+
+    -   @comet/admin@6.6.2
+    -   @comet/admin-date-time@6.6.2
+    -   @comet/admin-icons@6.6.2
+    -   @comet/admin-rte@6.6.2
+    -   @comet/admin-theme@6.6.2
+    -   @comet/blocks-admin@6.6.2
+
 ## 6.6.1
 
 ### Patch Changes
