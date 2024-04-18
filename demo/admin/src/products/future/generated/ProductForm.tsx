@@ -6,28 +6,21 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
-    FinalFormSaveSplitButton,
     FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
     MainContent,
     TextAreaField,
     TextField,
-    Toolbar,
-    ToolbarActions,
-    ToolbarFillSpace,
-    ToolbarItem,
-    ToolbarTitleItem,
     useAsyncOptionsProps,
     useFormApiRef,
-    useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { ArrowLeft, Lock } from "@comet/admin-icons";
+import { Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { FormControlLabel, IconButton, InputAdornment, MenuItem } from "@mui/material";
+import { FormControlLabel, InputAdornment, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
 import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
@@ -63,7 +56,6 @@ interface FormProps {
 }
 
 export function ProductForm({ id }: FormProps): React.ReactElement {
-    const stackApi = useStackApi();
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -158,24 +150,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             {() => (
                 <EditPageLayout>
                     {saveConflict.dialogs}
-                    <Toolbar>
-                        <ToolbarItem>
-                            <IconButton onClick={stackApi?.goBack}>
-                                <ArrowLeft />
-                            </IconButton>
-                        </ToolbarItem>
-                        <ToolbarTitleItem>
-                            <Field name="title">
-                                {({ input }) =>
-                                    input.value ? input.value : <FormattedMessage id="product.productDetail" defaultMessage="Product Detail" />
-                                }
-                            </Field>
-                        </ToolbarTitleItem>
-                        <ToolbarFillSpace />
-                        <ToolbarActions>
-                            <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
-                        </ToolbarActions>
-                    </Toolbar>
                     <MainContent>
                         <TextField
                             required

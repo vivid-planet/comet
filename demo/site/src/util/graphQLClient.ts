@@ -1,5 +1,9 @@
-import { createFetchWithDefaults, createFetchWithPreviewHeaders, createGraphQLFetch as createGraphQLFetchLibrary } from "@comet/cms-site";
-import { SitePreviewData } from "@src/app/api/site-preview/route";
+import {
+    createFetchWithDefaults,
+    createFetchWithPreviewHeaders,
+    createGraphQLFetch as createGraphQLFetchLibrary,
+    SitePreviewData,
+} from "@comet/cms-site";
 
 const isServerSide = typeof window === "undefined";
 export const graphQLApiUrl = `${isServerSide ? process.env.API_URL_INTERNAL : process.env.NEXT_PUBLIC_API_URL}/graphql`;

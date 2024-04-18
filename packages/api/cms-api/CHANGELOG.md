@@ -1,5 +1,24 @@
 # @comet/cms-api
 
+## 6.6.1
+
+### Patch Changes
+
+-   890795fda: Fix calculation of `totalCount` in `DependenciesService#getDependents`
+    -   @comet/blocks-api@6.6.1
+
+## 6.6.0
+
+### Minor Changes
+
+-   6160119fe: Provide a `User`-interface that allows module augmentation and hence storing additional data.
+-   38df2b4de: Add `userToLog`-option to AccessLogModule
+
+### Patch Changes
+
+-   Updated dependencies [e880929d8]
+    -   @comet/blocks-api@6.6.0
+
 ## 6.5.0
 
 ### Minor Changes

@@ -106,7 +106,6 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
                     value={value ? getIsoDateString(value) : undefined}
                     onChange={onChangeDate}
                     fullWidth
-                    clearable={clearable}
                     {...slotProps?.datePicker}
                 />
             </DateFormControl>

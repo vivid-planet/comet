@@ -1,6 +1,5 @@
-import { SitePreviewParams } from "../sitePreview/SitePreviewApiHelper";
+import { SitePreviewData } from "../sitePreview/SitePreviewUtils";
 
-type SitePreviewData = SitePreviewParams["settings"];
 type Fetch = typeof fetch;
 
 function graphQLHeaders(previewData?: SitePreviewData) {

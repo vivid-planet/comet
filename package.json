@@ -65,9 +65,9 @@
                     "@types/react": "^18.0.0"
                 }
             },
-            "@types/styled-components": {
+            "styled-components": {
                 "peerDependencies": {
-                    "@types/react": "*"
+                    "@types/react": "^18.0.0"
                 }
             }
         }
