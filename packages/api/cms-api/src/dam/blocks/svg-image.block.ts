@@ -10,7 +10,7 @@ import {
 } from "@comet/blocks-api";
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
-import { FILE_ENTITY } from "../dam/files/entities/file.entity";
+import { FILE_ENTITY } from "../files/entities/file.entity";
 import { SvgImageBlockTransformerService } from "./svg-image-block-transformer.service";
 
 class SvgImageBlockData extends BlockData {

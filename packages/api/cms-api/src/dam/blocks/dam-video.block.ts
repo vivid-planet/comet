@@ -12,7 +12,7 @@ import {
 } from "@comet/blocks-api";
 import { IsBoolean, IsOptional, IsUUID } from "class-validator";
 
-import { FILE_ENTITY } from "../dam/files/entities/file.entity";
+import { FILE_ENTITY } from "../files/entities/file.entity";
 import { DamVideoBlockTransformerService } from "./dam-video-block-transformer.service";
 
 class DamVideoBlockData extends BlockData {

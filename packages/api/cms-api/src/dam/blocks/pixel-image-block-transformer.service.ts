@@ -1,11 +1,11 @@
 import { BlockContext, BlockTransformerServiceInterface } from "@comet/blocks-api";
 import { Injectable } from "@nestjs/common";
 
-import { FilesService } from "../dam/files/files.service";
-import { ImageCropArea } from "../dam/images/entities/image-crop-area.entity";
-import { ImagesService } from "../dam/images/images.service";
-import { DamScopeInterface } from "../dam/types";
-import { PixelImageBlockData } from "./PixelImageBlock";
+import { FilesService } from "../files/files.service";
+import { ImageCropArea } from "../images/entities/image-crop-area.entity";
+import { ImagesService } from "../images/images.service";
+import { DamScopeInterface } from "../types";
+import { PixelImageBlockData } from "./pixel-image.block";
 
 type TransformReturn = {
     damFile?: {

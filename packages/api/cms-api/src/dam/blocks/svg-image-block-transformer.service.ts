@@ -1,9 +1,9 @@
 import { BlockContext, BlockTransformerServiceInterface } from "@comet/blocks-api";
 import { Injectable } from "@nestjs/common";
 
-import { FilesService } from "../dam/files/files.service";
-import { DamScopeInterface } from "../dam/types";
-import { SvgImageBlockData } from "./SvgImageBlock";
+import { FilesService } from "../files/files.service";
+import { DamScopeInterface } from "../types";
+import { SvgImageBlockData } from "./svg-image.block";
 
 type TransformReturn = {
     damFile?: {
