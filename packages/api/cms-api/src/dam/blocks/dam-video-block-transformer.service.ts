@@ -5,7 +5,7 @@ import { FilesService } from "../files/files.service";
 import { DamScopeInterface } from "../types";
 import { DamVideoBlockData } from "./dam-video.block";
 
-type TransformReturn = {
+type TransformResponse = {
     damFile?: {
         id: string;
         name: string;
@@ -24,7 +24,7 @@ type TransformReturn = {
 };
 
 @Injectable()
-export class DamVideoBlockTransformerService implements BlockTransformerServiceInterface<DamVideoBlockData, TransformReturn> {
+export class DamVideoBlockTransformerService implements BlockTransformerServiceInterface<DamVideoBlockData, TransformResponse> {
     constructor(private readonly filesService: FilesService) {}
 
     async transformToPlain(block: DamVideoBlockData, { previewDamUrls, relativeDamUrls }: BlockContext) {

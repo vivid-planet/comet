@@ -7,7 +7,7 @@ import { ImagesService } from "../images/images.service";
 import { DamScopeInterface } from "../types";
 import { PixelImageBlockData } from "./pixel-image.block";
 
-type TransformReturn = {
+type TransformResponse = {
     damFile?: {
         id: string;
         name: string;
@@ -33,7 +33,7 @@ type TransformReturn = {
 };
 
 @Injectable()
-export class PixelImageBlockTransformerService implements BlockTransformerServiceInterface<PixelImageBlockData, TransformReturn> {
+export class PixelImageBlockTransformerService implements BlockTransformerServiceInterface<PixelImageBlockData, TransformResponse> {
     constructor(private readonly filesService: FilesService, private readonly imagesService: ImagesService) {}
 
     async transformToPlain(block: PixelImageBlockData, { includeInvisibleContent, previewDamUrls, relativeDamUrls }: BlockContext) {

@@ -5,7 +5,7 @@ import { FilesService } from "../files/files.service";
 import { DamScopeInterface } from "../types";
 import { SvgImageBlockData } from "./svg-image.block";
 
-type TransformReturn = {
+type TransformResponse = {
     damFile?: {
         id: string;
         name: string;
@@ -21,7 +21,7 @@ type TransformReturn = {
 };
 
 @Injectable()
-export class SvgImageBlockTransformerService implements BlockTransformerServiceInterface<SvgImageBlockData, TransformReturn> {
+export class SvgImageBlockTransformerService implements BlockTransformerServiceInterface<SvgImageBlockData, TransformResponse> {
     constructor(private readonly filesService: FilesService) {}
 
     async transformToPlain(block: SvgImageBlockData, { includeInvisibleContent, previewDamUrls, relativeDamUrls }: BlockContext) {
