@@ -21,7 +21,7 @@ import { ImagesService } from "../dam/images/images.service";
 import { PixelImageBlockTransformerService } from "./pixel-image-block-transformer.service";
 
 // @TODO: make factory to support flexible validation
-export class PixelImageBlockData extends BlockData {
+class PixelImageBlockData extends BlockData {
     damFileId?: string;
 
     @Type(() => ImageCropArea)
@@ -236,3 +236,5 @@ export const PixelImageBlock = createBlock(PixelImageBlockData, PixelImageBlockI
     blockMeta: new Meta(PixelImageBlockData),
     blockInputMeta: new InputMeta(PixelImageBlockInput),
 });
+
+export type { PixelImageBlockData };
