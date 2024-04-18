@@ -1,6 +1,5 @@
 import {
     AnnotationBlockMeta,
-    BlockContext,
     BlockData,
     BlockIndexData,
     BlockInput,
@@ -8,42 +7,17 @@ import {
     BlockMetaFieldKind,
     createBlock,
     inputToData,
-    TraversableTransformResponse,
 } from "@comet/blocks-api";
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 import { FILE_ENTITY } from "../dam/files/entities/file.entity";
-import { FilesService } from "../dam/files/files.service";
+import { SvgImageBlockTransformerService } from "./svg-image-block-transformer.service";
 
-// @TODO: make factory to support flexible validation
 class SvgImageBlockData extends BlockData {
     damFileId?: string;
 
-    async transformToPlain(
-        { filesService }: { filesService: FilesService },
-        { previewDamUrls, relativeDamUrls }: BlockContext,
-    ): Promise<TraversableTransformResponse> {
-        if (!this.damFileId) {
-            return {};
-        }
-
-        const file = await filesService.findOneById(this.damFileId);
-
-        if (!file) {
-            return {};
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { createdAt, updatedAt, folder, copyOf, copies, ...data } = file;
-
-        return {
-            damFile: {
-                ...data,
-                image: {},
-                license: {},
-                fileUrl: await filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
-            },
-        };
+    async transformToPlain() {
+        return SvgImageBlockTransformerService;
     }
 
     indexData(): BlockIndexData {
@@ -157,3 +131,5 @@ export const SvgImageBlock = createBlock(SvgImageBlockData, SvgImageBlockInput, 
     blockMeta: new Meta(SvgImageBlockData),
     blockInputMeta: new InputMeta(SvgImageBlockInput),
 });
+
+export type { SvgImageBlockData };
