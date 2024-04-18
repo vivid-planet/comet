@@ -9,7 +9,7 @@ import { Tooltip } from "../../Tooltip";
 
 export type FeedbackButtonClassKey = "idle" | "loading" | "success" | "fail" | "successTooltip" | "errorTooltip" | ButtonClassKey;
 
-type OwnerState = Pick<FeedbackButtonProps, "variant" | "color"> & { displayState?: FeedbackButtonDisplayState };
+type OwnerState = { displayState: FeedbackButtonDisplayState };
 
 const Root = createComponentSlot(Button)<FeedbackButtonClassKey, OwnerState>({
     componentName: "FeedbackButton",
@@ -78,8 +78,6 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
 
     const ownerState: OwnerState = {
         displayState: displayState,
-        variant,
-        color,
     };
 
     const resolveIconForDisplayState = (displayState: FeedbackButtonDisplayState) => {
