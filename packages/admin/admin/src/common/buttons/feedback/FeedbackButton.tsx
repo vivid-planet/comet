@@ -120,10 +120,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             timeoutId = window.setTimeout(() => {
                 setDisplayState(newDisplayState);
             }, timeoutDuration);
-        } else {
-            timeoutId = undefined;
         }
-
         return () => {
             if (timeoutId !== undefined) {
                 window.clearTimeout(timeoutId);

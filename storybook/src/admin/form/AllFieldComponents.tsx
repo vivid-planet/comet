@@ -41,7 +41,7 @@ function Story() {
                             <Card variant="outlined">
                                 <CardHeader title="Common Field-Components" titleTypographyProps={{ variant: "h3" }} />
                                 <CardContent>
-                                    <TextField name="text" label="Text" fullWidth />
+                                    <TextField name="text" label="Text" fullWidth type="email" />
                                     <TextAreaField name="textarea" label="TextArea" fullWidth />
                                     <SearchField name="search" label="Search" fullWidth />
                                     <SelectField name="select" label="Select" fullWidth>
