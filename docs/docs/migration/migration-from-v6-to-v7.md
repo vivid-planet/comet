@@ -57,7 +57,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     class NewsLinkBlockData {
         ...
     -   transformToPlain(dependencies: TransformDependencies, context: BlockContext)
-    +   transformToPlain(, context: BlockContext)
+    +   transformToPlain(context: BlockContext)
     }
     ```
 
