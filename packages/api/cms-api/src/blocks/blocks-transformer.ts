@@ -6,9 +6,9 @@ import opentelemetry from "@opentelemetry/api";
 const tracer = opentelemetry.trace.getTracer("@comet/cms-api");
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function transformToPlain(block: BlockDataInterface, dependencies: any, ctx: BlockContext, moduleRef: ModuleRef): Promise<any> {
+export async function transformToPlain(block: BlockDataInterface, ctx: BlockContext, moduleRef: ModuleRef): Promise<any> {
     return tracer.startActiveSpan("BlockTransformer", async (span) => {
-        const traverse = createAsyncTraverse("transformToPlain", [dependencies, ctx], isBlockDataInterface, moduleRef);
+        const traverse = createAsyncTraverse("transformToPlain", [ctx], isBlockDataInterface, moduleRef);
         // TODO is await correct here?
         const ret = await traverse(block);
         span.end();
@@ -33,7 +33,7 @@ function createAsyncTraverse(methodName: string, argsArray: any[], isTargetObjec
                 if (isService) {
                     // TODO Support transient or request-scoped services using moduleRef.resolve?
                     const service = await moduleRef.get(methodResponse, { strict: false });
-                    entries = Object.entries(await service.transformToPlain(jsonObj, argsArray[1]));
+                    entries = Object.entries(await service.transformToPlain(jsonObj, argsArray[0]));
                 } else {
                     entries = Object.entries(methodResponse);
                 }

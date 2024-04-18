@@ -7,7 +7,6 @@ import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMig
 import { BlockMigrationInterface } from "../migrations/types";
 import { SearchText } from "../search/get-search-text";
 import { AnnotationBlockMeta, getBlockFieldData, getFieldKeys } from "./decorators/field";
-import { TransformDependencies } from "./dependencies";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
 
@@ -55,7 +54,7 @@ export declare type BlockIndexItem = {
 export declare type BlockIndex = Array<BlockIndexItem>;
 
 export interface BlockDataInterface {
-    transformToPlain(deps: TransformDependencies, ctx: BlockContext): Promise<Type<BlockTransformerServiceInterface> | TraversableTransformResponse>;
+    transformToPlain(context: BlockContext): Promise<Type<BlockTransformerServiceInterface> | TraversableTransformResponse>;
     transformToSave(): TraversableTransformResponse;
     indexData(): BlockIndexData;
     searchText(): SearchText[];
@@ -64,8 +63,7 @@ export interface BlockDataInterface {
 }
 
 export abstract class BlockData implements BlockDataInterface {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async transformToPlain(deps: TransformDependencies, ctx: BlockContext) {
+    async transformToPlain(context: BlockContext) {
         return { ...(this as any) };
     }
 
