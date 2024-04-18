@@ -25,8 +25,6 @@ export class InternalLinkBlockTransformerService implements BlockTransformerServ
             };
         }
 
-        //TODO do we need createReadApi({ visibility: "all" });?
-
         const node = await this.pageTreeReadApiService.getNode(block.targetPageId);
 
         if (!node) {
