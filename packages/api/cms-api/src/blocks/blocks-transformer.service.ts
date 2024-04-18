@@ -12,7 +12,7 @@ export class BlocksTransformerService {
 
     constructor(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        @Inject(CONTEXT) context: any,
+        @Inject(CONTEXT) private readonly context: any,
         private readonly moduleRef: ModuleRef,
     ) {
         let includeInvisibleBlocks: boolean | undefined = false;
@@ -39,6 +39,6 @@ export class BlocksTransformerService {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async transformToPlain(block: BlockDataInterface, context?: BlockContext): Promise<any> {
-        return transformToPlain(block, context ?? this.blockContext, this.moduleRef);
+        return transformToPlain(block, context ?? this.blockContext, this.moduleRef, this.context);
     }
 }

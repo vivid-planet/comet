@@ -1,6 +1,5 @@
 import { BlockTransformerServiceInterface } from "@comet/blocks-api";
-import { Injectable } from "@nestjs/common";
-import { ModuleRef } from "@nestjs/core";
+import { Injectable, Scope } from "@nestjs/common";
 
 import { PageTreeReadApiService } from "../page-tree-read-api.service";
 import type { InternalLinkBlockData } from "./internal-link.block";
@@ -15,9 +14,9 @@ type TransformResponse = {
     targetPageAnchor?: string;
 };
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class InternalLinkBlockTransformerService implements BlockTransformerServiceInterface<InternalLinkBlockData, TransformResponse> {
-    constructor(private moduleRef: ModuleRef) {}
+    constructor(private readonly pageTreeReadApiService: PageTreeReadApiService) {}
 
     async transformToPlain(block: InternalLinkBlockData) {
         if (!block.targetPageId) {
@@ -26,12 +25,9 @@ export class InternalLinkBlockTransformerService implements BlockTransformerServ
             };
         }
 
-        // @nsams: Can't get the PageTreeReadApiService using constructor injection
-        const pageTreeReadApiService = await this.moduleRef.resolve(PageTreeReadApiService);
-
         //TODO do we need createReadApi({ visibility: "all" });?
 
-        const node = await pageTreeReadApiService.getNode(block.targetPageId);
+        const node = await this.pageTreeReadApiService.getNode(block.targetPageId);
 
         if (!node) {
             return { targetPage: null };
@@ -41,7 +37,7 @@ export class InternalLinkBlockTransformerService implements BlockTransformerServ
             targetPage: {
                 id: node.id,
                 name: node.name,
-                path: await pageTreeReadApiService.nodePath(node),
+                path: await this.pageTreeReadApiService.nodePath(node),
                 documentType: node.documentType,
             },
             targetPageAnchor: block.targetPageAnchor,
