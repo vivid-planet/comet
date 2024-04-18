@@ -4,7 +4,7 @@ import { Prop } from "../generateGrid";
 import { GridConfig } from "../generator";
 import { Imports } from "../utils/generateImportsCode";
 
-export function getXxxForFilterProp({
+export function getPropsForFilterProp({
     config,
     filterType,
 }: {

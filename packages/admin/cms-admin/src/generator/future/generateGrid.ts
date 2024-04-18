@@ -9,8 +9,8 @@ import {
 import { plural } from "pluralize";
 
 import { findInputObjectType } from "./generateGrid/findInputObjectType";
-import { getXxxForFilterProp } from "./generateGrid/getXxxForFilterProp";
-import { getXxxForUnsupportedRequiredGqlArgs } from "./generateGrid/getXxxForUnsupportedRequiredGqlArgs";
+import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
+import { getPropsForUnsupportedRequiredGqlArgs } from "./generateGrid/getPropsForUnsupportedRequiredGqlArgs";
 import { GeneratorReturn, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
@@ -110,7 +110,7 @@ export function generateGrid(
         imports: unsupportedRequiredGqlArgsImports,
         props: unsupportedRequiredGqlArgsProps,
         gqlArgs,
-    } = getXxxForUnsupportedRequiredGqlArgs([gridQueryType, ...(createMutationType ? [createMutationType] : [])]);
+    } = getPropsForUnsupportedRequiredGqlArgs([gridQueryType, ...(createMutationType ? [createMutationType] : [])]);
     imports.push(...unsupportedRequiredGqlArgsImports);
     props.push(...unsupportedRequiredGqlArgsProps);
 
@@ -123,7 +123,11 @@ export function generateGrid(
         if (!filterType) throw new Error("Can't find filter type");
         filterFields = filterType.inputFields.map((f) => f.name);
 
-        const { hasFilterProp: tempHasFilterProp, imports: filterPropImports, props: filterPropProps } = getXxxForFilterProp({ config, filterType });
+        const {
+            hasFilterProp: tempHasFilterProp,
+            imports: filterPropImports,
+            props: filterPropProps,
+        } = getPropsForFilterProp({ config, filterType });
         hasFilterProp = tempHasFilterProp;
         imports.push(...filterPropImports);
         props.push(...filterPropProps);
