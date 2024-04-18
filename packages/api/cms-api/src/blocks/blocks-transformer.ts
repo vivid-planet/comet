@@ -31,6 +31,7 @@ function createAsyncTraverse(methodName: string, argsArray: any[], isTargetObjec
                 const isService = Reflect.hasMetadata(INJECTABLE_WATERMARK, methodResponse);
 
                 if (isService) {
+                    // TODO Support transient or request-scoped services using moduleRef.resolve?
                     const service = await moduleRef.get(methodResponse, { strict: false });
                     entries = Object.entries(await service.transformToPlain(jsonObj, argsArray[1]));
                 } else {
