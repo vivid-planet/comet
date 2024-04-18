@@ -97,25 +97,31 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
 
     React.useEffect(() => {
         let timeoutId: number | undefined;
+        let timeoutDuration: number | undefined;
+        let newDisplayState: FeedbackButtonDisplayState;
 
         if (displayState === "idle" && loading) {
             setDisplayState("loading");
         } else if (displayState === "loading" && hasErrors) {
-            timeoutId = window.setTimeout(() => {
-                setDisplayState("fail");
-            }, 500);
+            timeoutDuration = 500;
+            newDisplayState = "loading";
         } else if (displayState === "loading" && !loading && !hasErrors) {
-            timeoutId = window.setTimeout(() => {
-                setDisplayState("success");
-            }, 500);
+            timeoutDuration = 500;
+            newDisplayState = "success";
         } else if (displayState === "fail") {
-            timeoutId = window.setTimeout(() => {
-                setDisplayState("idle");
-            }, 5000);
+            timeoutDuration = 5000;
+            newDisplayState = "idle";
         } else if (displayState === "success") {
+            timeoutDuration = 2000;
+            newDisplayState = "idle";
+        }
+
+        if (timeoutDuration !== undefined) {
             timeoutId = window.setTimeout(() => {
-                setDisplayState("idle");
-            }, 2000);
+                setDisplayState(newDisplayState);
+            }, timeoutDuration);
+        } else {
+            timeoutId = undefined;
         }
 
         return () => {
