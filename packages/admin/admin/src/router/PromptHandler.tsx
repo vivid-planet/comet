@@ -56,15 +56,22 @@ function InnerPromptHandler({
     };
 
     const handleClose = async (action: PromptAction) => {
-        let allowTransition: boolean;
+        let allowTransition = false;
         const saveActions = Object.values(registeredMessages.current)
             .filter((registeredMessage) => !!registeredMessage.saveAction)
             .map((registeredMessage) => registeredMessage.saveAction);
-        if (saveActions.length > 0 && action === PromptAction.Save) {
-            const results: Array<SaveActionSuccess> = await Promise.all(saveActions.map((saveAction) => saveAction!()));
-            allowTransition = results.every((saveActionSuccess) => saveActionSuccess);
-        } else {
-            allowTransition = action === PromptAction.Discard;
+        if (action === PromptAction.Save) {
+            if (saveActions.length > 0) {
+                const results: Array<SaveActionSuccess> = await Promise.all(saveActions.map((saveAction) => saveAction!()));
+                allowTransition = results.every((saveActionSuccess) => saveActionSuccess);
+            } else {
+                allowTransition = true;
+            }
+        } else if (action === PromptAction.Discard) {
+            allowTransition = true;
+            for (const msg of Object.values(registeredMessages.current)) {
+                msg.resetAction?.();
+            }
         }
         if (state.callback) {
             state.callback(allowTransition);
@@ -95,6 +102,7 @@ interface PromptMessages {
         path: string;
         subRoutePath?: string;
         saveAction?: SaveAction;
+        resetAction?: ResetAction;
     };
 }
 interface Props {
@@ -103,6 +111,7 @@ interface Props {
 
 export type SaveActionSuccess = boolean;
 export type SaveAction = (() => Promise<SaveActionSuccess>) | (() => SaveActionSuccess);
+export type ResetAction = () => void;
 
 export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, apiRef }) => {
     const registeredMessages = React.useRef<PromptMessages>({});
@@ -111,16 +120,18 @@ export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, 
         id,
         message,
         saveAction,
+        resetAction,
         path,
         subRoutePath,
     }: {
         id: string;
         message: (location: History.Location, action: History.Action) => string | boolean;
         saveAction?: SaveAction;
+        resetAction?: ResetAction;
         path: string;
         subRoutePath?: string;
     }) => {
-        registeredMessages.current[id] = { message, path, subRoutePath, saveAction };
+        registeredMessages.current[id] = { message, path, subRoutePath, saveAction, resetAction };
         // If saveAction is passed it has to be passed for all registered components
         if (saveAction && Object.values(registeredMessages.current).some((registeredMessage) => !registeredMessage.saveAction)) {
             // eslint-disable-next-line no-console
