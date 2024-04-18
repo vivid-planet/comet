@@ -8,8 +8,8 @@ import {
 } from "graphql";
 import { plural } from "pluralize";
 
-import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
 import { findInputObjectType } from "./generateGrid/findInputObjectType";
+import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
 import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
 import { getPropsForUnsupportedRequiredGqlArgs } from "./generateGrid/getPropsForUnsupportedRequiredGqlArgs";
 import { GeneratorReturn, GridConfig } from "./generator";
@@ -306,11 +306,6 @@ export function generateGrid(
 
     const fragmentName = config.fragmentName ?? `${gqlTypePlural}Form`;
 
-    return {
-        code,
-        gqlDocuments,
-    };
-
     const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
         CrudContextMenu,
@@ -401,19 +396,19 @@ export function generateGrid(
         allowCopyPaste
             ? `const create${gqlType}Mutation = gql\`
         mutation Create${gqlType}(${[
-                ...gqlArgs
-                    .filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name)
-                    .map((gqlArg) => `$${gqlArg.name}: ${gqlArg.type}!`),
-                ...(hasScope ? [`$scope: ${gqlType}ContentScopeInput!`] : []),
-                ...[`$input: ${gqlType}Input!`],
-            ].join(", ")}) {
+                  ...gqlArgs
+                      .filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name)
+                      .map((gqlArg) => `$${gqlArg.name}: ${gqlArg.type}!`),
+                  ...(hasScope ? [`$scope: ${gqlType}ContentScopeInput!`] : []),
+                  ...[`$input: ${gqlType}Input!`],
+              ].join(", ")}) {
             create${gqlType}(${[
-                gqlArgs
-                    .filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name)
-                    .map((gqlArg) => `${gqlArg.name}: $${gqlArg.name}`),
-                ...(hasScope ? [`scope: $scope`] : []),
-                ...[`input: $input`],
-            ].join(", ")}) {
+                  gqlArgs
+                      .filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name)
+                      .map((gqlArg) => `${gqlArg.name}: $${gqlArg.name}`),
+                  ...(hasScope ? [`scope: $scope`] : []),
+                  ...[`input: $input`],
+              ].join(", ")}) {
                 id
             }
         }
@@ -426,29 +421,29 @@ export function generateGrid(
             <Toolbar>
                 <ToolbarAutomaticTitleItem />
                 ${
-        hasSearch
-            ? `<ToolbarItem>
+                    hasSearch
+                        ? `<ToolbarItem>
                     <GridToolbarQuickFilter />
                 </ToolbarItem>`
-            : ""
-    }
+                        : ""
+                }
                 ${
-        hasFilter
-            ? `<ToolbarItem>
+                    hasFilter
+                        ? `<ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>`
-            : ""
-    }
+                        : ""
+                }
                 <ToolbarFillSpace />
                 ${
-        allowAdding
-            ? `<ToolbarActions>
+                    allowAdding
+                        ? `<ToolbarActions>
                     <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
                         <FormattedMessage id="${instanceGqlType}.new${gqlType}" defaultMessage="New ${camelCaseToHumanReadable(gqlType)}" />
                     </Button>
                 </ToolbarActions>`
-            : ""
-    }
+                        : ""
+                }
             </Toolbar>
         );
     }
@@ -463,104 +458,104 @@ export function generateGrid(
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
-        .map((column) => {
-            const columnDefinition: TsCodeRecordToStringObject = {
-                field: `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
-                headerName: `intl.formatMessage({ id: "${instanceGqlType}.${column.name}",  defaultMessage: "${
-                    column.headerName || camelCaseToHumanReadable(column.name)
-                }" })`,
-                type: column.gridType ? `"${column.gridType}"` : undefined,
-                filterable: !filterFields.includes(column.name) ? `false` : undefined,
-                sortable: !sortFields.includes(column.name) ? `false` : undefined,
-                valueGetter: column.valueGetter,
-                valueOptions: column.valueOptions,
-                renderCell: column.renderCell,
-                width: column.width,
-                flex: column.flex,
-            };
+                .map((column) => {
+                    const columnDefinition: TsCodeRecordToStringObject = {
+                        field: `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
+                        headerName: `intl.formatMessage({ id: "${instanceGqlType}.${column.name}",  defaultMessage: "${
+                            column.headerName || camelCaseToHumanReadable(column.name)
+                        }" })`,
+                        type: column.gridType ? `"${column.gridType}"` : undefined,
+                        filterable: !filterFields.includes(column.name) ? `false` : undefined,
+                        sortable: !sortFields.includes(column.name) ? `false` : undefined,
+                        valueGetter: column.valueGetter,
+                        valueOptions: column.valueOptions,
+                        renderCell: column.renderCell,
+                        width: column.width,
+                        flex: column.flex,
+                    };
 
-            if (typeof column.width === "undefined") {
-                const defaultMinWidth = 150;
-                columnDefinition.flex = 1;
-                columnDefinition.maxWidth = column.maxWidth;
+                    if (typeof column.width === "undefined") {
+                        const defaultMinWidth = 150;
+                        columnDefinition.flex = 1;
+                        columnDefinition.maxWidth = column.maxWidth;
 
-                if (
-                    typeof column.minWidth === "undefined" &&
-                    (typeof column.maxWidth === "undefined" || column.maxWidth >= defaultMinWidth)
-                ) {
-                    columnDefinition.minWidth = defaultMinWidth;
-                } else if (typeof column.minWidth !== "undefined") {
-                    columnDefinition.minWidth = column.minWidth;
-                }
-            }
+                        if (
+                            typeof column.minWidth === "undefined" &&
+                            (typeof column.maxWidth === "undefined" || column.maxWidth >= defaultMinWidth)
+                        ) {
+                            columnDefinition.minWidth = defaultMinWidth;
+                        } else if (typeof column.minWidth !== "undefined") {
+                            columnDefinition.minWidth = column.minWidth;
+                        }
+                    }
 
-            return tsCodeRecordToString(columnDefinition);
-        })
-        .join(",\n")},
+                    return tsCodeRecordToString(columnDefinition);
+                })
+                .join(",\n")},
                 ${
-        showActionsColumn
-            ? `{
+                    showActionsColumn
+                        ? `{
                         ${actionsColumnProps.join(",\n")},
                         renderCell: (params) => {
                             return (
                                 <>
                                 ${
-                config.actions?.componentImport?.name
-                    ? `<${config.actions.componentImport.name} renderCellParams={params} />`
-                    : ""
-            }${
-                allowEditing
-                    ? `
+                                    config.actions?.componentImport?.name
+                                        ? `<${config.actions.componentImport.name} renderCellParams={params} />`
+                                        : ""
+                                }${
+                              allowEditing
+                                  ? `
                                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                                             <Edit color="primary" />
                                         </IconButton>`
-                    : ""
-            }${
-                allowCopyPaste || allowDeleting
-                    ? `
+                                  : ""
+                          }${
+                              allowCopyPaste || allowDeleting
+                                  ? `
                                         <CrudContextMenu
                                             ${
-                        allowCopyPaste
-                            ? `
+                                                allowCopyPaste
+                                                    ? `
                                             copyData={() => {
                                                 // Don't copy id, because we want to create a new entity with this data
                                                 ${
-                                createMutationInputFields.filter((field) => rootBlocks[field.name]).length
-                                    ? `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
+                                                    createMutationInputFields.filter((field) => rootBlocks[field.name]).length
+                                                        ? `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
                                                         return {
                                                             ...filteredData,
                                                             ${createMutationInputFields
-                                        .filter((field) => rootBlocks[field.name])
-                                        .map((field) => {
-                                            if (rootBlocks[field.name]) {
-                                                const blockName = rootBlocks[field.name].name;
-                                                return `${field.name}: ${blockName}.state2Output(${blockName}.input2State(filteredData.${field.name}))`;
-                                            }
-                                        })
-                                        .join(",\n")}
+                                                                .filter((field) => rootBlocks[field.name])
+                                                                .map((field) => {
+                                                                    if (rootBlocks[field.name]) {
+                                                                        const blockName = rootBlocks[field.name].name;
+                                                                        return `${field.name}: ${blockName}.state2Output(${blockName}.input2State(filteredData.${field.name}))`;
+                                                                    }
+                                                                })
+                                                                .join(",\n")}
                                                         };`
-                                    : `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
+                                                        : `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
                                                         return filteredData;`
-                            }
+                                                }
                                             }}
                                             onPaste={async ({ input }) => {
                                                 await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                                                     mutation: create${gqlType}Mutation,
                                                     variables: { ${[
-                                ...gqlArgs
-                                    .filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name)
-                                    .map((arg) => arg.name),
-                                ...(hasScope ? [`scope`] : []),
-                                ...["input"],
-                            ].join(", ")} },
+                                                        ...gqlArgs
+                                                            .filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name)
+                                                            .map((arg) => arg.name),
+                                                        ...(hasScope ? [`scope`] : []),
+                                                        ...["input"],
+                                                    ].join(", ")} },
                                                 });
                                             }}
                                             `
-                            : ""
-                    }
+                                                    : ""
+                                            }
                                             ${
-                        allowDeleting
-                            ? `
+                                                allowDeleting
+                                                    ? `
                                             onDelete={async () => {
                                                 await client.mutate<GQLDelete${gqlType}Mutation, GQLDelete${gqlType}MutationVariables>({
                                                     mutation: delete${gqlType}Mutation,
@@ -568,42 +563,42 @@ export function generateGrid(
                                                 });
                                             }}
                                             `
-                            : ""
-                    }
+                                                    : ""
+                                            }
                                             refetchQueries={[${instanceGqlTypePlural}Query]}
                                         />
                                     `
-                    : ""
-            }
+                                  : ""
+                          }
                                 </>
                             );
                         },
                     },`
-            : ""
-    }
+                        : ""
+                }
         ];
 
         ${
-        hasFilter || hasSearch
-            ? `const { ${hasFilter ? `filter: gqlFilter, ` : ""}${
-                hasSearch ? `search: gqlSearch, ` : ""
-            } } = muiGridFilterToGql(columns, dataGridProps.filterModel);`
-            : ""
-    }
+            hasFilter || hasSearch
+                ? `const { ${hasFilter ? `filter: gqlFilter, ` : ""}${
+                      hasSearch ? `search: gqlSearch, ` : ""
+                  } } = muiGridFilterToGql(columns, dataGridProps.filterModel);`
+                : ""
+        }
 
         const { data, loading, error } = useQuery<GQL${gqlTypePlural}GridQuery, GQL${gqlTypePlural}GridQueryVariables>(${instanceGqlTypePlural}Query, {
             variables: {
                 ${[
-        ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((arg) => arg.name),
-        ...(hasScope ? ["scope"] : []),
-        ...(hasFilter ? (hasFilterProp ? ["filter: filter ? { and: [gqlFilter, filter] } : gqlFilter"] : ["filter: gqlFilter"]) : []),
-        ...(hasSearch ? ["search: gqlSearch"] : []),
-        ...[
-            `offset: dataGridProps.page * dataGridProps.pageSize`,
-            `limit: dataGridProps.pageSize`,
-            `sort: muiGridSortToGql(dataGridProps.sortModel)`,
-        ],
-    ].join(", ")}
+                    ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((arg) => arg.name),
+                    ...(hasScope ? ["scope"] : []),
+                    ...(hasFilter ? (hasFilterProp ? ["filter: filter ? { and: [gqlFilter, filter] } : gqlFilter"] : ["filter: gqlFilter"]) : []),
+                    ...(hasSearch ? ["search: gqlSearch"] : []),
+                    ...[
+                        `offset: dataGridProps.page * dataGridProps.pageSize`,
+                        `limit: dataGridProps.pageSize`,
+                        `sort: muiGridSortToGql(dataGridProps.sortModel)`,
+                    ],
+                ].join(", ")}
             },
         });
         const rowCount = useBufferedRowCount(data?.${gridQuery}.totalCount);
@@ -627,4 +622,9 @@ export function generateGrid(
         );
     }
     `;
+
+    return {
+        code,
+        gqlDocuments,
+    };
 }
