@@ -128,39 +128,25 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         };
     }, [displayState, loading, hasErrors]);
 
+    const tooltip = (
+        <Tooltip
+            title={displayState === "fail" ? tooltipErrorMessage : tooltipSuccessMessage}
+            open={displayState === "fail" || displayState === "success"}
+            placement={endIcon && !startIcon ? "top-end" : "top-start"}
+            variant={resolveTooltipForDisplayState(displayState)}
+            {...slotProps?.tooltip}
+        >
+            <span>{resolveIconForDisplayState(displayState)}</span>
+        </Tooltip>
+    );
+
     return (
         <Root
             ownerState={ownerState}
             {...slotProps}
             {...restProps}
-            startIcon={
-                startIcon && (
-                    <Tooltip
-                        title={displayState === "fail" ? tooltipErrorMessage : tooltipSuccessMessage}
-                        open={displayState === "fail" || displayState === "success"}
-                        placement="top-start"
-                        variant={resolveTooltipForDisplayState(displayState)}
-                        {...slotProps?.tooltip}
-                    >
-                        <span>{resolveIconForDisplayState(displayState)}</span>
-                    </Tooltip>
-                )
-            }
-            endIcon={
-                endIcon && !startIcon ? (
-                    <Tooltip
-                        title={displayState === "fail" ? tooltipErrorMessage : tooltipSuccessMessage}
-                        open={displayState === "fail" || displayState === "success"}
-                        placement="top-end"
-                        variant={resolveTooltipForDisplayState(displayState)}
-                        {...slotProps?.tooltip}
-                    >
-                        <>{resolveIconForDisplayState(displayState)}</>
-                    </Tooltip>
-                ) : (
-                    <span>{endIcon && resolveIconForDisplayState(displayState)}</span>
-                )
-            }
+            startIcon={startIcon && tooltip}
+            endIcon={endIcon && !startIcon ? tooltip : <span>{endIcon && resolveIconForDisplayState(displayState)}</span>}
             variant={variant}
             color={color}
             disabled={disabled || displayState === "loading"}
