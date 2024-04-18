@@ -8,7 +8,6 @@ export type MenuCollapsibleItemClassKey =
     | "childSelected"
     | "listItem"
     | "open"
-    | "collapsedMenuParentTitle"
     | "itemTitle"
     | "collapsibleIcon"
     | "collapsibleIconColorGrey"
@@ -34,10 +33,6 @@ export const styles = (theme: Theme) =>
             "& [class*='MuiListItemIcon-root']": {
                 color: theme.palette.primary.main,
             },
-        },
-        collapsedMenuParentTitle: {
-            backgroundColor: ({ level, isMenuOpen, isCollapsibleOpen }) =>
-                level === 1 && !isMenuOpen && isCollapsibleOpen ? theme.palette.primary.main : theme.palette.grey[50],
         },
         itemTitle: {
             fontWeight: 600,
