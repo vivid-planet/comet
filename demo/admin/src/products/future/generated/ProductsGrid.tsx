@@ -104,6 +104,7 @@ export function ProductsGrid({ filter }: Props): React.ReactElement {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
+        { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
         { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, maxWidth: 250, minWidth: 200 },
         {
             field: "description",
@@ -111,7 +112,14 @@ export function ProductsGrid({ filter }: Props): React.ReactElement {
             flex: 1,
             minWidth: 150,
         },
-        { field: "price", headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }), flex: 1, maxWidth: 150, minWidth: 150 },
+        {
+            field: "price",
+            headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }),
+            type: "number",
+            flex: 1,
+            maxWidth: 150,
+            minWidth: 150,
+        },
         {
             field: "type",
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),

@@ -1,4 +1,4 @@
-export { BlockLoader, recursivelyLoadBlockData } from "./blockLoader/blockLoader";
+export { BlockLoader, BlockLoaderDependencies, recursivelyLoadBlockData } from "./blockLoader/blockLoader";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { BlocksBlock } from "./blocks/factories/BlocksBlock";
 export { ListBlock } from "./blocks/factories/ListBlock";
@@ -26,6 +26,5 @@ export { usePreview } from "./preview/usePreview";
 export { PreviewSkeleton } from "./previewskeleton/PreviewSkeleton";
 export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSitePreviewIFrameMessage";
 export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePreviewIFrameMessage";
-export type { SitePreviewParams } from "./sitePreview/SitePreviewApiHelper";
-export { getValidatedSitePreviewParams } from "./sitePreview/SitePreviewApiHelper";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
+export { previewParams, SitePreviewData, SitePreviewParams, sitePreviewRoute } from "./sitePreview/SitePreviewUtils";

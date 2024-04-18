@@ -16,7 +16,6 @@ export type FieldContainerProps = ThemedComponentBaseProps<{
 }> & {
     variant?: "vertical" | "horizontal";
     fullWidth?: boolean;
-    requiredSymbol?: React.ReactNode;
     label?: React.ReactNode;
     required?: boolean;
     disabled?: boolean;
@@ -201,7 +200,6 @@ export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerPr
         error,
         disabled,
         required,
-        requiredSymbol = "*",
         children,
         warning,
         helperText,
@@ -241,7 +239,6 @@ export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerPr
                 {label && (
                     <Label ownerState={ownerState} disabled={disabled} {...slotProps?.label}>
                         {label}
-                        {required && requiredSymbol}
                     </Label>
                 )}
                 <InputContainer ownerState={ownerState} {...slotProps?.inputContainer}>
