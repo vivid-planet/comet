@@ -31,9 +31,11 @@ program.addCommand(
 );
 
 program.addCommand(
-    new Command("future-generate").option("-f, --file <file>", "config file to generate").action(async ({ file }: { file?: string }) => {
-        await runFutureGenerate(file);
-    }),
+    new Command("future-generate")
+        .option("-f, --file <file>", "path to config file or glob pattern to generate specific files")
+        .action(async ({ file: filePattern }: { file?: string }) => {
+            await runFutureGenerate(filePattern);
+        }),
 );
 
 program.parse();

@@ -58,13 +58,13 @@ export type GeneratorConfig = FormConfig<any> | GridConfig<any> | TabsConfig;
 
 export type GeneratorReturn = { code: string; gqlDocuments: Record<string, string> };
 
-export async function runFutureGenerate(specificFile?: string) {
+export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
     const schema = await loadSchema("./schema.gql", {
         loaders: [new GraphQLFileLoader()],
     });
     const gqlIntrospection = introspectionFromSchema(schema);
 
-    const files: string[] = specificFile ? [specificFile] : await glob("src/**/*.cometGen.ts");
+    const files: string[] = await glob(filePattern);
     for (const file of files) {
         let outputCode = "";
         let gqlDocumentsOutputCode = "";
