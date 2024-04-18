@@ -31,23 +31,23 @@ const PreviewSkeleton: React.FunctionComponent<SkeletonProps> = ({
             return <>{customContainer}</>;
         } else if (type === "bar") {
             return (
-                <sc.BarSkeleton backgroundColor={backgroundColor} color={color}>
+                <sc.BarSkeleton $backgroundColor={backgroundColor} $color={color}>
                     {title}
                 </sc.BarSkeleton>
             );
         } else if (type === "rows") {
             return (
-                <sc.RowsContainer width={"100%"}>
-                    <sc.RowSkeleton width={"75%"} backgroundColor={backgroundColor} color={color}>
+                <sc.RowsContainer $width={"100%"}>
+                    <sc.RowSkeleton $width={"75%"} $backgroundColor={backgroundColor} $color={color}>
                         {title}
                     </sc.RowSkeleton>
-                    <sc.RowSkeleton width={"100%"} backgroundColor={backgroundColor} color={color} />
-                    <sc.RowSkeleton width={"50%"} backgroundColor={backgroundColor} color={color} />
+                    <sc.RowSkeleton $width={"100%"} $backgroundColor={backgroundColor} $color={color} />
+                    <sc.RowSkeleton $width={"50%"} $backgroundColor={backgroundColor} $color={color} />
                 </sc.RowsContainer>
             );
         } else if (type === "media") {
             return (
-                <sc.ImageContainer backgroundColor={backgroundColor} color={color}>
+                <sc.ImageContainer $backgroundColor={backgroundColor} $color={color}>
                     {title}
                 </sc.ImageContainer>
             );

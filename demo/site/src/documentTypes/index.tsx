@@ -1,4 +1,5 @@
-import PageTypePage from "@src/documentTypes/Page";
+import { Link } from "./Link";
+import { Page } from "./Page";
 
 // TODO fix type for async component
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -6,6 +7,9 @@ type DocumentType = any; //{ component: React.ComponentType<{ pageTreeNodeId: st
 
 export const documentTypes: Record<string, DocumentType> = {
     Page: {
-        component: PageTypePage,
+        component: Page,
+    },
+    Link: {
+        component: Link,
     },
 };

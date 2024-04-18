@@ -85,12 +85,36 @@ export function generateGrid(
     //const title = config.title ?? camelCaseToHumanReadable(gqlType);
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
     const instanceGqlTypePlural = gqlTypePlural[0].toLowerCase() + gqlTypePlural.substring(1);
-    const gridQuery = instanceGqlType != instanceGqlTypePlural ? instanceGqlTypePlural : `${instanceGqlTypePlural}List`;
+    const gridQuery = config.query ? config.query : instanceGqlType != instanceGqlTypePlural ? instanceGqlTypePlural : `${instanceGqlTypePlural}List`;
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
     const props: Prop[] = [];
 
+    // all root blocks including those we don't have columns for (required for copy/paste)
+    // this is not configured in the grid config, it's just an heuristics
     const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
+
+    const rootBlockColumns = config.columns
+        .filter((column) => column.type == "block")
+        .map((column) => {
+            // map is for ts to infer block type correctly
+            if (column.type !== "block") throw new Error("Field is not a block field");
+            return column;
+        });
+
+    rootBlockColumns.forEach((field) => {
+        if (rootBlocks[String(field.name)]) {
+            // update rootBlocks if they are also used in columns
+            rootBlocks[String(field.name)].import = field.block.import;
+            rootBlocks[String(field.name)].name = field.block.name;
+        }
+    });
+    Object.values(rootBlocks).forEach((block) => {
+        imports.push({
+            name: block.name,
+            importPath: block.import,
+        });
+    });
 
     const gridQueryType = findQueryTypeOrThrow(gridQuery, gqlIntrospection);
 
@@ -206,12 +230,10 @@ export function generateGrid(
             gridType = "number";
         } else if (type == "boolean") {
             gridType = "boolean";
-        } else if (type == "block") {
-            if (rootBlocks[name]) {
-                renderCell = `(params) => {
-                        return <BlockPreviewContent block={${rootBlocks[name].name}} input={params.row.${name}} />;
-                    }`;
-            }
+        } else if (column.type == "block") {
+            renderCell = `(params) => {
+                    return <BlockPreviewContent block={${column.block.name}} input={params.row.${name}} />;
+                }`;
         } else if (type == "staticSelect") {
             if (column.values) {
                 throw new Error("custom values for staticSelect is not yet supported"); // TODO add support

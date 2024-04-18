@@ -1,9 +1,8 @@
-import { gql } from "@comet/cms-site";
-import { SitePreviewData } from "@src/app/api/site-preview/route";
+import { gql, previewParams } from "@comet/cms-site";
 import { defaultLanguage, domain } from "@src/config";
 import { documentTypes } from "@src/documentTypes";
+import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
-import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables } from "./page.generated";
@@ -18,19 +17,15 @@ const documentTypeQuery = gql`
 `;
 
 export default async function Page({ params }: { params: { path: string[] } }) {
-    let previewData: SitePreviewData | undefined = undefined;
-    if (draftMode().isEnabled) {
-        previewData = { includeInvisible: false };
-    }
-    const graphqlFetch = createGraphQLFetch(previewData);
+    // TODO support multiple domains, get domain by Host header
+    const { scope, previewData } = previewParams() || { scope: { domain, language: defaultLanguage }, previewData: undefined };
 
-    const locale = /*context.locale ??*/ defaultLanguage;
-    const scope = { domain, language: locale };
+    const graphqlFetch = createGraphQLFetch(previewData);
 
     //fetch documentType
     const data = await graphqlFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(documentTypeQuery, {
         path: `/${(params.path ?? []).join("/")}`,
-        scope,
+        scope: scope as GQLPageTreeNodeScopeInput, //TODO fix type, the scope from previewParams() is not compatible with GQLPageTreeNodeScopeInput
     });
 
     if (!data.pageTreeNodeByPath?.documentType) {

@@ -1,3 +1,4 @@
+import { ChevronDown } from "@comet/admin-icons";
 import { Card, CardContent, Chip, Grid, Stack, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -8,191 +9,535 @@ function Story() {
             <Card>
                 <CardContent>
                     <Typography variant="h3" gutterBottom>
-                        Small Chips
+                        Chips
                     </Typography>
-                    <Grid container spacing={2}>
-                        <Grid item>
-                            <Chip size="small" label="Filled Default" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" color="primary" label="Filled Primary" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" color="secondary" label="Filled Secondary" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" variant="outlined" label="Outlined Default" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" variant="outlined" color="primary" label="Outlined Primary" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" variant="outlined" color="secondary" label="Outlined Secondary" />
-                        </Grid>
-                    </Grid>
-                    <br />
-                    <Grid container spacing={2}>
-                        <Grid item>
-                            <Chip size="small" disabled label="Filled Default Disabled" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" disabled color="primary" label="Filled Primary Disabled" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" disabled color="secondary" label="Filled Secondary Disabled" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" disabled variant="outlined" label="Outlined Default Disabled" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" disabled variant="outlined" color="primary" label="Outlined Primary Disabled" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" disabled variant="outlined" color="secondary" label="Outlined Secondary Disabled" />
-                        </Grid>
-                    </Grid>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardContent>
-                    <Typography variant="h3" gutterBottom>
-                        Medium Chips
+
+                    <Typography variant="h4" gutterBottom>
+                        Medium
                     </Typography>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={2} my={5}>
                         <Grid item>
-                            <Chip size="medium" label="Filled Default" />
+                            <Chip
+                                label="Normal"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
                         </Grid>
                         <Grid item>
-                            <Chip size="medium" color="primary" label="Filled Primary" />
+                            <Chip
+                                clickable
+                                label="Clickable"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
                         </Grid>
                         <Grid item>
-                            <Chip size="medium" color="secondary" label="Filled Secondary" />
+                            <Chip
+                                icon={<ChevronDown />}
+                                clickable
+                                label="With Icon"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
                         </Grid>
                         <Grid item>
-                            <Chip size="medium" variant="outlined" label="Outlined Default" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="medium" variant="outlined" color="primary" label="Outlined Primary" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="medium" variant="outlined" color="secondary" label="Outlined Secondary" />
-                        </Grid>
-                    </Grid>
-                    <br />
-                    <Grid container spacing={2}>
-                        <Grid item>
-                            <Chip size="medium" disabled label="Filled Default Disabled" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="medium" disabled color="primary" label="Filled Primary Disabled" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="medium" disabled color="secondary" label="Filled Secondary Disabled" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="medium" disabled variant="outlined" label="Outlined Default Disabled" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="medium" disabled variant="outlined" color="primary" label="Outlined Primary Disabled" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="medium" disabled variant="outlined" color="secondary" label="Outlined Secondary Disabled" />
+                            <Chip
+                                label="Disabled"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                                disabled
+                            />
                         </Grid>
                     </Grid>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardContent>
-                    <Typography variant="h3" gutterBottom>
-                        Small Chips - Clickable & Deletable
+                    <Grid container spacing={2} my={5}>
+                        <Grid item>
+                            <Chip
+                                variant="outlined"
+                                label="Normal"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                variant="outlined"
+                                clickable
+                                label="Clickable"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                variant="outlined"
+                                icon={<ChevronDown />}
+                                clickable
+                                label="With Icon"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                variant="outlined"
+                                label="Disabled"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                                disabled
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={2} my={5}>
+                        <Grid item>
+                            <Chip
+                                color="primary"
+                                label="Normal"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                clickable
+                                color="primary"
+                                label="Clickable"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                color="primary"
+                                icon={<ChevronDown />}
+                                clickable
+                                label="With Icon"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                color="primary"
+                                label="Disabled"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                                disabled
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={2} my={5}>
+                        <Grid item>
+                            <Chip
+                                color="success"
+                                label="Normal"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                color="success"
+                                clickable
+                                label="Clickable"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                color="success"
+                                icon={<ChevronDown />}
+                                clickable
+                                label="With Icon"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                color="success"
+                                label="Disabled"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                                disabled
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={2} my={5}>
+                        <Grid item>
+                            <Chip
+                                color="error"
+                                label="Normal"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                color="error"
+                                clickable
+                                label="Clickable"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                color="error"
+                                icon={<ChevronDown />}
+                                clickable
+                                label="With Icon"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                color="error"
+                                label="Disabled"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                                disabled
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={2} my={5}>
+                        <Grid item>
+                            <Chip
+                                color="warning"
+                                label="Normal"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                color="warning"
+                                clickable
+                                label="Clickable"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                color="warning"
+                                icon={<ChevronDown />}
+                                clickable
+                                label="With Icon"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                color="warning"
+                                label="Disabled"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                                disabled
+                            />
+                        </Grid>
+                    </Grid>
+
+                    <Typography variant="h4" gutterBottom>
+                        Small
                     </Typography>
-                    <Grid container spacing={2}>
+
+                    <Grid container spacing={2} my={5}>
                         <Grid item>
-                            <Chip size="small" clickable label="Filled Default" />
+                            <Chip
+                                size="small"
+                                label="Normal"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
                         </Grid>
                         <Grid item>
-                            <Chip size="small" clickable color="primary" label="Filled Primary" />
+                            <Chip
+                                size="small"
+                                clickable
+                                label="Clickable"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
                         </Grid>
                         <Grid item>
-                            <Chip size="small" clickable color="secondary" label="Filled Secondary" />
+                            <Chip
+                                size="small"
+                                icon={<ChevronDown />}
+                                clickable
+                                label="With Icon"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
                         </Grid>
                         <Grid item>
-                            <Chip size="small" clickable variant="outlined" label="Outlined Default" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" clickable variant="outlined" color="primary" label="Outlined Primary" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" clickable variant="outlined" color="secondary" label="Outlined Secondary" />
-                        </Grid>
-                    </Grid>
-                    <br />
-                    <Grid container spacing={2}>
-                        <Grid item>
-                            <Chip size="small" onDelete={() => {}} label="Filled Default" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" onDelete={() => {}} color="primary" label="Filled Primary" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" onDelete={() => {}} color="secondary" label="Filled Secondary" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" onDelete={() => {}} variant="outlined" label="Outlined Default" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" onDelete={() => {}} variant="outlined" color="primary" label="Outlined Primary" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="small" onDelete={() => {}} variant="outlined" color="secondary" label="Outlined Secondary" />
-                        </Grid>
-                    </Grid>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardContent>
-                    <Typography variant="h3" gutterBottom>
-                        Medium Chips - Clickable & Deletable
-                    </Typography>
-                    <Grid container spacing={2}>
-                        <Grid item>
-                            <Chip size="medium" clickable label="Filled Default" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="medium" clickable color="primary" label="Filled Primary" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="medium" clickable color="secondary" label="Filled Secondary" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="medium" clickable variant="outlined" label="Outlined Default" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="medium" clickable variant="outlined" color="primary" label="Outlined Primary" />
-                        </Grid>
-                        <Grid item>
-                            <Chip size="medium" clickable variant="outlined" color="secondary" label="Outlined Secondary" />
+                            <Chip
+                                size="small"
+                                label="Disabled"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                                disabled
+                            />
                         </Grid>
                     </Grid>
-                    <br />
-                    <Grid container spacing={2}>
+                    <Grid container spacing={2} my={5}>
                         <Grid item>
-                            <Chip size="medium" onDelete={() => {}} label="Filled Default" />
+                            <Chip
+                                size="small"
+                                variant="outlined"
+                                label="Normal"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
                         </Grid>
                         <Grid item>
-                            <Chip size="medium" onDelete={() => {}} color="primary" label="Filled Primary" />
+                            <Chip
+                                size="small"
+                                variant="outlined"
+                                clickable
+                                label="Clickable"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
                         </Grid>
                         <Grid item>
-                            <Chip size="medium" onDelete={() => {}} color="secondary" label="Filled Secondary" />
+                            <Chip
+                                size="small"
+                                variant="outlined"
+                                icon={<ChevronDown />}
+                                clickable
+                                label="With Icon"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
                         </Grid>
                         <Grid item>
-                            <Chip size="medium" onDelete={() => {}} variant="outlined" label="Outlined Default" />
+                            <Chip
+                                size="small"
+                                variant="outlined"
+                                label="Disabled"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                                disabled
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={2} my={5}>
+                        <Grid item>
+                            <Chip
+                                size="small"
+                                color="primary"
+                                label="Normal"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
                         </Grid>
                         <Grid item>
-                            <Chip size="medium" onDelete={() => {}} variant="outlined" color="primary" label="Outlined Primary" />
+                            <Chip
+                                size="small"
+                                clickable
+                                color="primary"
+                                label="Clickable"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
                         </Grid>
                         <Grid item>
-                            <Chip size="medium" onDelete={() => {}} variant="outlined" color="secondary" label="Outlined Secondary" />
+                            <Chip
+                                size="small"
+                                icon={<ChevronDown />}
+                                clickable
+                                color="primary"
+                                label="With Icon"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                size="small"
+                                color="primary"
+                                label="Disabled"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                                disabled
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={2} my={5}>
+                        <Grid item>
+                            <Chip
+                                size="small"
+                                color="success"
+                                label="Normal"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                size="small"
+                                color="success"
+                                clickable
+                                label="Clickable"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                size="small"
+                                color="success"
+                                icon={<ChevronDown />}
+                                clickable
+                                label="With Icon"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                size="small"
+                                color="success"
+                                label="Disabled"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                                disabled
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={2} my={5}>
+                        <Grid item>
+                            <Chip
+                                size="small"
+                                color="error"
+                                label="Normal"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                size="small"
+                                color="error"
+                                clickable
+                                label="Clickable"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                size="small"
+                                color="error"
+                                icon={<ChevronDown />}
+                                clickable
+                                label="With Icon"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                size="small"
+                                color="error"
+                                label="Disabled"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                                disabled
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={2} my={5}>
+                        <Grid item>
+                            <Chip
+                                size="small"
+                                color="warning"
+                                label="Normal"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                size="small"
+                                color="warning"
+                                clickable
+                                label="Clickable"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                size="small"
+                                color="warning"
+                                icon={<ChevronDown />}
+                                clickable
+                                label="With Icon"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Chip
+                                size="small"
+                                color="warning"
+                                label="Disabled"
+                                onDelete={() => {
+                                    console.log("Delete");
+                                }}
+                                disabled
+                            />
                         </Grid>
                     </Grid>
                 </CardContent>

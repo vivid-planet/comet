@@ -1,10 +1,10 @@
 import { Accept, Copy } from "@comet/admin-icons";
-import { Dialog, Divider, List, ListItem, Stack, Typography } from "@mui/material";
+import { Dialog, Divider, Stack, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { styled, useTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -98,11 +98,13 @@ function DefaultUserMessage({ error, additionalInformation }: DefaultUserMessage
                     values={{ errorCount: error.length }}
                 />
             </Typography>
-            <ErrorList>
+            <Typography variant="list">
                 {error.map((error) => (
-                    <ErrorListItem key={error}>{error}</ErrorListItem>
+                    <Typography variant="listItem" key={error}>
+                        {error}
+                    </Typography>
                 ))}
-            </ErrorList>
+            </Typography>
             <Typography gutterBottom>
                 <FormattedMessage
                     id="comet.errorDialog.copyToClipboardInstruction"
@@ -138,16 +140,6 @@ function DefaultUserMessage({ error, additionalInformation }: DefaultUserMessage
         </>
     );
 }
-
-const ErrorList = styled(List)`
-    list-style-type: disc;
-    padding-inline-start: ${({ theme }) => theme.spacing(6)};
-`;
-
-const ErrorListItem = styled(ListItem)`
-    display: list-item;
-    padding-left: 0;
-`;
 
 type CopyToClipboardButtonProps = {
     copyData: string;
