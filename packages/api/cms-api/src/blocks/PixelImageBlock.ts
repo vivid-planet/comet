@@ -6,10 +6,8 @@ import {
     BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
-    BlockTransformerService,
     createBlock,
     inputToData,
-    TraversableTransformResponse,
 } from "@comet/blocks-api";
 import { Type } from "class-transformer";
 import { IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
@@ -23,16 +21,14 @@ import { ImagesService } from "../dam/images/images.service";
 import { PixelImageBlockTransformerService } from "./pixel-image-block-transformer.service";
 
 // @TODO: make factory to support flexible validation
-class PixelImageBlockData extends BlockData {
+export class PixelImageBlockData extends BlockData {
     damFileId?: string;
 
     @Type(() => ImageCropArea)
     cropArea?: ImageCropArea;
 
-    async transformToPlain(): Promise<TraversableTransformResponse> {
-        return {
-            [BlockTransformerService]: PixelImageBlockTransformerService,
-        };
+    async transformToPlain() {
+        return PixelImageBlockTransformerService;
     }
 
     async previewImageUrlTemplate(

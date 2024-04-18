@@ -11,14 +11,11 @@ import { TransformDependencies } from "./dependencies";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
 
-export const BlockTransformerService = Symbol("BlockTransformerService");
-
 export interface BlockTransformerServiceInterface<Block extends BlockDataInterface = BlockDataInterface, T = any> {
     transformToPlain(block: Block, context: BlockContext): T | Promise<T>;
 }
 
 export interface TraversableTransformResponse {
-    [BlockTransformerService]?: Type<BlockTransformerServiceInterface>;
     [member: string]:
         | string
         | number
@@ -58,7 +55,7 @@ export declare type BlockIndexItem = {
 export declare type BlockIndex = Array<BlockIndexItem>;
 
 export interface BlockDataInterface {
-    transformToPlain(deps: TransformDependencies, ctx: BlockContext): Promise<TraversableTransformResponse>;
+    transformToPlain(deps: TransformDependencies, ctx: BlockContext): Promise<Type<BlockTransformerServiceInterface> | TraversableTransformResponse>;
     transformToSave(): TraversableTransformResponse;
     indexData(): BlockIndexData;
     searchText(): SearchText[];
@@ -68,7 +65,7 @@ export interface BlockDataInterface {
 
 export abstract class BlockData implements BlockDataInterface {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async transformToPlain(deps: TransformDependencies, ctx: BlockContext): Promise<TraversableTransformResponse> {
+    async transformToPlain(deps: TransformDependencies, ctx: BlockContext) {
         return { ...(this as any) };
     }
 

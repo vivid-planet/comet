@@ -1,11 +1,11 @@
-import { BlockContext, BlockTransformerServiceInterface, ExtractBlockData } from "@comet/blocks-api";
+import { BlockContext, BlockTransformerServiceInterface } from "@comet/blocks-api";
 import { Injectable } from "@nestjs/common";
 
 import { FilesService } from "../dam/files/files.service";
 import { ImageCropArea } from "../dam/images/entities/image-crop-area.entity";
 import { ImagesService } from "../dam/images/images.service";
 import { DamScopeInterface } from "../dam/types";
-import { PixelImageBlock } from "./PixelImageBlock";
+import { PixelImageBlockData } from "./PixelImageBlock";
 
 type TransformReturn = {
     damFile?: {
@@ -33,15 +33,10 @@ type TransformReturn = {
 };
 
 @Injectable()
-export class PixelImageBlockTransformerService
-    implements BlockTransformerServiceInterface<ExtractBlockData<typeof PixelImageBlock>, TransformReturn>
-{
+export class PixelImageBlockTransformerService implements BlockTransformerServiceInterface<PixelImageBlockData, TransformReturn> {
     constructor(private readonly filesService: FilesService, private readonly imagesService: ImagesService) {}
 
-    async transformToPlain(
-        block: ExtractBlockData<typeof PixelImageBlock>,
-        { includeInvisibleContent, previewDamUrls, relativeDamUrls }: BlockContext,
-    ) {
+    async transformToPlain(block: PixelImageBlockData, { includeInvisibleContent, previewDamUrls, relativeDamUrls }: BlockContext) {
         if (!block.damFileId) {
             return {};
         }

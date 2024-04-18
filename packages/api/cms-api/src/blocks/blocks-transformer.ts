@@ -1,4 +1,5 @@
-import { BlockContext, BlockDataInterface, BlockTransformerService, isBlockDataInterface } from "@comet/blocks-api";
+import { BlockContext, BlockDataInterface, isBlockDataInterface } from "@comet/blocks-api";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
 import { ModuleRef } from "@nestjs/core";
 import opentelemetry from "@opentelemetry/api";
 
@@ -22,20 +23,29 @@ function createAsyncTraverse(methodName: string, argsArray: any[], isTargetObjec
         if (Array.isArray(jsonObj)) {
             return Promise.all(jsonObj.map(traverse));
         } else if (jsonObj !== null && typeof jsonObj === "object") {
-            const object = isTargetObject(jsonObj) && typeof jsonObj[methodName] === "function" ? await jsonObj[methodName](...argsArray) : jsonObj;
-            const mappedEntries = Reflect.ownKeys(object).map(async (key) => {
-                const value = object[key];
-                const returnValue = await traverse(value);
+            let entries: [string, unknown][];
 
-                if (typeof returnValue === "object" && returnValue !== null && BlockTransformerService in returnValue) {
-                    const service = await moduleRef.get(returnValue[BlockTransformerService], { strict: false });
-                    // TODO fix context
-                    return [key, await service.transformToPlain(value, argsArray[1])];
+            if (isTargetObject(jsonObj) && typeof jsonObj[methodName] === "function") {
+                const methodResponse = await jsonObj[methodName](...argsArray);
+
+                const isService = Reflect.hasMetadata(INJECTABLE_WATERMARK, methodResponse);
+
+                if (isService) {
+                    const service = await moduleRef.get(methodResponse, { strict: false });
+                    entries = Object.entries(await service.transformToPlain(jsonObj, argsArray[1]));
+                } else {
+                    entries = Object.entries(methodResponse);
                 }
+            } else {
+                entries = Object.entries(jsonObj);
+            }
 
-                return [key, returnValue];
-            });
-            return (await Promise.all(mappedEntries)).reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const mappedEntries = entries.map(async ([k, i]: [string, any]) => {
+                return [k, await traverse(i)];
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            }) as any;
+            return Object.fromEntries(await Promise.all(mappedEntries));
         } else {
             // keep literal as it is
             return jsonObj;
