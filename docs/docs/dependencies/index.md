@@ -52,6 +52,15 @@ For example:
 You must then create the block index by calling `npm run console createBlockIndexViews` in your `/api` directory.
 This creates a materialized view called `block_index_dependencies` in your database.
 
+You must recreate the block index views after
+
+-   executing database migrations
+-   executing the fixtures (because they drop the whole database and recreate it)
+
+You should automate the creation by calling `DependenciesService#createViews` in the `MigrateConsole` and `FixturesConsole` of your project.
+Implement this functionality as shown in [this commit](https://github.com/vivid-planet/comet-starter/commit/d6666eb37f7e132a625bcab975cba8676ec6d566).
+For new projects, it should already work out-of-the-box.
+
 ### Displaying dependencies in the admin interface
 
 Next, you probably want to display the dependencies or dependents (usages) of an entity in the admin interface.
