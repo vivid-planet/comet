@@ -1,3 +1,4 @@
+import { DependenciesModule } from "@comet/cms-api";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@src/config/config.module";
 import { FixturesConsole } from "@src/db/fixtures/fixtures.console";
@@ -11,7 +12,7 @@ import { SvgImageFileFixtureService } from "./generators/svg-image-file-fixture.
 import { UnsplashImageFileFixtureService } from "./generators/unsplash-image-file-fixture.service";
 
 @Module({
-    imports: [ConfigModule, ConsoleModule, PagesModule, LinksModule],
+    imports: [ConfigModule, ConsoleModule, PagesModule, LinksModule, DependenciesModule],
     providers: [
         FixturesConsole,
         ManyImagesTestPageFixtureService,
