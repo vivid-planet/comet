@@ -97,7 +97,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
 
     const handlePopoverClose = (e: React.MouseEvent<HTMLElement>) => {
         if (isMenuOpen) return;
-        const el = e.target as HTMLElement;
+        const el = e.currentTarget;
         const rect = el.getBoundingClientRect();
         const { clientX, clientY } = e;
 
