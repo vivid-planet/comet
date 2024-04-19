@@ -55,7 +55,7 @@ export interface TimePickerProps extends Omit<InputWithPopperProps, "children" |
     minuteStep?: number;
     min?: string;
     max?: string;
-    clearable?: boolean;
+    required?: boolean;
     slotProps?: SlotProps;
 }
 
@@ -65,7 +65,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
         value,
         formatOptions,
         endAdornment,
-        clearable,
+        required,
         minuteStep = 15,
         placeholder,
         min = "00:00",
@@ -119,7 +119,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
             }}
             readOnly
             endAdornment={
-                clearable ? (
+                !required ? (
                     <>
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange?.(undefined)} />
                         {endAdornment}

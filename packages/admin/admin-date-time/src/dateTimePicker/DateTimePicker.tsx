@@ -56,11 +56,11 @@ export interface DateTimePickerProps
     }> {
     onChange?: (value?: Date) => void;
     value?: Date;
-    clearable?: boolean;
+    required?: boolean;
 }
 
 export const DateTimePicker = (inProps: DateTimePickerProps) => {
-    const { onChange, value, slotProps, clearable, ...restProps } = useThemeProps({
+    const { onChange, value, slotProps, required, ...restProps } = useThemeProps({
         props: inProps,
         name: "CometAdminDateTimePicker",
     });
@@ -116,7 +116,8 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
                     placeholder={intl.formatMessage({ id: "comet.timeTimePicker.time", defaultMessage: "Time" })}
                     onChange={onChangeTime}
                     fullWidth
-                    clearable={clearable}
+                    // clearable={clearable}
+                    required={required}
                     {...slotProps?.timePicker}
                 />
             </TimeFormControl>

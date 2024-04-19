@@ -58,7 +58,8 @@ export interface ColorPickerProps extends Omit<InputWithPopperProps, "children" 
     startAdornment?: InputBaseProps["startAdornment"];
     endAdornment?: InputBaseProps["endAdornment"];
     invalidIndicatorCharacter?: string;
-    clearable?: boolean;
+    // clearable?: boolean;
+    required?: boolean;
     titleText?: React.ReactNode;
     clearButtonText?: React.ReactNode;
     components?: ColorPickerPropsComponents;
@@ -78,7 +79,8 @@ export const ColorPicker = (inProps: ColorPickerProps) => {
         startAdornment,
         endAdornment,
         onBlur,
-        clearable,
+        // clearable,
+        required,
         titleText = <FormattedMessage id="comet.colorPicker.title" defaultMessage="Choose a color" />,
         clearButtonText = <FormattedMessage id="comet.colorPicker.clearButton" defaultMessage="clear color" />,
         components = {},
@@ -149,7 +151,7 @@ export const ColorPicker = (inProps: ColorPickerProps) => {
                 )
             }
             endAdornment={
-                clearable ? (
+                !required ? (
                     <>
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange?.(undefined)} />
                         {endAdornment}
