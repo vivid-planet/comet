@@ -30,8 +30,8 @@ storiesOf("stories/form/components/Date & Time Pickers/Time Picker", module)
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={6} md={3}>
-                    <FieldContainer label="Clearable" fullWidth>
-                        <TimePicker fullWidth clearable value={timeFour} onChange={setTimeFour} />
+                    <FieldContainer label="Required" fullWidth>
+                        <TimePicker fullWidth required value={timeFour} onChange={setTimeFour} />
                     </FieldContainer>
                 </Grid>
             </Grid>
@@ -66,7 +66,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Time Picker", module)
                             />
                         </Grid>
                         <Grid item xs={6} md={3}>
-                            <Field name="timeFour" label="Clearable" fullWidth component={FinalFormTimePicker} clearable />
+                            <Field name="timeFour" label="Required" fullWidth component={FinalFormTimePicker} required />
                         </Grid>
                     </Grid>
                 )}

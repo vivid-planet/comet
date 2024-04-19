@@ -24,7 +24,7 @@ const Story = () => {
                         <Card>
                             <CardContent>
                                 <Field name="dateTimeOne" label="Date-Time" fullWidth component={FinalFormDateTimePicker} />
-                                <Field name="dateTimeTwo" label="Clearable Date-Time" fullWidth clearable component={FinalFormDateTimePicker} />
+                                <Field name="dateTimeTwo" label="Required" fullWidth required component={FinalFormDateTimePicker} />
                             </CardContent>
                         </Card>
                         <pre>{JSON.stringify(values, null, 4)}</pre>
