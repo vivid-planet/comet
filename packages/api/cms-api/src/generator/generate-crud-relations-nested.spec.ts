@@ -77,7 +77,7 @@ describe("GenerateCrudRelationsNested", () => {
             }
 
             {
-                const file = lintedOut.find((file) => file.name === "dto/test-entity-variant.nested.input.ts");
+                const file = lintedOut.find((file) => file.name === "dto/test-entity-variant.test-entity-product-nested.input.ts");
                 if (!file) throw new Error("File not found");
                 const source = parseSource(file.content);
 
