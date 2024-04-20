@@ -9,6 +9,7 @@ import { GraphQLResolveInfo } from "graphql";
 
 import { Product } from "../entities/product.entity";
 import { ProductTag } from "../entities/product-tag.entity";
+import { ProductToTag } from "../entities/product-to-tag.entity";
 import { PaginatedProductTags } from "./dto/paginated-product-tags";
 import { ProductTagInput, ProductTagUpdateInput } from "./dto/product-tag.input";
 import { ProductTagsArgs } from "./dto/product-tags.args";
@@ -21,6 +22,7 @@ export class ProductTagResolver {
         private readonly entityManager: EntityManager,
         private readonly productTagsService: ProductTagsService,
         @InjectRepository(ProductTag) private readonly repository: EntityRepository<ProductTag>,
+        @InjectRepository(ProductToTag) private readonly productToTagRepository: EntityRepository<ProductToTag>,
         @InjectRepository(Product) private readonly productRepository: EntityRepository<Product>,
     ) {}
 
@@ -40,6 +42,9 @@ export class ProductTagResolver {
 
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];
+        if (fields.includes("productsWithStatus")) {
+            populate.push("productsWithStatus");
+        }
         if (fields.includes("products")) {
             populate.push("products");
         }
@@ -61,11 +66,25 @@ export class ProductTagResolver {
 
     @Mutation(() => ProductTag)
     async createProductTag(@Args("input", { type: () => ProductTagInput }) input: ProductTagInput): Promise<ProductTag> {
-        const { products: productsInput, ...assignInput } = input;
+        const { productsWithStatus: productsWithStatusInput, products: productsInput, ...assignInput } = input;
         const productTag = this.repository.create({
             ...assignInput,
         });
+        if (productsWithStatusInput) {
+            await productTag.productsWithStatus.loadItems();
+            productTag.productsWithStatus.set(
+                await Promise.all(
+                    productsWithStatusInput.map(async (productsWithStatusInput) => {
+                        const { product: productInput, ...assignInput } = productsWithStatusInput;
+                        return this.productToTagRepository.assign(new ProductToTag(), {
+                            ...assignInput,
 
+                            product: Reference.create(await this.productRepository.findOneOrFail(productInput)),
+                        });
+                    }),
+                ),
+            );
+        }
         if (productsInput) {
             const products = await this.productRepository.find({ id: productsInput });
             if (products.length != productsInput.length) throw new Error("Couldn't find all products that were passed as input");
@@ -90,11 +109,25 @@ export class ProductTagResolver {
             validateNotModified(productTag, lastUpdatedAt);
         }
 
-        const { products: productsInput, ...assignInput } = input;
+        const { productsWithStatus: productsWithStatusInput, products: productsInput, ...assignInput } = input;
         productTag.assign({
             ...assignInput,
         });
+        if (productsWithStatusInput) {
+            await productTag.productsWithStatus.loadItems();
+            productTag.productsWithStatus.set(
+                await Promise.all(
+                    productsWithStatusInput.map(async (productsWithStatusInput) => {
+                        const { product: productInput, ...assignInput } = productsWithStatusInput;
+                        return this.productToTagRepository.assign(new ProductToTag(), {
+                            ...assignInput,
 
+                            product: Reference.create(await this.productRepository.findOneOrFail(productInput)),
+                        });
+                    }),
+                ),
+            );
+        }
         if (productsInput) {
             const products = await this.productRepository.find({ id: productsInput });
             if (products.length != productsInput.length) throw new Error("Couldn't find all products that were passed as input");
@@ -114,6 +147,11 @@ export class ProductTagResolver {
         await this.entityManager.remove(productTag);
         await this.entityManager.flush();
         return true;
+    }
+
+    @ResolveField(() => [ProductToTag])
+    async productsWithStatus(@Parent() productTag: ProductTag): Promise<ProductToTag[]> {
+        return productTag.productsWithStatus.loadItems();
     }
 
     @ResolveField(() => [Product])

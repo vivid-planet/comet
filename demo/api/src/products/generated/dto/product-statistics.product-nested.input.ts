@@ -4,7 +4,7 @@ import { Field, InputType } from "@nestjs/graphql";
 import { IsInt, IsNotEmpty } from "class-validator";
 
 @InputType()
-export class ProductStatisticsInput {
+export class ProductProductStatisticsInput {
     @IsNotEmpty()
     @IsInt()
     @Field()
