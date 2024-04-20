@@ -476,24 +476,28 @@ function generateInputHandling(
 ${inputRelationToManyProps
     .map((prop) => {
         if (prop.orphanRemoval) {
+            const code = innerGenerateInputHandling(
+                {
+                    mode: "updateNested",
+                    inputName: `${prop.singularName}Input`,
+
+                    // alternative `return this.${prop.repositoryName}.create({` requires back relation to be set
+                    assignEntityCode: `return this.${prop.repositoryName}.assign(new ${prop.type}(), {`,
+
+                    excludeFields: prop.targetMeta.props
+                        .filter((prop) => prop.reference == "m:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
+                        .map((prop) => prop.name),
+                },
+                prop.targetMeta,
+            );
+            const isAsync = code.includes("await ");
             return `if (${prop.name}Input) {
         ${instanceNameSingular}.${prop.name}.set(
-            ${prop.name}Input.map((${prop.singularName}Input) => {
-                ${generateInputHandling(
-                    {
-                        mode: "updateNested",
-                        inputName: `${prop.singularName}Input`,
-
-                        // alternative `return this.${prop.repositoryName}.create({` requires back relation to be set
-                        assignEntityCode: `return this.${prop.repositoryName}.assign(new ${prop.type}(), {`,
-
-                        excludeFields: prop.targetMeta.props
-                            .filter((prop) => prop.reference == "m:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
-                            .map((prop) => prop.name),
-                    },
-                    prop.targetMeta,
-                )}
-            }),
+            ${isAsync ? `await Promise.all(` : ""}
+            ${prop.name}Input.map(${isAsync ? `async ` : ""}(${prop.singularName}Input) => {
+                ${code}
+            })
+            ${isAsync ? `)` : ""}
         );
         }`;
         } else {
