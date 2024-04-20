@@ -492,6 +492,7 @@ ${inputRelationToManyProps
             );
             const isAsync = code.includes("await ");
             return `if (${prop.name}Input) {
+        await ${instanceNameSingular}.${prop.name}.loadItems();
         ${instanceNameSingular}.${prop.name}.set(
             ${isAsync ? `await Promise.all(` : ""}
             ${prop.name}Input.map(${isAsync ? `async ` : ""}(${prop.singularName}Input) => {
