@@ -903,6 +903,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 : ""
         }
 
+        ${
+            generatorOptions.list
+                ? `
         @Query(() => Paginated${classNamePlural})
         ${rootArgProps
             .map((rootArgProp) => {
@@ -984,7 +987,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             const [entities, totalCount] = await this.repository.findAndCount(where, options);
             return new Paginated${classNamePlural}(entities, totalCount);
-
+        }
+        `
+                : ""
         }
 
         ${
