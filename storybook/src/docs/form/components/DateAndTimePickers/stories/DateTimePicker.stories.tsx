@@ -20,8 +20,8 @@ storiesOf("stories/form/components/Date & Time Pickers/Date-Time Picker", module
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <FieldContainer label="Required" fullWidth>
-                        <DateTimePicker value={dateTimeTwo} onChange={setDateTimeTwo} required />
+                    <FieldContainer label="Required" fullWidth required={true}>
+                        <DateTimePicker value={dateTimeTwo} onChange={setDateTimeTwo} required={true} />
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -72,7 +72,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Date-Time Picker", module
                             <Field name="dateTimeOne" label="Date Picker" fullWidth component={FinalFormDateTimePicker} />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Field name="dateTimeTwo" label="Required" fullWidth component={FinalFormDateTimePicker} required />
+                            <Field name="dateTimeTwo" label="Required" fullWidth required={true} component={FinalFormDateTimePicker} />
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <Field

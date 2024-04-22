@@ -118,6 +118,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
                 inputWithPopperProps.onOpenPopper?.();
             }}
             readOnly
+            required={required}
             endAdornment={
                 !required ? (
                     <>

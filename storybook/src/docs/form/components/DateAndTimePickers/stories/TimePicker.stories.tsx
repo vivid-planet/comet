@@ -30,7 +30,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Time Picker", module)
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={6} md={3}>
-                    <FieldContainer label="Required" fullWidth>
+                    <FieldContainer label="Required" fullWidth required>
                         <TimePicker fullWidth required value={timeFour} onChange={setTimeFour} />
                     </FieldContainer>
                 </Grid>

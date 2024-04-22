@@ -19,7 +19,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Date-Range Picker", modul
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={6} md={4}>
-                    <FieldContainer label="Required" fullWidth>
+                    <FieldContainer label="Required" fullWidth required>
                         <DateRangePicker fullWidth value={dateTwo} onChange={setDateTwo} required />
                     </FieldContainer>
                 </Grid>

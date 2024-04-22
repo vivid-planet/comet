@@ -18,7 +18,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Time-Range Picker", modul
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={6}>
-                    <FieldContainer label="Required" fullWidth>
+                    <FieldContainer label="Required" fullWidth required>
                         <TimeRangePicker value={timeRangeTwo} onChange={setTimeRangeTwo} required />
                     </FieldContainer>
                 </Grid>
@@ -39,7 +39,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Time-Range Picker", modul
                             <Field name="timeRangeOne" label="Time-Range Picker" fullWidth component={FinalFormTimeRangePicker} />
                         </Grid>
                         <Grid item xs={6}>
-                            <Field name="timeRangeThree" label="Required" fullWidth component={FinalFormTimeRangePicker} required />
+                            <Field name="timeRangeTwo" label="Required" fullWidth component={FinalFormTimeRangePicker} required />
                         </Grid>
                     </Grid>
                 )}

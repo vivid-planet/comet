@@ -60,7 +60,7 @@ export interface DateTimePickerProps
 }
 
 export const DateTimePicker = (inProps: DateTimePickerProps) => {
-    const { onChange, value, slotProps, required, ...restProps } = useThemeProps({
+    const { onChange, value, required, slotProps, ...restProps } = useThemeProps({
         props: inProps,
         name: "CometAdminDateTimePicker",
     });
@@ -106,6 +106,7 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
                     value={value ? getIsoDateString(value) : undefined}
                     onChange={onChangeDate}
                     fullWidth
+                    required={required}
                     {...slotProps?.datePicker}
                 />
             </DateFormControl>
@@ -116,7 +117,6 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
                     placeholder={intl.formatMessage({ id: "comet.timeTimePicker.time", defaultMessage: "Time" })}
                     onChange={onChangeTime}
                     fullWidth
-                    // clearable={clearable}
                     required={required}
                     {...slotProps?.timePicker}
                 />

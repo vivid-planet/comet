@@ -24,7 +24,6 @@ export interface DateRangePickerProps extends Omit<InputWithPopperProps, "childr
     value?: DateRange;
     formatDateOptions?: FormatDateOptions;
     rangeStringSeparator?: string;
-    // clearable?: boolean;
     required?: boolean;
     monthsToShow?: number;
     maxDate?: Date;
@@ -78,7 +77,6 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
         formatDateOptions,
         rangeStringSeparator = "  —  ",
         endAdornment,
-        // clearable,
         required,
         placeholder,
         monthsToShow = 2,
@@ -103,6 +101,7 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
             {...slotProps?.root}
             {...inputWithPopperProps}
             readOnly
+            required={required}
             endAdornment={
                 !required ? (
                     <>
