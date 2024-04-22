@@ -1,5 +1,5 @@
 "use client";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import * as React from "react";
 
 import { PreviewContext } from "../preview/PreviewContext";
@@ -8,12 +8,13 @@ import { SitePreviewIFrameLocationMessage, SitePreviewIFrameMessageType } from "
 
 const SitePreview: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
     const pathname = usePathname();
+    const searchParams = useSearchParams();
 
     React.useEffect(() => {
         function sendUpstreamMessage() {
             const message: SitePreviewIFrameLocationMessage = {
                 cometType: SitePreviewIFrameMessageType.SitePreviewLocation,
-                data: { search: location.search, pathname },
+                data: { search: searchParams.toString(), pathname },
             };
             sendSitePreviewIFrameMessage(message);
         }
@@ -22,7 +23,7 @@ const SitePreview: React.FunctionComponent<{ children: React.ReactNode }> = ({ c
         () => {
             window.removeEventListener("load", sendUpstreamMessage);
         };
-    }, [pathname]);
+    }, [pathname, searchParams]);
 
     return (
         <PreviewContext.Provider
