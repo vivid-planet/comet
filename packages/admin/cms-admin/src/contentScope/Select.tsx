@@ -14,14 +14,17 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import { useIntl } from "react-intl";
 
-import { capitalizeString, showLabelIfAvailable, wrapInArray } from "./ContentScope.utils";
-import { ContentScopeCombinations } from "./Controls";
+import { capitalizeString, joinLabels, showLabelIfAvailable } from "./ContentScope.utils";
 import { ContentScopeInterface } from "./Provider";
 
 export interface ContentScopeSelectProps {
-    values: ContentScopeCombinations;
+    values: {
+        group: ContentScopeInterface;
+        groupKey: string;
+        values: ContentScopeInterface[];
+    }[];
     value: ContentScopeInterface;
-    onChange: (selectedScopes: ContentScopeInterface[], mapping: string[]) => void;
+    onChange: (selectedScope: ContentScopeInterface) => void;
     label: string;
     icon?:
         | React.ComponentType<SvgIconProps>
@@ -46,16 +49,30 @@ export default function ContentScopeSelect({
 
     const [searchValue, setSearchValue] = React.useState<string>("");
 
-    const filterBySearchValue = (searchValue: string) => {
+    const filterBySearchValue = (
+        searchValue: string,
+    ): {
+        group: ContentScopeInterface;
+        groupKey: string;
+        values: ContentScopeInterface[];
+    }[] => {
         if (!searchValue) return values;
-        const groupValues = values.filter((scopeVal) => scopeVal.grouping?.value.includes(searchValue.toLowerCase()));
+        const groupValues = values.filter((scopeVal) => scopeVal.group?.value.includes(searchValue.toLowerCase()));
 
         const valuesWithSearch = values
-            .filter((scopeVal) => !scopeVal.grouping?.value.includes(searchValue.toLowerCase()))
-            .map((scopeVal) => ({
-                ...scopeVal,
-                values: scopeVal.values.filter((val) => val.some(({ value }: { value: string }) => value.includes(searchValue.toLowerCase()))),
-            }))
+            .filter((scopeVal) => !scopeVal.group?.value.includes(searchValue.toLowerCase()))
+            .map((scopeVal) => {
+                return {
+                    ...scopeVal,
+                    values: scopeVal.values.filter((val) => {
+                        return Object.keys(val)
+                            .map((key) => val[key])
+                            .some(({ label, value }: { value: string; label?: string }) => {
+                                return value.includes(searchValue.toLowerCase()) || label?.toLowerCase().includes(searchValue.toLowerCase());
+                            });
+                    }),
+                };
+            })
             .filter((scopeVal) => scopeVal.values.length > 0);
 
         return [...groupValues, ...valuesWithSearch];
@@ -86,22 +103,19 @@ export default function ContentScopeSelect({
                             autoFocus
                         />
                     )}
-                    {filteredValues.map(({ grouping, mapping, values }) => {
+                    {filteredValues.map(({ group, groupKey, values }) => {
                         return (
-                            <React.Fragment key={JSON.stringify({ grouping, values })}>
-                                {grouping && <ListSubheader>{capitalizeString(showLabelIfAvailable(grouping))}</ListSubheader>}
+                            <React.Fragment key={group.value}>
+                                {Object.keys(values[0]).length > 1 && <ListSubheader>{capitalizeString(showLabelIfAvailable(group))}</ListSubheader>}
                                 {values.map((scopeVal, index) => {
                                     return (
                                         <ListItemButton
                                             key={index}
                                             disabled={disabled}
-                                            selected={value.value === scopeVal}
+                                            selected={value === scopeVal}
                                             onClick={() => {
                                                 hideDropdown();
-                                                onChange(
-                                                    [...(grouping ? [grouping, ...wrapInArray(scopeVal)] : [...wrapInArray(scopeVal)])],
-                                                    mapping,
-                                                );
+                                                onChange(scopeVal);
                                                 setSearchValue("");
                                             }}
                                         >
@@ -110,13 +124,7 @@ export default function ContentScopeSelect({
                                                     <Icon />
                                                 </ListItemIcon>
                                             ) : null}
-                                            <ListItemText
-                                                primary={
-                                                    Array.isArray(scopeVal)
-                                                        ? scopeVal.map((val) => showLabelIfAvailable(val)).join(" - ")
-                                                        : showLabelIfAvailable(scopeVal)
-                                                }
-                                            />
+                                            <ListItemText primary={joinLabels(scopeVal, groupKey)} />
                                         </ListItemButton>
                                     );
                                 })}

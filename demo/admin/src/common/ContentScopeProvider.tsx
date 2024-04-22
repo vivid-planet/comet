@@ -3,9 +3,9 @@ import {
     ContentScopeConfigProps,
     ContentScopeControls as ContentScopeControlsLibrary,
     ContentScopeControlsConfig,
+    ContentScopeInterface,
     ContentScopeProvider as ContentScopeProviderLibrary,
     ContentScopeProviderProps,
-    ContentScopeValues,
     useContentScope as useContentScopeLibrary,
     UseContentScopeApi,
     useContentScopeConfig as useContentScopeConfigLibrary,
@@ -59,13 +59,20 @@ const ContentScopeProvider: React.FC<Pick<ContentScopeProviderProps, "children">
     const allowedSiteConfigs = Object.fromEntries(
         Object.entries(sitesConfig.configs).filter(([siteKey, siteConfig]) => allowedUserDomains.includes(siteKey)),
     );
-    const values: ContentScopeValues<ContentScope> = {
-        domain: Object.keys(allowedSiteConfigs).map((key) => ({ value: key })),
-        language: [
-            { label: "English", value: "en" },
-            { label: "German", value: "de" },
-        ],
-    };
+    const values: Array<ContentScopeInterface> = [
+        {
+            domain: { label: "Main", value: "main" },
+            language: { label: "English", value: "en" },
+        },
+        {
+            domain: { label: "Main", value: "main" },
+            language: { label: "German", value: "de" },
+        },
+        {
+            domain: { label: "Secondary", value: "secondary" },
+            language: { label: "English", value: "en" },
+        },
+    ];
 
     return (
         <ContentScopeProviderLibrary<ContentScope> values={values} defaultValue={{ domain: Object.keys(allowedSiteConfigs)[0], language: "en" }}>

@@ -10,7 +10,7 @@ interface ContentScopeContext {
     path: string;
     redirectPathAfterChange?: string; // define where the user should be redirected to after a scope change
     setRedirectPathAfterChange: React.Dispatch<React.SetStateAction<string | undefined>>;
-    values: ContentScopeValues;
+    values: Array<ContentScopeInterface>;
 }
 
 const defaultContentScopeContext: ContentScopeContext = {
@@ -18,7 +18,7 @@ const defaultContentScopeContext: ContentScopeContext = {
     setRedirectPathAfterChange: () => {
         //
     },
-    values: {},
+    values: [],
 };
 
 type NonNull<T> = T extends null ? never : T;
@@ -35,7 +35,7 @@ export type UseContentScopeApi<S extends ContentScopeInterface = ContentScopeInt
     match: match;
     setRedirectPathAfterChange: React.Dispatch<React.SetStateAction<string | undefined>>;
     supported: boolean;
-    values: ContentScopeValues<S>;
+    values: Array<ContentScopeInterface>;
 };
 
 export type ContentScopeValues<S extends ContentScopeInterface = ContentScopeInterface> = {
@@ -66,12 +66,20 @@ function formatScopeToRouterMatchParams<S extends ContentScopeInterface = Conten
     }, {} as NonNullRecord<S>);
 }
 
-function defaultCreatePath(values: ContentScopeValues) {
-    return Object.keys(values).reduce((a, key) => {
-        const plainValues = values[key].map((c) => c.value);
+function defaultCreatePath(values: Array<ContentScopeInterface>) {
+    const scopeKeys: { [key: string]: Set<string> } = {};
+    values.forEach((value) => {
+        Object.keys(value).forEach((key) => {
+            if (!scopeKeys[key]) scopeKeys[key] = new Set();
+            scopeKeys[key].add(value[key].value);
+        });
+    });
+    const path = Object.keys(scopeKeys).reduce((a, key) => {
+        const plainValues = Array.from(scopeKeys[key]);
         const whiteListedValuesString = plainValues ? `(${plainValues.join("|")})` : "";
         return `${a}/:${key}${whiteListedValuesString}`;
     }, "");
+    return path;
 }
 
 function defaultCreateUrl(scope: ContentScopeInterface) {
@@ -109,16 +117,16 @@ export function useContentScope<S extends ContentScopeInterface = ContentScopeIn
         match,
         setRedirectPathAfterChange: context.setRedirectPathAfterChange,
         supported: Object.keys(scope).length > 0,
-        values: context.values as ContentScopeValues<S>, // @TODO:
+        values: context.values,
     };
 }
 
 export interface ContentScopeProviderProps<S extends ContentScopeInterface = ContentScopeInterface> {
     defaultValue: S;
-    values: ContentScopeValues<S>;
+    values: Array<ContentScopeInterface>;
     children: (p: { match: match<NonNullRecord<S>> }) => React.ReactNode;
     location?: {
-        createPath: (scope: ContentScopeValues<S>) => string;
+        createPath: (scope: Array<ContentScopeInterface>) => string;
         createUrl: (scope: S) => string;
     };
 }
