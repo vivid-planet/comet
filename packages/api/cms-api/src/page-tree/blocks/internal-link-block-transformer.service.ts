@@ -1,5 +1,5 @@
 import { BlockTransformerServiceInterface } from "@comet/blocks-api";
-import { Injectable, Scope } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
 import { PageTreeReadApiService } from "../page-tree-read-api.service";
 import type { InternalLinkBlockData } from "./internal-link.block";
@@ -14,7 +14,7 @@ type TransformResponse = {
     targetPageAnchor?: string;
 };
 
-@Injectable({ scope: Scope.REQUEST })
+@Injectable()
 export class InternalLinkBlockTransformerService implements BlockTransformerServiceInterface<InternalLinkBlockData, TransformResponse> {
     constructor(private readonly pageTreeReadApiService: PageTreeReadApiService) {}
 
