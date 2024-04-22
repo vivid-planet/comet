@@ -970,8 +970,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             ${hasOutputRelations ? `// eslint-disable-next-line @typescript-eslint/no-explicit-any` : ""}
             const options: FindOptions<${metadata.className}${hasOutputRelations ? `, any` : ""}> = { offset, limit${
-        hasOutputRelations ? `, populate` : ""
-    }};
+                      hasOutputRelations ? `, populate` : ""
+                  }};
 
             ${
                 hasSortArg
