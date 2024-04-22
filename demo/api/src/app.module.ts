@@ -159,7 +159,15 @@ export class AppModule {
                 PredefinedPageModule,
                 CronJobsModule,
                 ProductsModule,
-                AccessLogModule,
+                AccessLogModule.forRoot({
+                    shouldLogRequest: ({ user }) => {
+                        // ignore Basic Authed User
+                        if (user === true) {
+                            return false;
+                        }
+                        return true;
+                    },
+                }),
             ],
         };
     }
