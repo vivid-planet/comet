@@ -3,10 +3,13 @@ import { TypographyOptions } from "@mui/material/styles/createTypography";
 const fontFamily = "Roboto, Helvetica, Arial, sans-serif";
 
 export const fontWeights = {
-    fontWeightLight: 100,
-    fontWeightRegular: 300,
-    fontWeightMedium: 400,
-    fontWeightBold: 500,
+    fontWeightThin: 100,
+    fontWeightExtraLight: 200,
+    fontWeightLight: 300,
+    fontWeightRegular: 400,
+    fontWeightMedium: 500,
+    fontWeightSemiBold: 600,
+    fontWeightBold: 700,
 };
 
 export const typographyOptions: TypographyOptions = {
@@ -58,5 +61,18 @@ export const typographyOptions: TypographyOptions = {
         fontSize: 14,
         lineHeight: "20px",
         fontWeight: fontWeights.fontWeightRegular,
+    },
+    subtitle2: {
+        fontFamily,
+        fontSize: 14,
+        lineHeight: "20px",
+        fontWeight: fontWeights.fontWeightSemiBold,
+    },
+    overline: {
+        fontFamily,
+        fontSize: 12,
+        lineHeight: "16px",
+        fontWeight: fontWeights.fontWeightSemiBold,
+        letterSpacing: 0,
     },
 };

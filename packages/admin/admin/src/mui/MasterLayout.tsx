@@ -28,13 +28,14 @@ function MasterLayoutComponent({
     headerHeight = 60,
 }: MasterLayoutProps & WithStyles<typeof styles>) {
     const [open, setOpen] = React.useState(openMenuByDefault);
+    const [drawerVariant, setDrawerVariant] = React.useState<"permanent" | "temporary">("permanent");
 
     const toggleOpen = () => {
         setOpen(!open);
     };
 
     return (
-        <MenuContext.Provider value={{ open, toggleOpen }}>
+        <MenuContext.Provider value={{ open, toggleOpen, drawerVariant, setDrawerVariant }}>
             <MasterLayoutContext.Provider value={{ headerHeight }}>
                 <CssBaseline />
                 <div className={classes.root}>

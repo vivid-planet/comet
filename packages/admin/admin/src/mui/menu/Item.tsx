@@ -3,7 +3,6 @@ import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import { MenuLevel } from "./CollapsibleItem";
-import { MenuContext } from "./Context";
 import { MenuItemClassKey, styles } from "./Item.styles";
 
 export interface MenuItemProps extends MenuLevel {
@@ -11,6 +10,7 @@ export interface MenuItemProps extends MenuLevel {
     secondary?: React.ReactNode;
     icon?: React.ReactElement;
     secondaryAction?: React.ReactNode;
+    isMenuOpen?: boolean;
     isCollapsibleOpen?: boolean;
     hasSubitems?: boolean;
 }
@@ -24,26 +24,28 @@ const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProp
     icon,
     level = 1,
     secondaryAction,
+    isMenuOpen,
+    hasSubitems,
+    isCollapsibleOpen,
     ...otherProps
 }) => {
-    const context = React.useContext(MenuContext);
-    if (!context) throw new Error("Could not find context for menu");
     if (level > 3) throw new Error("Maximum nesting level of 2 exceeded.");
 
-    const hasIcon = !!icon;
-    const showText = context.open || level !== 1;
+    const showIcon = !!icon && level === 1;
+    const showText = isMenuOpen || level !== 1;
 
     const listItemClasses = [classes.root];
     if (level === 1) listItemClasses.push(classes.level1);
     if (level === 2) listItemClasses.push(classes.level2);
     if (level === 3) listItemClasses.push(classes.level3);
-    if (hasIcon) listItemClasses.push(classes.hasIcon);
+    if (level === 3 && isMenuOpen) listItemClasses.push(classes.level3MenuOpen);
+    if (showIcon) listItemClasses.push(classes.hasIcon);
     if (secondary) listItemClasses.push(classes.hasSecondaryText);
     if (secondaryAction) listItemClasses.push(classes.hasSecondaryAction);
 
     return (
         <ListItem component="div" button classes={{ root: listItemClasses.join(" ") }} {...otherProps}>
-            {hasIcon && <ListItemIcon sx={{ my: 1.25 }}>{icon}</ListItemIcon>}
+            {showIcon && <ListItemIcon sx={{ my: 1.25 }}>{icon}</ListItemIcon>}
             {showText && <ListItemText primary={primary} secondary={secondary} inset={!icon} />}
             {!!secondaryAction && secondaryAction}
         </ListItem>
