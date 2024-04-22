@@ -73,7 +73,7 @@ describe("GenerateCrudRelationsNested", () => {
                 const structure = classes[0].getStructure();
 
                 expect(structure.properties?.length).toBe(2);
-                expect(structure.properties?.[1].type).toBe("TestEntityVariantInput[]");
+                expect(structure.properties?.[1].type).toBe("TestEntityProductTestEntityVariantInput[]");
             }
 
             {
@@ -84,7 +84,7 @@ describe("GenerateCrudRelationsNested", () => {
                 const classes = source.getClasses();
                 expect(classes.length).toBe(1);
 
-                expect(classes[0].getName()).toBe("TestEntityVariantInput");
+                expect(classes[0].getName()).toBe("TestEntityProductTestEntityVariantInput");
 
                 const structure = classes[0].getStructure();
 
