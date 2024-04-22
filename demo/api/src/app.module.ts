@@ -161,7 +161,7 @@ export class AppModule {
                 ProductsModule,
                 AccessLogModule.forRoot({
                     shouldLogRequest: ({ user }) => {
-                        // ignore Basic Authed User
+                        // Ignore system user
                         if (user === true) {
                             return false;
                         }
