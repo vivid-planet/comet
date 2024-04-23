@@ -40,11 +40,11 @@ export const Preview: React.FunctionComponent<PreviewProps> = ({ adminRoute, typ
     }, [enabledAutoScrolling, isHovered, isSelected]);
 
     return iFrameBridge.hasBridge ? (
-        <Root ref={rootEl} isSelected={isSelected} isHovered={isHovered} showOutlines={iFrameBridge.showOutlines}>
+        <Root ref={rootEl} $isSelected={isSelected} $isHovered={isHovered} $showOutlines={iFrameBridge.showOutlines}>
             <Selection
-                showOutlines={iFrameBridge.showOutlines}
-                isSelected={isSelected}
-                isHovered={isHovered}
+                $showOutlines={iFrameBridge.showOutlines}
+                $isSelected={isSelected}
+                $isHovered={isHovered}
                 onClick={() => {
                     iFrameBridge.sendSelectComponent(adminRoute);
                 }}
