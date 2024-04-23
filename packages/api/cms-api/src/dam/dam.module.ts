@@ -73,7 +73,7 @@ export class DamModule {
         };
 
         const DamItemsResolver = createDamItemsResolver({ File, Folder, Scope });
-        const FilesResolver = createFilesResolver({ File, Scope });
+        const FilesResolver = createFilesResolver({ File, Folder, Scope });
         const FileDependentsResolver = DependentsResolverFactory.create(File);
         const FoldersResolver = createFoldersResolver({ Folder, Scope });
 
