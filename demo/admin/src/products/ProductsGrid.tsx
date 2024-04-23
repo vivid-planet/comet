@@ -212,7 +212,6 @@ export function ProductsGrid() {
                 error={error}
                 components={{
                     Toolbar: ProductsGridToolbar,
-                    // Toolbar: GridToolbar,
                 }}
             />
         </MainContent>
