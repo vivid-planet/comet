@@ -124,7 +124,7 @@ export function createFilesResolver({
         }
 
         @Mutation(() => [File])
-        @AffectedEntity(Folder, { idArg: "targetFolderId" })
+        @AffectedEntity(Folder, { idArg: "targetFolderId", nullable: true })
         @AffectedEntity(File, { idArg: "fileIds" })
         @SkipBuild()
         async moveDamFiles(
