@@ -17,16 +17,13 @@ const documentTypeQuery = gql`
     }
 `;
 
-function fetchPageTreeNode(options: { path: string[]; lang: string }) {
-    const { scope, previewData } = previewParams() || { scope: { domain, language: options.lang }, previewData: undefined };
+function fetchPageTreeNode(params: { path: string[]; lang: string }) {
+    const { scope, previewData } = previewParams() || { scope: { domain, language: params.lang }, previewData: undefined };
     const graphQLFetch = createGraphQLFetch(previewData);
-    if (!languages.includes(options.lang)) {
-        notFound();
-    }
     return graphQLFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
         documentTypeQuery,
         {
-            path: `/${(options.path ?? []).join("/")}`,
+            path: `/${(params.path ?? []).join("/")}`,
             scope: scope as GQLPageTreeNodeScopeInput, //TODO fix type, the scope from previewParams() is not compatible with GQLPageTreeNodeScopeInput
         },
         { method: "GET" }, //for request memoization
@@ -41,7 +38,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     // TODO support multiple domains, get domain by Host header
     const { scope } = previewParams() || { scope: { domain, language: params.lang } };
 
-    const data = await fetchPageTreeNode({ path: params.path, lang: params.lang });
+    const data = await fetchPageTreeNode(params);
 
     if (!data.pageTreeNodeByPath?.documentType) {
         return {};
@@ -63,7 +60,11 @@ export default async function Page({ params }: Props) {
     // TODO support multiple domains, get domain by Host header
     const { scope } = previewParams() || { scope: { domain, language: params.lang } };
 
-    const data = await fetchPageTreeNode({ path: params.path, lang: params.lang });
+    if (!languages.includes(params.lang)) {
+        notFound();
+    }
+
+    const data = await fetchPageTreeNode(params);
 
     if (!data.pageTreeNodeByPath?.documentType) {
         notFound();
