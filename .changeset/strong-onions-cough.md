@@ -1,5 +1,7 @@
 ---
-"@comet/admin": major
+"@comet/admin": minor
 ---
 
-Add the `FinalFormFileSelect` component to allow picking files and using drag-and-drop to upload files
+Add `FinalFormFileSelect` component
+
+Allows selecting files via the file dialog or using drag-and-drop.
