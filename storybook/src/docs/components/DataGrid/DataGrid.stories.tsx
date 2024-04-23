@@ -1,11 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    DataGridExcelExportButton,
     GridFilterButton,
     Toolbar,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
+    useDataGridExcelExport,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
@@ -14,8 +16,6 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { DataGridExcelExportButton } from "../../../../../packages/admin/admin/src/dataGrid/excelExport/DataGridExcelExportButton";
-import { useDataGridExcelExport } from "../../../../../packages/admin/admin/src/dataGrid/excelExport/useDataGridExcelExport";
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
 import { storyRouterDecorator } from "../../../story-router.decorator";
 
