@@ -14,13 +14,13 @@ import {
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
+    useDynamicGridVisibilityModel,
     usePersistentColumnState,
-    useWindowSize,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton, useTheme } from "@mui/material";
-import { DataGridPro, GridColDef, GridColumnVisibilityModel, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { Button, IconButton } from "@mui/material";
+import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { filter } from "graphql-anywhere";
 import gql from "graphql-tag";
 import * as React from "react";
@@ -67,35 +67,14 @@ export function ProductsGrid() {
     const { data: categoriesData } = useQuery<GQLProductGridCategoriesQuery, GQLProductGridCategoriesQueryVariables>(productCategoriesQuery);
     const intl = useIntl();
 
-    const { breakpoints } = useTheme();
-    const compactView = useWindowSize().width < breakpoints.values.md;
-
-    // TODO: Allow showing/hiding columns again while keeping the switching between compact and full view
-    const visibilityModel: GridColumnVisibilityModel = compactView
-        ? {
-              overview: true,
-              title: false,
-              description: true,
-              price: false,
-              type: false,
-              category: false,
-              tags: true,
-              inStock: false,
-              status: true,
-              action: true,
-          }
-        : {
-              overview: false,
-              title: true,
-              description: true,
-              price: true,
-              type: true,
-              category: true,
-              tags: true,
-              inStock: true,
-              status: true,
-              action: true,
-          };
+    const dynamicGridVisibilityProps = useDynamicGridVisibilityModel({
+        overview: { defaultView: false, compactView: true },
+        title: { defaultView: true, compactView: false },
+        price: { defaultView: true, compactView: false },
+        type: { defaultView: true, compactView: false },
+        category: { defaultView: true, compactView: false },
+        inStock: { defaultView: true, compactView: false },
+    });
 
     const columns: GridColDef<GQLProductsListManualFragment>[] = [
         {
@@ -103,7 +82,7 @@ export function ProductsGrid() {
             headerName: "Overview",
             minWidth: 200,
             flex: 1,
-            sortable: false, // TODO: Should this sort by `title` somehow?
+            sortable: false,
             renderCell: ({ row }) => {
                 const secondaryValues = [
                     typeof row.price === "number" && intl.formatNumber(row.price, { style: "currency", currency: "EUR" }),
@@ -241,6 +220,7 @@ export function ProductsGrid() {
         <MainContent fullHeight disablePadding>
             <DataGridPro
                 {...dataGridProps}
+                {...dynamicGridVisibilityProps}
                 disableSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
@@ -250,7 +230,6 @@ export function ProductsGrid() {
                 components={{
                     Toolbar: ProductsGridToolbar,
                 }}
-                columnVisibilityModel={visibilityModel}
             />
         </MainContent>
     );
