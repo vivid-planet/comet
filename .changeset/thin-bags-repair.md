@@ -2,7 +2,11 @@
 "@comet/admin": minor
 ---
 
-Add `useDataGridExcelExport` hook for exporting data as excel from DataGrid and `DataGridExcelExportButton` component
+Add `useDataGridExcelExport` hook and `DataGridExcelExportButton` for exporting data from a `DataGrid` in an excel file
 
-`useDataGridExcelExport` provides the function `exportGrid` to generate and export the excel file. Additionally a `loading` and `error` state is available.
-`DataGridExcelExportButton` takes `exportApi` as parameter and handles export. Use `DataGridExcelExportButton` in the `DataGrid Toolbar`
+`useDataGridExcelExport` returns an `exportApi` encompassing 
+- `exportGrid()` to generate and export the excel file
+- `loading` 
+- `error`
+
+`DataGridExcelExportButton` is meant to be used in the `Toolbar`. It takes the `exportApi` and handles the export.
