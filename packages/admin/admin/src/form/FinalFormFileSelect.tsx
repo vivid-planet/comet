@@ -123,8 +123,8 @@ const styles = ({ palette }: Theme) => {
 export interface FinalFormFileSelectProps extends FieldRenderProps<File | File[], HTMLInputElement> {
     disableDropzone?: boolean;
     disableSelectFileButton?: boolean;
-    accept: Accept;
-    maxSize: number;
+    accept?: Accept;
+    maxSize?: number;
     maxFiles?: number;
     iconMapping?: {
         delete?: React.ReactNode;
