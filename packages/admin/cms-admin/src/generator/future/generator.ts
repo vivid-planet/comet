@@ -28,6 +28,7 @@ export type FormFieldConfig<T> = (
 export type FormConfig<T extends { __typename?: string }> = {
     type: "form";
     gqlType: T["__typename"];
+    mode?: "edit" | "add" | "editAdd";
     fragmentName?: string;
     fields: FormFieldConfig<T>[];
 };
