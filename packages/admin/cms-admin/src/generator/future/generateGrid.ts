@@ -136,7 +136,7 @@ export function generateGrid(
     //const title = config.title ?? camelCaseToHumanReadable(gqlType);
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
     const instanceGqlTypePlural = gqlTypePlural[0].toLowerCase() + gqlTypePlural.substring(1);
-    const gridQuery = instanceGqlType != instanceGqlTypePlural ? instanceGqlTypePlural : `${instanceGqlTypePlural}List`;
+    const gridQuery = config.query ? config.query : instanceGqlType != instanceGqlTypePlural ? instanceGqlTypePlural : `${instanceGqlTypePlural}List`;
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
 

@@ -1,5 +1,5 @@
 import { gql, previewParams } from "@comet/cms-site";
-import { defaultLanguage, domain } from "@src/config";
+import { domain, languages } from "@src/config";
 import { documentTypes } from "@src/documentTypes";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
@@ -17,9 +17,12 @@ const documentTypeQuery = gql`
     }
 `;
 
-function fetchPageTreeNode(options: { path: string[] }) {
-    const { scope, previewData } = previewParams() || { scope: { domain, language: defaultLanguage }, previewData: undefined };
+function fetchPageTreeNode(options: { path: string[]; lang: string }) {
+    const { scope, previewData } = previewParams() || { scope: { domain, language: options.lang }, previewData: undefined };
     const graphQLFetch = createGraphQLFetch(previewData);
+    if (!languages.includes(options.lang)) {
+        notFound();
+    }
     return graphQLFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
         documentTypeQuery,
         {
@@ -31,14 +34,14 @@ function fetchPageTreeNode(options: { path: string[] }) {
 }
 
 type Props = {
-    params: { path: string[] };
+    params: { path: string[]; lang: string };
 };
 
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
     // TODO support multiple domains, get domain by Host header
-    const { scope } = previewParams() || { scope: { domain, language: defaultLanguage } };
+    const { scope } = previewParams() || { scope: { domain, language: params.lang } };
 
-    const data = await fetchPageTreeNode({ path: params.path });
+    const data = await fetchPageTreeNode({ path: params.path, lang: params.lang });
 
     if (!data.pageTreeNodeByPath?.documentType) {
         return {};
@@ -58,9 +61,9 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 
 export default async function Page({ params }: Props) {
     // TODO support multiple domains, get domain by Host header
-    const { scope } = previewParams() || { scope: { domain, language: defaultLanguage } };
+    const { scope } = previewParams() || { scope: { domain, language: params.lang } };
 
-    const data = await fetchPageTreeNode({ path: params.path });
+    const data = await fetchPageTreeNode({ path: params.path, lang: params.lang });
 
     if (!data.pageTreeNodeByPath?.documentType) {
         notFound();

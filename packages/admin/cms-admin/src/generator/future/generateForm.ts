@@ -2,7 +2,6 @@ import { IntrospectionQuery } from "graphql";
 
 import { generateFormField } from "./generateFormField";
 import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
-import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 import { isFieldOptional } from "./utils/isFieldOptional";
 
@@ -17,7 +16,6 @@ export function generateForm(
     config: FormConfig<any>,
 ): GeneratorReturn {
     const gqlType = config.gqlType;
-    const title = config.title ?? camelCaseToHumanReadable(gqlType);
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
@@ -130,20 +128,13 @@ export function generateForm(
         FinalForm,
         FinalFormCheckbox,
         FinalFormInput,
-        FinalFormSaveSplitButton,
         FinalFormSelect,
         FinalFormSubmitEvent,
         Loading,
         MainContent,
         TextAreaField,
         TextField,
-        Toolbar,
-        ToolbarActions,
-        ToolbarFillSpace,
-        ToolbarItem,
-        ToolbarTitleItem,
         useFormApiRef,
-        useStackApi,
         useStackSwitchApi,
     } from "@comet/admin";
     import { ArrowLeft, Lock } from "@comet/admin-icons";
@@ -183,7 +174,6 @@ export function generateForm(
     }
     
     export function ${exportName}({ id }: FormProps): React.ReactElement {
-        const stackApi = useStackApi();
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
         const formApiRef = useFormApiRef<FormValues>();
@@ -284,24 +274,6 @@ export function generateForm(
                 {() => (
                     <EditPageLayout>
                         {saveConflict.dialogs}
-                        <Toolbar>
-                            <ToolbarItem>
-                                <IconButton onClick={stackApi?.goBack}>
-                                    <ArrowLeft />
-                                </IconButton>
-                            </ToolbarItem>
-                            <ToolbarTitleItem>
-                                <Field name="title">
-                                    {({ input }) =>
-                                        input.value ? input.value : <FormattedMessage id="${instanceGqlType}.${instanceGqlType}Detail" defaultMessage="${title} Detail" />
-                                    }
-                                </Field>
-                            </ToolbarTitleItem>
-                            <ToolbarFillSpace />
-                            <ToolbarActions>
-                                <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
-                            </ToolbarActions>
-                        </Toolbar>
                         <MainContent>
                             ${fieldsCode}
                         </MainContent>

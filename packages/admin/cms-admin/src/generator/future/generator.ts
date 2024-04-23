@@ -30,7 +30,6 @@ export type FormConfig<T extends { __typename?: string }> = {
     gqlType: T["__typename"];
     fragmentName?: string;
     fields: FormFieldConfig<T>[];
-    title?: string;
 };
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
@@ -50,6 +49,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
+    query?: string;
     columns: GridColumnConfig<T>[];
     add?: boolean;
     edit?: boolean;
@@ -64,13 +64,13 @@ export type GeneratorConfig = FormConfig<any> | GridConfig<any> | TabsConfig;
 
 export type GeneratorReturn = { code: string; gqlDocuments: Record<string, string> };
 
-export async function runFutureGenerate() {
+export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
     const schema = await loadSchema("./schema.gql", {
         loaders: [new GraphQLFileLoader()],
     });
     const gqlIntrospection = introspectionFromSchema(schema);
 
-    const files = await glob("src/**/*.cometGen.ts");
+    const files: string[] = await glob(filePattern);
     for (const file of files) {
         let outputCode = "";
         let gqlDocumentsOutputCode = "";
