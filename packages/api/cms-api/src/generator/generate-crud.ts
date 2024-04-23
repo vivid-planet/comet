@@ -903,6 +903,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 : ""
         }
 
+        ${
+            generatorOptions.list
+                ? `
         @Query(() => Paginated${classNamePlural})
         ${rootArgProps
             .map((rootArgProp) => {
@@ -967,8 +970,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             ${hasOutputRelations ? `// eslint-disable-next-line @typescript-eslint/no-explicit-any` : ""}
             const options: FindOptions<${metadata.className}${hasOutputRelations ? `, any` : ""}> = { offset, limit${
-        hasOutputRelations ? `, populate` : ""
-    }};
+                      hasOutputRelations ? `, populate` : ""
+                  }};
 
             ${
                 hasSortArg
@@ -984,7 +987,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             const [entities, totalCount] = await this.repository.findAndCount(where, options);
             return new Paginated${classNamePlural}(entities, totalCount);
-
+        }
+        `
+                : ""
         }
 
         ${
@@ -1067,6 +1072,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
         create: generatorOptionsParam.create ?? true,
         update: generatorOptionsParam.update ?? true,
         delete: generatorOptionsParam.delete ?? true,
+        list: generatorOptionsParam.list ?? true,
     };
 
     const generatedFiles: GeneratedFile[] = [];

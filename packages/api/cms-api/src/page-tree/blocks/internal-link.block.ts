@@ -84,6 +84,11 @@ class Meta extends AnnotationBlockMeta {
                             nullable: false,
                         },
                         {
+                            name: "scope",
+                            kind: BlockMetaFieldKind.Json,
+                            nullable: true,
+                        },
+                        {
                             name: "documentType",
                             kind: BlockMetaFieldKind.String,
                             nullable: false,

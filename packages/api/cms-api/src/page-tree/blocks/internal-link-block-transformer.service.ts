@@ -10,6 +10,7 @@ type TransformResponse = {
         name: string;
         path: string;
         documentType: string;
+        scope: Record<string, string> | null;
     } | null;
     targetPageAnchor?: string;
 };
@@ -37,6 +38,7 @@ export class InternalLinkBlockTransformerService implements BlockTransformerServ
                 name: node.name,
                 path: await this.pageTreeReadApiService.nodePath(node),
                 documentType: node.documentType,
+                scope: node.scope ? node.scope : null,
             },
             targetPageAnchor: block.targetPageAnchor,
         };
