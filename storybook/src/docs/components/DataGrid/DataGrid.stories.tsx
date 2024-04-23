@@ -19,6 +19,29 @@ import * as React from "react";
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
 import { storyRouterDecorator } from "../../../story-router.decorator";
 
+type Launch = {
+    id: string;
+    mission_name: string;
+    launch_date_local: Date;
+};
+
+interface LaunchesPastResultData {
+    data: Launch[];
+    result: { totalCount: number };
+}
+
+interface QueryVariables {
+    offset: number;
+    limit: number;
+    sort?: string;
+    order?: string | null;
+}
+
+interface GQLQuery {
+    __typename?: "Query";
+    launchesPastResult: LaunchesPastResultData;
+}
+
 const exampleRows = [
     { id: 1, lastName: "Snow", firstName: "Jon" },
     { id: 2, lastName: "Lannister", firstName: "Cersei" },
@@ -256,29 +279,6 @@ storiesOf("stories/components/DataGrid", module)
                 type: "dateTime",
             },
         ];
-
-        type Launch = {
-            id: string;
-            mission_name: string;
-            launch_date_local: Date;
-        };
-
-        interface LaunchesPastResultData {
-            data: Launch[];
-            result: { totalCount: number };
-        }
-
-        interface QueryVariables {
-            offset: number;
-            limit: number;
-            sort?: string;
-            order?: string | null;
-        }
-
-        interface GQLQuery {
-            __typename?: "Query";
-            launchesPastResult: LaunchesPastResultData;
-        }
 
         const query = gql`
             query LaunchesPast($limit: Int, $offset: Int, $sort: String, $order: String) {
