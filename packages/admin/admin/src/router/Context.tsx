@@ -1,12 +1,8 @@
 import * as History from "history";
 import * as React from "react";
 
-<<<<<<< HEAD
 import { PromptRoutes } from "./Prompt";
-import { SaveAction } from "./PromptHandler";
-=======
 import { ResetAction, SaveAction } from "./PromptHandler";
->>>>>>> next
 
 interface IContext {
     register: (options: {
