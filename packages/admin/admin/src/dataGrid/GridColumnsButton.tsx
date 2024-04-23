@@ -7,7 +7,7 @@ import { messages } from "../messages";
 
 type Props = Omit<React.ComponentProps<typeof GridToolbarColumnsButton>, "onResize" | "onResizeCapture">;
 
-export function GridColumnsButton({ ...restProps }: Props) {
+export function GridColumnsButton(props: Props) {
     return (
         <GridToolbarColumnsButton
             startIcon={<Columns4 />}
@@ -15,7 +15,7 @@ export function GridColumnsButton({ ...restProps }: Props) {
             color="info"
             onResize={undefined}
             onResizeCapture={undefined}
-            {...restProps}
+            {...props}
         >
             <FormattedMessage {...messages.columns} />
         </GridToolbarColumnsButton>
