@@ -1072,6 +1072,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
         create: generatorOptionsParam.create ?? true,
         update: generatorOptionsParam.update ?? true,
         delete: generatorOptionsParam.delete ?? true,
+        list: generatorOptionsParam.list ?? true,
     };
 
     const generatedFiles: GeneratedFile[] = [];
