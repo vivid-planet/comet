@@ -4,6 +4,7 @@ export interface CrudGeneratorOptions {
     create?: boolean;
     update?: boolean;
     delete?: boolean;
+    list?: boolean;
 }
 
 export function CrudGenerator({
@@ -12,10 +13,15 @@ export function CrudGenerator({
     create = true,
     update = true,
     delete: deleteMutation = true,
+    list = true,
 }: CrudGeneratorOptions): ClassDecorator {
     // eslint-disable-next-line @typescript-eslint/ban-types
     return function (target: Function) {
-        Reflect.defineMetadata(`data:crudGeneratorOptions`, { targetDirectory, requiredPermission, create, update, delete: deleteMutation }, target);
+        Reflect.defineMetadata(
+            `data:crudGeneratorOptions`,
+            { targetDirectory, requiredPermission, create, update, delete: deleteMutation, list },
+            target,
+        );
     };
 }
 
