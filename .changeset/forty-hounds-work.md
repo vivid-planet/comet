@@ -5,14 +5,12 @@
 
 Support "real" dependency injection in `BlockData#transformToPlain`
 
-Previously we supported poor man's dependency injection using the `TransformDependencies` object in `transformToPlain`
+Previously we supported poor man's dependency injection using the `TransformDependencies` object in `transformToPlain`.
 This is now replaced by a technique that allows actual dependency injection.
 
 **Example**
 
 ```ts
-// news-link.block.ts
-
 class NewsLinkBlockData extends BlockData {
     @BlockField({ nullable: true })
     id?: string;
@@ -51,3 +49,11 @@ class NewsLinkBlockTransformerService implements BlockTransformerServiceInterfac
     }
 }
 ```
+
+Adding this new technique results in a few breaking changes:
+
+-   Remove dynamic registration of `BlocksModule`
+-   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
+-   Remove `dependencies` from `BlockData#transformToPlain`
+
+See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
