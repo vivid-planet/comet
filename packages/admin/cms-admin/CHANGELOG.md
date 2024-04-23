@@ -1,5 +1,20 @@
 # @comet/cms-admin
 
+## 6.7.0
+
+### Patch Changes
+
+-   2db3bc855: Fix `CurrentUserInterface` type
+
+    Add missing `id` field, make `name`, `email`, and `language` required.
+
+    -   @comet/admin@6.7.0
+    -   @comet/admin-date-time@6.7.0
+    -   @comet/admin-icons@6.7.0
+    -   @comet/admin-rte@6.7.0
+    -   @comet/admin-theme@6.7.0
+    -   @comet/blocks-admin@6.7.0
+
 ## 6.6.2
 
 ### Patch Changes

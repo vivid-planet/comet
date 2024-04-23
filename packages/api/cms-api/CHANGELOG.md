@@ -1,5 +1,22 @@
 # @comet/cms-api
 
+## 6.7.0
+
+### Minor Changes
+
+-   645f19df9: Add `nullable` param to `@AffectedEntity` to support id args that can be `null` or `undefined`
+-   a0506e103: API Generator: Support validator decorators for input generation
+
+### Patch Changes
+
+-   645f19df9: Fix mutations `moveDamFiles`, `copyFilesToScope`, `archiveDamFiles` and `restoreDamFiles` by adding `@AffectedEntity` to enable scope checks
+-   8315f10cb: Fix order of `@RequiredPermission()` decorators
+
+    Decorators defined on handlers should be considered before decorators defined on classes.
+
+-   6eeaaa223: The CometAuthGuards now only creates the `CurrentUser` just on a request-basis and skips when called in a fieldResolver (e.g. when `fieldResolverEnhancers` contains `guards`).
+    -   @comet/blocks-api@6.7.0
+
 ## 6.6.2
 
 ### Patch Changes
