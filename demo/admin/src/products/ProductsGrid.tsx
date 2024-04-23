@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     CrudVisibility,
+    GridColumnsButton,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -49,6 +50,9 @@ function ProductsGridToolbar() {
             <ToolbarFillSpace />
             <ToolbarItem>
                 <GridFilterButton />
+            </ToolbarItem>
+            <ToolbarItem>
+                <GridColumnsButton />
             </ToolbarItem>
             <ToolbarItem>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
@@ -208,6 +212,7 @@ export function ProductsGrid() {
                 error={error}
                 components={{
                     Toolbar: ProductsGridToolbar,
+                    // Toolbar: GridToolbar,
                 }}
             />
         </MainContent>
