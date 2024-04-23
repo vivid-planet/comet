@@ -1,5 +1,5 @@
 import { Columns4 } from "@comet/admin-icons";
-import { GridToolbarColumnsButton } from "@mui/x-data-grid/components/toolbar/GridToolbarColumnsButton";
+import { GridToolbarColumnsButton } from "@mui/x-data-grid";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
