@@ -72,7 +72,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Date-Time Picker", module
                             <Field name="dateTimeOne" label="Date Picker" fullWidth component={FinalFormDateTimePicker} />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Field name="dateTimeTwo" label="Required" fullWidth required={true} component={FinalFormDateTimePicker} />
+                            <Field name="dateTimeTwo" label="Required" fullWidth required component={FinalFormDateTimePicker} />
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <Field
