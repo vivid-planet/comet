@@ -79,7 +79,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
                 return {};
             }
 
-            const news = await this.newsRepository.findOneOrFail(this..id);
+            const news = await newsRepository.findOneOrFail(this..id);
 
             return {
                 news: {
