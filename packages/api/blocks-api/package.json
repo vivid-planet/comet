@@ -21,7 +21,6 @@
         "lint": "run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ package.json",
         "lint:tsc": "tsc --noEmit",
-        "list-exports": "ts-node list-exports.ts",
         "test": "jest --verbose=true",
         "test:watch": "jest -w"
     },

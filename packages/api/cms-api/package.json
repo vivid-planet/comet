@@ -27,7 +27,6 @@
         "generate-schema:watch": "chokidar \"src/\" -c \"$npm_execpath generate-schema\"",
         "generate-block-meta": "ts-node generate-block-meta.ts",
         "generate-block-meta:watch": "chokidar \"src/\" -c \"$npm_execpath generate-block-meta\"",
-        "list-exports": "ts-node list-exports.ts",
         "test": "jest",
         "test:watch": "jest --watch"
     },
