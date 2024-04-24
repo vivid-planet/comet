@@ -13,7 +13,7 @@ import {
     SimpleBlockInputInterface,
 } from "@comet/blocks-api";
 
-import { PixelImageBlock } from "./PixelImageBlock";
+import { PixelImageBlock } from "../dam/blocks/pixel-image.block";
 
 interface CreateImageLinkBlockOptions<LinkBlock extends Block, ImageBlock extends Block> {
     image?: ImageBlock;

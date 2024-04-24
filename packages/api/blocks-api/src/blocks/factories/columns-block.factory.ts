@@ -17,7 +17,6 @@ import {
     TraversableTransformResponse,
 } from "../block";
 import { BlockField } from "../decorators/field";
-import { TransformDependencies } from "../dependencies";
 import { BlockFactoryNameOrOptions } from "./types";
 
 interface ColumnsBlockLayout {
@@ -102,7 +101,7 @@ export class ColumnsBlockFactory {
                 }));
             }
 
-            async transformToPlain(deps: TransformDependencies, { includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+            async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
                 return {
                     layout: this.layout,
                     columns: includeInvisibleContent ? this.columns : this.columns.filter((c) => c.visible),

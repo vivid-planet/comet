@@ -1,6 +1,5 @@
 import {
     AnnotationBlockMeta,
-    BlockContext,
     BlockData,
     BlockDataInterface,
     BlockField,
@@ -10,12 +9,11 @@ import {
     BlockMetaFieldKind,
     createBlock,
     inputToData,
-    TraversableTransformResponse,
 } from "@comet/blocks-api";
 import { IsBoolean, IsOptional, IsUUID } from "class-validator";
 
-import { FILE_ENTITY } from "../dam/files/entities/file.entity";
-import { FilesService } from "../dam/files/files.service";
+import { FILE_ENTITY } from "../files/entities/file.entity";
+import { DamVideoBlockTransformerService } from "./dam-video-block-transformer.service";
 
 class DamVideoBlockData extends BlockData {
     damFileId?: string;
@@ -29,33 +27,8 @@ class DamVideoBlockData extends BlockData {
     @BlockField({ nullable: true })
     showControls?: boolean;
 
-    async transformToPlain(
-        { filesService }: { filesService: FilesService },
-        { previewDamUrls, relativeDamUrls }: BlockContext,
-    ): Promise<TraversableTransformResponse> {
-        if (!this.damFileId) {
-            return {};
-        }
-
-        const file = await filesService.findOneById(this.damFileId);
-
-        if (!file) {
-            return {};
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { createdAt, updatedAt, folder, image, copyOf, copies, ...data } = file;
-
-        return {
-            damFile: {
-                ...data,
-                license: {},
-                fileUrl: await filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
-            },
-            autoplay: this.autoplay,
-            loop: this.loop,
-            showControls: this.showControls,
-        };
+    async transformToPlain() {
+        return DamVideoBlockTransformerService;
     }
 
     indexData(): BlockIndexData {
@@ -168,3 +141,5 @@ class Meta extends AnnotationBlockMeta {
 }
 
 export const DamVideoBlock = createBlock(DamVideoBlockData, DamVideoBlockInput, { name: "DamVideo", blockMeta: new Meta(DamVideoBlockData) });
+
+export type { DamVideoBlockData };
