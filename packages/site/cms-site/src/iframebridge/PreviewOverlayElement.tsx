@@ -47,7 +47,7 @@ const elementHoverStyles = css`
     outline-color: #29b6f6;
     outline-style: solid;
 
-    :after {
+    &:after {
         background-color: #29b6f6;
     }
 `;
@@ -58,7 +58,7 @@ const Root = styled.div<RootProps>`
     outline: 1px solid transparent;
     outline-offset: -1px;
 
-    :after {
+    &:after {
         content: "";
         position: absolute;
         top: 0;
@@ -68,7 +68,7 @@ const Root = styled.div<RootProps>`
         opacity: 0.25;
     }
 
-    :hover {
+    &:hover {
         ${elementHoverStyles}
     }
 
@@ -77,7 +77,7 @@ const Root = styled.div<RootProps>`
     ${({ showBlockOutlines: showOutlines, isHoveredInBlockList: isHovered }) =>
         Boolean(showOutlines && !isHovered) &&
         css`
-            :not(:hover) {
+            &:not(:hover) {
                 outline-color: #d9d9d9;
                 outline-style: dashed;
             }
