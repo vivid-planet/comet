@@ -1,4 +1,5 @@
 import { ThreeDotSaving } from "@comet/admin-icons";
+import { LoadingButton } from "@mui/lab";
 import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
 import { Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
@@ -11,7 +12,7 @@ export type FeedbackButtonClassKey = "idle" | "loading" | "success" | "error" | 
 
 type OwnerState = { displayState: FeedbackButtonDisplayState };
 
-const Root = createComponentSlot(Button)<FeedbackButtonClassKey, OwnerState>({
+const Root = createComponentSlot(LoadingButton)<FeedbackButtonClassKey, OwnerState>({
     componentName: "FeedbackButton",
     slotName: "root",
     classesResolver(ownerState) {
@@ -55,7 +56,6 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         color = "primary",
         classes,
         disabled,
-        loadingIcon = <ThreeDotSaving />,
         startIcon,
         endIcon,
         tooltipSuccessMessage,
@@ -72,14 +72,6 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
 
     const ownerState: OwnerState = {
         displayState: displayState,
-    };
-
-    const resolveIconForDisplayState = (displayState: FeedbackButtonDisplayState) => {
-        if (displayState === "loading") {
-            return loadingIcon;
-        }
-
-        return startIcon ?? endIcon;
     };
 
     const resolveTooltipForDisplayState = (displayState: FeedbackButtonDisplayState) => {
@@ -133,20 +125,23 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             variant={resolveTooltipForDisplayState(displayState)}
             {...slotProps?.tooltip}
         >
-            <span>{resolveIconForDisplayState(displayState)}</span>
+            <span>{startIcon ? startIcon : endIcon}</span>
         </Tooltip>
     );
 
     return (
         <Root
             ownerState={ownerState}
+            loading={loading}
             {...slotProps}
             {...restProps}
-            startIcon={startIcon && tooltip}
-            endIcon={endIcon && !startIcon ? tooltip : <span>{endIcon && resolveIconForDisplayState(displayState)}</span>}
             variant={variant}
             color={color}
             disabled={disabled || displayState === "loading"}
+            loadingPosition={startIcon ? "start" : "end"}
+            loadingIndicator={<ThreeDotSaving />}
+            startIcon={startIcon && tooltip}
+            endIcon={endIcon && !startIcon ? tooltip : <span>{endIcon}</span>}
         >
             {children}
         </Root>
