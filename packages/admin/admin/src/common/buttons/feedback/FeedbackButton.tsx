@@ -40,8 +40,8 @@ export interface FeedbackButtonProps
     loadingIcon?: React.ReactNode;
     startIcon?: React.ReactNode;
     endIcon?: React.ReactNode;
-    tooltipSuccessMessage?: string;
-    tooltipErrorMessage?: string;
+    tooltipSuccessMessage?: React.ReactNode;
+    tooltipErrorMessage?: React.ReactNode;
 }
 
 type FeedbackButtonDisplayState = "idle" | "loading" | "success" | "fail";
