@@ -16,16 +16,18 @@ export const DamFileDownloadLinkBlock = withPreview(
         }
 
         if (openFileType === "Download") {
-            return <a href={file.fileUrl}>{children}</a>;
-        } else if (openFileType === "NewTab") {
             return (
-                <a href={file.fileUrl} target="_blank" rel="noreferrer">
+                <a href={file.fileUrl} title={title}>
+                    {children}
+                </a>
+            );
+        } else {
+            return (
+                <a href={file.fileUrl} target="_blank" rel="noreferrer" title={title}>
                     {children}
                 </a>
             );
         }
-
-        return <>{children}</>;
     },
     { label: "DamFileDownloadLink" },
 );

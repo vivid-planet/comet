@@ -69,62 +69,59 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
 
     AdminComponent: ({ state, updateState }) => {
         return (
-            <>
-                <BlocksFinalForm<{
-                    openFileType: DamFileDownloadLinkBlockData["openFileType"];
-                    file?: DamFileDownloadLinkBlockData["file"];
-                }>
-                    onSubmit={(newValues) => {
-                        updateState({
-                            file: newValues.file ?? undefined,
-                            openFileType: newValues.openFileType,
-                        });
-                    }}
-                    initialValues={{
-                        file: state.file,
-                        openFileType: state.openFileType ?? "Download",
-                    }}
-                >
-                    {state.file === undefined ? (
-                        <Field name="file" component={FileField} fullWidth />
-                    ) : (
-                        <AdminComponentPaper disablePadding>
-                            <Box padding={3}>
-                                <Typography variant="subtitle1">{state.file.name}</Typography>
-                                <Typography variant="body1" color="textSecondary">
-                                    <DamPathLazy fileId={state.file.id} />
-                                </Typography>
-                            </Box>
-                            <Divider />
-                            <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ ...state, file: undefined })}>
-                                <FormattedMessage {...messages.empty} />
-                            </AdminComponentButton>
-                        </AdminComponentPaper>
-                    )}
-
-                    <Divider />
-                    <AdminComponentPaper>
-                        <Field
-                            name="openFileType"
-                            fullWidth
-                            label={<FormattedMessage id="blocks.damFileDownloadLink.openFileType" defaultMessage="Open file" />}
-                        >
-                            {(props) => (
-                                <>
-                                    <FinalFormSelect {...props}>
-                                        <MenuItem value="Download">
-                                            <FormattedMessage id="blocks.damFileDownloadLink.openFileType.download" defaultMessage="as a download" />
-                                        </MenuItem>
-                                        <MenuItem value="NewTab">
-                                            <FormattedMessage id="blocks.damFileDownloadLink.openFileType.newTab" defaultMessage="in a new tab" />
-                                        </MenuItem>
-                                    </FinalFormSelect>
-                                </>
-                            )}
-                        </Field>
+            <BlocksFinalForm<{
+                openFileType: DamFileDownloadLinkBlockData["openFileType"];
+                file?: DamFileDownloadLinkBlockData["file"];
+            }>
+                onSubmit={(newValues) => {
+                    updateState({
+                        file: newValues.file ?? undefined,
+                        openFileType: newValues.openFileType,
+                    });
+                }}
+                initialValues={{
+                    file: state.file,
+                    openFileType: state.openFileType ?? "Download",
+                }}
+            >
+                {state.file === undefined ? (
+                    <Field name="file" component={FileField} fullWidth />
+                ) : (
+                    <AdminComponentPaper disablePadding>
+                        <Box padding={3}>
+                            <Typography variant="subtitle1">{state.file.name}</Typography>
+                            <Typography variant="body1" color="textSecondary">
+                                <DamPathLazy fileId={state.file.id} />
+                            </Typography>
+                        </Box>
+                        <Divider />
+                        <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ ...state, file: undefined })}>
+                            <FormattedMessage {...messages.empty} />
+                        </AdminComponentButton>
                     </AdminComponentPaper>
-                </BlocksFinalForm>
-            </>
+                )}
+                <Divider />
+                <AdminComponentPaper>
+                    <Field
+                        name="openFileType"
+                        fullWidth
+                        label={<FormattedMessage id="blocks.damFileDownloadLink.openFileType" defaultMessage="Open file" />}
+                    >
+                        {(props) => (
+                            <>
+                                <FinalFormSelect {...props}>
+                                    <MenuItem value="Download">
+                                        <FormattedMessage id="blocks.damFileDownloadLink.openFileType.download" defaultMessage="as a download" />
+                                    </MenuItem>
+                                    <MenuItem value="NewTab">
+                                        <FormattedMessage id="blocks.damFileDownloadLink.openFileType.newTab" defaultMessage="in a new tab" />
+                                    </MenuItem>
+                                </FinalFormSelect>
+                            </>
+                        )}
+                    </Field>
+                </AdminComponentPaper>
+            </BlocksFinalForm>
         );
     },
 
