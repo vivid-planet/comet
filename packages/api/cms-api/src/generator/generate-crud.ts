@@ -309,20 +309,19 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
 
     let statusFilterClassName: string | undefined = undefined;
     let statusFilterDefaultValue;
-    let statusFilterItems: Array<string | number> | undefined = undefined;
     if (hasStatusFilter && statusProp) {
+        statusFilterClassName = findEnumName(statusProp.name, metadata);
+
+        const importPath = findEnumImportPath(statusFilterClassName, `${generatorOptions.targetDirectory}/dto`, metadata);
+        imports.push({
+            name: statusFilterClassName,
+            importPath,
+        });
+
         if (statusActiveItems && statusActiveItems.length > 1) {
-            //more than one active status, create enum that compresses them into single "Active"
-            statusFilterItems = ["Active", ...(statusProp.items?.filter((item) => !statusActiveItems.includes(item)) ?? [])];
-            statusFilterClassName = `${classNameSingular}StatusFilter`;
-            statusFilterDefaultValue = `${statusFilterClassName}.Active`;
+            statusFilterDefaultValue = `[${statusActiveItems.map((i) => `${statusFilterClassName}.${i}`).join(", ")}]`;
         } else {
-            statusFilterClassName = findEnumName(statusProp.name, metadata);
-            statusFilterDefaultValue = morphTsProperty(statusProp.name, metadata).getInitializer()?.getText();
-            imports.push({
-                name: statusFilterClassName,
-                importPath: findEnumImportPath(statusFilterClassName, `${generatorOptions.targetDirectory}/dto`, metadata),
-            });
+            statusFilterDefaultValue = `[${morphTsProperty(statusProp.name, metadata).getInitializer()?.getText()}]`;
         }
     }
 
@@ -334,17 +333,6 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
     import { ${classNameSingular}Sort } from "./${fileNameSingular}.sort";
 
     ${generateImportsCode(imports)}
-
-    ${
-        statusFilterItems && statusFilterClassName
-            ? `
-    export enum ${statusFilterClassName} {
-        ${statusFilterItems.map((item) => `${item} = "${item}",`).join("\n")}
-        }
-    registerEnumType(${statusFilterClassName}, { name: "${statusFilterClassName}" });
-    `
-            : ""
-    }
 
     @ArgsType()
     export class ${argsClassName} extends OffsetBasedPaginationArgs {
@@ -377,9 +365,9 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         ${
             hasStatusFilter
                 ? `
-        @Field(() => ${statusFilterClassName}, { defaultValue: ${statusFilterDefaultValue} })
-        @IsEnum(${statusFilterClassName})
-        status: ${statusFilterClassName};
+        @Field(() => [${statusFilterClassName}], { defaultValue: ${statusFilterDefaultValue} })
+        @IsEnum(${statusFilterClassName}, { each: true })
+        status: ${statusFilterClassName}[];
         `
                 : ""
         }
@@ -787,19 +775,8 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
 function generateResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular, instanceNameSingular, classNamePlural, fileNamePlural, instanceNamePlural } =
         buildNameVariants(metadata);
-    const {
-        scopeProp,
-        argsClassName,
-        argsFileName,
-        hasSlugProp,
-        hasSearchArg,
-        hasSortArg,
-        hasFilterArg,
-        statusProp,
-        statusActiveItems,
-        hasStatusFilter,
-        rootArgProps,
-    } = buildOptions(metadata);
+    const { scopeProp, argsClassName, argsFileName, hasSlugProp, hasSearchArg, hasSortArg, hasFilterArg, statusProp, hasStatusFilter, rootArgProps } =
+        buildOptions(metadata);
 
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
     const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
@@ -936,16 +913,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                     ? ` = this.${instanceNamePlural}Service.getFindCondition({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} });`
                     : `: ObjectQuery<${metadata.className}> = {}`
             }
-            ${
-                hasStatusFilter && statusActiveItems && statusActiveItems.length > 1
-                    ? `if (status == "Active") {
-                where.status = { $in: [${statusActiveItems.map((item) => `"${item}"`).join(", ")}] };
-            } else {
-                where.status = status;
-            }`
-                    : ""
-            }
-            ${hasStatusFilter && statusActiveItems && statusActiveItems.length <= 1 ? `where.status = status;` : ""}
+            ${hasStatusFilter ? `where.status = { $in: status };` : ""}
             ${scopeProp ? `where.scope = scope;` : ""}
             ${rootArgProps
                 .map((rootArgProp) => {
