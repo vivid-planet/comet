@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 5.7.1
+
+### Patch Changes
+
+-   015dee7f8: Prevent block-meta.json write in read-only file systems
+    -   @comet/blocks-api@5.7.1
+
 ## 5.7.0
 
 ### Patch Changes
