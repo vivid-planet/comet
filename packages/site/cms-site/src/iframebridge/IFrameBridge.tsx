@@ -76,22 +76,53 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
     const [showOutlines, setShowOutlines] = React.useState<boolean>(false);
     const [contentScope, setContentScope] = React.useState<unknown>(undefined);
     const [previewElements, setPreviewElements] = React.useState<PreviewElement[]>([]);
-    const [recalculatePreviewDataIndex, setRecalculatePreviewDataIndex] = React.useState<number>(0);
+    const [previewElementsData, setPreviewElementsData] = React.useState<OverlayElementData[]>([]);
 
     const childrenWrapperRef = React.useRef<HTMLDivElement>(null);
 
-    const triggerRecalculationOfPreviewData = React.useCallback(() => {
-        setRecalculatePreviewDataIndex((index) => index + 1);
-    }, []);
+    const recalculatePreviewElementsData = React.useCallback(() => {
+        setPreviewElementsData(
+            previewElements
+                .map((previewElement) => {
+                    const childNodes = getRecursiveChildrenOfPreviewElement(previewElement.element);
+                    const positioning = getCombinedPositioningOfElements(childNodes);
+
+                    return {
+                        adminRoute: previewElement.adminRoute,
+                        label: previewElement.label,
+                        position: {
+                            top: positioning.top,
+                            left: positioning.left,
+                            width: positioning.width,
+                            height: positioning.height,
+                        },
+                    };
+                })
+                .sort((previousElementData, nextElementData) => {
+                    const previousSize = previousElementData.position.width * previousElementData.position.height;
+                    const nextSize = nextElementData.position.width * nextElementData.position.height;
+                    return nextSize - previousSize;
+                })
+                .map((elementData, index) => {
+                    return {
+                        ...elementData,
+                        position: {
+                            ...elementData.position,
+                            zIndex: index + 1,
+                        },
+                    };
+                }),
+        );
+    }, [previewElements]);
 
     React.useEffect(() => {
         if (childrenWrapperRef.current) {
             const mutationObserver = new MutationObserver(() => {
-                triggerRecalculationOfPreviewData();
+                recalculatePreviewElementsData();
             });
 
             const resizeObserver = new ResizeObserver(() => {
-                triggerRecalculationOfPreviewData();
+                recalculatePreviewElementsData();
             });
 
             mutationObserver.observe(childrenWrapperRef.current, { childList: true, subtree: true });
@@ -102,41 +133,7 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
                 resizeObserver.disconnect();
             };
         }
-    }, [triggerRecalculationOfPreviewData]);
-
-    const calculatedPreviewElementsData: OverlayElementData[] = React.useMemo(() => {
-        return previewElements
-            .map((previewElement) => {
-                const childNodes = getRecursiveChildrenOfPreviewElement(previewElement.element);
-                const positioning = getCombinedPositioningOfElements(childNodes);
-
-                return {
-                    adminRoute: previewElement.adminRoute,
-                    label: previewElement.label,
-                    position: {
-                        top: positioning.top,
-                        left: positioning.left,
-                        width: positioning.width,
-                        height: positioning.height,
-                    },
-                };
-            })
-            .sort((previousElementData, nextElementData) => {
-                const previousSize = previousElementData.position.width * previousElementData.position.height;
-                const nextSize = nextElementData.position.width * nextElementData.position.height;
-                return nextSize - previousSize;
-            })
-            .map((elementData, index) => {
-                return {
-                    ...elementData,
-                    position: {
-                        ...elementData.position,
-                        zIndex: index + 1,
-                    },
-                };
-            });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [previewElements, recalculatePreviewDataIndex]);
+    }, [recalculatePreviewElementsData]);
 
     const sendMessage = (message: IFrameMessage) => {
         window.parent.postMessage(JSON.stringify(message), "*");
@@ -234,7 +231,7 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
                 },
                 sendMessage,
                 contentScope,
-                previewElementsData: calculatedPreviewElementsData,
+                previewElementsData,
                 addPreviewElement,
                 removePreviewElement,
             }}
