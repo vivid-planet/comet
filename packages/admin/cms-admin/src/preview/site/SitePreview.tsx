@@ -43,7 +43,28 @@ function useSearchState<ParseFunction extends (value: string | undefined) => Ret
     return [value, setValue];
 }
 function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props): React.ReactElement {
-    const [previewPath, setPreviewPath] = useSearchState("path", (v) => v ?? "");
+    const { scope } = useContentScope();
+
+    //initialPath: path the preview is intialized with; WITHOUT resolvePath called, might be not the path actually used in site
+    //doesn't change during navigation within site
+    const [initialPath] = useSearchState("path", (v) => v ?? "");
+
+    //sitePath: actual path of site, intialized with initialPath + resolvePath
+    //use case for resolvePath: i18n urls, for example `/${scope.language}${path}`;
+    //changes during navigation within site (iframe bridge reports new path)
+    const [sitePath, setSitePath] = useSearchState("sitePath", (v) => {
+        if (v) {
+            return v;
+        } else {
+            return resolvePath ? resolvePath(initialPath, scope) : initialPath;
+        }
+    });
+
+    //iframePath: path set for iframe
+    //needed to prevent the iframe from reloading on every change
+    //doesn't change during navigation within site
+    //changed when settings (showOnlyVisible) change
+    const [iframePath, setIframePath] = React.useState(sitePath);
 
     const [device, setDevice] = useSearchState("device", (v) => {
         if (![Device.Responsive, Device.Mobile, Device.Tablet, Device.Desktop].includes(Number(v))) {
@@ -55,10 +76,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
 
     const [linkToOpen, setLinkToOpen] = React.useState<ExternalLinkBlockData | undefined>(undefined);
 
-    const { scope } = useContentScope();
     const siteConfig = useSiteConfig({ scope });
-
-    const [initialPath, setInitialPath] = React.useState(previewPath); // prevents the iframe from reloading on every change
 
     const intl = useIntl();
 
@@ -66,11 +84,11 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     // we sync the location back to our admin-url, so we have it and can reload the page without loosing
     const handlePreviewLocationChange = React.useCallback(
         (message: SitePrevewIFrameLocationMessage) => {
-            if (previewPath !== message.data.pathname) {
-                setPreviewPath(message.data.pathname);
+            if (sitePath !== message.data.pathname) {
+                setSitePath(message.data.pathname);
             }
         },
-        [previewPath, setPreviewPath],
+        [sitePath, setSitePath],
     );
 
     const handleDeviceChange = (newDevice: Device) => {
@@ -80,10 +98,10 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     const handleShowOnlyVisibleChange = () => {
         const newShowOnlyVisible = !showOnlyVisible;
         setShowOnlyVisible(String(newShowOnlyVisible));
-        setInitialPath(previewPath);
+        setIframePath(sitePath); //reload iframe with new settings
     };
 
-    const siteLink = `${siteConfig.url}${resolvePath ? resolvePath(previewPath, scope) : previewPath}`;
+    const siteLink = `${siteConfig.url}${sitePath}`;
 
     useSitePreviewIFrameBridge((message) => {
         switch (message.cometType) {
@@ -98,7 +116,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
 
     const initialPageUrl = `${siteConfig.sitePreviewApiUrl}?${new URLSearchParams({
         scope: JSON.stringify(scope),
-        path: initialPath,
+        path: iframePath,
         settings: JSON.stringify({
             includeInvisible: showOnlyVisible ? false : true,
         }),
