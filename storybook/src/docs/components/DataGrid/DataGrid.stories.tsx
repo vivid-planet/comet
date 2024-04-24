@@ -1,8 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
-    DataGridExcelExportButton,
+    FileIcon,
     GridFilterButton,
+    Loading,
     Toolbar,
     ToolbarFillSpace,
     ToolbarItem,
@@ -11,6 +12,8 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
+import { MoreVert } from "@mui/icons-material";
+import { Button, Menu, MenuItem } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { storiesOf } from "@storybook/react";
@@ -280,6 +283,9 @@ storiesOf("stories/components/DataGrid", module)
             },
         ];
 
+        const [showMoreMenu, setShowMoreMenu] = React.useState<boolean>(false);
+        const moreMenuRef = React.useRef<HTMLButtonElement>(null);
+
         const query = gql`
             query LaunchesPast($limit: Int, $offset: Int, $sort: String, $order: String) {
                 launchesPastResult(limit: $limit, offset: $offset, sort: $sort, order: $order) {
@@ -310,19 +316,44 @@ storiesOf("stories/components/DataGrid", module)
             },
         });
 
-        const rows = data?.launchesPastResult.data ?? [];
-        const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
-
         function DemoToolbar() {
             return (
                 <Toolbar>
                     <ToolbarFillSpace />
                     <ToolbarItem>
-                        <DataGridExcelExportButton exportApi={exportApi} />
+                        <>
+                            <Button variant="text" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVert />} color="info">
+                                More Actions
+                            </Button>
+                            <Menu
+                                anchorEl={moreMenuRef.current}
+                                open={showMoreMenu}
+                                onClose={() => setShowMoreMenu(false)}
+                                anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                }}
+                            >
+                                <MenuItem
+                                    onClick={() => {
+                                        exportApi.exportGrid();
+                                        setShowMoreMenu(false);
+                                    }}
+                                    disabled={exportApi.loading}
+                                    sx={{ display: "flex", gap: "10px" }}
+                                >
+                                    {exportApi.loading ? <Loading fontSize="small" /> : <FileIcon fileType="application/msexcel" />}
+                                    Export
+                                </MenuItem>
+                            </Menu>
+                        </>
                     </ToolbarItem>
                 </Toolbar>
             );
         }
+
+        const rows = data?.launchesPastResult.data ?? [];
+        const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
 
         return (
             <Box sx={{ height: 400, width: "100%" }}>
