@@ -1,4 +1,5 @@
-import { useRouter } from "next/router";
+"use client";
+import { usePathname, useSearchParams } from "next/navigation";
 import * as React from "react";
 
 import { PreviewContext } from "../preview/PreviewContext";
@@ -6,13 +7,11 @@ import { sendSitePreviewIFrameMessage } from "./iframebridge/sendSitePreviewIFra
 import { SitePreviewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 
 const SitePreview: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
-    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
 
     React.useEffect(() => {
         function sendUpstreamMessage() {
-            const url = new URL(router.asPath, window.location.origin);
-            const { pathname, searchParams } = url;
-
             const message: SitePreviewIFrameLocationMessage = {
                 cometType: SitePreviewIFrameMessageType.SitePreviewLocation,
                 data: { search: searchParams.toString(), pathname },
@@ -24,7 +23,7 @@ const SitePreview: React.FunctionComponent<{ children: React.ReactNode }> = ({ c
         () => {
             window.removeEventListener("load", sendUpstreamMessage);
         };
-    }, [router]);
+    }, [pathname, searchParams]);
 
     return (
         <PreviewContext.Provider
@@ -39,6 +38,5 @@ const SitePreview: React.FunctionComponent<{ children: React.ReactNode }> = ({ c
 };
 
 export const SitePreviewProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
-    const router = useRouter();
-    return <>{router.isPreview ? <SitePreview>{children}</SitePreview> : children}</>;
+    return <SitePreview>{children}</SitePreview>;
 };
