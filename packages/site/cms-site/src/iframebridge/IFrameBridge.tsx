@@ -85,23 +85,23 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
     }, []);
 
     React.useEffect(() => {
-        const mutationObserver = new MutationObserver(() => {
-            triggerRecalculationOfPreviewData();
-        });
-
-        const resizeObserver = new ResizeObserver(() => {
-            triggerRecalculationOfPreviewData();
-        });
-
         if (childrenWrapperRef.current) {
+            const mutationObserver = new MutationObserver(() => {
+                triggerRecalculationOfPreviewData();
+            });
+
+            const resizeObserver = new ResizeObserver(() => {
+                triggerRecalculationOfPreviewData();
+            });
+
             mutationObserver.observe(childrenWrapperRef.current, { childList: true, subtree: true });
             resizeObserver.observe(childrenWrapperRef.current);
-        }
 
-        return () => {
-            mutationObserver.disconnect();
-            resizeObserver.disconnect();
-        };
+            return () => {
+                mutationObserver.disconnect();
+                resizeObserver.disconnect();
+            };
+        }
     }, [triggerRecalculationOfPreviewData]);
 
     const calculatedPreviewElementsData: OverlayElementData[] = React.useMemo(() => {
