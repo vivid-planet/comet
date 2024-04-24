@@ -359,6 +359,7 @@ export async function sendPages(
             if (sourcePage.document && !isEqual(sourceContentScope, targetContentScope)) {
                 const unhandledDependencies = unhandledDependenciesFromDocument(documentType, sourcePage.document, {
                     existingReplacements: dependencyReplacements,
+                    hasDamScope,
                 });
                 const replacementsForUnhandledDependencies = createUndefinedReplacementsForDependencies(unhandledDependencies);
                 dependencyReplacements.push(...replacementsForUnhandledDependencies);
