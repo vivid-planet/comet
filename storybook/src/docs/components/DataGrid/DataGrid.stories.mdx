@@ -74,6 +74,16 @@ Small hook that can be used to prevent rowCount from being undefined during the 
 const rowCount = useBufferedRowCount(data?.products.totalCount);
 ```
 
+## useDynamicGridVisibilityModel
+
+Used to show and hide individual columns depending on the screen size.
+
+For example, the columns "First name" and "Last name" are shown by default, but if the screen size is below 900px, the column "Full name" is shown instead.
+
+<Canvas>
+    <Story id="stories-components-datagrid--usedynamicgridvisibilitymodel" />
+</Canvas>
+
 ## GridFilterButton
 
 Small Component that can be placed in the Toolbar that will show the Filter. Must be used as DataGrid child as shown in the story below.
