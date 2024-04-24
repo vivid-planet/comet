@@ -7,7 +7,7 @@ import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { Tooltip as CometTooltip } from "../../Tooltip";
 
-export type FeedbackButtonClassKey = "idle" | "loading" | "success" | "fail" | "tooltip" | ButtonClassKey;
+export type FeedbackButtonClassKey = "idle" | "loading" | "success" | "error" | "tooltip" | ButtonClassKey;
 
 type OwnerState = { displayState: FeedbackButtonDisplayState };
 
@@ -17,7 +17,7 @@ const Root = createComponentSlot(Button)<FeedbackButtonClassKey, OwnerState>({
     classesResolver(ownerState) {
         return [
             ownerState.displayState === "idle" && "idle",
-            ownerState.displayState === "fail" && "fail",
+            ownerState.displayState === "error" && "error",
             ownerState.displayState === "success" && "success",
             ownerState.displayState === "loading" && "loading",
         ];
@@ -44,7 +44,7 @@ export interface FeedbackButtonProps
     tooltipErrorMessage?: React.ReactNode;
 }
 
-type FeedbackButtonDisplayState = "idle" | "loading" | "success" | "fail";
+type FeedbackButtonDisplayState = "idle" | "loading" | "success" | "error";
 
 export function FeedbackButton(inProps: FeedbackButtonProps) {
     const {
@@ -85,7 +85,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
     const resolveTooltipForDisplayState = (displayState: FeedbackButtonDisplayState) => {
         if (displayState === "success") {
             return "success";
-        } else if (displayState === "fail") {
+        } else if (displayState === "error") {
             return "error";
         } else {
             return "neutral";
@@ -105,7 +105,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         } else if (displayState === "loading" && !loading && !hasErrors) {
             timeoutDuration = 500;
             newDisplayState = "success";
-        } else if (displayState === "fail") {
+        } else if (displayState === "error") {
             timeoutDuration = 5000;
             newDisplayState = "idle";
         } else if (displayState === "success") {
@@ -127,8 +127,8 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
 
     const tooltip = (
         <Tooltip
-            title={displayState === "fail" ? tooltipErrorMessage : tooltipSuccessMessage}
-            open={displayState === "fail" || displayState === "success"}
+            title={displayState === "error" ? tooltipErrorMessage : tooltipSuccessMessage}
+            open={displayState === "error" || displayState === "success"}
             placement={endIcon && !startIcon ? "top-end" : "top-start"}
             variant={resolveTooltipForDisplayState(displayState)}
             {...slotProps?.tooltip}
