@@ -124,8 +124,4 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
             </BlocksFinalForm>
         );
     },
-
-    isValid: (state) => {
-        return !!state.file;
-    },
 };
