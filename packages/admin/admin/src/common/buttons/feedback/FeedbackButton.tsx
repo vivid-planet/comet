@@ -75,14 +75,11 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
     };
 
     const resolveIconForDisplayState = (displayState: FeedbackButtonDisplayState) => {
-        if (startIcon && displayState !== "loading") {
-            return startIcon;
-        } else if (endIcon && displayState !== "loading") {
-            return endIcon;
-        }
         if (displayState === "loading") {
             return loadingIcon;
         }
+
+        return startIcon ?? endIcon;
     };
 
     const resolveTooltipForDisplayState = (displayState: FeedbackButtonDisplayState) => {
