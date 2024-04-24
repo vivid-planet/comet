@@ -202,6 +202,20 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
         };
     }, [onReceiveMessage]);
 
+    const addPreviewElement = React.useCallback(
+        (element: PreviewElement) => {
+            setPreviewElements((prev) => [...prev, element]);
+        },
+        [setPreviewElements],
+    );
+
+    const removePreviewElement = React.useCallback(
+        (element: PreviewElement) => {
+            setPreviewElements((prev) => prev.filter((el) => el.adminRoute !== element.adminRoute));
+        },
+        [setPreviewElements],
+    );
+
     return (
         <IFrameBridgeContext.Provider
             value={{
@@ -221,12 +235,8 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
                 sendMessage,
                 contentScope,
                 previewElementsData: calculatedPreviewElementsData,
-                addPreviewElement: (element: PreviewElement) => {
-                    setPreviewElements((prev) => [...prev, element]);
-                },
-                removePreviewElement: (element: PreviewElement) => {
-                    setPreviewElements((prev) => prev.filter((el) => el.adminRoute !== element.adminRoute));
-                },
+                addPreviewElement,
+                removePreviewElement,
             }}
         >
             <div

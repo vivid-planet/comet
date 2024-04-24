@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const Preview: React.FunctionComponent<Props> = ({ adminRoute, children, label, enabledAutoScrolling = true }) => {
-    const iFrameBridge = useIFrameBridge();
+    const { addPreviewElement, removePreviewElement, ...iFrameBridge } = useIFrameBridge();
     const isSelected = adminRoute === iFrameBridge.selectedAdminRoute;
     const isHovered = adminRoute === iFrameBridge.hoveredAdminRoute;
     const previewElementContainerRef = React.useRef<HTMLDivElement>(null);
@@ -29,16 +29,13 @@ export const Preview: React.FunctionComponent<Props> = ({ adminRoute, children, 
             : null;
 
         if (previewElement) {
-            iFrameBridge.addPreviewElement(previewElement);
-        }
+            addPreviewElement(previewElement);
 
-        return () => {
-            if (previewElement) {
-                iFrameBridge.removePreviewElement(previewElement);
-            }
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+            return () => {
+                removePreviewElement(previewElement);
+            };
+        }
+    }, [label, adminRoute, addPreviewElement, removePreviewElement]);
 
     React.useEffect(() => {
         const timeout = setTimeout(() => {
