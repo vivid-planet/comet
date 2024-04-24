@@ -4,9 +4,9 @@ import * as React from "react";
 
 import { useWindowSize } from "../helpers/useWindowSize";
 
-type VisibilityChange = {
+type UserVisibilityChange = {
     column: string;
-    visibility: boolean;
+    visible: boolean;
     usingCompactView: boolean;
 };
 
@@ -23,11 +23,7 @@ type DynamicVisibilityGridProps = {
     columnVisibilityModel: GridColumnVisibilityModel;
 };
 
-export const useDynamicGridVisibilityModel = (columnVisibility: ColumnVisibility, breakpointValue?: number): DynamicVisibilityGridProps => {
-    const { breakpoints } = useTheme();
-    const usingCompactView = useWindowSize().width < (breakpointValue ?? breakpoints.values.md);
-    const [visibilityChanges, setVisibilityChanges] = React.useState<VisibilityChange[]>([]);
-
+const getInitialColumnVisibilityModel = (columnVisibility: ColumnVisibility, usingCompactView: boolean): GridColumnVisibilityModel => {
     const initialVisibilityModel: GridColumnVisibilityModel = {};
 
     Object.keys(columnVisibility).forEach((columnKey) => {
@@ -35,45 +31,65 @@ export const useDynamicGridVisibilityModel = (columnVisibility: ColumnVisibility
         initialVisibilityModel[columnKey] = value;
     });
 
-    const getVisibilityModel = (): GridColumnVisibilityModel => {
-        const visibilityModel: GridColumnVisibilityModel = { ...initialVisibilityModel };
+    return initialVisibilityModel;
+};
 
-        for (const change of visibilityChanges) {
-            if ((usingCompactView && change.usingCompactView) || (!usingCompactView && !change.usingCompactView)) {
-                visibilityModel[change.column] = change.visibility;
-            }
+const getColumnVisibilityModelWithUserChanges = (
+    initialVisibilityModel: GridColumnVisibilityModel,
+    userVisibilityChanges: UserVisibilityChange[],
+    usingCompactView: boolean,
+): GridColumnVisibilityModel => {
+    const visibilityModel: GridColumnVisibilityModel = { ...initialVisibilityModel };
+
+    for (const change of userVisibilityChanges) {
+        if ((usingCompactView && change.usingCompactView) || (!usingCompactView && !change.usingCompactView)) {
+            visibilityModel[change.column] = change.visible;
         }
+    }
 
-        return visibilityModel;
-    };
+    return visibilityModel;
+};
 
-    const onColumnVisibilityModelChange: React.ComponentProps<typeof DataGrid>["onColumnVisibilityModelChange"] = (newColumnVisibilities) => {
-        setVisibilityChanges((existingChanges) => {
-            let updatedChanges = [...existingChanges];
+const getUpdatedUserVisibilityChanges = (
+    existingChanges: UserVisibilityChange[],
+    initialVisibilityModel: GridColumnVisibilityModel,
+    newColumnVisibilities: GridColumnVisibilityModel,
+    usingCompactView: boolean,
+): UserVisibilityChange[] => {
+    let updatedChanges = [...existingChanges];
 
-            Object.keys(newColumnVisibilities).map((changedColumn) => {
-                const newVisibility = newColumnVisibilities[changedColumn];
-                const shouldBeStoredInState = initialVisibilityModel[changedColumn] !== newVisibility;
+    Object.keys(newColumnVisibilities).map((changedColumn) => {
+        const newVisible = newColumnVisibilities[changedColumn];
+        const shouldBeStoredInState = initialVisibilityModel[changedColumn] !== newVisible;
 
-                updatedChanges = updatedChanges.filter((change) => {
-                    return change.column !== changedColumn || change.usingCompactView !== usingCompactView;
-                });
-
-                if (shouldBeStoredInState) {
-                    updatedChanges.push({
-                        column: changedColumn,
-                        visibility: newVisibility,
-                        usingCompactView,
-                    });
-                }
-            });
-
-            return updatedChanges;
+        updatedChanges = updatedChanges.filter((change) => {
+            return change.column !== changedColumn || change.usingCompactView !== usingCompactView;
         });
-    };
+
+        if (shouldBeStoredInState) {
+            updatedChanges.push({
+                column: changedColumn,
+                visible: newVisible,
+                usingCompactView,
+            });
+        }
+    });
+
+    return updatedChanges;
+};
+
+export const useDynamicGridVisibilityModel = (columnVisibility: ColumnVisibility, breakpointValue?: number): DynamicVisibilityGridProps => {
+    const { breakpoints } = useTheme();
+    const usingCompactView = useWindowSize().width < (breakpointValue ?? breakpoints.values.md);
+    const [userVisibilityChanges, setUserVisibilityChanges] = React.useState<UserVisibilityChange[]>([]);
+    const initialVisibilityModel = getInitialColumnVisibilityModel(columnVisibility, usingCompactView);
 
     return {
-        onColumnVisibilityModelChange: onColumnVisibilityModelChange,
-        columnVisibilityModel: getVisibilityModel(),
+        onColumnVisibilityModelChange: (newColumnVisibilities: GridColumnVisibilityModel) => {
+            setUserVisibilityChanges((existingChanges) =>
+                getUpdatedUserVisibilityChanges(existingChanges, initialVisibilityModel, newColumnVisibilities, usingCompactView),
+            );
+        },
+        columnVisibilityModel: getColumnVisibilityModelWithUserChanges(initialVisibilityModel, userVisibilityChanges, usingCompactView),
     };
 };
