@@ -8,6 +8,7 @@ import {
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
+    useDynamicGridVisibilityModel,
     usePersistentColumnState,
 } from "@comet/admin";
 import Box from "@mui/material/Box";
@@ -201,6 +202,34 @@ storiesOf("stories/components/DataGrid", module)
                 <DataGrid {...dataGridProps} rows={exampleRows} columns={exampleColumns} />
             </Box>
         );
+    })
+    .add("useDynamicGridVisibilityModel", () => {
+        const columns: GridColDef[] = [
+            {
+                field: "fullName",
+                headerName: "Full name",
+                flex: 1,
+                renderCell: ({ row }) => `${row.firstName} ${row.lastName}`,
+            },
+            {
+                field: "firstName",
+                headerName: "First name",
+                flex: 1,
+            },
+            {
+                field: "lastName",
+                headerName: "Last name",
+                flex: 1,
+            },
+        ];
+
+        const dynamicGridVisibilityProps = useDynamicGridVisibilityModel({
+            fullName: { defaultView: false, compactView: true },
+            firstName: { defaultView: true, compactView: false },
+            lastName: { defaultView: true, compactView: false },
+        });
+
+        return <DataGrid sx={{ height: 400 }} rows={exampleRows} columns={columns} {...dynamicGridVisibilityProps} />;
     })
     .add("GridFilterButton", () => {
         function DemoToolbar() {
