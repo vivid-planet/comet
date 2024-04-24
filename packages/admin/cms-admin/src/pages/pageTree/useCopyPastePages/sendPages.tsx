@@ -418,6 +418,7 @@ function unhandledDependenciesFromDocument(
 ) {
     const unhandledDependencies = documentType.dependencies(document).filter((dependency) => {
         if (dependency.targetGraphqlObjectType === "DamFile" && !hasDamScope) {
+            // If there is no DAM scoping (DAM = global), the dependency is not unhandled. It's handled correctly by doing nothing
             return false;
         }
 
