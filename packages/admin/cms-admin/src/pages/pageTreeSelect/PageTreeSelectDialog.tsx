@@ -3,13 +3,12 @@ import { Toolbar, ToolbarActions, ToolbarFillSpace, useFocusAwarePolling } from 
 import { ArrowRight, Close, Delete } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Select } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { FixedSizeList as List, ListChildComponentProps } from "react-window";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
-import { useContentScope } from "../../contentScope/Provider";
+import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
 import { Maybe } from "../../graphql.generated";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
@@ -23,6 +22,7 @@ import { PageVisibilityIcon } from "../pageTree/PageVisibilityIcon";
 import { PageTreePage, usePageTree } from "../pageTree/usePageTree";
 import { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
 import * as sc from "./PageTreeSelectDialog.sc";
+
 export { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
 
 export const selectedPageFragment = gql`
@@ -60,19 +60,12 @@ const PageSearchContainer = styled("div")`
 `;
 
 interface PageTreeSelectProps {
-    value: GQLSelectedPageFragment | undefined | null;
-    onChange: (newValue: GQLSelectedPageFragment | null) => void;
+    value: (GQLSelectedPageFragment & { scope?: ContentScopeInterface }) | undefined | null;
+    onChange: (newValue: (GQLSelectedPageFragment & { scope?: ContentScopeInterface }) | null) => void;
     open: boolean;
     onClose: () => void;
     defaultCategory: string;
 }
-
-const useStyles = makeStyles({
-    dialogPaper: {
-        minHeight: "80vh",
-        maxHeight: "80vh",
-    },
-});
 
 export default function PageTreeSelectDialog({ value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
     const { pageTreeCategories, pageTreeDocumentTypes, additionalPageTreeNodeFragment } = useCmsBlockContext();
@@ -82,7 +75,6 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     const [height, setHeight] = React.useState(200);
     const refDialogContent = React.useRef<HTMLDivElement>(null);
     const selectedPageId = value?.id;
-    const classes = useStyles();
 
     const pagesQuery = React.useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
 
@@ -96,7 +88,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     });
 
     useFocusAwarePolling({
-        pollInterval: process.env.NODE_ENV === "development" ? undefined : 10000,
+        pollInterval: 10000,
         skip: !open,
         refetch,
         startPolling,
@@ -164,10 +156,10 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
 
     const handleSelect = React.useCallback(
         (page: PageTreePage) => {
-            onChange({ id: page.id, name: page.name, path: page.path, documentType: page.documentType });
+            onChange({ id: page.id, name: page.name, path: page.path, documentType: page.documentType, scope });
             onClose();
         },
-        [onChange, onClose],
+        [onChange, onClose, scope],
     );
 
     const itemData = React.useMemo<ItemData>(
@@ -182,7 +174,12 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
 
     return (
         <Dialog
-            classes={{ paper: classes.dialogPaper }}
+            PaperProps={{
+                sx: {
+                    minHeight: "80vh",
+                    maxHeight: "80vh",
+                },
+            }}
             open={open}
             onClose={onClose}
             fullWidth
@@ -222,7 +219,13 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
             </Toolbar>
             <DialogContent ref={refDialogContent}>
                 <PageTreeContext.Provider
-                    value={{ allCategories: pageTreeCategories, documentTypes: pageTreeDocumentTypes, tree, query: pagesQuery }}
+                    value={{
+                        allCategories: pageTreeCategories,
+                        currentCategory: category,
+                        documentTypes: pageTreeDocumentTypes,
+                        tree,
+                        query: pagesQuery,
+                    }}
                 >
                     <List
                         ref={refList}

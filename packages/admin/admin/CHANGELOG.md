@@ -1,5 +1,278 @@
 # @comet/admin
 
+## 6.6.1
+
+### Patch Changes
+
+-   @comet/admin-icons@6.6.1
+
+## 6.6.0
+
+### Minor Changes
+
+-   95b97d768: useDataGridRemote: Add `initialFilter` option
+
+    **Example usage:**
+
+    ```tsx
+    const dataGridProps = useDataGridRemote({
+        initialFilter: { items: [{ columnField: "description", operatorValue: "contains", value: "text" }] },
+    });
+    ```
+
+### Patch Changes
+
+-   6b04ac9a4: Fix the key for accessing the themes `styleOverrides` and `defaultProps` of `CometAdminMenu`
+    -   @comet/admin-icons@6.6.0
+
+## 6.5.0
+
+### Minor Changes
+
+-   6cb2f9046: Add `ContentOverflow` component
+
+    Used to wrap content that may be too large to fit its container.
+    If the content is too large, it will be truncated. When clicked, the entire content will be displayed in a dialog.
+
+    ```tsx
+    <ContentOverflow>{/* Lots of content ... */}</ContentOverflow>
+    ```
+
+### Patch Changes
+
+-   @comet/admin-icons@6.5.0
+
+## 6.4.0
+
+### Minor Changes
+
+-   8ce21f34b: SaveBoundary: Submit multiple Savables sequentially instead of parallel
+-   811903e60: Disable the content translation feature for disabled input fields and non-text inputs
+
+### Patch Changes
+
+-   @comet/admin-icons@6.4.0
+
+## 6.3.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.3.0
+
+## 6.2.1
+
+### Patch Changes
+
+-   @comet/admin-icons@6.2.1
+
+## 6.2.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.2.0
+
+## 6.1.0
+
+### Minor Changes
+
+-   b35bb8d1: Add basis for content translation
+
+    Wrap a component with a `ContentTranslationServiceProvider` to add support for content translation to all underlying `FinalFormInput` inputs.
+
+    ```tsx
+    <ContentTranslationServiceProvider
+        enabled={true}
+        translate={async function (text: string): Promise<string> {
+            return yourTranslationFnc(text);
+        }}
+    >
+        ...
+    </ContentTranslationServiceProvider>
+    ```
+
+    You can disable translation for a specific `FinalFormInput` by using the `disableContentTranslation` prop.
+
+    ```diff
+    <Field
+        required
+        fullWidth
+        name="myField"
+        component={FinalFormInput}
+        label={<FormattedMessage id="myField" defaultMessage="My Field" />}
+    +   disableContentTranslation
+    />
+    ```
+
+-   8eb13750: Add `SaveBoundary` and `SaveBoundarySaveButton` that helps implementing multiple forms with a centralized save button
+
+    Render a `Savable` Component anywhere below a `SaveBoundary`. For `FinalForm` this hasn't to be done manually.
+
+-   a4fac913: Rework `Alert` component
+
+    -   Use theme wherever possible
+    -   Move styles where they're more fitting
+    -   Fix some paddings
+
+### Patch Changes
+
+-   dcfa03ca: Fix a crash when using the `Alert` component inside a MUI `Snackbar`
+-   Updated dependencies [08e0da09]
+    -   @comet/admin-icons@6.1.0
+
+## 6.0.0
+
+### Major Changes
+
+-   298b63b7: FinalForm: remove default `onAfterSubmit` implementation
+
+    In most cases the default implementation is not needed anymore. When upgrading, an empty
+    function override of `onAfterSubmit` can be removed as it is not necessary any longer.
+
+    To get back the old behavior use the following in application code:
+
+    ```
+    const stackApi = React.useContext(StackApiContext);
+    const editDialog = React.useContext(EditDialogApiContext);
+    ....
+        <FinalForm
+            onAfterSubmit={() => {
+                stackApi?.goBack();
+                editDialog?.closeDialog({ delay: true });
+            }}
+        >
+    ```
+
+-   0d768540: FinalForm: Don't handle sync submit differently than async submit
+-   62779124: Change the signatures of `shouldScrollToField`, `shouldShowFieldError` and `shouldShowFieldWarning` in `FinalFormContext` to match the corresponding methods in `Field`
+
+    The API in `FinalFormContext` was changed from
+
+    ```tsx
+    // ❌
+    export interface FinalFormContext {
+        shouldScrollToField: ({ fieldMeta }: { fieldMeta: FieldMetaState<any> }) => boolean;
+        shouldShowFieldError: ({ fieldMeta }: { fieldMeta: FieldMetaState<any> }) => boolean;
+        shouldShowFieldWarning: ({ fieldMeta }: { fieldMeta: FieldMetaState<any> }) => boolean;
+    }
+    ```
+
+    to
+
+    ```tsx
+    // ✅
+    export interface FinalFormContext {
+        shouldScrollToField: (fieldMeta: FieldMetaState<any>) => boolean;
+        shouldShowFieldError: (fieldMeta: FieldMetaState<any>) => boolean;
+        shouldShowFieldWarning: (fieldMeta: FieldMetaState<any>) => boolean;
+    }
+    ```
+
+    Now the corresponding methods in `Field` and `FinalFormContext` have the same signature.
+
+### Minor Changes
+
+-   921f6378: Add `helperText` prop to `Field` and `FieldContainer` to provide additional information
+
+### Patch Changes
+
+-   Updated dependencies [76e50aa8]
+-   Updated dependencies [a525766c]
+    -   @comet/admin-icons@6.0.0
+
+## 5.6.0
+
+### Patch Changes
+
+-   @comet/admin-icons@5.6.0
+
+## 5.5.0
+
+### Patch Changes
+
+-   @comet/admin-icons@5.5.0
+
+## 5.4.0
+
+### Minor Changes
+
+-   60a18392: Add `Alert` component
+
+    **Example:**
+
+    ```tsx
+    import { Alert, OkayButton, SaveButton } from "@comet/admin";
+
+    <Alert
+        severity="warning"
+        title="Title"
+        action={
+            <Button variant="text" startIcon={<ArrowRight />}>
+                Action Text
+            </Button>
+        }
+    >
+        Notification Text
+    </Alert>;
+    ```
+
+### Patch Changes
+
+-   ba800163: Allow passing a mix of elements and arrays to `Tabs` and `RouterTabs` as children
+
+    For example:
+
+    ```tsx
+    <RouterTabs>
+        <RouterTab label="One" path="">
+            One
+        </RouterTab>
+        {content.map((value) => (
+            <RouterTab key={value} label={value} path={`/${value}`}>
+                {value}
+            </RouterTab>
+        ))}
+        {showFourthTab && (
+            <RouterTab label="Four" path="/four">
+                Four
+            </RouterTab>
+        )}
+    </RouterTabs>
+    ```
+
+    -   @comet/admin-icons@5.4.0
+
+## 5.3.0
+
+### Minor Changes
+
+-   60cc1b2a: Add `FieldSet` component with accordion behavior for better structuring of big forms.
+
+### Patch Changes
+
+-   a677a162: Fix `RouterPromptHandler` to not show a prompt when navigating to a path with params that is not a sub route
+-   5435b278: Fix `shouldScrollTo()`, `shouldShowError()` and `shouldShowWarning()` in `Field`
+
+    Previously, the `meta` argument was passed to these methods incorrectly. Now, the argument is passed as defined by the typing.
+
+-   Updated dependencies [0ff9b9ba]
+-   Updated dependencies [0ff9b9ba]
+    -   @comet/admin-icons@5.3.0
+
+## 5.2.0
+
+### Minor Changes
+
+-   0bed4e7c: Add optional `hasConflict` prop to `SaveButton`, `FinalFormSaveButton` and `FinalFormSaveSplitButton`
+
+    If set to `true`, a new "conflict" display state is triggered.
+    You should pass the `hasConflict` prop returned by `useSaveConflict()`, `useSaveConflictQuery()` and `useFormSaveConflict()`.
+
+### Patch Changes
+
+-   25daac07: Avoid remount of `RouterTab` with `forceRender={true}` when `RouterTabs` are used inside a `Stack`
+-   Updated dependencies [9fc7d474]
+    -   @comet/admin-icons@5.2.0
+
 ## 5.1.0
 
 ### Minor Changes

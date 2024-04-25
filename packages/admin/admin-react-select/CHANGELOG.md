@@ -1,5 +1,109 @@
 # @comet/admin-react-select
 
+## 6.6.1
+
+### Patch Changes
+
+-   @comet/admin@6.6.1
+
+## 6.6.0
+
+### Patch Changes
+
+-   Updated dependencies [95b97d768]
+-   Updated dependencies [6b04ac9a4]
+    -   @comet/admin@6.6.0
+
+## 6.5.0
+
+### Patch Changes
+
+-   Updated dependencies [6cb2f9046]
+    -   @comet/admin@6.5.0
+
+## 6.4.0
+
+### Patch Changes
+
+-   Updated dependencies [8ce21f34b]
+-   Updated dependencies [811903e60]
+    -   @comet/admin@6.4.0
+
+## 6.3.0
+
+### Patch Changes
+
+-   @comet/admin@6.3.0
+
+## 6.2.1
+
+### Patch Changes
+
+-   @comet/admin@6.2.1
+
+## 6.2.0
+
+### Patch Changes
+
+-   @comet/admin@6.2.0
+
+## 6.1.0
+
+### Patch Changes
+
+-   Updated dependencies [dcfa03ca]
+-   Updated dependencies [b35bb8d1]
+-   Updated dependencies [8eb13750]
+-   Updated dependencies [a4fac913]
+    -   @comet/admin@6.1.0
+
+## 6.0.0
+
+### Patch Changes
+
+-   Updated dependencies [921f6378]
+-   Updated dependencies [298b63b7]
+-   Updated dependencies [0d768540]
+-   Updated dependencies [62779124]
+    -   @comet/admin@6.0.0
+
+## 5.6.0
+
+### Patch Changes
+
+-   @comet/admin@5.6.0
+
+## 5.5.0
+
+### Patch Changes
+
+-   @comet/admin@5.5.0
+
+## 5.4.0
+
+### Patch Changes
+
+-   Updated dependencies [ba800163]
+-   Updated dependencies [60a18392]
+    -   @comet/admin@5.4.0
+
+## 5.3.0
+
+### Patch Changes
+
+-   Updated dependencies [a677a162]
+-   Updated dependencies [60cc1b2a]
+-   Updated dependencies [5435b278]
+    -   @comet/admin@5.3.0
+
+## 5.2.0
+
+### Patch Changes
+
+-   Updated dependencies [25daac07]
+-   Updated dependencies [0bed4e7c]
+    -   @comet/admin@5.2.0
+
 ## 5.1.0
 
 ### Patch Changes

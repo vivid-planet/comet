@@ -122,7 +122,43 @@
                 "nullable": false
             }
         ],
-        "inputFields": []
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "space": "Space",
+                                "richtext": "RichText",
+                                "headline": "Headline",
+                                "image": "DamImage"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
     },
     {
         "name": "DamImage",
@@ -618,6 +654,11 @@
                             "nullable": false
                         },
                         {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
+                        },
+                        {
                             "name": "documentType",
                             "kind": "String",
                             "nullable": false
@@ -643,6 +684,11 @@
     {
         "name": "Link",
         "fields": [
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
+            },
             {
                 "name": "attachedBlocks",
                 "kind": "NestedObjectList",
@@ -702,6 +748,11 @@
                 "name": "activeType",
                 "kind": "String",
                 "nullable": false
+            },
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -872,7 +923,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "heading": "Headline",
+                                "headline": "Headline",
                                 "richtext": "RichText",
                                 "image": "DamImage",
                                 "textImage": "TextImage"
@@ -884,7 +935,60 @@
                 "nullable": false
             }
         ],
-        "inputFields": []
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "headline": "Headline",
+                                "richtext": "RichText",
+                                "image": "DamImage",
+                                "textImage": "TextImage"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "NewsDetail",
+        "fields": [
+            {
+                "name": "id",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "id",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
     },
     {
         "name": "NewsLink",
@@ -1001,7 +1105,9 @@
                                 "columns": "Columns",
                                 "anchor": "Anchor",
                                 "twoLists": "TwoLists",
-                                "media": "Media"
+                                "media": "Media",
+                                "teaser": "Teaser",
+                                "newsDetail": "NewsDetail"
                             },
                             "nullable": false
                         },
@@ -1020,7 +1126,65 @@
                 "nullable": false
             }
         ],
-        "inputFields": []
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "space": "Space",
+                                "richtext": "RichText",
+                                "headline": "Headline",
+                                "image": "DamImage",
+                                "textImage": "TextImage",
+                                "damVideo": "DamVideo",
+                                "youTubeVideo": "YouTubeVideo",
+                                "video": "Video",
+                                "linkList": "LinkList",
+                                "fullWidthImage": "FullWidthImage",
+                                "columns": "Columns",
+                                "anchor": "Anchor",
+                                "twoLists": "TwoLists",
+                                "media": "Media",
+                                "teaser": "Teaser",
+                                "newsDetail": "NewsDetail"
+                            },
+                            "nullable": false
+                        },
+                        {
+                            "name": "userGroup",
+                            "kind": "Enum",
+                            "enum": [
+                                "All",
+                                "Admin",
+                                "User"
+                            ],
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
     },
     {
         "name": "PixelImage",
@@ -1606,6 +1770,61 @@
                 "name": "damFileId",
                 "kind": "String",
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "Teaser",
+        "fields": [
+            {
+                "name": "headline",
+                "kind": "Block",
+                "block": "Headline",
+                "nullable": false
+            },
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            },
+            {
+                "name": "links",
+                "kind": "Block",
+                "block": "LinkList",
+                "nullable": false
+            },
+            {
+                "name": "buttons",
+                "kind": "Block",
+                "block": "LinkList",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "headline",
+                "kind": "Block",
+                "block": "Headline",
+                "nullable": false
+            },
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            },
+            {
+                "name": "links",
+                "kind": "Block",
+                "block": "LinkList",
+                "nullable": false
+            },
+            {
+                "name": "buttons",
+                "kind": "Block",
+                "block": "LinkList",
+                "nullable": false
             }
         ]
     },

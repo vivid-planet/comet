@@ -1,4 +1,4 @@
-import cometConfig from "@src/../comet-config.json";
+import cometConfig from "@src/comet-config.json";
 import { plainToClass } from "class-transformer";
 import { validateSync } from "class-validator";
 
@@ -17,6 +17,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         helmRelease: envVars.HELM_RELEASE,
         apiUrl: envVars.API_URL,
         apiPort: envVars.API_PORT,
+        adminUrl: envVars.ADMIN_URL,
         corsAllowedOrigins: envVars.CORS_ALLOWED_ORIGINS.split(","),
         imgproxy: {
             ...cometConfig.imgproxy,
@@ -47,6 +48,9 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
                 },
             },
             storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
+        },
+        cdn: {
+            originCheckSecret: envVars.CDN_ORIGIN_CHECK_SECRET,
         },
     };
 }

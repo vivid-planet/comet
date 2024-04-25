@@ -1,4 +1,12 @@
-import { PageTreeNodeVisibility, PageTreeService, RequestContext, RequestContextInterface, validateNotModified } from "@comet/cms-api";
+import {
+    AffectedEntity,
+    PageTreeNodeVisibility,
+    PageTreeService,
+    RequestContext,
+    RequestContextInterface,
+    RequiredPermission,
+    validateNotModified,
+} from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
@@ -8,6 +16,7 @@ import { MainMenuItemInput } from "./dto/main-menu-item.input";
 import { MainMenuItem } from "./entities/main-menu-item.entity";
 
 @Resolver(() => MainMenuItem)
+@RequiredPermission(["pageTree"])
 export class MainMenuItemResolver {
     constructor(
         @InjectRepository(MainMenuItem) private readonly mainMenuItemRepository: EntityRepository<MainMenuItem>,
@@ -15,6 +24,7 @@ export class MainMenuItemResolver {
     ) {}
 
     @Query(() => MainMenuItem)
+    @AffectedEntity(MainMenuItem, { pageTreeNodeIdArg: "pageTreeNodeId" })
     async mainMenuItem(
         @Args("pageTreeNodeId", { type: () => ID }) pageTreeNodeId: string,
         @RequestContext() { includeInvisiblePages }: RequestContextInterface,
@@ -37,6 +47,7 @@ export class MainMenuItemResolver {
     }
 
     @Mutation(() => MainMenuItem)
+    @AffectedEntity(MainMenuItem, { pageTreeNodeIdArg: "pageTreeNodeId" })
     async updateMainMenuItem(
         @Args("pageTreeNodeId", { type: () => ID }) pageTreeNodeId: string,
         @Args("input", { type: () => MainMenuItemInput }) input: MainMenuItemInput,

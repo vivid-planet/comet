@@ -5,6 +5,7 @@ import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
     BlockPreviewWithTabs,
     createUsePage,
+    DependencyList,
     EditPageLayout,
     openSitePreviewWindow,
     PageName,
@@ -22,6 +23,25 @@ import { useRouteMatch } from "react-router";
 
 import { GQLEditPageQuery, GQLEditPageQueryVariables, GQLUpdatePageMutation, GQLUpdatePageMutationVariables } from "./EditPage.generated";
 import { PageContentBlock } from "./PageContentBlock";
+
+const pageDependenciesQuery = gql`
+    query PageDependencies($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false) {
+        item: page(id: $id) {
+            id
+            dependencies(offset: $offset, limit: $limit, forceRefresh: $forceRefresh) {
+                nodes {
+                    targetGraphqlObjectType
+                    targetId
+                    rootColumnName
+                    jsonPath
+                    name
+                    secondaryInformation
+                }
+                totalCount
+            }
+        }
+    }
+`;
 
 interface Props {
     id: string;
@@ -139,7 +159,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                 </ToolbarActions>
             </Toolbar>
             <MainContent disablePaddingBottom>
-                <BlockPreviewWithTabs previewUrl={`${siteConfig.previewUrl}/admin/page`} previewState={previewState} previewApi={previewApi}>
+                <BlockPreviewWithTabs previewUrl={`${siteConfig.blockPreviewBaseUrl}/page`} previewState={previewState} previewApi={previewApi}>
                     {[
                         {
                             key: "content",
@@ -160,6 +180,22 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                                 </AdminTabLabel>
                             ),
                             content: rootBlocksApi.seo.adminUI,
+                        },
+                        {
+                            key: "dependencies",
+                            label: (
+                                <AdminTabLabel isValid={rootBlocksApi.seo.isValid}>
+                                    <FormattedMessage id="pages.pages.page.edit.dependencies" defaultMessage="Dependencies" />
+                                </AdminTabLabel>
+                            ),
+                            content: (
+                                <DependencyList
+                                    query={pageDependenciesQuery}
+                                    variables={{
+                                        id: pageState?.document?.id ?? "",
+                                    }}
+                                />
+                            ),
                         },
                     ]}
                 </BlockPreviewWithTabs>

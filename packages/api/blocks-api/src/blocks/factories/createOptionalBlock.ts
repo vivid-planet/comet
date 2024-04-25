@@ -1,4 +1,5 @@
-import { IsBoolean, IsOptional } from "class-validator";
+import { Transform } from "class-transformer";
+import { IsBoolean, IsOptional, ValidateNested } from "class-validator";
 
 import {
     Block,
@@ -11,14 +12,13 @@ import {
     createBlock,
     ExtractBlockInput,
     inputToData,
+    isBlockDataInterface,
+    isBlockInputInterface,
     SimpleBlockInputInterface,
     TraversableTransformResponse,
 } from "../block";
-import { ChildBlock } from "../decorators/child-block";
-import { ChildBlockInput } from "../decorators/child-block-input";
 import { BlockField } from "../decorators/field";
-import { TransformDependencies } from "../dependencies";
-import { NameOrOptions } from "./types";
+import { BlockFactoryNameOrOptions } from "./types";
 
 export interface OptionalBlockInputInterface<DecoratedBlockInput extends BlockInputInterface> extends SimpleBlockInputInterface {
     block?: DecoratedBlockInput;
@@ -27,16 +27,17 @@ export interface OptionalBlockInputInterface<DecoratedBlockInput extends BlockIn
 
 export function createOptionalBlock<DecoratedBlock extends Block>(
     block: DecoratedBlock,
-    nameOrOptions: NameOrOptions = `Optional${block.name}`,
+    nameOrOptions: BlockFactoryNameOrOptions = `Optional${block.name}`,
 ): Block<BlockDataInterface, OptionalBlockInputInterface<ExtractBlockInput<DecoratedBlock>>> {
     class BlockOptional extends BlockData {
-        @ChildBlock(block, { nullable: true })
+        @BlockField({ type: "block", block, nullable: true })
+        @Transform(({ value }) => (value ? (isBlockDataInterface(value) ? value : block.blockDataFactory(value)) : undefined), { toClassOnly: true })
         block?: BlockDataInterface;
 
         @BlockField()
         visible: boolean;
 
-        async transformToPlain(deps: TransformDependencies, { includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
             return {
                 block: (includeInvisibleContent || this.visible) && this.block ? this.block : null,
                 visible: this.visible,
@@ -58,7 +59,11 @@ export function createOptionalBlock<DecoratedBlock extends Block>(
     }
 
     class BlockOptionalInput extends BlockInput {
-        @ChildBlockInput(block, { nullable: true })
+        @BlockField({ type: "block", block, nullable: true })
+        @Transform(({ value }) => (value ? (isBlockInputInterface(value) ? value : block.blockInputFactory(value)) : undefined), {
+            toClassOnly: true,
+        })
+        @ValidateNested()
         @IsOptional()
         block?: ExtractBlockInput<DecoratedBlock>;
 

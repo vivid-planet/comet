@@ -1,10 +1,9 @@
 module.exports = {
-    extends: [require.resolve("./core-without-import.js"), "next/core-web-vitals"],
+    extends: [require.resolve("./core.js"), "next/core-web-vitals"],
     rules: {
         "react/display-name": "off",
         "react/prop-types": "off",
         "react/self-closing-comp": "error",
-        "import/no-extraneous-dependencies": "error",
         "@comet/no-private-sibling-import": ["error", ["gql", "sc", "gql.generated"]],
         "no-restricted-imports": [
             "error",

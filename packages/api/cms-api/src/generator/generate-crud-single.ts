@@ -13,13 +13,13 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     const instanceNamePlural = classNamePlural[0].toLocaleLowerCase() + classNamePlural.slice(1);
     const fileNameSingular = instanceNameSingular.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
     const fileNamePlural = instanceNamePlural.replace(/[A-Z]/g, (i) => `-${i.toLocaleLowerCase()}`);
+    if (!generatorOptions.requiredPermission) generatorOptions.requiredPermission = [instanceNamePlural];
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {
         const generatedFiles: GeneratedFile[] = [];
 
         const scopeProp = metadata.props.find((prop) => prop.name == "scope");
         if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
-        const hasUpdatedAt = metadata.props.some((prop) => prop.name == "updatedAt");
         const blockProps = metadata.props.filter((prop) => {
             return hasFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
         });
@@ -41,7 +41,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { FindOptions } from "@mikro-orm/core";
     import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
-    import { SortDirection, validateNotModified } from "@comet/cms-api";
+    import { RequiredPermission, SortDirection, validateNotModified } from "@comet/cms-api";
     
     import { ${metadata.className} } from "${path.relative(generatorOptions.targetDirectory, metadata.path).replace(/\.ts$/, "")}";
     ${
@@ -56,6 +56,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
     import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
 
     @Resolver(() => ${metadata.className})
+    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
@@ -78,8 +79,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         @Mutation(() => ${metadata.className})
         async save${classNameSingular}(
             ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}
-            @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input,
-            ${hasUpdatedAt ? `@Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,` : ""}
+            @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
             let ${instanceNameSingular} = await this.repository.findOne({${scopeProp ? `scope` : ""}});
 
@@ -88,16 +88,12 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
                     ...input,
                     ${scopeProp ? `scope,` : ""} 
                 });
-            } else if (lastUpdatedAt) {
-                if (lastUpdatedAt) {
-                    validateNotModified(${instanceNameSingular}, lastUpdatedAt);
-                }
-    
-                ${instanceNameSingular}.assign({
-                    ...input,
-                    ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
-                });
             }
+
+            ${instanceNameSingular}.assign({
+                ...input,
+                ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
+            });
     
             await this.entityManager.flush();
     

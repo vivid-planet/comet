@@ -39,10 +39,15 @@ module.exports = {
                         importNames: ["Badge"],
                         message: "Please use Badge from @comet/admin instead",
                     },
+                    {
+                        name: "@mui/material",
+                        importNames: ["Alert"],
+                        message: "Please use Alert from @comet/admin instead",
+                    },
                 ],
             },
         ],
-        "@comet/no-private-sibling-import": ["error", ["gql", "sc", "gql.generated"]]
+        "@comet/no-private-sibling-import": ["error", ["gql", "sc", "gql.generated"]],
     },
     overrides: [
         {

@@ -18,8 +18,7 @@ import {
     TraversableTransformResponse,
 } from "../block";
 import { BlockField } from "../decorators/field";
-import { TransformDependencies } from "../dependencies";
-import { NameOrOptions } from "./types";
+import { BlockFactoryNameOrOptions } from "./types";
 
 export interface ListBlockItemDataInterface extends BlockData {
     key: string;
@@ -39,10 +38,7 @@ export function BaseListBlockItemData<B extends Block>(block: B): ClassConstruct
         @BlockField(block)
         props: BlockDataInterface;
 
-        async transformToPlain(
-            dependencies: TransformDependencies,
-            { includeInvisibleContent }: BlockContext,
-        ): Promise<TraversableTransformResponse> {
+        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
             const { key, visible, props, ...additionalFields } = this;
 
             return {
@@ -114,7 +110,7 @@ interface Options<B extends Block> {
 
 export function createListBlock<B extends Block>(
     { block, ListBlockItemData = BaseListBlockItemData(block), ListBlockItemInput = BaseListBlockItemInput(block, ListBlockItemData) }: Options<B>,
-    name: NameOrOptions,
+    name: BlockFactoryNameOrOptions,
 ): Block<BlockDataInterface, ListBlockInputInterface<ExtractBlockInput<B>>> {
     if (!block) throw new Error("block is undefined (can happen because of cycling imports)");
 
@@ -123,7 +119,7 @@ export function createListBlock<B extends Block>(
         @BlockField(ListBlockItemData)
         blocks: ListBlockItemDataInterface[];
 
-        async transformToPlain(deps: TransformDependencies, { includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
             return {
                 blocks: includeInvisibleContent ? this.blocks : this.blocks.filter((c) => c.visible),
             };

@@ -27,6 +27,8 @@ export { composeBlocks } from "./blocks/helpers/composeBlocks/composeBlocks";
 export { createCompositeSetting } from "./blocks/helpers/composeBlocks/createCompositeSetting";
 export { createCompositeSettings } from "./blocks/helpers/composeBlocks/createCompositeSettings";
 export { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
+export { createCompositeBlockSelectField } from "./blocks/helpers/createCompositeBlockSelectField";
+export { createCompositeBlockTextField } from "./blocks/helpers/createCompositeBlockTextField";
 export { default as decomposeUpdateStateAction } from "./blocks/helpers/decomposeUpdateStateAction";
 export { withAdditionalBlockAttributes } from "./blocks/helpers/withAdditionalBlockAttributes";
 export { SpaceBlock } from "./blocks/SpaceBlock";
@@ -49,6 +51,7 @@ export type {
     SetStateAction,
     SetStateFn,
 } from "./blocks/types";
+export type { CustomBlockCategory } from "./blocks/types";
 export { BlockCategory, blockCategoryLabels } from "./blocks/types";
 export { resolveNewState } from "./blocks/utils";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";

@@ -5,7 +5,7 @@ import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import ControlButton from "../../Controls/ControlButton";
+import { ControlButton } from "../../Controls/ControlButton";
 import { IControlProps } from "../../types";
 import findEntityDataInCurrentSelection from "../../utils/findEntityDataInCurrentSelection";
 import findEntityInCurrentSelection from "../../utils/findEntityInCurrentSelection";

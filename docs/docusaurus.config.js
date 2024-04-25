@@ -24,11 +24,10 @@ const config = {
             ({
                 docs: {
                     sidebarPath: require.resolve("./sidebars.js"),
-                    editUrl: "https://github.com/vivid-planet/comet-docs/edit/main/",
+                    editUrl: "https://github.com/vivid-planet/comet/edit/main/docs/",
                 },
                 blog: {
                     showReadingTime: true,
-                    editUrl: "https://github.com/vivid-planet/comet-docs/edit/main/blog/",
                 },
                 theme: {
                     customCss: require.resolve("./src/css/custom.css"),
@@ -100,6 +99,12 @@ const config = {
             },
             liveCodeBlock: {
                 playgroundPosition: "top",
+            },
+            algolia: {
+                appId: "KRLBC262QV",
+                apiKey: "d7d66be907d32f32828bcb2344e7be6e",
+                indexName: "comet-dxp",
+                contextualSearch: true,
             },
         }),
 

@@ -1,18 +1,19 @@
 import { V1CronJob, V1Job } from "@kubernetes/client-node";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import parser from "cron-parser";
 import { format } from "date-fns";
 
-import { CurrentUserInterface } from "../auth/current-user/current-user";
-import { ContentScope } from "../common/decorators/content-scope.interface";
-import { ContentScopeService } from "../content-scope/content-scope.service";
-import { JobStatus } from "../kubernetes/job-status.enum";
-import { INSTANCE_LABEL, PARENT_CRON_JOB_LABEL } from "../kubernetes/kubernetes.constants";
+import { KubernetesJobStatus } from "../kubernetes/job-status.enum";
+import { INSTANCE_LABEL, LABEL_ANNOTATION, PARENT_CRON_JOB_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
+import { CurrentUser } from "../user-permissions/dto/current-user";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
+import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
 import { BuildTemplatesService } from "./build-templates.service";
-import { BUILDER_LABEL, LABEL_ANNOTATION, TRIGGER_ANNOTATION } from "./builds.constants";
+import { BUILDER_LABEL, TRIGGER_ANNOTATION } from "./builds.constants";
 import { AutoBuildStatus } from "./dto/auto-build-status.object";
 import { Build } from "./dto/build.object";
 import { ChangesSinceLastBuild } from "./entities/changes-since-last-build.entity";
@@ -25,13 +26,13 @@ export class BuildsService {
         @InjectRepository(ChangesSinceLastBuild) private readonly changesRepository: EntityRepository<ChangesSinceLastBuild>,
         private readonly buildTemplatesService: BuildTemplatesService,
         private readonly kubernetesService: KubernetesService,
-        private readonly contentScopeService: ContentScopeService,
+        @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
     ) {}
 
-    private async getAllowedBuildJobs(user: CurrentUserInterface): Promise<V1Job[]> {
+    private async getAllowedBuildJobs(user: CurrentUser): Promise<V1Job[]> {
         const allJobs = await this.kubernetesService.getAllJobs(`${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`);
         return allJobs.filter((job) => {
-            return this.contentScopeService.canAccessScope(this.kubernetesService.getContentScope(job), user);
+            return this.accessControlService.isAllowed(user, "builds", this.kubernetesService.getContentScope(job) ?? {});
         });
     }
 
@@ -63,7 +64,7 @@ export class BuildsService {
             if (mostRecentJob) {
                 // check if another build is already running and skip if so, to prevent overwhelming the cluster
                 const status = this.kubernetesService.getStatusForKubernetesJob(mostRecentJob);
-                if (status === JobStatus.active || status === JobStatus.pending) {
+                if (status === KubernetesJobStatus.active || status === KubernetesJobStatus.pending) {
                     console.warn(`Job for ${cronJob.metadata?.name} already running; skipping this run`);
                     continue;
                 }
@@ -88,7 +89,7 @@ export class BuildsService {
         return this.createBuilds(trigger, builderCronJobs);
     }
 
-    async getBuilds(user: CurrentUserInterface, options?: { limit?: number | undefined }): Promise<Build[]> {
+    async getBuilds(user: CurrentUser, options?: { limit?: number | undefined }): Promise<Build[]> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }
@@ -113,7 +114,7 @@ export class BuildsService {
         );
     }
 
-    async getAutoBuildStatus(user: CurrentUserInterface): Promise<AutoBuildStatus> {
+    async getAutoBuildStatus(user: CurrentUser): Promise<AutoBuildStatus> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }

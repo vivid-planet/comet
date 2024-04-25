@@ -1,5 +1,238 @@
 # @comet/blocks-admin
 
+## 6.6.1
+
+### Patch Changes
+
+-   @comet/admin@6.6.1
+-   @comet/admin-icons@6.6.1
+
+## 6.6.0
+
+### Minor Changes
+
+-   a65679ba3: Add `minVisibleBlocks` option to `createListBlock` factory
+
+    This enables the possibility to enforce a minimum amount of blocks added to a list block. List blocks with less than the required amount of visible entries can't be saved.
+
+    **Example usage:**
+
+    ```diff
+    export const SomeListBlock = createListBlock({
+        // ...
+    +   minVisibleBlocks: 2,
+    });
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [95b97d768]
+-   Updated dependencies [6b04ac9a4]
+    -   @comet/admin@6.6.0
+    -   @comet/admin-icons@6.6.0
+
+## 6.5.0
+
+### Minor Changes
+
+-   2f64daa9b: Add `title` field to link block
+
+    Perform the following steps to use it in an application:
+
+    1. API: Use the new `createLinkBlock` factory to create the LinkBlock:
+
+        ```ts
+        import { createLinkBlock } from "@comet/cms-api";
+
+        // ...
+
+        const LinkBlock = createLinkBlock({
+            supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, news: NewsLinkBlock },
+        });
+        ```
+
+    2. Site: Pass the `title` prop to LinkBlock's child blocks:
+
+    ```diff
+    const supportedBlocks: SupportedBlocks = {
+    -   internal: ({ children, ...props }) => <InternalLinkBlock data={props}>{children}</InternalLinkBlock>,
+    +   internal: ({ children, title, ...props }) => <InternalLinkBlock data={props} title={title}>{children}</InternalLinkBlock>,
+        // ...
+    };
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [6cb2f9046]
+    -   @comet/admin@6.5.0
+    -   @comet/admin-icons@6.5.0
+
+## 6.4.0
+
+### Minor Changes
+
+-   30d9e0dee: Add `createCompositeBlockSelectField` helper function
+
+    To simplify the creation of a select field blocks by hiding the verbose definition of `Form`, `Field` and items.
+
+-   322da3831: Add `resolveDependencyPath()` to `BlockMethods` interface
+
+    Blocks must now offer a `resolveDependencyPath()` method that returns a URL path based on the block's `state` and `jsonPath`.
+    It can be used to build the URL to a block's edit view.
+
+    For most cases, the default implementation of this method should be sufficient, so you don't have to implement it yourself.
+    You must only override it manually if your block's admin component contains special routing logic (e.g. `RouterTabs`).
+
+-   887365c76: Add `createCompositeBlockTextField` helper function
+
+    To simplify the creation of a text block field by hiding the verbose definition of `Form` and `Field`.
+
+### Patch Changes
+
+-   811903e60: Disable the content translation feature for input fields where it doesn't make sense
+-   Updated dependencies [8ce21f34b]
+-   Updated dependencies [811903e60]
+    -   @comet/admin@6.4.0
+    -   @comet/admin-icons@6.4.0
+
+## 6.3.0
+
+### Patch Changes
+
+-   @comet/admin@6.3.0
+-   @comet/admin-icons@6.3.0
+
+## 6.2.1
+
+### Patch Changes
+
+-   @comet/admin@6.2.1
+-   @comet/admin-icons@6.2.1
+
+## 6.2.0
+
+### Patch Changes
+
+-   @comet/admin@6.2.0
+-   @comet/admin-icons@6.2.0
+
+## 6.1.0
+
+### Patch Changes
+
+-   Updated dependencies [dcfa03ca]
+-   Updated dependencies [08e0da09]
+-   Updated dependencies [b35bb8d1]
+-   Updated dependencies [8eb13750]
+-   Updated dependencies [a4fac913]
+    -   @comet/admin@6.1.0
+    -   @comet/admin-icons@6.1.0
+
+## 6.0.0
+
+### Patch Changes
+
+-   Updated dependencies [921f6378]
+-   Updated dependencies [76e50aa8]
+-   Updated dependencies [298b63b7]
+-   Updated dependencies [a525766c]
+-   Updated dependencies [0d768540]
+-   Updated dependencies [62779124]
+    -   @comet/admin@6.0.0
+    -   @comet/admin-icons@6.0.0
+
+## 5.6.0
+
+### Patch Changes
+
+-   76f85abe: Fix linking from block preview to block admin for non-trivial composite/list block combinations
+    -   @comet/admin@5.6.0
+    -   @comet/admin-icons@5.6.0
+
+## 5.5.0
+
+### Patch Changes
+
+-   @comet/admin@5.5.0
+-   @comet/admin-icons@5.5.0
+
+## 5.4.0
+
+### Patch Changes
+
+-   Updated dependencies [ba800163]
+-   Updated dependencies [60a18392]
+    -   @comet/admin@5.4.0
+    -   @comet/admin-icons@5.4.0
+
+## 5.3.0
+
+### Minor Changes
+
+-   a2273887: Add support for custom block categories
+
+    Allows specifying custom block categories in application code.
+
+    **Example:**
+
+    In `src/common/blocks/customBlockCategories.tsx`:
+
+    ```tsx
+    import { BlockCategory, CustomBlockCategory } from "@comet/blocks-admin";
+    import React from "react";
+    import { FormattedMessage } from "react-intl";
+
+    const productsBlockCategory: CustomBlockCategory = {
+        id: "Products",
+        label: <FormattedMessage id="blocks.category.products" defaultMessage="Products" />,
+        // Specify where category will be shown in drawer
+        insertBefore: BlockCategory.Teaser,
+    };
+
+    export { productsBlockCategory };
+    ```
+
+    In `src/documents/pages/blocks/MyBlock.tsx`:
+
+    ```tsx
+    import { productsBlockCategory } from "@src/common/blocks/customBlockCategories";
+
+    const MyBlock: BlockInterface = {
+        category: productsBlockCategory,
+        ...
+    };
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [0ff9b9ba]
+-   Updated dependencies [0ff9b9ba]
+-   Updated dependencies [a677a162]
+-   Updated dependencies [60cc1b2a]
+-   Updated dependencies [5435b278]
+    -   @comet/admin-icons@5.3.0
+    -   @comet/admin@5.3.0
+
+## 5.2.0
+
+### Minor Changes
+
+-   824ea66a: Improve layout selection UX in `createColumnsBlock`
+
+    Hide select when there's only one layout for a specific number of columns
+
+### Patch Changes
+
+-   3702bb23: Infer additional item fields in `BlocksBlock` and `ListBlock`
+
+    Additional fields in the `item` prop of `AdditionalItemContextMenuItems` and `AdditionalItemContent` will be typed correctly if the `additionalItemFields` option is strongly typed.
+
+-   Updated dependencies [25daac07]
+-   Updated dependencies [0bed4e7c]
+-   Updated dependencies [9fc7d474]
+    -   @comet/admin@5.2.0
+    -   @comet/admin-icons@5.2.0
+
 ## 5.1.0
 
 ### Patch Changes

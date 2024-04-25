@@ -34,6 +34,7 @@ import {
     GQLRedirectDetailQueryVariables,
 } from "./RedirectForm.gql.generated";
 import { useSubmitMutation } from "./submitMutation";
+
 export { GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
 export { createRedirectMutation, updateRedirectMutation } from "./RedirectForm.gql";
 export { GQLCreateRedirectMutation, GQLUpdateRedirectMutation } from "./RedirectForm.gql.generated";
@@ -253,6 +254,8 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                             validate={validateSource as any}
                                             fullWidth
+                                            placeholder="/example-path"
+                                            disableContentTranslation
                                         />
                                     </Grid>
                                     <Grid item xs={3}>

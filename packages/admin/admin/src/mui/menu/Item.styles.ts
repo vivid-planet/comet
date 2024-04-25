@@ -1,11 +1,13 @@
-import { Theme } from "@mui/material";
+import { createCometTheme } from "@comet/admin-theme";
 import { createStyles } from "@mui/styles";
 
 import { MenuItemProps, MuiListItemProps } from "./Item";
 
 export type MenuItemClassKey = "root" | "level1" | "level2" | "level3" | "hasIcon" | "hasSecondaryText" | "hasSecondaryAction" | "level3MenuOpen";
 
-export const styles = (theme: Theme) => {
+export const styles = () => {
+    const theme = createCometTheme(); // TODO: Remove after theming-refactor
+
     return createStyles<MenuItemClassKey, MenuItemProps & MuiListItemProps>({
         root: {
             flexShrink: 0,

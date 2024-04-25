@@ -1,11 +1,41 @@
-import { ComponentsOverrides, Theme } from "@mui/material";
+import { ComponentsOverrides } from "@mui/material";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
 import MuiTabs, { TabsProps as MuiTabsProps } from "@mui/material/Tabs";
-import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
-import { styles, TabsClassKey } from "./Tabs.styles";
+import { createComponentSlot } from "../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { TabScrollButton } from "./TabScrollButton";
+
+export type TabsClassKey = "root" | "tabs" | "content" | "contentHidden";
+
+type OwnerState = { contentHidden?: boolean };
+
+const Root = createComponentSlot("div")<TabsClassKey>({
+    componentName: "Tabs",
+    slotName: "root",
+})();
+
+const StyledTabs = createComponentSlot(MuiTabs)<TabsClassKey>({
+    componentName: "Tabs",
+    slotName: "tabs",
+})();
+
+const Content = createComponentSlot("div")<TabsClassKey, OwnerState>({
+    componentName: "Tabs",
+    slotName: "content",
+    classesResolver(ownerState) {
+        return [ownerState.contentHidden && "contentHidden"];
+    },
+})(
+    ({ ownerState }) => css`
+        ${ownerState.contentHidden &&
+        css`
+            display: none;
+        `}
+    `,
+);
 
 interface TabProps extends Omit<MuiTabProps, "children"> {
     label: React.ReactNode;
@@ -20,22 +50,33 @@ interface ITabsState {
     setValue: (value: number) => void;
 }
 
-export interface TabsProps extends MuiTabsProps {
-    children: Array<React.ReactElement<TabProps> | boolean | null | undefined> | React.ReactElement<TabProps>;
+type TabsChild = React.ReactElement<TabProps> | boolean | null | undefined;
+type TabsChildren = TabsChild | Array<TabsChild | Array<TabsChild>>;
+
+export interface TabsProps
+    extends MuiTabsProps,
+        ThemedComponentBaseProps<{
+            root: "div";
+            tabs: typeof MuiTabs;
+            content: "div";
+        }> {
+    children: TabsChildren;
     tabComponent?: React.ComponentType<MuiTabProps>;
     defaultIndex?: number;
     tabsState?: ITabsState;
 }
 
-function TabsComponent({
-    children,
-    tabComponent: TabComponent = MuiTab,
-    defaultIndex,
-    tabsState,
-    ScrollButtonComponent = TabScrollButton,
-    classes,
-    ...restProps
-}: TabsProps & WithStyles<typeof styles>) {
+export function Tabs(inProps: TabsProps) {
+    const {
+        children,
+        tabComponent: TabComponent = MuiTab,
+        defaultIndex,
+        tabsState,
+        ScrollButtonComponent = TabScrollButton,
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminTabs" });
+
     let value: ITabsState["value"];
     let setValue: ITabsState["setValue"];
 
@@ -64,14 +105,14 @@ function TabsComponent({
     });
 
     return (
-        <div className={classes.root}>
-            <MuiTabs
-                classes={{ root: classes.tabs }}
+        <Root {...slotProps?.root}>
+            <StyledTabs
                 value={value}
                 onChange={handleChange}
                 ScrollButtonComponent={ScrollButtonComponent}
                 scrollButtons="auto"
                 variant="scrollable"
+                {...slotProps?.tabs}
                 {...restProps}
             >
                 {React.Children.map(children, (child: React.ReactElement<TabProps>) => {
@@ -82,23 +123,27 @@ function TabsComponent({
                     const { children, label, ...restTabProps } = child.props;
                     return <TabComponent label={label} {...restTabProps} />;
                 })}
-            </MuiTabs>
+            </StyledTabs>
             {React.Children.map(children, (child: React.ReactElement<TabProps>, index) => {
+                const ownerState: OwnerState = {
+                    contentHidden: index !== value && child.props.forceRender,
+                };
+
                 if (!React.isValidElement<TabProps>(child)) {
                     return null;
                 }
 
-                if (index === value) {
-                    return <div className={classes.content}>{child.props.children}</div>;
-                } else if (child.props.forceRender) {
-                    return <div className={`${classes.content} ${classes.contentHidden}`}>{child.props.children}</div>;
+                if (index === value || child.props.forceRender) {
+                    return (
+                        <Content ownerState={ownerState} {...slotProps?.content}>
+                            {child.props.children}
+                        </Content>
+                    );
                 }
             })}
-        </div>
+        </Root>
     );
 }
-
-export const Tabs = withStyles(styles, { name: "CometAdminTabs" })(TabsComponent);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -111,7 +156,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminTabs?: {
-            defaultProps?: ComponentsPropsList["CometAdminTabs"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminTabs"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminTabs"];
         };
     }

@@ -2,7 +2,7 @@ import { IsBoolean, IsOptional } from "class-validator";
 
 import { BlockData, BlockInput, createBlock, inputToData } from "./block";
 import { BlockField } from "./decorators/field";
-import { IsHref } from "./externalLinkBlock/is-href.validator";
+import { IsLinkTarget } from "./externalLinkBlock/is-link-target.validator";
 
 class ExternalLinkBlockData extends BlockData {
     @BlockField({ nullable: true })
@@ -14,7 +14,7 @@ class ExternalLinkBlockData extends BlockData {
 
 class ExternalLinkBlockInput extends BlockInput {
     @IsOptional()
-    @IsHref()
+    @IsLinkTarget()
     @BlockField({ nullable: true })
     targetUrl?: string;
 

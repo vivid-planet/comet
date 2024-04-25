@@ -1,3 +1,4 @@
+import { createCometTheme } from "@comet/admin-theme";
 import { Box, ComponentsOverrides, Theme, Tooltip, Typography } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import clsx from "clsx";
@@ -12,8 +13,10 @@ import { MenuItemRouterLinkProps } from "./ItemRouterLink";
 
 export type MenuItemGroupClassKey = "root" | "title" | "titleMenuOpen" | "titleContainer" | "titleContainerMenuOpen";
 
-const styles = (theme: Theme) =>
-    createStyles<MenuItemGroupClassKey, MenuItemGroupProps>({
+const styles = () => {
+    const theme = createCometTheme(); // TODO: Remove after theming-refactor
+
+    return createStyles<MenuItemGroupClassKey, MenuItemGroupProps>({
         root: { marginTop: theme.spacing(8) },
         title: {
             border: `1px solid ${theme.palette.grey[100]}`,
@@ -41,6 +44,7 @@ const styles = (theme: Theme) =>
             alignItems: "center",
         },
     });
+};
 
 export interface MenuItemGroupProps {
     title: React.ReactNode;

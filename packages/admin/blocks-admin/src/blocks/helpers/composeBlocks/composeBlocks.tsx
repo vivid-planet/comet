@@ -127,16 +127,20 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
                     { flatten: true },
                 ),
 
-            createPreviewState: (s, previewCtx) =>
-                applyToCompositeBlocks(
-                    compositeBlocks,
-                    ([block, options], attr) => {
-                        const extractedState = extractData([block, options], attr, s);
-                        return block.createPreviewState(extractedState, previewCtx);
-                    },
-                    { flatten: true },
-                ),
-
+            createPreviewState: (s, previewCtx) => {
+                return {
+                    adminRoute: previewCtx.parentUrl,
+                    adminMeta: { route: previewCtx.parentUrl },
+                    ...applyToCompositeBlocks(
+                        compositeBlocks,
+                        ([block, options], attr) => {
+                            const extractedState = extractData([block, options], attr, s);
+                            return block.createPreviewState(extractedState, previewCtx);
+                        },
+                        { flatten: true },
+                    ),
+                };
+            },
             isValid: async (state) => {
                 const isValidPromises: Promise<boolean>[] = Object.values(
                     applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
@@ -190,6 +194,25 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
                 const result = Object.values<PreviewContent[]>(previewContents).reduce<PreviewContent[]>((prev, next) => [...prev, ...next], []);
 
                 return result;
+            },
+            resolveDependencyPath: (state, jsonPath) => {
+                const pathArr = jsonPath.split(".");
+                const key = pathArr[0];
+                const childJsonPath = pathArr.slice(1).join(".");
+
+                let dependencyPath: string | undefined;
+                applyToCompositeBlocks(compositeBlocks, ([block, options], attr) => {
+                    if (attr === key) {
+                        const extractedData = extractData([block, options], attr, state);
+                        dependencyPath = block.resolveDependencyPath(extractedData, childJsonPath);
+                    }
+                });
+
+                if (dependencyPath === undefined) {
+                    throw new Error(`CompositeBlock: Can't find block with key "${key}"`);
+                }
+
+                return dependencyPath;
             },
         },
         api: {

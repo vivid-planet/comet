@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { MainContent, Table, TableQuery, Toolbar, ToolbarAutomaticTitleItem, useStackSwitchApi, useTableQuery } from "@comet/admin";
+import { MainContent, StackLink, Table, TableQuery, Toolbar, ToolbarAutomaticTitleItem, useTableQuery } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { ContentScopeIndicator } from "@src/common/ContentScopeIndicator";
@@ -25,7 +25,6 @@ const mainMenuQuery = gql`
 `;
 
 const MainMenuItems: React.FunctionComponent = () => {
-    const stackApi = useStackSwitchApi();
     const { scope } = useContentScope();
 
     const { tableData, api, loading, error } = useTableQuery<GQLMainMenuQuery, GQLMainMenuQueryVariables>()(mainMenuQuery, {
@@ -64,7 +63,7 @@ const MainMenuItems: React.FunctionComponent = () => {
                                     header: "",
                                     cellProps: { align: "right" },
                                     render: (item) => (
-                                        <IconButton color="primary" onClick={() => stackApi.activatePage("edit", item.node.id)}>
+                                        <IconButton component={StackLink} color="primary" pageName="edit" payload={item.node.id}>
                                             <Edit />
                                         </IconButton>
                                     ),

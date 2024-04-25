@@ -1,7 +1,7 @@
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
-import { ComponentsOverrides, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
 import {
     DraftBlockType,
     DraftEditorCommand,
@@ -48,7 +48,8 @@ export type SupportedThings =
     | "history"
     | "link"
     | "links-remove"
-    | "non-breaking-space";
+    | "non-breaking-space"
+    | "soft-hyphen";
 
 export interface IRteOptions {
     supports: SupportedThings[];
@@ -90,7 +91,11 @@ export type FilterEditorStateBeforeUpdateFn = (
     context: Pick<IRteOptions, "supports" | "listLevelMax" | "maxBlocks" | "standardBlockType">,
 ) => EditorState;
 
-export interface RteProps {
+export interface RteProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        editor: "div";
+    }> {
     value: EditorState;
     onChange: OnEditorStateChangeFn;
     options?: IOptions;
@@ -148,201 +153,232 @@ export const styleMap = {
     },
 };
 
-const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles>> = (props, ref) => {
-    const { value: editorState, onChange, options: passedOptions, disabled, classes } = props;
-    const editorRef = React.useRef<DraftJsEditor>(null);
-    const editorWrapperRef = React.useRef<HTMLDivElement>(null);
+export const Rte: React.ForwardRefExoticComponent<React.PropsWithoutRef<RteProps> & React.RefAttributes<unknown>> = React.forwardRef(
+    (inProps: RteProps, ref) => {
+        const {
+            value: editorState,
+            onChange,
+            options: passedOptions,
+            disabled,
+            minHeight,
+            colors,
+            slotProps,
+            ...restProps
+        } = useThemeProps({
+            props: inProps,
+            name: "CometAdminRte",
+        });
 
-    // merge default options with passed options
-    let options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions;
-
-    // extract deprecated options and handle them specially
-    let deprecatedCustomBlockMap: ICustomBlockTypeMap_Deprecated = {};
-    if (options.customBlockMap) {
-        deprecatedCustomBlockMap = options.customBlockMap;
-        delete options.customBlockMap;
-    }
-
-    cleanBlockTypeMap(options.blocktypeMap); // mutate object and print warning when configuration is wrong
-
-    // blocktypes need an extra merge as they have their own merge strategy
-    options = {
-        ...options,
-        blocktypeMap: mergeBlocktypeMaps(defaultBlocktypeMap, deprecatedCustomBlockMap, options.blocktypeMap),
-    };
-
-    // force draftjs to be readonly when rte is disabled
-    if (disabled) {
-        options.draftJsProps = { ...options.draftJsProps, readOnly: true };
-    }
-
-    /**
-     * Expose methods
-     */
-    React.useImperativeHandle(ref, () => ({
-        focus: () => {
-            if (editorRef && editorRef.current) {
-                editorRef.current.focus();
-            }
-        },
-    }));
-
-    const { filterEditorStateBeforeUpdate, supports, listLevelMax, maxBlocks, standardBlockType } = options;
-
-    const decoratedOnChange = React.useCallback(
-        (nextEditorState: EditorState) => {
-            let modifiedState = nextEditorState;
-            const context = {
-                supports: supports,
-                listLevelMax: listLevelMax,
-                maxBlocks: maxBlocks,
-                standardBlockType: standardBlockType,
-            };
-            // apply optional filter to editorState
-            if (filterEditorStateBeforeUpdate) {
-                modifiedState = filterEditorStateBeforeUpdate(modifiedState, context);
-            }
-            // apply mandatory filter to editorState
-            modifiedState = mandatoryFilterEditorStateFn(modifiedState, context);
-
-            // pass the modified filter to original onChange
-            onChange(modifiedState);
-        },
-        [filterEditorStateBeforeUpdate, supports, listLevelMax, maxBlocks, standardBlockType, onChange],
-    );
-
-    const blockRenderMap = createBlockRenderMap({ blocktypeMap: options.blocktypeMap });
-
-    function handleKeyCommand(command: DraftEditorCommand) {
-        const commandToSupportsMap: Partial<Record<DraftEditorCommand, SupportedThings>> = {
-            bold: "bold",
-            italic: "italic",
-            strikethrough: "strikethrough",
-            underline: "underline",
+        const ownerState: OwnerState = {
+            disabled,
+            minHeight,
         };
 
-        const relevantSupports = commandToSupportsMap[command];
-        if (relevantSupports && options.supports.includes(relevantSupports)) {
-            const newState = RichUtils.handleKeyCommand(editorState, command);
+        const editorRef = React.useRef<DraftJsEditor>(null);
+        const editorWrapperRef = React.useRef<HTMLDivElement>(null);
 
-            if (newState) {
-                onChange(newState);
+        // merge default options with passed options
+        let options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions;
+
+        // extract deprecated options and handle them specially
+        let deprecatedCustomBlockMap: ICustomBlockTypeMap_Deprecated = {};
+        if (options.customBlockMap) {
+            deprecatedCustomBlockMap = options.customBlockMap;
+            delete options.customBlockMap;
+        }
+
+        cleanBlockTypeMap(options.blocktypeMap); // mutate object and print warning when configuration is wrong
+
+        // blocktypes need an extra merge as they have their own merge strategy
+        options = {
+            ...options,
+            blocktypeMap: mergeBlocktypeMaps(defaultBlocktypeMap, deprecatedCustomBlockMap, options.blocktypeMap),
+        };
+
+        // force draftjs to be readonly when rte is disabled
+        if (disabled) {
+            options.draftJsProps = { ...options.draftJsProps, readOnly: true };
+        }
+
+        /**
+         * Expose methods
+         */
+        React.useImperativeHandle(ref, () => ({
+            focus: () => {
+                if (editorRef && editorRef.current) {
+                    editorRef.current.focus();
+                }
+            },
+        }));
+
+        const { filterEditorStateBeforeUpdate, supports, listLevelMax, maxBlocks, standardBlockType } = options;
+
+        const decoratedOnChange = React.useCallback(
+            (nextEditorState: EditorState) => {
+                let modifiedState = nextEditorState;
+                const context = {
+                    supports: supports,
+                    listLevelMax: listLevelMax,
+                    maxBlocks: maxBlocks,
+                    standardBlockType: standardBlockType,
+                };
+                // apply optional filter to editorState
+                if (filterEditorStateBeforeUpdate) {
+                    modifiedState = filterEditorStateBeforeUpdate(modifiedState, context);
+                }
+                // apply mandatory filter to editorState
+                modifiedState = mandatoryFilterEditorStateFn(modifiedState, context);
+
+                // pass the modified filter to original onChange
+                onChange(modifiedState);
+            },
+            [filterEditorStateBeforeUpdate, supports, listLevelMax, maxBlocks, standardBlockType, onChange],
+        );
+
+        const blockRenderMap = createBlockRenderMap({ blocktypeMap: options.blocktypeMap });
+
+        function handleKeyCommand(command: DraftEditorCommand) {
+            const commandToSupportsMap: Partial<Record<DraftEditorCommand, SupportedThings>> = {
+                bold: "bold",
+                italic: "italic",
+                strikethrough: "strikethrough",
+                underline: "underline",
+            };
+
+            const relevantSupports = commandToSupportsMap[command];
+            if (relevantSupports && options.supports.includes(relevantSupports)) {
+                const newState = RichUtils.handleKeyCommand(editorState, command);
+
+                if (newState) {
+                    onChange(newState);
+                    return "handled";
+                }
+            }
+
+            // disallow user to add a new block when block limit is already reached
+            if (command === "split-block" && options.maxBlocks) {
+                const content = editorState.getCurrentContent();
+                const blockSize = content.getBlockMap().count();
+
+                const userTriesToAddTooMuchBlocks = blockSize >= options.maxBlocks;
+                if (userTriesToAddTooMuchBlocks) {
+                    return "handled"; // do nothing
+                }
+            }
+            return "not-handled";
+        }
+
+        function handleReturn(e: React.KeyboardEvent, innerEditorState: EditorState) {
+            // inserts a newline "\n" on SHIFT+ENTER-key
+            if (e.shiftKey) {
+                onChange(RichUtils.insertSoftNewline(innerEditorState));
                 return "handled";
             }
+            return "not-handled";
         }
 
-        // disallow user to add a new block when block limit is already reached
-        if (command === "split-block" && options.maxBlocks) {
-            const content = editorState.getCurrentContent();
-            const blockSize = content.getBlockMap().count();
-
-            const userTriesToAddTooMuchBlocks = blockSize >= options.maxBlocks;
-            if (userTriesToAddTooMuchBlocks) {
-                return "handled"; // do nothing
+        function keyBindingFn(event: React.KeyboardEvent) {
+            if (event.key === "Tab") {
+                // nested lists for ol and ul
+                event.preventDefault();
+                const newEditorState = RichUtils.onTab(event, editorState, options.listLevelMax);
+                if (newEditorState !== editorState) {
+                    onChange(newEditorState);
+                }
             }
-        }
-        return "not-handled";
-    }
 
-    function handleReturn(e: React.KeyboardEvent, innerEditorState: EditorState) {
-        // inserts a newline "\n" on SHIFT+ENTER-key
-        if (e.shiftKey) {
-            onChange(RichUtils.insertSoftNewline(innerEditorState));
-            return "handled";
-        }
-        return "not-handled";
-    }
-
-    function keyBindingFn(event: React.KeyboardEvent) {
-        if (event.key === "Tab") {
-            // nested lists for ol and ul
-            event.preventDefault();
-            const newEditorState = RichUtils.onTab(event, editorState, options.listLevelMax);
-            if (newEditorState !== editorState) {
-                onChange(newEditorState);
-            }
+            return getDefaultKeyBinding(event);
         }
 
-        return getDefaultKeyBinding(event);
-    }
+        const customStyleMap: DraftStyleMap = { ...styleMap };
 
-    const rootClasses: string[] = [classes.root];
-    if (disabled) rootClasses.push(classes.disabled);
+        if (options.customInlineStyles) {
+            Object.entries(options.customInlineStyles).forEach(([name, { style }]) => {
+                customStyleMap[name] = style;
+            });
+        }
 
-    const customStyleMap: DraftStyleMap = { ...styleMap };
+        return (
+            <Root ref={editorWrapperRef} ownerState={ownerState} {...slotProps?.root} {...restProps}>
+                <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} disabled={disabled} />
+                <Editor ownerState={ownerState} {...slotProps?.editor}>
+                    <DraftJsEditor
+                        ref={editorRef}
+                        editorState={editorState}
+                        onChange={decoratedOnChange}
+                        handleKeyCommand={handleKeyCommand}
+                        handleReturn={handleReturn}
+                        keyBindingFn={keyBindingFn}
+                        customStyleMap={customStyleMap}
+                        blockRenderMap={blockRenderMap}
+                        onCopy={(editor, event) => {
+                            onDraftEditorCopy(editor, event as React.ClipboardEvent<HTMLElement>);
+                        }}
+                        onCut={(editor, event) => {
+                            onDraftEditorCut(editor, event as React.ClipboardEvent<HTMLElement>);
+                        }}
+                        handlePastedText={(text: string, html: string | undefined, editorState: EditorState): DraftHandleValue => {
+                            const nextEditorState = pasteAndFilterText(html, editorState, options);
 
-    if (options.customInlineStyles) {
-        Object.entries(options.customInlineStyles).forEach(([name, { style }]) => {
-            customStyleMap[name] = style;
-        });
-    }
+                            if (nextEditorState) {
+                                decoratedOnChange(nextEditorState);
+                                return "handled";
+                            }
 
-    return (
-        <div ref={editorWrapperRef} className={rootClasses.join(" ")}>
-            <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} disabled={disabled} />
-            <div
-                className={classes.editor}
-                style={{ "--comet-admin-rte-min-height": `${props.minHeight === undefined ? 240 : props.minHeight}px` } as React.CSSProperties}
-            >
-                <DraftJsEditor
-                    ref={editorRef}
-                    editorState={editorState}
-                    onChange={decoratedOnChange}
-                    handleKeyCommand={handleKeyCommand}
-                    handleReturn={handleReturn}
-                    keyBindingFn={keyBindingFn}
-                    customStyleMap={customStyleMap}
-                    blockRenderMap={blockRenderMap}
-                    onCopy={(editor, event) => {
-                        onDraftEditorCopy(editor, event as React.ClipboardEvent<HTMLElement>);
-                    }}
-                    onCut={(editor, event) => {
-                        onDraftEditorCut(editor, event as React.ClipboardEvent<HTMLElement>);
-                    }}
-                    handlePastedText={(text: string, html: string | undefined, editorState: EditorState): DraftHandleValue => {
-                        const nextEditorState = pasteAndFilterText(html, editorState, options);
-
-                        if (nextEditorState) {
-                            decoratedOnChange(nextEditorState);
-                            return "handled";
-                        }
-
-                        return "not-handled";
-                    }}
-                    {...options.draftJsProps}
-                />
-            </div>
-        </div>
-    );
-};
+                            return "not-handled";
+                        }}
+                        {...options.draftJsProps}
+                    />
+                </Editor>
+            </Root>
+        );
+    },
+);
 
 export type RteClassKey = "root" | "disabled" | "editor";
 
-const styles = (theme: Theme) => {
-    const rteTheme = getRteTheme(theme.components?.CometAdminRte?.defaultProps);
+type OwnerState = Pick<RteProps, "disabled" | "minHeight">;
 
-    return createStyles<RteClassKey, RteProps>({
-        root: {
-            border: `1px solid ${rteTheme.colors.border}`,
-            borderTopWidth: 0,
-            backgroundColor: "#fff",
-        },
-        disabled: {
-            "& $editor": {
-                color: theme.palette.text.disabled,
-            },
-        },
-        editor: {
-            "& .public-DraftEditor-content": {
-                minHeight: "var(--comet-admin-rte-min-height)",
-                padding: 20,
-                boxSizing: "border-box",
-            },
-        },
-    });
-};
+const Root = createComponentSlot("div")<RteClassKey, OwnerState>({
+    componentName: "Rte",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [ownerState.disabled && "disabled"];
+    },
+})(
+    ({ theme }) => css`
+        border: 1px solid ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors.border};
+        border-top-width: 0;
+        background-color: #fff;
+    `,
+);
 
-export default withStyles(styles, { name: "CometAdminRte" })(React.forwardRef(Rte));
+const Editor = createComponentSlot("div")<RteClassKey, OwnerState>({
+    componentName: "Rte",
+    slotName: "editor",
+    classesResolver(ownerState) {
+        return [ownerState.disabled && "disabled"];
+    },
+})(
+    ({ ownerState, theme }) => css`
+        & .public-DraftEditor-content {
+            min-height: 240px;
+
+            ${ownerState.minHeight !== undefined &&
+            css`
+                min-height: ${ownerState.minHeight};
+            `}
+
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        ${ownerState.disabled &&
+        css`
+            color: ${theme.palette.text.disabled};
+        `}
+    `,
+);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -355,7 +391,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminRte?: {
-            defaultProps?: ComponentsPropsList["CometAdminRte"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminRte"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminRte"];
         };
     }

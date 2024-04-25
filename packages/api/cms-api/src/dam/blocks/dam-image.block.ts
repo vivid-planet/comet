@@ -1,7 +1,7 @@
 import { createOneOfBlock, OneOfBlock } from "@comet/blocks-api";
 
-import { PixelImageBlock } from "../../blocks/PixelImageBlock";
-import { SvgImageBlock } from "../../blocks/SvgImageBlock";
+import { PixelImageBlock } from "./pixel-image.block";
+import { SvgImageBlock } from "./svg-image.block";
 
 const DamImageBlock: OneOfBlock<{ pixelImage: typeof PixelImageBlock; svgImage: typeof SvgImageBlock }> = createOneOfBlock(
     {

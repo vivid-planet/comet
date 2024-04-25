@@ -1,6 +1,6 @@
 import { StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
-import { Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -20,74 +20,112 @@ import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDepende
 import { BlockDependency, BlockInterface, BlockState, PreviewContent } from "../types";
 import { createUseAdminComponent } from "./listBlock/createUseAdminComponent";
 
-export interface ListBlockItem<T extends BlockInterface> {
+// Using {} instead of Record<string, never> because never and unknown are incompatible.
+// eslint-disable-next-line @typescript-eslint/ban-types
+type DefaultAdditionalItemFields = {};
+
+export type ListBlockItem<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields> = {
     [key: string]: unknown;
     key: string;
     visible: boolean;
     props: BlockState<T>;
     selected: boolean;
     slideIn: boolean;
+} & AdditionalItemFields;
+
+export interface ListBlockState<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields> {
+    blocks: ListBlockItem<T, AdditionalItemFields>[];
 }
 
-export interface ListBlockState<T extends BlockInterface> {
-    blocks: ListBlockItem<T>[];
+export interface ListBlockFragment<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields> {
+    blocks: Array<
+        {
+            [key: string]: unknown;
+            key: string;
+            visible: boolean;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            props: any;
+        } & AdditionalItemFields
+    >;
 }
 
-export interface ListBlockFragment {
-    blocks: Array<{
-        [key: string]: unknown;
-        key: string;
-        visible: boolean;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        props: any;
-    }>;
+export interface ListBlockOutput<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields> {
+    blocks: Array<
+        {
+            [key: string]: unknown;
+            key: string;
+            visible: boolean;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            props: any;
+        } & AdditionalItemFields
+    >;
 }
 
-export interface ListBlockOutput {
-    blocks: Array<{
-        [key: string]: unknown;
-        key: string;
-        visible: boolean;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        props: any;
-    }>;
-}
-
-export interface AdditionalItemField<Value = unknown> {
+export interface ListBlockAdditionalItemField<Value = unknown> {
     defaultValue: Value;
 }
 
-interface CreateListBlockOptions<T extends BlockInterface> {
+interface CreateListBlockOptions<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown>> {
     name: string;
     displayName?: React.ReactNode;
     itemName?: React.ReactNode;
     itemsName?: React.ReactNode;
     block: T;
+    minVisibleBlocks?: number;
     maxVisibleBlocks?: number;
     createDefaultListEntry?: boolean;
-    additionalItemFields?: Record<string, AdditionalItemField>;
+    additionalItemFields?: {
+        [Key in keyof AdditionalItemFields]: ListBlockAdditionalItemField<AdditionalItemFields[Key]>;
+    };
     AdditionalItemContextMenuItems?: React.FunctionComponent<{
-        item: ListBlockItem<T>;
-        onChange: (item: ListBlockItem<T>) => void;
+        item: ListBlockItem<T, AdditionalItemFields>;
+        onChange: (item: ListBlockItem<T, AdditionalItemFields>) => void;
         onMenuClose: () => void;
     }>;
-    AdditionalItemContent?: React.FunctionComponent<{ item: ListBlockItem<T> }>;
+    AdditionalItemContent?: React.FunctionComponent<{ item: ListBlockItem<T, AdditionalItemFields> }>;
 }
 
-export function createListBlock<T extends BlockInterface>({
+export function createListBlock<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>({
     name,
     block,
     displayName = <FormattedMessage id="comet.blocks.listBlock.name" defaultMessage="List" />,
     itemName = <FormattedMessage id="comet.blocks.listBlock.itemName" defaultMessage="block" />,
     itemsName = <FormattedMessage id="comet.blocks.listBlock.itemsName" defaultMessage="blocks" />,
+    minVisibleBlocks,
     maxVisibleBlocks,
     createDefaultListEntry,
-    additionalItemFields = {},
+    additionalItemFields,
     AdditionalItemContextMenuItems,
     AdditionalItemContent,
-}: CreateListBlockOptions<T>): BlockInterface<ListBlockFragment, ListBlockState<T>, ListBlockOutput> {
+}: CreateListBlockOptions<T, AdditionalItemFields>): BlockInterface<
+    ListBlockFragment<AdditionalItemFields>,
+    ListBlockState<T, AdditionalItemFields>,
+    ListBlockOutput<AdditionalItemFields>
+> {
     const useAdminComponent = createUseAdminComponent({ block, maxVisibleBlocks, additionalItemFields });
-    const BlockListBlock: BlockInterface<ListBlockFragment, ListBlockState<T>, ListBlockOutput> = {
+    if (minVisibleBlocks && maxVisibleBlocks && minVisibleBlocks > maxVisibleBlocks)
+        throw new Error(
+            `${name}: The property 'minVisibleBlocks' (value: ${minVisibleBlocks}) must be equal to or smaller than 'maxVisibleBlocks' (value: ${maxVisibleBlocks})`,
+        );
+
+    const getDefaultListEntry = () => ({
+        key: uuid(),
+        visible: true,
+        props: block.defaultValues(),
+        selected: false,
+        slideIn: false,
+        // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
+        ...(Object.entries(additionalItemFields ?? {}).reduce(
+            (fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }),
+            {},
+        ) as AdditionalItemFields),
+    });
+
+    const BlockListBlock: BlockInterface<
+        ListBlockFragment<AdditionalItemFields>,
+        ListBlockState<T, AdditionalItemFields>,
+        ListBlockOutput<AdditionalItemFields>
+    > = {
         ...createBlockSkeleton(),
 
         name,
@@ -95,35 +133,26 @@ export function createListBlock<T extends BlockInterface>({
         displayName,
 
         defaultValues: () => ({
-            blocks: createDefaultListEntry
-                ? [
-                      {
-                          key: uuid(),
-                          visible: true,
-                          props: block.defaultValues(),
-                          selected: false,
-                          slideIn: false,
-                          ...Object.entries(additionalItemFields).reduce(
-                              (fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }),
-                              {},
-                          ),
-                      },
-                  ]
-                : [],
+            blocks:
+                minVisibleBlocks !== undefined
+                    ? Array.from({ length: minVisibleBlocks }, getDefaultListEntry)
+                    : createDefaultListEntry
+                    ? [getDefaultListEntry()]
+                    : [],
         }),
 
         category: block.category,
 
-        input2State: (s) => {
+        input2State: (input) => {
             return {
-                ...s,
-                blocks: s.blocks.map((c) => {
+                ...input,
+                blocks: input.blocks.map((child) => {
                     return {
-                        ...c,
-                        key: c.key,
-                        visible: c.visible,
-                        props: block.input2State(c.props),
-                        ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
+                        ...child,
+                        key: child.key,
+                        visible: child.visible,
+                        props: block.input2State(child.props),
+                        ...Object.keys(additionalItemFields ?? {}).reduce((fields, field) => ({ ...fields, [field]: child[field] }), {}),
                         selected: false,
                         slideIn: false,
                     };
@@ -131,29 +160,33 @@ export function createListBlock<T extends BlockInterface>({
             };
         },
 
-        state2Output: (s) => {
+        state2Output: (state) => {
             return {
-                blocks: s.blocks.map((c) => {
+                blocks: state.blocks.map((child) => {
                     return {
-                        key: c.key,
-                        visible: c.visible,
-                        props: block.state2Output(c.props),
-                        ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
+                        key: child.key,
+                        visible: child.visible,
+                        props: block.state2Output(child.props),
+                        // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
+                        ...(Object.keys(additionalItemFields ?? {}).reduce(
+                            (fields, field) => ({ ...fields, [field]: child[field] }),
+                            {},
+                        ) as AdditionalItemFields),
                     };
                 }),
             };
         },
 
         output2State: async (output, context) => {
-            const state: ListBlockState<T> = {
+            const state: ListBlockState<T, AdditionalItemFields> = {
                 blocks: [],
             };
 
-            for (const item of output.blocks) {
+            for (const child of output.blocks) {
                 state.blocks.push({
                     slideIn: false,
-                    ...item,
-                    props: await block.output2State(item.props, context),
+                    ...child,
+                    props: await block.output2State(child.props, context),
                     selected: false,
                 });
             }
@@ -165,15 +198,19 @@ export function createListBlock<T extends BlockInterface>({
             return {
                 adminRoute: previewCtx.parentUrl,
                 blocks: state.blocks
-                    .filter((c) => (previewCtx.showVisibleOnly ? c.visible : true)) // depending on context show all blocks or only visible blocks
-                    .map((c) => {
-                        const blockAdminRoute = `${previewCtx.parentUrl}/${c.key}/edit`;
+                    .filter((child) => (previewCtx.showVisibleOnly ? child.visible : true)) // depending on context show all blocks or only visible blocks
+                    .map((child) => {
+                        const blockAdminRoute = `${previewCtx.parentUrlSubRoute ?? previewCtx.parentUrl}/${child.key}/edit`;
 
                         return {
-                            key: c.key,
-                            visible: c.visible,
-                            props: block.createPreviewState(c.props, { ...previewCtx, parentUrl: blockAdminRoute }),
-                            ...Object.keys(additionalItemFields).reduce((fields, field) => ({ ...fields, [field]: c[field] }), {}),
+                            key: child.key,
+                            visible: child.visible,
+                            props: block.createPreviewState(child.props, { ...previewCtx, parentUrl: blockAdminRoute }),
+                            // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
+                            ...(Object.keys(additionalItemFields ?? {}).reduce(
+                                (fields, field) => ({ ...fields, [field]: child[field] }),
+                                {},
+                            ) as AdditionalItemFields),
                             adminRoute: blockAdminRoute,
                             adminMeta: { route: blockAdminRoute },
                         };
@@ -181,7 +218,10 @@ export function createListBlock<T extends BlockInterface>({
                 adminMeta: { route: previewCtx.parentUrl },
             };
         },
-        isValid: async (state) => parallelAsyncEvery(state.blocks, async (c) => block.isValid(c.props)),
+        isValid: async (state) => {
+            const blockValidityResult = await parallelAsyncEvery(state.blocks, async (c) => block.isValid(c.props));
+            return blockValidityResult && (minVisibleBlocks ? minVisibleBlocks <= state.blocks.filter((block) => block.visible).length : true);
+        },
 
         childBlockCount: (state) => state.blocks.length,
 
@@ -200,12 +240,12 @@ export function createListBlock<T extends BlockInterface>({
         },
 
         replaceDependenciesInOutput: (output, replacements) => {
-            const newOutput: ListBlockOutput = { ...output, blocks: [] };
+            const newOutput: ListBlockOutput<AdditionalItemFields> = { ...output, blocks: [] };
 
-            for (const c of output.blocks) {
+            for (const child of output.blocks) {
                 newOutput.blocks.push({
-                    ...c,
-                    props: block.replaceDependenciesInOutput(c.props, replacements),
+                    ...child,
+                    props: block.replaceDependenciesInOutput(child.props, replacements),
                 });
             }
 
@@ -281,8 +321,17 @@ export function createListBlock<T extends BlockInterface>({
                                                     </AdminComponentStickyHeader>
                                                     <div>
                                                         {state.blocks.map((data, blockIndex) => {
-                                                            const canChangeVisibility =
-                                                                maxVisibleBlocks && totalVisibleBlocks >= maxVisibleBlocks ? data.visible : true;
+                                                            const isMinVisibleBlocksMet =
+                                                                !!minVisibleBlocks && totalVisibleBlocks >= minVisibleBlocks;
+                                                            const isMaxVisibleBlocksReached =
+                                                                !!maxVisibleBlocks && totalVisibleBlocks >= maxVisibleBlocks;
+
+                                                            const canToggleVisibility = isMaxVisibleBlocksReached ? data.visible : true;
+
+                                                            const showMaxBlocksAllowedMessage = isMaxVisibleBlocksReached && !data.visible;
+                                                            const showMinBlocksRequiredMessage =
+                                                                !isMinVisibleBlocksMet || (minVisibleBlocks === totalVisibleBlocks && data.visible);
+
                                                             return (
                                                                 <HoverPreviewComponent key={data.key} componentSlug={`${data.key}/edit`}>
                                                                     <BlockRow
@@ -306,35 +355,37 @@ export function createListBlock<T extends BlockInterface>({
                                                                             });
                                                                         }}
                                                                         visibilityButton={
-                                                                            canChangeVisibility ? (
-                                                                                <IconButton onClick={() => toggleVisible(data.key)} size="small">
-                                                                                    {data.visible ? (
-                                                                                        <Visible color="secondary" />
-                                                                                    ) : (
-                                                                                        <Invisible color="action" />
-                                                                                    )}
-                                                                                </IconButton>
-                                                                            ) : (
-                                                                                <Tooltip
-                                                                                    title={
+                                                                            <Tooltip
+                                                                                title={
+                                                                                    showMaxBlocksAllowedMessage ? (
                                                                                         <FormattedMessage
                                                                                             id="comet.blocks.list.maxVisibleBlocks"
-                                                                                            defaultMessage="Max visible blocks: {maxVisibleBlocks}"
+                                                                                            defaultMessage="Max. visible blocks allowed: {maxVisibleBlocks}"
                                                                                             values={{ maxVisibleBlocks }}
                                                                                         />
-                                                                                    }
-                                                                                >
-                                                                                    <span>
-                                                                                        <IconButton disabled size="small">
-                                                                                            {data.visible ? (
-                                                                                                <Visible color="secondary" />
-                                                                                            ) : (
-                                                                                                <Invisible color="action" />
-                                                                                            )}
-                                                                                        </IconButton>
-                                                                                    </span>
-                                                                                </Tooltip>
-                                                                            )
+                                                                                    ) : showMinBlocksRequiredMessage ? (
+                                                                                        <FormattedMessage
+                                                                                            id="comet.blocks.list.minVisibleBlocks"
+                                                                                            defaultMessage="Min. visible blocks required: {minVisibleBlocks}"
+                                                                                            values={{ minVisibleBlocks }}
+                                                                                        />
+                                                                                    ) : null
+                                                                                }
+                                                                            >
+                                                                                <Box component="span">
+                                                                                    <IconButton
+                                                                                        onClick={() => canToggleVisibility && toggleVisible(data.key)}
+                                                                                        size="small"
+                                                                                        disabled={!canToggleVisibility}
+                                                                                    >
+                                                                                        {data.visible ? (
+                                                                                            <Visible color="secondary" />
+                                                                                        ) : (
+                                                                                            <Invisible color="action" />
+                                                                                        )}
+                                                                                    </IconButton>
+                                                                                </Box>
+                                                                            </Tooltip>
                                                                         }
                                                                         onAddNewBlock={(beforeIndex) => {
                                                                             const key = addNewBlock(beforeIndex);
@@ -346,7 +397,7 @@ export function createListBlock<T extends BlockInterface>({
                                                                                     name: block.name,
                                                                                     visible: data.visible,
                                                                                     state: data.props,
-                                                                                    additionalFields: Object.keys(additionalItemFields).reduce(
+                                                                                    additionalFields: Object.keys(additionalItemFields ?? {}).reduce(
                                                                                         (fields, field) => ({ ...fields, [field]: data[field] }),
                                                                                         {},
                                                                                     ),
@@ -466,6 +517,18 @@ export function createListBlock<T extends BlockInterface>({
                 const nextPreviewContent = block.previewContent(next.props, ctx);
                 return [...prev, ...nextPreviewContent];
             }, []);
+        },
+        resolveDependencyPath: (state, jsonPath) => {
+            if (!/^blocks.\d+.props/.test(jsonPath)) {
+                throw new Error("ListBlock: Invalid jsonPath");
+            }
+
+            const pathArr = jsonPath.split(".");
+            const num = Number(pathArr[1]);
+            const blockItem = state.blocks[num];
+
+            const childPath = block.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
+            return `${blockItem.key}/edit/${childPath}`;
         },
     };
     return BlockListBlock;

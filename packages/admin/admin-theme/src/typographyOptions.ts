@@ -1,3 +1,4 @@
+import { Breakpoints } from "@mui/material";
 import { TypographyOptions } from "@mui/material/styles/createTypography";
 
 const fontFamily = "Roboto, Helvetica, Arial, sans-serif";
@@ -12,50 +13,87 @@ export const fontWeights = {
     fontWeightBold: 700,
 };
 
-export const typographyOptions: TypographyOptions = {
+const body1Styles = {
+    fontFamily,
+    fontSize: 16,
+    lineHeight: "20px",
+    fontWeight: fontWeights.fontWeightRegular,
+};
+
+export const createTypographyOptions = (breakpoints: Breakpoints): TypographyOptions => ({
+    fontFamily,
     ...fontWeights,
     h1: {
         fontFamily,
-        fontSize: 55,
-        lineHeight: "64px",
+        fontSize: 36,
+        lineHeight: "42px",
         fontWeight: fontWeights.fontWeightLight,
+
+        [breakpoints.up("md")]: {
+            fontSize: 55,
+            lineHeight: "64px",
+        },
     },
     h2: {
         fontFamily,
-        fontSize: 44,
-        lineHeight: "52px",
-        fontWeight: fontWeights.fontWeightLight,
+        fontSize: 30,
+        lineHeight: "38px",
+        fontWeight: fontWeights.fontWeightExtraLight,
+
+        [breakpoints.up("md")]: {
+            fontSize: 44,
+            lineHeight: "52px",
+            fontWeight: fontWeights.fontWeightLight,
+        },
     },
     h3: {
         fontFamily,
-        fontSize: 33,
-        lineHeight: "39px",
-        fontWeight: fontWeights.fontWeightLight,
+        fontSize: 24,
+        lineHeight: "28px",
+        fontWeight: fontWeights.fontWeightRegular,
+
+        [breakpoints.up("md")]: {
+            fontSize: 33,
+            lineHeight: "39px",
+            fontWeight: fontWeights.fontWeightLight,
+        },
     },
     h4: {
         fontFamily,
-        fontSize: 24,
-        lineHeight: "28px",
-        fontWeight: fontWeights.fontWeightLight,
+        fontSize: 20,
+        lineHeight: "26px",
+        fontWeight: fontWeights.fontWeightRegular,
+
+        [breakpoints.up("md")]: {
+            fontSize: 24,
+            lineHeight: "28px",
+            fontWeight: fontWeights.fontWeightExtraLight,
+        },
     },
     h5: {
         fontFamily,
-        fontSize: 18,
-        lineHeight: "21px",
-        fontWeight: fontWeights.fontWeightRegular,
+        fontSize: 16,
+        lineHeight: "20px",
+        fontWeight: fontWeights.fontWeightMedium,
+
+        [breakpoints.up("md")]: {
+            fontSize: 18,
+            lineHeight: "21px",
+            fontWeight: fontWeights.fontWeightRegular,
+        },
     },
     h6: {
         fontFamily,
-        fontSize: 16,
-        lineHeight: "20px",
+        fontSize: 14,
+        lineHeight: "18px",
         fontWeight: fontWeights.fontWeightBold,
+
+        [breakpoints.up("md")]: {
+            fontSize: 16,
+            lineHeight: "20px",
+        },
     },
-    body1: {
-        fontFamily,
-        fontSize: 16,
-        lineHeight: "20px",
-        fontWeight: fontWeights.fontWeightRegular,
-    },
+    body1: body1Styles,
     body2: {
         fontFamily,
         fontSize: 14,
@@ -75,4 +113,34 @@ export const typographyOptions: TypographyOptions = {
         fontWeight: fontWeights.fontWeightSemiBold,
         letterSpacing: 0,
     },
-};
+    list: {
+        paddingInlineStart: 30,
+        paddingTop: 8,
+        paddingBottom: 8,
+    },
+    listItem: {
+        ...body1Styles,
+        paddingLeft: 0,
+        paddingTop: 4,
+        paddingBottom: 4,
+    },
+});
+
+declare module "@mui/material/styles" {
+    interface TypographyVariants {
+        list: React.CSSProperties;
+        listItem: React.CSSProperties;
+    }
+
+    interface TypographyVariantsOptions {
+        list?: React.CSSProperties;
+        listItem?: React.CSSProperties;
+    }
+}
+
+declare module "@mui/material/Typography" {
+    interface TypographyPropsVariantOverrides {
+        list: true;
+        listItem: true;
+    }
+}

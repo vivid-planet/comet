@@ -1,17 +1,18 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
 
-import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { ContentScope } from "../interfaces/content-scope.interface";
 
 @ObjectType()
 export class CurrentUserPermission {
     @Field()
     permission: string;
+    @Field(() => [GraphQLJSONObject])
+    contentScopes: ContentScope[];
 }
 
 @ObjectType()
-export class CurrentUser implements CurrentUserInterface {
+export class CurrentUser {
     @Field()
     id: string;
     @Field()
@@ -19,9 +20,7 @@ export class CurrentUser implements CurrentUserInterface {
     @Field()
     email: string;
     @Field()
-    language: string;
-    @Field(() => [GraphQLJSONObject])
-    contentScopes: ContentScope[];
+    locale: string;
     @Field(() => [CurrentUserPermission])
     permissions: CurrentUserPermission[];
 }
