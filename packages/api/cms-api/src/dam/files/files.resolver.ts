@@ -80,7 +80,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         async findCopiesOfFileInScope(
             @Args({ type: () => FindCopiesOfFileInScopeArgs }) { id, scope, imageCropArea }: FindCopiesOfFileInScopeArgsInterface,
         ): Promise<FileInterface[]> {
-            return this.filesService.findCopiesOfFileInScope(id, imageCropArea, scope);
+            return this.filesService.findCopiesOfFileInScope(id, imageCropArea, nonEmptyScopeOrNothing(scope));
         }
 
         @Mutation(() => File)
@@ -109,7 +109,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
                 ...input,
                 imageCropArea: imageInput?.cropArea,
                 folderId: input.folderId ? input.folderId : undefined,
-                scope,
+                scope: nonEmptyScopeOrNothing(scope),
             });
             return uploadedFile;
         }
