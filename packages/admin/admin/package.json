@@ -38,6 +38,7 @@
         "lodash.debounce": "^4.0.8",
         "lodash.isequal": "^4.5.0",
         "query-string": "^6.8.1",
+        "react-currency-input-field": "^3.8.0",
         "use-constant": "^1.0.0",
         "uuid": "^9.0.0"
     },

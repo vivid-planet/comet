@@ -1,5 +1,6 @@
 import {
     CheckboxField,
+    CurrencyField,
     Field,
     FieldContainer,
     FinalFormCheckbox,
@@ -65,6 +66,7 @@ function Story() {
                                         fullWidth
                                     />
                                     <SwitchField name="switch" label={values.switch ? "On" : "Off"} fieldLabel="Switch" />
+                                    <CurrencyField currency="EUR" name="currency" label="Currency" fullwidth clearable />
                                 </CardContent>
                             </Card>
                         </Grid>
