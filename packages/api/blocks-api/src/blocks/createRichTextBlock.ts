@@ -205,11 +205,8 @@ function IsDraftContent(link: Block, validationOptions?: ValidationOptions) {
                 async validate(value: unknown, args: ValidationArguments) {
                     const LinkBlock = args.constraints[0] as Block;
 
-                    if (typeof value === "object" && value !== null) {
-                        // TODO check if object matches RawDraftContentState
-                        const { entityMap } = value as DraftJsInput<ExtractBlockInput<typeof LinkBlock>>;
-
-                        for (const entity of Object.values(entityMap)) {
+                    if (isDraftJsInput(value)) {
+                        for (const entity of Object.values(value.entityMap)) {
                             const validationErrors = await validate(LinkBlock.blockInputFactory(entity.data), {
                                 forbidNonWhitelisted: true,
                                 whitelist: true,
@@ -229,4 +226,17 @@ function IsDraftContent(link: Block, validationOptions?: ValidationOptions) {
             },
         });
     };
+}
+
+function isDraftJsInput(value: unknown): value is DraftJsInput<BlockInputInterface> {
+    return (
+        typeof value === "object" &&
+        value !== null &&
+        "blocks" in value &&
+        "entityMap" in value &&
+        Array.isArray(value.blocks) &&
+        typeof value.entityMap === "object" &&
+        value.entityMap !== null &&
+        Object.values(value.entityMap).every((entity) => typeof entity === "object" && entity !== null && entity.type === "LINK")
+    );
 }
