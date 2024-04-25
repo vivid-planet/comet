@@ -51,6 +51,8 @@ type Dependency {
   visible: Boolean!
   targetGraphqlObjectType: String!
   targetId: String!
+  name: String
+  secondaryInformation: String
 }
 
 type PaginatedDependencies {
@@ -192,6 +194,7 @@ type Link implements DocumentInterface {
   updatedAt: DateTime!
   content: LinkBlockData!
   createdAt: DateTime!
+  pageTreeNode: PageTreeNode
 }
 
 interface DocumentInterface {
@@ -276,11 +279,6 @@ input DependentFilter {
   rootColumnName: String
 }
 
-type PaginatedPages {
-  nodes: [Page!]!
-  totalCount: Int!
-}
-
 type PredefinedPage implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -335,12 +333,12 @@ type FooterContentScope {
   language: String!
 }
 
-type Footer implements DocumentInterface {
+type Footer {
   id: ID!
-  updatedAt: DateTime!
   content: FooterContentBlockData!
   scope: FooterContentScope!
   createdAt: DateTime!
+  updatedAt: DateTime!
   dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
@@ -363,11 +361,11 @@ type MainMenu {
   items: [MainMenuItem!]!
 }
 
-type NewsComment implements DocumentInterface {
+type NewsComment {
   id: ID!
-  updatedAt: DateTime!
   comment: String!
   createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type NewsContentScope {
@@ -375,9 +373,8 @@ type NewsContentScope {
   language: String!
 }
 
-type News implements DocumentInterface {
+type News {
   id: ID!
-  updatedAt: DateTime!
   scope: NewsContentScope!
   slug: String!
   title: String!
@@ -387,6 +384,7 @@ type News implements DocumentInterface {
   image: DamImageBlockData!
   content: NewsContentBlockData!
   createdAt: DateTime!
+  updatedAt: DateTime!
   comments: [NewsComment!]!
   dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
@@ -409,12 +407,12 @@ type PaginatedNews {
   totalCount: Int!
 }
 
-type ProductCategory implements DocumentInterface {
+type ProductCategory {
   id: ID!
-  updatedAt: DateTime!
   title: String!
   slug: String!
   createdAt: DateTime!
+  updatedAt: DateTime!
   products: [Product!]!
 }
 
@@ -425,20 +423,20 @@ type ProductStatistics {
   updatedAt: DateTime!
 }
 
-type ProductTag implements DocumentInterface {
+type ProductTag {
   id: ID!
-  updatedAt: DateTime!
   title: String!
   createdAt: DateTime!
+  updatedAt: DateTime!
   products: [Product!]!
 }
 
-type ProductVariant implements DocumentInterface {
+type ProductVariant {
   id: ID!
-  updatedAt: DateTime!
   name: String!
   image: DamImageBlockData!
   createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type ProductDiscounts {
@@ -452,15 +450,8 @@ type ProductDimensions {
   depth: Float!
 }
 
-type ProductPackageDimensions {
-  width: Float!
-  height: Float!
-  depth: Float!
-}
-
-type Product implements DocumentInterface {
+type Product {
   id: ID!
-  updatedAt: DateTime!
   title: String!
   visible: Boolean!
   slug: String!
@@ -473,9 +464,9 @@ type Product implements DocumentInterface {
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
   dimensions: ProductDimensions
-  packageDimensions: ProductPackageDimensions
   statistics: ProductStatistics
   createdAt: DateTime!
+  updatedAt: DateTime!
   category: ProductCategory
   variants: [ProductVariant!]!
   tags: [ProductTag!]!
@@ -511,9 +502,8 @@ type PaginatedPageTreeNodes {
   totalCount: Int!
 }
 
-type Redirect implements DocumentInterface {
+type Redirect {
   id: ID!
-  updatedAt: DateTime!
   sourceType: RedirectSourceTypeValues!
   source: String!
   target: JSONObject!
@@ -521,6 +511,7 @@ type Redirect implements DocumentInterface {
   active: Boolean!
   generationType: RedirectGenerationType!
   createdAt: DateTime!
+  updatedAt: DateTime!
   scope: RedirectScope!
   dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
@@ -595,12 +586,6 @@ input ProductDimensionsInput {
   depth: Float!
 }
 
-input ProductPackageDimensionsInput {
-  width: Float!
-  height: Float!
-  depth: Float!
-}
-
 input RedirectScopeInput {
   domain: String!
 }
@@ -618,7 +603,7 @@ type Query {
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
   link(linkId: ID!): Link
-  pages(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC): PaginatedPages!
+  page(id: ID!): Page!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
@@ -1148,7 +1133,6 @@ input ProductInput {
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
   dimensions: ProductDimensionsInput
-  packageDimensions: ProductPackageDimensionsInput
   statistics: ProductStatisticsInput
   variants: [ProductVariantInput!]! = []
   category: ID = null
@@ -1175,7 +1159,6 @@ input ProductUpdateInput {
   discounts: [ProductDiscountsInput!]
   articleNumbers: [String!]
   dimensions: ProductDimensionsInput
-  packageDimensions: ProductPackageDimensionsInput
   statistics: ProductStatisticsInput
   variants: [ProductVariantInput!]
   category: ID

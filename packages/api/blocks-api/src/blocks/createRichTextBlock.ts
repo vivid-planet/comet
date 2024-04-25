@@ -1,5 +1,5 @@
 import { instanceToPlain, plainToInstance } from "class-transformer";
-import { Allow, IsObject } from "class-validator";
+import { registerDecorator, validate, ValidationArguments, ValidationOptions } from "class-validator";
 import type { DraftBlockType, DraftEntityMutability, DraftInlineStyleType, RawDraftContentState, RawDraftEntityRange } from "draft-js";
 
 import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator";
@@ -16,7 +16,7 @@ import {
     registerBlock,
 } from "./block";
 import { AnnotationBlockMeta, BlockField } from "./decorators/field";
-import { NameOrOptions } from "./factories/types";
+import { BlockFactoryNameOrOptions } from "./factories/types";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
 
@@ -69,7 +69,7 @@ export interface RichTextBlockInputInterface<LinkBlockInput extends BlockInputIn
 
 export function createRichTextBlock<LinkBlock extends Block>(
     { link: LinkBlock, indexSearchText = true }: CreateRichTextBlockOptions,
-    nameOrOptions: NameOrOptions = "RichText",
+    nameOrOptions: BlockFactoryNameOrOptions = "RichText",
 ): Block<RichTextBlockDataInterface, RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>>> {
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
     const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
@@ -106,8 +106,7 @@ export function createRichTextBlock<LinkBlock extends Block>(
     }
 
     class RichTextBlockInput implements RichTextBlockInputInterface<ExtractBlockInput<LinkBlock>> {
-        @Allow()
-        @IsObject()
+        @IsDraftContent(LinkBlock)
         @BlockField({ type: "json" })
         draftContent: DraftJsInput<ExtractBlockInput<LinkBlock>>;
 
@@ -191,4 +190,52 @@ export function createRichTextBlock<LinkBlock extends Block>(
     registerBlock(RichTextBlock);
 
     return RichTextBlock;
+}
+
+function IsDraftContent(link: Block, validationOptions?: ValidationOptions) {
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    return function (object: Object, propertyName: string) {
+        registerDecorator({
+            name: "isDraftContent",
+            target: object.constructor,
+            propertyName,
+            constraints: [link],
+            options: validationOptions,
+            validator: {
+                async validate(value: unknown, args: ValidationArguments) {
+                    const LinkBlock = args.constraints[0] as Block;
+
+                    if (isDraftJsInput(value)) {
+                        for (const entity of Object.values(value.entityMap)) {
+                            const validationErrors = await validate(LinkBlock.blockInputFactory(entity.data), {
+                                forbidNonWhitelisted: true,
+                                whitelist: true,
+                            });
+
+                            if (validationErrors.length > 0) {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    }
+
+                    return false;
+                },
+            },
+        });
+    };
+}
+
+function isDraftJsInput(value: unknown): value is DraftJsInput<BlockInputInterface> {
+    return (
+        typeof value === "object" &&
+        value !== null &&
+        "blocks" in value &&
+        "entityMap" in value &&
+        Array.isArray(value.blocks) &&
+        typeof value.entityMap === "object" &&
+        value.entityMap !== null &&
+        Object.values(value.entityMap).every((entity) => typeof entity === "object" && entity !== null && entity.type === "LINK")
+    );
 }

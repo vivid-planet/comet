@@ -1,10 +1,8 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudField, CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
+import { CrudField, CrudGenerator, DamImageBlock, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
 import {
     BaseEntity,
     Collection,
-    Embeddable,
-    Embedded,
     Entity,
     Enum,
     ManyToMany,
@@ -55,33 +53,11 @@ export class ProductDimensions {
     depth: number;
 }
 
-@Embeddable()
 @ObjectType()
-@InputType("ProductPackageDimensionsInput")
-export class ProductPackageDimensions {
-    @Property({ type: types.integer })
-    @Field()
-    @IsNumber()
-    width: number;
-
-    @Property({ type: types.integer })
-    @Field()
-    @IsNumber()
-    height: number;
-
-    @Property({ type: types.integer })
-    @Field()
-    @IsNumber()
-    depth: number;
-}
-
-@ObjectType({
-    implements: () => [DocumentInterface],
-})
 @Entity()
-@RootBlockEntity()
+@RootBlockEntity<Product>({ isVisible: (product) => product.visible })
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class Product extends BaseEntity<Product, "id"> implements DocumentInterface {
+export class Product extends BaseEntity<Product, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })
@@ -146,10 +122,6 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Property({ type: "json", nullable: true })
     @Field(() => ProductDimensions, { nullable: true })
     dimensions?: ProductDimensions = undefined;
-
-    @Embedded(() => ProductPackageDimensions, { nullable: true })
-    @Field(() => ProductPackageDimensions, { nullable: true })
-    packageDimensions?: ProductPackageDimensions = undefined;
 
     @OneToOne(() => ProductStatistics, { inversedBy: "product", owner: true, ref: true, nullable: true })
     @Field(() => ProductStatistics, { nullable: true })

@@ -1,10 +1,11 @@
 import { CallHandler, ExecutionContext, Inject, Injectable, Logger, NestInterceptor, Optional } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
+import { getClientIp } from "request-ip";
 
 import { CurrentUser } from "../user-permissions/dto/current-user";
-import { SHOULD_LOG_REQUEST } from "./access-log.constants";
-import { ShouldLogRequest } from "./access-log.module";
+import { ACCESS_LOG_CONFIG } from "./access-log.constants";
+import { AccessLogConfig } from "./access-log.module";
 
 const IGNORED_PATHS = ["/dam/images/:hash/:fileId", "/dam/files/:hash/:fileId", "/dam/images/preview/:fileId", "/dam/files/preview/:fileId"];
 
@@ -12,7 +13,7 @@ const IGNORED_PATHS = ["/dam/images/:hash/:fileId", "/dam/files/:hash/:fileId", 
 export class AccessLogInterceptor implements NestInterceptor {
     protected readonly logger = new Logger(AccessLogInterceptor.name);
 
-    constructor(@Optional() @Inject(SHOULD_LOG_REQUEST) private readonly shouldLogRequest?: ShouldLogRequest) {}
+    constructor(@Optional() @Inject(ACCESS_LOG_CONFIG) private readonly config?: AccessLogConfig) {}
 
     intercept(context: ExecutionContext, next: CallHandler) {
         const requestType = context.getType().toString();
@@ -25,8 +26,9 @@ export class AccessLogInterceptor implements NestInterceptor {
             const graphqlContext = graphqlExecutionContext.getContext();
 
             if (
-                this.shouldLogRequest &&
-                !this.shouldLogRequest({
+                this.config &&
+                this.config.shouldLogRequest &&
+                !this.config.shouldLogRequest({
                     user: graphqlContext.req.user,
                     req: graphqlContext.req,
                 })
@@ -34,7 +36,8 @@ export class AccessLogInterceptor implements NestInterceptor {
                 ignored = true;
             }
 
-            requestData.push(`ip: ${graphqlContext.req.ip}`);
+            const ipAddress = getClientIp(graphqlContext.req);
+            requestData.push(`ip: ${ipAddress}`);
             this.pushUserToRequestData(graphqlContext.req.user, requestData);
 
             const gqlArgs = { ...graphqlExecutionContext.getArgs() };
@@ -55,8 +58,9 @@ export class AccessLogInterceptor implements NestInterceptor {
 
             if (
                 IGNORED_PATHS.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
-                (this.shouldLogRequest &&
-                    !this.shouldLogRequest({
+                (this.config &&
+                    this.config.shouldLogRequest &&
+                    !this.config.shouldLogRequest({
                         user: httpRequest.user,
                         req: httpRequest,
                     }))
@@ -64,7 +68,8 @@ export class AccessLogInterceptor implements NestInterceptor {
                 ignored = true;
             }
 
-            requestData.push(`ip: ${httpRequest.ip}`);
+            const ipAddress = getClientIp(httpRequest);
+            requestData.push(`ip: ${ipAddress}`);
             this.pushUserToRequestData(httpRequest.user, requestData);
 
             requestData.push(
@@ -81,7 +86,7 @@ export class AccessLogInterceptor implements NestInterceptor {
 
     private pushUserToRequestData(user: CurrentUser, requestData: string[]) {
         if (user) {
-            requestData.push(`user: ${user.id} (${user.name})`);
+            requestData.push(this.config && this.config.userToLog ? this.config.userToLog(user) : `user: ${user.id}`);
         }
     }
 }

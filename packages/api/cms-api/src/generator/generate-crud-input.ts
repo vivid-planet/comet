@@ -1,4 +1,5 @@
 import { EntityMetadata } from "@mikro-orm/core";
+import { getMetadataStorage } from "class-validator";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
 import { buildNameVariants } from "./utils/build-name-variants";
@@ -10,6 +11,7 @@ import {
     findEnumImportPath,
     findEnumName,
     findInputClassImportPath,
+    findValidatorImportPath,
     morphTsProperty,
 } from "./utils/ts-morph-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
@@ -59,6 +61,7 @@ export async function generateCrudInput(
     for (const prop of props) {
         let type = prop.type;
         const fieldName = prop.name;
+        const definedDecorators = morphTsProperty(prop.name, metadata).getDecorators();
         const decorators = [] as Array<string>;
         if (!prop.nullable) {
             decorators.push("@IsNotEmpty()");
@@ -116,8 +119,11 @@ export async function generateCrudInput(
             decorators.push(`@Field(${fieldOptions})`);
             type = "number";
         } else if (prop.type === "DateType" || prop.type === "Date") {
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
+            const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             decorators.push("@IsDate()");
-            decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
+            decorators.push(`@Field(${fieldOptions})`);
             type = "Date";
         } else if (prop.type === "BooleanType" || prop.type === "boolean") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
@@ -310,6 +316,34 @@ export async function generateCrudInput(
             console.warn(`${prop.name}: unsupported type ${type}`);
             continue;
         }
+
+        const classValidatorValidators = getMetadataStorage().getTargetValidationMetadatas(metadata.class, prop.name, false, false, undefined);
+        for (const validator of classValidatorValidators) {
+            if (validator.propertyName !== prop.name) continue;
+            const constraints = getMetadataStorage().getTargetValidatorConstraints(validator.constraintCls);
+            for (const constraint of constraints) {
+                const decorator = definedDecorators.find((decorator) => {
+                    return (
+                        // ignore casing since class validator is inconsistent with casing
+                        decorator.getName().toUpperCase() === constraint.name.toUpperCase() ||
+                        // some class validator decorators have a prefix "Is" but not in the constraint name
+                        `Is${decorator.getName()}`.toUpperCase() === constraint.name.toUpperCase()
+                    );
+                });
+                if (decorator) {
+                    const importPath = findValidatorImportPath(decorator.getName(), generatorOptions, metadata);
+                    if (importPath) {
+                        imports.push({ name: decorator.getName(), importPath });
+                        if (!decorators.includes(decorator.getText())) {
+                            decorators.unshift(decorator.getText());
+                        }
+                    }
+                } else {
+                    console.warn(`Decorator import for constraint ${constraint.name} not found`);
+                }
+            }
+        }
+
         fieldsOut += `${decorators.join("\n")}
     ${fieldName}${prop.nullable ? "?" : ""}: ${type};
     

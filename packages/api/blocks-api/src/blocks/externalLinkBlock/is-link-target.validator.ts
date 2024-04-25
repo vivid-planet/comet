@@ -3,26 +3,30 @@ import { isEmail, isString, isURL, registerDecorator, ValidatorConstraint, Valid
 
 const PHONE_NUMBER_REGEX = /^\+?[0-9\s]+$/;
 
-export const IsHref = () => {
+export const IsLinkTarget = () => {
     // eslint-disable-next-line @typescript-eslint/ban-types
     return (object: Object, propertyName: string): void => {
         registerDecorator({
             target: object.constructor,
             propertyName,
-            validator: IsHrefConstraint,
+            validator: IsLinkTargetConstraint,
         });
     };
 };
 
-@ValidatorConstraint({ name: "IsHref" })
+@ValidatorConstraint({ name: "IsLinkTarget" })
 @Injectable()
-export class IsHrefConstraint implements ValidatorConstraintInterface {
+export class IsLinkTargetConstraint implements ValidatorConstraintInterface {
     validate(value: unknown): boolean {
         if (!isString(value)) {
             return false;
         }
 
-        if (value.startsWith("mailto:")) {
+        if (value.toLowerCase().includes("javascript:")) {
+            return false;
+        } else if (value.toLowerCase().includes("data:")) {
+            return false;
+        } else if (value.startsWith("mailto:")) {
             return isEmail(value.slice(7));
         } else if (value.startsWith("tel:")) {
             return PHONE_NUMBER_REGEX.test(value.slice(4));
@@ -32,6 +36,6 @@ export class IsHrefConstraint implements ValidatorConstraintInterface {
     }
 
     defaultMessage(): string {
-        return "Invalid href";
+        return "Invalid link target";
     }
 }

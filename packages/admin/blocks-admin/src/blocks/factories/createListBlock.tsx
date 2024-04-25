@@ -1,6 +1,6 @@
 import { StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
-import { Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -71,6 +71,7 @@ interface CreateListBlockOptions<T extends BlockInterface, AdditionalItemFields 
     itemName?: React.ReactNode;
     itemsName?: React.ReactNode;
     block: T;
+    minVisibleBlocks?: number;
     maxVisibleBlocks?: number;
     createDefaultListEntry?: boolean;
     additionalItemFields?: {
@@ -90,6 +91,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
     displayName = <FormattedMessage id="comet.blocks.listBlock.name" defaultMessage="List" />,
     itemName = <FormattedMessage id="comet.blocks.listBlock.itemName" defaultMessage="block" />,
     itemsName = <FormattedMessage id="comet.blocks.listBlock.itemsName" defaultMessage="blocks" />,
+    minVisibleBlocks,
     maxVisibleBlocks,
     createDefaultListEntry,
     additionalItemFields,
@@ -101,6 +103,24 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
     ListBlockOutput<AdditionalItemFields>
 > {
     const useAdminComponent = createUseAdminComponent({ block, maxVisibleBlocks, additionalItemFields });
+    if (minVisibleBlocks && maxVisibleBlocks && minVisibleBlocks > maxVisibleBlocks)
+        throw new Error(
+            `${name}: The property 'minVisibleBlocks' (value: ${minVisibleBlocks}) must be equal to or smaller than 'maxVisibleBlocks' (value: ${maxVisibleBlocks})`,
+        );
+
+    const getDefaultListEntry = () => ({
+        key: uuid(),
+        visible: true,
+        props: block.defaultValues(),
+        selected: false,
+        slideIn: false,
+        // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
+        ...(Object.entries(additionalItemFields ?? {}).reduce(
+            (fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }),
+            {},
+        ) as AdditionalItemFields),
+    });
+
     const BlockListBlock: BlockInterface<
         ListBlockFragment<AdditionalItemFields>,
         ListBlockState<T, AdditionalItemFields>,
@@ -113,22 +133,12 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
         displayName,
 
         defaultValues: () => ({
-            blocks: createDefaultListEntry
-                ? [
-                      {
-                          key: uuid(),
-                          visible: true,
-                          props: block.defaultValues(),
-                          selected: false,
-                          slideIn: false,
-                          // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
-                          ...(Object.entries(additionalItemFields ?? {}).reduce(
-                              (fields, [field, { defaultValue }]) => ({ ...fields, [field]: defaultValue }),
-                              {},
-                          ) as AdditionalItemFields),
-                      },
-                  ]
-                : [],
+            blocks:
+                minVisibleBlocks !== undefined
+                    ? Array.from({ length: minVisibleBlocks }, getDefaultListEntry)
+                    : createDefaultListEntry
+                    ? [getDefaultListEntry()]
+                    : [],
         }),
 
         category: block.category,
@@ -208,7 +218,10 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                 adminMeta: { route: previewCtx.parentUrl },
             };
         },
-        isValid: async (state) => parallelAsyncEvery(state.blocks, async (c) => block.isValid(c.props)),
+        isValid: async (state) => {
+            const blockValidityResult = await parallelAsyncEvery(state.blocks, async (c) => block.isValid(c.props));
+            return blockValidityResult && (minVisibleBlocks ? minVisibleBlocks <= state.blocks.filter((block) => block.visible).length : true);
+        },
 
         childBlockCount: (state) => state.blocks.length,
 
@@ -308,8 +321,17 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                                                     </AdminComponentStickyHeader>
                                                     <div>
                                                         {state.blocks.map((data, blockIndex) => {
-                                                            const canChangeVisibility =
-                                                                maxVisibleBlocks && totalVisibleBlocks >= maxVisibleBlocks ? data.visible : true;
+                                                            const isMinVisibleBlocksMet =
+                                                                !!minVisibleBlocks && totalVisibleBlocks >= minVisibleBlocks;
+                                                            const isMaxVisibleBlocksReached =
+                                                                !!maxVisibleBlocks && totalVisibleBlocks >= maxVisibleBlocks;
+
+                                                            const canToggleVisibility = isMaxVisibleBlocksReached ? data.visible : true;
+
+                                                            const showMaxBlocksAllowedMessage = isMaxVisibleBlocksReached && !data.visible;
+                                                            const showMinBlocksRequiredMessage =
+                                                                !isMinVisibleBlocksMet || (minVisibleBlocks === totalVisibleBlocks && data.visible);
+
                                                             return (
                                                                 <HoverPreviewComponent key={data.key} componentSlug={`${data.key}/edit`}>
                                                                     <BlockRow
@@ -333,35 +355,37 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                                                                             });
                                                                         }}
                                                                         visibilityButton={
-                                                                            canChangeVisibility ? (
-                                                                                <IconButton onClick={() => toggleVisible(data.key)} size="small">
-                                                                                    {data.visible ? (
-                                                                                        <Visible color="secondary" />
-                                                                                    ) : (
-                                                                                        <Invisible color="action" />
-                                                                                    )}
-                                                                                </IconButton>
-                                                                            ) : (
-                                                                                <Tooltip
-                                                                                    title={
+                                                                            <Tooltip
+                                                                                title={
+                                                                                    showMaxBlocksAllowedMessage ? (
                                                                                         <FormattedMessage
                                                                                             id="comet.blocks.list.maxVisibleBlocks"
-                                                                                            defaultMessage="Max visible blocks: {maxVisibleBlocks}"
+                                                                                            defaultMessage="Max. visible blocks allowed: {maxVisibleBlocks}"
                                                                                             values={{ maxVisibleBlocks }}
                                                                                         />
-                                                                                    }
-                                                                                >
-                                                                                    <span>
-                                                                                        <IconButton disabled size="small">
-                                                                                            {data.visible ? (
-                                                                                                <Visible color="secondary" />
-                                                                                            ) : (
-                                                                                                <Invisible color="action" />
-                                                                                            )}
-                                                                                        </IconButton>
-                                                                                    </span>
-                                                                                </Tooltip>
-                                                                            )
+                                                                                    ) : showMinBlocksRequiredMessage ? (
+                                                                                        <FormattedMessage
+                                                                                            id="comet.blocks.list.minVisibleBlocks"
+                                                                                            defaultMessage="Min. visible blocks required: {minVisibleBlocks}"
+                                                                                            values={{ minVisibleBlocks }}
+                                                                                        />
+                                                                                    ) : null
+                                                                                }
+                                                                            >
+                                                                                <Box component="span">
+                                                                                    <IconButton
+                                                                                        onClick={() => canToggleVisibility && toggleVisible(data.key)}
+                                                                                        size="small"
+                                                                                        disabled={!canToggleVisibility}
+                                                                                    >
+                                                                                        {data.visible ? (
+                                                                                            <Visible color="secondary" />
+                                                                                        ) : (
+                                                                                            <Invisible color="action" />
+                                                                                        )}
+                                                                                    </IconButton>
+                                                                                </Box>
+                                                                            </Tooltip>
                                                                         }
                                                                         onAddNewBlock={(beforeIndex) => {
                                                                             const key = addNewBlock(beforeIndex);
@@ -493,6 +517,18 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                 const nextPreviewContent = block.previewContent(next.props, ctx);
                 return [...prev, ...nextPreviewContent];
             }, []);
+        },
+        resolveDependencyPath: (state, jsonPath) => {
+            if (!/^blocks.\d+.props/.test(jsonPath)) {
+                throw new Error("ListBlock: Invalid jsonPath");
+            }
+
+            const pathArr = jsonPath.split(".");
+            const num = Number(pathArr[1]);
+            const blockItem = state.blocks[num];
+
+            const childPath = block.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
+            return `${blockItem.key}/edit/${childPath}`;
         },
     };
     return BlockListBlock;

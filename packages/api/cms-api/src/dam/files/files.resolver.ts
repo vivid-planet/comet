@@ -1,7 +1,8 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, NotFoundException, Type } from "@nestjs/common";
-import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, Context, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { IncomingMessage } from "http";
 import { basename, extname } from "path";
 
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
@@ -28,7 +29,15 @@ import { FileValidationService } from "./file-validation.service";
 import { FilesService } from "./files.service";
 import { slugifyFilename } from "./files.utils";
 
-export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<FileInterface>; Scope?: Type<DamScopeInterface> }): Type<unknown> {
+export function createFilesResolver({
+    File,
+    Folder,
+    Scope: PassedScope,
+}: {
+    File: Type<FileInterface>;
+    Folder: Type<FolderInterface>;
+    Scope?: Type<DamScopeInterface>;
+}): Type<unknown> {
     const Scope = PassedScope ?? EmptyDamScope;
     const hasNonEmptyScope = PassedScope != null;
 
@@ -80,7 +89,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         async findCopiesOfFileInScope(
             @Args({ type: () => FindCopiesOfFileInScopeArgs }) { id, scope, imageCropArea }: FindCopiesOfFileInScopeArgsInterface,
         ): Promise<FileInterface[]> {
-            return this.filesService.findCopiesOfFileInScope(id, imageCropArea, scope);
+            return this.filesService.findCopiesOfFileInScope(id, imageCropArea, nonEmptyScopeOrNothing(scope));
         }
 
         @Mutation(() => File)
@@ -109,12 +118,14 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
                 ...input,
                 imageCropArea: imageInput?.cropArea,
                 folderId: input.folderId ? input.folderId : undefined,
-                scope,
+                scope: nonEmptyScopeOrNothing(scope),
             });
             return uploadedFile;
         }
 
         @Mutation(() => [File])
+        @AffectedEntity(Folder, { idArg: "targetFolderId", nullable: true })
+        @AffectedEntity(File, { idArg: "fileIds" })
         @SkipBuild()
         async moveDamFiles(
             @Args({ type: () => MoveDamFilesArgs }) { fileIds, targetFolderId }: MoveDamFilesArgs,
@@ -123,28 +134,16 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             let targetFolder = null;
             if (targetFolderId !== null) {
                 targetFolder = await this.foldersRepository.findOneOrFail(targetFolderId);
-
-                if (targetFolder.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", targetFolder.scope)) {
-                    throw new Error("Can't access parent folder");
-                }
             }
 
-            const files = [];
-
-            for (const id of fileIds) {
-                const file = await this.filesRepository.findOneOrFail(id);
-
-                if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
-                    throw new Error("Can't access file");
-                }
-
-                files.push(file);
-            }
+            const files = await this.filesRepository.find({ id: { $in: fileIds } });
 
             return this.filesService.moveBatch(files, targetFolder);
         }
 
         @Mutation(() => CopyFilesResponse)
+        @AffectedEntity(File, { idArg: "fileIds" })
+        @AffectedEntity(Folder, { idArg: "inboxFolderId" })
         @SkipBuild()
         async copyFilesToScope(
             @GetCurrentUser() user: CurrentUser,
@@ -154,7 +153,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             })
             inboxFolderId: string,
         ): Promise<CopyFilesResponseInterface> {
-            return this.filesService.copyFilesToScope({ fileIds, inboxFolderId, user });
+            return this.filesService.copyFilesToScope({ fileIds, inboxFolderId });
         }
 
         @Mutation(() => File)
@@ -169,6 +168,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => [File])
+        @AffectedEntity(File, { idArg: "ids" })
         @SkipBuild()
         async archiveDamFiles(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<FileInterface[]> {
             const entities = await this.filesRepository.find({ id: { $in: ids } });
@@ -193,6 +193,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => [File])
+        @AffectedEntity(File, { idArg: "ids" })
         @SkipBuild()
         async restoreDamFiles(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<FileInterface[]> {
             const entities = await this.filesRepository.find({ id: { $in: ids } });
@@ -256,8 +257,8 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @ResolveField(() => String)
-        async fileUrl(@Parent() file: FileInterface): Promise<string> {
-            return this.filesService.createFileUrl(file);
+        async fileUrl(@Parent() file: FileInterface, @Context("req") req: IncomingMessage): Promise<string> {
+            return this.filesService.createFileUrl(file, Boolean(req.headers["x-preview-dam-urls"]));
         }
 
         @ResolveField(() => [File])
