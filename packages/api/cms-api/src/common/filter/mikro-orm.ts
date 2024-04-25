@@ -151,6 +151,8 @@ export function filtersToMikroOrmQuery(
 }
 
 const splitSearchString = (search: string) => {
+    // regex to match all single tokens or quotes in a string => "This is a 'quoted string'" will result in ["This", "is", "a", "quoted string"]
+    // it will also take escaped quotes (prepended with a backslash => \) into account
     const regex = /(["'])(?:(?=(\\?))\2.)*?\1|\S+/g;
     const matches = search.match(regex) || [];
 
@@ -158,6 +160,7 @@ const splitSearchString = (search: string) => {
         const unescaped = match.replace(/\\(['"])/g, "$1");
         const isQuoted = (unescaped.startsWith('"') && unescaped.endsWith('"')) || (unescaped.startsWith("'") && unescaped.endsWith("'"));
         const content = isQuoted ? unescaped.slice(1, -1) : unescaped;
+
         return `%${content.replace(/([%_\\])/g, "\\$1")}%`;
     });
 };
