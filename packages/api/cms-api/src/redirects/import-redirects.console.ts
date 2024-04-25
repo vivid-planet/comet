@@ -5,16 +5,13 @@ import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import * as console from "console";
 import * as fs from "fs";
 import { Command, Console } from "nestjs-console";
-import { v4 as uuid } from "uuid";
 
 import { RedirectInterface } from "../../lib/redirects/entities/redirect-entity.factory";
 import { PageTreeService } from "../page-tree/page-tree.service";
-import { PageTreeNodeInterface } from "../page-tree/types";
 import { REDIRECTS_LINK_BLOCK } from "./redirects.constants";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects.enum";
 import { RedirectsLinkBlock } from "./redirects.module";
-
-type Scope = { [key: string]: string };
+import { RedirectScopeInterface } from "./types";
 
 @Injectable()
 @Console()
@@ -38,16 +35,7 @@ export class ImportRedirectsConsole {
         let error = 0;
 
         for (const row of imports) {
-            let node: PageTreeNodeInterface | null;
-            try {
-                node = await this.pageTreeService.createReadApi().getNodeByPath(row["target"]);
-            } catch (e) {
-                console.log(row["source"]);
-                console.log(e);
-                error++;
-                continue;
-            }
-
+            const node = await this.pageTreeService.createReadApi().getNodeByPath(row["target"]);
             const existingRedirect = await this.repository.findOne({ source: row.source });
 
             if (row["target_type"] === "internal" && node) {
@@ -66,6 +54,7 @@ export class ImportRedirectsConsole {
                                 activeType: "internal",
                             })
                             .transformToBlockData(),
+                        comment,
                     });
 
                     success++;
@@ -73,7 +62,6 @@ export class ImportRedirectsConsole {
                     await this.repository.flush();
                 } else {
                     const redirect = this.repository.create({
-                        id: uuid(),
                         sourceType: RedirectSourceTypeValues.path,
                         source: row["source"],
                         target: this.linkBlock
@@ -89,10 +77,7 @@ export class ImportRedirectsConsole {
                                 activeType: "internal",
                             })
                             .transformToBlockData(),
-                        active: true,
                         generationType: RedirectGenerationType.manual,
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
                         comment,
                         scope: row["scope"],
                     });
@@ -118,6 +103,7 @@ export class ImportRedirectsConsole {
                                 activeType: "external",
                             })
                             .transformToBlockData(),
+                        comment,
                     });
 
                     success++;
@@ -125,7 +111,6 @@ export class ImportRedirectsConsole {
                     await this.repository.flush();
                 } else {
                     const redirect = this.repository.create({
-                        id: uuid(),
                         sourceType: RedirectSourceTypeValues.path,
                         source: row["source"],
                         target: this.linkBlock
@@ -142,10 +127,7 @@ export class ImportRedirectsConsole {
                                 activeType: "external",
                             })
                             .transformToBlockData(),
-                        active: true,
                         generationType: RedirectGenerationType.manual,
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
                         comment,
                         scope: row["scope"],
                     });
@@ -172,7 +154,7 @@ export class ImportRedirectsConsole {
             target_type: string;
             source: string;
             comment: string;
-            scope: Scope;
+            scope: RedirectScopeInterface;
         }>
     > => {
         const imports: Array<{
@@ -180,7 +162,7 @@ export class ImportRedirectsConsole {
             target_type: string;
             source: string;
             comment: string;
-            scope: Scope;
+            scope: RedirectScopeInterface;
         }> = [];
         return new Promise((resolve, reject) => {
             fs.createReadStream(filePath)
@@ -190,13 +172,7 @@ export class ImportRedirectsConsole {
                     reject(error);
                 })
                 .on("data", (row) => {
-                    const hasScope = Object.keys(row).some((key) => key.startsWith("scope_"));
-
-                    if (!hasScope) {
-                        throw Error("Could not find a scope in the passed file!");
-                    }
-
-                    const scope: Scope = {};
+                    const scope: RedirectScopeInterface = {};
                     Object.keys(row).forEach((key) => {
                         if (key.startsWith("scope_")) {
                             const scopeKey = key.replace("scope_", "");
@@ -206,6 +182,7 @@ export class ImportRedirectsConsole {
                     });
 
                     row["scope"] = scope;
+
                     imports.push(row);
                 })
                 .on("end", (rowCount: number) => {
