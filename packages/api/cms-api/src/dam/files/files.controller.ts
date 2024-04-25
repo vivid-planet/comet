@@ -1,3 +1,4 @@
+import { BaseEntity } from "@mikro-orm/core";
 import {
     Body,
     Controller,
@@ -18,20 +19,22 @@ import { validate } from "class-validator";
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
 
-import { CurrentUserInterface } from "../../auth/current-user/current-user";
+import { DisableCometGuards } from "../../auth/decorators/disable-comet-guards.decorator";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
-import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometValidationException } from "../../common/errors/validation.exception";
-import { ContentScopeService } from "../../content-scope/content-scope.service";
-import { CDN_ORIGIN_CHECK_HEADER, DamConfig } from "../dam.config";
+import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
+import { CurrentUser } from "../../user-permissions/dto/current-user";
+import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
+import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
+import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { DamScopeInterface } from "../types";
 import { DamUploadFileInterceptor } from "./dam-upload-file.interceptor";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createUploadFileBody, UploadFileBodyInterface } from "./dto/file.body";
 import { FileParams, HashFileParams } from "./dto/file.params";
-import { FileUploadInterface } from "./dto/file-upload.interface";
+import { FileUploadInput } from "./dto/file-upload.input";
 import { FileInterface } from "./entities/file.entity";
 import { FilesService } from "./files.service";
 import { calculatePartialRanges, createHashedPath } from "./files.utils";
@@ -49,21 +52,24 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
     const UploadFileBody = createUploadFileBody({ Scope });
 
     @Controller("dam/files")
+    @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scope is checked in actions
     class FilesController {
         constructor(
             @Inject(DAM_CONFIG) private readonly damConfig: DamConfig,
             private readonly filesService: FilesService,
             private readonly blobStorageBackendService: BlobStorageBackendService,
-            private readonly contentScopeService: ContentScopeService,
+            @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
         ) {}
 
         @Post("upload")
         @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
         async upload(
-            @UploadedFile() file: FileUploadInterface,
+            @UploadedFile() file: FileUploadInput,
             @Body() body: UploadFileBodyInterface,
-            @GetCurrentUser() user: CurrentUserInterface,
-        ): Promise<FileInterface> {
+            @GetCurrentUser() user: CurrentUser,
+            @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
+            @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
+        ): Promise<Omit<FileInterface, keyof BaseEntity<FileInterface, "id">> & { fileUrl: string }> {
             const transformedBody = plainToInstance(UploadFileBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
@@ -72,19 +78,24 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
             const scope = nonEmptyScopeOrNothing(transformedBody.scope);
 
-            if (scope && !this.contentScopeService.canAccessScope(scope, user)) {
+            if (scope && !this.accessControlService.isAllowed(user, "dam", scope)) {
                 throw new ForbiddenException();
             }
 
             const uploadedFile = await this.filesService.upload(file, { ...transformedBody, scope });
-            return Object.assign(uploadedFile, { fileUrl: await this.filesService.createFileUrl(uploadedFile) });
+            const fileUrl = await this.filesService.createFileUrl(uploadedFile, {
+                previewDamUrls: Boolean(previewDamUrls),
+                relativeDamUrls: Boolean(relativeDamUrls),
+            });
+
+            return { ...uploadedFile, fileUrl };
         }
 
         @Get(`/preview/${fileUrl}`)
         async previewFileUrl(
             @Param() { fileId }: FileParams,
             @Res() res: Response,
-            @GetCurrentUser() user: CurrentUserInterface,
+            @GetCurrentUser() user: CurrentUser,
             @Headers("range") range?: string,
         ): Promise<void> {
             const file = await this.filesService.findOneById(fileId);
@@ -93,23 +104,16 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 throw new NotFoundException();
             }
 
-            if (file.scope !== undefined && !this.contentScopeService.canAccessScope(file.scope, user)) {
+            if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
                 throw new ForbiddenException();
             }
 
             return this.streamFile(file, res, { range, overrideHeaders: { "Cache-control": "private" } });
         }
 
-        @DisableGlobalGuard()
+        @DisableCometGuards()
         @Get(`/:hash/${fileUrl}`)
-        async hashedFileUrl(
-            @Param() { hash, ...params }: HashFileParams,
-            @Res() res: Response,
-            @Headers(CDN_ORIGIN_CHECK_HEADER) cdnOriginCheck: string,
-            @Headers("range") range?: string,
-        ): Promise<void> {
-            this.checkCdnOrigin(cdnOriginCheck);
-
+        async hashedFileUrl(@Param() { hash, ...params }: HashFileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
             if (!this.isValidHash(hash, params)) {
                 throw new NotFoundException();
             }
@@ -121,14 +125,6 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
 
             return this.streamFile(file, res, { range });
-        }
-
-        private checkCdnOrigin(incomingCdnOriginHeader: string): void {
-            if (this.damConfig.cdnEnabled && !this.damConfig.disableCdnOriginHeaderCheck) {
-                if (incomingCdnOriginHeader !== this.damConfig.cdnOriginHeader) {
-                    throw new ForbiddenException();
-                }
-            }
         }
 
         private isValidHash(hash: string, fileParams: FileParams): boolean {

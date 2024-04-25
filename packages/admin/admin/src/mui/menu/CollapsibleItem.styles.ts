@@ -1,4 +1,4 @@
-import { Theme } from "@mui/material";
+import { createCometTheme } from "@comet/admin-theme";
 import { createStyles } from "@mui/styles";
 
 import { MenuCollapsibleItemProps } from "./CollapsibleItem";
@@ -13,8 +13,10 @@ export type MenuCollapsibleItemClassKey =
     | "collapsibleIconColorGrey"
     | "collapsibleIconColorWhite";
 
-export const styles = (theme: Theme) =>
-    createStyles<MenuCollapsibleItemClassKey, MenuCollapsibleItemProps>({
+export const styles = () => {
+    const theme = createCometTheme(); // TODO: Remove after theming-refactor
+
+    return createStyles<MenuCollapsibleItemClassKey, MenuCollapsibleItemProps>({
         root: {},
         childSelected: {
             color: theme.palette.primary.main,
@@ -53,3 +55,4 @@ export const styles = (theme: Theme) =>
         listItem: {},
         open: {},
     });
+};

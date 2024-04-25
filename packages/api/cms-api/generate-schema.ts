@@ -3,16 +3,12 @@ import { NestFactory } from "@nestjs/core";
 import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType } from "@nestjs/graphql";
 import { writeFile } from "fs/promises";
 import { printSchema } from "graphql";
-import { GraphQLJSONObject } from "graphql-type-json";
 
 import {
     BuildsResolver,
-    ContentScope,
     createAuthResolver,
     createPageTreeResolver,
     createRedirectsResolver,
-    CurrentUserInterface,
-    CurrentUserRightInterface,
     DependenciesResolverFactory,
     DependentsResolverFactory,
     DocumentInterface,
@@ -23,6 +19,7 @@ import {
 } from "./src";
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
 import { CronJobsResolver } from "./src/cron-jobs/cron-jobs.resolver";
+import { JobsResolver } from "./src/cron-jobs/jobs.resolver";
 import { createDamItemsResolver } from "./src/dam/files/dam-items.resolver";
 import { createFileEntity } from "./src/dam/files/entities/file.entity";
 import { createFolderEntity } from "./src/dam/files/entities/folder.entity";
@@ -32,7 +29,6 @@ import { createFoldersResolver } from "./src/dam/files/folders.resolver";
 import { SitePreviewResolver } from "./src/page-tree/site-preview.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
-import { CurrentUserPermission } from "./src/user-permissions/dto/current-user";
 import { UserResolver } from "./src/user-permissions/user.resolver";
 import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
 import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
@@ -49,34 +45,6 @@ class PageTreeNode extends PageTreeNodeBase {
 class Page implements DocumentInterface {
     id: string;
     updatedAt: Date;
-}
-
-@ObjectType()
-class CurrentUserRight implements CurrentUserRightInterface {
-    @Field()
-    right: string;
-
-    @Field(() => [String])
-    values: string[];
-}
-
-@ObjectType()
-class CurrentUser implements CurrentUserInterface {
-    id: string;
-    @Field()
-    name: string;
-    @Field()
-    email: string;
-    @Field()
-    language: string;
-    @Field()
-    role: string;
-    @Field(() => [CurrentUserRight], { nullable: true })
-    rights: CurrentUserRightInterface[];
-    @Field(() => [GraphQLJSONObject])
-    contentScopes: ContentScope[];
-    @Field(() => [CurrentUserPermission])
-    permissions: CurrentUserPermission[];
 }
 
 async function generateSchema(): Promise<void> {
@@ -101,7 +69,7 @@ async function generateSchema(): Promise<void> {
     }); // no scope
     const PageTreeDependentsResolver = DependentsResolverFactory.create(PageTreeNode);
 
-    const AuthResolver = createAuthResolver({ currentUser: CurrentUser });
+    const AuthResolver = createAuthResolver({});
     const RedirectsDependenciesResolver = DependenciesResolverFactory.create(RedirectEntity);
 
     const Folder = createFolderEntity();
@@ -119,14 +87,15 @@ async function generateSchema(): Promise<void> {
         createFoldersResolver({ Folder }),
         pageTreeResolver,
         CronJobsResolver,
+        JobsResolver,
         AuthResolver,
         RedirectsDependenciesResolver,
         PageTreeDependentsResolver,
         FileDependentsResolver,
+        SitePreviewResolver,
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,
-        SitePreviewResolver,
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

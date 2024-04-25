@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -7,6 +8,7 @@ export interface IFrameBridgeContext {
     hasBridge: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     block?: any;
+    showOnlyVisible: boolean;
     selectedAdminRoute?: string;
     hoveredAdminRoute?: string;
     sendSelectComponent: (id: string) => void;
@@ -16,11 +18,13 @@ export interface IFrameBridgeContext {
      */
     sendMessage: (message: IFrameMessage) => void;
     showOutlines: boolean;
+    contentScope: unknown;
 }
 
 export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
     hasBridge: false,
     showOutlines: false,
+    showOnlyVisible: false,
     sendSelectComponent: () => {
         // empty
     },
@@ -30,13 +34,16 @@ export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
     sendMessage: () => {
         //empty
     },
+    contentScope: undefined,
 });
 
-export const IFrameBridgeProvider: React.FunctionComponent = ({ children }) => {
+export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
     const [block, setBlock] = React.useState<unknown | undefined>(undefined);
+    const [showOnlyVisible, setShowOnlyVisible] = React.useState<boolean>(false);
     const [selectedAdminRoute, setSelectedAdminRoute] = React.useState<string | undefined>(undefined);
     const [hoveredAdminRoute, setHoveredAdminRoute] = React.useState<string | undefined>(undefined);
     const [showOutlines, setShowOutlines] = React.useState<boolean>(false);
+    const [contentScope, setContentScope] = React.useState<unknown>(undefined);
 
     const sendMessage = (message: IFrameMessage) => {
         window.parent.postMessage(JSON.stringify(message), "*");
@@ -52,6 +59,9 @@ export const IFrameBridgeProvider: React.FunctionComponent = ({ children }) => {
                 case AdminMessageType.Block:
                     setBlock(message.data.block);
                     break;
+                case AdminMessageType.ShowOnlyVisible:
+                    setShowOnlyVisible(message.data.showOnlyVisible);
+                    break;
                 case AdminMessageType.SelectComponent:
                     setSelectedAdminRoute(
                         message.data.adminRoute.lastIndexOf("#") > 0
@@ -63,6 +73,9 @@ export const IFrameBridgeProvider: React.FunctionComponent = ({ children }) => {
                     setHoveredAdminRoute(message.data.adminRoute);
                     setShowOutlines(true);
                     debounceDeactivateOutlines();
+                    break;
+                case AdminMessageType.ContentScope:
+                    setContentScope(message.data.contentScope);
                     break;
             }
         },
@@ -102,6 +115,7 @@ export const IFrameBridgeProvider: React.FunctionComponent = ({ children }) => {
                 showOutlines,
                 hasBridge: true,
                 block,
+                showOnlyVisible,
                 selectedAdminRoute,
                 hoveredAdminRoute,
                 sendSelectComponent: (adminRoute: string) => {
@@ -112,6 +126,7 @@ export const IFrameBridgeProvider: React.FunctionComponent = ({ children }) => {
                     sendMessage({ cometType: IFrameMessageType.HoverComponent, data: { route } });
                 },
                 sendMessage,
+                contentScope,
             }}
         >
             <div

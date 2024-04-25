@@ -4,8 +4,8 @@ import { GqlExecutionContext } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 import { Observable } from "rxjs";
 
-import { ContentScope } from "../common/decorators/content-scope.interface";
-import { ContentScopeService } from "../content-scope/content-scope.service";
+import { ContentScopeService } from "../user-permissions/content-scope.service";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { BuildsService } from "./builds.service";
 import { SKIP_BUILD_METADATA_KEY } from "./skip-build.decorator";
 
@@ -29,17 +29,37 @@ export class ChangesCheckerInterceptor implements NestInterceptor {
                     this.reflector.get<string[]>(SKIP_BUILD_METADATA_KEY, context.getClass());
 
                 if (!skipBuild) {
-                    const scope = await this.contentScopeService.inferScopeFromExecutionContext(context);
-
-                    if (process.env.NODE_ENV === "development" && this.changeAffectsAllScopes(scope)) {
-                        if (operation.name) {
-                            console.warn(`Mutation "${operation.name.value}" affects all scopes. Are you sure this is correct?`);
-                        } else {
-                            console.warn(`Unknown mutation affects all scopes. Are you sure this is correct?`);
-                        }
+                    let scopes: ContentScope[] | null;
+                    try {
+                        scopes = await this.contentScopeService.inferScopesFromExecutionContext(context);
+                    } catch (error) {
+                        // We might land here when an @AffectedEntity does not have a @ScopedEntity decorator
+                        // (this was formerly ignored but now throws an error because it's essential for the scope check)
+                        scopes = null;
                     }
+                    if (scopes) {
+                        for (const scope of scopes) {
+                            if (process.env.NODE_ENV === "development" && this.changeAffectsAllScopes(scope)) {
+                                if (operation.name) {
+                                    console.warn(`Mutation "${operation.name.value}" affects all scopes. Are you sure this is correct?`);
+                                } else {
+                                    console.warn(`Unknown mutation affects all scopes. Are you sure this is correct?`);
+                                }
+                            }
 
-                    await this.buildsService.setChangesSinceLastBuild(scope);
+                            await this.buildsService.setChangesSinceLastBuild(scope);
+                        }
+                    } else {
+                        if (process.env.NODE_ENV === "development") {
+                            if (operation.name) {
+                                console.warn(`Mutation "${operation.name.value}" affects all scopes. Are you sure this is correct?`);
+                            } else {
+                                console.warn(`Unknown mutation affects all scopes. Are you sure this is correct?`);
+                            }
+                        }
+
+                        await this.buildsService.setChangesSinceLastBuild("all");
+                    }
                 }
             }
         }

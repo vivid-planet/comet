@@ -1,12 +1,14 @@
+import { gql, useMutation } from "@apollo/client";
 import { AppHeaderDropdown, Loading } from "@comet/admin";
 import { Account, Info, Logout } from "@comet/admin-icons";
-import { Box, Button as MUIButton } from "@mui/material";
+import { Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { useCurrentUser } from "../../userPermissions/hooks/currentUser";
 import { AboutModal } from "./about/AboutModal";
-import { GQLCurrentUserQuery, GQLSignOutMutation } from "./UserHeaderItem.generated";
+import { GQLSignOutMutation } from "./UserHeaderItem.generated";
 
 const DropdownContent = styled(Box)`
     width: 250px;
@@ -24,22 +26,6 @@ const Separator = styled(Box)`
     margin-bottom: 20px;
 `;
 
-const LoadingWrapper = styled("div")`
-    width: 60px;
-    height: 100%;
-    border-left: 1px solid rgba(255, 255, 255, 0.2);
-`;
-
-import { gql, useMutation, useQuery } from "@apollo/client";
-
-const currentUserQuery = gql`
-    query CurrentUser {
-        currentUser {
-            name
-        }
-    }
-`;
-
 const signOutMutation = gql`
     mutation SignOut {
         currentUserSignOut
@@ -53,19 +39,15 @@ interface UserHeaderItemProps {
 export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
     const { aboutModalLogo } = props;
 
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+    const user = useCurrentUser();
     const [showAboutModal, setShowAboutModal] = React.useState(false);
-    const { loading, data } = useQuery<GQLCurrentUserQuery>(currentUserQuery);
     const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
 
-    if (loading || !data)
-        return (
-            <LoadingWrapper>
-                <Loading behavior="fillParent" sx={{ fontSize: 20 }} color="inherit" />
-            </LoadingWrapper>
-        );
-
     return (
-        <AppHeaderDropdown buttonChildren={data.currentUser.name} startIcon={<Account />}>
+        <AppHeaderDropdown buttonChildren={isMobile ? <Account /> : user.name} startIcon={isMobile ? undefined : <Account />}>
             <DropdownContent padding={4}>
                 <Button
                     fullWidth={true}

@@ -21,8 +21,10 @@ import {
 import { Type } from "class-transformer";
 import { IsBoolean, IsEnum, IsJSON, IsOptional, IsString, IsUrl, ValidateNested } from "class-validator";
 
-import { PixelImageBlock } from "./PixelImageBlock";
+import { PixelImageBlock } from "../dam/blocks/pixel-image.block";
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with PascalCase
 export enum SitemapPagePriority {
     _0_0 = "0_0",
     _0_1 = "0_1",
@@ -36,7 +38,10 @@ export enum SitemapPagePriority {
     _0_9 = "0_9",
     _1_0 = "1_0",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with PascalCase
 export enum SitemapPageChangeFrequency {
     "always" = "always",
     "hourly" = "hourly",
@@ -46,12 +51,12 @@ export enum SitemapPageChangeFrequency {
     "yearly" = "yearly",
     "never" = "never",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
 interface CreateSeoBlockOptions<ImageBlock extends Block> {
     image?: ImageBlock;
 }
 
-// Block-factories need the their BlockInputInterface to be public
 interface SeoBlockInputInterface<ImageBlockInput extends BlockInputInterface> extends SimpleBlockInputInterface {
     htmlTitle?: string;
     metaDescription?: string;

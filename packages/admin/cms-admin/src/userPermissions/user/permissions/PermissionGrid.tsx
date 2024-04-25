@@ -9,6 +9,7 @@ import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
+import { OverrideContentScopesDialog } from "./OverrideContentScopesDialog";
 import { PermissionDialog } from "./PermissionDialog";
 import { GQLPermissionForGridFragment, GQLPermissionsQuery, GQLPermissionsQueryVariables, namedOperations } from "./PermissionGrid.generated";
 
@@ -17,6 +18,7 @@ export const PermissionGrid: React.FC<{
 }> = ({ userId }) => {
     const intl = useIntl();
     const [permissionId, setPermissionId] = React.useState<string | "add" | null>(null);
+    const [overrideContentScopesId, setOverrideContentScopesId] = React.useState<string | null>(null);
 
     const { data, loading, error } = useQuery<GQLPermissionsQuery, GQLPermissionsQueryVariables>(
         gql`
@@ -34,6 +36,7 @@ export const PermissionGrid: React.FC<{
                 reason
                 requestedBy
                 approvedBy
+                overrideContentScopes
             }
         `,
         {
@@ -49,13 +52,7 @@ export const PermissionGrid: React.FC<{
             flex: 1,
             pinnable: false,
             headerName: intl.formatMessage({ id: "comet.userPermissions.permission", defaultMessage: "Permission" }),
-            renderCell: ({ row }) => (
-                <>
-                    <Typography variant="h6">
-                        <FormattedMessage id={`permission.${row.permission}`} defaultMessage={camelCaseToHumanReadable(row.permission)} />
-                    </Typography>
-                </>
-            ),
+            renderCell: ({ row }) => <Typography variant="h6">{camelCaseToHumanReadable(row.permission)}</Typography>,
         },
         {
             field: "source",
@@ -99,6 +96,20 @@ export const PermissionGrid: React.FC<{
                         )}
                 </div>
             ),
+        },
+        {
+            field: "overrideContentScopes",
+            headerName: "",
+            width: 175,
+            sortable: false,
+            pinnable: false,
+            filterable: false,
+            renderCell: ({ row }) =>
+                (row.source === "MANUAL" || row.overrideContentScopes) && (
+                    <Button onClick={() => setOverrideContentScopesId(row.id)}>
+                        <FormattedMessage id="comet.userPermissions.overrideContentScopes" defaultMessage="Permission-specific Content-Scopes" />
+                    </Button>
+                ),
         },
         {
             field: "edit",
@@ -176,6 +187,13 @@ export const PermissionGrid: React.FC<{
                     ),
                 }}
             />
+            {overrideContentScopesId && (
+                <OverrideContentScopesDialog
+                    userId={userId}
+                    permissionId={overrideContentScopesId}
+                    handleDialogClose={() => setOverrideContentScopesId(null)}
+                />
+            )}
             {permissionId && <PermissionDialog userId={userId} permissionId={permissionId} handleDialogClose={() => setPermissionId(null)} />}
         </Card>
     );

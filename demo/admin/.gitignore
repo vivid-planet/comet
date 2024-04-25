@@ -12,5 +12,6 @@ lang-compiled
 graphql.generated.ts
 block-meta.json
 src/blocks.generated.ts
-comet-config.json
+src/comet-config.json
 src/**/*.generated.ts
+.swc/

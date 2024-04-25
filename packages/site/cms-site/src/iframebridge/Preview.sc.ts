@@ -5,14 +5,14 @@ export const Root = styled.div<ISelectionStyleProps>`
 `;
 
 export interface ISelectionStyleProps {
-    isSelected: boolean;
-    isHovered: boolean;
-    showOutlines: boolean;
+    $isSelected: boolean;
+    $isHovered: boolean;
+    $showOutlines: boolean;
 }
 export const Selection = styled.div<ISelectionStyleProps>`
     z-index: 2;
 
-    :after {
+    &:after {
         content: "";
         position: absolute;
         top: 0;
@@ -23,18 +23,18 @@ export const Selection = styled.div<ISelectionStyleProps>`
     }
 
     ${(props) => {
-        if (props.isHovered) {
+        if (props.$isHovered) {
             return css`
-                :after {
+                &:after {
                     background-color: #57b0eb;
                 }
                 border: #57b0eb solid 1px;
             `;
-        } else if (props.isSelected) {
+        } else if (props.$isSelected) {
             return css`
                 border: #57b0eb solid 1px;
             `;
-        } else if (props.showOutlines) {
+        } else if (props.$showOutlines) {
             return css`
                 border: #dddddd dashed 1px;
             `;
@@ -43,14 +43,14 @@ export const Selection = styled.div<ISelectionStyleProps>`
 
     &:hover {
         border: #57b0eb solid 1px;
-        :after {
+        &:after {
             background-color: #57b0eb;
         }
         cursor: pointer;
     }
 
     &:active {
-        :after {
+        &:after {
             background-color: #57b0eb;
         }
     }

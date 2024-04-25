@@ -2,9 +2,9 @@ import { NotFoundException, Type } from "@nestjs/common";
 import { Args, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { SkipBuild } from "../../builds/skip-build.decorator";
-import { SubjectEntity } from "../../common/decorators/subject-entity.decorator";
 import { PaginatedResponseFactory } from "../../common/pagination/paginated-response.factory";
-import { ScopeGuardActive } from "../../content-scope/decorators/scope-guard-active.decorator";
+import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
+import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { DamScopeInterface } from "../types";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
 import { createFolderArgs, createFolderByNameAndParentIdArgs, FolderArgsInterface, FolderByNameAndParentIdArgsInterface } from "./dto/folder.args";
@@ -36,7 +36,7 @@ export function createFoldersResolver({
     @ObjectType()
     class PaginatedDamFolders extends PaginatedResponseFactory.create(Folder) {}
 
-    @ScopeGuardActive(hasNonEmptyScope)
+    @RequiredPermission(["dam"], { skipScopeCheck: !hasNonEmptyScope })
     @Resolver(() => Folder)
     class FoldersResolver {
         constructor(private readonly foldersService: FoldersService) {}
@@ -55,7 +55,7 @@ export function createFoldersResolver({
         }
 
         @Query(() => Folder)
-        @SubjectEntity(Folder)
+        @AffectedEntity(Folder)
         async damFolder(@Args("id", { type: () => ID }) id: string): Promise<FolderInterface> {
             const folder = await this.foldersService.findOneById(id);
             if (!folder) {
@@ -81,7 +81,7 @@ export function createFoldersResolver({
         }
 
         @Mutation(() => Folder)
-        @SubjectEntity(Folder)
+        @AffectedEntity(Folder)
         @SkipBuild()
         async updateDamFolder(
             @Args("id", { type: () => ID }) id: string,
@@ -101,7 +101,7 @@ export function createFoldersResolver({
         }
 
         @Mutation(() => Boolean)
-        @SubjectEntity(Folder)
+        @AffectedEntity(Folder)
         @SkipBuild()
         async deleteDamFolder(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
             return this.foldersService.delete(id);

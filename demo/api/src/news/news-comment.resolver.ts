@@ -1,4 +1,4 @@
-import { SubjectEntity } from "@comet/cms-api";
+import { AffectedEntity } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Args, ID, Mutation, Resolver } from "@nestjs/graphql";
@@ -15,7 +15,7 @@ export class NewsCommentResolver {
     ) {}
 
     @Mutation(() => NewsComment)
-    @SubjectEntity(News, { idArg: "newsId" })
+    @AffectedEntity(News, { idArg: "newsId" })
     async createNewsComment(
         @Args("newsId", { type: () => ID }) newsId: string,
         @Args("input", { type: () => NewsCommentInput }) input: NewsCommentInput,
@@ -32,17 +32,12 @@ export class NewsCommentResolver {
     }
 
     @Mutation(() => NewsComment)
-    @SubjectEntity(NewsComment)
+    @AffectedEntity(NewsComment)
     async updateNewsComment(
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => NewsCommentInput }) input: NewsCommentInput,
-        @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
     ): Promise<NewsComment> {
         const newsComment = await this.newsCommentRepository.findOneOrFail(id);
-        console.log(lastUpdatedAt);
-        if (lastUpdatedAt) {
-            //validateNotModified(newsComment, lastUpdatedAt);
-        }
         newsComment.assign({
             ...input,
         });
@@ -53,7 +48,7 @@ export class NewsCommentResolver {
     }
 
     @Mutation(() => Boolean)
-    @SubjectEntity(NewsComment)
+    @AffectedEntity(NewsComment)
     async deleteNewsComment(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         await this.newsCommentRepository.removeAndFlush({ id });
 

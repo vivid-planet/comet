@@ -1,10 +1,11 @@
 import {
+    AffectedEntity,
     PageTreeNodeInterface,
     PageTreeNodeVisibility,
     PageTreeService,
     RequestContext,
     RequestContextInterface,
-    SubjectEntity,
+    RequiredPermission,
     validateNotModified,
 } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
@@ -19,6 +20,7 @@ import { PredefinedPage } from "./entities/predefined-page.entity";
 import { PredefinedPageService } from "./predefined-page.service";
 
 @Resolver(() => PredefinedPage)
+@RequiredPermission("pageTree")
 export class PredefinedPageResolver {
     constructor(
         @InjectRepository(PredefinedPage) private readonly repository: EntityRepository<PredefinedPage>,
@@ -27,13 +29,13 @@ export class PredefinedPageResolver {
     ) {}
 
     @Query(() => PredefinedPage, { nullable: true })
-    @SubjectEntity(PredefinedPage)
+    @AffectedEntity(PredefinedPage)
     async predefinedPage(@Args("id", { type: () => ID }) id: string): Promise<PredefinedPage | null> {
         return this.repository.findOneOrFail(id);
     }
 
     @Mutation(() => PredefinedPage)
-    @SubjectEntity(PredefinedPage, { pageTreeNodeIdArg: "attachedPageTreeNodeId" })
+    @AffectedEntity(PredefinedPage, { pageTreeNodeIdArg: "attachedPageTreeNodeId" })
     async savePredefinedPage(
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => PredefinedPageInput }) input: PredefinedPageInput,

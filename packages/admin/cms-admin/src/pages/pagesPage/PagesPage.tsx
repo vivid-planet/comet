@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import {
+    Alert,
     Loading,
     LocalErrorScopeApolloContext,
     MainContent,
@@ -15,7 +16,6 @@ import {
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Box, Button, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
-import withStyles from "@mui/styles/withStyles";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -78,7 +78,7 @@ export function PagesPage({
     });
 
     useFocusAwarePolling({
-        pollInterval: process.env.NODE_ENV === "development" ? undefined : 10000,
+        pollInterval: 10000,
         refetch,
         startPolling,
         stopPolling,
@@ -156,9 +156,9 @@ export function PagesPage({
                                 </Button>
                             </ToolbarActions>
                         </Toolbar>
-                        <PageTreeContext.Provider value={{ allCategories, documentTypes, tree, query: pagesQuery }}>
-                            <PageTreeContent fullHeight>
-                                <ActionToolbarBox>
+                        <PageTreeContext.Provider value={{ allCategories, currentCategory: category, documentTypes, tree, query: pagesQuery }}>
+                            <MainContent fullHeight sx={{ display: "flex", flexDirection: "column" }}>
+                                <Box>
                                     <PagesPageActionToolbar
                                         selectedState={selectState}
                                         onSelectAllPressed={() => {
@@ -178,8 +178,8 @@ export function PagesPage({
                                             setExpandedIds([]);
                                         }}
                                     />
-                                </ActionToolbarBox>
-                                <FullHeightPaper variant="outlined">
+                                </Box>
+                                <Paper variant="outlined" sx={{ flex: 1 }}>
                                     {loading && isInitialLoad.current ? (
                                         <Loading behavior="fillParent" />
                                     ) : (
@@ -202,8 +202,8 @@ export function PagesPage({
                                             />
                                         </>
                                     )}
-                                </FullHeightPaper>
-                            </PageTreeContent>
+                                </Paper>
+                            </MainContent>
                         </PageTreeContext.Provider>
 
                         <EditDialog>
@@ -219,12 +219,40 @@ export function PagesPage({
                         {(selectedId) => {
                             const page = data?.pages.find((page) => page.id == selectedId);
 
+                            if (loading && isInitialLoad.current) {
+                                return <Loading behavior="fillPageHeight" />;
+                            }
+
                             if (!page) {
-                                return null;
+                                return (
+                                    <MainContent>
+                                        <Alert
+                                            title={<FormattedMessage id="comet.pages.pages.notFound" defaultMessage="Not found" />}
+                                            severity="error"
+                                        >
+                                            <FormattedMessage
+                                                id="comet.pages.pages.documentDoesntExist"
+                                                defaultMessage="This document doesn't exist"
+                                            />
+                                        </Alert>
+                                    </MainContent>
+                                );
                             }
 
                             if (page.visibility === "Archived") {
-                                return <>403, not allowed</>;
+                                return (
+                                    <MainContent>
+                                        <Alert
+                                            title={<FormattedMessage id="comet.pages.pages.archived" defaultMessage="Archived" />}
+                                            severity="error"
+                                        >
+                                            <FormattedMessage
+                                                id="comet.pages.pages.documentHasBeenArchived"
+                                                defaultMessage="This document has been archived and can no longer be edited"
+                                            />
+                                        </Alert>
+                                    </MainContent>
+                                );
                             }
 
                             const documentType = documentTypes[page.documentType];
@@ -243,24 +271,3 @@ export function PagesPage({
         </DamScopeProvider>
     );
 }
-
-const PageTreeContent = withStyles({
-    root: {
-        display: "flex",
-        flexDirection: "column",
-    },
-})(MainContent);
-
-const FullHeightPaper = withStyles({
-    root: {
-        flex: 1,
-    },
-})(Paper);
-
-const ActionToolbarBox = withStyles({
-    root: {
-        width: "100%",
-        paddingLeft: 24,
-        paddingRight: 50,
-    },
-})(Box);

@@ -1,21 +1,36 @@
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { MoreHoriz } from "@mui/icons-material";
-import { ComponentsOverrides, ListItemIcon, Menu, MenuItem, Theme, Tooltip } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { ListItemIcon as MuiListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
+import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
 import { Editor } from "draft-js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { IFeatureConfig } from "../types";
-import ControlButton from "./ControlButton";
+import { ControlButton } from "./ControlButton";
 
-interface IProps {
+interface IProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        buttonWrapper: "div";
+        listItem: typeof MenuItem;
+        listItemIcon: typeof MuiListItemIcon;
+    }> {
     features: IFeatureConfig[];
     disabled?: boolean;
     editorRef: React.RefObject<Editor>;
     maxVisible?: number;
 }
 
-function FeaturesButtonGroup({ features, disabled: globallyDisabled, classes, editorRef, maxVisible }: IProps & WithStyles<typeof styles>) {
+export function FeaturesButtonGroup(inProps: IProps) {
+    const {
+        features,
+        disabled: globallyDisabled,
+        editorRef,
+        maxVisible,
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminRteFeaturesButtonGroup" });
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleMoreOptionsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -43,9 +58,9 @@ function FeaturesButtonGroup({ features, disabled: globallyDisabled, classes, ed
     const additionalFeatures = maxVisible !== undefined && features.length > maxVisible ? features.slice(maxVisible - 1) : [];
 
     return (
-        <div className={classes.root}>
+        <Root {...slotProps?.root} {...restProps}>
             {visibleFeatures.map(({ name, onButtonClick, tooltipText, disabled, ...rest }) => (
-                <div className={classes.buttonWrapper} key={name}>
+                <ButtonWrapper {...slotProps?.buttonWrapper} key={name}>
                     {tooltipText ? (
                         <Tooltip title={tooltipText} placement="top">
                             <span>
@@ -55,11 +70,11 @@ function FeaturesButtonGroup({ features, disabled: globallyDisabled, classes, ed
                     ) : (
                         <ControlButton onButtonClick={onButtonClick} disabled={globallyDisabled || disabled} {...rest} />
                     )}
-                </div>
+                </ButtonWrapper>
             ))}
             {additionalFeatures.length > 0 && (
                 <>
-                    <div className={classes.buttonWrapper}>
+                    <ButtonWrapper {...slotProps?.buttonWrapper}>
                         <Tooltip
                             title={<FormattedMessage id="comet.rte.controls.moreOptionsTooltip" defaultMessage="More options" />}
                             placement="top"
@@ -68,10 +83,10 @@ function FeaturesButtonGroup({ features, disabled: globallyDisabled, classes, ed
                                 <ControlButton onButtonClick={handleMoreOptionsClick} disabled={globallyDisabled} icon={MoreHoriz} />
                             </span>
                         </Tooltip>
-                    </div>
+                    </ButtonWrapper>
                     <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleMenuClose}>
                         {additionalFeatures.map(({ name, onButtonClick, disabled, selected, label, icon: Icon }) => (
-                            <MenuItem
+                            <ListItem
                                 key={name}
                                 onMouseDown={(event) => {
                                     handleMenuClose();
@@ -84,47 +99,56 @@ function FeaturesButtonGroup({ features, disabled: globallyDisabled, classes, ed
                                 }}
                                 disabled={globallyDisabled || disabled}
                                 selected={selected}
-                                className={classes.listItem}
+                                {...slotProps?.listItem}
                             >
                                 {label}
                                 {Icon && (
-                                    <ListItemIcon className={classes.listItemIcon}>
+                                    <ListItemIcon {...slotProps?.listItemIcon}>
                                         <Icon />
                                     </ListItemIcon>
                                 )}
-                            </MenuItem>
+                            </ListItem>
                         ))}
                     </Menu>
                 </>
             )}
-        </div>
+        </Root>
     );
 }
 
 export type RteFeaturesButtonGroupClassKey = "root" | "buttonWrapper" | "listItem" | "listItemIcon";
 
-const styles = () => {
-    return createStyles<RteFeaturesButtonGroupClassKey, IProps>({
-        root: {
-            display: "inline-flex",
-            justifyContent: "flex-start",
-        },
-        buttonWrapper: {
-            marginRight: 1,
-            "&:last-child": {
-                marginRight: 0,
-            },
-        },
-        listItem: {
-            justifyContent: "space-between",
-        },
-        listItemIcon: {
-            justifyContent: "flex-end",
-        },
-    });
-};
+const Root = createComponentSlot("div")<RteFeaturesButtonGroupClassKey>({
+    componentName: "RteFeaturesButtonGroup",
+    slotName: "root",
+})(css`
+    display: inline-flex;
+    justify-content: flex-start;
+`);
 
-export default withStyles(styles, { name: "CometAdminRteFeaturesButtonGroup" })(FeaturesButtonGroup);
+const ButtonWrapper = createComponentSlot("div")<RteFeaturesButtonGroupClassKey>({
+    componentName: "RteFeaturesButtonGroup",
+    slotName: "buttonWrapper",
+})(css`
+    margin-right: 1px;
+    &:last-child {
+        margin-right: 0;
+    }
+`);
+
+const ListItem = createComponentSlot(MenuItem)<RteFeaturesButtonGroupClassKey>({
+    componentName: "RteFeaturesButtonGroup",
+    slotName: "listItem",
+})(css`
+    justify-content: space-between;
+`);
+
+const ListItemIcon = createComponentSlot(MuiListItemIcon)<RteFeaturesButtonGroupClassKey>({
+    componentName: "RteFeaturesButtonGroup",
+    slotName: "listItemIcon",
+})(css`
+    justify-content: flex-end;
+`);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

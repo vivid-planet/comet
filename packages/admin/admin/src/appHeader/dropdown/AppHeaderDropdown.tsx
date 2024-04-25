@@ -1,13 +1,21 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
-import { ComponentsOverrides, Popover, PopoverProps, Theme, useTheme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides, Popover as MuiPopover, PopoverProps, Theme } from "@mui/material";
+import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { AppHeaderButton, AppHeaderButtonProps } from "../button/AppHeaderButton";
 
-export type AppHeaderDropdownClassKey = "root" | "popoverRoot" | "popoverPaper";
+export type AppHeaderDropdownClassKey = "root" | "popover" | "button";
 
-export interface AppHeaderDropdownProps extends Omit<AppHeaderButtonProps, "children"> {
+export interface AppHeaderDropdownProps
+    extends Omit<AppHeaderButtonProps, "children" | "slotProps">,
+        ThemedComponentBaseProps<{
+            root: "div";
+            popover: typeof Popover;
+            button: typeof AppHeaderButton;
+        }> {
     children?: ((closeDropdown: () => void) => React.ReactNode) | React.ReactNode;
     buttonChildren?: React.ReactNode;
     dropdownArrow?: ((isOpen: boolean) => React.ReactNode) | null;
@@ -16,38 +24,35 @@ export interface AppHeaderDropdownProps extends Omit<AppHeaderButtonProps, "chil
     onOpenChange?: (open: boolean) => void;
 }
 
-const styles = () => {
-    return createStyles<AppHeaderDropdownClassKey, AppHeaderDropdownProps>({
-        root: {
-            height: "100%",
-        },
-        popoverRoot: {},
-        popoverPaper: {
-            minWidth: "var(--comet-admin-app-header-dropdown-item-width)",
-        },
-    });
-};
+const Root = createComponentSlot("div")<AppHeaderDropdownClassKey>({
+    componentName: "AppHeaderDropdown",
+    slotName: "root",
+})(css`
+    height: 100%;
+`);
 
-function DefaultArrowUp(): React.ReactElement {
-    const { palette } = useTheme();
-    return <ChevronUp htmlColor={palette.primary.contrastText} />;
-}
+const Button = createComponentSlot(AppHeaderButton)<AppHeaderDropdownClassKey>({
+    componentName: "AppHeaderDropdown",
+    slotName: "button",
+})();
 
-function DefaultArrowDown(): React.ReactElement {
-    const { palette } = useTheme();
-    return <ChevronDown htmlColor={palette.primary.contrastText} />;
-}
+const Popover = createComponentSlot(MuiPopover)<AppHeaderDropdownClassKey>({
+    componentName: "AppHeaderDropdown",
+    slotName: "popover",
+})();
 
-function Dropdown({
-    children,
-    buttonChildren,
-    dropdownArrow = (isOpen) => (isOpen ? <DefaultArrowUp /> : <DefaultArrowDown />),
-    popoverProps,
-    open,
-    onOpenChange,
-    classes,
-    ...restProps
-}: AppHeaderDropdownProps & WithStyles<typeof styles>): React.ReactElement {
+export function AppHeaderDropdown(inProps: AppHeaderDropdownProps) {
+    const {
+        children,
+        buttonChildren,
+        dropdownArrow = (isOpen: boolean) => (isOpen ? <ChevronUp /> : <ChevronDown />),
+        popoverProps,
+        open,
+        onOpenChange,
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminAppHeaderDropdown" });
+
     const [uncontrolledOpen, setUncontrolledOpen] = React.useState<boolean>(false);
 
     const _open = open !== undefined ? open : uncontrolledOpen;
@@ -68,41 +73,48 @@ function Dropdown({
     }, []);
 
     return (
-        <div className={classes.root} ref={rootRef}>
-            <AppHeaderButton endIcon={dropdownArrow !== null ? dropdownArrow(_open) : undefined} {...restProps} onClick={() => _onOpenChange(true)}>
+        <Root ref={rootRef} {...slotProps?.root}>
+            <Button
+                endIcon={dropdownArrow !== null ? dropdownArrow(_open) : undefined}
+                {...restProps}
+                {...slotProps?.button}
+                onClick={() => _onOpenChange(true)}
+            >
                 {buttonChildren}
-            </AppHeaderButton>
+            </Button>
             <Popover
-                classes={{ root: classes.popoverRoot, paper: classes.popoverPaper }}
-                style={{ "--comet-admin-app-header-dropdown-item-width": `${itemWidth}px` } as React.CSSProperties}
+                {...slotProps?.popover}
                 open={_open}
                 anchorEl={rootRef.current}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                 transformOrigin={{ vertical: "top", horizontal: "center" }}
                 onClose={() => _onOpenChange(false)}
                 marginThreshold={0}
+                PaperProps={{
+                    sx: {
+                        minWidth: itemWidth,
+                    },
+                }}
                 {...popoverProps}
             >
                 {typeof children === "function" ? children(() => _onOpenChange(false)) : children}
             </Popover>
-        </div>
+        </Root>
     );
 }
 
-export const AppHeaderDropdown = withStyles(styles, { name: "CometAdminAppHeaderDropdown" })(Dropdown);
-
 declare module "@mui/material/styles" {
-    interface ComponentNameToClassKey {
-        CometAdminAppHeaderDropdown: AppHeaderDropdownClassKey;
-    }
-
     interface ComponentsPropsList {
         CometAdminAppHeaderDropdown: AppHeaderDropdownProps;
     }
 
+    interface ComponentNameToClassKey {
+        CometAdminAppHeaderDropdown: AppHeaderDropdownClassKey;
+    }
+
     interface Components {
         CometAdminAppHeaderDropdown?: {
-            defaultProps?: ComponentsPropsList["CometAdminAppHeaderDropdown"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminAppHeaderDropdown"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminAppHeaderDropdown"];
         };
     }

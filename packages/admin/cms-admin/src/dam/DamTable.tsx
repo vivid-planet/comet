@@ -21,6 +21,7 @@ import { Button } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { CurrentDamFolderProvider } from "./CurrentDamFolderProvider";
 import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
 import { UploadFilesButton } from "./DataGrid/fileUpload/UploadFilesButton";
@@ -34,11 +35,13 @@ import FolderDataGrid, {
 } from "./DataGrid/FolderDataGrid";
 import { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { DamMoreActions } from "./DataGrid/selection/DamMoreActions";
-import { DamSelectionProvider } from "./DataGrid/selection/DamSelectionContext";
+import { DamSelectionProvider, useDamSelectionApi } from "./DataGrid/selection/DamSelectionContext";
+import { SelectedItemsChip } from "./DataGrid/selection/SelectedItemsChip";
 import EditFile from "./FileForm/EditFile";
 
 interface FolderProps extends DamConfig {
     filterApi: IFilterApi<DamFilter>;
+    additionalToolbarItems?: React.ReactNode;
     id?: string;
 }
 
@@ -53,6 +56,8 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
     const [, , editDialogApi, selectionApi] = useEditDialog();
+    const { selectionMap } = useDamSelectionApi();
+    const selectionSize = selectionMap.size;
 
     // The selectedFolderId is only used to determine the name of a folder for the "folder" stack page
     // If you want to use the id of the current folder in the "table" stack page, use the id prop
@@ -70,52 +75,56 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
     };
 
     return (
-        <StackSwitch initialPage="table">
-            <StackPage name="table">
-                <EditDialogApiContext.Provider value={editDialogApi}>
-                    {props.contentScopeIndicator}
-                    <Toolbar>
-                        <ToolbarItem>
-                            <DamTableFilter hideArchiveFilter={props.hideArchiveFilter} filterApi={filterApi} />
-                        </ToolbarItem>
-                        <ToolbarFillSpace />
-                        <ToolbarActions>
-                            <DamMoreActions
-                                button={
-                                    <Button variant="text" color="inherit" endIcon={<MoreVertical />} sx={{ mx: 2 }}>
-                                        <FormattedMessage id="comet.pages.dam.moreActions" defaultMessage="More actions" />
-                                    </Button>
-                                }
-                                anchorOrigin={{
-                                    vertical: "bottom",
-                                    horizontal: "left",
-                                }}
-                                transformOrigin={{
-                                    vertical: "top",
-                                    horizontal: "left",
-                                }}
-                                folderId={id}
-                                filter={uploadFilters}
-                            />
+        <CurrentDamFolderProvider folderId={id}>
+            <StackSwitch initialPage="table">
+                <StackPage name="table">
+                    <EditDialogApiContext.Provider value={editDialogApi}>
+                        {props.contentScopeIndicator}
+                        <Toolbar>
+                            <ToolbarItem>
+                                <DamTableFilter hideArchiveFilter={props.hideArchiveFilter} filterApi={filterApi} />
+                            </ToolbarItem>
+                            <ToolbarFillSpace />
+                            <ToolbarActions>
+                                {props.additionalToolbarItems}
+                                <DamMoreActions
+                                    button={
+                                        <Button variant="text" color="inherit" endIcon={<MoreVertical />} sx={{ mx: 2 }}>
+                                            <FormattedMessage id="comet.pages.dam.moreActions" defaultMessage="More actions" />
+                                            {selectionSize > 0 && <SelectedItemsChip>{selectionSize}</SelectedItemsChip>}
+                                        </Button>
+                                    }
+                                    anchorOrigin={{
+                                        vertical: "bottom",
+                                        horizontal: "left",
+                                    }}
+                                    transformOrigin={{
+                                        vertical: "top",
+                                        horizontal: "left",
+                                    }}
+                                    folderId={id}
+                                    filter={uploadFilters}
+                                />
 
-                            <UploadFilesButton folderId={id} filter={uploadFilters} />
-                        </ToolbarActions>
-                    </Toolbar>
-                    <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />
-                </EditDialogApiContext.Provider>
-            </StackPage>
-            <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.dam.edit", defaultMessage: "Edit" })}>
-                {(selectedId: string) => {
-                    return <EditFile id={selectedId} />;
-                }}
-            </StackPage>
-            <StackPage name="folder" title={data?.damFolder.name}>
-                {(selectedId) => {
-                    setSelectedFolderId(selectedId);
-                    return <Folder id={selectedId} filterApi={filterApi} {...props} />;
-                }}
-            </StackPage>
-        </StackSwitch>
+                                <UploadFilesButton folderId={id} filter={uploadFilters} />
+                            </ToolbarActions>
+                        </Toolbar>
+                        <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />
+                    </EditDialogApiContext.Provider>
+                </StackPage>
+                <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.dam.edit", defaultMessage: "Edit" })}>
+                    {(selectedId: string) => {
+                        return <EditFile id={selectedId} />;
+                    }}
+                </StackPage>
+                <StackPage name="folder" title={data?.damFolder.name}>
+                    {(selectedId) => {
+                        setSelectedFolderId(selectedId);
+                        return <Folder id={selectedId} filterApi={filterApi} {...props} />;
+                    }}
+                </StackPage>
+            </StackSwitch>
+        </CurrentDamFolderProvider>
     );
 };
 
@@ -127,6 +136,7 @@ export interface DamConfig {
     contentScopeIndicator?: React.ReactNode;
     hideMultiselect?: boolean;
     hideDamActions?: boolean;
+    additionalToolbarItems?: React.ReactNode;
 }
 
 type DamTableProps = DamConfig;
@@ -161,7 +171,7 @@ export const DamTable = ({ ...props }: DamTableProps): React.ReactElement => {
             <FileUploadContextProvider>
                 <ManualDuplicatedFilenamesHandlerContextProvider>
                     <DamSelectionProvider>
-                        <Folder filterApi={filterApi} {...propsWithDefaultValues} />
+                        <Folder filterApi={filterApi} {...propsWithDefaultValues} additionalToolbarItems={props.additionalToolbarItems} />
                     </DamSelectionProvider>
                 </ManualDuplicatedFilenamesHandlerContextProvider>
             </FileUploadContextProvider>

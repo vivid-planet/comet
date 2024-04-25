@@ -2,10 +2,10 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
     FinalForm,
-    FinalFormInput,
     FinalFormSaveSplitButton,
     FinalFormSubmitEvent,
     MainContent,
+    TextField,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
@@ -92,10 +92,10 @@ function ProductTagForm({ id }: FormProps): React.ReactElement {
             if (!id) throw new Error();
             await client.mutate<GQLProductTagFormUpdateProductTagMutation, GQLProductTagFormUpdateProductTagMutationVariables>({
                 mutation: updateProductTagMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.productTag.updatedAt },
+                variables: { id, input: output },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<
+            const { data: mutationResponse } = await client.mutate<
                 GQLProductTagFormCreateProductTagMutation,
                 GQLProductTagFormCreateProductTagMutationVariables
             >({
@@ -103,7 +103,7 @@ function ProductTagForm({ id }: FormProps): React.ReactElement {
                 variables: { input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createProductTag.id;
+                const id = mutationResponse?.createProductTag.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage(`edit`, id);
@@ -122,16 +122,7 @@ function ProductTagForm({ id }: FormProps): React.ReactElement {
     }
 
     return (
-        <FinalForm<FormState>
-            apiRef={formApiRef}
-            onSubmit={handleSubmit}
-            mode={mode}
-            initialValues={initialValues}
-            onAfterSubmit={(values, form) => {
-                //don't go back automatically TODO remove this automatismn
-            }}
-            subscription={{}}
-        >
+        <FinalForm<FormState> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues} subscription={{}}>
             {() => (
                 <EditPageLayout>
                     {saveConflict.dialogs}
@@ -154,17 +145,11 @@ function ProductTagForm({ id }: FormProps): React.ReactElement {
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <FinalFormSaveSplitButton />
+                            <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <Field
-                            required
-                            fullWidth
-                            name="title"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.title" defaultMessage="Title" />}
-                        />
+                        <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
                     </MainContent>
                 </EditPageLayout>
             )}

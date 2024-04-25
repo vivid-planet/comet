@@ -3,7 +3,7 @@ import { tabClasses } from "@mui/material";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiTab: GetMuiComponentTheme<"MuiTab"> = (component, { palette, typography }) => ({
+export const getMuiTab: GetMuiComponentTheme<"MuiTab"> = (component, { palette, typography, breakpoints }) => ({
     ...component,
     styleOverrides: mergeOverrideStyles<"MuiTab">(component?.styleOverrides, {
         root: {
@@ -16,7 +16,7 @@ export const getMuiTab: GetMuiComponentTheme<"MuiTab"> = (component, { palette, 
             paddingLeft: 10,
             color: palette.grey[400],
 
-            "@media (min-width: 600px)": {
+            [breakpoints.up("sm")]: {
                 minWidth: 0,
             },
 

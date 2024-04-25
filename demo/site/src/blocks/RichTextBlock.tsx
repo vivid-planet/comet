@@ -1,8 +1,8 @@
-import { PreviewSkeleton, PropsWithData, withPreview } from "@comet/cms-site";
+"use client";
+import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData, withPreview } from "@comet/cms-site";
 import { LinkBlockData, RichTextBlockData } from "@src/blocks.generated";
 import { useColorTheme } from "@src/blocks/ColorThemeContext";
 import { Typography } from "@src/components/common/Typography";
-import type { RawDraftContentState } from "draft-js";
 import * as React from "react";
 import redraft, { Renderers } from "redraft";
 import styled from "styled-components";
@@ -10,7 +10,7 @@ import styled from "styled-components";
 import { LinkBlock } from "./LinkBlock";
 import * as sc from "./RichTextBlock.sc";
 
-const GreenCustomHeader: React.FC = ({ children }) => <h3 style={{ color: "green" }}>{children}</h3>;
+const GreenCustomHeader: React.FC<{ children: React.ReactNode }> = ({ children }) => <h3 style={{ color: "green" }}>{children}</h3>;
 
 export const DefaultStyleLink = styled.a`
     color: ${({ theme }) => theme.colors.primary};
@@ -118,18 +118,15 @@ interface RichTextBlockProps extends PropsWithData<RichTextBlockData> {
     renderers?: Renderers;
 }
 
-const RichTextBlock: React.FC<RichTextBlockProps> = ({ data: { draftContent }, renderers = defaultRenderers }) => {
-    const rendered = redraft(draftContent, renderers);
+const RichTextBlock: React.FC<RichTextBlockProps> = ({ data, renderers = defaultRenderers }) => {
+    const rendered = redraft(data.draftContent, renderers);
     const colorTheme = useColorTheme();
 
     return (
-        <PreviewSkeleton title={"RichText"} type={"rows"} hasContent={hasDraftContent(draftContent as RawDraftContentState)}>
-            <sc.Wrapper colorTheme={colorTheme}>{rendered}</sc.Wrapper>
+        <PreviewSkeleton title={"RichText"} type={"rows"} hasContent={hasRichTextBlockContent(data)}>
+            <sc.Wrapper $colorTheme={colorTheme}>{rendered}</sc.Wrapper>
         </PreviewSkeleton>
     );
 };
 
-export function hasDraftContent(draftContent: RawDraftContentState): boolean {
-    return !(draftContent.blocks.length == 1 && draftContent.blocks[0].text === "");
-}
 export default withPreview(RichTextBlock, { label: "RichText" });

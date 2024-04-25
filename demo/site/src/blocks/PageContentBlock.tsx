@@ -1,5 +1,8 @@
-import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
+"use client";
+import { BlocksBlock, PropsWithData, SupportedBlocks, YouTubeVideoBlock } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
+import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
+import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
 import * as React from "react";
 
 import { AnchorBlock } from "./AnchorBlock";
@@ -14,7 +17,6 @@ import RichTextBlock from "./RichTextBlock";
 import SpaceBlock from "./SpaceBlock";
 import { TextImageBlock } from "./TextImageBlock";
 import { TwoListsBlock } from "./TwoListsBlock";
-import YouTubeVideoBlock from "./YouTubeVideoBlock";
 
 const supportedBlocks: SupportedBlocks = {
     space: (props) => <SpaceBlock data={props} />,
@@ -30,6 +32,8 @@ const supportedBlocks: SupportedBlocks = {
     anchor: (props) => <AnchorBlock data={props} />,
     media: (props) => <MediaBlock data={props} />,
     twoLists: (props) => <TwoListsBlock data={props} />,
+    teaser: (props) => <TeaserBlock data={props} />,
+    newsDetail: (props) => <NewsDetailBlock data={props} />,
 };
 
 export const PageContentBlock: React.FC<PropsWithData<PageContentBlockData>> = ({ data }) => {

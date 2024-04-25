@@ -1,4 +1,4 @@
-import { PageTreeNodeInterface, PageTreeReadApiService, PublicApi } from "@comet/cms-api";
+import { PageTreeNodeInterface, PageTreeReadApiService, RequiredPermission } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Args, Query, Resolver } from "@nestjs/graphql";
@@ -10,6 +10,7 @@ import { MainMenuObject } from "./dto/main-menu.object";
 import { MainMenuItem } from "./entities/main-menu-item.entity";
 
 @Resolver(() => MainMenuObject)
+@RequiredPermission("pageTree")
 export class MenusResolver {
     constructor(
         private readonly pageTreeReadApi: PageTreeReadApiService,
@@ -17,7 +18,6 @@ export class MenusResolver {
     ) {}
 
     @Query(() => MainMenuObject)
-    @PublicApi()
     async mainMenu(@Args("scope", { type: () => PageTreeNodeScope }) scope: PageTreeNodeScope): Promise<MainMenuObject> {
         await this.pageTreeReadApi.preloadNodes(scope);
         const rootNodes = await this.pageTreeReadApi.pageTreeRootNodeList({

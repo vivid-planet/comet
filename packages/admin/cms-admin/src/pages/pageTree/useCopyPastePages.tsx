@@ -4,7 +4,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
-import { useContentScope } from "../../contentScope/Provider";
+import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
 import { useDamScope } from "../../dam/config/useDamScope";
 import { GQLDocument, GQLPageQuery, GQLPageQueryVariables } from "../../documents/types";
 import { useProgressDialog } from "./useCopyPastePages/ProgressDialog";
@@ -16,6 +16,7 @@ export type PageClipboard = GQLPageTreePageFragment & { document?: GQLDocument |
 
 export interface PagesClipboard {
     pages: PageClipboard[];
+    scope: ContentScopeInterface;
 }
 
 /**
@@ -64,7 +65,7 @@ interface UseCopyPastePagesApi {
  * This hooks provides some helper functions to copy / paste Pages and PageTreeNodes
  */
 function useCopyPastePages(): UseCopyPastePagesApi {
-    const { documentTypes } = usePageTreeContext();
+    const { documentTypes, currentCategory } = usePageTreeContext();
     const client = useApolloClient();
     const { scope } = useContentScope();
     const damScope = useDamScope();
@@ -107,10 +108,11 @@ function useCopyPastePages(): UseCopyPastePagesApi {
 
             const clipboardPages: PagesClipboard = {
                 pages: [...pagesWithDocuments],
+                scope,
             };
             return clipboardPages;
         },
-        [client, documentTypes],
+        [client, documentTypes, scope],
     );
     const writeToClipboard = React.useCallback(async (pages: PagesClipboard) => {
         return writeClipboardText(JSON.stringify(pages));
@@ -170,7 +172,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     const sendPagesCb = React.useCallback(
         async (parentId: string | null, pages: PagesClipboard, options: SendPagesOptions) => {
             try {
-                await sendPages(parentId, pages, options, { client, scope, documentTypes, blockContext, damScope }, updateProgress);
+                await sendPages(parentId, pages, options, { client, scope, documentTypes, blockContext, damScope, currentCategory }, updateProgress);
             } catch (e) {
                 errorDialog?.showError({
                     title: <FormattedMessage {...messages.error} />,
@@ -183,7 +185,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                 updateProgress(undefined); //hides progress dialog
             }
         },
-        [client, scope, documentTypes, blockContext, damScope, updateProgress, errorDialog],
+        [client, scope, documentTypes, blockContext, damScope, currentCategory, updateProgress, errorDialog],
     );
 
     return {

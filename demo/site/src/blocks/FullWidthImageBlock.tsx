@@ -1,3 +1,4 @@
+"use client";
 import { OptionalBlock, PropsWithData, withPreview } from "@comet/cms-site";
 import { FullWidthImageBlockData } from "@src/blocks.generated";
 import * as React from "react";

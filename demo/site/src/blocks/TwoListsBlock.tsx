@@ -1,3 +1,4 @@
+"use client";
 import { ListBlock, PropsWithData, withPreview } from "@comet/cms-site";
 import { TwoListsBlockData } from "@src/blocks.generated";
 

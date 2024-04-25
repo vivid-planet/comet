@@ -1,9 +1,12 @@
 import React from "react";
 
+import { FileWithFolderPath } from "./useDamFileUpload";
+
 export interface NewlyUploadedItem {
     id: string;
     parentId?: string;
     type: "file" | "folder";
+    file?: FileWithFolderPath;
 }
 
 interface FileUploadContextApi {

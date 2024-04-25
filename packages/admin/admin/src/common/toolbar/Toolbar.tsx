@@ -1,56 +1,76 @@
-import { ComponentsOverrides, Paper, Theme, Toolbar as MuiToolbar } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides, Paper, Toolbar as MuiToolbar } from "@mui/material";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
 
 export type ToolbarClassKey = "root" | "muiToolbar" | "mainContentContainer";
 
-export interface ToolbarProps {
+export interface ToolbarProps
+    extends ThemedComponentBaseProps<{
+        root: typeof Paper;
+        muiToolbar: typeof MuiToolbar;
+        mainContentContainer: "div";
+    }> {
     elevation?: number;
+    children?: React.ReactNode;
 }
 
-const styles = () => {
-    return createStyles<ToolbarClassKey, ToolbarProps>({
-        root: {
-            position: "sticky",
-            zIndex: 10,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            top: "var(--comet-admin-toolbar-top-spacing)",
-            padding: 0,
-            minHeight: 80,
-        },
-        muiToolbar: {
-            display: "flex",
-            flex: 1,
-            alignItems: "stretch",
-        },
-        mainContentContainer: {
-            display: "flex",
-            flex: 1,
-        },
-    });
+type OwnerState = {
+    headerHeight: number;
 };
 
-const ToolbarComponent: React.FunctionComponent<ToolbarProps & WithStyles<typeof styles>> = ({ children, elevation = 1, classes }) => {
+const Root = createComponentSlot(Paper)<ToolbarClassKey, OwnerState>({
+    componentName: "Toolbar",
+    slotName: "root",
+})(
+    ({ ownerState }) => css`
+        position: sticky;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        top: ${ownerState.headerHeight}px;
+        padding: 0;
+        min-height: 80px;
+    `,
+);
+
+const StyledToolbar = createComponentSlot(MuiToolbar)<ToolbarClassKey>({
+    componentName: "Toolbar",
+    slotName: "muiToolbar",
+})(css`
+    display: flex;
+    flex: 1;
+    align-items: stretch;
+`);
+
+const MainContentContainer = createComponentSlot("div")<ToolbarClassKey>({
+    componentName: "Toolbar",
+    slotName: "mainContentContainer",
+})(css`
+    display: flex;
+    flex: 1;
+`);
+
+export const Toolbar = (inProps: ToolbarProps) => {
+    const { children, elevation = 1, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbar" });
     const { headerHeight } = React.useContext(MasterLayoutContext);
 
+    const ownerState: OwnerState = {
+        headerHeight,
+    };
+
     return (
-        <Paper
-            elevation={elevation}
-            style={{ "--comet-admin-toolbar-top-spacing": `${headerHeight}px` } as React.CSSProperties}
-            classes={{ root: classes.root }}
-        >
-            <MuiToolbar classes={{ root: classes.muiToolbar }}>
-                <div className={classes.mainContentContainer}>{children}</div>
-            </MuiToolbar>
-        </Paper>
+        <Root elevation={elevation} ownerState={ownerState} {...slotProps?.root} {...restProps}>
+            <StyledToolbar {...slotProps?.muiToolbar}>
+                <MainContentContainer {...slotProps?.mainContentContainer}>{children}</MainContentContainer>
+            </StyledToolbar>
+        </Root>
     );
 };
-
-export const Toolbar = withStyles(styles, { name: "CometAdminToolbar" })(ToolbarComponent);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -63,7 +83,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminToolbar?: {
-            defaultProps?: ComponentsPropsList["CometAdminToolbar"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminToolbar"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminToolbar"];
         };
     }

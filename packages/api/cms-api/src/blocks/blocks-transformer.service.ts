@@ -1,24 +1,23 @@
 import { BlockContext, BlockDataInterface } from "@comet/blocks-api";
 import { Inject, Injectable } from "@nestjs/common";
+import { ModuleRef } from "@nestjs/core";
 import { CONTEXT } from "@nestjs/graphql";
 
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
-import { PageTreeReadApiService } from "../page-tree/page-tree-read-api.service";
-import { BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES } from "./blocks.constants";
 import { transformToPlain } from "./blocks-transformer";
 
 @Injectable()
 export class BlocksTransformerService {
     private blockContext: BlockContext;
-    private dependencies: Record<string, unknown>;
+
     constructor(
-        @Inject(BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES) dependencies: Record<string, unknown>,
-        pageTreeReadApi: PageTreeReadApiService,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        @Inject(CONTEXT) context: any,
+        @Inject(CONTEXT) private readonly context: any,
+        private readonly moduleRef: ModuleRef,
     ) {
         let includeInvisibleBlocks: boolean | undefined = false;
         let previewDamUrls = false;
+        let relativeDamUrls = false;
         if (context) {
             let headers;
             if (context.req) {
@@ -32,17 +31,14 @@ export class BlocksTransformerService {
 
             includeInvisibleBlocks = ctx.includeInvisibleBlocks;
             previewDamUrls = ctx.previewDamUrls;
+            relativeDamUrls = ctx.relativeDamUrls;
         }
 
-        this.blockContext = { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls };
-        this.dependencies = {
-            ...dependencies,
-            pageTreeReadApi: pageTreeReadApi,
-        };
+        this.blockContext = { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls, relativeDamUrls };
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async transformToPlain(block: BlockDataInterface): Promise<any> {
-        return transformToPlain(block, this.dependencies, this.blockContext);
+    async transformToPlain(block: BlockDataInterface, context?: BlockContext): Promise<any> {
+        return transformToPlain(block, context ?? this.blockContext, this.moduleRef, this.context);
     }
 }

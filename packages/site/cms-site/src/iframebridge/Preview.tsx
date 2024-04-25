@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import scrollIntoView from "scroll-into-view-if-needed";
 
@@ -8,6 +9,7 @@ interface PreviewProps {
     adminRoute: string;
     type: string;
     enabledAutoScrolling?: boolean;
+    children: React.ReactNode;
 }
 
 export const Preview: React.FunctionComponent<PreviewProps> = ({ adminRoute, type, children, enabledAutoScrolling = true }) => {
@@ -38,11 +40,11 @@ export const Preview: React.FunctionComponent<PreviewProps> = ({ adminRoute, typ
     }, [enabledAutoScrolling, isHovered, isSelected]);
 
     return iFrameBridge.hasBridge ? (
-        <Root ref={rootEl} isSelected={isSelected} isHovered={isHovered} showOutlines={iFrameBridge.showOutlines}>
+        <Root ref={rootEl} $isSelected={isSelected} $isHovered={isHovered} $showOutlines={iFrameBridge.showOutlines}>
             <Selection
-                showOutlines={iFrameBridge.showOutlines}
-                isSelected={isSelected}
-                isHovered={isHovered}
+                $showOutlines={iFrameBridge.showOutlines}
+                $isSelected={isSelected}
+                $isHovered={isHovered}
                 onClick={() => {
                     iFrameBridge.sendSelectComponent(adminRoute);
                 }}

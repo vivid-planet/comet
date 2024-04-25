@@ -16,7 +16,9 @@ import { Type } from "@nestjs/common";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
+import { EntityInfo } from "../../../dependencies/decorators/entity-info.decorator";
 import { DamScopeInterface } from "../../types";
+import { FilesEntityInfoService } from "../files-entity-info.service";
 import { DamFileImage } from "./file-image.entity";
 import { FolderInterface } from "./folder.entity";
 import { License } from "./license.embeddable";
@@ -39,6 +41,8 @@ export interface FileInterface extends BaseEntity<FileInterface, "id"> {
     createdAt: Date;
     updatedAt: Date;
     scope?: DamScopeInterface;
+    importSourceId?: string;
+    importSourceType?: string;
 }
 
 export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInterface>; Folder: Type<FolderInterface> }): Type<FileInterface> {
@@ -103,9 +107,8 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         @Field()
         @Property({
             columnType: "boolean",
-            default: false,
         })
-        archived: boolean;
+        archived: boolean = false;
 
         @Field(() => DamFileImage, { nullable: true })
         @OneToOne({
@@ -135,10 +138,19 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         @Field()
         updatedAt: Date = new Date();
 
+        @Field({ nullable: true })
+        @Property({ columnType: "text", nullable: true })
+        importSourceId?: string;
+
+        @Field({ nullable: true })
+        @Property({ columnType: "text", nullable: true })
+        importSourceType?: string;
+
         // fileUrl: Field is resolved in resolver
     }
 
     if (Scope) {
+        @EntityInfo<DamFile>(FilesEntityInfoService)
         @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
         class DamFile extends FileBase {
@@ -148,6 +160,7 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         }
         return DamFile;
     } else {
+        @EntityInfo<DamFile>(FilesEntityInfoService)
         @Entity({ tableName: FILE_TABLE_NAME })
         @ObjectType("DamFile")
         class DamFile extends FileBase {}

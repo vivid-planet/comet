@@ -1,56 +1,21 @@
 import { Inject } from "@nestjs/common";
-import { Args, ArgsType, Field, ObjectType, Query, Resolver } from "@nestjs/graphql";
-import { IsNumber, IsString } from "class-validator";
-import { createHmac } from "crypto";
-import { differenceInMinutes, getTime } from "date-fns";
+import { Args, Query, Resolver } from "@nestjs/graphql";
+import { GraphQLJSONObject } from "graphql-type-json";
 
-import { SITE_PREVIEW_CONFIG } from "./page-tree.constants";
+import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
+import { CurrentUser } from "../user-permissions/dto/current-user";
+import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
+import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
+import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
 
-@ObjectType()
-@ArgsType()
-class SitePreviewHash {
-    @Field(() => Number)
-    @IsNumber()
-    timestamp: number;
-
-    @Field(() => String)
-    @IsString()
-    hash: string;
-}
-
-export type SitePreviewConfig = {
-    secret: string;
-};
-
-@Resolver(() => SitePreviewHash)
+@Resolver()
 export class SitePreviewResolver {
-    constructor(@Inject(SITE_PREVIEW_CONFIG) private readonly config: SitePreviewConfig) {}
-
-    @Query(() => SitePreviewHash)
-    getSitePreviewHash(): SitePreviewHash {
-        const timestamp = this.getTimestamp();
-        return {
-            timestamp: timestamp,
-            hash: this.createHash(timestamp),
-        };
-    }
+    constructor(@Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface) {}
 
     @Query(() => Boolean)
-    validateSitePreviewHash(@Args() args: SitePreviewHash): boolean {
-        if (differenceInMinutes(this.getTimestamp(), args.timestamp) > 5) {
-            return false;
-        }
-        return this.createHash(args.timestamp) === args.hash;
-    }
-
-    private getTimestamp() {
-        return getTime(Date.now());
-    }
-
-    private createHash(timestamp: number): string {
-        if (!timestamp) throw new Error("Timestamp is required");
-        return createHmac("sha256", this.config.secret)
-            .update(timestamp + this.config.secret)
-            .digest("hex");
+    @RequiredPermission(["pageTree"], { skipScopeCheck: true })
+    isAllowedSitePreview(@GetCurrentUser() user: CurrentUser, @Args("scope", { type: () => GraphQLJSONObject }) scope: ContentScope): boolean {
+        return this.accessControlService.isAllowed(user, "pageTree", scope);
     }
 }

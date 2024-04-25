@@ -20,8 +20,7 @@ import {
     TraversableTransformResponse,
 } from "../block";
 import { BlockField } from "../decorators/field";
-import { TransformDependencies } from "../dependencies";
-import { NameOrOptions } from "./types";
+import { BlockFactoryNameOrOptions } from "./types";
 
 export interface BlocksBlockItemDataInterface extends BlockData {
     key: string;
@@ -57,7 +56,7 @@ export function BaseBlocksBlockItemData<BlockMap extends BaseBlockMap>(supported
         @BlockField({ kind: "oneOfBlocks", blocks: supportedBlocks })
         props: BlockDataInterface;
 
-        async transformToPlain(deps: TransformDependencies, { includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
             const { key, visible, type, props, ...additionalFields } = this;
 
             return {
@@ -89,12 +88,15 @@ export function BaseBlocksBlockItemInput<BlockMap extends BaseBlockMap>(
     class BlocksBlockItemInput extends BlockInput {
         @Allow()
         @IsString()
+        @BlockField()
         key: string;
 
         @IsBoolean()
+        @BlockField()
         visible: boolean;
 
         @IsString()
+        @BlockField()
         type: string;
 
         @Transform(
@@ -111,6 +113,7 @@ export function BaseBlocksBlockItemInput<BlockMap extends BaseBlockMap>(
             { toClassOnly: true },
         )
         @ValidateNested()
+        @BlockField({ kind: "oneOfBlocks", blocks: supportedBlocks })
         props: BlockInputInterface;
 
         transformToBlockData(): BlocksBlockItemDataInterface {
@@ -148,7 +151,7 @@ export function createBlocksBlock<BlockMap extends BaseBlockMap>(
         BlocksBlockItemData = BaseBlocksBlockItemData(supportedBlocks),
         BlocksBlockItemInput = BaseBlocksBlockItemInput(supportedBlocks, BlocksBlockItemData),
     }: Options<BlockMap>,
-    nameOrOptions: NameOrOptions,
+    nameOrOptions: BlockFactoryNameOrOptions,
 ): Block<BlockDataInterface, BlocksBlockInputInterface<BlockMap>> {
     if (Object.keys(supportedBlocks).length === 0) {
         throw new Error("Blocks block with no supported block is not allowed. Please specify at least two supported blocks.");
@@ -178,7 +181,7 @@ export function createBlocksBlock<BlockMap extends BaseBlockMap>(
         @BlockField(BlocksBlockItemData)
         blocks: BlocksBlockItemDataInterface[];
 
-        async transformToPlain(deps: TransformDependencies, { includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
             return {
                 blocks: includeInvisibleContent ? this.blocks : this.blocks.filter((c) => c.visible),
             };
@@ -208,7 +211,8 @@ export function createBlocksBlock<BlockMap extends BaseBlockMap>(
                 .map((item) => plainToInstance(BlocksBlockItemInput, item)),
         )
         @ValidateNested({ each: true })
-        blocks: BlocksBlockInputInterface<BlockMap>["blocks"];
+        @BlockField(BlocksBlockItemInput)
+        blocks: SupportedBlocksInputInterfaces<BlockMap>[];
 
         transformToBlockData(): BlocksBlockData {
             return plainToInstance(BlocksBlockData, {

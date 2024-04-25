@@ -6,7 +6,6 @@ on:
             - opened
             - synchronize
             - reopened
-            - closed
     push:
         branches:
             - main
@@ -40,6 +39,15 @@ jobs:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   path: "demo/admin/lang/comet-demo-lang"
 
+            - name: Initial lang content (TODO remove this step after all lang files are in the repo)
+              run: |
+                  mkdir -p demo/admin/lang/comet-demo-lang/admin
+                  test -f demo/admin/lang/comet-demo-lang/admin/en.json || echo "{}" > demo/admin/lang/comet-demo-lang/admin/en.json
+                  test -f demo/admin/lang/comet-demo-lang/admin/de.json || echo "{}" > demo/admin/lang/comet-demo-lang/admin/de.json
+                  mkdir -p demo/site/lang/comet-demo-lang/site
+                  test -f demo/site/lang/comet-demo-lang/site/en.json || echo "{}" > demo/site/lang/comet-demo-lang/site/en.json
+                  test -f demo/site/lang/comet-demo-lang/site/de.json || echo "{}" > demo/site/lang/comet-demo-lang/site/de.json
+
             - uses: pnpm/action-setup@v2
               with:
                   version: 8
@@ -57,7 +65,7 @@ jobs:
               run: pnpm run copy-schema-files
 
             - name: Build
-              run: pnpm run build:lib
+              run: pnpm run build:packages
 
             - name: Lint
               run: |
@@ -65,13 +73,3 @@ jobs:
                   pnpm run lint
                   # check for duplicate ids of formatted messages
                   pnpm run intl:extract
-
-            - name: Test
-              run: pnpm run test
-
-            - name: Upload test results
-              uses: actions/upload-artifact@v3
-              if: success() || failure()
-              with:
-                  name: test-results
-                  path: packages/**/junit.xml

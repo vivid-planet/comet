@@ -10,6 +10,7 @@ import { PageVisibilityIcon } from "./PageVisibilityIcon";
 import { subTreeFromNode, treeMapToArray } from "./treemap/TreeMapUtils";
 import { GQLPageTreePageFragment, PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
+
 export { GQLUpdatePageVisibilityMutation, GQLUpdatePageVisibilityMutationVariables } from "./PageVisibility.generated";
 
 export const updatePageVisibilityMutation = gql`
