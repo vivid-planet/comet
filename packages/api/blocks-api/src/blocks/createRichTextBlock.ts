@@ -213,7 +213,6 @@ function IsDraftContent(link: Block, validationOptions?: ValidationOptions) {
                             });
 
                             if (validationErrors.length > 0) {
-                                // TODO better error message
                                 return false;
                             }
                         }
