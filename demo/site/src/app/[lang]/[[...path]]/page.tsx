@@ -1,5 +1,5 @@
 import { gql, previewParams } from "@comet/cms-site";
-import { defaultLanguage, domain } from "@src/config";
+import { domain, languages } from "@src/config";
 import { documentTypes } from "@src/documentTypes";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
@@ -16,11 +16,14 @@ const documentTypeQuery = gql`
     }
 `;
 
-export default async function Page({ params }: { params: { path: string[] } }) {
+export default async function Page({ params }: { params: { path: string[]; lang: string } }) {
     // TODO support multiple domains, get domain by Host header
-    const { scope, previewData } = previewParams() || { scope: { domain, language: defaultLanguage }, previewData: undefined };
-
+    const { scope, previewData } = previewParams() || { scope: { domain, language: params.lang }, previewData: undefined };
     const graphqlFetch = createGraphQLFetch(previewData);
+
+    if (!languages.includes(params.lang)) {
+        notFound();
+    }
 
     //fetch documentType
     const data = await graphqlFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(documentTypeQuery, {

@@ -12,7 +12,7 @@ export interface ISelectionStyleProps {
 export const Selection = styled.div<ISelectionStyleProps>`
     z-index: 2;
 
-    :after {
+    &:after {
         content: "";
         position: absolute;
         top: 0;
@@ -25,7 +25,7 @@ export const Selection = styled.div<ISelectionStyleProps>`
     ${(props) => {
         if (props.$isHovered) {
             return css`
-                :after {
+                &:after {
                     background-color: #57b0eb;
                 }
                 border: #57b0eb solid 1px;
@@ -43,14 +43,14 @@ export const Selection = styled.div<ISelectionStyleProps>`
 
     &:hover {
         border: #57b0eb solid 1px;
-        :after {
+        &:after {
             background-color: #57b0eb;
         }
         cursor: pointer;
     }
 
     &:active {
-        :after {
+        &:after {
             background-color: #57b0eb;
         }
     }
