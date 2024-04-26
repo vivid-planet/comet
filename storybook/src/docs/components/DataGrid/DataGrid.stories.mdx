@@ -72,7 +72,7 @@ const rowCount = useBufferedRowCount(data?.products.totalCount);
 Hook for excel export functionality. To use it, the following steps are necessary:
 
 1. get an instance of `exportApi` from the `useDataGridExcelExport()` hook like in the example below
-2. call the `exportGrid` function of the instance from `exportApi`
+2. call `exportApi.exportGrid()` to execute the export
 
 Typical Usage Example:
 
