@@ -7,12 +7,8 @@ import { matchPath, useLocation } from "react-router";
 
 import { MenuCollapsibleItemClassKey, styles } from "./CollapsibleItem.styles";
 import { MenuContext } from "./Context";
-import { MenuItem, MenuItemProps } from "./Item";
+import { MenuItem, MenuItemLevel, MenuItemProps } from "./Item";
 import { MenuItemRouterLinkProps } from "./ItemRouterLink";
-
-export interface MenuLevel {
-    level?: 1 | 2 | 3;
-}
 
 export type MenuChild = React.ReactElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>;
 
@@ -41,7 +37,7 @@ const CollapsibleItem: React.FC<WithStyles<typeof styles> & MenuCollapsibleItemP
     ClosedIcon = ClosedIcon || (isMenuOpen ? ChevronDown : ChevronRight);
 
     const { drawerVariant } = React.useContext(MenuContext);
-    const itemLevel: MenuLevel["level"] = level ?? 1;
+    const itemLevel: MenuItemLevel = level ?? 1;
     const hasSelectedChild = useRef(false);
     const location = useLocation();
 

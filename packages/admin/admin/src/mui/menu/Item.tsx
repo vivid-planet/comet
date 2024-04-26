@@ -1,11 +1,19 @@
-import { ComponentsOverrides, ListItem, ListItemIcon, ListItemProps, ListItemText, Theme } from "@mui/material";
-import { WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides, ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText, Theme, useThemeProps } from "@mui/material";
 import * as React from "react";
 
-import { MenuLevel } from "./CollapsibleItem";
-import { MenuItemClassKey, styles } from "./Item.styles";
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { Icon, MenuItemClassKey, OwnerState, Root, Text } from "./Item.styles";
 
-export interface MenuItemProps extends MenuLevel {
+export type MenuItemLevel = 1 | 2 | 3;
+
+export interface MenuItemProps
+    extends ThemedComponentBaseProps<{
+            root: typeof ListItemButton;
+            icon: typeof ListItemIcon;
+            text: typeof ListItemText;
+        }>,
+        ListItemButtonProps {
+    level?: MenuItemLevel;
     primary: React.ReactNode;
     secondary?: React.ReactNode;
     icon?: React.ReactElement;
@@ -15,44 +23,48 @@ export interface MenuItemProps extends MenuLevel {
     hasSubitems?: boolean;
 }
 
-export type MuiListItemProps = Pick<ListItemProps, Exclude<keyof ListItemProps, "innerRef" | "button">> & { component?: React.ElementType };
+export const MenuItem = (inProps: MenuItemProps) => {
+    const {
+        primary,
+        secondary,
+        icon,
+        level = 1,
+        secondaryAction,
+        isMenuOpen,
+        hasSubitems,
+        isCollapsibleOpen,
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminMenuItem" });
 
-const Item: React.FC<WithStyles<typeof styles> & MenuItemProps & MuiListItemProps> = ({
-    classes,
-    primary,
-    secondary,
-    icon,
-    level = 1,
-    secondaryAction,
-    isMenuOpen,
-    hasSubitems,
-    isCollapsibleOpen,
-    ...otherProps
-}) => {
     if (level > 3) throw new Error("Maximum nesting level of 2 exceeded.");
 
     const showIcon = !!icon && level === 1;
     const showText = isMenuOpen || level !== 1;
 
-    const listItemClasses = [classes.root];
-    if (level === 1) listItemClasses.push(classes.level1);
-    if (level === 2) listItemClasses.push(classes.level2);
-    if (level === 3) listItemClasses.push(classes.level3);
-    if (level === 3 && isMenuOpen) listItemClasses.push(classes.level3MenuOpen);
-    if (showIcon) listItemClasses.push(classes.hasIcon);
-    if (secondary) listItemClasses.push(classes.hasSecondaryText);
-    if (secondaryAction) listItemClasses.push(classes.hasSecondaryAction);
+    const ownerState: OwnerState = {
+        level,
+        open: Boolean(isMenuOpen),
+        hasIcon: Boolean(icon),
+        collapsibleOpen: Boolean(isCollapsibleOpen),
+        hasSecondaryText: Boolean(secondary),
+        hasSecondaryAction: Boolean(secondaryAction),
+        hasSubItems: Boolean(hasSubitems),
+    };
 
     return (
-        <ListItem component="div" button classes={{ root: listItemClasses.join(" ") }} {...otherProps}>
-            {showIcon && <ListItemIcon sx={{ my: 1.25 }}>{icon}</ListItemIcon>}
-            {showText && <ListItemText primary={primary} secondary={secondary} inset={!icon} />}
+        // @ts-expect-error The type of the `component` is missing when using `styled()`: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop
+        <Root component="div" ownerState={ownerState} {...slotProps?.root} {...restProps}>
+            {showIcon && (
+                <Icon ownerState={ownerState} {...slotProps?.icon}>
+                    {icon}
+                </Icon>
+            )}
+            {showText && <Text ownerState={ownerState} primary={primary} secondary={secondary} inset={!icon} {...slotProps?.text} />}
             {!!secondaryAction && secondaryAction}
-        </ListItem>
+        </Root>
     );
 };
-
-export const MenuItem = withStyles(styles, { name: "CometAdminMenuItem" })(Item);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
