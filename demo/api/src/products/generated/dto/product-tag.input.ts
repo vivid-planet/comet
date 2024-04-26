@@ -5,7 +5,7 @@ import { Field, ID, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsArray, IsNotEmpty, IsString, IsUUID } from "class-validator";
 
-import { ProductTagProductToTagInput } from "./product-to-tag.product-tag-nested.input";
+import { ProductTagNestedProductToTagInput } from "./product-tag-nested-product-to-tag.input";
 
 @InputType()
 export class ProductTagInput {
@@ -19,10 +19,10 @@ export class ProductTagInput {
     @IsUUID(undefined, { each: true })
     products: string[];
 
-    @Field(() => [ProductTagProductToTagInput], { defaultValue: [] })
+    @Field(() => [ProductTagNestedProductToTagInput], { defaultValue: [] })
     @IsArray()
-    @Type(() => ProductTagProductToTagInput)
-    productsWithStatus: ProductTagProductToTagInput[];
+    @Type(() => ProductTagNestedProductToTagInput)
+    productsWithStatus: ProductTagNestedProductToTagInput[];
 }
 
 @InputType()

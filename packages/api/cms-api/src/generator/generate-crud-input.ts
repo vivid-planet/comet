@@ -172,13 +172,13 @@ export async function generateCrudInput(
                 //if orphanRemoval is enabled, we need to generate a nested input type
                 decorators.length = 0;
                 if (!prop.targetMeta) throw new Error("No targetMeta");
-                const inputNameClassName = `${metadata.className}${prop.targetMeta.className}Input`;
+                const inputNameClassName = `${metadata.className}Nested${prop.targetMeta.className}Input`;
                 {
                     const excludeFields = prop.targetMeta.props.filter((p) => p.reference == "m:1" && p.targetMeta == metadata).map((p) => p.name);
 
                     const { fileNameSingular } = buildNameVariants(metadata);
                     const { fileNameSingular: targetFileNameSingular } = buildNameVariants(prop.targetMeta);
-                    const fileName = `dto/${targetFileNameSingular}.${fileNameSingular}-nested.input.ts`;
+                    const fileName = `dto/${fileNameSingular}-nested-${targetFileNameSingular}.input.ts`;
 
                     const nestedInputFiles = await generateCrudInput(generatorOptions, prop.targetMeta, {
                         nested: true,
@@ -245,12 +245,12 @@ export async function generateCrudInput(
             }
         } else if (prop.reference == "1:1") {
             if (!prop.targetMeta) throw new Error("No targetMeta");
-            const inputNameClassName = `${metadata.className}${prop.targetMeta.className}Input`;
+            const inputNameClassName = `${metadata.className}Nested${prop.targetMeta.className}Input`;
             {
                 const excludeFields = prop.targetMeta.props.filter((p) => p.reference == "1:1" && p.targetMeta == metadata).map((p) => p.name);
                 const { fileNameSingular } = buildNameVariants(metadata);
                 const { fileNameSingular: targetFileNameSingular } = buildNameVariants(prop.targetMeta);
-                const fileName = `dto/${targetFileNameSingular}.${fileNameSingular}-nested.input.ts`;
+                const fileName = `dto/${fileNameSingular}-nested-${targetFileNameSingular}.input.ts`;
                 const nestedInputFiles = await generateCrudInput(generatorOptions, prop.targetMeta, {
                     nested: true,
                     fileName,

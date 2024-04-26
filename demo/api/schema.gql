@@ -1142,23 +1142,23 @@ input ProductInput {
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
   dimensions: ProductDimensionsInput
-  statistics: ProductProductStatisticsInput
-  variants: [ProductProductVariantInput!]! = []
+  statistics: ProductNestedProductStatisticsInput
+  variants: [ProductNestedProductVariantInput!]! = []
   category: ID = null
   tags: [ID!]! = []
-  tagsWithStatus: [ProductProductToTagInput!]! = []
+  tagsWithStatus: [ProductNestedProductToTagInput!]! = []
 }
 
-input ProductProductStatisticsInput {
+input ProductNestedProductStatisticsInput {
   views: Float!
 }
 
-input ProductProductVariantInput {
+input ProductNestedProductVariantInput {
   name: String!
   image: DamImageBlockInput!
 }
 
-input ProductProductToTagInput {
+input ProductNestedProductToTagInput {
   tag: ID!
   exampleStatus: Boolean! = true
 }
@@ -1174,11 +1174,11 @@ input ProductUpdateInput {
   discounts: [ProductDiscountsInput!]
   articleNumbers: [String!]
   dimensions: ProductDimensionsInput
-  statistics: ProductProductStatisticsInput
-  variants: [ProductProductVariantInput!]
+  statistics: ProductNestedProductStatisticsInput
+  variants: [ProductNestedProductVariantInput!]
   category: ID
   tags: [ID!]
-  tagsWithStatus: [ProductProductToTagInput!]
+  tagsWithStatus: [ProductNestedProductToTagInput!]
 }
 
 input ProductCategoryInput {
@@ -1196,10 +1196,10 @@ input ProductCategoryUpdateInput {
 input ProductTagInput {
   title: String!
   products: [ID!]! = []
-  productsWithStatus: [ProductTagProductToTagInput!]! = []
+  productsWithStatus: [ProductTagNestedProductToTagInput!]! = []
 }
 
-input ProductTagProductToTagInput {
+input ProductTagNestedProductToTagInput {
   product: ID!
   exampleStatus: Boolean! = true
 }
@@ -1207,5 +1207,5 @@ input ProductTagProductToTagInput {
 input ProductTagUpdateInput {
   title: String
   products: [ID!]
-  productsWithStatus: [ProductTagProductToTagInput!]
+  productsWithStatus: [ProductTagNestedProductToTagInput!]
 }
