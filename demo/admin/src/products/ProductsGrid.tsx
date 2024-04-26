@@ -8,6 +8,7 @@ import {
     GridColumnsButton,
     GridFilterButton,
     MainContent,
+    messages,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -19,9 +20,25 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit, StateFilled } from "@comet/admin-icons";
+import { Add as AddIcon, Delete, DeleteForever, Edit, MoreVertical, MoveToTrash, Restore, StateFilled } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton, useTheme } from "@mui/material";
+import {
+    Box,
+    Button,
+    Chip,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    MenuList,
+    Typography,
+    useTheme,
+} from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import * as React from "react";
@@ -42,10 +59,213 @@ import {
 } from "./ProductsGrid.generated";
 import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
-function ProductsGridToolbar() {
+interface DeleteDialogProps {
+    dialogOpen: boolean;
+    onDelete: () => void;
+    onCancel: () => void;
+}
+
+const DeleteDialog: React.FC<DeleteDialogProps> = (props) => {
+    const { dialogOpen, onDelete, onCancel } = props;
+
+    return (
+        <Dialog open={dialogOpen} onClose={onCancel}>
+            <DialogTitle>
+                <FormattedMessage id="products.deleteDialog.title" defaultMessage="Delete item?" />
+            </DialogTitle>
+            <DialogContent>Lorem Ipsum dolor sit amet</DialogContent>
+            <DialogActions>
+                <Button onClick={onCancel} color="primary">
+                    <FormattedMessage {...messages.no} />
+                </Button>
+                <Button onClick={onDelete} color="primary" variant="contained">
+                    <FormattedMessage {...messages.yes} />
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
+};
+
+type MoreActionsProps = {
+    selectedIds: string[];
+    statusFilter: null | "Deleted";
+    setStatusFilter: (status: null | "Deleted") => void;
+    refetch: () => void;
+};
+function MoreActions(props: MoreActionsProps) {
+    const client = useApolloClient();
+    const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+
+    const handleMenuButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setMenuAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setMenuAnchorEl(null);
+    };
+
+    const handleDelete = async () => {
+        for (const id of props.selectedIds) {
+            await client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
+                mutation: updateProductStatusMutation,
+                variables: { id, status: "Deleted" },
+            });
+        }
+        await props.refetch();
+    };
+
+    const handleRestore = async () => {
+        for (const id of props.selectedIds) {
+            await client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
+                mutation: updateProductStatusMutation,
+                variables: { id, status: "Unpublished" },
+            });
+        }
+        await props.refetch();
+    };
+
+    const handleDeletePermanently = async () => {
+        for (const id of props.selectedIds) {
+            await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
+                mutation: deleteProductMutation,
+                variables: { id },
+            });
+        }
+        await props.refetch();
+    };
+
+    return (
+        <>
+            <Button variant="text" color="inherit" endIcon={<MoreVertical />} sx={{ mx: 2 }} onClick={handleMenuButtonClick}>
+                <FormattedMessage id="products.moreActions" defaultMessage="More actions" />
+            </Button>
+            <Menu
+                anchorEl={menuAnchorEl}
+                open={Boolean(menuAnchorEl)}
+                onClose={handleMenuClose}
+                keepMounted={false}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                }}
+                transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                }}
+            >
+                <Box px={3}>
+                    <Typography variant="subtitle2" color={(theme) => theme.palette.grey[500]} fontWeight="bold" mt={5}>
+                        <FormattedMessage id="products.overallActions" defaultMessage="Overall actions" />
+                    </Typography>
+                    <MenuList>
+                        {props.statusFilter == null && (
+                            <MenuItem
+                                onClick={() => {
+                                    props.setStatusFilter("Deleted");
+                                    handleMenuClose();
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <Delete />
+                                </ListItemIcon>
+                                <ListItemText primary={<FormattedMessage id="products.openTrash" defaultMessage="Open trash" />} />
+                            </MenuItem>
+                        )}
+                        {props.statusFilter == "Deleted" && (
+                            <MenuItem
+                                onClick={() => {
+                                    props.setStatusFilter(null);
+                                    handleMenuClose();
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <Delete />
+                                </ListItemIcon>
+                                <ListItemText primary={<FormattedMessage id="products.closeTrash" defaultMessage="Close trash" />} />
+                            </MenuItem>
+                        )}
+                    </MenuList>
+                </Box>
+                <Box px={3}>
+                    <Typography variant="subtitle2" color={(theme) => theme.palette.grey[500]} fontWeight="bold" mt={5}>
+                        <FormattedMessage id="products.selectiveActions" defaultMessage="Selective actions" />
+                    </Typography>
+                    <MenuList>
+                        {props.statusFilter == null && (
+                            <MenuItem
+                                disabled={props.selectedIds.length == 0}
+                                onClick={() => {
+                                    setDeleteDialogOpen(true);
+                                    handleMenuClose();
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <MoveToTrash />
+                                </ListItemIcon>
+                                <ListItemText primary={<FormattedMessage id="products.delete" defaultMessage="Delete" />} />
+                            </MenuItem>
+                        )}
+                        {props.statusFilter == "Deleted" && (
+                            <MenuItem
+                                disabled={props.selectedIds.length == 0}
+                                onClick={async () => {
+                                    await handleRestore();
+                                    handleMenuClose();
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <Restore /> {/* wrong icon, RestoreFromTrash doesn't exist yet */}
+                                </ListItemIcon>
+                                <ListItemText primary={<FormattedMessage id="products.restore" defaultMessage="Restore" />} />
+                            </MenuItem>
+                        )}
+                        {props.statusFilter == "Deleted" && (
+                            <MenuItem
+                                disabled={props.selectedIds.length == 0}
+                                onClick={async () => {
+                                    await handleDeletePermanently();
+                                    handleMenuClose();
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <DeleteForever />
+                                </ListItemIcon>
+                                <ListItemText primary={<FormattedMessage id="products.deletePermanently" defaultMessage="Delete permanently" />} />
+                            </MenuItem>
+                        )}
+                    </MenuList>
+                </Box>
+            </Menu>
+            <DeleteDialog
+                dialogOpen={deleteDialogOpen}
+                onDelete={async () => {
+                    await handleDelete();
+                    setDeleteDialogOpen(false);
+                }}
+                onCancel={() => {
+                    setDeleteDialogOpen(false);
+                }}
+            />
+        </>
+    );
+}
+
+type ProductsGridToolbarProps = {
+    selectedIds: string[];
+    statusFilter: null | "Deleted";
+    setStatusFilter: (status: null | "Deleted") => void;
+    refetch: () => void;
+};
+function ProductsGridToolbar(props: ProductsGridToolbarProps) {
     return (
         <Toolbar>
             <ToolbarAutomaticTitleItem />
+            {props.statusFilter == "Deleted" && (
+                <ToolbarItem>
+                    <Chip variant="outlined" icon={<Delete />} label=<FormattedMessage id="products.trash" defaultMessage="Trash" /> />
+                </ToolbarItem>
+            )}
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
@@ -55,6 +275,19 @@ function ProductsGridToolbar() {
             </ToolbarItem>
             <ToolbarItem>
                 <GridColumnsButton />
+            </ToolbarItem>
+            <ToolbarItem>
+                <MoreActions
+                    selectedIds={props.selectedIds}
+                    statusFilter={props.statusFilter}
+                    setStatusFilter={props.setStatusFilter}
+                    refetch={props.refetch}
+                />
+                {props.statusFilter == null && (
+                    <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                        <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
+                    </Button>
+                )}
             </ToolbarItem>
             <ToolbarItem>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
@@ -72,6 +305,8 @@ export function ProductsGrid() {
     const { data: categoriesData } = useQuery<GQLProductGridCategoriesQuery, GQLProductGridCategoriesQueryVariables>(productCategoriesQuery);
     const intl = useIntl();
     const theme = useTheme();
+    const [rowSelectionModel, setRowSelectionModel] = React.useState<string[]>([]);
+    const [statusFilter, setStatusFilter] = React.useState<null | "Deleted">(null);
 
     const columns: GridColDef<GQLProductsListManualFragment>[] = [
         {
@@ -154,7 +389,10 @@ export function ProductsGrid() {
                 />
             ),
         },
-        {
+        { field: "inStock", headerName: "In Stock", width: 50, type: "boolean" },
+    ];
+    if (statusFilter == null) {
+        columns.push({
             field: "status",
             headerName: "Status",
             flex: 1,
@@ -178,8 +416,8 @@ export function ProductsGrid() {
                     />
                 );
             },
-        },
-        {
+        });
+        columns.push({
             field: "action",
             headerName: "",
             sortable: false,
@@ -216,9 +454,10 @@ export function ProductsGrid() {
                                 });
                             }}
                             onDelete={async () => {
-                                await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
-                                    mutation: deleteProductMutation,
-                                    variables: { id: params.row.id },
+                                // TODO dialog shows "WARNING: This cannot be undone!" which is not true
+                                await client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
+                                    mutation: updateProductStatusMutation,
+                                    variables: { id: params.row.id, status: "Deleted" },
                                 });
                             }}
                             refetchQueries={["ProductsList"]}
@@ -229,15 +468,51 @@ export function ProductsGrid() {
                     </>
                 );
             },
-        },
-    ];
+        });
+    } else if (statusFilter == "Deleted") {
+        columns.push({
+            field: "action",
+            headerName: "",
+            sortable: false,
+            filterable: false,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <IconButton
+                            onClick={async () => {
+                                await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
+                                    mutation: deleteProductMutation,
+                                    variables: { id: params.row.id },
+                                });
+                                refetch();
+                            }}
+                        >
+                            <DeleteForever />
+                        </IconButton>
+                        <IconButton
+                            onClick={async () => {
+                                await client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
+                                    mutation: updateProductStatusMutation,
+                                    variables: { id: params.row.id, status: "Unpublished" },
+                                });
+                                refetch();
+                            }}
+                        >
+                            <Restore /> {/* wrong icon, RestoreFromTrash doesn't exist yet */}
+                        </IconButton>
+                    </>
+                );
+            },
+        });
+    }
 
-    const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
+    const { data, loading, error, refetch } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
             sort: muiGridSortToGql(sortModel, dataGridProps.apiRef),
+            status: statusFilter ? statusFilter : ["Published", "Unpublished"],
         },
     });
     const rows = data?.products.nodes ?? [];
@@ -247,14 +522,21 @@ export function ProductsGrid() {
         <MainContent fullHeight disablePadding>
             <DataGridPro
                 {...dataGridProps}
-                disableSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
                 error={error}
+                checkboxSelection={true}
+                onSelectionModelChange={(newRowSelectionModel) => {
+                    setRowSelectionModel(newRowSelectionModel as string[]);
+                }}
+                selectionModel={rowSelectionModel}
                 components={{
                     Toolbar: ProductsGridToolbar,
+                }}
+                componentsProps={{
+                    toolbar: { selectedIds: rowSelectionModel, statusFilter, setStatusFilter, refetch },
                 }}
             />
         </MainContent>
@@ -296,8 +578,8 @@ const productsFragment = gql`
 `;
 
 const productsQuery = gql`
-    query ProductsList($offset: Int, $limit: Int, $sort: [ProductSort!], $filter: ProductFilter, $search: String) {
-        products(offset: $offset, limit: $limit, sort: $sort, filter: $filter, search: $search) {
+    query ProductsList($offset: Int, $limit: Int, $sort: [ProductSort!], $filter: ProductFilter, $search: String, $status: [ProductStatus!]) {
+        products(offset: $offset, limit: $limit, sort: $sort, filter: $filter, search: $search, status: $status) {
             nodes {
                 id
                 ...ProductsListManual
@@ -319,12 +601,6 @@ const productCategoriesQuery = gql`
     }
 `;
 
-const deleteProductMutation = gql`
-    mutation DeleteProduct($id: ID!) {
-        deleteProduct(id: $id)
-    }
-`;
-
 const createProductMutation = gql`
     mutation CreateProduct($input: ProductInput!) {
         createProduct(input: $input) {
@@ -339,5 +615,11 @@ const updateProductStatusMutation = gql`
             id
             status
         }
+    }
+`;
+
+const deleteProductMutation = gql`
+    mutation DeleteProduct($id: ID!) {
+        deleteProduct(id: $id)
     }
 `;
