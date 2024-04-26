@@ -9,8 +9,8 @@ import {
 import { plural } from "pluralize";
 
 import { findInputObjectType } from "./generateGrid/findInputObjectType";
+import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
-import { getPropsForUnsupportedRequiredGqlArgs } from "./generateGrid/getPropsForUnsupportedRequiredGqlArgs";
 import { GeneratorReturn, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findRootBlocks } from "./utils/findRootBlocks";
@@ -131,12 +131,12 @@ export function generateGrid(
     const showActionsColumn = allowCopyPaste || allowEditing || allowDeleting;
 
     const {
-        imports: unsupportedRequiredGqlArgsImports,
-        props: unsupportedRequiredGqlArgsProps,
+        imports: forwardedGqlArgsImports,
+        props: forwardedGqlArgsProps,
         gqlArgs,
-    } = getPropsForUnsupportedRequiredGqlArgs([gridQueryType, ...(createMutationType ? [createMutationType] : [])]);
-    imports.push(...unsupportedRequiredGqlArgsImports);
-    props.push(...unsupportedRequiredGqlArgsProps);
+    } = getForwardedGqlArgs([gridQueryType, ...(createMutationType ? [createMutationType] : [])]);
+    imports.push(...forwardedGqlArgsImports);
+    props.push(...forwardedGqlArgsProps);
 
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
     const hasFilter = !!filterArg;

@@ -5,7 +5,7 @@ import { Imports } from "../utils/generateImportsCode";
 
 type GqlArg = { type: string; name: string; queryOrMutationName: string };
 
-export function getPropsForUnsupportedRequiredGqlArgs(gqlFields: IntrospectionField[]): {
+export function getForwardedGqlArgs(gqlFields: IntrospectionField[]): {
     imports: Imports;
     props: Prop[];
     gqlArgs: GqlArg[];
