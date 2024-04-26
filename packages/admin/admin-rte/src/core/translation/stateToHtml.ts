@@ -21,6 +21,9 @@ export function stateToHtml({ editorState, options }: { editorState: EditorState
 
     const html = stateToHTML(contentState, {
         inlineStyles,
+        blockStyleFn: (block) => {
+            return { attributes: { class: block.getType() } };
+        },
         entityStyleFn: (entity) => {
             const entityType = entity.getType();
             const data = entity.getData();
