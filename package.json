@@ -7,6 +7,7 @@
     },
     "license": "BSD-2-Clause",
     "scripts": {
+        "create-site-configs-env": "npx ts-node cli.ts inject-site-configs -i .env.site-configs.tpl -o .env.site-configs",
         "build:storybook": "pnpm recursive --filter '@comet/admin*' --filter '@comet/eslint-plugin' run build && pnpm --filter comet-storybook run build-storybook",
         "build:packages": "pnpm recursive --filter '@comet/*' run build",
         "build:docs": "pnpm recursive --filter '@comet/eslint-plugin' --filter '@comet/admin*' --filter 'comet-docs' run build",
@@ -33,15 +34,18 @@
         "publish": "pnpm run build:packages && $npm_execpath changeset publish"
     },
     "devDependencies": {
+        "@comet/cli": "workspace:*",
         "@comet/dev-process-manager": "^2.5.1",
         "@comet/eslint-plugin": "workspace:*",
         "@formatjs/cli": "^4.8.3",
         "@types/node": "^18.0.0",
+        "commander": "^9.5.0",
         "dotenv-cli": "^5.1.0",
         "husky": "^7.0.4",
         "lint-staged": "^12.3.7",
         "prettier": "^2.0.0",
         "rimraf": "^3.0.2",
+        "ts-node": "^10.9.2",
         "typescript": "^4.2.2",
         "wait-on": "^5.3.0"
     },

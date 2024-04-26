@@ -1,9 +1,2 @@
-import { Command } from "commander";
-
-import { generateBlockTypes } from "./commands/generate-block-types";
-
-const program = new Command();
-
-program.addCommand(generateBlockTypes);
-
-program.parse();
+export { createInjectSiteConfigsCommand } from "./commands/site-configs";
+export { SiteConfig, SiteConfigPrivate, SiteConfigPublic } from "./site-configs.types";
