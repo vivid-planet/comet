@@ -16,19 +16,16 @@ import { GeneratedFile } from "./utils/write-generated-files";
 export function buildOptions(metadata: EntityMetadata<any>) {
     const { classNameSingular, classNamePlural, fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
 
-    const rootArgProps = metadata.props.filter((prop) => {
-        if (prop.reference == "m:1") {
-            if (!prop.targetMeta) throw new Error("targetMeta is not set for relation");
-            for (const innerProp of prop.targetMeta.props) {
-                if (innerProp.reference == "1:m" && innerProp.targetMeta == metadata && innerProp.mappedBy == prop.name) {
-                    const hasOwnCrudGenerator = Reflect.getMetadata(`data:crudGeneratorOptions`, prop.targetMeta.class);
-                    if (hasOwnCrudGenerator && innerProp.orphanRemoval) {
-                        //if the back relation has its own crud generator and has orphan removal, it's a root arg
-                        return true;
-                    }
-                }
+    const dedicatedResolverArgProps = metadata.props.filter((prop) => {
+        if (hasFieldFeature(metadata.class, prop.name, "dedicatedResolverArg")) {
+            if (prop.reference == "m:1") {
+                return true;
+            } else {
+                console.warn(`${metadata.className} ${prop.name} can't use dedicatedResolverArg as it's not a m:1 relation`);
+                return false;
             }
         }
+        return false;
     });
 
     const crudSearchPropNames = metadata.props
@@ -95,7 +92,7 @@ export function buildOptions(metadata: EntityMetadata<any>) {
                 prop.type === "DateType" ||
                 prop.type === "Date" ||
                 prop.reference === "m:1") &&
-            !rootArgProps.some((rootArgProp) => rootArgProp.name == prop.name),
+            !dedicatedResolverArgProps.some((dedicatedResolverArgProp) => dedicatedResolverArgProp.name == prop.name),
     );
     const hasFilterArg = crudFilterProps.length > 0;
     const crudSortProps = metadata.props.filter(
@@ -141,7 +138,7 @@ export function buildOptions(metadata: EntityMetadata<any>) {
         argsClassName,
         argsFileName,
         blockProps,
-        rootArgProps,
+        dedicatedResolverArgProps,
     };
 }
 
@@ -300,8 +297,17 @@ function generatePaginatedDto({ generatorOptions, metadata }: { generatorOptions
 
 function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular } = buildNameVariants(metadata);
-    const { scopeProp, argsClassName, hasSearchArg, hasSortArg, hasFilterArg, statusProp, statusActiveItems, hasStatusFilter, rootArgProps } =
-        buildOptions(metadata);
+    const {
+        scopeProp,
+        argsClassName,
+        hasSearchArg,
+        hasSortArg,
+        hasFilterArg,
+        statusProp,
+        statusActiveItems,
+        hasStatusFilter,
+        dedicatedResolverArgProps,
+    } = buildOptions(metadata);
     const imports: Imports = [];
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`));
@@ -359,17 +365,17 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
                 : ""
         }
 
-        ${rootArgProps
-            .map((rootArgProp) => {
-                if (integerTypes.includes(rootArgProp.type)) {
+        ${dedicatedResolverArgProps
+            .map((dedicatedResolverArgProp) => {
+                if (integerTypes.includes(dedicatedResolverArgProp.type)) {
                     return `@Field(() => ID)
                     @Transform(({ value }) => value.map((id: string) => parseInt(id)))
                     @IsInt()
-                    ${rootArgProp.name}: number;`;
+                    ${dedicatedResolverArgProp.name}: number;`;
                 } else {
                     return `@Field(() => ID)
                     @IsUUID()
-                    ${rootArgProp.name}: string;`;
+                    ${dedicatedResolverArgProp.name}: string;`;
                 }
             })
             .join("")}
@@ -486,7 +492,7 @@ function generateInputHandling(
     metadata: EntityMetadata<any>,
 ): string {
     const { instanceNameSingular } = buildNameVariants(metadata);
-    const { blockProps, scopeProp, rootArgProps } = buildOptions(metadata);
+    const { blockProps, scopeProp, dedicatedResolverArgProps } = buildOptions(metadata);
 
     const props = metadata.props.filter((prop) => !options.excludeFields || !options.excludeFields.includes(prop.name));
 
@@ -498,8 +504,8 @@ function generateInputHandling(
     const inputRelationManyToOneProps = relationManyToOneProps
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
         .filter((prop) => {
-            //filter out props that are rootArgProps
-            return !rootArgProps.some((rootArgProps) => rootArgProps.name === prop.name);
+            //filter out props that are dedicatedResolverArgProp
+            return !dedicatedResolverArgProps.some((dedicatedResolverArgProp) => dedicatedResolverArgProp.name === prop.name);
         })
         .map((prop) => {
             return {
@@ -553,11 +559,11 @@ function generateInputHandling(
         ${options.mode == "create" && scopeProp ? `scope,` : ""}
         ${
             options.mode == "create"
-                ? rootArgProps
-                      .map((rootArgProp) => {
-                          return `${rootArgProp.name}: Reference.create(await this.${classNameToInstanceName(
-                              rootArgProp.type,
-                          )}Repository.findOneOrFail(${rootArgProp.name})), `;
+                ? dedicatedResolverArgProps
+                      .map((dedicatedResolverArgProp) => {
+                          return `${dedicatedResolverArgProp.name}: Reference.create(await this.${classNameToInstanceName(
+                              dedicatedResolverArgProp.type,
+                          )}Repository.findOneOrFail(${dedicatedResolverArgProp.name})), `;
                       })
                       .join("")
                 : ""
@@ -798,7 +804,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         statusProp,
         statusActiveItems,
         hasStatusFilter,
-        rootArgProps,
+        dedicatedResolverArgProps,
     } = buildOptions(metadata);
 
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
@@ -819,7 +825,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         .forEach((prop) => {
             injectRepositories.add(prop.type);
         });
-    rootArgProps.forEach((prop) => {
+    dedicatedResolverArgProps.forEach((prop) => {
         injectRepositories.add(prop.type);
     });
 
@@ -907,16 +913,16 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             generatorOptions.list
                 ? `
         @Query(() => Paginated${classNamePlural})
-        ${rootArgProps
-            .map((rootArgProp) => {
-                return `@AffectedEntity(${rootArgProp.targetMeta?.className}, { idArg: "${rootArgProp.name}" })`;
+        ${dedicatedResolverArgProps
+            .map((dedicatedResolverArgProp) => {
+                return `@AffectedEntity(${dedicatedResolverArgProp.targetMeta?.className}, { idArg: "${dedicatedResolverArgProp.name}" })`;
             })
             .join("")}
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
             @Args() {${Object.entries({
                 scope: !!scopeProp,
-                ...rootArgProps.reduce((acc, rootArgProp) => {
-                    acc[rootArgProp.name] = true;
+                ...dedicatedResolverArgProps.reduce((acc, dedicatedResolverArgProp) => {
+                    acc[dedicatedResolverArgProp.name] = true;
                     return acc;
                 }, {} as Record<string, boolean>),
                 status: !!hasStatusFilter,
@@ -947,9 +953,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             }
             ${hasStatusFilter && statusActiveItems && statusActiveItems.length <= 1 ? `where.status = status;` : ""}
             ${scopeProp ? `where.scope = scope;` : ""}
-            ${rootArgProps
-                .map((rootArgProp) => {
-                    return `where.${rootArgProp.name} = ${rootArgProp.name};`;
+            ${dedicatedResolverArgProps
+                .map((dedicatedResolverArgProp) => {
+                    return `where.${dedicatedResolverArgProp.name} = ${dedicatedResolverArgProp.name};`;
                 })
                 .join("\n")}
 
@@ -997,15 +1003,15 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
 
         @Mutation(() => ${metadata.className})
-        ${rootArgProps
-            .map((rootArgProp) => {
-                return `@AffectedEntity(${rootArgProp.targetMeta?.className}, { idArg: "${rootArgProp.name}" })`;
+        ${dedicatedResolverArgProps
+            .map((dedicatedResolverArgProp) => {
+                return `@AffectedEntity(${dedicatedResolverArgProp.targetMeta?.className}, { idArg: "${dedicatedResolverArgProp.name}" })`;
             })
             .join("")}
         async create${classNameSingular}(
-            ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}${rootArgProps
-                      .map((rootArgProp) => {
-                          return `${generateIdArg(rootArgProp.name, metadata)}, `;
+            ${scopeProp ? `@Args("scope", { type: () => ${scopeProp.type} }) scope: ${scopeProp.type},` : ""}${dedicatedResolverArgProps
+                      .map((dedicatedResolverArgProp) => {
+                          return `${generateIdArg(dedicatedResolverArgProp.name, metadata)}, `;
                       })
                       .join("")}@Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
