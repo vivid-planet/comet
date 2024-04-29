@@ -219,7 +219,7 @@ export function ProductsGrid() {
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
             sort: muiGridSortToGql(sortModel, {
-                overview: "title",
+                overview: ["title", "price", "type", "category", "inStock"],
             }),
         },
     });
