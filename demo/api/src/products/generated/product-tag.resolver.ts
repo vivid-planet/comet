@@ -111,7 +111,7 @@ export class ProductTagResolver {
     @AffectedEntity(ProductTag)
     async deleteProductTag(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const productTag = await this.repository.findOneOrFail(id);
-        await this.entityManager.remove(productTag);
+        this.entityManager.remove(productTag);
         await this.entityManager.flush();
         return true;
     }
