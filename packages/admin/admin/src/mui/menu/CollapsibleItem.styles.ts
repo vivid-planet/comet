@@ -4,7 +4,7 @@ import { css } from "@mui/material/styles";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { MenuItem as CometMenuItem, MenuItemLevel } from "./Item";
 
-export type MenuCollapsibleItemClassKey = "root" | "open" | "childSelected" | "menuItem" | "itemTitle" | "collapsibleIndicator"; // TODO: Mention change from `main` in changeset.
+export type MenuCollapsibleItemClassKey = "root" | "open" | "childSelected" | "menuItem" | "itemTitle" | "collapsibleIndicator";
 
 export type OwnerState = {
     childSelected: boolean;
