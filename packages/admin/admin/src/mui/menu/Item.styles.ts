@@ -311,19 +311,9 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
 export const Icon = createComponentSlot(ListItemIcon)<MenuItemClassKey, OwnerState>({
     componentName: "MenuItem",
     slotName: "icon",
-})(
-    ({ theme }) => css`
-        margin-top: ${theme.spacing(1.25)};
-        margin-bottom: ${theme.spacing(1.25)};
-        // TODO: Move 'ListItemIcon' styles from 'Root' here
-    `,
-);
+})();
 
 export const Text = createComponentSlot(ListItemText)<MenuItemClassKey, OwnerState>({
     componentName: "MenuItem",
     slotName: "text",
-})(
-    ({ theme }) => css`
-        // TODO: Move 'ListItemText' styles from 'Root' here
-    `,
-);
+})();
