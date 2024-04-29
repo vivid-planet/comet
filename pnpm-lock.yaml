@@ -2408,6 +2408,9 @@ importers:
       rimraf:
         specifier: ^3.0.0
         version: 3.0.2
+      ts-node:
+        specifier: ^10.9.1
+        version: 10.9.2(@types/node@18.15.3)(typescript@4.9.4)
       typescript:
         specifier: ^4.0.0
         version: 4.9.4
@@ -22021,7 +22024,7 @@ packages:
     resolution: {integrity: sha512-WvJ193OHa0GHPEL+AycEJgxvBEwyfRkN1vhjca23OaPVMCaLCXTd5qAu82AjTcgP1UJmytkOKb63Ypde7raDIg==}
     engines: {node: '>=0.6'}
     dependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       inherits: 2.0.4
       mkdirp: 0.5.6
       rimraf: 2.7.1
@@ -25034,7 +25037,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
 
   /jsonify@0.0.1:
     resolution: {integrity: sha512-2/Ki0GcmuqSrgFyelQq9M05y7PS0mEwuIzrf3f1fPqkVDVRvZrPZtVSMHxdgo8Aq0sxAOb/cr2aqqA3LeWHVPg==}
