@@ -5,6 +5,7 @@ import {
     GridFilterButton,
     Loading,
     Toolbar,
+    ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
@@ -320,7 +321,7 @@ storiesOf("stories/components/DataGrid", module)
             return (
                 <Toolbar>
                     <ToolbarFillSpace />
-                    <ToolbarItem>
+                    <ToolbarActions>
                         <>
                             <Button variant="text" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVert />} color="info">
                                 More Actions
@@ -347,7 +348,7 @@ storiesOf("stories/components/DataGrid", module)
                                 </MenuItem>
                             </Menu>
                         </>
-                    </ToolbarItem>
+                    </ToolbarActions>
                 </Toolbar>
             );
         }
