@@ -148,11 +148,17 @@ const FinalFormFileSelectComponent: React.FunctionComponent<WithStyles<typeof st
 
     const onDrop = React.useCallback(
         (acceptedFiles: File[]) => {
-            if (multipleFiles && Array.isArray(fieldValue)) {
-                if (!maxFiles || (maxFiles && fieldValue.length < maxFiles && fieldValue.length + acceptedFiles.length <= maxFiles)) {
-                    onChange([...fieldValue, ...acceptedFiles]);
-                } else onChange([...acceptedFiles]);
-            } else onChange([...acceptedFiles]);
+            if (multipleFiles) {
+                if (Array.isArray(fieldValue)) {
+                    if (!maxFiles || (maxFiles && fieldValue.length < maxFiles && fieldValue.length + acceptedFiles.length <= maxFiles)) {
+                        onChange([...fieldValue, ...acceptedFiles]);
+                    }
+                } else {
+                    onChange([...acceptedFiles]);
+                }
+            } else {
+                onChange(acceptedFiles[0]);
+            }
         },
         [fieldValue, multipleFiles, onChange, maxFiles],
     );
