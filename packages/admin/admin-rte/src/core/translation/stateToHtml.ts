@@ -1,6 +1,7 @@
 import { EditorState } from "draft-js";
 import { RenderConfig, stateToHTML } from "draft-js-export-html";
 
+import defaultBlocktypeMap from "../defaultBlocktypeMap";
 import { IRteOptions } from "../Rte";
 
 export function stateToHtml({ editorState, options }: { editorState: EditorState; options: IRteOptions }) {
@@ -22,7 +23,11 @@ export function stateToHtml({ editorState, options }: { editorState: EditorState
     const html = stateToHTML(contentState, {
         inlineStyles,
         blockStyleFn: (block) => {
-            return { attributes: { class: block.getType() } };
+            const type = block.getType();
+
+            if (!Object.keys(defaultBlocktypeMap).includes(type)) {
+                return { attributes: { class: type } };
+            }
         },
         entityStyleFn: (entity) => {
             const entityType = entity.getType();
