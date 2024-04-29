@@ -1,7 +1,7 @@
 import { SiteConfig } from "./site-configs.types";
 
 // Called by ./cli.ts
-export const getSiteConfigs = (): SiteConfig[] => [
+export default (): SiteConfig[] => [
     {
         name: 'Comet Site "Main/DE"',
         contentScope: {
