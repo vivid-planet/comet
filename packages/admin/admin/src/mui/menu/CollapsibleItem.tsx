@@ -21,8 +21,6 @@ export interface MenuCollapsibleItemProps
         }> {
     children: MenuChild | MenuChild[];
     openByDefault?: boolean;
-    // openedIcon?: React.JSXElementConstructor<SvgIconProps>; // TODO: Mention in changeset if existed in `main`.
-    // closedIcon?: React.JSXElementConstructor<SvgIconProps>; // TODO: Mention in changeset if existed in `main`.
     isMenuOpen?: boolean;
     iconMapping?: {
         openDropdown?: React.ReactNode;
