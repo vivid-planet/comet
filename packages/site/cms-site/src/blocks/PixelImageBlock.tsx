@@ -10,7 +10,7 @@ import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { PropsWithData } from "./PropsWithData";
 
 interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<ImageProps, "src" | "width" | "height" | "alt"> {
-    aspectRatio?: string | "inherit";
+    aspectRatio: string | "inherit";
     layout: "fill" | "fixed" | "intrinsic" | "responsive";
     // Workaround to prevent flicker on already loaded images.
     // See https://github.com/vercel/next.js/issues/27539 for more information.
@@ -18,13 +18,7 @@ interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<
 }
 
 export const PixelImageBlock = withPreview(
-    ({
-        aspectRatio = "16x9",
-        data: { damFile, cropArea, urlTemplate },
-        layout,
-        disableBlurPlaceholder = false,
-        ...nextImageProps
-    }: PixelImageBlockProps) => {
+    ({ aspectRatio, data: { damFile, cropArea, urlTemplate }, layout, disableBlurPlaceholder = false, ...nextImageProps }: PixelImageBlockProps) => {
         if (!damFile || !damFile.image) return <PreviewSkeleton type="media" hasContent={false} />;
 
         // If we have a crop area set, DAM setting are overwritten, so we use that
