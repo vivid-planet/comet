@@ -10,8 +10,9 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
     .description("Inject site-configs into a file")
     .requiredOption("-i, --in-file <file>", "The filename of a template file to inject.")
     .requiredOption("-o, --out-file <file>", "Write the injected template to a file.")
+    .option("-f, --site-config-file <file>", "Path to ts-file which provides a default export with (env: string) => SiteConfig[]")
     .action(async (options) => {
-        const configFile = `${process.cwd()}/site-configs.ts`;
+        const configFile = options.siteConfigFile ?? `${process.cwd()}/site-configs.ts`;
         const getSiteConfigs: (env: string) => SiteConfig[] = (await import(configFile)).default;
 
         console.log(`inject-site-configs: Replace site-configs in ${options.inFile}`);
