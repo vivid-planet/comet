@@ -73,7 +73,6 @@ export function ProductsGrid() {
             headerName: "Overview",
             minWidth: 200,
             flex: 1,
-            sortable: false,
             showOnlyInView: "compact",
             renderCell: ({ row }) => {
                 const secondaryValues = [
@@ -219,7 +218,9 @@ export function ProductsGrid() {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
-            sort: muiGridSortToGql(sortModel),
+            sort: muiGridSortToGql(sortModel, {
+                overview: "title",
+            }),
         },
     });
     const rows = data?.products.nodes ?? [];

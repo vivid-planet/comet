@@ -1,11 +1,11 @@
 import { GridSortModel } from "@mui/x-data-grid";
 
-export function muiGridSortToGql(sortModel?: GridSortModel) {
+export function muiGridSortToGql(sortModel?: GridSortModel, fieldMapping?: Record<string, string>) {
     if (!sortModel) return undefined;
+
     return sortModel.map((i) => {
         return {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            field: i.field as any, //as any to be compatible with enum
+            field: (fieldMapping?.[i.field] || i.field) as any, // any to be compatible with enum
             direction: (i.sort == "desc" ? "DESC" : "ASC") as "DESC" | "ASC",
         };
     });
