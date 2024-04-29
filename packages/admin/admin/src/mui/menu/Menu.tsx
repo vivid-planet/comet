@@ -19,10 +19,6 @@ export interface MenuProps
     variant?: "permanent" | "temporary";
     drawerWidth?: number;
     drawerWidthCollapsed?: number;
-    // temporaryDrawerProps?: DrawerProps; // TODO: Mention removal in changeset, if present in `main` branch.
-    // permanentDrawerProps?: DrawerProps; // TODO: Mention removal in changeset, if present in `main` branch.
-    // temporaryDrawerPaperProps?: PaperProps; // TODO: Mention removal in changeset, if present in `main` branch.
-    // permanentDrawerPaperProps?: PaperProps; // TODO: Mention removal in changeset, if present in `main` branch.
 }
 
 export const Menu = (inProps: MenuProps) => {
