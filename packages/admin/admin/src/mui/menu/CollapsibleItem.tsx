@@ -209,7 +209,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminMenuCollapsibleItem?: {
-            defaultProps?: ComponentsPropsList["CometAdminMenuCollapsibleItem"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminMenuCollapsibleItem"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenuCollapsibleItem"];
         };
     }

@@ -180,7 +180,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminMenuItemGroup?: {
-            defaultProps?: ComponentsPropsList["CometAdminMenuItemGroup"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminMenuItemGroup"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenuItemGroup"];
         };
     }

@@ -67,12 +67,17 @@ export const MenuItem = (inProps: MenuItemProps) => {
 };
 
 declare module "@mui/material/styles" {
+    interface ComponentsPropsList {
+        CometAdminMenuItem: MenuItemProps;
+    }
+
     interface ComponentNameToClassKey {
         CometAdminMenuItem: MenuItemClassKey;
     }
 
     interface Components {
         CometAdminMenuItem?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminMenuItem"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenuItem"];
         };
     }
