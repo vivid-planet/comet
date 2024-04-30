@@ -12,8 +12,9 @@ export interface GridCellTextProps
         primaryText: typeof Typography;
         secondaryText: typeof Typography;
     }> {
-    primary: React.ReactNode;
+    primary?: React.ReactNode;
     secondary?: React.ReactNode;
+    children?: React.ReactNode;
 }
 
 type OwnerState = {
@@ -21,7 +22,7 @@ type OwnerState = {
 };
 
 export const GridCellText = (inProps: GridCellTextProps) => {
-    const { primary, secondary, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminGridCellText" });
+    const { children, primary, secondary, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminGridCellText" });
 
     const ownerState: OwnerState = {
         hasSecondaryText: Boolean(secondary),
@@ -30,7 +31,7 @@ export const GridCellText = (inProps: GridCellTextProps) => {
     return (
         <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
             <PrimaryText ownerState={ownerState} {...slotProps?.primaryText}>
-                {primary}
+                {children ? children : primary}
             </PrimaryText>
             {ownerState.hasSecondaryText && <SecondaryText {...slotProps?.secondaryText}>{secondary}</SecondaryText>}
         </Root>
