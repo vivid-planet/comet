@@ -18,7 +18,7 @@ export function generateExcelFile<Row extends GridValidRowModel>(
     const worksheet = workbook.addWorksheet(worksheetName);
 
     const excelColumns: Partial<Excel.Column>[] = [];
-    // @ts-expect-error - is iterable
+    // @ts-expect-error - type can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher
     for (const [columnIndex, column] of columns.entries()) {
         const header = column.headerName;
         if (!column.disableExport) {
@@ -40,7 +40,7 @@ export function generateExcelFile<Row extends GridValidRowModel>(
         const excelRow: { [key: string]: string | number | null } = {};
 
         try {
-            // @ts-expect-error - is iterable
+            // @ts-expect-error - type can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher
             for (const [columnIndex, column] of columns.entries()) {
                 if (!column.disableExport) {
                     let value = row[column.field];
