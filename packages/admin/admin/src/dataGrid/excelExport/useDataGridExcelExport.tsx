@@ -51,7 +51,6 @@ export function useDataGridExcelExport<Row extends GridValidRowModel, GQLQuery, 
         setLoading(true);
 
         try {
-            // fetch data
             const data: Row[] = [];
             let offset = 0;
             do {
