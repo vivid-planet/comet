@@ -1,5 +1,26 @@
 # @comet/blocks-api
 
+## 6.7.0
+
+## 6.6.2
+
+## 6.6.1
+
+## 6.6.0
+
+### Minor Changes
+
+-   e880929d8: Improve typing of `@RootBlockEntity()` decorator
+
+    The target entity can now be passed as generic to have the correct type in `isVisible`:
+
+    ```ts
+    @RootBlockEntity<Product>({
+        isVisible: (product) => product.visible,
+    })
+    export class Product extends BaseEntity<Product, "id"> {}
+    ```
+
 ## 6.5.0
 
 ### Minor Changes
