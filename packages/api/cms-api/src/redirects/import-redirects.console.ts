@@ -6,8 +6,8 @@ import * as console from "console";
 import * as fs from "fs";
 import { Command, Console } from "nestjs-console";
 
-import { RedirectInterface } from "../../lib/redirects/entities/redirect-entity.factory";
 import { PageTreeService } from "../page-tree/page-tree.service";
+import { RedirectInterface } from "./entities/redirect-entity.factory";
 import { REDIRECTS_LINK_BLOCK } from "./redirects.constants";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects.enum";
 import { RedirectsLinkBlock } from "./redirects.module";
