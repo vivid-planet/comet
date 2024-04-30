@@ -1,5 +1,15 @@
 # @comet/cms-api
 
+## 4.9.0
+
+### Minor Changes
+
+-   541ca1239: Enhanced the access log functionality to now skip logging for field resolvers in GraphQL context. This change improves the readability and relevance of our logs by reducing unnecessary entries.
+
+### Patch Changes
+
+-   @comet/blocks-api@4.9.0
+
 ## 4.8.1
 
 ### Patch Changes
