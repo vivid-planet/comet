@@ -58,8 +58,6 @@ export class ImportRedirectsConsole {
                     });
 
                     success++;
-
-                    await this.repository.flush();
                 } else {
                     const redirect = this.repository.create({
                         sourceType: RedirectSourceTypeValues.path,
@@ -107,8 +105,6 @@ export class ImportRedirectsConsole {
                     });
 
                     success++;
-
-                    await this.repository.flush();
                 } else {
                     const redirect = this.repository.create({
                         sourceType: RedirectSourceTypeValues.path,
