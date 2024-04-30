@@ -25,7 +25,6 @@ export function applyDefaultStyling(worksheet: Worksheet) {
                 color: { argb: "FF707070" },
             };
 
-            // Header
             if (rowNumber === 1) {
                 cell.fill = {
                     type: "pattern",
