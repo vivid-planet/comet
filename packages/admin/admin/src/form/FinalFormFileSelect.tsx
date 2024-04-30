@@ -144,7 +144,7 @@ const FinalFormFileSelectComponent: React.FunctionComponent<WithStyles<typeof st
     input: { onChange, value: fieldValue, multiple: multipleFiles },
     iconMapping = {},
 }) => {
-    const { delete: deleteIcon = <Delete />, info: infoIcon = <Error color="error" />, select: selectIcon = <Select /> } = iconMapping;
+    const { delete: deleteIcon = <Delete />, error: errorIcon = <Error color="error" />, select: selectIcon = <Select /> } = iconMapping;
 
     const onDrop = React.useCallback(
         (acceptedFiles: File[]) => {
@@ -266,7 +266,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminFinalFormFileSelect?: {
-            defaultProps?: ComponentsPropsList["CometAdminFinalFormFileSelect"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFinalFormFileSelect"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFinalFormFileSelect"];
         };
     }
