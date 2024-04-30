@@ -7,17 +7,10 @@ Add `createSpaceBlock` factory
 
 Allows selecting a spacing value out of a list of provided options.
 
-**Example Admin:**
-```tsx
-const options = [
-    { value: "d150", label: "Dynamic 150" },
-    { value: "d200", label: "Dynamic 200" },
-];
+**Example**
 
-export const SpaceBlock = createSpaceBlock<string>({ defaultValue: options[0].value, options });
-```
+API
 
-**Example Api:**
 ```tsx
 enum Spacing {
     d150 = "d150",
@@ -25,4 +18,15 @@ enum Spacing {
 }
 
 export const SpaceBlock = createSpaceBlock({ spacing: Spacing }, "DemoSpace");
+```
+
+Admin
+
+```tsx
+const options = [
+    { value: "d150", label: "Dynamic 150" },
+    { value: "d200", label: "Dynamic 200" },
+];
+
+export const SpaceBlock = createSpaceBlock<string>({ defaultValue: options[0].value, options });
 ```
