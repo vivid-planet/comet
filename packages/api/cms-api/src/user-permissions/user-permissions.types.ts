@@ -16,7 +16,7 @@ export enum UserPermissions {
 
 export type Users = [User[], number];
 
-export type SystemUser = true;
+export type SystemUser = string;
 
 type PermissionForUser = {
     permission: string;

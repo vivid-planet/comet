@@ -25,7 +25,7 @@ export class UserPermissionsGuard implements CanActivate {
         if (!user) return false;
 
         // System user authenticated via basic auth
-        if (user === true) return true;
+        if (user === "static-credentials-basic") return true;
 
         const requiredPermission = this.getDecorator<RequiredPermissionMetadata>(context, "requiredPermission");
         if (!requiredPermission && this.isResolvingGraphQLField(context)) return true;
