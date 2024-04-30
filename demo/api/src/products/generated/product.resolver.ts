@@ -193,7 +193,7 @@ export class ProductResolver {
     @AffectedEntity(Product)
     async deleteProduct(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const product = await this.repository.findOneOrFail(id);
-        await this.entityManager.remove(product);
+        this.entityManager.remove(product);
         await this.entityManager.flush();
         return true;
     }

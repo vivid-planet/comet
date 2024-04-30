@@ -874,7 +874,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                           : `@Args("id", { type: () => ID }) id: string`
                   }): Promise<boolean> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
-            await this.entityManager.remove(${instanceNameSingular});
+            this.entityManager.remove(${instanceNameSingular});
             await this.entityManager.flush();
             return true;
         }
