@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { manufacturerSelectFragment } from "@src/products/ManufacturerSelectFields";
 
 export const productFormFragment = gql`
     fragment ProductFormManual on Product {
@@ -16,6 +17,9 @@ export const productFormFragment = gql`
             id
             title
         }
+        manufacturer {
+            id
+        }
     }
 `;
 
@@ -25,9 +29,11 @@ export const productQuery = gql`
             id
             updatedAt
             ...ProductFormManual
+            ...ManufacturerSelect
         }
     }
     ${productFormFragment}
+    ${manufacturerSelectFragment}
 `;
 
 export const createProductMutation = gql`

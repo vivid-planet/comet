@@ -18,7 +18,8 @@ import {
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { MenuItem } from "@mui/material";
-import { GQLProductType } from "@src/graphql.generated";
+import { GQLManufacturerCountryFilter, GQLProductType } from "@src/graphql.generated";
+import { ManufacturerSelectFields, manufacturerSelectFragment } from "@src/products/ManufacturerSelectFields";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -56,8 +57,9 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormManualFragment, "image"> & {
+type FormValues = Omit<GQLProductFormManualFragment, "image" | "manufacturer"> & {
     image: BlockState<typeof rootBlocks.image>;
+    manufacturer: string | null;
 };
 
 export function ProductForm({ id }: FormProps): React.ReactElement {
@@ -65,6 +67,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
     const stackSwitchApi = useStackSwitchApi();
+    const filterGermanSpeakingCountries: GQLManufacturerCountryFilter = {
+        or: [{ country: { equal: "DE" } }, { country: { equal: "AT" } }, { country: { equal: "LI" } }],
+    };
 
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
         productQuery,
@@ -75,6 +80,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         ? {
               ...filterByFragment<GQLProductFormManualFragment>(productFormFragment, data.product),
               image: rootBlocks.image.input2State(data.product.image),
+              manufacturer: data.product.manufacturer ? data.product.manufacturer.id : null,
           }
         : {
               image: rootBlocks.image.defaultValues(),
@@ -94,6 +100,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
     });
 
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+        console.log("OuterForm formValues", formValues);
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
@@ -186,6 +193,16 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             getOptionLabel={(option: GQLProductTagsSelectFragment) => option.title}
                         />
                         <CheckboxField name="inStock" label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />} fullWidth />
+
+                        <Field name="manufacturer" fullWidth>
+                            {(props) => (
+                                <ManufacturerSelectFields
+                                    {...props}
+                                    data={data?.product.manufacturer ? filterByFragment(manufacturerSelectFragment, data?.product) : undefined}
+                                    countrySelectFilter={filterGermanSpeakingCountries}
+                                />
+                            )}
+                        </Field>
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
