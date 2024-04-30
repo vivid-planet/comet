@@ -3,7 +3,7 @@ import { MikroORM } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
-import { CrudGenerator } from "./crud-generator.decorator";
+import { CrudField, CrudGenerator } from "./crud-generator.decorator";
 import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
@@ -17,6 +17,7 @@ class TestEntityProductVariant extends BaseEntity<TestEntityProductVariant, "id"
     name: string;
 
     @ManyToOne(() => TestEntityProduct, { ref: true })
+    @CrudField({ dedicatedResolverArg: true })
     product: Ref<TestEntityProduct>;
 }
 
@@ -33,7 +34,7 @@ class TestEntityProduct extends BaseEntity<TestEntityProduct, "id"> {
     variants = new Collection<TestEntityProductVariant>(this);
 }
 
-describe("GenerateCrudRelationsNonNullable", () => {
+describe("GenerateCrud dedicatedResolverArg", () => {
     describe("resolver class", () => {
         it("input type must not include product relation", async () => {
             LazyMetadataStorage.load();

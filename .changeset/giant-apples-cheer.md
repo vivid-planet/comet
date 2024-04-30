@@ -2,7 +2,7 @@
 "@comet/cms-api": major
 ---
 
-API Generator: Generate better API for Many-to-one-relations with `orphanRemoval` activated where the reverse side has its own API generated
+API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
 
-- Add `id` as argument to create mutation
-- Add `id` as argument to list query
+- Add foreign id as argument to create mutation
+- Add foreign id as argument to list query
