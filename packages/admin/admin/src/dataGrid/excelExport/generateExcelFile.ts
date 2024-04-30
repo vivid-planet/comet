@@ -37,7 +37,6 @@ export function generateExcelFile<Row extends GridValidRowModel>(
 
     worksheet.columns = excelColumns;
 
-    // create Rows
     for (const row of data) {
         const excelRow: { [key: string]: string | number | null } = {};
 
