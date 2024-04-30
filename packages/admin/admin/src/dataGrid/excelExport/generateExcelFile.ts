@@ -18,8 +18,8 @@ export function generateExcelFile<Row extends GridValidRowModel>(
     const worksheet = workbook.addWorksheet(worksheetName);
 
     const excelColumns: Partial<Excel.Column>[] = [];
-    // @ts-expect-error - type can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher
-    for (const [columnIndex, column] of columns.entries()) {
+
+    columns.forEach((column, columnIndex) => {
         const header = column.headerName;
         if (!column.disableExport) {
             excelColumns.push({
@@ -32,7 +32,7 @@ export function generateExcelFile<Row extends GridValidRowModel>(
                 values: [],
             });
         }
-    }
+    });
 
     worksheet.columns = excelColumns;
 
@@ -40,14 +40,15 @@ export function generateExcelFile<Row extends GridValidRowModel>(
         const excelRow: { [key: string]: string | number | null } = {};
 
         try {
-            // @ts-expect-error - type can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher
-            for (const [columnIndex, column] of columns.entries()) {
+            columns.forEach((column, columnIndex) => {
                 if (!column.disableExport) {
                     let value = row[column.field];
                     if (column.valueGetter) {
+                        // @ts-expect-error `valueGetter` requires more data but we don't have all that data available so we only pass in what we have and hope nothing breaks
                         value = column.valueGetter({ value, row });
                     }
                     if (column.valueFormatter) {
+                        // @ts-expect-error `valueFormatter` requires more data but we don't have all that data available so we only pass in what we have and hope nothing breaks
                         value = column.valueFormatter({ value });
                     }
                     if (typeof value !== "string") {
@@ -56,7 +57,7 @@ export function generateExcelFile<Row extends GridValidRowModel>(
 
                     excelRow[column.field + columnIndex] = value;
                 }
-            }
+            });
 
             worksheet.addRow({ ...excelRow });
         } catch (e) {

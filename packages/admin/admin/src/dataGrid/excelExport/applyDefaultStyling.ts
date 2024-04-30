@@ -9,7 +9,7 @@ export function applyDefaultStyling(worksheet: Worksheet) {
             cell.fill = {
                 type: "pattern",
                 pattern: "solid",
-                fgColor: { argb: rowNumber % 2 === 1 ? "FFf5f5f5" :"ffffffff" },
+                fgColor: { argb: rowNumber % 2 === 1 ? "FFf5f5f5" : "ffffffff" },
             };
 
             cell.font = {
