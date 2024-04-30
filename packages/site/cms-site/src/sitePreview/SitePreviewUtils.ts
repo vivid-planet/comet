@@ -18,12 +18,15 @@ export type SitePreviewParams = {
     previewData?: SitePreviewData;
 };
 
-if (!process.env.SITE_PREVIEW_SECRET && process.env.NODE_ENV === "production") {
-    throw new Error("SITE_PREVIEW_SECRET environment variable is required in production mode");
+function getPreviewScopeSigningKey() {
+    if (!process.env.SITE_PREVIEW_SECRET && process.env.NODE_ENV === "production") {
+        throw new Error("SITE_PREVIEW_SECRET environment variable is required in production mode");
+    }
+    return process.env.SITE_PREVIEW_SECRET || "secret";
 }
-const previewScopeSigningKey = process.env.SITE_PREVIEW_SECRET || "secret";
 
 export async function sitePreviewRoute(request: NextRequest, graphQLFetch: GraphQLFetch) {
+    const previewScopeSigningKey = getPreviewScopeSigningKey();
     const params = request.nextUrl.searchParams;
     const settingsParam = params.get("settings");
     const scopeParam = params.get("scope");
@@ -62,6 +65,8 @@ export async function sitePreviewRoute(request: NextRequest, graphQLFetch: Graph
 }
 
 export function previewParams(): SitePreviewParams | null {
+    const previewScopeSigningKey = getPreviewScopeSigningKey();
+
     if (!draftMode().isEnabled) return null;
     const cookie = cookies().get("__comet_preview");
     if (cookie) {
