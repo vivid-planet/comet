@@ -1,5 +1,27 @@
 # @comet/cms-api
 
+## 6.8.0
+
+### Minor Changes
+
+-   d6ca50a52: Enhanced the access log functionality to now skip logging for field resolvers in GraphQL context. This change improves the readability and relevance of our logs by reducing unnecessary entries.
+-   ebdbabc21: Extend `searchToMikroOrmQuery` function to support quoted search strings.
+
+    Quotes searches can be done with single (`'...'`) or double quotation marks (`"..."`).
+
+### Patch Changes
+
+-   35efa037b: API-Generator: Remove unnecessary await for delete mutation
+-   d3a06fcaf: Prevent block-meta.json write in read-only file systems
+-   a696ec7b9: Handle DAM scope correctly in the `findCopiesOfFileInScope` query and the `importDamFileByDownload` mutation
+
+    Previously, these endpoints would cause errors if no DAM scoping was used.
+
+-   Updated dependencies [be8664c75]
+-   Updated dependencies [90c6f192e]
+-   Updated dependencies [90c6f192e]
+    -   @comet/blocks-api@6.8.0
+
 ## 6.7.0
 
 ### Minor Changes
