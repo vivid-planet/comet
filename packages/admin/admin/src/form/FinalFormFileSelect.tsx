@@ -128,7 +128,7 @@ export interface FinalFormFileSelectProps extends FieldRenderProps<File | File[]
     maxFiles?: number;
     iconMapping?: {
         delete?: React.ReactNode;
-        info?: React.ReactNode;
+        error?: React.ReactNode;
         select?: React.ReactNode;
     };
 }
@@ -190,7 +190,7 @@ const FinalFormFileSelectComponent: React.FunctionComponent<WithStyles<typeof st
             <Tooltip trigger="hover" title={rejectedFile.file.name}>
                 <div className={classes.fileListText}>{rejectedFile.file.name}</div>
             </Tooltip>
-            {infoIcon}
+            {errorIcon}
         </div>
     ));
 
@@ -206,7 +206,7 @@ const FinalFormFileSelectComponent: React.FunctionComponent<WithStyles<typeof st
                             isDragReject && classes.droppableAreaHasError,
                         )}
                     >
-                        {isDragReject && <div className={classes.droppableAreaError}>{infoIcon}</div>}
+                        {isDragReject && <div className={classes.droppableAreaError}>{errorIcon}</div>}
                         <Typography variant="body2" className={classes.droppableAreaCaption}>
                             <FormattedMessage id="comet.finalFormFileSelect.dropfiles" defaultMessage="Drop files here to upload" />
                         </Typography>
@@ -236,7 +236,7 @@ const FinalFormFileSelectComponent: React.FunctionComponent<WithStyles<typeof st
             {fileRejections.length > 0 && <div className={classes.fileList}>{rejectedFiles}</div>}
             {(fileRejections.length > 0 || isDragReject) && (
                 <div className={classes.errorMessage}>
-                    {infoIcon}
+                    {errorIcon}
                     <FormattedMessage id="comet.finalFormFileSelect.errors.unknownError" defaultMessage="Something went wrong." />
                 </div>
             )}
