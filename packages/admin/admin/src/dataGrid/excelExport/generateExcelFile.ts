@@ -17,7 +17,6 @@ export function generateExcelFile<Row extends GridValidRowModel>(
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet(worksheetName);
 
-    // create columns
     const excelColumns: Partial<Excel.Column>[] = [];
     // @ts-expect-error - is iterable
     for (const [columnIndex, column] of columns.entries()) {
