@@ -1,6 +1,6 @@
-export type SiteConfig<ContentScope = object, Private = object, Public = object> = {
+export type SiteConfig = {
     name: string;
-    contentScope: ContentScope;
+    contentScope: Record<string, unknown>;
     domains: {
         main: string;
         preliminary?: string;
@@ -10,13 +10,13 @@ export type SiteConfig<ContentScope = object, Private = object, Public = object>
         preview: string;
     };
     preloginEnabled?: boolean;
-    public?: Public;
-} & Private;
-export type SiteConfigPrivate<S extends SiteConfig<object, object, object>> = Omit<S, "public"> & {
+    public?: Record<string, unknown>;
+};
+export type SiteConfigPrivate<S extends SiteConfig> = Omit<S, "public"> & {
     url: string;
     previewUrl: string;
 } & S["public"];
-export type SiteConfigPublic<S extends SiteConfig<object, object, object>> = Pick<S, "contentScope" | "name" | "domains" | "preloginEnabled"> & {
+export type SiteConfigPublic<S extends SiteConfig> = Pick<S, "contentScope" | "name" | "domains" | "preloginEnabled"> & {
     url: string;
     previewUrl: string;
 } & S["public"];
