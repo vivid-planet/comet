@@ -6,20 +6,11 @@ export function applyDefaultStyling(worksheet: Worksheet) {
         for (let i = 1; i <= row.cellCount; ++i) {
             const cell = row.getCell(i);
 
-            // Zebra
-            if (rowNumber % 2 === 1) {
-                cell.fill = {
-                    type: "pattern",
-                    pattern: "solid",
-                    fgColor: { argb: "FFf5f5f5" },
-                };
-            } else {
-                cell.fill = {
-                    type: "pattern",
-                    pattern: "solid",
-                    fgColor: { argb: "ffffffff" },
-                };
-            }
+            cell.fill = {
+                type: "pattern",
+                pattern: "solid",
+                fgColor: { argb: rowNumber % 2 === 1 ? "FFf5f5f5" :"ffffffff" },
+            };
 
             cell.font = {
                 color: { argb: "FF707070" },
