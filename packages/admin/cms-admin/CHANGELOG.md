@@ -1,5 +1,19 @@
 # @comet/cms-admin
 
+## 6.8.0
+
+### Patch Changes
+
+-   c1ca9c335: Don't remove references to `DamFile` from blocks when copying a document from one scope to another if DAM scoping is not enabled
+-   Updated dependencies [90c6f192e]
+-   Updated dependencies [90c6f192e]
+    -   @comet/blocks-admin@6.8.0
+    -   @comet/admin@6.8.0
+    -   @comet/admin-date-time@6.8.0
+    -   @comet/admin-icons@6.8.0
+    -   @comet/admin-rte@6.8.0
+    -   @comet/admin-theme@6.8.0
+
 ## 6.7.0
 
 ### Patch Changes
