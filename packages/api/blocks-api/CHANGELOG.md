@@ -1,5 +1,7 @@
 # @comet/blocks-api
 
+## 5.8.0
+
 ## 5.7.2
 
 ### Patch Changes

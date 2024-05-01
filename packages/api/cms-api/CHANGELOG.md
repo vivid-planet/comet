@@ -1,5 +1,20 @@
 # @comet/cms-api
 
+## 5.8.0
+
+### Minor Changes
+
+-   0b60e0986: Enhanced the access log functionality to now skip logging for field resolvers in GraphQL context. This change improves the readability and relevance of our logs by reducing unnecessary entries.
+
+### Patch Changes
+
+-   97c3f4428: Fix calculation of `totalCount` in `DependenciesService#getDependents`
+-   378a1e5e5: Handle DAM scope correctly in the `findCopiesOfFileInScope` query and the `importDamFileByDownload` mutation
+
+    Previously, these endpoints would cause errors if no DAM scoping was used.
+
+    -   @comet/blocks-api@5.8.0
+
 ## 5.7.2
 
 ### Patch Changes
