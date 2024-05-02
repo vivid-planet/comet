@@ -31,7 +31,7 @@ export const GridCellText = (inProps: GridCellTextProps) => {
     return (
         <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
             <PrimaryText ownerState={ownerState} {...slotProps?.primaryText}>
-                {children ? children : primary}
+                {primary ? primary : children}
             </PrimaryText>
             {ownerState.hasSecondaryText && <SecondaryText {...slotProps?.secondaryText}>{secondary}</SecondaryText>}
         </Root>
