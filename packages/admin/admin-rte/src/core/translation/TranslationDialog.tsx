@@ -1,5 +1,5 @@
 import { messages } from "@comet/admin";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from "@mui/material";
 import { EditorState } from "draft-js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -20,15 +20,19 @@ export const TranslationDialog: React.FC<TranslationDialogProps> = (props) => {
     const { open, close, originalText, translatedText, editTranslation, applyTranslation } = props;
 
     return (
-        <Dialog open={open} onClose={close}>
+        <Dialog open={open} onClose={close} fullWidth maxWidth="lg">
             <DialogTitle>
                 <FormattedMessage id="comet.translator.translation" defaultMessage="Translation" />
             </DialogTitle>
             <DialogContent>
-                <TwoColumnLayout
-                    leftContent={<RteReadOnly value={originalText} />}
-                    rightContent={<Rte value={translatedText} onChange={editTranslation} />}
-                />
+                <Grid container spacing={4} columns={2} alignItems="center">
+                    <Grid item xs={1}>
+                        <RteReadOnly value={originalText} />
+                    </Grid>
+                    <Grid item xs={1}>
+                        <Rte value={translatedText} onChange={editTranslation} />
+                    </Grid>
+                </Grid>
             </DialogContent>
             <DialogActions>
                 <Button
@@ -46,14 +50,5 @@ export const TranslationDialog: React.FC<TranslationDialogProps> = (props) => {
                 </Button>
             </DialogActions>
         </Dialog>
-    );
-};
-
-const TwoColumnLayout = ({ leftContent, rightContent }: { leftContent: JSX.Element; rightContent: JSX.Element }) => {
-    return (
-        <div style={{ display: "flex" }}>
-            <div style={{ flex: 1 }}>{leftContent}</div>
-            <div style={{ flex: 1 }}>{rightContent}</div>
-        </div>
     );
 };
