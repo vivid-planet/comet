@@ -1,7 +1,8 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, InputBase } from "@mui/material";
-import { messages } from "messages";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
+
+import { messages } from "../messages";
 
 interface TranslationDialogProps {
     open: boolean;
