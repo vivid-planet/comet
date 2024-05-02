@@ -20,9 +20,9 @@ export function generateForm(
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
 
-    const mode = config.mode ?? "editAdd";
-    const editMode = mode === "edit" || mode == "editAdd";
-    const addMode = mode === "add" || mode == "editAdd";
+    const mode = config.mode ?? "all";
+    const editMode = mode === "edit" || mode == "all";
+    const addMode = mode === "add" || mode == "all";
 
     const rootBlockFields = config.fields
         .filter((field) => field.type == "block")
@@ -183,7 +183,7 @@ export function generateForm(
         editMode
             ? `
     interface FormProps {
-        ${mode == "editAdd" ? `id?: string;` : ""}
+        ${mode == "all" ? `id?: string;` : ""}
         ${mode == "edit" ? `id: string;` : ""}
     }
     `
@@ -192,7 +192,7 @@ export function generateForm(
     
     export function ${exportName}(${editMode ? `{ id }: FormProps` : ""}): React.ReactElement {
         const client = useApolloClient();
-        ${mode == "editAdd" ? `const mode = id ? "edit" : "add";` : ""}
+        ${mode == "all" ? `const mode = id ? "edit" : "add";` : ""}
         const formApiRef = useFormApiRef<FormValues>();
         ${addMode ? `const stackSwitchApi = useStackSwitchApi();` : ""}
     
@@ -260,7 +260,7 @@ export function generateForm(
                 ...formValues,
                 ${formValueToGqlInputCode}
             };
-            ${mode == "editAdd" ? `if (mode === "edit") {` : ""}
+            ${mode == "all" ? `if (mode === "edit") {` : ""}
                 ${
                     editMode
                         ? `
@@ -273,7 +273,7 @@ export function generateForm(
                 `
                         : ""
                 }
-            ${mode == "editAdd" ? `} else {` : ""}
+            ${mode == "all" ? `} else {` : ""}
                 ${
                     addMode
                         ? `
@@ -292,7 +292,7 @@ export function generateForm(
                 `
                         : ""
                 }
-            ${mode == "editAdd" ? `}` : ""}
+            ${mode == "all" ? `}` : ""}
         };
 
         ${hooksCode}
@@ -307,7 +307,7 @@ export function generateForm(
             <FinalForm<FormValues>
                 apiRef={formApiRef}
                 onSubmit={handleSubmit}
-                mode=${mode == "editAdd" ? `{mode}` : editMode ? `"edit"` : `"add"`}
+                mode=${mode == "all" ? `{mode}` : editMode ? `"edit"` : `"add"`}
                 initialValues={initialValues}
                 initialValuesEqual={isEqual} //required to compare block data correctly
                 subscription={{}}
