@@ -19,8 +19,8 @@ storiesOf("stories/form/components/Date & Time Pickers/Date-Range Picker", modul
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={6} md={4}>
-                    <FieldContainer label="Clearable" fullWidth>
-                        <DateRangePicker fullWidth value={dateTwo} onChange={setDateTwo} clearable />
+                    <FieldContainer label="Required" fullWidth required>
+                        <DateRangePicker fullWidth value={dateTwo} onChange={setDateTwo} required />
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={6} md={4}>
@@ -54,7 +54,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Date-Range Picker", modul
                             <Field name="dateOne" label="Date-Range Picker" fullWidth component={FinalFormDateRangePicker} />
                         </Grid>
                         <Grid item xs={6} md={4}>
-                            <Field name="dateTwo" label="Clearable" fullWidth component={FinalFormDateRangePicker} clearable />
+                            <Field name="dateTwo" label="Required" fullWidth component={FinalFormDateRangePicker} required />
                         </Grid>
                         <Grid item xs={6} md={4}>
                             <Field

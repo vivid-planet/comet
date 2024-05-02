@@ -25,8 +25,8 @@ storiesOf("stories/form/components/Date & Time Pickers/Date Picker", module)
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={6} md={3}>
-                    <FieldContainer label="Clearable" fullWidth>
-                        <DatePicker fullWidth value={dateThree} onChange={setDateThree} />
+                    <FieldContainer label="Required" fullWidth required>
+                        <DatePicker fullWidth value={dateThree} onChange={setDateThree} required />
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={6} md={3}>
@@ -61,7 +61,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Date Picker", module)
                             <Field name="dateTwo" label="Show two months" fullWidth component={FinalFormDatePicker} monthsToShow={2} />
                         </Grid>
                         <Grid item xs={6} md={3}>
-                            <Field name="dateThree" label="Clearable " fullWidth component={FinalFormDatePicker} clearable />
+                            <Field name="dateThree" label="Required" fullWidth component={FinalFormDatePicker} required />
                         </Grid>
                         <Grid item xs={6} md={3}>
                             <Field

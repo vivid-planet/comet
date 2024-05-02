@@ -46,7 +46,7 @@ export async function generateCrudInput(
 ): Promise<GeneratedFile[]> {
     const generatedFiles: GeneratedFile[] = [];
 
-    const { rootArgProps } = buildOptions(metadata);
+    const { dedicatedResolverArgProps } = buildOptions(metadata);
 
     const props = metadata.props
         .filter((prop) => {
@@ -56,8 +56,8 @@ export async function generateCrudInput(
             return hasFieldFeature(metadata.class, prop.name, "input");
         })
         .filter((prop) => {
-            //filter out props that are rootArgProps
-            return !rootArgProps.some((rootArgProps) => rootArgProps.name === prop.name);
+            //filter out props that are dedicatedResolverArgProps
+            return !dedicatedResolverArgProps.some((dedicatedResolverArgProp) => dedicatedResolverArgProp.name === prop.name);
         })
         .filter((prop) => !options.excludeFields.includes(prop.name));
 

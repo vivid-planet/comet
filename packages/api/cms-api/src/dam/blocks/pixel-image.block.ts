@@ -8,17 +8,17 @@ import {
     BlockMetaFieldKind,
     createBlock,
     inputToData,
-    TraversableTransformResponse,
 } from "@comet/blocks-api";
 import { Type } from "class-transformer";
 import { IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
 
-import { FocalPoint } from "../dam/common/enums/focal-point.enum";
-import { FILE_ENTITY } from "../dam/files/entities/file.entity";
-import { FilesService } from "../dam/files/files.service";
-import { ImageCropAreaInput } from "../dam/images/dto/image-crop-area.input";
-import { ImageCropArea } from "../dam/images/entities/image-crop-area.entity";
-import { ImagesService } from "../dam/images/images.service";
+import { FocalPoint } from "../common/enums/focal-point.enum";
+import { FILE_ENTITY } from "../files/entities/file.entity";
+import { FilesService } from "../files/files.service";
+import { ImageCropAreaInput } from "../images/dto/image-crop-area.input";
+import { ImageCropArea } from "../images/entities/image-crop-area.entity";
+import { ImagesService } from "../images/images.service";
+import { PixelImageBlockTransformerService } from "./pixel-image-block-transformer.service";
 
 // @TODO: make factory to support flexible validation
 class PixelImageBlockData extends BlockData {
@@ -27,41 +27,8 @@ class PixelImageBlockData extends BlockData {
     @Type(() => ImageCropArea)
     cropArea?: ImageCropArea;
 
-    async transformToPlain(
-        { filesService, imagesService }: { filesService: FilesService; imagesService: ImagesService },
-        { previewDamUrls, relativeDamUrls, includeInvisibleContent }: BlockContext,
-    ): Promise<TraversableTransformResponse> {
-        if (!this.damFileId) {
-            return {};
-        }
-
-        const file = await filesService.findOneById(this.damFileId);
-
-        if (!file) {
-            return {};
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { createdAt, updatedAt, folder, license, copyOf, copies, ...data } = file;
-
-        const fileUrl = includeInvisibleContent ? await filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }) : undefined;
-
-        return {
-            damFile: {
-                ...data,
-                image: file.image
-                    ? {
-                          width: file.image.width,
-                          height: file.image.height,
-                          cropArea: { ...file.image.cropArea },
-                          dominantColor: file.image.dominantColor,
-                      }
-                    : undefined,
-                fileUrl,
-            },
-            cropArea: this.cropArea ? { ...this.cropArea } : undefined,
-            urlTemplate: imagesService.createUrlTemplate({ file, cropArea: this.cropArea }, { previewDamUrls, relativeDamUrls }),
-        };
+    async transformToPlain() {
+        return PixelImageBlockTransformerService;
     }
 
     async previewImageUrlTemplate(
@@ -269,3 +236,5 @@ export const PixelImageBlock = createBlock(PixelImageBlockData, PixelImageBlockI
     blockMeta: new Meta(PixelImageBlockData),
     blockInputMeta: new InputMeta(PixelImageBlockInput),
 });
+
+export type { PixelImageBlockData };
