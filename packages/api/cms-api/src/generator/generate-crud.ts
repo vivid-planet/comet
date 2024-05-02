@@ -830,22 +830,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     );
     injectRepositories.push(...createInputHandlingInjectRepositories);
 
-<<<<<<< HEAD
-    [...relationManyToOneProps, ...relationOneToOneProps, ...relationOneToManyProps, ...relationManyToManyProps]
-        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
-        .forEach((prop) => {
-            injectRepositories.add(prop.type);
-        });
-    dedicatedResolverArgProps.forEach((prop) => {
-        injectRepositories.add(prop.type);
-    });
-=======
     const { code: updateInputHandlingCode, injectRepositories: updateInputHandlingInjectRepositories } = generateInputHandling(
         { mode: "update", inputName: "input", assignEntityCode: `${instanceNameSingular}.assign({` },
         metadata,
     );
     injectRepositories.push(...updateInputHandlingInjectRepositories);
->>>>>>> main
+
+    injectRepositories.push(...dedicatedResolverArgProps.map((prop) => prop.type));
 
     const {
         imports: relationsFieldResolverImports,
@@ -1045,18 +1036,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput
         ): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
-<<<<<<< HEAD
-            ${generateInputHandling({ mode: "update", inputName: "input", assignEntityCode: `${instanceNameSingular}.assign({` }, metadata)}
-=======
-            ${
-                hasUpdatedAt
-                    ? `if (lastUpdatedAt) {
-                validateNotModified(${instanceNameSingular}, lastUpdatedAt);
-            }`
-                    : ""
-            }
             ${updateInputHandlingCode}
->>>>>>> main
 
             await this.entityManager.flush();
 

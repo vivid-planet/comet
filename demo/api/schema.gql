@@ -1322,30 +1322,19 @@ input ProductInput {
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
   dimensions: ProductDimensionsInput
-<<<<<<< HEAD
-  statistics: ProductStatisticsInput
-  colors: [ProductColorInput!]! = []
-  category: ID = null
-  tags: [ID!]! = []
-  manufacturer: ID = null
-=======
   statistics: ProductNestedProductStatisticsInput
-  variants: [ProductNestedProductVariantInput!]! = []
+  colors: [ProductNestedProductColorInput!]! = []
   category: ID = null
   tags: [ID!]! = []
   tagsWithStatus: [ProductNestedProductToTagInput!]! = []
->>>>>>> main
+  manufacturer: ID = null
 }
 
 input ProductNestedProductStatisticsInput {
   views: Float!
 }
 
-<<<<<<< HEAD
-input ProductColorInput {
-=======
-input ProductNestedProductVariantInput {
->>>>>>> main
+input ProductNestedProductColorInput {
   name: String!
   hexCode: String!
 }
@@ -1368,19 +1357,12 @@ input ProductUpdateInput {
   discounts: [ProductDiscountsInput!]
   articleNumbers: [String!]
   dimensions: ProductDimensionsInput
-<<<<<<< HEAD
-  statistics: ProductStatisticsInput
-  colors: [ProductColorInput!]
-  category: ID
-  tags: [ID!]
-  manufacturer: ID
-=======
   statistics: ProductNestedProductStatisticsInput
-  variants: [ProductNestedProductVariantInput!]
+  colors: [ProductNestedProductColorInput!]
   category: ID
   tags: [ID!]
   tagsWithStatus: [ProductNestedProductToTagInput!]
->>>>>>> main
+  manufacturer: ID
 }
 
 input ProductCategoryInput {

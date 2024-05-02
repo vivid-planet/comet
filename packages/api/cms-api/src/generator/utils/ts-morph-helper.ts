@@ -90,7 +90,7 @@ export function findValidatorImportPath(validatorName: string, generatorOptions:
         }
         return path.relative(`${generatorOptions.targetDirectory}/dto`, metadata.path).replace(/\.ts$/, "");
     } else {
-        const { importPath } = findImportPath(validatorName, generatorOptions, metadata);
+        const { importPath } = findImportPath(validatorName, generatorOptions.targetDirectory, metadata);
         return importPath;
     }
 }

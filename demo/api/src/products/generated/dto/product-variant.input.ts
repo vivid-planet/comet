@@ -7,7 +7,7 @@ import { Transform } from "class-transformer";
 import { IsNotEmpty, IsString, ValidateNested } from "class-validator";
 
 @InputType()
-export class ProductNestedProductVariantInput {
+export class ProductVariantInput {
     @IsNotEmpty()
     @IsString()
     @Field()

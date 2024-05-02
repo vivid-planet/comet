@@ -4,7 +4,7 @@ import { Field, InputType } from "@nestjs/graphql";
 import { IsNotEmpty, IsString } from "class-validator";
 
 @InputType()
-export class ProductColorInput {
+export class ProductNestedProductColorInput {
     @IsNotEmpty()
     @IsString()
     @Field()

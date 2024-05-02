@@ -261,7 +261,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                     getImportDeclaration.getNamedImports().some((namedImport) => namedImport.getName() === "IsValidRedirectSource"),
                 );
                 expect(isSlugImport).toBeDefined();
-                expect(isSlugImport?.getModuleSpecifierValue()).toBe("../../redirects/validators/isValidRedirectSource");
+                expect(isSlugImport?.getModuleSpecifierValue()).toBe("../redirects/validators/isValidRedirectSource");
 
                 orm.close();
             });
