@@ -5,9 +5,9 @@ import { disableFragmentWarnings, gql } from "@apollo/client";
 // Turn off warnings for repeated fragment names
 disableFragmentWarnings();
 
-import { filter } from "./filter";
+import { filterByDocument } from "./filterByDocument";
 
-describe("filter", () => {
+describe("filterByDocument", () => {
     describe("with a single query", () => {
         const doc = gql`
             {
@@ -93,23 +93,23 @@ describe("filter", () => {
         ];
 
         it("can filter data", () => {
-            expect(filter(doc, data)).toEqual(filteredData);
+            expect(filterByDocument(doc, data)).toEqual(filteredData);
         });
 
         it("can filter an array of data", () => {
-            expect(filter(doc, arrayData)).toEqual(filteredArrayData);
+            expect(filterByDocument(doc, arrayData)).toEqual(filteredArrayData);
         });
 
         it("can short circuit when data is null", () => {
-            expect(filter(doc, null)).toEqual(null);
+            expect(filterByDocument(doc, null)).toEqual(null);
         });
 
         it("can filter data for fragments", () => {
-            expect(filter(fragment, data)).toEqual(filteredData);
+            expect(filterByDocument(fragment, data)).toEqual(filteredData);
         });
 
         it("can filter data for fragments with variables", () => {
-            expect(filter(fragmentWithAVariable, data, { foo: true })).toEqual(filteredData);
+            expect(filterByDocument(fragmentWithAVariable, data, { foo: true })).toEqual(filteredData);
         });
     });
 
@@ -180,11 +180,11 @@ describe("filter", () => {
         ];
 
         it("can filter data", () => {
-            expect(filter(doc, data)).toEqual(filteredData);
+            expect(filterByDocument(doc, data)).toEqual(filteredData);
         });
 
         it("can filter an array of data", () => {
-            expect(filter(doc, arrayData)).toEqual(filteredArrayData);
+            expect(filterByDocument(doc, arrayData)).toEqual(filteredArrayData);
         });
     });
 
@@ -255,11 +255,11 @@ describe("filter", () => {
         ];
 
         it("can filter data", () => {
-            expect(filter(doc, data)).toEqual(filteredData);
+            expect(filterByDocument(doc, data)).toEqual(filteredData);
         });
 
         it("can filter an array of data", () => {
-            expect(filter(doc, arrayData)).toEqual(filteredArrayData);
+            expect(filterByDocument(doc, arrayData)).toEqual(filteredArrayData);
         });
     });
 
@@ -336,16 +336,16 @@ describe("filter", () => {
         ];
 
         it("can filter data", () => {
-            expect(filter(doc, data)).toEqual(filteredData);
+            expect(filterByDocument(doc, data)).toEqual(filteredData);
         });
 
         it("can filter an array of data", () => {
-            expect(filter(doc, arrayData)).toEqual(filteredArrayData);
+            expect(filterByDocument(doc, arrayData)).toEqual(filteredArrayData);
         });
 
         describe("if the nested fragment has not matched", () => {
             it("can filter data", () => {
-                const filtered = filter(doc, {
+                const filtered = filterByDocument(doc, {
                     alias: "Bob",
                     name: "Wrong",
                     height: 1.89,

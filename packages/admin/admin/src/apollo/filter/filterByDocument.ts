@@ -4,7 +4,7 @@ import { DocumentNode } from "graphql";
 
 import { ExecContext, ExecInfo, graphql, VariableMap } from "./graphql";
 
-export function filter<FD = any, D extends FD = any>(doc: DocumentNode, data: D, variableValues: VariableMap = {}): FD {
+export function filterByDocument<FD = any, D extends FD = any>(doc: DocumentNode, data: D, variableValues: VariableMap = {}): FD {
     if (data === null) return data;
 
     const resolver = (fieldName: string, root: any, args: Record<string, any>, context: ExecContext, info: ExecInfo) => {
