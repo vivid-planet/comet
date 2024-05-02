@@ -423,11 +423,19 @@ type ProductStatistics {
   updatedAt: DateTime!
 }
 
+type ProductToTag {
+  id: String!
+  exampleStatus: Boolean!
+  product: Product!
+  tag: ProductTag!
+}
+
 type ProductTag {
   id: ID!
   title: String!
   createdAt: DateTime!
   updatedAt: DateTime!
+  productsWithStatus: [ProductToTag!]!
   products: [Product!]!
 }
 
@@ -469,6 +477,7 @@ type Product {
   updatedAt: DateTime!
   category: ProductCategory
   variants: [ProductVariant!]!
+  tagsWithStatus: [ProductToTag!]!
   tags: [ProductTag!]!
 }
 
@@ -1133,19 +1142,25 @@ input ProductInput {
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
   dimensions: ProductDimensionsInput
-  statistics: ProductStatisticsInput
-  variants: [ProductVariantInput!]! = []
+  statistics: ProductNestedProductStatisticsInput
+  variants: [ProductNestedProductVariantInput!]! = []
   category: ID = null
   tags: [ID!]! = []
+  tagsWithStatus: [ProductNestedProductToTagInput!]! = []
 }
 
-input ProductStatisticsInput {
+input ProductNestedProductStatisticsInput {
   views: Float!
 }
 
-input ProductVariantInput {
+input ProductNestedProductVariantInput {
   name: String!
   image: DamImageBlockInput!
+}
+
+input ProductNestedProductToTagInput {
+  tag: ID!
+  exampleStatus: Boolean! = true
 }
 
 input ProductUpdateInput {
@@ -1159,10 +1174,11 @@ input ProductUpdateInput {
   discounts: [ProductDiscountsInput!]
   articleNumbers: [String!]
   dimensions: ProductDimensionsInput
-  statistics: ProductStatisticsInput
-  variants: [ProductVariantInput!]
+  statistics: ProductNestedProductStatisticsInput
+  variants: [ProductNestedProductVariantInput!]
   category: ID
   tags: [ID!]
+  tagsWithStatus: [ProductNestedProductToTagInput!]
 }
 
 input ProductCategoryInput {
@@ -1180,9 +1196,16 @@ input ProductCategoryUpdateInput {
 input ProductTagInput {
   title: String!
   products: [ID!]! = []
+  productsWithStatus: [ProductTagNestedProductToTagInput!]! = []
+}
+
+input ProductTagNestedProductToTagInput {
+  product: ID!
+  exampleStatus: Boolean! = true
 }
 
 input ProductTagUpdateInput {
   title: String
   products: [ID!]
+  productsWithStatus: [ProductTagNestedProductToTagInput!]
 }
