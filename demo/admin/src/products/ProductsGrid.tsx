@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     CrudVisibility,
+    filterByDocument,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -20,7 +21,6 @@ import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton, Typography } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { filter } from "graphql-anywhere";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -178,7 +178,7 @@ function ProductsGrid() {
                             }}
                             refetchQueries={["ProductsList"]}
                             copyData={() => {
-                                return filter<GQLProductsListManualFragment>(productsFragment, params.row);
+                                return filterByDocument<GQLProductsListManualFragment>(productsFragment, params.row);
                             }}
                         />
                     </>

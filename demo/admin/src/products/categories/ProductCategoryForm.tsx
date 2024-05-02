@@ -1,6 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
+    filterByDocument,
     FinalForm,
     FinalFormSaveSplitButton,
     FinalFormSubmitEvent,
@@ -19,7 +20,6 @@ import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { CircularProgress, IconButton } from "@mui/material";
 import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -62,7 +62,7 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
 
     const initialValues: Partial<FormState> = data?.productCategory
         ? {
-              ...filter<GQLProductCategoryFormFragment>(productCategoryFormFragment, data.productCategory),
+              ...filterByDocument<GQLProductCategoryFormFragment>(productCategoryFormFragment, data.productCategory),
           }
         : {};
 
