@@ -113,6 +113,7 @@ export function ProductsGrid(): React.ReactElement {
             valueOptions: [
                 { value: "Published", label: intl.formatMessage({ id: "product.status.published", defaultMessage: "Published" }) },
                 { value: "Unpublished", label: intl.formatMessage({ id: "product.status.unpublished", defaultMessage: "Unpublished" }) },
+                { value: "Deleted", label: intl.formatMessage({ id: "product.status.deleted", defaultMessage: "Deleted" }) },
             ],
             width: 150,
         },

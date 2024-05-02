@@ -30,6 +30,7 @@ import { ProductVariant } from "./product-variant.entity";
 export enum ProductStatus {
     Published = "Published",
     Unpublished = "Unpublished",
+    Deleted = "Deleted",
 }
 registerEnumType(ProductStatus, { name: "ProductStatus" });
 

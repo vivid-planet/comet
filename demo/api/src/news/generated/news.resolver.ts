@@ -43,8 +43,7 @@ export class NewsResolver {
         @Info() info: GraphQLResolveInfo,
     ): Promise<PaginatedNews> {
         const where = this.newsService.getFindCondition({ search, filter });
-
-        where.status = status;
+        where.status = { $in: status };
         where.scope = scope;
 
         const fields = extractGraphqlFields(info, { root: "nodes" });

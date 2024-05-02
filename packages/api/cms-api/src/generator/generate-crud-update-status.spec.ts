@@ -8,13 +8,13 @@ import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
-export enum TestEntitiy1Status {
+export enum TestEntity1Status {
     Active = "Active",
     Archived = "Archived",
     Deleted = "Deleted",
 }
 
-registerEnumType(TestEntitiy1Status, { name: "TestEntitiyStatus" });
+registerEnumType(TestEntity1Status, { name: "TestEntity1Status" });
 
 @Entity()
 class TestEntity1 extends BaseEntity<TestEntity1, "id"> {
@@ -24,9 +24,9 @@ class TestEntity1 extends BaseEntity<TestEntity1, "id"> {
     @Property()
     title: string;
 
-    @Enum({ items: () => TestEntitiy1Status })
-    @Field(() => TestEntitiy1Status)
-    status: TestEntitiy1Status = TestEntitiy1Status.Active;
+    @Enum({ items: () => TestEntity1Status })
+    @Field(() => TestEntity1Status)
+    status: TestEntity1Status = TestEntity1Status.Active;
 }
 
 describe("GenerateCrud Status with active", () => {
@@ -95,18 +95,18 @@ describe("GenerateCrud Status with active", () => {
 
         const statusProp = (structure.properties || []).find((prop) => prop.name == "status");
         expect(statusProp).toBeTruthy();
-        expect(statusProp?.type).toBe("TestEntitiy1Status");
+        expect(statusProp?.type).toBe("TestEntity1Status[]");
     });
 });
 
-export enum TestEntitiy2Status {
+export enum TestEntity2Status {
     Published = "Published",
     Unpublished = "Unpublished",
     Archived = "Archived",
     Deleted = "Deleted",
 }
 
-registerEnumType(TestEntitiy2Status, { name: "TestEntitiy2Status" });
+registerEnumType(TestEntity2Status, { name: "TestEntity2Status" });
 
 @Entity()
 class TestEntity2 extends BaseEntity<TestEntity2, "id"> {
@@ -116,9 +116,9 @@ class TestEntity2 extends BaseEntity<TestEntity2, "id"> {
     @Property()
     title: string;
 
-    @Enum({ items: () => TestEntitiy2Status })
-    @Field(() => TestEntitiy2Status)
-    status: TestEntitiy2Status = TestEntitiy2Status.Unpublished;
+    @Enum({ items: () => TestEntity2Status })
+    @Field(() => TestEntity2Status)
+    status: TestEntity2Status = TestEntity2Status.Unpublished;
 }
 
 describe("GenerateCrud Status with published/unpublished", () => {
@@ -138,7 +138,7 @@ describe("GenerateCrud Status with published/unpublished", () => {
         orm.close();
     });
 
-    it("args should include own status enum that doesn't include published/unpublished", async () => {
+    it("args should include default value", async () => {
         const file = lintedOut.find((file) => file.name === "dto/test-entity2s.args.ts");
         if (!file) throw new Error("File not found");
 
@@ -153,27 +153,23 @@ describe("GenerateCrud Status with published/unpublished", () => {
 
         const statusProp = (structure.properties || []).find((prop) => prop.name == "status");
         expect(statusProp).toBeTruthy();
-        expect(statusProp?.type).toBe("TestEntity2StatusFilter");
-
-        const enums = source.getEnums();
-        expect(enums.length).toBe(1);
-
-        const enumm = enums[0];
-        expect(enumm.getName()).toBe("TestEntity2StatusFilter");
-        const enumNames = enumm.getMembers().map((member) => member.getName());
-        expect(enumNames).toContain("Active");
-        expect(enumNames).toContain("Deleted");
-        expect(enumNames).not.toContain("Published");
-        expect(enumNames).not.toContain("Unpublished");
+        expect(statusProp?.type).toBe("TestEntity2Status[]");
+        const decorators = statusProp?.decorators;
+        if (!decorators) throw new Error("No decorators found");
+        const fieldDecorator = decorators.find((dec) => dec.name == "Field");
+        if (!fieldDecorator) throw new Error("No fieldDecorator found");
+        if (!fieldDecorator.arguments) throw new Error("No fieldDecorator arguments found");
+        if (!Array.isArray(fieldDecorator.arguments)) throw new Error("No fieldDecorator arguments found");
+        expect(fieldDecorator.arguments?.[1]).toBe("{ defaultValue: [TestEntity2Status.Published, TestEntity2Status.Unpublished] }");
     });
 });
 
-export enum TestEntitiy3Status {
+export enum TestEntity3Status {
     Published = "Published",
     Unpublished = "Unpublished",
 }
 
-registerEnumType(TestEntitiy3Status, { name: "TestEntitiy3Status" });
+registerEnumType(TestEntity3Status, { name: "TestEntity3Status" });
 
 @Entity()
 class TestEntity3 extends BaseEntity<TestEntity3, "id"> {
@@ -183,9 +179,9 @@ class TestEntity3 extends BaseEntity<TestEntity3, "id"> {
     @Property()
     title: string;
 
-    @Enum({ items: () => TestEntitiy3Status })
-    @Field(() => TestEntitiy3Status)
-    status: TestEntitiy3Status = TestEntitiy3Status.Unpublished;
+    @Enum({ items: () => TestEntity3Status })
+    @Field(() => TestEntity3Status)
+    status: TestEntity3Status = TestEntity3Status.Unpublished;
 }
 
 describe("GenerateCrud Status with published/unpublished", () => {
