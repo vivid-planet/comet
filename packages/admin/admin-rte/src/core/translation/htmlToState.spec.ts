@@ -146,6 +146,16 @@ describe("htmlToState", () => {
                 entityRanges: [],
                 data: {},
             },
+            // Custom Block Style
+            {
+                key: "7l334",
+                text: "A rte text with custom block styling",
+                type: "header-custom-green",
+                depth: 0,
+                inlineStyleRanges: [],
+                entityRanges: [],
+                data: {},
+            },
         ];
         const rawContent = {
             entityMap: {},

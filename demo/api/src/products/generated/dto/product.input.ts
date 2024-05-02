@@ -8,8 +8,14 @@ import { IsArray, IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsString, IsU
 
 import { ProductDimensions, ProductDiscounts, ProductStatus } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
+<<<<<<< HEAD
 import { ProductColorInput } from "./product-color.nested.input";
 import { ProductStatisticsInput } from "./product-statistics.nested.input";
+=======
+import { ProductNestedProductStatisticsInput } from "./product-nested-product-statistics.input";
+import { ProductNestedProductToTagInput } from "./product-nested-product-to-tag.input";
+import { ProductNestedProductVariantInput } from "./product-nested-product-variant.input";
+>>>>>>> main
 
 @InputType()
 export class ProductInput {
@@ -80,15 +86,22 @@ export class ProductInput {
     dimensions?: ProductDimensions;
 
     @IsNullable()
-    @Field(() => ProductStatisticsInput, { nullable: true })
-    @Type(() => ProductStatisticsInput)
+    @Field(() => ProductNestedProductStatisticsInput, { nullable: true })
+    @Type(() => ProductNestedProductStatisticsInput)
     @ValidateNested()
-    statistics?: ProductStatisticsInput;
+    statistics?: ProductNestedProductStatisticsInput;
 
+<<<<<<< HEAD
     @Field(() => [ProductColorInput], { defaultValue: [] })
     @IsArray()
     @Type(() => ProductColorInput)
     colors: ProductColorInput[];
+=======
+    @Field(() => [ProductNestedProductVariantInput], { defaultValue: [] })
+    @IsArray()
+    @Type(() => ProductNestedProductVariantInput)
+    variants: ProductNestedProductVariantInput[];
+>>>>>>> main
 
     @IsNullable()
     @Field(() => ID, { nullable: true, defaultValue: null })
@@ -100,10 +113,17 @@ export class ProductInput {
     @IsUUID(undefined, { each: true })
     tags: string[];
 
+<<<<<<< HEAD
     @IsNullable()
     @Field(() => ID, { nullable: true, defaultValue: null })
     @IsUUID()
     manufacturer?: string;
+=======
+    @Field(() => [ProductNestedProductToTagInput], { defaultValue: [] })
+    @IsArray()
+    @Type(() => ProductNestedProductToTagInput)
+    tagsWithStatus: ProductNestedProductToTagInput[];
+>>>>>>> main
 }
 
 @InputType()

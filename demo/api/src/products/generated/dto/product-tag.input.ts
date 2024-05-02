@@ -2,7 +2,10 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { PartialType } from "@comet/cms-api";
 import { Field, ID, InputType } from "@nestjs/graphql";
+import { Type } from "class-transformer";
 import { IsArray, IsNotEmpty, IsString, IsUUID } from "class-validator";
+
+import { ProductTagNestedProductToTagInput } from "./product-tag-nested-product-to-tag.input";
 
 @InputType()
 export class ProductTagInput {
@@ -15,6 +18,11 @@ export class ProductTagInput {
     @IsArray()
     @IsUUID(undefined, { each: true })
     products: string[];
+
+    @Field(() => [ProductTagNestedProductToTagInput], { defaultValue: [] })
+    @IsArray()
+    @Type(() => ProductTagNestedProductToTagInput)
+    productsWithStatus: ProductTagNestedProductToTagInput[];
 }
 
 @InputType()

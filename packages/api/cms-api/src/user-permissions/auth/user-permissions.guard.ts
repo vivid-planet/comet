@@ -62,7 +62,7 @@ export class UserPermissionsGuard implements CanActivate {
     }
 
     private getDecorator<T = object>(context: ExecutionContext, decorator: string): T {
-        return this.reflector.getAllAndOverride(decorator, [context.getClass(), context.getHandler()]);
+        return this.reflector.getAllAndOverride(decorator, [context.getHandler(), context.getClass()]);
     }
 
     // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level

@@ -9,18 +9,27 @@ import { ProductCategory } from "./entities/product-category.entity";
 import { ProductColor } from "./entities/product-color.entity";
 import { ProductStatistics } from "./entities/product-statistics.entity";
 import { ProductTag } from "./entities/product-tag.entity";
+import { ProductToTag } from "./entities/product-to-tag.entity";
 import { ProductVariant } from "./entities/product-variant.entity";
 import { ProductResolver } from "./generated/product.resolver";
 import { ProductCategoriesService } from "./generated/product-categories.service";
 import { ProductCategoryResolver } from "./generated/product-category.resolver";
 import { ProductTagResolver } from "./generated/product-tag.resolver";
 import { ProductTagsService } from "./generated/product-tags.service";
+<<<<<<< HEAD
 import { ProductVariantResolver } from "./generated/product-variant.resolver";
 import { ProductVariantsService } from "./generated/product-variants.service";
 import { ProductsService } from "./generated/products.service";
 
 @Module({
     imports: [MikroOrmModule.forFeature([Product, ProductCategory, ProductTag, ProductVariant, ProductStatistics, ProductColor, Manufacturer])],
+=======
+import { ProductToTagResolver } from "./generated/product-to-tag.resolver";
+import { ProductsService } from "./generated/products.service";
+
+@Module({
+    imports: [MikroOrmModule.forFeature([Product, ProductCategory, ProductTag, ProductToTag, ProductVariant, ProductStatistics])],
+>>>>>>> main
     providers: [
         ProductResolver,
         ProductsService,
@@ -28,10 +37,14 @@ import { ProductsService } from "./generated/products.service";
         ProductCategoriesService,
         ProductTagResolver,
         ProductTagsService,
+<<<<<<< HEAD
         ProductVariantsService,
         ProductVariantResolver,
         ManufacturerResolver,
         ManufacturersService,
+=======
+        ProductToTagResolver,
+>>>>>>> main
     ],
     exports: [],
 })

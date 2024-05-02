@@ -115,7 +115,7 @@ export class NewsResolver {
     @AffectedEntity(News)
     async deleteNews(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const news = await this.repository.findOneOrFail(id);
-        await this.entityManager.remove(news);
+        this.entityManager.remove(news);
         await this.entityManager.flush();
         return true;
     }
