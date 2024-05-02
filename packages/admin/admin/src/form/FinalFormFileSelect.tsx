@@ -23,7 +23,8 @@ export type FinalFormFileSelectClassKey =
     | "errorMessage"
     | "droppableAreaIsDisabled"
     | "droppableAreaHasError"
-    | "fileListText";
+    | "fileListText"
+    | "selectButton";
 
 const styles = ({ palette }: Theme) => {
     return createStyles<FinalFormFileSelectClassKey, FinalFormFileSelectProps>({
@@ -117,6 +118,14 @@ const styles = ({ palette }: Theme) => {
             overflow: "hidden",
             whiteSpace: "nowrap",
         },
+        selectButton: {
+            backgroundColor: palette.grey[800],
+            color: palette.common.white,
+            "&:hover": {
+                backgroundColor: palette.grey[800],
+                color: palette.common.white,
+            },
+        },
     });
 };
 
@@ -146,6 +155,8 @@ const FinalFormFileSelectComponent: React.FunctionComponent<WithStyles<typeof st
 }) => {
     const { delete: deleteIcon = <Delete />, error: errorIcon = <Error color="error" />, select: selectIcon = <Select /> } = iconMapping;
 
+    const dropzoneDisabled = disabled || (maxFiles && fieldValue.length >= maxFiles);
+
     const onDrop = React.useCallback(
         (acceptedFiles: File[]) => {
             if (multipleFiles) {
@@ -171,7 +182,7 @@ const FinalFormFileSelectComponent: React.FunctionComponent<WithStyles<typeof st
     const { fileRejections, getRootProps, getInputProps, isDragReject } = useDropzone({
         onDrop,
         accept,
-        disabled: disabled || (maxFiles && fieldValue.length >= maxFiles),
+        disabled: dropzoneDisabled,
         multiple: multipleFiles,
         maxSize: maxSize,
         maxFiles,
@@ -202,7 +213,7 @@ const FinalFormFileSelectComponent: React.FunctionComponent<WithStyles<typeof st
                     <div
                         className={clsx(
                             classes.droppableArea,
-                            disabled && classes.droppableAreaIsDisabled,
+                            dropzoneDisabled && classes.droppableAreaIsDisabled,
                             isDragReject && classes.droppableAreaHasError,
                         )}
                     >
@@ -213,11 +224,22 @@ const FinalFormFileSelectComponent: React.FunctionComponent<WithStyles<typeof st
                     </div>
                 )}
                 {!disableSelectFileButton && (
-                    <Button disabled={disabled} variant="contained" color="secondary" startIcon={selectIcon}>
+                    <Button disabled={dropzoneDisabled} variant="contained" color="secondary" startIcon={selectIcon} className={classes.selectButton}>
                         <FormattedMessage id="comet.finalFormFileSelect.selectfile" defaultMessage="Select file" />
                     </Button>
                 )}
             </div>
+            {maxFiles && fieldValue.length >= maxFiles && (
+                <FormHelperText sx={{ margin: 0 }}>
+                    <FormattedMessage
+                        id="comet.finalFormFileSelect.maximumFilesAmount"
+                        defaultMessage="Maximum {maxFiles} files"
+                        values={{
+                            maxFiles: maxFiles,
+                        }}
+                    />
+                </FormHelperText>
+            )}
             {acceptedFiles.length > 0 && (
                 <div className={classes.fileList}>
                     {acceptedFiles.map((file, index) => (
