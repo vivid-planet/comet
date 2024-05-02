@@ -1,5 +1,104 @@
 # @comet/cms-api
 
+## 6.8.0
+
+### Minor Changes
+
+-   d6ca50a52: Enhanced the access log functionality to now skip logging for field resolvers in GraphQL context. This change improves the readability and relevance of our logs by reducing unnecessary entries.
+-   ebdbabc21: Extend `searchToMikroOrmQuery` function to support quoted search strings.
+
+    Quotes searches can be done with single (`'...'`) or double quotation marks (`"..."`).
+
+### Patch Changes
+
+-   35efa037b: API-Generator: Remove unnecessary await for delete mutation
+-   d3a06fcaf: Prevent block-meta.json write in read-only file systems
+-   a696ec7b9: Handle DAM scope correctly in the `findCopiesOfFileInScope` query and the `importDamFileByDownload` mutation
+
+    Previously, these endpoints would cause errors if no DAM scoping was used.
+
+-   Updated dependencies [be8664c75]
+-   Updated dependencies [90c6f192e]
+-   Updated dependencies [90c6f192e]
+    -   @comet/blocks-api@6.8.0
+
+## 6.7.0
+
+### Minor Changes
+
+-   645f19df9: Add `nullable` param to `@AffectedEntity` to support id args that can be `null` or `undefined`
+-   a0506e103: API Generator: Support validator decorators for input generation
+
+### Patch Changes
+
+-   645f19df9: Fix mutations `moveDamFiles`, `copyFilesToScope`, `archiveDamFiles` and `restoreDamFiles` by adding `@AffectedEntity` to enable scope checks
+-   8315f10cb: Fix order of `@RequiredPermission()` decorators
+
+    Decorators defined on handlers should be considered before decorators defined on classes.
+
+-   6eeaaa223: The CometAuthGuards now only creates the `CurrentUser` just on a request-basis and skips when called in a fieldResolver (e.g. when `fieldResolverEnhancers` contains `guards`).
+    -   @comet/blocks-api@6.7.0
+
+## 6.6.2
+
+### Patch Changes
+
+-   @comet/blocks-api@6.6.2
+
+## 6.6.1
+
+### Patch Changes
+
+-   890795fda: Fix calculation of `totalCount` in `DependenciesService#getDependents`
+    -   @comet/blocks-api@6.6.1
+
+## 6.6.0
+
+### Minor Changes
+
+-   6160119fe: Provide a `User`-interface that allows module augmentation and hence storing additional data.
+-   38df2b4de: Add `userToLog`-option to AccessLogModule
+
+### Patch Changes
+
+-   Updated dependencies [e880929d8]
+    -   @comet/blocks-api@6.6.0
+
+## 6.5.0
+
+### Minor Changes
+
+-   2f64daa9b: Add `title` field to link block
+
+    Perform the following steps to use it in an application:
+
+    1. API: Use the new `createLinkBlock` factory to create the LinkBlock:
+
+        ```ts
+        import { createLinkBlock } from "@comet/cms-api";
+
+        // ...
+
+        const LinkBlock = createLinkBlock({
+            supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, news: NewsLinkBlock },
+        });
+        ```
+
+    2. Site: Pass the `title` prop to LinkBlock's child blocks:
+
+    ```diff
+    const supportedBlocks: SupportedBlocks = {
+    -   internal: ({ children, ...props }) => <InternalLinkBlock data={props}>{children}</InternalLinkBlock>,
+    +   internal: ({ children, title, ...props }) => <InternalLinkBlock data={props} title={title}>{children}</InternalLinkBlock>,
+        // ...
+    };
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [2f64daa9b]
+    -   @comet/blocks-api@6.5.0
+
 ## 6.4.0
 
 ### Minor Changes

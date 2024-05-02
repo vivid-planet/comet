@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-api",
-    "version": "6.4.0",
+    "version": "6.8.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -27,12 +27,11 @@
         "generate-schema:watch": "chokidar \"src/\" -c \"$npm_execpath generate-schema\"",
         "generate-block-meta": "ts-node generate-block-meta.ts",
         "generate-block-meta:watch": "chokidar \"src/\" -c \"$npm_execpath generate-block-meta\"",
-        "list-exports": "ts-node list-exports.ts",
         "test": "jest",
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "@comet/blocks-api": "workspace:^6.4.0",
+        "@comet/blocks-api": "workspace:^6.8.0",
         "@golevelup/nestjs-discovery": "^3.0.0",
         "@hapi/accept": "^5.0.2",
         "@nestjs/jwt": "^9.0.0",
@@ -80,7 +79,7 @@
         "@aws-sdk/client-s3": "^3.47.0",
         "@aws-sdk/types": "^3.47.0",
         "@azure/storage-blob": "^12.0.0",
-        "@comet/eslint-config": "workspace:^6.4.0",
+        "@comet/eslint-config": "workspace:^6.8.0",
         "@golevelup/ts-jest": "^0.4.0",
         "@kubernetes/client-node": "^0.18.1",
         "@mikro-orm/cli": "^5.7.1",

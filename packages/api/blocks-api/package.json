@@ -1,6 +1,6 @@
 {
     "name": "@comet/blocks-api",
-    "version": "6.4.0",
+    "version": "6.8.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -21,7 +21,6 @@
         "lint": "run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ package.json",
         "lint:tsc": "tsc --noEmit",
-        "list-exports": "ts-node list-exports.ts",
         "test": "jest --verbose=true",
         "test:watch": "jest -w"
     },
@@ -29,7 +28,7 @@
         "rimraf": "^3.0.0"
     },
     "devDependencies": {
-        "@comet/eslint-config": "workspace:^6.4.0",
+        "@comet/eslint-config": "workspace:^6.8.0",
         "@nestjs/common": "^9.0.0",
         "@types/draft-js": "^0.11.10",
         "@types/jest": "^29.5.0",

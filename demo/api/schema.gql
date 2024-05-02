@@ -333,12 +333,12 @@ type FooterContentScope {
   language: String!
 }
 
-type Footer implements DocumentInterface {
+type Footer {
   id: ID!
-  updatedAt: DateTime!
   content: FooterContentBlockData!
   scope: FooterContentScope!
   createdAt: DateTime!
+  updatedAt: DateTime!
   dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
@@ -361,11 +361,11 @@ type MainMenu {
   items: [MainMenuItem!]!
 }
 
-type NewsComment implements DocumentInterface {
+type NewsComment {
   id: ID!
-  updatedAt: DateTime!
   comment: String!
   createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type NewsContentScope {
@@ -373,9 +373,8 @@ type NewsContentScope {
   language: String!
 }
 
-type News implements DocumentInterface {
+type News {
   id: ID!
-  updatedAt: DateTime!
   scope: NewsContentScope!
   slug: String!
   title: String!
@@ -385,6 +384,7 @@ type News implements DocumentInterface {
   image: DamImageBlockData!
   content: NewsContentBlockData!
   createdAt: DateTime!
+  updatedAt: DateTime!
   comments: [NewsComment!]!
   dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
@@ -407,12 +407,12 @@ type PaginatedNews {
   totalCount: Int!
 }
 
-type ProductCategory implements DocumentInterface {
+type ProductCategory {
   id: ID!
-  updatedAt: DateTime!
   title: String!
   slug: String!
   createdAt: DateTime!
+  updatedAt: DateTime!
   products: [Product!]!
 }
 
@@ -423,20 +423,28 @@ type ProductStatistics {
   updatedAt: DateTime!
 }
 
-type ProductTag implements DocumentInterface {
+type ProductToTag {
+  id: String!
+  exampleStatus: Boolean!
+  product: Product!
+  tag: ProductTag!
+}
+
+type ProductTag {
   id: ID!
-  updatedAt: DateTime!
   title: String!
   createdAt: DateTime!
+  updatedAt: DateTime!
+  productsWithStatus: [ProductToTag!]!
   products: [Product!]!
 }
 
-type ProductVariant implements DocumentInterface {
+type ProductVariant {
   id: ID!
-  updatedAt: DateTime!
   name: String!
   image: DamImageBlockData!
   createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type ProductDiscounts {
@@ -450,9 +458,8 @@ type ProductDimensions {
   depth: Float!
 }
 
-type Product implements DocumentInterface {
+type Product {
   id: ID!
-  updatedAt: DateTime!
   title: String!
   visible: Boolean!
   slug: String!
@@ -467,8 +474,10 @@ type Product implements DocumentInterface {
   dimensions: ProductDimensions
   statistics: ProductStatistics
   createdAt: DateTime!
+  updatedAt: DateTime!
   category: ProductCategory
   variants: [ProductVariant!]!
+  tagsWithStatus: [ProductToTag!]!
   tags: [ProductTag!]!
 }
 
@@ -502,9 +511,8 @@ type PaginatedPageTreeNodes {
   totalCount: Int!
 }
 
-type Redirect implements DocumentInterface {
+type Redirect {
   id: ID!
-  updatedAt: DateTime!
   sourceType: RedirectSourceTypeValues!
   source: String!
   target: JSONObject!
@@ -512,6 +520,7 @@ type Redirect implements DocumentInterface {
   active: Boolean!
   generationType: RedirectGenerationType!
   createdAt: DateTime!
+  updatedAt: DateTime!
   scope: RedirectScope!
   dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
@@ -1133,19 +1142,25 @@ input ProductInput {
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
   dimensions: ProductDimensionsInput
-  statistics: ProductStatisticsInput
-  variants: [ProductVariantInput!]! = []
+  statistics: ProductNestedProductStatisticsInput
+  variants: [ProductNestedProductVariantInput!]! = []
   category: ID = null
   tags: [ID!]! = []
+  tagsWithStatus: [ProductNestedProductToTagInput!]! = []
 }
 
-input ProductStatisticsInput {
+input ProductNestedProductStatisticsInput {
   views: Float!
 }
 
-input ProductVariantInput {
+input ProductNestedProductVariantInput {
   name: String!
   image: DamImageBlockInput!
+}
+
+input ProductNestedProductToTagInput {
+  tag: ID!
+  exampleStatus: Boolean! = true
 }
 
 input ProductUpdateInput {
@@ -1159,10 +1174,11 @@ input ProductUpdateInput {
   discounts: [ProductDiscountsInput!]
   articleNumbers: [String!]
   dimensions: ProductDimensionsInput
-  statistics: ProductStatisticsInput
-  variants: [ProductVariantInput!]
+  statistics: ProductNestedProductStatisticsInput
+  variants: [ProductNestedProductVariantInput!]
   category: ID
   tags: [ID!]
+  tagsWithStatus: [ProductNestedProductToTagInput!]
 }
 
 input ProductCategoryInput {
@@ -1180,9 +1196,16 @@ input ProductCategoryUpdateInput {
 input ProductTagInput {
   title: String!
   products: [ID!]! = []
+  productsWithStatus: [ProductTagNestedProductToTagInput!]! = []
+}
+
+input ProductTagNestedProductToTagInput {
+  product: ID!
+  exampleStatus: Boolean! = true
 }
 
 input ProductTagUpdateInput {
   title: String
   products: [ID!]
+  productsWithStatus: [ProductTagNestedProductToTagInput!]
 }
