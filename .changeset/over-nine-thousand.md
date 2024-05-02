@@ -1,7 +1,5 @@
 ---
-"@comet/admin": minor
+"@comet/admin-rte": patch
 ---
 
-Add support for block styles for the rte translation
-
-
+Fix losing custom block types when converting between editor state and HTML
