@@ -20,8 +20,8 @@ export function createStaticCredentialsBasicStrategy({
         }
 
         validate(username: string, password: string): string | undefined {
-            if (username === "") throw new Error("username for StaticCredentialsBasicStrategy must no be empty");
-            if (password === "") throw new Error("password for StaticCredentialsBasicStrategy must no be empty");
+            if (requiredUsername === "") throw new Error(`username for strategy ${strategyName} must no be empty`);
+            if (requiredPassword === "") throw new Error(`password for strategy ${strategyName} must no be empty`);
             if (username === requiredUsername && password === requiredPassword) return strategyName;
         }
     }
