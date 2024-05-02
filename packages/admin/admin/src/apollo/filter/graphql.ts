@@ -1,5 +1,6 @@
 // Copied and adapted from https://github.com/apollographql/apollo-client/blob/release-2.x/packages/graphql-anywhere/src/graphql.ts
 
+import { FragmentMatcher } from "@apollo/client";
 import {
     argumentsObjectFromField,
     createFragmentMap,
@@ -21,13 +22,12 @@ export type Resolver = (fieldName: string, rootValue: any, args: any, context: a
 export type VariableMap = { [name: string]: any };
 
 export type ResultMapper = (values: { [fieldName: string]: any }, rootValue: any) => any;
-export type FragmentMatcher = (rootValue: any, typeCondition: string, context: any) => boolean;
 
 export type ExecContext = {
     fragmentMap: FragmentMap;
     contextValue: any;
     variableValues: VariableMap;
-    resultMapper: ResultMapper;
+    resultMapper?: ResultMapper;
     resolver: Resolver;
     fragmentMatcher: FragmentMatcher;
 };
@@ -35,7 +35,7 @@ export type ExecContext = {
 export type ExecInfo = {
     isLeaf: boolean;
     resultKey: string;
-    directives: DirectiveInfo;
+    directives: DirectiveInfo | null;
     field: FieldNode;
 };
 
@@ -82,7 +82,6 @@ export function graphql(
         fragmentMap,
         contextValue,
         variableValues,
-        // @ts-expect-error TODO
         resultMapper,
         resolver,
         fragmentMatcher,
@@ -94,7 +93,7 @@ export function graphql(
 function executeSelectionSet(selectionSet: SelectionSetNode, rootValue: any, execContext: ExecContext) {
     const { fragmentMap, contextValue, variableValues: variables } = execContext;
 
-    const result = {};
+    const result: Record<string, any> = {};
 
     selectionSet.selections.forEach((selection) => {
         if (variables && !shouldInclude(selection, variables)) {
@@ -108,12 +107,9 @@ function executeSelectionSet(selectionSet: SelectionSetNode, rootValue: any, exe
             const resultFieldKey = resultKeyNameFromField(selection);
 
             if (fieldResult !== undefined) {
-                // @ts-expect-error TODO
                 if (result[resultFieldKey] === undefined) {
-                    // @ts-expect-error TODO
                     result[resultFieldKey] = fieldResult;
                 } else {
-                    // @ts-expect-error TODO
                     merge(result[resultFieldKey], fieldResult);
                 }
             }
@@ -131,10 +127,9 @@ function executeSelectionSet(selectionSet: SelectionSetNode, rootValue: any, exe
                 }
             }
 
-            // @ts-expect-error TODO
-            const typeCondition = fragment.typeCondition.name.value;
+            const typeCondition = fragment.typeCondition?.name.value;
 
-            if (execContext.fragmentMatcher(rootValue, typeCondition, contextValue)) {
+            if (typeCondition && execContext.fragmentMatcher(rootValue, typeCondition, contextValue)) {
                 const fragmentResult = executeSelectionSet(fragment.selectionSet, rootValue, execContext);
 
                 merge(result, fragmentResult);
@@ -184,9 +179,7 @@ function executeField(field: FieldNode, rootValue: any, execContext: ExecContext
     return executeSelectionSet(field.selectionSet, result, execContext);
 }
 
-// @ts-expect-error TODO
-function executeSubSelectedArray(field, result, execContext) {
-    // @ts-expect-error TODO
+function executeSubSelectedArray(field: FieldNode, result: any[], execContext: ExecContext): any[] {
     return result.map((item) => {
         // null value in array
         if (item === null) {
@@ -198,6 +191,10 @@ function executeSubSelectedArray(field, result, execContext) {
             return executeSubSelectedArray(field, item, execContext);
         }
 
+        if (!field.selectionSet) {
+            return null;
+        }
+
         // This is an object, run the selection set on it
         return executeSelectionSet(field.selectionSet, item, execContext);
     });
@@ -205,8 +202,7 @@ function executeSubSelectedArray(field, result, execContext) {
 
 const hasOwn = Object.prototype.hasOwnProperty;
 
-// @ts-expect-error TODO
-export function merge(dest, src) {
+export function merge(dest: Record<string, any>, src: Record<string, any>) {
     if (src !== null && typeof src === "object") {
         Object.keys(src).forEach((key) => {
             const srcVal = src[key];
