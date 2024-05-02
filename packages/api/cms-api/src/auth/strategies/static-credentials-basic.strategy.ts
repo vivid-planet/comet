@@ -5,13 +5,13 @@ import { BasicStrategy } from "passport-http";
 interface StaticCredentialsBasicStrategyConfig {
     username?: string;
     password: string;
-    strategyName?: string;
+    strategyName: string;
 }
 
 export function createStaticCredentialsBasicStrategy({
     username: requiredUsername = "comet",
     password: requiredPassword,
-    strategyName = "static-credentials-basic",
+    strategyName,
 }: StaticCredentialsBasicStrategyConfig): Type {
     @Injectable()
     class StaticCredentialsBasicStrategy extends PassportStrategy(BasicStrategy, strategyName) {
