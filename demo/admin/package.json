@@ -51,7 +51,6 @@
         "final-form": "^4.0.0",
         "final-form-set-field-touched": "^1.0.0",
         "graphql": "^15.0.0",
-        "graphql-anywhere": "^4.0.0",
         "graphql-tag": "^2.0.0",
         "history": "^4.0.0",
         "immutable": "~3.7.6",
