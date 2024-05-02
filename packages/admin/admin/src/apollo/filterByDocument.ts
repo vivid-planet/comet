@@ -1,5 +1,3 @@
-// Copied and adapted from https://github.com/apollographql/apollo-client/blob/release-2.x/packages/graphql-anywhere/src/graphql.ts
-
 import { FragmentMatcher } from "@apollo/client";
 import {
     argumentsObjectFromField,
@@ -13,17 +11,29 @@ import {
     resultKeyNameFromField,
     shouldInclude,
 } from "@apollo/client/utilities";
-import { DocumentNode, FieldNode, FragmentDefinitionNode, InlineFragmentNode, SelectionSetNode } from "graphql";
+import { DirectiveNode, DocumentNode, FieldNode, FragmentDefinitionNode, InlineFragmentNode, SelectionSetNode } from "graphql";
 
-import { getDirectiveInfoFromField } from "./directives";
+// Copied and adapted from https://github.com/apollographql/apollo-client/blob/release-2.x/packages/graphql-anywhere/src/utilities.ts
+export function filterByDocument<FD = any, D extends FD = any>(doc: DocumentNode, data: D, variableValues: VariableMap = {}): FD {
+    if (data === null) return data;
 
-export type Resolver = (fieldName: string, rootValue: any, args: any, context: any, info: ExecInfo) => any;
+    const resolver = (fieldName: string, root: any, args: Record<string, any>, context: ExecContext, info: ExecInfo) => {
+        return root[info.resultKey];
+    };
 
-export type VariableMap = { [name: string]: any };
+    return Array.isArray(data)
+        ? data.map((dataObj) => graphql(resolver, doc, dataObj, null, variableValues))
+        : graphql(resolver, doc, data, null, variableValues);
+}
 
-export type ResultMapper = (values: { [fieldName: string]: any }, rootValue: any) => any;
+// Copied and adapted from https://github.com/apollographql/apollo-client/blob/release-2.x/packages/graphql-anywhere/src/graphql.ts
+type Resolver = (fieldName: string, rootValue: any, args: any, context: any, info: ExecInfo) => any;
 
-export type ExecContext = {
+type VariableMap = { [name: string]: any };
+
+type ResultMapper = (values: { [fieldName: string]: any }, rootValue: any) => any;
+
+type ExecContext = {
     fragmentMap: FragmentMap;
     contextValue: any;
     variableValues: VariableMap;
@@ -32,14 +42,14 @@ export type ExecContext = {
     fragmentMatcher: FragmentMatcher;
 };
 
-export type ExecInfo = {
+type ExecInfo = {
     isLeaf: boolean;
     resultKey: string;
     directives: DirectiveInfo | null;
     field: FieldNode;
 };
 
-export type ExecOptions = {
+type ExecOptions = {
     resultMapper?: ResultMapper;
     fragmentMatcher?: FragmentMatcher;
 };
@@ -60,7 +70,7 @@ export type ExecOptions = {
  * In the 5.0 version, this will be the only export again
  * and it will be async
  */
-export function graphql(
+function graphql(
     resolver: Resolver,
     document: DocumentNode,
     rootValue?: any,
@@ -202,7 +212,7 @@ function executeSubSelectedArray(field: FieldNode, result: any[], execContext: E
 
 const hasOwn = Object.prototype.hasOwnProperty;
 
-export function merge(dest: Record<string, any>, src: Record<string, any>) {
+function merge(dest: Record<string, any>, src: Record<string, any>) {
     if (src !== null && typeof src === "object") {
         Object.keys(src).forEach((key) => {
             const srcVal = src[key];
@@ -213,4 +223,22 @@ export function merge(dest: Record<string, any>, src: Record<string, any>) {
             }
         });
     }
+}
+
+// Copied and adapted from https://github.com/apollographql/apollo-client/blob/release-2.x/packages/apollo-utilities/src/directives.ts
+
+// Provides the methods that allow QueryManager to handle the `skip` and
+// `include` directives within GraphQL.
+function getDirectiveInfoFromField(field: FieldNode, variables: Record<string, any>): DirectiveInfo | null {
+    if (field.directives && field.directives.length) {
+        const directiveObj: DirectiveInfo = {};
+        field.directives.forEach((directive: DirectiveNode) => {
+            const argumentsObj = argumentsObjectFromField(directive, variables);
+            if (argumentsObj) {
+                directiveObj[directive.name.value] = argumentsObj;
+            }
+        });
+        return directiveObj;
+    }
+    return null;
 }
