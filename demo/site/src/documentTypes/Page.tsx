@@ -80,6 +80,9 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
     if (!document) {
         return {};
     }
+    const siteUrl = "http://localhost:3000"; //TODO get from site config
+    const canonicalUrl = document.seo.canonicalUrl || `${siteUrl}${data.pageContent.path}`;
+
     // TODO move into library
     return {
         title: document.seo.htmlTitle || data.pageContent.name,
@@ -88,7 +91,7 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
             title: document.seo.openGraphTitle,
             description: document.seo.openGraphDescription,
             type: "website",
-            url: document.seo.canonicalUrl,
+            url: canonicalUrl,
             images: document.seo.openGraphImage.block?.urlTemplate
                 ? generateImageUrl({ src: document.seo.openGraphImage.block?.urlTemplate, width: 1024 }, 1 / 1)
                 : undefined,
@@ -97,7 +100,7 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
             index: !document.seo.noIndex,
         },
         alternates: {
-            canonical: document.seo.canonicalUrl,
+            canonical: canonicalUrl,
             languages: document.seo.alternativeLinks.reduce((acc, link) => {
                 if (link.code && link.url) acc[link.code] = link.url;
                 return acc;
