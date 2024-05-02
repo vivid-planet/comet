@@ -1,6 +1,6 @@
 import { SiteConfig } from "./site-configs.types";
 
-// Called by ./cli.ts
+// Called by `npx @comet/cli inject-site-configs`
 export default (): SiteConfig[] => [
     {
         name: 'Comet Site "Main/DE"',
