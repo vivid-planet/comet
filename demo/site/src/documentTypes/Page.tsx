@@ -82,23 +82,22 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
     }
     // TODO move into library
     return {
-        title: document.seo.htmlTitle || data.pageContent.name, //support passedTitle
+        title: document.seo.htmlTitle || data.pageContent.name,
         description: document.seo.metaDescription,
         openGraph: {
             title: document.seo.openGraphTitle,
             description: document.seo.openGraphDescription,
             type: "website",
-            url: document.seo.canonicalUrl, //support passedCanonicalUrl
+            url: document.seo.canonicalUrl,
             images: document.seo.openGraphImage.block?.urlTemplate
                 ? generateImageUrl({ src: document.seo.openGraphImage.block?.urlTemplate, width: 1024 }, 1 / 1)
                 : undefined,
         },
-        // TODO structuredData (must be part of Page component)
         robots: {
             index: !document.seo.noIndex,
         },
         alternates: {
-            canonical: document.seo.canonicalUrl, //support passedCanonicalUrl,
+            canonical: document.seo.canonicalUrl,
             languages: document.seo.alternativeLinks.reduce((acc, link) => {
                 if (link.code && link.url) acc[link.code] = link.url;
                 return acc;
