@@ -5,6 +5,7 @@ import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/comm
 import { DependentsResolverFactory } from "../dependencies/dependents.resolver.factory";
 import { DocumentInterface } from "../document/dto/document-interface";
 import { AttachedDocumentLoaderService } from "./attached-document-loader.service";
+import { InternalLinkBlockTransformerService } from "./blocks/internal-link-block-transformer.service";
 import { createPageTreeResolver } from "./createPageTreeResolver";
 import { DocumentSubscriberFactory } from "./document-subscriber";
 import { PageTreeNodeBaseCreateInput, PageTreeNodeBaseUpdateInput } from "./dto/page-tree-node.input";
@@ -90,8 +91,15 @@ export class PageTreeModule {
                 SitePreviewResolver,
                 PageTreeNodeDocumentEntityInfoService,
                 PageTreeNodeDocumentEntityScopeService,
+                InternalLinkBlockTransformerService,
             ],
-            exports: [PageTreeService, PageTreeReadApiService, AttachedDocumentLoaderService, PageTreeNodeDocumentEntityScopeService],
+            exports: [
+                PageTreeService,
+                PageTreeReadApiService,
+                AttachedDocumentLoaderService,
+                PageTreeNodeDocumentEntityScopeService,
+                InternalLinkBlockTransformerService,
+            ],
         };
     }
 }

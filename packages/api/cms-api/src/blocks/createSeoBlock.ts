@@ -21,7 +21,7 @@ import {
 import { Type } from "class-transformer";
 import { IsBoolean, IsEnum, IsJSON, IsOptional, IsString, IsUrl, ValidateNested } from "class-validator";
 
-import { PixelImageBlock } from "./PixelImageBlock";
+import { PixelImageBlock } from "../dam/blocks/pixel-image.block";
 
 /* eslint-disable @typescript-eslint/naming-convention */
 // TODO: Replace with PascalCase

@@ -22,7 +22,6 @@ import {
     TraversableTransformResponse,
 } from "../block";
 import { AnnotationBlockMeta, BlockField } from "../decorators/field";
-import { TransformDependencies } from "../dependencies";
 import { BlockFactoryNameOrOptions } from "./types";
 
 type BaseBlockMap = Record<string, Block<BlockDataInterface, BlockInputInterface>>;
@@ -117,7 +116,7 @@ export function BaseOneOfBlockData<BlockMap extends BaseBlockMap>({
         // index of blocks
         activeType?: string;
 
-        async transformToPlain(deps: TransformDependencies, { includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
             const { attachedBlocks, activeType, ...additionalFields } = this;
             const block = attachedBlocks.find((c) => c.type === this.activeType);
             return {
