@@ -1,4 +1,6 @@
 import {
+    RouterTab,
+    RouterTabs,
     SaveBoundary,
     SaveBoundarySaveButton,
     Stack,
@@ -14,6 +16,7 @@ import * as React from "react";
 import { useIntl } from "react-intl";
 
 import { ProductForm } from "./generated/ProductForm";
+import { ProductPriceForm } from "./generated/ProductPriceForm";
 import { ProductsGrid } from "./generated/ProductsGrid";
 
 export function ProductsPage(): React.ReactElement {
@@ -35,7 +38,22 @@ export function ProductsPage(): React.ReactElement {
                                     <SaveBoundarySaveButton />
                                 </ToolbarActions>
                             </StackToolbar>
-                            <ProductForm id={selectedProductId} />
+                            <RouterTabs>
+                                <RouterTab
+                                    forceRender={true}
+                                    path=""
+                                    label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
+                                >
+                                    <ProductForm id={selectedProductId} />
+                                </RouterTab>
+                                <RouterTab
+                                    forceRender={true}
+                                    path="/price"
+                                    label={intl.formatMessage({ id: "products.price", defaultMessage: "Price" })}
+                                >
+                                    <ProductPriceForm id={selectedProductId} />
+                                </RouterTab>
+                            </RouterTabs>
                         </SaveBoundary>
                     )}
                 </StackPage>
