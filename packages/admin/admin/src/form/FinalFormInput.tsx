@@ -3,9 +3,9 @@ import { IconButton, InputBase, InputBaseProps, Tooltip } from "@mui/material";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
-import { TranslationDialog } from "translator/TranslationDialog";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
+import { TranslationDialog } from "../translator/TranslationDialog";
 import { useContentTranslationService } from "../translator/useContentTranslationService";
 
 export type FinalFormInputProps = InputBaseProps &
