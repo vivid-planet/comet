@@ -1,5 +1,5 @@
 ---
-"@comet/cms-site": minor
+"@comet/cms-site": major
 ---
 
 Fix an issue where the admin preview could break a block's styling and HTML structure
