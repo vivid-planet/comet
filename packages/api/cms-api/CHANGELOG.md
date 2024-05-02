@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 4.9.1
+
+### Patch Changes
+
+-   Updated dependencies [3ba4b4663]
+    -   @comet/blocks-api@4.9.1
+
 ## 4.9.0
 
 ### Minor Changes

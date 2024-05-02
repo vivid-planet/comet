@@ -1,5 +1,13 @@
 # @comet/blocks-api
 
+## 4.9.1
+
+### Patch Changes
+
+-   3ba4b4663: Fix `RichTextBlock` draft content validation
+
+    Extend validation to validate inline links in draft content.
+
 ## 4.9.0
 
 ## 4.8.1
