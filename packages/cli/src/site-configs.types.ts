@@ -12,11 +12,11 @@ export type SiteConfig = {
     preloginEnabled?: boolean;
     public?: Record<string, unknown>;
 };
-export type SiteConfigPrivate<S extends SiteConfig> = Omit<S, "public"> & {
+export type SiteConfigPrivate<S extends SiteConfig> = S & {
     url: string;
     previewUrl: string;
-} & S["public"];
-export type SiteConfigPublic<S extends SiteConfig> = Pick<S, "contentScope" | "name" | "domains" | "preloginEnabled"> & {
+};
+export type SiteConfigPublic<S extends SiteConfig> = Pick<S, "name" | "contentScope" | "domains" | "preloginEnabled" | "public"> & {
     url: string;
     previewUrl: string;
-} & S["public"];
+};
