@@ -26,12 +26,24 @@ export interface MenuCollapsibleItemProps
         openDropdown?: React.ReactNode;
         closeDropdown?: React.ReactNode;
         firstLevelHoverIndicator?: React.ReactNode;
-        subMenuHoverIndicator?: React.ReactNode;
+        secondLevelHoverIndicator?: React.ReactNode;
     };
 }
 
 export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
-    const { classes, level, primary, secondary, isMenuOpen, icon, openByDefault, children, slotProps, iconMapping, ...restProps } = useThemeProps({
+    const {
+        classes,
+        level = 1,
+        primary,
+        secondary,
+        isMenuOpen,
+        icon,
+        openByDefault,
+        children,
+        slotProps,
+        iconMapping,
+        ...restProps
+    } = useThemeProps({
         props: inProps,
         name: "CometAdminMenuCollapsibleItem",
     });
