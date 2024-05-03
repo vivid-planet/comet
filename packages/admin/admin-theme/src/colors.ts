@@ -8,6 +8,13 @@ export const primaryPalette: PaletteColor = {
     contrastText: "#000000",
 };
 
+export const secondaryPalette = {
+    light: "#5B5B5B",
+    main: "#333333",
+    dark: "#232323",
+    contrastText: "#FFFFFF",
+};
+
 export const errorPalette: SimplePaletteColorOptions = {
     light: "#DA4533",
     main: "#D11700",
@@ -30,8 +37,6 @@ export const successPalette: SimplePaletteColorOptions = {
     dark: "#0E8E23",
     contrastText: "#000000",
 };
-
-export const secondaryPalette = { ...successPalette };
 
 export const greyPalette: ColorPartial = {
     50: "#F2F2F2",

@@ -77,7 +77,7 @@ export interface TimeRangePickerProps
     minuteStep?: number;
     min?: string;
     max?: string;
-    clearable?: boolean;
+    required?: boolean;
     separatorText?: React.ReactNode;
 }
 
@@ -90,6 +90,7 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
         separatorText = <FormattedMessage id="comet.dateTime.fromToSeparatorText" defaultMessage="to" />,
         className,
         sx,
+        required,
         slotProps,
         ...propsForBothTimePickers
     } = useThemeProps({ props: inProps, name: "CometAdminTimeRangePicker" });
@@ -153,6 +154,7 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                     onOpenPopper={() => setStartPickerIsOpen(true)}
                     onClosePopper={() => setStartPickerIsOpen(false)}
                     fullWidth
+                    required={required}
                     {...propsForBothTimePickers}
                     {...slotProps?.startTimePicker}
                 />
@@ -167,6 +169,7 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
                     onOpenPopper={() => setEndPickerIsOpen(true)}
                     onClosePopper={() => setEndPickerIsOpen(false)}
                     fullWidth
+                    required={required}
                     {...propsForBothTimePickers}
                     {...slotProps?.endTimePicker}
                 />
