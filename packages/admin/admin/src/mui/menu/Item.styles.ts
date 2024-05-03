@@ -42,6 +42,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
 })(
     ({ theme, ownerState }) => css`
         flex-shrink: 0;
+        flex-grow: 0;
 
         &:after {
             content: "";
