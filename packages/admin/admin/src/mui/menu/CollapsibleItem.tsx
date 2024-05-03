@@ -52,7 +52,7 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
         openDropdown: openDropdownIcon = <ChevronDown color="inherit" fontSize="inherit" />,
         closeDropdown: closeDropdownIcon = <ChevronUp color="inherit" fontSize="inherit" />,
         firstLevelHoverIndicator: firstLevelHoverIndicatorIcon = <ChevronRight color="inherit" fontSize="inherit" />,
-        subMenuHoverIndicator: subMenuHoverIndicatorIcon = <ChevronRight color="inherit" fontSize="inherit" />,
+        secondLevelHoverIndicator: secondLevelHoverIndicatorIcon = <ChevronRight color="inherit" fontSize="inherit" />,
     } = iconMapping ?? {};
 
     const { drawerVariant } = React.useContext(MenuContext);
@@ -147,8 +147,8 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
     } else {
         if (level === 1) {
             collapsibleIndicatorIcon = firstLevelHoverIndicatorIcon;
-        } else {
-            collapsibleIndicatorIcon = subMenuHoverIndicatorIcon;
+        } else if (level === 2) {
+            collapsibleIndicatorIcon = secondLevelHoverIndicatorIcon;
         }
     }
 
