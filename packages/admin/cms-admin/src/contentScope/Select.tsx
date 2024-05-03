@@ -57,9 +57,10 @@ export default function ContentScopeSelect({
         values: ContentScopeInterface[];
     }[] => {
         if (!searchValue) return values;
-        const groupValues = values.filter((scopeVal) => scopeVal.group?.value.includes(searchValue.toLowerCase()));
+        const valuesWithId = values.map((value, index) => ({ id: index, ...value }));
+        const groupValues = valuesWithId.filter((scopeVal) => scopeVal.group?.value.includes(searchValue.toLowerCase()));
 
-        const valuesWithSearch = values
+        const valuesWithSearch = valuesWithId
             .filter((scopeVal) => !scopeVal.group?.value.includes(searchValue.toLowerCase()))
             .map((scopeVal) => {
                 return {
@@ -75,7 +76,7 @@ export default function ContentScopeSelect({
             })
             .filter((scopeVal) => scopeVal.values.length > 0);
 
-        return [...groupValues, ...valuesWithSearch];
+        return [...groupValues, ...valuesWithSearch].sort((a, b) => a.id - b.id);
     };
 
     const filteredValues = searchable ? filterBySearchValue(searchValue) : values;
