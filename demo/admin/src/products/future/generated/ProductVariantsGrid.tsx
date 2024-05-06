@@ -21,6 +21,7 @@ import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { filter as filterByFragment } from "graphql-anywhere";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -38,9 +39,7 @@ const productVariantsFragment = gql`
     fragment ProductVariantsGridFuture on ProductVariant {
         id
         name
-        image
         createdAt
-        updatedAt
     }
 `;
 
@@ -112,7 +111,7 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "productVariant.createdAt", defaultMessage: "Created at" }),
             type: "date",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
             flex: 1,
             minWidth: 150,
         },
@@ -131,10 +130,11 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
                         </IconButton>
                         <CrudContextMenu
                             copyData={() => {
-                                const row = params.row;
+                                // Don't copy id, because we want to create a new entity with this data
+                                const { id, ...filteredData } = filterByFragment(productVariantsFragment, params.row);
                                 return {
-                                    name: row.name,
-                                    image: DamImageBlock.state2Output(DamImageBlock.input2State(row.image)),
+                                    ...filteredData,
+                                    image: DamImageBlock.state2Output(DamImageBlock.input2State(filteredData.image)),
                                 };
                             }}
                             onPaste={async ({ input }) => {
