@@ -2,8 +2,10 @@
 "@comet/admin": minor
 ---
 
-Add `useDataGridExcelExport` hook for exporting data from a `DataGrid` in an excel file `useDataGridExcelExport` returns an `exportApi` encompassing
+Add the `useDataGridExcelExport` hook for exporting data from a `DataGrid` to an excel file 
 
--   `exportGrid()` to generate and export the excel file
--   `loading`
--   `error`
+The hook returns an `exportApi` encompassing: 
+
+-   `exportGrid`: a function to generate and export the excel file
+-   `loading`: a boolean indicating if the export is in progress
+-   `error`: an error message when the export has failed
