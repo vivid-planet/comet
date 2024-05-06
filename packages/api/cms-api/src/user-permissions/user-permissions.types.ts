@@ -39,6 +39,7 @@ export interface UserPermissionsUserServiceInterface {
 
 export interface UserPermissionsOptions {
     availableContentScopes?: ContentScope[] | (() => Promise<ContentScope[]> | ContentScope[]);
+    systemUsers?: string[];
 }
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {
     UserService?: Type<UserPermissionsUserServiceInterface>;

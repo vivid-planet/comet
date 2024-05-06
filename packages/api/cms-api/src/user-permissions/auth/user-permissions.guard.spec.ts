@@ -73,7 +73,7 @@ describe("UserPermissionsGuard", () => {
         moduleRef = createMock<ModuleRef>();
         contentScopeService = new ContentScopeService(reflector, orm, moduleRef);
         accessControlService = new AccessControlService();
-        guard = new UserPermissionsGuard(reflector, contentScopeService, accessControlService);
+        guard = new UserPermissionsGuard(reflector, contentScopeService, accessControlService, {});
     });
 
     it("allows user with exact permission", async () => {
