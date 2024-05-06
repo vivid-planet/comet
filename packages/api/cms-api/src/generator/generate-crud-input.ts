@@ -1,4 +1,5 @@
 import { EntityMetadata } from "@mikro-orm/core";
+import { getMetadataStorage } from "class-validator";
 
 import { hasFieldFeature } from "./crud-generator.decorator";
 import { buildNameVariants } from "./utils/build-name-variants";
@@ -10,6 +11,7 @@ import {
     findEnumImportPath,
     findEnumName,
     findInputClassImportPath,
+    findValidatorImportPath,
     morphTsProperty,
 } from "./utils/ts-morph-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
@@ -41,7 +43,7 @@ export async function generateCrudInput(
     generatorOptions: { targetDirectory: string },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata: EntityMetadata<any>,
-    options: { nested: boolean; excludeFields: string[] } = { nested: false, excludeFields: [] },
+    options: { nested: boolean; fileName?: string; className?: string; excludeFields: string[] } = { nested: false, excludeFields: [] },
 ): Promise<GeneratedFile[]> {
     const generatedFiles: GeneratedFile[] = [];
 
@@ -59,6 +61,7 @@ export async function generateCrudInput(
     for (const prop of props) {
         let type = prop.type;
         const fieldName = prop.name;
+        const definedDecorators = morphTsProperty(prop.name, metadata).getDecorators();
         const decorators = [] as Array<string>;
         if (!prop.nullable) {
             decorators.push("@IsNotEmpty()");
@@ -116,8 +119,11 @@ export async function generateCrudInput(
             decorators.push(`@Field(${fieldOptions})`);
             type = "number";
         } else if (prop.type === "DateType" || prop.type === "Date") {
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
+            const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             decorators.push("@IsDate()");
-            decorators.push(`@Field(${prop.nullable ? "{ nullable: true }" : ""})`);
+            decorators.push(`@Field(${fieldOptions})`);
             type = "Date";
         } else if (prop.type === "BooleanType" || prop.type === "boolean") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
@@ -168,21 +174,31 @@ export async function generateCrudInput(
             if (prop.orphanRemoval) {
                 //if orphanRemoval is enabled, we need to generate a nested input type
                 decorators.length = 0;
+                if (!prop.targetMeta) throw new Error("No targetMeta");
+                const inputNameClassName = `${metadata.className}Nested${prop.targetMeta.className}Input`;
                 {
-                    if (!prop.targetMeta) throw new Error("No targetMeta");
                     const excludeFields = prop.targetMeta.props.filter((p) => p.reference == "m:1" && p.targetMeta == metadata).map((p) => p.name);
-                    const nestedInputFiles = await generateCrudInput(generatorOptions, prop.targetMeta, { nested: true, excludeFields });
+
+                    const { fileNameSingular } = buildNameVariants(metadata);
+                    const { fileNameSingular: targetFileNameSingular } = buildNameVariants(prop.targetMeta);
+                    const fileName = `dto/${fileNameSingular}-nested-${targetFileNameSingular}.input.ts`;
+
+                    const nestedInputFiles = await generateCrudInput(generatorOptions, prop.targetMeta, {
+                        nested: true,
+                        fileName,
+                        className: inputNameClassName,
+                        excludeFields,
+                    });
                     generatedFiles.push(...nestedInputFiles);
                     imports.push({
-                        name: `${prop.targetMeta.className}Input`,
+                        name: inputNameClassName,
                         importPath: nestedInputFiles[0].name.replace(/^dto/, ".").replace(/\.ts$/, ""),
                     });
                 }
-                const inputName = `${prop.targetMeta.className}Input`;
-                decorators.push(`@Field(() => [${inputName}], {${prop.nullable ? "nullable: true" : "defaultValue: []"}})`);
+                decorators.push(`@Field(() => [${inputNameClassName}], {${prop.nullable ? "nullable: true" : "defaultValue: []"}})`);
                 decorators.push(`@IsArray()`);
-                decorators.push(`@Type(() => ${inputName})`);
-                type = `${inputName}[]`;
+                decorators.push(`@Type(() => ${inputNameClassName})`);
+                type = `${inputNameClassName}[]`;
             } else {
                 //if orphanRemoval is disabled, we reference the id in input
                 decorators.length = 0;
@@ -231,21 +247,29 @@ export async function generateCrudInput(
                 console.warn(`${prop.name}: Unsupported referenced type`);
             }
         } else if (prop.reference == "1:1") {
+            if (!prop.targetMeta) throw new Error("No targetMeta");
+            const inputNameClassName = `${metadata.className}Nested${prop.targetMeta.className}Input`;
             {
-                if (!prop.targetMeta) throw new Error("No targetMeta");
                 const excludeFields = prop.targetMeta.props.filter((p) => p.reference == "1:1" && p.targetMeta == metadata).map((p) => p.name);
-                const nestedInputFiles = await generateCrudInput(generatorOptions, prop.targetMeta, { nested: true, excludeFields });
+                const { fileNameSingular } = buildNameVariants(metadata);
+                const { fileNameSingular: targetFileNameSingular } = buildNameVariants(prop.targetMeta);
+                const fileName = `dto/${fileNameSingular}-nested-${targetFileNameSingular}.input.ts`;
+                const nestedInputFiles = await generateCrudInput(generatorOptions, prop.targetMeta, {
+                    nested: true,
+                    fileName,
+                    className: inputNameClassName,
+                    excludeFields,
+                });
                 generatedFiles.push(...nestedInputFiles);
                 imports.push({
-                    name: `${prop.targetMeta.className}Input`,
+                    name: inputNameClassName,
                     importPath: nestedInputFiles[0].name.replace(/^dto/, ".").replace(/\.ts$/, ""),
                 });
             }
-            const inputName = `${prop.targetMeta.className}Input`;
-            decorators.push(`@Field(() => ${inputName}${prop.nullable ? ", { nullable: true }" : ""})`);
-            decorators.push(`@Type(() => ${inputName})`);
+            decorators.push(`@Field(() => ${inputNameClassName}${prop.nullable ? ", { nullable: true }" : ""})`);
+            decorators.push(`@Type(() => ${inputNameClassName})`);
             decorators.push("@ValidateNested()");
-            type = `${inputName}`;
+            type = `${inputNameClassName}`;
         } else if (prop.type == "JsonType" || prop.embeddable || prop.type == "ArrayType") {
             const tsProp = morphTsProperty(prop.name, metadata);
 
@@ -310,11 +334,40 @@ export async function generateCrudInput(
             console.warn(`${prop.name}: unsupported type ${type}`);
             continue;
         }
+
+        const classValidatorValidators = getMetadataStorage().getTargetValidationMetadatas(metadata.class, prop.name, false, false, undefined);
+        for (const validator of classValidatorValidators) {
+            if (validator.propertyName !== prop.name) continue;
+            const constraints = getMetadataStorage().getTargetValidatorConstraints(validator.constraintCls);
+            for (const constraint of constraints) {
+                const decorator = definedDecorators.find((decorator) => {
+                    return (
+                        // ignore casing since class validator is inconsistent with casing
+                        decorator.getName().toUpperCase() === constraint.name.toUpperCase() ||
+                        // some class validator decorators have a prefix "Is" but not in the constraint name
+                        `Is${decorator.getName()}`.toUpperCase() === constraint.name.toUpperCase()
+                    );
+                });
+                if (decorator) {
+                    const importPath = findValidatorImportPath(decorator.getName(), generatorOptions, metadata);
+                    if (importPath) {
+                        imports.push({ name: decorator.getName(), importPath });
+                        if (!decorators.includes(decorator.getText())) {
+                            decorators.unshift(decorator.getText());
+                        }
+                    }
+                } else {
+                    console.warn(`Decorator import for constraint ${constraint.name} not found`);
+                }
+            }
+        }
+
         fieldsOut += `${decorators.join("\n")}
     ${fieldName}${prop.nullable ? "?" : ""}: ${type};
     
     `;
     }
+    const className = options.className ?? `${metadata.className}Input`;
     const inputOut = `import { Field, InputType, ID } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
@@ -324,7 +377,7 @@ import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
 ${generateImportsCode(imports)}
 
 @InputType()
-export class ${metadata.className}Input {
+export class ${className} {
     ${fieldsOut}
 }
 
@@ -332,15 +385,16 @@ ${
     !options.nested
         ? `
 @InputType()
-export class ${metadata.className}UpdateInput extends PartialType(${metadata.className}Input) {}
+export class ${className.replace(/Input$/, "")}UpdateInput extends PartialType(${className}) {}
 `
         : ""
 }
 `;
 
     const { fileNameSingular } = buildNameVariants(metadata);
+    const fileName = options.fileName ?? `dto/${fileNameSingular}.input.ts`;
     generatedFiles.push({
-        name: !options.nested ? `dto/${fileNameSingular}.input.ts` : `dto/${fileNameSingular}.nested.input.ts`,
+        name: fileName,
         content: inputOut,
         type: "input",
     });

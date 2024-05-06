@@ -2,9 +2,9 @@ import { ModuleMetadata, Type } from "@nestjs/common";
 
 import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
-import { User } from "./dto/user";
 import { UserPermission } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
+import { User } from "./interfaces/user";
 
 export enum UserPermissions {
     allContentScopes = "all-content-scopes",
@@ -12,6 +12,8 @@ export enum UserPermissions {
 }
 
 export type Users = [User[], number];
+
+export type SystemUser = true;
 
 type PermissionForUser = {
     permission: string;
@@ -22,7 +24,7 @@ export type PermissionsForUser = PermissionForUser[] | UserPermissions.allPermis
 export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentScopes;
 
 export interface AccessControlServiceInterface {
-    isAllowed(user: CurrentUser, permission: string, contentScope?: ContentScope): boolean;
+    isAllowed(user: CurrentUser | SystemUser, permission: string, contentScope?: ContentScope): boolean;
     getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }

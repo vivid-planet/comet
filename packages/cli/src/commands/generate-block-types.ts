@@ -91,11 +91,19 @@ function writeFieldType(field: BlockMetaField, blockNamePostfix: string) {
     }
 }
 
+type Options = {
+    inputs: boolean;
+    inputFile: string;
+    outputFile: string;
+};
+
 const generateBlockTypes = new Command("generate-block-types")
     .description("generate block types from block meta")
     .option("--inputs", "include block inputs")
-    .action(async (options) => {
-        const blockMeta = await readFile("block-meta.json").then((fileContents) => JSON.parse(fileContents.toString()) as BlockMeta[]);
+    .option("--input-file <inputFile>", "file to read block meta from", "block-meta.json")
+    .option("--output-file <outputFile>", "file to write block types to", "./src/blocks.generated.ts")
+    .action(async (options: Options) => {
+        const blockMeta = await readFile(options.inputFile).then((fileContents) => JSON.parse(fileContents.toString()) as BlockMeta[]);
 
         const sortedBlockMeta = blockMeta.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -128,7 +136,7 @@ const generateBlockTypes = new Command("generate-block-types")
         const prettierOptions = await resolveConfig(process.cwd());
         content = format(content, { ...prettierOptions, parser: "typescript" });
 
-        await writeFile(`./src/blocks.generated.ts`, content);
+        await writeFile(options.outputFile, content);
     });
 
 export { generateBlockTypes };

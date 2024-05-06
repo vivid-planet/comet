@@ -1,5 +1,5 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudField, CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
+import { CrudField, CrudGenerator, DamImageBlock, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
 import {
     BaseEntity,
     Collection,
@@ -22,6 +22,7 @@ import { v4 as uuid } from "uuid";
 import { ProductCategory } from "./product-category.entity";
 import { ProductStatistics } from "./product-statistics.entity";
 import { ProductTag } from "./product-tag.entity";
+import { ProductToTag } from "./product-to-tag.entity";
 import { ProductType } from "./product-type.enum";
 import { ProductVariant } from "./product-variant.entity";
 
@@ -53,13 +54,11 @@ export class ProductDimensions {
     depth: number;
 }
 
-@ObjectType({
-    implements: () => [DocumentInterface],
-})
+@ObjectType()
 @Entity()
-@RootBlockEntity()
+@RootBlockEntity<Product>({ isVisible: (product) => product.visible })
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class Product extends BaseEntity<Product, "id"> implements DocumentInterface {
+export class Product extends BaseEntity<Product, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })
@@ -158,6 +157,9 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
         input: true, //default is true
     })
     tags = new Collection<ProductTag>(this);
+
+    @OneToMany(() => ProductToTag, (productToTag) => productToTag.product, { orphanRemoval: true })
+    tagsWithStatus = new Collection<ProductToTag>(this);
 
     @Property()
     @Field()

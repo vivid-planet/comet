@@ -19,6 +19,7 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { GQLDamItemType } from "../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
+import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
@@ -30,8 +31,10 @@ import DamContextMenu from "./DamContextMenu";
 import { useDamFileUpload } from "./fileUpload/useDamFileUpload";
 import { damFolderQuery, damItemListPosition, damItemsListQuery } from "./FolderDataGrid.gql";
 import {
+    GQLDamFileTableFragment,
     GQLDamFolderQuery,
     GQLDamFolderQueryVariables,
+    GQLDamFolderTableFragment,
     GQLDamItemListPositionQuery,
     GQLDamItemListPositionQueryVariables,
     GQLDamItemsListQuery,
@@ -84,6 +87,7 @@ const FolderDataGrid = ({
     const damSelectionActionsApi = useDamSelectionApi();
     const scope = useDamScope();
     const snackbarApi = useSnackbarApi();
+    const { importSources } = useDamConfig();
 
     const [redirectedToId, setRedirectedToId] = useStoredState<string | null>("FolderDataGrid-redirectedToId", null, window.sessionStorage);
 
@@ -338,7 +342,7 @@ const FolderDataGrid = ({
         return "";
     };
 
-    const dataGridColumns: GridColumns = [
+    const dataGridColumns: GridColumns<GQLDamFileTableFragment | GQLDamFolderTableFragment> = [
         {
             field: "name",
             headerName: intl.formatMessage({
@@ -373,10 +377,49 @@ const FolderDataGrid = ({
             disableColumnMenu: true,
         },
         {
-            field: "size",
+            field: "importSourceType",
             headerName: intl.formatMessage({
-                id: "comet.dam.file.size",
-                defaultMessage: "Size",
+                id: "comet.dam.file.importSourceType",
+                defaultMessage: "Source",
+            }),
+            renderCell: ({ row }) => {
+                if (isFile(row) && row.importSourceType && importSources?.[row.importSourceType]) {
+                    return importSources[row.importSourceType].label;
+                }
+            },
+            // TODO enable sorting/filtering in API
+            sortable: false,
+            hideSortIcons: true,
+            disableColumnMenu: true,
+        },
+        {
+            field: "type",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.fileType",
+                defaultMessage: "Type/Format",
+            }),
+            headerAlign: "left",
+            align: "left",
+            minWidth: 140,
+            renderCell: ({ row }) => {
+                if (isFile(row) && row.mimetype) {
+                    return row.mimetype;
+                } else if (isFolder(row)) {
+                    return intl.formatMessage({
+                        id: "comet.dam.file.fileType.folder",
+                        defaultMessage: "Folder",
+                    });
+                }
+            },
+            sortable: false,
+            hideSortIcons: true,
+            disableColumnMenu: true,
+        },
+        {
+            field: "info",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.info",
+                defaultMessage: "Info",
             }),
             headerAlign: "right",
             align: "right",
@@ -401,13 +444,33 @@ const FolderDataGrid = ({
             disableColumnMenu: true,
         },
         {
+            field: "createdAt",
+            headerName: intl.formatMessage({
+                id: "comet.dam.file.creationDate",
+                defaultMessage: "Creation",
+            }),
+            headerAlign: "left",
+            align: "left",
+            minWidth: 180,
+            renderCell: ({ row }) => (
+                <div>
+                    <FormattedDate value={row.createdAt} day="2-digit" month="2-digit" year="numeric" />
+                    {", "}
+                    <FormattedTime value={row.createdAt} />
+                </div>
+            ),
+            sortable: false,
+            hideSortIcons: true,
+            disableColumnMenu: true,
+        },
+        {
             field: "updatedAt",
             headerName: intl.formatMessage({
                 id: "comet.dam.file.changeDate",
-                defaultMessage: "Change date",
+                defaultMessage: "Latest change",
             }),
-            headerAlign: "right",
-            align: "right",
+            headerAlign: "left",
+            align: "left",
             minWidth: 180,
             renderCell: ({ row }) => (
                 <div>
@@ -463,6 +526,7 @@ const FolderDataGrid = ({
                     selectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
                     onSelectionModelChange={handleSelectionModelChange}
                     autoHeight={true}
+                    initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                 />
             </sc.FolderOuterHoverHighlight>
             <DamSelectionFooter open={damSelectionActionsApi.selectionMap.size > 0} />

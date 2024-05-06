@@ -325,6 +325,47 @@
         ]
     },
     {
+        "name": "DemoSpace",
+        "fields": [
+            {
+                "name": "spacing",
+                "kind": "Enum",
+                "enum": [
+                    "d150",
+                    "d200",
+                    "d250",
+                    "d300",
+                    "d350",
+                    "d400",
+                    "d450",
+                    "d500",
+                    "d550",
+                    "d600"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "spacing",
+                "kind": "Enum",
+                "enum": [
+                    "d150",
+                    "d200",
+                    "d250",
+                    "d300",
+                    "d350",
+                    "d400",
+                    "d450",
+                    "d500",
+                    "d550",
+                    "d600"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "DemoTextLink",
         "fields": [
             {
@@ -680,6 +721,11 @@
         "name": "Link",
         "fields": [
             {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "attachedBlocks",
                 "kind": "NestedObjectList",
                 "object": {
@@ -738,6 +784,11 @@
                 "name": "activeType",
                 "kind": "String",
                 "nullable": false
+            },
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -1060,7 +1111,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "space": "Space",
+                                "space": "DemoSpace",
                                 "richtext": "RichText",
                                 "headline": "Headline",
                                 "image": "DamImage",
@@ -1118,7 +1169,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "space": "Space",
+                                "space": "DemoSpace",
                                 "richtext": "RichText",
                                 "headline": "Headline",
                                 "image": "DamImage",

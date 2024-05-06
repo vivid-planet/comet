@@ -46,3 +46,7 @@ public/robots.txt
 tsconfig.tsbuildinfo
 
 src/comet-config.json
+
+lang
+lang-extracted
+lang-compiled
