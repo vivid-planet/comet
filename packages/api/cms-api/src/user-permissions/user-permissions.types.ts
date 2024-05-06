@@ -1,11 +1,10 @@
 import { ModuleMetadata, Type } from "@nestjs/common";
-import { CurrentUserInterface } from "src/auth/current-user/current-user";
 
+import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
-import { User } from "./dto/user";
 import { UserPermission } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
-import { Permission } from "./interfaces/user-permission.interface";
+import { User } from "./interfaces/user";
 
 export enum UserPermissions {
     allContentScopes = "all-content-scopes",
@@ -14,8 +13,10 @@ export enum UserPermissions {
 
 export type Users = [User[], number];
 
+export type SystemUser = true;
+
 type PermissionForUser = {
-    permission: keyof Permission;
+    permission: string;
     contentScopes?: ContentScope[];
 } & Pick<UserPermission, "validFrom" | "validTo" | "reason" | "requestedBy" | "approvedBy">;
 export type PermissionsForUser = PermissionForUser[] | UserPermissions.allPermissions;
@@ -23,7 +24,7 @@ export type PermissionsForUser = PermissionForUser[] | UserPermissions.allPermis
 export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentScopes;
 
 export interface AccessControlServiceInterface {
-    isAllowed(user: CurrentUserInterface, permission: keyof Permission, contentScope?: ContentScope): boolean;
+    isAllowed(user: CurrentUser | SystemUser, permission: string, contentScope?: ContentScope): boolean;
     getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }
@@ -34,16 +35,15 @@ export interface UserPermissionsUserServiceInterface {
 }
 
 export interface UserPermissionsOptions {
-    availablePermissions?: (keyof Permission)[];
-    availableContentScopes?: ContentScope[];
+    availableContentScopes?: ContentScope[] | (() => Promise<ContentScope[]> | ContentScope[]);
 }
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {
-    UserService: Type<UserPermissionsUserServiceInterface>;
+    UserService?: Type<UserPermissionsUserServiceInterface>;
     AccessControlService: Type<AccessControlServiceInterface>;
 }
 
 export interface UserPermissionsAsyncOptions extends UserPermissionsOptions {
-    userService: UserPermissionsUserServiceInterface;
+    userService?: UserPermissionsUserServiceInterface;
     accessControlService: AccessControlServiceInterface;
 }
 

@@ -6,10 +6,11 @@ import { Field, ID, InputType } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
 
-import { ProductDimensions, ProductDiscounts, ProductPackageDimensions } from "../../entities/product.entity";
+import { ProductDimensions, ProductDiscounts } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
-import { ProductStatisticsInput } from "./product-statistics.nested.input";
-import { ProductVariantInput } from "./product-variant.nested.input";
+import { ProductNestedProductStatisticsInput } from "./product-nested-product-statistics.input";
+import { ProductNestedProductToTagInput } from "./product-nested-product-to-tag.input";
+import { ProductNestedProductVariantInput } from "./product-nested-product-variant.input";
 
 @InputType()
 export class ProductInput {
@@ -70,21 +71,15 @@ export class ProductInput {
     dimensions?: ProductDimensions;
 
     @IsNullable()
+    @Field(() => ProductNestedProductStatisticsInput, { nullable: true })
+    @Type(() => ProductNestedProductStatisticsInput)
     @ValidateNested()
-    @Type(() => ProductPackageDimensions)
-    @Field(() => ProductPackageDimensions, { nullable: true })
-    packageDimensions?: ProductPackageDimensions;
+    statistics?: ProductNestedProductStatisticsInput;
 
-    @IsNullable()
-    @Field(() => ProductStatisticsInput, { nullable: true })
-    @Type(() => ProductStatisticsInput)
-    @ValidateNested()
-    statistics?: ProductStatisticsInput;
-
-    @Field(() => [ProductVariantInput], { defaultValue: [] })
+    @Field(() => [ProductNestedProductVariantInput], { defaultValue: [] })
     @IsArray()
-    @Type(() => ProductVariantInput)
-    variants: ProductVariantInput[];
+    @Type(() => ProductNestedProductVariantInput)
+    variants: ProductNestedProductVariantInput[];
 
     @IsNullable()
     @Field(() => ID, { nullable: true, defaultValue: null })
@@ -95,6 +90,11 @@ export class ProductInput {
     @IsArray()
     @IsUUID(undefined, { each: true })
     tags: string[];
+
+    @Field(() => [ProductNestedProductToTagInput], { defaultValue: [] })
+    @IsArray()
+    @Type(() => ProductNestedProductToTagInput)
+    tagsWithStatus: ProductNestedProductToTagInput[];
 }
 
 @InputType()

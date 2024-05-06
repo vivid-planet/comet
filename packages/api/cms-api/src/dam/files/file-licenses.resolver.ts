@@ -1,9 +1,11 @@
 import { Parent, ResolveField, Resolver } from "@nestjs/graphql";
 import { add, differenceInCalendarDays, isAfter, isBefore } from "date-fns";
 
+import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { License } from "./entities/license.embeddable";
 
 @Resolver(() => License)
+@RequiredPermission(["dam"])
 export class FileLicensesResolver {
     // if durationTo = '2023-02-27T00:00:00.000Z' then the license is still valid on 27.03.2023
     // and expires at '2023-02-28T00:00:00.000Z'

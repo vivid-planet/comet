@@ -1,10 +1,8 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudField, CrudGenerator, DamImageBlock, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
+import { CrudField, CrudGenerator, DamImageBlock, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
 import {
     BaseEntity,
     Collection,
-    Embeddable,
-    Embedded,
     Entity,
     Enum,
     ManyToMany,
@@ -24,6 +22,7 @@ import { v4 as uuid } from "uuid";
 import { ProductCategory } from "./product-category.entity";
 import { ProductStatistics } from "./product-statistics.entity";
 import { ProductTag } from "./product-tag.entity";
+import { ProductToTag } from "./product-to-tag.entity";
 import { ProductType } from "./product-type.enum";
 import { ProductVariant } from "./product-variant.entity";
 
@@ -55,33 +54,11 @@ export class ProductDimensions {
     depth: number;
 }
 
-@Embeddable()
 @ObjectType()
-@InputType("ProductPackageDimensionsInput")
-export class ProductPackageDimensions {
-    @Property({ type: types.integer })
-    @Field()
-    @IsNumber()
-    width: number;
-
-    @Property({ type: types.integer })
-    @Field()
-    @IsNumber()
-    height: number;
-
-    @Property({ type: types.integer })
-    @Field()
-    @IsNumber()
-    depth: number;
-}
-
-@ObjectType({
-    implements: () => [DocumentInterface],
-})
 @Entity()
-@RootBlockEntity()
+@RootBlockEntity<Product>({ isVisible: (product) => product.visible })
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class Product extends BaseEntity<Product, "id"> implements DocumentInterface {
+export class Product extends BaseEntity<Product, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })
@@ -147,10 +124,6 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
     @Field(() => ProductDimensions, { nullable: true })
     dimensions?: ProductDimensions = undefined;
 
-    @Embedded(() => ProductPackageDimensions, { nullable: true })
-    @Field(() => ProductPackageDimensions, { nullable: true })
-    packageDimensions?: ProductPackageDimensions = undefined;
-
     @OneToOne(() => ProductStatistics, { inversedBy: "product", owner: true, ref: true, nullable: true })
     @Field(() => ProductStatistics, { nullable: true })
     statistics?: Ref<ProductStatistics> = undefined;
@@ -184,6 +157,9 @@ export class Product extends BaseEntity<Product, "id"> implements DocumentInterf
         input: true, //default is true
     })
     tags = new Collection<ProductTag>(this);
+
+    @OneToMany(() => ProductToTag, (productToTag) => productToTag.product, { orphanRemoval: true })
+    tagsWithStatus = new Collection<ProductToTag>(this);
 
     @Property()
     @Field()

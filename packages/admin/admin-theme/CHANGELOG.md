@@ -1,5 +1,80 @@
 # @comet/admin-theme
 
+## 6.8.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.8.0
+
+## 6.7.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.7.0
+
+## 6.6.2
+
+### Patch Changes
+
+-   @comet/admin-icons@6.6.2
+
+## 6.6.1
+
+### Patch Changes
+
+-   @comet/admin-icons@6.6.1
+
+## 6.6.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.6.0
+
+## 6.5.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.5.0
+
+## 6.4.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.4.0
+
+## 6.3.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.3.0
+
+## 6.2.1
+
+### Patch Changes
+
+-   @comet/admin-icons@6.2.1
+
+## 6.2.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.2.0
+
+## 6.1.0
+
+### Minor Changes
+
+-   a4fac913: Rework `Alert` component
+
+    -   Use theme wherever possible
+    -   Move styles where they're more fitting
+    -   Fix some paddings
+
+### Patch Changes
+
+-   Updated dependencies [08e0da09]
+    -   @comet/admin-icons@6.1.0
+
 ## 6.0.0
 
 ### Patch Changes

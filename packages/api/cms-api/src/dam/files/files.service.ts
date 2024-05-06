@@ -12,7 +12,6 @@ import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
 
-import { CurrentUserInterface } from "../../auth/current-user/current-user";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
@@ -457,41 +456,15 @@ export class FilesService {
         return this.create(fileInput);
     }
 
-    async copyFilesToScope({ user, fileIds, inboxFolderId }: { user: CurrentUserInterface; fileIds: string[]; inboxFolderId: string }) {
+    async copyFilesToScope({ fileIds, inboxFolderId }: { fileIds: string[]; inboxFolderId: string }) {
         const inboxFolder = await this.foldersService.findOneById(inboxFolderId);
         if (!inboxFolder) {
             throw new Error("Specified inbox folder doesn't exist.");
         }
-        if (inboxFolder.scope && !this.accessControlService.isAllowed(user, "dam", inboxFolder.scope)) {
-            throw new Error("User can't access the target scope");
-        }
-
-        const getUniqueFileScopes = (files: FileInterface[]): DamScopeInterface[] => {
-            const fileScopes: DamScopeInterface[] = [];
-            for (const file of files) {
-                if (file.scope === undefined) {
-                    continue;
-                }
-
-                const isDuplicateScope = Boolean(fileScopes.find((scope) => this.contentScopeService.scopesAreEqual(scope, file.scope)));
-                if (!isDuplicateScope) {
-                    fileScopes.push(file.scope);
-                }
-            }
-            return fileScopes;
-        };
 
         const files = await this.findMultipleByIds(fileIds);
         if (files.length === 0) {
             throw new Error("No valid file ids provided");
-        }
-
-        const fileScopes = getUniqueFileScopes(files);
-        const canAccessFileScopes = fileScopes.every((scope) => {
-            return this.accessControlService.isAllowed(user, "dam", scope);
-        });
-        if (!canAccessFileScopes) {
-            throw new Error(`User can't access the scope of one or more files`);
         }
 
         const mappedFiles: Array<{ rootFile: FileInterface; copy: FileInterface }> = [];

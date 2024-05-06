@@ -1,5 +1,286 @@
 # @comet/cms-admin
 
+## 6.8.0
+
+### Patch Changes
+
+-   c1ca9c335: Don't remove references to `DamFile` from blocks when copying a document from one scope to another if DAM scoping is not enabled
+-   Updated dependencies [90c6f192e]
+-   Updated dependencies [90c6f192e]
+    -   @comet/blocks-admin@6.8.0
+    -   @comet/admin@6.8.0
+    -   @comet/admin-date-time@6.8.0
+    -   @comet/admin-icons@6.8.0
+    -   @comet/admin-rte@6.8.0
+    -   @comet/admin-theme@6.8.0
+
+## 6.7.0
+
+### Patch Changes
+
+-   2db3bc855: Fix `CurrentUserInterface` type
+
+    Add missing `id` field, make `name`, `email`, and `language` required.
+
+    -   @comet/admin@6.7.0
+    -   @comet/admin-date-time@6.7.0
+    -   @comet/admin-icons@6.7.0
+    -   @comet/admin-rte@6.7.0
+    -   @comet/admin-theme@6.7.0
+    -   @comet/blocks-admin@6.7.0
+
+## 6.6.2
+
+### Patch Changes
+
+-   0758d2339: Hide the "Dependents" tab in the DAM if the `DependenciesConfigProvider` is not configured
+
+    Previously, the tab was always shown, even if the feature wasn't configured. Though it didn't cause an error, the tab showed no valuable information.
+
+    Now, we hide the tab if no configuration is passed via the `DependenciesConfigProvider`.
+
+    -   @comet/admin@6.6.2
+    -   @comet/admin-date-time@6.6.2
+    -   @comet/admin-icons@6.6.2
+    -   @comet/admin-rte@6.6.2
+    -   @comet/admin-theme@6.6.2
+    -   @comet/blocks-admin@6.6.2
+
+## 6.6.1
+
+### Patch Changes
+
+-   @comet/admin@6.6.1
+-   @comet/admin-date-time@6.6.1
+-   @comet/admin-icons@6.6.1
+-   @comet/admin-rte@6.6.1
+-   @comet/admin-theme@6.6.1
+-   @comet/blocks-admin@6.6.1
+
+## 6.6.0
+
+### Patch Changes
+
+-   c76666503: Make headers in `includeInvisibleContentContext` overridable in query
+
+    You can now override the headers `x-include-invisible-content` and `x-preview-dam-urls` in your query like this:
+
+    ```tsx
+    const { loading, data, error } = useQuery(exampleQuery, {
+        // ...
+        context: {
+            headers: {
+                "x-include-invisible-content": [],
+                "x-preview-dam-urls": 0,
+            },
+        },
+    });
+    ```
+
+-   Updated dependencies [95b97d768]
+-   Updated dependencies [a65679ba3]
+-   Updated dependencies [6b04ac9a4]
+    -   @comet/admin@6.6.0
+    -   @comet/blocks-admin@6.6.0
+    -   @comet/admin-date-time@6.6.0
+    -   @comet/admin-icons@6.6.0
+    -   @comet/admin-rte@6.6.0
+    -   @comet/admin-theme@6.6.0
+
+## 6.5.0
+
+### Minor Changes
+
+-   2f64daa9b: Add `title` field to link block
+
+    Perform the following steps to use it in an application:
+
+    1. API: Use the new `createLinkBlock` factory to create the LinkBlock:
+
+        ```ts
+        import { createLinkBlock } from "@comet/cms-api";
+
+        // ...
+
+        const LinkBlock = createLinkBlock({
+            supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, news: NewsLinkBlock },
+        });
+        ```
+
+    2. Site: Pass the `title` prop to LinkBlock's child blocks:
+
+    ```diff
+    const supportedBlocks: SupportedBlocks = {
+    -   internal: ({ children, ...props }) => <InternalLinkBlock data={props}>{children}</InternalLinkBlock>,
+    +   internal: ({ children, title, ...props }) => <InternalLinkBlock data={props} title={title}>{children}</InternalLinkBlock>,
+        // ...
+    };
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [2f64daa9b]
+-   Updated dependencies [6cb2f9046]
+    -   @comet/blocks-admin@6.5.0
+    -   @comet/admin@6.5.0
+    -   @comet/admin-date-time@6.5.0
+    -   @comet/admin-icons@6.5.0
+    -   @comet/admin-rte@6.5.0
+    -   @comet/admin-theme@6.5.0
+
+## 6.4.0
+
+### Minor Changes
+
+-   2d1b9467a: createImageLinkBlock: Allow overriding name
+
+    This allows using two different `ImageLink` blocks in one application.
+
+    Perform the following steps to override the name:
+
+    1. API: Add the name as second argument in the `createImageLinkBlock` factory:
+
+        ```diff
+        const MyCustomImageLinkBlock = createImageLinkBlock(
+            { link: InternalLinkBlock },
+        +   "MyCustomImageLink"
+        );
+        ```
+
+    2. Admin: Set the `name` option in the `createImageLinkBlock` factory:
+
+        ```diff
+        const MyCustomImageLinkBlock = createImageLinkBlock({
+            link: InternalLinkBlock,
+        +   name: "MyCustomImageLink"
+        });
+        ```
+
+-   322da3831: Add `DependencyInterface`
+
+    The `DependencyInterface` must be implemented for entities to be displayed correctly in the `DependencyList`.
+    The implementation must then be passed to the `DependenciesConfigProvider`.
+
+    You can use one of the helper methods to implement the `resolvePath()` method required by `DependencyInterface`:
+
+    -   `createDocumentDependencyMethods()` for documents
+    -   `createDependencyMethods()` for all other entities
+
+    You can find more information in [the docs](https://docs.comet-dxp.com/docs/dependencies/).
+
+-   322da3831: Add `DependencyList` that can be used to display the dependencies of an entity in the admin
+
+    The `DependencyList` is intended to be used in `Tabs` (as done in the DAM).
+
+### Patch Changes
+
+-   f6c972e59: Correctly evaluate the `language`-field of the `CurrentUser`-object
+-   811903e60: Disable the content translation feature for input fields where it doesn't make sense
+-   0efae68ff: Prevent XSS attacks in `isLinkTarget()` validator
+-   Updated dependencies [30d9e0dee]
+-   Updated dependencies [811903e60]
+-   Updated dependencies [8ce21f34b]
+-   Updated dependencies [322da3831]
+-   Updated dependencies [811903e60]
+-   Updated dependencies [887365c76]
+    -   @comet/blocks-admin@6.4.0
+    -   @comet/admin@6.4.0
+    -   @comet/admin-date-time@6.4.0
+    -   @comet/admin-icons@6.4.0
+    -   @comet/admin-rte@6.4.0
+    -   @comet/admin-theme@6.4.0
+
+## 6.3.0
+
+### Minor Changes
+
+-   80e6fde4: Show DAM import source in grid
+
+    To show the "Source" column in the DAM's data grid, provide `importSources` in `DamConfigProvider`:
+
+    ```tsx
+    <DamConfigProvider
+        value={{
+            ...
+            importSources: {
+                unsplash: {
+                    label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
+                },
+            },
+        }}
+    >
+        ...
+    </DamConfigProvider>
+    ```
+
+### Patch Changes
+
+-   @comet/admin@6.3.0
+-   @comet/admin-date-time@6.3.0
+-   @comet/admin-icons@6.3.0
+-   @comet/admin-rte@6.3.0
+-   @comet/admin-theme@6.3.0
+-   @comet/blocks-admin@6.3.0
+
+## 6.2.1
+
+### Patch Changes
+
+-   @comet/admin@6.2.1
+-   @comet/admin-date-time@6.2.1
+-   @comet/admin-icons@6.2.1
+-   @comet/admin-rte@6.2.1
+-   @comet/admin-theme@6.2.1
+-   @comet/blocks-admin@6.2.1
+
+## 6.2.0
+
+### Minor Changes
+
+-   75865caa: Deprecate `isHref` validator, `IsHref` decorator and `IsHrefConstraint` class.
+
+    New versions `isLinkTarget`, `IsLinkTarget` and `IsLinkTargetConstraint` are added as replacement.
+
+### Patch Changes
+
+-   ad153c99: Add the `x-preview-dam-urls` header to our axios client
+
+    Now the axios client always requests preview DAM urls just like the GraphQL client.
+
+-   5dfe4839: Prevent the document editor from losing its state when (re)gaining focus
+
+    In v6.1.0 a loading indicator was added to the document editor (in `PagesPage`).
+    This had an unwanted side effect: Focusing the edit page automatically causes a GraphQL request to check for a newer version of the document. This request also caused the loading indicator to render, thus unmounting the editor (`EditComponent`). Consequently, the local state of the editor was lost.
+
+    -   @comet/admin@6.2.0
+    -   @comet/admin-date-time@6.2.0
+    -   @comet/admin-icons@6.2.0
+    -   @comet/admin-rte@6.2.0
+    -   @comet/admin-theme@6.2.0
+    -   @comet/blocks-admin@6.2.0
+
+## 6.1.0
+
+### Patch Changes
+
+-   7ea5f61f: Use `useCurrentUser` hook where possible
+-   693cbdb4: Add loading state for edit `StackPage` in `PagesPage`
+
+    Prevents flash of "Document not found" error message when reloading the page editor
+
+-   Updated dependencies [dcfa03ca]
+-   Updated dependencies [08e0da09]
+-   Updated dependencies [b35bb8d1]
+-   Updated dependencies [f1fc9e20]
+-   Updated dependencies [8eb13750]
+-   Updated dependencies [a4fac913]
+    -   @comet/admin@6.1.0
+    -   @comet/admin-icons@6.1.0
+    -   @comet/admin-rte@6.1.0
+    -   @comet/admin-theme@6.1.0
+    -   @comet/admin-date-time@6.1.0
+    -   @comet/blocks-admin@6.1.0
+
 ## 6.0.0
 
 ### Major Changes

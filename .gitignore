@@ -9,3 +9,4 @@ lang/
 .pnp.*
 junit.xml
 .env.local
+**/.idea

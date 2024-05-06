@@ -118,7 +118,7 @@ export class ProductCategoryResolver {
     @AffectedEntity(ProductCategory)
     async deleteProductCategory(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const productCategory = await this.repository.findOneOrFail(id);
-        await this.entityManager.remove(productCategory);
+        this.entityManager.remove(productCategory);
         await this.entityManager.flush();
         return true;
     }
