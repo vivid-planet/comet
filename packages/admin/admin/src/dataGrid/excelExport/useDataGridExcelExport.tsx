@@ -52,6 +52,7 @@ export function useDataGridExcelExport<Row extends GridValidRowModel, GQLQuery, 
 
         try {
             const data: Row[] = [];
+            const incrementAmount = 100;
             let offset = 0;
             do {
                 const { data: pageData } = await client.query<GQLQuery, GQLQueryVariables>({
@@ -59,10 +60,10 @@ export function useDataGridExcelExport<Row extends GridValidRowModel, GQLQuery, 
                     variables: {
                         ...variables,
                         offset,
-                        limit: 100,
+                        limit: incrementAmount,
                     },
                 });
-                offset += 100;
+                offset += incrementAmount;
 
                 data.push(...resolveQueryNodes(pageData));
             } while (data.length < totalCount);
