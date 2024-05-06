@@ -71,11 +71,11 @@ export function useDataGridExcelExport<Row extends GridValidRowModel, GQLQuery, 
                 createExcelExportDownload<Row>(columns, data, exportOptions);
             }
         } catch (e) {
-            setError("Error happend while exporting data");
+            setError(intl.formatMessage({ id: "comet.dataGrid.excelExport.error", defaultMessage: "Error happend while exporting data" }));
         } finally {
             setLoading(false);
         }
-    }, [client, columns, createExcelExportDownload, exportOptions, query, resolveQueryNodes, totalCount, variables]);
+    }, [client, columns, createExcelExportDownload, exportOptions, intl, query, resolveQueryNodes, totalCount, variables]);
 
     return {
         loading,
