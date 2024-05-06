@@ -209,7 +209,7 @@ export class DependenciesService {
             ret.push(dependency);
         }
 
-        const countResult = await this.withCount(qb).select("rootId").groupBy(["rootId", "rootEntityName"]);
+        const countResult = await this.withCount(qb).select("targetId").groupBy(["targetId", "targetEntityName"]);
         const totalCount = countResult[0]?.count ?? 0;
 
         return new PaginatedDependencies(ret, Number(totalCount));

@@ -187,4 +187,27 @@ describe("useDataGridRemote", () => {
 
         expect(result.current.sortModel).toEqual(mockedUrlSortModel);
     });
+
+    it("should set empty initial filter if not provided", () => {
+        const { result } = renderHook(() => useDataGridRemote());
+
+        expect(result.current.filterModel).toEqual({ items: [] });
+    });
+
+    it("uses initial filter if no filter is set in the URL", () => {
+        const { result } = renderHook(() => useDataGridRemote({ initialFilter: mockedFilterModel }));
+
+        expect(result.current.filterModel).toBe(mockedFilterModel);
+    });
+
+    it("doesn't use initial default filter if filter is set in the URL", () => {
+        const mockedUrlFilterModel = { items: [{ columnField: "description", id: 1, operatorValue: "equal", value: "Test" }] };
+        useLocation.mockReturnValue({
+            search: queryString.stringify({ filter: '{"items":[{"columnField":"description","id":1,"operatorValue":"equal","value":"Test"}]}' }),
+        });
+
+        const { result } = renderHook(() => useDataGridRemote({ initialFilter: mockedFilterModel }));
+
+        expect(result.current.filterModel).toEqual(mockedUrlFilterModel);
+    });
 });

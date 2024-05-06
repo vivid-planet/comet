@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, HttpException, Injectable, mixin } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { GqlExecutionContext } from "@nestjs/graphql";
+import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 import { AuthGuard, IAuthGuard, Type } from "@nestjs/passport";
 import { Request } from "express";
 import { isObservable, lastValueFrom } from "rxjs";
@@ -41,8 +41,23 @@ export function createCometAuthGuard(type?: string | string[]): Type<IAuthGuard>
                 return true;
             }
 
+            if (this.isResolvingGraphQLField(context)) {
+                return true;
+            }
+
             const canActivate = await super.canActivate(context);
             return isObservable(canActivate) ? lastValueFrom(canActivate) : canActivate;
+        }
+
+        // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
+        private isResolvingGraphQLField(context: ExecutionContext): boolean {
+            if (context.getType<GqlContextType>() === "graphql") {
+                const gqlContext = GqlExecutionContext.create(context);
+                const info = gqlContext.getInfo();
+                const parentType = info.parentType.name;
+                return parentType !== "Query" && parentType !== "Mutation";
+            }
+            return false;
         }
     }
     return mixin(CometAuthGuard);
