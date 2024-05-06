@@ -43,7 +43,7 @@ function getArgs(gqlFields: IntrospectionField[], skipGqlArgs: string[]) {
     return gqlFields.reduce<{ name: string; type: string; gqlArg: IntrospectionInputValue; gqlField: IntrospectionField }[]>((acc, gqlField) => {
         gqlField.args.forEach((gqlArg) => {
             if (skipGqlArgs.includes(gqlArg.name)) return acc;
-            if (gqlArg.type.kind !== "NON_NULL") return acc;
+            if (gqlArg.type.kind !== "NON_NULL" || gqlArg.defaultValue) return acc;
 
             const gqlType = gqlArg.type.ofType;
 
