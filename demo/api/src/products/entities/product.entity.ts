@@ -24,12 +24,14 @@ import { ProductCategory } from "./product-category.entity";
 import { ProductColor } from "./product-color.entity";
 import { ProductStatistics } from "./product-statistics.entity";
 import { ProductTag } from "./product-tag.entity";
+import { ProductToTag } from "./product-to-tag.entity";
 import { ProductType } from "./product-type.enum";
 import { ProductVariant } from "./product-variant.entity";
 
 export enum ProductStatus {
     Published = "Published",
     Unpublished = "Unpublished",
+    Deleted = "Deleted",
 }
 registerEnumType(ProductStatus, { name: "ProductStatus" });
 
@@ -178,6 +180,9 @@ export class Product extends BaseEntity<Product, "id"> {
         input: true, //default is true
     })
     tags = new Collection<ProductTag>(this);
+
+    @OneToMany(() => ProductToTag, (productToTag) => productToTag.product, { orphanRemoval: true })
+    tagsWithStatus = new Collection<ProductToTag>(this);
 
     @Property()
     @Field()

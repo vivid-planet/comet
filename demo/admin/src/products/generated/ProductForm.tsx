@@ -166,6 +166,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     <MenuItem value="Unpublished">
                                         <FormattedMessage id="product.status.unpublished" defaultMessage="Unpublished" />
                                     </MenuItem>
+                                    <MenuItem value="Deleted">
+                                        <FormattedMessage id="product.status.deleted" defaultMessage="Deleted" />
+                                    </MenuItem>
                                 </FinalFormSelect>
                             )}
                         </Field>

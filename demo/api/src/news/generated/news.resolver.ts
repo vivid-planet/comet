@@ -43,8 +43,7 @@ export class NewsResolver {
         @Info() info: GraphQLResolveInfo,
     ): Promise<PaginatedNews> {
         const where = this.newsService.getFindCondition({ search, filter });
-
-        where.status = status;
+        where.status = { $in: status };
         where.scope = scope;
 
         const fields = extractGraphqlFields(info, { root: "nodes" });
@@ -116,7 +115,7 @@ export class NewsResolver {
     @AffectedEntity(News)
     async deleteNews(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const news = await this.repository.findOneOrFail(id);
-        await this.entityManager.remove(news);
+        this.entityManager.remove(news);
         await this.entityManager.flush();
         return true;
     }

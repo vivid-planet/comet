@@ -70,9 +70,9 @@ type Props = Omit<NextImageProps, "loader"> &
               layout?: "fill" | "responsive";
               sizes: string;
           }
-    ) & { aspectRatio?: string };
+    ) & { aspectRatio: string };
 
-export function Image({ aspectRatio = "16x9", ...nextImageProps }: Props): React.ReactElement {
+export function Image({ aspectRatio, ...nextImageProps }: Props): React.ReactElement {
     const usedAspectRatio = parseAspectRatio(aspectRatio);
 
     return <NextImage loader={(loaderProps) => generateImageUrl(loaderProps, usedAspectRatio)} {...nextImageProps} />;
