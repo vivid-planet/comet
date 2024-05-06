@@ -10,7 +10,7 @@ import { FormattedDate } from "react-intl";
 import { GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables } from "./page.generated";
 
 export default async function NewsDetailPage({ params }: { params: { slug: string; lang: string } }) {
-    const { scope, previewData } = previewParams() || { scope: { domain, language: params.lang }, previewData: undefined };
+    const { scope, previewData } = (await previewParams()) || { scope: { domain, language: params.lang }, previewData: undefined };
     const graphqlFetch = createGraphQLFetch(previewData);
 
     const data = await graphqlFetch<GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables>(
