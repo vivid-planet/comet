@@ -30,13 +30,13 @@ export class ImportRedirectsConsole {
     })
     @UseRequestContext()
     async execute(filepath: string, comment = "Imported"): Promise<void> {
-        const imports = await this.readRedirectsCsv(filepath);
-        let success = 0;
-        let error = 0;
+        const rows = await this.readRedirectsCsv(filepath);
+        let successes = 0;
+        let errors = 0;
 
-        for (const row of imports) {
-            const node = await this.pageTreeService.createReadApi().getNodeByPath(row["target"]);
-            const existingRedirect = await this.repository.findOne({ source: row.source });
+        for (const row of rows) {
+            const node = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeByPath(row["target"]);
+            const existingRedirect = await this.repository.findOne({ source: row.source, scope: row["scope"] });
 
             if (row["target_type"] === "internal" && node) {
                 if (existingRedirect) {
@@ -57,7 +57,7 @@ export class ImportRedirectsConsole {
                         comment,
                     });
 
-                    success++;
+                    successes++;
                 } else {
                     const redirect = this.repository.create({
                         sourceType: RedirectSourceTypeValues.path,
@@ -80,7 +80,7 @@ export class ImportRedirectsConsole {
                         scope: row["scope"],
                     });
 
-                    success++;
+                    successes++;
 
                     this.repository.persist(redirect);
                 }
@@ -104,7 +104,7 @@ export class ImportRedirectsConsole {
                         comment,
                     });
 
-                    success++;
+                    successes++;
                 } else {
                     const redirect = this.repository.create({
                         sourceType: RedirectSourceTypeValues.path,
@@ -128,18 +128,18 @@ export class ImportRedirectsConsole {
                         scope: row["scope"],
                     });
 
-                    success++;
+                    successes++;
                     this.repository.persist(redirect);
                 }
             } else {
                 console.log(`Error for Redirect ${row["source"]}`);
-                error++;
+                errors++;
             }
         }
 
         await this.repository.flush();
-        console.log(`\nSuccess: ${success}`);
-        console.log(`Error: ${error}`);
+        console.log(`\nSuccess: ${successes}`);
+        console.log(`Error: ${errors}`);
     }
 
     readRedirectsCsv = async (
