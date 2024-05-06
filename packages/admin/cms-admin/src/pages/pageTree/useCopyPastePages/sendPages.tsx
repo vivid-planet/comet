@@ -359,6 +359,7 @@ export async function sendPages(
             if (sourcePage.document && !isEqual(sourceContentScope, targetContentScope)) {
                 const unhandledDependencies = unhandledDependenciesFromDocument(documentType, sourcePage.document, {
                     existingReplacements: dependencyReplacements,
+                    hasDamScope,
                 });
                 const replacementsForUnhandledDependencies = createUndefinedReplacementsForDependencies(unhandledDependencies);
                 dependencyReplacements.push(...replacementsForUnhandledDependencies);
@@ -413,16 +414,18 @@ function createPageTreeNodeIdReplacements(nodes: PageClipboard[]): ReplaceDepend
 function unhandledDependenciesFromDocument(
     documentType: DocumentInterface,
     document: GQLDocument,
-    { existingReplacements }: { existingReplacements: ReplaceDependencyObject[] },
+    { existingReplacements, hasDamScope = false }: { existingReplacements: ReplaceDependencyObject[]; hasDamScope?: boolean },
 ) {
-    const unhandledDependencies = documentType
-        .dependencies(document)
-        .filter(
-            (dependency) =>
-                !existingReplacements.some(
-                    (replacement) => replacement.originalId === dependency.id && replacement.type === dependency.targetGraphqlObjectType,
-                ),
+    const unhandledDependencies = documentType.dependencies(document).filter((dependency) => {
+        if (dependency.targetGraphqlObjectType === "DamFile" && !hasDamScope) {
+            // If there is no DAM scoping (DAM = global), the dependency is not unhandled. It's handled correctly by doing nothing
+            return false;
+        }
+
+        return !existingReplacements.some(
+            (replacement) => replacement.originalId === dependency.id && replacement.type === dependency.targetGraphqlObjectType,
         );
+    });
 
     return unhandledDependencies;
 }
