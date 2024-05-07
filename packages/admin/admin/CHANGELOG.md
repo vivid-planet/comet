@@ -1,5 +1,12 @@
 # @comet/admin
 
+## 5.8.1
+
+### Patch Changes
+
+-   390c1255b: Ignore local storage quota exceeded error in `writeClipboardText`
+    -   @comet/admin-icons@5.8.1
+
 ## 5.8.0
 
 ### Patch Changes
