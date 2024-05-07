@@ -1,5 +1,11 @@
 # @comet/blocks-api
 
+## 6.9.0
+
+### Minor Changes
+
+-   8be9565d1: typesafeMigrationPipe: Add support for 20 migrations
+
 ## 6.8.0
 
 ### Minor Changes
