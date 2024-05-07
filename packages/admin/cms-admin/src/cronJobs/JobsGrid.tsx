@@ -37,6 +37,7 @@ const jobsQuery = gql`
         kubernetesJobs(cronJobName: $cronJobName) {
             id
             name
+            label
             startTime
             completionTime
             status

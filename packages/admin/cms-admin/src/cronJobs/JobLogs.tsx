@@ -5,27 +5,13 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import {
-    GQLKubernetesJobLogsQuery,
-    GQLKubernetesJobLogsQueryVariables,
-    GQLKubernetesJobQuery,
-    GQLKubernetesJobQueryVariables,
-} from "./JobLogs.generated";
+import { GQLKubernetesJobWithLogsQuery, GQLKubernetesJobWithLogsQueryVariables } from "./JobLogs.generated";
 
-const jobQuery = gql`
-    query KubernetesJob($name: String!) {
-        kubernetesJob(name: $name) {
-            id
-            name
-            label
-        }
+function JobLogsToolbar(props: { kubernetesJob?: { name: string; label: string | null } }) {
+    const { kubernetesJob } = props;
+    if (!kubernetesJob) {
+        return null;
     }
-`;
-
-function JobLogsToolbar(props: { jobName: string }) {
-    const { jobName } = props;
-
-    const { data } = useQuery<GQLKubernetesJobQuery, GQLKubernetesJobQueryVariables>(jobQuery, { variables: { name: jobName } });
 
     return (
         <Toolbar>
@@ -35,7 +21,7 @@ function JobLogsToolbar(props: { jobName: string }) {
                     id="comet.jobLogs.title"
                     defaultMessage="Job logs for {job}"
                     values={{
-                        job: data?.kubernetesJob.label ? `${data?.kubernetesJob.label} (${data?.kubernetesJob.name})` : data?.kubernetesJob.name,
+                        job: kubernetesJob.label ? `${kubernetesJob.label} (${kubernetesJob.name})` : kubernetesJob.name,
                     }}
                 />
             </ToolbarTitleItem>
@@ -49,8 +35,13 @@ const LogsContainer = styled("pre")`
     overflow-x: auto;
 `;
 
-const logsQuery = gql`
-    query KubernetesJobLogs($name: String!) {
+const jobWithLogsQuery = gql`
+    query KubernetesJobWithLogs($name: String!) {
+        kubernetesJob(name: $name) {
+            id
+            name
+            label
+        }
         kubernetesJobLogs(name: $name)
     }
 `;
@@ -58,10 +49,9 @@ const logsQuery = gql`
 export function JobLogs(props: { jobName: string }) {
     const { jobName } = props;
 
-    const { loading, data, error } = useQuery<GQLKubernetesJobLogsQuery, GQLKubernetesJobLogsQueryVariables>(logsQuery, {
+    const { loading, data, error } = useQuery<GQLKubernetesJobWithLogsQuery, GQLKubernetesJobWithLogsQueryVariables>(jobWithLogsQuery, {
         variables: { name: jobName },
     });
-    const logs = data?.kubernetesJobLogs;
 
     if (error) {
         throw error;
@@ -71,9 +61,12 @@ export function JobLogs(props: { jobName: string }) {
         return <Loading behavior="fillPageHeight" />;
     }
 
+    const logs = data?.kubernetesJobLogs;
+    const job = data?.kubernetesJob;
+
     return (
         <MainContent disablePadding>
-            <JobLogsToolbar jobName={jobName} />
+            <JobLogsToolbar kubernetesJob={job} />
             {logs ? (
                 <Box paddingLeft={4}>
                     <LogsContainer>{logs}</LogsContainer>
