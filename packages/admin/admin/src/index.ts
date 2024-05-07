@@ -99,7 +99,7 @@ export { messages } from "./messages";
 export { MainContent, MainContentClassKey, MainContentProps } from "./mui/MainContent";
 export { MasterLayout, MasterLayoutClassKey, MasterLayoutProps } from "./mui/MasterLayout";
 export { MasterLayoutContext } from "./mui/MasterLayoutContext";
-export { MenuCollapsibleItem, MenuCollapsibleItemProps, MenuLevel } from "./mui/menu/CollapsibleItem";
+export { MenuCollapsibleItem, MenuCollapsibleItemProps } from "./mui/menu/CollapsibleItem";
 export { MenuCollapsibleItemClassKey } from "./mui/menu/CollapsibleItem.styles";
 export { IMenuContext, IWithMenu, MenuContext, withMenu } from "./mui/menu/Context";
 export { MenuItem, MenuItemProps } from "./mui/menu/Item";

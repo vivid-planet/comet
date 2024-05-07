@@ -2,6 +2,6 @@
 "@comet/admin": major
 ---
 
-Change type of props `openedIcon` and `closedIcon` of `MenuCollapsibleItem` to `React.JSXElementConstructor<SvgIconProps>`
+Remove the `openedIcon` and `closedIcon` props from `MenuCollapsibleItem` and add `iconMapping` instead
 
-Reason being, the icons need to be called as JSX element to be able to dynamically add classes.
+The icon shown as the collapse indicator will be chosen from `iconMapping`, depending on the collapsed states of the Menu and the Item.

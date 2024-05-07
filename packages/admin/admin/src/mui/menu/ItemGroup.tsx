@@ -1,67 +1,112 @@
-import { createCometTheme } from "@comet/admin-theme";
-import { Box, ComponentsOverrides, Theme, Tooltip, Typography } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
-import clsx from "clsx";
-import * as React from "react";
-import { useMemo } from "react";
+import { ComponentsOverrides, css, Theme, Typography, useThemeProps } from "@mui/material";
+import React from "react";
 import { FormattedMessage, MessageDescriptor, useIntl } from "react-intl";
 
+import { Tooltip as CommonTooltip } from "../../common/Tooltip";
+import { createComponentSlot } from "../../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MenuChild, MenuCollapsibleItemProps } from "./CollapsibleItem";
 import { MenuContext } from "./Context";
 import { MenuItemProps } from "./Item";
 import { MenuItemRouterLinkProps } from "./ItemRouterLink";
 
-export type MenuItemGroupClassKey = "root" | "title" | "titleMenuOpen" | "titleContainer" | "titleContainerMenuOpen";
+export type MenuItemGroupClassKey = "root" | "open" | "tooltip" | "titleContainer" | "title" | "shortTitle";
 
-const styles = () => {
-    const theme = createCometTheme(); // TODO: Remove after theming-refactor
-
-    return createStyles<MenuItemGroupClassKey, MenuItemGroupProps>({
-        root: { marginTop: theme.spacing(8) },
-        title: {
-            border: `1px solid ${theme.palette.grey[100]}`,
-            borderRadius: 20,
-            color: theme.palette.grey[300],
-            padding: "2px 7px",
-            textAlign: "center",
-        },
-        titleMenuOpen: {
-            border: `1px solid ${theme.palette.common.white}`, // change border to white instead of removing it to avoid jumping
-            borderRadius: "initial",
-            padding: 0,
-            color: theme.palette.grey[900],
-            marginRight: theme.spacing(1),
-        },
-        titleContainer: {
-            borderBottom: `1px solid ${theme.palette.grey[50]}`,
-            display: "flex",
-            justifyContent: "center",
-            padding: `${theme.spacing(2)} 0`,
-        },
-        titleContainerMenuOpen: {
-            justifyContent: "flex-start",
-            padding: theme.spacing(2, 4),
-            alignItems: "center",
-        },
-    });
+type OwnerState = {
+    open: boolean;
 };
 
-export interface MenuItemGroupProps {
+const Root = createComponentSlot("div")<MenuItemGroupClassKey, OwnerState>({
+    componentName: "MenuItemGroup",
+    slotName: "root",
+    classesResolver: (ownerState) => {
+        return [ownerState.open && "open"];
+    },
+})(
+    ({ theme }) => css`
+        margin-top: ${theme.spacing(8)};
+    `,
+);
+
+const Tooltip = createComponentSlot(CommonTooltip)<MenuItemGroupClassKey>({
+    componentName: "MenuItemGroup",
+    slotName: "tooltip",
+})();
+
+const TitleContainer = createComponentSlot("div")<MenuItemGroupClassKey, OwnerState>({
+    componentName: "MenuItemGroup",
+    slotName: "titleContainer",
+})(
+    ({ theme, ownerState }) => css`
+        border-bottom: 1px solid ${theme.palette.grey[50]};
+        display: flex;
+        justify-content: flex-start;
+        padding: ${theme.spacing(2, 4)};
+        align-items: center;
+        gap: ${theme.spacing(1)};
+
+        ${!ownerState.open &&
+        css`
+            padding-left: 0;
+            padding-right: 0;
+        `}
+    `,
+);
+
+const Title = createComponentSlot(Typography)<MenuItemGroupClassKey, OwnerState>({
+    componentName: "MenuItemGroup",
+    slotName: "title",
+})(
+    ({ theme, ownerState }) => css`
+        color: ${theme.palette.grey[900]};
+
+        ${!ownerState.open &&
+        css`
+            display: none;
+        `}
+    `,
+);
+
+const ShortTitle = createComponentSlot(Typography)<MenuItemGroupClassKey, OwnerState>({
+    componentName: "MenuItemGroup",
+    slotName: "shortTitle",
+})(
+    ({ theme, ownerState }) => css`
+        border: 1px solid ${theme.palette.grey[100]};
+        border-radius: 20px;
+        color: ${theme.palette.grey[300]};
+        padding: 1px 7px;
+        margin-left: auto;
+        margin-right: auto;
+
+        ${ownerState.open &&
+        css`
+            display: none;
+        `}
+    `,
+);
+
+export interface MenuItemGroupProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        tooltip: typeof CommonTooltip;
+        titleContainer: "div";
+        title: typeof Typography;
+        shortTitle: typeof Typography;
+    }> {
     title: React.ReactNode;
     shortTitle?: React.ReactNode;
     helperIcon?: React.ReactNode;
+    children?: React.ReactNode;
 }
 
-const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & MenuItemGroupProps>> = ({
-    title,
-    shortTitle,
-    helperIcon,
-    children,
-    classes,
-}) => {
+export const MenuItemGroup = (inProps: MenuItemGroupProps) => {
+    const { title, shortTitle, helperIcon, children, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminMenuItemGroup" });
+
     const { open: menuOpen } = React.useContext(MenuContext);
     const intl = useIntl();
-    let displayedTitle = title;
+
+    const ownerState: OwnerState = { open: menuOpen };
 
     function isFormattedMessage(node: React.ReactNode): node is React.ReactElement<MessageDescriptor> {
         return !!node && React.isValidElement(node) && node.type === FormattedMessage;
@@ -89,11 +134,7 @@ const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & Me
         return words.map((word) => word[0].toUpperCase()).join("");
     }
 
-    if (!menuOpen) {
-        displayedTitle = shortTitle || getInitials(title);
-    }
-
-    const childElements = useMemo(
+    const childElements = React.useMemo(
         () =>
             React.Children.map(children, (child: MenuChild) => {
                 return React.cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
@@ -104,21 +145,29 @@ const ItemGroup: React.FC<React.PropsWithChildren<WithStyles<typeof styles> & Me
     );
 
     return (
-        <Box className={classes.root}>
-            <Tooltip placement="right" disableHoverListener={menuOpen} disableFocusListener={menuOpen} disableTouchListener={menuOpen} title={title}>
-                <Box className={clsx(classes.titleContainer, menuOpen && classes.titleContainerMenuOpen)}>
-                    <Typography className={clsx(classes.title, menuOpen && classes.titleMenuOpen)} variant={menuOpen ? "subtitle2" : "overline"}>
-                        {displayedTitle}
-                    </Typography>
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
+            <Tooltip
+                placement="right"
+                disableHoverListener={menuOpen}
+                disableFocusListener={menuOpen}
+                disableTouchListener={menuOpen}
+                title={title}
+                {...slotProps?.tooltip}
+            >
+                <TitleContainer ownerState={ownerState} {...slotProps?.titleContainer}>
+                    <ShortTitle variant="overline" ownerState={ownerState} {...slotProps?.shortTitle}>
+                        {shortTitle || getInitials(title)}
+                    </ShortTitle>
+                    <Title variant="subtitle2" ownerState={ownerState} {...slotProps?.title}>
+                        {title}
+                    </Title>
                     {menuOpen && !!helperIcon && helperIcon}
-                </Box>
+                </TitleContainer>
             </Tooltip>
             {childElements}
-        </Box>
+        </Root>
     );
 };
-
-export const MenuItemGroup = withStyles(styles, { name: "CometAdminMenuItemGroup" })(ItemGroup);
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
@@ -131,7 +180,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminMenuItemGroup?: {
-            defaultProps?: ComponentsPropsList["CometAdminMenuItemGroup"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminMenuItemGroup"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenuItemGroup"];
         };
     }
