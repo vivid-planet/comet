@@ -8,7 +8,7 @@ import { ExcelGenerationOptions, generateExcelFile } from "./generateExcelFile";
 
 export interface ExportApi {
     loading: boolean;
-    error?: string;
+    error?: unknown;
     exportGrid: () => void;
 }
 
@@ -72,11 +72,11 @@ export function useDataGridExcelExport<Row extends GridValidRowModel, GQLQuery, 
                 createExcelExportDownload<Row>(columns, data, exportOptions);
             }
         } catch (e) {
-            setError(intl.formatMessage({ id: "comet.dataGrid.excelExport.error", defaultMessage: "Error happend while exporting data" }));
+            setError(e);
         } finally {
             setLoading(false);
         }
-    }, [client, columns, createExcelExportDownload, exportOptions, intl, query, resolveQueryNodes, totalCount, variables]);
+    }, [client, columns, createExcelExportDownload, exportOptions, query, resolveQueryNodes, totalCount, variables]);
 
     return {
         loading,
