@@ -33,6 +33,7 @@ export class ProductVariant extends BaseEntity<ProductVariant, "id"> {
         // filter: true, // not yet supported for nested
         // sort: true, // not yet supported for nested
         // input: false, // ignored because product is a root argument for create
+        dedicatedResolverArg: true, //default is false
     })
     product: Ref<Product>;
 

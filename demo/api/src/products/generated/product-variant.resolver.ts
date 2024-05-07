@@ -108,7 +108,7 @@ export class ProductVariantResolver {
     @AffectedEntity(ProductVariant)
     async deleteProductVariant(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const productVariant = await this.repository.findOneOrFail(id);
-        await this.entityManager.remove(productVariant);
+        this.entityManager.remove(productVariant);
         await this.entityManager.flush();
         return true;
     }

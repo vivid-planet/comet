@@ -7,7 +7,7 @@ import * as React from "react";
 
 type Props = PropsWithData<DamImageBlockData> &
     Omit<ImageProps, "src" | "width" | "height" | "alt"> & {
-        aspectRatio?: string | "inherit";
+        aspectRatio: string | "inherit";
     } & (
         | { layout?: "fixed" | "intrinsic" }
         // The sizes prop must be specified for images with layout "fill" or "responsive", as recommended in the next/image documentation
