@@ -55,7 +55,7 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
         });
 
         str = str.replace(/"({{ site:\/\/domains\/.*\/.* }})"/g, "$1"); // remove quotes in array
-        str = await replaceAsync(str, /{{ site:\/\/domains\/(site|prelogin|cdn)\/(.*) }}/g, async (substr, type, env) => {
+        str = await replaceAsync(str, /{{ site:\/\/domains\/(site|prelogin)\/(.*) }}/g, async (substr, type, env) => {
             const siteConfigs = await getSiteConfigs(env);
             console.log(`inject-site-domains: - ${substr} (${siteConfigs.length} sites)`);
             if (type === "site") {
@@ -71,10 +71,8 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
                     ...filteredSiteConfigs.filter((d) => d.domains.preliminary).map((d) => d.domains.preliminary),
                     ...filteredSiteConfigs.filter((d) => d.domains.additional).flatMap((d) => d.domains.additional),
                 ]);
-            } else if (type === "cdn") {
-                return JSON.stringify(siteConfigs.filter((d) => d.domains.cdn).map((d) => d.domains.cdn));
             }
-            throw new Error('type must be "site", "prelogin" or "cdn"');
+            throw new Error('type must be "site", "prelogin"');
         });
 
         fs.writeFileSync(resolve(process.cwd(), options.outFile), str);

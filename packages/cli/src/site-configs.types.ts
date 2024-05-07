@@ -5,7 +5,6 @@ export type SiteConfig = {
         main: string;
         preliminary?: string;
         pattern?: string;
-        cdn?: string;
         additional?: string[];
         preview: string;
     };
