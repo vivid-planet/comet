@@ -2,9 +2,9 @@
 "@comet/cms-site": major
 ---
 
-Fix an issue where the admin preview could break a block's styling and HTML structure
+Fix an issue where the block preview could break a block's styling and HTML structure
 
-This was caused by a `div` added around every block to enable the selection and highlighting of the block in the admin preview.
+This was caused by a `div` added around every block to enable the selection and highlighting of the block in the block preview.
 The `div` is still present but now uses `display: contents`, so its effect should be minimal.
 
 Common issues that should now be resolved include:
