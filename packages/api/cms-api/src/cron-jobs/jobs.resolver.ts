@@ -36,7 +36,7 @@ export class JobsResolver {
     }
 
     @Query(() => Job)
-    async kubernetesJob(@Args("name") jobName: string, @GetCurrentUser() user: CurrentUserInterface): Promise<Job> {
+    async kubernetesJob(@Args("name") jobName: string, @GetCurrentUser() user: CurrentUser): Promise<Job> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }
@@ -51,7 +51,7 @@ export class JobsResolver {
     }
 
     @Query(() => String)
-    async kubernetesJobLogs(@Args("name") jobName: string, @GetCurrentUser() user: CurrentUserInterface): Promise<string> {
+    async kubernetesJobLogs(@Args("name") jobName: string, @GetCurrentUser() user: CurrentUser): Promise<string> {
         if (this.kubernetesService.localMode) {
             throw Error("Not available in local mode!");
         }
