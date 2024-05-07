@@ -1,5 +1,51 @@
 # @comet/cms-admin
 
+## 6.8.0
+
+### Patch Changes
+
+-   c1ca9c335: Don't remove references to `DamFile` from blocks when copying a document from one scope to another if DAM scoping is not enabled
+-   Updated dependencies [90c6f192e]
+-   Updated dependencies [90c6f192e]
+    -   @comet/blocks-admin@6.8.0
+    -   @comet/admin@6.8.0
+    -   @comet/admin-date-time@6.8.0
+    -   @comet/admin-icons@6.8.0
+    -   @comet/admin-rte@6.8.0
+    -   @comet/admin-theme@6.8.0
+
+## 6.7.0
+
+### Patch Changes
+
+-   2db3bc855: Fix `CurrentUserInterface` type
+
+    Add missing `id` field, make `name`, `email`, and `language` required.
+
+    -   @comet/admin@6.7.0
+    -   @comet/admin-date-time@6.7.0
+    -   @comet/admin-icons@6.7.0
+    -   @comet/admin-rte@6.7.0
+    -   @comet/admin-theme@6.7.0
+    -   @comet/blocks-admin@6.7.0
+
+## 6.6.2
+
+### Patch Changes
+
+-   0758d2339: Hide the "Dependents" tab in the DAM if the `DependenciesConfigProvider` is not configured
+
+    Previously, the tab was always shown, even if the feature wasn't configured. Though it didn't cause an error, the tab showed no valuable information.
+
+    Now, we hide the tab if no configuration is passed via the `DependenciesConfigProvider`.
+
+    -   @comet/admin@6.6.2
+    -   @comet/admin-date-time@6.6.2
+    -   @comet/admin-icons@6.6.2
+    -   @comet/admin-rte@6.6.2
+    -   @comet/admin-theme@6.6.2
+    -   @comet/blocks-admin@6.6.2
+
 ## 6.6.1
 
 ### Patch Changes

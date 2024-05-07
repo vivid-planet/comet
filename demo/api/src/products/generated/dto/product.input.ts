@@ -8,8 +8,9 @@ import { IsArray, IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsString, IsU
 
 import { ProductDimensions, ProductDiscounts, ProductStatus } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
-import { ProductColorInput } from "./product-color.nested.input";
-import { ProductStatisticsInput } from "./product-statistics.nested.input";
+import { ProductNestedProductColorInput } from "./product-nested-product-color.input";
+import { ProductNestedProductStatisticsInput } from "./product-nested-product-statistics.input";
+import { ProductNestedProductToTagInput } from "./product-nested-product-to-tag.input";
 
 @InputType()
 export class ProductInput {
@@ -80,15 +81,15 @@ export class ProductInput {
     dimensions?: ProductDimensions;
 
     @IsNullable()
-    @Field(() => ProductStatisticsInput, { nullable: true })
-    @Type(() => ProductStatisticsInput)
+    @Field(() => ProductNestedProductStatisticsInput, { nullable: true })
+    @Type(() => ProductNestedProductStatisticsInput)
     @ValidateNested()
-    statistics?: ProductStatisticsInput;
+    statistics?: ProductNestedProductStatisticsInput;
 
-    @Field(() => [ProductColorInput], { defaultValue: [] })
+    @Field(() => [ProductNestedProductColorInput], { defaultValue: [] })
     @IsArray()
-    @Type(() => ProductColorInput)
-    colors: ProductColorInput[];
+    @Type(() => ProductNestedProductColorInput)
+    colors: ProductNestedProductColorInput[];
 
     @IsNullable()
     @Field(() => ID, { nullable: true, defaultValue: null })
@@ -99,6 +100,11 @@ export class ProductInput {
     @IsArray()
     @IsUUID(undefined, { each: true })
     tags: string[];
+
+    @Field(() => [ProductNestedProductToTagInput], { defaultValue: [] })
+    @IsArray()
+    @Type(() => ProductNestedProductToTagInput)
+    tagsWithStatus: ProductNestedProductToTagInput[];
 
     @IsNullable()
     @Field(() => ID, { nullable: true, defaultValue: null })

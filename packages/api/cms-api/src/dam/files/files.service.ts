@@ -16,7 +16,6 @@ import { BlobStorageBackendService } from "../../blob-storage/backends/blob-stor
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
-import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { FocalPoint } from "../common/enums/focal-point.enum";
@@ -457,41 +456,15 @@ export class FilesService {
         return this.create(fileInput);
     }
 
-    async copyFilesToScope({ user, fileIds, inboxFolderId }: { user: CurrentUser; fileIds: string[]; inboxFolderId: string }) {
+    async copyFilesToScope({ fileIds, inboxFolderId }: { fileIds: string[]; inboxFolderId: string }) {
         const inboxFolder = await this.foldersService.findOneById(inboxFolderId);
         if (!inboxFolder) {
             throw new Error("Specified inbox folder doesn't exist.");
         }
-        if (inboxFolder.scope && !this.accessControlService.isAllowed(user, "dam", inboxFolder.scope)) {
-            throw new Error("User can't access the target scope");
-        }
-
-        const getUniqueFileScopes = (files: FileInterface[]): DamScopeInterface[] => {
-            const fileScopes: DamScopeInterface[] = [];
-            for (const file of files) {
-                if (file.scope === undefined) {
-                    continue;
-                }
-
-                const isDuplicateScope = Boolean(fileScopes.find((scope) => this.contentScopeService.scopesAreEqual(scope, file.scope)));
-                if (!isDuplicateScope) {
-                    fileScopes.push(file.scope);
-                }
-            }
-            return fileScopes;
-        };
 
         const files = await this.findMultipleByIds(fileIds);
         if (files.length === 0) {
             throw new Error("No valid file ids provided");
-        }
-
-        const fileScopes = getUniqueFileScopes(files);
-        const canAccessFileScopes = fileScopes.every((scope) => {
-            return this.accessControlService.isAllowed(user, "dam", scope);
-        });
-        if (!canAccessFileScopes) {
-            throw new Error(`User can't access the scope of one or more files`);
         }
 
         const mappedFiles: Array<{ rootFile: FileInterface; copy: FileInterface }> = [];

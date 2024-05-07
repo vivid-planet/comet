@@ -1,4 +1,4 @@
-import { ExtractBlockInputFactoryProps, SpaceBlock } from "@comet/blocks-api";
-import faker from "faker";
+import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
+import { SpaceBlock, Spacing } from "@src/common/blocks/space.block";
 
-export const generateSpaceBlock = (): ExtractBlockInputFactoryProps<typeof SpaceBlock> => ({ height: faker.datatype.number(200) });
+export const generateSpaceBlock = (): ExtractBlockInputFactoryProps<typeof SpaceBlock> => ({ spacing: Spacing.d200 });
