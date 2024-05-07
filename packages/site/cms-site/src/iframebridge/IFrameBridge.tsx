@@ -1,8 +1,29 @@
 "use client";
 import * as React from "react";
+import styled from "styled-components";
 import { useDebouncedCallback } from "use-debounce";
 
 import { AdminMessage, AdminMessageType, IFrameMessage, IFrameMessageType } from "./IFrameMessage";
+import { PreviewOverlay } from "./PreviewOverlay";
+import { getCombinedPositioningOfElements, getRecursiveChildrenOfPreviewElement } from "./utils";
+
+export type PreviewElement = {
+    element: HTMLElement;
+    adminRoute: string;
+    label: string;
+};
+
+export type OverlayElementData = {
+    adminRoute: string;
+    label: string;
+    position: {
+        zIndex: number;
+        top: number;
+        left: number;
+        width: number;
+        height: number;
+    };
+};
 
 export interface IFrameBridgeContext {
     hasBridge: boolean;
@@ -19,6 +40,9 @@ export interface IFrameBridgeContext {
     sendMessage: (message: IFrameMessage) => void;
     showOutlines: boolean;
     contentScope: unknown;
+    previewElementsData: OverlayElementData[];
+    addPreviewElement: (element: PreviewElement) => void;
+    removePreviewElement: (element: PreviewElement) => void;
 }
 
 export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
@@ -35,6 +59,13 @@ export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
         //empty
     },
     contentScope: undefined,
+    previewElementsData: [],
+    removePreviewElement: () => {
+        // empty
+    },
+    addPreviewElement: () => {
+        // empty
+    },
 });
 
 export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
@@ -44,6 +75,65 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
     const [hoveredAdminRoute, setHoveredAdminRoute] = React.useState<string | undefined>(undefined);
     const [showOutlines, setShowOutlines] = React.useState<boolean>(false);
     const [contentScope, setContentScope] = React.useState<unknown>(undefined);
+    const [previewElements, setPreviewElements] = React.useState<PreviewElement[]>([]);
+    const [previewElementsData, setPreviewElementsData] = React.useState<OverlayElementData[]>([]);
+
+    const childrenWrapperRef = React.useRef<HTMLDivElement>(null);
+
+    const recalculatePreviewElementsData = React.useCallback(() => {
+        setPreviewElementsData(
+            previewElements
+                .map((previewElement) => {
+                    const childNodes = getRecursiveChildrenOfPreviewElement(previewElement.element);
+                    const positioning = getCombinedPositioningOfElements(childNodes);
+
+                    return {
+                        adminRoute: previewElement.adminRoute,
+                        label: previewElement.label,
+                        position: {
+                            top: positioning.top,
+                            left: positioning.left,
+                            width: positioning.width,
+                            height: positioning.height,
+                        },
+                    };
+                })
+                .sort((previousElementData, nextElementData) => {
+                    const previousSize = previousElementData.position.width * previousElementData.position.height;
+                    const nextSize = nextElementData.position.width * nextElementData.position.height;
+                    return nextSize - previousSize;
+                })
+                .map((elementData, index) => {
+                    return {
+                        ...elementData,
+                        position: {
+                            ...elementData.position,
+                            zIndex: index + 1,
+                        },
+                    };
+                }),
+        );
+    }, [previewElements]);
+
+    React.useEffect(() => {
+        if (childrenWrapperRef.current) {
+            const mutationObserver = new MutationObserver(() => {
+                recalculatePreviewElementsData();
+            });
+
+            const resizeObserver = new ResizeObserver(() => {
+                recalculatePreviewElementsData();
+            });
+
+            mutationObserver.observe(childrenWrapperRef.current, { childList: true, subtree: true });
+            resizeObserver.observe(childrenWrapperRef.current);
+
+            return () => {
+                mutationObserver.disconnect();
+                resizeObserver.disconnect();
+            };
+        }
+    }, [recalculatePreviewElementsData]);
 
     const sendMessage = (message: IFrameMessage) => {
         window.parent.postMessage(JSON.stringify(message), "*");
@@ -109,6 +199,20 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
         };
     }, [onReceiveMessage]);
 
+    const addPreviewElement = React.useCallback(
+        (element: PreviewElement) => {
+            setPreviewElements((prev) => [...prev, element]);
+        },
+        [setPreviewElements],
+    );
+
+    const removePreviewElement = React.useCallback(
+        (element: PreviewElement) => {
+            setPreviewElements((prev) => prev.filter((el) => el.adminRoute !== element.adminRoute));
+        },
+        [setPreviewElements],
+    );
+
     return (
         <IFrameBridgeContext.Provider
             value={{
@@ -127,6 +231,9 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
                 },
                 sendMessage,
                 contentScope,
+                previewElementsData,
+                addPreviewElement,
+                removePreviewElement,
             }}
         >
             <div
@@ -135,8 +242,14 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
                     debounceDeactivateOutlines();
                 }}
             >
-                {children}
+                <PreviewOverlay />
+                <ChildrenWrapper ref={childrenWrapperRef}>{children}</ChildrenWrapper>
             </div>
         </IFrameBridgeContext.Provider>
     );
 };
+
+const ChildrenWrapper = styled.div`
+    position: relative;
+    z-index: 1;
+`;
