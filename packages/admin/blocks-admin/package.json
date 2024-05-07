@@ -70,7 +70,7 @@
         "react-dnd": "^16.0.0",
         "react-dom": "^16.8.0 || ^17.0.0",
         "react-final-form": "^6.0.0",
-        "react-intl": "^5.0.0",
+        "react-intl": "^6.0.0",
         "react-router": "^5.0.0",
         "react-router-dom": "^5.0.0",
         "ts-jest": "^29.0.5",
@@ -83,7 +83,7 @@
         "react-dnd": "^16.0.0",
         "react-dom": "^16.8.0 || ^17.0.0",
         "react-final-form": "^6.0.0",
-        "react-intl": "^5.0.0",
+        "react-intl": "^5.0.0 || ^6.0.0",
         "react-router": "^5.0.0",
         "react-router-dom": "^5.0.0"
     },
