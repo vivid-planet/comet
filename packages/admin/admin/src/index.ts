@@ -41,13 +41,13 @@ export { ContentOverflow, ContentOverflowClassKey, ContentOverflowProps } from "
 export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
 export { GridCellText, GridCellTextClassKey, GridCellTextProps } from "./dataGrid/GridCellText";
+export { GridColDef } from "./dataGrid/GridColDef";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
 export { muiGridSortToGql } from "./dataGrid/muiGridSortToGql";
 export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
 export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
-export { useDynamicGridVisibilityModel } from "./dataGrid/useDynamicGridVisibilityModel";
 export { usePersistentColumnState } from "./dataGrid/usePersistentColumnState";
 export { DeleteMutation } from "./DeleteMutation";
 export { EditDialog, useEditDialog } from "./EditDialog";

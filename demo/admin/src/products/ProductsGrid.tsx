@@ -3,6 +3,7 @@ import {
     CrudContextMenu,
     CrudVisibility,
     GridCellText,
+    GridColDef,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -14,13 +15,12 @@ import {
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
-    useDynamicGridVisibilityModel,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { filter } from "graphql-anywhere";
 import gql from "graphql-tag";
 import * as React from "react";
@@ -67,15 +67,6 @@ export function ProductsGrid() {
     const { data: categoriesData } = useQuery<GQLProductGridCategoriesQuery, GQLProductGridCategoriesQueryVariables>(productCategoriesQuery);
     const intl = useIntl();
 
-    const dynamicGridVisibilityProps = useDynamicGridVisibilityModel({
-        overview: { defaultView: false, compactView: true },
-        title: { defaultView: true, compactView: false },
-        price: { defaultView: true, compactView: false },
-        type: { defaultView: true, compactView: false },
-        category: { defaultView: true, compactView: false },
-        inStock: { defaultView: true, compactView: false },
-    });
-
     const columns: GridColDef<GQLProductsListManualFragment>[] = [
         {
             field: "overview",
@@ -83,6 +74,7 @@ export function ProductsGrid() {
             minWidth: 200,
             flex: 1,
             sortable: false,
+            showOnlyInView: "compact",
             renderCell: ({ row }) => {
                 const secondaryValues = [
                     typeof row.price === "number" && intl.formatNumber(row.price, { style: "currency", currency: "EUR" }),
@@ -100,6 +92,7 @@ export function ProductsGrid() {
             headerName: "Title",
             minWidth: 150,
             flex: 1,
+            showOnlyInView: "default",
         },
         { field: "description", headerName: "Description", flex: 1, minWidth: 150 },
         {
@@ -108,9 +101,17 @@ export function ProductsGrid() {
             minWidth: 100,
             flex: 1,
             type: "number",
+            showOnlyInView: "default",
             renderCell: ({ row }) => (typeof row.price === "number" ? <FormattedNumber value={row.price} style="currency" currency="EUR" /> : "-"),
         },
-        { field: "type", headerName: "Type", width: 100, type: "singleSelect", valueOptions: ["Cap", "Shirt", "Tie"] },
+        {
+            field: "type",
+            headerName: "Type",
+            width: 100,
+            type: "singleSelect",
+            showOnlyInView: "default",
+            valueOptions: ["Cap", "Shirt", "Tie"],
+        },
         {
             field: "category",
             headerName: "Category",
@@ -118,6 +119,7 @@ export function ProductsGrid() {
             minWidth: 100,
             renderCell: (params) => <>{params.row.category?.title}</>,
             type: "singleSelect",
+            showOnlyInView: "default",
             valueOptions: categoriesData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
         },
         {
@@ -127,7 +129,14 @@ export function ProductsGrid() {
             minWidth: 150,
             renderCell: (params) => <>{params.row.tags.map((tag) => tag.title).join(", ")}</>,
         },
-        { field: "inStock", headerName: "In Stock", flex: 1, minWidth: 80, type: "boolean" },
+        {
+            field: "inStock",
+            headerName: "In Stock",
+            flex: 1,
+            minWidth: 80,
+            type: "boolean",
+            showOnlyInView: "default",
+        },
         {
             field: "status",
             headerName: "Status",
@@ -220,7 +229,6 @@ export function ProductsGrid() {
         <MainContent fullHeight disablePadding>
             <DataGridPro
                 {...dataGridProps}
-                {...dynamicGridVisibilityProps}
                 disableSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
