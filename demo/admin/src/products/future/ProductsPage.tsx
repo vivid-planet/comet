@@ -12,6 +12,7 @@ import {
     ToolbarBackButton,
     ToolbarFillSpace,
 } from "@comet/admin";
+import { ProductVariantsGrid } from "@src/products/future/generated/ProductVariantsGrid";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
@@ -56,6 +57,9 @@ export function ProductsPage(): React.ReactElement {
                             </RouterTabs>
                         </SaveBoundary>
                     )}
+                </StackPage>
+                <StackPage name="variants" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Product variants" })}>
+                    {(selectedId) => <ProductVariantsGrid product={selectedId} />}
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add Product" })}>
                     <ProductForm />
