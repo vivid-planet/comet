@@ -1,5 +1,16 @@
 # @comet/cms-api
 
+## 6.9.0
+
+### Minor Changes
+
+-   94ac6b729: API Generator: Fix generated API for many-to-many-relations with custom relation entity
+
+### Patch Changes
+
+-   Updated dependencies [8be9565d1]
+    -   @comet/blocks-api@6.9.0
+
 ## 6.8.0
 
 ### Minor Changes

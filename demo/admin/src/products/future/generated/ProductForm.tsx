@@ -3,6 +3,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
+    filterByFragment,
     FinalForm,
     FinalFormCheckbox,
     FinalFormSelect,
@@ -21,7 +22,6 @@ import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { FormControlLabel, InputAdornment, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -68,7 +68,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         () =>
             data?.product
                 ? {
-                      ...filter<GQLProductFormDetailsFragment>(productFormFragment, data.product),
+                      ...filterByFragment<GQLProductFormDetailsFragment>(productFormFragment, data.product),
 
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
                       availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
