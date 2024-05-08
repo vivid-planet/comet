@@ -2,7 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CheckboxField,
     Field,
-    filterByDocument,
+    filterByFragment,
     FinalForm,
     FinalFormInput,
     FinalFormSelect,
@@ -75,7 +75,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
 
     const initialValues: Partial<FormValues> = data?.product
         ? {
-              ...filterByDocument<GQLProductFormManualFragment>(productFormFragment, data.product),
+              ...filterByFragment<GQLProductFormManualFragment>(productFormFragment, data.product),
               price: String(data.product.price),
               image: rootBlocks.image.input2State(data.product.image),
           }

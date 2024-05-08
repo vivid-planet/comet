@@ -115,7 +115,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     import {
         DateTimeField,
         Field,
-        filterByDocument,
+        filterByFragment,
         FinalForm,
         FinalFormInput,
         FinalFormSaveSplitButton,
@@ -201,7 +201,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     
         const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceEntityName}
             ? {
-                  ...filterByDocument<GQL${entityName}FormFragment>(${instanceEntityName}FormFragment, data.${instanceEntityName}),
+                  ...filterByFragment<GQL${entityName}FormFragment>(${instanceEntityName}FormFragment, data.${instanceEntityName}),
                   ${numberFields.map((field) => `${field.name}: String(data.${instanceEntityName}.${field.name}),`).join("\n")}
                   ${Object.keys(rootBlocks)
                       .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.input2State(data.${instanceEntityName}.${rootBlockKey}),`)

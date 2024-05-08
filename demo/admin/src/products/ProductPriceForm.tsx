@@ -1,5 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { Field, filterByDocument, FinalForm, FinalFormInput, FinalFormSubmitEvent, MainContent, useFormApiRef } from "@comet/admin";
+import { Field, filterByFragment, FinalForm, FinalFormInput, FinalFormSubmitEvent, MainContent, useFormApiRef } from "@comet/admin";
 import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { CircularProgress } from "@mui/material";
 import { FormApi } from "final-form";
@@ -34,7 +34,7 @@ function ProductPriceForm({ id }: FormProps): React.ReactElement {
 
     const initialValues: Partial<FormValues> = data?.product
         ? {
-              ...filterByDocument<GQLProductPriceFormFragment>(productPriceFormFragment, data.product),
+              ...filterByFragment<GQLProductPriceFormFragment>(productPriceFormFragment, data.product),
               price: String(data.product.price),
           }
         : {};

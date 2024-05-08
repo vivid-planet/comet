@@ -4,7 +4,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
-    filterByDocument,
+    filterByFragment,
     FinalForm,
     FinalFormSaveSplitButton,
     FinalFormSelect,
@@ -75,7 +75,7 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
         () =>
             data?.news
                 ? {
-                      ...filterByDocument<GQLNewsFormFragment>(newsFormFragment, data.news),
+                      ...filterByFragment<GQLNewsFormFragment>(newsFormFragment, data.news),
 
                       image: rootBlocks.image.input2State(data.news.image),
                       content: rootBlocks.content.input2State(data.news.content),

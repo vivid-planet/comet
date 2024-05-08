@@ -2,7 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     CrudVisibility,
-    filterByDocument,
+    filterByFragment,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -178,7 +178,7 @@ function ProductsGrid() {
                             }}
                             refetchQueries={["ProductsList"]}
                             copyData={() => {
-                                return filterByDocument<GQLProductsListManualFragment>(productsFragment, params.row);
+                                return filterByFragment<GQLProductsListManualFragment>(productsFragment, params.row);
                             }}
                         />
                     </>

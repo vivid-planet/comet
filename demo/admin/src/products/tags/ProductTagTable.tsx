@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
-    filterByDocument,
+    filterByFragment,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -83,7 +83,7 @@ const columns: GridColDef<GQLProductsTagsListFragment>[] = [
                         }}
                         refetchQueries={["ProductTagsList"]}
                         copyData={() => {
-                            return filterByDocument<GQLProductsTagsListFragment>(productTagsFragment, params.row);
+                            return filterByFragment<GQLProductsTagsListFragment>(productTagsFragment, params.row);
                         }}
                     />
                 </>

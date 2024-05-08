@@ -1,7 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
-    filterByDocument,
+    filterByFragment,
     FinalForm,
     FinalFormSaveSplitButton,
     FinalFormSubmitEvent,
@@ -62,7 +62,7 @@ function ProductTagForm({ id }: FormProps): React.ReactElement {
 
     const initialValues: Partial<FormState> = data?.productTag
         ? {
-              ...filterByDocument<GQLProductTagFormFragment>(productTagFormFragment, data.productTag),
+              ...filterByFragment<GQLProductTagFormFragment>(productTagFormFragment, data.productTag),
           }
         : {};
 

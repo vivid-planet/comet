@@ -1,5 +1,5 @@
 export { Alert, AlertClassKey, AlertProps } from "./alert/Alert";
-export { filterByDocument } from "./apollo/filterByDocument";
+export { filterByFragment } from "./apollo/filterByFragment";
 export { useFocusAwarePolling } from "./apollo/useFocusAwarePolling";
 export { AppHeader, AppHeaderClassKey } from "./appHeader/AppHeader";
 export { AppHeaderButton, AppHeaderButtonProps } from "./appHeader/button/AppHeaderButton";
