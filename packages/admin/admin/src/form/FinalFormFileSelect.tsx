@@ -7,6 +7,7 @@ import { Accept, useDropzone } from "react-dropzone";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { Alert } from "../alert/Alert";
 import { Tooltip } from "../common/Tooltip";
 import { PrettyBytes } from "../helpers/PrettyBytes";
 
@@ -207,38 +208,42 @@ const FinalFormFileSelectComponent: React.FunctionComponent<WithStyles<typeof st
 
     return (
         <div className={classes.root}>
-            <div {...getRootProps()} className={classes.dropzone}>
-                <input {...getInputProps()} />
-                {!disableDropzone && (
-                    <div
-                        className={clsx(
-                            classes.droppableArea,
-                            dropzoneDisabled && classes.droppableAreaIsDisabled,
-                            isDragReject && classes.droppableAreaHasError,
-                        )}
-                    >
-                        {isDragReject && <div className={classes.droppableAreaError}>{errorIcon}</div>}
-                        <Typography variant="body2" className={classes.droppableAreaCaption}>
-                            <FormattedMessage id="comet.finalFormFileSelect.dropfiles" defaultMessage="Drop files here to upload" />
-                        </Typography>
-                    </div>
-                )}
-                {!disableSelectFileButton && (
-                    <Button disabled={dropzoneDisabled} variant="contained" color="secondary" startIcon={selectIcon} className={classes.selectButton}>
-                        <FormattedMessage id="comet.finalFormFileSelect.selectfile" defaultMessage="Select file" />
-                    </Button>
-                )}
-            </div>
-            {maxFiles && fieldValue.length >= maxFiles && (
-                <FormHelperText sx={{ margin: 0 }}>
+            {maxFiles && fieldValue.length >= maxFiles ? (
+                <Alert title={<FormattedMessage id="comet.finalFormFileSelect.maximumReached" defaultMessage="Maximum reached" />} severity="info">
                     <FormattedMessage
                         id="comet.finalFormFileSelect.maximumFilesAmount"
-                        defaultMessage="Maximum {maxFiles} files"
-                        values={{
-                            maxFiles: maxFiles,
-                        }}
+                        defaultMessage="The maximum number of uploads has been reached. Please delete files from the list before uploading new files."
                     />
-                </FormHelperText>
+                </Alert>
+            ) : (
+                <div {...getRootProps()} className={classes.dropzone}>
+                    <input {...getInputProps()} />
+                    {!disableDropzone && (
+                        <div
+                            className={clsx(
+                                classes.droppableArea,
+                                dropzoneDisabled && classes.droppableAreaIsDisabled,
+                                isDragReject && classes.droppableAreaHasError,
+                            )}
+                        >
+                            {isDragReject && <div className={classes.droppableAreaError}>{errorIcon}</div>}
+                            <Typography variant="body2" className={classes.droppableAreaCaption}>
+                                <FormattedMessage id="comet.finalFormFileSelect.dropfiles" defaultMessage="Drop files here to upload" />
+                            </Typography>
+                        </div>
+                    )}
+                    {!disableSelectFileButton && (
+                        <Button
+                            disabled={dropzoneDisabled}
+                            variant="contained"
+                            color="secondary"
+                            startIcon={selectIcon}
+                            className={classes.selectButton}
+                        >
+                            <FormattedMessage id="comet.finalFormFileSelect.selectfile" defaultMessage="Select file" />
+                        </Button>
+                    )}
+                </div>
             )}
             {acceptedFiles.length > 0 && (
                 <div className={classes.fileList}>
