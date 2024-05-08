@@ -206,7 +206,6 @@ storiesOf("stories/components/DataGrid", module)
     })
     .add("compactView", () => {
         const dataGridProps = usePersistentColumnState("CompactViewStory");
-        console.log("###", "STORY", dataGridProps.columnVisibilityModel);
         const columns: CometGridColDef[] = [
             {
                 field: "id",

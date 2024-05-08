@@ -6,13 +6,6 @@ import { useWindowSize } from "../helpers/useWindowSize";
 import { useStoredState } from "../hooks/useStoredState";
 import { GridColDef, GridColView } from "./GridColDef";
 
-type ReturnGridProps = Omit<DataGridProps, "rows" | "columns"> & {
-    apiRef: ReturnType<typeof useGridApiRef>;
-    pinnedColumns: GridColumnVisibilityModel;
-    onPinnedColumnsChange: (newModel: GridColumnVisibilityModel) => void;
-    onColumnWidthChange: () => void;
-};
-
 type UserVisibilityChange = {
     column: string;
     visible: boolean;
@@ -90,7 +83,7 @@ const useCurrentView = (compactViewBreakpoint: Breakpoint, apiRef: ReturnType<ty
     return usingCompactView ? "compact" : "default";
 };
 
-export function usePersistentColumnState(stateKey: string, compactViewBreakpoint: Breakpoint = "md"): ReturnGridProps {
+export function usePersistentColumnState(stateKey: string, compactViewBreakpoint: Breakpoint = "md"): Omit<DataGridProps, "rows" | "columns"> {
     const apiRef = useGridApiRef();
     const currentView = useCurrentView(compactViewBreakpoint, apiRef);
 
@@ -145,10 +138,17 @@ export function usePersistentColumnState(stateKey: string, compactViewBreakpoint
     return {
         columnVisibilityModel,
         onColumnVisibilityModelChange: handleColumnVisibilityModelChange,
+
+        // TODO find a better solution (problem: pinnedColumns is a Pro Feature)
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         pinnedColumns,
         onPinnedColumnsChange: handlePinnedColumnsChange,
+
         onColumnWidthChange: handleColumnWidthChange,
+
         onColumnOrderChange: handleColumnOrderChange,
+
         apiRef,
         initialState,
     };
