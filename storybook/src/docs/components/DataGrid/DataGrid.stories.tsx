@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    GridColDef as CometGridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     Toolbar,
@@ -8,11 +9,11 @@ import {
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
-    useDynamicGridVisibilityModel,
     usePersistentColumnState,
 } from "@comet/admin";
 import Box from "@mui/material/Box";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGridPro } from "@mui/x-data-grid-pro";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -203,33 +204,37 @@ storiesOf("stories/components/DataGrid", module)
             </Box>
         );
     })
-    .add("useDynamicGridVisibilityModel", () => {
-        const columns: GridColDef[] = [
+    .add("compactView", () => {
+        const dataGridProps = usePersistentColumnState("CompactViewStory");
+        console.log("###", "STORY", dataGridProps.columnVisibilityModel);
+        const columns: CometGridColDef[] = [
+            {
+                field: "id",
+                headerName: "ID",
+                width: 50,
+            },
             {
                 field: "fullName",
                 headerName: "Full name",
                 flex: 1,
                 renderCell: ({ row }) => `${row.firstName} ${row.lastName}`,
+                showOnlyInView: "compact",
             },
             {
                 field: "firstName",
                 headerName: "First name",
                 flex: 1,
+                showOnlyInView: "default",
             },
             {
                 field: "lastName",
                 headerName: "Last name",
                 flex: 1,
+                showOnlyInView: "default",
             },
         ];
 
-        const dynamicGridVisibilityProps = useDynamicGridVisibilityModel({
-            fullName: { defaultView: false, compactView: true },
-            firstName: { defaultView: true, compactView: false },
-            lastName: { defaultView: true, compactView: false },
-        });
-
-        return <DataGrid sx={{ height: 400 }} rows={exampleRows} columns={columns} {...dynamicGridVisibilityProps} />;
+        return <DataGridPro sx={{ height: 200 }} rows={exampleRows} columns={columns} {...dataGridProps} />;
     })
     .add("GridFilterButton", () => {
         function DemoToolbar() {

@@ -28,6 +28,7 @@
         "@mui/material": "^5.0.0",
         "@mui/system": "^5.0.0",
         "@mui/x-data-grid": "^5.17.6",
+        "@mui/x-data-grid-pro": "^5.17.6",
         "@storybook/addon-actions": "^6.5.16",
         "@storybook/addon-docs": "^6.5.16",
         "@storybook/addon-knobs": "^6.4.0",

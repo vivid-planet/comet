@@ -2620,6 +2620,9 @@ importers:
       '@mui/x-data-grid':
         specifier: ^5.17.6
         version: 5.17.20(@mui/material@5.11.6)(@mui/system@5.11.5)(react-dom@17.0.2)(react@17.0.2)
+      '@mui/x-data-grid-pro':
+        specifier: ^5.17.6
+        version: 5.17.20(@mui/material@5.11.6)(@mui/system@5.11.5)(react-dom@17.0.2)(react@17.0.2)
       '@storybook/addon-actions':
         specifier: ^6.5.16
         version: 6.5.16(react-dom@17.0.2)(react@17.0.2)
