@@ -303,6 +303,7 @@ export function generateGrid(
     const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
         CrudContextMenu,
+        filterByFragment,
         GridFilterButton,
         MainContent,
         muiGridFilterToGql,
@@ -331,7 +332,6 @@ export function generateGrid(
         GQLDelete${gqlType}Mutation,
         GQLDelete${gqlType}MutationVariables
     } from "./${gqlTypePlural}Grid.generated";
-    import { filter as filterByFragment } from "graphql-anywhere";
     import * as React from "react";
     import { FormattedMessage, useIntl } from "react-intl";
     ${generateImportsCode(imports)}

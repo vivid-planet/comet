@@ -25,7 +25,7 @@ interface Props {
 }
 
 export async function Link({ pageTreeNodeId }: Props): Promise<JSX.Element> {
-    const { previewData } = previewParams() || { previewData: undefined };
+    const { previewData } = (await previewParams()) || { previewData: undefined };
     const graphqlFetch = createGraphQLFetch(previewData);
 
     const { pageTreeNode } = await graphqlFetch<GQLLinkRedirectQuery, GQLLinkRedirectQueryVariables>(linkRedirectQuery, {
