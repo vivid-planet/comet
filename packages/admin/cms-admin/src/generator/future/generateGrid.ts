@@ -160,6 +160,8 @@ export function generateGrid(
         props.push(...filterPropProps);
     }
 
+    const renderToolbar = config.renderToolbar ?? true;
+
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
 
     const sortArg = gridQueryType.args.find((arg) => arg.name === "sort");
@@ -408,7 +410,9 @@ export function generateGrid(
             : ""
     }
 
-    function ${gqlTypePlural}GridToolbar() {
+    ${
+        renderToolbar
+            ? `function ${gqlTypePlural}GridToolbar() {
         return (
             <Toolbar>
                 <ToolbarAutomaticTitleItem />
@@ -438,6 +442,8 @@ export function generateGrid(
                 }
             </Toolbar>
         );
+    }`
+            : ""
     }
 
     ${gridPropsTypeCode}
@@ -607,9 +613,13 @@ export function generateGrid(
                     rowCount={rowCount}
                     columns={columns}
                     loading={loading}
-                    components={{
-                        Toolbar: ${gqlTypePlural}GridToolbar,
-                    }}
+                    ${
+                        renderToolbar
+                            ? `components={{
+    Toolbar: ${gqlTypePlural}GridToolbar,
+    }}`
+                            : ""
+                    }
                 />
             </MainContent>
         );

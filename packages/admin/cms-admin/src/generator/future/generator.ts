@@ -59,6 +59,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     copyPaste?: boolean;
     readOnly?: boolean;
     filterProp?: boolean;
+    renderToolbar?: boolean;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
