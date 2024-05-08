@@ -43,12 +43,15 @@ const getUpdatedUserVisibilityChanges = (
     return updatedUserChanges;
 };
 
-const getGridColumns = (apiRef: ReturnType<typeof useGridApiRef>) => {
-    if (apiRef.current !== undefined && apiRef.current.getAllColumns !== undefined) {
-        return apiRef.current.getAllColumns();
-    }
+const useGridColumns = (apiRef: ReturnType<typeof useGridApiRef>) => {
+    const [columns, setColumns] = React.useState<GridColDef[] | undefined>();
 
-    return undefined; // This occurs if the free version of DataGrid V5 is used.
+    React.useEffect(() => {
+        // This will be `undefined` if the free version of DataGrid V5 is used.
+        setColumns(apiRef.current?.getAllColumns?.());
+    }, [apiRef]);
+
+    return columns;
 };
 
 const useFinalVisibilityModel = (
@@ -57,7 +60,7 @@ const useFinalVisibilityModel = (
     apiRef: ReturnType<typeof useGridApiRef>,
 ): GridColumnVisibilityModel => {
     const visibilityModel: GridColumnVisibilityModel = {};
-    const columns = getGridColumns(apiRef);
+    const columns = useGridColumns(apiRef);
 
     columns?.forEach((column: GridColDef) => {
         if (column.showOnlyInView !== undefined) {
@@ -75,7 +78,7 @@ const useFinalVisibilityModel = (
 };
 
 const useCurrentView = (compactViewBreakpoint: Breakpoint, apiRef: ReturnType<typeof useGridApiRef>): GridColView => {
-    const columns = getGridColumns(apiRef);
+    const columns = useGridColumns(apiRef);
     const { breakpoints } = useTheme();
     const usingCompactView = useWindowSize().width < breakpoints.values[compactViewBreakpoint];
     const enableSwitchingBetweenViews = columns?.some((column: GridColDef) => typeof column.showOnlyInView !== "undefined");
