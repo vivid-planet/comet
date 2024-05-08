@@ -22,6 +22,7 @@ import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
 import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
+import { CreateProductPage as FutureCreateProductPage } from "@src/products/future/CreateProductPage";
 import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
 import { ProductsPage } from "@src/products/generated/ProductsPage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
@@ -173,6 +174,13 @@ export const masterMenuData: MasterMenuData = [
                 route: {
                     path: "/products-future",
                     component: FutureProductsPage,
+                },
+            },
+            {
+                primary: <FormattedMessage id="menu.createProductFuture" defaultMessage="Create Product Future" />,
+                route: {
+                    path: "/create-product-future",
+                    component: FutureCreateProductPage,
                 },
             },
             {
