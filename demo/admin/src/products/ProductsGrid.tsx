@@ -38,6 +38,7 @@ import {
     GQLUpdateProductStatusMutation,
     GQLUpdateProductStatusMutationVariables,
 } from "./ProductsGrid.generated";
+import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
 function ProductsGridToolbar() {
     return (
@@ -139,9 +140,11 @@ export function ProductsGrid() {
             headerName: "",
             sortable: false,
             filterable: false,
+            width: 96,
             renderCell: (params) => {
                 return (
                     <>
+                        <ProductsGridPreviewAction product={params.row} />
                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                             <Edit color="primary" />
                         </IconButton>
