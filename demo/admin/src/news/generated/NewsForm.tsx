@@ -4,6 +4,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
+    filterByFragment,
     FinalForm,
     FinalFormSaveSplitButton,
     FinalFormSelect,
@@ -27,7 +28,6 @@ import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, 
 import { IconButton, MenuItem } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -75,7 +75,7 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
         () =>
             data?.news
                 ? {
-                      ...filter<GQLNewsFormFragment>(newsFormFragment, data.news),
+                      ...filterByFragment<GQLNewsFormFragment>(newsFormFragment, data.news),
 
                       image: rootBlocks.image.input2State(data.news.image),
                       content: rootBlocks.content.input2State(data.news.content),
