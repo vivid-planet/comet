@@ -45,7 +45,7 @@ const pageQuery = gql`
 type Props = { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput };
 
 async function fetchData({ pageTreeNodeId, scope }: Props) {
-    const { previewData } = previewParams() || { previewData: undefined };
+    const { previewData } = (await previewParams()) || { previewData: undefined };
     const graphQLFetch = createGraphQLFetch(previewData);
 
     const props = await graphQLFetch<GQLPageQuery, GQLPageQueryVariables>(
@@ -110,7 +110,7 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
 }
 
 export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput }) {
-    const { previewData } = previewParams() || { previewData: undefined };
+    const { previewData } = (await previewParams()) || { previewData: undefined };
     const graphQLFetch = createGraphQLFetch(previewData);
 
     const data = await fetchData({ pageTreeNodeId, scope });

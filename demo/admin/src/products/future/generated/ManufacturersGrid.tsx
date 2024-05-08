@@ -230,7 +230,7 @@ export function ManufacturersGrid(): React.ReactElement {
 
     const { data, loading, error } = useQuery<GQLManufacturersGridQuery, GQLManufacturersGridQueryVariables>(manufacturersQuery, {
         variables: {
-            filter: { and: [gqlFilter] },
+            filter: gqlFilter,
             search: gqlSearch,
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,

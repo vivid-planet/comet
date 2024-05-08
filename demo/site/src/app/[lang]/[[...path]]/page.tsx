@@ -17,8 +17,8 @@ const documentTypeQuery = gql`
     }
 `;
 
-function fetchPageTreeNode(params: { path: string[]; lang: string }) {
-    const { scope, previewData } = previewParams() || { scope: { domain, language: params.lang }, previewData: undefined };
+async function fetchPageTreeNode(params: { path: string[]; lang: string }) {
+    const { scope, previewData } = (await previewParams()) || { scope: { domain, language: params.lang }, previewData: undefined };
     const graphQLFetch = createGraphQLFetch(previewData);
     return graphQLFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
         documentTypeQuery,
@@ -36,7 +36,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
     // TODO support multiple domains, get domain by Host header
-    const { scope } = previewParams() || { scope: { domain, language: params.lang } };
+    const { scope } = (await previewParams()) || { scope: { domain, language: params.lang } };
 
     const data = await fetchPageTreeNode(params);
 
@@ -58,7 +58,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 
 export default async function Page({ params }: Props) {
     // TODO support multiple domains, get domain by Host header
-    const { scope } = previewParams() || { scope: { domain, language: params.lang } };
+    const { scope } = (await previewParams()) || { scope: { domain, language: params.lang } };
 
     if (!languages.includes(params.lang)) {
         notFound();
