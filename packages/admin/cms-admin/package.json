@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-admin",
-    "version": "6.8.0",
+    "version": "6.9.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -34,12 +34,12 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "@comet/admin": "workspace:^6.8.0",
-        "@comet/admin-date-time": "workspace:^6.8.0",
-        "@comet/admin-icons": "workspace:^6.8.0",
-        "@comet/admin-rte": "workspace:^6.8.0",
-        "@comet/admin-theme": "workspace:^6.8.0",
-        "@comet/blocks-admin": "workspace:^6.8.0",
+        "@comet/admin": "workspace:^6.9.0",
+        "@comet/admin-date-time": "workspace:^6.9.0",
+        "@comet/admin-icons": "workspace:^6.9.0",
+        "@comet/admin-rte": "workspace:^6.9.0",
+        "@comet/admin-theme": "workspace:^6.9.0",
+        "@comet/blocks-admin": "workspace:^6.9.0",
         "@graphql-tools/graphql-file-loader": "^7.5.17",
         "@graphql-tools/load": "^7.8.14",
         "@graphql-typed-document-node/core": "^3.1.1",
@@ -83,10 +83,16 @@
         "@apollo/client": "^3.7.0",
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
+<<<<<<< HEAD
         "@comet/admin-babel-preset": "workspace:^6.8.0",
         "@comet/admin-theme": "workspace:^6.8.0",
         "@comet/cli": "workspace:^6.8.0",
         "@comet/eslint-config": "workspace:^6.8.0",
+=======
+        "@comet/admin-babel-preset": "workspace:^6.9.0",
+        "@comet/cli": "workspace:^6.9.0",
+        "@comet/eslint-config": "workspace:^6.9.0",
+>>>>>>> main
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
         "@graphql-codegen/cli": "^2.0.0",
@@ -138,7 +144,7 @@
         "react-dnd-html5-backend": "^16.0.0",
         "react-dom": "^17.0.0",
         "react-final-form": "^6.5.9",
-        "react-intl": "^5.0.0",
+        "react-intl": "^6.0.0",
         "react-router": "^5.0.0",
         "react-router-dom": "^5.0.0",
         "ts-jest": "^29.0.5",
@@ -160,7 +166,7 @@
         "react-dnd-html5-backend": "^16.0.0",
         "react-dom": "^16.8.0 || ^17.0.0",
         "react-final-form": "^6.0.0",
-        "react-intl": "^5.0.0",
+        "react-intl": "^5.0.0 || ^6.0.0",
         "react-router": "^5.0.0",
         "react-router-dom": "^5.0.0"
     },

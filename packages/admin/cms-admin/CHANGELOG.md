@@ -1,5 +1,23 @@
 # @comet/cms-admin
 
+## 6.9.0
+
+### Minor Changes
+
+-   e85837a17: Loosen peer dependency on `react-intl` to allow using v6
+
+### Patch Changes
+
+-   Updated dependencies [9ff9d66c6]
+-   Updated dependencies [8fb8b209a]
+-   Updated dependencies [e85837a17]
+    -   @comet/admin@6.9.0
+    -   @comet/admin-rte@6.9.0
+    -   @comet/admin-date-time@6.9.0
+    -   @comet/blocks-admin@6.9.0
+    -   @comet/admin-icons@6.9.0
+    -   @comet/admin-theme@6.9.0
+
 ## 6.8.0
 
 ### Patch Changes
