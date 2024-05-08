@@ -34,13 +34,8 @@ export function ProductPriceForm({ id }: FormProps): React.ReactElement {
 
     const initialValues: Partial<FormValues> = data?.product
         ? {
-<<<<<<< HEAD
-              ...filter<GQLProductPriceFormFragment>(productPriceFormFragment, data.product),
-              price: data.product.price ? String(data.product.price) : undefined,
-=======
               ...filterByFragment<GQLProductPriceFormFragment>(productPriceFormFragment, data.product),
-              price: String(data.product.price),
->>>>>>> main
+              price: data.product.price ? String(data.product.price) : undefined,
           }
         : {};
 

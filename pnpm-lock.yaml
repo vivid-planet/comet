@@ -201,13 +201,8 @@ importers:
         specifier: ^8.0.0
         version: 8.6.12(react@17.0.2)
       react-intl:
-<<<<<<< HEAD
-        specifier: ^5.0.0
-        version: 5.25.1(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
-=======
         specifier: ^6.0.0
-        version: 6.6.6(react@17.0.2)(typescript@4.9.4)
->>>>>>> main
+        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
       react-is:
         specifier: ^17.0.2
         version: 17.0.2
@@ -673,13 +668,8 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
       react-intl:
-<<<<<<< HEAD
-        specifier: ^5.0.0
-        version: 5.25.1(@types/react@18.2.71)(react@18.2.0)(typescript@4.9.4)
-=======
         specifier: ^6.0.0
-        version: 6.6.6(react@17.0.2)(typescript@4.9.4)
->>>>>>> main
+        version: 6.6.6(@types/react@18.2.71)(react@18.2.0)(typescript@4.9.4)
       react-is:
         specifier: ^17.0.2
         version: 17.0.2
@@ -877,13 +867,8 @@ importers:
         specifier: ^6.5.9
         version: 6.5.9(final-form@4.20.9)(react@17.0.2)
       react-intl:
-<<<<<<< HEAD
-        specifier: ^5.0.0
-        version: 5.25.1(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
-=======
         specifier: ^6.0.0
-        version: 6.6.6(react@17.0.2)(typescript@4.9.4)
->>>>>>> main
+        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
       react-live:
         specifier: ^2.4.1
         version: 2.4.1(react-dom@17.0.2)(react@17.0.2)
@@ -989,7 +974,7 @@ importers:
         specifier: workspace:^6.9.0
         version: link:../admin-babel-preset
       '@comet/admin-theme':
-        specifier: workspace:^6.8.0
+        specifier: workspace:^6.9.0
         version: link:../admin-theme
       '@comet/eslint-config':
         specifier: workspace:^6.9.0
@@ -1112,13 +1097,8 @@ importers:
         specifier: ^6.3.1
         version: 6.5.9(final-form@4.20.9)(react@17.0.2)
       react-intl:
-<<<<<<< HEAD
-        specifier: ^5.10.0
-        version: 5.25.1(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
-=======
         specifier: ^6.0.0
-        version: 6.6.6(react@17.0.2)(typescript@4.9.4)
->>>>>>> main
+        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
       react-router:
         specifier: ^5.1.2
         version: 5.3.4(react@17.0.2)
@@ -1229,13 +1209,8 @@ importers:
         specifier: ^6.3.1
         version: 6.5.9(final-form@4.20.9)(react@17.0.2)
       react-intl:
-<<<<<<< HEAD
-        specifier: ^5.24.6
-        version: 5.25.1(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
-=======
         specifier: ^6.0.0
-        version: 6.6.6(react@17.0.2)(typescript@4.9.4)
->>>>>>> main
+        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2
@@ -1310,13 +1285,8 @@ importers:
         specifier: ^6.5.7
         version: 6.5.9(final-form@4.20.9)(react@17.0.2)
       react-intl:
-<<<<<<< HEAD
-        specifier: ^5.24.6
-        version: 5.25.1(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
-=======
         specifier: ^6.0.0
-        version: 6.6.6(react@17.0.2)(typescript@4.9.4)
->>>>>>> main
+        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2
@@ -1554,13 +1524,8 @@ importers:
         specifier: ^6.3.1
         version: 6.5.9(final-form@4.20.9)(react@17.0.2)
       react-intl:
-<<<<<<< HEAD
-        specifier: ^5.10.0
-        version: 5.25.1(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
-=======
         specifier: ^6.0.0
-        version: 6.6.6(react@17.0.2)(typescript@4.9.4)
->>>>>>> main
+        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2
@@ -1744,13 +1709,8 @@ importers:
         specifier: ^6.0.0
         version: 6.5.9(final-form@4.20.9)(react@17.0.2)
       react-intl:
-<<<<<<< HEAD
-        specifier: ^5.0.0
-        version: 5.25.1(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
-=======
         specifier: ^6.0.0
-        version: 6.6.6(react@17.0.2)(typescript@4.9.4)
->>>>>>> main
+        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
       react-router:
         specifier: ^5.0.0
         version: 5.3.4(react@17.0.2)
@@ -2068,13 +2028,8 @@ importers:
         specifier: ^6.5.9
         version: 6.5.9(final-form@4.20.9)(react@17.0.2)
       react-intl:
-<<<<<<< HEAD
-        specifier: ^5.0.0
-        version: 5.25.1(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
-=======
         specifier: ^6.0.0
-        version: 6.6.6(react@17.0.2)(typescript@4.9.4)
->>>>>>> main
+        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
       react-router:
         specifier: ^5.0.0
         version: 5.3.4(react@17.0.2)
@@ -2735,13 +2690,8 @@ importers:
         specifier: ^6.3.1
         version: 6.5.9(final-form@4.20.9)(react@17.0.2)
       react-intl:
-<<<<<<< HEAD
-        specifier: ^5.10.0
-        version: 5.25.1(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
-=======
         specifier: ^6.0.0
-        version: 6.6.6(react@17.0.2)(typescript@4.9.4)
->>>>>>> main
+        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
       react-select:
         specifier: ^3.0.4
         version: 3.2.0(react-dom@17.0.2)(react@17.0.2)
@@ -4439,7 +4389,7 @@ packages:
       '@babel/traverse': 7.20.13
       '@babel/types': 7.20.7
       convert-source-map: 1.9.0
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@9.3.1)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.0
@@ -4461,7 +4411,7 @@ packages:
       '@babel/traverse': 7.22.11
       '@babel/types': 7.22.11
       convert-source-map: 1.9.0
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@9.3.1)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -6928,15 +6878,9 @@ packages:
       '@babel/helper-function-name': 7.19.0
       '@babel/helper-hoist-variables': 7.18.6
       '@babel/helper-split-export-declaration': 7.18.6
-<<<<<<< HEAD
       '@babel/parser': 7.22.14
       '@babel/types': 7.22.11
       debug: 4.3.4(supports-color@9.3.1)
-=======
-      '@babel/parser': 7.20.13
-      '@babel/types': 7.20.7
-      debug: 4.3.4
->>>>>>> main
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -6953,7 +6897,7 @@ packages:
       '@babel/helper-split-export-declaration': 7.22.6
       '@babel/parser': 7.22.14
       '@babel/types': 7.22.11
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@9.3.1)
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -8563,7 +8507,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@9.3.1)
       espree: 9.5.2
       globals: 13.19.0
       ignore: 5.2.4
@@ -8652,16 +8596,6 @@ packages:
     peerDependenciesMeta:
       vue:
         optional: true
-<<<<<<< HEAD
-    dev: false
-
-  /@formatjs/ecma402-abstract@1.11.4:
-    resolution: {integrity: sha512-EBikYFp2JCdIfGEb5G9dyCkTGDmC57KSHhRQOC3aYxoPWVZvfWCDjZwkGYHN7Lis/fmuWl906bnNTJifDQ3sXw==}
-    dependencies:
-      '@formatjs/intl-localematcher': 0.2.25
-      tslib: 2.5.0
-=======
->>>>>>> main
 
   /@formatjs/ecma402-abstract@1.14.3:
     resolution: {integrity: sha512-SlsbRC/RX+/zg4AApWIFNDdkLtFbkq3LNoZWXZCE/nHVKqoIJyaoQyge/I0Y38vLxowUn9KTtXgusLD91+orbg==}
@@ -8670,35 +8604,16 @@ packages:
       tslib: 2.5.0
     dev: false
 
-<<<<<<< HEAD
-  /@formatjs/ecma402-abstract@1.5.0:
-    resolution: {integrity: sha512-wXv36yo+mfWllweN0Fq7sUs7PUiNopn7I0JpLTe3hGu6ZMR4CV7LqK1llhB18pndwpKoafQKb1et2DCJAOW20Q==}
-    dependencies:
-      tslib: 2.5.0
-    dev: true
-
-  /@formatjs/fast-memoize@1.2.1:
-    resolution: {integrity: sha512-Rg0e76nomkz3vF9IPlKeV+Qynok0r7YZjL6syLz4/urSg0IbjPZCB/iYUMNsYA643gh4mgrX3T7KEIFIxJBQeg==}
-    dependencies:
-      tslib: 2.5.0
-=======
   /@formatjs/ecma402-abstract@1.18.2:
     resolution: {integrity: sha512-+QoPW4csYALsQIl8GbN14igZzDbuwzcpWrku9nyMXlaqAlwRBgl5V+p0vWMGFqHOw37czNXaP/lEk4wbLgcmtA==}
     dependencies:
       '@formatjs/intl-localematcher': 0.5.4
-      tslib: 2.4.1
->>>>>>> main
+      tslib: 2.5.0
 
   /@formatjs/fast-memoize@2.2.0:
     resolution: {integrity: sha512-hnk/nY8FyrL5YxwP9e4r9dqeM6cAbo8PeU9UjyXojZMNvVad2Z06FAVHyR3Ecw6fza+0GH7vdJgiKIVXTMbSBA==}
     dependencies:
-<<<<<<< HEAD
-      '@formatjs/ecma402-abstract': 1.11.4
-      '@formatjs/icu-skeleton-parser': 1.3.6
       tslib: 2.5.0
-=======
-      tslib: 2.4.1
->>>>>>> main
 
   /@formatjs/icu-messageformat-parser@2.1.14:
     resolution: {integrity: sha512-0KqeVOb72losEhUW+59vhZGGd14s1f35uThfEMVKZHKLEObvJdFTiI3ZQwvTMUCzLEMxnS6mtnYPmG4mTvwd3Q==}
@@ -8713,7 +8628,7 @@ packages:
     dependencies:
       '@formatjs/ecma402-abstract': 1.18.2
       '@formatjs/icu-skeleton-parser': 1.8.0
-      tslib: 2.4.1
+      tslib: 2.5.0
 
   /@formatjs/icu-skeleton-parser@1.3.18:
     resolution: {integrity: sha512-ND1ZkZfmLPcHjAH1sVpkpQxA+QYfOX3py3SjKWMUVGDow18gZ0WPqz3F+pJLYQMpS2LnnQ5zYR2jPVYTbRwMpg==}
@@ -8725,45 +8640,22 @@ packages:
   /@formatjs/icu-skeleton-parser@1.8.0:
     resolution: {integrity: sha512-QWLAYvM0n8hv7Nq5BEs4LKIjevpVpbGLAJgOaYzg9wABEoX1j0JO1q2/jVkO6CVlq0dbsxZCngS5aXbysYueqA==}
     dependencies:
-<<<<<<< HEAD
-      '@formatjs/ecma402-abstract': 1.11.4
-      tslib: 2.5.0
-=======
       '@formatjs/ecma402-abstract': 1.18.2
-      tslib: 2.4.1
->>>>>>> main
+      tslib: 2.5.0
 
   /@formatjs/intl-displaynames@6.6.6:
     resolution: {integrity: sha512-Dg5URSjx0uzF8VZXtHb6KYZ6LFEEhCbAbKoYChYHEOnMFTw/ZU3jIo/NrujzQD2EfKPgQzIq73LOUvW6Z/LpFA==}
     dependencies:
-<<<<<<< HEAD
-      '@formatjs/ecma402-abstract': 1.11.4
-      '@formatjs/intl-localematcher': 0.2.25
-      tslib: 2.5.0
-
-  /@formatjs/intl-listformat@6.5.3:
-    resolution: {integrity: sha512-ozpz515F/+3CU+HnLi5DYPsLa6JoCfBggBSSg/8nOB5LYSFW9+ZgNQJxJ8tdhKYeODT+4qVHX27EeJLoxLGLNg==}
-    dependencies:
-      '@formatjs/ecma402-abstract': 1.11.4
-      '@formatjs/intl-localematcher': 0.2.25
-      tslib: 2.5.0
-
-  /@formatjs/intl-localematcher@0.2.25:
-    resolution: {integrity: sha512-YmLcX70BxoSopLFdLr1Ds99NdlTI2oWoLbaUW2M406lxOIPzE1KQhRz2fPUkq34xVZQaihCoU29h0KK7An3bhA==}
-    dependencies:
-      tslib: 2.5.0
-=======
       '@formatjs/ecma402-abstract': 1.18.2
       '@formatjs/intl-localematcher': 0.5.4
-      tslib: 2.4.1
+      tslib: 2.5.0
 
   /@formatjs/intl-listformat@7.5.5:
     resolution: {integrity: sha512-XoI52qrU6aBGJC9KJddqnacuBbPlb/bXFN+lIFVFhQ1RnFHpzuFrlFdjD9am2O7ZSYsyqzYRpkVcXeT1GHkwDQ==}
     dependencies:
       '@formatjs/ecma402-abstract': 1.18.2
       '@formatjs/intl-localematcher': 0.5.4
-      tslib: 2.4.1
->>>>>>> main
+      tslib: 2.5.0
 
   /@formatjs/intl-localematcher@0.2.32:
     resolution: {integrity: sha512-k/MEBstff4sttohyEpXxCmC3MqbUn9VvHGlZ8fauLzkbwXmVrEeyzS+4uhrvAk9DWU9/7otYWxyDox4nT/KVLQ==}
@@ -8774,7 +8666,7 @@ packages:
   /@formatjs/intl-localematcher@0.5.4:
     resolution: {integrity: sha512-zTwEpWOzZ2CiKcB93BLngUX59hQkuZjT2+SAQEscSm52peDW/getsawMcWF1rGRpMCX6D7nSJA3CzJ8gn13N/g==}
     dependencies:
-      tslib: 2.4.1
+      tslib: 2.5.0
 
   /@formatjs/intl@2.10.2(typescript@4.9.4):
     resolution: {integrity: sha512-raPGWr3JRv3neXV78SqPFrGC05fIbhhNzVghHNxFde27ls2KkXiMhtP7HBybjGpikVSjjhdhaZto+4p1vmm9bQ==}
@@ -8784,40 +8676,15 @@ packages:
       typescript:
         optional: true
     dependencies:
-<<<<<<< HEAD
-      '@formatjs/ecma402-abstract': 1.11.4
-      '@formatjs/fast-memoize': 1.2.1
-      '@formatjs/icu-messageformat-parser': 2.1.0
-      '@formatjs/intl-displaynames': 5.4.3
-      '@formatjs/intl-listformat': 6.5.3
-      intl-messageformat: 9.13.0
-      tslib: 2.5.0
-      typescript: 4.9.4
-
-  /@formatjs/ts-transformer@2.13.0:
-    resolution: {integrity: sha512-mu7sHXZk1NWZrQ3eUqugpSYo8x5/tXkrI4uIbFqCEC0eNgQaIcoKgVeDFgDAcgG+cEme2atAUYSFF+DFWC4org==}
-    peerDependencies:
-      ts-jest: ^26.4.0
-    peerDependenciesMeta:
-      ts-jest:
-        optional: true
-    dependencies:
-      intl-messageformat-parser: 6.1.2
-      tslib: 2.5.0
-      typescript: 4.9.4
-    dev: true
-
-=======
       '@formatjs/ecma402-abstract': 1.18.2
       '@formatjs/fast-memoize': 2.2.0
       '@formatjs/icu-messageformat-parser': 2.7.6
       '@formatjs/intl-displaynames': 6.6.6
       '@formatjs/intl-listformat': 7.5.5
       intl-messageformat: 10.5.12
-      tslib: 2.4.1
+      tslib: 2.5.0
       typescript: 4.9.4
 
->>>>>>> main
   /@formatjs/ts-transformer@3.11.5:
     resolution: {integrity: sha512-cAmvKzgPqdetAr/RsxoXYhfNhMf5tERlXzJTsQw+j6tddPwIAbihACQx6KaajyJJ4aNssiziWNmcaHtjTqrrVw==}
     peerDependencies:
@@ -8835,24 +8702,6 @@ packages:
       typescript: 4.9.4
     dev: false
 
-<<<<<<< HEAD
-  /@formatjs/ts-transformer@3.9.4:
-    resolution: {integrity: sha512-S5q/zsTodaKtxVxNvbRQ9APenJtm5smXE76usS+5yF2vWQdZHkagmOKWfgvfIbesP4SR2B+i3koqlnlpqSIp5w==}
-    peerDependencies:
-      ts-jest: '27'
-    peerDependenciesMeta:
-      ts-jest:
-        optional: true
-    dependencies:
-      '@formatjs/icu-messageformat-parser': 2.1.0
-      '@types/node': 17.0.45
-      chalk: 4.1.2
-      tslib: 2.5.0
-      typescript: 4.9.4
-    dev: true
-
-=======
->>>>>>> main
   /@gar/promisify@1.1.3:
     resolution: {integrity: sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==}
     dev: false
@@ -9720,7 +9569,7 @@ packages:
       '@types/json-stable-stringify': 1.0.34
       '@types/jsonwebtoken': 9.0.1
       chalk: 4.1.2
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@9.3.1)
       dotenv: 16.0.3
       graphql: 15.8.0
       graphql-request: 5.1.0(graphql@15.8.0)
@@ -10071,7 +9920,7 @@ packages:
     engines: {node: '>=10.10.0'}
     dependencies:
       '@humanwhocodes/object-schema': 1.2.1
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@9.3.1)
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -15945,7 +15794,7 @@ packages:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
     engines: {node: '>= 6.0.0'}
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@9.3.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -19226,32 +19075,6 @@ packages:
       ms: 2.1.3
     dev: false
 
-<<<<<<< HEAD
-=======
-  /debug@4.3.4:
-    resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
-    engines: {node: '>=6.0'}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-    dependencies:
-      ms: 2.1.2
-
-  /debug@4.3.4(supports-color@5.5.0):
-    resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
-    engines: {node: '>=6.0'}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-    dependencies:
-      ms: 2.1.2
-      supports-color: 5.5.0
-
->>>>>>> main
   /debug@4.3.4(supports-color@9.3.1):
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
     engines: {node: '>=6.0'}
@@ -20773,7 +20596,7 @@ packages:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@9.3.1)
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.1.1
@@ -23015,7 +22838,7 @@ packages:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@9.3.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -23078,7 +22901,7 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4
+      debug: 4.3.4(supports-color@9.3.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -23359,24 +23182,10 @@ packages:
   /intl-messageformat@10.5.12:
     resolution: {integrity: sha512-izl0uxhy/melhw8gP2r8pGiVieviZmM4v5Oqx3c1/R7g9cwER2smmGfSjcIsp8Y3Q53bfciL/gkxacJRx/dUvg==}
     dependencies:
-<<<<<<< HEAD
-      '@formatjs/ecma402-abstract': 1.5.0
-      tslib: 2.5.0
-    dev: true
-
-  /intl-messageformat@9.13.0:
-    resolution: {integrity: sha512-7sGC7QnSQGa5LZP7bXLDhVDtQOeKGeBFGHF2Y8LVBwYZoQZCgWeKoPGTa5GMG8g/TzDgeXuYJQis7Ggiw2xTOw==}
-    dependencies:
-      '@formatjs/ecma402-abstract': 1.11.4
-      '@formatjs/fast-memoize': 1.2.1
-      '@formatjs/icu-messageformat-parser': 2.1.0
-      tslib: 2.5.0
-=======
       '@formatjs/ecma402-abstract': 1.18.2
       '@formatjs/fast-memoize': 2.2.0
       '@formatjs/icu-messageformat-parser': 2.7.6
-      tslib: 2.4.1
->>>>>>> main
+      tslib: 2.5.0
 
   /invariant@2.2.4:
     resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
@@ -26246,6 +26055,7 @@ packages:
     resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+    dev: false
 
   /nanoid@3.3.7:
     resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
@@ -29143,20 +28953,12 @@ packages:
       react: 17.0.2
     dev: false
 
-<<<<<<< HEAD
-  /react-intl@5.25.1(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4):
-    resolution: {integrity: sha512-pkjdQDvpJROoXLMltkP/5mZb0/XqrqLoPGKUCfbdkP8m6U9xbK40K51Wu+a4aQqTEvEK5lHBk0fWzUV72SJ3Hg==}
-    peerDependencies:
-      '@types/react': '*'
-      react: ^16.3.0 || 17 || 18
-      typescript: ^4.5
-=======
-  /react-intl@6.6.6(react@17.0.2)(typescript@4.9.4):
+  /react-intl@6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4):
     resolution: {integrity: sha512-dKXQNUrhZTlCp8uelYW8PHiM4saNKyLmHCfsJYWK0N/kZ/Ien35wjPHB8x9yQcTJbeN/hBOmb4x16iKUrdL9MA==}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.6.0 || 17 || 18
       typescript: ^4.7 || 5
->>>>>>> main
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -29171,30 +28973,30 @@ packages:
       hoist-non-react-statics: 3.3.2
       intl-messageformat: 10.5.12
       react: 17.0.2
-      tslib: 2.4.1
+      tslib: 2.5.0
       typescript: 4.9.4
 
-  /react-intl@5.25.1(@types/react@18.2.71)(react@18.2.0)(typescript@4.9.4):
-    resolution: {integrity: sha512-pkjdQDvpJROoXLMltkP/5mZb0/XqrqLoPGKUCfbdkP8m6U9xbK40K51Wu+a4aQqTEvEK5lHBk0fWzUV72SJ3Hg==}
+  /react-intl@6.6.6(@types/react@18.2.71)(react@18.2.0)(typescript@4.9.4):
+    resolution: {integrity: sha512-dKXQNUrhZTlCp8uelYW8PHiM4saNKyLmHCfsJYWK0N/kZ/Ien35wjPHB8x9yQcTJbeN/hBOmb4x16iKUrdL9MA==}
     peerDependencies:
       '@types/react': '*'
-      react: ^16.3.0 || 17 || 18
-      typescript: ^4.5
+      react: ^16.6.0 || 17 || 18
+      typescript: ^4.7 || 5
     peerDependenciesMeta:
       typescript:
         optional: true
     dependencies:
-      '@formatjs/ecma402-abstract': 1.11.4
-      '@formatjs/icu-messageformat-parser': 2.1.0
-      '@formatjs/intl': 2.2.1(typescript@4.9.4)
-      '@formatjs/intl-displaynames': 5.4.3
-      '@formatjs/intl-listformat': 6.5.3
+      '@formatjs/ecma402-abstract': 1.18.2
+      '@formatjs/icu-messageformat-parser': 2.7.6
+      '@formatjs/intl': 2.10.2(typescript@4.9.4)
+      '@formatjs/intl-displaynames': 6.6.6
+      '@formatjs/intl-listformat': 7.5.5
       '@types/hoist-non-react-statics': 3.3.1
       '@types/react': 18.2.71
       hoist-non-react-statics: 3.3.2
-      intl-messageformat: 9.13.0
+      intl-messageformat: 10.5.12
       react: 18.2.0
-      tslib: 2.4.1
+      tslib: 2.5.0
       typescript: 4.9.4
     dev: false
 
@@ -30815,6 +30617,7 @@ packages:
   /source-map-js@1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
+    dev: false
 
   /source-map-js@1.2.0:
     resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==}

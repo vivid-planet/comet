@@ -3,6 +3,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    filterByFragment,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -22,7 +23,6 @@ import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
-import { filter as filterByFragment } from "graphql-anywhere";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
