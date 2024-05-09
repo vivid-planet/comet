@@ -1,5 +1,5 @@
 import { ComponentsOverrides } from "@mui/material";
-import { Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
@@ -8,19 +8,47 @@ import { Toolbar, ToolbarProps } from "./Toolbar";
 
 export type DataGridToolbarClassKey = "root";
 
-export type DataGridToolbarProps = Omit<ToolbarProps, "slotProps" | "scopeIndicator" | "hideTopBar" | "hideBottomBar"> &
+export type DataGridToolbarProps = { density?: "standard" | "comfortable" } & Omit<
+    ToolbarProps,
+    "slotProps" | "scopeIndicator" | "hideTopBar" | "hideBottomBar"
+> &
     ThemedComponentBaseProps<{
         root: typeof Toolbar;
     }>;
 
-const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey>({
+type OwnerState = {
+    density: "standard" | "comfortable";
+};
+
+const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
     componentName: "DataGridToolbar",
     slotName: "root",
-})();
+})(
+    ({ ownerState, theme }) => css`
+        ${ownerState.density === "comfortable" &&
+        css`
+            min-height: 80px;
+
+            ${theme.breakpoints.up("sm")} {
+                min-height: 80px;
+            }
+
+            // necessary to override strange MUI default styling
+            @media (min-width: 0px) and (orientation: landscape) {
+                min-height: 80px;
+            }
+        `}
+    `,
+);
 
 export const DataGridToolbar = (inProps: DataGridToolbarProps) => {
-    const props = useThemeProps({ props: inProps, name: "CometAdminDataGridToolbar" });
-    return <Root {...props} hideTopBar />;
+    const { density = "standard", ...restProps } = useThemeProps({ props: inProps, name: "CometAdminDataGridToolbar" });
+
+    const ownerState: OwnerState = {
+        density,
+    };
+
+    return <Root {...restProps} hideTopBar ownerState={ownerState} />;
 };
 
 declare module "@mui/material/styles" {
