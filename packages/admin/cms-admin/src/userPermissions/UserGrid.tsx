@@ -1,12 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+    DataGridToolbar,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackSwitchApiContext,
-    Toolbar,
-    ToolbarActions,
-    ToolbarAutomaticTitleItem,
     ToolbarItem,
     useDataGridRemote,
     usePersistentColumnState,
@@ -98,15 +96,14 @@ export const UserGrid: React.FC = () => {
             loading={loading}
             components={{
                 Toolbar: () => (
-                    <Toolbar>
-                        <ToolbarAutomaticTitleItem />
-                        <ToolbarActions>
-                            <ToolbarItem>
-                                <GridToolbarQuickFilter />
-                                <GridFilterButton />
-                            </ToolbarItem>
-                        </ToolbarActions>
-                    </Toolbar>
+                    <DataGridToolbar>
+                        <ToolbarItem>
+                            <GridToolbarQuickFilter />
+                        </ToolbarItem>
+                        <ToolbarItem>
+                            <GridFilterButton />
+                        </ToolbarItem>
+                    </DataGridToolbar>
                 ),
             }}
         />
