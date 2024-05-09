@@ -32,6 +32,7 @@ export {
 } from "./common/toolbar/automatictitleitem/ToolbarAutomaticTitleItem";
 export { ToolbarBackButton, ToolbarBackButtonClassKey, ToolbarBackButtonProps } from "./common/toolbar/backbutton/ToolbarBackButton";
 export { ToolbarBreadcrumbs, ToolbarBreadcrumbsClassKey, ToolbarBreadcrumbsProps } from "./common/toolbar/breadcrumb/ToolbarBreadcrumbs";
+export { DataGridToolbar, DataGridToolbarClassKey, DataGridToolbarProps } from "./common/toolbar/DataGridToolbar";
 export { ToolbarFillSpace, ToolbarFillSpaceClassKey, ToolbarFillSpaceProps } from "./common/toolbar/fillspace/ToolbarFillSpace";
 export { ToolbarItem, ToolbarItemClassKey, ToolbarItemProps } from "./common/toolbar/item/ToolbarItem";
 export { StackToolbar } from "./common/toolbar/StackToolbar";
