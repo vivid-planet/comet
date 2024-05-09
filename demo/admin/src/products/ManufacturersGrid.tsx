@@ -1,14 +1,13 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    DataGridToolbar,
     filterByFragment,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    Toolbar,
-    ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
     Tooltip,
@@ -33,21 +32,20 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 function ManufacturersGridToolbar() {
     return (
-        <Toolbar>
-            <ToolbarAutomaticTitleItem />
+        <DataGridToolbar>
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
-            <ToolbarFillSpace />
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
+            <ToolbarFillSpace />
             <ToolbarItem>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
                     <FormattedMessage id="manufacturers.newManufacturer" defaultMessage="New Manufacturer" />
                 </Button>
             </ToolbarItem>
-        </Toolbar>
+        </DataGridToolbar>
     );
 }
 
@@ -179,7 +177,7 @@ export function ManufacturersGrid() {
     const rowCount = useBufferedRowCount(data?.manufacturers.totalCount);
 
     return (
-        <MainContent fullHeight disablePadding>
+        <MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
                 disableSelectionOnClick
