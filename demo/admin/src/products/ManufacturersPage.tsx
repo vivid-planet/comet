@@ -5,7 +5,6 @@ import {
     StackPage,
     StackSwitch,
     StackToolbar,
-    Toolbar,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
@@ -23,7 +22,7 @@ export function ManufacturersPage(): React.ReactElement {
         <Stack topLevelTitle={intl.formatMessage({ id: "products.manufacturers", defaultMessage: "Manufacturers" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <Toolbar scopeIndicator={<ContentScopeIndicator global />} hideBottomBar />
+                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />} hideBottomBar />
                     <ManufacturersGrid />
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editManufacturers", defaultMessage: "Edit Manufacturers" })}>
