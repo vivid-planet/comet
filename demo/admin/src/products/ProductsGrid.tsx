@@ -2,14 +2,13 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     CrudVisibility,
+    DataGridToolbar,
     filterByFragment,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    Toolbar,
-    ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
     Tooltip,
@@ -42,21 +41,20 @@ import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
 function ProductsGridToolbar() {
     return (
-        <Toolbar>
-            <ToolbarAutomaticTitleItem />
+        <DataGridToolbar>
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
-            <ToolbarFillSpace />
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
+            <ToolbarFillSpace />
             <ToolbarItem>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
                     <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
                 </Button>
             </ToolbarItem>
-        </Toolbar>
+        </DataGridToolbar>
     );
 }
 
@@ -200,7 +198,7 @@ export function ProductsGrid() {
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
     return (
-        <MainContent fullHeight disablePadding>
+        <MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
                 disableSelectionOnClick
