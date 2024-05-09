@@ -31,7 +31,7 @@ export const ToolbarAutomaticTitleItem = (inProps: ToolbarAutomaticTitleItemProp
 
     return (
         <Root {...slotProps?.root} {...restProps}>
-            <Typography variant="h4" {...typographyProps} {...slotProps?.typography}>
+            <Typography variant="h5" {...typographyProps} {...slotProps?.typography}>
                 {stackApi?.breadCrumbs != null && stackApi.breadCrumbs.length > 0 && stackApi.breadCrumbs[stackApi?.breadCrumbs.length - 1].title}
             </Typography>
         </Root>

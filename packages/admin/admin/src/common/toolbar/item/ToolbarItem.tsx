@@ -12,11 +12,14 @@ const Root = createComponentSlot("div")<ToolbarItemClassKey>({
     slotName: "root",
 })(
     ({ theme }) => css`
-        padding: 15px;
         display: flex;
         justify-items: center;
         align-items: center;
-        border-right: 1px solid ${theme.palette.grey[50]};
+        padding: 0 ${theme.spacing(1)};
+
+        ${theme.breakpoints.up("sm")} {
+            padding: 0 ${theme.spacing(2)};
+        }
     `,
 );
 

@@ -1,5 +1,5 @@
-import { ComponentsOverrides, Link, Typography as MuiTypography, TypographyTypeMap } from "@mui/material";
-import { css, Theme, useThemeProps } from "@mui/material/styles";
+import { Link, Typography as MuiTypography, TypographyTypeMap } from "@mui/material";
+import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
 
@@ -118,20 +118,3 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
         </StackApiContext.Consumer>
     );
 };
-
-declare module "@mui/material/styles" {
-    interface ComponentNameToClassKey {
-        CometAdminToolbarBreadcrumbs: ToolbarBreadcrumbsClassKey;
-    }
-
-    interface ComponentsPropsList {
-        CometAdminToolbarBreadcrumbs: ToolbarBreadcrumbsProps;
-    }
-
-    interface Components {
-        CometAdminToolbarBreadcrumbs?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminToolbarBreadcrumbs"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminToolbarBreadcrumbs"];
-        };
-    }
-}
