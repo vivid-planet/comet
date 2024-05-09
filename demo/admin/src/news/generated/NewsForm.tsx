@@ -24,7 +24,7 @@ import {
 import { DateField } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { ContentScopeIndicator, DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { IconButton, MenuItem } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormApi } from "final-form";
@@ -143,9 +143,9 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
     return (
         <FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues}>
             {({ values }) => (
-                <>
+                <EditPageLayout>
                     {saveConflict.dialogs}
-                    <Toolbar scopeIndicator={<ContentScopeIndicator />}>
+                    <Toolbar>
                         <ToolbarItem>
                             <IconButton onClick={stackApi?.goBack}>
                                 <ArrowLeft />
@@ -197,7 +197,7 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                             {createFinalFormBlock(rootBlocks.content)}
                         </Field>
                     </MainContent>
-                </>
+                </EditPageLayout>
             )}
         </FinalForm>
     );

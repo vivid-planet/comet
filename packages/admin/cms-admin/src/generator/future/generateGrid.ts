@@ -305,14 +305,14 @@ export function generateGrid(
     const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
         CrudContextMenu,
+        DataGridToolbar,
         filterByFragment,
         GridFilterButton,
+        MainContent,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,
-        Toolbar,
         ToolbarActions,
-        ToolbarAutomaticTitleItem,
         ToolbarFillSpace,
         ToolbarItem,
         useBufferedRowCount,
@@ -413,8 +413,7 @@ export function generateGrid(
         toolbar
             ? `function ${gqlTypePlural}GridToolbar() {
         return (
-            <Toolbar>
-                <ToolbarAutomaticTitleItem />
+            <DataGridToolbar>
                 ${
                     hasSearch
                         ? `<ToolbarItem>
@@ -439,7 +438,7 @@ export function generateGrid(
                 </ToolbarActions>`
                         : ""
                 }
-            </Toolbar>
+            </DataGridToolbar>
         );
     }`
             : ""
@@ -614,8 +613,8 @@ export function generateGrid(
                 ${
                     toolbar
                         ? `components={{
-Toolbar: ${gqlTypePlural}GridToolbar,
-}}`
+                            Toolbar: ${gqlTypePlural}GridToolbar,
+                        }}`
                         : ""
                 }
             />

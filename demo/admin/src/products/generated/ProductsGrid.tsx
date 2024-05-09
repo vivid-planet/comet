@@ -3,13 +3,14 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
-    DataGridToolbar,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
+    Toolbar,
     ToolbarActions,
+    ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
@@ -80,7 +81,8 @@ const createProductMutation = gql`
 
 function ProductsGridToolbar() {
     return (
-        <DataGridToolbar>
+        <Toolbar>
+            <ToolbarAutomaticTitleItem />
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
@@ -93,7 +95,7 @@ function ProductsGridToolbar() {
                     <FormattedMessage id="product.newProduct" defaultMessage="New Product" />
                 </Button>
             </ToolbarActions>
-        </DataGridToolbar>
+        </Toolbar>
     );
 }
 
@@ -225,7 +227,7 @@ export function ProductsGrid(): React.ReactElement {
     const rows = data?.products.nodes ?? [];
 
     return (
-        <MainContent fullHeight>
+        <MainContent fullHeight disablePadding>
             <DataGridPro
                 {...dataGridProps}
                 disableSelectionOnClick

@@ -3,13 +3,14 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
-    DataGridToolbar,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
+    Toolbar,
     ToolbarActions,
+    ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
@@ -79,7 +80,8 @@ const createNewsMutation = gql`
 
 function NewsGridToolbar() {
     return (
-        <DataGridToolbar>
+        <Toolbar>
+            <ToolbarAutomaticTitleItem />
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
@@ -92,7 +94,7 @@ function NewsGridToolbar() {
                     <FormattedMessage id="news.newNews" defaultMessage="New News" />
                 </Button>
             </ToolbarActions>
-        </DataGridToolbar>
+        </Toolbar>
     );
 }
 
@@ -229,7 +231,7 @@ export function NewsGrid(): React.ReactElement {
     const rows = data?.newsList.nodes ?? [];
 
     return (
-        <MainContent fullHeight>
+        <MainContent fullHeight disablePadding>
             <DataGridPro
                 {...dataGridProps}
                 disableSelectionOnClick

@@ -13,6 +13,7 @@ import {
     ToolbarBackButton,
     ToolbarFillSpace,
 } from "@comet/admin";
+import { ContentScopeIndicator } from "@comet/cms-admin";
 import { ProductVariantsGrid } from "@src/products/future/generated/ProductVariantsGrid";
 import * as React from "react";
 import { useIntl } from "react-intl";
@@ -27,14 +28,15 @@ export function ProductsPage(): React.ReactElement {
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <MainContent fullHeight disablePadding>
+                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />} hideBottomBar />
+                    <MainContent fullHeight>
                         <ProductsGrid />
                     </MainContent>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>
                     {(selectedProductId) => (
                         <SaveBoundary>
-                            <StackToolbar>
+                            <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
                                 <ToolbarBackButton />
                                 <ToolbarAutomaticTitleItem />
                                 <ToolbarFillSpace />
