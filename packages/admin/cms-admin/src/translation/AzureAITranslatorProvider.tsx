@@ -1,18 +1,24 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { ContentTranslationServiceProvider } from "@comet/admin";
-// import { GQLTranslateQuery, GQLTranslateQueryVariables } from "@src/common/translation/AzureAITranslatorProvider.generated";
 import React from "react";
 
-import { useContentScope } from "../../contentScope/Provider";
+import { useContentScope } from "../contentScope/Provider";
 import { GQLTranslateQuery, GQLTranslateQueryVariables } from "./AzureAITranslatorProvider.generated";
 
-export const AzureAITranslatorProvider: React.FunctionComponent = ({ children }) => {
+type AzureAITranslatorProps = {
+    enabled?: boolean;
+};
+
+export const AzureAITranslatorProvider: React.FunctionComponent<AzureAITranslatorProps> = ({
+    children,
+    enabled = false,
+}: React.PropsWithChildren<AzureAITranslatorProps>) => {
     const { scope } = useContentScope();
     const apolloClient = useApolloClient();
 
     return (
         <ContentTranslationServiceProvider
-            enabled={true}
+            enabled={enabled}
             translate={async function (text: string): Promise<string> {
                 const { data } = await apolloClient.query<GQLTranslateQuery, GQLTranslateQueryVariables>({
                     query: translationQuery,
@@ -30,6 +36,6 @@ export const AzureAITranslatorProvider: React.FunctionComponent = ({ children })
 
 const translationQuery = gql`
     query Translate($input: TranslationInput!) {
-        translate(input: $input)
+        azureAiranslate(input: $input)
     }
 `;

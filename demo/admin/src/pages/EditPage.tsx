@@ -127,7 +127,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
     }
 
     return (
-        <AzureAITranslatorProvider>
+        <AzureAITranslatorProvider enabled={true}>
             <EditPageLayout>
                 {hasChanges && (
                     <RouterPrompt

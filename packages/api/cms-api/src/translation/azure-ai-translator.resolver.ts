@@ -10,7 +10,8 @@ import { TranslationInput } from "./dto/translation.input";
 @Resolver()
 @RequiredPermission(["translation"], { skipScopeCheck: true })
 export class AzureAITranslatorResolver {
-    private translationClient: TextTranslationClient;
+    private readonly translationClient: TextTranslationClient;
+
     constructor(@Inject(AZURE_AI_TRANSLATOR_CONFIG) private readonly config: AzureAITranslatorConfig) {
         this.translationClient = createClient(config.endpoint, {
             key: config.key,
@@ -18,7 +19,7 @@ export class AzureAITranslatorResolver {
         });
     }
     @Query(() => String)
-    async translate(@Args("input") input: TranslationInput): Promise<string> {
+    async azureAiTranslate(@Args("input") input: TranslationInput): Promise<string> {
         const translateResponse = await this.translationClient.path("/translate").post({
             body: [{ text: input.text }],
             queryParameters: {

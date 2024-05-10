@@ -32,7 +32,6 @@ export { MasterMenuRoutes, useRoutePropsFromMasterMenuData } from "./common/Mast
 export type { PageListItem } from "./common/PageList";
 export { PageList } from "./common/PageList";
 export { PageName } from "./common/PageName";
-export { AzureAITranslatorProvider } from "./common/translation/AzureAITranslatorProvider";
 export { useEditState } from "./common/useEditState";
 export { useSaveState } from "./common/useSaveState";
 export { ContentScopeIndicator } from "./contentScope/ContentScopeIndicator";
@@ -99,6 +98,7 @@ export type { SiteConfig } from "./sitesConfig/SitesConfigContext";
 export { SitesConfigProvider } from "./sitesConfig/SitesConfigProvider";
 export { useSiteConfig } from "./sitesConfig/useSiteConfig";
 export { useSitesConfig } from "./sitesConfig/useSitesConfig";
+export { AzureAITranslatorProvider } from "./translation/AzureAITranslatorProvider";
 export { CurrentUserInterface, CurrentUserProvider, useCurrentUser, useUserPermissionCheck } from "./userPermissions/hooks/currentUser";
 export { UserPermissionsPage } from "./userPermissions/UserPermissionsPage";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
