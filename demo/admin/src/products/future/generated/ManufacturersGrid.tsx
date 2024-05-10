@@ -241,7 +241,6 @@ export function ManufacturersGrid(): React.ReactElement {
     const rows = data?.manufacturers.nodes ?? [];
 
     return (
-        // <MainContent fullHeight disablePadding>
         <DataGridPro
             {...dataGridProps}
             disableSelectionOnClick
@@ -253,6 +252,5 @@ export function ManufacturersGrid(): React.ReactElement {
                 Toolbar: ManufacturersGridToolbar,
             }}
         />
-        // </MainContent>
     );
 }

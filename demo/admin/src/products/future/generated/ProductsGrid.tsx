@@ -205,7 +205,6 @@ export function ProductsGrid({ filter }: Props): React.ReactElement {
     const rows = data?.products.nodes ?? [];
 
     return (
-        // <MainContent fullHeight disablePadding>
         <DataGridPro
             {...dataGridProps}
             disableSelectionOnClick
@@ -217,6 +216,5 @@ export function ProductsGrid({ filter }: Props): React.ReactElement {
                 Toolbar: ProductsGridToolbar,
             }}
         />
-        // </MainContent>
     );
 }

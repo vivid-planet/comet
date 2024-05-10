@@ -173,7 +173,6 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
     const rows = data?.productVariants.nodes ?? [];
 
     return (
-        // <MainContent fullHeight disablePadding>
         <DataGridPro
             {...dataGridProps}
             disableSelectionOnClick
@@ -185,6 +184,5 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
                 Toolbar: ProductVariantsGridToolbar,
             }}
         />
-        // </MainContent>
     );
 }
