@@ -31,7 +31,8 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
     const client = useApolloClient();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-    const isEditable = !!(page.visibility !== "Archived" && documentTypes[page.documentType].editComponent);
+    const documentType = documentTypes[page.documentType];
+    const isEditable = !!(page.visibility !== "Archived" && documentType.editComponent);
 
     const handleDeleteClick = async () => {
         const subTree = subTreeFromNode(page, tree);
@@ -79,6 +80,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                         onClick={() => {
                             openSitePreviewWindow(page.path, contentScopeMatch.url);
                         }}
+                        disabled={documentType.hasNoPreview}
                     >
                         <FormattedMessage id="comet.pages.pages.page.openPreview" defaultMessage="Open preview" />
                     </RowActionsItem>,
