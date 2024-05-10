@@ -3,7 +3,6 @@ import {
     ContentScopeConfigProps,
     ContentScopeControls as ContentScopeControlsLibrary,
     ContentScopeControlsConfig,
-    ContentScopeInterface,
     ContentScopeProvider as ContentScopeProviderLibrary,
     ContentScopeProviderProps,
     useContentScope as useContentScopeLibrary,
@@ -12,6 +11,7 @@ import {
     useCurrentUser,
     useSitesConfig,
 } from "@comet/cms-admin";
+import { ContentScopeValues } from "@comet/cms-admin/lib/contentScope/Provider";
 import { SitesConfig } from "@src/config";
 import React from "react";
 
@@ -59,7 +59,7 @@ const ContentScopeProvider: React.FC<Pick<ContentScopeProviderProps, "children">
     const allowedSiteConfigs = Object.fromEntries(
         Object.entries(sitesConfig.configs).filter(([siteKey, siteConfig]) => allowedUserDomains.includes(siteKey)),
     );
-    const values: Array<ContentScopeInterface> = [
+    const values: Array<ContentScopeValues> = [
         {
             domain: { label: "Main", value: "main" },
             language: { label: "English", value: "en" },

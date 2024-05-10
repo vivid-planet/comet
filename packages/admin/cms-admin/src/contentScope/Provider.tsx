@@ -10,7 +10,7 @@ interface ContentScopeContext {
     path: string;
     redirectPathAfterChange?: string; // define where the user should be redirected to after a scope change
     setRedirectPathAfterChange: React.Dispatch<React.SetStateAction<string | undefined>>;
-    values: Array<ContentScopeInterface>;
+    values: Array<ContentScopeValues>;
 }
 
 const defaultContentScopeContext: ContentScopeContext = {
@@ -35,11 +35,11 @@ export type UseContentScopeApi<S extends ContentScopeInterface = ContentScopeInt
     match: match;
     setRedirectPathAfterChange: React.Dispatch<React.SetStateAction<string | undefined>>;
     supported: boolean;
-    values: Array<ContentScopeInterface>;
+    values: Array<ContentScopeValues>;
 };
 
 export type ContentScopeValues<S extends ContentScopeInterface = ContentScopeInterface> = {
-    [P in keyof S]: Array<{ label?: string; value: NonNull<S[P]> }>;
+    [P in keyof S]: { label?: string; value: NonNull<S[P]> };
 };
 
 // @TODO (maybe): factory for Provider (and other components) to be able to create a generic context https://ordina-jworks.github.io/architecture/2021/02/12/react-generic-context.html

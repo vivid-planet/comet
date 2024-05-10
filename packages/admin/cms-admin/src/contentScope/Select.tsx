@@ -14,7 +14,6 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import { useIntl } from "react-intl";
 
-import { capitalizeString, joinLabels, showLabelIfAvailable } from "./ContentScope.utils";
 import { ContentScopeInterface } from "./Provider";
 
 export interface ContentScopeSelectProps {
@@ -141,3 +140,13 @@ export default function ContentScopeSelect({
 const ListItemIcon = styled(MuiListItemIcon)`
     min-width: 25px;
 `;
+
+const capitalizeString = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+
+const showLabelIfAvailable = (val: ContentScopeInterface) => (val.label ? val.label : val.value);
+
+const joinLabels = (scope: ContentScopeInterface, groupKey: string) =>
+    Object.keys(scope)
+        .filter((key) => key !== groupKey)
+        .map((key) => capitalizeString(showLabelIfAvailable(scope[key])))
+        .join(" - ");

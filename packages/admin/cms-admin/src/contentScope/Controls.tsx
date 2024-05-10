@@ -1,7 +1,6 @@
 import { SvgIconProps } from "@mui/material";
 import React, { useMemo } from "react";
 
-import { capitalizeString } from "./ContentScope.utils";
 import { ContentScopeInterface, useContentScope } from "./Provider";
 import ContentScopeSelect from "./Select";
 
@@ -72,3 +71,5 @@ export function ContentScopeControls<S extends ContentScopeInterface = ContentSc
         />
     );
 }
+
+const capitalizeString = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
