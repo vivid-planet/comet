@@ -4,4 +4,4 @@
 
 Remove `MainContent` from generated Grids
 
-Grid size is now determined by the size of their container
+Grid size is now determined by the size of its container
