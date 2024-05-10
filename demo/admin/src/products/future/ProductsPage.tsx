@@ -1,4 +1,5 @@
 import {
+    MainContent,
     RouterTab,
     RouterTabs,
     SaveBoundary,
@@ -26,7 +27,9 @@ export function ProductsPage(): React.ReactElement {
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <ProductsGrid />
+                    <MainContent fullHeight disablePadding>
+                        <ProductsGrid />
+                    </MainContent>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>
                     {(selectedProductId) => (
@@ -59,7 +62,11 @@ export function ProductsPage(): React.ReactElement {
                     )}
                 </StackPage>
                 <StackPage name="variants" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Product variants" })}>
-                    {(selectedId) => <ProductVariantsGrid product={selectedId} />}
+                    {(selectedId) => (
+                        <MainContent fullHeight disablePadding>
+                            <ProductVariantsGrid product={selectedId} />
+                        </MainContent>
+                    )}
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add Product" })}>
                     <ProductForm />

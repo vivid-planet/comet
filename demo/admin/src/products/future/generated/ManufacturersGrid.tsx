@@ -5,7 +5,6 @@ import {
     CrudContextMenu,
     filterByFragment,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -242,18 +241,18 @@ export function ManufacturersGrid(): React.ReactElement {
     const rows = data?.manufacturers.nodes ?? [];
 
     return (
-        <MainContent fullHeight disablePadding>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                components={{
-                    Toolbar: ManufacturersGridToolbar,
-                }}
-            />
-        </MainContent>
+        // <MainContent fullHeight disablePadding>
+        <DataGridPro
+            {...dataGridProps}
+            disableSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            components={{
+                Toolbar: ManufacturersGridToolbar,
+            }}
+        />
+        // </MainContent>
     );
 }
