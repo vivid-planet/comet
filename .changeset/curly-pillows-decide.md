@@ -12,7 +12,7 @@ You can use it like this:
     components={{
         Toolbar: () => (
             <DataGridToolbar>
-                {/* // ... */}
+                {/* ... */}
             </DataGridToolbar>
         ),
     }}
