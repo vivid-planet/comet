@@ -12,7 +12,7 @@ export interface ExportApi {
     exportGrid: () => void;
 }
 
-export type DataGridExcelExportOptions = Omit<ExcelGenerationOptions, "worksheetName"> & {
+type DataGridExcelExportOptions = Omit<ExcelGenerationOptions, "worksheetName"> & {
     fileName?: string;
     worksheetName?: string;
 };
