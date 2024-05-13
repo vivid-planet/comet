@@ -63,6 +63,7 @@ export type GridConfig<T extends { __typename?: string }> = {
         columnWidth?: number;
         componentImport?: ImportReference;
     };
+    toolbar?: boolean;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
