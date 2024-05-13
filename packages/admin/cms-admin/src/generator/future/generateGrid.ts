@@ -160,7 +160,7 @@ export function generateGrid(
         props.push(...filterPropProps);
     }
 
-    const renderToolbar = config.renderToolbar ?? true;
+    const toolbar = config.toolbar ?? true;
 
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
 
@@ -411,7 +411,7 @@ export function generateGrid(
     }
 
     ${
-        renderToolbar
+        toolbar
             ? `function ${gqlTypePlural}GridToolbar() {
         return (
             <Toolbar>
@@ -614,7 +614,7 @@ export function generateGrid(
                     columns={columns}
                     loading={loading}
                     ${
-                        renderToolbar
+                        toolbar
                             ? `components={{
     Toolbar: ${gqlTypePlural}GridToolbar,
     }}`
