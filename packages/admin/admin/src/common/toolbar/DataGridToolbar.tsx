@@ -6,7 +6,7 @@ import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { Toolbar, ToolbarProps } from "./Toolbar";
 
-export type DataGridToolbarClassKey = "root";
+export type DataGridToolbarClassKey = "root" | "standard" | "comfortable";
 
 export type DataGridToolbarProps = { density?: "standard" | "comfortable" } & Omit<
     ToolbarProps,
@@ -23,6 +23,9 @@ type OwnerState = {
 const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
     componentName: "DataGridToolbar",
     slotName: "root",
+    classesResolver(ownerState) {
+        return [ownerState.density === "standard" ? "standard" : "comfortable"];
+    },
 })(
     ({ ownerState, theme }) => css`
         ${ownerState.density === "comfortable" &&
