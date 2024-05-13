@@ -4,7 +4,7 @@ export type SiteConfig = {
     domains: {
         main: string;
         preliminary?: string;
-        pattern?: string;
+        pattern?: RegExp;
         additional?: string[];
         preview: string;
     };
