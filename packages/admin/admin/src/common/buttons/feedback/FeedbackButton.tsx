@@ -1,6 +1,6 @@
 import { ThreeDotSaving } from "@comet/admin-icons";
-import { LoadingButton } from "@mui/lab";
-import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
+import { LoadingButton, LoadingButtonProps } from "@mui/lab";
+import { ButtonClassKey, ComponentsOverrides } from "@mui/material";
 import { Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
@@ -32,10 +32,10 @@ const Tooltip = createComponentSlot(CometTooltip)<FeedbackButtonClassKey>({
 
 export interface FeedbackButtonProps
     extends ThemedComponentBaseProps<{
-            root: typeof Button;
+            root: typeof LoadingButton;
             tooltip: typeof CometTooltip;
         }>,
-        ButtonProps {
+        LoadingButtonProps {
     loading?: boolean;
     hasErrors?: boolean;
     loadingIcon?: React.ReactNode;
