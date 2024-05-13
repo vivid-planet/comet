@@ -5,8 +5,8 @@ import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 import { ContentScopeService } from "../content-scope.service";
 import { DisablePermissionCheck, RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
 import { CurrentUser } from "../dto/current-user";
-import { ACCESS_CONTROL_SERVICE } from "../user-permissions.constants";
-import { AccessControlServiceInterface, SystemUser } from "../user-permissions.types";
+import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS } from "../user-permissions.constants";
+import { AccessControlServiceInterface, SystemUser, UserPermissionsOptions } from "../user-permissions.types";
 
 @Injectable()
 export class UserPermissionsGuard implements CanActivate {
@@ -14,6 +14,7 @@ export class UserPermissionsGuard implements CanActivate {
         protected reflector: Reflector,
         private readonly contentScopeService: ContentScopeService,
         @Inject(ACCESS_CONTROL_SERVICE) private readonly accessControlService: AccessControlServiceInterface,
+        @Inject(USER_PERMISSIONS_OPTIONS) private readonly options: UserPermissionsOptions,
     ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -25,7 +26,7 @@ export class UserPermissionsGuard implements CanActivate {
         if (!user) return false;
 
         // System user authenticated via basic auth
-        if (user === true) return true;
+        if (typeof user === "string" && this.options.systemUsers?.includes(user)) return true;
 
         const requiredPermission = this.getDecorator<RequiredPermissionMetadata>(context, "requiredPermission");
         if (!requiredPermission && this.isResolvingGraphQLField(context)) return true;

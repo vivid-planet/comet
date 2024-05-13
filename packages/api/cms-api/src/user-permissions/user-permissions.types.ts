@@ -16,7 +16,7 @@ export enum UserPermissions {
 
 export type Users = [User[], number];
 
-export type SystemUser = true;
+export type SystemUser = string;
 
 type PermissionForUser = {
     permission: string;
@@ -39,6 +39,7 @@ export interface UserPermissionsUserServiceInterface {
 
 export interface UserPermissionsOptions {
     availableContentScopes?: ContentScope[] | (() => Promise<ContentScope[]> | ContentScope[]);
+    systemUsers?: string[];
 }
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {
     UserService?: Type<UserPermissionsUserServiceInterface>;
