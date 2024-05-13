@@ -133,8 +133,6 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         <Root
             ownerState={ownerState}
             loading={loading}
-            {...slotProps}
-            {...restProps}
             variant={variant}
             color={color}
             disabled={disabled || displayState === "loading"}
@@ -142,6 +140,8 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             loadingIndicator={<ThreeDotSaving />}
             startIcon={startIcon && tooltip}
             endIcon={endIcon && !startIcon ? tooltip : { endIcon }}
+            {...slotProps}
+            {...restProps}
         >
             {children}
         </Root>
