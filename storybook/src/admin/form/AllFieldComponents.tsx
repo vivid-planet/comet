@@ -66,7 +66,7 @@ function Story() {
                                         fullWidth
                                     />
                                     <SwitchField name="switch" label={values.switch ? "On" : "Off"} fieldLabel="Switch" />
-                                    <CurrencyField currencySign="€" currencySignPosition="after" name="currency" label="Currency" fullWidth />
+                                    <CurrencyField name="currency" label="Currency" />
                                 </CardContent>
                             </Card>
                         </Grid>

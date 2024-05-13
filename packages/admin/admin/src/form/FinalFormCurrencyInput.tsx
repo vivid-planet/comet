@@ -22,32 +22,45 @@ export function FinalFormCurrencyInput({
     ...props
 }: FinalFormCurrencyInputProps): React.ReactElement {
     const intl = useIntl();
-    const [formattedCurrencyValue, setFormattedCurrencyValue] = React.useState<string | undefined>(getFormattedValue(input.value));
 
-    function getFormattedValue(value: number) {
-        const formattedValueWithoutCurrencySign =
-            value !== 0
-                ? intl.formatNumber(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-                : intl.formatNumber(0, { minimumFractionDigits: 2 });
-        if (currencySignPosition === "before") {
-            return `${currencySign} ${formattedValueWithoutCurrencySign}`;
-        }
-        return `${formattedValueWithoutCurrencySign} ${currencySign}`;
-    }
+    const numberParts = intl.formatNumberToParts(1111.111);
+    const decimalSymbol = numberParts.find(({ type }) => type === "decimal")?.value;
+    const thousandSeparatorSymbol = numberParts.find(({ type }) => type === "group")?.value;
+
+    const [formattedCurrencyValue, setFormattedCurrencyValue] = React.useState<string | undefined>("");
+
+    const getFormattedValue = React.useCallback(
+        (value: number) => {
+            const formattedValue =
+                value !== 0
+                    ? intl.formatNumber(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                    : intl.formatNumber(0, { minimumFractionDigits: 2 });
+            return formattedValue;
+        },
+        [intl],
+    );
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
-
-        if (value === "") {
-            input.onChange(undefined);
-            setFormattedCurrencyValue(undefined);
-        } else {
-            const numericValue = parseFloat(value.replace(/\D/g, "")) / 100;
-
-            input.onChange(numericValue);
-            setFormattedCurrencyValue(getFormattedValue(numericValue));
-        }
+        setFormattedCurrencyValue(value);
     };
+
+    const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+        const { value } = event.target;
+        let numericValue: number;
+
+        if (decimalSymbol === ",") {
+            numericValue = parseFloat(value.split(`${thousandSeparatorSymbol}`).join("").split(`${decimalSymbol}`).join("."));
+        } else {
+            numericValue = parseFloat(value.split(`${thousandSeparatorSymbol}`).join(""));
+        }
+        input.onChange(numericValue);
+        isNaN(numericValue) ? setFormattedCurrencyValue(getFormattedValue(0)) : setFormattedCurrencyValue(getFormattedValue(numericValue));
+    };
+
+    React.useEffect(() => {
+        setFormattedCurrencyValue(getFormattedValue(input.value));
+    }, [getFormattedValue, input.value]);
 
     return (
         <InputBase
@@ -55,9 +68,10 @@ export function FinalFormCurrencyInput({
             {...props}
             value={formattedCurrencyValue}
             onChange={handleChange}
-            // onBlur={handleBlur}
+            onBlur={handleBlur}
             endAdornment={
                 <>
+                    {endAdornment}
                     {clearable && (
                         <ClearInputAdornment
                             position="end"
@@ -65,7 +79,6 @@ export function FinalFormCurrencyInput({
                             onClick={() => input.onChange(undefined)}
                         />
                     )}
-                    {endAdornment}
                 </>
             }
         />
