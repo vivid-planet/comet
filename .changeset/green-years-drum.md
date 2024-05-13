@@ -5,3 +5,5 @@
 ---
 
 Add a `DamFileDownloadLinkBlock` that can be used to download a file or open it in a new tab
+
+Add a new endpoint for downloading assets
