@@ -1,4 +1,4 @@
-export type SiteConfig = {
+export type BaseSiteConfig = {
     name: string;
     contentScope: Record<string, unknown>;
     domains: {
@@ -11,11 +11,11 @@ export type SiteConfig = {
     preloginEnabled?: boolean;
     public?: Record<string, unknown>;
 };
-export type SiteConfigPrivate<S extends SiteConfig> = S & {
+export type ExtractPrivateSiteConfig<S extends BaseSiteConfig> = S & {
     url: string;
     previewUrl: string;
 };
-export type SiteConfigPublic<S extends SiteConfig> = Pick<S, "name" | "contentScope" | "domains" | "preloginEnabled" | "public"> & {
+export type ExtractPublicSiteConfig<S extends BaseSiteConfig> = Pick<S, "name" | "contentScope" | "domains" | "preloginEnabled" | "public"> & {
     url: string;
     previewUrl: string;
 };

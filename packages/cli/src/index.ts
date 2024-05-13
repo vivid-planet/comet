@@ -1,1 +1,1 @@
-export { SiteConfig, SiteConfigPrivate, SiteConfigPublic } from "./site-configs.types";
+export { BaseSiteConfig, ExtractPrivateSiteConfig, ExtractPublicSiteConfig } from "./site-configs.types";

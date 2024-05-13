@@ -3,7 +3,7 @@ import { Command } from "commander";
 import fs from "fs";
 import { resolve } from "path";
 
-import { SiteConfig, SiteConfigPrivate, SiteConfigPublic } from "../site-configs.types";
+import { BaseSiteConfig, ExtractPrivateSiteConfig, ExtractPublicSiteConfig } from "../site-configs.types";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const injectSiteConfigsCommand = new Command("inject-site-configs")
@@ -13,7 +13,7 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
     .option("-f, --site-config-file <file>", "Path to ts-file which provides a default export with (env: string) => SiteConfig[]")
     .action(async (options) => {
         const configFile = options.siteConfigFile ?? `${process.cwd()}/site-configs.ts`;
-        const getSiteConfigs: (env: string) => SiteConfig[] = (await import(configFile)).default;
+        const getSiteConfigs: (env: string) => BaseSiteConfig[] = (await import(configFile)).default;
 
         console.log(`inject-site-configs: Replace site-configs in ${options.inFile}`);
 
@@ -23,8 +23,8 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
             return domain.includes("localhost") ? `http://${domain}` : `https://${domain}`;
         };
 
-        const replacerFunctions: Record<string, (siteConfigs: SiteConfig[]) => unknown> = {
-            private: (siteConfigs: SiteConfig[]): SiteConfigPrivate<SiteConfig>[] =>
+        const replacerFunctions: Record<string, (siteConfigs: BaseSiteConfig[]) => unknown> = {
+            private: (siteConfigs: BaseSiteConfig[]): ExtractPrivateSiteConfig<BaseSiteConfig>[] =>
                 siteConfigs.map((siteConfig) =>
                     (({ public: publicVars, ...rest }) => ({
                         ...rest,
@@ -32,7 +32,7 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
                         previewUrl: getUrlFromDomain(siteConfig.domains.preview),
                     }))(siteConfig),
                 ),
-            public: (siteConfigs: SiteConfig[]): SiteConfigPublic<SiteConfig>[] =>
+            public: (siteConfigs: BaseSiteConfig[]): ExtractPublicSiteConfig<BaseSiteConfig>[] =>
                 siteConfigs.map((siteConfig) => ({
                     name: siteConfig.name,
                     contentScope: siteConfig.contentScope,
