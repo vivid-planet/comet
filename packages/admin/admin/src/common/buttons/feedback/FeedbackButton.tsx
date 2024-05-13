@@ -159,7 +159,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminFeedbackButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminFeedbackButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFeedbackButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFeedbackButton"];
         };
     }
