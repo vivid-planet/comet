@@ -3,8 +3,8 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    filterByFragment,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -20,7 +20,6 @@ import {
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { filter as filterByFragment } from "graphql-anywhere";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -128,6 +127,7 @@ export function ManufacturersGrid(): React.ReactElement {
         {
             field: "address_streetNumber",
             headerName: intl.formatMessage({ id: "manufacturer.address.streetNumber", defaultMessage: "Street number" }),
+            type: "number",
             filterable: false,
             sortable: false,
             valueGetter: ({ row }) => row.address?.streetNumber,
@@ -146,6 +146,7 @@ export function ManufacturersGrid(): React.ReactElement {
         {
             field: "address_alternativeAddress_streetNumber",
             headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.streetNumber", defaultMessage: "Alt-Street number" }),
+            type: "number",
             filterable: false,
             sortable: false,
             valueGetter: ({ row }) => row.address?.alternativeAddress?.streetNumber,
@@ -162,6 +163,7 @@ export function ManufacturersGrid(): React.ReactElement {
         {
             field: "addressAsEmbeddable_streetNumber",
             headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.streetNumber", defaultMessage: "Street number 2" }),
+            type: "number",
             valueGetter: ({ row }) => row.addressAsEmbeddable?.streetNumber,
             flex: 1,
             minWidth: 150,
@@ -179,6 +181,7 @@ export function ManufacturersGrid(): React.ReactElement {
                 id: "manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber",
                 defaultMessage: "Alt-Street number 2",
             }),
+            type: "number",
             valueGetter: ({ row }) => row.addressAsEmbeddable?.alternativeAddress?.streetNumber,
             flex: 1,
             minWidth: 150,
@@ -226,7 +229,7 @@ export function ManufacturersGrid(): React.ReactElement {
 
     const { data, loading, error } = useQuery<GQLManufacturersGridQuery, GQLManufacturersGridQueryVariables>(manufacturersQuery, {
         variables: {
-            filter: { and: [gqlFilter] },
+            filter: gqlFilter,
             search: gqlSearch,
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
@@ -238,18 +241,16 @@ export function ManufacturersGrid(): React.ReactElement {
     const rows = data?.manufacturers.nodes ?? [];
 
     return (
-        <MainContent fullHeight disablePadding>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                components={{
-                    Toolbar: ManufacturersGridToolbar,
-                }}
-            />
-        </MainContent>
+        <DataGridPro
+            {...dataGridProps}
+            disableSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            components={{
+                Toolbar: ManufacturersGridToolbar,
+            }}
+        />
     );
 }

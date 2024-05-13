@@ -6,7 +6,6 @@ import {
     BlockPreviewWithTabs,
     createUsePage,
     DependencyList,
-    EditPageLayout,
     openSitePreviewWindow,
     PageName,
     useBlockPreview,
@@ -126,7 +125,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
     }
 
     return (
-        <EditPageLayout>
+        <>
             {hasChanges && (
                 <RouterPrompt
                     message={(location) => {
@@ -201,6 +200,6 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                 </BlockPreviewWithTabs>
             </MainContent>
             {dialogs}
-        </EditPageLayout>
+        </>
     );
 };

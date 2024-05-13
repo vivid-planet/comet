@@ -1,5 +1,17 @@
 # @comet/cli
 
+## 6.9.0
+
+## 6.8.0
+
+### Minor Changes
+
+-   360b8b137: Add `--input-file` and `--output-file` options to generate-block-types script for enhanced flexibility.
+
+## 6.7.0
+
+## 6.6.2
+
 ## 6.6.1
 
 ## 6.6.0

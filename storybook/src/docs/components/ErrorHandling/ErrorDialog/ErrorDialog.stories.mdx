@@ -6,15 +6,15 @@ import { Meta, Canvas, Story } from "@storybook/addon-docs";
 
 ## Setup
 
-Setup is easy, just add the `ErrorDialogProvider` somewhere in your application
+Setup is easy, just add the `ErrorDialogHandler` somewhere in your application
 
 ```
-import { ErrorDialogProvider } from "@comet/admin";
+import { ErrorDialogHandler } from "@comet/admin";
 
 const App: React.FunctionComponent = ({ children }) => {
     return (
         <OtherProvider>
-            <ErrorDialogProvider />
+            <ErrorDialogHandler />
             {children}
         </OtherProvider>
     );

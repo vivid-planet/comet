@@ -1,5 +1,31 @@
 # @comet/admin-react-select
 
+## 6.9.0
+
+### Patch Changes
+
+-   Updated dependencies [9ff9d66c6]
+-   Updated dependencies [e85837a17]
+    -   @comet/admin@6.9.0
+
+## 6.8.0
+
+### Patch Changes
+
+-   @comet/admin@6.8.0
+
+## 6.7.0
+
+### Patch Changes
+
+-   @comet/admin@6.7.0
+
+## 6.6.2
+
+### Patch Changes
+
+-   @comet/admin@6.6.2
+
 ## 6.6.1
 
 ### Patch Changes

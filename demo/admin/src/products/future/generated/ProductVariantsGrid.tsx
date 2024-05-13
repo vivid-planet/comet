@@ -3,8 +3,8 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    filterByFragment,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -38,9 +38,7 @@ const productVariantsFragment = gql`
     fragment ProductVariantsGridFuture on ProductVariant {
         id
         name
-        image
         createdAt
-        updatedAt
     }
 `;
 
@@ -112,7 +110,7 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "productVariant.createdAt", defaultMessage: "Created at" }),
             type: "date",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
             flex: 1,
             minWidth: 150,
         },
@@ -131,10 +129,11 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
                         </IconButton>
                         <CrudContextMenu
                             copyData={() => {
-                                const row = params.row;
+                                // Don't copy id, because we want to create a new entity with this data
+                                const { id, ...filteredData } = filterByFragment(productVariantsFragment, params.row);
                                 return {
-                                    name: row.name,
-                                    image: DamImageBlock.state2Output(DamImageBlock.input2State(row.image)),
+                                    ...filteredData,
+                                    image: DamImageBlock.state2Output(DamImageBlock.input2State(filteredData.image)),
                                 };
                             }}
                             onPaste={async ({ input }) => {
@@ -174,18 +173,16 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
     const rows = data?.productVariants.nodes ?? [];
 
     return (
-        <MainContent fullHeight disablePadding>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                components={{
-                    Toolbar: ProductVariantsGridToolbar,
-                }}
-            />
-        </MainContent>
+        <DataGridPro
+            {...dataGridProps}
+            disableSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            components={{
+                Toolbar: ProductVariantsGridToolbar,
+            }}
+        />
     );
 }

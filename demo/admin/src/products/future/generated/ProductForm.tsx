@@ -3,9 +3,9 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
+    filterByFragment,
     FinalForm,
     FinalFormCheckbox,
-    FinalFormInput,
     FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
@@ -22,7 +22,6 @@ import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { FormControlLabel, InputAdornment, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -46,8 +45,7 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormDetailsFragment, "price"> & {
-    price?: string;
+type FormValues = GQLProductFormDetailsFragment & {
     image: BlockState<typeof rootBlocks.image>;
 };
 
@@ -70,8 +68,8 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         () =>
             data?.product
                 ? {
-                      ...filter<GQLProductFormDetailsFragment>(productFormFragment, data.product),
-                      price: data.product.price ? String(data.product.price) : undefined,
+                      ...filterByFragment<GQLProductFormDetailsFragment>(productFormFragment, data.product),
+
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
                       availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
@@ -99,7 +97,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         const output = {
             ...formValues,
             category: formValues.category?.id,
-            price: formValues.price ? parseFloat(formValues.price) : null,
             image: rootBlocks.image.state2Output(formValues.image),
         };
         if (mode === "edit") {
@@ -203,15 +200,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormSelect}
                             {...categorySelectAsyncProps}
                             getOptionLabel={(option: GQLProductCategorySelectFragment) => option.title}
-                        />
-
-                        <Field
-                            fullWidth
-                            name="price"
-                            component={FinalFormInput}
-                            type="number"
-                            label={<FormattedMessage id="product.price" defaultMessage="Price" />}
-                            helperText={<FormattedMessage id="product.price.helperText" defaultMessage="Enter price in this format: 123,45" />}
                         />
                         <Field name="inStock" label="" type="checkbox" fullWidth>
                             {(props) => (
