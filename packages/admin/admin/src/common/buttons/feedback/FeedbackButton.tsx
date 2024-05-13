@@ -38,7 +38,6 @@ export interface FeedbackButtonProps
         LoadingButtonProps {
     loading?: boolean;
     hasErrors?: boolean;
-    loadingIcon?: React.ReactNode;
     startIcon?: React.ReactNode;
     endIcon?: React.ReactNode;
     tooltipSuccessMessage?: React.ReactNode;
