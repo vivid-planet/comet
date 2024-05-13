@@ -1,5 +1,16 @@
 # @comet/admin
 
+## 6.9.0
+
+### Minor Changes
+
+-   e85837a17: Loosen peer dependency on `react-intl` to allow using v6
+
+### Patch Changes
+
+-   9ff9d66c6: Ignore local storage quota exceeded error in `writeClipboardText`
+    -   @comet/admin-icons@6.9.0
+
 ## 6.8.0
 
 ### Patch Changes

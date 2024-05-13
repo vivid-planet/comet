@@ -21,7 +21,6 @@ const Root = createComponentSlot("div")<ToolbarBackButtonClassKey>({
 
         .CometAdminToolbarItem-root {
             padding: 0;
-            padding-right: ${theme.spacing(3)};
         }
     `,
 );
@@ -29,7 +28,15 @@ const Root = createComponentSlot("div")<ToolbarBackButtonClassKey>({
 const IconButton = createComponentSlot(MuiIconButton)<ToolbarBackButtonClassKey>({
     componentName: "ToolbarBackButton",
     slotName: "iconButton",
-})();
+})(
+    ({ theme }) => css`
+        padding: 0 ${theme.spacing(1)};
+
+        ${theme.breakpoints.up("sm")} {
+            padding: 0 ${theme.spacing(2)};
+        }
+    `,
+);
 
 const ToolbarItem = createComponentSlot(CommonToolbarItem)<ToolbarBackButtonClassKey>({
     componentName: "ToolbarBackButton",
