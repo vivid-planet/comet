@@ -140,7 +140,7 @@ export function ProductsGrid() {
             headerName: "",
             sortable: false,
             filterable: false,
-            width: 96,
+            width: 106,
             renderCell: (params) => {
                 return (
                     <>
