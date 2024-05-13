@@ -305,7 +305,6 @@ export function generateGrid(
         CrudContextMenu,
         filterByFragment,
         GridFilterButton,
-        MainContent,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,
