@@ -8,4 +8,4 @@ The hook returns an `exportApi` encompassing:
 
 -   `exportGrid`: a function to generate and export the excel file
 -   `loading`: a boolean indicating if the export is in progress
--   `error`: an error message when the export has failed
+-   `error`: an error when the export has failed
