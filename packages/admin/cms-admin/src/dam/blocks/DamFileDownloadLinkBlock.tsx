@@ -17,7 +17,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
 
     name: "DamFileDownloadLink",
 
-    displayName: <FormattedMessage id="blocks.damFileDownloadLink" defaultMessage="CMS Asset" />,
+    displayName: <FormattedMessage id="comet.blocks.damFileDownloadLink" defaultMessage="CMS Asset" />,
 
     previewContent: (state) => (state.file ? [{ type: "text", content: state.file?.name }] : []),
 
@@ -105,16 +105,19 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                     <Field
                         name="openFileType"
                         fullWidth
-                        label={<FormattedMessage id="blocks.damFileDownloadLink.openFileType" defaultMessage="Open file" />}
+                        label={<FormattedMessage id="comet.blocks.damFileDownloadLink.openFileType" defaultMessage="Open file" />}
                     >
                         {(props) => (
                             <>
                                 <FinalFormSelect {...props}>
                                     <MenuItem value="Download">
-                                        <FormattedMessage id="blocks.damFileDownloadLink.openFileType.download" defaultMessage="as a download" />
+                                        <FormattedMessage
+                                            id="comet.blocks.damFileDownloadLink.openFileType.download"
+                                            defaultMessage="as a download"
+                                        />
                                     </MenuItem>
                                     <MenuItem value="NewTab">
-                                        <FormattedMessage id="blocks.damFileDownloadLink.openFileType.newTab" defaultMessage="in a new tab" />
+                                        <FormattedMessage id="comet.blocks.damFileDownloadLink.openFileType.newTab" defaultMessage="in a new tab" />
                                     </MenuItem>
                                 </FinalFormSelect>
                             </>
