@@ -108,6 +108,26 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         }
 
         @DisableGlobalGuard()
+        @Get(`/download/preview/${fileUrl}`)
+        async previewDownloadFile(
+            @Param() { fileId }: FileParams,
+            @Res() res: Response,
+            @Headers(CDN_ORIGIN_CHECK_HEADER) cdnOriginCheck: string,
+            @Headers("range") range?: string,
+        ): Promise<void> {
+            this.checkCdnOrigin(cdnOriginCheck);
+
+            const file = await this.filesService.findOneById(fileId);
+
+            if (file === null) {
+                throw new NotFoundException();
+            }
+
+            res.setHeader("Content-Disposition", "attachment");
+            return this.streamFile(file, res, { range });
+        }
+
+        @DisableGlobalGuard()
         @Get(`/download/:hash/${fileUrl}`)
         async downloadFile(
             @Param() { hash, ...params }: HashFileParams,
