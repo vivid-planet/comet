@@ -4,7 +4,10 @@ import { useHistory } from "react-router";
 
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../MasterLayoutContext";
+import { MenuChild, MenuCollapsibleItemProps } from "./CollapsibleItem";
 import { MenuContext } from "./Context";
+import { MenuItemProps } from "./Item";
+import { MenuItemRouterLinkProps } from "./ItemRouterLink";
 import { MenuClassKey, OwnerState, PermanentDrawer, TemporaryDrawer } from "./Menu.styles";
 
 export const DEFAULT_DRAWER_WIDTH = 300;
@@ -73,6 +76,16 @@ export const Menu = (inProps: MenuProps) => {
         headerHeight,
     };
 
+    const childElements = React.useMemo(
+        () =>
+            React.Children.map(children, (child: MenuChild) => {
+                return React.cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
+                    isMenuOpen: open,
+                });
+            }),
+        [children, open],
+    );
+
     // Always render both temporary and permanent drawers to make sure, the opening and closing animations run fully when switching between variants.
     return (
         <>
@@ -84,7 +97,7 @@ export const Menu = (inProps: MenuProps) => {
                 {...slotProps?.temporaryDrawer}
                 {...restProps}
             >
-                {children}
+                {childElements}
             </TemporaryDrawer>
             <PermanentDrawer
                 variant="permanent"
@@ -98,7 +111,7 @@ export const Menu = (inProps: MenuProps) => {
                 }}
                 {...restProps}
             >
-                {children}
+                {childElements}
             </PermanentDrawer>
         </>
     );
