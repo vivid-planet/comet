@@ -1,22 +1,20 @@
 import { Tooltip } from "@comet/admin";
-import { View } from "@comet/admin-icons";
-import { Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { GridActionsCellItem } from "@mui/x-data-grid";
 import { GQLProductsListManualFragment } from "@src/products/ProductsGrid.generated";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-type Props = {
+type Props = React.ComponentProps<typeof GridActionsCellItem> & {
     product: GQLProductsListManualFragment;
 };
 
-export const ProductsGridPreviewAction = ({ product }: Props) => {
+export const ProductsGridPreviewAction = ({ product, ...restProps }: Props) => {
     const [showDetails, setShowDetails] = React.useState(false);
     return (
         <>
             <Tooltip title="View Details">
-                <IconButton onClick={() => setShowDetails(true)}>
-                    <View />
-                </IconButton>
+                <GridActionsCellItem {...restProps} onClick={() => setShowDetails(true)} />
             </Tooltip>
             <Dialog open={showDetails} onClose={() => setShowDetails(false)}>
                 <DialogTitle>

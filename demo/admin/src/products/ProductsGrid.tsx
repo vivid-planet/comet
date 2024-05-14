@@ -1,6 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
-    CrudContextMenu,
     CrudVisibility,
     filterByFragment,
     GridFilterButton,
@@ -15,12 +14,13 @@ import {
     Tooltip,
     useBufferedRowCount,
     useDataGridRemote,
+    useGetCrudActions,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
+import { Add as AddIcon, Info, View } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton, Typography } from "@mui/material";
-import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridEnrichedColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -66,7 +66,9 @@ export function ProductsGrid() {
     const client = useApolloClient();
     const { data: categoriesData } = useQuery<GQLProductGridCategoriesQuery, GQLProductGridCategoriesQueryVariables>(productCategoriesQuery);
 
-    const columns: GridColDef<GQLProductsListManualFragment>[] = [
+    const getCrudActions = useGetCrudActions();
+
+    const columns: GridEnrichedColDef<GQLProductsListManualFragment>[] = [
         {
             field: "title",
             headerName: "Title",
@@ -136,55 +138,49 @@ export function ProductsGrid() {
             },
         },
         {
-            field: "action",
+            field: "actions",
+            type: "actions",
             headerName: "",
-            sortable: false,
-            filterable: false,
             width: 106,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <ProductsGridPreviewAction product={params.row} />
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit color="primary" />
-                        </IconButton>
-                        <CrudContextMenu
-                            onPaste={async ({ input }) => {
-                                await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
-                                    mutation: createProductMutation,
-                                    variables: {
-                                        input: {
-                                            description: input.description,
-                                            image: DamImageBlock.state2Output(DamImageBlock.input2State(input.image)),
-                                            inStock: input.inStock,
-                                            price: input.price,
-                                            slug: input.slug,
-                                            title: input.title,
-                                            type: input.type,
-                                            category: input.category?.id,
-                                            tags: input.tags.map((tag) => tag.id),
-                                            colors: input.colors,
-                                            articleNumbers: input.articleNumbers,
-                                            discounts: input.discounts,
-                                            statistics: { views: 0 },
-                                        },
-                                    },
-                                });
-                            }}
-                            onDelete={async () => {
-                                await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
-                                    mutation: deleteProductMutation,
-                                    variables: { id: params.row.id },
-                                });
-                            }}
-                            refetchQueries={["ProductsList"]}
-                            copyData={() => {
-                                return filterByFragment<GQLProductsListManualFragment>(productsFragment, params.row);
-                            }}
-                        />
-                    </>
-                );
-            },
+            getActions: (params) => [
+                ...getCrudActions({
+                    // TODO: Remove the need to define the type of `input`
+                    onPaste: async ({ input }: { input: GQLProductsListManualFragment }) => {
+                        await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
+                            mutation: createProductMutation,
+                            variables: {
+                                input: {
+                                    description: input.description,
+                                    image: DamImageBlock.state2Output(DamImageBlock.input2State(input.image)),
+                                    inStock: input.inStock,
+                                    price: input.price,
+                                    slug: input.slug,
+                                    title: input.title,
+                                    type: input.type,
+                                    category: input.category?.id,
+                                    tags: input.tags.map((tag) => tag.id),
+                                    colors: input.colors,
+                                    articleNumbers: input.articleNumbers,
+                                    discounts: input.discounts,
+                                    statistics: { views: 0 },
+                                },
+                            },
+                        });
+                    },
+                    onDelete: async () => {
+                        await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
+                            mutation: deleteProductMutation,
+                            variables: { id: params.row.id },
+                        });
+                    },
+                    refetchQueries: ["ProductsList"],
+                    copyData: async () => {
+                        return filterByFragment<GQLProductsListManualFragment>(productsFragment, params.row);
+                    },
+                }),
+                // @ts-expect-error TODO: The `getActions` type does not allow custom props, such as `product`
+                <ProductsGridPreviewAction key="view-details" label="View Details" icon={<View />} product={params.row} />,
+            ],
         },
     ];
 

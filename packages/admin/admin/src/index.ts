@@ -48,6 +48,7 @@ export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
 export { muiGridSortToGql } from "./dataGrid/muiGridSortToGql";
 export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
 export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
+export { useGetCrudActions } from "./dataGrid/useGetCrudActions";
 export { usePersistentColumnState } from "./dataGrid/usePersistentColumnState";
 export { DeleteMutation } from "./DeleteMutation";
 export { EditDialog, useEditDialog } from "./EditDialog";
