@@ -2,4 +2,4 @@
 "@comet/cms-admin": minor
 ---
 
-Make it possible to remove the "Hide in menu" field from `createEditPageNode`
+Add `disableHideInMenu` option to `createEditPageNode` to hide the "Hide in menu" checkbox 
