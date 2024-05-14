@@ -55,6 +55,7 @@ export type {
 export type { CustomBlockCategory } from "./blocks/types";
 export { BlockCategory, blockCategoryLabels } from "./blocks/types";
 export { resolveNewState } from "./blocks/utils";
+export { VimeoVideoBlock } from "./blocks/VimeoVideoBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
 export { CannotPasteBlockDialog } from "./clipboard/CannotPasteBlockDialog";
 export { readClipboard } from "./clipboard/readClipboard";

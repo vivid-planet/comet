@@ -971,6 +971,33 @@
         ]
     },
     {
+        "name": "VimeoVideo",
+        "fields": [
+            {
+                "name": "vimeoIdentifier",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "vimeoIdentifier",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "YouTubeVideo",
         "fields": [
             {

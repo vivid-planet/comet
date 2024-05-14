@@ -1,5 +1,186 @@
 [
     {
+        "name": "Anchor",
+        "fields": [
+            {
+                "name": "name",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "name",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "DamImage",
+        "fields": [
+            {
+                "name": "attachedBlocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "pixelImage": "PixelImage",
+                                "svgImage": "SvgImage"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "block",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "pixelImage": "PixelImage",
+                                "svgImage": "SvgImage"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "DamVideo",
+        "fields": [
+            {
+                "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "loop",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "damFile",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "name",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Number",
+                            "nullable": false
+                        },
+                        {
+                            "name": "mimetype",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "contentHash",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "title",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "altText",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "archived",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
+                        },
+                        {
+                            "name": "fileUrl",
+                            "kind": "String",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "damFileId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "loop",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "ExternalLink",
         "fields": [
             {
@@ -27,6 +208,593 @@
         ]
     },
     {
+        "name": "InternalLink",
+        "fields": [
+            {
+                "name": "targetPageAnchor",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "targetPage",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "name",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "path",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "documentType",
+                            "kind": "String",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "targetPageId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "targetPageAnchor",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "Link",
+        "fields": [
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "attachedBlocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "internal": "InternalLink",
+                                "external": "ExternalLink"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "block",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "internal": "InternalLink",
+                                "external": "ExternalLink"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "activeType",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "OptionalPixelImage",
+        "fields": [
+            {
+                "name": "block",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": true
+            },
+            {
+                "name": "visible",
+                "kind": "Boolean",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "block",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": true
+            },
+            {
+                "name": "visible",
+                "kind": "Boolean",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "PixelImage",
+        "fields": [
+            {
+                "name": "damFile",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "name",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Number",
+                            "nullable": false
+                        },
+                        {
+                            "name": "mimetype",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "contentHash",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "title",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "altText",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "archived",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
+                        },
+                        {
+                            "name": "image",
+                            "kind": "NestedObject",
+                            "object": {
+                                "fields": [
+                                    {
+                                        "name": "width",
+                                        "kind": "Number",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "height",
+                                        "kind": "Number",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "cropArea",
+                                        "kind": "NestedObject",
+                                        "object": {
+                                            "fields": [
+                                                {
+                                                    "name": "focalPoint",
+                                                    "kind": "Enum",
+                                                    "enum": [
+                                                        "SMART",
+                                                        "CENTER",
+                                                        "NORTHWEST",
+                                                        "NORTHEAST",
+                                                        "SOUTHWEST",
+                                                        "SOUTHEAST"
+                                                    ],
+                                                    "nullable": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "kind": "Number",
+                                                    "nullable": true
+                                                },
+                                                {
+                                                    "name": "height",
+                                                    "kind": "Number",
+                                                    "nullable": true
+                                                },
+                                                {
+                                                    "name": "x",
+                                                    "kind": "Number",
+                                                    "nullable": true
+                                                },
+                                                {
+                                                    "name": "y",
+                                                    "kind": "Number",
+                                                    "nullable": true
+                                                }
+                                            ]
+                                        },
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "dominantColor",
+                                        "kind": "String",
+                                        "nullable": true
+                                    }
+                                ]
+                            },
+                            "nullable": true
+                        },
+                        {
+                            "name": "fileUrl",
+                            "kind": "String",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            },
+            {
+                "name": "cropArea",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "focalPoint",
+                            "kind": "Enum",
+                            "enum": [
+                                "SMART",
+                                "CENTER",
+                                "NORTHWEST",
+                                "NORTHEAST",
+                                "SOUTHWEST",
+                                "SOUTHEAST"
+                            ],
+                            "nullable": false
+                        },
+                        {
+                            "name": "width",
+                            "kind": "Number",
+                            "nullable": true
+                        },
+                        {
+                            "name": "height",
+                            "kind": "Number",
+                            "nullable": true
+                        },
+                        {
+                            "name": "x",
+                            "kind": "Number",
+                            "nullable": true
+                        },
+                        {
+                            "name": "y",
+                            "kind": "Number",
+                            "nullable": true
+                        }
+                    ]
+                },
+                "nullable": true
+            },
+            {
+                "name": "urlTemplate",
+                "kind": "String",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "damFileId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "cropArea",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "focalPoint",
+                            "kind": "Enum",
+                            "enum": [
+                                "SMART",
+                                "CENTER",
+                                "NORTHWEST",
+                                "NORTHEAST",
+                                "SOUTHWEST",
+                                "SOUTHEAST"
+                            ],
+                            "nullable": false
+                        },
+                        {
+                            "name": "width",
+                            "kind": "Number",
+                            "nullable": true
+                        },
+                        {
+                            "name": "height",
+                            "kind": "Number",
+                            "nullable": true
+                        },
+                        {
+                            "name": "x",
+                            "kind": "Number",
+                            "nullable": true
+                        },
+                        {
+                            "name": "y",
+                            "kind": "Number",
+                            "nullable": true
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "RichText",
+        "fields": [
+            {
+                "name": "draftContent",
+                "kind": "Json",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "draftContent",
+                "kind": "Json",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "Seo",
+        "fields": [
+            {
+                "name": "htmlTitle",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "metaDescription",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "openGraphTitle",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "openGraphDescription",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "openGraphImage",
+                "kind": "Block",
+                "block": "OptionalPixelImage",
+                "nullable": false
+            },
+            {
+                "name": "structuredData",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "noIndex",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "priority",
+                "kind": "Enum",
+                "enum": [
+                    "0_0",
+                    "0_1",
+                    "0_2",
+                    "0_3",
+                    "0_4",
+                    "0_5",
+                    "0_6",
+                    "0_7",
+                    "0_8",
+                    "0_9",
+                    "1_0"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "changeFrequency",
+                "kind": "Enum",
+                "enum": [
+                    "always",
+                    "hourly",
+                    "daily",
+                    "weekly",
+                    "monthly",
+                    "yearly",
+                    "never"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "canonicalUrl",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "alternativeLinks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "code",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "url",
+                            "kind": "String",
+                            "nullable": true
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "htmlTitle",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "metaDescription",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "openGraphTitle",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "openGraphDescription",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "openGraphImage",
+                "kind": "Block",
+                "block": "OptionalPixelImage",
+                "nullable": false
+            },
+            {
+                "name": "structuredData",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "noIndex",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "priority",
+                "kind": "Enum",
+                "enum": [
+                    "0_0",
+                    "0_1",
+                    "0_2",
+                    "0_3",
+                    "0_4",
+                    "0_5",
+                    "0_6",
+                    "0_7",
+                    "0_8",
+                    "0_9",
+                    "1_0"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "changeFrequency",
+                "kind": "Enum",
+                "enum": [
+                    "always",
+                    "hourly",
+                    "daily",
+                    "weekly",
+                    "monthly",
+                    "yearly",
+                    "never"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "canonicalUrl",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "alternativeLinks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "code",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "url",
+                            "kind": "String",
+                            "nullable": true
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "Space",
         "fields": [
             {
@@ -40,6 +808,192 @@
                 "name": "height",
                 "kind": "Number",
                 "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "SvgImage",
+        "fields": [
+            {
+                "name": "damFile",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "name",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Number",
+                            "nullable": false
+                        },
+                        {
+                            "name": "mimetype",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "contentHash",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "title",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "altText",
+                            "kind": "String",
+                            "nullable": true
+                        },
+                        {
+                            "name": "archived",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
+                        },
+                        {
+                            "name": "fileUrl",
+                            "kind": "String",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "damFileId",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "TextImage",
+        "fields": [
+            {
+                "name": "text",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "imagePosition",
+                "kind": "Enum",
+                "enum": [
+                    "left",
+                    "right"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "imageAspectRatio",
+                "kind": "String",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "text",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "imagePosition",
+                "kind": "Enum",
+                "enum": [
+                    "left",
+                    "right"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "imageAspectRatio",
+                "kind": "String",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "TextLink",
+        "fields": [
+            {
+                "name": "text",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "link",
+                "kind": "Block",
+                "block": "Link",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "text",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "link",
+                "kind": "Block",
+                "block": "Link",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "VimeoVideo",
+        "fields": [
+            {
+                "name": "vimeoIdentifier",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "vimeoIdentifier",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
             }
         ]
     },

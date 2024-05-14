@@ -1,4 +1,4 @@
-import { createBlocksBlock, YouTubeVideoBlock } from "@comet/blocks-admin";
+import { createBlocksBlock, VimeoVideoBlock, YouTubeVideoBlock } from "@comet/blocks-admin";
 import { AnchorBlock, DamImageBlock, DamVideoBlock } from "@comet/cms-admin";
 import { HeadlineBlock } from "@src/common/blocks/HeadlineBlock";
 import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
@@ -27,6 +27,7 @@ export const PageContentBlock = createBlocksBlock({
         textImage: TextImageBlock,
         damVideo: DamVideoBlock,
         youTubeVideo: YouTubeVideoBlock,
+        vimeoVideo: VimeoVideoBlock,
         video: VideoBlock,
         linkList: LinkListBlock,
         fullWidthImage: FullWidthImageBlock,

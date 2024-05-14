@@ -1118,6 +1118,7 @@
                                 "textImage": "TextImage",
                                 "damVideo": "DamVideo",
                                 "youTubeVideo": "YouTubeVideo",
+                                "vimeoVideo": "VimeoVideo",
                                 "video": "Video",
                                 "linkList": "LinkList",
                                 "fullWidthImage": "FullWidthImage",
@@ -1176,6 +1177,7 @@
                                 "textImage": "TextImage",
                                 "damVideo": "DamVideo",
                                 "youTubeVideo": "YouTubeVideo",
+                                "vimeoVideo": "VimeoVideo",
                                 "video": "Video",
                                 "linkList": "LinkList",
                                 "fullWidthImage": "FullWidthImage",
@@ -2010,7 +2012,8 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "damVideo": "DamVideo",
-                                "youtubeVideo": "YouTubeVideo"
+                                "youtubeVideo": "YouTubeVideo",
+                                "vimeoVideo": "VimeoVideo"
                             },
                             "nullable": false
                         }
@@ -2038,7 +2041,8 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "damVideo": "DamVideo",
-                                "youtubeVideo": "YouTubeVideo"
+                                "youtubeVideo": "YouTubeVideo",
+                                "vimeoVideo": "VimeoVideo"
                             },
                             "nullable": false
                         }
@@ -2051,6 +2055,33 @@
             {
                 "name": "activeType",
                 "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "VimeoVideo",
+        "fields": [
+            {
+                "name": "vimeoIdentifier",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "vimeoIdentifier",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "autoplay",
+                "kind": "Boolean",
                 "nullable": true
             }
         ]
