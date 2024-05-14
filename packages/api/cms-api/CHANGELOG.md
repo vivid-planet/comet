@@ -1,5 +1,15 @@
 # @comet/cms-api
 
+## 5.8.2
+
+### Patch Changes
+
+-   d6c462408: Only return duplicates within the same scope in the `FilesResolver#duplicates` field resolver
+
+    As a side effect `FilesService#findAllByHash` now accepts an optional scope parameter.
+
+    -   @comet/blocks-api@5.8.2
+
 ## 5.8.1
 
 ### Patch Changes
