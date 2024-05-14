@@ -14,12 +14,14 @@ interface Props {
     previewApi: BlockPreviewApi;
     url: string;
     previewState: unknown;
+    actions?: React.ReactNode;
 }
 
 function BlockPreview({
     url,
     previewState,
     previewApi: { device, setDevice, showOnlyVisible, setShowOnlyVisible, setMinimized },
+    actions,
 }: Props): React.ReactElement {
     const iFrameBridge = useIFrameBridge();
     const { scope } = useContentScope();
@@ -50,6 +52,7 @@ function BlockPreview({
                     </Grid>
                     <Grid item>
                         <VisibilityToggle showOnlyVisible={showOnlyVisible} onChange={setShowOnlyVisible} />
+                        {actions}
                     </Grid>
                 </Grid>
             </ActionsContainer>
