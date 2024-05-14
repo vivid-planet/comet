@@ -1,5 +1,16 @@
 # @comet/cms-admin
 
+## 5.8.2
+
+### Patch Changes
+
+-   @comet/admin@5.8.2
+-   @comet/admin-date-time@5.8.2
+-   @comet/admin-icons@5.8.2
+-   @comet/admin-rte@5.8.2
+-   @comet/admin-theme@5.8.2
+-   @comet/blocks-admin@5.8.2
+
 ## 5.8.1
 
 ### Patch Changes
