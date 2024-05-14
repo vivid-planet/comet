@@ -107,24 +107,25 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return this.streamFile(file, res, { range, overrideHeaders: { "Cache-control": "private" } });
         }
 
-        @DisableGlobalGuard()
         @Get(`/download/preview/${fileUrl}`)
         async previewDownloadFile(
             @Param() { fileId }: FileParams,
             @Res() res: Response,
-            @Headers(CDN_ORIGIN_CHECK_HEADER) cdnOriginCheck: string,
+            @GetCurrentUser() user: CurrentUser,
             @Headers("range") range?: string,
         ): Promise<void> {
-            this.checkCdnOrigin(cdnOriginCheck);
-
             const file = await this.filesService.findOneById(fileId);
 
             if (file === null) {
                 throw new NotFoundException();
             }
 
+            if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+                throw new ForbiddenException();
+            }
+
             res.setHeader("Content-Disposition", "attachment");
-            return this.streamFile(file, res, { range });
+            return this.streamFile(file, res, { range, overrideHeaders: { "Cache-control": "private" } });
         }
 
         @DisableGlobalGuard()
