@@ -24,7 +24,7 @@ const Root = createComponentSlot(Toolbar)<DataGridToolbarClassKey, OwnerState>({
     componentName: "DataGridToolbar",
     slotName: "root",
     classesResolver(ownerState) {
-        return [ownerState.density === "standard" ? "standard" : "comfortable"];
+        return [ownerState.density];
     },
 })(
     ({ ownerState, theme }) => css`
