@@ -1,5 +1,33 @@
 # @comet/cms-api
 
+## 6.10.0
+
+### Minor Changes
+
+-   536fdb85a: Add `createUserFromIdToken` to `UserService`-interface
+
+    This allows to override the default implementation of creating the User-Object from the JWT when logging in via `createAuthProxyJwtStrategy`
+
+-   f528bc340: CronJobModule: Show logs for job run
+
+### Patch Changes
+
+-   d340cabc2: DAM: Fix the duplicate name check when updating a file
+
+    Previously, there were two bugs:
+
+    1. In the `EditFile` form, the `folderId` wasn't passed to the mutation
+    2. In `FilesService#updateByEntity`, the duplicate check was always done against the root folder if no `folderId` was passed
+
+    This caused an error when saving a file in any folder if there was another file with the same name in the root folder.
+    And it was theoretically possible to create two files with the same name in one folder (though this was still prevented by admin-side validation).
+
+-   584d14d86: Only return duplicates within the same scope in the `FilesResolver#duplicates` field resolver
+
+    As a side effect `FilesService#findAllByHash` now accepts an optional scope parameter.
+
+    -   @comet/blocks-api@6.10.0
+
 ## 6.9.0
 
 ### Minor Changes
