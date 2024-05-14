@@ -54,8 +54,9 @@ export function FinalFormCurrencyInput({
         } else {
             numericValue = parseFloat(value.split(`${thousandSeparatorSymbol}`).join(""));
         }
-        input.onChange(numericValue);
-        isNaN(numericValue) ? setFormattedCurrencyValue(getFormattedValue(0)) : setFormattedCurrencyValue(getFormattedValue(numericValue));
+        const inputValue = isNaN(numericValue) ? 0 : numericValue;
+        input.onChange(inputValue);
+        setFormattedCurrencyValue(getFormattedValue(inputValue));
     };
 
     React.useEffect(() => {
