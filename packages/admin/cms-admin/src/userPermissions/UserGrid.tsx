@@ -44,12 +44,6 @@ export const UserGrid: React.FC = () => {
             headerName: intl.formatMessage({ id: "comet.userPermissions.email", defaultMessage: "E-Mail" }),
         },
         {
-            field: "locale",
-            flex: 0.5,
-            pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userPermissions.locale", defaultMessage: "Locale" }),
-        },
-        {
             field: "actions",
             headerName: "",
             sortable: false,
@@ -81,7 +75,6 @@ export const UserGrid: React.FC = () => {
                 id
                 name
                 email
-                locale
             }
         `,
         {
