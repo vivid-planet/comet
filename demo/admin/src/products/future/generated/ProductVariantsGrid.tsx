@@ -5,7 +5,6 @@ import {
     CrudContextMenu,
     filterByFragment,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -174,18 +173,16 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
     const rows = data?.productVariants.nodes ?? [];
 
     return (
-        <MainContent fullHeight disablePadding>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                components={{
-                    Toolbar: ProductVariantsGridToolbar,
-                }}
-            />
-        </MainContent>
+        <DataGridPro
+            {...dataGridProps}
+            disableSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            components={{
+                Toolbar: ProductVariantsGridToolbar,
+            }}
+        />
     );
 }

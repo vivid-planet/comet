@@ -146,7 +146,7 @@ export class AppModule {
                 AccessLogModule.forRoot({
                     shouldLogRequest: ({ user }) => {
                         // Ignore system user
-                        if (user === true) {
+                        if (user === "system-user") {
                             return false;
                         }
                         return true;
