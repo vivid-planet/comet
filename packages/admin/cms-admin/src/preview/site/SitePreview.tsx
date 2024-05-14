@@ -18,7 +18,7 @@ import { useSitePreviewIFrameBridge } from "./iframebridge/useSitePreviewIFrameB
 import { OpenLinkDialog } from "./OpenLinkDialog";
 import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLinkWrapper } from "./SitePreview.sc";
 
-interface SitePreviewParams {
+export interface SitePreviewParams {
     includeInvisibleBlocks: boolean;
 }
 
@@ -26,9 +26,11 @@ interface SitePreviewParams {
 interface Props extends RouteComponentProps {
     resolvePath?: (path: string, scope: ContentScopeInterface) => string;
     logo?: React.ReactNode;
+    actions?: React.ReactNode;
+    additionalSitePreviewParams?: Partial<SitePreviewParams>;
 }
 
-function useSearchState<ParseFunction extends (value: string | undefined) => ReturnType<ParseFunction>>(
+export function useSearchState<ParseFunction extends (value: string | undefined) => ReturnType<ParseFunction>>(
     name: string,
     parseValue: ParseFunction,
 ): [ReturnType<ParseFunction>, (value: string) => void] {
@@ -47,7 +49,7 @@ function useSearchState<ParseFunction extends (value: string | undefined) => Ret
     );
     return [value, setValue];
 }
-function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props): React.ReactElement {
+function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} />, actions, additionalSitePreviewParams }: Props): React.ReactElement {
     const [previewPath, setPreviewPath] = useSearchState("path", (v) => v ?? "");
 
     const [device, setDevice] = useSearchState("device", (v) => {
@@ -59,7 +61,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     const [showOnlyVisible, setShowOnlyVisible] = useSearchState("showOnlyVisible", (v) => !v || v === "true");
 
     const [linkToOpen, setLinkToOpen] = React.useState<ExternalLinkBlockData | undefined>(undefined);
-    const sitePreviewParams: SitePreviewParams = { includeInvisibleBlocks: !showOnlyVisible };
+    const sitePreviewParams: SitePreviewParams = { includeInvisibleBlocks: !showOnlyVisible, ...additionalSitePreviewParams };
     const formattedSitePreviewParams = JSON.stringify(sitePreviewParams);
 
     const { scope } = useContentScope();
@@ -153,6 +155,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
                     </Grid>
                     <Grid item>
                         <VisibilityToggle showOnlyVisible={showOnlyVisible} onChange={handleShowOnlyVisibleChange} />
+                        {actions}
                     </Grid>
                 </Grid>
             </ActionsContainer>

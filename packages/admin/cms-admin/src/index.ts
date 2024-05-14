@@ -92,7 +92,7 @@ export { SplitPreview } from "./preview/block/SplitPreview";
 export type { BlockPreviewApi } from "./preview/block/useBlockPreview";
 export { useBlockPreview } from "./preview/block/useBlockPreview";
 export { openPreviewWindow, openSitePreviewWindow } from "./preview/openSitePreviewWindow";
-export { SitePreview } from "./preview/site/SitePreview";
+export { SitePreview, SitePreviewParams, useSearchState } from "./preview/site/SitePreview";
 export { createRedirectsPage } from "./redirects/createRedirectsPage";
 export type { SiteConfig } from "./sitesConfig/SitesConfigContext";
 export { SitesConfigProvider } from "./sitesConfig/SitesConfigProvider";

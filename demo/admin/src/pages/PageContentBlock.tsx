@@ -1,4 +1,4 @@
-import { createBlocksBlock, YouTubeVideoBlock } from "@comet/blocks-admin";
+import { createBlocksBlock, IPreviewContext, YouTubeVideoBlock } from "@comet/blocks-admin";
 import { AnchorBlock, DamImageBlock, DamVideoBlock } from "@comet/cms-admin";
 import { HeadlineBlock } from "@src/common/blocks/HeadlineBlock";
 import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
@@ -46,3 +46,11 @@ export const PageContentBlock = createBlocksBlock({
         return <UserGroupChip item={item} />;
     },
 });
+
+const orginalCreatePreviewState = PageContentBlock.createPreviewState;
+
+PageContentBlock.createPreviewState = (state, context: IPreviewContext) => {
+    const previewState = orginalCreatePreviewState(state, context);
+
+    return { ...previewState, blocks: previewState.blocks.filter((block) => block.userGroup === context.userGroup || block.userGroup === "All") };
+};

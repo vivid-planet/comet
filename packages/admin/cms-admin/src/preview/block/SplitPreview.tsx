@@ -11,9 +11,10 @@ interface Props {
     previewApi: BlockPreviewApi;
     previewState: unknown;
     children: React.ReactNode | [React.ReactNode, React.ReactNode];
+    actions?: React.ReactNode;
 }
 
-function SplitPreview({ url, previewState, children, previewApi }: Props): React.ReactElement {
+function SplitPreview({ url, previewState, children, previewApi, actions }: Props): React.ReactElement {
     const { minimized, setMinimized } = previewApi;
     const rootRef = React.useRef<HTMLDivElement>(null);
     const [columnHeight, setColumnHeight] = React.useState<number>(0);
@@ -50,7 +51,7 @@ function SplitPreview({ url, previewState, children, previewApi }: Props): React
                         <Box paddingBottom={4}>{firstColumn}</Box>
                     </FirstColumnContainer>
                     <PreviewContainer minimized={minimized}>
-                        <BlockPreview url={url} previewState={previewState} previewApi={previewApi} />
+                        <BlockPreview url={url} previewState={previewState} previewApi={previewApi} actions={actions} />
                         {minimized && (
                             <MaximizeButton onClick={handleMaximizeClick}>
                                 <MaximizeIcon />

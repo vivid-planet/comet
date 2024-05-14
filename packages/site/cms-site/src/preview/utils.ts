@@ -4,7 +4,7 @@ import { Url } from "./PreviewContext";
 
 export const defaultPreviewPath = "/preview";
 
-interface SitePreviewParams {
+export interface SitePreviewParams {
     includeInvisibleBlocks: boolean;
 }
 
