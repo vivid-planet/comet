@@ -175,8 +175,8 @@ export class FilesService {
         return [files, totalCount];
     }
 
-    async findAllByHash(contentHash: string): Promise<FileInterface[]> {
-        return withFilesSelect(this.selectQueryBuilder(), { contentHash }).getResult();
+    async findAllByHash(contentHash: string, options?: { scope?: DamScopeInterface }): Promise<FileInterface[]> {
+        return withFilesSelect(this.selectQueryBuilder(), { contentHash, scope: options?.scope }).getResult();
     }
 
     async findMultipleByIds(ids: string[]) {
