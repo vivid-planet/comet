@@ -2,8 +2,26 @@
 "@comet/admin": minor
 ---
 
-Add the ability to show and hide individual columns depending on the screen size when using `DataGridPro` with `usePersistentColumnState`
+Add the ability to make `DataGrid` columns responsive by setting the `visible` property of the column definition to a media query
 
-A compact view of a grid can be created by defining additional columns that show a combination of others.
-Then, you can use the `showOnlyInView` setting on certain columns to show them only in the default or compact view.
+This can be used to hide certain columns on smaller screens and show a combined column instead.
+
+This will only work when using `usePersistentColumnState` with `DataGridPro`/`DataGridPremium`.
 When defining the columns, use the `GridColDef` type from `@comet/admin` instead of `@mui/x-data-grid`.
+
+```ts
+const columns: GridColDef[] = [
+    {
+        field: "fullName",
+        visible: theme.breakpoints.down("md"),
+    },
+    {
+        field: "firstName",
+        visible: theme.breakpoints.up("md"),
+    },
+    {
+        field: "lastName",
+        visible: theme.breakpoints.up("md"),
+    },
+];
+```
