@@ -242,7 +242,8 @@ export class FilesService {
         return this.updateByEntity(file, data);
     }
 
-    async updateByEntity(entity: FileInterface, { folderId, image, ...input }: UpdateFileInput): Promise<FileInterface> {
+    async updateByEntity(entity: FileInterface, { image, ...input }: UpdateFileInput): Promise<FileInterface> {
+        const folderId = input.folderId !== undefined ? input.folderId : entity.folder?.id;
         const folder = folderId ? await this.foldersService.findOneById(folderId) : null;
 
         if (entity.image && image?.cropArea) {
