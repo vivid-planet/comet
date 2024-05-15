@@ -3,8 +3,8 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    filterByFragment,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -38,18 +38,13 @@ import {
 const productsFragment = gql`
     fragment ProductsGridFuture on Product {
         id
-        title
-        status
-        slug
-        description
-        type
-        price
         inStock
-        soldCount
+        title
+        description
+        price
+        type
         availableSince
-        image
         createdAt
-        updatedAt
     }
 `;
 
@@ -142,14 +137,14 @@ export function ProductsGrid({ filter }: Props): React.ReactElement {
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
             type: "date",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
             width: 140,
         },
         {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
             type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
             width: 170,
         },
         {
@@ -167,17 +162,11 @@ export function ProductsGrid({ filter }: Props): React.ReactElement {
                         </IconButton>
                         <CrudContextMenu
                             copyData={() => {
-                                const row = params.row;
+                                // Don't copy id, because we want to create a new entity with this data
+                                const { id, ...filteredData } = filterByFragment(productsFragment, params.row);
                                 return {
-                                    title: row.title,
-                                    status: row.status,
-                                    slug: row.slug,
-                                    description: row.description,
-                                    type: row.type,
-                                    price: row.price,
-                                    inStock: row.inStock,
-                                    availableSince: row.availableSince,
-                                    image: DamImageBlock.state2Output(DamImageBlock.input2State(row.image)),
+                                    ...filteredData,
+                                    image: DamImageBlock.state2Output(DamImageBlock.input2State(filteredData.image)),
                                 };
                             }}
                             onPaste={async ({ input }) => {
@@ -204,7 +193,7 @@ export function ProductsGrid({ filter }: Props): React.ReactElement {
 
     const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
         variables: {
-            filter: { and: [gqlFilter, ...(filter ? [filter] : [])] },
+            filter: filter ? { and: [gqlFilter, filter] } : gqlFilter,
             search: gqlSearch,
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
@@ -216,18 +205,16 @@ export function ProductsGrid({ filter }: Props): React.ReactElement {
     const rows = data?.products.nodes ?? [];
 
     return (
-        <MainContent fullHeight disablePadding>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                components={{
-                    Toolbar: ProductsGridToolbar,
-                }}
-            />
-        </MainContent>
+        <DataGridPro
+            {...dataGridProps}
+            disableSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            components={{
+                Toolbar: ProductsGridToolbar,
+            }}
+        />
     );
 }

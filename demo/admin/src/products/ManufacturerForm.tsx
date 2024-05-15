@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
     FieldSet,
+    filterByFragment,
     FinalForm,
     FinalFormInput,
     FinalFormSaveSplitButton,
@@ -22,7 +23,6 @@ import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -83,7 +83,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
     );
 
     const initialValues = React.useMemo<Partial<FormValues>>(() => {
-        const filteredData = data ? filter<GQLManufacturerFormDetailsFragment>(manufacturerFormFragment, data.manufacturer) : undefined;
+        const filteredData = data ? filterByFragment<GQLManufacturerFormDetailsFragment>(manufacturerFormFragment, data.manufacturer) : undefined;
         if (!filteredData) return {};
         return {
             ...filteredData,

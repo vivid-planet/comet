@@ -1,6 +1,8 @@
+import { SitePreviewProvider } from "@comet/cms-site";
 import StyledComponentsRegistry from "@src/util/StyledComponentsRegistry";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { draftMode } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +18,9 @@ export default function RootLayout({
     return (
         <html>
             <body className={inter.className}>
-                <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+                <StyledComponentsRegistry>
+                    {draftMode().isEnabled ? <SitePreviewProvider>{children}</SitePreviewProvider> : children}
+                </StyledComponentsRegistry>
             </body>
         </html>
     );

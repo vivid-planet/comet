@@ -35,7 +35,7 @@
     "devDependencies": {
         "@comet/dev-process-manager": "^2.5.1",
         "@comet/eslint-plugin": "workspace:*",
-        "@formatjs/cli": "^4.8.3",
+        "@formatjs/cli": "^6.0.0",
         "@types/node": "^18.0.0",
         "dotenv-cli": "^5.1.0",
         "husky": "^7.0.4",
@@ -65,7 +65,12 @@
                     "@types/react": "^18.0.0"
                 }
             },
-            "@types/styled-components": {
+            "styled-components": {
+                "peerDependencies": {
+                    "@types/react": "^18.0.0"
+                }
+            },
+            "react-intl": {
                 "peerDependencies": {
                     "@types/react": "*"
                 }

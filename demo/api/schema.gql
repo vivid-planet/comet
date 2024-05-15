@@ -16,7 +16,6 @@ type CurrentUser {
   id: String!
   name: String!
   email: String!
-  locale: String!
   permissions: [CurrentUserPermission!]!
 }
 
@@ -181,7 +180,6 @@ type User {
   id: String!
   name: String!
   email: String!
-  locale: String!
 }
 
 type PaginatedUserList {
@@ -478,11 +476,19 @@ type ProductStatistics {
   updatedAt: DateTime!
 }
 
+type ProductToTag {
+  id: String!
+  exampleStatus: Boolean!
+  product: Product!
+  tag: ProductTag!
+}
+
 type ProductTag {
   id: ID!
   title: String!
   createdAt: DateTime!
   updatedAt: DateTime!
+  productsWithStatus: [ProductToTag!]!
   products: [Product!]!
 }
 
@@ -528,12 +534,14 @@ type Product {
   manufacturer: Manufacturer
   colors: [ProductColor!]!
   variants: [ProductVariant!]!
+  tagsWithStatus: [ProductToTag!]!
   tags: [ProductTag!]!
 }
 
 enum ProductStatus {
   Published
   Unpublished
+  Deleted
 }
 
 enum ProductType {
@@ -726,7 +734,7 @@ type Query {
   damFolderByNameAndParentId(scope: DamScopeInput!, name: String!, parentId: ID): DamFolder
   news(id: ID!): News!
   newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
-  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: NewsStatus! = Active, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: [NewsStatus!]! = [Active], search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
@@ -736,9 +744,11 @@ type Query {
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
+  kubernetesJob(name: String!): KubernetesJob!
+  kubernetesJobLogs(name: String!): String!
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
-  products(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
+  products(offset: Int! = 0, limit: Int! = 25, status: [ProductStatus!]! = [Published, Unpublished], search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
   productCategory(id: ID!): ProductCategory!
   productCategoryBySlug(slug: String!): ProductCategory
   productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
@@ -754,7 +764,6 @@ input UserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
-  locale: StringFilter
   and: [UserFilter!]
   or: [UserFilter!]
 }
@@ -776,7 +785,6 @@ enum UserSortField {
   name
   email
   status
-  locale
 }
 
 enum SortDirection {
@@ -1312,20 +1320,26 @@ input ProductInput {
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
   dimensions: ProductDimensionsInput
-  statistics: ProductStatisticsInput
-  colors: [ProductColorInput!]! = []
+  statistics: ProductNestedProductStatisticsInput
+  colors: [ProductNestedProductColorInput!]! = []
   category: ID = null
   tags: [ID!]! = []
+  tagsWithStatus: [ProductNestedProductToTagInput!]! = []
   manufacturer: ID = null
 }
 
-input ProductStatisticsInput {
+input ProductNestedProductStatisticsInput {
   views: Float!
 }
 
-input ProductColorInput {
+input ProductNestedProductColorInput {
   name: String!
   hexCode: String!
+}
+
+input ProductNestedProductToTagInput {
+  tag: ID!
+  exampleStatus: Boolean! = true
 }
 
 input ProductUpdateInput {
@@ -1341,10 +1355,11 @@ input ProductUpdateInput {
   discounts: [ProductDiscountsInput!]
   articleNumbers: [String!]
   dimensions: ProductDimensionsInput
-  statistics: ProductStatisticsInput
-  colors: [ProductColorInput!]
+  statistics: ProductNestedProductStatisticsInput
+  colors: [ProductNestedProductColorInput!]
   category: ID
   tags: [ID!]
+  tagsWithStatus: [ProductNestedProductToTagInput!]
   manufacturer: ID
 }
 
@@ -1361,11 +1376,18 @@ input ProductCategoryUpdateInput {
 input ProductTagInput {
   title: String!
   products: [ID!]! = []
+  productsWithStatus: [ProductTagNestedProductToTagInput!]! = []
+}
+
+input ProductTagNestedProductToTagInput {
+  product: ID!
+  exampleStatus: Boolean! = true
 }
 
 input ProductTagUpdateInput {
   title: String
   products: [ID!]
+  productsWithStatus: [ProductTagNestedProductToTagInput!]
 }
 
 input ProductVariantInput {

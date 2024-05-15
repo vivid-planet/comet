@@ -13,6 +13,7 @@ import { ProductCategory } from "../entities/product-category.entity";
 import { ProductColor } from "../entities/product-color.entity";
 import { ProductStatistics } from "../entities/product-statistics.entity";
 import { ProductTag } from "../entities/product-tag.entity";
+import { ProductToTag } from "../entities/product-to-tag.entity";
 import { ProductVariant } from "../entities/product-variant.entity";
 import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductInput, ProductUpdateInput } from "./dto/product.input";
@@ -30,6 +31,7 @@ export class ProductResolver {
         @InjectRepository(Manufacturer) private readonly manufacturerRepository: EntityRepository<Manufacturer>,
         @InjectRepository(ProductStatistics) private readonly productStatisticsRepository: EntityRepository<ProductStatistics>,
         @InjectRepository(ProductColor) private readonly productColorRepository: EntityRepository<ProductColor>,
+        @InjectRepository(ProductToTag) private readonly productToTagRepository: EntityRepository<ProductToTag>,
         @InjectRepository(ProductTag) private readonly productTagRepository: EntityRepository<ProductTag>,
     ) {}
 
@@ -48,8 +50,12 @@ export class ProductResolver {
     }
 
     @Query(() => PaginatedProducts)
-    async products(@Args() { search, filter, sort, offset, limit }: ProductsArgs, @Info() info: GraphQLResolveInfo): Promise<PaginatedProducts> {
+    async products(
+        @Args() { status, search, filter, sort, offset, limit }: ProductsArgs,
+        @Info() info: GraphQLResolveInfo,
+    ): Promise<PaginatedProducts> {
         const where = this.productsService.getFindCondition({ search, filter });
+        where.status = { $in: status };
 
         const fields = extractGraphqlFields(info, { root: "nodes" });
         const populate: string[] = [];
@@ -64,6 +70,9 @@ export class ProductResolver {
         }
         if (fields.includes("variants")) {
             populate.push("variants");
+        }
+        if (fields.includes("tagsWithStatus")) {
+            populate.push("tagsWithStatus");
         }
         if (fields.includes("tags")) {
             populate.push("tags");
@@ -91,6 +100,7 @@ export class ProductResolver {
     async createProduct(@Args("input", { type: () => ProductInput }) input: ProductInput): Promise<Product> {
         const {
             colors: colorsInput,
+            tagsWithStatus: tagsWithStatusInput,
             tags: tagsInput,
             category: categoryInput,
             manufacturer: manufacturerInput,
@@ -106,12 +116,28 @@ export class ProductResolver {
             image: imageInput.transformToBlockData(),
         });
         if (colorsInput) {
+            await product.colors.loadItems();
             product.colors.set(
                 colorsInput.map((colorInput) => {
                     return this.productColorRepository.assign(new ProductColor(), {
                         ...colorInput,
                     });
                 }),
+            );
+        }
+        if (tagsWithStatusInput) {
+            await product.tagsWithStatus.loadItems();
+            product.tagsWithStatus.set(
+                await Promise.all(
+                    tagsWithStatusInput.map(async (tagsWithStatusInput) => {
+                        const { tag: tagInput, ...assignInput } = tagsWithStatusInput;
+                        return this.productToTagRepository.assign(new ProductToTag(), {
+                            ...assignInput,
+
+                            tag: Reference.create(await this.productTagRepository.findOneOrFail(tagInput)),
+                        });
+                    }),
+                ),
             );
         }
         if (tagsInput) {
@@ -144,6 +170,7 @@ export class ProductResolver {
 
         const {
             colors: colorsInput,
+            tagsWithStatus: tagsWithStatusInput,
             tags: tagsInput,
             category: categoryInput,
             manufacturer: manufacturerInput,
@@ -155,12 +182,28 @@ export class ProductResolver {
             ...assignInput,
         });
         if (colorsInput) {
+            await product.colors.loadItems();
             product.colors.set(
                 colorsInput.map((colorInput) => {
                     return this.productColorRepository.assign(new ProductColor(), {
                         ...colorInput,
                     });
                 }),
+            );
+        }
+        if (tagsWithStatusInput) {
+            await product.tagsWithStatus.loadItems();
+            product.tagsWithStatus.set(
+                await Promise.all(
+                    tagsWithStatusInput.map(async (tagsWithStatusInput) => {
+                        const { tag: tagInput, ...assignInput } = tagsWithStatusInput;
+                        return this.productToTagRepository.assign(new ProductToTag(), {
+                            ...assignInput,
+
+                            tag: Reference.create(await this.productTagRepository.findOneOrFail(tagInput)),
+                        });
+                    }),
+                ),
             );
         }
         if (tagsInput) {
@@ -199,7 +242,7 @@ export class ProductResolver {
     @AffectedEntity(Product)
     async deleteProduct(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const product = await this.repository.findOneOrFail(id);
-        await this.entityManager.remove(product);
+        this.entityManager.remove(product);
         await this.entityManager.flush();
         return true;
     }
@@ -222,6 +265,11 @@ export class ProductResolver {
     @ResolveField(() => [ProductVariant])
     async variants(@Parent() product: Product): Promise<ProductVariant[]> {
         return product.variants.loadItems();
+    }
+
+    @ResolveField(() => [ProductToTag])
+    async tagsWithStatus(@Parent() product: Product): Promise<ProductToTag[]> {
+        return product.tagsWithStatus.loadItems();
     }
 
     @ResolveField(() => [ProductTag])

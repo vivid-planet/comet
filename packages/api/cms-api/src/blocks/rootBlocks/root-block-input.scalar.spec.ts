@@ -1,7 +1,7 @@
 import { NestFactory } from "@nestjs/core";
 import { Args, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, Mutation, Query } from "@nestjs/graphql";
 
-import { PixelImageBlock } from "../PixelImageBlock";
+import { PixelImageBlock } from "../../dam/blocks/pixel-image.block";
 import { RootBlockDataScalar } from "./root-block-data.scalar";
 import { RootBlockInputScalar } from "./root-block-input.scalar";
 

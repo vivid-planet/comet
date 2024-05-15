@@ -1,4 +1,5 @@
 export { Alert, AlertClassKey, AlertProps } from "./alert/Alert";
+export { filterByFragment } from "./apollo/filterByFragment";
 export { useFocusAwarePolling } from "./apollo/useFocusAwarePolling";
 export { AppHeader, AppHeaderClassKey } from "./appHeader/AppHeader";
 export { AppHeaderButton, AppHeaderButtonProps } from "./appHeader/button/AppHeaderButton";
@@ -41,6 +42,7 @@ export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";
 export { ContentOverflow, ContentOverflowClassKey, ContentOverflowProps } from "./ContentOverflow";
 export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
+export { GridCellText, GridCellTextClassKey, GridCellTextProps } from "./dataGrid/GridCellText";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";

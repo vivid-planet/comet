@@ -18,10 +18,9 @@ export const ProductForm: FormConfig<GQLProduct> = {
         { type: "text", name: "description", label: "Description", multiline: true },
         { type: "staticSelect", name: "type", label: "Type" /*, values: from gql schema (TODO overridable)*/ },
         { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
-        { type: "number", name: "price", helperText: "Enter price in this format: 123,45" },
         { type: "boolean", name: "inStock" },
         { type: "date", name: "availableSince" },
-        { type: "block", name: "image", label: "Image", block: { name: "PixelImageBlock", import: "@comet/cms-admin" } },
+        { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },
     ],
 };
 

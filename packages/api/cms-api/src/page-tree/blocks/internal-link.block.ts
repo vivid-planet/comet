@@ -8,23 +8,12 @@ import {
     BlockMetaFieldKind,
     createBlock,
     inputToData,
-    TransformResponse,
 } from "@comet/blocks-api";
 import { IsOptional, IsString, IsUUID } from "class-validator";
 
 import { PAGE_TREE_ENTITY } from "../page-tree.constants";
-import { PageTreeReadApi } from "../page-tree-read-api";
 import { PageExists } from "../validators/page-exists.validator";
-
-interface InternalLinkBlockTransformResponse extends TransformResponse {
-    targetPage: {
-        id: string;
-        name: string;
-        path: string;
-        documentType: string;
-    } | null;
-    targetPageAnchor?: string;
-}
+import { InternalLinkBlockTransformerService } from "./internal-link-block-transformer.service";
 
 class InternalLinkBlockData extends BlockData {
     targetPageId?: string;
@@ -32,34 +21,8 @@ class InternalLinkBlockData extends BlockData {
     @BlockField({ nullable: true })
     targetPageAnchor?: string;
 
-    async transformToPlain({ pageTreeReadApi }: { pageTreeReadApi: PageTreeReadApi }): Promise<InternalLinkBlockTransformResponse> {
-        if (pageTreeReadApi === undefined) {
-            throw new Error("Missing transform dependency pageTreeService!");
-        }
-
-        if (!this.targetPageId) {
-            return {
-                targetPage: null,
-            };
-        }
-
-        //TODO do we need createReadApi({ visibility: "all" });?
-
-        const node = await pageTreeReadApi.getNode(this.targetPageId);
-
-        if (!node) {
-            return { targetPage: null };
-        }
-
-        return {
-            targetPage: {
-                id: node.id,
-                name: node.name,
-                path: await pageTreeReadApi.nodePath(node),
-                documentType: node.documentType,
-            },
-            targetPageAnchor: this.targetPageAnchor,
-        };
+    async transformToPlain() {
+        return InternalLinkBlockTransformerService;
     }
 
     indexData(): BlockIndexData {
@@ -119,6 +82,11 @@ class Meta extends AnnotationBlockMeta {
                             name: "path",
                             kind: BlockMetaFieldKind.String,
                             nullable: false,
+                        },
+                        {
+                            name: "scope",
+                            kind: BlockMetaFieldKind.Json,
+                            nullable: true,
                         },
                         {
                             name: "documentType",

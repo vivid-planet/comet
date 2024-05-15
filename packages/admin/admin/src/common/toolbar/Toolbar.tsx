@@ -5,17 +5,23 @@ import * as React from "react";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
+import { ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";
 
-export type ToolbarClassKey = "root" | "muiToolbar" | "mainContentContainer";
+export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer" | "breadcrumbs";
 
 export interface ToolbarProps
     extends ThemedComponentBaseProps<{
         root: typeof Paper;
-        muiToolbar: typeof MuiToolbar;
+        bottomBar: typeof MuiToolbar;
         mainContentContainer: "div";
+        topBar: "div";
+        breadcrumbs: typeof ToolbarBreadcrumbs;
     }> {
     elevation?: number;
     children?: React.ReactNode;
+    scopeIndicator?: React.ReactNode;
+    hideTopBar?: boolean;
+    hideBottomBar?: boolean;
 }
 
 type OwnerState = {
@@ -34,18 +40,40 @@ const Root = createComponentSlot(Paper)<ToolbarClassKey, OwnerState>({
         justify-content: center;
         top: ${ownerState.headerHeight}px;
         padding: 0;
-        min-height: 80px;
     `,
 );
 
-const StyledToolbar = createComponentSlot(MuiToolbar)<ToolbarClassKey>({
+const TopBar = createComponentSlot("div")<ToolbarClassKey>({
     componentName: "Toolbar",
-    slotName: "muiToolbar",
+    slotName: "topBar",
 })(css`
-    display: flex;
-    flex: 1;
-    align-items: stretch;
+    min-height: 40px;
 `);
+
+const BottomBar = createComponentSlot(MuiToolbar)<ToolbarClassKey>({
+    componentName: "Toolbar",
+    slotName: "bottomBar",
+})(
+    ({ theme }) => css`
+        display: flex;
+        flex: 1;
+        align-items: stretch;
+        border-top: solid 1px ${theme.palette.grey["50"]};
+        box-sizing: border-box;
+        min-height: 60px;
+        padding: 0 5px;
+
+        ${theme.breakpoints.up("sm")} {
+            min-height: 60px;
+            padding: 0 10px;
+        }
+
+        // necessary to override strange MUI default styling
+        @media (min-width: 0px) and (orientation: landscape) {
+            min-height: 60px;
+        }
+    `,
+);
 
 const MainContentContainer = createComponentSlot("div")<ToolbarClassKey>({
     componentName: "Toolbar",
@@ -55,9 +83,23 @@ const MainContentContainer = createComponentSlot("div")<ToolbarClassKey>({
     flex: 1;
 `);
 
+const Breadcrumbs = createComponentSlot(ToolbarBreadcrumbs)<ToolbarClassKey>({
+    componentName: "Toolbar",
+    slotName: "breadcrumbs",
+})();
+
 export const Toolbar = (inProps: ToolbarProps) => {
-    const { children, elevation = 1, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbar" });
+    const {
+        children,
+        hideTopBar = false,
+        hideBottomBar: passedHideBottomBar,
+        elevation = 1,
+        slotProps,
+        scopeIndicator,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminToolbar" });
     const { headerHeight } = React.useContext(MasterLayoutContext);
+    const hideBottomBar = passedHideBottomBar ?? React.Children.count(children) === 0 ?? false;
 
     const ownerState: OwnerState = {
         headerHeight,
@@ -65,9 +107,16 @@ export const Toolbar = (inProps: ToolbarProps) => {
 
     return (
         <Root elevation={elevation} ownerState={ownerState} {...slotProps?.root} {...restProps}>
-            <StyledToolbar {...slotProps?.muiToolbar}>
-                <MainContentContainer {...slotProps?.mainContentContainer}>{children}</MainContentContainer>
-            </StyledToolbar>
+            {!hideTopBar && (
+                <TopBar {...slotProps?.topBar}>
+                    <Breadcrumbs scopeIndicator={scopeIndicator} {...slotProps?.breadcrumbs} />
+                </TopBar>
+            )}
+            {!hideBottomBar && (
+                <BottomBar {...slotProps?.bottomBar}>
+                    <MainContentContainer {...slotProps?.mainContentContainer}>{children}</MainContentContainer>
+                </BottomBar>
+            )}
         </Root>
     );
 };

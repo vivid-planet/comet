@@ -2,8 +2,6 @@ import { IntrospectionQuery } from "graphql";
 
 import { generateFormField } from "./generateFormField";
 import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
-import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
-import { findRootBlocks } from "./utils/findRootBlocks";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 import { isFieldOptional } from "./utils/isFieldOptional";
 
@@ -18,13 +16,27 @@ export function generateForm(
     config: FormConfig<any>,
 ): GeneratorReturn {
     const gqlType = config.gqlType;
-    const title = config.title ?? camelCaseToHumanReadable(gqlType);
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
 
-    // TODO make RootBlocks configurable (from config)
-    const rootBlocks = findRootBlocks({ gqlType, targetDirectory }, gqlIntrospection);
+    const mode = config.mode ?? "all";
+    const editMode = mode === "edit" || mode == "all";
+    const addMode = mode === "add" || mode == "all";
+
+    const rootBlockFields = config.fields
+        .filter((field) => field.type == "block")
+        .map((field) => {
+            // map is for ts to infer block type correctly
+            if (field.type !== "block") throw new Error("Field is not a block field");
+            return field;
+        });
+    rootBlockFields.forEach((field) => {
+        imports.push({
+            name: field.block.name,
+            importPath: field.block.import,
+        });
+    });
 
     const numberFields = config.fields.filter((field) => field.type == "number");
     const booleanFields = config.fields.filter((field) => field.type == "boolean");
@@ -61,38 +73,44 @@ export function generateForm(
         }
     `;
 
-    gqlDocuments[`${instanceGqlType}Query`] = `
-        query ${gqlType}($id: ID!) {
-            ${instanceGqlType}(id: $id) {
-                id
-                updatedAt
-                ...${fragmentName}
+    if (editMode) {
+        gqlDocuments[`${instanceGqlType}Query`] = `
+            query ${gqlType}($id: ID!) {
+                ${instanceGqlType}(id: $id) {
+                    id
+                    updatedAt
+                    ...${fragmentName}
+                }
             }
-        }
-        \${${`${instanceGqlType}FormFragment`}}
-    `;
+            \${${`${instanceGqlType}FormFragment`}}
+        `;
+    }
 
-    gqlDocuments[`create${gqlType}Mutation`] = `
-        mutation Create${gqlType}($input: ${gqlType}Input!) {
-            create${gqlType}(input: $input) {
-                id
-                updatedAt
-                ...${fragmentName}
+    if (addMode) {
+        gqlDocuments[`create${gqlType}Mutation`] = `
+            mutation Create${gqlType}($input: ${gqlType}Input!) {
+                create${gqlType}(input: $input) {
+                    id
+                    updatedAt
+                    ...${fragmentName}
+                }
             }
-        }
-        \${${`${instanceGqlType}FormFragment`}}
-    `;
+            \${${`${instanceGqlType}FormFragment`}}
+        `;
+    }
 
-    gqlDocuments[`update${gqlType}Mutation`] = `
-        mutation Update${gqlType}($id: ID!, $input: ${gqlType}UpdateInput!) {
-            update${gqlType}(id: $id, input: $input) {
-                id
-                updatedAt
-                ...${fragmentName}
+    if (editMode) {
+        gqlDocuments[`update${gqlType}Mutation`] = `
+            mutation Update${gqlType}($id: ID!, $input: ${gqlType}UpdateInput!) {
+                update${gqlType}(id: $id, input: $input) {
+                    id
+                    updatedAt
+                    ...${fragmentName}
+                }
             }
-        }
-        \${${`${instanceGqlType}FormFragment`}}
-    `;
+            \${${`${instanceGqlType}FormFragment`}}
+        `;
+    }
 
     for (const name in gqlDocuments) {
         const gqlDocument = gqlDocuments[name];
@@ -117,23 +135,17 @@ export function generateForm(
     const code = `import { useApolloClient, useQuery } from "@apollo/client";
     import {
         Field,
+        filterByFragment,
         FinalForm,
         FinalFormCheckbox,
         FinalFormInput,
-        FinalFormSaveSplitButton,
         FinalFormSelect,
         FinalFormSubmitEvent,
         Loading,
         MainContent,
         TextAreaField,
         TextField,
-        Toolbar,
-        ToolbarActions,
-        ToolbarFillSpace,
-        ToolbarItem,
-        ToolbarTitleItem,
         useFormApiRef,
-        useStackApi,
         useStackSwitchApi,
     } from "@comet/admin";
     import { ArrowLeft, Lock } from "@comet/admin-icons";
@@ -142,20 +154,14 @@ export function generateForm(
     import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
     import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
     import { FormApi } from "final-form";
-    import { filter } from "graphql-anywhere";
     import isEqual from "lodash.isequal";
     import React from "react";
     import { FormattedMessage } from "react-intl";
     ${generateImportsCode(imports)}
-    
-    ${Object.entries(rootBlocks)
-        .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
-        .join("\n")}
-
     ${
-        Object.keys(rootBlocks).length > 0
+        rootBlockFields.length > 0
             ? `const rootBlocks = {
-                ${Object.entries(rootBlocks).map(([rootBlockKey, rootBlock]) => `${rootBlockKey}: ${rootBlock.name}`)}
+                ${rootBlockFields.map((field) => `${String(field.name)}: ${field.block.name}`)}
                 };`
             : ""
     }
@@ -165,35 +171,47 @@ export function generateForm(
             ? `Omit<GQL${fragmentName}Fragment, ${numberFields.map((field) => `"${String(field.name)}"`).join(" | ")}>`
             : `GQL${fragmentName}Fragment`
     } ${
-        numberFields.length > 0 || Object.keys(rootBlocks).length > 0
+        numberFields.length > 0 || rootBlockFields.length > 0
             ? `& {
         ${numberFields.map((field) => `${String(field.name)}${isOptional(field) ? `?` : ``}: string;`).join("\n")}
-        ${Object.keys(rootBlocks)
-            .map((rootBlockKey) => `${rootBlockKey}: BlockState<typeof rootBlocks.${rootBlockKey}>;`)
-            .join("\n")}
+        ${rootBlockFields.map((field) => `${String(field.name)}: BlockState<typeof rootBlocks.${String(field.name)}>;`).join("\n")}
     }`
             : ""
     };
 
+    ${
+        editMode
+            ? `
     interface FormProps {
-        id?: string;
+        ${mode == "all" ? `id?: string;` : ""}
+        ${mode == "edit" ? `id: string;` : ""}
+    }
+    `
+            : ""
     }
     
-    export function ${exportName}({ id }: FormProps): React.ReactElement {
-        const stackApi = useStackApi();
+    export function ${exportName}(${editMode ? `{ id }: FormProps` : ""}): React.ReactElement {
         const client = useApolloClient();
-        const mode = id ? "edit" : "add";
+        ${mode == "all" ? `const mode = id ? "edit" : "add";` : ""}
         const formApiRef = useFormApiRef<FormValues>();
-        const stackSwitchApi = useStackSwitchApi();
+        ${addMode ? `const stackSwitchApi = useStackSwitchApi();` : ""}
     
+        ${
+            editMode
+                ? `
         const { data, error, loading, refetch } = useQuery<GQL${gqlType}Query, GQL${gqlType}QueryVariables>(
             ${instanceGqlType}Query,
-            id ? { variables: { id } } : { skip: true },
+            ${mode == "edit" ? `{ variables: { id } }` : `id ? { variables: { id } } : { skip: true }`},
         );
+        `
+                : ""
+        }
     
-        const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
+        ${
+            editMode
+                ? `const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
         ? {
-            ...filter<GQL${fragmentName}Fragment>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
+            ...filterByFragment<GQL${fragmentName}Fragment>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
             ${numberFields
                 .map((field) => {
                     let assignment = `String(data.${instanceGqlType}.${String(field.name)})`;
@@ -211,18 +229,24 @@ export function generateForm(
                         )}) : undefined,`,
                 )
                 .join("\n")}
-            ${Object.keys(rootBlocks)
-                .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.input2State(data.${instanceGqlType}.${rootBlockKey}),`)
+            ${rootBlockFields
+                .map((field) => `${String(field.name)}: rootBlocks.${String(field.name)}.input2State(data.${instanceGqlType}.${String(field.name)}),`)
                 .join("\n")}
         }
         : {
             ${booleanFields.map((field) => `${String(field.name)}: false,`).join("\n")}
-            ${Object.keys(rootBlocks)
-                .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.defaultValues(),`)
-                .join("\n")}
+            ${rootBlockFields.map((field) => `${String(field.name)}: rootBlocks.${String(field.name)}.defaultValues(),`).join("\n")}
         }
-    , [data]);
+    , [data]);`
+                : `const initialValues = {
+                ${booleanFields.map((field) => `${String(field.name)}: false,`).join("\n")}
+                ${rootBlockFields.map((field) => `${String(field.name)}: rootBlocks.${String(field.name)}.defaultValues(),`).join("\n")}
+            };`
+        }
     
+        ${
+            editMode
+                ? `
         const saveConflict = useFormSaveConflict({
             checkConflict: async () => {
                 const updatedAt = await queryUpdatedAt(client, "${instanceGqlType}", id);
@@ -233,21 +257,33 @@ export function generateForm(
                 await refetch();
             },
         });
+        `
+                : ""
+        }
     
-        const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-            if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+        const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>${addMode ? `, event: FinalFormSubmitEvent` : ""}) => {
+            ${editMode ? `if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");` : ""}
             const output = {
                 ...formValues,
                 ${formValueToGqlInputCode}
             };
-            if (mode === "edit") {
+            ${mode == "all" ? `if (mode === "edit") {` : ""}
+                ${
+                    editMode
+                        ? `
                 if (!id) throw new Error();
                 const { ${readOnlyFields.map((field) => `${String(field.name)},`).join("")} ...updateInput } = output;
                 await client.mutate<GQLUpdate${gqlType}Mutation, GQLUpdate${gqlType}MutationVariables>({
                     mutation: update${gqlType}Mutation,
                     variables: { id, input: updateInput },
                 });
-            } else {
+                `
+                        : ""
+                }
+            ${mode == "all" ? `} else {` : ""}
+                ${
+                    addMode
+                        ? `
                 const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                     mutation: create${gqlType}Mutation,
                     variables: { input: output },
@@ -260,47 +296,36 @@ export function generateForm(
                         });
                     }
                 }
-            }
+                `
+                        : ""
+                }
+            ${mode == "all" ? `}` : ""}
         };
 
         ${hooksCode}
     
-        if (error) throw error;
-    
-        if (loading) {
-            return <Loading behavior="fillPageHeight" />;
+        ${
+            editMode
+                ? ` if (error) throw error;
+
+                    if (loading) {
+                        return <Loading behavior="fillPageHeight" />;
+                    }`
+                : ``
         }
     
         return (
             <FinalForm<FormValues>
                 apiRef={formApiRef}
                 onSubmit={handleSubmit}
-                mode={mode}
+                mode=${mode == "all" ? `{mode}` : editMode ? `"edit"` : `"add"`}
                 initialValues={initialValues}
                 initialValuesEqual={isEqual} //required to compare block data correctly
                 subscription={{}}
             >
                 {() => (
                     <EditPageLayout>
-                        {saveConflict.dialogs}
-                        <Toolbar>
-                            <ToolbarItem>
-                                <IconButton onClick={stackApi?.goBack}>
-                                    <ArrowLeft />
-                                </IconButton>
-                            </ToolbarItem>
-                            <ToolbarTitleItem>
-                                <Field name="title">
-                                    {({ input }) =>
-                                        input.value ? input.value : <FormattedMessage id="${instanceGqlType}.${instanceGqlType}Detail" defaultMessage="${title} Detail" />
-                                    }
-                                </Field>
-                            </ToolbarTitleItem>
-                            <ToolbarFillSpace />
-                            <ToolbarActions>
-                                <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
-                            </ToolbarActions>
-                        </Toolbar>
+                        ${editMode ? `{saveConflict.dialogs}` : ``}
                         <MainContent>
                             ${fieldsCode}
                         </MainContent>
