@@ -47,5 +47,5 @@ export interface DocumentInterface<
     anchors: (input: DocumentInput) => string[];
     dependencies: (input: DocumentInput) => BlockDependency[];
     replaceDependenciesInOutput: (output: DocumentOutput, replacements: ReplaceDependencyObject[]) => DocumentOutput;
-    hasNoPreview?: boolean;
+    hasNoPreview?: true;
 }
