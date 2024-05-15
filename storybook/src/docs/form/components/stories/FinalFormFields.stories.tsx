@@ -2,6 +2,8 @@ import {
     Field,
     FieldContainer,
     FinalForm,
+    FinalFormAsyncAutocomplete,
+    FinalFormAsyncSelect,
     FinalFormAutocomplete,
     FinalFormCheckbox,
     FinalFormInput,
@@ -10,7 +12,6 @@ import {
     FinalFormSearchTextField,
     FinalFormSelect,
     FinalFormSwitch,
-    useAsyncOptionsProps,
 } from "@comet/admin";
 import { Button, FormControlLabel } from "@mui/material";
 import { storiesOf } from "@storybook/react";
@@ -82,10 +83,6 @@ storiesOf("stories/form/FinalForm Fields", module)
             [],
         );
 
-        const acAsyncProps = useAsyncOptionsProps<Option>(async () => {
-            return new Promise((resolve) => setTimeout(() => resolve(options), 3000));
-        });
-
         return (
             <FinalForm
                 mode="add"
@@ -104,8 +101,10 @@ storiesOf("stories/form/FinalForm Fields", module)
                     fullWidth
                 />
                 <Field
-                    component={FinalFormAutocomplete}
-                    {...acAsyncProps}
+                    component={FinalFormAsyncAutocomplete}
+                    loadOptions={async () => {
+                        return new Promise((resolve) => setTimeout(() => resolve(options), 3000));
+                    }}
                     getOptionLabel={(option: Option) => option.label}
                     isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
                     name="autocompleteAsync"
@@ -146,10 +145,6 @@ storiesOf("stories/form/FinalForm Fields", module)
             [],
         );
 
-        const selectAsyncProps = useAsyncOptionsProps<Option>(async () => {
-            return new Promise((resolve) => setTimeout(() => resolve(options), 500));
-        });
-
         return (
             <FinalForm
                 mode="add"
@@ -170,12 +165,14 @@ storiesOf("stories/form/FinalForm Fields", module)
                     fullWidth
                 />
                 <Field
-                    component={FinalFormSelect}
+                    component={FinalFormAsyncSelect}
                     getOptionLabel={(option: Option) => option.label}
                     getOptionSelected={(option: Option, value: Option) => {
                         return option.value === value.value;
                     }}
-                    {...selectAsyncProps}
+                    loadOptions={async () => {
+                        return new Promise((resolve) => setTimeout(() => resolve(options), 500));
+                    }}
                     name="selectAsync"
                     label="SelectAsync"
                     fullWidth

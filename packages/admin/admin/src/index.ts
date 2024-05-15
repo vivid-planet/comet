@@ -86,6 +86,8 @@ export { SelectField, SelectFieldProps } from "./form/fields/SelectField";
 export { SwitchField, SwitchFieldProps } from "./form/fields/SwitchField";
 export { TextAreaField, TextAreaFieldProps } from "./form/fields/TextAreaField";
 export { TextField, TextFieldProps } from "./form/fields/TextField";
+export { FinalFormAsyncAutocomplete, FinalFormAsyncAutocompleteProps } from "./form/FinalFormAsyncAutocomplete";
+export { FinalFormAsyncSelect, FinalFormAsyncSelectProps } from "./form/FinalFormAsyncSelect";
 export { FinalFormContext, FinalFormContextProvider, FinalFormContextProviderProps, useFinalFormContext } from "./form/FinalFormContextProvider";
 export { FinalFormFileSelect, FinalFormFileSelectClassKey, FinalFormFileSelectProps } from "./form/FinalFormFileSelect";
 export { FinalFormInput, FinalFormInputProps } from "./form/FinalFormInput";
