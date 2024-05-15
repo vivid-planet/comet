@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import { IEditDialogApi, RowActionsItem, RowActionsMenu, useStackSwitchApi, writeClipboardText } from "@comet/admin";
-import { Add, Delete, Domain, Edit, Preview, Settings } from "@comet/admin-icons";
+import { Add, Delete, Domain, Edit, Preview, PreviewUnavailable, Settings } from "@comet/admin-icons";
 import { Divider } from "@mui/material";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -76,7 +76,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                     </RowActionsItem>,
                     <RowActionsItem
                         key="preview"
-                        icon={<Preview />}
+                        icon={documentType.hasNoPreview ? <PreviewUnavailable /> : <Preview />}
                         onClick={() => {
                             openSitePreviewWindow(page.path, contentScopeMatch.url);
                         }}
