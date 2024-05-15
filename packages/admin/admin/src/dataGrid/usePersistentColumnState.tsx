@@ -1,40 +1,8 @@
-import { Breakpoint, useTheme } from "@mui/material";
 import { DataGridProps, GridColumnVisibilityModel, useGridApiRef } from "@mui/x-data-grid";
 import * as React from "react";
 
-import { useWindowSize } from "../helpers/useWindowSize";
 import { useStoredState } from "../hooks/useStoredState";
-import { GridColDef, GridColView } from "./GridColDef";
-
-type UserVisibilityChange = {
-    column: string;
-    visible: boolean;
-    view: GridColView;
-};
-
-const getUpdatedUserVisibilityChanges = (
-    existingUserChanges: UserVisibilityChange[],
-    newColumnVisibilities: GridColumnVisibilityModel,
-    currentView: GridColView,
-): UserVisibilityChange[] => {
-    let updatedUserChanges = [...existingUserChanges];
-
-    Object.keys(newColumnVisibilities).forEach((changedColumn) => {
-        const newVisible = newColumnVisibilities[changedColumn];
-
-        updatedUserChanges = updatedUserChanges.filter((change) => {
-            return change.column !== changedColumn || change.view !== currentView;
-        });
-
-        updatedUserChanges.push({
-            column: changedColumn,
-            visible: newVisible,
-            view: currentView,
-        });
-    });
-
-    return updatedUserChanges;
-};
+import { GridColDef } from "./GridColDef";
 
 const useGridColumns = (apiRef: ReturnType<typeof useGridApiRef>) => {
     const [columns, setColumns] = React.useState<GridColDef[] | undefined>();
@@ -47,54 +15,60 @@ const useGridColumns = (apiRef: ReturnType<typeof useGridApiRef>) => {
     return columns;
 };
 
-const useFinalVisibilityModel = (
-    userChanges: UserVisibilityChange[],
-    currentView: GridColView | null,
-    apiRef: ReturnType<typeof useGridApiRef>,
-): GridColumnVisibilityModel => {
-    const visibilityModel: GridColumnVisibilityModel = {};
-    const columns = useGridColumns(apiRef);
+const useVisibilityModelFromColumnMediaQueries = (columns: GridColDef[] | undefined): GridColumnVisibilityModel => {
+    const [visibilityModel, setVisibilityModel] = React.useState<GridColumnVisibilityModel>({});
 
-    columns?.forEach((column: GridColDef) => {
-        if (column.showOnlyInView !== undefined) {
-            visibilityModel[column.field] = column.showOnlyInView === currentView;
-        }
-    });
+    React.useEffect(() => {
+        const updateVisibilityModel = () => {
+            const visibilityModel: GridColumnVisibilityModel = {};
 
-    userChanges.forEach((change) => {
-        if (change.view === currentView) {
-            visibilityModel[change.column] = change.visible;
-        }
-    });
+            columns?.forEach((column: GridColDef) => {
+                if (column.visible !== undefined) {
+                    const mediaQuery = column.visible.replace("@media", "").trim();
+                    visibilityModel[column.field] = window.matchMedia(mediaQuery).matches;
+                }
+            });
+
+            setVisibilityModel(visibilityModel);
+        };
+
+        updateVisibilityModel();
+        window.addEventListener("resize", updateVisibilityModel);
+
+        return () => {
+            window.removeEventListener("resize", updateVisibilityModel);
+        };
+    }, [columns]);
 
     return visibilityModel;
 };
 
-const useCurrentView = (compactViewBreakpoint: Breakpoint, apiRef: ReturnType<typeof useGridApiRef>): GridColView => {
-    const columns = useGridColumns(apiRef);
-    const { breakpoints } = useTheme();
-    const usingCompactView = useWindowSize().width < breakpoints.values[compactViewBreakpoint];
-    const enableSwitchingBetweenViews = columns?.some((column: GridColDef) => typeof column.showOnlyInView !== "undefined");
-
-    if (!enableSwitchingBetweenViews) {
-        return "default";
-    }
-
-    return usingCompactView ? "compact" : "default";
-};
-
-export function usePersistentColumnState(stateKey: string, compactViewBreakpoint: Breakpoint = "md"): Omit<DataGridProps, "rows" | "columns"> {
+export function usePersistentColumnState(stateKey: string): Omit<DataGridProps, "rows" | "columns"> {
     const apiRef = useGridApiRef();
-    const currentView = useCurrentView(compactViewBreakpoint, apiRef);
+    const columns = useGridColumns(apiRef);
 
-    const [userVisibilityChanges, setUserVisibilityChanges] = useStoredState<UserVisibilityChange[]>(`${stateKey}UserColumnVisibilityChanges`, []);
-    const columnVisibilityModel = useFinalVisibilityModel(userVisibilityChanges, currentView, apiRef);
+    const mediaQueryColumnVisibilityModel = useVisibilityModelFromColumnMediaQueries(columns);
+    const [storedColumnVisibilityModel, setStoredColumnVisibilityModel] = useStoredState<GridColumnVisibilityModel>(
+        `${stateKey}ColumnVisibility`,
+        {},
+    );
 
     const handleColumnVisibilityModelChange = React.useCallback(
         (newModel: GridColumnVisibilityModel) => {
-            setUserVisibilityChanges((existingChanges) => getUpdatedUserVisibilityChanges(existingChanges, newModel, currentView));
+            const modelToStore: GridColumnVisibilityModel = {};
+
+            // Do not store column visibility controlled by media queries.
+            // This prevents stored values from a previous screen size from overriding the values.
+            Object.entries(newModel).forEach(([field, visible]) => {
+                const visibilityChangedByUser = mediaQueryColumnVisibilityModel[field] !== visible;
+                if (visibilityChangedByUser) {
+                    modelToStore[field] = visible;
+                }
+            });
+
+            setStoredColumnVisibilityModel(modelToStore);
         },
-        [currentView, setUserVisibilityChanges],
+        [mediaQueryColumnVisibilityModel, setStoredColumnVisibilityModel],
     );
 
     const [pinnedColumns, setPinnedColumns] = useStoredState<GridColumnVisibilityModel>(`${stateKey}PinnedColumns`, {});
@@ -136,7 +110,7 @@ export function usePersistentColumnState(stateKey: string, compactViewBreakpoint
     };
 
     return {
-        columnVisibilityModel,
+        columnVisibilityModel: { ...mediaQueryColumnVisibilityModel, ...storedColumnVisibilityModel },
         onColumnVisibilityModelChange: handleColumnVisibilityModelChange,
 
         // TODO find a better solution (problem: pinnedColumns is a Pro Feature)
