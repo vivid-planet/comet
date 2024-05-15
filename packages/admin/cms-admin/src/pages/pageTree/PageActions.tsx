@@ -76,11 +76,11 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                     </RowActionsItem>,
                     <RowActionsItem
                         key="preview"
-                        icon={documentType.hasNoPreview ? <PreviewUnavailable /> : <Preview />}
+                        icon={documentType.hasNoSitePreview ? <PreviewUnavailable /> : <Preview />}
                         onClick={() => {
                             openSitePreviewWindow(page.path, contentScopeMatch.url);
                         }}
-                        disabled={documentType.hasNoPreview}
+                        disabled={documentType.hasNoSitePreview}
                     >
                         <FormattedMessage id="comet.pages.pages.page.openPreview" defaultMessage="Open preview" />
                     </RowActionsItem>,

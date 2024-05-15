@@ -55,7 +55,7 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & D
         return null;
     },
     menuIcon: LinkIcon,
-    hasNoPreview: true,
+    hasNoSitePreview: true,
     ...createDocumentRootBlocksMethods(rootBlocks),
     ...createDocumentDependencyMethods({
         rootQueryName: "link",
