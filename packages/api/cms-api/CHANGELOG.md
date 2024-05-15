@@ -1,5 +1,21 @@
 # @comet/cms-api
 
+## 5.8.3
+
+### Patch Changes
+
+-   91b734330: DAM: Fix the duplicate name check when updating a file
+
+    Previously, there were two bugs:
+
+    1. In the `EditFile` form, the `folderId` wasn't passed to the mutation
+    2. In `FilesService#updateByEntity`, the duplicate check was always done against the root folder if no `folderId` was passed
+
+    This caused an error when saving a file in any folder if there was another file with the same name in the root folder.
+    And it was theoretically possible to create two files with the same name in one folder (though this was still prevented by admin-side validation).
+
+    -   @comet/blocks-api@5.8.3
+
 ## 5.8.2
 
 ### Patch Changes
