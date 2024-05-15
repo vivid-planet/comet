@@ -5,20 +5,25 @@ import { VimeoVideoBlockData } from "../blocks.generated";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { PropsWithData } from "./PropsWithData";
 
-export const VimeoVideoBlock: React.FunctionComponent<PropsWithData<VimeoVideoBlockData>> = ({ data: { vimeoIdentifier, autoplay } }) => {
-    if (vimeoIdentifier === undefined) {
-        return null;
-    }
+const isUrl = (value: string) => {
     try {
-        new URL(vimeoIdentifier);
-        const splitUrl = vimeoIdentifier.split("/");
-        vimeoIdentifier = splitUrl[splitUrl.length - 1];
-    } catch (error) {
-        // no url, but ID was specified
+        return Boolean(new URL(value));
+    } catch (e) {
+        return false;
+    }
+};
+
+export const VimeoVideoBlock: React.FunctionComponent<PropsWithData<VimeoVideoBlockData>> = ({ data: { vimeoIdentifier, autoplay } }) => {
+    if (!vimeoIdentifier) {
+        return <PreviewSkeleton type="media" hasContent={false} />;
     }
 
-    if (vimeoIdentifier.length === 0) {
-        return <PreviewSkeleton type="media" hasContent={false} />;
+    if (isUrl(vimeoIdentifier)) {
+        const regEx = /(https?:\/\/)?(www\.)?(player\.)?vimeo\.com\/?(showcase\/)*([0-9)([a-z]*\/)*([0-9]{6,11})[?]?.*/;
+        const match = vimeoIdentifier.match(regEx);
+        if (match && match.length == 7) {
+            vimeoIdentifier = match[6];
+        }
     }
 
     return (
