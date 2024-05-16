@@ -16,9 +16,6 @@ export function FinalFormCurrencyInput({
     innerRef,
     clearable,
     endAdornment,
-    disableContentTranslation,
-    currencySign,
-    currencySignPosition,
     ...props
 }: FinalFormCurrencyInputProps): React.ReactElement {
     const intl = useIntl();
