@@ -80,6 +80,10 @@ export function ManufacturersGrid() {
             ),
         },
         {
+            field: "name",
+            headerName: intl.formatMessage({ id: "manufacturers.name", defaultMessage: "Name" }),
+        },
+        {
             field: "address.street",
             headerName: intl.formatMessage({ id: "manufacturers.street", defaultMessage: "Street" }),
             valueGetter: ({ row }) => `${row.address?.street} ${row.address?.streetNumber}`,
