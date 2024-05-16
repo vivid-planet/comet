@@ -20,11 +20,8 @@ export function FinalFormNumberInput({ meta, input, innerRef, clearable, endAdor
     const [formattedNumberValue, setFormattedNumberValue] = React.useState<string | undefined>("");
 
     const getFormattedValue = React.useCallback(
-        (value: number) => {
-            const formattedValue =
-                value !== 0
-                    ? intl.formatNumber(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-                    : intl.formatNumber(0, { minimumFractionDigits: 2 });
+        (value: number | undefined) => {
+            const formattedValue = value !== undefined ? intl.formatNumber(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "";
             return formattedValue;
         },
         [intl],
@@ -44,7 +41,7 @@ export function FinalFormNumberInput({ meta, input, innerRef, clearable, endAdor
         } else {
             numericValue = parseFloat(value.split(`${thousandSeparatorSymbol}`).join(""));
         }
-        const inputValue = isNaN(numericValue) ? 0 : numericValue;
+        const inputValue = isNaN(numericValue) ? undefined : numericValue;
         input.onChange(inputValue);
         setFormattedNumberValue(getFormattedValue(inputValue));
     };
