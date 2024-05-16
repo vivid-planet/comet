@@ -1,8 +1,6 @@
 import { Delete, Error, Select } from "@comet/admin-icons";
 import { Button, Chip, ComponentsOverrides, FormHelperText, IconButton, Typography } from "@mui/material";
 import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
-import { PrettyBytes } from "../helpers/PrettyBytes";
-import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import * as React from "react";
 import { Accept, useDropzone } from "react-dropzone";
 import { FieldRenderProps } from "react-final-form";
@@ -10,6 +8,8 @@ import { FormattedMessage } from "react-intl";
 
 import { Alert } from "../alert/Alert";
 import { Tooltip } from "../common/Tooltip";
+import { PrettyBytes } from "../helpers/PrettyBytes";
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type FinalFormFileSelectClassKey =
     | "root"
