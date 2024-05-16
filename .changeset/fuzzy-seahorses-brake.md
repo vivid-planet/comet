@@ -2,7 +2,8 @@
 "@comet/cms-admin": major
 ---
 
-Update Scope Picker to display all scope dimensions in a single dropdown
+Update Scope Picker to display all scope dimensions in a single dropdown.
+
 This requires the scopes to be transformed into a new format with all possible combinations.
 
 Example:

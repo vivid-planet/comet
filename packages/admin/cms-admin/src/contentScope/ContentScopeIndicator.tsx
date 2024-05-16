@@ -21,9 +21,8 @@ export const ContentScopeIndicator = ({ global = false, scope: passedScope, chil
     const { scope: contentScope, values } = useContentScope();
     const scope = passedScope ?? contentScope;
 
-    const findLabelForScopePart = (scopePart: string) => {
-        //@ts-expect-error TS is not able to resolve key structure
-        const label = values[scopePart].find(({ value }: ContentScopeInterface) => value === scope[scopePart])?.label;
+    const findLabelForScopePart = (scopePart: keyof ContentScopeInterface) => {
+        const label = values.find(({ value }) => value === scope[scopePart])?.label;
         return label ?? capitalizeString(scope[scopePart]);
     };
 
