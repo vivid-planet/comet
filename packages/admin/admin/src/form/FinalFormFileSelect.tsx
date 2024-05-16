@@ -1,6 +1,6 @@
 import { Delete, Error, Select } from "@comet/admin-icons";
 import { Button, Chip, ComponentsOverrides, FormHelperText, IconButton, Typography } from "@mui/material";
-import { css, styled, Theme, useThemeProps } from "@mui/material/styles";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { Accept, useDropzone } from "react-dropzone";
 import { FieldRenderProps } from "react-final-form";
@@ -8,6 +8,7 @@ import { FormattedMessage } from "react-intl";
 
 import { Alert } from "../alert/Alert";
 import { Tooltip } from "../common/Tooltip";
+import { createComponentSlot } from "../helpers/createComponentSlot";
 import { PrettyBytes } from "../helpers/PrettyBytes";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
@@ -23,16 +24,15 @@ export type FinalFormFileSelectClassKey =
     | "rejectedFileListItem"
     | "errorMessage"
     | "fileListText"
-    | "selectButton";
+    | "selectButton"
+    | "droppableAreaIsDisabled"
+    | "droppableAreaHasError";
 
 type OwnerState = { droppableAreaIsDisabled: boolean; droppableAreaHasError: boolean };
 
-const Root = styled("div", {
-    name: "CometAdminFinalFormFileSelect",
-    slot: "root",
-    overridesResolver(_, styles) {
-        return [styles.root];
-    },
+const Root = createComponentSlot("div")<FinalFormFileSelectClassKey>({
+    componentName: "CometAdminFinalFormFileSelect",
+    slotName: "root",
 })(
     () => css`
         display: flex;
@@ -42,12 +42,9 @@ const Root = styled("div", {
     `,
 );
 
-const Dropzone = styled("div", {
-    name: "CometAdminFinalFormFileSelect",
-    slot: "dropzone",
-    overridesResolver(_, styles) {
-        return [styles.dropzone];
-    },
+const Dropzone = createComponentSlot("div")<FinalFormFileSelectClassKey>({
+    componentName: "CometAdminFinalFormFileSelect",
+    slotName: "dropzone",
 })(
     () => css`
         display: flex;
@@ -58,13 +55,13 @@ const Dropzone = styled("div", {
     `,
 );
 
-const DroppableArea = styled("div", {
-    name: "CometAdminFinalFormFileSelect",
-    slot: "droppableArea",
-    overridesResolver({ ownerState }: { ownerState: OwnerState }, styles) {
-        return [styles.droppableArea];
+const DroppableArea = createComponentSlot("div")<FinalFormFileSelectClassKey, OwnerState>({
+    componentName: "CometAdminFinalFormFileSelect",
+    slotName: "droppableArea",
+    classesResolver(ownerState) {
+        return [ownerState.droppableAreaHasError && "droppableAreaHasError", ownerState.droppableAreaIsDisabled && "droppableAreaIsDisabled"];
     },
-})<{ ownerState: OwnerState }>(
+})(
     ({ theme, ownerState }) => css`
         position: relative;
         display: flex;
@@ -86,12 +83,9 @@ const DroppableArea = styled("div", {
     `,
 );
 
-const DroppableAreaCaption = styled(Typography, {
-    name: "CometAdminFinalFormFileSelect",
-    slot: "droppableAreaCaption",
-    overridesResolver(_, styles) {
-        return [styles.droppableAreaCaption];
-    },
+const DroppableAreaCaption = createComponentSlot(Typography)<FinalFormFileSelectClassKey>({
+    componentName: "CometAdminFinalFormFileSelect",
+    slotName: "droppableAreaCaption",
 })(
     ({ theme }) => css`
         padding: 30px;
@@ -99,12 +93,9 @@ const DroppableAreaCaption = styled(Typography, {
     `,
 );
 
-const DroppableAreaError = styled("div", {
-    name: "CometAdminFinalFormFileSelect",
-    slot: "droppableAreaError",
-    overridesResolver(_, styles) {
-        return [styles.droppableAreaError];
-    },
+const DroppableAreaError = createComponentSlot("div")<FinalFormFileSelectClassKey>({
+    componentName: "CometAdminFinalFormFileSelect",
+    slotName: "droppableAreaError",
 })(
     ({ theme }) => css`
         position: absolute;
@@ -115,12 +106,9 @@ const DroppableAreaError = styled("div", {
     `,
 );
 
-const FileList = styled("div", {
-    name: "CometAdminFinalFormFileSelect",
-    slot: "fileList",
-    overridesResolver(_, styles) {
-        return [styles.fileList];
-    },
+const FileList = createComponentSlot("div")<FinalFormFileSelectClassKey>({
+    componentName: "CometAdminFinalFormFileSelect",
+    slotName: "fileList",
 })(
     () => css`
         display: flex;
@@ -131,12 +119,9 @@ const FileList = styled("div", {
     `,
 );
 
-const FileListItem = styled("div", {
-    name: "CometAdminFinalFormFileSelect",
-    slot: "fileListItem",
-    overridesResolver(_, styles) {
-        return [styles.fileListItem];
-    },
+const FileListItem = createComponentSlot("div")<FinalFormFileSelectClassKey>({
+    componentName: "CometAdminFinalFormFileSelect",
+    slotName: "fileListItem",
 })(
     ({ theme }) => css`
         display: flex;
@@ -151,12 +136,9 @@ const FileListItem = styled("div", {
     `,
 );
 
-const FileListItemInfos = styled("div", {
-    name: "CometAdminFinalFormFileSelect",
-    slot: "fileListItemInfos",
-    overridesResolver(_, styles) {
-        return [styles.fileListItemInfos];
-    },
+const FileListItemInfos = createComponentSlot("div")<FinalFormFileSelectClassKey>({
+    componentName: "CometAdminFinalFormFileSelect",
+    slotName: "fileListItemInfos",
 })(
     () => css`
         display: flex;
@@ -166,12 +148,9 @@ const FileListItemInfos = styled("div", {
     `,
 );
 
-const RejectedFileListItem = styled("div", {
-    name: "CometAdminFinalFormFileSelect",
-    slot: "rejectedFileListItem",
-    overridesResolver(_, styles) {
-        return [styles.rejectedFileListItem];
-    },
+const RejectedFileListItem = createComponentSlot("div")<FinalFormFileSelectClassKey>({
+    componentName: "CometAdminFinalFormFileSelect",
+    slotName: "rejectedFileListItem",
 })(
     ({ theme }) => css`
         display: flex;
@@ -188,12 +167,9 @@ const RejectedFileListItem = styled("div", {
     `,
 );
 
-const ErrorMessage = styled("div", {
-    name: "CometAdminFinalFormFileSelect",
-    slot: "errorMessage",
-    overridesResolver(_, styles) {
-        return [styles.errorMessage];
-    },
+const ErrorMessage = createComponentSlot("div")<FinalFormFileSelectClassKey>({
+    componentName: "CometAdminFinalFormFileSelect",
+    slotName: "errorMessage",
 })(
     ({ theme }) => css`
         display: flex;
@@ -203,12 +179,9 @@ const ErrorMessage = styled("div", {
     `,
 );
 
-const FileListText = styled("div", {
-    name: "CometAdminFinalFormFileSelect",
-    slot: "fileListText",
-    overridesResolver(_, styles) {
-        return [styles.fileListText];
-    },
+const FileListText = createComponentSlot("div")<FinalFormFileSelectClassKey>({
+    componentName: "CometAdminFinalFormFileSelect",
+    slotName: "fileListText",
 })(
     () => css`
         text-overflow: ellipsis;
@@ -217,12 +190,9 @@ const FileListText = styled("div", {
     `,
 );
 
-const SelectButton = styled(Button, {
-    name: "CometAdminFinalFormFileSelect",
-    slot: "selectButton",
-    overridesResolver(_, styles) {
-        return [styles.selectButton];
-    },
+const SelectButton = createComponentSlot(Button)<FinalFormFileSelectClassKey>({
+    componentName: "CometAdminFinalFormFileSelect",
+    slotName: "selectButton",
 })(
     ({ theme }) => css`
         background-color: ${theme.palette.grey[800]};
@@ -265,6 +235,7 @@ export interface FinalFormFileSelectProps
 
 export function FinalFormFileSelect(inProps: FinalFormFileSelectProps) {
     const {
+        slotProps,
         disabled,
         disableDropzone,
         disableSelectFileButton,
@@ -328,16 +299,16 @@ export function FinalFormFileSelect(inProps: FinalFormFileSelectProps) {
     }
 
     const rejectedFiles = fileRejections.map((rejectedFile, index) => (
-        <RejectedFileListItem key={index}>
+        <RejectedFileListItem {...slotProps?.rejectedFileListItem} key={index}>
             <Tooltip trigger="hover" title={rejectedFile.file.name}>
-                <FileListText>{rejectedFile.file.name}</FileListText>
+                <FileListText {...slotProps?.fileListText}>{rejectedFile.file.name}</FileListText>
             </Tooltip>
             {errorIcon}
         </RejectedFileListItem>
     ));
 
     return (
-        <Root {...restProps}>
+        <Root {...slotProps?.root} {...restProps}>
             {maxFiles && fieldValue.length >= maxFiles ? (
                 <Alert title={<FormattedMessage id="comet.finalFormFileSelect.maximumReached" defaultMessage="Maximum reached" />} severity="info">
                     <FormattedMessage
@@ -346,31 +317,37 @@ export function FinalFormFileSelect(inProps: FinalFormFileSelectProps) {
                     />
                 </Alert>
             ) : (
-                <Dropzone {...getRootProps()}>
+                <Dropzone {...slotProps?.dropzone} {...getRootProps()}>
                     <input {...getInputProps()} />
                     {!disableDropzone && (
-                        <DroppableArea ownerState={ownerState}>
-                            {isDragReject && <DroppableAreaError>{errorIcon}</DroppableAreaError>}
-                            <DroppableAreaCaption variant="body2">
+                        <DroppableArea {...slotProps?.droppableArea} ownerState={ownerState}>
+                            {isDragReject && <DroppableAreaError {...slotProps?.droppableAreaError}>{errorIcon}</DroppableAreaError>}
+                            <DroppableAreaCaption {...slotProps?.droppableAreaCaption} variant="body2">
                                 <FormattedMessage id="comet.finalFormFileSelect.dropfiles" defaultMessage="Drop files here to upload" />
                             </DroppableAreaCaption>
                         </DroppableArea>
                     )}
                     {!disableSelectFileButton && (
-                        <SelectButton disabled={dropzoneDisabled} variant="contained" color="secondary" startIcon={selectIcon}>
+                        <SelectButton
+                            {...slotProps?.selectButton}
+                            disabled={dropzoneDisabled}
+                            variant="contained"
+                            color="secondary"
+                            startIcon={selectIcon}
+                        >
                             <FormattedMessage id="comet.finalFormFileSelect.selectfile" defaultMessage="Select file" />
                         </SelectButton>
                     )}
                 </Dropzone>
             )}
             {acceptedFiles.length > 0 && (
-                <FileList>
+                <FileList {...slotProps?.fileList}>
                     {acceptedFiles.map((file, index) => (
-                        <FileListItem key={index}>
+                        <FileListItem {...slotProps?.fileListItem} key={index}>
                             <Tooltip trigger="hover" title={file.name}>
-                                <FileListText>{file.name}</FileListText>
+                                <FileListText {...slotProps?.fileListText}>{file.name}</FileListText>
                             </Tooltip>
-                            <FileListItemInfos>
+                            <FileListItemInfos {...slotProps?.fileListItemInfos}>
                                 <Chip label={<PrettyBytes value={file.size} />} />
                                 <IconButton onClick={removeFile(file)}>{deleteIcon}</IconButton>
                             </FileListItemInfos>
@@ -380,7 +357,7 @@ export function FinalFormFileSelect(inProps: FinalFormFileSelectProps) {
             )}
             {fileRejections.length > 0 && <FileList>{rejectedFiles}</FileList>}
             {(fileRejections.length > 0 || isDragReject) && (
-                <ErrorMessage>
+                <ErrorMessage {...slotProps?.errorMessage}>
                     {errorIcon}
                     <FormattedMessage id="comet.finalFormFileSelect.errors.unknownError" defaultMessage="Something went wrong." />
                 </ErrorMessage>
