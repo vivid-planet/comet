@@ -137,6 +137,7 @@ export function ManufacturersGrid() {
                                     mutation: createManufacturerMutation,
                                     variables: {
                                         input: {
+                                            name: input.name,
                                             address: input.address,
                                             addressAsEmbeddable: input.addressAsEmbeddable,
                                         },
@@ -192,6 +193,7 @@ export function ManufacturersGrid() {
 
 const manufacturersFragment = gql`
     fragment ManufacturersListManual on Manufacturer {
+        name
         address {
             street
             streetNumber

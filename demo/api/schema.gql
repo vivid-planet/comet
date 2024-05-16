@@ -442,6 +442,7 @@ type AddressAsEmbeddable {
 
 type Manufacturer {
   id: ID!
+  name: String!
   address: Address
   addressAsEmbeddable: AddressAsEmbeddable!
   updatedAt: DateTime!
@@ -1040,6 +1041,7 @@ enum ProductVariantSortField {
 }
 
 input ManufacturerFilter {
+  name: StringFilter
   addressAsEmbeddable_street: StringFilter
   addressAsEmbeddable_streetNumber: NumberFilter
   addressAsEmbeddable_zip: NumberFilter
@@ -1059,6 +1061,7 @@ input ManufacturerSort {
 }
 
 enum ManufacturerSortField {
+  name
   addressAsEmbeddable_street
   addressAsEmbeddable_streetNumber
   addressAsEmbeddable_zip
@@ -1401,11 +1404,13 @@ input ProductVariantUpdateInput {
 }
 
 input ManufacturerInput {
+  name: String!
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput!
 }
 
 input ManufacturerUpdateInput {
+  name: String
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput
 }
