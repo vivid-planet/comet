@@ -17,7 +17,7 @@ export function FinalFormNumberInput({ meta, input, innerRef, clearable, endAdor
     const decimalSymbol = numberParts.find(({ type }) => type === "decimal")?.value;
     const thousandSeparatorSymbol = numberParts.find(({ type }) => type === "group")?.value;
 
-    const [formattedNumberValue, setFormattedNumberValue] = React.useState<string | undefined>("");
+    const [formattedNumberValue, setFormattedNumberValue] = React.useState("");
 
     const getFormattedValue = React.useCallback(
         (value: number | undefined) => {
