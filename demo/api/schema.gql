@@ -447,8 +447,18 @@ type Manufacturer {
   updatedAt: DateTime!
 }
 
+type ManufacturerCountry {
+  country: String!
+  used: Float!
+}
+
 type PaginatedManufacturers {
   nodes: [Manufacturer!]!
+  totalCount: Int!
+}
+
+type PaginatedManufacturerCountries {
+  nodes: [ManufacturerCountry!]!
   totalCount: Int!
 }
 
@@ -758,6 +768,7 @@ type Query {
   productVariants(offset: Int! = 0, limit: Int! = 25, product: ID!, search: String, filter: ProductVariantFilter, sort: [ProductVariantSort!]): PaginatedProductVariants!
   manufacturer(id: ID!): Manufacturer!
   manufacturers(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerFilter, sort: [ManufacturerSort!]): PaginatedManufacturers!
+  manufacturerCountries(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerCountryFilter): PaginatedManufacturerCountries!
 }
 
 input UserFilter {
@@ -1068,6 +1079,13 @@ enum ManufacturerSortField {
   addressAsEmbeddable_alternativeAddress_zip
   addressAsEmbeddable_alternativeAddress_country
   updatedAt
+}
+
+input ManufacturerCountryFilter {
+  country: StringFilter
+  used: NumberFilter
+  and: [ManufacturerCountryFilter!]
+  or: [ManufacturerCountryFilter!]
 }
 
 type Mutation {
