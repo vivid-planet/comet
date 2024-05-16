@@ -68,7 +68,6 @@ export async function sitePreviewRoute(request: NextRequest, graphQLFetch: Graph
 export async function previewParams(): Promise<SitePreviewParams | null> {
     const previewScopeSigningKey = getPreviewScopeSigningKey();
 
-    if (!draftMode().isEnabled) return null;
     const cookie = cookies().get("__comet_preview");
     if (cookie) {
         const { payload } = await jwtDecrypt<SitePreviewParams>(cookie.value, new TextEncoder().encode(previewScopeSigningKey));
