@@ -18,8 +18,8 @@ const documentTypeQuery = gql`
 `;
 
 async function fetchPageTreeNode(params: { path: string[]; lang: string }) {
-    const { scope, previewData } = (await previewParams()) || { scope: { domain, language: params.lang }, previewData: undefined };
-    const graphQLFetch = createGraphQLFetch(previewData);
+    const { scope } = (await previewParams()) || { scope: { domain, language: params.lang } };
+    const graphQLFetch = await createGraphQLFetch();
     return graphQLFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
         documentTypeQuery,
         {

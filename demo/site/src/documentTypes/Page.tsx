@@ -1,4 +1,4 @@
-import { generateImageUrl, gql, previewParams } from "@comet/cms-site";
+import { generateImageUrl, gql } from "@comet/cms-site";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import Breadcrumbs from "@src/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/components/Breadcrumbs.fragment";
@@ -45,8 +45,7 @@ const pageQuery = gql`
 type Props = { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput };
 
 async function fetchData({ pageTreeNodeId, scope }: Props) {
-    const { previewData } = (await previewParams()) || { previewData: undefined };
-    const graphQLFetch = createGraphQLFetch(previewData);
+    const graphQLFetch = await createGraphQLFetch();
 
     const props = await graphQLFetch<GQLPageQuery, GQLPageQueryVariables>(
         pageQuery,
@@ -110,8 +109,7 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
 }
 
 export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; scope: GQLPageTreeNodeScopeInput }) {
-    const { previewData } = (await previewParams()) || { previewData: undefined };
-    const graphQLFetch = createGraphQLFetch(previewData);
+    const graphQLFetch = await createGraphQLFetch();
 
     const data = await fetchData({ pageTreeNodeId, scope });
     const document = data?.pageContent?.document;

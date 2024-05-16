@@ -4,18 +4,19 @@
 
 Add GraphQL fetch client
 
-- `createGraphQLFetch`: simple graphql client around fetch, usage: createGraphQLFetch(fetch, url)(gql, variables)
-- `type GraphQLFetch = <T, V>(query: string, variables?: V, init?: RequestInit) => Promise<T>`
-- `gql` for tagging queries
-- `createFetchWithDefaults` fetch decorator that adds default values (eg. headers or next.revalidate)
-- `createFetchWithPreviewHeaders` fetch decorator that adds comet preview headers (based on SitePreviewData)
+-   `createGraphQLFetch`: simple graphql client around fetch, usage: createGraphQLFetch(fetch, url)(gql, variables)
+-   `type GraphQLFetch = <T, V>(query: string, variables?: V, init?: RequestInit) => Promise<T>`
+-   `gql` for tagging queries
+-   `createFetchWithDefaults` fetch decorator that adds default values (eg. headers or next.revalidate)
+-   `createFetchWithPreviewHeaders` fetch decorator that adds comet preview headers (based on SitePreviewData)
 
 Example helper in application:
+
 ```
 export const graphQLApiUrl = `${typeof window === "undefined" ? process.env.API_URL_INTERNAL : process.env.NEXT_PUBLIC_API_URL}/graphql`;
-export function createGraphQLFetch(previewData?: SitePreviewData) {
+export function createGraphQLFetch() {
     return createGraphQLFetchLibrary(
-        createFetchWithDefaults(createFetchWithPreviewHeaders(fetch, previewData), { next: { revalidate: 15 * 60 } }),
+        createFetchWithDefaults(createFetchWithPreviewHeaders(fetch), { next: { revalidate: 15 * 60 } }),
         graphQLApiUrl,
     );
 
@@ -23,8 +24,9 @@ export function createGraphQLFetch(previewData?: SitePreviewData) {
 ```
 
 Usage example:
+
 ```
-const graphqlFetch = createGraphQLFetch(previewData);
+const graphqlFetch = createGraphQLFetch();
 const data = await graphqlFetch<GQLExampleQuery, GQLExampleQueryVariables>(
     exampleQuery,
     {

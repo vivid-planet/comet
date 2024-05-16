@@ -9,8 +9,8 @@ import { GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables } from "./page.ge
 
 export default async function NewsIndexPage({ params }: { params: { lang: string } }) {
     // TODO support multiple domains, get domain by Host header
-    const { scope, previewData } = (await previewParams()) || { scope: { domain, language: params.lang }, previewData: undefined };
-    const graphqlFetch = createGraphQLFetch(previewData);
+    const { scope } = (await previewParams()) || { scope: { domain, language: params.lang } };
+    const graphqlFetch = await createGraphQLFetch();
 
     const { newsList } = await graphqlFetch<GQLNewsIndexPageQuery, GQLNewsIndexPageQueryVariables>(
         gql`

@@ -8,8 +8,8 @@ import { Content, fragment } from "./content";
 import { GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables } from "./page.generated";
 
 export default async function NewsDetailPage({ params }: { params: { slug: string; lang: string } }) {
-    const { scope, previewData } = (await previewParams()) || { scope: { domain, language: params.lang }, previewData: undefined };
-    const graphqlFetch = createGraphQLFetch(previewData);
+    const { scope } = (await previewParams()) || { scope: { domain, language: params.lang } };
+    const graphqlFetch = await createGraphQLFetch();
 
     const data = await graphqlFetch<GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables>(
         gql`

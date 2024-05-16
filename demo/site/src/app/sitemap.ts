@@ -7,7 +7,7 @@ import { GQLPrebuildPageDataListSitemapQuery, GQLPrebuildPageDataListSitemapQuer
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const sitemap: MetadataRoute.Sitemap = [];
-    const graphqlFetch = createGraphQLFetch();
+    const graphqlFetch = await createGraphQLFetch();
 
     for (const lang of languages) {
         const scope = { domain, language: lang };

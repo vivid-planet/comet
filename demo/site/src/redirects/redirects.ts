@@ -19,8 +19,6 @@ const redirectsQuery = gql`
     }
 `;
 
-const graphQLFetch = createGraphQLFetch();
-
 const createInternalRedirects = async (): Promise<Map<string, Redirect>> => {
     const redirectsMap = new Map<string, Redirect>();
     const adminUrl = process.env.ADMIN_URL;
@@ -37,6 +35,7 @@ async function* fetchApiRedirects(scope: GQLRedirectScope) {
     let offset = 0;
     const limit = 100;
 
+    const graphQLFetch = await createGraphQLFetch();
     while (true) {
         const { paginatedRedirects } = await graphQLFetch<GQLRedirectsQuery, GQLRedirectsQueryVariables>(redirectsQuery, {
             filter: { active: { equal: true } },
