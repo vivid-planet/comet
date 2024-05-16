@@ -17,7 +17,7 @@ export function FinalFormNumberInput({
     innerRef,
     clearable,
     endAdornment,
-    decimals,
+    decimals = 0,
     ...props
 }: FinalFormNumberInputProps): React.ReactElement {
     const intl = useIntl();
