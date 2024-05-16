@@ -8,9 +8,18 @@ import { ClearInputAdornment } from "../common/ClearInputAdornment";
 export type FinalFormNumberInputProps = InputBaseProps &
     FieldRenderProps<number> & {
         clearable?: boolean;
+        decimals?: number;
     };
 
-export function FinalFormNumberInput({ meta, input, innerRef, clearable, endAdornment, ...props }: FinalFormNumberInputProps): React.ReactElement {
+export function FinalFormNumberInput({
+    meta,
+    input,
+    innerRef,
+    clearable,
+    endAdornment,
+    decimals,
+    ...props
+}: FinalFormNumberInputProps): React.ReactElement {
     const intl = useIntl();
 
     const numberParts = intl.formatNumberToParts(1111.111);
@@ -20,8 +29,9 @@ export function FinalFormNumberInput({ meta, input, innerRef, clearable, endAdor
     const [formattedNumberValue, setFormattedNumberValue] = React.useState("");
 
     const getFormattedValue = React.useCallback(
-        (value: number | undefined) => {
-            const formattedValue = value !== undefined ? intl.formatNumber(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "";
+        (value: number | undefined, decimals: number | undefined) => {
+            const formattedValue =
+                value !== undefined ? intl.formatNumber(value, { minimumFractionDigits: decimals, maximumFractionDigits: decimals }) : "";
             return formattedValue;
         },
         [intl],
@@ -43,12 +53,12 @@ export function FinalFormNumberInput({ meta, input, innerRef, clearable, endAdor
         }
         const inputValue = isNaN(numericValue) ? undefined : numericValue;
         input.onChange(inputValue);
-        setFormattedNumberValue(getFormattedValue(inputValue));
+        setFormattedNumberValue(getFormattedValue(inputValue, decimals));
     };
 
     React.useEffect(() => {
-        setFormattedNumberValue(getFormattedValue(input.value));
-    }, [getFormattedValue, input.value]);
+        setFormattedNumberValue(getFormattedValue(input.value, decimals));
+    }, [getFormattedValue, decimals, input.value]);
 
     return (
         <InputBase
