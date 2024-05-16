@@ -52,6 +52,7 @@ function Story() {
                                             </MenuItem>
                                         ))}
                                     </SelectField>
+                                    <CurrencyField name="currency" label="Currency" fullwidth />
                                     <CheckboxField
                                         name="singleCheckboxWithLink"
                                         label={
@@ -66,7 +67,6 @@ function Story() {
                                         fullWidth
                                     />
                                     <SwitchField name="switch" label={values.switch ? "On" : "Off"} fieldLabel="Switch" />
-                                    <CurrencyField name="currency" label="Currency" />
                                 </CardContent>
                             </Card>
                         </Grid>
