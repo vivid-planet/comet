@@ -52,7 +52,7 @@ function Story() {
                                             </MenuItem>
                                         ))}
                                     </SelectField>
-                                    <NumberField name="number" label="Number" fullwidth />
+                                    <NumberField name="number" label="Number" fullWidth />
                                     <CheckboxField
                                         name="singleCheckboxWithLink"
                                         label={
