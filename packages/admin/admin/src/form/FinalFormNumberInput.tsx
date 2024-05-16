@@ -5,26 +5,19 @@ import { useIntl } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 
-export type FinalFormCurrencyInputProps = InputBaseProps &
+export type FinalFormNumberInputProps = InputBaseProps &
     FieldRenderProps<number> & {
         clearable?: boolean;
     };
 
-export function FinalFormCurrencyInput({
-    meta,
-    input,
-    innerRef,
-    clearable,
-    endAdornment,
-    ...props
-}: FinalFormCurrencyInputProps): React.ReactElement {
+export function FinalFormNumberInput({ meta, input, innerRef, clearable, endAdornment, ...props }: FinalFormNumberInputProps): React.ReactElement {
     const intl = useIntl();
 
     const numberParts = intl.formatNumberToParts(1111.111);
     const decimalSymbol = numberParts.find(({ type }) => type === "decimal")?.value;
     const thousandSeparatorSymbol = numberParts.find(({ type }) => type === "group")?.value;
 
-    const [formattedCurrencyValue, setFormattedCurrencyValue] = React.useState<string | undefined>("");
+    const [formattedNumberValue, setFormattedNumberValue] = React.useState<string | undefined>("");
 
     const getFormattedValue = React.useCallback(
         (value: number) => {
@@ -39,7 +32,7 @@ export function FinalFormCurrencyInput({
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
-        setFormattedCurrencyValue(value);
+        setFormattedNumberValue(value);
     };
 
     const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
@@ -53,18 +46,18 @@ export function FinalFormCurrencyInput({
         }
         const inputValue = isNaN(numericValue) ? 0 : numericValue;
         input.onChange(inputValue);
-        setFormattedCurrencyValue(getFormattedValue(inputValue));
+        setFormattedNumberValue(getFormattedValue(inputValue));
     };
 
     React.useEffect(() => {
-        setFormattedCurrencyValue(getFormattedValue(input.value));
+        setFormattedNumberValue(getFormattedValue(input.value));
     }, [getFormattedValue, input.value]);
 
     return (
         <InputBase
             {...input}
             {...props}
-            value={formattedCurrencyValue}
+            value={formattedNumberValue}
             onChange={handleChange}
             onBlur={handleBlur}
             endAdornment={

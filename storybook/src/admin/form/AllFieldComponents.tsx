@@ -1,6 +1,5 @@
 import {
     CheckboxField,
-    CurrencyField,
     Field,
     FieldContainer,
     FinalFormCheckbox,
@@ -9,6 +8,7 @@ import {
     FinalFormSearchTextField,
     FinalFormSelect,
     FinalFormSwitch,
+    NumberField,
     SearchField,
     SelectField,
     SwitchField,
@@ -52,7 +52,7 @@ function Story() {
                                             </MenuItem>
                                         ))}
                                     </SelectField>
-                                    <CurrencyField name="currency" label="Currency" fullwidth />
+                                    <NumberField name="number" label="Number" fullwidth />
                                     <CheckboxField
                                         name="singleCheckboxWithLink"
                                         label={

@@ -2,4 +2,4 @@
 "@comet/admin": major
 ---
 
-Add `CurrencyField` as an optimised field for currency inputs in FinalForms
+Add `NumberField` as an optimised field for number inputs in FinalForms
