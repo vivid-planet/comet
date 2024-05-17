@@ -313,7 +313,6 @@ export function generateGrid(
         CrudContextMenu,
         filterByFragment,
         GridFilterButton,
-        MainContent,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,
@@ -612,21 +611,21 @@ export function generateGrid(
         const rows = data?.${gridQuery}.nodes ?? [];
 
         return (
-                <DataGridPro
-                    {...dataGridProps}
-                    disableSelectionOnClick
-                    rows={rows}
-                    rowCount={rowCount}
-                    columns={columns}
-                    loading={loading}
-                    ${
-                        toolbar
-                            ? `components={{
-    Toolbar: ${gqlTypePlural}GridToolbar,
-    }}`
-                            : ""
-                    }
-                />
+            <DataGridPro
+                {...dataGridProps}
+                disableSelectionOnClick
+                rows={rows}
+                rowCount={rowCount}
+                columns={columns}
+                loading={loading}
+                ${
+                    toolbar
+                        ? `components={{
+Toolbar: ${gqlTypePlural}GridToolbar,
+}}`
+                        : ""
+                }
+            />
         );
     }
     `;
