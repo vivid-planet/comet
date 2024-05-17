@@ -22,7 +22,7 @@ import { Page } from "@src/pages/Page";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
-import { CreateProductPage as FutureCreateProductPage } from "@src/products/future/CreateProductPage";
+import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
 import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
 import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
@@ -173,10 +173,10 @@ export const masterMenuData: MasterMenuData = [
                 },
             },
             {
-                primary: <FormattedMessage id="menu.createProductFuture" defaultMessage="Create Product Future" />,
+                primary: <FormattedMessage id="menu.createCapProductFuture" defaultMessage="Create Cap Product Future" />,
                 route: {
-                    path: "/create-product-future",
-                    component: FutureCreateProductPage,
+                    path: "/create-cap-product-future",
+                    component: FutureCreateCapProductPage,
                 },
             },
             {

@@ -19,12 +19,10 @@ export const productCategoriesQuery = gql`
     ${productCategoriesSelectFragment}
 `;
 export const productFormFragment = gql`
-    fragment ProductFormDetails on Product {
+    fragment CreateCapProductFormDetails on Product {
         title
         slug
-        createdAt
         description
-        type
         category {
             id
             title
@@ -39,7 +37,7 @@ export const createProductMutation = gql`
         createProduct(input: $input) {
             id
             updatedAt
-            ...ProductFormDetails
+            ...CreateCapProductFormDetails
         }
     }
     ${productFormFragment}
