@@ -3,6 +3,8 @@ import * as React from "react";
 import { Field, FieldProps } from "../Field";
 import { FinalFormNumberInput } from "../FinalFormNumberInput";
 
-export const NumberField = ({ ...restProps }: FieldProps) => {
+export type NumberFieldProps = FieldProps<string, HTMLInputElement>;
+
+export const NumberField = ({ ...restProps }: NumberFieldProps) => {
     return <Field component={FinalFormNumberInput} {...restProps} />;
 };

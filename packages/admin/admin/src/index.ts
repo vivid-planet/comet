@@ -79,7 +79,7 @@ export { FinalFormCheckbox, FinalFormCheckboxProps } from "./form/Checkbox";
 export { Field, FieldProps } from "./form/Field";
 export { FieldContainer, FieldContainerClassKey, FieldContainerComponent, FieldContainerProps } from "./form/FieldContainer";
 export { CheckboxField, CheckboxFieldProps } from "./form/fields/CheckboxField";
-export { NumberField } from "./form/fields/NumberField";
+export { NumberField, NumberFieldProps } from "./form/fields/NumberField";
 export { SearchField, SearchFieldProps } from "./form/fields/SearchField";
 export { SelectField, SelectFieldProps } from "./form/fields/SelectField";
 export { SwitchField, SwitchFieldProps } from "./form/fields/SwitchField";
