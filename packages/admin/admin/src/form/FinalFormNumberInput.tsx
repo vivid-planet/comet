@@ -45,7 +45,13 @@ export function FinalFormNumberInput({
     const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
         const { value } = event.target;
 
-        const numericValue = parseFloat(value.split(`${thousandSeparatorSymbol}`).join("").split(`${decimalSymbol}`).join("."));
+        const numericValue = parseFloat(
+            value
+                .split(thousandSeparatorSymbol || "")
+                .join("")
+                .split(decimalSymbol || ".")
+                .join("."),
+        );
 
         const inputValue = isNaN(numericValue) ? undefined : numericValue;
         input.onChange(inputValue);
