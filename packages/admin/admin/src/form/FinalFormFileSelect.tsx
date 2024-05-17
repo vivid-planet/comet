@@ -31,7 +31,7 @@ export type FinalFormFileSelectClassKey =
 type OwnerState = { droppableAreaIsDisabled: boolean; droppableAreaHasError: boolean };
 
 const Root = createComponentSlot("div")<FinalFormFileSelectClassKey>({
-    componentName: "CometAdminFinalFormFileSelect",
+    componentName: "FinalFormFileSelect",
     slotName: "root",
 })(
     () => css`
@@ -43,7 +43,7 @@ const Root = createComponentSlot("div")<FinalFormFileSelectClassKey>({
 );
 
 const Dropzone = createComponentSlot("div")<FinalFormFileSelectClassKey>({
-    componentName: "CometAdminFinalFormFileSelect",
+    componentName: "FinalFormFileSelect",
     slotName: "dropzone",
 })(
     () => css`
@@ -56,7 +56,7 @@ const Dropzone = createComponentSlot("div")<FinalFormFileSelectClassKey>({
 );
 
 const DroppableArea = createComponentSlot("div")<FinalFormFileSelectClassKey, OwnerState>({
-    componentName: "CometAdminFinalFormFileSelect",
+    componentName: "FinalFormFileSelect",
     slotName: "droppableArea",
     classesResolver(ownerState) {
         return [ownerState.droppableAreaHasError && "droppableAreaHasError", ownerState.droppableAreaIsDisabled && "droppableAreaIsDisabled"];
@@ -84,7 +84,7 @@ const DroppableArea = createComponentSlot("div")<FinalFormFileSelectClassKey, Ow
 );
 
 const DroppableAreaCaption = createComponentSlot(Typography)<FinalFormFileSelectClassKey>({
-    componentName: "CometAdminFinalFormFileSelect",
+    componentName: "FinalFormFileSelect",
     slotName: "droppableAreaCaption",
 })(
     ({ theme }) => css`
@@ -94,7 +94,7 @@ const DroppableAreaCaption = createComponentSlot(Typography)<FinalFormFileSelect
 );
 
 const DroppableAreaError = createComponentSlot("div")<FinalFormFileSelectClassKey>({
-    componentName: "CometAdminFinalFormFileSelect",
+    componentName: "FinalFormFileSelect",
     slotName: "droppableAreaError",
 })(
     ({ theme }) => css`
@@ -107,7 +107,7 @@ const DroppableAreaError = createComponentSlot("div")<FinalFormFileSelectClassKe
 );
 
 const FileList = createComponentSlot("div")<FinalFormFileSelectClassKey>({
-    componentName: "CometAdminFinalFormFileSelect",
+    componentName: "FinalFormFileSelect",
     slotName: "fileList",
 })(
     () => css`
@@ -120,7 +120,7 @@ const FileList = createComponentSlot("div")<FinalFormFileSelectClassKey>({
 );
 
 const FileListItem = createComponentSlot("div")<FinalFormFileSelectClassKey>({
-    componentName: "CometAdminFinalFormFileSelect",
+    componentName: "FinalFormFileSelect",
     slotName: "fileListItem",
 })(
     ({ theme }) => css`
@@ -137,7 +137,7 @@ const FileListItem = createComponentSlot("div")<FinalFormFileSelectClassKey>({
 );
 
 const FileListItemInfos = createComponentSlot("div")<FinalFormFileSelectClassKey>({
-    componentName: "CometAdminFinalFormFileSelect",
+    componentName: "FinalFormFileSelect",
     slotName: "fileListItemInfos",
 })(
     () => css`
@@ -149,7 +149,7 @@ const FileListItemInfos = createComponentSlot("div")<FinalFormFileSelectClassKey
 );
 
 const RejectedFileListItem = createComponentSlot("div")<FinalFormFileSelectClassKey>({
-    componentName: "CometAdminFinalFormFileSelect",
+    componentName: "FinalFormFileSelect",
     slotName: "rejectedFileListItem",
 })(
     ({ theme }) => css`
@@ -168,7 +168,7 @@ const RejectedFileListItem = createComponentSlot("div")<FinalFormFileSelectClass
 );
 
 const ErrorMessage = createComponentSlot("div")<FinalFormFileSelectClassKey>({
-    componentName: "CometAdminFinalFormFileSelect",
+    componentName: "FinalFormFileSelect",
     slotName: "errorMessage",
 })(
     ({ theme }) => css`
@@ -180,7 +180,7 @@ const ErrorMessage = createComponentSlot("div")<FinalFormFileSelectClassKey>({
 );
 
 const FileListText = createComponentSlot("div")<FinalFormFileSelectClassKey>({
-    componentName: "CometAdminFinalFormFileSelect",
+    componentName: "FinalFormFileSelect",
     slotName: "fileListText",
 })(
     () => css`
@@ -191,7 +191,7 @@ const FileListText = createComponentSlot("div")<FinalFormFileSelectClassKey>({
 );
 
 const SelectButton = createComponentSlot(Button)<FinalFormFileSelectClassKey>({
-    componentName: "CometAdminFinalFormFileSelect",
+    componentName: "FinalFormFileSelect",
     slotName: "selectButton",
 })(
     ({ theme }) => css`
