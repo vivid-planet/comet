@@ -76,9 +76,7 @@ export function FinalFormNumberInput({
             endAdornment={
                 <>
                     {endAdornment}
-                    {clearable && (
-                        <ClearInputAdornment position="end" hasClearableContent={input.value !== "" && true} onClick={() => input.onChange("")} />
-                    )}
+                    <ClearInputAdornment position="end" hasClearableContent={typeof input.value === "number"} onClick={() => input.onChange("")} />
                 </>
             }
         />
