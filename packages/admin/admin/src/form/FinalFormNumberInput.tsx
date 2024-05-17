@@ -29,7 +29,7 @@ export function FinalFormNumberInput({
     const [formattedNumberValue, setFormattedNumberValue] = React.useState("");
 
     const getFormattedValue = React.useCallback(
-        (value, decimals: number | undefined) => {
+        (value, decimals: number) => {
             const formattedValue =
                 value !== undefined ? intl.formatNumber(value, { minimumFractionDigits: decimals, maximumFractionDigits: decimals }) : "";
             return formattedValue;
