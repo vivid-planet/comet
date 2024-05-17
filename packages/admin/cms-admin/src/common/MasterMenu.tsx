@@ -11,6 +11,7 @@ import {
     useWindowSize,
 } from "@comet/admin";
 import * as React from "react";
+import { match } from "react-router";
 import { RouteProps, useRouteMatch } from "react-router-dom";
 
 import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
@@ -103,7 +104,7 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
                 ...menuItem,
                 to: to ?? route?.path?.toString() ?? "",
             },
-            hasSubmenu: !!submenu,
+            hasSubmenu: !!submenu?.length,
             submenu: submenu ? submenu.filter(checkPermission).map(mapFn) : [],
         };
     };
@@ -126,57 +127,53 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
 
+    const renderSubmenuItems = (submenu: MenuItemRoute["submenu"], match: match) =>
+        submenu.flatMap((submenuItem, index) => {
+            if (isMenuItemAnchor(submenuItem)) {
+                return <MenuItemAnchorLink key={index} {...submenuItem.menuElement} />;
+            } else if (isMenuItemRoute(submenuItem)) {
+                return <MenuItemRouterLink key={index} {...submenuItem.menuElement} to={`${match.url}${submenuItem.menuElement.to}`} />;
+            }
+            return [];
+        });
+
+    const renderGroupItems = (groupItems: MenuItemGroupElement["groupItems"], match: match) =>
+        groupItems.flatMap((groupItem, index) => {
+            if (isMenuItemRoute(groupItem)) {
+                if (groupItem.hasSubmenu) {
+                    return (
+                        <MenuCollapsibleItem key={index} {...groupItem.menuElement}>
+                            {renderSubmenuItems(groupItem.submenu, match)}
+                        </MenuCollapsibleItem>
+                    );
+                }
+                return <MenuItemRouterLink key={index} {...groupItem.menuElement} to={`${match.url}${groupItem.menuElement.to}`} />;
+            } else if (isMenuItemAnchor(groupItem)) {
+                return <MenuItemAnchorLink key={index} {...groupItem.menuElement} />;
+            }
+            return [];
+        });
+
     return (
         <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
-            {menuItems.map((menuElement, index) =>
-                isMenuItemAnchor(menuElement) ? (
-                    <MenuItemAnchorLink key={index} {...menuElement.menuElement} />
-                ) : isMenuItemGroupElement(menuElement) ? (
-                    <MenuItemGroup key={index} {...menuElement.menuElement}>
-                        {menuElement.groupItems.flatMap((groupItem, index) =>
-                            isMenuItemRoute(groupItem) ? (
-                                groupItem.hasSubmenu ? (
-                                    <MenuCollapsibleItem key={index} {...groupItem.menuElement}>
-                                        {groupItem.submenu.flatMap((submenuItem, index) =>
-                                            isMenuItemAnchor(submenuItem) ? (
-                                                <MenuItemAnchorLink key={index} {...submenuItem.menuElement} />
-                                            ) : isMenuItemRoute(submenuItem) ? (
-                                                <MenuItemRouterLink
-                                                    key={index}
-                                                    {...submenuItem.menuElement}
-                                                    to={`${match.url}${submenuItem.menuElement.to}`}
-                                                />
-                                            ) : (
-                                                []
-                                            ),
-                                        )}
-                                    </MenuCollapsibleItem>
-                                ) : (
-                                    <MenuItemRouterLink key={index} {...groupItem.menuElement} to={`${match.url}${groupItem.menuElement.to}`} />
-                                )
-                            ) : isMenuItemAnchor(groupItem) ? (
-                                <MenuItemAnchorLink key={index} {...groupItem.menuElement} />
-                            ) : (
-                                []
-                            ),
-                        )}
-                    </MenuItemGroup>
-                ) : menuElement.hasSubmenu ? (
-                    <MenuCollapsibleItem key={index} {...menuElement.menuElement}>
-                        {menuElement.submenu.flatMap((submenuItem, index) =>
-                            isMenuItemAnchor(submenuItem) ? (
-                                <MenuItemAnchorLink key={index} {...submenuItem.menuElement} />
-                            ) : isMenuItemRoute(submenuItem) ? (
-                                <MenuItemRouterLink key={index} {...submenuItem.menuElement} to={`${match.url}${submenuItem.menuElement.to}`} />
-                            ) : (
-                                []
-                            ),
-                        )}
-                    </MenuCollapsibleItem>
-                ) : (
-                    <MenuItemRouterLink key={index} {...menuElement.menuElement} to={`${match.url}${menuElement.menuElement.to}`} />
-                ),
-            )}
+            {menuItems.map((menuElement, index) => {
+                if (isMenuItemGroupElement(menuElement)) {
+                    return (
+                        <MenuItemGroup key={index} {...menuElement.menuElement}>
+                            {renderGroupItems(menuElement.groupItems, match)}
+                        </MenuItemGroup>
+                    );
+                } else if (isMenuItemAnchor(menuElement)) {
+                    return <MenuItemAnchorLink key={index} {...menuElement.menuElement} />;
+                } else if (menuElement.hasSubmenu) {
+                    return (
+                        <MenuCollapsibleItem key={index} {...menuElement.menuElement}>
+                            {renderSubmenuItems(menuElement.submenu, match)}
+                        </MenuCollapsibleItem>
+                    );
+                }
+                return <MenuItemRouterLink key={index} {...menuElement.menuElement} to={`${match.url}${menuElement.menuElement.to}`} />;
+            })}
         </Menu>
     );
 };
