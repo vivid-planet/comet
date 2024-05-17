@@ -37,12 +37,46 @@ export type MasterMenuElement = MasterMenuItemRoute | MasterMenuItemAnchor | Mas
 
 export type MasterMenuData = MasterMenuElement[];
 
+type MenuItemRoute = {
+    menuElement: MenuItemRouterLinkProps;
+    hasSubmenu: boolean;
+    submenu: MenuItem[];
+};
+
+type MenuItemAnchor = {
+    menuElement: MenuItemAnchorLinkProps;
+};
+
+type MenuItemGroupElement = {
+    menuElement: MenuItemGroupProps;
+    isGroup: boolean;
+    groupItems: MenuItem[];
+};
+
+type MenuItem = MenuItemRoute | MenuItemAnchor | MenuItemGroupElement;
+
+export interface MasterMenuProps {
+    permanentMenuMinWidth?: number;
+    menu: MasterMenuData;
+}
+
 export function isMasterMenuItemGroup(item: MasterMenuElement): item is MasterMenuItemGroup {
     return !!item && "groupItems" in item;
 }
 
 export function isMasterMenuItemAnchor(item: MasterMenuElement): item is MasterMenuItemAnchor {
     return !!item && "href" in item;
+}
+
+export function isMenuItemGroupElement(item: MenuItem): item is MenuItemGroupElement {
+    return !!item && "groupItems" in item && "isGroup" in item;
+}
+function isMenuItemAnchor(item: MenuItem): item is MenuItemAnchor {
+    return !!item.menuElement && "href" in item.menuElement;
+}
+
+function isMenuItemRoute(item: MenuItem): item is MenuItemRoute {
+    return !!item && "hasSubmenu" in item && "submenu" in item;
 }
 
 export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
@@ -74,41 +108,6 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
         };
     };
     return items.filter(checkPermission).map(mapFn);
-}
-
-type MenuItemRoute = {
-    menuElement: MenuItemRouterLinkProps;
-    hasSubmenu: boolean;
-    submenu: MenuItem[];
-};
-
-type MenuItemAnchor = {
-    menuElement: MenuItemAnchorLinkProps;
-};
-
-type MenuItemGroupElement = {
-    menuElement: MenuItemGroupProps;
-    isGroup: boolean;
-    groupItems: MenuItem[];
-};
-
-export function isMenuItemGroupElement(item: MenuItem): item is MenuItemGroupElement {
-    return !!item && "groupItems" in item && "isGroup" in item;
-}
-
-type MenuItem = MenuItemRoute | MenuItemAnchor | MenuItemGroupElement;
-
-function isMenuItemAnchor(item: MenuItem): item is MenuItemAnchor {
-    return !!item.menuElement && "href" in item.menuElement;
-}
-
-function isMenuItemRoute(item: MenuItem): item is MenuItemRoute {
-    return !!item && "hasSubmenu" in item && "submenu" in item;
-}
-
-export interface MasterMenuProps {
-    permanentMenuMinWidth?: number;
-    menu: MasterMenuData;
 }
 
 export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWidth = 1024 }) => {
