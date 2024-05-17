@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import { Loading, MainContent, messages, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
-import { ArrowLeft, Preview } from "@comet/admin-icons";
+import { ArrowLeft, Preview, Status } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
     AzureAiTranslatorProvider,
@@ -14,7 +14,7 @@ import {
     useCmsBlockContext,
     useSiteConfig,
 } from "@comet/cms-admin";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, styled } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
@@ -160,7 +160,16 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                 </ToolbarActions>
             </Toolbar>
             <MainContent disablePaddingBottom>
-                <BlockPreviewWithTabs previewUrl={`${siteConfig.blockPreviewBaseUrl}/page`} previewState={previewState} previewApi={previewApi}>
+                <BlockPreviewWithTabs
+                    previewUrl={`${siteConfig.blockPreviewBaseUrl}/page`}
+                    previewState={previewState}
+                    previewApi={previewApi}
+                    actions={
+                        <StatusButton>
+                            <Status />
+                        </StatusButton>
+                    }
+                >
                     {[
                         {
                             key: "content",
@@ -205,3 +214,11 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
         </AzureAiTranslatorProvider>
     );
 };
+
+const StatusButton = styled(IconButton)`
+    width: 50px;
+    height: 50px;
+    border-radius: 0;
+    color: ${({ theme }) => theme.palette.common.white};
+    border-left: 1px solid #2e3440;
+`;
