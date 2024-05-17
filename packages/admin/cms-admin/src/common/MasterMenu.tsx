@@ -38,13 +38,13 @@ export type MasterMenuElement = MasterMenuItemRoute | MasterMenuItemAnchor | Mas
 
 export type MasterMenuData = MasterMenuElement[];
 
-type MenuItemRoute = {
+type MenuItemRouteElement = {
     menuElement: MenuItemRouterLinkProps;
     hasSubmenu: boolean;
     submenu: MenuItem[];
 };
 
-type MenuItemAnchor = {
+type MenuItemAnchorElement = {
     menuElement: MenuItemAnchorLinkProps;
 };
 
@@ -54,7 +54,7 @@ type MenuItemGroupElement = {
     groupItems: MenuItem[];
 };
 
-type MenuItem = MenuItemRoute | MenuItemAnchor | MenuItemGroupElement;
+type MenuItem = MenuItemRouteElement | MenuItemAnchorElement | MenuItemGroupElement;
 
 export interface MasterMenuProps {
     permanentMenuMinWidth?: number;
@@ -72,11 +72,11 @@ export function isMasterMenuItemAnchor(item: MasterMenuElement): item is MasterM
 export function isMenuItemGroupElement(item: MenuItem): item is MenuItemGroupElement {
     return !!item && "groupItems" in item && "isGroup" in item;
 }
-function isMenuItemAnchor(item: MenuItem): item is MenuItemAnchor {
+function isMenuItemAnchor(item: MenuItem): item is MenuItemAnchorElement {
     return !!item.menuElement && "href" in item.menuElement;
 }
 
-function isMenuItemRoute(item: MenuItem): item is MenuItemRoute {
+function isMenuItemRoute(item: MenuItem): item is MenuItemRouteElement {
     return !!item && "hasSubmenu" in item && "submenu" in item;
 }
 
@@ -127,7 +127,7 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
 
-    const renderSubmenuItems = (submenu: MenuItemRoute["submenu"], match: match) =>
+    const renderSubmenuItems = (submenu: MenuItemRouteElement["submenu"], match: match) =>
         submenu.flatMap((submenuItem, index) => {
             if (isMenuItemAnchor(submenuItem)) {
                 return <MenuItemAnchorLink key={index} {...submenuItem.menuElement} />;
