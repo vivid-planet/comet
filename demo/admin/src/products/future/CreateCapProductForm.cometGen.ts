@@ -1,11 +1,11 @@
 import { future_FormConfig as FormConfig } from "@comet/cms-admin";
 import { GQLProduct } from "@src/graphql.generated";
 
-export const CreateProductForm: FormConfig<GQLProduct> = {
+export const CreateCapProductForm: FormConfig<GQLProduct> = {
     type: "form",
     gqlType: "Product",
     mode: "add",
-    fragmentName: "ProductFormDetails", // configurable as it must be unique across project
+    fragmentName: "CreateCapProductFormDetails",
     fields: [
         {
             type: "text",
@@ -15,9 +15,7 @@ export const CreateProductForm: FormConfig<GQLProduct> = {
             validate: { name: "validateTitle", import: "./validateTitle" },
         },
         { type: "text", name: "slug" },
-        { type: "date", name: "createdAt", label: "Created", readOnly: true },
         { type: "text", name: "description", label: "Description", multiline: true },
-        { type: "staticSelect", name: "type", label: "Type" /*, values: from gql schema (TODO overridable)*/ },
         { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
         { type: "boolean", name: "inStock" },
         { type: "date", name: "availableSince" },
