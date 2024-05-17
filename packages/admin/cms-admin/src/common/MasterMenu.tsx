@@ -4,6 +4,8 @@ import {
     MenuContext,
     MenuItemAnchorLink,
     MenuItemAnchorLinkProps,
+    MenuItemGroup,
+    MenuItemGroupProps,
     MenuItemRouterLink,
     MenuItemRouterLinkProps,
     useWindowSize,
@@ -17,33 +19,53 @@ type MasterMenuItemRoute = Omit<MenuItemRouterLinkProps, "to"> & {
     requiredPermission?: string;
     route?: RouteProps;
     to?: string;
-    submenu?: MasterMenuItem[];
+    submenu?: MasterMenuElement[];
 };
 
 type MasterMenuItemAnchor = MenuItemAnchorLinkProps & {
     requiredPermission?: string;
 };
 
+type MasterMenuItemGroup = MenuItemGroupProps & {
+    requiredPermission?: string;
+    groupItems: MasterMenuItem[];
+};
+
 export type MasterMenuItem = MasterMenuItemRoute | MasterMenuItemAnchor;
 
-export type MasterMenuData = MasterMenuItem[];
+export type MasterMenuElement = MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemGroup;
 
-export function isMasterMenuItemAnchor(item: MasterMenuItem): item is MasterMenuItemAnchor {
-    return !!item.href;
+export type MasterMenuData = MasterMenuElement[];
+
+export function isMasterMenuItemGroup(item: MasterMenuElement): item is MasterMenuItemGroup {
+    return !!item && "groupItems" in item;
+}
+
+export function isMasterMenuItemAnchor(item: MasterMenuElement): item is MasterMenuItemAnchor {
+    return !!item && "href" in item;
 }
 
 export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
     const isAllowed = useUserPermissionCheck();
-    const checkPermission = (item: MasterMenuItem): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
+    const checkPermission = (item: MasterMenuElement): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
 
-    const mapFn = (item: MasterMenuItem): MenuItem => {
+    const mapFn = (item: MasterMenuElement): MenuItem => {
         if (isMasterMenuItemAnchor(item)) {
-            return { menuItem: item };
+            return { menuElement: item };
+        }
+
+        if (isMasterMenuItemGroup(item)) {
+            const { groupItems, ...menuElement } = item;
+            return {
+                menuElement,
+                isGroup: true,
+                groupItems: groupItems.filter(checkPermission).map(mapFn),
+            };
         }
 
         const { route, submenu, to, ...menuItem } = item;
         return {
-            menuItem: {
+            menuElement: {
                 ...menuItem,
                 to: to ?? route?.path?.toString() ?? "",
             },
@@ -55,19 +77,33 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
 }
 
 type MenuItemRoute = {
-    menuItem: MenuItemRouterLinkProps;
+    menuElement: MenuItemRouterLinkProps;
     hasSubmenu: boolean;
     submenu: MenuItem[];
 };
 
 type MenuItemAnchor = {
-    menuItem: MenuItemAnchorLinkProps;
+    menuElement: MenuItemAnchorLinkProps;
 };
 
-type MenuItem = MenuItemRoute | MenuItemAnchor;
+type MenuItemGroupElement = {
+    menuElement: MenuItemGroupProps;
+    isGroup: boolean;
+    groupItems: MenuItem[];
+};
+
+export function isMenuItemGroupElement(item: MenuItem): item is MenuItemGroupElement {
+    return !!item && "groupItems" in item && "isGroup" in item;
+}
+
+type MenuItem = MenuItemRoute | MenuItemAnchor | MenuItemGroupElement;
 
 function isMenuItemAnchor(item: MenuItem): item is MenuItemAnchor {
-    return !!item.menuItem.href;
+    return !!item.menuElement && "href" in item.menuElement;
+}
+
+function isMenuItemRoute(item: MenuItem): item is MenuItemRoute {
+    return !!item && "hasSubmenu" in item && "submenu" in item;
 }
 
 export interface MasterMenuProps {
@@ -93,21 +129,53 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
 
     return (
         <Menu variant={useTemporaryMenu ? "temporary" : "permanent"}>
-            {menuItems.map((menuItem, index) =>
-                isMenuItemAnchor(menuItem) ? (
-                    <MenuItemAnchorLink key={index} {...menuItem.menuItem} />
-                ) : menuItem.hasSubmenu ? (
-                    <MenuCollapsibleItem key={index} {...menuItem.menuItem}>
-                        {menuItem.submenu.map((submenuItem, index) =>
-                            isMenuItemAnchor(submenuItem) ? (
-                                <MenuItemAnchorLink key={index} {...submenuItem.menuItem} />
+            {menuItems.map((menuElement, index) =>
+                isMenuItemAnchor(menuElement) ? (
+                    <MenuItemAnchorLink key={index} {...menuElement.menuElement} />
+                ) : isMenuItemGroupElement(menuElement) ? (
+                    <MenuItemGroup key={index} {...menuElement.menuElement}>
+                        {menuElement.groupItems.flatMap((groupItem, index) =>
+                            isMenuItemRoute(groupItem) ? (
+                                groupItem.hasSubmenu ? (
+                                    <MenuCollapsibleItem key={index} {...groupItem.menuElement}>
+                                        {groupItem.submenu.flatMap((submenuItem, index) =>
+                                            isMenuItemAnchor(submenuItem) ? (
+                                                <MenuItemAnchorLink key={index} {...submenuItem.menuElement} />
+                                            ) : isMenuItemRoute(submenuItem) ? (
+                                                <MenuItemRouterLink
+                                                    key={index}
+                                                    {...submenuItem.menuElement}
+                                                    to={`${match.url}${submenuItem.menuElement.to}`}
+                                                />
+                                            ) : (
+                                                []
+                                            ),
+                                        )}
+                                    </MenuCollapsibleItem>
+                                ) : (
+                                    <MenuItemRouterLink key={index} {...groupItem.menuElement} to={`${match.url}${groupItem.menuElement.to}`} />
+                                )
+                            ) : isMenuItemAnchor(groupItem) ? (
+                                <MenuItemAnchorLink key={index} {...groupItem.menuElement} />
                             ) : (
-                                <MenuItemRouterLink key={index} {...submenuItem.menuItem} to={`${match.url}${submenuItem.menuItem.to}`} />
+                                []
+                            ),
+                        )}
+                    </MenuItemGroup>
+                ) : menuElement.hasSubmenu ? (
+                    <MenuCollapsibleItem key={index} {...menuElement.menuElement}>
+                        {menuElement.submenu.flatMap((submenuItem, index) =>
+                            isMenuItemAnchor(submenuItem) ? (
+                                <MenuItemAnchorLink key={index} {...submenuItem.menuElement} />
+                            ) : isMenuItemRoute(submenuItem) ? (
+                                <MenuItemRouterLink key={index} {...submenuItem.menuElement} to={`${match.url}${submenuItem.menuElement.to}`} />
+                            ) : (
+                                []
                             ),
                         )}
                     </MenuCollapsibleItem>
                 ) : (
-                    <MenuItemRouterLink key={index} {...menuItem.menuItem} to={`${match.url}${menuItem.menuItem.to}`} />
+                    <MenuItemRouterLink key={index} {...menuElement.menuElement} to={`${match.url}${menuElement.menuElement.to}`} />
                 ),
             )}
         </Menu>

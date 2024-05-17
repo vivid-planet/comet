@@ -3,17 +3,19 @@ import * as React from "react";
 import { Redirect, RouteProps, Switch, useRouteMatch } from "react-router-dom";
 
 import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
-import { isMasterMenuItemAnchor, MasterMenuData, MasterMenuItem } from "./MasterMenu";
+import { isMasterMenuItemAnchor, isMasterMenuItemGroup, MasterMenuData, MasterMenuElement } from "./MasterMenu";
 
 export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
     const isAllowed = useUserPermissionCheck();
-    const checkPermission = (item: MasterMenuItem): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
+    const checkPermission = (item: MasterMenuElement): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
 
-    const flat = (routes: RouteProps[], item: MasterMenuItem): RouteProps[] => {
+    const flat = (routes: RouteProps[], item: MasterMenuElement): RouteProps[] => {
         if (isMasterMenuItemAnchor(item)) {
             return routes;
         }
-
+        if (isMasterMenuItemGroup(item)) {
+            return routes.concat(item.groupItems.reduce(flat, []));
+        }
         if (item.route && checkPermission(item)) {
             routes.push(item.route);
         }
