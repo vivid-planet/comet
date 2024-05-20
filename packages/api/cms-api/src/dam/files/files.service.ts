@@ -580,7 +580,9 @@ export class FilesService {
         const filename = parse(file.name).name;
 
         // Use CDN url only if available and not in preview as preview requires auth
-        const baseUrl = [this.config.cdnEnabled ? `${this.config.cdnDomain}/files/download` : `${this.config.filesBaseUrl}/download`];
+        const baseUrl = [
+            this.config.cdnEnabled && !previewDamUrls ? `${this.config.cdnDomain}/files/download` : `${this.config.filesBaseUrl}/download`,
+        ];
 
         if (previewDamUrls) {
             baseUrl.push("preview");
