@@ -2,7 +2,6 @@ import { gql, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     FileIcon,
-    GridColDef as CometGridColDef,
     GridColDef,
     GridFilterButton,
     Loading,
@@ -238,7 +237,7 @@ storiesOf("stories/components/DataGrid", module)
         const dataGridProps = usePersistentColumnState("ResponsiveColumnsStory");
         const theme = useTheme();
 
-        const columns: CometGridColDef[] = [
+        const columns: GridColDef[] = [
             {
                 field: "id",
                 headerName: "ID",
