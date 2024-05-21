@@ -925,7 +925,7 @@ importers:
   packages/admin/admin:
     dependencies:
       '@comet/admin-icons':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-icons
       '@mui/private-theming':
         specifier: ^5.0.0
@@ -957,6 +957,9 @@ importers:
       query-string:
         specifier: ^6.8.1
         version: 6.14.1
+      react-dropzone:
+        specifier: ^14.0.0
+        version: 14.2.3(react@17.0.2)
       use-constant:
         specifier: ^1.0.0
         version: 1.1.1(react@17.0.2)
@@ -974,13 +977,13 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-babel-preset
       '@comet/admin-theme':
         specifier: workspace:^6.9.0
         version: link:../admin-theme
       '@comet/eslint-config':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
@@ -1145,10 +1148,10 @@ importers:
   packages/admin/admin-color-picker:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin
       '@comet/admin-icons':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-icons
       clsx:
         specifier: ^1.1.1
@@ -1170,10 +1173,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../../eslint-config
       '@mui/icons-material':
         specifier: ^5.0.0
@@ -1224,10 +1227,10 @@ importers:
   packages/admin/admin-date-time:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin
       '@comet/admin-icons':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-icons
       '@mui/utils':
         specifier: ^5.4.1
@@ -1249,10 +1252,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1306,10 +1309,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1363,7 +1366,7 @@ importers:
   packages/admin/admin-react-select:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin
       classnames:
         specifier: ^2.2.6
@@ -1376,10 +1379,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../../eslint-config
       '@mui/icons-material':
         specifier: ^5.0.0
@@ -1430,10 +1433,10 @@ importers:
   packages/admin/admin-rte:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin
       '@comet/admin-icons':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-icons
       detect-browser:
         specifier: ^5.2.1
@@ -1458,10 +1461,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../../eslint-config
       '@mui/icons-material':
         specifier: ^5.0.0
@@ -1542,7 +1545,7 @@ importers:
   packages/admin/admin-theme:
     dependencies:
       '@comet/admin-icons':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-icons
       '@mui/utils':
         specifier: ^5.4.1
@@ -1555,10 +1558,10 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-babel-preset
       '@comet/eslint-config':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1600,10 +1603,10 @@ importers:
   packages/admin/blocks-admin:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin
       '@comet/admin-icons':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-icons
       '@mui/lab':
         specifier: ^5.0.0-alpha.76
@@ -1634,13 +1637,13 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-babel-preset
       '@comet/cli':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../../cli
       '@comet/eslint-config':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
@@ -1730,22 +1733,22 @@ importers:
   packages/admin/cms-admin:
     dependencies:
       '@comet/admin':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin
       '@comet/admin-date-time':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-date-time
       '@comet/admin-icons':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-icons
       '@comet/admin-rte':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-rte
       '@comet/admin-theme':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-theme
       '@comet/blocks-admin':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../blocks-admin
       '@graphql-tools/graphql-file-loader':
         specifier: ^7.5.17
@@ -1872,13 +1875,13 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../admin-babel-preset
       '@comet/cli':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../../cli
       '@comet/eslint-config':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
@@ -2062,7 +2065,7 @@ importers:
         version: 3.0.2
     devDependencies:
       '@comet/eslint-config':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../../eslint-config
       '@nestjs/common':
         specifier: ^9.0.0
@@ -2119,7 +2122,7 @@ importers:
         specifier: ^12.17.0
         version: 12.17.0
       '@comet/blocks-api':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../blocks-api
       '@golevelup/nestjs-discovery':
         specifier: ^3.0.0
@@ -2255,7 +2258,7 @@ importers:
         specifier: ^3.47.0
         version: 3.254.0
       '@comet/eslint-config':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../../eslint-config
       '@golevelup/ts-jest':
         specifier: ^0.4.0
@@ -2385,7 +2388,7 @@ importers:
         version: 2.8.3
     devDependencies:
       '@comet/eslint-config':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../eslint-config
       '@types/node':
         specifier: ^18.0.0
@@ -2412,7 +2415,7 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1
       '@comet/eslint-plugin':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../eslint-plugin
       '@next/eslint-plugin-next':
         specifier: ^12.0.0
@@ -2510,10 +2513,10 @@ importers:
         version: 6.0.1(react@18.2.0)
     devDependencies:
       '@comet/cli':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../../cli
       '@comet/eslint-config':
-        specifier: workspace:^6.9.0
+        specifier: workspace:^6.10.0
         version: link:../../eslint-config
       '@gitbeaker/node':
         specifier: ^34.0.0
@@ -6884,9 +6887,32 @@ packages:
       '@babel/helper-function-name': 7.19.0
       '@babel/helper-hoist-variables': 7.18.6
       '@babel/helper-split-export-declaration': 7.18.6
+<<<<<<< HEAD
       '@babel/parser': 7.22.14
       '@babel/types': 7.22.11
       debug: 4.3.4(supports-color@9.3.1)
+=======
+      '@babel/parser': 7.20.13
+      '@babel/types': 7.20.7
+      debug: 4.3.4(supports-color@9.3.1)
+      globals: 11.12.0
+    transitivePeerDependencies:
+      - supports-color
+
+  /@babel/traverse@7.20.13(supports-color@5.5.0):
+    resolution: {integrity: sha512-kMJXfF0T6DIS9E8cgdLCSAL+cuCK+YEZHWiLK0SXpTo8YRj5lpJu3CDNKiIBCne4m9hhTIqUg6SYTAI39tAiVQ==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      '@babel/code-frame': 7.18.6
+      '@babel/generator': 7.20.7
+      '@babel/helper-environment-visitor': 7.18.9
+      '@babel/helper-function-name': 7.19.0
+      '@babel/helper-hoist-variables': 7.18.6
+      '@babel/helper-split-export-declaration': 7.18.6
+      '@babel/parser': 7.20.13
+      '@babel/types': 7.20.7
+      debug: 4.3.4(supports-color@5.5.0)
+>>>>>>> main
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -19161,6 +19187,21 @@ packages:
       ms: 2.1.3
     dev: false
 
+<<<<<<< HEAD
+=======
+  /debug@4.3.4(supports-color@5.5.0):
+    resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+    dependencies:
+      ms: 2.1.2
+      supports-color: 5.5.0
+
+>>>>>>> main
   /debug@4.3.4(supports-color@9.3.1):
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
     engines: {node: '>=6.0'}

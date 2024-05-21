@@ -34,12 +34,16 @@ export function createAuthProxyJwtStrategy({
         }
 
         async validate(data: JwtPayload): Promise<CurrentUser> {
+<<<<<<< HEAD
             if (!data.sub) throw new Error("JwtPayload does not contain sub.");
             return this.service.createCurrentUser({
                 id: data.sub,
                 name: data.name,
                 email: data.email,
             });
+=======
+            return this.service.createCurrentUser(await this.service.createUserFromIdToken(data));
+>>>>>>> main
         }
     }
     return AuthProxyJwtStrategy;
