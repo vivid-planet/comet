@@ -3,7 +3,7 @@ import { DamVideoBlockData } from "@src/blocks.generated";
 import * as React from "react";
 import styled from "styled-components";
 
-export const VideoContainer = styled.div`
+const VideoContainer = styled.div`
     position: relative;
     aspect-ratio: 16 / 9;
     overflow: hidden;
