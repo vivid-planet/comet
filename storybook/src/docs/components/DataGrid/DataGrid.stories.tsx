@@ -3,6 +3,7 @@ import {
     CrudContextMenu,
     FileIcon,
     GridColDef as CometGridColDef,
+    GridColDef,
     GridFilterButton,
     Loading,
     muiGridFilterToGql,
@@ -18,7 +19,7 @@ import {
 import { MoreVert } from "@mui/icons-material";
 import { Button, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
