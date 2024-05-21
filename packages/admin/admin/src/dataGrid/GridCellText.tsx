@@ -4,17 +4,20 @@ import React from "react";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export type GridCellTextClassKey = "root" | "hasSecondaryText" | "primaryText" | "secondaryText";
+export type GridCellTextClassKey = "root" | "hasSecondaryText" | "iconContainer" | "textContainer" | "primaryText" | "secondaryText";
 
 export interface GridCellTextProps
     extends ThemedComponentBaseProps<{
         root: "div";
+        textContainer: "div";
+        iconContainer: "div";
         primaryText: typeof Typography;
         secondaryText: typeof Typography;
     }> {
     primary?: React.ReactNode;
     secondary?: React.ReactNode;
     children?: React.ReactNode;
+    icon?: React.ReactNode;
 }
 
 type OwnerState = {
@@ -22,7 +25,10 @@ type OwnerState = {
 };
 
 export const GridCellText = (inProps: GridCellTextProps) => {
-    const { children, primary, secondary, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminGridCellText" });
+    const { children, primary, secondary, slotProps, icon, ...restProps } = useThemeProps({
+        props: inProps,
+        name: "CometAdminGridCellText",
+    });
 
     const ownerState: OwnerState = {
         hasSecondaryText: Boolean(secondary),
@@ -30,10 +36,13 @@ export const GridCellText = (inProps: GridCellTextProps) => {
 
     return (
         <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
-            <PrimaryText ownerState={ownerState} {...slotProps?.primaryText}>
-                {primary ? primary : children}
-            </PrimaryText>
-            {ownerState.hasSecondaryText && <SecondaryText {...slotProps?.secondaryText}>{secondary}</SecondaryText>}
+            {icon && <IconContainer {...slotProps?.iconContainer}>{icon}</IconContainer>}
+            <TextContainer>
+                <PrimaryText ownerState={ownerState} {...slotProps?.primaryText}>
+                    {primary ? primary : children}
+                </PrimaryText>
+                {ownerState.hasSecondaryText && <SecondaryText {...slotProps?.secondaryText}>{secondary}</SecondaryText>}
+            </TextContainer>
         </Root>
     );
 };
@@ -44,8 +53,28 @@ const Root = createComponentSlot("div")<GridCellTextClassKey, OwnerState>({
     classesResolver(ownerState) {
         return [ownerState.hasSecondaryText && "hasSecondaryText"];
     },
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        gap: ${theme.spacing(2)};
+        overflow: hidden;
+        line-height: 0;
+    `,
+);
+
+const TextContainer = createComponentSlot("div")<GridCellTextClassKey>({
+    componentName: "GridCellText",
+    slotName: "textContainer",
 })(css`
     overflow: hidden;
+`);
+
+const IconContainer = createComponentSlot("div")<GridCellTextClassKey>({
+    componentName: "GridCellText",
+    slotName: "iconContainer",
+})(css`
+    flex-shrink: 0;
 `);
 
 const ellipsisStyles = css`

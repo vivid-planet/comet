@@ -18,7 +18,7 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { Add as AddIcon, Edit, StateFilled } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton, useTheme } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
@@ -135,8 +135,19 @@ export function ProductsGrid() {
             headerName: "In Stock",
             flex: 1,
             minWidth: 80,
-            type: "boolean",
             visibleMediaQuery: theme.breakpoints.up("md"),
+            renderCell: (params) => (
+                <GridCellText
+                    icon={<StateFilled color={params.row.inStock ? "success" : "error"} />}
+                    primary={
+                        params.row.inStock ? (
+                            <FormattedMessage id="products.inStock" defaultMessage="In Stock" />
+                        ) : (
+                            <FormattedMessage id="products.outOfStock" defaultMessage="Out of Stock" />
+                        )
+                    }
+                />
+            ),
         },
         {
             field: "status",

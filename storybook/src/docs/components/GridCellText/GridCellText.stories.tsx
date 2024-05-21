@@ -1,4 +1,5 @@
 import { GridCellText } from "@comet/admin";
+import { StateFilled } from "@comet/admin-icons";
 import { faker } from "@faker-js/faker";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { storiesOf } from "@storybook/react";
@@ -11,6 +12,7 @@ storiesOf("stories/components/GridCellText", module).add("GridCellText", () => {
         occupation: faker.name.jobTitle(),
         company: faker.company.name(),
         email: faker.internet.email(),
+        onlineStatus: faker.datatype.boolean(),
     }));
 
     const gridColumns: GridColDef[] = [
@@ -29,6 +31,17 @@ storiesOf("stories/components/GridCellText", module).add("GridCellText", () => {
             field: "email",
             headerName: "Email",
             flex: 1,
+        },
+        {
+            field: "onlineStatus",
+            headerName: "Status",
+            flex: 1,
+            renderCell: ({ row }) => (
+                <GridCellText
+                    icon={<StateFilled color={row.onlineStatus ? "success" : "disabled"} />}
+                    primary={row.onlineStatus ? "Online" : "Offline"}
+                />
+            ),
         },
     ];
 
