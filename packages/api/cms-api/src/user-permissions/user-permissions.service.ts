@@ -66,7 +66,6 @@ export class UserPermissionsService {
             id: idToken.sub,
             name: idToken.name,
             email: idToken.email,
-            language: idToken.locale || idToken.language,
         };
     }
 
