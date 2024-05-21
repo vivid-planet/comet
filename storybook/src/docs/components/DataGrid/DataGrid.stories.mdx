@@ -77,14 +77,14 @@ const rowCount = useBufferedRowCount(data?.products.totalCount);
 ## Responsive column visibility
 
 When using DataGrid Pro/Premium with `usePersistentColumnState`, you can change the columns' visibility depending on the screen size.
-This can be done by setting the `visible` property of the column definition to a media query.
+This can be done by setting the `visibleMediaQuery` property of the column definition to a media query.
 
 When defining the columns, use the `GridColDef` type from `@comet/admin` instead of `@mui/x-data-grid`.
 
 #### Example
 
 In this example, the `First name` and `Last name` columns are combined into a single `Full name` column when the screen size is below 900px.
-Since the `ID` column has no `visible` setting, it will always be shown.
+Since the `ID` column has no `visibleMediaQuery` setting, it will always be shown.
 
 <Canvas>
     <Story id="stories-components-datagrid--responsivecolumns" />
