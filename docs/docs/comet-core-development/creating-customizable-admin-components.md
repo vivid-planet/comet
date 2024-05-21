@@ -1,5 +1,5 @@
 ---
-title: Creating customizable admin components
+title: Creating customizable Admin components
 ---
 
 MUI components support multiple ways of customization.
@@ -34,7 +34,7 @@ export type MyComponentClassKey = "root" | "title";
 
 ## Slots
 
-Each element or sub-component of a Comet Admin component is defined as a slot.
+Each element or subcomponent of a Comet Admin component is defined as a slot.
 
 A slot is created and styled by using `createComponentSlot()` and passing in the HTML element or component you want to be the base of your slot.
 
