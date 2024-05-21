@@ -37,7 +37,7 @@ export const VimeoVideoBlock: React.FunctionComponent<PropsWithData<VimeoVideoBl
     );
 };
 
-export const VideoContainer = styled.div`
+const VideoContainer = styled.div`
     position: relative;
     aspect-ratio: 16 / 9;
     overflow: hidden;
