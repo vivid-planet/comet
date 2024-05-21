@@ -138,7 +138,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             loadingPosition={startIcon ? "start" : "end"}
             loadingIndicator={<ThreeDotSaving />}
             startIcon={startIcon && tooltip}
-            endIcon={endIcon && !startIcon ? tooltip : { endIcon }}
+            endIcon={endIcon && !startIcon ? tooltip : endIcon}
             {...slotProps?.root}
             {...restProps}
         >
