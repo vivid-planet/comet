@@ -94,6 +94,38 @@ describe("filterToMikroOrmQuery", () => {
             $ilike: "%foo",
         });
     });
+    it("string lower than 'a'", async () => {
+        const f = new StringFilter();
+        f.lowerThan = "a";
+
+        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
+            $lt: "a",
+        });
+    });
+    it("string lower than equal 'a'", async () => {
+        const f = new StringFilter();
+        f.lowerThanEqual = "a";
+
+        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
+            $lte: "a",
+        });
+    });
+    it("string greater than 'a'", async () => {
+        const f = new StringFilter();
+        f.greaterThan = "a";
+
+        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
+            $gt: "a",
+        });
+    });
+    it("string lower than equal 'a'", async () => {
+        const f = new StringFilter();
+        f.greaterThanEqual = "a";
+
+        expect(filterToMikroOrmQuery(f, "test")).toStrictEqual({
+            $gte: "a",
+        });
+    });
     it("string starts with and contains", async () => {
         const f = new StringFilter();
         f.endsWith = "foo";

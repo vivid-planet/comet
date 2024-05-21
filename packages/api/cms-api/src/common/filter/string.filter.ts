@@ -27,4 +27,24 @@ export class StringFilter {
     @IsOptional()
     @IsString()
     notEqual?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    lowerThan?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    greaterThan?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    lowerThanEqual?: string;
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsString()
+    greaterThanEqual?: string;
 }

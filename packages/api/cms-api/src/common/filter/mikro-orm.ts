@@ -43,6 +43,18 @@ export function filterToMikroOrmQuery(
         if (filterProperty.notEqual !== undefined) {
             ret.$ne = filterProperty.notEqual;
         }
+        if (filterProperty.lowerThan !== undefined) {
+            ret.$lt = filterProperty.lowerThan;
+        }
+        if (filterProperty.greaterThan !== undefined) {
+            ret.$gt = filterProperty.greaterThan;
+        }
+        if (filterProperty.lowerThanEqual !== undefined) {
+            ret.$lte = filterProperty.lowerThanEqual;
+        }
+        if (filterProperty.greaterThanEqual !== undefined) {
+            ret.$gte = filterProperty.greaterThanEqual;
+        }
     } else if (filterProperty instanceof NumberFilter) {
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;

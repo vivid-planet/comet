@@ -672,6 +672,10 @@ input StringFilter {
   endsWith: String
   equal: String
   notEqual: String
+  lowerThan: String
+  greaterThan: String
+  lowerThanEqual: String
+  greaterThanEqual: String
 }
 
 input UserSort {
