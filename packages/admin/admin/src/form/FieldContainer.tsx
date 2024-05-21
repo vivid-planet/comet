@@ -69,6 +69,8 @@ const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState
     },
 })(
     ({ theme, ownerState }) => css`
+        max-width: 100%;
+
         ${ownerState.fieldMargin !== "never" &&
         css`
             margin-bottom: ${theme.spacing(4)};
