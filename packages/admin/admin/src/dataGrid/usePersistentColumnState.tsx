@@ -23,8 +23,8 @@ const useVisibilityModelFromColumnMediaQueries = (columns: GridColDef[] | undefi
             const visibilityModel: GridColumnVisibilityModel = {};
 
             columns?.forEach((column: GridColDef) => {
-                if (column.visible !== undefined) {
-                    const mediaQuery = column.visible.replace("@media", "").trim();
+                if (column.visibleMediaQuery !== undefined) {
+                    const mediaQuery = column.visibleMediaQuery.replace("@media", "").trim();
                     visibilityModel[column.field] = window.matchMedia(mediaQuery).matches;
                 }
             });
