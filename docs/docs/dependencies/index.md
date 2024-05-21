@@ -57,6 +57,9 @@ You must recreate the block index views after
 -   executing database migrations
 -   executing the fixtures (because they drop the whole database and recreate it)
 
+You can automate this process by following the steps in the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v5-to-v6/#block-index).
+For new projects, it should already be automated.
+
 ### Displaying dependencies in the admin interface
 
 Next, you probably want to display the dependencies or dependents (usages) of an entity in the admin interface.
