@@ -1,5 +1,62 @@
 # @comet/cms-admin
 
+## 6.10.0
+
+### Minor Changes
+
+-   f89af8bb2: Add `disableHideInMenu` option to `createEditPageNode` to hide the "Hide in menu" checkbox
+-   d4a269e1e: Add `filterByFragment` to replace graphql-anywhere's `filter`
+
+    [graphql-anywhere](https://www.npmjs.com/package/graphql-anywhere) is no longer maintained.
+    However, its `filter` utility is useful for filtering data by a GraphQL document, e.g., a fragment.
+    Therefore, the function was copied to `@comet/admin`.
+    To migrate, replace all `filter` calls with `filterByFragment`:
+
+    ```diff
+    - import { filter } from "graphql-anywhere";
+    + import { filterByFragment } from "@comet/admin";
+
+    const initialValues: Partial<FormValues> = data?.product
+        ? {
+    -       ...filter<GQLProductPriceFormFragment>(productPriceFormFragment, data.product),
+    +       ...filterByFragment<GQLProductPriceFormFragment>(productPriceFormFragment, data.product),
+            price: String(data.product.price),
+        }
+        : {};
+    ```
+
+    You can then uninstall the `graphql-anywhere` package:
+
+    ```bash
+    # In admin/
+    npm uninstall graphql-anywhere
+    ```
+
+-   f528bc340: CronJobModule: Show logs for job run
+
+### Patch Changes
+
+-   d340cabc2: DAM: Fix the duplicate name check when updating a file
+
+    Previously, there were two bugs:
+
+    1. In the `EditFile` form, the `folderId` wasn't passed to the mutation
+    2. In `FilesService#updateByEntity`, the duplicate check was always done against the root folder if no `folderId` was passed
+
+    This caused an error when saving a file in any folder if there was another file with the same name in the root folder.
+    And it was theoretically possible to create two files with the same name in one folder (though this was still prevented by admin-side validation).
+
+-   Updated dependencies [a8a098a24]
+-   Updated dependencies [d4a269e1e]
+-   Updated dependencies [52130afba]
+-   Updated dependencies [e938254bf]
+    -   @comet/admin@6.10.0
+    -   @comet/admin-date-time@6.10.0
+    -   @comet/admin-icons@6.10.0
+    -   @comet/admin-rte@6.10.0
+    -   @comet/admin-theme@6.10.0
+    -   @comet/blocks-admin@6.10.0
+
 ## 6.9.0
 
 ### Minor Changes
