@@ -57,8 +57,8 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         disabled,
         startIcon,
         endIcon,
-        tooltipSuccessMessage,
-        tooltipErrorMessage,
+        tooltipSuccessMessage = "Success",
+        tooltipErrorMessage = "Error",
         slotProps,
 
         ...restProps
