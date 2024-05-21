@@ -3,12 +3,17 @@
 import { IsNullable, PartialType } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsNotEmpty, ValidateNested } from "class-validator";
+import { IsNotEmpty, IsString, ValidateNested } from "class-validator";
 
 import { Address, AddressAsEmbeddable } from "../../entities/manufacturer.entity";
 
 @InputType()
 export class ManufacturerInput {
+    @IsNotEmpty()
+    @IsString()
+    @Field()
+    name: string;
+
     @IsNullable()
     @ValidateNested()
     @Type(() => Address)

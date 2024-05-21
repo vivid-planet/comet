@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 
 export const manufacturerFormFragment = gql`
     fragment ManufacturerFormDetails on Manufacturer {
+        name
         address {
             street
             streetNumber

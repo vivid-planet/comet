@@ -30,7 +30,7 @@ export const messages = defineMessages({
     page: { id: "comet.generic.page", defaultMessage: "Page" },
     yes: { id: "comet.generic.yes", defaultMessage: "Yes" },
     no: { id: "comet.generic.no", defaultMessage: "No" },
-    globalContentScope: { id: "comet.generic.globalContentScope", defaultMessage: "Global Content" },
+    globalContentScope: { id: "comet.generic.globalContentScope", defaultMessage: "Global" },
     invalidData: { id: "comet.generic.invalidData", defaultMessage: "Invalid Data" },
     saveConflict: { id: "comet.generic.saveConflict", defaultMessage: "Save Conflict" },
     retry: { id: "comet.generic.retry", defaultMessage: "Retry" },

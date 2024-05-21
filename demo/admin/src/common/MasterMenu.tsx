@@ -1,5 +1,6 @@
 import { Assets, Dashboard as DashboardIcon, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
 import {
+    ContentScopeIndicator,
     createRedirectsPage,
     CronJobsPage,
     DamPage,
@@ -9,6 +10,7 @@ import {
     PublisherPage,
     UserPermissionsPage,
 } from "@comet/cms-admin";
+import { ContentScope } from "@src/common/ContentScopeProvider";
 import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import Dashboard from "@src/dashboard/Dashboard";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
@@ -20,6 +22,7 @@ import { Page } from "@src/pages/Page";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
+import { CreateProductPage as FutureCreateProductPage } from "@src/products/future/CreateProductPage";
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
 import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
 import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
@@ -32,7 +35,6 @@ import { FormattedMessage } from "react-intl";
 import { Redirect, RouteComponentProps } from "react-router-dom";
 
 import { ComponentDemo } from "./ComponentDemo";
-import { ContentScopeIndicator } from "./ContentScopeIndicator";
 import { EditPageNode } from "./EditPageNode";
 
 export const pageTreeDocumentTypes = {
@@ -75,7 +77,7 @@ export const masterMenuData: MasterMenuData = [
                         documentTypes={pageTreeDocumentTypes}
                         editPageNode={EditPageNode}
                         category={category}
-                        renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} variant="toolbar" />}
+                        renderContentScopeIndicator={(scope: ContentScope) => <ContentScopeIndicator scope={scope} />}
                     />
                 );
             },
@@ -101,12 +103,7 @@ export const masterMenuData: MasterMenuData = [
         icon: <Assets />,
         route: {
             path: "/assets",
-            render: () => (
-                <DamPage
-                    renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} domainOnly variant="toolbar" />}
-                    additionalToolbarItems={<ImportFromUnsplash />}
-                />
-            ),
+            render: () => <DamPage additionalToolbarItems={<ImportFromUnsplash />} />,
         },
         requiredPermission: "dam",
     },
@@ -173,6 +170,13 @@ export const masterMenuData: MasterMenuData = [
                 route: {
                     path: "/products-future",
                     component: FutureProductsPage,
+                },
+            },
+            {
+                primary: <FormattedMessage id="menu.createProductFuture" defaultMessage="Create Product Future" />,
+                route: {
+                    path: "/create-product-future",
+                    component: FutureCreateProductPage,
                 },
             },
             {

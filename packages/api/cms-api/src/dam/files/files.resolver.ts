@@ -266,7 +266,7 @@ export function createFilesResolver({
 
         @ResolveField(() => [File])
         async duplicates(@Parent() file: FileInterface): Promise<FileInterface[]> {
-            const files = await this.filesService.findAllByHash(file.contentHash);
+            const files = await this.filesService.findAllByHash(file.contentHash, { scope: file.scope });
             return files.filter((f) => f.id !== file.id);
         }
 
