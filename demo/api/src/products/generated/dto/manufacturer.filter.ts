@@ -11,6 +11,12 @@ export class ManufacturerFilter {
     @ValidateNested()
     @IsOptional()
     @Type(() => StringFilter)
+    name?: StringFilter;
+
+    @Field(() => StringFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => StringFilter)
     addressAsEmbeddable_street?: StringFilter;
 
     @Field(() => NumberFilter, { nullable: true })

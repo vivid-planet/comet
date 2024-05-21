@@ -7,6 +7,7 @@ export const ManufacturersGrid: GridConfig<GQLManufacturer> = {
     fragmentName: "ManufacturersGridFuture", // configurable as it must be unique across project
     columns: [
         { type: "text", name: "id", headerName: "ID" },
+        { type: "text", name: "name", headerName: "Name" },
         { type: "text", name: "address.street", headerName: "Street" },
         { type: "number", name: "address.streetNumber", headerName: "Street number" },
         { type: "text", name: "address.alternativeAddress.street", headerName: "Alt-Street" },

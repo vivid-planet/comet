@@ -193,6 +193,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
                 <EditPageLayout>
                     {saveConflict.dialogs}
                     <MainContent>
+                        <TextField required fullWidth name="name" label={<FormattedMessage id="manufacturer.name" defaultMessage="Name" />} />
                         <FieldSet
                             title={<FormattedMessage id="manufacturer.address" defaultMessage="Address" />}
                             supportText={<FormattedMessage id="manufacturer.address.supportText" defaultMessage="The main address" />}

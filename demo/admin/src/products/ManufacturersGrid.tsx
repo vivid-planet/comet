@@ -80,6 +80,10 @@ export function ManufacturersGrid() {
             ),
         },
         {
+            field: "name",
+            headerName: intl.formatMessage({ id: "manufacturers.name", defaultMessage: "Name" }),
+        },
+        {
             field: "address.street",
             headerName: intl.formatMessage({ id: "manufacturers.street", defaultMessage: "Street" }),
             valueGetter: ({ row }) => `${row.address?.street} ${row.address?.streetNumber}`,
@@ -137,6 +141,7 @@ export function ManufacturersGrid() {
                                     mutation: createManufacturerMutation,
                                     variables: {
                                         input: {
+                                            name: input.name,
                                             address: input.address,
                                             addressAsEmbeddable: input.addressAsEmbeddable,
                                         },
@@ -192,6 +197,7 @@ export function ManufacturersGrid() {
 
 const manufacturersFragment = gql`
     fragment ManufacturersListManual on Manufacturer {
+        name
         address {
             street
             streetNumber
