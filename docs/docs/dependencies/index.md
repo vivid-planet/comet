@@ -1,6 +1,6 @@
 # Block Index / Dependencies
 
-Blocks can contain references to entities.
+Blocks can have references to entities.
 But since block data is stored as JSON, there is no actual database relationship.
 
 If you still need to know which entities a block references or in which blocks an entity is used, you can use COMET's block index.
@@ -11,7 +11,7 @@ If you still need to know which entities a block references or in which blocks a
 
 Follow the upcoming guide if you want to
 
--   make the "Dependents" tab in the DAM work (only non-optional steps) or
+-   make the "Dependents" tab in the DAM work
 -   display the dependencies or dependents of an entity somewhere in your admin app
 
 ### Configuring the block index
@@ -57,7 +57,7 @@ You must recreate the block index views after
 -   executing database migrations
 -   executing the fixtures (because they drop the whole database and recreate it)
 
-You can automate this process by following the steps in the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v5-to-v6/#block-index).
+You can automate this process by following the steps in the [migration guide](../migration/migration-from-v5-to-v6/#block-index).
 For new projects, it should already be automated.
 
 ### Displaying dependencies in the admin interface
@@ -248,10 +248,14 @@ The key must be the name of the GraphQL object type associated with the entity.
 // ...
 ```
 
-#### 4. (Optional) API: Add field resolvers
+Now, the DAM's "Dependents" tab should work.
+If that was your goal, you can stop here.
+Otherwise, continue following the guide.
+
+#### 4. API: Add field resolvers
 
 If you want to query the dependencies or dependents of an entity, use the factories provided by the library.
-**Only do this if it makes sense.**
+**Only do this where it makes sense.**
 
 ```ts
 // news.module.ts
@@ -266,7 +270,7 @@ If you want to query the dependencies or dependents of an entity, use the factor
 export class NewsModule {}
 ```
 
-#### 5. (Optional) Admin: Display dependencies with the `DependencyList` component
+#### 5. Admin: Display dependencies with the `DependencyList` component
 
 You can use the `DependencyList` component provided by `@comet/cms-admin` to display dependencies or dependents.
 The DAM uses this component in its "Dependents" tab.
