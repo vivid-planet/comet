@@ -32,6 +32,7 @@
     },
     "dependencies": {
         "@comet/blocks-api": "workspace:^6.10.0",
+        "@fast-csv/parse": "^4.3.6",
         "@golevelup/nestjs-discovery": "^3.0.0",
         "@hapi/accept": "^5.0.2",
         "@nestjs/jwt": "^9.0.0",
