@@ -6,19 +6,19 @@ import { messages } from "../messages";
 
 interface TranslationDialogProps {
     open: boolean;
-    close: () => void;
+    onClose: () => void;
     originalText: string;
     translatedText: string;
-    applyTranslation: (value: string) => void;
+    onApplyTranslation: (value: string) => void;
 }
 
 export const TranslationDialog: React.FC<TranslationDialogProps> = (props) => {
-    const { open, close, originalText, translatedText, applyTranslation } = props;
+    const { open, onClose, originalText, translatedText, onApplyTranslation } = props;
 
     const [translation, setTranslation] = React.useState<string>(translatedText);
 
     return (
-        <Dialog open={open} onClose={close} fullWidth maxWidth="lg">
+        <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
             <DialogTitle>
                 <FormattedMessage id="comet.translator.translation" defaultMessage="Translation" />
             </DialogTitle>
@@ -33,13 +33,13 @@ export const TranslationDialog: React.FC<TranslationDialogProps> = (props) => {
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Button onClick={close} color="primary">
+                <Button onClick={onClose} color="primary">
                     <FormattedMessage {...messages.cancel} />
                 </Button>
                 <Button
                     onClick={() => {
-                        applyTranslation(translation);
-                        close();
+                        onApplyTranslation(translation);
+                        onClose();
                     }}
                     color="primary"
                     variant="contained"

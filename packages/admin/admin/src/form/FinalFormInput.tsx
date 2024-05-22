@@ -63,10 +63,10 @@ export function FinalFormInput({
             {translation && (
                 <TranslationDialog
                     open={open}
-                    close={() => setOpen(false)}
+                    onClose={() => setOpen(false)}
                     originalText={input.value}
                     translatedText={translation}
-                    applyTranslation={input.onChange}
+                    onApplyTranslation={input.onChange}
                 />
             )}
         </>

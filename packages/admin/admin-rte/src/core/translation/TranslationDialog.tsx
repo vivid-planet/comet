@@ -9,20 +9,20 @@ import RteReadOnly from "../RteReadOnly";
 
 interface TranslationDialogProps {
     open: boolean;
-    close: () => void;
+    onClose: () => void;
     originalText: EditorState;
     translatedText?: EditorState;
-    editTranslation: (newValue: EditorState) => void;
-    applyTranslation: (newValue: EditorState) => void;
+    onEditTranslation: (newValue: EditorState) => void;
+    onApplyTranslation: (newValue: EditorState) => void;
 }
 
 export const TranslationDialog: React.FC<TranslationDialogProps> = (props) => {
-    const { open, close, originalText, translatedText, editTranslation, applyTranslation } = props;
+    const { open, onClose, originalText, translatedText, onEditTranslation, onApplyTranslation } = props;
 
     if (!translatedText) return null;
 
     return (
-        <Dialog open={open} onClose={close} fullWidth maxWidth="lg">
+        <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
             <DialogTitle>
                 <FormattedMessage id="comet.translator.translation" defaultMessage="Translation" />
             </DialogTitle>
@@ -32,18 +32,18 @@ export const TranslationDialog: React.FC<TranslationDialogProps> = (props) => {
                         <RteReadOnly value={originalText} />
                     </Grid>
                     <Grid item xs={1}>
-                        <Rte value={translatedText} onChange={editTranslation} />
+                        <Rte value={translatedText} onChange={onEditTranslation} />
                     </Grid>
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Button onClick={close} color="primary">
+                <Button onClick={onClose} color="primary">
                     <FormattedMessage {...messages.cancel} />
                 </Button>
                 <Button
                     onClick={() => {
-                        applyTranslation(translatedText);
-                        close();
+                        onApplyTranslation(translatedText);
+                        onClose();
                     }}
                     color="primary"
                     variant="contained"

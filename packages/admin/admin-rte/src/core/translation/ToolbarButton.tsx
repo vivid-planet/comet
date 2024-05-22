@@ -45,11 +45,11 @@ function ToolbarButton({ editorState, setEditorState, options }: IControlProps):
             {pendingEditorState && (
                 <TranslationDialog
                     open={pendingEditorState}
-                    close={() => setPendingEditorState(false)}
+                    onClose={() => setPendingEditorState(false)}
                     originalText={editorState}
                     translatedText={translationEditorState}
-                    editTranslation={setTranslationEditorState}
-                    applyTranslation={setEditorState}
+                    onEditTranslation={setTranslationEditorState}
+                    onApplyTranslation={setEditorState}
                 />
             )}
         </>
