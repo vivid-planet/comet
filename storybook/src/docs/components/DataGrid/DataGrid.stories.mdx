@@ -18,12 +18,12 @@ It's up to the application code to pass filterModel, sortModel and page/pageSize
 
 #### Arguments
 
-| Name              | Type   | Description                                                                      |
-| :---------------- | :----- | :------------------------------------------------------------------------------- |
-| pageSize          | number | Number of items per page, defaults to 20.                                        |
-| queryParamsPrefix | string | Prefix used for query parameters, useful when multiple DataGrid are on one page. |
+| Name              | Type                                              | Description                                                                      |
+| :---------------- | :------------------------------------------------ | :------------------------------------------------------------------------------- |
+| pageSize          | number                                            | Number of items per page, defaults to 20.                                        |
+| queryParamsPrefix | string                                            | Prefix used for query parameters, useful when multiple DataGrid are on one page. |
 | initialSort       | Array<{ field: string; sort: GridSortDirection }> | Initial sort columns and directions. Used when no sort query params are present. |
-| initialFilter       | GridFilterModel | Initial grid filter. Used when no filter query params are present. |
+| initialFilter     | GridFilterModel                                   | Initial grid filter. Used when no filter query params are present.               |
 
 #### Example
 
@@ -73,6 +73,19 @@ Small hook that can be used to prevent rowCount from being undefined during the 
 ```
 const rowCount = useBufferedRowCount(data?.products.totalCount);
 ```
+
+## useDataGridExcelExport
+
+Hook for excel export functionality. To use it, the following steps are necessary:
+
+1. get an instance of `exportApi` from the `useDataGridExcelExport()` hook like in the example below
+2. call `exportApi.exportGrid()` to execute the export
+
+Typical Usage Example:
+
+<Canvas>
+    <Story id="stories-components-datagrid--usedatagridexcelexport" />
+</Canvas>
 
 ## Responsive column visibility
 

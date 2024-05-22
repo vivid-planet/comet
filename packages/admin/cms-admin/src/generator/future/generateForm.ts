@@ -207,7 +207,9 @@ export function generateForm(
                 : ""
         }
     
-        const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
+        ${
+            editMode
+                ? `const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
         ? {
             ...filterByFragment<GQL${fragmentName}Fragment>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
             ${numberFields
@@ -235,7 +237,12 @@ export function generateForm(
             ${booleanFields.map((field) => `${String(field.name)}: false,`).join("\n")}
             ${rootBlockFields.map((field) => `${String(field.name)}: rootBlocks.${String(field.name)}.defaultValues(),`).join("\n")}
         }
-    , [data]);
+    , [data]);`
+                : `const initialValues = {
+                ${booleanFields.map((field) => `${String(field.name)}: false,`).join("\n")}
+                ${rootBlockFields.map((field) => `${String(field.name)}: rootBlocks.${String(field.name)}.defaultValues(),`).join("\n")}
+            };`
+        }
     
         ${
             editMode
@@ -297,10 +304,14 @@ export function generateForm(
 
         ${hooksCode}
     
-        if (error) throw error;
-    
-        if (loading) {
-            return <Loading behavior="fillPageHeight" />;
+        ${
+            editMode
+                ? ` if (error) throw error;
+
+                    if (loading) {
+                        return <Loading behavior="fillPageHeight" />;
+                    }`
+                : ``
         }
     
         return (
@@ -314,7 +325,7 @@ export function generateForm(
             >
                 {() => (
                     <EditPageLayout>
-                        {saveConflict.dialogs}
+                        ${editMode ? `{saveConflict.dialogs}` : ``}
                         <MainContent>
                             ${fieldsCode}
                         </MainContent>

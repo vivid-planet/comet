@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     filterByFragment,
+    GridColDef,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -18,7 +19,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@mui/material";
-import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
     GQLCreateManufacturerMutation,
     GQLCreateManufacturerMutationVariables,
@@ -80,6 +81,10 @@ export function ManufacturersGrid() {
             ),
         },
         {
+            field: "name",
+            headerName: intl.formatMessage({ id: "manufacturers.name", defaultMessage: "Name" }),
+        },
+        {
             field: "address.street",
             headerName: intl.formatMessage({ id: "manufacturers.street", defaultMessage: "Street" }),
             valueGetter: ({ row }) => `${row.address?.street} ${row.address?.streetNumber}`,
@@ -137,6 +142,7 @@ export function ManufacturersGrid() {
                                     mutation: createManufacturerMutation,
                                     variables: {
                                         input: {
+                                            name: input.name,
                                             address: input.address,
                                             addressAsEmbeddable: input.addressAsEmbeddable,
                                         },
@@ -192,6 +198,7 @@ export function ManufacturersGrid() {
 
 const manufacturersFragment = gql`
     fragment ManufacturersListManual on Manufacturer {
+        name
         address {
             street
             streetNumber

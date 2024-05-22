@@ -1,6 +1,8 @@
-import { GridColDef as MuiGridColDef, GridValidRowModel } from "@mui/x-data-grid";
-
-export type GridColView = "default" | "compact";
+import {
+    // eslint-disable-next-line no-restricted-imports
+    GridColDef as MuiGridColDef,
+    GridValidRowModel,
+} from "@mui/x-data-grid";
 
 export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> extends MuiGridColDef<R, V, F> {
     /**

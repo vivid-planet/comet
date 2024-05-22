@@ -1,6 +1,6 @@
+import { GridColDef } from "@comet/admin";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
-import { GridColDef } from "@mui/x-data-grid";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
@@ -59,6 +59,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     copyPaste?: boolean;
     readOnly?: boolean;
     filterProp?: boolean;
+    toolbar?: boolean;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

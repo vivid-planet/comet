@@ -87,10 +87,7 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
 
     const handleSubmit = async (formState: FormState, form: FormApi<FormState>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-        const output = {
-            ...formState,
-            products: [], // TODO don't reset on update
-        };
+        const output = { ...formState };
         if (mode === "edit") {
             if (!id) throw new Error();
             await client.mutate<GQLProductCategoryFormUpdateProductCategoryMutation, GQLProductCategoryFormUpdateProductCategoryMutationVariables>({
