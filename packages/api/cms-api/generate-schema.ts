@@ -5,6 +5,7 @@ import { writeFile } from "fs/promises";
 import { printSchema } from "graphql";
 
 import {
+    AzureAITranslatorModule,
     BuildsResolver,
     createAuthResolver,
     createPageTreeResolver,
@@ -77,11 +78,12 @@ async function generateSchema(): Promise<void> {
     const FileDependentsResolver = DependentsResolverFactory.create(File);
 
     const schema = await gqlSchemaFactory.create([
+        AzureAITranslatorModule,
         BuildsResolver,
         BuildTemplatesResolver,
         redirectsResolver,
         createDamItemsResolver({ File, Folder }),
-        createFilesResolver({ File }),
+        createFilesResolver({ File, Folder }),
         FileLicensesResolver,
         FileImagesResolver,
         createFoldersResolver({ Folder }),

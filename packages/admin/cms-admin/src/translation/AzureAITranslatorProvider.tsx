@@ -26,7 +26,7 @@ export const AzureAITranslatorProvider: React.FunctionComponent<AzureAITranslato
                         input: { text, targetLanguage: scope.language },
                     },
                 });
-                return data.translate;
+                return data.azureAiTranslate;
             }}
         >
             {children}
@@ -36,6 +36,6 @@ export const AzureAITranslatorProvider: React.FunctionComponent<AzureAITranslato
 
 const translationQuery = gql`
     query Translate($input: TranslationInput!) {
-        azureAiranslate(input: $input)
+        azureAiTranslate(input: $input)
     }
 `;

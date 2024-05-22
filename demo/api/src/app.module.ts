@@ -1,5 +1,6 @@
 import {
     AccessLogModule,
+    AzureAITranslatorModule,
     BlobStorageModule,
     BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
     BlocksModule,
@@ -160,6 +161,7 @@ export class AppModule {
                 CronJobsModule,
                 ProductsModule,
                 AccessLogModule,
+                ...(config.azureAiTranslator ? [AzureAITranslatorModule.register(config.azureAiTranslator)] : []),
             ],
         };
     }
