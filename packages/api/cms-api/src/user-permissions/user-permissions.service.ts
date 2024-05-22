@@ -3,6 +3,7 @@ import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Inject, Injectable, Optional } from "@nestjs/common";
 import { isFuture, isPast } from "date-fns";
+import { JwtPayload } from "jsonwebtoken";
 import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
 
@@ -56,6 +57,16 @@ export class UserPermissionsService {
                     .sort(),
             ),
         ];
+    }
+
+    async createUserFromIdToken(idToken: JwtPayload): Promise<User> {
+        if (this.userService?.createUserFromIdToken) return this.userService.createUserFromIdToken(idToken);
+        if (!idToken.sub) throw new Error("JwtPayload does not contain sub.");
+        return {
+            id: idToken.sub,
+            name: idToken.name,
+            email: idToken.email,
+        };
     }
 
     async getUser(id: string): Promise<User> {

@@ -36,6 +36,7 @@ import {
 const manufacturersFragment = gql`
     fragment ManufacturersGridFuture on Manufacturer {
         id
+        name
         address {
             street
             streetNumber
@@ -115,6 +116,7 @@ export function ManufacturersGrid(): React.ReactElement {
             flex: 1,
             minWidth: 150,
         },
+        { field: "name", headerName: intl.formatMessage({ id: "manufacturer.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
         {
             field: "address_street",
             headerName: intl.formatMessage({ id: "manufacturer.address.street", defaultMessage: "Street" }),
