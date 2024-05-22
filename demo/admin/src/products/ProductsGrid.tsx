@@ -76,6 +76,7 @@ export function ProductsGrid() {
             minWidth: 200,
             flex: 1,
             visibleMediaQuery: theme.breakpoints.down("md"),
+            sortBy: ["title", "price", "type", "category", "inStock"],
             renderCell: ({ row }) => {
                 const secondaryValues = [
                     typeof row.price === "number" && intl.formatNumber(row.price, { style: "currency", currency: "EUR" }),
@@ -221,9 +222,7 @@ export function ProductsGrid() {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
-            sort: muiGridSortToGql(sortModel, {
-                overview: ["title", "price", "type", "category", "inStock"],
-            }),
+            sort: muiGridSortToGql(sortModel, dataGridProps.apiRef),
         },
     });
     const rows = data?.products.nodes ?? [];

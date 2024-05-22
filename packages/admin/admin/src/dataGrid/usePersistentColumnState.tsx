@@ -43,7 +43,11 @@ const useVisibilityModelFromColumnMediaQueries = (columns: GridColDef[] | undefi
     return visibilityModel;
 };
 
-export function usePersistentColumnState(stateKey: string): Omit<DataGridProps, "rows" | "columns"> {
+type GridProps = Omit<DataGridProps, "rows" | "columns"> & {
+    apiRef: React.MutableRefObject<any>;
+};
+
+export function usePersistentColumnState(stateKey: string): GridProps {
     const apiRef = useGridApiRef();
     const columns = useGridColumns(apiRef);
 
