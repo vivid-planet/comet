@@ -13,7 +13,7 @@ import { TranslationDialog } from "./TranslationDialog";
 function ToolbarButton({ editorState, setEditorState, options }: IControlProps): React.ReactElement {
     const translationContext = useContentTranslationService();
 
-    const [open, setOpen] = React.useState<boolean>(false);
+    const [pendingEditorState, setPendingEditorState] = React.useState<boolean>(false);
     const [translationEditorState, setTranslationEditorState] = React.useState<EditorState | undefined>(undefined);
 
     async function handleClick(event: React.MouseEvent) {
@@ -29,7 +29,7 @@ function ToolbarButton({ editorState, setEditorState, options }: IControlProps):
 
         if (translationContext.showDialog) {
             setTranslationEditorState(translatedEditorState);
-            setOpen(true);
+            setPendingEditorState(true);
         } else {
             setEditorState(translatedEditorState);
         }
@@ -42,10 +42,10 @@ function ToolbarButton({ editorState, setEditorState, options }: IControlProps):
                     <ControlButton icon={Translate} onButtonClick={handleClick} />
                 </span>
             </Tooltip>
-            {translationEditorState && (
+            {pendingEditorState && (
                 <TranslationDialog
-                    open={open}
-                    close={() => setOpen(false)}
+                    open={pendingEditorState}
+                    close={() => setPendingEditorState(false)}
                     originalText={editorState}
                     translatedText={translationEditorState}
                     editTranslation={setTranslationEditorState}

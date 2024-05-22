@@ -11,13 +11,15 @@ interface TranslationDialogProps {
     open: boolean;
     close: () => void;
     originalText: EditorState;
-    translatedText: EditorState;
+    translatedText?: EditorState;
     editTranslation: (newValue: EditorState) => void;
     applyTranslation: (newValue: EditorState) => void;
 }
 
 export const TranslationDialog: React.FC<TranslationDialogProps> = (props) => {
     const { open, close, originalText, translatedText, editTranslation, applyTranslation } = props;
+
+    if (!translatedText) return null;
 
     return (
         <Dialog open={open} onClose={close} fullWidth maxWidth="lg">
