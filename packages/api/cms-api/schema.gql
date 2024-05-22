@@ -12,7 +12,6 @@ type CurrentUser {
   id: String!
   name: String!
   email: String!
-  locale: String!
   permissions: [CurrentUserPermission!]!
 }
 
@@ -177,7 +176,6 @@ type User {
   id: String!
   name: String!
   email: String!
-  locale: String!
 }
 
 type PaginatedUserList {
@@ -356,6 +354,8 @@ type Query {
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
+  kubernetesJob(name: String!): KubernetesJob!
+  kubernetesJobLogs(name: String!): String!
   currentUser: CurrentUser!
   isAllowedSitePreview(scope: JSONObject!): Boolean!
   userPermissionsUserById(id: String!): User!
@@ -478,7 +478,6 @@ input UserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
-  locale: StringFilter
   and: [UserFilter!]
   or: [UserFilter!]
 }
@@ -492,7 +491,6 @@ enum UserSortField {
   name
   email
   status
-  locale
 }
 
 type Mutation {

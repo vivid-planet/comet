@@ -1,6 +1,6 @@
-import { GridCellText } from "@comet/admin";
+import { GridCellText, GridColDef } from "@comet/admin";
 import { faker } from "@faker-js/faker";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 

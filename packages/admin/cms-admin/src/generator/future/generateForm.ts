@@ -135,6 +135,7 @@ export function generateForm(
     const code = `import { useApolloClient, useQuery } from "@apollo/client";
     import {
         Field,
+        filterByFragment,
         FinalForm,
         FinalFormCheckbox,
         FinalFormInput,
@@ -153,7 +154,6 @@ export function generateForm(
     import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
     import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
     import { FormApi } from "final-form";
-    import { filter } from "graphql-anywhere";
     import isEqual from "lodash.isequal";
     import React from "react";
     import { FormattedMessage } from "react-intl";
@@ -207,9 +207,11 @@ export function generateForm(
                 : ""
         }
     
-        const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
+        ${
+            editMode
+                ? `const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
         ? {
-            ...filter<GQL${fragmentName}Fragment>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
+            ...filterByFragment<GQL${fragmentName}Fragment>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
             ${numberFields
                 .map((field) => {
                     let assignment = `String(data.${instanceGqlType}.${String(field.name)})`;
@@ -235,7 +237,12 @@ export function generateForm(
             ${booleanFields.map((field) => `${String(field.name)}: false,`).join("\n")}
             ${rootBlockFields.map((field) => `${String(field.name)}: rootBlocks.${String(field.name)}.defaultValues(),`).join("\n")}
         }
-    , [data]);
+    , [data]);`
+                : `const initialValues = {
+                ${booleanFields.map((field) => `${String(field.name)}: false,`).join("\n")}
+                ${rootBlockFields.map((field) => `${String(field.name)}: rootBlocks.${String(field.name)}.defaultValues(),`).join("\n")}
+            };`
+        }
     
         ${
             editMode
@@ -297,10 +304,14 @@ export function generateForm(
 
         ${hooksCode}
     
-        if (error) throw error;
-    
-        if (loading) {
-            return <Loading behavior="fillPageHeight" />;
+        ${
+            editMode
+                ? ` if (error) throw error;
+
+                    if (loading) {
+                        return <Loading behavior="fillPageHeight" />;
+                    }`
+                : ``
         }
     
         return (
@@ -314,7 +325,7 @@ export function generateForm(
             >
                 {() => (
                     <EditPageLayout>
-                        {saveConflict.dialogs}
+                        ${editMode ? `{saveConflict.dialogs}` : ``}
                         <MainContent>
                             ${fieldsCode}
                         </MainContent>

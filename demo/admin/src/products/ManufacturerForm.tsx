@@ -2,27 +2,18 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
     FieldSet,
+    filterByFragment,
     FinalForm,
     FinalFormInput,
-    FinalFormSaveSplitButton,
     FinalFormSubmitEvent,
     Loading,
     MainContent,
     TextField,
-    Toolbar,
-    ToolbarActions,
-    ToolbarFillSpace,
-    ToolbarItem,
-    ToolbarTitleItem,
     useFormApiRef,
-    useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
-import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { IconButton } from "@mui/material";
 import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -71,7 +62,6 @@ interface FormProps {
 }
 
 export function ManufacturerForm({ id }: FormProps): React.ReactElement {
-    const stackApi = useStackApi();
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -83,7 +73,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
     );
 
     const initialValues = React.useMemo<Partial<FormValues>>(() => {
-        const filteredData = data ? filter<GQLManufacturerFormDetailsFragment>(manufacturerFormFragment, data.manufacturer) : undefined;
+        const filteredData = data ? filterByFragment<GQLManufacturerFormDetailsFragment>(manufacturerFormFragment, data.manufacturer) : undefined;
         if (!filteredData) return {};
         return {
             ...filteredData,
@@ -202,29 +192,8 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
             {() => (
                 <EditPageLayout>
                     {saveConflict.dialogs}
-                    <Toolbar>
-                        <ToolbarItem>
-                            <IconButton onClick={stackApi?.goBack}>
-                                <ArrowLeft />
-                            </IconButton>
-                        </ToolbarItem>
-                        <ToolbarTitleItem>
-                            <Field name="title">
-                                {({ input }) =>
-                                    input.value ? (
-                                        input.value
-                                    ) : (
-                                        <FormattedMessage id="manufacturer.manufacturerDetail" defaultMessage="Manufacturer Detail" />
-                                    )
-                                }
-                            </Field>
-                        </ToolbarTitleItem>
-                        <ToolbarFillSpace />
-                        <ToolbarActions>
-                            <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
-                        </ToolbarActions>
-                    </Toolbar>
                     <MainContent>
+                        <TextField required fullWidth name="name" label={<FormattedMessage id="manufacturer.name" defaultMessage="Name" />} />
                         <FieldSet
                             title={<FormattedMessage id="manufacturer.address" defaultMessage="Address" />}
                             supportText={<FormattedMessage id="manufacturer.address.supportText" defaultMessage="The main address" />}
@@ -327,7 +296,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
                             <Field
                                 required
                                 fullWidth
-                                name="address.zip"
+                                name="addressAsEmbeddable.zip"
                                 component={FinalFormInput}
                                 type="number"
                                 label={<FormattedMessage id="manufacturer.address.zip" defaultMessage="Address Zip" />}
@@ -335,7 +304,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
                             <TextField
                                 required
                                 fullWidth
-                                name="address.country"
+                                name="addressAsEmbeddable.country"
                                 label={<FormattedMessage id="manufacturer.address.country" defaultMessage="Address Country" />}
                             />
                             <TextField

@@ -4,6 +4,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
+    filterByFragment,
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
@@ -28,7 +29,6 @@ import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -73,7 +73,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         () =>
             data?.product
                 ? {
-                      ...filter<GQLProductFormFragment>(productFormFragment, data.product),
+                      ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
                       price: String(data.product.price),
                       image: rootBlocks.image.input2State(data.product.image),
                   }

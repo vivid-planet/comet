@@ -3,8 +3,9 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    filterByFragment,
+    GridColDef,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -19,8 +20,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { filter as filterByFragment } from "graphql-anywhere";
+import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -37,6 +37,7 @@ import {
 const manufacturersFragment = gql`
     fragment ManufacturersGridFuture on Manufacturer {
         id
+        name
         address {
             street
             streetNumber
@@ -116,6 +117,7 @@ export function ManufacturersGrid(): React.ReactElement {
             flex: 1,
             minWidth: 150,
         },
+        { field: "name", headerName: intl.formatMessage({ id: "manufacturer.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
         {
             field: "address_street",
             headerName: intl.formatMessage({ id: "manufacturer.address.street", defaultMessage: "Street" }),
@@ -242,18 +244,16 @@ export function ManufacturersGrid(): React.ReactElement {
     const rows = data?.manufacturers.nodes ?? [];
 
     return (
-        <MainContent fullHeight disablePadding>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                components={{
-                    Toolbar: ManufacturersGridToolbar,
-                }}
-            />
-        </MainContent>
+        <DataGridPro
+            {...dataGridProps}
+            disableSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            components={{
+                Toolbar: ManufacturersGridToolbar,
+            }}
+        />
     );
 }

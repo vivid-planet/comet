@@ -15,6 +15,7 @@ export class ManufacturersService {
         if (options.search) {
             andFilters.push(
                 searchToMikroOrmQuery(options.search, [
+                    "name",
                     "addressAsEmbeddable_street",
                     "addressAsEmbeddable_country",
                     "addressAsEmbeddable_alternativeAddress_street",

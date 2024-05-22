@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     CrudVisibility,
+    filterByFragment,
     GridCellText,
     GridColDef,
     GridFilterButton,
@@ -19,9 +20,8 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, useTheme } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { filter } from "graphql-anywhere";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
@@ -39,6 +39,7 @@ import {
     GQLUpdateProductStatusMutation,
     GQLUpdateProductStatusMutationVariables,
 } from "./ProductsGrid.generated";
+import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
 function ProductsGridToolbar() {
     return (
@@ -66,6 +67,7 @@ export function ProductsGrid() {
     const client = useApolloClient();
     const { data: categoriesData } = useQuery<GQLProductGridCategoriesQuery, GQLProductGridCategoriesQueryVariables>(productCategoriesQuery);
     const intl = useIntl();
+    const theme = useTheme();
 
     const columns: GridColDef<GQLProductsListManualFragment>[] = [
         {
@@ -73,7 +75,7 @@ export function ProductsGrid() {
             headerName: "Overview",
             minWidth: 200,
             flex: 1,
-            showOnlyInView: "compact",
+            visibleMediaQuery: theme.breakpoints.down("md"),
             renderCell: ({ row }) => {
                 const secondaryValues = [
                     typeof row.price === "number" && intl.formatNumber(row.price, { style: "currency", currency: "EUR" }),
@@ -91,7 +93,7 @@ export function ProductsGrid() {
             headerName: "Title",
             minWidth: 150,
             flex: 1,
-            showOnlyInView: "default",
+            visibleMediaQuery: theme.breakpoints.up("md"),
         },
         { field: "description", headerName: "Description", flex: 1, minWidth: 150 },
         {
@@ -100,7 +102,7 @@ export function ProductsGrid() {
             minWidth: 100,
             flex: 1,
             type: "number",
-            showOnlyInView: "default",
+            visibleMediaQuery: theme.breakpoints.up("md"),
             renderCell: ({ row }) => (typeof row.price === "number" ? <FormattedNumber value={row.price} style="currency" currency="EUR" /> : "-"),
         },
         {
@@ -108,7 +110,7 @@ export function ProductsGrid() {
             headerName: "Type",
             width: 100,
             type: "singleSelect",
-            showOnlyInView: "default",
+            visibleMediaQuery: theme.breakpoints.up("md"),
             valueOptions: ["Cap", "Shirt", "Tie"],
         },
         {
@@ -118,7 +120,7 @@ export function ProductsGrid() {
             minWidth: 100,
             renderCell: (params) => <>{params.row.category?.title}</>,
             type: "singleSelect",
-            showOnlyInView: "default",
+            visibleMediaQuery: theme.breakpoints.up("md"),
             valueOptions: categoriesData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
         },
         {
@@ -134,7 +136,7 @@ export function ProductsGrid() {
             flex: 1,
             minWidth: 80,
             type: "boolean",
-            showOnlyInView: "default",
+            visibleMediaQuery: theme.breakpoints.up("md"),
         },
         {
             field: "status",
@@ -166,10 +168,11 @@ export function ProductsGrid() {
             headerName: "",
             sortable: false,
             filterable: false,
-            width: 84,
+            width: 106,
             renderCell: (params) => {
                 return (
                     <>
+                        <ProductsGridPreviewAction product={params.row} />
                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                             <Edit color="primary" />
                         </IconButton>
@@ -204,7 +207,7 @@ export function ProductsGrid() {
                             }}
                             refetchQueries={["ProductsList"]}
                             copyData={() => {
-                                return filter<GQLProductsListManualFragment>(productsFragment, params.row);
+                                return filterByFragment<GQLProductsListManualFragment>(productsFragment, params.row);
                             }}
                         />
                     </>
