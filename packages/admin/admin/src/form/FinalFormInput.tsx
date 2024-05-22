@@ -27,7 +27,7 @@ export function FinalFormInput({
     const { enabled: translationEnabled, showApplyTranslationDialog, translate } = useContentTranslationService();
     const isTranslatable = translationEnabled && !disableContentTranslation && type === "text" && !props.disabled;
 
-    const [open, setOpen] = React.useState<boolean>(false);
+    const [pendingTranslation, setPendingTranslation] = React.useState<boolean>(false);
     const [translation, setTranslation] = React.useState<string | undefined>(undefined);
 
     return (
@@ -46,7 +46,7 @@ export function FinalFormInput({
                                     onClick={async () => {
                                         if (showApplyTranslationDialog) {
                                             setTranslation(await translate(input.value));
-                                            setOpen(true);
+                                            setPendingTranslation(true);
                                         } else {
                                             input.onChange(await translate(input.value));
                                         }
@@ -60,10 +60,10 @@ export function FinalFormInput({
                     </>
                 }
             />
-            {translation && (
+            {pendingTranslation && translation && (
                 <PlainTextTranslationDialog
-                    open={open}
-                    onClose={() => setOpen(false)}
+                    open={pendingTranslation}
+                    onClose={() => setPendingTranslation(false)}
                     originalText={input.value}
                     translatedText={translation}
                     onApplyTranslation={input.onChange}
