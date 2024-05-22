@@ -230,8 +230,6 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
 
 #### 3. Admin: Register the `DependencyInterface` at the `DependenciesConfigProvider`
 
-This allows you to access the `displayName` and `resolvePath` method via the `useDependenciesConfig()` hook.
-
 The key must be the name of the GraphQL object type associated with the entity.
 
 ```tsx
