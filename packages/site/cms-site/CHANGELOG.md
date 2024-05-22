@@ -1,5 +1,15 @@
 # @comet/cms-site
 
+## 6.10.0
+
+### Minor Changes
+
+-   5c1ab80d6: SeoBlock: Change Open Graph image to recommended size and aspect ratio (`1200x630`)
+
+## 6.9.0
+
+## 6.8.0
+
 ## 6.7.0
 
 ## 6.6.2

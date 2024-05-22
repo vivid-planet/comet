@@ -1,5 +1,66 @@
 # @comet/cms-api
 
+## 6.10.0
+
+### Minor Changes
+
+-   536fdb85a: Add `createUserFromIdToken` to `UserService`-interface
+
+    This allows to override the default implementation of creating the User-Object from the JWT when logging in via `createAuthProxyJwtStrategy`
+
+-   f528bc340: CronJobModule: Show logs for job run
+
+### Patch Changes
+
+-   d340cabc2: DAM: Fix the duplicate name check when updating a file
+
+    Previously, there were two bugs:
+
+    1. In the `EditFile` form, the `folderId` wasn't passed to the mutation
+    2. In `FilesService#updateByEntity`, the duplicate check was always done against the root folder if no `folderId` was passed
+
+    This caused an error when saving a file in any folder if there was another file with the same name in the root folder.
+    And it was theoretically possible to create two files with the same name in one folder (though this was still prevented by admin-side validation).
+
+-   584d14d86: Only return duplicates within the same scope in the `FilesResolver#duplicates` field resolver
+
+    As a side effect `FilesService#findAllByHash` now accepts an optional scope parameter.
+
+    -   @comet/blocks-api@6.10.0
+
+## 6.9.0
+
+### Minor Changes
+
+-   94ac6b729: API Generator: Fix generated API for many-to-many-relations with custom relation entity
+
+### Patch Changes
+
+-   Updated dependencies [8be9565d1]
+    -   @comet/blocks-api@6.9.0
+
+## 6.8.0
+
+### Minor Changes
+
+-   d6ca50a52: Enhanced the access log functionality to now skip logging for field resolvers in GraphQL context. This change improves the readability and relevance of our logs by reducing unnecessary entries.
+-   ebdbabc21: Extend `searchToMikroOrmQuery` function to support quoted search strings.
+
+    Quotes searches can be done with single (`'...'`) or double quotation marks (`"..."`).
+
+### Patch Changes
+
+-   35efa037b: API-Generator: Remove unnecessary await for delete mutation
+-   d3a06fcaf: Prevent block-meta.json write in read-only file systems
+-   a696ec7b9: Handle DAM scope correctly in the `findCopiesOfFileInScope` query and the `importDamFileByDownload` mutation
+
+    Previously, these endpoints would cause errors if no DAM scoping was used.
+
+-   Updated dependencies [be8664c75]
+-   Updated dependencies [90c6f192e]
+-   Updated dependencies [90c6f192e]
+    -   @comet/blocks-api@6.8.0
+
 ## 6.7.0
 
 ### Minor Changes

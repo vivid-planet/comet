@@ -15,13 +15,14 @@ import {
     Ref,
     types,
 } from "@mikro-orm/core";
-import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
+import { Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
 import { IsNumber } from "class-validator";
 import { v4 as uuid } from "uuid";
 
 import { ProductCategory } from "./product-category.entity";
 import { ProductStatistics } from "./product-statistics.entity";
 import { ProductTag } from "./product-tag.entity";
+import { ProductToTag } from "./product-to-tag.entity";
 import { ProductType } from "./product-type.enum";
 import { ProductVariant } from "./product-variant.entity";
 
@@ -100,7 +101,7 @@ export class Product extends BaseEntity<Product, "id"> {
     inStock: boolean = true;
 
     @Property({ type: types.decimal, nullable: true })
-    @Field()
+    @Field(() => Int, { nullable: true })
     @CrudField({
         input: false,
     })
@@ -156,6 +157,9 @@ export class Product extends BaseEntity<Product, "id"> {
         input: true, //default is true
     })
     tags = new Collection<ProductTag>(this);
+
+    @OneToMany(() => ProductToTag, (productToTag) => productToTag.product, { orphanRemoval: true })
+    tagsWithStatus = new Collection<ProductToTag>(this);
 
     @Property()
     @Field()
