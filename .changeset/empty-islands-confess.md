@@ -7,7 +7,7 @@ Add the ability to change by which fields a DataGrid column is sorted using `sor
 This can be useful for custom columns that do not represent an actual field in the data, e.g., columns that render the data of multiple fields.
 
 ```tsx
-const columns: GridColDef<GQLProductsListManualFragment>[] = [
+const columns: GridColDef[] = [
     {
         field: "fullName",
         sortBy: ["firstName", "lastName"],
