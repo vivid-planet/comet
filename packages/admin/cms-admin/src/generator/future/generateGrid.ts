@@ -332,7 +332,7 @@ export function generateGrid(
         GQLCreate${gqlType}MutationVariables,
         GQLDelete${gqlType}Mutation,
         GQLDelete${gqlType}MutationVariables
-    } from "./${gqlTypePlural}Grid.generated";
+    } from "./${baseOutputFilename}.generated";
     import * as React from "react";
     import { FormattedMessage, useIntl } from "react-intl";
     ${generateImportsCode(imports)}
