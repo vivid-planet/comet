@@ -522,12 +522,8 @@ type Product {
   type: ProductType!
   price: Float
   inStock: Boolean!
-<<<<<<< HEAD
-  soldCount: Float
-  availableSince: DateTime
-=======
   soldCount: Int
->>>>>>> main
+  availableSince: DateTime
   image: DamImageBlockData!
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
