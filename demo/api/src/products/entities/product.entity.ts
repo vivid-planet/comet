@@ -15,12 +15,8 @@ import {
     Ref,
     types,
 } from "@mikro-orm/core";
-<<<<<<< HEAD
-import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
-=======
-import { Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
->>>>>>> main
 import { IsNumber } from "class-validator";
 import { v4 as uuid } from "uuid";
 
@@ -114,11 +110,7 @@ export class Product extends BaseEntity<Product, "id"> {
     inStock: boolean = true;
 
     @Property({ type: types.decimal, nullable: true })
-<<<<<<< HEAD
-    @Field({ nullable: true })
-=======
     @Field(() => Int, { nullable: true })
->>>>>>> main
     @CrudField({
         input: false,
     })
