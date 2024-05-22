@@ -80,6 +80,7 @@ export interface IRteOptions {
      */
     customBlockMap?: ICustomBlockTypeMap_Deprecated;
     customInlineStyles?: CustomInlineStyles;
+    disableContentTranslation?: boolean;
 }
 
 export type IOptions = Partial<IRteOptions>;

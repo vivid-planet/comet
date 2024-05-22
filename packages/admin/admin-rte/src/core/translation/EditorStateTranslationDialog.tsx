@@ -24,7 +24,7 @@ export const EditorStateTranslationDialog: React.FC<EditorStateTranslationDialog
             translatedText={translatedText}
             onApplyTranslation={onApplyTranslation}
             renderOriginalText={(text) => <RteReadOnly value={text} />}
-            renderTranslatedText={(text, onChange) => <Rte value={text} onChange={onChange} />}
+            renderTranslatedText={(text, onChange) => <Rte value={text} onChange={onChange} options={{ disableContentTranslation: true }} />}
         />
     );
 };
