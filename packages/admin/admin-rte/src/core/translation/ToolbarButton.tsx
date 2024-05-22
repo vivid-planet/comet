@@ -6,9 +6,9 @@ import { FormattedMessage } from "react-intl";
 
 import ControlButton from "../Controls/ControlButton";
 import { IControlProps } from "../types";
+import { EditorStateTranslationDialog } from "./EditorStateTranslationDialog";
 import { htmlToState } from "./htmlToState";
 import { stateToHtml } from "./stateToHtml";
-import { TranslationDialog } from "./TranslationDialog";
 
 function ToolbarButton({ editorState, setEditorState, options }: IControlProps): React.ReactElement {
     const translationContext = useContentTranslationService();
@@ -42,13 +42,12 @@ function ToolbarButton({ editorState, setEditorState, options }: IControlProps):
                     <ControlButton icon={Translate} onButtonClick={handleClick} />
                 </span>
             </Tooltip>
-            {pendingEditorState && (
-                <TranslationDialog
+            {pendingEditorState && translationEditorState && (
+                <EditorStateTranslationDialog
                     open={pendingEditorState}
                     onClose={() => setPendingEditorState(false)}
                     originalText={editorState}
                     translatedText={translationEditorState}
-                    onEditTranslation={setTranslationEditorState}
                     onApplyTranslation={setEditorState}
                 />
             )}

@@ -1,21 +1,22 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, InputBase } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { messages } from "../messages";
 
-interface TranslationDialogProps {
+interface TranslationDialogBaseProps<T> {
     open: boolean;
     onClose: () => void;
-    originalText: string;
-    translatedText: string;
-    onApplyTranslation: (value: string) => void;
+    originalText: T;
+    translatedText: T;
+    onApplyTranslation: (value: T) => void;
+    renderOriginalText: (text: T) => JSX.Element;
+    renderTranslatedText: (text: T, onChange: (value: T) => void) => JSX.Element;
 }
 
-export const TranslationDialog: React.FC<TranslationDialogProps> = (props) => {
-    const { open, onClose, originalText, translatedText, onApplyTranslation } = props;
-
-    const [translation, setTranslation] = React.useState<string>(translatedText);
+export const BaseTranslationDialog = <T,>(props: TranslationDialogBaseProps<T>) => {
+    const { open, onClose, originalText, translatedText, onApplyTranslation, renderOriginalText, renderTranslatedText } = props;
+    const [translation, setTranslation] = React.useState(translatedText);
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
@@ -25,10 +26,10 @@ export const TranslationDialog: React.FC<TranslationDialogProps> = (props) => {
             <DialogContent>
                 <Grid container spacing={4} columns={2} alignItems="center">
                     <Grid item xs={1}>
-                        <InputBase value={originalText} disabled fullWidth />
+                        {renderOriginalText(originalText)}
                     </Grid>
                     <Grid item xs={1}>
-                        <InputBase value={translation} onChange={(event) => setTranslation(event.target.value)} fullWidth />
+                        {renderTranslatedText(translation, setTranslation)}
                     </Grid>
                 </Grid>
             </DialogContent>

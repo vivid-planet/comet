@@ -5,7 +5,7 @@ import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
-import { TranslationDialog } from "../translator/TranslationDialog";
+import { PlainTextTranslationDialog } from "../translator/PlainTextTranslationDialog";
 import { useContentTranslationService } from "../translator/useContentTranslationService";
 
 export type FinalFormInputProps = InputBaseProps &
@@ -61,7 +61,7 @@ export function FinalFormInput({
                 }
             />
             {translation && (
-                <TranslationDialog
+                <PlainTextTranslationDialog
                     open={open}
                     onClose={() => setOpen(false)}
                     originalText={input.value}
