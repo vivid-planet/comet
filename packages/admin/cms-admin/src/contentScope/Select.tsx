@@ -18,8 +18,7 @@ import { ContentScopeInterface } from "./Provider";
 
 export interface ContentScopeSelectProps {
     values: {
-        group: ContentScopeInterface;
-        groupKey: string;
+        group: { key: string; value: ContentScopeInterface };
         values: ContentScopeInterface[];
     }[];
     value: ContentScopeInterface;
@@ -51,8 +50,7 @@ export default function ContentScopeSelect({
     const filterBySearchValue = (
         searchValue: string,
     ): {
-        group: ContentScopeInterface;
-        groupKey: string;
+        group: { key: string; value: ContentScopeInterface };
         values: ContentScopeInterface[];
     }[] => {
         if (!searchValue) return values;
@@ -103,10 +101,10 @@ export default function ContentScopeSelect({
                             autoFocus
                         />
                     )}
-                    {filteredValues.map(({ group, groupKey, values }) => {
+                    {filteredValues.map(({ group: { key, value }, values }) => {
                         return (
-                            <React.Fragment key={group.value}>
-                                {Object.keys(values[0]).length > 1 && <ListSubheader>{capitalizeString(showLabelIfAvailable(group))}</ListSubheader>}
+                            <React.Fragment key={value.value}>
+                                {Object.keys(values[0]).length > 1 && <ListSubheader>{capitalizeString(showLabelIfAvailable(value))}</ListSubheader>}
                                 {values.map((scopeVal, index) => {
                                     return (
                                         <ListItemButton
@@ -124,7 +122,7 @@ export default function ContentScopeSelect({
                                                     <Icon />
                                                 </ListItemIcon>
                                             ) : null}
-                                            <ListItemText primary={joinLabels(scopeVal, groupKey)} />
+                                            <ListItemText primary={joinLabels(scopeVal, key)} />
                                         </ListItemButton>
                                     );
                                 })}

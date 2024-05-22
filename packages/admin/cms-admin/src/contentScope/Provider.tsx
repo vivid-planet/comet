@@ -10,7 +10,7 @@ interface ContentScopeContext {
     path: string;
     redirectPathAfterChange?: string; // define where the user should be redirected to after a scope change
     setRedirectPathAfterChange: React.Dispatch<React.SetStateAction<string | undefined>>;
-    values: Array<ContentScopeValues>;
+    values: ContentScopeValues;
 }
 
 const defaultContentScopeContext: ContentScopeContext = {
@@ -35,12 +35,12 @@ export type UseContentScopeApi<S extends ContentScopeInterface = ContentScopeInt
     match: match;
     setRedirectPathAfterChange: React.Dispatch<React.SetStateAction<string | undefined>>;
     supported: boolean;
-    values: Array<ContentScopeValues>;
+    values: ContentScopeValues;
 };
 
-export type ContentScopeValues<S extends ContentScopeInterface = ContentScopeInterface> = {
+export type ContentScopeValues<S extends ContentScopeInterface = ContentScopeInterface> = Array<{
     [P in keyof S]: { label?: string; value: NonNull<S[P]> };
-};
+}>;
 
 // @TODO (maybe): factory for Provider (and other components) to be able to create a generic context https://ordina-jworks.github.io/architecture/2021/02/12/react-generic-context.html
 // ... and get rid of "as" type-assertions
@@ -66,7 +66,7 @@ function formatScopeToRouterMatchParams<S extends ContentScopeInterface = Conten
     }, {} as NonNullRecord<S>);
 }
 
-function defaultCreatePath(values: Array<ContentScopeInterface>) {
+function defaultCreatePath(values: ContentScopeValues) {
     const scopeKeys: { [key: string]: Set<string> } = {};
     values.forEach((value) => {
         Object.keys(value).forEach((key) => {
@@ -123,10 +123,10 @@ export function useContentScope<S extends ContentScopeInterface = ContentScopeIn
 
 export interface ContentScopeProviderProps<S extends ContentScopeInterface = ContentScopeInterface> {
     defaultValue: S;
-    values: Array<ContentScopeInterface>;
+    values: ContentScopeValues<S>;
     children: (p: { match: match<NonNullRecord<S>> }) => React.ReactNode;
     location?: {
-        createPath: (scope: Array<ContentScopeInterface>) => string;
+        createPath: (scope: ContentScopeValues<S>) => string;
         createUrl: (scope: S) => string;
     };
 }

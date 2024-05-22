@@ -44,8 +44,7 @@ export function ContentScopeControls<S extends ContentScopeInterface = ContentSc
         });
 
         return Object.keys(groupedValues).map((group, index) => ({
-            group: groupedValues[group][0][groupingKey],
-            groupKey: groupingKey,
+            group: { key: groupingKey, value: groupedValues[group][0][groupingKey] },
             values: groupedValues[group],
         }));
     }, [values]);
