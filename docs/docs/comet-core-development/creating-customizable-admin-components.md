@@ -151,7 +151,7 @@ This allows easy customization using its class name in a selector outside the co
 
 In the following example, a component has a conditional `highlighted` state.
 If `true`, the class name `CometAdminMyComponent-highlighted` is added to the `root` slot by returning the `highlighted` class key in `classesResolver`.
-If `false`, `classesResolver` returns an empty array, so no additional class name is added.
+If `false`, the `classesResolver` does not return the class key, so no additional class name is added.
 
 ```tsx
 export type MyComponentClassKey = "root" | "highlighted";
