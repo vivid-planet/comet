@@ -16,11 +16,13 @@ import { useIntl } from "react-intl";
 
 import { ContentScopeInterface } from "./Provider";
 
+type ContentScopeSelectValues = {
+    group: { key: string; value: ContentScopeInterface };
+    values: ContentScopeInterface[];
+}[];
+
 export interface ContentScopeSelectProps {
-    values: {
-        group: { key: string; value: ContentScopeInterface };
-        values: ContentScopeInterface[];
-    }[];
+    values: ContentScopeSelectValues;
     value: ContentScopeInterface;
     onChange: (selectedScope: ContentScopeInterface) => void;
     label: string;
@@ -47,18 +49,13 @@ export default function ContentScopeSelect({
 
     const [searchValue, setSearchValue] = React.useState<string>("");
 
-    const filterBySearchValue = (
-        searchValue: string,
-    ): {
-        group: { key: string; value: ContentScopeInterface };
-        values: ContentScopeInterface[];
-    }[] => {
+    const filterBySearchValue = (searchValue: string): ContentScopeSelectValues => {
         if (!searchValue) return values;
         const valuesWithId = values.map((value, index) => ({ id: index, ...value }));
-        const groupValues = valuesWithId.filter((scopeVal) => scopeVal.group?.value.includes(searchValue.toLowerCase()));
+        const groupValues = valuesWithId.filter((scopeVal) => scopeVal.group?.value.value.includes(searchValue.toLowerCase()));
 
         const valuesWithSearch = valuesWithId
-            .filter((scopeVal) => !scopeVal.group?.value.includes(searchValue.toLowerCase()))
+            .filter((scopeVal) => !scopeVal.group?.value.value.includes(searchValue.toLowerCase()))
             .map((scopeVal) => {
                 return {
                     ...scopeVal,
