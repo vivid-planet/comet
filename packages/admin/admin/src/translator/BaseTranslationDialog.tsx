@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -26,9 +26,15 @@ export const BaseTranslationDialog = <T,>(props: TranslationDialogBaseProps<T>) 
             <DialogContent>
                 <Grid container spacing={4} columns={2} alignItems="center">
                     <Grid item xs={1}>
+                        <Typography variant="h6">
+                            <FormattedMessage id="comet.translator.translation" defaultMessage="Original" />
+                        </Typography>
                         {renderOriginalText(originalText)}
                     </Grid>
                     <Grid item xs={1}>
+                        <Typography variant="h6">
+                            <FormattedMessage id="comet.translator.translation" defaultMessage="Translation" />
+                        </Typography>
                         {renderTranslatedText(translation, setTranslation)}
                     </Grid>
                 </Grid>
