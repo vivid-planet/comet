@@ -5,7 +5,7 @@ import { ContentTranslationServiceContext } from "./ContentTranslationServiceCon
 export const ContentTranslationServiceProvider: React.FunctionComponent<ContentTranslationServiceContext> = ({
     children,
     enabled,
-    showApplyTranslationDialog,
+    showApplyTranslationDialog = true,
     translate,
 }) => {
     return (

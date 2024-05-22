@@ -7,7 +7,7 @@ Add a dialog option to the translation feature
 
 If enabled a dialog will open when pressing the translation button showing the original text and an editable translation
 
-Control if the dialog should be shown for the current scope via the `showApplyTranslationDialog` prop
+Control if the dialog should be shown for the current scope via the `showApplyTranslationDialog` prop (default: true)
 
 ```diff
 <ContentTranslationServiceProvider
