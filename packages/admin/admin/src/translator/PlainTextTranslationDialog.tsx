@@ -1,4 +1,4 @@
-import { InputBase } from "@mui/material";
+import { TextField } from "@mui/material";
 import * as React from "react";
 
 import { BaseTranslationDialog } from "./BaseTranslationDialog";
@@ -21,8 +21,8 @@ export const PlainTextTranslationDialog: React.FC<PlainTextTranslationDialogProp
             originalText={originalText}
             translatedText={translatedText}
             onApplyTranslation={onApplyTranslation}
-            renderOriginalText={(text) => <InputBase value={text} disabled fullWidth />}
-            renderTranslatedText={(text, onChange) => <InputBase value={text} onChange={(event) => onChange(event.target.value)} fullWidth />}
+            renderOriginalText={(text) => <TextField value={text} disabled fullWidth />}
+            renderTranslatedText={(text, onChange) => <TextField value={text} onChange={(event) => onChange(event.target.value)} fullWidth />}
         />
     );
 };
