@@ -1,5 +1,6 @@
 import * as csv from "@fast-csv/parse";
 import { EntityManager, EntityRepository, MikroORM, UseRequestContext } from "@mikro-orm/core";
+import type { FilterQuery } from "@mikro-orm/core/typings";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import * as console from "console";
@@ -12,6 +13,14 @@ import { REDIRECTS_LINK_BLOCK } from "./redirects.constants";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects.enum";
 import { RedirectsLinkBlock } from "./redirects.module";
 import { RedirectScopeInterface } from "./types";
+
+interface Row {
+    target: string;
+    target_type: string;
+    source: string;
+    comment?: string;
+    scope?: RedirectScopeInterface;
+}
 
 @Injectable()
 @Console()
@@ -36,7 +45,12 @@ export class ImportRedirectsConsole {
 
         for (const row of rows) {
             const node = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeByPath(row["target"]);
-            const existingRedirect = await this.repository.findOne({ source: row.source, scope: row["scope"] });
+
+            const where: FilterQuery<RedirectInterface> = { source: row.source };
+            if (row["scope"]) {
+                where["scope"] = row["scope"];
+            }
+            const existingRedirect = await this.repository.findOne(where);
 
             if (row["target_type"] === "internal" && node) {
                 if (existingRedirect) {
@@ -54,7 +68,7 @@ export class ImportRedirectsConsole {
                                 activeType: "internal",
                             })
                             .transformToBlockData(),
-                        comment,
+                        comment: row["comment"] ?? comment,
                     });
 
                     successes++;
@@ -76,7 +90,7 @@ export class ImportRedirectsConsole {
                             })
                             .transformToBlockData(),
                         generationType: RedirectGenerationType.manual,
-                        comment,
+                        comment: row["comment"] ?? comment,
                         scope: row["scope"],
                     });
 
@@ -101,7 +115,7 @@ export class ImportRedirectsConsole {
                                 activeType: "external",
                             })
                             .transformToBlockData(),
-                        comment,
+                        comment: row["comment"] ?? comment,
                     });
 
                     successes++;
@@ -124,7 +138,7 @@ export class ImportRedirectsConsole {
                             })
                             .transformToBlockData(),
                         generationType: RedirectGenerationType.manual,
-                        comment,
+                        comment: row["comment"] ?? comment,
                         scope: row["scope"],
                     });
 
@@ -142,24 +156,8 @@ export class ImportRedirectsConsole {
         console.log(`Error: ${errors}`);
     }
 
-    readRedirectsCsv = async (
-        filePath: string,
-    ): Promise<
-        Array<{
-            target: string;
-            target_type: string;
-            source: string;
-            comment: string;
-            scope: RedirectScopeInterface;
-        }>
-    > => {
-        const imports: Array<{
-            target: string;
-            target_type: string;
-            source: string;
-            comment: string;
-            scope: RedirectScopeInterface;
-        }> = [];
+    readRedirectsCsv = async (filePath: string): Promise<Row[]> => {
+        const imports: Row[] = [];
         return new Promise((resolve, reject) => {
             fs.createReadStream(filePath)
                 .pipe(csv.parse({ headers: true, delimiter: ";" }))
@@ -167,7 +165,7 @@ export class ImportRedirectsConsole {
                     console.error(error);
                     reject(error);
                 })
-                .on("data", (row) => {
+                .on("data", (row: Row & Record<string, string>) => {
                     const scope: RedirectScopeInterface = {};
                     Object.keys(row).forEach((key) => {
                         if (key.startsWith("scope_")) {
@@ -177,7 +175,7 @@ export class ImportRedirectsConsole {
                         }
                     });
 
-                    row["scope"] = scope;
+                    row["scope"] = Object.keys(scope).length > 0 ? scope : undefined;
 
                     imports.push(row);
                 })
