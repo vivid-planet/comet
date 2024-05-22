@@ -24,7 +24,7 @@ export function FinalFormInput({
     ...props
 }: FinalFormInputProps): React.ReactElement {
     const type = props.type ?? input.type ?? "text";
-    const { enabled: translationEnabled, showDialog, translate } = useContentTranslationService();
+    const { enabled: translationEnabled, showApplyTranslationDialog, translate } = useContentTranslationService();
     const isTranslatable = translationEnabled && !disableContentTranslation && type === "text" && !props.disabled;
 
     const [open, setOpen] = React.useState<boolean>(false);
@@ -44,7 +44,7 @@ export function FinalFormInput({
                             <Tooltip title={<FormattedMessage id="comet.translate" defaultMessage="Translate" />}>
                                 <IconButton
                                     onClick={async () => {
-                                        if (showDialog) {
+                                        if (showApplyTranslationDialog) {
                                             setTranslation(await translate(input.value));
                                             setOpen(true);
                                         } else {

@@ -27,7 +27,7 @@ function ToolbarButton({ editorState, setEditorState, options }: IControlProps):
 
         const translatedEditorState = htmlToState({ html: translation, entities });
 
-        if (translationContext.showDialog) {
+        if (translationContext.showApplyTranslationDialog) {
             setTranslationEditorState(translatedEditorState);
             setPendingEditorState(true);
         } else {
