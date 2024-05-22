@@ -33,6 +33,9 @@ export const TranslationDialog: React.FC<TranslationDialogProps> = (props) => {
                 </Grid>
             </DialogContent>
             <DialogActions>
+                <Button onClick={close} color="primary">
+                    <FormattedMessage {...messages.cancel} />
+                </Button>
                 <Button
                     onClick={() => {
                         applyTranslation(translation);
@@ -42,9 +45,6 @@ export const TranslationDialog: React.FC<TranslationDialogProps> = (props) => {
                     variant="contained"
                 >
                     <FormattedMessage {...messages.apply} />
-                </Button>
-                <Button onClick={close} color="primary">
-                    <FormattedMessage {...messages.cancel} />
                 </Button>
             </DialogActions>
         </Dialog>
