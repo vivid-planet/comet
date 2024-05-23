@@ -448,7 +448,7 @@ type Manufacturer {
 }
 
 type ManufacturerCountry {
-  country: String!
+  id: String!
   used: Float!
 }
 
@@ -768,6 +768,7 @@ type Query {
   productVariants(offset: Int! = 0, limit: Int! = 25, product: ID!, search: String, filter: ProductVariantFilter, sort: [ProductVariantSort!]): PaginatedProductVariants!
   manufacturer(id: ID!): Manufacturer!
   manufacturers(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerFilter, sort: [ManufacturerSort!]): PaginatedManufacturers!
+  manufacturerCountry(id: ID!): ManufacturerCountry!
   manufacturerCountries(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerCountryFilter): PaginatedManufacturerCountries!
 }
 
@@ -1082,7 +1083,7 @@ enum ManufacturerSortField {
 }
 
 input ManufacturerCountryFilter {
-  country: StringFilter
+  id: StringFilter
   used: NumberFilter
   and: [ManufacturerCountryFilter!]
   or: [ManufacturerCountryFilter!]

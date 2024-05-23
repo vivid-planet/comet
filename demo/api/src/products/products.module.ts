@@ -3,9 +3,9 @@ import { Module } from "@nestjs/common";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { ManufacturerCountry } from "@src/products/entities/manufacturer-country.entity";
 import { ManufacturerResolver } from "@src/products/generated/manufacturer.resolver";
+import { ManufacturerCountriesService } from "@src/products/generated/manufacturer-countries.service";
+import { ManufacturerCountryResolver } from "@src/products/generated/manufacturer-country.resolver";
 import { ManufacturersService } from "@src/products/generated/manufacturers.service";
-import { ManufacturerCountriesService } from "@src/products/manufacturer-countries.service";
-import { ManufacturerCountryResolver } from "@src/products/manufacturer-country.resolver";
 
 import { Product } from "./entities/product.entity";
 import { ProductCategory } from "./entities/product-category.entity";
