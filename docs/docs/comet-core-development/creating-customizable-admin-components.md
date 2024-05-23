@@ -95,6 +95,9 @@ export function MyComponent(inProps: MyComponentProps) {
 To allow overriding the props of each slot, the `slotProps` object should be spread into each slot.
 Additionally, the `sx` and `className` props should be passed into the root slot, for example with `...restProps`.
 
+`slotProps` and `restProps` should typically be spread after other props to allow overriding of the slot's hardcoded props.
+Exceptions would be for props that should never be overridden.
+
 ```tsx
 export function MyComponent(inProps: MyComponentProps) {
     const { slotProps, ...restProps } = useThemeProps({
