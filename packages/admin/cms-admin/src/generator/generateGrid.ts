@@ -205,6 +205,7 @@ export async function writeCrudGrid(
     import {
         CrudContextMenu,
         DataGridToolbar,
+        GridColDef,
         GridFilterButton,
         MainContent,
         muiGridFilterToGql,
@@ -220,7 +221,7 @@ export async function writeCrudGrid(
     import { Add as AddIcon, Edit } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton } from "@mui/material";
-    import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${classNamePlural}GridQuery,

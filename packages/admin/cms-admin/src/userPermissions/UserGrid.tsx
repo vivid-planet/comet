@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     DataGridToolbar,
+    GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -12,7 +13,7 @@ import {
 import { Edit } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import React from "react";
 import { useIntl } from "react-intl";
 
