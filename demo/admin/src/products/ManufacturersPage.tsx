@@ -22,7 +22,7 @@ export function ManufacturersPage(): React.ReactElement {
         <Stack topLevelTitle={intl.formatMessage({ id: "products.manufacturers", defaultMessage: "Manufacturers" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />} hideBottomBar />
+                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
                     <ManufacturersGrid />
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editManufacturers", defaultMessage: "Edit Manufacturers" })}>

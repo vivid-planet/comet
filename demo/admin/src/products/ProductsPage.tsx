@@ -30,7 +30,7 @@ const ProductsPage: React.FC = () => {
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
             <StackSwitch initialPage="grid">
                 <StackPage name="grid">
-                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />} hideBottomBar />
+                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
                     <ProductsGrid />
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit product" })}>

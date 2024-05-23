@@ -28,7 +28,7 @@ export function ProductsPage(): React.ReactElement {
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />} hideBottomBar />
+                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
                     <MainContent fullHeight>
                         <ProductsGrid />
                     </MainContent>
@@ -66,7 +66,7 @@ export function ProductsPage(): React.ReactElement {
                 <StackPage name="variants" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Product variants" })}>
                     {(selectedId) => (
                         <>
-                            <StackToolbar scopeIndicator={<ContentScopeIndicator global />} hideBottomBar />
+                            <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
                             <MainContent fullHeight disablePadding>
                                 <ProductVariantsGrid product={selectedId} />
                             </MainContent>

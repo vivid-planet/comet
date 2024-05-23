@@ -32,7 +32,7 @@ export async function writeCrudPage({ entityName, target: targetDirectory }: Cru
     )}" })}>
                     <StackSwitch>
                         <StackPage name="grid">
-                            <Toolbar scopeIndicator={<ContentScopeIndicator ${!hasScope ? "global" : ""} />} hideBottomBar />
+                            <Toolbar scopeIndicator={<ContentScopeIndicator ${!hasScope ? "global" : ""} />} />
                             <${classNamePlural}Grid />
                         </StackPage>
                         <StackPage name="edit" title={intl.formatMessage({ id: "${instanceNamePlural}.edit${classNameSingular}", defaultMessage: "Edit ${camelCaseToHumanReadable(

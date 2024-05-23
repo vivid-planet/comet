@@ -15,7 +15,7 @@ export function ProductsPage(): React.ReactElement {
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <Toolbar scopeIndicator={<ContentScopeIndicator global />} hideBottomBar />
+                    <Toolbar scopeIndicator={<ContentScopeIndicator global />} />
                     <ProductsGrid />
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>

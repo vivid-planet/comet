@@ -15,7 +15,7 @@ export function NewsPage(): React.ReactElement {
         <Stack topLevelTitle={intl.formatMessage({ id: "news.news", defaultMessage: "News" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <Toolbar scopeIndicator={<ContentScopeIndicator />} hideBottomBar />
+                    <Toolbar scopeIndicator={<ContentScopeIndicator />} />
                     <NewsGrid />
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "news.editNews", defaultMessage: "Edit News" })}>
