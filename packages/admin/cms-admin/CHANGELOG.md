@@ -1,5 +1,21 @@
 # @comet/cms-admin
 
+## 5.8.4
+
+### Patch Changes
+
+-   d7ee70834: Fix link target validation in `ExternalLinkBlock`
+
+    Previously, two different validation checks were used.
+    This resulted in an error when saving an invalid link target but no error message was shown.
+
+    -   @comet/admin@5.8.4
+    -   @comet/admin-date-time@5.8.4
+    -   @comet/admin-icons@5.8.4
+    -   @comet/admin-rte@5.8.4
+    -   @comet/admin-theme@5.8.4
+    -   @comet/blocks-admin@5.8.4
+
 ## 5.8.3
 
 ### Patch Changes
