@@ -57,7 +57,7 @@ const manufacturersFragment = gql`
 `;
 
 const manufacturersQuery = gql`
-    query ManufacturersGrid($offset: Int, $limit: Int, $sort: [ManufacturerSort!], $search: String, $filter: ManufacturerFilter) {
+    query ManufacturersGrid($offset: Int!, $limit: Int!, $sort: [ManufacturerSort!], $search: String, $filter: ManufacturerFilter) {
         manufacturers(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
             nodes {
                 ...ManufacturersGridFuture

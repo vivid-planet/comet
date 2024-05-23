@@ -45,8 +45,8 @@ const productVariantsFragment = gql`
 const productVariantsQuery = gql`
     query ProductVariantsGrid(
         $product: ID!
-        $offset: Int
-        $limit: Int
+        $offset: Int!
+        $limit: Int!
         $sort: [ProductVariantSort!]
         $search: String
         $filter: ProductVariantFilter
