@@ -1,4 +1,4 @@
-import { Stack, StackPage, StackSwitch } from "@comet/admin";
+import { MainContent, Stack, StackPage, StackSwitch, Toolbar } from "@comet/admin";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
@@ -11,7 +11,10 @@ export function ProductsWithLowPricePage(): React.ReactElement {
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <ProductsGrid filter={{ price: { lowerThan: 10 } }} />
+                    <Toolbar />
+                    <MainContent fullHeight>
+                        <ProductsGrid filter={{ price: { lowerThan: 10 } }} />
+                    </MainContent>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>
                     {(selectedId) => <ProductForm id={selectedId} />}
