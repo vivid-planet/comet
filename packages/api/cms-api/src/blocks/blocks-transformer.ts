@@ -30,7 +30,9 @@ export async function transformToPlain(block: BlockDataInterface, blockContext: 
                         if (moduleRef.introspect(transformResponse).scope === Scope.DEFAULT) {
                             service = moduleRef.get(transformResponse, { strict: false });
                         } else {
-                            service = await moduleRef.resolve(transformResponse, ContextIdFactory.getByRequest(context), { strict: false });
+                            const contextId = ContextIdFactory.create();
+                            moduleRef.registerRequestByContextId(context, contextId);
+                            service = await moduleRef.resolve(transformResponse, contextId, { strict: false });
                         }
 
                         entries = Object.entries(await service.transformToPlain(json, blockContext));
