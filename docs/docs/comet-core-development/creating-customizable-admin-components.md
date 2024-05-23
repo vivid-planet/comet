@@ -8,7 +8,7 @@ You can also use the theme to override those components' default props.
 
 All Comet Admin components should also support these features.
 
-Those features should be useable as described in [Customization and Styling](/docs/admin-components/customization-and-styling).
+Those features should be usable as described in [Customization and Styling](/docs/admin-components/customization-and-styling).
 
 ## Basics
 
