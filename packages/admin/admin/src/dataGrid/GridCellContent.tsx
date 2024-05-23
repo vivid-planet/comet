@@ -4,9 +4,9 @@ import React from "react";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export type GridCellTextClassKey = "root" | "hasSecondaryText" | "iconContainer" | "textContainer" | "primaryText" | "secondaryText";
+export type GridCellContentClassKey = "root" | "hasSecondaryText" | "iconContainer" | "textContainer" | "primaryText" | "secondaryText";
 
-export interface GridCellTextProps
+export interface GridCellContentProps
     extends ThemedComponentBaseProps<{
         root: "div";
         textContainer: "div";
@@ -14,8 +14,8 @@ export interface GridCellTextProps
         primaryText: typeof Typography;
         secondaryText: typeof Typography;
     }> {
-    primary?: React.ReactNode;
-    secondary?: React.ReactNode;
+    primaryText?: React.ReactNode;
+    secondaryText?: React.ReactNode;
     children?: React.ReactNode;
     icon?: React.ReactNode;
 }
@@ -24,14 +24,14 @@ type OwnerState = {
     hasSecondaryText: boolean;
 };
 
-export const GridCellText = (inProps: GridCellTextProps) => {
-    const { children, primary, secondary, slotProps, icon, ...restProps } = useThemeProps({
+export const GridCellContent = (inProps: GridCellContentProps) => {
+    const { children, primaryText, secondaryText, slotProps, icon, ...restProps } = useThemeProps({
         props: inProps,
-        name: "CometAdminGridCellText",
+        name: "CometAdminGridCellContent",
     });
 
     const ownerState: OwnerState = {
-        hasSecondaryText: Boolean(secondary),
+        hasSecondaryText: Boolean(secondaryText),
     };
 
     return (
@@ -39,16 +39,16 @@ export const GridCellText = (inProps: GridCellTextProps) => {
             {icon && <IconContainer {...slotProps?.iconContainer}>{icon}</IconContainer>}
             <TextContainer>
                 <PrimaryText ownerState={ownerState} {...slotProps?.primaryText}>
-                    {primary ? primary : children}
+                    {primaryText ? primaryText : children}
                 </PrimaryText>
-                {ownerState.hasSecondaryText && <SecondaryText {...slotProps?.secondaryText}>{secondary}</SecondaryText>}
+                {ownerState.hasSecondaryText && <SecondaryText {...slotProps?.secondaryText}>{secondaryText}</SecondaryText>}
             </TextContainer>
         </Root>
     );
 };
 
-const Root = createComponentSlot("div")<GridCellTextClassKey, OwnerState>({
-    componentName: "GridCellText",
+const Root = createComponentSlot("div")<GridCellContentClassKey, OwnerState>({
+    componentName: "GridCellContent",
     slotName: "root",
     classesResolver(ownerState) {
         return [ownerState.hasSecondaryText && "hasSecondaryText"];
@@ -63,15 +63,15 @@ const Root = createComponentSlot("div")<GridCellTextClassKey, OwnerState>({
     `,
 );
 
-const TextContainer = createComponentSlot("div")<GridCellTextClassKey>({
-    componentName: "GridCellText",
+const TextContainer = createComponentSlot("div")<GridCellContentClassKey>({
+    componentName: "GridCellContent",
     slotName: "textContainer",
 })(css`
     overflow: hidden;
 `);
 
-const IconContainer = createComponentSlot("div")<GridCellTextClassKey>({
-    componentName: "GridCellText",
+const IconContainer = createComponentSlot("div")<GridCellContentClassKey>({
+    componentName: "GridCellContent",
     slotName: "iconContainer",
 })(css`
     flex-shrink: 0;
@@ -83,8 +83,8 @@ const ellipsisStyles = css`
     white-space: nowrap;
 `;
 
-const PrimaryText = createComponentSlot(Typography)<GridCellTextClassKey, OwnerState>({
-    componentName: "GridCellText",
+const PrimaryText = createComponentSlot(Typography)<GridCellContentClassKey, OwnerState>({
+    componentName: "GridCellContent",
     slotName: "primaryText",
 })(
     ({ theme, ownerState }) => css`
@@ -101,8 +101,8 @@ const PrimaryText = createComponentSlot(Typography)<GridCellTextClassKey, OwnerS
     `,
 );
 
-const SecondaryText = createComponentSlot(Typography)<GridCellTextClassKey>({
-    componentName: "GridCellText",
+const SecondaryText = createComponentSlot(Typography)<GridCellContentClassKey>({
+    componentName: "GridCellContent",
     slotName: "secondaryText",
 })(
     ({ theme }) => css`
@@ -120,17 +120,17 @@ const SecondaryText = createComponentSlot(Typography)<GridCellTextClassKey>({
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminGridCellText: GridCellTextProps;
+        CometAdminGridCellContent: GridCellContentProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminGridCellText: GridCellTextClassKey;
+        CometAdminGridCellContent: GridCellContentClassKey;
     }
 
     interface Components {
-        CometAdminGridCellText?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminGridCellText"]>;
-            styleOverrides?: ComponentsOverrides<Theme>["CometAdminGridCellText"];
+        CometAdminGridCellContent?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminGridCellContent"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminGridCellContent"];
         };
     }
 }

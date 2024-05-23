@@ -3,7 +3,7 @@ import {
     CrudContextMenu,
     CrudVisibility,
     filterByFragment,
-    GridCellText,
+    GridCellContent,
     GridColDef,
     GridFilterButton,
     MainContent,
@@ -86,7 +86,7 @@ export function ProductsGrid() {
                         ? intl.formatMessage({ id: "comet.products.product.inStock", defaultMessage: "In Stock" })
                         : intl.formatMessage({ id: "comet.products.product.outOfStock", defaultMessage: "Out of Stock" }),
                 ];
-                return <GridCellText primary={row.title} secondary={secondaryValues.filter(Boolean).join(" • ")} />;
+                return <GridCellContent primaryText={row.title} secondaryText={secondaryValues.filter(Boolean).join(" • ")} />;
             },
         },
         {
@@ -138,9 +138,9 @@ export function ProductsGrid() {
             minWidth: 80,
             visibleMediaQuery: theme.breakpoints.up("md"),
             renderCell: (params) => (
-                <GridCellText
+                <GridCellContent
                     icon={<StateFilled color={params.row.inStock ? "success" : "error"} />}
-                    primary={
+                    primaryText={
                         params.row.inStock ? (
                             <FormattedMessage id="products.inStock" defaultMessage="In Stock" />
                         ) : (

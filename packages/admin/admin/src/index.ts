@@ -43,7 +43,7 @@ export { ContentOverflow, ContentOverflowClassKey, ContentOverflowProps } from "
 export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
 export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDataGridExcelExport";
-export { GridCellText, GridCellTextClassKey, GridCellTextProps } from "./dataGrid/GridCellText";
+export { GridCellContent, GridCellContentClassKey, GridCellContentProps } from "./dataGrid/GridCellContent";
 export { GridColDef } from "./dataGrid/GridColDef";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
