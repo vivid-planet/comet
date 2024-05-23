@@ -160,7 +160,7 @@ export function generateGrid(
         props.push(...filterPropProps);
     }
 
-    const toolbar = config.toolbar ?? { hideTopBar: false, automaticTitleItem: true };
+    const toolbar = config.toolbar ?? true;
 
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
 
@@ -413,8 +413,7 @@ export function generateGrid(
         toolbar
             ? `function ${gqlTypePlural}GridToolbar() {
         return (
-            <Toolbar ${toolbar.hideTopBar ? `hideTopBar` : ``}>
-                ${toolbar.automaticTitleItem ? `<ToolbarAutomaticTitleItem />` : ``}
+            <Toolbar hideTopBar>
                 ${
                     hasSearch
                         ? `<ToolbarItem>
