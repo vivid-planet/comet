@@ -108,7 +108,6 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
             {() => (
                 <EditPageLayout>
                     {saveConflict.dialogs}
-
                     <MainContent>
                         <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
                         <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
