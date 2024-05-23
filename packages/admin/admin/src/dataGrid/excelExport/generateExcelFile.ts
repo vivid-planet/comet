@@ -1,6 +1,7 @@
-import { GridColDef, GridValidRowModel } from "@mui/x-data-grid";
+import { GridValidRowModel } from "@mui/x-data-grid";
 import * as Excel from "exceljs";
 
+import { GridColDef } from "../GridColDef";
 import { applyDefaultStyling } from "./applyDefaultStyling";
 
 export interface ExcelGenerationOptions {
