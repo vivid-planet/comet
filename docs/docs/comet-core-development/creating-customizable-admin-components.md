@@ -8,7 +8,7 @@ You can also use the theme to override those components' default props.
 
 All Comet Admin components should also support these features.
 
-For examples of how those features should be able to be used, see the [Customization and Styling](/docs/admin-components/customization-and-styling).
+Those features should be useable as described in [Customization and Styling](/docs/admin-components/customization-and-styling).
 
 ## Basics
 
@@ -24,7 +24,7 @@ export { MyComponent, MyComponentProps, MyComponentClassKey } from "./src/MyComp
 
 ## Class keys
 
-A components `ClassKey` type defines all the individual elements (or slots) of a component or a modifier/alternative style of a component.
+A component's `ClassKey` type defines all the individual elements (or slots) of a component and all modifiers/alternative styles of a component.
 
 The outermost slot of a component is generally called `root`.
 
@@ -36,7 +36,7 @@ export type MyComponentClassKey = "root" | "title";
 
 Each element or subcomponent of a Comet Admin component is defined as a slot.
 
-A slot is created and styled by using `createComponentSlot()` and passing in the HTML element or component you want to be the base of your slot.
+A slot is created and styled by using `createComponentSlot()` and passing in the HTML element or component you want to base your slot on.
 
 Additionally, the component's name must be passed in, as well as the slot's name, as defined in the class key type.
 
@@ -77,7 +77,7 @@ export interface MyComponentProps
 ## Using props
 
 Props should not be used directly but through the `useThemeProps` hook instead.
-This ensures that the components `defaultProps` from the theme are merged with the passed-in props.
+This ensures that the component's `defaultProps` from the theme are merged with the passed-in props.
 
 Note that the name passed to the `useThemeProps` hook must be the same as the component's name, prefixed with `CometAdmin`.
 
@@ -111,7 +111,7 @@ export function MyComponent(inProps: MyComponentProps) {
 
 ## Owner state
 
-The `ownerState` is an object that includes all values that should impact the component's styling.
+The `ownerState` is an object that includes all values that can impact the component's styling.
 It is passed into every slot that requires any of these values for its styling.
 
 ```tsx
@@ -141,13 +141,13 @@ export function MyComponent(inProps: MyComponentProps) {
 }
 ```
 
-## A slots `classesResolver`
+## A slot's `classesResolver`
 
-By default, a slots class name consists of the component and slot names, prefixed with `CometAdmin`.
+By default, a slot's class name consists of the component and slot names, prefixed with `CometAdmin`.
 For example, the `root` slot of `MyComponent` would have the class name `CometAdminMyComponent-root`, while the `title` slot would have the class name `CometAdminMyComponent-title`.
 
 Additional class names can be added to a slot by returning an array of class keys in `classesResolver()`.
-This allows easy customization using its class name in a selector outside the component.
+This allows easy customization using the resulting class name in a selector outside the component.
 
 In the following example, a component has a conditional `highlighted` state.
 If `true`, the class name `CometAdminMyComponent-highlighted` is added to the `root` slot by returning the `highlighted` class key in `classesResolver`.
