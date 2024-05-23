@@ -31,6 +31,7 @@ export type FormConfig<T extends { __typename?: string }> = {
     gqlType: T["__typename"];
     mode?: "edit" | "add" | "all";
     fragmentName?: string;
+    createMutation?: string;
     fields: FormFieldConfig<T>[];
 };
 
