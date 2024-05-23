@@ -76,7 +76,7 @@ export function ProductsGrid() {
             minWidth: 200,
             flex: 1,
             sortable: false,
-            visibleMediaQuery: theme.breakpoints.down("md"),
+            visible: theme.breakpoints.down("md"),
             renderCell: ({ row }) => {
                 const secondaryValues = [
                     typeof row.price === "number" && intl.formatNumber(row.price, { style: "currency", currency: "EUR" }),
@@ -94,7 +94,7 @@ export function ProductsGrid() {
             headerName: "Title",
             minWidth: 150,
             flex: 1,
-            visibleMediaQuery: theme.breakpoints.up("md"),
+            visible: theme.breakpoints.up("md"),
         },
         { field: "description", headerName: "Description", flex: 1, minWidth: 150 },
         {
@@ -103,7 +103,7 @@ export function ProductsGrid() {
             minWidth: 100,
             flex: 1,
             type: "number",
-            visibleMediaQuery: theme.breakpoints.up("md"),
+            visible: theme.breakpoints.up("md"),
             renderCell: ({ row }) => (typeof row.price === "number" ? <FormattedNumber value={row.price} style="currency" currency="EUR" /> : "-"),
         },
         {
@@ -111,7 +111,7 @@ export function ProductsGrid() {
             headerName: "Type",
             width: 100,
             type: "singleSelect",
-            visibleMediaQuery: theme.breakpoints.up("md"),
+            visible: theme.breakpoints.up("md"),
             valueOptions: ["Cap", "Shirt", "Tie"],
         },
         {
@@ -121,7 +121,7 @@ export function ProductsGrid() {
             minWidth: 100,
             renderCell: (params) => <>{params.row.category?.title}</>,
             type: "singleSelect",
-            visibleMediaQuery: theme.breakpoints.up("md"),
+            visible: theme.breakpoints.up("md"),
             valueOptions: categoriesData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
         },
         {
@@ -137,7 +137,7 @@ export function ProductsGrid() {
             flex: 1,
             minWidth: 80,
             type: "boolean",
-            visibleMediaQuery: theme.breakpoints.up("md"),
+            visible: theme.breakpoints.up("md"),
         },
         {
             field: "status",
