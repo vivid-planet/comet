@@ -65,13 +65,26 @@ export function ProductsPage(): React.ReactElement {
                 </StackPage>
                 <StackPage name="variants" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Product variants" })}>
                     {(selectedId) => (
-                        <MainContent fullHeight disablePadding>
-                            <ProductVariantsGrid product={selectedId} />
-                        </MainContent>
+                        <>
+                            <StackToolbar scopeIndicator={<ContentScopeIndicator global />} hideBottomBar />
+                            <MainContent fullHeight disablePadding>
+                                <ProductVariantsGrid product={selectedId} />
+                            </MainContent>
+                        </>
                     )}
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add Product" })}>
-                    <ProductForm />
+                    <SaveBoundary>
+                        <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+                            <ToolbarBackButton />
+                            <ToolbarAutomaticTitleItem />
+                            <ToolbarFillSpace />
+                            <ToolbarActions>
+                                <SaveBoundarySaveButton />
+                            </ToolbarActions>
+                        </StackToolbar>
+                        <ProductForm />
+                    </SaveBoundary>
                 </StackPage>
             </StackSwitch>
         </Stack>
