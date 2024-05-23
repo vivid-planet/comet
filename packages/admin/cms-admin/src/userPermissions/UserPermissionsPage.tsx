@@ -10,7 +10,7 @@ export const UserPermissionsPage = (): React.ReactElement => (
     <Stack topLevelTitle={<FormattedMessage id="comet.userPermissions.title" defaultMessage="User Management" />}>
         <StackSwitch>
             <StackPage name="table">
-                <Toolbar scopeIndicator={<ContentScopeIndicator global />} hideBottomBar />
+                <Toolbar scopeIndicator={<ContentScopeIndicator global />} />
                 <MainContent fullHeight>
                     <UserGrid />
                 </MainContent>
