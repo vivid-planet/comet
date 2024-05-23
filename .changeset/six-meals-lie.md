@@ -2,4 +2,7 @@
 "@comet/cms-admin": patch
 ---
 
-Improve URL validation in `ExternalLinkBlock` and `SeoBlock`
+Fix link target validation in `ExternalLinkBlock`
+
+Previously, two different validation checks were used.
+This resulted in an error when saving an invalid link target but no error message was shown.
