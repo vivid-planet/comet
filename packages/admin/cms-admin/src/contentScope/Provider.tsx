@@ -35,7 +35,7 @@ export type UseContentScopeApi<S extends ContentScopeInterface = ContentScopeInt
     match: match;
     setRedirectPathAfterChange: React.Dispatch<React.SetStateAction<string | undefined>>;
     supported: boolean;
-    values: ContentScopeValues;
+    values: ContentScopeValues<S>;
 };
 
 export type ContentScopeValues<S extends ContentScopeInterface = ContentScopeInterface> = Array<{
@@ -117,7 +117,7 @@ export function useContentScope<S extends ContentScopeInterface = ContentScopeIn
         match,
         setRedirectPathAfterChange: context.setRedirectPathAfterChange,
         supported: Object.keys(scope).length > 0,
-        values: context.values,
+        values: context.values as ContentScopeValues<S>,
     };
 }
 
