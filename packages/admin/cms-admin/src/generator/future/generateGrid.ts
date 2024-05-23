@@ -160,7 +160,7 @@ export function generateGrid(
         props.push(...filterPropProps);
     }
 
-    const toolbar = config.toolbar ?? { hideTopBar: false, automaticTitleItem: true };
+    const toolbar = config.toolbar ?? true;
 
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
 
@@ -305,14 +305,13 @@ export function generateGrid(
     const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
         CrudContextMenu,
+        DataGridToolbar,
         filterByFragment,
         GridFilterButton,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,
-        Toolbar,
         ToolbarActions,
-        ToolbarAutomaticTitleItem,
         ToolbarFillSpace,
         ToolbarItem,
         useBufferedRowCount,
@@ -415,8 +414,7 @@ export function generateGrid(
         toolbar
             ? `function ${gqlTypePlural}GridToolbar() {
         return (
-            <Toolbar ${toolbar.hideTopBar ? `hideTopBar` : ``}>
-                ${toolbar.automaticTitleItem ? `<ToolbarAutomaticTitleItem />` : ``}
+            <DataGridToolbar>
                 ${
                     hasSearch
                         ? `<ToolbarItem>
@@ -441,7 +439,7 @@ export function generateGrid(
                 </ToolbarActions>`
                         : ""
                 }
-            </Toolbar>
+            </DataGridToolbar>
         );
     }`
             : ""

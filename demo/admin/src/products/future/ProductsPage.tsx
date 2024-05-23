@@ -8,6 +8,7 @@ import {
     StackPage,
     StackSwitch,
     StackToolbar,
+    Toolbar,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
@@ -27,7 +28,8 @@ export function ProductsPage(): React.ReactElement {
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <MainContent fullHeight disablePadding>
+                    <Toolbar />
+                    <MainContent fullHeight>
                         <ProductsGrid />
                     </MainContent>
                 </StackPage>
@@ -69,7 +71,17 @@ export function ProductsPage(): React.ReactElement {
                     )}
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add Product" })}>
-                    <ProductForm />
+                    <SaveBoundary>
+                        <StackToolbar>
+                            <ToolbarBackButton />
+                            <ToolbarAutomaticTitleItem />
+                            <ToolbarFillSpace />
+                            <ToolbarActions>
+                                <SaveBoundarySaveButton />
+                            </ToolbarActions>
+                        </StackToolbar>
+                        <ProductForm />
+                    </SaveBoundary>
                 </StackPage>
             </StackSwitch>
         </Stack>
