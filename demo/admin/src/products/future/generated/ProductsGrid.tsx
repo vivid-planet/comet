@@ -3,8 +3,8 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    filterByFragment,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -21,6 +21,7 @@ import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -37,17 +38,12 @@ import {
 const productsFragment = gql`
     fragment ProductsGridFuture on Product {
         id
-        updatedAt
-        title
-        status
-        slug
-        description
-        type
-        price
         inStock
-        soldCount
+        title
+        description
+        price
+        type
         availableSince
-        image
         createdAt
     }
 `;
@@ -98,12 +94,17 @@ function ProductsGridToolbar() {
     );
 }
 
-export function ProductsGrid(): React.ReactElement {
+type Props = {
+    filter?: GQLProductFilter;
+};
+
+export function ProductsGrid({ filter }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
+        { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
         { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, maxWidth: 250, minWidth: 200 },
         {
             field: "description",
@@ -111,7 +112,14 @@ export function ProductsGrid(): React.ReactElement {
             flex: 1,
             minWidth: 150,
         },
-        { field: "price", headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }), flex: 1, maxWidth: 150, minWidth: 150 },
+        {
+            field: "price",
+            headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }),
+            type: "number",
+            flex: 1,
+            maxWidth: 150,
+            minWidth: 150,
+        },
         {
             field: "type",
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
@@ -129,14 +137,14 @@ export function ProductsGrid(): React.ReactElement {
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
             type: "date",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
             width: 140,
         },
         {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
             type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
             width: 170,
         },
         {
@@ -154,17 +162,11 @@ export function ProductsGrid(): React.ReactElement {
                         </IconButton>
                         <CrudContextMenu
                             copyData={() => {
-                                const row = params.row;
+                                // Don't copy id, because we want to create a new entity with this data
+                                const { id, ...filteredData } = filterByFragment(productsFragment, params.row);
                                 return {
-                                    title: row.title,
-                                    status: row.status,
-                                    slug: row.slug,
-                                    description: row.description,
-                                    type: row.type,
-                                    price: row.price,
-                                    inStock: row.inStock,
-                                    availableSince: row.availableSince,
-                                    image: DamImageBlock.state2Output(DamImageBlock.input2State(row.image)),
+                                    ...filteredData,
+                                    image: DamImageBlock.state2Output(DamImageBlock.input2State(filteredData.image)),
                                 };
                             }}
                             onPaste={async ({ input }) => {
@@ -191,7 +193,7 @@ export function ProductsGrid(): React.ReactElement {
 
     const { data, loading, error } = useQuery<GQLProductsGridQuery, GQLProductsGridQueryVariables>(productsQuery, {
         variables: {
-            filter: gqlFilter,
+            filter: filter ? { and: [gqlFilter, filter] } : gqlFilter,
             search: gqlSearch,
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
@@ -203,18 +205,16 @@ export function ProductsGrid(): React.ReactElement {
     const rows = data?.products.nodes ?? [];
 
     return (
-        <MainContent fullHeight disablePadding>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                components={{
-                    Toolbar: ProductsGridToolbar,
-                }}
-            />
-        </MainContent>
+        <DataGridPro
+            {...dataGridProps}
+            disableSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            components={{
+                Toolbar: ProductsGridToolbar,
+            }}
+        />
     );
 }

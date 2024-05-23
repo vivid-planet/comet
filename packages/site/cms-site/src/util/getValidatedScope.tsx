@@ -1,4 +1,6 @@
-import { headers } from "next/headers";
+import { NextRequest } from "next/server";
+
+import { GraphQLFetch } from "../graphQLFetch/graphQLFetch";
 
 export type Scope = Record<string, unknown>;
 export type GraphQLClient = {
@@ -6,23 +8,36 @@ export type GraphQLClient = {
     request<T>(document: string, variables?: unknown): Promise<T>;
 };
 
-export async function getValidatedScope(request: Request, graphQLClient: GraphQLClient, permission: string): Promise<Record<string, unknown>> {
-    const { searchParams } = new URL(request.url);
-    let scope: Scope;
-    try {
-        scope = JSON.parse(searchParams.get("scope") || "{}");
-    } catch (e) {
-        throw new Error("Missing or wrong scope query parameter");
+export async function getValidatedScope(
+    request: NextRequest,
+    graphQLFetch: GraphQLFetch,
+    permission: string,
+): Promise<Record<string, unknown> | null> {
+    const params = request.nextUrl.searchParams;
+    const scopeParam = params.get("scope");
+    if (!scopeParam) {
+        throw new Error("Missing scope parameter");
     }
+    const scope = JSON.parse(scopeParam);
 
-    const headersList = headers();
-    graphQLClient.setHeader("authorization", headersList.get("authorization") || "");
-    const { currentUser } = await graphQLClient.request<{ currentUser: { permissionsForScope: string[] } }>(
-        "query CurrentUserPermissionsForScope($scope: JSONObject!) { currentUser{ permissionsForScope(scope: $scope) } }",
+    const { currentUser } = await graphQLFetch<{ currentUser: { permissionsForScope: string[] } }, { scope: unknown }>(
+        `
+            query CurrentUserPermissionsForScope($scope: JSONObject!) {
+                currentUser {
+                    permissionsForScope(scope: $scope)
+                }
+            }
+        `,
         { scope },
+        {
+            headers: {
+                authorization: request.headers.get("authorization") || "",
+            },
+        },
     );
+
     if (!currentUser.permissionsForScope.includes(permission)) {
-        throw new Error("You don't have permission to access this scope");
+        return null;
     }
     return scope;
 }

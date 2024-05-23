@@ -19,8 +19,6 @@ export class CurrentUser {
     name: string;
     @Field()
     email: string;
-    @Field()
-    locale: string;
     @Field(() => [CurrentUserPermission])
     permissions: CurrentUserPermission[];
 }

@@ -6,6 +6,21 @@ import { GraphQLHandler } from "graphql-mocks";
 import { ResponseResolver, rest } from "msw";
 import { RestContext } from "msw/lib/types/handlers/RestHandler";
 
+type StringFilter = {
+    contains: string;
+    equal: string;
+};
+
+type DateFilter = {
+    equal: Date;
+};
+
+type LaunchesPastFilter = {
+    launch_date_local: DateFilter;
+    mission_name: StringFilter;
+    or: LaunchesPastFilter[];
+};
+
 export type Launch = {
     id: string;
     mission_name: string;
@@ -43,6 +58,7 @@ schema {
 }
 
 scalar Date
+scalar DateTime
 
 type Launch {
     id: ID!
@@ -67,17 +83,33 @@ type LaunchesPastPagePagingResult {
     totalPages: Int
 }
 
+input StringFilter {
+    contains: String
+    equal: String
+}
+
+input DateFilter {
+    equal: DateTime
+}
+
+input LaunchesPastFilter {
+    launch_date_local: DateFilter
+    mission_name: StringFilter
+    or: [LaunchesPastFilter!]
+}
+
 type Query {
-    launchesPastResult(limit: Int, offset: Int, sort: String, order: String): LaunchesPastResult!
+    launchesPastResult(limit: Int, offset: Int, sort: String, order: String, filter: LaunchesPastFilter): LaunchesPastResult!
     launchesPastPagePaging(page: Int, size: Int): LaunchesPastPagePagingResult!
 }
 `;
 
-const launchesPastResult: GraphQLFieldResolver<unknown, unknown, { limit?: number; offset?: number; sort?: string; order?: "asc" | "desc" }> = (
-    parent,
-    args,
-) => {
-    const { limit, offset, sort, order } = args;
+const launchesPastResult: GraphQLFieldResolver<
+    unknown,
+    unknown,
+    { limit?: number; offset?: number; sort?: string; order?: "asc" | "desc"; filter?: LaunchesPastFilter }
+> = (parent, args) => {
+    const { limit, offset, sort, order, filter } = args;
 
     let launches = [...allLaunches];
 
@@ -96,6 +128,44 @@ const launchesPastResult: GraphQLFieldResolver<unknown, unknown, { limit?: numbe
                     return compareDesc(a.launch_date_local, b.launch_date_local);
                 }
             }
+        });
+    }
+
+    if (filter) {
+        launches = launches.filter((launch) => {
+            if (filter.mission_name) {
+                if (filter.mission_name.equal) {
+                    return launch.mission_name === filter.mission_name.equal;
+                }
+                if (filter.mission_name.contains) {
+                    return launch.mission_name.includes(filter.mission_name.contains);
+                }
+            }
+            if (filter.launch_date_local) {
+                if (filter.launch_date_local.equal) {
+                    return launch.launch_date_local === filter.launch_date_local.equal;
+                }
+            }
+
+            if (filter.or.length > 0) {
+                return filter.or.some((f) => {
+                    if (f.mission_name) {
+                        if (f.mission_name.equal) {
+                            return launch.mission_name === f.mission_name.equal;
+                        }
+                        if (f.mission_name.contains) {
+                            return launch.mission_name.includes(f.mission_name.contains);
+                        }
+                    }
+                    if (f.launch_date_local) {
+                        if (f.launch_date_local.equal) {
+                            return launch.launch_date_local === f.launch_date_local.equal;
+                        }
+                    }
+                });
+            }
+
+            return true;
         });
     }
 

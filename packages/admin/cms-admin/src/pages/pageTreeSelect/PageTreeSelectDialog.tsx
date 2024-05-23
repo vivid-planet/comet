@@ -8,7 +8,7 @@ import { FormattedMessage } from "react-intl";
 import { FixedSizeList as List, ListChildComponentProps } from "react-window";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
-import { useContentScope } from "../../contentScope/Provider";
+import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
 import { Maybe } from "../../graphql.generated";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
@@ -60,8 +60,8 @@ const PageSearchContainer = styled("div")`
 `;
 
 interface PageTreeSelectProps {
-    value: GQLSelectedPageFragment | undefined | null;
-    onChange: (newValue: GQLSelectedPageFragment | null) => void;
+    value: (GQLSelectedPageFragment & { scope?: ContentScopeInterface }) | undefined | null;
+    onChange: (newValue: (GQLSelectedPageFragment & { scope?: ContentScopeInterface }) | null) => void;
     open: boolean;
     onClose: () => void;
     defaultCategory: string;
@@ -156,10 +156,10 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
 
     const handleSelect = React.useCallback(
         (page: PageTreePage) => {
-            onChange({ id: page.id, name: page.name, path: page.path, documentType: page.documentType });
+            onChange({ id: page.id, name: page.name, path: page.path, documentType: page.documentType, scope });
             onClose();
         },
-        [onChange, onClose],
+        [onChange, onClose, scope],
     );
 
     const itemData = React.useMemo<ItemData>(

@@ -12,7 +12,6 @@ type CurrentUser {
   id: String!
   name: String!
   email: String!
-  locale: String!
   permissions: [CurrentUserPermission!]!
   permissionsForScope(scope: JSONObject!): [String!]!
 }
@@ -178,7 +177,6 @@ type User {
   id: String!
   name: String!
   email: String!
-  locale: String!
 }
 
 type PaginatedUserList {
@@ -230,9 +228,8 @@ input DependentFilter {
   rootColumnName: String
 }
 
-type Redirect implements DocumentInterface {
+type Redirect {
   id: ID!
-  updatedAt: DateTime!
   sourceType: RedirectSourceTypeValues!
   source: String!
   target: JSONObject!
@@ -240,6 +237,7 @@ type Redirect implements DocumentInterface {
   active: Boolean!
   generationType: RedirectGenerationType!
   createdAt: DateTime!
+  updatedAt: DateTime!
   dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
@@ -357,6 +355,8 @@ type Query {
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
+  kubernetesJob(name: String!): KubernetesJob!
+  kubernetesJobLogs(name: String!): String!
   currentUser: CurrentUser!
   userPermissionsUserById(id: String!): User!
   userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
@@ -478,7 +478,6 @@ input UserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
-  locale: StringFilter
   and: [UserFilter!]
   or: [UserFilter!]
 }
@@ -492,7 +491,6 @@ enum UserSortField {
   name
   email
   status
-  locale
 }
 
 type Mutation {

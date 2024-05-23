@@ -9,6 +9,7 @@ storiesOf("stories/components/Color Picker/Color Picker", module).add("Color Pic
     const [colorTwo, setColorTwo] = React.useState<string | undefined>("rgba(255, 127, 80, 0.75)");
     const [colorThree, setColorThree] = React.useState<string | undefined>();
     const [colorFour, setColorFour] = React.useState<string | undefined>();
+    const [colorFive, setColorFive] = React.useState<string | undefined>();
 
     return (
         <Grid container spacing={4} sx={{ pb: 2 }}>
@@ -54,6 +55,11 @@ storiesOf("stories/components/Color Picker/Color Picker", module).add("Color Pic
             <Grid item md={3}>
                 <FieldContainer label="Disabled" fullWidth disabled>
                     <ColorPicker fullWidth disabled value={colorFour} onChange={setColorFour} />
+                </FieldContainer>
+            </Grid>
+            <Grid item md={3}>
+                <FieldContainer label="Required" fullWidth required>
+                    <ColorPicker fullWidth required value={colorFive} onChange={setColorFive} />
                 </FieldContainer>
             </Grid>
         </Grid>

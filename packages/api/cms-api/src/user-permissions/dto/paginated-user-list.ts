@@ -23,11 +23,6 @@ class UserFilter {
     @Type(() => StringFilter)
     status?: StringFilter;
 
-    @Field(() => StringFilter, { nullable: true })
-    @ValidateNested()
-    @Type(() => StringFilter)
-    locale?: StringFilter;
-
     @Field(() => [UserFilter], { nullable: true })
     @Type(() => UserFilter)
     @ValidateNested({ each: true })
@@ -39,12 +34,14 @@ class UserFilter {
     or?: UserFilter[];
 }
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with PascalCase
 enum UserSortField {
     name = "name",
     email = "email",
     status = "status",
-    locale = "locale",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(UserSortField, {
     name: "UserSortField",
 });

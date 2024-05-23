@@ -16,20 +16,16 @@ export { BlobStorageFileConfig } from "./blob-storage/backends/file/blob-storage
 export { BlobStorageFileStorage } from "./blob-storage/backends/file/blob-storage-file.storage";
 export { BlobStorageConfig } from "./blob-storage/blob-storage.config";
 export { BlobStorageModule } from "./blob-storage/blob-storage.module";
-export { BLOCKS_MODULE_OPTIONS, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES } from "./blocks/blocks.constants";
-export { BlocksModule, BlocksModuleOptions } from "./blocks/blocks.module";
+export { BlocksModule } from "./blocks/blocks.module";
 export { BlocksTransformerService } from "./blocks/blocks-transformer.service";
 export { BlocksTransformerMiddlewareFactory } from "./blocks/blocks-transformer-middleware.factory";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
 export { createLinkBlock } from "./blocks/createLinkBlock";
 export { createSeoBlock, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/createSeoBlock";
 export { createTextImageBlock, ImagePosition } from "./blocks/createTextImageBlock";
-export { DamVideoBlock } from "./blocks/dam-video.block";
-export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { RootBlockType } from "./blocks/root-block-type";
 export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar";
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
-export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export { BUILDS_CONFIG, BUILDS_MODULE_OPTIONS } from "./builds/builds.constants";
 export { BuildsModule } from "./builds/builds.module";
 export { BuildsResolver } from "./builds/builds.resolver";
@@ -63,6 +59,9 @@ export { IsSlug } from "./common/validators/is-slug";
 export { IsUndefinable } from "./common/validators/is-undefinable";
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";
+export { DamVideoBlock } from "./dam/blocks/dam-video.block";
+export { PixelImageBlock } from "./dam/blocks/pixel-image.block";
+export { SvgImageBlock } from "./dam/blocks/svg-image.block";
 export { ScaledImagesCacheService } from "./dam/cache/scaled-images-cache.service";
 export { FocalPoint } from "./dam/common/enums/focal-point.enum";
 export { CometImageResolutionException } from "./dam/common/errors/image-resolution.exception";
@@ -151,8 +150,8 @@ export { RequiredPermission } from "./user-permissions/decorators/required-permi
 export { ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
 export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
-export { User } from "./user-permissions/dto/user";
 export { ContentScope } from "./user-permissions/interfaces/content-scope.interface";
+export { User } from "./user-permissions/interfaces/user";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export {
     AccessControlServiceInterface,

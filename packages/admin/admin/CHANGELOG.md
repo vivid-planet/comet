@@ -1,5 +1,124 @@
 # @comet/admin
 
+## 6.10.0
+
+### Minor Changes
+
+-   d4a269e1e: Add `filterByFragment` to replace graphql-anywhere's `filter`
+
+    [graphql-anywhere](https://www.npmjs.com/package/graphql-anywhere) is no longer maintained.
+    However, its `filter` utility is useful for filtering data by a GraphQL document, e.g., a fragment.
+    Therefore, the function was copied to `@comet/admin`.
+    To migrate, replace all `filter` calls with `filterByFragment`:
+
+    ```diff
+    - import { filter } from "graphql-anywhere";
+    + import { filterByFragment } from "@comet/admin";
+
+    const initialValues: Partial<FormValues> = data?.product
+        ? {
+    -       ...filter<GQLProductPriceFormFragment>(productPriceFormFragment, data.product),
+    +       ...filterByFragment<GQLProductPriceFormFragment>(productPriceFormFragment, data.product),
+            price: String(data.product.price),
+        }
+        : {};
+    ```
+
+    You can then uninstall the `graphql-anywhere` package:
+
+    ```bash
+    # In admin/
+    npm uninstall graphql-anywhere
+    ```
+
+-   52130afba: Add `FinalFormFileSelect` component
+
+    Allows selecting files via the file dialog or using drag-and-drop.
+
+-   e938254bf: Add the `useDataGridExcelExport` hook for exporting data from a `DataGrid` to an excel file
+
+    The hook returns an `exportApi` encompassing:
+
+    -   `exportGrid`: a function to generate and export the excel file
+    -   `loading`: a boolean indicating if the export is in progress
+    -   `error`: an error when the export has failed
+
+### Patch Changes
+
+-   a8a098a24: muiGridFilterToGql: change fallback operator to 'and' to match MUI default
+    -   @comet/admin-icons@6.10.0
+
+## 6.9.0
+
+### Minor Changes
+
+-   e85837a17: Loosen peer dependency on `react-intl` to allow using v6
+
+### Patch Changes
+
+-   9ff9d66c6: Ignore local storage quota exceeded error in `writeClipboardText`
+    -   @comet/admin-icons@6.9.0
+
+## 6.8.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.8.0
+
+## 6.7.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.7.0
+
+## 6.6.2
+
+### Patch Changes
+
+-   @comet/admin-icons@6.6.2
+
+## 6.6.1
+
+### Patch Changes
+
+-   @comet/admin-icons@6.6.1
+
+## 6.6.0
+
+### Minor Changes
+
+-   95b97d768: useDataGridRemote: Add `initialFilter` option
+
+    **Example usage:**
+
+    ```tsx
+    const dataGridProps = useDataGridRemote({
+        initialFilter: { items: [{ columnField: "description", operatorValue: "contains", value: "text" }] },
+    });
+    ```
+
+### Patch Changes
+
+-   6b04ac9a4: Fix the key for accessing the themes `styleOverrides` and `defaultProps` of `CometAdminMenu`
+    -   @comet/admin-icons@6.6.0
+
+## 6.5.0
+
+### Minor Changes
+
+-   6cb2f9046: Add `ContentOverflow` component
+
+    Used to wrap content that may be too large to fit its container.
+    If the content is too large, it will be truncated. When clicked, the entire content will be displayed in a dialog.
+
+    ```tsx
+    <ContentOverflow>{/* Lots of content ... */}</ContentOverflow>
+    ```
+
+### Patch Changes
+
+-   @comet/admin-icons@6.5.0
+
 ## 6.4.0
 
 ### Minor Changes

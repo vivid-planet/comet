@@ -325,6 +325,47 @@
         ]
     },
     {
+        "name": "DemoSpace",
+        "fields": [
+            {
+                "name": "spacing",
+                "kind": "Enum",
+                "enum": [
+                    "d150",
+                    "d200",
+                    "d250",
+                    "d300",
+                    "d350",
+                    "d400",
+                    "d450",
+                    "d500",
+                    "d550",
+                    "d600"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "spacing",
+                "kind": "Enum",
+                "enum": [
+                    "d150",
+                    "d200",
+                    "d250",
+                    "d300",
+                    "d350",
+                    "d400",
+                    "d450",
+                    "d500",
+                    "d550",
+                    "d600"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "DemoTextLink",
         "fields": [
             {
@@ -654,6 +695,11 @@
                             "nullable": false
                         },
                         {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
+                        },
+                        {
                             "name": "documentType",
                             "kind": "String",
                             "nullable": false
@@ -969,6 +1015,23 @@
         ]
     },
     {
+        "name": "NewsDetail",
+        "fields": [
+            {
+                "name": "id",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "id",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "NewsLink",
         "fields": [
             {
@@ -1070,7 +1133,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "space": "Space",
+                                "space": "DemoSpace",
                                 "richtext": "RichText",
                                 "headline": "Headline",
                                 "image": "DamImage",
@@ -1084,7 +1147,8 @@
                                 "anchor": "Anchor",
                                 "twoLists": "TwoLists",
                                 "media": "Media",
-                                "teaser": "Teaser"
+                                "teaser": "Teaser",
+                                "newsDetail": "NewsDetail"
                             },
                             "nullable": false
                         },
@@ -1128,7 +1192,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "space": "Space",
+                                "space": "DemoSpace",
                                 "richtext": "RichText",
                                 "headline": "Headline",
                                 "image": "DamImage",
@@ -1142,7 +1206,8 @@
                                 "anchor": "Anchor",
                                 "twoLists": "TwoLists",
                                 "media": "Media",
-                                "teaser": "Teaser"
+                                "teaser": "Teaser",
+                                "newsDetail": "NewsDetail"
                             },
                             "nullable": false
                         },

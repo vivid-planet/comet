@@ -48,7 +48,7 @@ export const withPreview = <ComponentProps,>(
                         parentEnabledAutoScrolling: !parentEnabledAutoScrolling ? false : enabledChildrenAutoScrolling,
                     }}
                 >
-                    <Preview adminRoute={componentProps.data?.adminMeta.route} type={label} enabledAutoScrolling={parentEnabledAutoScrolling}>
+                    <Preview adminRoute={componentProps.data?.adminMeta.route} label={label} enabledAutoScrolling={parentEnabledAutoScrolling}>
                         <Component {...componentProps} />
                     </Preview>
                 </AdminRouteContext.Provider>

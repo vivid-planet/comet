@@ -4,7 +4,10 @@ import { SortDirection } from "@comet/cms-api";
 import { Field, InputType, registerEnumType } from "@nestjs/graphql";
 import { IsEnum } from "class-validator";
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with PascalCase
 export enum ManufacturerSortField {
+    name = "name",
     addressAsEmbeddable_street = "addressAsEmbeddable_street",
     addressAsEmbeddable_streetNumber = "addressAsEmbeddable_streetNumber",
     addressAsEmbeddable_zip = "addressAsEmbeddable_zip",
@@ -15,6 +18,7 @@ export enum ManufacturerSortField {
     addressAsEmbeddable_alternativeAddress_country = "addressAsEmbeddable_alternativeAddress_country",
     updatedAt = "updatedAt",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(ManufacturerSortField, {
     name: "ManufacturerSortField",
 });

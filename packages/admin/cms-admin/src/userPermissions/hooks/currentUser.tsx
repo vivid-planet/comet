@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import isEqual from "lodash.isequal";
 import React from "react";
 
@@ -15,9 +15,9 @@ type CurrentUserContext = {
 export const CurrentUserContext = React.createContext<CurrentUserContext | undefined>(undefined);
 
 export interface CurrentUserInterface {
-    name?: string;
-    email?: string;
-    locale?: string;
+    id: string;
+    name: string;
+    email: string;
     permissions: GQLCurrentUserPermission[];
     allowedContentScopes: ContentScopeInterface[];
 }
@@ -31,7 +31,6 @@ export const CurrentUserProvider: React.FC<{
                 id
                 name
                 email
-                locale
                 permissions {
                     permission
                     contentScopes
@@ -40,26 +39,7 @@ export const CurrentUserProvider: React.FC<{
         }
     `);
 
-    // As this Provider is very high up in the tree, don't rely on ErrorBoundary or a configured intl-Provider here
-    if (error) {
-        const isUnauthenticated = error.graphQLErrors.some(
-            (e) => e.extensions?.exception?.status === 401 || e.extensions?.code === "UNAUTHENTICATED",
-        );
-        return (
-            <>
-                <Typography gutterBottom>{isUnauthenticated ? "Your access-token is invalid. Re-login might help." : error.message}</Typography>
-                {isUnauthenticated && (
-                    <Button href="/" color="info" variant="outlined">
-                        {
-                            // eslint-disable-next-line @calm/react-intl/missing-formatted-message
-                        }
-                        Re-Login
-                    </Button>
-                )}
-            </>
-        );
-    }
-
+    if (error) return <Typography gutterBottom>{error.message}</Typography>;
     if (!data) return <Loading behavior="fillPageHeight" />;
 
     const context: CurrentUserContext = {

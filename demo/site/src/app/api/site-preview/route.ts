@@ -1,22 +1,9 @@
-import { getValidatedSitePreviewParams, SitePreviewParams } from "@comet/cms-site";
-import createGraphQLClient from "@src/util/createGraphQLClient";
-import { draftMode } from "next/headers";
-import { redirect } from "next/navigation";
+import { sitePreviewRoute } from "@comet/cms-site";
+import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { type NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: Request) {
-    let params: SitePreviewParams;
-    try {
-        params = await getValidatedSitePreviewParams(request, createGraphQLClient());
-    } catch (e) {
-        return new Response(e.message, { status: 403 });
-    }
-
-    // You might want to store params.scope now
-    draftMode().enable();
-
-    redirect(params.path);
+export async function GET(request: NextRequest) {
+    return sitePreviewRoute(request, createGraphQLFetch());
 }
-
-export type PreviewData = SitePreviewParams["settings"];

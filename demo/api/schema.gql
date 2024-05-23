@@ -16,7 +16,6 @@ type CurrentUser {
   id: String!
   name: String!
   email: String!
-  locale: String!
   permissions: [CurrentUserPermission!]!
   permissionsForScope(scope: JSONObject!): [String!]!
 }
@@ -182,7 +181,6 @@ type User {
   id: String!
   name: String!
   email: String!
-  locale: String!
 }
 
 type PaginatedUserList {
@@ -334,12 +332,12 @@ type FooterContentScope {
   language: String!
 }
 
-type Footer implements DocumentInterface {
+type Footer {
   id: ID!
-  updatedAt: DateTime!
   content: FooterContentBlockData!
   scope: FooterContentScope!
   createdAt: DateTime!
+  updatedAt: DateTime!
   dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
@@ -362,11 +360,11 @@ type MainMenu {
   items: [MainMenuItem!]!
 }
 
-type NewsComment implements DocumentInterface {
+type NewsComment {
   id: ID!
-  updatedAt: DateTime!
   comment: String!
   createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type NewsContentScope {
@@ -374,9 +372,8 @@ type NewsContentScope {
   language: String!
 }
 
-type News implements DocumentInterface {
+type News {
   id: ID!
-  updatedAt: DateTime!
   scope: NewsContentScope!
   slug: String!
   title: String!
@@ -386,6 +383,7 @@ type News implements DocumentInterface {
   image: DamImageBlockData!
   content: NewsContentBlockData!
   createdAt: DateTime!
+  updatedAt: DateTime!
   comments: [NewsComment!]!
   dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
@@ -445,6 +443,7 @@ type AddressAsEmbeddable {
 
 type Manufacturer {
   id: ID!
+  name: String!
   address: Address
   addressAsEmbeddable: AddressAsEmbeddable!
   updatedAt: DateTime!
@@ -455,12 +454,12 @@ type PaginatedManufacturers {
   totalCount: Int!
 }
 
-type ProductCategory implements DocumentInterface {
+type ProductCategory {
   id: ID!
-  updatedAt: DateTime!
   title: String!
   slug: String!
   createdAt: DateTime!
+  updatedAt: DateTime!
   products: [Product!]!
 }
 
@@ -474,25 +473,33 @@ type ProductColor implements DocumentInterface {
 
 type ProductStatistics {
   id: ID!
-  views: Float!
+  views: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
-type ProductTag implements DocumentInterface {
+type ProductToTag {
+  id: String!
+  exampleStatus: Boolean!
+  product: Product!
+  tag: ProductTag!
+}
+
+type ProductTag {
   id: ID!
-  updatedAt: DateTime!
   title: String!
   createdAt: DateTime!
+  updatedAt: DateTime!
+  productsWithStatus: [ProductToTag!]!
   products: [Product!]!
 }
 
-type ProductVariant implements DocumentInterface {
+type ProductVariant {
   id: ID!
-  updatedAt: DateTime!
   name: String!
   image: DamImageBlockData!
   createdAt: DateTime!
+  updatedAt: DateTime!
   product: Product!
 }
 
@@ -507,9 +514,8 @@ type ProductDimensions {
   depth: Float!
 }
 
-type Product implements DocumentInterface {
+type Product {
   id: ID!
-  updatedAt: DateTime!
   title: String!
   status: ProductStatus!
   slug: String!
@@ -517,7 +523,7 @@ type Product implements DocumentInterface {
   type: ProductType!
   price: Float
   inStock: Boolean!
-  soldCount: Float
+  soldCount: Int
   availableSince: DateTime
   image: DamImageBlockData!
   discounts: [ProductDiscounts!]!
@@ -525,16 +531,19 @@ type Product implements DocumentInterface {
   dimensions: ProductDimensions
   statistics: ProductStatistics
   createdAt: DateTime!
+  updatedAt: DateTime!
   category: ProductCategory
   manufacturer: Manufacturer
   colors: [ProductColor!]!
   variants: [ProductVariant!]!
+  tagsWithStatus: [ProductToTag!]!
   tags: [ProductTag!]!
 }
 
 enum ProductStatus {
   Published
   Unpublished
+  Deleted
 }
 
 enum ProductType {
@@ -572,9 +581,8 @@ type PaginatedPageTreeNodes {
   totalCount: Int!
 }
 
-type Redirect implements DocumentInterface {
+type Redirect {
   id: ID!
-  updatedAt: DateTime!
   sourceType: RedirectSourceTypeValues!
   source: String!
   target: JSONObject!
@@ -582,6 +590,7 @@ type Redirect implements DocumentInterface {
   active: Boolean!
   generationType: RedirectGenerationType!
   createdAt: DateTime!
+  updatedAt: DateTime!
   scope: RedirectScope!
   dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
@@ -726,7 +735,7 @@ type Query {
   damFolderByNameAndParentId(scope: DamScopeInput!, name: String!, parentId: ID): DamFolder
   news(id: ID!): News!
   newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
-  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: NewsStatus! = Active, search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+  newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: [NewsStatus!]! = [Active], search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
@@ -736,9 +745,11 @@ type Query {
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
+  kubernetesJob(name: String!): KubernetesJob!
+  kubernetesJobLogs(name: String!): String!
   product(id: ID!): Product!
   productBySlug(slug: String!): Product
-  products(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
+  products(offset: Int! = 0, limit: Int! = 25, status: [ProductStatus!]! = [Published, Unpublished], search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
   productCategory(id: ID!): ProductCategory!
   productCategoryBySlug(slug: String!): ProductCategory
   productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
@@ -754,7 +765,6 @@ input UserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
-  locale: StringFilter
   and: [UserFilter!]
   or: [UserFilter!]
 }
@@ -776,7 +786,6 @@ enum UserSortField {
   name
   email
   status
-  locale
 }
 
 enum SortDirection {
@@ -1032,6 +1041,7 @@ enum ProductVariantSortField {
 }
 
 input ManufacturerFilter {
+  name: StringFilter
   addressAsEmbeddable_street: StringFilter
   addressAsEmbeddable_streetNumber: NumberFilter
   addressAsEmbeddable_zip: NumberFilter
@@ -1051,6 +1061,7 @@ input ManufacturerSort {
 }
 
 enum ManufacturerSortField {
+  name
   addressAsEmbeddable_street
   addressAsEmbeddable_streetNumber
   addressAsEmbeddable_zip
@@ -1312,20 +1323,26 @@ input ProductInput {
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
   dimensions: ProductDimensionsInput
-  statistics: ProductStatisticsInput
-  colors: [ProductColorInput!]! = []
+  statistics: ProductNestedProductStatisticsInput
+  colors: [ProductNestedProductColorInput!]! = []
   category: ID = null
   tags: [ID!]! = []
+  tagsWithStatus: [ProductNestedProductToTagInput!]! = []
   manufacturer: ID = null
 }
 
-input ProductStatisticsInput {
+input ProductNestedProductStatisticsInput {
   views: Float!
 }
 
-input ProductColorInput {
+input ProductNestedProductColorInput {
   name: String!
   hexCode: String!
+}
+
+input ProductNestedProductToTagInput {
+  tag: ID!
+  exampleStatus: Boolean! = true
 }
 
 input ProductUpdateInput {
@@ -1341,10 +1358,11 @@ input ProductUpdateInput {
   discounts: [ProductDiscountsInput!]
   articleNumbers: [String!]
   dimensions: ProductDimensionsInput
-  statistics: ProductStatisticsInput
-  colors: [ProductColorInput!]
+  statistics: ProductNestedProductStatisticsInput
+  colors: [ProductNestedProductColorInput!]
   category: ID
   tags: [ID!]
+  tagsWithStatus: [ProductNestedProductToTagInput!]
   manufacturer: ID
 }
 
@@ -1361,11 +1379,18 @@ input ProductCategoryUpdateInput {
 input ProductTagInput {
   title: String!
   products: [ID!]! = []
+  productsWithStatus: [ProductTagNestedProductToTagInput!]! = []
+}
+
+input ProductTagNestedProductToTagInput {
+  product: ID!
+  exampleStatus: Boolean! = true
 }
 
 input ProductTagUpdateInput {
   title: String
   products: [ID!]
+  productsWithStatus: [ProductTagNestedProductToTagInput!]
 }
 
 input ProductVariantInput {
@@ -1379,11 +1404,13 @@ input ProductVariantUpdateInput {
 }
 
 input ManufacturerInput {
+  name: String!
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput!
 }
 
 input ManufacturerUpdateInput {
+  name: String
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput
 }

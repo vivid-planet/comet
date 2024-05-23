@@ -38,7 +38,6 @@ import {
 const productsFragment = gql`
     fragment ProductsList on Product {
         id
-        updatedAt
         title
         status
         slug
@@ -50,6 +49,7 @@ const productsFragment = gql`
         availableSince
         image
         createdAt
+        updatedAt
     }
 `;
 
@@ -105,13 +105,6 @@ export function ProductsGrid(): React.ReactElement {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 
     const columns: GridColDef<GQLProductsListFragment>[] = [
-        {
-            field: "updatedAt",
-            headerName: intl.formatMessage({ id: "product.updatedAt", defaultMessage: "Updated At" }),
-            type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
-            width: 150,
-        },
         { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }), width: 150 },
         {
             field: "status",
@@ -120,6 +113,7 @@ export function ProductsGrid(): React.ReactElement {
             valueOptions: [
                 { value: "Published", label: intl.formatMessage({ id: "product.status.published", defaultMessage: "Published" }) },
                 { value: "Unpublished", label: intl.formatMessage({ id: "product.status.unpublished", defaultMessage: "Unpublished" }) },
+                { value: "Deleted", label: intl.formatMessage({ id: "product.status.deleted", defaultMessage: "Deleted" }) },
             ],
             width: 150,
         },
@@ -159,6 +153,13 @@ export function ProductsGrid(): React.ReactElement {
         {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
+            type: "dateTime",
+            valueGetter: ({ value }) => value && new Date(value),
+            width: 150,
+        },
+        {
+            field: "updatedAt",
+            headerName: intl.formatMessage({ id: "product.updatedAt", defaultMessage: "Updated At" }),
             type: "dateTime",
             valueGetter: ({ value }) => value && new Date(value),
             width: 150,

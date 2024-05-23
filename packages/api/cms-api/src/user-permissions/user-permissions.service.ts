@@ -3,16 +3,17 @@ import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Inject, Injectable, Optional } from "@nestjs/common";
 import { isFuture, isPast } from "date-fns";
+import { JwtPayload } from "jsonwebtoken";
 import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
 
 import { DisablePermissionCheck, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
 import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
-import { User } from "./dto/user";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
+import { User } from "./interfaces/user";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER_SERVICE } from "./user-permissions.constants";
 import {
     AccessControlServiceInterface,
@@ -57,6 +58,16 @@ export class UserPermissionsService {
                     .sort(),
             ),
         ];
+    }
+
+    async createUserFromIdToken(idToken: JwtPayload): Promise<User> {
+        if (this.userService?.createUserFromIdToken) return this.userService.createUserFromIdToken(idToken);
+        if (!idToken.sub) throw new Error("JwtPayload does not contain sub.");
+        return {
+            id: idToken.sub,
+            name: idToken.name,
+            email: idToken.email,
+        };
     }
 
     async getUser(id: string): Promise<User> {

@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     CrudVisibility,
+    filterByFragment,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -20,7 +21,6 @@ import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton, Typography } from "@mui/material";
 import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { filter } from "graphql-anywhere";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -38,6 +38,7 @@ import {
     GQLUpdateProductStatusMutation,
     GQLUpdateProductStatusMutationVariables,
 } from "./ProductsGrid.generated";
+import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
 function ProductsGridToolbar() {
     return (
@@ -139,9 +140,11 @@ export function ProductsGrid() {
             headerName: "",
             sortable: false,
             filterable: false,
+            width: 106,
             renderCell: (params) => {
                 return (
                     <>
+                        <ProductsGridPreviewAction product={params.row} />
                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                             <Edit color="primary" />
                         </IconButton>
@@ -176,7 +179,7 @@ export function ProductsGrid() {
                             }}
                             refetchQueries={["ProductsList"]}
                             copyData={() => {
-                                return filter<GQLProductsListManualFragment>(productsFragment, params.row);
+                                return filterByFragment<GQLProductsListManualFragment>(productsFragment, params.row);
                             }}
                         />
                     </>

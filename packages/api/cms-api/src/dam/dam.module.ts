@@ -3,6 +3,9 @@ import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/comm
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
 import { BlobStorageModule, defaultDamAcceptedMimetypes, DependentsResolverFactory } from "..";
+import { DamVideoBlockTransformerService } from "./blocks/dam-video-block-transformer.service";
+import { PixelImageBlockTransformerService } from "./blocks/pixel-image-block-transformer.service";
+import { SvgImageBlockTransformerService } from "./blocks/svg-image-block-transformer.service";
 import { ScaledImagesCacheService } from "./cache/scaled-images-cache.service";
 import { DamConfig } from "./dam.config";
 import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE, IMGPROXY_CONFIG } from "./dam.constants";
@@ -73,7 +76,7 @@ export class DamModule {
         };
 
         const DamItemsResolver = createDamItemsResolver({ File, Folder, Scope });
-        const FilesResolver = createFilesResolver({ File, Scope });
+        const FilesResolver = createFilesResolver({ File, Folder, Scope });
         const FileDependentsResolver = DependentsResolverFactory.create(File);
         const FoldersResolver = createFoldersResolver({ Folder, Scope });
 
@@ -122,9 +125,23 @@ export class DamModule {
                 CalculateDominantImageColor,
                 FileValidationService,
                 FileUploadService,
+                PixelImageBlockTransformerService,
+                SvgImageBlockTransformerService,
+                DamVideoBlockTransformerService,
             ],
             controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
-            exports: [ImgproxyService, FilesService, FoldersService, ImagesService, ScaledImagesCacheService, damConfigProvider, FileUploadService],
+            exports: [
+                ImgproxyService,
+                FilesService,
+                FoldersService,
+                ImagesService,
+                ScaledImagesCacheService,
+                damConfigProvider,
+                FileUploadService,
+                PixelImageBlockTransformerService,
+                SvgImageBlockTransformerService,
+                DamVideoBlockTransformerService,
+            ],
         };
     }
 }

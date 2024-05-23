@@ -2,6 +2,7 @@
 import { BlocksBlock, PropsWithData, SupportedBlocks, YouTubeVideoBlock } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
+import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
 import * as React from "react";
 
 import { AnchorBlock } from "./AnchorBlock";
@@ -21,7 +22,7 @@ const supportedBlocks: SupportedBlocks = {
     space: (props) => <SpaceBlock data={props} />,
     richtext: (props) => <RichTextBlock data={props} />,
     headline: (props) => <HeadlineBlock data={props} />,
-    image: (props) => <DamImageBlock data={props} />,
+    image: (props) => <DamImageBlock data={props} aspectRatio="inherit" />,
     textImage: (props) => <TextImageBlock data={props} />,
     damVideo: (props) => <DamVideoBlock data={props} />,
     youTubeVideo: (props) => <YouTubeVideoBlock data={props} />,
@@ -32,6 +33,7 @@ const supportedBlocks: SupportedBlocks = {
     media: (props) => <MediaBlock data={props} />,
     twoLists: (props) => <TwoListsBlock data={props} />,
     teaser: (props) => <TeaserBlock data={props} />,
+    newsDetail: (props) => <NewsDetailBlock data={props} />,
 };
 
 export const PageContentBlock: React.FC<PropsWithData<PageContentBlockData>> = ({ data }) => {

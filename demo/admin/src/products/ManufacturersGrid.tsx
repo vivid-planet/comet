@@ -1,6 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    filterByFragment,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -26,7 +27,6 @@ import {
     GQLManufacturersListQuery,
     GQLManufacturersListQueryVariables,
 } from "@src/products/ManufacturersGrid.generated";
-import { filter } from "graphql-anywhere";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -78,6 +78,10 @@ export function ManufacturersGrid() {
                     </Tooltip>
                 </div>
             ),
+        },
+        {
+            field: "name",
+            headerName: intl.formatMessage({ id: "manufacturers.name", defaultMessage: "Name" }),
         },
         {
             field: "address.street",
@@ -137,6 +141,7 @@ export function ManufacturersGrid() {
                                     mutation: createManufacturerMutation,
                                     variables: {
                                         input: {
+                                            name: input.name,
                                             address: input.address,
                                             addressAsEmbeddable: input.addressAsEmbeddable,
                                         },
@@ -151,7 +156,7 @@ export function ManufacturersGrid() {
                             }}
                             refetchQueries={["ManufacturersList"]}
                             copyData={() => {
-                                return filter(manufacturersFragment, params.row);
+                                return filterByFragment(manufacturersFragment, params.row);
                             }}
                         />
                     </>
@@ -192,6 +197,7 @@ export function ManufacturersGrid() {
 
 const manufacturersFragment = gql`
     fragment ManufacturersListManual on Manufacturer {
+        name
         address {
             street
             streetNumber
