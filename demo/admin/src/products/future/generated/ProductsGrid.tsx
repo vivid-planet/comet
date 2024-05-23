@@ -50,7 +50,7 @@ const productsFragment = gql`
 `;
 
 const productsQuery = gql`
-    query ProductsGrid($offset: Int, $limit: Int, $sort: [ProductSort!], $search: String, $filter: ProductFilter) {
+    query ProductsGrid($offset: Int!, $limit: Int!, $sort: [ProductSort!], $search: String, $filter: ProductFilter) {
         products(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
             nodes {
                 ...ProductsGridFuture

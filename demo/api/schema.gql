@@ -472,7 +472,7 @@ type ProductColor implements DocumentInterface {
 
 type ProductStatistics {
   id: ID!
-  views: Float!
+  views: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -522,7 +522,7 @@ type Product {
   type: ProductType!
   price: Float
   inStock: Boolean!
-  soldCount: Float
+  soldCount: Int
   availableSince: DateTime
   image: DamImageBlockData!
   discounts: [ProductDiscounts!]!
