@@ -1,14 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import {
-    filterByFragment,
-    FinalForm,
-    FinalFormSubmitEvent,
-    MainContent,
-    TextField,
-    useFormApiRef,
-    useStackApi,
-    useStackSwitchApi,
-} from "@comet/admin";
+import { filterByFragment, FinalForm, FinalFormSubmitEvent, MainContent, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
 import { EditPageLayout, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { CircularProgress } from "@mui/material";
 import { FormApi } from "final-form";
@@ -41,7 +32,6 @@ interface FormProps {
 type FormState = GQLProductCategoryFormFragment;
 
 function ProductCategoryForm({ id }: FormProps): React.ReactElement {
-    const stackApi = useStackApi();
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormState>();

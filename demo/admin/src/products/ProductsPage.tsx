@@ -23,6 +23,17 @@ import { ProductsGrid } from "./ProductsGrid";
 import { ProductVariantForm } from "./ProductVariantForm";
 import { ProductVariantsGrid } from "./ProductVariantsGrid";
 
+const FormToolbar = () => (
+    <StackToolbar>
+        <ToolbarBackButton />
+        <ToolbarAutomaticTitleItem />
+        <ToolbarFillSpace />
+        <ToolbarActions>
+            <SaveBoundarySaveButton />
+        </ToolbarActions>
+    </StackToolbar>
+);
+
 const ProductsPage: React.FC = () => {
     const intl = useIntl();
 
@@ -36,14 +47,7 @@ const ProductsPage: React.FC = () => {
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit product" })}>
                     {(selectedProductId) => (
                         <SaveBoundary>
-                            <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
-                                <ToolbarBackButton />
-                                <ToolbarAutomaticTitleItem />
-                                <ToolbarFillSpace />
-                                <ToolbarActions>
-                                    <SaveBoundarySaveButton />
-                                </ToolbarActions>
-                            </StackToolbar>
+                            <FormToolbar />
                             <MainContent>
                                 <RouterTabs>
                                     <RouterTab
@@ -114,14 +118,7 @@ const ProductsPage: React.FC = () => {
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add product" })}>
                     <SaveBoundary>
-                        <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
-                            <ToolbarBackButton />
-                            <ToolbarAutomaticTitleItem />
-                            <ToolbarFillSpace />
-                            <ToolbarActions>
-                                <SaveBoundarySaveButton />
-                            </ToolbarActions>
-                        </StackToolbar>
+                        <FormToolbar />
                         <ProductForm />
                     </SaveBoundary>
                 </StackPage>
