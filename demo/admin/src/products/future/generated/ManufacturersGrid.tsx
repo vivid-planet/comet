@@ -83,8 +83,7 @@ const createManufacturerMutation = gql`
 
 function ManufacturersGridToolbar() {
     return (
-        <Toolbar>
-            <ToolbarAutomaticTitleItem />
+        <DataGridToolbar>
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
@@ -97,7 +96,7 @@ function ManufacturersGridToolbar() {
                     <FormattedMessage id="manufacturer.newManufacturer" defaultMessage="New Manufacturer" />
                 </Button>
             </ToolbarActions>
-        </Toolbar>
+        </DataGridToolbar>
     );
 }
 
