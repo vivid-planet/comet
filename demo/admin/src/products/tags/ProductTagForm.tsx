@@ -1,24 +1,16 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
-    Field,
     filterByFragment,
     FinalForm,
-    FinalFormSaveSplitButton,
     FinalFormSubmitEvent,
     MainContent,
     TextField,
-    Toolbar,
-    ToolbarActions,
-    ToolbarFillSpace,
-    ToolbarItem,
-    ToolbarTitleItem,
     useFormApiRef,
     useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
-import { ArrowLeft } from "@comet/admin-icons";
-import { EditPageLayout, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { CircularProgress, IconButton } from "@mui/material";
+import { resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { CircularProgress } from "@mui/material";
 import { FormApi } from "final-form";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -124,34 +116,12 @@ function ProductTagForm({ id }: FormProps): React.ReactElement {
     return (
         <FinalForm<FormState> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues} subscription={{}}>
             {() => (
-                <EditPageLayout>
+                <>
                     {saveConflict.dialogs}
-                    <Toolbar>
-                        <ToolbarItem>
-                            <IconButton onClick={stackApi?.goBack}>
-                                <ArrowLeft />
-                            </IconButton>
-                        </ToolbarItem>
-                        <ToolbarTitleItem>
-                            <Field name="title">
-                                {({ input }) =>
-                                    input.value ? (
-                                        input.value
-                                    ) : (
-                                        <FormattedMessage id="products.productTagDetail" defaultMessage="Product Tag Detail" />
-                                    )
-                                }
-                            </Field>
-                        </ToolbarTitleItem>
-                        <ToolbarFillSpace />
-                        <ToolbarActions>
-                            <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
-                        </ToolbarActions>
-                    </Toolbar>
                     <MainContent>
                         <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
                     </MainContent>
-                </EditPageLayout>
+                </>
             )}
         </FinalForm>
     );

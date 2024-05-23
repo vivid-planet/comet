@@ -1,15 +1,13 @@
 import { useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    DataGridToolbar,
     filterByFragment,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridPagingToGql,
     muiGridSortToGql,
     StackLink,
-    Toolbar,
-    ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
@@ -35,8 +33,7 @@ import {
 
 function ProductCategoriesTableToolbar() {
     return (
-        <Toolbar>
-            <ToolbarAutomaticTitleItem />
+        <DataGridToolbar>
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
@@ -49,7 +46,7 @@ function ProductCategoriesTableToolbar() {
                     <FormattedMessage id="products.newCategory" defaultMessage="New Category" />
                 </Button>
             </ToolbarItem>
-        </Toolbar>
+        </DataGridToolbar>
     );
 }
 
@@ -114,20 +111,18 @@ function ProductCategoriesTable() {
     const rowCount = useBufferedRowCount(data?.productCategories.totalCount);
 
     return (
-        <MainContent fullHeight disablePadding>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                error={error}
-                components={{
-                    Toolbar: ProductCategoriesTableToolbar,
-                }}
-            />
-        </MainContent>
+        <DataGridPro
+            {...dataGridProps}
+            disableSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            error={error}
+            components={{
+                Toolbar: ProductCategoriesTableToolbar,
+            }}
+        />
     );
 }
 

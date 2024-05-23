@@ -67,7 +67,7 @@ export function ProductsPage(): React.ReactElement {
                     {(selectedId) => (
                         <>
                             <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
-                            <MainContent fullHeight disablePadding>
+                            <MainContent fullHeight>
                                 <ProductVariantsGrid product={selectedId} />
                             </MainContent>
                         </>

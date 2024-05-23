@@ -1,4 +1,17 @@
-import { Stack, StackPage, StackSwitch } from "@comet/admin";
+import {
+    MainContent,
+    SaveBoundary,
+    SaveBoundarySaveButton,
+    Stack,
+    StackPage,
+    StackSwitch,
+    StackToolbar,
+    ToolbarActions,
+    ToolbarAutomaticTitleItem,
+    ToolbarBackButton,
+    ToolbarFillSpace,
+} from "@comet/admin";
+import { ContentScopeIndicator } from "@comet/cms-admin";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -12,13 +25,38 @@ const ProductCategoriesPage: React.FC = () => {
         <Stack topLevelTitle={intl.formatMessage({ id: "products.productCategories", defaultMessage: "Product Categories" })}>
             <StackSwitch initialPage="table">
                 <StackPage name="table">
-                    <ProductCategoriesTable />
+                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
+                    <MainContent fullHeight>
+                        <ProductCategoriesTable />
+                    </MainContent>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProductCategory", defaultMessage: "Edit product category" })}>
-                    {(selectedId) => <ProductCategoryForm id={selectedId} />}
+                    {(selectedId) => (
+                        <SaveBoundary>
+                            <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+                                <ToolbarBackButton />
+                                <ToolbarAutomaticTitleItem />
+                                <ToolbarFillSpace />
+                                <ToolbarActions>
+                                    <SaveBoundarySaveButton />
+                                </ToolbarActions>
+                            </StackToolbar>
+                            <ProductCategoryForm id={selectedId} />
+                        </SaveBoundary>
+                    )}
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProductCategory", defaultMessage: "Add product category" })}>
-                    <ProductCategoryForm />
+                    <SaveBoundary>
+                        <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+                            <ToolbarBackButton />
+                            <ToolbarAutomaticTitleItem />
+                            <ToolbarFillSpace />
+                            <ToolbarActions>
+                                <SaveBoundarySaveButton />
+                            </ToolbarActions>
+                        </StackToolbar>
+                        <ProductCategoryForm />
+                    </SaveBoundary>
                 </StackPage>
             </StackSwitch>
         </Stack>
