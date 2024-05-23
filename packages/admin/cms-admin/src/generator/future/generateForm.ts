@@ -131,9 +131,9 @@ export function generateForm(
     if (addMode && createMutationType) {
         gqlDocuments[`create${gqlType}Mutation`] = `
             mutation Create${gqlType}(${
-            gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield && gqlArg.queryOrMutationName === `create${gqlType}`).length
+            gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield && gqlArg.queryOrMutationName === createMutationType.name).length
                 ? `${gqlArgs
-                      .filter((gqlArg) => !gqlArg.isInputArgSubfield && gqlArg.queryOrMutationName === `create${gqlType}`)
+                      .filter((gqlArg) => !gqlArg.isInputArgSubfield && gqlArg.queryOrMutationName === createMutationType.name)
                       .map((gqlArg) => {
                           return `$${gqlArg.name}: ${gqlArg.type}!`;
                       })
@@ -141,9 +141,9 @@ export function generateForm(
                 : ``
         }$input: ${gqlType}Input!) {
                 ${createMutationType.name}(${
-            gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield && gqlArg.queryOrMutationName === `create${gqlType}`).length
+            gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield && gqlArg.queryOrMutationName === createMutationType.name).length
                 ? `${gqlArgs
-                      .filter((gqlArg) => !gqlArg.isInputArgSubfield && gqlArg.queryOrMutationName === `create${gqlType}`)
+                      .filter((gqlArg) => !gqlArg.isInputArgSubfield && gqlArg.queryOrMutationName === createMutationType.name)
                       .map((gqlArg) => {
                           return `${gqlArg.name}: $${gqlArg.name}`;
                       })
