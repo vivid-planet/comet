@@ -75,13 +75,8 @@ export function ProductsGrid() {
             headerName: "Overview",
             minWidth: 200,
             flex: 1,
-<<<<<<< HEAD
-            visibleMediaQuery: theme.breakpoints.down("md"),
             sortBy: ["title", "price", "type", "category", "inStock"],
-=======
-            sortable: false,
             visible: theme.breakpoints.down("md"),
->>>>>>> origin/next
             renderCell: ({ row }) => {
                 const secondaryValues = [
                     typeof row.price === "number" && intl.formatNumber(row.price, { style: "currency", currency: "EUR" }),
