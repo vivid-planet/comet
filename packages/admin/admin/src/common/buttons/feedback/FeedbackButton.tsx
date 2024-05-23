@@ -3,6 +3,7 @@ import { LoadingButton, LoadingButtonProps } from "@mui/lab";
 import { ButtonClassKey, ComponentsOverrides } from "@mui/material";
 import { Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
+import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
@@ -57,8 +58,8 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         disabled,
         startIcon,
         endIcon,
-        tooltipSuccessMessage = "Success",
-        tooltipErrorMessage = "Error",
+        tooltipSuccessMessage = <FormattedMessage id="comet.feedbackButton.tooltipSuccessMessage" defaultMessage="Success" />,
+        tooltipErrorMessage = <FormattedMessage id="comet.feedbackButton.tooltipErrorMessage" defaultMessage="Error" />,
         slotProps,
 
         ...restProps
