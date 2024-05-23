@@ -248,19 +248,19 @@ storiesOf("stories/components/DataGrid", module)
                 headerName: "Full name",
                 flex: 1,
                 renderCell: ({ row }) => `${row.firstName} ${row.lastName}`,
-                visibleMediaQuery: theme.breakpoints.down("md"),
+                visible: theme.breakpoints.down("md"),
             },
             {
                 field: "firstName",
                 headerName: "First name",
                 flex: 1,
-                visibleMediaQuery: theme.breakpoints.up("md"),
+                visible: theme.breakpoints.up("md"),
             },
             {
                 field: "lastName",
                 headerName: "Last name",
                 flex: 1,
-                visibleMediaQuery: theme.breakpoints.up("md"),
+                visible: theme.breakpoints.up("md"),
             },
         ];
 
