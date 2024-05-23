@@ -150,7 +150,7 @@ export function filtersToMikroOrmQuery(
     return genericFilter(filter);
 }
 
-const splitSearchString = (search: string) => {
+export const splitSearchString = (search: string) => {
     // regex to match all single tokens or quotes in a string => "This is a 'quoted string'" will result in ["This", "is", "a", "quoted string"]
     // it will also take escaped quotes (prepended with a backslash => \) into account
     const regex = /(["'])(?:(?=(\\?))\2.)*?\1|\S+/g;

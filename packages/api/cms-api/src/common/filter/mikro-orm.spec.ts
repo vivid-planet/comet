@@ -1,8 +1,64 @@
 import { BooleanFilter } from "./boolean.filter";
 import { DateFilter } from "./date.filter";
-import { filtersToMikroOrmQuery, filterToMikroOrmQuery, searchToMikroOrmQuery } from "./mikro-orm";
+import { filtersToMikroOrmQuery, filterToMikroOrmQuery, searchToMikroOrmQuery, splitSearchString } from "./mikro-orm";
 import { NumberFilter } from "./number.filter";
 import { StringFilter } from "./string.filter";
+
+describe("splitSearchString", () => {
+    it("should split a simple space-separated string", () => {
+        const input = "This is a test";
+        const expected = ["%This%", "%is%", "%a%", "%test%"];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+
+    it("should handle quoted strings as single tokens", () => {
+        const input = 'This is a "quoted string"';
+        const expected = ["%This%", "%is%", "%a%", "%quoted string%"];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+
+    it("should handle escaped quotes within quoted strings", () => {
+        const input = 'This is a "quoted \\"string\\""';
+        const expected = ["%This%", "%is%", "%a%", '%quoted "string"%'];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+
+    it("should handle single quotes", () => {
+        const input = "This is a 'quoted string'";
+        const expected = ["%This%", "%is%", "%a%", "%quoted string%"];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+
+    it("should handle escaped quotes within single quoted strings", () => {
+        const input = "This is a 'quoted \\'string\\''";
+        const expected = ["%This%", "%is%", "%a%", "%quoted 'string'%"];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+
+    it("should handle mixed quotes", () => {
+        const input = "This \"is a\" 'test'";
+        const expected = ["%This%", "%is a%", "%test%"];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+
+    it("should handle empty strings", () => {
+        const input = "";
+        const expected: string[] = [];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+
+    it("should handle strings with special characters", () => {
+        const input = "This is a test with % and _ characters";
+        const expected = ["%This%", "%is%", "%a%", "%test%", "%with%", "%\\%%", "%and%", "%\\_%", "%characters%"];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+
+    it("should handle strings with only special characters", () => {
+        const input = "% _";
+        const expected = ["%\\%%", "%\\_%"];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+});
 
 describe("searchToMikroOrmQuery", () => {
     it("should work", async () => {
