@@ -6,6 +6,7 @@ import {
     DataGridToolbar,
     GridColDef,
     GridFilterButton,
+    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -229,16 +230,18 @@ export function NewsGrid(): React.ReactElement {
     const rows = data?.newsList.nodes ?? [];
 
     return (
-        <DataGridPro
-            {...dataGridProps}
-            disableSelectionOnClick
-            rows={rows}
-            rowCount={rowCount}
-            columns={columns}
-            loading={loading}
-            components={{
-                Toolbar: NewsGridToolbar,
-            }}
-        />
+        <MainContent fullHeight>
+            <DataGridPro
+                {...dataGridProps}
+                disableSelectionOnClick
+                rows={rows}
+                rowCount={rowCount}
+                columns={columns}
+                loading={loading}
+                components={{
+                    Toolbar: NewsGridToolbar,
+                }}
+            />
+        </MainContent>
     );
 }
