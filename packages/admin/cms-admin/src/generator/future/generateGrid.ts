@@ -363,7 +363,7 @@ export function generateGrid(
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
         .join("\n")}
-    ${config.actions?.componentImport ? `import { ${config.actions.componentImport.name} } from "${config.actions.componentImport.import}";` : ""}
+    ${config.actions?.component ? `import { ${config.actions.component.name} } from "${config.actions.component.import}";` : ""}
 
     const ${instanceGqlTypePlural}Fragment = gql\`
         fragment ${fragmentName} on ${gqlType} {
@@ -521,11 +521,7 @@ export function generateGrid(
                         renderCell: (params) => {
                             return (
                                 <>
-                                ${
-                                    config.actions?.componentImport?.name
-                                        ? `<${config.actions.componentImport.name} renderCellParams={params} />`
-                                        : ""
-                                }${
+                                ${config.actions?.component?.name ? `<${config.actions.component.name} params={params} />` : ""}${
                               allowEditing
                                   ? forwardRowAction
                                       ? `{rowAction && rowAction(params)}`

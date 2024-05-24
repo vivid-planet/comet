@@ -83,7 +83,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     rowActionProp?: boolean;
     actions?: {
         columnWidth?: number;
-        componentImport?: ImportReference;
+        component?: ImportReference;
     };
 };
 
