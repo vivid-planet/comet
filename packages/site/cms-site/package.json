@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-site",
-    "version": "5.8.4",
+    "version": "5.8.5",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -33,8 +33,8 @@
         "use-debounce": "^6.0.0"
     },
     "devDependencies": {
-        "@comet/cli": "workspace:^5.8.4",
-        "@comet/eslint-config": "workspace:^5.8.4",
+        "@comet/cli": "workspace:^5.8.5",
+        "@comet/eslint-config": "workspace:^5.8.5",
         "@gitbeaker/node": "^34.0.0",
         "@testing-library/react-hooks": "^8.0.0",
         "@types/draft-js": "^0.11.10",
