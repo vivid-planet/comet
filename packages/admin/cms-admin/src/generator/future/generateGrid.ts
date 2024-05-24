@@ -136,8 +136,8 @@ export function generateGrid(
     props.push(...forwardedGqlArgsProps);
 
     const actionsColumnProps = ['field: "actions"', 'headerName: ""', "sortable: false", "filterable: false", 'type: "actions"', 'align: "right"'];
-    if (typeof config.actions?.columnWidth !== "undefined") {
-        actionsColumnProps.push(`width: ${config.actions.columnWidth}`);
+    if (typeof config.actionsWidth !== "undefined") {
+        actionsColumnProps.push(`width: ${config.actionsWidth}`);
     }
 
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
@@ -340,7 +340,7 @@ export function generateGrid(
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
         .join("\n")}
-    ${config.actions?.component ? `import { ${config.actions.component.name} } from "${config.actions.component.import}";` : ""}
+    ${config.actionsComponent ? `import { ${config.actionsComponent.name} } from "${config.actionsComponent.import}";` : ""}
 
     const ${instanceGqlTypePlural}Fragment = gql\`
         fragment ${fragmentName} on ${gqlType} {
@@ -497,7 +497,7 @@ export function generateGrid(
                         renderCell: (params) => {
                             return (
                                 <>
-                                ${config.actions?.component?.name ? `<${config.actions.component.name} params={params} />` : ""}${
+                                ${config.actionsComponent?.name ? `<${config.actionsComponent.name} params={params} />` : ""}${
                               allowEditing
                                   ? `
                                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>

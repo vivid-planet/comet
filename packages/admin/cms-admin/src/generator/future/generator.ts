@@ -61,10 +61,8 @@ export type GridConfig<T extends { __typename?: string }> = {
     readOnly?: boolean;
     filterProp?: boolean;
     toolbar?: boolean;
-    actions?: {
-        columnWidth?: number;
-        component?: ImportReference;
-    };
+    actionsComponent?: ImportReference;
+    actionsWidth?: number;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
