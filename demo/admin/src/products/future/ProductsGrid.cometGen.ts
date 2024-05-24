@@ -17,6 +17,6 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
     ],
     actions: {
         columnWidth: 116,
-        componentImport: { name: "ProductsGridActions", import: "../ProductsGridActions" },
+        component: { name: "ProductsGridPreviewAction", import: "../../ProductsGridPreviewAction" },
     },
 };

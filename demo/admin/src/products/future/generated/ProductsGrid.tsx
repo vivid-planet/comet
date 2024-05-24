@@ -26,7 +26,7 @@ import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { ProductsGridActions } from "../ProductsGridActions";
+import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -160,7 +160,7 @@ export function ProductsGrid({ filter }: Props): React.ReactElement {
             renderCell: (params) => {
                 return (
                     <>
-                        <ProductsGridActions renderCellParams={params} />
+                        <ProductsGridPreviewAction params={params} />
                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                             <Edit color="primary" />
                         </IconButton>
