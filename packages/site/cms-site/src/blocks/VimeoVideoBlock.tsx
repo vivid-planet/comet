@@ -1,8 +1,9 @@
 import * as React from "react";
-import styled from "styled-components";
 
 import { VimeoVideoBlockData } from "../blocks.generated";
+import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
+import { getHeightInPercentForAspectRatio, VideoContainer } from "./helpers";
 import { PropsWithData } from "./PropsWithData";
 
 const isUrl = (value: string) => {
@@ -13,41 +14,49 @@ const isUrl = (value: string) => {
     }
 };
 
-export const VimeoVideoBlock: React.FunctionComponent<PropsWithData<VimeoVideoBlockData>> = ({ data: { vimeoIdentifier, autoplay } }) => {
-    if (!vimeoIdentifier) {
-        return <PreviewSkeleton type="media" hasContent={false} />;
+function parseVimeoIdentifier(vimeoIdentifier: string): string | undefined {
+    const urlRegEx = /(https?:\/\/)?(www\.)?(player\.)?vimeo\.com\/?(showcase\/)*([0-9)([a-z]*\/)*([0-9]{6,11})[?]?.*/;
+    const idRegEx = /([0-9]{6,11})/;
+
+    const identifierIsUrl = isUrl(vimeoIdentifier);
+
+    const regEx = identifierIsUrl ? urlRegEx : idRegEx;
+    const match = vimeoIdentifier.match(regEx);
+
+    if (match) {
+        const idIndex = identifierIsUrl ? 6 : 1;
+        return match[idIndex];
+    } else {
+        return undefined;
     }
+}
 
-    if (isUrl(vimeoIdentifier)) {
-        const regEx = /(https?:\/\/)?(www\.)?(player\.)?vimeo\.com\/?(showcase\/)*([0-9)([a-z]*\/)*([0-9]{6,11})[?]?.*/;
-        const match = vimeoIdentifier.match(regEx);
-        if (match && match.length == 7) {
-            vimeoIdentifier = match[6];
-        }
-    }
+export const VimeoVideoBlock = withPreview(
+    ({ data: { vimeoIdentifier, loop, showControls, aspectRatio, autoplay } }: PropsWithData<VimeoVideoBlockData>) => {
+        if (!vimeoIdentifier) return <PreviewSkeleton type="media" hasContent={false} />;
 
-    return (
-        <VideoContainer>
-            <iframe
-                src={`https://player.vimeo.com/video/${vimeoIdentifier}?autoplay=${Number(autoplay)}&muted=${Number(autoplay)}&dnt=1`}
-                allow="autoplay"
-                allowFullScreen
-            />
-        </VideoContainer>
-    );
-};
+        const identifier = parseVimeoIdentifier(vimeoIdentifier);
 
-const VideoContainer = styled.div`
-    position: relative;
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
+        const searchParams = new URLSearchParams();
 
-    iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        border: 0;
-        width: 100%;
-        height: 100%;
-    }
-`;
+        searchParams.append("autoplay", Number(autoplay).toString());
+        autoplay && searchParams.append("muted", "1");
+
+        searchParams.append("loop", Number(loop).toString());
+
+        searchParams.append("controls", Number(showControls).toString());
+
+        searchParams.append("dnt", "1");
+
+        const vimeoBaseUrl = "https://player.vimeo.com/video/";
+        const vimeoUrl = new URL(`${vimeoBaseUrl}${identifier ?? ""}`);
+        vimeoUrl.search = searchParams.toString();
+
+        return (
+            <VideoContainer heightInPercent={getHeightInPercentForAspectRatio(aspectRatio)}>
+                <iframe src={vimeoUrl.toString()} allow="autoplay" allowFullScreen style={{ border: 0 }} />
+            </VideoContainer>
+        );
+    },
+    { label: "Vimeo Video" },
+);

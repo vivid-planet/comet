@@ -1,37 +1,9 @@
 import * as React from "react";
-import styled from "styled-components";
 
 import { YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
+import { getHeightInPercentForAspectRatio, VideoContainer } from "./helpers";
 import { PropsWithData } from "./PropsWithData";
-
-interface VideoContainerProps {
-    heightInPercent: number;
-}
-
-const VideoContainer = styled.div<VideoContainerProps>`
-    height: 0;
-    overflow: hidden;
-    padding-top: ${({ heightInPercent }) => heightInPercent}%;
-    position: relative;
-
-    iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-`;
-
-const getHeightInPercentForAspectRatio = (aspectRatio: YouTubeVideoBlockData["aspectRatio"]) => {
-    switch (aspectRatio) {
-        case "16X9":
-            return 56.25;
-        case "4X3":
-            return 75;
-    }
-};
 
 const EXPECTED_YT_ID_LENGTH = 11;
 
@@ -71,5 +43,5 @@ export const YouTubeVideoBlock = withPreview(
             </VideoContainer>
         );
     },
-    { label: "Video" },
+    { label: "YouTube Video" },
 );
