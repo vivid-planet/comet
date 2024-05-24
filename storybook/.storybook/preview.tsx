@@ -1,4 +1,4 @@
-import "@fontsource-variable/roboto-flex";
+import "@fontsource-variable/roboto-flex/full.css";
 
 import { MainContent, MuiThemeProvider } from "@comet/admin";
 import { DateFnsLocaleProvider } from "@comet/admin-date-time";

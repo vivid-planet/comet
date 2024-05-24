@@ -1,4 +1,4 @@
-import "@fontsource-variable/roboto-flex";
+import "@fontsource-variable/roboto-flex/full.css";
 import "material-design-icons/iconfont/material-icons.css";
 import "typeface-open-sans";
 import "@src/polyfills";

@@ -30,11 +30,14 @@ const TypographyRoot = createComponentSlot(MuiTypography)<ToolbarBreadcrumbsClas
     },
 })(
     ({ ownerState }) => css`
-        font-size: 18px;
+        font-size: 14px;
+        font-weight: 200;
+        line-height: 16px;
 
         ${ownerState.active &&
         css`
             color: ${ownerState.active};
+            font-weight: 600;
         `}
     `,
 );
