@@ -35,7 +35,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
 
     displayName: <FormattedMessage id="comet.blocks.youTubeVideo" defaultMessage="Video (YouTube)" />,
 
-    defaultValues: () => ({ youtubeIdentifier: "", autoplay: false, showControls: false, loop: false, aspectRatio: "16X9" }),
+    defaultValues: () => ({ youtubeIdentifier: "", autoplay: false, showControls: true, loop: false, aspectRatio: "16X9" }),
 
     category: BlockCategory.Media,
 
@@ -45,6 +45,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
 
     definesOwnPadding: true,
 
+    // !youtubeIdentifier to allow saving empty string
     isValid: ({ youtubeIdentifier }) => !youtubeIdentifier || isValidYouTubeIdentifier(youtubeIdentifier),
 
     AdminComponent: ({ state, updateState }) => {
