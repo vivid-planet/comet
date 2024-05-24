@@ -1,21 +1,19 @@
 import { BlockContext, BlockDataInterface } from "@comet/blocks-api";
-import { Inject, Injectable, Optional } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { ModuleRef } from "@nestjs/core";
 import { CONTEXT } from "@nestjs/graphql";
 
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
-import { PageTreeReadApiService } from "../page-tree/page-tree-read-api.service";
-import { BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES } from "./blocks.constants";
 import { transformToPlain } from "./blocks-transformer";
 
 @Injectable()
 export class BlocksTransformerService {
     private blockContext: BlockContext;
-    private dependencies: Record<string, unknown>;
+
     constructor(
-        @Inject(BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES) dependencies: Record<string, unknown>,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        @Inject(CONTEXT) context: any,
-        @Optional() pageTreeReadApi?: PageTreeReadApiService,
+        @Inject(CONTEXT) private readonly context: any,
+        private readonly moduleRef: ModuleRef,
     ) {
         let includeInvisibleBlocks: boolean | undefined = false;
         let previewDamUrls = false;
@@ -37,14 +35,10 @@ export class BlocksTransformerService {
         }
 
         this.blockContext = { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls, relativeDamUrls };
-        this.dependencies = {
-            ...dependencies,
-            pageTreeReadApi: pageTreeReadApi,
-        };
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async transformToPlain(block: BlockDataInterface, context?: BlockContext): Promise<any> {
-        return transformToPlain(block, this.dependencies, context ?? this.blockContext);
+        return transformToPlain(block, context ?? this.blockContext, this.moduleRef, this.context);
     }
 }

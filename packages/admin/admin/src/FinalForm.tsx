@@ -87,6 +87,7 @@ function RouterPromptIf({
                 return true;
             }}
             saveAction={doSave}
+            resetAction={() => formApi.reset()}
             subRoutePath={subRoutePath}
         >
             {children}
@@ -198,14 +199,16 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
             return true;
         }, [formRenderProps.form]);
-
+        const doReset = React.useCallback(() => {
+            formRenderProps.form.reset();
+        }, [formRenderProps.form]);
         return (
             <FinalFormContextProvider {...formContext}>
                 {saveBoundaryApi && (
                     <FormSpy subscription={{ dirty: true }}>
                         {(props) => (
                             <>
-                                <Savable hasChanges={props.dirty} doSave={doSave} />
+                                <Savable hasChanges={props.dirty} doSave={doSave} doReset={doReset} />
                             </>
                         )}
                     </FormSpy>

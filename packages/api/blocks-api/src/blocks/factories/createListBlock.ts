@@ -18,7 +18,6 @@ import {
     TraversableTransformResponse,
 } from "../block";
 import { BlockField } from "../decorators/field";
-import { TransformDependencies } from "../dependencies";
 import { BlockFactoryNameOrOptions } from "./types";
 
 export interface ListBlockItemDataInterface extends BlockData {
@@ -39,10 +38,7 @@ export function BaseListBlockItemData<B extends Block>(block: B): ClassConstruct
         @BlockField(block)
         props: BlockDataInterface;
 
-        async transformToPlain(
-            dependencies: TransformDependencies,
-            { includeInvisibleContent }: BlockContext,
-        ): Promise<TraversableTransformResponse> {
+        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
             const { key, visible, props, ...additionalFields } = this;
 
             return {
@@ -123,7 +119,7 @@ export function createListBlock<B extends Block>(
         @BlockField(ListBlockItemData)
         blocks: ListBlockItemDataInterface[];
 
-        async transformToPlain(deps: TransformDependencies, { includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
             return {
                 blocks: includeInvisibleContent ? this.blocks : this.blocks.filter((c) => c.visible),
             };

@@ -12,7 +12,4 @@ export class User implements UserInterface {
 
     @Field()
     email: string;
-
-    @Field()
-    locale: string;
 }

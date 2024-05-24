@@ -112,4 +112,37 @@ export const createTypographyOptions = (breakpoints: Breakpoints): TypographyOpt
         fontVariationSettings: "'wdth' 80",
         textTransform: "none",
     },
+    list: {
+        paddingInlineStart: 30,
+        paddingTop: 8,
+        paddingBottom: 8,
+    },
+    listItem: {
+        fontFamily,
+        fontSize: 16,
+        lineHeight: "20px",
+        fontWeight: 250,
+        paddingLeft: 0,
+        paddingTop: 4,
+        paddingBottom: 4,
+    },
 });
+
+declare module "@mui/material/styles" {
+    interface TypographyVariants {
+        list: React.CSSProperties;
+        listItem: React.CSSProperties;
+    }
+
+    interface TypographyVariantsOptions {
+        list?: React.CSSProperties;
+        listItem?: React.CSSProperties;
+    }
+}
+
+declare module "@mui/material/Typography" {
+    interface TypographyPropsVariantOverrides {
+        list: true;
+        listItem: true;
+    }
+}

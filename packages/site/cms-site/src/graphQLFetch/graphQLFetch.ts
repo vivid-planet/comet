@@ -1,6 +1,5 @@
-import { SitePreviewParams } from "../sitePreview/SitePreviewApiHelper";
+import { SitePreviewData } from "../sitePreview/SitePreviewUtils";
 
-type SitePreviewData = SitePreviewParams["settings"];
 type Fetch = typeof fetch;
 
 function graphQLHeaders(previewData?: SitePreviewData) {
@@ -62,15 +61,23 @@ export type GraphQLFetch = <T, V>(query: string, variables?: V, init?: RequestIn
 
 export function createGraphQLFetch(fetch: Fetch, url: string): GraphQLFetch {
     return async function <T, V>(query: string, variables?: V, init?: RequestInit): Promise<T> {
-        const response = await fetch(url, {
-            method: "POST",
-            ...init,
-            headers: { "Content-Type": "application/json", ...init?.headers },
-            body: JSON.stringify({
-                query,
-                variables,
-            }),
-        });
+        let response;
+        if (init?.method === "GET") {
+            const fetchUrl = new URL(url);
+            fetchUrl.searchParams.append("query", query);
+            fetchUrl.searchParams.append("variables", JSON.stringify(variables));
+            response = await fetch(fetchUrl, init);
+        } else {
+            response = await fetch(url, {
+                method: "POST",
+                ...init,
+                headers: { "Content-Type": "application/json", ...init?.headers },
+                body: JSON.stringify({
+                    query,
+                    variables,
+                }),
+            });
+        }
         if (!response.ok) {
             throw new Error(`Network response was not ok. Status: ${response.status}`);
         }

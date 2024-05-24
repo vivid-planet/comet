@@ -11,12 +11,12 @@ import { FormatDateOptions, useIntl } from "react-intl";
 
 import { DatePickerNavigation } from "../DatePickerNavigation";
 import { useDateFnsLocale } from "../utils/DateFnsLocaleProvider";
-import { defaultMaxDate, defaultMinDate } from "../utils/datePickerHelpers";
+import { defaultMaxDate, defaultMinDate, getIsoDateString } from "../utils/datePickerHelpers";
 import { DateRange, DateRangePickerClassKey, Root, SlotProps, StartAdornment } from "./DateRangePicker.slots";
 
 export type DateRange = {
-    start: Date;
-    end: Date;
+    start: string;
+    end: string;
 };
 
 export interface DateRangePickerProps extends Omit<InputWithPopperProps, "children" | "value" | "onChange" | "slotProps"> {
@@ -24,7 +24,7 @@ export interface DateRangePickerProps extends Omit<InputWithPopperProps, "childr
     value?: DateRange;
     formatDateOptions?: FormatDateOptions;
     rangeStringSeparator?: string;
-    clearable?: boolean;
+    required?: boolean;
     monthsToShow?: number;
     maxDate?: Date;
     minDate?: Date;
@@ -52,10 +52,11 @@ const rangeKey = "pickedDateRange";
 
 const getRangeFromValue = (value: undefined | DateRange): Range => {
     if (value?.start) {
+        const startDate = new Date(value.start);
         return {
             key: rangeKey,
-            startDate: value.start,
-            endDate: value.end ?? value.start,
+            startDate,
+            endDate: value.end ? new Date(value.end) : startDate,
         };
     }
 
@@ -76,7 +77,7 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
         formatDateOptions,
         rangeStringSeparator = "  —  ",
         endAdornment,
-        clearable,
+        required,
         placeholder,
         monthsToShow = 2,
         minDate = defaultMinDate,
@@ -100,8 +101,9 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
             {...slotProps?.root}
             {...inputWithPopperProps}
             readOnly
+            required={required}
             endAdornment={
-                clearable ? (
+                !required ? (
                     <>
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange && onChange(undefined)} />
                         {endAdornment}
@@ -133,11 +135,10 @@ export const DateRangePicker = (inProps: DateRangePickerProps) => {
                     onChange={(ranges) => {
                         const pickedRange = ranges[rangeKey];
                         if (pickedRange.startDate && pickedRange.endDate) {
-                            onChange &&
-                                onChange({
-                                    start: pickedRange.startDate,
-                                    end: pickedRange.endDate,
-                                });
+                            onChange?.({
+                                start: getIsoDateString(pickedRange.startDate),
+                                end: getIsoDateString(pickedRange.endDate),
+                            });
                         }
                     }}
                     showDateDisplay={false}

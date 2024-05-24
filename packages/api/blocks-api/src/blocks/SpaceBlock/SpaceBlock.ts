@@ -22,6 +22,7 @@ class SpaceBlockInput extends BlockInput {
     }
 }
 
+/** @deprecated The `SpaceBlock` is deprecated. It will be removed in the next major version. Use `createSpaceBlock` instead. */
 export const SpaceBlock = createBlock(SpaceBlockData, SpaceBlockInput, {
     name: "Space",
     // demoMigrations:

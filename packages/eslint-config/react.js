@@ -39,6 +39,21 @@ module.exports = {
                         importNames: ["Alert"],
                         message: "Please use Alert from @comet/admin instead",
                     },
+                    {
+                        name: "@mui/x-data-grid",
+                        importNames: ["GridColDef"],
+                        message: "Please use GridColDef from @comet/admin instead",
+                    },
+                    {
+                        name: "@mui/x-data-grid-pro",
+                        importNames: ["GridColDef"],
+                        message: "Please use GridColDef from @comet/admin instead",
+                    },
+                    {
+                        name: "@mui/x-data-grid-premium",
+                        importNames: ["GridColDef"],
+                        message: "Please use GridColDef from @comet/admin instead",
+                    },
                 ],
             },
         ],

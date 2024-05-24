@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+    GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -14,7 +15,7 @@ import {
 import { Edit } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -42,12 +43,6 @@ export const UserGrid: React.FC = () => {
             flex: 1,
             pinnable: false,
             headerName: intl.formatMessage({ id: "comet.userPermissions.email", defaultMessage: "E-Mail" }),
-        },
-        {
-            field: "locale",
-            flex: 0.5,
-            pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userPermissions.locale", defaultMessage: "Locale" }),
         },
         {
             field: "actions",
@@ -81,7 +76,6 @@ export const UserGrid: React.FC = () => {
                 id
                 name
                 email
-                locale
             }
         `,
         {

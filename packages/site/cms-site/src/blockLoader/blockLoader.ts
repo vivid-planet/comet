@@ -61,23 +61,25 @@ interface BetterBlockMetaNestedObject {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type BlockLoader<BlockData = any> = (options: { blockData: BlockData; graphQLFetch: GraphQLFetch; fetch: typeof fetch }) => Promise<any> | any;
+export type BlockLoader<BlockData = any> = (options: { blockData: BlockData } & BlockLoaderDependencies) => Promise<any> | any;
+
+export interface BlockLoaderDependencies {
+    graphQLFetch: GraphQLFetch;
+    fetch: typeof fetch;
+}
 
 export async function recursivelyLoadBlockData({
     blockType,
     blockData,
-    graphQLFetch,
-    fetch: fetchFunction,
     blocksMeta,
     loaders,
+    ...dependencies
 }: {
     blockType: string;
     blockData: unknown;
-    graphQLFetch: GraphQLFetch;
-    fetch: typeof fetch;
     blocksMeta: BlockMeta[];
     loaders: Record<string, BlockLoader>;
-}) {
+} & BlockLoaderDependencies) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function iterateField(block: BetterBlockMeta | BetterBlockMetaNestedObject, passedBlockData: any) {
         const blockData = { ...passedBlockData };
@@ -116,7 +118,7 @@ export async function recursivelyLoadBlockData({
 
         const newBlockData = iterateField(block, blockData);
         if (loaders[blockType]) {
-            newBlockData.loaded = loaders[blockType]({ blockData, graphQLFetch, fetch: fetchFunction }); // return unresolved promise
+            newBlockData.loaded = loaders[blockType]({ blockData, ...dependencies }); // return unresolved promise
             loadedBlockData.push(newBlockData);
         }
         return newBlockData;
