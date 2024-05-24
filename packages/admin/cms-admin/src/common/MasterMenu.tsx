@@ -11,7 +11,6 @@ import {
     useWindowSize,
 } from "@comet/admin";
 import * as React from "react";
-import { match } from "react-router";
 import { RouteProps, useRouteMatch } from "react-router-dom";
 
 import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
@@ -127,7 +126,7 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
 
-    const renderSubmenuItems = (submenu: MenuItemRouteElement["submenu"], match: match) =>
+    const renderSubmenuItems = (submenu: MenuItemRouteElement["submenu"]) =>
         submenu.flatMap((submenuItem, index) => {
             if (isMenuItemAnchor(submenuItem)) {
                 return <MenuItemAnchorLink key={index} {...submenuItem.menuElement} />;
@@ -137,13 +136,13 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
             return [];
         });
 
-    const renderGroupItems = (groupItems: MenuItemGroupElement["groupItems"], match: match) =>
+    const renderGroupItems = (groupItems: MenuItemGroupElement["groupItems"]) =>
         groupItems.flatMap((groupItem, index) => {
             if (isMenuItemRoute(groupItem)) {
                 if (groupItem.hasSubmenu) {
                     return (
                         <MenuCollapsibleItem key={index} {...groupItem.menuElement}>
-                            {renderSubmenuItems(groupItem.submenu, match)}
+                            {renderSubmenuItems(groupItem.submenu)}
                         </MenuCollapsibleItem>
                     );
                 }
@@ -160,7 +159,7 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
                 if (isMenuItemGroupElement(menuElement)) {
                     return (
                         <MenuItemGroup key={index} {...menuElement.menuElement}>
-                            {renderGroupItems(menuElement.groupItems, match)}
+                            {renderGroupItems(menuElement.groupItems)}
                         </MenuItemGroup>
                     );
                 } else if (isMenuItemAnchor(menuElement)) {
@@ -168,7 +167,7 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
                 } else if (menuElement.hasSubmenu) {
                     return (
                         <MenuCollapsibleItem key={index} {...menuElement.menuElement}>
-                            {renderSubmenuItems(menuElement.submenu, match)}
+                            {renderSubmenuItems(menuElement.submenu)}
                         </MenuCollapsibleItem>
                     );
                 }
