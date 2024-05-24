@@ -49,10 +49,29 @@
             {
                 "name": "vimeoIdentifier",
                 "kind": "String",
-                "nullable": true
+                "nullable": false
+            },
+            {
+                "name": "aspectRatio",
+                "kind": "Enum",
+                "enum": [
+                    "16X9",
+                    "4X3"
+                ],
+                "nullable": false
             },
             {
                 "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "loop",
                 "kind": "Boolean",
                 "nullable": true
             }
@@ -61,10 +80,29 @@
             {
                 "name": "vimeoIdentifier",
                 "kind": "String",
-                "nullable": true
+                "nullable": false
+            },
+            {
+                "name": "aspectRatio",
+                "kind": "Enum",
+                "enum": [
+                    "16X9",
+                    "4X3"
+                ],
+                "nullable": false
             },
             {
                 "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "loop",
                 "kind": "Boolean",
                 "nullable": true
             }

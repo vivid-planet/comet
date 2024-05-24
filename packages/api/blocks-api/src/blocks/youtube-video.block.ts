@@ -1,19 +1,15 @@
 import { IsBoolean, IsEnum, IsOptional, IsString } from "class-validator";
 
+import { VideoAspectRatio } from "../constants/enums";
 import { BlockData, BlockDataInterface, BlockInput, createBlock, inputToData } from "./block";
 import { BlockField } from "./decorators/field";
-
-enum AspectRatio {
-    "16X9" = "16X9",
-    "4X3" = "4X3",
-}
 
 class YouTubeVideoBlockData extends BlockData {
     @BlockField()
     youtubeIdentifier?: string;
 
-    @BlockField({ type: "enum", enum: AspectRatio })
-    aspectRatio: AspectRatio;
+    @BlockField({ type: "enum", enum: VideoAspectRatio })
+    aspectRatio: VideoAspectRatio;
 
     @BlockField({ nullable: true })
     autoplay?: boolean;
@@ -31,9 +27,9 @@ class YouTubeVideoBlockInput extends BlockInput {
     @BlockField()
     youtubeIdentifier?: string;
 
-    @IsEnum(AspectRatio)
-    @BlockField({ type: "enum", enum: AspectRatio })
-    aspectRatio: AspectRatio;
+    @IsEnum(VideoAspectRatio)
+    @BlockField({ type: "enum", enum: VideoAspectRatio })
+    aspectRatio: VideoAspectRatio;
 
     @IsBoolean()
     @IsOptional()
