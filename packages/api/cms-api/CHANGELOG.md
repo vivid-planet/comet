@@ -1,5 +1,11 @@
 # @comet/cms-api
 
+## 5.8.5
+
+### Patch Changes
+
+-   @comet/blocks-api@5.8.5
+
 ## 5.8.4
 
 ### Patch Changes

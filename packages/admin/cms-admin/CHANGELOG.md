@@ -1,5 +1,17 @@
 # @comet/cms-admin
 
+## 5.8.5
+
+### Patch Changes
+
+-   9da6d4086: Prevent error in `ExternalLinkBlock` when the url field is empty
+    -   @comet/admin@5.8.5
+    -   @comet/admin-date-time@5.8.5
+    -   @comet/admin-icons@5.8.5
+    -   @comet/admin-rte@5.8.5
+    -   @comet/admin-theme@5.8.5
+    -   @comet/blocks-admin@5.8.5
+
 ## 5.8.4
 
 ### Patch Changes
