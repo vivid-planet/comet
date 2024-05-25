@@ -80,7 +80,6 @@ class App extends React.Component {
                                         label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
                                     },
                                 },
-                                overrideAcceptedMimetypes: ["image/png"],
                             }}
                         >
                             <DependenciesConfigProvider

@@ -139,7 +139,6 @@ export class AppModule {
                         allowedImageSizes: config.dam.allowedImageSizes,
                         allowedAspectRatios: config.dam.allowedImageAspectRatios,
                         additionalMimeTypes: config.dam.additionalMimetypes,
-                        overrideAcceptedMimetypes: ["image/png"],
                         filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
                         cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
                         maxFileSize: config.dam.uploadsMaxFileSize,
