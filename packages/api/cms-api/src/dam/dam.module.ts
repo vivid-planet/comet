@@ -68,7 +68,7 @@ export class DamModule {
             provide: DAM_FILE_VALIDATION_SERVICE,
             useValue: new FileValidationService({
                 maxFileSize: damConfig.maxFileSize,
-                acceptedMimeTypes: [...defaultDamAcceptedMimetypes, ...(damConfig.additionalMimeTypes ?? [])],
+                acceptedMimeTypes: damConfig.overrideAcceptedMimetypes ?? [...defaultDamAcceptedMimetypes, ...(damConfig.additionalMimeTypes ?? [])],
             }),
         };
 
