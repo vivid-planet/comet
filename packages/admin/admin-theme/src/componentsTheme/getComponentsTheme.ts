@@ -10,6 +10,7 @@ import { getMuiAlert } from "./MuiAlert";
 import { getMuiAlertTitle } from "./MuiAlertTitle";
 import { getMuiAppBar } from "./MuiAppBar";
 import { getMuiAutocomplete } from "./MuiAutocomplete";
+import { getMuiBadge } from "./MuiBadge";
 import { getMuiButton } from "./MuiButton";
 import { getMuiButtonGroup } from "./MuiButtonGroup";
 import { getMuiCardContent } from "./MuiCardContent";
@@ -69,6 +70,7 @@ export const getComponentsTheme = (components: Components, themeData: ThemeData)
     MuiAlertTitle: getMuiAlertTitle(components.MuiAlertTitle, themeData),
     MuiAppBar: getMuiAppBar(components.MuiAppBar, themeData),
     MuiAutocomplete: getMuiAutocomplete(components.MuiAutocomplete, themeData),
+    MuiBadge: getMuiBadge(components.MuiBadge, themeData),
     MuiButton: getMuiButton(components.MuiButton, themeData),
     MuiButtonGroup: getMuiButtonGroup(components.MuiButtonGroup, themeData),
     MuiCardContent: getMuiCardContent(components.MuiCardContent, themeData),
