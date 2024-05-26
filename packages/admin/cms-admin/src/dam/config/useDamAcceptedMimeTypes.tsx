@@ -35,7 +35,7 @@ interface UseDamAcceptedMimeTypesApi {
 
 export const useDamAcceptedMimeTypes = (): UseDamAcceptedMimeTypesApi => {
     const damConfig = useDamConfig();
-    const allAcceptedMimeTypes = damConfig.overrideAcceptedMimetypes ?? [...damDefaultAcceptedMimeTypes, ...(damConfig.additionalMimeTypes ?? [])];
+    const allAcceptedMimeTypes = damConfig.overrideAcceptedMimeTypes ?? [...damDefaultAcceptedMimeTypes, ...(damConfig.additionalMimeTypes ?? [])];
 
     return {
         allAcceptedMimeTypes,

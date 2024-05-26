@@ -3,11 +3,11 @@
 "@comet/cms-api": minor
 ---
 
-Add `overrideAcceptedMimetypes` configuration to DAM
+Add `overrideAcceptedMimeTypes` configuration to DAM
 
-If set, only the mimetypes specified in `overrideAcceptedMimetypes` will be accepted.
+If set, only the mimetypes specified in `overrideAcceptedMimeTypes` will be accepted.
 
-You must configure `overrideAcceptedMimetypes` in the API and the admin interface:
+You must configure `overrideAcceptedMimeTypes` in the API and the admin interface:
 
 API:
 
@@ -17,7 +17,7 @@ API:
 DamModule.register({
     damConfig: {
         // ...
-+       overrideAcceptedMimetypes: ["image/png"],
++       overrideAcceptedMimeTypes: ["image/png"],
         // ...
     },
     // ...
@@ -32,7 +32,7 @@ Admin:
 <DamConfigProvider
     value={{
         // ...
-+       overrideAcceptedMimetypes: ["image/png"],
++       overrideAcceptedMimeTypes: ["image/png"],
     }}
 >
 ```
