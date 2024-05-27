@@ -20,17 +20,11 @@ import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 
-function tsCodeRecordToString(object: TsCodeRecordToStringObject, removeBrackets = false) {
-    const stringWithoutBrackets = Object.entries(object)
+function tsCodeRecordToString(object: TsCodeRecordToStringObject) {
+    return `{${Object.entries(object)
         .filter(([key, value]) => value !== undefined)
         .map(([key, value]) => `${key}: ${value},`)
-        .join("\n");
-
-    if (removeBrackets) {
-        return stringWithoutBrackets;
-    }
-
-    return `{${stringWithoutBrackets}}`;
+        .join("\n")}}`;
 }
 
 function findQueryType(queryName: string, schema: IntrospectionQuery) {
@@ -493,93 +487,88 @@ export function generateGrid(
                 .join(",\n")},
                 ${
                     showActionsColumn
-                        ? `{
-                        ${tsCodeRecordToString(
-                            {
-                                field: '"actions"',
-                                headerName: '""',
-                                sortable: "false",
-                                filterable: "false",
-                                type: '"actions"',
-                                align: '"right"',
-                                width: config.actionsWidth,
-                            },
-                            true,
-                        )}
-                        renderCell: (params) => {
-                            return (
-                                <>
-                                ${config.actionsComponent?.name ? `<${config.actionsComponent.name} params={params} />` : ""}${
-                              allowEditing
-                                  ? `
-                                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                                            <Edit color="primary" />
-                                        </IconButton>`
-                                  : ""
-                          }${
-                              allowCopyPaste || allowDeleting
-                                  ? `
-                                        <CrudContextMenu
-                                            ${
-                                                allowCopyPaste
-                                                    ? `
-                                            copyData={() => {
-                                                // Don't copy id, because we want to create a new entity with this data
-                                                ${
-                                                    createMutationInputFields.filter((field) => rootBlocks[field.name]).length
-                                                        ? `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
-                                                        return {
-                                                            ...filteredData,
-                                                            ${createMutationInputFields
-                                                                .filter((field) => rootBlocks[field.name])
-                                                                .map((field) => {
-                                                                    if (rootBlocks[field.name]) {
-                                                                        const blockName = rootBlocks[field.name].name;
-                                                                        return `${field.name}: ${blockName}.state2Output(${blockName}.input2State(filteredData.${field.name}))`;
-                                                                    }
-                                                                })
-                                                                .join(",\n")}
-                                                        };`
-                                                        : `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
-                                                        return filteredData;`
-                                                }
-                                            }}
-                                            onPaste={async ({ input }) => {
-                                                await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
-                                                    mutation: create${gqlType}Mutation,
-                                                    variables: { ${[
-                                                        ...gqlArgs
-                                                            .filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name)
-                                                            .map((arg) => arg.name),
-                                                        ...(hasScope ? [`scope`] : []),
-                                                        ...["input"],
-                                                    ].join(", ")} },
-                                                });
-                                            }}
+                        ? tsCodeRecordToString({
+                              field: '"actions"',
+                              headerName: '""',
+                              sortable: "false",
+                              filterable: "false",
+                              type: '"actions"',
+                              align: '"right"',
+                              width: config.actionsWidth,
+                              renderCell: `(params) => {
+                                    return (
+                                        <>
+                                        ${config.actionsComponent?.name ? `<${config.actionsComponent.name} params={params} />` : ""}${
+                                  allowEditing
+                                      ? `
+                                                <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
+                                                    <Edit color="primary" />
+                                                </IconButton>`
+                                      : ""
+                              }${
+                                  allowCopyPaste || allowDeleting
+                                      ? `
+                                                <CrudContextMenu
+                                                    ${
+                                                        allowCopyPaste
+                                                            ? `
+                                                    copyData={() => {
+                                                        // Don't copy id, because we want to create a new entity with this data
+                                                        ${
+                                                            createMutationInputFields.filter((field) => rootBlocks[field.name]).length
+                                                                ? `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
+                                                                return {
+                                                                    ...filteredData,
+                                                                    ${createMutationInputFields
+                                                                        .filter((field) => rootBlocks[field.name])
+                                                                        .map((field) => {
+                                                                            if (rootBlocks[field.name]) {
+                                                                                const blockName = rootBlocks[field.name].name;
+                                                                                return `${field.name}: ${blockName}.state2Output(${blockName}.input2State(filteredData.${field.name}))`;
+                                                                            }
+                                                                        })
+                                                                        .join(",\n")}
+                                                                };`
+                                                                : `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
+                                                                return filteredData;`
+                                                        }
+                                                    }}
+                                                    onPaste={async ({ input }) => {
+                                                        await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
+                                                            mutation: create${gqlType}Mutation,
+                                                            variables: { ${[
+                                                                ...gqlArgs
+                                                                    .filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name)
+                                                                    .map((arg) => arg.name),
+                                                                ...(hasScope ? [`scope`] : []),
+                                                                ...["input"],
+                                                            ].join(", ")} },
+                                                        });
+                                                    }}
+                                                    `
+                                                            : ""
+                                                    }
+                                                    ${
+                                                        allowDeleting
+                                                            ? `
+                                                    onDelete={async () => {
+                                                        await client.mutate<GQLDelete${gqlType}Mutation, GQLDelete${gqlType}MutationVariables>({
+                                                            mutation: delete${gqlType}Mutation,
+                                                            variables: { id: params.row.id },
+                                                        });
+                                                    }}
+                                                    `
+                                                            : ""
+                                                    }
+                                                    refetchQueries={[${instanceGqlTypePlural}Query]}
+                                                />
                                             `
-                                                    : ""
-                                            }
-                                            ${
-                                                allowDeleting
-                                                    ? `
-                                            onDelete={async () => {
-                                                await client.mutate<GQLDelete${gqlType}Mutation, GQLDelete${gqlType}MutationVariables>({
-                                                    mutation: delete${gqlType}Mutation,
-                                                    variables: { id: params.row.id },
-                                                });
-                                            }}
-                                            `
-                                                    : ""
-                                            }
-                                            refetchQueries={[${instanceGqlTypePlural}Query]}
-                                        />
-                                    `
-                                  : ""
-                          }
-                                </>
-                            );
-                        },
-                    },`
+                                      : ""
+                              }
+                                        </>
+                                    );
+                                }`,
+                          })
                         : ""
                 }
         ];
