@@ -53,7 +53,7 @@ export function FinalFormNumberInput({
                 .join("."),
         );
 
-        const inputValue = isNaN(numericValue) ? undefined : numericValue;
+        const inputValue = isNaN(numericValue) ? undefined : numericValue.toFixed(decimals);
         input.onChange(inputValue);
         setFormattedNumberValue(getFormattedValue(inputValue, decimals));
     };
