@@ -4,7 +4,7 @@ import * as React from "react";
 
 const FooterBar = styled(Paper)`
     position: fixed;
-    z-index: 10;
+    z-index: 1500;
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
