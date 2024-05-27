@@ -11,6 +11,9 @@ export interface PageTreeContext {
     allCategories: AllCategories;
     currentCategory: string;
     documentTypes: Record<DocumentType, DocumentInterface>;
+    categoryToDocumentTypesMap?: {
+        [category: string]: Record<DocumentType, DocumentInterface>;
+    };
     tree: TreeMap<GQLPageTreePageFragment>;
     query: DocumentNode;
 }

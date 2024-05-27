@@ -68,7 +68,17 @@ export const masterMenuData: MasterMenuData = [
                     <PagesPage
                         path={`/pages/pagetree/${match.params.category}`}
                         allCategories={pageTreeCategories}
-                        documentTypes={pageTreeDocumentTypes}
+                        categoryToDocumentTypesMap={{
+                            MainNavigation: {
+                                Page,
+                                Link,
+                                PredefinedPage,
+                            },
+                            TopMenu: {
+                                Page,
+                                PredefinedPage,
+                            },
+                        }}
                         editPageNode={EditPageNode}
                         category={category}
                         renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} variant="toolbar" />}
