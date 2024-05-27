@@ -165,9 +165,9 @@ export const masterMenuData: MasterMenuData = [
         requiredPermission: "pageTree",
     },
     {
-        primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
+        title: <FormattedMessage id="menu.products" defaultMessage="Products" />,
         icon: <Snips />,
-        submenu: [
+        groupItems: [
             {
                 primary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products Future" />,
                 route: {
