@@ -263,6 +263,22 @@ If you want to enable the origin check:
 
 4. DNS changes might be required. `api.example.com` should point to CDN, CDN should point to internal API domain
 
+### Remove `language` field from `User`
+
+```diff
+// static-users.ts
+
+export const staticUsers = {
+    admin: {
+        id: "3b09cc12-c7e6-4d16-b858-40a822f2c548",
+        name: "Admin",
+        email: "admin@customer.com",
+-       language: "en",
+    },
+    // ...
+} satisfies Record<string, User>;
+```
+
 ## Admin
 
 ### Rearrange components in `App.tsx`
