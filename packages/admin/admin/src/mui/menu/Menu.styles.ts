@@ -25,6 +25,10 @@ export type OwnerState = {
 const getSharedStyles = (theme: Theme) => css`
     background-color: ${theme.palette.common.white};
     overflow-x: hidden;
+
+    .CometAdminMenuItemGroup-root + .CometAdminMenuItem-root {
+        margin-top: ${theme.spacing(8)};
+    }
 `;
 
 export const TemporaryDrawer = createComponentSlot(MuiDrawer)<MenuClassKey, OwnerState>({
