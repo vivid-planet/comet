@@ -181,3 +181,22 @@ Make sure to use a meaningful strategy name as this name can be used to identify
 
 -   `ErrorDialogHandler` must be beneath `MuiThemeProvider` and `IntlProvider`
 -   `CurrentUserProvider` must be beneath or parallel to `ErrorDialogHandler`
+
+## ESLint
+
+### PascalCase in Enums
+
+We now enforce PascalCase for enums.
+If your project has enums that are cased differently, you should change the casing.
+
+In some cases, changing the enum casing can be problematic.
+For example, if the enum value is stored in the database.
+In such cases, you can disable the rule like so
+
+```diff
++ /* eslint-disable @typescript-eslint/naming-convention */
+  export enum ExampleEnum {
+      attr1 = "attr1",
+  }
++ /* eslint-enable @typescript-eslint/naming-convention */
+```
