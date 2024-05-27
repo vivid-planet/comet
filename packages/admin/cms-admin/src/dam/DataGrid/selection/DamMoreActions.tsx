@@ -1,6 +1,6 @@
-import { MoreActionsDivider, MoreActionsGroup, MoreActionsMenu, useEditDialog, useSnackbarApi } from "@comet/admin";
+import { MoreActionsDivider, MoreActionsGroup, MoreActionsMenu, SelectedItemsChip, useEditDialog, useSnackbarApi } from "@comet/admin";
 import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, Upload } from "@comet/admin-icons";
-import { Chip, ListItemIcon, ListItemText, MenuItem, Slide, Snackbar } from "@mui/material";
+import { ListItemIcon, ListItemText, MenuItem, Slide, Snackbar } from "@mui/material";
 import { PopoverOrigin } from "@mui/material/Popover/Popover";
 import { SlideProps } from "@mui/material/Slide/Slide";
 import * as React from "react";
@@ -18,10 +18,6 @@ interface DamMoreActionsProps {
     filter?: {
         allowedMimetypes?: string[];
     };
-}
-
-function SelectedItemsChip({ selectionSize }: { selectionSize: number }) {
-    return <Chip label={selectionSize} size="small" color="primary" sx={{ width: 20, height: 20, flexShrink: 0, borderRadius: 20, marginLeft: 1 }} />;
 }
 
 export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter }: DamMoreActionsProps): React.ReactElement => {
@@ -87,7 +83,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
     });
 
     const selectedItemsChip = React.useMemo(
-        () => (itemsSelected ? <SelectedItemsChip selectionSize={selectionSize} /> : null),
+        () => (itemsSelected ? <SelectedItemsChip label={selectionSize} /> : null),
         [itemsSelected, selectionSize],
     );
 
@@ -151,7 +147,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                                         <ListItemText
                                             primary={<FormattedMessage id="comet.dam.moreActions.downloadSelected" defaultMessage="Download" />}
                                         />
-                                        <SelectedItemsChip selectionSize={lengthOfSelectedFiles} />
+                                        <SelectedItemsChip label={lengthOfSelectedFiles} />
                                     </MenuItem>
                                     <MoreActionsDivider />
                                 </>

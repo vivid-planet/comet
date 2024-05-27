@@ -33,6 +33,18 @@ interface MoreActionsMenuProps {
     children?: (props: { handleClose: () => void }) => React.ReactNode;
 }
 
+export function SelectedItemsChip({ label, ...restProps }: Partial<ChipProps>) {
+    return (
+        <Chip
+            size="small"
+            color="primary"
+            sx={{ width: 20, height: 20, flexShrink: 0, borderRadius: 20, marginLeft: 1 }}
+            {...restProps}
+            label={label}
+        />
+    );
+}
+
 export function MoreActionsMenu({ children, buttonProps, menuProps, chipProps, selectionSize }: MoreActionsMenuProps) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -43,6 +55,7 @@ export function MoreActionsMenu({ children, buttonProps, menuProps, chipProps, s
     const handleClose = () => {
         setAnchorEl(null);
     };
+
     return (
         <>
             <Button
@@ -57,15 +70,7 @@ export function MoreActionsMenu({ children, buttonProps, menuProps, chipProps, s
                 }}
             >
                 <FormattedMessage id="comet.pages.dam.moreActions" defaultMessage="More actions" />
-                {!!selectionSize && selectionSize > 0 && (
-                    <Chip
-                        label={selectionSize}
-                        size="small"
-                        color="primary"
-                        sx={{ width: 20, height: 20, flexShrink: 0, borderRadius: 20, marginLeft: 1 }}
-                        {...chipProps}
-                    />
-                )}
+                {!!selectionSize && selectionSize > 0 && <SelectedItemsChip {...chipProps} label={selectionSize} />}
             </Button>
             <Menu
                 keepMounted={false}

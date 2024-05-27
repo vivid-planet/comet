@@ -50,7 +50,7 @@ export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
 export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDataGridExcelExport";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
-export { MoreActionsDivider, MoreActionsGroup, MoreActionsMenu } from "./dataGrid/MoreActionsMenu";
+export { MoreActionsDivider, MoreActionsGroup, MoreActionsMenu, SelectedItemsChip } from "./dataGrid/MoreActionsMenu";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
 export { muiGridSortToGql } from "./dataGrid/muiGridSortToGql";
