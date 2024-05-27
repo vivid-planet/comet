@@ -39,6 +39,9 @@ interface Props {
     category: string;
     path: string;
     allCategories: AllCategories;
+    /**
+     * @deprecated Use categoryToDocumentTypesMap instead
+     */
     documentTypes?: Record<DocumentType, DocumentInterface>;
     categoryToDocumentTypesMap?: {
         [category: string]: Record<DocumentType, DocumentInterface>;
