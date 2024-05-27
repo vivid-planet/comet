@@ -10,7 +10,7 @@ export class PreventLocalInvocationGuard implements CanActivate {
 
     canActivate(): boolean {
         if (this.kubernetesService.localMode) {
-            this.logger.warn("Local invocaion not allowed, because the handler is related to build and/or Kubernetes");
+            this.logger.warn("Local invocation not allowed, because the handler is related to build and/or Kubernetes");
             return false;
         }
 
