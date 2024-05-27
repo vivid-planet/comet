@@ -309,7 +309,7 @@ export async function middleware(request: NextRequest) {
 
 ## ESLint
 
-### PascalCase in Enums
+### Enforce PascalCase in enums
 
 We now enforce PascalCase for enums.
 If your project has enums that are cased differently, you should change the casing.
@@ -324,4 +324,24 @@ In such cases, you can disable the rule like so
       attr1 = "attr1",
   }
 + /* eslint-enable @typescript-eslint/naming-convention */
+```
+
+### @typescript-eslint/prefer-enum-initializers
+
+It's now mandatory to initialize enums:
+
+```ts
+// ✅
+enum ExampleEnum {
+    One = "One",
+    Two = "Two",
+}
+```
+
+```ts
+// ❌
+enum ExampleEnum {
+    One,
+    Two,
+}
 ```
