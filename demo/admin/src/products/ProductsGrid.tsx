@@ -3,7 +3,7 @@ import {
     CrudContextMenu,
     CrudVisibility,
     filterByFragment,
-    GridCellText,
+    GridCellContent,
     GridColDef,
     GridFilterButton,
     MainContent,
@@ -18,7 +18,7 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { Add as AddIcon, Edit, StateFilled } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton, useTheme } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
@@ -86,7 +86,7 @@ export function ProductsGrid() {
                         ? intl.formatMessage({ id: "comet.products.product.inStock", defaultMessage: "In Stock" })
                         : intl.formatMessage({ id: "comet.products.product.outOfStock", defaultMessage: "Out of Stock" }),
                 ];
-                return <GridCellText primary={row.title} secondary={secondaryValues.filter(Boolean).join(" • ")} />;
+                return <GridCellContent primaryText={row.title} secondaryText={secondaryValues.filter(Boolean).join(" • ")} />;
             },
         },
         {
@@ -136,8 +136,19 @@ export function ProductsGrid() {
             headerName: "In Stock",
             flex: 1,
             minWidth: 80,
-            type: "boolean",
             visible: theme.breakpoints.up("md"),
+            renderCell: (params) => (
+                <GridCellContent
+                    icon={<StateFilled color={params.row.inStock ? "success" : "error"} />}
+                    primaryText={
+                        params.row.inStock ? (
+                            <FormattedMessage id="products.inStock" defaultMessage="In Stock" />
+                        ) : (
+                            <FormattedMessage id="products.outOfStock" defaultMessage="Out of Stock" />
+                        )
+                    }
+                />
+            ),
         },
         {
             field: "status",

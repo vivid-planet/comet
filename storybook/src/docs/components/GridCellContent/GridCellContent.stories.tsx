@@ -1,16 +1,17 @@
-import { GridCellText, GridColDef } from "@comet/admin";
+import { GridCellContent, GridColDef } from "@comet/admin";
+import { StateFilled } from "@comet/admin-icons";
 import { faker } from "@faker-js/faker";
 import { DataGrid } from "@mui/x-data-grid";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/GridCellText", module).add("GridCellText", () => {
+storiesOf("stories/components/GridCellContent", module).add("GridCellContent", () => {
     const gridRows = Array.from({ length: 5 }).map((_, index) => ({
         id: index + 1,
         name: faker.name.fullName(),
         occupation: faker.name.jobTitle(),
-        company: faker.company.name(),
         email: faker.internet.email(),
+        onlineStatus: faker.datatype.boolean(),
     }));
 
     const gridColumns: GridColDef[] = [
@@ -18,7 +19,7 @@ storiesOf("stories/components/GridCellText", module).add("GridCellText", () => {
             field: "person",
             headerName: "Person",
             flex: 1,
-            renderCell: ({ row }) => <GridCellText primary={row.name} secondary={row.occupation} />,
+            renderCell: ({ row }) => <GridCellContent primaryText={row.name} secondaryText={row.occupation} />,
         },
         {
             field: "company",
@@ -29,6 +30,17 @@ storiesOf("stories/components/GridCellText", module).add("GridCellText", () => {
             field: "email",
             headerName: "Email",
             flex: 1,
+        },
+        {
+            field: "onlineStatus",
+            headerName: "Status",
+            flex: 1,
+            renderCell: ({ row }) => (
+                <GridCellContent
+                    icon={<StateFilled color={row.onlineStatus ? "success" : "disabled"} />}
+                    primaryText={row.onlineStatus ? "Online" : "Offline"}
+                />
+            ),
         },
     ];
 
