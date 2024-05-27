@@ -7,13 +7,18 @@ import {
 } from "@comet/blocks-api";
 import { Scope, Type } from "@nestjs/common";
 import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
-import { ContextIdFactory, ModuleRef } from "@nestjs/core";
+import { ContextId, ModuleRef } from "@nestjs/core";
 import opentelemetry from "@opentelemetry/api";
 
 const tracer = opentelemetry.trace.getTracer("@comet/cms-api");
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function transformToPlain(block: BlockDataInterface, blockContext: BlockContext, moduleRef: ModuleRef, context: any): Promise<unknown> {
+export async function transformToPlain(
+    block: BlockDataInterface,
+    blockContext: BlockContext,
+    moduleRef: ModuleRef,
+    contextId: ContextId,
+): Promise<unknown> {
     return tracer.startActiveSpan("BlockTransformer", async (span) => {
         async function traverse(json: unknown): Promise<unknown> {
             if (Array.isArray(json)) {
@@ -30,7 +35,7 @@ export async function transformToPlain(block: BlockDataInterface, blockContext: 
                         if (moduleRef.introspect(transformResponse).scope === Scope.DEFAULT) {
                             service = moduleRef.get(transformResponse, { strict: false });
                         } else {
-                            service = await moduleRef.resolve(transformResponse, ContextIdFactory.getByRequest(context), { strict: false });
+                            service = await moduleRef.resolve(transformResponse, contextId, { strict: false });
                         }
 
                         entries = Object.entries(await service.transformToPlain(json, blockContext));
