@@ -3,4 +3,4 @@ export { errorPalette, greyPalette, infoPalette, primaryPalette, successPalette,
 export { createCometTheme } from "./createCometTheme";
 export { paletteOptions } from "./paletteOptions";
 export { shadows } from "./shadows";
-export { createTypographyOptions, fontWeights } from "./typographyOptions";
+export { createTypographyOptions } from "./typographyOptions";

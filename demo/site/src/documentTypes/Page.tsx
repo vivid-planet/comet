@@ -93,7 +93,7 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
             type: "website",
             url: canonicalUrl,
             images: document.seo.openGraphImage.block?.urlTemplate
-                ? generateImageUrl({ src: document.seo.openGraphImage.block?.urlTemplate, width: 1024 }, 1 / 1)
+                ? generateImageUrl({ src: document.seo.openGraphImage.block?.urlTemplate, width: 1200 }, 1200 / 630)
                 : undefined,
         },
         robots: {
@@ -101,10 +101,13 @@ export async function generateMetadata({ pageTreeNodeId, scope }: Props, parent:
         },
         alternates: {
             canonical: canonicalUrl,
-            languages: document.seo.alternativeLinks.reduce((acc, link) => {
-                if (link.code && link.url) acc[link.code] = link.url;
-                return acc;
-            }, {}),
+            languages: document.seo.alternativeLinks.reduce(
+                (acc, link) => {
+                    if (link.code && link.url) acc[link.code] = link.url;
+                    return acc;
+                },
+                { [scope.language]: canonicalUrl },
+            ),
         },
     };
 }

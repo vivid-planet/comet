@@ -7,6 +7,7 @@ import { IsEnum } from "class-validator";
 /* eslint-disable @typescript-eslint/naming-convention */
 // TODO: Replace with PascalCase
 export enum ManufacturerSortField {
+    name = "name",
     addressAsEmbeddable_street = "addressAsEmbeddable_street",
     addressAsEmbeddable_streetNumber = "addressAsEmbeddable_streetNumber",
     addressAsEmbeddable_zip = "addressAsEmbeddable_zip",
