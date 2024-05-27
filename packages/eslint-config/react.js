@@ -36,11 +36,6 @@ module.exports = {
                     },
                     {
                         name: "@mui/material",
-                        importNames: ["Badge"],
-                        message: "Please use Badge from @comet/admin instead",
-                    },
-                    {
-                        name: "@mui/material",
                         importNames: ["Alert"],
                         message: "Please use Alert from @comet/admin instead",
                     },
