@@ -21,7 +21,6 @@ export interface ToolbarProps
     children?: React.ReactNode;
     scopeIndicator?: React.ReactNode;
     hideTopBar?: boolean;
-    hideBottomBar?: boolean;
 }
 
 type OwnerState = {
@@ -92,14 +91,12 @@ export const Toolbar = (inProps: ToolbarProps) => {
     const {
         children,
         hideTopBar = false,
-        hideBottomBar: passedHideBottomBar,
         elevation = 1,
         slotProps,
         scopeIndicator,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminToolbar" });
     const { headerHeight } = React.useContext(MasterLayoutContext);
-    const hideBottomBar = passedHideBottomBar ?? React.Children.count(children) === 0 ?? false;
 
     const ownerState: OwnerState = {
         headerHeight,
@@ -112,7 +109,7 @@ export const Toolbar = (inProps: ToolbarProps) => {
                     <Breadcrumbs scopeIndicator={scopeIndicator} {...slotProps?.breadcrumbs} />
                 </TopBar>
             )}
-            {!hideBottomBar && (
+            {children && (
                 <BottomBar {...slotProps?.bottomBar}>
                     <MainContentContainer {...slotProps?.mainContentContainer}>{children}</MainContentContainer>
                 </BottomBar>
