@@ -20,11 +20,17 @@ import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 
-function tsCodeRecordToString(object: TsCodeRecordToStringObject) {
-    return `{${Object.entries(object)
+function tsCodeRecordToString(object: TsCodeRecordToStringObject, removeBrackets = false) {
+    const stringWithoutBrackets = Object.entries(object)
         .filter(([key, value]) => value !== undefined)
         .map(([key, value]) => `${key}: ${value},`)
-        .join("\n")}}`;
+        .join("\n");
+
+    if (removeBrackets) {
+        return stringWithoutBrackets;
+    }
+
+    return `{${stringWithoutBrackets}}`;
 }
 
 function findQueryType(queryName: string, schema: IntrospectionQuery) {
@@ -144,11 +150,6 @@ export function generateGrid(
     } = getForwardedGqlArgs([gridQueryType, ...(createMutationType ? [createMutationType] : [])]);
     imports.push(...forwardedGqlArgsImports);
     props.push(...forwardedGqlArgsProps);
-
-    const actionsColumnProps = ['field: "actions"', 'headerName: ""', "sortable: false", "filterable: false", 'type: "actions"', 'align: "right"'];
-    if (typeof config.actionsWidth !== "undefined") {
-        actionsColumnProps.push(`width: ${config.actionsWidth}`);
-    }
 
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
     const hasFilter = !!filterArg;
@@ -517,7 +518,18 @@ export function generateGrid(
                 ${
                     showActionsColumn
                         ? `{
-                        ${actionsColumnProps.join(",\n")},
+                        ${tsCodeRecordToString(
+                            {
+                                field: '"actions"',
+                                headerName: '""',
+                                sortable: "false",
+                                filterable: "false",
+                                type: '"actions"',
+                                align: '"right"',
+                                width: config.actionsWidth,
+                            },
+                            true,
+                        )}
                         renderCell: (params) => {
                             return (
                                 <>
