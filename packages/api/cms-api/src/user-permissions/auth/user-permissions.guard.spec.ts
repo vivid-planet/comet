@@ -47,7 +47,6 @@ describe("UserPermissionsGuard", () => {
                         id: "1",
                         name: "Admin",
                         email: "demo@comet-dxp.com",
-                        locale: "en",
                         permissions: context.userPermissions,
                     } satisfies CurrentUser,
                     params: context.args,
@@ -73,7 +72,7 @@ describe("UserPermissionsGuard", () => {
         moduleRef = createMock<ModuleRef>();
         contentScopeService = new ContentScopeService(reflector, orm, moduleRef);
         accessControlService = new AccessControlService();
-        guard = new UserPermissionsGuard(reflector, contentScopeService, accessControlService);
+        guard = new UserPermissionsGuard(reflector, contentScopeService, accessControlService, {});
     });
 
     it("allows user with exact permission", async () => {

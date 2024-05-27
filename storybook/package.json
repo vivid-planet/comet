@@ -1,5 +1,6 @@
 {
     "name": "comet-storybook",
+    "version": "1.0.0",
     "private": true,
     "license": "BSD-2-Clause",
     "files": [
@@ -28,6 +29,7 @@
         "@mui/material": "^5.0.0",
         "@mui/system": "^5.0.0",
         "@mui/x-data-grid": "^5.17.6",
+        "@mui/x-data-grid-pro": "^5.17.6",
         "@storybook/addon-actions": "^6.5.16",
         "@storybook/addon-docs": "^6.5.16",
         "@storybook/addon-knobs": "^6.4.0",
@@ -53,7 +55,7 @@
         "react": "^17.0",
         "react-dom": "^17.0.2",
         "react-final-form": "^6.3.1",
-        "react-intl": "^5.10.0",
+        "react-intl": "^6.0.0",
         "react-select": "^3.0.4",
         "require-from-string": "^2.0.2",
         "use-debounce": "^6.0.0",

@@ -1,10 +1,12 @@
+import { fallbackClipboardData } from "./writeClipboardText";
+
 export async function readClipboardText(): Promise<string | undefined> {
     if (
         !("clipboard" in navigator) || // Browser doesn't support navigator.clipboard
         navigator.clipboard.readText === undefined // Firefox doesn't support navigator.clipboard.readText() by default
     ) {
-        // Reading from clipboard isn't supported, fallback to local storage.
-        return window.localStorage.getItem("comet_clipboard") ?? undefined;
+        // Reading from clipboard isn't supported, fallback to in-memory clipboard.
+        return fallbackClipboardData;
     }
 
     try {
@@ -13,7 +15,7 @@ export async function readClipboardText(): Promise<string | undefined> {
         const data = await navigator.clipboard.readText();
         return data;
     } catch {
-        console.warn("Clipboard access denied, fallback to local storage.");
-        return window.localStorage.getItem("comet_clipboard") ?? undefined;
+        console.warn("Clipboard access denied, fallback to in-memory clipboard.");
+        return fallbackClipboardData;
     }
 }

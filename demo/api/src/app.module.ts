@@ -1,24 +1,21 @@
 import {
     AccessLogModule,
     BlobStorageModule,
-    BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
     BlocksModule,
     BlocksTransformerMiddlewareFactory,
     BuildsModule,
     CronJobsModule,
     DamModule,
     DependenciesModule,
-    FilesService,
-    ImagesService,
     KubernetesModule,
     PageTreeModule,
-    PageTreeService,
     PublicUploadModule,
     RedirectsModule,
     UserPermissionsModule,
 } from "@comet/cms-api";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
+import { ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
 import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
@@ -59,7 +56,7 @@ export class AppModule {
                 GraphQLModule.forRootAsync<ApolloDriverConfig>({
                     driver: ApolloDriver,
                     imports: [BlocksModule],
-                    useFactory: (dependencies: Record<string, unknown>) => ({
+                    useFactory: (moduleRef: ModuleRef) => ({
                         debug: config.debug,
                         playground: config.debug,
                         autoSchemaFile: "schema.gql",
@@ -78,12 +75,12 @@ export class AppModule {
                             origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
                         },
                         buildSchemaOptions: {
-                            fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(dependencies)],
+                            fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(moduleRef)],
                         },
                         // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
                         fieldResolverEnhancers: ["guards", "interceptors", "filters"] as Enhancer[],
                     }),
-                    inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
+                    inject: [ModuleRef],
                 }),
                 AuthModule,
                 UserPermissionsModule.forRootAsync({
@@ -99,19 +96,7 @@ export class AppModule {
                     inject: [UserService, AccessControlService],
                     imports: [AuthModule],
                 }),
-                BlocksModule.forRoot({
-                    imports: [PagesModule],
-                    useFactory: (pageTreeService: PageTreeService, filesService: FilesService, imagesService: ImagesService) => {
-                        return {
-                            transformerDependencies: {
-                                pageTreeService,
-                                filesService,
-                                imagesService,
-                            },
-                        };
-                    },
-                    inject: [PageTreeService, FilesService, ImagesService],
-                }),
+                BlocksModule,
                 DependenciesModule,
                 KubernetesModule.register({
                     helmRelease: config.helmRelease,
@@ -158,7 +143,15 @@ export class AppModule {
                 PredefinedPageModule,
                 CronJobsModule,
                 ProductsModule,
-                AccessLogModule,
+                AccessLogModule.forRoot({
+                    shouldLogRequest: ({ user }) => {
+                        // Ignore system user
+                        if (user === "system-user") {
+                            return false;
+                        }
+                        return true;
+                    },
+                }),
             ],
         };
     }

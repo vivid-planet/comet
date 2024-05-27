@@ -1,9 +1,18 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { Field, FinalForm, FinalFormInput, FinalFormSubmitEvent, Loading, MainContent, useFormApiRef, useStackSwitchApi } from "@comet/admin";
+import {
+    Field,
+    filterByFragment,
+    FinalForm,
+    FinalFormInput,
+    FinalFormSubmitEvent,
+    Loading,
+    MainContent,
+    useFormApiRef,
+    useStackSwitchApi,
+} from "@comet/admin";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -50,7 +59,7 @@ export function ProductVariantForm({ id, productId }: FormProps): React.ReactEle
 
     const initialValues: Partial<FormValues> = data?.productVariant
         ? {
-              ...filter<GQLProductVariantFormFragment>(productVariantFormFragment, data.productVariant),
+              ...filterByFragment<GQLProductVariantFormFragment>(productVariantFormFragment, data.productVariant),
               image: rootBlocks.image.input2State(data.productVariant.image),
           }
         : {
