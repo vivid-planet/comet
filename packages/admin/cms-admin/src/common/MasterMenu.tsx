@@ -19,7 +19,7 @@ type MasterMenuItemRoute = Omit<MenuItemRouterLinkProps, "to"> & {
     requiredPermission?: string;
     route?: RouteProps;
     to?: string;
-    submenu?: MasterMenuElement[];
+    submenu?: MasterMenuItem[];
 };
 
 type MasterMenuItemAnchor = MenuItemAnchorLinkProps & {
@@ -28,14 +28,12 @@ type MasterMenuItemAnchor = MenuItemAnchorLinkProps & {
 
 type MasterMenuItemGroup = MenuItemGroupProps & {
     requiredPermission?: string;
-    groupItems: MasterMenuItem[];
+    groupItems: Array<MasterMenuItemRoute | MasterMenuItemAnchor>;
 };
 
-export type MasterMenuItem = MasterMenuItemRoute | MasterMenuItemAnchor;
+export type MasterMenuItem = MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemGroup;
 
-export type MasterMenuElement = MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemGroup;
-
-export type MasterMenuData = MasterMenuElement[];
+export type MasterMenuData = MasterMenuItem[];
 
 type MenuItemRouteElement = {
     menuElement: MenuItemRouterLinkProps;
@@ -60,11 +58,11 @@ export interface MasterMenuProps {
     menu: MasterMenuData;
 }
 
-export function isMasterMenuItemGroup(item: MasterMenuElement): item is MasterMenuItemGroup {
+export function isMasterMenuItemGroup(item: MasterMenuItem): item is MasterMenuItemGroup {
     return !!item && "groupItems" in item;
 }
 
-export function isMasterMenuItemAnchor(item: MasterMenuElement): item is MasterMenuItemAnchor {
+export function isMasterMenuItemAnchor(item: MasterMenuItem): item is MasterMenuItemAnchor {
     return !!item && "href" in item;
 }
 
@@ -81,9 +79,9 @@ function isMenuItemRoute(item: MenuItem): item is MenuItemRouteElement {
 
 export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
     const isAllowed = useUserPermissionCheck();
-    const checkPermission = (item: MasterMenuElement): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
+    const checkPermission = (item: MasterMenuItem): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
 
-    const mapFn = (item: MasterMenuElement): MenuItem => {
+    const mapFn = (item: MasterMenuItem): MenuItem => {
         if (isMasterMenuItemAnchor(item)) {
             return { menuElement: item };
         }
