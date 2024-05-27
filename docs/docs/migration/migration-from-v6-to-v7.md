@@ -8,6 +8,16 @@ sidebar_position: 1
 First, execute `npx @comet/upgrade@latest v7` in the root of your project.
 It automatically installs the new versions of all `@comet` libraries, runs an ESLint autofix and handles some of the necessary renames.
 
+<details>
+
+<summary>Changes handled by @comet/upgrade</summary>
+
+-   Disabling GraphQL field suggestions
+-   Importing the types of `@comet/admin-theme` in `vendors.d.ts`
+-   Replacing the Roboto font with Roboto Flex
+
+</details>
+
 ## API
 
 ### Support dependency injection in `BlockData#transformToPlain`
