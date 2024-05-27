@@ -1,6 +1,6 @@
-import { useEditDialog, useSnackbarApi } from "@comet/admin";
+import { MoreActionsDivider, MoreActionsGroup, MoreActionsMenu, useEditDialog, useSnackbarApi } from "@comet/admin";
 import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, Upload } from "@comet/admin-icons";
-import { Box, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Slide, Snackbar, Typography } from "@mui/material";
+import { Chip, ListItemIcon, ListItemText, MenuItem, Slide, Snackbar } from "@mui/material";
 import { PopoverOrigin } from "@mui/material/Popover/Popover";
 import { SlideProps } from "@mui/material/Slide/Slide";
 import * as React from "react";
@@ -10,19 +10,21 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamFileUpload } from "../fileUpload/useDamFileUpload";
 import { useDamSelectionApi } from "./DamSelectionContext";
-import { SelectedItemsChip } from "./SelectedItemsChip";
 
 interface DamMoreActionsProps {
     transformOrigin?: PopoverOrigin;
     anchorOrigin?: PopoverOrigin;
-    button: React.ReactElement;
     folderId?: string;
     filter?: {
         allowedMimetypes?: string[];
     };
 }
 
-export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId, filter }: DamMoreActionsProps): React.ReactElement => {
+function SelectedItemsChip({ selectionSize }: { selectionSize: number }) {
+    return <Chip label={selectionSize} size="small" color="primary" sx={{ width: 20, height: 20, flexShrink: 0, borderRadius: 20, marginLeft: 1 }} />;
+}
+
+export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter }: DamMoreActionsProps): React.ReactElement => {
     const damSelectionActionsApi = useDamSelectionApi();
     const { selectionMap, archiveSelected, deleteSelected, downloadSelected, restoreSelected, moveSelected } = damSelectionActionsApi;
     const snackbarApi = useSnackbarApi();
@@ -32,21 +34,11 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
 
     const folderInputRef = React.useRef<HTMLInputElement>(null);
 
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
     const selectionSize = selectionMap.size;
     const itemsSelected = !!selectionSize;
     const selectionMapValues = Array.from(selectionMap.values());
     const lengthOfSelectedFiles = selectionMapValues.filter((value) => value === "file").length;
     const onlyFoldersSelected = selectionMapValues.every((value) => value === "folder");
-
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
 
     const handleDownloadClick = () => {
         const isFolderInSelection = selectionMapValues.some((value) => value === "folder");
@@ -63,39 +55,21 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
         );
 
         downloadSelected();
-        handleClose();
+
         isFolderInSelection && snackbarApi.showSnackbar(snackbarElement);
     };
 
-    const handleUploadFolderClick = () => {
-        folderInputRef.current?.click();
-        handleClose();
-    };
+    const handleUploadFolderClick = () => folderInputRef.current?.click();
 
-    const handleAddFolderClick = () => {
-        editDialogApi.openAddDialog(folderId);
-        handleClose();
-    };
+    const handleAddFolderClick = () => editDialogApi.openAddDialog(folderId);
 
-    const handleMoveClick = () => {
-        moveSelected();
-        handleClose();
-    };
+    const handleMoveClick = () => moveSelected();
 
-    const handleArchiveClick = () => {
-        archiveSelected();
-        handleClose();
-    };
+    const handleArchiveClick = () => archiveSelected();
 
-    const handleRestoreClick = () => {
-        restoreSelected();
-        handleClose();
-    };
+    const handleRestoreClick = () => restoreSelected();
 
-    const handleDeleteClick = () => {
-        deleteSelected();
-        handleClose();
-    };
+    const handleDeleteClick = () => deleteSelected();
 
     const {
         uploadFiles,
@@ -112,86 +86,132 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
         },
     });
 
+    const selectedItemsChip = React.useMemo(
+        () => (itemsSelected ? <SelectedItemsChip selectionSize={selectionSize} /> : null),
+        [itemsSelected, selectionSize],
+    );
+
     return (
         <>
-            {React.cloneElement(button, { onClick: handleClick })}
-            <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-                keepMounted={false}
-                transformOrigin={transformOrigin}
-                anchorOrigin={anchorOrigin}
+            <MoreActionsMenu
+                selectionSize={selectionSize}
+                menuProps={{
+                    transformOrigin,
+                    anchorOrigin,
+                }}
             >
-                <Box px={3}>
-                    <Typography variant="subtitle2" color={(theme) => theme.palette.grey[500]} fontWeight="bold" mt={5}>
-                        <FormattedMessage id="comet.dam.moreActions.overallActions" defaultMessage="Overall actions" />
-                    </Typography>
-                    <MenuList>
-                        <MenuItem disabled={itemsSelected} onClick={handleUploadFolderClick}>
-                            <ListItemIcon>
-                                <Upload />
-                            </ListItemIcon>
-                            <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.uploadFolder" defaultMessage="Upload folder" />} />
-                        </MenuItem>
+                {({ handleClose }) => (
+                    <>
+                        <MoreActionsGroup
+                            groupTitle={<FormattedMessage id="comet.dam.moreActions.overallActions" defaultMessage="Overall actions" />}
+                        >
+                            <MenuItem
+                                disabled={itemsSelected}
+                                onClick={() => {
+                                    handleUploadFolderClick();
+                                    handleClose();
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <Upload />
+                                </ListItemIcon>
+                                <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.uploadFolder" defaultMessage="Upload folder" />} />
+                            </MenuItem>
 
-                        <MenuItem disabled={itemsSelected} onClick={handleAddFolderClick}>
-                            <ListItemIcon>
-                                <AddFolderIcon />
-                            </ListItemIcon>
-                            <FormattedMessage id="comet.pages.dam.addFolder" defaultMessage="Add Folder" />
-                        </MenuItem>
-                    </MenuList>
-                    <Divider sx={{ my: 1, borderColor: (theme) => theme.palette.grey[50] }} />
-                    <Typography variant="subtitle2" color={(theme) => theme.palette.grey[500]} fontWeight="bold" mt={5}>
-                        <FormattedMessage id="comet.dam.moreActions.selectiveActions" defaultMessage="Selective actions" />
-                    </Typography>
-                    <MenuList>
-                        {!onlyFoldersSelected && (
-                            <>
-                                <MenuItem onClick={handleDownloadClick}>
-                                    <ListItemIcon>
-                                        <Download />
-                                    </ListItemIcon>
-                                    <ListItemText
-                                        primary={<FormattedMessage id="comet.dam.moreActions.downloadSelected" defaultMessage="Download" />}
-                                    />
-                                    <SelectedItemsChip>{lengthOfSelectedFiles}</SelectedItemsChip>
-                                </MenuItem>
-                                <Divider sx={{ my: 1, borderColor: (theme) => theme.palette.grey[50] }} />
-                            </>
-                        )}
-                        <MenuItem disabled={!itemsSelected} onClick={handleMoveClick}>
-                            <ListItemIcon>
-                                <Move />
-                            </ListItemIcon>
-                            <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.moveItems" defaultMessage="Move" />} />
-                            {itemsSelected && <SelectedItemsChip>{selectionSize}</SelectedItemsChip>}
-                        </MenuItem>
-                        <MenuItem disabled={!itemsSelected} onClick={handleArchiveClick}>
-                            <ListItemIcon>
-                                <Archive />
-                            </ListItemIcon>
-                            <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.archiveItems" defaultMessage="Archive" />} />
-                            {itemsSelected && <SelectedItemsChip>{selectionSize}</SelectedItemsChip>}
-                        </MenuItem>
-                        <MenuItem disabled={!itemsSelected} onClick={handleRestoreClick}>
-                            <ListItemIcon>
-                                <Restore />
-                            </ListItemIcon>
-                            <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.restoreItems" defaultMessage="Restore" />} />
-                            {itemsSelected && <SelectedItemsChip>{selectionSize}</SelectedItemsChip>}
-                        </MenuItem>
-                        <MenuItem disabled={!itemsSelected} onClick={handleDeleteClick}>
-                            <ListItemIcon>
-                                <Delete />
-                            </ListItemIcon>
-                            <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.deleteItems" defaultMessage="Delete" />} />
-                            {itemsSelected && <SelectedItemsChip>{selectionSize}</SelectedItemsChip>}
-                        </MenuItem>
-                    </MenuList>
-                </Box>
-            </Menu>
+                            <MenuItem
+                                disabled={itemsSelected}
+                                onClick={() => {
+                                    handleAddFolderClick();
+                                    handleClose();
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <AddFolderIcon />
+                                </ListItemIcon>
+                                <FormattedMessage id="comet.pages.dam.addFolder" defaultMessage="Add Folder" />
+                            </MenuItem>
+                        </MoreActionsGroup>
+
+                        <MoreActionsDivider />
+
+                        <MoreActionsGroup
+                            groupTitle={<FormattedMessage id="comet.dam.moreActions.selectiveActions" defaultMessage="Selective actions" />}
+                        >
+                            {!onlyFoldersSelected && (
+                                <>
+                                    <MenuItem
+                                        onClick={() => {
+                                            handleDownloadClick();
+                                            handleClose();
+                                        }}
+                                    >
+                                        <ListItemIcon>
+                                            <Download />
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primary={<FormattedMessage id="comet.dam.moreActions.downloadSelected" defaultMessage="Download" />}
+                                        />
+                                        <SelectedItemsChip selectionSize={lengthOfSelectedFiles} />
+                                    </MenuItem>
+                                    <MoreActionsDivider />
+                                </>
+                            )}
+                            <MenuItem
+                                disabled={!itemsSelected}
+                                onClick={() => {
+                                    handleMoveClick();
+                                    handleClose();
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <Move />
+                                </ListItemIcon>
+                                <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.moveItems" defaultMessage="Move" />} />
+                                {selectedItemsChip}
+                            </MenuItem>
+                            <MenuItem
+                                disabled={!itemsSelected}
+                                onClick={() => {
+                                    handleArchiveClick();
+                                    handleClose();
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <Archive />
+                                </ListItemIcon>
+                                <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.archiveItems" defaultMessage="Archive" />} />
+                                {selectedItemsChip}
+                            </MenuItem>
+                            <MenuItem
+                                disabled={!itemsSelected}
+                                onClick={() => {
+                                    handleRestoreClick();
+                                    handleClose();
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <Restore />
+                                </ListItemIcon>
+                                <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.restoreItems" defaultMessage="Restore" />} />
+                                {selectedItemsChip}
+                            </MenuItem>
+                            <MenuItem
+                                disabled={!itemsSelected}
+                                onClick={() => {
+                                    handleDeleteClick();
+                                    handleClose();
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <Delete />
+                                </ListItemIcon>
+                                <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.deleteItems" defaultMessage="Delete" />} />
+                                {selectedItemsChip}
+                            </MenuItem>
+                        </MoreActionsGroup>
+                    </>
+                )}
+            </MoreActionsMenu>
 
             {/* the directory property is needed for the folder upload to work but not known to eslint */}
             {/* eslint-disable-next-line react/no-unknown-property */}
