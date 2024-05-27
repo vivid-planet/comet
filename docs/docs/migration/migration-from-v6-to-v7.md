@@ -175,12 +175,137 @@ Make sure to use a meaningful strategy name as this name can be used to identify
   }),
 ```
 
+### Remove CDN config from DAM
+
+```diff
+// app.module.ts
+
+DamModule.register({
+   damConfig: {
+-     filesBaseUrl: `${config.apiUrl}/dam/files`,
+-     imagesBaseUrl: `${config.apiUrl}/dam/images`,
++     apiUrl: config.apiUrl,
+      // ...
+   }
+})
+```
+
+#### How to migrate (only required if CDN is used):
+
+Remove the following env vars from the API
+
+```diff
+//.env
+
+- DAM_CDN_ENABLED=
+- DAM_CDN_DOMAIN=
+- DAM_CDN_ORIGIN_HEADER=
+- DAM_DISABLE_CDN_ORIGIN_HEADER_CHECK=false
+```
+
+If you want to enable the origin check:
+
+1. Set the following env vars for the API
+
+    ```diff
+    // .env
+
+    + CDN_ORIGIN_CHECK_SECRET="Use value from DAM_CDN_ORIGIN_HEADER to avoid downtime"
+    ```
+
+    _environment-variables.ts_
+
+    ```diff
+    // environment-variables.ts
+
+    + @IsString()
+    + @ValidateIf(() => process.env.NODE_ENV === "production")
+    + CDN_ORIGIN_CHECK_SECRET: string;
+    ```
+
+    ```
+    // config.ts
+
+    + cdn: {
+    +  originCheckSecret: envVars.CDN_ORIGIN_CHECK_SECRET,
+    + },
+    ```
+
+2. Add CdnGuard
+
+    ```diff
+    // main.ts
+
+    + // if CDN is enabled, make sure all traffic is either coming from the CDN or internal sources
+    + if (config.cdn.originCheckSecret) {
+    +   app.useGlobalGuards(new CdnGuard({ headerName: "x-cdn-origin-check", headerValue: config.cdn.originCheckSecret }));
+    + }
+    ```
+
+3. Adjust `site/server.js`
+
+```diff
+// site/server.js
+
+- const cdnEnabled = process.env.CDN_ENABLED === "true";
+- const disableCdnOriginHeaderCheck = process.env.DISABLE_CDN_ORIGIN_HEADER_CHECK === "true";
+- const cdnOriginHeader = process.env.CDN_ORIGIN_HEADER;
++ const cdnOriginCheckSecret = process.env.CDN_ORIGIN_CHECK_SECRET;
+
+// ...
+
+- if (cdnEnabled && !disableCdnOriginHeaderCheck) {
+-    const incomingCdnOriginHeader = req.headers["x-cdn-origin-check"];
+-    if (cdnOriginHeader !== incomingCdnOriginHeader) {
++ if (cdnOriginCheckSecret) {
++    if (req.headers["x-cdn-origin-check"] !== cdnOriginCheckSecret) {
+```
+
+4. DNS changes might be required. `api.example.com` should point to CDN, CDN should point to internal API domain
+
 ## Admin
 
 ### Rearrange components in `App.tsx`
 
 -   `ErrorDialogHandler` must be beneath `MuiThemeProvider` and `IntlProvider`
 -   `CurrentUserProvider` must be beneath or parallel to `ErrorDialogHandler`
+
+## Site
+
+### Make relative DAM URLs work
+
+#### Pages Router
+
+```diff
+// next.config.js
+
+const nextConfig = {
+    rewrites: async () => {
+        if (process.env.NEXT_PUBLIC_SITE_IS_PREVIEW === "true") return [];
+        var rewrites = await require("./preBuild/build/preBuild/src/createRewrites").createRewrites();
+-       return rewrites;
++       return [
++           ...rewrites,
++           {
++               source: "/dam/:path*",
++               destination: process.env.API_URL + "/dam/:path*",
++           },
++       ];
+    },
+    // ...
+```
+
+#### App Router
+
+```diff
+// middleware.ts
+
+export async function middleware(request: NextRequest) {
++   if (request.nextUrl.pathname.startsWith("/dam")) {
++       return NextResponse.rewrite(new URL(`${process.env.API_URL_INTERNAL}${request.nextUrl.pathname}`));
++   }
+    // ...
+```
 
 ## ESLint
 
