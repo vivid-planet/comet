@@ -27,7 +27,7 @@ const Story = () => {
                         <Card>
                             <CardContent>
                                 <Field name="timeRangeOne" label="Time range" fullWidth component={FinalFormTimeRangePicker} />
-                                <Field name="timeRangeTwo" label="Clearable" fullWidth clearable component={FinalFormTimeRangePicker} />
+                                <Field name="timeRangeTwo" label="Required" fullWidth required component={FinalFormTimeRangePicker} />
                             </CardContent>
                         </Card>
                         <pre>{JSON.stringify(values, null, 4)}</pre>

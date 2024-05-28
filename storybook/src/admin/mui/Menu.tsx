@@ -2,7 +2,6 @@ import {
     AppHeader,
     AppHeaderFillSpace,
     AppHeaderMenuButton,
-    Badge,
     CometLogo,
     MainContent,
     MasterLayout,
@@ -14,7 +13,7 @@ import {
     useWindowSize,
 } from "@comet/admin";
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Badge, Card, CardContent, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Route, Switch } from "react-router";

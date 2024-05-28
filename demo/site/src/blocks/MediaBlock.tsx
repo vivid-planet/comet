@@ -7,7 +7,7 @@ import { DamImageBlock } from "./DamImageBlock";
 import DamVideoBlock from "./DamVideoBlock";
 
 const supportedBlocks: SupportedBlocks = {
-    image: (props) => <DamImageBlock data={props} />,
+    image: (props) => <DamImageBlock data={props} aspectRatio="inherit" />,
     video: (props) => <DamVideoBlock data={props} />,
 };
 

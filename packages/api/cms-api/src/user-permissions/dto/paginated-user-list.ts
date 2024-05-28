@@ -23,11 +23,6 @@ class UserFilter {
     @Type(() => StringFilter)
     status?: StringFilter;
 
-    @Field(() => StringFilter, { nullable: true })
-    @ValidateNested()
-    @Type(() => StringFilter)
-    locale?: StringFilter;
-
     @Field(() => [UserFilter], { nullable: true })
     @Type(() => UserFilter)
     @ValidateNested({ each: true })
@@ -45,7 +40,6 @@ enum UserSortField {
     name = "name",
     email = "email",
     status = "status",
-    locale = "locale",
 }
 /* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(UserSortField, {

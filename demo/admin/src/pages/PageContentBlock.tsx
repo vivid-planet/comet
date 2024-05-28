@@ -1,8 +1,9 @@
-import { createBlocksBlock, SpaceBlock, YouTubeVideoBlock } from "@comet/blocks-admin";
+import { createBlocksBlock, YouTubeVideoBlock } from "@comet/blocks-admin";
 import { AnchorBlock, DamImageBlock, DamVideoBlock } from "@comet/cms-admin";
 import { HeadlineBlock } from "@src/common/blocks/HeadlineBlock";
 import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
+import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
 import { userGroupAdditionalItemFields } from "@src/userGroups/userGroupAdditionalItemFields";

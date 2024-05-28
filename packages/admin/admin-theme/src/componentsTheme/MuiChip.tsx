@@ -10,6 +10,9 @@ export const getMuiChip: GetMuiComponentTheme<"MuiChip"> = (component, { palette
     styleOverrides: mergeOverrideStyles<"MuiChip">(component?.styleOverrides, {
         root: {
             borderRadius: 12,
+            "&.Mui-disabled": {
+                opacity: 0.5,
+            },
         },
         sizeMedium: {
             height: 24,
@@ -48,9 +51,6 @@ export const getMuiChip: GetMuiComponentTheme<"MuiChip"> = (component, { palette
         deleteIconSmall: {
             margin: 0,
             fontSize: 12,
-        },
-        disabled: {
-            opacity: 0.5,
         },
         deleteIconColorPrimary: {
             color: palette.primary.contrastText,

@@ -1,33 +1,15 @@
 import { Breakpoints } from "@mui/material";
 import { TypographyOptions } from "@mui/material/styles/createTypography";
 
-const fontFamily = "Roboto, Helvetica, Arial, sans-serif";
-
-export const fontWeights = {
-    fontWeightThin: 100,
-    fontWeightExtraLight: 200,
-    fontWeightLight: 300,
-    fontWeightRegular: 400,
-    fontWeightMedium: 500,
-    fontWeightSemiBold: 600,
-    fontWeightBold: 700,
-};
-
-const body1Styles = {
-    fontFamily,
-    fontSize: 16,
-    lineHeight: "20px",
-    fontWeight: fontWeights.fontWeightRegular,
-};
+const fontFamily = "Roboto Flex Variable, Helvetica, Arial, sans-serif";
 
 export const createTypographyOptions = (breakpoints: Breakpoints): TypographyOptions => ({
     fontFamily,
-    ...fontWeights,
     h1: {
         fontFamily,
         fontSize: 36,
         lineHeight: "42px",
-        fontWeight: fontWeights.fontWeightLight,
+        fontWeight: 170,
 
         [breakpoints.up("md")]: {
             fontSize: 55,
@@ -38,80 +20,97 @@ export const createTypographyOptions = (breakpoints: Breakpoints): TypographyOpt
         fontFamily,
         fontSize: 30,
         lineHeight: "38px",
-        fontWeight: fontWeights.fontWeightExtraLight,
+        fontWeight: 160,
 
         [breakpoints.up("md")]: {
             fontSize: 44,
             lineHeight: "52px",
-            fontWeight: fontWeights.fontWeightLight,
         },
     },
     h3: {
         fontFamily,
         fontSize: 24,
         lineHeight: "28px",
-        fontWeight: fontWeights.fontWeightRegular,
+        fontWeight: 150,
 
         [breakpoints.up("md")]: {
             fontSize: 33,
             lineHeight: "39px",
-            fontWeight: fontWeights.fontWeightLight,
         },
     },
     h4: {
         fontFamily,
         fontSize: 20,
         lineHeight: "26px",
-        fontWeight: fontWeights.fontWeightRegular,
+        fontWeight: 150,
 
         [breakpoints.up("md")]: {
             fontSize: 24,
             lineHeight: "28px",
-            fontWeight: fontWeights.fontWeightExtraLight,
         },
     },
     h5: {
         fontFamily,
         fontSize: 16,
         lineHeight: "20px",
-        fontWeight: fontWeights.fontWeightMedium,
+        fontWeight: 200,
 
         [breakpoints.up("md")]: {
             fontSize: 18,
             lineHeight: "21px",
-            fontWeight: fontWeights.fontWeightRegular,
         },
     },
     h6: {
         fontFamily,
         fontSize: 14,
         lineHeight: "18px",
-        fontWeight: fontWeights.fontWeightBold,
+        fontWeight: 550,
+        textTransform: "uppercase",
 
         [breakpoints.up("md")]: {
             fontSize: 16,
             lineHeight: "20px",
         },
     },
-    body1: body1Styles,
+    body1: {
+        fontFamily,
+        fontSize: 16,
+        lineHeight: "20px",
+        fontWeight: 250,
+    },
     body2: {
         fontFamily,
         fontSize: 14,
         lineHeight: "20px",
-        fontWeight: fontWeights.fontWeightRegular,
+        fontWeight: 250,
+    },
+    caption: {
+        fontFamily,
+        fontSize: 12,
+        lineHeight: "16px",
+        fontWeight: 300,
+    },
+    subtitle1: {
+        fontFamily,
+        fontSize: 16,
+        lineHeight: "20px",
+        fontWeight: 600,
+        fontVariationSettings: "'wdth' 85",
     },
     subtitle2: {
         fontFamily,
         fontSize: 14,
         lineHeight: "20px",
-        fontWeight: fontWeights.fontWeightSemiBold,
+        fontWeight: 600,
+        fontVariationSettings: "'wdth' 85",
     },
     overline: {
         fontFamily,
         fontSize: 12,
         lineHeight: "16px",
-        fontWeight: fontWeights.fontWeightSemiBold,
-        letterSpacing: 0,
+        fontWeight: 600,
+        fontVariationSettings: "'wdth' 80",
+        textTransform: "none",
     },
     list: {
         paddingInlineStart: 30,
@@ -119,7 +118,10 @@ export const createTypographyOptions = (breakpoints: Breakpoints): TypographyOpt
         paddingBottom: 8,
     },
     listItem: {
-        ...body1Styles,
+        fontFamily,
+        fontSize: 16,
+        lineHeight: "20px",
+        fontWeight: 250,
         paddingLeft: 0,
         paddingTop: 4,
         paddingBottom: 4,

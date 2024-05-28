@@ -40,39 +40,24 @@ const Story = () => {
                     <form>
                         <Card>
                             <CardContent>
-                                <DateField
-                                    name="date"
-                                    label="Date"
-                                    fullWidth
-                                    clearable
-                                    helperText={`Stringified value: ${JSON.stringify(values.date)}`}
-                                />
+                                <DateField name="date" label="Date" fullWidth helperText={`Stringified value: ${JSON.stringify(values.date)}`} />
                                 <DateRangeField
                                     name="dateRange"
                                     label="DateRange"
                                     fullWidth
-                                    clearable
                                     helperText={`Stringified value: ${JSON.stringify(values.dateRange)}`}
                                 />
                                 <DateTimeField
                                     name="dateTime"
                                     label="DateTime"
                                     fullWidth
-                                    clearable
                                     helperText={`Stringified value: ${JSON.stringify(values.dateTime)}`}
                                 />
-                                <TimeField
-                                    name="time"
-                                    label="Time"
-                                    fullWidth
-                                    clearable
-                                    helperText={`Stringified value: ${JSON.stringify(values.time)}`}
-                                />
+                                <TimeField name="time" label="Time" fullWidth helperText={`Stringified value: ${JSON.stringify(values.time)}`} />
                                 <TimeRangeField
                                     name="timeRange"
                                     label="TimeRange"
                                     fullWidth
-                                    clearable
                                     helperText={`Stringified value: ${JSON.stringify(values.timeRange)}`}
                                 />
                             </CardContent>

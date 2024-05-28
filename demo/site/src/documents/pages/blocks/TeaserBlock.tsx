@@ -10,7 +10,7 @@ const TeaserBlock = withPreview(
         return (
             <Root>
                 <HeadlineBlock data={headline} />
-                <DamImageBlock data={image} />
+                <DamImageBlock data={image} aspectRatio="1x1" />
                 <LinkListBlock data={links} />
                 <LinkListBlock data={buttons} />
             </Root>

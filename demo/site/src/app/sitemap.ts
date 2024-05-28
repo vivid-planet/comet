@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"; // don't generate at build time
+
 import { gql } from "@comet/cms-site";
 import { domain, languages } from "@src/config";
 import { createGraphQLFetch } from "@src/util/graphQLClient";

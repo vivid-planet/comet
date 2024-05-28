@@ -1,9 +1,10 @@
 import { CrudField, CrudGenerator } from "@comet/cms-api";
-import { BaseEntity, Collection, Entity, ManyToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Collection, Entity, ManyToMany, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 import { Product } from "./product.entity";
+import { ProductToTag } from "./product-to-tag.entity";
 
 @ObjectType()
 @Entity()
@@ -28,6 +29,9 @@ export class ProductTag extends BaseEntity<ProductTag, "id"> {
     })
     @ManyToMany(() => Product, (products) => products.tags)
     products = new Collection<Product>(this);
+
+    @OneToMany(() => ProductToTag, (productToTag) => productToTag.tag, { orphanRemoval: true })
+    productsWithStatus = new Collection<ProductToTag>(this);
 
     @Property()
     @Field()

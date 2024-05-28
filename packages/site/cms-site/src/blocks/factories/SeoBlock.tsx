@@ -44,7 +44,7 @@ export const SeoBlock = <T = PixelImageBlockData,>({
             <meta property={"og:type"} content={"website"} />
             <meta property={"og:url"} content={usedCanonicalUrl} />
             {openGraphImageUrlTemplate && (
-                <meta property={"og:image"} content={generateImageUrl({ src: openGraphImageUrlTemplate, width: 1024 }, 1 / 1)} />
+                <meta property={"og:image"} content={generateImageUrl({ src: openGraphImageUrlTemplate, width: 1200 }, 1200 / 630)} />
             )}
 
             {/* Structured Data */}
