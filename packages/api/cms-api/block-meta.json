@@ -976,7 +976,7 @@
             {
                 "name": "youtubeIdentifier",
                 "kind": "String",
-                "nullable": false
+                "nullable": true
             },
             {
                 "name": "aspectRatio",
@@ -1007,7 +1007,7 @@
             {
                 "name": "youtubeIdentifier",
                 "kind": "String",
-                "nullable": false
+                "nullable": true
             },
             {
                 "name": "aspectRatio",
