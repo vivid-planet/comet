@@ -58,7 +58,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
                 <SelectPreviewComponent>
                     <BlocksFinalForm
                         onSubmit={(newState) => {
-                            updateState({ ...state, ...{ youtubeIdentifier: "" }, ...newState });
+                            updateState(newState);
                         }}
                         initialValues={state}
                     >
