@@ -38,7 +38,7 @@ export function generateForm(
     const editMode = mode === "edit" || mode == "all";
     const addMode = mode === "add" || mode == "all";
 
-    const createMutationType = addMode && findMutationTypeOrThrow(`create${gqlType}`, gqlIntrospection);
+    const createMutationType = addMode && findMutationTypeOrThrow(config.createMutation ?? `create${gqlType}`, gqlIntrospection);
 
     const gqlArgs: ReturnType<typeof getForwardedGqlArgs>["gqlArgs"] = [];
     if (createMutationType) {
@@ -128,7 +128,7 @@ export function generateForm(
         `;
     }
 
-    if (addMode) {
+    if (addMode && createMutationType) {
         gqlDocuments[`create${gqlType}Mutation`] = `
             mutation Create${gqlType}(${
             gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield && gqlArg.queryOrMutationName === `create${gqlType}`).length
@@ -140,7 +140,7 @@ export function generateForm(
                       .join(", ")}, `
                 : ``
         }$input: ${gqlType}Input!) {
-                create${gqlType}(${
+                ${createMutationType.name}(${
             gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield && gqlArg.queryOrMutationName === `create${gqlType}`).length
                 ? `${gqlArgs
                       .filter((gqlArg) => !gqlArg.isInputArgSubfield && gqlArg.queryOrMutationName === `create${gqlType}`)
@@ -333,7 +333,7 @@ export function generateForm(
                 }
             ${mode == "all" ? `} else {` : ""}
                 ${
-                    addMode
+                    addMode && createMutationType
                         ? `
                 const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                     mutation: create${gqlType}Mutation,
@@ -354,7 +354,7 @@ export function generateForm(
                           } },
                 });
                 if (!event.navigatingBack) {
-                    const id = mutationResponse?.create${gqlType}.id;
+                    const id = mutationResponse?.${createMutationType.name}.id;
                     if (id) {
                         setTimeout(() => {
                             stackSwitchApi.activatePage(\`edit\`, id);

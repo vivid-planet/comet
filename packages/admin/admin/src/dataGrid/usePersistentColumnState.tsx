@@ -2,16 +2,73 @@ import { DataGridProps, GridColumnVisibilityModel, useGridApiRef } from "@mui/x-
 import * as React from "react";
 
 import { useStoredState } from "../hooks/useStoredState";
+import { GridColDef } from "./GridColDef";
+
+const useGridColumns = (apiRef: ReturnType<typeof useGridApiRef>) => {
+    const [columns, setColumns] = React.useState<GridColDef[] | undefined>();
+
+    React.useEffect(() => {
+        // This will be `undefined` if the free version of DataGrid V5 is used.
+        setColumns(apiRef.current?.getAllColumns?.());
+    }, [apiRef]);
+
+    return columns;
+};
+
+const useVisibilityModelFromColumnMediaQueries = (columns: GridColDef[] | undefined): GridColumnVisibilityModel => {
+    const [visibilityModel, setVisibilityModel] = React.useState<GridColumnVisibilityModel>({});
+
+    React.useEffect(() => {
+        const updateVisibilityModel = () => {
+            const visibilityModel: GridColumnVisibilityModel = {};
+
+            columns?.forEach((column: GridColDef) => {
+                if (column.visible !== undefined) {
+                    const mediaQuery = column.visible.replace("@media", "").trim();
+                    visibilityModel[column.field] = window.matchMedia(mediaQuery).matches;
+                }
+            });
+
+            setVisibilityModel(visibilityModel);
+        };
+
+        updateVisibilityModel();
+        window.addEventListener("resize", updateVisibilityModel);
+
+        return () => {
+            window.removeEventListener("resize", updateVisibilityModel);
+        };
+    }, [columns]);
+
+    return visibilityModel;
+};
 
 export function usePersistentColumnState(stateKey: string): Omit<DataGridProps, "rows" | "columns"> {
     const apiRef = useGridApiRef();
+    const columns = useGridColumns(apiRef);
 
-    const [columnVisibilityModel, setColumnVisibilityModel] = useStoredState<GridColumnVisibilityModel>(`${stateKey}ColumnVisibility`, {});
+    const mediaQueryColumnVisibilityModel = useVisibilityModelFromColumnMediaQueries(columns);
+    const [storedColumnVisibilityModel, setStoredColumnVisibilityModel] = useStoredState<GridColumnVisibilityModel>(
+        `${stateKey}ColumnVisibility`,
+        {},
+    );
+
     const handleColumnVisibilityModelChange = React.useCallback(
         (newModel: GridColumnVisibilityModel) => {
-            setColumnVisibilityModel(newModel);
+            const modelToStore: GridColumnVisibilityModel = {};
+
+            // Do not store column visibility controlled by media queries.
+            // This prevents stored values from a previous screen size from overriding the values.
+            Object.entries(newModel).forEach(([field, visible]) => {
+                const visibilityChangedByUser = mediaQueryColumnVisibilityModel[field] !== visible;
+                if (visibilityChangedByUser) {
+                    modelToStore[field] = visible;
+                }
+            });
+
+            setStoredColumnVisibilityModel(modelToStore);
         },
-        [setColumnVisibilityModel],
+        [mediaQueryColumnVisibilityModel, setStoredColumnVisibilityModel],
     );
 
     const [pinnedColumns, setPinnedColumns] = useStoredState<GridColumnVisibilityModel>(`${stateKey}PinnedColumns`, {});
@@ -53,7 +110,7 @@ export function usePersistentColumnState(stateKey: string): Omit<DataGridProps, 
     };
 
     return {
-        columnVisibilityModel,
+        columnVisibilityModel: { ...mediaQueryColumnVisibilityModel, ...storedColumnVisibilityModel },
         onColumnVisibilityModelChange: handleColumnVisibilityModelChange,
 
         // TODO find a better solution (problem: pinnedColumns is a Pro Feature)

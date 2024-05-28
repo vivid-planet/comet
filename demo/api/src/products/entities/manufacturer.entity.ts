@@ -84,6 +84,10 @@ export class Manufacturer extends BaseEntity<Manufacturer, "id"> {
     @Field(() => ID)
     id: string = uuid();
 
+    @Property()
+    @Field()
+    name: string;
+
     @Property({ type: "json", nullable: true })
     @Field(() => Address, { nullable: true })
     address?: Address = undefined;

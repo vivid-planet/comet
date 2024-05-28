@@ -160,11 +160,12 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                             cropArea,
                         },
                         license: values.license?.type === "NO_LICENSE" ? null : { ...values.license, type: values.license?.type },
+                        folderId: file.folder?.id ?? null,
                     },
                 },
             });
         },
-        [id, updateDamFile],
+        [file.folder?.id, id, updateDamFile],
     );
 
     const initialBlockListWidth = 100 / 3;

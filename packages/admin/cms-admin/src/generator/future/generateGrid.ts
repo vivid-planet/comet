@@ -301,6 +301,7 @@ export function generateGrid(
         CrudContextMenu,
         filterByFragment,
         GridFilterButton,
+        GridColDef,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,
@@ -316,7 +317,7 @@ export function generateGrid(
     import { Add as AddIcon, Edit } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton } from "@mui/material";
-    import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
@@ -326,7 +327,7 @@ export function generateGrid(
         GQLCreate${gqlType}MutationVariables,
         GQLDelete${gqlType}Mutation,
         GQLDelete${gqlType}MutationVariables
-    } from "./${gqlTypePlural}Grid.generated";
+    } from "./${baseOutputFilename}.generated";
     import * as React from "react";
     import { FormattedMessage, useIntl } from "react-intl";
     ${generateImportsCode(imports)}
@@ -345,7 +346,7 @@ export function generateGrid(
     const ${instanceGqlTypePlural}Query = gql\`
         query ${gqlTypePlural}Grid(${[
         ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((gqlArg) => `$${gqlArg.name}: ${gqlArg.type}!`),
-        ...[`$offset: Int`, `$limit: Int`],
+        ...[`$offset: Int!`, `$limit: Int!`],
         ...(hasSort ? [`$sort: [${gqlType}Sort!]`] : []),
         ...(hasSearch ? [`$search: String`] : []),
         ...(hasFilter ? [`$filter: ${gqlType}Filter`] : []),

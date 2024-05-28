@@ -9,7 +9,7 @@ export const getMuiTab: GetMuiComponentTheme<"MuiTab"> = (component, { palette, 
         root: {
             fontSize: 16,
             lineHeight: 1,
-            fontWeight: typography.fontWeightBold,
+            fontWeight: 550,
             paddingTop: 17,
             paddingRight: 10,
             paddingBottom: 17,
