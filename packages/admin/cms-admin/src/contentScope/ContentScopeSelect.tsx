@@ -1,6 +1,7 @@
 import { AppHeaderDropdown, ClearInputAdornment } from "@comet/admin";
 import { Domain, Search } from "@comet/admin-icons";
 import { Divider, InputAdornment, InputBase, List, ListItemButton, ListItemText, ListSubheader } from "@mui/material";
+import { capitalCase } from "change-case";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -91,7 +92,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     if (!renderSelectedOption) {
         renderSelectedOption = (option) => {
             return Object.values(option)
-                .map((option) => option.label ?? option.value)
+                .map((option) => humanReadableLabel(option))
                 .join(" / ");
         };
     }
@@ -126,7 +127,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                     <List>
                         {groups.map((group) => (
                             <React.Fragment key={group.value}>
-                                {hasMultipleDimensions && <ListSubheader>{group.label}</ListSubheader>}
+                                {hasMultipleDimensions && <ListSubheader>{humanReadableLabel(group)}</ListSubheader>}
                                 {group.options.map((option) => (
                                     <ListItemButton
                                         key={JSON.stringify(option)}
@@ -157,4 +158,8 @@ function optionToValue<Value extends ContentScopeInterface = ContentScopeInterfa
     });
 
     return value as Value;
+}
+
+function humanReadableLabel({ label, value }: { label?: string; value: string }) {
+    return label ?? capitalCase(value);
 }
