@@ -131,24 +131,30 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                         </>
                     )}
                     <List>
-                        {groups.map((group) => (
-                            <React.Fragment key={group.value}>
-                                {hasMultipleDimensions && <ListSubheader>{humanReadableLabel(group)}</ListSubheader>}
-                                {group.options.map((option) => (
-                                    <ListItemButton
-                                        key={JSON.stringify(option)}
-                                        onClick={() => {
-                                            hideDropdown();
-                                            onChange(optionToValue<Value>(option));
-                                            setSearchValue("");
-                                        }}
-                                        selected={option === selectedOption}
-                                    >
-                                        {renderOption?.(option)}
-                                    </ListItemButton>
-                                ))}
-                            </React.Fragment>
-                        ))}
+                        {groups.map((group, index) => {
+                            const showGroupHeader = hasMultipleDimensions;
+                            const showGroupDivider = showGroupHeader && index !== groups.length - 1;
+
+                            return (
+                                <React.Fragment key={group.value}>
+                                    {showGroupHeader && <ListSubheader>{humanReadableLabel(group)}</ListSubheader>}
+                                    {group.options.map((option) => (
+                                        <ListItemButton
+                                            key={JSON.stringify(option)}
+                                            onClick={() => {
+                                                hideDropdown();
+                                                onChange(optionToValue<Value>(option));
+                                                setSearchValue("");
+                                            }}
+                                            selected={option === selectedOption}
+                                        >
+                                            {renderOption?.(option)}
+                                        </ListItemButton>
+                                    ))}
+                                    {showGroupDivider && <Divider sx={{ margin: 2, borderColor: "grey.50" }} />}
+                                </React.Fragment>
+                            );
+                        })}
                     </List>
                 </>
             )}
