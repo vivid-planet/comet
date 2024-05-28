@@ -23,7 +23,7 @@ const isValidYouTubeIdentifier = (value: string) => {
 };
 
 const validateIdentifier = (value?: string) => {
-    if (!value) return false;
+    if (!value) return undefined;
 
     return value && isValidYouTubeIdentifier(value) ? undefined : (
         <FormattedMessage id="comet.blocks.youTubeVideo.validation" defaultMessage="Should be a valid YouTube URL or identifier" />
