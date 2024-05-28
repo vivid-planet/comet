@@ -1,6 +1,6 @@
 import { AppHeaderDropdown, ClearInputAdornment } from "@comet/admin";
 import { Domain, Search } from "@comet/admin-icons";
-import { Divider, InputAdornment, InputBase, List, ListItemButton, ListItemText, ListSubheader } from "@mui/material";
+import { Box, Divider, InputAdornment, InputBase, List, ListItemButton, ListItemText, ListSubheader } from "@mui/material";
 import { capitalCase } from "change-case";
 import React from "react";
 import { useIntl } from "react-intl";
@@ -103,24 +103,30 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                 <>
                     {searchable && (
                         <>
-                            <InputBase
-                                sx={{ margin: 1 }}
-                                startAdornment={
-                                    <InputAdornment position="start">
-                                        <Search />
-                                    </InputAdornment>
-                                }
-                                placeholder={intl.formatMessage({
-                                    id: "contentScopeSelect.searchInput.placeholder",
-                                    defaultMessage: "Search...",
-                                })}
-                                value={searchValue}
-                                onChange={(event) => setSearchValue(event.currentTarget.value)}
-                                endAdornment={
-                                    <ClearInputAdornment onClick={() => setSearchValue("")} hasClearableContent={searchValue !== ""} position="end" />
-                                }
-                                autoFocus
-                            />
+                            <Box sx={{ padding: 1 }}>
+                                <InputBase
+                                    startAdornment={
+                                        <InputAdornment position="start">
+                                            <Search />
+                                        </InputAdornment>
+                                    }
+                                    placeholder={intl.formatMessage({
+                                        id: "contentScopeSelect.searchInput.placeholder",
+                                        defaultMessage: "Search...",
+                                    })}
+                                    value={searchValue}
+                                    onChange={(event) => setSearchValue(event.currentTarget.value)}
+                                    endAdornment={
+                                        <ClearInputAdornment
+                                            onClick={() => setSearchValue("")}
+                                            hasClearableContent={searchValue !== ""}
+                                            position="end"
+                                        />
+                                    }
+                                    autoFocus
+                                    fullWidth
+                                />
+                            </Box>
                             <Divider />
                         </>
                     )}
