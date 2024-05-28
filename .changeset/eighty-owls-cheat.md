@@ -7,7 +7,6 @@ Rework colors
 - Rename `bluePalette` to `primaryPalette`
 - Rename `neutrals` to `greyPalette`
 - Remove `greenPalette`
-- Remove `secondary` from `paletteOptions`
 - Change colors in all palettes
 - Change `text` colors 
 - Add `highlight` colors `purple`, `green`, `orange`, `yellow` and `red` to palette

@@ -1,7 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { messages, Stack, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
-import { Domain } from "@comet/admin-icons";
-import { Typography } from "@mui/material";
+import { Stack, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
 import { styled } from "@mui/material/styles";
 import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
@@ -12,19 +10,6 @@ import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { JobRuntime } from "../cronJobs/JobRuntime";
 import { PublishButton } from "./PublishButton";
 import { GQLBuildsQuery } from "./PublisherPage.generated";
-
-const ScopeIndicatorLabelBold = styled(Typography)`
-    && {
-        font-weight: 400;
-        padding: 0 8px 0 4px;
-        text-transform: uppercase;
-    }
-`;
-
-const ScopeIndicatorContent = styled("div")`
-    display: flex;
-    align-items: center;
-`;
 
 const buildsQuery = gql`
     query Builds {
@@ -54,15 +39,7 @@ export function PublisherPage(): React.ReactElement {
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.publisher", defaultMessage: "Publisher" })}>
-            <ContentScopeIndicator variant="toolbar">
-                <ScopeIndicatorContent>
-                    <Domain fontSize="small" />
-                    <ScopeIndicatorLabelBold variant="body2">
-                        <FormattedMessage {...messages.globalContentScope} />
-                    </ScopeIndicatorLabelBold>
-                </ScopeIndicatorContent>
-            </ContentScopeIndicator>
-            <Toolbar>
+            <Toolbar scopeIndicator={<ContentScopeIndicator global />}>
                 <ToolbarTitleItem>
                     <FormattedMessage id="comet.publisher.title" defaultMessage="Publisher" />
                 </ToolbarTitleItem>

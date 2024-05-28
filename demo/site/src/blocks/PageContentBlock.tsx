@@ -22,7 +22,7 @@ const supportedBlocks: SupportedBlocks = {
     space: (props) => <SpaceBlock data={props} />,
     richtext: (props) => <RichTextBlock data={props} />,
     headline: (props) => <HeadlineBlock data={props} />,
-    image: (props) => <DamImageBlock data={props} />,
+    image: (props) => <DamImageBlock data={props} aspectRatio="inherit" />,
     textImage: (props) => <TextImageBlock data={props} />,
     damVideo: (props) => <DamVideoBlock data={props} />,
     youTubeVideo: (props) => <YouTubeVideoBlock data={props} />,

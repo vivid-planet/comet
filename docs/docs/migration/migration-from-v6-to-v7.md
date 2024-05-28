@@ -136,6 +136,35 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     }
     ```
 
+### Provide `strategyName` in createStaticCredentialsBasicStrategy
+
+Make sure to use a meaningful strategy name as this name can be used to identify the user when using this strategy more than once. Do not forget to add the strategy to the App Guard.
+
+```diff
+  createStaticCredentialsBasicStrategy({
+      password: "xxxxx",
++     strategyName: "system-user",
+  }),
+```
+
+```diff
+  {
+      provide: APP_GUARD,
+-     useClass: createCometAuthGuard(["static-credentials-basic", "..."]),
++     useClass: createCometAuthGuard(["system-user", "..."]),
+  };
+```
+
+```diff
+  UserPermissionsModule.forRootAsync({
+      useFactory: (...) => ({
++         systemUsers: ["system-user"],
+          ...
+      }),
+      ...
+  }),
+```
+
 ## Admin
 
 ### Rearrange components in `App.tsx`

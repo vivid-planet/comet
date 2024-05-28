@@ -79,8 +79,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
             <StackSwitch initialPage="table">
                 <StackPage name="table">
                     <EditDialogApiContext.Provider value={editDialogApi}>
-                        {props.contentScopeIndicator}
-                        <Toolbar>
+                        <Toolbar scopeIndicator={props.contentScopeIndicator}>
                             <ToolbarItem>
                                 <DamTableFilter hideArchiveFilter={props.hideArchiveFilter} filterApi={filterApi} />
                             </ToolbarItem>

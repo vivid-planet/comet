@@ -32,6 +32,7 @@ export const additionalPageTreeNodeFieldsFragment = {
 };
 
 export const EditPageNode = createEditPageNode({
+    disableHideInMenu: false,
     valuesToInput: ({ values }: { values: { userGroup: string } }) => {
         return {
             userGroup: values.userGroup,

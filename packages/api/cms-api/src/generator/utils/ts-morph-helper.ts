@@ -81,6 +81,20 @@ export function findEnumImportPath(enumName: string, targetDirectory: string, me
     }
 }
 
+export function findValidatorImportPath(validatorName: string, generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): string {
+    const tsSource = morphTsSource(metadata);
+    //validator defined in same file as entity
+    if (tsSource.getVariableDeclaration(validatorName) || tsSource.getFunction(validatorName)) {
+        if (!(tsSource.getVariableDeclaration(validatorName)?.isExported() || tsSource.getFunction(validatorName)?.isExported())) {
+            throw new Error(`Validator ${validatorName} is not exported in ${metadata.path}`);
+        }
+        return path.relative(`${generatorOptions.targetDirectory}/dto`, metadata.path).replace(/\.ts$/, "");
+    } else {
+        const { importPath } = findImportPath(validatorName, generatorOptions.targetDirectory, metadata);
+        return importPath;
+    }
+}
+
 export function findBlockName(propertyName: string, metadata: EntityMetadata<any>): string {
     const tsProp = morphTsProperty(propertyName, metadata);
     if (!tsProp) throw new Error("property not found");

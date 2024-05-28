@@ -1,6 +1,8 @@
+export let fallbackClipboardData: string | undefined;
+
 export async function writeClipboardText(data: string): Promise<void> {
-    // Always write to local storage, which is used as a fallback when reading from the clipboard is not supported/allowed.
-    window.localStorage.setItem("comet_clipboard", data);
+    // Always set fallback, which is used when reading from the clipboard is not supported/allowed.
+    fallbackClipboardData = data;
 
     if (!("clipboard" in navigator)) {
         return;

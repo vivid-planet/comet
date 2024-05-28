@@ -1,6 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
+    filterByFragment,
     FinalForm,
     FinalFormSaveSplitButton,
     FinalFormSubmitEvent,
@@ -19,7 +20,6 @@ import { ArrowLeft } from "@comet/admin-icons";
 import { EditPageLayout, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { CircularProgress, IconButton } from "@mui/material";
 import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -62,7 +62,7 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
 
     const initialValues: Partial<FormState> = data?.productCategory
         ? {
-              ...filter<GQLProductCategoryFormFragment>(productCategoryFormFragment, data.productCategory),
+              ...filterByFragment<GQLProductCategoryFormFragment>(productCategoryFormFragment, data.productCategory),
           }
         : {};
 
@@ -87,10 +87,7 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
 
     const handleSubmit = async (formState: FormState, form: FormApi<FormState>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-        const output = {
-            ...formState,
-            products: [], // TODO don't reset on update
-        };
+        const output = { ...formState };
         if (mode === "edit") {
             if (!id) throw new Error();
             await client.mutate<GQLProductCategoryFormUpdateProductCategoryMutation, GQLProductCategoryFormUpdateProductCategoryMutationVariables>({
