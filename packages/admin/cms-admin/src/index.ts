@@ -35,6 +35,7 @@ export { PageName } from "./common/PageName";
 export { useEditState } from "./common/useEditState";
 export { useSaveState } from "./common/useSaveState";
 export { ContentScopeIndicator } from "./contentScope/ContentScopeIndicator";
+export { ContentScopeSelect } from "./contentScope/ContentScopeSelect";
 export type { ContentScopeControlsConfig } from "./contentScope/Controls";
 export { ContentScopeControls } from "./contentScope/Controls";
 export { LegacyContentScopeIndicator } from "./contentScope/LegacyContentScopeIndicator";
