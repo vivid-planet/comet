@@ -162,76 +162,6 @@ export const masterMenuData: MasterMenuData = [
         requiredPermission: "pageTree",
     },
     {
-        title: <FormattedMessage id="menu.products" defaultMessage="Products" />,
-        icon: <Snips />,
-        groupItems: [
-            {
-                primary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products Future" />,
-                route: {
-                    path: "/products-future",
-                    component: FutureProductsPage,
-                },
-            },
-            {
-                primary: <FormattedMessage id="menu.createProductFuture" defaultMessage="Create Product Future" />,
-                route: {
-                    path: "/create-product-future",
-                    component: FutureCreateProductPage,
-                },
-            },
-            {
-                primary: <FormattedMessage id="menu.manufacturersFuture" defaultMessage="Manufacturers Future" />,
-                route: {
-                    path: "/manufacturers-future",
-                    component: FutureManufacturersPage,
-                },
-            },
-            {
-                primary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products with low price Future" />,
-                route: {
-                    path: "/products-with-low-price-future",
-                    component: FutureProductsWithLowPricePage,
-                },
-            },
-            {
-                primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
-                route: {
-                    path: "/products",
-                    component: ProductsPage,
-                },
-            },
-            {
-                primary: <FormattedMessage id="menu.productCategories" defaultMessage="Categories" />,
-                route: {
-                    path: "/product-categories",
-                    component: ProductCategoriesPage,
-                },
-            },
-            {
-                primary: <FormattedMessage id="menu.productTags" defaultMessage="Tags" />,
-                route: {
-                    path: "/product-tags",
-                    component: ProductTagsPage,
-                },
-            },
-            {
-                primary: <FormattedMessage id="menu.productsHandmade" defaultMessage="Products Handmade" />,
-                route: {
-                    path: "/products-handmade",
-                    component: ProductsHandmadePage,
-                },
-            },
-            {
-                primary: <FormattedMessage id="menu.manufacturersHandmade" defaultMessage="Manufacturers Handmade" />,
-                route: {
-                    path: "/manufacturers-handmade",
-                    component: ManufacturersHandmadePage,
-                },
-            },
-        ],
-        requiredPermission: "products",
-    },
-    {
         primary: <FormattedMessage id="menu.userPermissions" defaultMessage="User Permissions" />,
         icon: <Snips />,
         route: {
@@ -239,6 +169,91 @@ export const masterMenuData: MasterMenuData = [
             component: UserPermissionsPage,
         },
         requiredPermission: "userPermissions",
+    },
+    {
+        title: <FormattedMessage id="menu.products" defaultMessage="Products" />,
+        icon: <Snips />,
+        groupItems: [
+            {
+                primary: <FormattedMessage id="menu.futureGenerator" defaultMessage="Future Generator" />,
+                submenu: [
+                    {
+                        primary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products Future" />,
+                        route: {
+                            path: "/products-future",
+                            component: FutureProductsPage,
+                        },
+                    },
+                    {
+                        primary: <FormattedMessage id="menu.createProductFuture" defaultMessage="Create Product Future" />,
+                        route: {
+                            path: "/create-product-future",
+                            component: FutureCreateProductPage,
+                        },
+                    },
+                    {
+                        primary: <FormattedMessage id="menu.manufacturersFuture" defaultMessage="Manufacturers Future" />,
+                        route: {
+                            path: "/manufacturers-future",
+                            component: FutureManufacturersPage,
+                        },
+                    },
+                    {
+                        primary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products with low price Future" />,
+                        route: {
+                            path: "/products-with-low-price-future",
+                            component: FutureProductsWithLowPricePage,
+                        },
+                    },
+                ],
+            },
+            {
+                primary: <FormattedMessage id="menu.oldGenerator" defaultMessage="Old Generator" />,
+                submenu: [
+                    {
+                        primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
+                        route: {
+                            path: "/products",
+                            component: ProductsPage,
+                        },
+                    },
+                    {
+                        primary: <FormattedMessage id="menu.productCategories" defaultMessage="Categories" />,
+                        route: {
+                            path: "/product-categories",
+                            component: ProductCategoriesPage,
+                        },
+                    },
+                    {
+                        primary: <FormattedMessage id="menu.productTags" defaultMessage="Tags" />,
+                        route: {
+                            path: "/product-tags",
+                            component: ProductTagsPage,
+                        },
+                    },
+                ],
+            },
+            {
+                primary: <FormattedMessage id="menu.handmade" defaultMessage="Handmade" />,
+                submenu: [
+                    {
+                        primary: <FormattedMessage id="menu.productsHandmade" defaultMessage="Products Handmade" />,
+                        route: {
+                            path: "/products-handmade",
+                            component: ProductsHandmadePage,
+                        },
+                    },
+                    {
+                        primary: <FormattedMessage id="menu.manufacturersHandmade" defaultMessage="Manufacturers Handmade" />,
+                        route: {
+                            path: "/manufacturers-handmade",
+                            component: ManufacturersHandmadePage,
+                        },
+                    },
+                ],
+            },
+        ],
+        requiredPermission: "products",
     },
 ];
 
