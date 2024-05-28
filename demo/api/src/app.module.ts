@@ -143,7 +143,15 @@ export class AppModule {
                 PredefinedPageModule,
                 CronJobsModule,
                 ProductsModule,
-                AccessLogModule,
+                AccessLogModule.forRoot({
+                    shouldLogRequest: ({ user }) => {
+                        // Ignore system user
+                        if (user === "system-user") {
+                            return false;
+                        }
+                        return true;
+                    },
+                }),
             ],
         };
     }

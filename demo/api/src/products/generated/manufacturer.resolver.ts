@@ -78,7 +78,7 @@ export class ManufacturerResolver {
     @AffectedEntity(Manufacturer)
     async deleteManufacturer(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const manufacturer = await this.repository.findOneOrFail(id);
-        await this.entityManager.remove(manufacturer);
+        this.entityManager.remove(manufacturer);
         await this.entityManager.flush();
         return true;
     }

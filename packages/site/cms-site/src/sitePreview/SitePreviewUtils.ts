@@ -1,6 +1,6 @@
 //TODO add import "server-only"; once this file gets correctly tree-shaked out of the client bundle
 
-import jsonwebtoken from "jsonwebtoken";
+import { jwtDecrypt, SignJWT } from "jose";
 import { cookies, draftMode } from "next/headers";
 import { redirect } from "next/navigation";
 import { type NextRequest } from "next/server";
@@ -18,12 +18,15 @@ export type SitePreviewParams = {
     previewData?: SitePreviewData;
 };
 
-if (!process.env.SITE_PREVIEW_SECRET && process.env.NODE_ENV === "production") {
-    throw new Error("SITE_PREVIEW_SECRET environment variable is required in production mode");
+function getPreviewScopeSigningKey() {
+    if (!process.env.SITE_PREVIEW_SECRET && process.env.NODE_ENV === "production") {
+        throw new Error("SITE_PREVIEW_SECRET environment variable is required in production mode");
+    }
+    return process.env.SITE_PREVIEW_SECRET || "secret";
 }
-const previewScopeSigningKey = process.env.SITE_PREVIEW_SECRET || "secret";
 
 export async function sitePreviewRoute(request: NextRequest, graphQLFetch: GraphQLFetch) {
+    const previewScopeSigningKey = getPreviewScopeSigningKey();
     const params = request.nextUrl.searchParams;
     const settingsParam = params.get("settings");
     const scopeParam = params.get("scope");
@@ -54,18 +57,22 @@ export async function sitePreviewRoute(request: NextRequest, graphQLFetch: Graph
     }
 
     const data: SitePreviewParams = { scope, previewData };
-    cookies().set("__comet_preview", jsonwebtoken.sign(data, previewScopeSigningKey));
+    const token = await new SignJWT(data).setProtectedHeader({ alg: "HS256" }).sign(new TextEncoder().encode(previewScopeSigningKey));
+    cookies().set("__comet_preview", token);
 
     draftMode().enable();
 
     return redirect(params.get("path") || "/");
 }
 
-export function previewParams(): SitePreviewParams | null {
+export async function previewParams(): Promise<SitePreviewParams | null> {
+    const previewScopeSigningKey = getPreviewScopeSigningKey();
+
     if (!draftMode().isEnabled) return null;
     const cookie = cookies().get("__comet_preview");
     if (cookie) {
-        return jsonwebtoken.verify(cookie.value, previewScopeSigningKey) as SitePreviewParams;
+        const { payload } = await jwtDecrypt<SitePreviewParams>(cookie.value, new TextEncoder().encode(previewScopeSigningKey));
+        return payload;
     }
     return null;
 }

@@ -6,6 +6,8 @@ import { DependenciesResolverFactory } from "../dependencies/dependencies.resolv
 import { InternalLinkBlock, InternalLinkBlockData, InternalLinkBlockInput } from "../page-tree/blocks/internal-link.block";
 import { RedirectInputFactory } from "./dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./entities/redirect-entity.factory";
+import { ImportRedirectsConsole } from "./import-redirects.console";
+import { REDIRECTS_LINK_BLOCK } from "./redirects.constants";
 import { createRedirectsResolver } from "./redirects.resolver";
 import { RedirectsService } from "./redirects.service";
 import { RedirectScopeInterface } from "./types";
@@ -15,8 +17,6 @@ type CustomTargets = Record<string, Block>;
 export type RedirectsLinkBlock = OneOfBlock<
     CustomTargets & { internal: Block<InternalLinkBlockData, InternalLinkBlockInput>; external: typeof ExternalLinkBlock }
 >;
-
-export const REDIRECTS_LINK_BLOCK = "REDIRECTS_LINK_BLOCK";
 
 interface Config {
     customTargets?: CustomTargets;
@@ -47,7 +47,7 @@ export class RedirectsModule {
         return {
             module: RedirectsModule,
             imports: [MikroOrmModule.forFeature([Redirect])],
-            providers: [RedirectsResolver, RedirectsDependenciesResolver, RedirectsService, linkBlockProvider],
+            providers: [RedirectsResolver, RedirectsDependenciesResolver, RedirectsService, linkBlockProvider, ImportRedirectsConsole],
             exports: [RedirectsService],
         };
     }

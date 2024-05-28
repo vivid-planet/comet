@@ -1,0 +1,29 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "comet-demo-admin": "1.0.0",
+    "comet-demo-admin-server": "1.0.0",
+    "comet-demo-api": "1.0.0",
+    "comet-demo-site": "1.0.0",
+    "comet-docs": "0.0.0",
+    "@comet/admin": "6.10.0",
+    "@comet/admin-babel-preset": "6.10.0",
+    "@comet/admin-color-picker": "6.10.0",
+    "@comet/admin-date-time": "6.10.0",
+    "@comet/admin-icons": "6.10.0",
+    "@comet/admin-react-select": "6.10.0",
+    "@comet/admin-rte": "6.10.0",
+    "@comet/admin-theme": "6.10.0",
+    "@comet/blocks-admin": "6.10.0",
+    "@comet/cms-admin": "6.10.0",
+    "@comet/blocks-api": "6.10.0",
+    "@comet/cms-api": "6.10.0",
+    "@comet/cli": "6.10.0",
+    "@comet/eslint-config": "6.10.0",
+    "@comet/eslint-plugin": "6.10.0",
+    "@comet/cms-site": "6.10.0",
+    "comet-storybook": "1.0.0"
+  },
+  "changesets": []
+}

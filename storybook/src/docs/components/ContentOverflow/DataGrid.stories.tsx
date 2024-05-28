@@ -1,6 +1,6 @@
-import { ContentOverflow } from "@comet/admin";
+import { ContentOverflow, GridColDef } from "@comet/admin";
 import { Typography } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
