@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-react-select",
-    "version": "6.10.0",
+    "version": "6.11.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -25,14 +25,14 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
-        "@comet/admin": "workspace:^6.10.0",
+        "@comet/admin": "workspace:^6.11.0",
         "classnames": "^2.2.6"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^6.10.0",
-        "@comet/eslint-config": "workspace:^6.10.0",
+        "@comet/admin-babel-preset": "workspace:^6.11.0",
+        "@comet/eslint-config": "workspace:^6.11.0",
         "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
         "@mui/styles": "^5.0.0",
