@@ -21,6 +21,7 @@ export { useIFrameBridge } from "./iframebridge/useIFrameBridge";
 export { isWithPreviewPropsData, withPreview, WithPreviewProps } from "./iframebridge/withPreview";
 export type { ImageDimensions } from "./image/Image";
 export { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, Image, parseAspectRatio } from "./image/Image";
+export { preloginRoute } from "./prelogin/PreloginUtils";
 export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";
 export { usePreview } from "./preview/usePreview";
 export { PreviewSkeleton } from "./previewskeleton/PreviewSkeleton";
@@ -28,4 +29,3 @@ export { sendSitePreviewIFrameMessage } from "./sitePreview/iframebridge/sendSit
 export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePreviewIFrameMessage";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
 export { previewParams, SitePreviewData, SitePreviewParams, sitePreviewRoute } from "./sitePreview/SitePreviewUtils";
-export { getValidatedScope } from "./util/getValidatedScope";
