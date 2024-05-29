@@ -8,10 +8,7 @@ import { Toolbar, ToolbarProps } from "./Toolbar";
 
 export type DataGridToolbarClassKey = "root" | "standard" | "comfortable";
 
-export type DataGridToolbarProps = { density?: "standard" | "comfortable" } & Omit<
-    ToolbarProps,
-    "slotProps" | "scopeIndicator" | "hideTopBar" | "hideBottomBar"
-> &
+export type DataGridToolbarProps = { density?: "standard" | "comfortable" } & Omit<ToolbarProps, "slotProps" | "scopeIndicator" | "hideTopBar"> &
     ThemedComponentBaseProps<{
         root: typeof Toolbar;
     }>;

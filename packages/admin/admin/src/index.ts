@@ -14,6 +14,7 @@ export { CancelButton, CancelButtonClassKey, CancelButtonProps } from "./common/
 export { ClearInputButton, ClearInputButtonClassKey, ClearInputButtonProps } from "./common/buttons/clearinput/ClearInputButton";
 export { CopyToClipboardButton, CopyToClipboardButtonClassKey, CopyToClipboardButtonProps } from "./common/buttons/CopyToClipboardButton";
 export { DeleteButton, DeleteButtonClassKey, DeleteButtonProps } from "./common/buttons/delete/DeleteButton";
+export { FeedbackButton, FeedbackButtonClassKey, FeedbackButtonProps } from "./common/buttons/feedback/FeedbackButton";
 export { OkayButton, OkayButtonClassKey, OkayButtonProps } from "./common/buttons/okay/OkayButton";
 export { SaveButton, SaveButtonClassKey, SaveButtonProps } from "./common/buttons/save/SaveButton";
 export { SplitButton, SplitButtonClassKey, SplitButtonProps } from "./common/buttons/split/SplitButton";
@@ -43,7 +44,8 @@ export { ContentOverflow, ContentOverflowClassKey, ContentOverflowProps } from "
 export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
 export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDataGridExcelExport";
-export { GridCellText, GridCellTextClassKey, GridCellTextProps } from "./dataGrid/GridCellText";
+export { GridCellContent, GridCellContentClassKey, GridCellContentProps } from "./dataGrid/GridCellContent";
+export { GridColDef } from "./dataGrid/GridColDef";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";

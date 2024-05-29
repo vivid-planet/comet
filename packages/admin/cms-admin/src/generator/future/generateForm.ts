@@ -2,6 +2,7 @@ import { IntrospectionQuery } from "graphql";
 
 import { generateFormField } from "./generateFormField";
 import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
+import { findMutationTypeOrThrow } from "./utils/findMutationType";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 import { isFieldOptional } from "./utils/isFieldOptional";
 
@@ -23,6 +24,8 @@ export function generateForm(
     const mode = config.mode ?? "all";
     const editMode = mode === "edit" || mode == "all";
     const addMode = mode === "add" || mode == "all";
+
+    const createMutation = addMode ? findMutationTypeOrThrow(config.createMutation ?? `create${gqlType}`, gqlIntrospection) : undefined;
 
     const rootBlockFields = config.fields
         .filter((field) => field.type == "block")
@@ -86,10 +89,10 @@ export function generateForm(
         `;
     }
 
-    if (addMode) {
+    if (addMode && createMutation) {
         gqlDocuments[`create${gqlType}Mutation`] = `
             mutation Create${gqlType}($input: ${gqlType}Input!) {
-                create${gqlType}(input: $input) {
+                ${createMutation.name}(input: $input) {
                     id
                     updatedAt
                     ...${fragmentName}
@@ -282,14 +285,14 @@ export function generateForm(
                 }
             ${mode == "all" ? `} else {` : ""}
                 ${
-                    addMode
+                    addMode && createMutation
                         ? `
                 const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                     mutation: create${gqlType}Mutation,
                     variables: { input: output },
                 });
                 if (!event.navigatingBack) {
-                    const id = mutationResponse?.create${gqlType}.id;
+                    const id = mutationResponse?.${createMutation.name}.id;
                     if (id) {
                         setTimeout(() => {
                             stackSwitchApi.activatePage(\`edit\`, id);
