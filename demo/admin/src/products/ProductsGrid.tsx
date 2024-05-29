@@ -5,6 +5,7 @@ import {
     filterByFragment,
     GridCellContent,
     GridColDef,
+    GridColumnsButton,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -51,6 +52,9 @@ function ProductsGridToolbar() {
             <ToolbarFillSpace />
             <ToolbarItem>
                 <GridFilterButton />
+            </ToolbarItem>
+            <ToolbarItem>
+                <GridColumnsButton />
             </ToolbarItem>
             <ToolbarItem>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
