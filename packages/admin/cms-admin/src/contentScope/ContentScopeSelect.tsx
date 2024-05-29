@@ -37,7 +37,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
 
     const hasMultipleDimensions = Object.keys(value).length > 1;
 
-    let filteredOptions: Array<Option<Value>>;
+    let filteredOptions = options;
 
     if (searchable) {
         filteredOptions = options.filter((option) => {
@@ -45,8 +45,6 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                 return value.toLowerCase().includes(searchValue.toLowerCase()) || label?.toLowerCase().includes(searchValue.toLowerCase());
             });
         });
-    } else {
-        filteredOptions = options;
     }
 
     let groups: Array<{ value: string; label: string | undefined; options: Option<Value>[] }> = [];
