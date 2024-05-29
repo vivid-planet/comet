@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../../../apollo-rest-story.decorator";
 
-storiesOf("stories/Form/Components", module)
+storiesOf("stories/Form/Components/NumberField", module)
     .addDecorator(apolloRestStoryDecorator())
     .add("NumberField", () => {
         return (
@@ -13,8 +13,7 @@ storiesOf("stories/Form/Components", module)
             </FinalForm>
         );
     });
-
-storiesOf("stories/Form/Components", module)
+storiesOf("stories/Form/Components/NumberField", module)
     .addDecorator(apolloRestStoryDecorator())
     .add("WithDecimals", () => {
         return (
@@ -23,8 +22,7 @@ storiesOf("stories/Form/Components", module)
             </FinalForm>
         );
     });
-
-storiesOf("stories/Form/Components", module)
+storiesOf("stories/Form/Components/NumberField", module)
     .addDecorator(apolloRestStoryDecorator())
     .add("Currency", () => {
         return (
