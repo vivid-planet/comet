@@ -1,4 +1,3 @@
-// TODO: Move file to comet
 import { jwtVerify, SignJWT } from "jose";
 import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
