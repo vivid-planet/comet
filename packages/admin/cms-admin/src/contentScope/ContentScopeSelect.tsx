@@ -1,9 +1,9 @@
 import { AppHeaderDropdown, ClearInputAdornment } from "@comet/admin";
 import { Domain, Search } from "@comet/admin-icons";
-import { Box, Divider, InputAdornment, InputBase, List, ListItemButton, ListItemText, ListSubheader } from "@mui/material";
+import { Box, Divider, InputAdornment, InputBase, List, ListItem, ListItemButton, ListItemText, ListSubheader } from "@mui/material";
 import { capitalCase } from "change-case";
 import React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeInterface } from "./Provider";
 
@@ -153,6 +153,11 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                 </React.Fragment>
                             );
                         })}
+                        {filteredOptions.length === 0 && (
+                            <ListItem>
+                                <FormattedMessage id="contentScopeSelect.list.noOptions" defaultMessage="No options" />
+                            </ListItem>
+                        )}
                     </List>
                 </>
             )}
