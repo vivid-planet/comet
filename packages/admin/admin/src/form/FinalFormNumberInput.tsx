@@ -53,7 +53,12 @@ export function FinalFormNumberInput({
                 .join("."),
         );
 
-        const inputValue = isNaN(numericValue) ? undefined : numericValue.toFixed(decimals);
+        const roundToDecimals = (numericValue: number, decimals: number) => {
+            const factor = Math.pow(10, decimals);
+            return Math.round(numericValue * factor) / factor;
+        };
+
+        const inputValue = isNaN(numericValue) ? undefined : roundToDecimals(numericValue, decimals);
         input.onChange(inputValue);
         setFormattedNumberValue(getFormattedValue(inputValue, decimals));
     };
