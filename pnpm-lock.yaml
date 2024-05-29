@@ -1943,9 +1943,6 @@ importers:
       '@graphql-codegen/typescript-operations':
         specifier: ^2.0.0
         version: 2.5.12(graphql@15.8.0)
-      '@mui/icons-material':
-        specifier: ^5.0.0
-        version: 5.11.0(@mui/material@5.11.6)(@types/react@17.0.53)(react@17.0.2)
       '@mui/material':
         specifier: ^5.0.0
         version: 5.11.6(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@types/react@17.0.53)(react-dom@17.0.2)(react@17.0.2)
@@ -23273,7 +23270,7 @@ packages:
     resolution: {integrity: sha512-n3s8EwkdFIJCG3BPKBYvskgXGoy88ARzvegkitk60NxRdwltLOTaH7CUiMRXvwYorl0Q712iEjcWB+fK/MrWVw==}
     engines: {node: '>=10'}
     dependencies:
-      debug: 4.3.4(supports-color@9.3.1)
+      debug: 4.3.4
       istanbul-lib-coverage: 3.2.0
       source-map: 0.6.1
     transitivePeerDependencies:
