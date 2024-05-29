@@ -58,7 +58,7 @@ export function FinalFormNumberInput({
             return Math.round(numericValue * factor) / factor;
         };
 
-        const inputValue = isNaN(numericValue) ? undefined : roundToDecimals(numericValue, decimals);
+        const inputValue: number | undefined = isNaN(numericValue) ? undefined : roundToDecimals(numericValue, decimals);
         input.onChange(inputValue);
         setFormattedNumberValue(getFormattedValue(inputValue, decimals));
     };
