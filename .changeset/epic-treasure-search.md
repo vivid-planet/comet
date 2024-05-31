@@ -2,4 +2,4 @@
 "@comet/admin-rte": patch
 ---
 
-Hide translation button on FinalFormSearchTextField component
+Hide translation button for `FinalFormSearchTextField`
