@@ -50,12 +50,7 @@ export const VimeoVideoBlock: BlockInterface<VimeoVideoBlockData, VimeoVideoBloc
         return (
             <Box padding={isInPaper ? 3 : 0} pb={0}>
                 <SelectPreviewComponent>
-                    <BlocksFinalForm
-                        onSubmit={(newState) => {
-                            updateState({ ...state, ...newState });
-                        }}
-                        initialValues={state}
-                    >
+                    <BlocksFinalForm onSubmit={updateState} initialValues={state}>
                         <Field
                             name="vimeoIdentifier"
                             label={<FormattedMessage id="blocks.vimeoVideo.vimeoIdentifier" defaultMessage="Vimeo URL or Vimeo Video ID" />}
