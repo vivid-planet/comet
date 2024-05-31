@@ -1,4 +1,4 @@
-import { MoreHoriz } from "@mui/icons-material";
+import { MoreHorizontal } from "@comet/admin-icons";
 import { ComponentsOverrides, ListItemIcon, Menu, MenuItem, Theme, Tooltip } from "@mui/material";
 import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import { Editor } from "draft-js";
@@ -65,7 +65,7 @@ function FeaturesButtonGroup({ features, disabled: globallyDisabled, classes, ed
                             placement="top"
                         >
                             <span>
-                                <ControlButton onButtonClick={handleMoreOptionsClick} disabled={globallyDisabled} icon={MoreHoriz} />
+                                <ControlButton onButtonClick={handleMoreOptionsClick} disabled={globallyDisabled} icon={MoreHorizontal} />
                             </span>
                         </Tooltip>
                     </div>
