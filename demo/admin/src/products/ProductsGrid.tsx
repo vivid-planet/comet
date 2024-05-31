@@ -20,7 +20,7 @@ import {
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton, Typography } from "@mui/material";
-import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridColDef, GridFilterInputSingleSelect, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -90,6 +90,22 @@ export function ProductsGrid() {
         { field: "description", headerName: "Description", width: 150 },
         { field: "price", headerName: "Price", width: 150, type: "number" },
         { field: "type", headerName: "Type", width: 150, type: "singleSelect", valueOptions: ["Cap", "Shirt", "Tie"] },
+        {
+            field: "additionalTypes",
+            headerName: "Additional Types",
+            width: 150,
+            renderCell: (params) => <>{params.row.additionalTypes.join(", ")}</>,
+            filterOperators: [
+                {
+                    value: "contains",
+                    getApplyFilterFn: (filterItem) => {
+                        throw new Error("not implemented, we filter server side");
+                    },
+                    InputComponent: GridFilterInputSingleSelect,
+                },
+            ],
+            valueOptions: ["Cap", "Shirt", "Tie"],
+        },
         {
             field: "category",
             headerName: "Category",
@@ -225,6 +241,7 @@ const productsFragment = gql`
         description
         price
         type
+        additionalTypes
         inStock
         image
         status

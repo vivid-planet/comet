@@ -40,6 +40,10 @@ export class ProductInput {
     @Field(() => ProductType)
     type: ProductType;
 
+    @IsEnum(ProductType, { each: true })
+    @Field(() => [ProductType], { defaultValue: [] })
+    additionalTypes: ProductType[];
+
     @IsNullable()
     @IsNumber()
     @Field({ nullable: true, defaultValue: null })

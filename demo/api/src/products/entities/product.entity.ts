@@ -100,6 +100,10 @@ export class Product extends BaseEntity<Product, "id"> {
     @Field(() => ProductType)
     type: ProductType;
 
+    @Field(() => [ProductType])
+    @Enum({ items: () => ProductType, array: true })
+    additionalTypes: ProductType[] = [];
+
     @Property({ type: types.decimal, nullable: true })
     @Field({ nullable: true })
     price?: number = undefined;
