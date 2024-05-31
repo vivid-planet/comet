@@ -5,7 +5,7 @@ import { BlockData, BlockDataInterface, BlockInput, createBlock, inputToData } f
 import { BlockField } from "./decorators/field";
 
 class VimeoVideoBlockData extends BlockData {
-    @BlockField()
+    @BlockField({ nullable: true })
     vimeoIdentifier?: string;
 
     @BlockField({ type: "enum", enum: VideoAspectRatio })
@@ -24,7 +24,7 @@ class VimeoVideoBlockData extends BlockData {
 class VimeoVideoBlockInput extends BlockInput {
     @IsOptional()
     @IsString()
-    @BlockField()
+    @BlockField({ nullable: true })
     vimeoIdentifier?: string;
 
     @IsEnum(VideoAspectRatio)
