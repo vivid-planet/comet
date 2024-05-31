@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SvgIconComponent } from "@mui/icons-material";
-import CancelIcon from "@mui/icons-material/Cancel";
-import ClearIcon from "@mui/icons-material/Clear";
-import DropdownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { ChevronDown, Clear, Close } from "@comet/admin-icons";
 import { Chip, ComponentsOverrides, InputBase, InputBaseProps, MenuItem, Paper, Theme, Typography, useTheme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import classNames from "classnames";
@@ -97,7 +94,7 @@ function MultiValue<OptionType extends OptionTypeBase>(props: MultiValueProps<Op
                 [props.selectProps.classes.chipFocused]: props.isFocused,
             })}
             onDelete={props.removeProps.onClick}
-            deleteIcon={<CancelIcon {...props.removeProps} />}
+            deleteIcon={<Clear {...props.removeProps} />}
         />
     );
 }
@@ -122,7 +119,7 @@ function ClearIndicator<OptionType extends OptionTypeBase, IsMulti extends boole
     selectProps,
     clearValue,
 }: IndicatorProps<OptionType, IsMulti>) {
-    const Icon = selectProps.clearIcon ? selectProps.clearIcon : ClearIcon;
+    const Icon = selectProps.clearIcon ? selectProps.clearIcon : Close;
     return (
         <div className={`${selectProps.classes.indicator} ${selectProps.classes.clearIndicator}`} onClick={clearValue}>
             <Icon fontSize="inherit" color="inherit" />
@@ -131,8 +128,8 @@ function ClearIndicator<OptionType extends OptionTypeBase, IsMulti extends boole
 }
 
 function DropdownIndicator<OptionType extends OptionTypeBase, IsMulti extends boolean>({ selectProps }: IndicatorProps<OptionType, IsMulti>) {
-    const DefaultIcon = selectProps.dropdownIcon ? selectProps.dropdownIcon : DropdownIcon;
-    const OpenIcon = selectProps.dropdownIconOpen ? selectProps.dropdownIconOpen : DropdownIcon;
+    const DefaultIcon = selectProps.dropdownIcon ? selectProps.dropdownIcon : ChevronDown;
+    const OpenIcon = selectProps.dropdownIconOpen ? selectProps.dropdownIconOpen : ChevronDown;
     const Icon = selectProps.menuIsOpen ? OpenIcon : DefaultIcon;
 
     return (
@@ -160,9 +157,9 @@ const components = {
 export interface SelectProps<OptionType extends OptionTypeBase> {
     theme: Theme;
     selectComponent: React.ComponentType<ReactSelectProps<OptionType>>;
-    clearIcon?: SvgIconComponent;
-    dropdownIcon?: SvgIconComponent;
-    dropdownIconOpen?: SvgIconComponent;
+    clearIcon?: React.ReactNode;
+    dropdownIcon?: React.ReactNode;
+    dropdownIconOpen?: React.ReactNode;
 }
 
 function SelectWrapper<OptionType extends OptionTypeBase>({
