@@ -21,6 +21,8 @@ const isValidVimeoIdentifier = (value: string) => {
 };
 
 const validateIdentifier = (value?: string) => {
+    if (!value) return undefined;
+
     return value && isValidVimeoIdentifier(value) ? undefined : (
         <FormattedMessage id="comet.blocks.vimeoVideo.validation" defaultMessage="Should be a valid Vimeo URL or identifier" />
     );
