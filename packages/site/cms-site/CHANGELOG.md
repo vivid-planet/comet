@@ -1,5 +1,7 @@
 # @comet/cms-site
 
+## 6.11.0
+
 ## 6.10.0
 
 ### Minor Changes
