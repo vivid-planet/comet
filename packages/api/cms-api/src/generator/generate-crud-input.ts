@@ -32,7 +32,7 @@ function findReferenceTargetType(
         return "uuid";
     } else if (referencedColumnProp.type == "string") {
         return "string";
-    } else if (referencedColumnProp.type == "integer") {
+    } else if (referencedColumnProp.type == "integer" || referencedColumnProp.type == "int") {
         return "integer";
     } else {
         return null;
