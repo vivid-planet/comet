@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
+import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { getHeightInPercentForAspectRatio, VideoContainer } from "./helpers";
 import { PropsWithData } from "./PropsWithData";
 
@@ -19,6 +20,7 @@ const parseYoutubeIdentifier = (value: string): string | undefined => {
 
 export const YouTubeVideoBlock = withPreview(
     ({ data: { youtubeIdentifier, autoplay, loop, showControls, aspectRatio } }: PropsWithData<YouTubeVideoBlockData>) => {
+        if (!youtubeIdentifier) return <PreviewSkeleton type="media" hasContent={false} />;
         const identifier = parseYoutubeIdentifier(youtubeIdentifier);
 
         const searchParams = new URLSearchParams();

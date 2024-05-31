@@ -418,7 +418,7 @@ type ProductCategory {
 
 type ProductStatistics {
   id: ID!
-  views: Float!
+  views: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -467,7 +467,7 @@ type Product {
   type: ProductType!
   price: Float
   inStock: Boolean!
-  soldCount: Float!
+  soldCount: Int
   image: DamImageBlockData!
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!

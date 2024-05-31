@@ -73,7 +73,7 @@ export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilt
             };
         });
     const filter: GqlFilter = {};
-    const op: "and" | "or" = filterModel.linkOperator ?? "or";
+    const op: "and" | "or" = filterModel.linkOperator ?? "and";
     filter[op] = filterItems;
 
     let search: undefined | string = undefined;

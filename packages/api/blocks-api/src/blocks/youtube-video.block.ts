@@ -5,7 +5,7 @@ import { BlockData, BlockDataInterface, BlockInput, createBlock, inputToData } f
 import { BlockField } from "./decorators/field";
 
 class YouTubeVideoBlockData extends BlockData {
-    @BlockField()
+    @BlockField({ nullable: true })
     youtubeIdentifier?: string;
 
     @BlockField({ type: "enum", enum: VideoAspectRatio })
@@ -24,7 +24,7 @@ class YouTubeVideoBlockData extends BlockData {
 class YouTubeVideoBlockInput extends BlockInput {
     @IsOptional()
     @IsString()
-    @BlockField()
+    @BlockField({ nullable: true })
     youtubeIdentifier?: string;
 
     @IsEnum(VideoAspectRatio)
