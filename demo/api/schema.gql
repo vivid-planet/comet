@@ -925,6 +925,7 @@ input ProductFilter {
   soldCount: NumberFilter
   availableSince: DateFilter
   category: ManyToOneFilter
+  tags: ManyToManyFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   manufacturer: ManyToOneFilter
@@ -957,6 +958,10 @@ input ManyToOneFilter {
   isAnyOf: [ID!]
   equal: ID
   notEqual: ID
+}
+
+input ManyToManyFilter {
+  contains: ID
 }
 
 input ProductSort {
@@ -1003,6 +1008,7 @@ enum ProductCategorySortField {
 
 input ProductTagFilter {
   title: StringFilter
+  products: ManyToManyFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   and: [ProductTagFilter!]
