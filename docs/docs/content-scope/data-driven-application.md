@@ -53,40 +53,4 @@ First, an overview of user permissions:
 
 (Both are defined by rule in `AccessControlService` or can be overridden manually per user in the Admin)
 
--   Every entity belongs to a scope
-
 (The user permission feature checks for every request if the entity scope and the user's allowed scopes match.)
-
-#### @ScopedEntity
-
-Use this decorator at entity level to return the scope of an entity. You might have to load multiple relations for nested data.
-
-```ts
-@ScopedEntity(async (product: Product) => {
-    return {
-        dealer: product.dealer.id,
-    };
-})
-@Entity()
-export class Product extends BaseEntity<Product, "id"> {}
-```
-
-#### @AffectedEntity
-
-Use this decorator at the operation level to specify which entity (and thus scope) is affected by the operation.
-
-```ts
-    @Query(Product)
-    @AffectedEntity(Product)
-    async product(@Args("id", { type: () => ID }) id: string): Promise<Product> {
-        //...
-    }
-```
-
-```ts
-    @Query([Product])
-    @AffectedEntity(Dealer, { idArg: "dealer" })
-    async products(@Args("dealer", { type: () => ID }) dealer: string): Promise<Product[]> {
-        // Note: you can trust "dealer" being in a valid scope, but you need to make sure that your business code restricts this query to the given dealer
-    }
-```
