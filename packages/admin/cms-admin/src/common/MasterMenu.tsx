@@ -78,21 +78,6 @@ export interface MasterMenuProps {
     menu: MasterMenuData;
 }
 
-export function isMenuItemGroup(item: MenuItem): item is MenuItemGroupElement {
-    return item.type === "group";
-}
-export function isMenuItemAnchor(item: MenuItem): item is MenuItemAnchorElement {
-    return item.type === "anchor";
-}
-
-export function isMenuItemRoute(item: MenuItem): item is MenuItemRouteElement {
-    return item.type === "route";
-}
-
-export function isMenuItemCollapsible(item: MenuItem): item is MenuItemCollapsibleElement {
-    return item.type === "collapsible";
-}
-
 export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
     const isAllowed = useUserPermissionCheck();
     const checkPermission = (item: MasterMenuItem): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
@@ -150,15 +135,15 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
 
     const renderMenuItems = (items: MenuItemGroupElement["items"] | MenuItemCollapsibleElement["items"]) =>
         items.flatMap((item, index) => {
-            if (isMenuItemCollapsible(item)) {
+            if (item.type === "collapsible") {
                 return (
                     <MenuCollapsibleItem key={index} {...item.menuElement}>
                         {renderMenuItems(item.items)}
                     </MenuCollapsibleItem>
                 );
-            } else if (isMenuItemAnchor(item)) {
+            } else if (item.type === "anchor") {
                 return <MenuItemAnchorLink key={index} {...item.menuElement} />;
-            } else if (isMenuItemRoute(item)) {
+            } else if (item.type === "route") {
                 return <MenuItemRouterLink key={index} {...item.menuElement} to={`${match.url}${item.menuElement.to}`} />;
             }
             return [];
