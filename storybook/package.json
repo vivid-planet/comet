@@ -22,6 +22,8 @@
         "@comet/admin-react-select": "workspace:*",
         "@comet/admin-rte": "workspace:*",
         "@comet/admin-theme": "workspace:*",
+        "@comet/blocks-admin": "workspace:*",
+        "@comet/cms-admin": "workspace:*",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
         "@fontsource-variable/roboto-flex": "^5.0.14",
