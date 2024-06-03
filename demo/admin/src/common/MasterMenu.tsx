@@ -59,7 +59,7 @@ export const masterMenuData: MasterMenuData = [
         type: "collapsible",
         primary: <FormattedMessage id="menu.pageTree" defaultMessage="Page tree" />,
         icon: <PageTree />,
-        submenu: pageTreeCategories.map((category) => ({
+        items: pageTreeCategories.map((category) => ({
             type: "route",
             primary: category.label,
             to: `/pages/pagetree/${categoryToUrlParam(category.category as GQLPageTreeNodeCategory)}`,
@@ -91,7 +91,7 @@ export const masterMenuData: MasterMenuData = [
         type: "collapsible",
         primary: <FormattedMessage id="menu.structuredContent" defaultMessage="Structured Content" />,
         icon: <Data />,
-        submenu: [
+        items: [
             {
                 type: "route",
                 primary: <FormattedMessage id="menu.news" defaultMessage="News" />,
@@ -117,7 +117,7 @@ export const masterMenuData: MasterMenuData = [
         type: "collapsible",
         primary: <FormattedMessage id="menu.projectSnips" defaultMessage="Project snips" />,
         icon: <Snips />,
-        submenu: [
+        items: [
             {
                 type: "route",
                 primary: <FormattedMessage id="menu.mainMenu" defaultMessage="Main menu" />,
@@ -133,7 +133,7 @@ export const masterMenuData: MasterMenuData = [
         type: "collapsible",
         primary: <FormattedMessage id="menu.system" defaultMessage="System" />,
         icon: <Wrench />,
-        submenu: [
+        items: [
             {
                 type: "route",
                 primary: <FormattedMessage id="menu.publisher" defaultMessage="Publisher" />,
@@ -187,11 +187,11 @@ export const masterMenuData: MasterMenuData = [
     {
         type: "group",
         title: <FormattedMessage id="menu.products" defaultMessage="Products" />,
-        groupItems: [
+        items: [
             {
                 type: "collapsible",
                 primary: <FormattedMessage id="menu.futureGenerator" defaultMessage="Future Generator" />,
-                submenu: [
+                items: [
                     {
                         type: "route",
                         primary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products Future" />,
@@ -229,7 +229,7 @@ export const masterMenuData: MasterMenuData = [
             {
                 type: "collapsible",
                 primary: <FormattedMessage id="menu.oldGenerator" defaultMessage="Old Generator" />,
-                submenu: [
+                items: [
                     {
                         type: "route",
                         primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
@@ -259,7 +259,7 @@ export const masterMenuData: MasterMenuData = [
             {
                 type: "collapsible",
                 primary: <FormattedMessage id="menu.handmade" defaultMessage="Handmade" />,
-                submenu: [
+                items: [
                     {
                         type: "route",
                         primary: <FormattedMessage id="menu.productsHandmade" defaultMessage="Products Handmade" />,

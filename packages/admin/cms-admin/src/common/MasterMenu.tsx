@@ -30,7 +30,7 @@ type MasterMenuItemRoute = MasterMenuItemBase &
 type MasterMenuItemCollapsible = MasterMenuItemBase &
     Omit<MenuCollapsibleItemProps, "children"> & {
         type: "collapsible";
-        submenu?: Array<MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible>;
+        items?: Array<MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible>;
         route?: RouteProps;
     };
 
@@ -42,7 +42,7 @@ type MasterMenuItemAnchor = MasterMenuItemBase &
 type MasterMenuItemGroup = MasterMenuItemBase &
     MenuItemGroupProps & {
         type: "group";
-        groupItems: Array<MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible>;
+        items: Array<MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible>;
     };
 
 export type MasterMenuItem = MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible | MasterMenuItemGroup;
@@ -57,7 +57,7 @@ type MenuItemRouteElement = {
 type MenuCollapsibleElement = {
     type: "collapsible";
     menuElement: Omit<MenuCollapsibleItemProps, "children">;
-    submenu: MenuItem[];
+    items: MenuItem[];
 };
 
 type MenuItemAnchorElement = {
@@ -68,7 +68,7 @@ type MenuItemAnchorElement = {
 type MenuItemGroupElement = {
     type: "group";
     menuElement: MenuItemGroupProps;
-    groupItems: MenuItem[];
+    items: MenuItem[];
 };
 
 type MenuItem = MenuItemRouteElement | MenuItemAnchorElement | MenuCollapsibleElement | MenuItemGroupElement;
@@ -103,20 +103,20 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
         }
 
         if (item.type === "group") {
-            const { groupItems, ...menuElement } = item;
+            const { items, ...menuElement } = item;
             return {
                 type: "group",
                 menuElement,
-                groupItems: groupItems.filter(checkPermission).map(mapFn),
+                items: items.filter(checkPermission).map(mapFn),
             };
         }
 
         if (item.type === "collapsible") {
-            const { route, submenu, ...menuElement } = item;
+            const { route, items, ...menuElement } = item;
             return {
                 type: "collapsible",
                 menuElement,
-                submenu: submenu ? submenu.filter(checkPermission).map(mapFn) : [],
+                items: items ? items.filter(checkPermission).map(mapFn) : [],
             };
         }
 
@@ -148,28 +148,28 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
 
-    const renderSubmenuItems = (submenu: MenuCollapsibleElement["submenu"]) =>
-        submenu.flatMap((submenuItem, index) => {
-            if (isMenuItemCollapsible(submenuItem)) {
+    const renderSubmenuItems = (items: MenuCollapsibleElement["items"]) =>
+        items.flatMap((item, index) => {
+            if (isMenuItemCollapsible(item)) {
                 return (
-                    <MenuCollapsibleItem key={index} {...submenuItem.menuElement}>
-                        {renderSubmenuItems(submenuItem.submenu)}
+                    <MenuCollapsibleItem key={index} {...item.menuElement}>
+                        {renderSubmenuItems(item.items)}
                     </MenuCollapsibleItem>
                 );
-            } else if (isMenuItemAnchor(submenuItem)) {
-                return <MenuItemAnchorLink key={index} {...submenuItem.menuElement} />;
-            } else if (isMenuItemRoute(submenuItem)) {
-                return <MenuItemRouterLink key={index} {...submenuItem.menuElement} to={`${match.url}${submenuItem.menuElement.to}`} />;
+            } else if (isMenuItemAnchor(item)) {
+                return <MenuItemAnchorLink key={index} {...item.menuElement} />;
+            } else if (isMenuItemRoute(item)) {
+                return <MenuItemRouterLink key={index} {...item.menuElement} to={`${match.url}${item.menuElement.to}`} />;
             }
             return [];
         });
 
-    const renderGroupItems = (groupItems: MenuItemGroupElement["groupItems"]) =>
-        groupItems.flatMap((groupItem, index) => {
-            if (isMenuItemCollapsible(groupItem) && !!groupItem.submenu.length) {
+    const renderGroupItems = (items: MenuItemGroupElement["items"]) =>
+        items.flatMap((groupItem, index) => {
+            if (isMenuItemCollapsible(groupItem) && !!groupItem.items.length) {
                 return (
                     <MenuCollapsibleItem key={index} {...groupItem.menuElement}>
-                        {renderSubmenuItems(groupItem.submenu)}
+                        {renderSubmenuItems(groupItem.items)}
                     </MenuCollapsibleItem>
                 );
             } else if (isMenuItemRoute(groupItem)) {
@@ -187,13 +187,13 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
                     case "group":
                         return (
                             <MenuItemGroup key={index} {...menuElement.menuElement}>
-                                {renderGroupItems(menuElement.groupItems)}
+                                {renderGroupItems(menuElement.items)}
                             </MenuItemGroup>
                         );
                     case "collapsible":
                         return (
                             <MenuCollapsibleItem key={index} {...menuElement.menuElement}>
-                                {renderSubmenuItems(menuElement.submenu)}
+                                {renderSubmenuItems(menuElement.items)}
                             </MenuCollapsibleItem>
                         );
                     case "anchor":

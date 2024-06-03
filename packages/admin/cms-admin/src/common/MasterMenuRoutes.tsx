@@ -14,13 +14,13 @@ export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RoutePro
             return routes;
         }
         if (item.type === "group") {
-            return routes.concat(item.groupItems.reduce(flat, []));
+            return routes.concat(item.items.reduce(flat, []));
         }
         if (item.route && checkPermission(item)) {
             routes.push(item.route);
         }
-        if (item.type === "collapsible" && !!item.submenu?.length) {
-            routes.concat(item.submenu.reduce(flat, routes));
+        if (item.type === "collapsible" && !!item.items?.length) {
+            routes.concat(item.items.reduce(flat, routes));
         }
         return routes;
     };
