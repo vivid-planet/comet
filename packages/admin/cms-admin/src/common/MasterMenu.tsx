@@ -148,34 +148,18 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
 
-    const renderSubmenuItems = (items: MenuCollapsibleElement["items"]) =>
+    const renderMenuItems = (items: MenuItemGroupElement["items"] | MenuCollapsibleElement["items"]) =>
         items.flatMap((item, index) => {
             if (isMenuItemCollapsible(item)) {
                 return (
                     <MenuCollapsibleItem key={index} {...item.menuElement}>
-                        {renderSubmenuItems(item.items)}
+                        {renderMenuItems(item.items)}
                     </MenuCollapsibleItem>
                 );
             } else if (isMenuItemAnchor(item)) {
                 return <MenuItemAnchorLink key={index} {...item.menuElement} />;
             } else if (isMenuItemRoute(item)) {
                 return <MenuItemRouterLink key={index} {...item.menuElement} to={`${match.url}${item.menuElement.to}`} />;
-            }
-            return [];
-        });
-
-    const renderGroupItems = (items: MenuItemGroupElement["items"]) =>
-        items.flatMap((groupItem, index) => {
-            if (isMenuItemCollapsible(groupItem) && !!groupItem.items.length) {
-                return (
-                    <MenuCollapsibleItem key={index} {...groupItem.menuElement}>
-                        {renderSubmenuItems(groupItem.items)}
-                    </MenuCollapsibleItem>
-                );
-            } else if (isMenuItemRoute(groupItem)) {
-                return <MenuItemRouterLink key={index} {...groupItem.menuElement} to={`${match.url}${groupItem.menuElement.to}`} />;
-            } else if (isMenuItemAnchor(groupItem)) {
-                return <MenuItemAnchorLink key={index} {...groupItem.menuElement} />;
             }
             return [];
         });
@@ -187,13 +171,13 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
                     case "group":
                         return (
                             <MenuItemGroup key={index} {...menuElement.menuElement}>
-                                {renderGroupItems(menuElement.items)}
+                                {renderMenuItems(menuElement.items)}
                             </MenuItemGroup>
                         );
                     case "collapsible":
                         return (
                             <MenuCollapsibleItem key={index} {...menuElement.menuElement}>
-                                {renderSubmenuItems(menuElement.items)}
+                                {renderMenuItems(menuElement.items)}
                             </MenuCollapsibleItem>
                         );
                     case "anchor":
