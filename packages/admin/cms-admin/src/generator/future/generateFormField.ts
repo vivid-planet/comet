@@ -147,6 +147,7 @@ export function generateFormField(
         if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
         const values = enumType.enumValues.map((i) => i.name);
         code = `<Field
+            ${required ? "required" : ""}
             fullWidth
             name="${name}"
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
