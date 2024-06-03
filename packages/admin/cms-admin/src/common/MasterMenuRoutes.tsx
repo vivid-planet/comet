@@ -10,7 +10,7 @@ export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RoutePro
     const checkPermission = (item: MasterMenuItem): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
 
     const flat = (routes: RouteProps[], item: MasterMenuItem): RouteProps[] => {
-        if (item.type === "anchor") {
+        if (item.type === "externalLink") {
             return routes;
         }
         if (item.type === "group") {

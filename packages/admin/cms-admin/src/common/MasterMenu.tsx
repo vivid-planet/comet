@@ -36,7 +36,7 @@ type MasterMenuItemCollapsible = MasterMenuItemBase &
 
 type MasterMenuItemAnchor = MasterMenuItemBase &
     MenuItemAnchorLinkProps & {
-        type: "anchor";
+        type: "externalLink";
     };
 
 type MasterMenuItemGroup = MasterMenuItemBase &
@@ -61,7 +61,7 @@ type MenuItemCollapsibleElement = {
 };
 
 type MenuItemAnchorElement = {
-    type: "anchor";
+    type: "externalLink";
     menuElement: MenuItemAnchorLinkProps;
 };
 
@@ -83,8 +83,8 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
     const checkPermission = (item: MasterMenuItem): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
 
     const mapFn = (item: MasterMenuItem): MenuItem => {
-        if (item.type === "anchor") {
-            return { type: "anchor", menuElement: item };
+        if (item.type === "externalLink") {
+            return { type: "externalLink", menuElement: item };
         }
 
         if (item.type === "group") {
@@ -141,7 +141,7 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
                         {renderMenuItems(item.items)}
                     </MenuCollapsibleItem>
                 );
-            } else if (item.type === "anchor") {
+            } else if (item.type === "externalLink") {
                 return <MenuItemAnchorLink key={index} {...item.menuElement} />;
             } else if (item.type === "route") {
                 return <MenuItemRouterLink key={index} {...item.menuElement} to={`${match.url}${item.menuElement.to}`} />;
@@ -165,7 +165,7 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
                                 {renderMenuItems(menuElement.items)}
                             </MenuCollapsibleItem>
                         );
-                    case "anchor":
+                    case "externalLink":
                         return <MenuItemAnchorLink key={index} {...menuElement.menuElement} />;
                     case "route":
                         return <MenuItemRouterLink key={index} {...menuElement.menuElement} to={`${match.url}${menuElement.menuElement.to}`} />;
