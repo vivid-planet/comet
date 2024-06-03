@@ -54,7 +54,7 @@ type MenuItemRouteElement = {
     menuElement: MenuItemRouterLinkProps;
 };
 
-type MenuCollapsibleElement = {
+type MenuItemCollapsibleElement = {
     type: "collapsible";
     menuElement: Omit<MenuCollapsibleItemProps, "children">;
     items: MenuItem[];
@@ -67,11 +67,11 @@ type MenuItemAnchorElement = {
 
 type MenuItemGroupElement = {
     type: "group";
-    menuElement: MenuItemGroupProps;
+    menuElement: Omit<MenuItemGroupProps, "children">;
     items: MenuItem[];
 };
 
-type MenuItem = MenuItemRouteElement | MenuItemAnchorElement | MenuCollapsibleElement | MenuItemGroupElement;
+type MenuItem = MenuItemRouteElement | MenuItemAnchorElement | MenuItemCollapsibleElement | MenuItemGroupElement;
 
 export interface MasterMenuProps {
     permanentMenuMinWidth?: number;
@@ -89,7 +89,7 @@ export function isMenuItemRoute(item: MenuItem): item is MenuItemRouteElement {
     return item.type === "route";
 }
 
-export function isMenuItemCollapsible(item: MenuItem): item is MenuCollapsibleElement {
+export function isMenuItemCollapsible(item: MenuItem): item is MenuItemCollapsibleElement {
     return item.type === "collapsible";
 }
 
@@ -148,7 +148,7 @@ export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWi
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
 
-    const renderMenuItems = (items: MenuItemGroupElement["items"] | MenuCollapsibleElement["items"]) =>
+    const renderMenuItems = (items: MenuItemGroupElement["items"] | MenuItemCollapsibleElement["items"]) =>
         items.flatMap((item, index) => {
             if (isMenuItemCollapsible(item)) {
                 return (
