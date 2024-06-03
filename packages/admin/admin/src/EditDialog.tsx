@@ -30,7 +30,7 @@ interface EditDialogComponentsProps {
     dialogTitle?: Partial<DialogTitleProps>;
 }
 
-interface EditDialogProps {
+export interface EditDialogProps {
     title?: ITitle | string;
     disableCloseAfterSave?: boolean;
     onAfterSave?: () => void;
@@ -40,7 +40,7 @@ interface EditDialogProps {
 
 export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: string; mode?: "add" | "edit" }, IEditDialogApi, ISelectionApi] {
     const [Selection, selection, selectionApi] = useSelectionRoute();
-    const [options, setOptions] = React.useState<EditDialogOptions>({ readonly: false });
+    const [editDialogProps, setEditDialogProps] = React.useState<React.PropsWithChildren<EditDialogProps>>({ options: { readonly: false } });
 
     const openAddDialog = React.useCallback(
         (id?: string) => {
@@ -50,9 +50,9 @@ export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: s
     );
 
     const openEditDialog = React.useCallback(
-        (id: string, options?: EditDialogOptions) => {
+        (id: string, options?: EditDialogProps) => {
             selectionApi.handleSelectId(id);
-            options && setOptions(options);
+            options && setEditDialogProps(options);
         },
         [selectionApi],
     );
@@ -69,7 +69,7 @@ export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: s
             } else {
                 selectionApi.handleDeselect();
             }
-            setOptions({ readonly: false });
+            setEditDialogProps({ options: { readonly: false } });
         },
         [selectionApi],
     );
@@ -79,20 +79,22 @@ export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: s
             openAddDialog,
             openEditDialog,
             closeDialog,
+            editDialogProps,
+            setEditDialogProps,
         };
-    }, [closeDialog, openAddDialog, openEditDialog]);
+    }, [closeDialog, editDialogProps, openAddDialog, openEditDialog]);
 
     const EditDialogWithHookProps = React.useMemo(() => {
         return (props: EditDialogProps) => {
             return (
                 <Selection>
                     <EditDialogFormApiProvider onAfterSave={props.onAfterSave}>
-                        <EditDialogInner {...props} selection={selection} selectionApi={selectionApi} api={api} options={options} />
+                        <EditDialogInner {...props} {...editDialogProps} selection={selection} selectionApi={selectionApi} api={api} />
                     </EditDialogFormApiProvider>
                 </Selection>
             );
         };
-    }, [Selection, options, api, selection, selectionApi]);
+    }, [Selection, editDialogProps, api, selection, selectionApi]);
 
     return [EditDialogWithHookProps, selection, api, selectionApi];
 }

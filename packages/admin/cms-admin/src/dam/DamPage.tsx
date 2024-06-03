@@ -1,4 +1,4 @@
-import { messages } from "@comet/admin";
+import { EditDialogApiContext, messages, useEditDialog } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -58,15 +58,19 @@ function DamPage({ renderContentScopeIndicator = defaultRenderContentScopeIndica
     const damRouteLocation = routeMatch.url.replace(match.url, "");
     useContentScopeConfig({ redirectPathAfterChange: damRouteLocation });
     const damConfig = useDamConfig();
+    const [EditDialog, selection, editDialogApi, selectionApi] = useEditDialog();
 
     return (
         <DamScopeProvider>
-            <DamTableWrapper>
-                <DamTable
-                    contentScopeIndicator={renderContentScopeIndicator(scope)}
-                    additionalToolbarItems={damConfig.additionalToolbarItems ?? additionalToolbarItems}
-                />
-            </DamTableWrapper>
+            <EditDialogApiContext.Provider value={editDialogApi}>
+                <DamTableWrapper>
+                    <DamTable
+                        contentScopeIndicator={renderContentScopeIndicator(scope)}
+                        additionalToolbarItems={damConfig.additionalToolbarItems ?? additionalToolbarItems}
+                    />
+                </DamTableWrapper>
+                <EditDialog />
+            </EditDialogApiContext.Provider>
         </DamScopeProvider>
     );
 }
