@@ -13,7 +13,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
 import { SaveButton } from "./common/buttons/save/SaveButton";
-import { CloseDialogOptions, EditDialogApiContext, IEditDialogApi } from "./EditDialogApiContext";
+import { CloseDialogOptions, EditDialogApiContext, EditDialogOptions, IEditDialogApi } from "./EditDialogApiContext";
 import { EditDialogFormApiProvider, useEditDialogFormApi } from "./EditDialogFormApiContext";
 import { messages } from "./messages";
 import { RouterContext } from "./router/Context";
@@ -21,10 +21,7 @@ import { SaveAction } from "./router/PromptHandler";
 import { ISelectionApi } from "./SelectionApi";
 import { useSelectionRoute } from "./SelectionRoute";
 
-interface ITitle {
-    edit: React.ReactNode;
-    add: React.ReactNode;
-}
+type ITitle = Record<"edit" | "add", React.ReactNode>;
 
 interface EditDialogComponentsProps {
     dialog?: Omit<Partial<DialogProps>, "open" | "onClose">;
@@ -38,10 +35,12 @@ interface EditDialogProps {
     disableCloseAfterSave?: boolean;
     onAfterSave?: () => void;
     componentsProps?: EditDialogComponentsProps;
+    options?: EditDialogOptions;
 }
 
-export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi, ISelectionApi] {
+export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: string; mode?: "add" | "edit" }, IEditDialogApi, ISelectionApi] {
     const [Selection, selection, selectionApi] = useSelectionRoute();
+    const [options, setOptions] = React.useState<EditDialogOptions>({ readonly: false });
 
     const openAddDialog = React.useCallback(
         (id?: string) => {
@@ -51,8 +50,9 @@ export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: s
     );
 
     const openEditDialog = React.useCallback(
-        (id: string) => {
+        (id: string, options?: EditDialogOptions) => {
             selectionApi.handleSelectId(id);
+            options && setOptions(options);
         },
         [selectionApi],
     );
@@ -69,6 +69,7 @@ export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: s
             } else {
                 selectionApi.handleDeselect();
             }
+            setOptions({ readonly: false });
         },
         [selectionApi],
     );
@@ -86,12 +87,12 @@ export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: s
             return (
                 <Selection>
                     <EditDialogFormApiProvider onAfterSave={props.onAfterSave}>
-                        <EditDialogInner {...props} selection={selection} selectionApi={selectionApi} api={api} />
+                        <EditDialogInner {...props} selection={selection} selectionApi={selectionApi} api={api} options={options} />
                     </EditDialogFormApiProvider>
                 </Selection>
             );
         };
-    }, [Selection, api, selection, selectionApi]);
+    }, [Selection, options, api, selection, selectionApi]);
 
     return [EditDialogWithHookProps, selection, api, selectionApi];
 }
@@ -114,13 +115,14 @@ const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = (
     onAfterSave,
     children,
     componentsProps,
+    options,
 }) => {
     const intl = useIntl();
     const editDialogFormApi = useEditDialogFormApi();
     const parentRouterContext = React.useContext(RouterContext);
     const saveActionRef = React.useRef<SaveAction>();
 
-    const title = maybeTitle ?? {
+    const title: string | ITitle = maybeTitle ?? {
         edit: intl.formatMessage(messages.edit),
         add: intl.formatMessage(messages.add),
     };
@@ -175,7 +177,12 @@ const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = (
                         <DialogContent {...componentsProps?.dialogContent}>{children}</DialogContent>
                         <DialogActions {...componentsProps?.dialogActions}>
                             <CancelButton onClick={handleCancelClick} />
-                            <SaveButton saving={editDialogFormApi?.saving} hasErrors={editDialogFormApi?.hasErrors} onClick={handleSaveClick}>
+                            <SaveButton
+                                disabled={options?.readonly || false}
+                                saving={editDialogFormApi?.saving}
+                                hasErrors={editDialogFormApi?.hasErrors}
+                                onClick={handleSaveClick}
+                            >
                                 <FormattedMessage {...messages.save} />
                             </SaveButton>
                         </DialogActions>
@@ -187,10 +194,10 @@ const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = (
 };
 
 interface IEditDialogHooklessProps extends EditDialogProps {
-    children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => React.ReactNode;
+    children: (injectedProps: { selectedId?: string; selectionMode?: "add" | "edit" }) => React.ReactNode;
 }
 
-const EditDialogHooklessInner: React.RefForwardingComponent<IEditDialogApi, IEditDialogHooklessProps> = (
+const EditDialogHooklessInner: React.ForwardRefRenderFunction<IEditDialogApi, IEditDialogHooklessProps> = (
     { children, title, onAfterSave, componentsProps },
     ref,
 ) => {

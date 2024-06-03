@@ -38,6 +38,8 @@ import { DamMoreActions } from "./DataGrid/selection/DamMoreActions";
 import { DamSelectionProvider, useDamSelectionApi } from "./DataGrid/selection/DamSelectionContext";
 import { SelectedItemsChip } from "./DataGrid/selection/SelectedItemsChip";
 import EditFile from "./FileForm/EditFile";
+import AddFolder from "./FolderForm/AddFolder";
+import EditFolder from "./FolderForm/EditFolder";
 
 interface FolderProps extends DamConfig {
     filterApi: IFilterApi<DamFilter>;
@@ -55,7 +57,7 @@ export interface DamFilter {
 const Folder = ({ id, filterApi, ...props }: FolderProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
-    const [, , editDialogApi, selectionApi] = useEditDialog();
+    const [EditDialog, selection, editDialogApi, selectionApi] = useEditDialog();
     const { selectionMap } = useDamSelectionApi();
     const selectionSize = selectionMap.size;
 
@@ -109,7 +111,16 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                                 <UploadFilesButton folderId={id} filter={uploadFilters} />
                             </ToolbarActions>
                         </Toolbar>
-                        <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} selectionApi={selectionApi} filterApi={filterApi} {...props} />
+                        <FolderDataGrid id={id} breadcrumbs={stackApi?.breadCrumbs} filterApi={filterApi} {...props} />
+                        <EditDialog
+                            title={{
+                                edit: <FormattedMessage id="comet.dam.folderEditDialog.renameFolder" defaultMessage="Rename folder" />,
+                                add: <FormattedMessage id="comet.dam.folderEditDialog.addFolder" defaultMessage="Add folder" />,
+                            }}
+                        >
+                            {selection.mode === "add" && <AddFolder parentId={selection.id} selectionApi={selectionApi} />}
+                            {selection.mode === "edit" && selection.id && <EditFolder id={selection.id} selectionApi={selectionApi} />}
+                        </EditDialog>
                     </EditDialogApiContext.Provider>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.dam.edit", defaultMessage: "Edit" })}>

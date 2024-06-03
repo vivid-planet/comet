@@ -4,9 +4,13 @@ export interface CloseDialogOptions {
     delay?: boolean | number;
 }
 
+export interface EditDialogOptions {
+    readonly: boolean;
+}
+
 export interface IEditDialogApi {
     openAddDialog: (id?: string) => void;
-    openEditDialog: (id: string) => void;
+    openEditDialog: (id: string, options?: EditDialogOptions) => void;
     closeDialog: (options?: CloseDialogOptions) => void;
 }
 

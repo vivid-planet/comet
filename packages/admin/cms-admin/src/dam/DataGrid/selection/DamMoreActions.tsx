@@ -1,4 +1,4 @@
-import { useEditDialog, useSnackbarApi } from "@comet/admin";
+import { useEditDialogApi, useSnackbarApi } from "@comet/admin";
 import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, Upload } from "@comet/admin-icons";
 import { Box, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Slide, Snackbar, Typography } from "@mui/material";
 import { PopoverOrigin } from "@mui/material/Popover/Popover";
@@ -26,7 +26,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
     const damSelectionActionsApi = useDamSelectionApi();
     const { selectionMap, archiveSelected, deleteSelected, downloadSelected, restoreSelected, moveSelected } = damSelectionActionsApi;
     const snackbarApi = useSnackbarApi();
-    const [, , editDialogApi] = useEditDialog();
+    const editDialogApi = useEditDialogApi();
     const intl = useIntl();
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
@@ -73,7 +73,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
     };
 
     const handleAddFolderClick = () => {
-        editDialogApi.openAddDialog(folderId);
+        editDialogApi?.openAddDialog(folderId);
         handleClose();
     };
 

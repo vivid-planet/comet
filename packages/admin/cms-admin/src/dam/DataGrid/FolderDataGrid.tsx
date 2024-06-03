@@ -1,15 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import {
-    BreadcrumbItem,
-    EditDialog,
-    IFilterApi,
-    ISelectionApi,
-    PrettyBytes,
-    useDataGridRemote,
-    useSnackbarApi,
-    useStackSwitchApi,
-    useStoredState,
-} from "@comet/admin";
+import { BreadcrumbItem, IFilterApi, PrettyBytes, useDataGridRemote, useSnackbarApi, useStackSwitchApi, useStoredState } from "@comet/admin";
 import { Slide, SlideProps, Snackbar } from "@mui/material";
 import { DataGrid, GridColumns, GridRowClassNameParams, GridSelectionModel } from "@mui/x-data-grid";
 import * as React from "react";
@@ -22,8 +12,6 @@ import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
 import { DamConfig, DamFilter } from "../DamTable";
-import AddFolder from "../FolderForm/AddFolder";
-import EditFolder from "../FolderForm/EditFolder";
 import { isFile } from "../helpers/isFile";
 import { isFolder } from "../helpers/isFolder";
 import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
@@ -67,14 +55,12 @@ interface FolderDataGridProps extends DamConfig {
     id?: string;
     breadcrumbs?: BreadcrumbItem[];
     filterApi: IFilterApi<DamFilter>;
-    selectionApi: ISelectionApi;
 }
 
 const FolderDataGrid = ({
     id: currentFolderId,
     filterApi,
     breadcrumbs,
-    selectionApi,
     hideContextMenu,
     hideArchiveFilter,
     hideMultiselect,
@@ -531,21 +517,7 @@ const FolderDataGrid = ({
             </sc.FolderOuterHoverHighlight>
             <DamSelectionFooter open={damSelectionActionsApi.selectionMap.size > 0} />
             <DamUploadFooter open={Boolean(uploadTargetFolderName)} folderName={uploadTargetFolderName} />
-            <EditDialog
-                title={{
-                    edit: <FormattedMessage id="comet.dam.folderEditDialog.renameFolder" defaultMessage="Rename folder" />,
-                    add: <FormattedMessage id="comet.dam.folderEditDialog.addFolder" defaultMessage="Add folder" />,
-                }}
-            >
-                {({ selectedId, selectionMode }) => {
-                    return (
-                        <>
-                            {selectionMode === "add" && <AddFolder parentId={selectedId} selectionApi={selectionApi} />}
-                            {selectionMode === "edit" && <EditFolder id={selectedId as string} selectionApi={selectionApi} />}
-                        </>
-                    );
-                }}
-            </EditDialog>
+
             {fileUploadApi.dialogs}
             <MoveDamItemDialog
                 damItemsToMove={damItemToMove ? [damItemToMove] : []}
