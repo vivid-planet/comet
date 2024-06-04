@@ -44,13 +44,4 @@ const variables = {
 
 ### API: User permissions
 
-Data-driven applications don't benefit much from the COMET scope system. But for user permissions it has its value.
-
-First, an overview of user permissions:
-
--   Every user has permissions that give them access to resolvers (e.g., "products") - not covered here
--   Every user has access to scopes
-
-(Both are defined by rule in `AccessControlService` or can be overridden manually per user in the Admin)
-
-(The user permission feature checks for every request if the entity scope and the user's allowed scopes match.)
+In data-driven applications, the scope system is primarily used for controlling permissions. For additional information refer to the [User Permissions chapter](/docs/user-permissions/access-control).
