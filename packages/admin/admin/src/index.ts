@@ -80,6 +80,7 @@ export { FinalFormAutocomplete, FinalFormAutocompleteProps } from "./form/Autoco
 export { FinalFormCheckbox, FinalFormCheckboxProps } from "./form/Checkbox";
 export { Field, FieldProps } from "./form/Field";
 export { FieldContainer, FieldContainerClassKey, FieldContainerComponent, FieldContainerProps } from "./form/FieldContainer";
+export { AsyncSelectField, AsyncSelectFieldProps } from "./form/fields/AsyncSelectField";
 export { CheckboxField, CheckboxFieldProps } from "./form/fields/CheckboxField";
 export { SearchField, SearchFieldProps } from "./form/fields/SearchField";
 export { SelectField, SelectFieldProps } from "./form/fields/SelectField";

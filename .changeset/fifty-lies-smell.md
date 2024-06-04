@@ -2,7 +2,7 @@
 "@comet/admin": minor
 ---
 
-Add `FinalFormAsyncSelect` and `FinalFormAsyncAutocomplete` components
+Add `FinalFormAsyncSelect`, `AsyncSelectField`, and `FinalFormAsyncAutocomplete` components
 
 Thin wrappers to ease using `useAsyncOptionsProps()` with `FinalFormSelect` and `FinalFormAutocomplete`.
 
