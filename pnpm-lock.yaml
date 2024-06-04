@@ -2608,6 +2608,12 @@ importers:
       '@comet/admin-theme':
         specifier: workspace:*
         version: link:../packages/admin/admin-theme
+      '@comet/blocks-admin':
+        specifier: workspace:*
+        version: link:../packages/admin/blocks-admin
+      '@comet/cms-admin':
+        specifier: workspace:*
+        version: link:../packages/admin/cms-admin
       '@emotion/react':
         specifier: ^11.5.0
         version: 11.9.3(@babel/core@7.22.11)(@types/react@17.0.53)(react@17.0.2)

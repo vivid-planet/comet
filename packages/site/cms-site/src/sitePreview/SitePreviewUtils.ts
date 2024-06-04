@@ -37,10 +37,12 @@ export async function sitePreviewRoute(request: NextRequest, graphQLFetch: Graph
     const previewData = JSON.parse(settingsParam);
     const scope = JSON.parse(scopeParam);
 
-    const { isAllowedSitePreview } = await graphQLFetch<{ isAllowedSitePreview: boolean }, { scope: unknown }>(
+    const { currentUser } = await graphQLFetch<{ currentUser: { permissionsForScope: string[] } }, { scope: Scope }>(
         `
-            query isAllowedSitePreview($scope: JSONObject!) {
-                isAllowedSitePreview(scope: $scope)
+            query CurrentUserPermissionsForScope($scope: JSONObject!) {
+                currentUser {
+                    permissionsForScope(scope: $scope)
+                }
             }
         `,
         { scope },
@@ -50,7 +52,7 @@ export async function sitePreviewRoute(request: NextRequest, graphQLFetch: Graph
             },
         },
     );
-    if (!isAllowedSitePreview) {
+    if (!currentUser.permissionsForScope.includes("pageTree")) {
         return new Response("Preview is not allowed", {
             status: 403,
         });
