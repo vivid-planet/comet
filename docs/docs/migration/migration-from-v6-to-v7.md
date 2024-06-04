@@ -279,6 +279,32 @@ export const staticUsers = {
 } satisfies Record<string, User>;
 ```
 
+### Remove `@PublicApi()` and rename `@DisableGlobalGuard()`
+
+Replace all usages of `@PublicApi()` and `@DisableGlobalGuard()` with `@DisableCometGuards()`.
+Use this occasion to check if all operations decorated with this decorator **should actually be public and don't return any confidential data**.
+
+### Remove unnecessary dependencies
+
+Remove following dependencies **if you don't use them in your project**:
+
+-   `@aws-sdk/client-s3`
+-   `@azure/storage-blob`
+-   `pg-error-constants`
+
+### API Generator: Remove support for `visible` boolean, use `status` enum instead
+
+Replace the `visible` boolean field with a `status` enum field.
+Recommended enum values are (depending on the use case):
+
+-   Published/Unpublished
+-   Visible/Invisible
+-   Active/Deleted
+-   Active/Archived
+
+The `update{Entity}Visibility` mutation is also removed.
+Use the generic `update{Entity}` mutation instead.
+
 ## Admin
 
 ### Rearrange components in `App.tsx`
@@ -286,9 +312,139 @@ export const staticUsers = {
 -   `ErrorDialogHandler` must be beneath `MuiThemeProvider` and `IntlProvider`
 -   `CurrentUserProvider` must be beneath or parallel to `ErrorDialogHandler`
 
+### Remove `axios` dependency
+
+Remove `axios` **if you don't use it in your project**.
+
+### @comet/admin
+
+-   `Menu`: Replace `permanentDrawerProps` and `temporaryDrawerProps` props with `slotProps`
+-   `Menu`: Rename `permanent` class-key to `permanentDrawer` and `temporary` class-key to `temporaryDrawer`
+-   `CopyToClipboardButton`: Remove `components` prop. Use `copyIcon` and `successIcon` instead
+-   `CopyToClipboardButton`: Replace `componentProps` with `slotProps`
+-   `FieldSet`: Replace `componentsProps` with `slotProps`
+-   `InputWithPopper`: Replace `componentsProps` with `slotProps`
+
+#### Toolbar
+
+// TODO
+
+// curly-pillows-decide.md
+// fifty-keys-sit.md
+// giant-ladybugs-greet.md
+
+### @comet/admin-theme
+
+#### `Chip` theme rework
+
+Check if you use `Chip` from MUI anywhere in your project.
+If yes, check if the styling still looks as intended.
+Otherwise, adjust it to your needs.
+
+#### `Typography` theme rework
+
+The theme of `Typography` was changed for most variants.
+Check if the styling still looks as intended in your application.
+
+#### Colors
+
+-   Colors in all palettes were changed
+-   Most notable changes:
+    -   The grey palette (neutrals) were reworked
+    -   The secondary palette is now grey instead of green
+
+### @comet/admin-color-picker
+
+-   `ColorPicker`: Replace `componentsProps` with `slotProps`
+
+#### Remove the `clearable` prop
+
+Remove the `clearable` prop from `ColorPicker`.
+The clear button will automatically be shown for optional fields.
+
+### @comet/admin-date-time
+
+#### Change value type
+
+The value returned by `DatePicker` and `DateRangePicker` is now a `string` (previously it was a `Date`).
+
+The code that handles values from these components needs to be adjusted.
+**This may include how the values are stored in or sent to the database.**
+
+**Required Admin Changes:**
+
+```diff
+-   const [date, setDate] = useState<Date | undefined>(new Date("2024-03-10"));
++   const [date, setDate] = useState<string | undefined>("2024-03-10");
+    return <DatePicker value={date} onChange={setDate} />;
+```
+
+```diff
+    const [dateRange, setDateRange] = useState<DateRange | undefined>({
+-       start: new Date("2024-03-10"),
+-       end: new Date("2024-03-16"),
++       start: "2024-03-10",
++       end: "2024-03-16",
+    });
+    return <DateRangePicker value={dateRange} onChange={setDateRange} />;
+```
+
+#### Remove the `clearable` prop
+
+Remove the `clearable` prop from `DateRangePicker`, `DateTimePicker`, `TimePicker` and `TimeRangePicker`.
+The clear button will automatically be shown for all optional fields.
+
 ## Site
 
+### Major dependency upgrades
+
+-   Next.js to v14
+-   React to v18
+-   Styled Components to v6
+
+Follow the official migration guides:
+
+Migration Guides Next.js:
+
+-   [12 -> 13](https://nextjs.org/docs/pages/building-your-application/upgrading/version-13)
+-   [13 -> 14](https://nextjs.org/docs/pages/building-your-application/upgrading/version-14)
+
+Migration Guide React:
+
+-   [17 -> 18](https://react.dev/blog/2022/03/08/react-18-upgrade-guide)
+
+Migration guide Styled Components:
+
+-   [5 -> 6](https://styled-components.com/docs/faqs#what-do-i-need-to-do-to-migrate-to-v6)
+
+### Custom `InternalLinkBlock`
+
+The `InternalLinkBlock` provided by `@comet/cms-site` is deprecated.
+Instead, implement your own `InternalLinkBlock` in your project.
+
+This is needed for more flexibility, e.g., support for internationalized routing.
+
+### Add `aspectRatio` to `PixelImageBlock` and `Image`
+
+Previously, there was a default aspect ratio of `16x9`.
+This has repeatedly led to incorrectly displayed images on the site.
+
+Now `aspectRatio` is required and must be added to `PixelImageBlock` and `Image`.
+**Consider which aspect ratio should be used.**
+
+Example:
+
+```diff
+<PixelImageBlock
+  data={teaser}
+  layout="fill"
++ aspectRatio="16x9"
+/>
+```
+
 ### Make relative DAM URLs work
+
+This requires the following change (depending on which router you use):
 
 #### Pages Router
 
@@ -322,6 +478,18 @@ export async function middleware(request: NextRequest) {
 +   }
     // ...
 ```
+
+### TODO: GraphQL fetch client
+
+// TODO ?
+
+plenty-cougars-warn.md
+
+### TODO: New technique for blocks to load additional data at page level
+
+// TODO ?
+
+selfish-dolls-beg.md
 
 ## ESLint
 
