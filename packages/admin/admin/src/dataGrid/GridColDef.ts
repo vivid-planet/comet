@@ -10,4 +10,8 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> e
      * Requires DataGridPro or DataGridPremium.
      */
     visible?: string;
+    /**
+     * Requires DataGridPro or DataGridPremium.
+     */
+    sortBy?: string | string[];
 }
