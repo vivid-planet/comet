@@ -2,6 +2,7 @@ module.exports = {
     extends: [require.resolve("./core.js"), "next/core-web-vitals"],
     rules: {
         "react/display-name": "off",
+        "react/jsx-curly-brace-presence": "error",
         "react/prop-types": "off",
         "react/self-closing-comp": "error",
         "@comet/no-private-sibling-import": ["error", ["gql", "sc", "gql.generated"]],
