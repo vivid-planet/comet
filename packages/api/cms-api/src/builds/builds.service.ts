@@ -37,10 +37,6 @@ export class BuildsService {
     }
 
     async createBuilds(trigger: string, builderCronJobs: V1CronJob[]): Promise<boolean> {
-        if (this.kubernetesService.localMode) {
-            throw Error("Not available in local mode!");
-        }
-
         // No ACL here, because this is only used for clean-up
         const builderJobs = await this.kubernetesService.getAllJobs(
             `${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`,
@@ -90,10 +86,6 @@ export class BuildsService {
     }
 
     async getBuilds(user: CurrentUser, options?: { limit?: number | undefined }): Promise<Build[]> {
-        if (this.kubernetesService.localMode) {
-            throw Error("Not available in local mode!");
-        }
-
         const buildJobs = await this.getAllowedBuildJobs(user);
         return Promise.all(
             buildJobs.slice(0, options?.limit).map(async (job) => {
@@ -115,10 +107,6 @@ export class BuildsService {
     }
 
     async getAutoBuildStatus(user: CurrentUser): Promise<AutoBuildStatus> {
-        if (this.kubernetesService.localMode) {
-            throw Error("Not available in local mode!");
-        }
-
         const autoBuildStatus = new AutoBuildStatus();
         autoBuildStatus.hasChangesSinceLastBuild = await this.hasChangesSinceLastBuild();
 

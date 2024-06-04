@@ -1,40 +1,77 @@
-# Dependencies
+# Block Index / Dependencies
 
-## Register fields to be added to the block index
+Blocks can have references to entities.
+But since block data is stored as JSON, there is no actual database relationship.
 
-### Add `@RootBlockEntity()` and `@RootBlock()` decorators to entity
+If you still need to know which entities a block references or in which blocks an entity is used, you can use COMET's block index.
 
-The entity needs to be annotated with `@RootBlockEntity()`.
+---
 
-All fields containing block data need to be annotated with `@RootBlock()`. The Block used by this field must be passed as an argument.
+## Configuration Guide
 
-```ts
-//...
-@RootBlockEntity()
-export class News extends BaseEntity<News, "id"> {
-    // ...
+Follow the upcoming guide if you want to
 
-    @RootBlock(DamImageBlock)
-    @Property({ customType: new RootBlockType(DamImageBlock) })
-    @Field(() => RootBlockDataScalar(DamImageBlock))
-    image: BlockDataInterface;
+-   make the "Dependents" tab in the DAM work
+-   display the dependencies or dependents of an entity somewhere in your admin app
 
-    @RootBlock(NewsContentBlock)
-    @Property({ customType: new RootBlockType(NewsContentBlock) })
-    @Field(() => RootBlockDataScalar(NewsContentBlock))
-    content: BlockDataInterface;
+### Configuring the block index
 
-    // ...
-}
+#### 1. API: Register fields to be added to the block index
+
+First, you must "tell" the block index which database fields contain block data.
+It will scan these fields for dependency information.
+
+To do that, you must
+
+-   Annotate the entity with `@RootBlockEntity()`
+-   Annotate all columns containing block data with `@RootBlock(ExampleBlock)`
+
+For example:
+
+```diff
++   @RootBlockEntity()
+    export class News extends BaseEntity<News, "id"> {
+        // ...
+
++       @RootBlock(DamImageBlock)
+        @Property({ customType: new RootBlockType(DamImageBlock) })
+        @Field(() => RootBlockDataScalar(DamImageBlock))
+        image: BlockDataInterface;
+
++       @RootBlock(NewsContentBlock)
+        @Property({ customType: new RootBlockType(NewsContentBlock) })
+        @Field(() => RootBlockDataScalar(NewsContentBlock))
+        content: BlockDataInterface;
+
+        // ...
+    }
 ```
 
-## Correctly display a dependency target
+#### 2. Create the block index
 
-### 1. Add `@EntityInfo()` to entity (API)
+You must then create the block index by calling `npm run console createBlockIndexViews` in your `/api` directory.
+This creates a materialized view called `block_index_dependencies` in your database.
 
-You can provide the entity info in two ways:
+You must recreate the block index views after
 
-#### `GetEntityInfo` Method
+-   executing database migrations
+-   executing the fixtures (because they drop the whole database and recreate it)
+
+You can automate this process by following the steps in the [migration guide](../migration/migration-from-v5-to-v6/#block-index).
+For new projects, it should already be automated.
+
+### Displaying dependencies in the admin interface
+
+Next, you probably want to display the dependencies or dependents (usages) of an entity in the admin interface.
+
+#### 1. API: Add `@EntityInfo()` to entity
+
+The `@EntityInfo()` decorator allows you to configure which information about an entity should be displayed in the admin interface.
+You can provide a `name` and `secondaryInformation`.
+
+The decorator accepts two inputs:
+
+##### `GetEntityInfo` method
 
 The simple way is to provide a function returning a `name` and (optional) `secondaryInformation` based on the entity instance.
 
@@ -43,9 +80,10 @@ The simple way is to provide a function returning a `name` and (optional) `secon
 @EntityInfo<News>((news) => ({ name: news.title, secondaryInformation: news.slug }))
 ```
 
-#### `EntityInfoService`
+##### `EntityInfoService`
 
-If you need to load additional information from a service or repository to provide the entity info, you can implement an `EntityInfoService`. In this service, you can use Nest's dependency injection.
+If you need to load additional information from a service or repository, you can implement an `EntityInfoService`.
+In this service, you can use Nest's dependency injection.
 
 The service must offer a `getEntityInfo()` method returning a `name` and (optional) `secondaryInformation`.
 
@@ -69,11 +107,29 @@ export class FilesEntityInfoService implements EntityInfoServiceInterface<FileIn
 }
 ```
 
-### 2. Implement the DependencyInterface (Admin)
+###### Helper service for documents
 
-The DependencyInterface requires a translatable `displayName` and a `resolvePath()` method providing a path to edit an entity or its blocks.
+For documents, you can simply use the `PageTreeNodeDocumentEntityInfoService`.
+It will return the `PageTreeNode` name and slug (as secondary information).
 
 ```ts
+// page.entity.ts
+@EntityInfo(PageTreeNodeDocumentEntityInfoService)
+export class Page extends BaseEntity<Page, "id"> implements DocumentInterface {
+    // ...
+}
+```
+
+#### 2. Admin: Implement the `DependencyInterface`
+
+The DependencyInterface requires a translatable `displayName` and a `resolvePath()` method.
+`resolvePath` provides a URL path to the edit page of an entity or a specific block.
+
+<details>
+
+<summary>Example of a `resolvePath` method</summary>
+
+```tsx
 // NewsDependency.tsx
 export const NewsDependency: DependencyInterface = {
     displayName: <FormattedMessage id="news.displayName" defaultMessage="News" />,
@@ -112,7 +168,23 @@ export const NewsDependency: DependencyInterface = {
 };
 ```
 
-You may also use the `createDependencyMethods` helper to simplify resolving the path to the entity/block. Use the `basePath` option to specify where the entity is located in the Admin.
+</details>
+
+Usually, you don't have to write the `resolvePath` method yourself.
+Instead, use one of our helpers:
+
+##### `createDependencyMethods`
+
+For most entities, you can use the `createDependencyMethods` helper.
+
+The `rootQueryName` specifies the name of the GraphQL query used to load the entity.
+It should normally be the camelCase version of the entity name.
+
+The `rootBlocks` specify which of the entity's fields contain block data.
+These should be the same fields you annotated with `@RootBlock()` in the API.
+You must also specify the used Block and - if necessary - the path under which the block is available.
+
+The `basePath` option specifies the URL path to the entity's edit page.
 
 ```tsx
 // NewsDependency.tsx
@@ -130,7 +202,10 @@ export const NewsDependency: DependencyInterface = {
 };
 ```
 
-For document types you may use the `createDocumentDependencyMethods` helper that also loads the page tree node the document is attached to:
+##### `createDocumentDependencyMethods`
+
+For document types you can use the `createDocumentDependencyMethods` helper.
+It loads the document and also the `PageTreeNode` the document is attached to.
 
 ```tsx
 // Page.tsx
@@ -153,11 +228,11 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
 };
 ```
 
-### 3. Register the DependencyInterface at the DependenciesConfigProvider
+#### 3. Admin: Register the `DependencyInterface` at the `DependenciesConfigProvider`
 
 The key must be the name of the GraphQL object type associated with the entity.
 
-```ts
+```tsx
 // App.tsx
 // ...
 <DependenciesConfigProvider
@@ -170,3 +245,72 @@ The key must be the name of the GraphQL object type associated with the entity.
 </DependenciesConfigProvider>
 // ...
 ```
+
+Now, the DAM's "Dependents" tab should work.
+If that was your goal, you can stop here.
+Otherwise, continue following the guide.
+
+#### 4. API: Add field resolvers
+
+If you want to query the dependencies or dependents of an entity, use the factories provided by the library.
+**Only do this where it makes sense.**
+
+```ts
+// news.module.ts
+@Module({
+    // ...
+    providers: [
+        // ...
+        DependenciesResolverFactory.create(News),
+        DependentsResolverFactory.create(News),
+    ],
+})
+export class NewsModule {}
+```
+
+#### 5. Admin: Display dependencies with the `DependencyList` component
+
+You can use the `DependencyList` component provided by `@comet/cms-admin` to display dependencies or dependents.
+The DAM uses this component in its "Dependents" tab.
+
+The component requires two props:
+
+-   `query`: A GraphQL query. It must have a `dependencies` or `dependents` field resolver.
+-   `variables`: The variables for the query.
+
+<details>
+
+<summary>A usage could look like this</summary>
+
+```tsx
+<DependencyList
+    query={gql`
+        query DamFileDependencies(
+            $id: ID!
+            $offset: Int!
+            $limit: Int!
+            $forceRefresh: Boolean = false
+        ) {
+            item: damFile(id: $id) {
+                id
+                dependents(offset: $offset, limit: $limit, forceRefresh: $forceRefresh) {
+                    nodes {
+                        rootGraphqlObjectType
+                        rootId
+                        rootColumnName
+                        jsonPath
+                        name
+                        secondaryInformation
+                    }
+                    totalCount
+                }
+            }
+        }
+    `}
+    variables={{
+        id: id,
+    }}
+/>
+```
+
+</details>
