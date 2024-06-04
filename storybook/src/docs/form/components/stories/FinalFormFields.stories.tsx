@@ -167,9 +167,6 @@ storiesOf("stories/form/FinalForm Fields", module)
                 <Field
                     component={FinalFormAsyncSelect}
                     getOptionLabel={(option: Option) => option.label}
-                    getOptionSelected={(option: Option, value: Option) => {
-                        return option.value === value.value;
-                    }}
                     loadOptions={async () => {
                         return new Promise((resolve) => setTimeout(() => resolve(options), 500));
                     }}
