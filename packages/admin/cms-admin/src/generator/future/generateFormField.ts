@@ -238,6 +238,7 @@ export function generateFormField(
         formValueToGqlInputCode = `${name}: formValues.${name}?.id,`;
 
         code = `<Field
+                ${required ? "required" : ""}
                 fullWidth
                 name="${name}"
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
