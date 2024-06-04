@@ -1,5 +1,22 @@
 [
     {
+        "name": "EmailLink",
+        "fields": [
+            {
+                "name": "email",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "email",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "ExternalLink",
         "fields": [
             {
@@ -22,6 +39,23 @@
             {
                 "name": "openInNewWindow",
                 "kind": "Boolean",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "PhoneLink",
+        "fields": [
+            {
+                "name": "phone",
+                "kind": "String",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "phone",
+                "kind": "String",
                 "nullable": false
             }
         ]
