@@ -27,8 +27,8 @@ export function FinalFormInput({
     const { enabled: translationEnabled, showApplyTranslationDialog, translate } = useContentTranslationService();
     const isTranslatable = translationEnabled && !disableContentTranslation && type === "text" && !props.disabled;
 
-    const [pendingTranslation, setPendingTranslation] = React.useState<boolean>(false);
-    const [translation, setTranslation] = React.useState<string | undefined>(undefined);
+    const [open, setOpen] = React.useState<boolean>(false);
+    const [pendingTranslation, setPendingTranslation] = React.useState<string | undefined>(undefined);
 
     return (
         <>
@@ -45,8 +45,8 @@ export function FinalFormInput({
                                 <IconButton
                                     onClick={async () => {
                                         if (showApplyTranslationDialog) {
-                                            setTranslation(await translate(input.value));
-                                            setPendingTranslation(true);
+                                            setPendingTranslation(await translate(input.value));
+                                            setOpen(true);
                                         } else {
                                             input.onChange(await translate(input.value));
                                         }
@@ -60,12 +60,12 @@ export function FinalFormInput({
                     </>
                 }
             />
-            {pendingTranslation && translation && (
+            {open && pendingTranslation && (
                 <PlainTextTranslationDialog
-                    open={pendingTranslation}
-                    onClose={() => setPendingTranslation(false)}
+                    open={open}
+                    onClose={() => setOpen(false)}
                     originalText={input.value}
-                    translatedText={translation}
+                    translatedText={pendingTranslation}
                     onApplyTranslation={input.onChange}
                 />
             )}

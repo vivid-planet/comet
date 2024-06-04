@@ -13,8 +13,8 @@ import { stateToHtml } from "./stateToHtml";
 function ToolbarButton({ editorState, setEditorState, options }: IControlProps): React.ReactElement {
     const translationContext = useContentTranslationService();
 
-    const [pendingEditorState, setPendingEditorState] = React.useState<boolean>(false);
-    const [translationEditorState, setTranslationEditorState] = React.useState<EditorState | undefined>(undefined);
+    const [open, setOpen] = React.useState<boolean>(false);
+    const [pendingTranslation, setPendingTranslation] = React.useState<EditorState | undefined>(undefined);
 
     async function handleClick(event: React.MouseEvent) {
         if (!translationContext) return;
@@ -28,8 +28,8 @@ function ToolbarButton({ editorState, setEditorState, options }: IControlProps):
         const translatedEditorState = htmlToState({ html: translation, entities });
 
         if (translationContext.showApplyTranslationDialog) {
-            setTranslationEditorState(translatedEditorState);
-            setPendingEditorState(true);
+            setPendingTranslation(translatedEditorState);
+            setOpen(true);
         } else {
             setEditorState(translatedEditorState);
         }
@@ -42,12 +42,12 @@ function ToolbarButton({ editorState, setEditorState, options }: IControlProps):
                     <ControlButton icon={Translate} onButtonClick={handleClick} />
                 </span>
             </Tooltip>
-            {pendingEditorState && translationEditorState && (
+            {open && pendingTranslation && (
                 <EditorStateTranslationDialog
-                    open={pendingEditorState}
-                    onClose={() => setPendingEditorState(false)}
+                    open={open}
+                    onClose={() => setOpen(false)}
                     originalText={editorState}
-                    translatedText={translationEditorState}
+                    translatedText={pendingTranslation}
                     onApplyTranslation={setEditorState}
                 />
             )}
