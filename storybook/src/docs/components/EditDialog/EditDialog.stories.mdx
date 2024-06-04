@@ -11,13 +11,24 @@ It's commonly used in combination with a table to add new rows or edit existing 
 
 ## EditDialog
 
-### useEditDialog Hook
+There are two ways to integrate an EditDialog.
+
+### 1) useEditDialog Hook (Recommended)
 
 The recommended way is to use the `useEditDialog` hook.
 It returns an instance of `EditDialog` and the corresponding `editDialogApi`.
 
 <Canvas>
     <Story id="stories-components-editdialog-useeditdialog--useeditdialog" />
+</Canvas>
+
+### 2) EditDialog Component
+
+Alternatively, you can import the `EditDialog` component from `@comet/admin` and use it directly.
+To gain access to the `editDialogApi`, you need to attach a ref to the component.
+
+<Canvas>
+    <Story id="stories-components-editdialog-edit-dialog-docs-only--edit-dialog" />
 </Canvas>
 
 ## useEditDialogApi and EditDialogApiContext
@@ -62,8 +73,14 @@ The mode is also appended to the URL (`/add`).
 If an existing resource is changed, `mode` is set to `edit`.
 The `id` then specifies which resource is edited and is appended to the URL (e.g. `/8a31ea9d-d00a-4e37-807b-a69624964ba0`).
 
-### Example with useEditDialog
+### Example with useEditDialog  (Recommended)
 
 <Canvas>
     <Story id="stories-components-editdialog-edit-dialog-and-selection-useeditdialog--edit-dialog-and-selection-useeditdialog" />
+</Canvas>
+
+### Example with EditDialog Component
+
+<Canvas>
+    <Story id="stories-components-editdialog-edit-dialog-and-selection-editdialog-component-docs-only--edit-dialog-and-selection-editdialog-component" />
 </Canvas>
