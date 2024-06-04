@@ -123,7 +123,7 @@ const RichTextBlock: React.FC<RichTextBlockProps> = ({ data, renderers = default
     const colorTheme = useColorTheme();
 
     return (
-        <PreviewSkeleton title={"RichText"} type={"rows"} hasContent={hasRichTextBlockContent(data)}>
+        <PreviewSkeleton title="RichText" type="rows" hasContent={hasRichTextBlockContent(data)}>
             <sc.Wrapper $colorTheme={colorTheme}>{rendered}</sc.Wrapper>
         </PreviewSkeleton>
     );
