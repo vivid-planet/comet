@@ -316,22 +316,194 @@ Use the generic `update{Entity}` mutation instead.
 
 Remove `axios` **if you don't use it in your project**.
 
+### Site Config
+
+The `previewUrl` prop of `SiteConfig` was renamed to `blockPreviewBaseUrl`.
+
+```diff
+- previewUrl = `${siteConfig.previewUrl}/page`;
++ previewUrl = `${siteConfig.blockPreviewBaseUrl}/page`;
+```
+
 ### @comet/admin
 
--   `Menu`: Replace `permanentDrawerProps` and `temporaryDrawerProps` props with `slotProps`
--   `Menu`: Rename `permanent` class-key to `permanentDrawer` and `temporary` class-key to `temporaryDrawer`
+#### Change admin component styling method
+
+The legacy `@mui/styles` package was removed in favor of `@mui/material/styles`.
+You can remove `@mui/styles` too:
+
+```diff
+//package.json
+- "@mui/styles": "^5.8.6",
+```
+
+This has multiple implications:
+
+-   Components can now be styled using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/)
+-   Individual elements (slots) of a component can now be styled using the `slotProps` and `sx` props
+-   The `$` syntax in the theme's `styleOverrides` is no longer supported, see: [MUI Docs](https://mui.com/material-ui/migration/v5-style-changes/#migrate-theme-styleoverrides-to-emotion):
+
+```diff
+ const theme = createCometTheme({
+     components: {
+         CometAdminMyComponent: {
+             styleOverrides: {
+-                root: {
+-                    "&$hasShadow": {
+-                        boxShadow: "2px 2px 5px 0 rgba(0, 0, 0, 0.25)",
+-                    },
+-                    "& $header": {
+-                        backgroundColor: "lime",
+-                    },
+-                },
++                hasShadow: {
++                    boxShadow: "2px 2px 5px 0 rgba(0, 0, 0, 0.25)",
++                },
++                header: {
++                    backgroundColor: "lime",
++                },
+             },
+         },
+     },
+ });
+```
+
+-   Overriding a component's styles using `withStyles` is no longer supported. Use the `sx` and `slotProps` props instead:
+
+```diff
+-import { withStyles } from "@mui/styles";
+-
+-const StyledMyComponent = withStyles({
+-    root: {
+-        backgroundColor: "lime",
+-    },
+-    header: {
+-        backgroundColor: "fuchsia",
+-    },
+-})(MyComponent);
+-
+-// ...
+-
+-<StyledMyComponent title="Hello World" />;
++<MyComponent
++    title="Hello World"
++    sx={{
++        backgroundColor: "lime",
++    }}
++    slotProps={{
++        header: {
++            sx: {
++                backgroundColor: "fuchsia",
++            },
++        },
++    }}
++/>
+```
+
+-   The module augmentation for the `DefaultTheme` type from `@mui/styles/defaultTheme` is no longer needed and needs to be removed from the admins theme file, usually located in `admin/src/theme.ts`:
+
+```diff
+-declare module "@mui/styles/defaultTheme" {
+-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+-    export interface DefaultTheme extends Theme {}
+-}
+```
+
+-   Some props and class keys of certain components were removed or renamed
+
+<details>
+
+<summary>Affected components</summary>
+
+-   `Alert`: Remove the `message` class key (use `.MuiAlert-message` instead)
+-   `AppHeaderButton`: Remove class keys `disabled` and `focusVisible` (use the `:disabled` or `:focus` selectors instead)
+-   `AppHeaderButton`: Rename the `inner` class key to `content`
+-   `AppHeaderDropdown`: Remove the `popoverPaper` class key
+-   `AppHeaderDropdown`: Rename the `popoverRoot` class key to `popover`
+-   `ClearInputButton`: Remove the `disabled` class key (use the `:disabled` selector instead)
 -   `CopyToClipboardButton`: Remove `components` prop. Use `copyIcon` and `successIcon` instead
 -   `CopyToClipboardButton`: Replace `componentProps` with `slotProps`
 -   `FieldSet`: Replace `componentsProps` with `slotProps`
+-   `FinalFormSelect`: Remove the `endAdornment` prop
 -   `InputWithPopper`: Replace `componentsProps` with `slotProps`
+-   `Menu`: Replace `temporaryDrawerProps`, `permanentDrawerProps`, `temporaryDrawerPaperProps` and `permanentDrawerPaperProps` props (use `slotProps` instead)
+-   `Menu`: Rename `permanent` class key to `permanentDrawer` and `temporary` class key to `temporaryDrawer`
+-   `MenuCollapsibleItem`: Remove the `listItem` class key
+-   `MenuCollapsibleItem`: Replace `openedIcon` and `closedIcon` props with `iconMapping`
+-   `MenuItem`: No longer supports props of `ListItem`. Instead supports the props of `ListItemButton`
+
+</details>
+
+### Restructure `MasterMenuData`
+
+You must add a `type` to all items. There are four types available:
+
+-   `route`
+
+    ```diff
+    {
+    +   type: "route",
+        primary: <FormattedMessage id="menu.dashboard" defaultMessage="Dashboard" />,
+        icon: <DashboardIcon />,
+        route: {
+            path: "/dashboard",
+            component: Dashboard,
+        },
+    },
+    ```
+
+-   `externalLink`
+
+    ```diff
+    {
+    +   type: "externalLink",
+        primary: <FormattedMessage id="menu.cometDxp" defaultMessage="COMET DXP" />,
+        icon: <Snips />,
+        href: "https://comet-dxp.com",
+    },
+    ```
+
+-   `collapsible`
+
+    ```diff
+    {
+    +   type: "collapsible",
+        primary: <FormattedMessage id="menu.structuredContent" defaultMessage="Structured Content" />,
+        icon: <Data />,
+    -   submenu: [
+    +   items: [
+            // ...
+        ],
+    },
+    ```
+
+-   `group` (new)
+
+    ```diff
+    {
+    +  type: "group",
+    +  title: <FormattedMessage id="menu.products" defaultMessage="Products" />,
+    +  items: [
+    +      // ...
+    +  ]
+    },
+    ```
 
 #### Toolbar
 
 // TODO
 
+// brave-kiwis-pay.md
 // curly-pillows-decide.md
 // fifty-keys-sit.md
 // giant-ladybugs-greet.md
+
+#### Content Scope Picker
+
+// TODO
+
+// funny-paws-dream.md
+// real-roses-applaud.md
 
 ### @comet/admin-theme
 
@@ -391,8 +563,34 @@ The code that handles values from these components needs to be adjusted.
 
 #### Remove the `clearable` prop
 
-Remove the `clearable` prop from `DateRangePicker`, `DateTimePicker`, `TimePicker` and `TimeRangePicker`.
+Remove the `clearable` prop from `DatePicker`, `DateRangePicker`, `DateTimePicker`, `TimePicker` and `TimeRangePicker`.
 The clear button will automatically be shown for all optional fields.
+
+#### Prop renames and removals
+
+-   `DatePicker`:
+
+    -   Replace the `componentsProps` prop with `slotProps`
+    -   Remove the `DatePickerComponentsProps` type
+
+-   `DateRangePicker`:
+
+    -   Replace the `componentsProps` prop with `slotProps`
+    -   Remove the `DateRangePickerComponentsProps` type
+    -   Rename the `calendar` class-key to `dateRange`
+
+-   `DateTimePicker`:
+
+    -   Replace the `componentsProps` prop with `slotProps`
+    -   Remove the `DateTimePickerComponentsProps` type
+    -   Replace the `formControl` class-key with two separate class-keys: `dateFormControl` and `timeFormControl`
+
+-   `TimeRangePicker`:
+
+    -   Replace the `componentsProps` prop with `slotProps`
+    -   Remove the `TimeRangePickerComponentsProps` and `TimeRangePickerIndividualPickerProps` types
+    -   Replace the `formControl` class-key with two separate class-keys: `startFormControl` and `endFormControl`
+    -   Replace the `timePicker` class-key with two separate class-keys: `startTimePicker` and `endTimePicker`
 
 ## Site
 
@@ -478,6 +676,12 @@ export async function middleware(request: NextRequest) {
 +   }
     // ...
 ```
+
+### Switch to Next.js preview mode
+
+// TODO
+
+yellow-seahorses-lick.md
 
 ### TODO: GraphQL fetch client
 
