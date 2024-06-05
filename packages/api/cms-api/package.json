@@ -92,6 +92,7 @@
         "@nestjs/core": "^9.0.0",
         "@nestjs/graphql": "^10.0.0",
         "@nestjs/platform-express": "^9.0.0",
+        "@nestjs/testing": "^9.0.0",
         "@types/express": "^4.0.0",
         "@types/jest": "^29.5.0",
         "@types/jsonwebtoken": "^8.5.9",
