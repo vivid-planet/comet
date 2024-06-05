@@ -308,18 +308,33 @@ Use the generic `update{Entity}` mutation instead.
 
 ## Admin
 
+### Remove `axios` dependency
+
+Remove `axios` **if you don't use it in your project**.
+
 ### Rearrange components in `App.tsx`
 
 -   `ErrorDialogHandler` must be beneath `MuiThemeProvider` and `IntlProvider`
 -   `CurrentUserProvider` must be beneath or parallel to `ErrorDialogHandler`
 
-### Remove `axios` dependency
+The resulting order should look something like this:
 
-Remove `axios` **if you don't use it in your project**.
+```tsx
+// ...
+<IntlProvider locale="en" messages={getMessages()}>
+// ...
+    <MuiThemeProvider theme={theme}>
+    // ...
+        <ErrorDialogHandler />
+        <CurrentUserProvider>
+        // ...
+```
 
-### Site Config
+### Rename `previewUrl` prop of `SiteConfig`
 
 The `previewUrl` prop of `SiteConfig` was renamed to `blockPreviewBaseUrl`.
+
+Example:
 
 ```diff
 - previewUrl = `${siteConfig.previewUrl}/page`;
@@ -435,7 +450,7 @@ This has multiple implications:
 
 </details>
 
-### Restructure `MasterMenuData`
+### Change the structure of `MasterMenuData`
 
 You must add a `type` to all items. There are four types available:
 
@@ -490,7 +505,7 @@ You must add a `type` to all items. There are four types available:
     },
     ```
 
-#### Toolbar
+#### New Toolbar
 
 // TODO
 
@@ -499,7 +514,7 @@ You must add a `type` to all items. There are four types available:
 // fifty-keys-sit.md
 // giant-ladybugs-greet.md
 
-#### Content Scope Picker
+#### New Content Scope Picker
 
 // TODO
 
@@ -510,8 +525,7 @@ You must add a `type` to all items. There are four types available:
 
 #### `Chip` theme rework
 
-Check if you use `Chip` from MUI anywhere in your project.
-If yes, check if the styling still looks as intended.
+If you use MUI's `Chip` anywhere in your project, check if the styling still looks as intended.
 Otherwise, adjust it to your needs.
 
 #### `Typography` theme rework
@@ -526,7 +540,11 @@ Check if the styling still looks as intended in your application.
     -   The grey palette (neutrals) were reworked
     -   The secondary palette is now grey instead of green
 
+Check if the styling still looks as intended in your application.
+
 ### @comet/admin-color-picker
+
+#### Prop renames and removals
 
 -   `ColorPicker`: Replace `componentsProps` with `slotProps`
 
@@ -537,7 +555,7 @@ The clear button will automatically be shown for optional fields.
 
 ### @comet/admin-date-time
 
-#### Change value type
+#### Change the value type
 
 The value returned by `DatePicker` and `DateRangePicker` is now a `string` (previously it was a `Date`).
 
@@ -616,7 +634,7 @@ Migration guide Styled Components:
 
 -   [5 -> 6](https://styled-components.com/docs/faqs#what-do-i-need-to-do-to-migrate-to-v6)
 
-### Custom `InternalLinkBlock`
+### Add a custom `InternalLinkBlock`
 
 The `InternalLinkBlock` provided by `@comet/cms-site` is deprecated.
 Instead, implement your own `InternalLinkBlock` in your project.
@@ -626,7 +644,7 @@ This is needed for more flexibility, e.g., support for internationalized routing
 ### Add `aspectRatio` to `PixelImageBlock` and `Image`
 
 Previously, there was a default aspect ratio of `16x9`.
-This has repeatedly led to incorrectly displayed images on the site.
+This has repeatedly led to incorrectly displayed images.
 
 Now `aspectRatio` is required and must be added to `PixelImageBlock` and `Image`.
 **Consider which aspect ratio should be used.**
@@ -672,7 +690,7 @@ const nextConfig = {
 // middleware.ts
 
 export async function middleware(request: NextRequest) {
-+   if (request.nextUrl.pathname.startsWith("/dam")) {
++   if (request.nextUrl.pathname.startsWith("/dam/")) {
 +       return NextResponse.rewrite(new URL(`${process.env.API_URL_INTERNAL}${request.nextUrl.pathname}`));
 +   }
     // ...
@@ -719,18 +737,11 @@ In such cases, you can disable the rule like so
 
 It's now mandatory to initialize enums:
 
-```ts
-// ✅
+```diff
 enum ExampleEnum {
-    One = "One",
-    Two = "Two",
-}
-```
-
-```ts
-// ❌
-enum ExampleEnum {
-    One,
-    Two,
+-   One,
+-   Two,
++   One = "One",
++   Two = "Two",
 }
 ```
