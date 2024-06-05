@@ -1,5 +1,29 @@
 # @comet/cms-api
 
+## 6.12.0
+
+### Minor Changes
+
+-   3ee8c7a33: Add a `DamFileDownloadLinkBlock` that can be used to download a file or open it in a new tab
+
+    Also, add new `/dam/files/download/:hash/:fileId/:filename` endpoint for downloading assets.
+
+-   0597b1e0a: Add `DisablePermissionCheck` constant for use in `@RequiredPermission` decorator
+
+    You can disable authorization for a resolver or operation by adding the decorator `@RequiredPermission(DisablePermissionCheck)`
+
+### Patch Changes
+
+-   67176820c: API CrudSingleGenerator: Run `transformToBlockData()` for block fields on create
+-   b158e6a2c: ChangesCheckerConsole: Start exactly matching job or all partially matching jobs
+
+    Previously, the first job with a partially matching content scope was started.
+    Doing so could lead to problems when multiple jobs with overlapping content scopes exist.
+    For instance, jobs with the scopes `{ domain: "main", language: "de" }` and `{ domain: "main", language: "en" }` both partially match a change in `{ domain: "main", language: "de" }`.
+    To fix this, we either start a single job if the content scope matches exactly or start all jobs with partially matching content scopes.
+
+    -   @comet/blocks-api@6.12.0
+
 ## 6.11.0
 
 ### Minor Changes
