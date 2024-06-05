@@ -114,7 +114,12 @@ export class UserPermissionsService {
                         permission.assign({
                             ...p,
                             permission: permissionName,
-                            id: getUuid(JSON.stringify(p)),
+                            id: getUuid(
+                                JSON.stringify({
+                                    ...p,
+                                    permission: permissionName,
+                                }),
+                            ),
                             source: UserPermissionSource.BY_RULE,
                             userId: user.id,
                             overrideContentScopes: !!p.contentScopes,
