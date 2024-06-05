@@ -20,6 +20,64 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
 ## API
 
+### Remove unnecessary dependencies
+
+Remove following dependencies **if you don't use them in your project**:
+
+-   `@aws-sdk/client-s3`
+-   `@azure/storage-blob`
+-   `pg-error-constants`
+
+### Provide `strategyName` in createStaticCredentialsBasicStrategy
+
+Make sure to use a meaningful strategy name as this name can be used to identify the user when using this strategy more than once. Do not forget to add the strategy to the App Guard.
+
+```diff
+  createStaticCredentialsBasicStrategy({
+      password: "xxxxx",
++     strategyName: "system-user",
+  }),
+```
+
+```diff
+  {
+      provide: APP_GUARD,
+-     useClass: createCometAuthGuard(["static-credentials-basic", "..."]),
++     useClass: createCometAuthGuard(["system-user", "..."]),
+  };
+```
+
+```diff
+  UserPermissionsModule.forRootAsync({
+      useFactory: (...) => ({
++         systemUsers: ["system-user"],
+          ...
+      }),
+      ...
+  }),
+```
+
+### Remove `language` field from `User`
+
+```diff
+// static-users.ts
+
+export const staticUsers = {
+    admin: {
+        id: "3b09cc12-c7e6-4d16-b858-40a822f2c548",
+        name: "Admin",
+        email: "admin@customer.com",
+-       language: "en",
+    },
+    // ...
+} satisfies Record<string, User>;
+```
+
+### Remove `@PublicApi()` and rename `@DisableGlobalGuard()`
+
+Replace all usages of `@PublicApi()` and `@DisableGlobalGuard()` with `@DisableCometGuards()`.
+Use this occasion to check if all operations decorated with this decorator **should actually be public and don't return any confidential data**.
+
 ### Support dependency injection in `BlockData#transformToPlain`
 
 1. Remove dynamic registration of `BlocksModule`:
@@ -146,35 +204,6 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     }
     ```
 
-### Provide `strategyName` in createStaticCredentialsBasicStrategy
-
-Make sure to use a meaningful strategy name as this name can be used to identify the user when using this strategy more than once. Do not forget to add the strategy to the App Guard.
-
-```diff
-  createStaticCredentialsBasicStrategy({
-      password: "xxxxx",
-+     strategyName: "system-user",
-  }),
-```
-
-```diff
-  {
-      provide: APP_GUARD,
--     useClass: createCometAuthGuard(["static-credentials-basic", "..."]),
-+     useClass: createCometAuthGuard(["system-user", "..."]),
-  };
-```
-
-```diff
-  UserPermissionsModule.forRootAsync({
-      useFactory: (...) => ({
-+         systemUsers: ["system-user"],
-          ...
-      }),
-      ...
-  }),
-```
-
 ### Remove CDN config from DAM
 
 ```diff
@@ -263,42 +292,14 @@ If you want to enable the origin check:
 
 4. DNS changes might be required. `api.example.com` should point to CDN, CDN should point to internal API domain
 
-### Remove `language` field from `User`
-
-```diff
-// static-users.ts
-
-export const staticUsers = {
-    admin: {
-        id: "3b09cc12-c7e6-4d16-b858-40a822f2c548",
-        name: "Admin",
-        email: "admin@customer.com",
--       language: "en",
-    },
-    // ...
-} satisfies Record<string, User>;
-```
-
-### Remove `@PublicApi()` and rename `@DisableGlobalGuard()`
-
-Replace all usages of `@PublicApi()` and `@DisableGlobalGuard()` with `@DisableCometGuards()`.
-Use this occasion to check if all operations decorated with this decorator **should actually be public and don't return any confidential data**.
-
-### Remove unnecessary dependencies
-
-Remove following dependencies **if you don't use them in your project**:
-
--   `@aws-sdk/client-s3`
--   `@azure/storage-blob`
--   `pg-error-constants`
-
 ### API Generator: Remove support for `visible` boolean, use `status` enum instead
 
 Replace the `visible` boolean field with a `status` enum field.
 Recommended enum values are (depending on the use case):
 
 -   Published/Unpublished
--   Visible/Invisible
+-   Published/Unpublished/Archived
+-   Published/Unpublished/Deleted
 -   Active/Deleted
 -   Active/Archived
 
