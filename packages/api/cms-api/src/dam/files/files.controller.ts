@@ -107,6 +107,51 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return this.streamFile(file, res, { range, overrideHeaders: { "Cache-control": "private" } });
         }
 
+        @Get(`/download/preview/${fileUrl}`)
+        async previewDownloadFile(
+            @Param() { fileId }: FileParams,
+            @Res() res: Response,
+            @GetCurrentUser() user: CurrentUser,
+            @Headers("range") range?: string,
+        ): Promise<void> {
+            const file = await this.filesService.findOneById(fileId);
+
+            if (file === null) {
+                throw new NotFoundException();
+            }
+
+            if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+                throw new ForbiddenException();
+            }
+
+            res.setHeader("Content-Disposition", "attachment");
+            return this.streamFile(file, res, { range, overrideHeaders: { "Cache-control": "private" } });
+        }
+
+        @DisableGlobalGuard()
+        @Get(`/download/:hash/${fileUrl}`)
+        async downloadFile(
+            @Param() { hash, ...params }: HashFileParams,
+            @Res() res: Response,
+            @Headers(CDN_ORIGIN_CHECK_HEADER) cdnOriginCheck: string,
+            @Headers("range") range?: string,
+        ): Promise<void> {
+            this.checkCdnOrigin(cdnOriginCheck);
+
+            if (!this.isValidHash(hash, params)) {
+                throw new NotFoundException();
+            }
+
+            const file = await this.filesService.findOneById(params.fileId);
+
+            if (file === null) {
+                throw new NotFoundException();
+            }
+
+            res.setHeader("Content-Disposition", "attachment");
+            return this.streamFile(file, res, { range });
+        }
+
         @DisableGlobalGuard()
         @Get(`/:hash/${fileUrl}`)
         async hashedFileUrl(
