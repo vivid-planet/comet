@@ -66,6 +66,7 @@ export function FinalFormNumberInput({
     React.useEffect(() => {
         if (!input.value && input.value !== 0) {
             input.onChange(undefined);
+            setFormattedNumberValue("");
         } else {
             setFormattedNumberValue(getFormattedValue(input.value, decimals));
         }
