@@ -5,6 +5,7 @@ import {
     filterByFragment,
     GridCellContent,
     GridColDef,
+    GridColumnsButton,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -53,6 +54,9 @@ function ProductsGridToolbar() {
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarItem>
+                <GridColumnsButton />
+            </ToolbarItem>
+            <ToolbarItem>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
                     <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
                 </Button>
@@ -75,7 +79,7 @@ export function ProductsGrid() {
             headerName: "Overview",
             minWidth: 200,
             flex: 1,
-            sortable: false,
+            sortBy: ["title", "price", "type", "category", "inStock"],
             visible: theme.breakpoints.down("md"),
             renderCell: ({ row }) => {
                 const secondaryValues = [
@@ -233,7 +237,7 @@ export function ProductsGrid() {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
-            sort: muiGridSortToGql(sortModel),
+            sort: muiGridSortToGql(sortModel, dataGridProps.apiRef),
         },
     });
     const rows = data?.products.nodes ?? [];

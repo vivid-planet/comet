@@ -80,7 +80,7 @@ const RichTextBlock: React.FC<RichTextBlockProps> = ({ data, renderers = default
     const rendered = redraft(data.draftContent, renderers);
 
     return (
-        <PreviewSkeleton title={"RichText"} type={"rows"} hasContent={hasRichTextBlockContent(data)}>
+        <PreviewSkeleton title="RichText" type="rows" hasContent={hasRichTextBlockContent(data)}>
             {rendered}
         </PreviewSkeleton>
     );

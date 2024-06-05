@@ -927,6 +927,9 @@ importers:
       '@comet/admin-icons':
         specifier: workspace:^6.10.0
         version: link:../admin-icons
+      '@mui/lab':
+        specifier: ^5.0.0-alpha.76
+        version: 5.0.0-alpha.117(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@mui/material@5.11.6)(@types/react@17.0.53)(react-dom@17.0.2)(react@17.0.2)
       '@mui/private-theming':
         specifier: ^5.0.0
         version: 5.11.2(@types/react@17.0.53)(react@17.0.2)
@@ -2605,6 +2608,12 @@ importers:
       '@comet/admin-theme':
         specifier: workspace:*
         version: link:../packages/admin/admin-theme
+      '@comet/blocks-admin':
+        specifier: workspace:*
+        version: link:../packages/admin/blocks-admin
+      '@comet/cms-admin':
+        specifier: workspace:*
+        version: link:../packages/admin/cms-admin
       '@emotion/react':
         specifier: ^11.5.0
         version: 11.9.3(@babel/core@7.22.11)(@types/react@17.0.53)(react@17.0.2)
