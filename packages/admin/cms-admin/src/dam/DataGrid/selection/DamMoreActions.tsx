@@ -3,7 +3,6 @@ import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, U
 import { Box, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Slide, Snackbar, Typography } from "@mui/material";
 import { PopoverOrigin } from "@mui/material/Popover/Popover";
 import { SlideProps } from "@mui/material/Slide/Slide";
-import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -11,6 +10,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamFileUpload } from "../fileUpload/useDamFileUpload";
 import { useDamSelectionApi } from "./DamSelectionContext";
+import { SelectedItemsChip } from "./SelectedItemsChip";
 
 interface DamMoreActionsProps {
     transformOrigin?: PopoverOrigin;
@@ -156,7 +156,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
                                     <ListItemText
                                         primary={<FormattedMessage id="comet.dam.moreActions.downloadSelected" defaultMessage="Download" />}
                                     />
-                                    <NumberSelectedChip>{lengthOfSelectedFiles}</NumberSelectedChip>
+                                    <SelectedItemsChip>{lengthOfSelectedFiles}</SelectedItemsChip>
                                 </MenuItem>
                                 <Divider sx={{ my: 1, borderColor: (theme) => theme.palette.grey[50] }} />
                             </>
@@ -166,28 +166,28 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
                                 <Move />
                             </ListItemIcon>
                             <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.moveItems" defaultMessage="Move" />} />
-                            {itemsSelected && <NumberSelectedChip>{selectionSize}</NumberSelectedChip>}
+                            {itemsSelected && <SelectedItemsChip>{selectionSize}</SelectedItemsChip>}
                         </MenuItem>
                         <MenuItem disabled={!itemsSelected} onClick={handleArchiveClick}>
                             <ListItemIcon>
                                 <Archive />
                             </ListItemIcon>
                             <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.archiveItems" defaultMessage="Archive" />} />
-                            {itemsSelected && <NumberSelectedChip>{selectionSize}</NumberSelectedChip>}
+                            {itemsSelected && <SelectedItemsChip>{selectionSize}</SelectedItemsChip>}
                         </MenuItem>
                         <MenuItem disabled={!itemsSelected} onClick={handleRestoreClick}>
                             <ListItemIcon>
                                 <Restore />
                             </ListItemIcon>
                             <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.restoreItems" defaultMessage="Restore" />} />
-                            {itemsSelected && <NumberSelectedChip>{selectionSize}</NumberSelectedChip>}
+                            {itemsSelected && <SelectedItemsChip>{selectionSize}</SelectedItemsChip>}
                         </MenuItem>
                         <MenuItem disabled={!itemsSelected} onClick={handleDeleteClick}>
                             <ListItemIcon>
                                 <Delete />
                             </ListItemIcon>
                             <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.deleteItems" defaultMessage="Delete" />} />
-                            {itemsSelected && <NumberSelectedChip>{selectionSize}</NumberSelectedChip>}
+                            {itemsSelected && <SelectedItemsChip>{selectionSize}</SelectedItemsChip>}
                         </MenuItem>
                     </MenuList>
                 </Box>
@@ -200,16 +200,3 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
         </>
     );
 };
-
-const NumberSelectedChip = styled("div")`
-    display: flex;
-    align-items: center;
-    height: 24px;
-    background-color: ${({ theme }) => theme.palette.primary.main};
-    margin-left: 10px;
-    padding: 0 10px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 400;
-    color: ${({ theme }) => theme.palette.grey[900]};
-`;

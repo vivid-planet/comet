@@ -113,7 +113,9 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     const out = `
     import { useApolloClient, useQuery } from "@apollo/client";
     import {
+        DateTimeField,
         Field,
+        filterByFragment,
         FinalForm,
         FinalFormInput,
         FinalFormSaveSplitButton,
@@ -121,6 +123,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         FinalFormSubmitEvent,
         Loading,
         MainContent,
+        TextField,
         Toolbar,
         ToolbarActions,
         ToolbarFillSpace,
@@ -131,13 +134,12 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         useStackSwitchApi,
         FinalFormCheckbox,
     } from "@comet/admin";
+    import { DateField } from "@comet/admin-date-time";
     import { ArrowLeft } from "@comet/admin-icons";
-    import { FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
     import { EditPageLayout, resolveHasSaveConflict, useFormSaveConflict, queryUpdatedAt } from "@comet/cms-admin";
     import { IconButton, FormControlLabel, MenuItem } from "@mui/material";
     import { FormApi } from "final-form";
-    import { filter } from "graphql-anywhere";
     import isEqual from "lodash.isequal";
     import React from "react";
     import { FormattedMessage } from "react-intl";
@@ -199,7 +201,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     
         const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceEntityName}
             ? {
-                  ...filter<GQL${entityName}FormFragment>(${instanceEntityName}FormFragment, data.${instanceEntityName}),
+                  ...filterByFragment<GQL${entityName}FormFragment>(${instanceEntityName}FormFragment, data.${instanceEntityName}),
                   ${numberFields.map((field) => `${field.name}: String(data.${instanceEntityName}.${field.name}),`).join("\n")}
                   ${Object.keys(rootBlocks)
                       .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.input2State(data.${instanceEntityName}.${rootBlockKey}),`)
@@ -349,15 +351,19 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
                     />
                 )}
             </Field>`;
+    } else if (type.kind === "SCALAR" && type.name === "String") {
+        return `<TextField ${field.type.kind === "NON_NULL" ? "required" : ""} fullWidth name="${
+            field.name
+        }"  label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}"/>} />`;
+    } else if (type.kind === "SCALAR" && type.name === "DateTime") {
+        //TODO DateTime vs Date
+        return `<DateField ${field.type.kind === "NON_NULL" ? "required" : ""} fullWidth name="${
+            field.name
+        }"  label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}"/>} />`;
     } else {
         let component;
         let additionalProps = "";
-        if (type.kind === "SCALAR" && type.name === "DateTime") {
-            //TODO DateTime vs Date
-            component = "FinalFormDatePicker";
-        } else if (type.kind === "SCALAR" && type.name === "String") {
-            component = "FinalFormInput";
-        } else if (type.kind === "SCALAR" && type.name === "Float") {
+        if (type.kind === "SCALAR" && type.name === "Float") {
             component = "FinalFormInput";
             additionalProps += 'type="number"';
             //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot

@@ -1,12 +1,37 @@
-import { ExternalLinkBlock, InternalLinkBlock, OneOfBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
+import {
+    DamFileDownloadLinkBlock,
+    ExternalLinkBlock,
+    InternalLinkBlock,
+    OneOfBlock,
+    PropsWithData,
+    SupportedBlocks,
+    withPreview,
+} from "@comet/cms-site";
 import { LinkBlockData } from "@src/blocks.generated";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import * as React from "react";
 
 const supportedBlocks: SupportedBlocks = {
-    internal: ({ children, ...props }) => <InternalLinkBlock data={props}>{children}</InternalLinkBlock>,
-    external: ({ children, ...props }) => <ExternalLinkBlock data={props}>{children}</ExternalLinkBlock>,
-    news: ({ children, ...props }) => <NewsLinkBlock data={props}>{children}</NewsLinkBlock>,
+    internal: ({ children, title, ...props }) => (
+        <InternalLinkBlock data={props} title={title}>
+            {children}
+        </InternalLinkBlock>
+    ),
+    external: ({ children, title, ...props }) => (
+        <ExternalLinkBlock data={props} title={title}>
+            {children}
+        </ExternalLinkBlock>
+    ),
+    news: ({ children, title, ...props }) => (
+        <NewsLinkBlock data={props} title={title}>
+            {children}
+        </NewsLinkBlock>
+    ),
+    damFileDownload: ({ children, title, ...props }) => (
+        <DamFileDownloadLinkBlock data={props} title={title}>
+            {children}
+        </DamFileDownloadLinkBlock>
+    ),
 };
 
 interface LinkBlockProps extends PropsWithData<LinkBlockData> {

@@ -1,5 +1,208 @@
 # @comet/blocks-admin
 
+## 6.11.0
+
+### Patch Changes
+
+-   Updated dependencies [8e3dec523]
+    -   @comet/admin@6.11.0
+    -   @comet/admin-icons@6.11.0
+
+## 6.10.0
+
+### Patch Changes
+
+-   Updated dependencies [a8a098a24]
+-   Updated dependencies [d4a269e1e]
+-   Updated dependencies [52130afba]
+-   Updated dependencies [e938254bf]
+    -   @comet/admin@6.10.0
+    -   @comet/admin-icons@6.10.0
+
+## 6.9.0
+
+### Minor Changes
+
+-   e85837a17: Loosen peer dependency on `react-intl` to allow using v6
+
+### Patch Changes
+
+-   Updated dependencies [9ff9d66c6]
+-   Updated dependencies [e85837a17]
+    -   @comet/admin@6.9.0
+    -   @comet/admin-icons@6.9.0
+
+## 6.8.0
+
+### Minor Changes
+
+-   90c6f192e: Deprecate `SpaceBlock`
+
+    It will be replaced by the `createSpaceBlock` factory since it had no real use case.
+
+-   90c6f192e: Add `createSpaceBlock` factory
+
+    Allows selecting a spacing value out of a list of provided options.
+
+    **Example**
+
+    API
+
+    ```tsx
+    enum Spacing {
+        d150 = "d150",
+        d200 = "d200",
+    }
+
+    export const SpaceBlock = createSpaceBlock({ spacing: Spacing }, "DemoSpace");
+    ```
+
+    Admin
+
+    ```tsx
+    const options = [
+        { value: "d150", label: "Dynamic 150" },
+        { value: "d200", label: "Dynamic 200" },
+    ];
+
+    export const SpaceBlock = createSpaceBlock<string>({ defaultValue: options[0].value, options });
+    ```
+
+### Patch Changes
+
+-   @comet/admin@6.8.0
+-   @comet/admin-icons@6.8.0
+
+## 6.7.0
+
+### Patch Changes
+
+-   @comet/admin@6.7.0
+-   @comet/admin-icons@6.7.0
+
+## 6.6.2
+
+### Patch Changes
+
+-   @comet/admin@6.6.2
+-   @comet/admin-icons@6.6.2
+
+## 6.6.1
+
+### Patch Changes
+
+-   @comet/admin@6.6.1
+-   @comet/admin-icons@6.6.1
+
+## 6.6.0
+
+### Minor Changes
+
+-   a65679ba3: Add `minVisibleBlocks` option to `createListBlock` factory
+
+    This enables the possibility to enforce a minimum amount of blocks added to a list block. List blocks with less than the required amount of visible entries can't be saved.
+
+    **Example usage:**
+
+    ```diff
+    export const SomeListBlock = createListBlock({
+        // ...
+    +   minVisibleBlocks: 2,
+    });
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [95b97d768]
+-   Updated dependencies [6b04ac9a4]
+    -   @comet/admin@6.6.0
+    -   @comet/admin-icons@6.6.0
+
+## 6.5.0
+
+### Minor Changes
+
+-   2f64daa9b: Add `title` field to link block
+
+    Perform the following steps to use it in an application:
+
+    1. API: Use the new `createLinkBlock` factory to create the LinkBlock:
+
+        ```ts
+        import { createLinkBlock } from "@comet/cms-api";
+
+        // ...
+
+        const LinkBlock = createLinkBlock({
+            supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, news: NewsLinkBlock },
+        });
+        ```
+
+    2. Site: Pass the `title` prop to LinkBlock's child blocks:
+
+    ```diff
+    const supportedBlocks: SupportedBlocks = {
+    -   internal: ({ children, ...props }) => <InternalLinkBlock data={props}>{children}</InternalLinkBlock>,
+    +   internal: ({ children, title, ...props }) => <InternalLinkBlock data={props} title={title}>{children}</InternalLinkBlock>,
+        // ...
+    };
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [6cb2f9046]
+    -   @comet/admin@6.5.0
+    -   @comet/admin-icons@6.5.0
+
+## 6.4.0
+
+### Minor Changes
+
+-   30d9e0dee: Add `createCompositeBlockSelectField` helper function
+
+    To simplify the creation of a select field blocks by hiding the verbose definition of `Form`, `Field` and items.
+
+-   322da3831: Add `resolveDependencyPath()` to `BlockMethods` interface
+
+    Blocks must now offer a `resolveDependencyPath()` method that returns a URL path based on the block's `state` and `jsonPath`.
+    It can be used to build the URL to a block's edit view.
+
+    For most cases, the default implementation of this method should be sufficient, so you don't have to implement it yourself.
+    You must only override it manually if your block's admin component contains special routing logic (e.g. `RouterTabs`).
+
+-   887365c76: Add `createCompositeBlockTextField` helper function
+
+    To simplify the creation of a text block field by hiding the verbose definition of `Form` and `Field`.
+
+### Patch Changes
+
+-   811903e60: Disable the content translation feature for input fields where it doesn't make sense
+-   Updated dependencies [8ce21f34b]
+-   Updated dependencies [811903e60]
+    -   @comet/admin@6.4.0
+    -   @comet/admin-icons@6.4.0
+
+## 6.3.0
+
+### Patch Changes
+
+-   @comet/admin@6.3.0
+-   @comet/admin-icons@6.3.0
+
+## 6.2.1
+
+### Patch Changes
+
+-   @comet/admin@6.2.1
+-   @comet/admin-icons@6.2.1
+
+## 6.2.0
+
+### Patch Changes
+
+-   @comet/admin@6.2.0
+-   @comet/admin-icons@6.2.0
+
 ## 6.1.0
 
 ### Patch Changes

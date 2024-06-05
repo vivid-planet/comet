@@ -4,13 +4,14 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
+    filterByFragment,
     FinalForm,
-    FinalFormInput,
     FinalFormSaveSplitButton,
     FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
     MainContent,
+    TextField,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
@@ -20,14 +21,13 @@ import {
     useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
-import { FinalFormDatePicker } from "@comet/admin-date-time";
+import { DateField } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { IconButton, MenuItem } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -75,7 +75,7 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
         () =>
             data?.news
                 ? {
-                      ...filter<GQLNewsFormFragment>(newsFormFragment, data.news),
+                      ...filterByFragment<GQLNewsFormFragment>(newsFormFragment, data.news),
 
                       image: rootBlocks.image.input2State(data.news.image),
                       content: rootBlocks.content.input2State(data.news.content),
@@ -160,27 +160,9 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <Field
-                            required
-                            fullWidth
-                            name="slug"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="news.slug" defaultMessage="Slug" />}
-                        />
-                        <Field
-                            required
-                            fullWidth
-                            name="title"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="news.title" defaultMessage="Title" />}
-                        />
-                        <Field
-                            required
-                            fullWidth
-                            name="date"
-                            component={FinalFormDatePicker}
-                            label={<FormattedMessage id="news.date" defaultMessage="Date" />}
-                        />
+                        <TextField required fullWidth name="slug" label={<FormattedMessage id="news.slug" defaultMessage="Slug" />} />
+                        <TextField required fullWidth name="title" label={<FormattedMessage id="news.title" defaultMessage="Title" />} />
+                        <DateField required fullWidth name="date" label={<FormattedMessage id="news.date" defaultMessage="Date" />} />
                         <Field fullWidth name="category" label={<FormattedMessage id="news.category" defaultMessage="Category" />}>
                             {(props) => (
                                 <FinalFormSelect {...props}>

@@ -43,6 +43,7 @@ export type { ContentScopeConfigProps } from "./contentScope/useContentScopeConf
 export { useContentScopeConfig } from "./contentScope/useContentScopeConfig";
 export { CronJobsPage } from "./cronJobs/CronJobsPage";
 export { JobRuntime } from "./cronJobs/JobRuntime";
+export { DamFileDownloadLinkBlock } from "./dam/blocks/DamFileDownloadLinkBlock";
 export { DamImageBlock } from "./dam/blocks/DamImageBlock";
 export { DamConfigProvider } from "./dam/config/DamConfigProvider";
 export { damDefaultAcceptedMimeTypes } from "./dam/config/damDefaultAcceptedMimeTypes";
@@ -51,6 +52,7 @@ export { useDamConfig } from "./dam/config/useDamConfig";
 export { useCurrentDamFolder } from "./dam/CurrentDamFolderProvider";
 export { DamPage } from "./dam/DamPage";
 export { useDamFileUpload } from "./dam/DataGrid/fileUpload/useDamFileUpload";
+export { createDamFileDependency } from "./dam/dependencies/createDamFileDependency";
 export { DashboardHeader, DashboardHeaderProps } from "./dashboard/DashboardHeader";
 export { DashboardWidgetRoot, DashboardWidgetRootProps } from "./dashboard/widgets/DashboardWidgetRoot";
 export { LatestBuildsDashboardWidget } from "./dashboard/widgets/LatestBuildsDashboardWidget";
@@ -58,6 +60,11 @@ export {
     LatestContentUpdatesDashboardWidget,
     LatestContentUpdatesDashboardWidgetProps,
 } from "./dashboard/widgets/LatestContentUpdatesDashboardWidget";
+export { createDependencyMethods } from "./dependencies/createDependencyMethods";
+export { createDocumentDependencyMethods } from "./dependencies/createDocumentDependencyMethods";
+export { DependenciesConfigProvider, useDependenciesConfig } from "./dependencies/DependenciesConfig";
+export { DependencyList } from "./dependencies/DependencyList";
+export { DependencyInterface } from "./dependencies/types";
 export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootBlocksMethods";
 export type { DocumentInterface, DocumentType } from "./documents/types";
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";

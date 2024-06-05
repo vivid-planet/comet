@@ -5,8 +5,8 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ExternalLinkBlockData, ExternalLinkBlockInput } from "../blocks.generated";
-import { isLinkTarget } from "../validation/isHref";
-import { validateUrl } from "../validation/validateUrl";
+import { isLinkTarget } from "../validation/isLinkTarget";
+import { validateLinkTarget } from "../validation/validateLinkTarget";
 
 type State = ExternalLinkBlockData;
 
@@ -68,7 +68,8 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
                         name="targetUrl"
                         component={FinalFormInput}
                         fullWidth
-                        validate={(url) => validateUrl(url)}
+                        validate={(url) => validateLinkTarget(url)}
+                        disableContentTranslation
                     />
                     <Field name="openInNewWindow" type="checkbox">
                         {(props) => (

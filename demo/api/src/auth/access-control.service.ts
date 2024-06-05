@@ -4,7 +4,7 @@ import { Injectable } from "@nestjs/common";
 @Injectable()
 export class AccessControlService extends AbstractAccessControlService {
     getPermissionsForUser(user: User): PermissionsForUser {
-        if (user.email.endsWith("@comet-dxp.com")) {
+        if (user.isAdmin) {
             return UserPermissions.allPermissions;
         } else {
             return [
@@ -14,7 +14,7 @@ export class AccessControlService extends AbstractAccessControlService {
         }
     }
     getContentScopesForUser(user: User): ContentScopesForUser {
-        if (user.email.endsWith("@comet-dxp.com")) {
+        if (user.isAdmin) {
             return UserPermissions.allContentScopes;
         } else {
             return [{ domain: "main", language: "en" }];

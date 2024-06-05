@@ -7,6 +7,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { CronJobsGrid } from "./CronJobsGrid";
+import { JobLogs } from "./JobLogs";
 import { JobsGrid } from "./JobsGrid";
 
 const ScopeIndicatorLabelBold = styled(Typography)`
@@ -40,7 +41,16 @@ export function CronJobsPage(): React.ReactElement {
 
                     <CronJobsGrid />
                 </StackPage>
-                <StackPage name="jobs">{(cronJob) => <JobsGrid cronJob={cronJob} />}</StackPage>
+                <StackPage name="jobs">
+                    {(selectedCronJobName) => (
+                        <StackSwitch>
+                            <StackPage name="grid">
+                                <JobsGrid cronJob={selectedCronJobName} />
+                            </StackPage>
+                            <StackPage name="logs">{(selectedJobName) => <JobLogs jobName={selectedJobName} />}</StackPage>
+                        </StackSwitch>
+                    )}
+                </StackPage>
             </StackSwitch>
         </Stack>
     );

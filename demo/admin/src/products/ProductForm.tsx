@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CheckboxField,
     Field,
+    filterByFragment,
     FinalForm,
     FinalFormInput,
     FinalFormSelect,
@@ -20,7 +21,6 @@ import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, 
 import { MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -75,7 +75,7 @@ function ProductForm({ id }: FormProps): React.ReactElement {
 
     const initialValues: Partial<FormValues> = data?.product
         ? {
-              ...filter<GQLProductFormManualFragment>(productFormFragment, data.product),
+              ...filterByFragment<GQLProductFormManualFragment>(productFormFragment, data.product),
               price: String(data.product.price),
               image: rootBlocks.image.input2State(data.product.image),
           }

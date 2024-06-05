@@ -23,6 +23,8 @@ const isValidYouTubeIdentifier = (value: string) => {
 };
 
 const validateIdentifier = (value?: string) => {
+    if (!value) return undefined;
+
     return value && isValidYouTubeIdentifier(value) ? undefined : (
         <FormattedMessage id="comet.blocks.youTubeVideo.validation" defaultMessage="Should be a valid YouTube URL or identifier" />
     );
@@ -56,7 +58,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
                 <SelectPreviewComponent>
                     <BlocksFinalForm
                         onSubmit={(newState) => {
-                            updateState({ ...state, ...newState });
+                            updateState(newState);
                         }}
                         initialValues={state}
                     >
@@ -69,6 +71,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
                             name="youtubeIdentifier"
                             component={FinalFormInput}
                             fullWidth
+                            disableContentTranslation
                         />
                         <FieldContainer label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.aspectRatio", defaultMessage: "Aspect Ratio" })}>
                             <Field name="aspectRatio" type="radio" value="16X9">

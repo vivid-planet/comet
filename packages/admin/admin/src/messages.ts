@@ -43,6 +43,7 @@ export const messages = defineMessages({
         id: "comet.generic.errors.unknownError",
         defaultMessage: "<strong>Something went wrong.</strong> Please try again later.",
     },
+    unknown: { id: "comet.generic.unknown", defaultMessage: "Unknown" },
     warning: { id: "comet.generic.warning", defaultMessage: "Warning" },
     content: { id: "comet.generic.content", defaultMessage: "Content" },
     close: { id: "comet.generic.close", defaultMessage: "Close" },
@@ -50,4 +51,5 @@ export const messages = defineMessages({
     filter: { id: "comet.generic.filter", defaultMessage: "Filter" },
     copyUrl: { id: "comet.generic.copyUrl", defaultMessage: "Copy URL" },
     deleteItem: { id: "comet.generic.deleteItem", defaultMessage: "Delete Item" },
+    empty: { id: "comet.generic.empty", defaultMessage: "Empty" },
 });

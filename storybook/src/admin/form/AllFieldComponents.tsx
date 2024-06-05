@@ -1,4 +1,5 @@
 import {
+    AsyncSelectField,
     CheckboxField,
     Field,
     FieldContainer,
@@ -51,6 +52,15 @@ function Story() {
                                             </MenuItem>
                                         ))}
                                     </SelectField>
+                                    <AsyncSelectField
+                                        name="asyncSelect"
+                                        label="Async Select"
+                                        loadOptions={async () => {
+                                            return new Promise<typeof options>((resolve) => setTimeout(() => resolve(options), 1000));
+                                        }}
+                                        getOptionLabel={(option) => option.label}
+                                        fullWidth
+                                    />
                                     <CheckboxField
                                         name="singleCheckboxWithLink"
                                         label={

@@ -161,6 +161,60 @@
         ]
     },
     {
+        "name": "DamFileDownloadLink",
+        "fields": [
+            {
+                "name": "file",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "name",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "fileUrl",
+                            "kind": "String",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            },
+            {
+                "name": "openFileType",
+                "kind": "Enum",
+                "enum": [
+                    "NewTab",
+                    "Download"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "fileId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "openFileType",
+                "kind": "Enum",
+                "enum": [
+                    "NewTab",
+                    "Download"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "DamImage",
         "fields": [
             {
@@ -321,6 +375,47 @@
                 "name": "showControls",
                 "kind": "Boolean",
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "DemoSpace",
+        "fields": [
+            {
+                "name": "spacing",
+                "kind": "Enum",
+                "enum": [
+                    "d150",
+                    "d200",
+                    "d250",
+                    "d300",
+                    "d350",
+                    "d400",
+                    "d450",
+                    "d500",
+                    "d550",
+                    "d600"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "spacing",
+                "kind": "Enum",
+                "enum": [
+                    "d150",
+                    "d200",
+                    "d250",
+                    "d300",
+                    "d350",
+                    "d400",
+                    "d450",
+                    "d500",
+                    "d550",
+                    "d600"
+                ],
+                "nullable": false
             }
         ]
     },
@@ -680,6 +775,11 @@
         "name": "Link",
         "fields": [
             {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "attachedBlocks",
                 "kind": "NestedObjectList",
                 "object": {
@@ -695,7 +795,8 @@
                             "blocks": {
                                 "internal": "InternalLink",
                                 "external": "ExternalLink",
-                                "news": "NewsLink"
+                                "news": "NewsLink",
+                                "damFileDownload": "DamFileDownloadLink"
                             },
                             "nullable": false
                         }
@@ -724,7 +825,8 @@
                             "blocks": {
                                 "internal": "InternalLink",
                                 "external": "ExternalLink",
-                                "news": "NewsLink"
+                                "news": "NewsLink",
+                                "damFileDownload": "DamFileDownloadLink"
                             },
                             "nullable": false
                         }
@@ -738,6 +840,11 @@
                 "name": "activeType",
                 "kind": "String",
                 "nullable": false
+            },
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -1060,7 +1167,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "space": "Space",
+                                "space": "DemoSpace",
                                 "richtext": "RichText",
                                 "headline": "Headline",
                                 "image": "DamImage",
@@ -1118,7 +1225,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "space": "Space",
+                                "space": "DemoSpace",
                                 "richtext": "RichText",
                                 "headline": "Headline",
                                 "image": "DamImage",
@@ -2010,7 +2117,7 @@
             {
                 "name": "youtubeIdentifier",
                 "kind": "String",
-                "nullable": false
+                "nullable": true
             },
             {
                 "name": "aspectRatio",

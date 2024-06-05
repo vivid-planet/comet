@@ -1,5 +1,264 @@
 # @comet/cms-api
 
+## 6.11.0
+
+### Minor Changes
+
+-   0db10a5f8: Add a console script to import redirects from a csv file
+
+    You can use the script like this: `npm run console import-redirects file-to-import.csv`
+
+    The CSV file must look like this:
+
+    ```csv
+    source;target;target_type;comment;scope_domain
+    /test-source;/test-target;internal;Internal Example;main
+    /test-source-external;https://www.comet-dxp.com/;external;External Example;secondary
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [93a84b651]
+    -   @comet/blocks-api@6.11.0
+
+## 6.10.0
+
+### Minor Changes
+
+-   536fdb85a: Add `createUserFromIdToken` to `UserService`-interface
+
+    This allows to override the default implementation of creating the User-Object from the JWT when logging in via `createAuthProxyJwtStrategy`
+
+-   f528bc340: CronJobModule: Show logs for job run
+
+### Patch Changes
+
+-   d340cabc2: DAM: Fix the duplicate name check when updating a file
+
+    Previously, there were two bugs:
+
+    1. In the `EditFile` form, the `folderId` wasn't passed to the mutation
+    2. In `FilesService#updateByEntity`, the duplicate check was always done against the root folder if no `folderId` was passed
+
+    This caused an error when saving a file in any folder if there was another file with the same name in the root folder.
+    And it was theoretically possible to create two files with the same name in one folder (though this was still prevented by admin-side validation).
+
+-   584d14d86: Only return duplicates within the same scope in the `FilesResolver#duplicates` field resolver
+
+    As a side effect `FilesService#findAllByHash` now accepts an optional scope parameter.
+
+    -   @comet/blocks-api@6.10.0
+
+## 6.9.0
+
+### Minor Changes
+
+-   94ac6b729: API Generator: Fix generated API for many-to-many-relations with custom relation entity
+
+### Patch Changes
+
+-   Updated dependencies [8be9565d1]
+    -   @comet/blocks-api@6.9.0
+
+## 6.8.0
+
+### Minor Changes
+
+-   d6ca50a52: Enhanced the access log functionality to now skip logging for field resolvers in GraphQL context. This change improves the readability and relevance of our logs by reducing unnecessary entries.
+-   ebdbabc21: Extend `searchToMikroOrmQuery` function to support quoted search strings.
+
+    Quotes searches can be done with single (`'...'`) or double quotation marks (`"..."`).
+
+### Patch Changes
+
+-   35efa037b: API-Generator: Remove unnecessary await for delete mutation
+-   d3a06fcaf: Prevent block-meta.json write in read-only file systems
+-   a696ec7b9: Handle DAM scope correctly in the `findCopiesOfFileInScope` query and the `importDamFileByDownload` mutation
+
+    Previously, these endpoints would cause errors if no DAM scoping was used.
+
+-   Updated dependencies [be8664c75]
+-   Updated dependencies [90c6f192e]
+-   Updated dependencies [90c6f192e]
+    -   @comet/blocks-api@6.8.0
+
+## 6.7.0
+
+### Minor Changes
+
+-   645f19df9: Add `nullable` param to `@AffectedEntity` to support id args that can be `null` or `undefined`
+-   a0506e103: API Generator: Support validator decorators for input generation
+
+### Patch Changes
+
+-   645f19df9: Fix mutations `moveDamFiles`, `copyFilesToScope`, `archiveDamFiles` and `restoreDamFiles` by adding `@AffectedEntity` to enable scope checks
+-   8315f10cb: Fix order of `@RequiredPermission()` decorators
+
+    Decorators defined on handlers should be considered before decorators defined on classes.
+
+-   6eeaaa223: The CometAuthGuards now only creates the `CurrentUser` just on a request-basis and skips when called in a fieldResolver (e.g. when `fieldResolverEnhancers` contains `guards`).
+    -   @comet/blocks-api@6.7.0
+
+## 6.6.2
+
+### Patch Changes
+
+-   @comet/blocks-api@6.6.2
+
+## 6.6.1
+
+### Patch Changes
+
+-   890795fda: Fix calculation of `totalCount` in `DependenciesService#getDependents`
+    -   @comet/blocks-api@6.6.1
+
+## 6.6.0
+
+### Minor Changes
+
+-   6160119fe: Provide a `User`-interface that allows module augmentation and hence storing additional data.
+-   38df2b4de: Add `userToLog`-option to AccessLogModule
+
+### Patch Changes
+
+-   Updated dependencies [e880929d8]
+    -   @comet/blocks-api@6.6.0
+
+## 6.5.0
+
+### Minor Changes
+
+-   2f64daa9b: Add `title` field to link block
+
+    Perform the following steps to use it in an application:
+
+    1. API: Use the new `createLinkBlock` factory to create the LinkBlock:
+
+        ```ts
+        import { createLinkBlock } from "@comet/cms-api";
+
+        // ...
+
+        const LinkBlock = createLinkBlock({
+            supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, news: NewsLinkBlock },
+        });
+        ```
+
+    2. Site: Pass the `title` prop to LinkBlock's child blocks:
+
+    ```diff
+    const supportedBlocks: SupportedBlocks = {
+    -   internal: ({ children, ...props }) => <InternalLinkBlock data={props}>{children}</InternalLinkBlock>,
+    +   internal: ({ children, title, ...props }) => <InternalLinkBlock data={props} title={title}>{children}</InternalLinkBlock>,
+        // ...
+    };
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [2f64daa9b]
+    -   @comet/blocks-api@6.5.0
+
+## 6.4.0
+
+### Minor Changes
+
+-   9ff9d9840: Support using a service in `@ScopedEntity()` decorator
+
+    This can be useful when an entity's scope cannot be derived directly from the passed entity.
+    For example, a `Page` document's scope is derived by the `PageTreeNode` the document is attached to, but there is no database relation between the two entities.
+
+    For page tree document types you can use the provided `PageTreeNodeDocumentEntityScopeService`.
+
+-   955182b09: Make permission-check for field-resolvers optional
+-   322da3831: Add `@EntityInfo()` decorator
+
+    Adding `@EntityInfo()` to an entity is necessary to correctly display dependencies in the admin application.
+    You can find more information in [the docs](https://docs.comet-dxp.com/docs/dependencies/).
+
+-   1910551c7: Log the correct user IP even if the app is behind a proxy
+
+    The package [request-ip](https://www.npmjs.com/package/request-ip) is now used to get the actual user IP even if the app runs behind a proxy. Previously, the proxy's IP was logged.
+
+-   2d1b9467a: createImageLinkBlock: Allow overriding name
+
+    This allows using two different `ImageLink` blocks in one application.
+
+    Perform the following steps to override the name:
+
+    1. API: Add the name as second argument in the `createImageLinkBlock` factory:
+
+        ```diff
+        const MyCustomImageLinkBlock = createImageLinkBlock(
+            { link: InternalLinkBlock },
+        +   "MyCustomImageLink"
+        );
+        ```
+
+    2. Admin: Set the `name` option in the `createImageLinkBlock` factory:
+
+        ```diff
+        const MyCustomImageLinkBlock = createImageLinkBlock({
+            link: InternalLinkBlock,
+        +   name: "MyCustomImageLink"
+        });
+        ```
+
+### Patch Changes
+
+-   8568153d8: API Generator: Add missing `ObjectQuery` import
+-   1910551c7: Remove user name from access log
+
+    We decided to remove the user name because of privacy concerns.
+
+-   bfc1a4614: API Generator: Correctly support default value for date fields
+-   b478a8b71: Don't fail in ChangesCheckerInterceptor because of stricter content scope check
+-   Updated dependencies [0efae68ff]
+    -   @comet/blocks-api@6.4.0
+
+## 6.3.0
+
+### Minor Changes
+
+-   fc1b16fe: Allow overriding the block context in `BlocksTransformerService#transformToPlain`
+
+### Patch Changes
+
+-   e2e2114b: Fix parsing of `contentScopeAnnotation` in `KubernetesService#getContentScope`
+    -   @comet/blocks-api@6.3.0
+
+## 6.2.1
+
+### Patch Changes
+
+-   f1457306: Ignore user permissions when using system user
+
+    The `UserPermissionsGuard` didn't allow requests when using a system user (e.g., basic authorization during site build).
+
+    -   @comet/blocks-api@6.2.1
+
+## 6.2.0
+
+### Minor Changes
+
+-   beeea1dd: Remove `availablePermissions`-option in `UserPermissionsModule`
+
+    Simply remove the `Permission` interface module augmentation and the `availablePermissions`-option from the application.
+
+-   151e1218: Support multiple `@AffectedEntity()`-decorators for a single function
+
+### Patch Changes
+
+-   04afb3ee: Fix attached document deletion when deleting a page tree node
+-   ad153c99: Always use preview DAM URLs in the admin application
+
+    This fixes a bug where the PDF preview in the DAM wouldn't work because the file couldn't be included in an iFrame on the admin domain.
+
+    We already intended to use preview URLs everywhere in [v5.3.0](https://github.com/vivid-planet/comet/releases/tag/v5.3.0#:~:text=Always%20use%20the%20/preview%20file%20URLs%20in%20the%20admin%20application). However, the `x-preview-dam-urls` header wasn't passed correctly to the `createFileUrl()` method everywhere. As a result, preview URLs were only used in blocks but not in the DAM. Now, the DAM uses preview URLs as well.
+
+-   Updated dependencies [75865caa]
+    -   @comet/blocks-api@6.2.0
+
 ## 6.1.0
 
 ### Minor Changes
