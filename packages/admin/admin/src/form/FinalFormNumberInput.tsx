@@ -6,7 +6,7 @@ import { useIntl } from "react-intl";
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 
 export type FinalFormNumberInputProps = InputBaseProps &
-    FieldRenderProps<number | string> & {
+    FieldRenderProps<number> & {
         clearable?: boolean;
         decimals?: number;
     };
@@ -29,7 +29,7 @@ export function FinalFormNumberInput({
     const [formattedNumberValue, setFormattedNumberValue] = React.useState("");
 
     const getFormattedValue = React.useCallback(
-        (value, decimals: number) => {
+        (value: number | undefined, decimals: number) => {
             const formattedValue =
                 value !== undefined ? intl.formatNumber(value, { minimumFractionDigits: decimals, maximumFractionDigits: decimals }) : "";
             return formattedValue;
@@ -64,12 +64,12 @@ export function FinalFormNumberInput({
     };
 
     React.useEffect(() => {
-        if (input.value !== "") {
-            setFormattedNumberValue(getFormattedValue(input.value, decimals));
+        if (!input.value && input.value !== 0) {
+            input.onChange(undefined);
         } else {
-            setFormattedNumberValue("");
+            setFormattedNumberValue(getFormattedValue(input.value, decimals));
         }
-    }, [getFormattedValue, decimals, input.value]);
+    }, [getFormattedValue, decimals, input.value, input]);
 
     return (
         <InputBase
