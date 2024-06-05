@@ -12,6 +12,7 @@ import { paletteOptions as cometPaletteOptions } from "./paletteOptions";
 import { shadows } from "./shadows";
 import { createTypographyOptions as createCometTypographyOptions } from "./typographyOptions";
 
+<<<<<<< HEAD
 export const createCometTheme = ({
     palette: passedPaletteOptions = {},
     typography: passedTypographyOptions = {},
@@ -24,6 +25,19 @@ export const createCometTheme = ({
     const breakpointsOptions: BreakpointsOptions = deepmerge<BreakpointsOptions>(cometBreakpointsOptions, passedBreakpointsOptions);
     const breakpoints = createBreakpoints(breakpointsOptions);
 
+=======
+export const createCometTheme = (
+    {
+        palette: passedPaletteOptions = {},
+        typography: passedTypographyOptions = {},
+        spacing: passedSpacingOptions = 5,
+        components: passedComponentsOptions = {},
+        zIndex: passedZIndexOptions = {},
+        ...restPassedOptions
+    }: ThemeOptions | undefined = {},
+    ...args: object[]
+): Theme => {
+>>>>>>> main
     const paletteOptions: PaletteOptions = deepmerge<PaletteOptions>(cometPaletteOptions, passedPaletteOptions);
     const palette = createPalette(paletteOptions);
 
@@ -56,5 +70,5 @@ export const createCometTheme = ({
     };
 
     const themeOptions = deepmerge<ThemeOptions>(cometThemeOptions, restPassedOptions);
-    return createTheme(themeOptions);
+    return createTheme(themeOptions, ...args);
 };

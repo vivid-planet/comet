@@ -77,13 +77,20 @@ export { FinalFormSaveSplitButton } from "./FinalFormSaveSplitButton";
 export { FinalFormAutocomplete, FinalFormAutocompleteProps } from "./form/Autocomplete";
 export { FinalFormCheckbox, FinalFormCheckboxProps } from "./form/Checkbox";
 export { Field, FieldProps } from "./form/Field";
+<<<<<<< HEAD
 export { FieldContainer, FieldContainerClassKey, FieldContainerProps } from "./form/FieldContainer";
+=======
+export { FieldContainer, FieldContainerClassKey, FieldContainerComponent, FieldContainerProps } from "./form/FieldContainer";
+export { AsyncSelectField, AsyncSelectFieldProps } from "./form/fields/AsyncSelectField";
+>>>>>>> main
 export { CheckboxField, CheckboxFieldProps } from "./form/fields/CheckboxField";
 export { SearchField, SearchFieldProps } from "./form/fields/SearchField";
 export { SelectField, SelectFieldProps } from "./form/fields/SelectField";
 export { SwitchField, SwitchFieldProps } from "./form/fields/SwitchField";
 export { TextAreaField, TextAreaFieldProps } from "./form/fields/TextAreaField";
 export { TextField, TextFieldProps } from "./form/fields/TextField";
+export { FinalFormAsyncAutocomplete, FinalFormAsyncAutocompleteProps } from "./form/FinalFormAsyncAutocomplete";
+export { FinalFormAsyncSelect, FinalFormAsyncSelectProps } from "./form/FinalFormAsyncSelect";
 export { FinalFormContext, FinalFormContextProvider, FinalFormContextProviderProps, useFinalFormContext } from "./form/FinalFormContextProvider";
 export { FinalFormFileSelect, FinalFormFileSelectClassKey, FinalFormFileSelectProps } from "./form/FinalFormFileSelect";
 export { FinalFormInput, FinalFormInputProps } from "./form/FinalFormInput";

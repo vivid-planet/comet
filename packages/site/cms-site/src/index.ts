@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 export { BlockLoader, BlockLoaderDependencies, recursivelyLoadBlockData } from "./blockLoader/blockLoader";
+=======
+export { DamFileDownloadLinkBlock } from "./blocks/DamFileDownloadLinkBlock";
+>>>>>>> main
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { BlocksBlock } from "./blocks/factories/BlocksBlock";
 export { ListBlock } from "./blocks/factories/ListBlock";

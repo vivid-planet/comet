@@ -1,4 +1,13 @@
 import { createCometTheme } from "@comet/admin-theme";
 import type {} from "@mui/lab/themeAugmentation";
 
+<<<<<<< HEAD
 export default createCometTheme();
+=======
+export const theme = createCometTheme();
+
+declare module "@mui/styles/defaultTheme" {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    export interface DefaultTheme extends Theme {}
+}
+>>>>>>> main

@@ -86,6 +86,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
             if (!${instanceNameSingular}) {
                 ${instanceNameSingular} = this.repository.create({ 
                     ...input,
+                    ${blockProps.length ? `${blockProps.map((prop) => `${prop.name}: input.${prop.name}.transformToBlockData()`).join(", ")}, ` : ""}
                     ${scopeProp ? `scope,` : ""} 
                 });
             }
