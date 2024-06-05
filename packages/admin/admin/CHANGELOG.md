@@ -1,5 +1,42 @@
 # @comet/admin
 
+## 6.12.0
+
+### Minor Changes
+
+-   16ffa7be9: Add `FinalFormAsyncSelect`, `AsyncSelectField`, and `FinalFormAsyncAutocomplete` components
+
+    Thin wrappers to ease using `useAsyncOptionsProps()` with `FinalFormSelect` and `FinalFormAutocomplete`.
+
+    **Example**
+
+    Previously:
+
+    ```tsx
+    const asyncOptionsProps = useAsyncOptionsProps(async () => {
+        // Load options here
+    });
+
+    // ...
+
+    <Field component={FinalFormAsyncAutocomplete} {...asyncOptionsProps} />;
+    ```
+
+    Now:
+
+    ```tsx
+    <Field
+        component={FinalFormAsyncAutocomplete}
+        loadOptions={async () => {
+            // Load options here
+        }}
+    />
+    ```
+
+### Patch Changes
+
+-   @comet/admin-icons@6.12.0
+
 ## 6.11.0
 
 ### Minor Changes
