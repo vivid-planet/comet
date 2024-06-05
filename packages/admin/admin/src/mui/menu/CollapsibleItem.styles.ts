@@ -35,6 +35,12 @@ export const MenuItem = createComponentSlot(CometMenuItem)<MenuCollapsibleItemCl
     slotName: "menuItem",
 })(
     ({ theme, ownerState }) => css`
+        ${!ownerState.menuOpen &&
+        ownerState.level === 1 &&
+        css`
+            justify-content: space-between;
+        `}
+
         ${ownerState.childSelected &&
         css`
             .CometAdminMenuItem-text,
@@ -72,6 +78,7 @@ export const CollapsibleIndicator = createComponentSlot("div")<MenuCollapsibleIt
         font-size: 16px;
         line-height: 0;
         color: ${theme.palette.grey[900]};
+        margin-left: 8px;
 
         ${ownerState.level === 1 &&
         !ownerState.menuOpen &&

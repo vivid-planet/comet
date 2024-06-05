@@ -59,6 +59,9 @@ const Title = createComponentSlot(Typography)<MenuItemGroupClassKey, OwnerState>
 })(
     ({ theme, ownerState }) => css`
         color: ${theme.palette.grey[900]};
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
 
         ${!ownerState.open &&
         css`
@@ -76,7 +79,7 @@ const ShortTitle = createComponentSlot(Typography)<MenuItemGroupClassKey, OwnerS
         border-radius: 20px;
         color: ${theme.palette.grey[300]};
         padding: 1px 7px;
-        margin-left: auto;
+        margin-left: 20px;
         margin-right: auto;
 
         ${ownerState.open &&
