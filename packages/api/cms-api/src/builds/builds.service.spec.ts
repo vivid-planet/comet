@@ -74,9 +74,8 @@ describe("BuildsService", () => {
         it("should return all partially matching jobs", async () => {
             await expect(service.getBuilderCronJobsToStart([{ domain: "main" }])).resolves.toEqual([jobMainEnglish, jobMainGerman]);
 
-            mockedBuildTemplatesService.getAllBuilderCronJobs.mockResolvedValueOnce([jobMain]);
-
             // Multiple content scopes in a single builder cron job.
+            mockedBuildTemplatesService.getAllBuilderCronJobs.mockResolvedValueOnce([jobMain]);
             await expect(
                 service.getBuilderCronJobsToStart([
                     { domain: "main", language: "en" },
