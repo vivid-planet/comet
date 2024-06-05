@@ -1,3 +1,4 @@
+export { DamFileDownloadLinkBlock } from "./blocks/DamFileDownloadLinkBlock";
 export { DamVideoBlock } from "./blocks/DamVideoBlock";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { BlocksBlock } from "./blocks/factories/BlocksBlock";
