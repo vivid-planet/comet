@@ -1,5 +1,86 @@
 # @comet/blocks-api
 
+## 6.12.0
+
+## 6.11.0
+
+### Patch Changes
+
+-   93a84b651: Fix type of `youtubeIdentifier` in `YouTubeVideoBlock`
+
+    Previously, it was incorrectly typed as required. Now it's optional.
+
+## 6.10.0
+
+## 6.9.0
+
+### Minor Changes
+
+-   8be9565d1: typesafeMigrationPipe: Add support for 20 migrations
+
+## 6.8.0
+
+### Minor Changes
+
+-   90c6f192e: Deprecate `SpaceBlock`
+
+    It will be replaced by the `createSpaceBlock` factory since it had no real use case.
+
+-   90c6f192e: Add `createSpaceBlock` factory
+
+    Allows selecting a spacing value out of a list of provided options.
+
+    **Example**
+
+    API
+
+    ```tsx
+    enum Spacing {
+        d150 = "d150",
+        d200 = "d200",
+    }
+
+    export const SpaceBlock = createSpaceBlock({ spacing: Spacing }, "DemoSpace");
+    ```
+
+    Admin
+
+    ```tsx
+    const options = [
+        { value: "d150", label: "Dynamic 150" },
+        { value: "d200", label: "Dynamic 200" },
+    ];
+
+    export const SpaceBlock = createSpaceBlock<string>({ defaultValue: options[0].value, options });
+    ```
+
+### Patch Changes
+
+-   be8664c75: Fix `RichTextBlock` draft content validation
+
+    Extend validation to validate inline links in draft content.
+
+## 6.7.0
+
+## 6.6.2
+
+## 6.6.1
+
+## 6.6.0
+
+### Minor Changes
+
+-   e880929d8: Improve typing of `@RootBlockEntity()` decorator
+
+    The target entity can now be passed as generic to have the correct type in `isVisible`:
+
+    ```ts
+    @RootBlockEntity<Product>({
+        isVisible: (product) => product.visible,
+    })
+    export class Product extends BaseEntity<Product, "id"> {}
+    ```
+
 ## 6.5.0
 
 ### Minor Changes

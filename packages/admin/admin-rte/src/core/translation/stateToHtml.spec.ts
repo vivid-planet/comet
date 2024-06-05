@@ -9,7 +9,10 @@ function trimHtml(html: string) {
 }
 
 describe("stateToHtml", () => {
-    const options = { customInlineStyles: { HIGHLIGHT: { label: "Highlight!", style: { backgroundColor: "yellow" } } } } as unknown as IRteOptions;
+    const options = {
+        customInlineStyles: { HIGHLIGHT: { label: "Highlight!", style: { backgroundColor: "yellow" } } },
+        blocktypeMap: { "header-custom-green": { label: "Header Custom Green", renderConfig: { element: "p" } } },
+    } as unknown as IRteOptions;
 
     it("should convert the rte editor state with styling into html while keeping the format via tags - formats part 1", () => {
         const blocks = [
@@ -335,6 +338,37 @@ describe("stateToHtml", () => {
         });
 
         const expectedHtml = `<p><span class="HIGHLIGHT">A rte text with custom styling</span></p>`;
+
+        expect(trimHtml(html)).toEqual(trimHtml(expectedHtml));
+    });
+
+    it("should convert the rte editor state with formating into html while keeping the format via tags - formats part 6 (custom block styles)", () => {
+        const blocks = [
+            {
+                key: "7l334",
+                text: "A rte text with custom block styling",
+                type: "header-custom-green",
+                depth: 0,
+                inlineStyleRanges: [],
+                entityRanges: [],
+                data: {},
+            },
+        ];
+
+        const rawContent = {
+            entityMap: {},
+            blocks,
+        } as RawDraftContentState;
+
+        const content = convertFromRaw(rawContent);
+        const editorState = EditorState.createWithContent(content);
+
+        const { html } = stateToHtml({
+            editorState,
+            options,
+        });
+
+        const expectedHtml = `<p class="header-custom-green">A rte text with custom block styling</p>`;
 
         expect(trimHtml(html)).toEqual(trimHtml(expectedHtml));
     });

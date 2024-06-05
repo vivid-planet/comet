@@ -17,7 +17,7 @@ import {
     RedirectsModule,
     UserPermissionsModule,
 } from "@comet/cms-api";
-import { ApolloDriver } from "@nestjs/apollo";
+import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
 import { Config } from "@src/config/config";
@@ -26,6 +26,7 @@ import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
+import { ValidationError } from "apollo-server-express";
 import { Request } from "express";
 
 import { AccessControlService } from "./auth/access-control.service";
@@ -55,13 +56,22 @@ export class AppModule {
             imports: [
                 ConfigModule.forRoot(config),
                 DbModule,
-                GraphQLModule.forRootAsync({
+                GraphQLModule.forRootAsync<ApolloDriverConfig>({
                     driver: ApolloDriver,
                     imports: [BlocksModule],
                     useFactory: (dependencies: Record<string, unknown>) => ({
                         debug: config.debug,
                         playground: config.debug,
                         autoSchemaFile: "schema.gql",
+                        formatError: (error) => {
+                            // Disable GraphQL field suggestions in production
+                            if (process.env.NODE_ENV !== "development") {
+                                if (error instanceof ValidationError) {
+                                    return new ValidationError("Invalid request.");
+                                }
+                            }
+                            return error;
+                        },
                         context: ({ req }: { req: Request }) => ({ ...req }),
                         cors: {
                             credentials: true,
@@ -149,7 +159,15 @@ export class AppModule {
                 PredefinedPageModule,
                 CronJobsModule,
                 ProductsModule,
-                AccessLogModule,
+                AccessLogModule.forRoot({
+                    shouldLogRequest: ({ user }) => {
+                        // Ignore system user
+                        if (user === true) {
+                            return false;
+                        }
+                        return true;
+                    },
+                }),
             ],
         };
     }

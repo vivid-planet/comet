@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
+import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { PropsWithData } from "./PropsWithData";
 
 interface VideoContainerProps {
@@ -47,6 +48,7 @@ const parseYoutubeIdentifier = (value: string): string | undefined => {
 
 export const YouTubeVideoBlock = withPreview(
     ({ data: { youtubeIdentifier, autoplay, loop, showControls, aspectRatio } }: PropsWithData<YouTubeVideoBlockData>) => {
+        if (!youtubeIdentifier) return <PreviewSkeleton type="media" hasContent={false} />;
         const identifier = parseYoutubeIdentifier(youtubeIdentifier);
 
         const searchParams = new URLSearchParams();

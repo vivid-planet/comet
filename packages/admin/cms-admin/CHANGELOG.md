@@ -1,5 +1,223 @@
 # @comet/cms-admin
 
+## 6.12.0
+
+### Minor Changes
+
+-   3ee8c7a33: Add a `DamFileDownloadLinkBlock` that can be used to download a file or open it in a new tab
+
+    Also, add new `/dam/files/download/:hash/:fileId/:filename` endpoint for downloading assets.
+
+### Patch Changes
+
+-   Updated dependencies [dc7eaeccb]
+-   Updated dependencies [16ffa7be9]
+-   Updated dependencies [c06c6f1e9]
+    -   @comet/admin-rte@6.12.0
+    -   @comet/admin@6.12.0
+    -   @comet/admin-theme@6.12.0
+    -   @comet/admin-date-time@6.12.0
+    -   @comet/admin-icons@6.12.0
+    -   @comet/blocks-admin@6.12.0
+
+## 6.11.0
+
+### Minor Changes
+
+-   e10753b65: Allow disabling the "Open preview" button in the `PageTree` for certain document types
+
+    The "Open preview" button is shown for all document types in the `PageTree`.
+    But some document types (e.g., links) don't have a preview.
+    Clicking on the preview button leads to an error page.
+
+    Now, it's possible to disable the button by setting `hasNoSitePreview` for the document:
+
+    ```diff
+    export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
+        // ...
+    +   hasNoSitePreview: true,
+    };
+    ```
+
+-   fdf9fa7cb: Automatic Redirects are now set to false if the page is unpublished or archived
+
+### Patch Changes
+
+-   815ba51e7: Fix link target validation in `ExternalLinkBlock`
+
+    Previously, two different validation checks were used.
+    This resulted in an error when saving an invalid link target but no error message was shown.
+
+-   Updated dependencies [8e3dec523]
+    -   @comet/admin@6.11.0
+    -   @comet/admin-date-time@6.11.0
+    -   @comet/admin-icons@6.11.0
+    -   @comet/admin-rte@6.11.0
+    -   @comet/admin-theme@6.11.0
+    -   @comet/blocks-admin@6.11.0
+
+## 6.10.0
+
+### Minor Changes
+
+-   f89af8bb2: Add `disableHideInMenu` option to `createEditPageNode` to hide the "Hide in menu" checkbox
+-   d4a269e1e: Add `filterByFragment` to replace graphql-anywhere's `filter`
+
+    [graphql-anywhere](https://www.npmjs.com/package/graphql-anywhere) is no longer maintained.
+    However, its `filter` utility is useful for filtering data by a GraphQL document, e.g., a fragment.
+    Therefore, the function was copied to `@comet/admin`.
+    To migrate, replace all `filter` calls with `filterByFragment`:
+
+    ```diff
+    - import { filter } from "graphql-anywhere";
+    + import { filterByFragment } from "@comet/admin";
+
+    const initialValues: Partial<FormValues> = data?.product
+        ? {
+    -       ...filter<GQLProductPriceFormFragment>(productPriceFormFragment, data.product),
+    +       ...filterByFragment<GQLProductPriceFormFragment>(productPriceFormFragment, data.product),
+            price: String(data.product.price),
+        }
+        : {};
+    ```
+
+    You can then uninstall the `graphql-anywhere` package:
+
+    ```bash
+    # In admin/
+    npm uninstall graphql-anywhere
+    ```
+
+-   f528bc340: CronJobModule: Show logs for job run
+
+### Patch Changes
+
+-   d340cabc2: DAM: Fix the duplicate name check when updating a file
+
+    Previously, there were two bugs:
+
+    1. In the `EditFile` form, the `folderId` wasn't passed to the mutation
+    2. In `FilesService#updateByEntity`, the duplicate check was always done against the root folder if no `folderId` was passed
+
+    This caused an error when saving a file in any folder if there was another file with the same name in the root folder.
+    And it was theoretically possible to create two files with the same name in one folder (though this was still prevented by admin-side validation).
+
+-   Updated dependencies [a8a098a24]
+-   Updated dependencies [d4a269e1e]
+-   Updated dependencies [52130afba]
+-   Updated dependencies [e938254bf]
+    -   @comet/admin@6.10.0
+    -   @comet/admin-date-time@6.10.0
+    -   @comet/admin-icons@6.10.0
+    -   @comet/admin-rte@6.10.0
+    -   @comet/admin-theme@6.10.0
+    -   @comet/blocks-admin@6.10.0
+
+## 6.9.0
+
+### Minor Changes
+
+-   e85837a17: Loosen peer dependency on `react-intl` to allow using v6
+
+### Patch Changes
+
+-   Updated dependencies [9ff9d66c6]
+-   Updated dependencies [8fb8b209a]
+-   Updated dependencies [e85837a17]
+    -   @comet/admin@6.9.0
+    -   @comet/admin-rte@6.9.0
+    -   @comet/admin-date-time@6.9.0
+    -   @comet/blocks-admin@6.9.0
+    -   @comet/admin-icons@6.9.0
+    -   @comet/admin-theme@6.9.0
+
+## 6.8.0
+
+### Patch Changes
+
+-   c1ca9c335: Don't remove references to `DamFile` from blocks when copying a document from one scope to another if DAM scoping is not enabled
+-   Updated dependencies [90c6f192e]
+-   Updated dependencies [90c6f192e]
+    -   @comet/blocks-admin@6.8.0
+    -   @comet/admin@6.8.0
+    -   @comet/admin-date-time@6.8.0
+    -   @comet/admin-icons@6.8.0
+    -   @comet/admin-rte@6.8.0
+    -   @comet/admin-theme@6.8.0
+
+## 6.7.0
+
+### Patch Changes
+
+-   2db3bc855: Fix `CurrentUserInterface` type
+
+    Add missing `id` field, make `name`, `email`, and `language` required.
+
+    -   @comet/admin@6.7.0
+    -   @comet/admin-date-time@6.7.0
+    -   @comet/admin-icons@6.7.0
+    -   @comet/admin-rte@6.7.0
+    -   @comet/admin-theme@6.7.0
+    -   @comet/blocks-admin@6.7.0
+
+## 6.6.2
+
+### Patch Changes
+
+-   0758d2339: Hide the "Dependents" tab in the DAM if the `DependenciesConfigProvider` is not configured
+
+    Previously, the tab was always shown, even if the feature wasn't configured. Though it didn't cause an error, the tab showed no valuable information.
+
+    Now, we hide the tab if no configuration is passed via the `DependenciesConfigProvider`.
+
+    -   @comet/admin@6.6.2
+    -   @comet/admin-date-time@6.6.2
+    -   @comet/admin-icons@6.6.2
+    -   @comet/admin-rte@6.6.2
+    -   @comet/admin-theme@6.6.2
+    -   @comet/blocks-admin@6.6.2
+
+## 6.6.1
+
+### Patch Changes
+
+-   @comet/admin@6.6.1
+-   @comet/admin-date-time@6.6.1
+-   @comet/admin-icons@6.6.1
+-   @comet/admin-rte@6.6.1
+-   @comet/admin-theme@6.6.1
+-   @comet/blocks-admin@6.6.1
+
+## 6.6.0
+
+### Patch Changes
+
+-   c76666503: Make headers in `includeInvisibleContentContext` overridable in query
+
+    You can now override the headers `x-include-invisible-content` and `x-preview-dam-urls` in your query like this:
+
+    ```tsx
+    const { loading, data, error } = useQuery(exampleQuery, {
+        // ...
+        context: {
+            headers: {
+                "x-include-invisible-content": [],
+                "x-preview-dam-urls": 0,
+            },
+        },
+    });
+    ```
+
+-   Updated dependencies [95b97d768]
+-   Updated dependencies [a65679ba3]
+-   Updated dependencies [6b04ac9a4]
+    -   @comet/admin@6.6.0
+    -   @comet/blocks-admin@6.6.0
+    -   @comet/admin-date-time@6.6.0
+    -   @comet/admin-icons@6.6.0
+    -   @comet/admin-rte@6.6.0
+    -   @comet/admin-theme@6.6.0
+
 ## 6.5.0
 
 ### Minor Changes

@@ -1,5 +1,131 @@
 # @comet/blocks-admin
 
+## 6.12.0
+
+### Patch Changes
+
+-   Updated dependencies [16ffa7be9]
+    -   @comet/admin@6.12.0
+    -   @comet/admin-icons@6.12.0
+
+## 6.11.0
+
+### Patch Changes
+
+-   Updated dependencies [8e3dec523]
+    -   @comet/admin@6.11.0
+    -   @comet/admin-icons@6.11.0
+
+## 6.10.0
+
+### Patch Changes
+
+-   Updated dependencies [a8a098a24]
+-   Updated dependencies [d4a269e1e]
+-   Updated dependencies [52130afba]
+-   Updated dependencies [e938254bf]
+    -   @comet/admin@6.10.0
+    -   @comet/admin-icons@6.10.0
+
+## 6.9.0
+
+### Minor Changes
+
+-   e85837a17: Loosen peer dependency on `react-intl` to allow using v6
+
+### Patch Changes
+
+-   Updated dependencies [9ff9d66c6]
+-   Updated dependencies [e85837a17]
+    -   @comet/admin@6.9.0
+    -   @comet/admin-icons@6.9.0
+
+## 6.8.0
+
+### Minor Changes
+
+-   90c6f192e: Deprecate `SpaceBlock`
+
+    It will be replaced by the `createSpaceBlock` factory since it had no real use case.
+
+-   90c6f192e: Add `createSpaceBlock` factory
+
+    Allows selecting a spacing value out of a list of provided options.
+
+    **Example**
+
+    API
+
+    ```tsx
+    enum Spacing {
+        d150 = "d150",
+        d200 = "d200",
+    }
+
+    export const SpaceBlock = createSpaceBlock({ spacing: Spacing }, "DemoSpace");
+    ```
+
+    Admin
+
+    ```tsx
+    const options = [
+        { value: "d150", label: "Dynamic 150" },
+        { value: "d200", label: "Dynamic 200" },
+    ];
+
+    export const SpaceBlock = createSpaceBlock<string>({ defaultValue: options[0].value, options });
+    ```
+
+### Patch Changes
+
+-   @comet/admin@6.8.0
+-   @comet/admin-icons@6.8.0
+
+## 6.7.0
+
+### Patch Changes
+
+-   @comet/admin@6.7.0
+-   @comet/admin-icons@6.7.0
+
+## 6.6.2
+
+### Patch Changes
+
+-   @comet/admin@6.6.2
+-   @comet/admin-icons@6.6.2
+
+## 6.6.1
+
+### Patch Changes
+
+-   @comet/admin@6.6.1
+-   @comet/admin-icons@6.6.1
+
+## 6.6.0
+
+### Minor Changes
+
+-   a65679ba3: Add `minVisibleBlocks` option to `createListBlock` factory
+
+    This enables the possibility to enforce a minimum amount of blocks added to a list block. List blocks with less than the required amount of visible entries can't be saved.
+
+    **Example usage:**
+
+    ```diff
+    export const SomeListBlock = createListBlock({
+        // ...
+    +   minVisibleBlocks: 2,
+    });
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [95b97d768]
+-   Updated dependencies [6b04ac9a4]
+    -   @comet/admin@6.6.0
+    -   @comet/admin-icons@6.6.0
+
 ## 6.5.0
 
 ### Minor Changes
