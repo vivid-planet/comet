@@ -160,6 +160,43 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
       }),
     ```
 
+### Block Index
+
+Automate the creation of the block index during local development:
+
+1. Call `DependenciesService#createViews` in your `FixturesConsole`:
+
+```diff
+  // ...
+  await this.publicUploadsFixtureService.generatePublicUploads();
+
++ await this.dependenciesService.createViews();
+
+  await this.orm.em.flush();
+  // ...
+```
+
+2. Call `createBlockIndexViews` before starting the API (after the migrations):
+
+Remove `db:migrate` from `dev-pm.config.js`:
+
+```diff
+{
+   name: "api",
+-  script: "npm --prefix api run db:migrate && npm --prefix api run start:dev",
++  script: "npm --prefix api run start:dev",
+   group: "api",
+   waitOn: ["tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
+},
+```
+
+Add `db:migrate` and `createBlockIndexViews` to `start:dev` script in package.json:
+
+```diff
+- "start:dev": "npm run prebuild && dotenv -c secrets -- nest start --watch --preserveWatchOutput",
++ "start:dev": "npm run prebuild && npm run db:migrate && npm run console createBlockIndexViews && dotenv -c secrets -- nest start --watch --preserveWatchOutput",
+```
+
 ## Admin
 
 ### User Permissions
