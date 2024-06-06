@@ -1,11 +1,11 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { forwardRef, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import hasha from "hasha";
 import { basename, extname } from "path";
 
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
-import { slugifyFilename } from "../dam/files/files.utils";
+import { createHashedPath, slugifyFilename } from "../dam/files/files.utils";
 import { PublicUploadFileUploadInterface } from "./dto/public-upload-file-upload.interface";
 import { PublicUpload } from "./entities/public-upload.entity";
 import { PublicUploadConfig } from "./public-upload.config";
@@ -37,5 +37,25 @@ export class PublicUploadsService {
         this.publicUploadsRepository.persist(publicUpload);
 
         return publicUpload;
+    }
+
+    async getFileById(id: string): Promise<PublicUpload> {
+        const file = await this.publicUploadsRepository.findOne(id);
+        if (!file) {
+            throw new NotFoundException();
+        }
+        return file;
+    }
+
+    async getFileStreamById(id: string): Promise<NodeJS.ReadableStream> {
+        const file = await this.getFileById(id);
+        const filePath = createHashedPath(file.contentHash);
+        const fileExists = await this.blobStorageBackendService.fileExists(this.config.directory, filePath);
+
+        if (!fileExists) {
+            throw new NotFoundException();
+        }
+
+        return this.blobStorageBackendService.getFile(this.config.directory, filePath);
     }
 }
