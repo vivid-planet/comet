@@ -1,5 +1,72 @@
 # @comet/blocks-api
 
+## 7.0.0-beta.0
+
+### Major Changes
+
+-   e15927594: Support "real" dependency injection in `BlockData#transformToPlain`
+
+    Previously we supported poor man's dependency injection using the `TransformDependencies` object in `transformToPlain`.
+    This is now replaced by a technique that allows actual dependency injection.
+
+    **Example**
+
+    ```ts
+    class NewsLinkBlockData extends BlockData {
+        @BlockField({ nullable: true })
+        id?: string;
+
+        transformToPlain() {
+            // Return service that does the transformation
+            return NewsLinkBlockTransformerService;
+        }
+    }
+
+    type TransformResponse = {
+        news?: {
+            id: string;
+            slug: string;
+        };
+    };
+
+    @Injectable()
+    class NewsLinkBlockTransformerService implements BlockTransformerServiceInterface<NewsLinkBlockData, TransformResponse> {
+        // Use dependency injection here
+        constructor(@InjectRepository(News) private readonly repository: EntityRepository<News>) {}
+
+        async transformToPlain(block: NewsLinkBlockData, context: BlockContext) {
+            if (!block.id) {
+                return {};
+            }
+
+            const news = await this.repository.findOneOrFail(block.id);
+
+            return {
+                news: {
+                    id: news.id,
+                    slug: news.slug,
+                },
+            };
+        }
+    }
+    ```
+
+    Adding this new technique results in a few breaking changes:
+
+    -   Remove dynamic registration of `BlocksModule`
+    -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
+    -   Remove `dependencies` from `BlockData#transformToPlain`
+
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+
+-   ebf597120: Remove unused/unnecessary peer dependencies
+
+    Some dependencies were incorrectly marked as peer dependencies.
+    If you don't use them in your application, you may remove the following dependencies:
+
+    -   Admin: `axios`
+    -   API: `@aws-sdk/client-s3`, `@azure/storage-blob` and `pg-error-constants`
+
 ## 6.12.0
 
 ## 6.11.0
