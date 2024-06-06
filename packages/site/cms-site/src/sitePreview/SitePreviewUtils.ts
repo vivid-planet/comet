@@ -67,9 +67,10 @@ export async function sitePreviewRoute(request: NextRequest, graphQLFetch: Graph
     return redirect(params.get("path") || "/");
 }
 
-export async function previewParams(): Promise<SitePreviewParams | null> {
+export async function previewParams(options: { checkDraftMode: boolean } = { checkDraftMode: true }): Promise<SitePreviewParams | null> {
     const previewScopeSigningKey = getPreviewScopeSigningKey();
 
+    if (options.checkDraftMode && !draftMode().isEnabled) return null;
     const cookie = cookies().get("__comet_preview");
     if (cookie) {
         const { payload } = await jwtVerify<SitePreviewParams>(cookie.value, new TextEncoder().encode(previewScopeSigningKey));
