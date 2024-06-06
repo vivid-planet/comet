@@ -77,12 +77,8 @@ export { FinalFormSaveSplitButton } from "./FinalFormSaveSplitButton";
 export { FinalFormAutocomplete, FinalFormAutocompleteProps } from "./form/Autocomplete";
 export { FinalFormCheckbox, FinalFormCheckboxProps } from "./form/Checkbox";
 export { Field, FieldProps } from "./form/Field";
-<<<<<<< HEAD
 export { FieldContainer, FieldContainerClassKey, FieldContainerProps } from "./form/FieldContainer";
-=======
-export { FieldContainer, FieldContainerClassKey, FieldContainerComponent, FieldContainerProps } from "./form/FieldContainer";
 export { AsyncSelectField, AsyncSelectFieldProps } from "./form/fields/AsyncSelectField";
->>>>>>> main
 export { CheckboxField, CheckboxFieldProps } from "./form/fields/CheckboxField";
 export { SearchField, SearchFieldProps } from "./form/fields/SearchField";
 export { SelectField, SelectFieldProps } from "./form/fields/SelectField";

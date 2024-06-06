@@ -1,17 +1,5 @@
-<<<<<<< HEAD
 "use client";
-import { ExternalLinkBlock, OneOfBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
-=======
-import {
-    DamFileDownloadLinkBlock,
-    ExternalLinkBlock,
-    InternalLinkBlock,
-    OneOfBlock,
-    PropsWithData,
-    SupportedBlocks,
-    withPreview,
-} from "@comet/cms-site";
->>>>>>> main
+import { DamFileDownloadLinkBlock, ExternalLinkBlock, OneOfBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
 import { LinkBlockData } from "@src/blocks.generated";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import * as React from "react";

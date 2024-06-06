@@ -552,13 +552,13 @@ export class FilesService {
         return [...baseUrl, file.id, filename].join("/");
     }
 
-    async createFileDownloadUrl(file: FileInterface, previewDamUrls?: boolean): Promise<string> {
+    async createFileDownloadUrl(
+        file: FileInterface,
+        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
+    ): Promise<string> {
         const filename = parse(file.name).name;
 
-        // Use CDN url only if available and not in preview as preview requires auth
-        const baseUrl = [
-            this.config.cdnEnabled && !previewDamUrls ? `${this.config.cdnDomain}/files/download` : `${this.config.filesBaseUrl}/download`,
-        ];
+        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/files/download`];
 
         if (previewDamUrls) {
             baseUrl.push("preview");

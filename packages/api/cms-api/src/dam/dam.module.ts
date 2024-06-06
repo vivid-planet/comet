@@ -3,6 +3,7 @@ import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/comm
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
 import { BlobStorageModule, defaultDamAcceptedMimetypes, DependentsResolverFactory } from "..";
+import { DamFileDownloadLinkBlockTransformerService } from "./blocks/dam-file-download-link-block-transformer.service";
 import { DamVideoBlockTransformerService } from "./blocks/dam-video-block-transformer.service";
 import { PixelImageBlockTransformerService } from "./blocks/pixel-image-block-transformer.service";
 import { SvgImageBlockTransformerService } from "./blocks/svg-image-block-transformer.service";
@@ -128,6 +129,7 @@ export class DamModule {
                 PixelImageBlockTransformerService,
                 SvgImageBlockTransformerService,
                 DamVideoBlockTransformerService,
+                DamFileDownloadLinkBlockTransformerService,
             ],
             controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
             exports: [

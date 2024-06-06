@@ -1,13 +1,9 @@
-<<<<<<< HEAD
 ---
-title: Dependencies
+title: Block Index / Dependencies
 sidebar_position: 15
 ---
 
-# Dependencies
-=======
 # Block Index / Dependencies
->>>>>>> main
 
 Blocks can have references to entities.
 But since block data is stored as JSON, there is no actual database relationship.

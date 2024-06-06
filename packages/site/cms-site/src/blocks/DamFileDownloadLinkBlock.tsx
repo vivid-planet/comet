@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 
 import { DamFileDownloadLinkBlockData } from "../blocks.generated";
@@ -5,7 +6,7 @@ import { withPreview } from "../iframebridge/withPreview";
 import { PropsWithData } from "./PropsWithData";
 
 interface Props extends PropsWithData<DamFileDownloadLinkBlockData> {
-    children: React.ReactNode;
+    children: React.ReactElement;
     title?: string;
 }
 
@@ -16,17 +17,9 @@ export const DamFileDownloadLinkBlock = withPreview(
         }
 
         if (openFileType === "Download") {
-            return (
-                <a href={file.fileUrl} title={title}>
-                    {children}
-                </a>
-            );
+            return React.cloneElement(children, { href: file.fileUrl, title: title });
         } else {
-            return (
-                <a href={file.fileUrl} target="_blank" rel="noreferrer" title={title}>
-                    {children}
-                </a>
-            );
+            return React.cloneElement(children, { href: file.fileUrl, target: "_blank", rel: "noreferrer", title: title });
         }
     },
     { label: "DamFileDownloadLink" },

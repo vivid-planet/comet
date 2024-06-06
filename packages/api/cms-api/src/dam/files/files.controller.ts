@@ -111,9 +111,6 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return this.streamFile(file, res, { range, overrideHeaders: { "Cache-control": "private" } });
         }
 
-<<<<<<< HEAD
-        @DisableCometGuards()
-=======
         @Get(`/download/preview/${fileUrl}`)
         async previewDownloadFile(
             @Param() { fileId }: FileParams,
@@ -135,16 +132,9 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return this.streamFile(file, res, { range, overrideHeaders: { "Cache-control": "private" } });
         }
 
-        @DisableGlobalGuard()
+        @DisableCometGuards()
         @Get(`/download/:hash/${fileUrl}`)
-        async downloadFile(
-            @Param() { hash, ...params }: HashFileParams,
-            @Res() res: Response,
-            @Headers(CDN_ORIGIN_CHECK_HEADER) cdnOriginCheck: string,
-            @Headers("range") range?: string,
-        ): Promise<void> {
-            this.checkCdnOrigin(cdnOriginCheck);
-
+        async downloadFile(@Param() { hash, ...params }: HashFileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
             if (!this.isValidHash(hash, params)) {
                 throw new NotFoundException();
             }
@@ -159,8 +149,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return this.streamFile(file, res, { range });
         }
 
-        @DisableGlobalGuard()
->>>>>>> main
+        @DisableCometGuards()
         @Get(`/:hash/${fileUrl}`)
         async hashedFileUrl(@Param() { hash, ...params }: HashFileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
             if (!this.isValidHash(hash, params)) {
