@@ -1,5 +1,7 @@
 # @comet/eslint-plugin
 
+## 7.0.0-beta.0
+
 ## 6.12.0
 
 ## 6.11.0

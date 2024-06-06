@@ -1,5 +1,208 @@
 # @comet/cms-api
 
+## 7.0.0-beta.0
+
+### Major Changes
+
+-   9a1b01669: Remove CDN config from DAM
+
+    It was a bad idea to introduce this in the first place, because `@comet/cms-api` should not be opinionated about how the CDN works.
+
+    Modern applications require all traffic to be routed through a CDN. Cloudflare offers a tunnel, which made the origin-check obsolete, so we introduced a flag to disable the origin check.
+
+    Also changes the behavior of the `FilesService::createFileUrl()`-method which now expects an options-object as second argument.
+
+    ## How to migrate (only required if CDN is used):
+
+    Remove the following env vars from the API
+
+    ```
+    DAM_CDN_ENABLED=
+    DAM_CDN_DOMAIN=
+    DAM_CDN_ORIGIN_HEADER=
+    DAM_DISABLE_CDN_ORIGIN_HEADER_CHECK=false
+    ```
+
+    If you want to enable the origin check:
+
+    1. Set the following env vars for the API
+
+    ```
+    CDN_ORIGIN_CHECK_SECRET="Use value from DAM_CDN_ORIGIN_HEADER to avoid downtime"
+    ```
+
+    _environment-variables.ts_
+
+    ```
+    @IsOptional()
+    @IsString()
+    CDN_ORIGIN_CHECK_SECRET: string;
+    ```
+
+    _config.ts_
+
+    ```
+    cdn: {
+        originCheckSecret: envVars.CDN_ORIGIN_CHECK_SECRET,
+    },
+    ```
+
+    2. Add CdnGuard
+
+    ```
+    // if CDN is enabled, make sure all traffic is either coming from the CDN or internal sources
+    if (config.cdn.originCheckSecret) {
+        app.useGlobalGuards(new CdnGuard({ headerName: "x-cdn-origin-check", headerValue: config.cdn.originCheckSecret }));
+    }
+    ```
+
+    3. DNS changes might be required. `api.example.com` should point to CDN, CDN should point to internal API domain
+
+-   f74544524: Change language field in User and CurrentUser to locale
+-   0588e212c: Remove `locale`-field from `User`-object
+
+    -   Providing the locale is not mandatory for ID-Tokens
+    -   Does not have a real use case (better rely on the Accept-Language header of the browser to determine the language of the current user)
+
+-   46b86ba5f: `FilesService#createFileDownloadUrl` now expects an options object as second parameter
+
+    ```diff
+    - this.filesService.createFileDownloadUrl(file, previewDamUrls)
+    + this.filesService.createFileDownloadUrl(file, { previewDamUrls, relativeDamUrls })
+    ```
+
+-   0e6debb06: CRUD Generator: Remove `lastUpdatedAt` argument from update mutations
+-   ebf597120: Make `@nestjs/platform-express` a peer dependency
+
+    Make sure that `@nestjs/platform-express` is installed in the application.
+
+-   e15927594: Support "real" dependency injection in `BlockData#transformToPlain`
+
+    Previously we supported poor man's dependency injection using the `TransformDependencies` object in `transformToPlain`.
+    This is now replaced by a technique that allows actual dependency injection.
+
+    **Example**
+
+    ```ts
+    class NewsLinkBlockData extends BlockData {
+        @BlockField({ nullable: true })
+        id?: string;
+
+        transformToPlain() {
+            // Return service that does the transformation
+            return NewsLinkBlockTransformerService;
+        }
+    }
+
+    type TransformResponse = {
+        news?: {
+            id: string;
+            slug: string;
+        };
+    };
+
+    @Injectable()
+    class NewsLinkBlockTransformerService implements BlockTransformerServiceInterface<NewsLinkBlockData, TransformResponse> {
+        // Use dependency injection here
+        constructor(@InjectRepository(News) private readonly repository: EntityRepository<News>) {}
+
+        async transformToPlain(block: NewsLinkBlockData, context: BlockContext) {
+            if (!block.id) {
+                return {};
+            }
+
+            const news = await this.repository.findOneOrFail(block.id);
+
+            return {
+                news: {
+                    id: news.id,
+                    slug: news.slug,
+                },
+            };
+        }
+    }
+    ```
+
+    Adding this new technique results in a few breaking changes:
+
+    -   Remove dynamic registration of `BlocksModule`
+    -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
+    -   Remove `dependencies` from `BlockData#transformToPlain`
+
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+
+-   9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
+
+    -   Add foreign id as argument to create mutation
+    -   Add foreign id as argument to list query
+
+-   28322b422: Refactor auth-decorators
+
+    -   Remove `@PublicApi()`-decorator
+    -   Rename `@DisableGlobalGuard()`-decorator to `@DisableCometGuards()`
+
+    The `@DisableCometGuards()`-decorator will only disable the AuthGuard when no `x-include-invisible-content`-header is set.
+
+-   ebf597120: Remove unused/unnecessary peer dependencies
+
+    Some dependencies were incorrectly marked as peer dependencies.
+    If you don't use them in your application, you may remove the following dependencies:
+
+    -   Admin: `axios`
+    -   API: `@aws-sdk/client-s3`, `@azure/storage-blob` and `pg-error-constants`
+
+-   2497a062f: API Generator: Remove support for `visible` boolean, use `status` enum instead.
+
+    Recommended enum values: Published/Unpublished or Visible/Invisible or Active/Deleted or Active/Archived
+
+    Remove support for update visibility mutation, use existing generic update instead
+
+-   769bd72f0: Uses the Next.JS Preview mode for the site preview
+
+    The preview is entered by navigating to an API-Route in the site, which has to be executed in a secured environment.
+    In the API-Routes the current scope is checked (and possibly stored), then the client is redirected to the Preview.
+
+    // TODO Move the following introduction to the migration guide before releasing
+
+    Requires following changes to site:
+
+    -   Import `useRouter` from `next/router` (not exported from `@comet/cms-site` anymore)
+    -   Import `Link` from `next/link` (not exported from `@comet/cms-site` anymore)
+    -   Remove preview pages (pages in `src/pages/preview/` directory which call `createGetUniversalProps` with preview parameters)
+    -   Remove `createGetUniversalProps`
+        -   Just implement `getStaticProps`/`getServerSideProps` (Preview Mode will SSR automatically)
+        -   Get `previewData` from `context` and use it to configure the GraphQL Client
+    -   Add `SitePreviewProvider` to `App` (typically in `src/pages/_app.tsx`)
+    -   Provide a protected environment for the site
+        -   Make sure that a Authorization-Header is present in this environment
+        -   Add a Next.JS API-Route for the site preview (eg. `/api/site-preview`)
+        -   Call `getValidatedSitePreviewParams()` in the API-Route (calls the API which checks the Authorization-Header with the submitted scope)
+        -   Use the `path`-part of the return value to redirect to the preview
+
+    Requires following changes to admin
+
+    -   The `SitesConfig` must provide a `sitePreviewApiUrl`
+
+### Minor Changes
+
+-   f1d0f023d: API Generator: Add `list` option to `@CrudGenerator()` to allow disabling the list query
+
+    Related DTO classes will still be generated as they might be useful for application code.
+
+-   36cdd70f1: InternalLinkBlock: add scope to targetPage in output
+
+    This allows for example using the language from scope as url prefix in a multi-language site
+
+-   1d2f54bee: Require `strategyName` in `createStaticCredentialsBasicStrategy`
+
+    The `strategyName` is then used as SystemUser which allows to distinguish between different system users (e.g. activate logging)
+
+### Patch Changes
+
+-   Updated dependencies [e15927594]
+-   Updated dependencies [ebf597120]
+    -   @comet/blocks-api@7.0.0-beta.0
+
 ## 6.12.0
 
 ### Minor Changes
