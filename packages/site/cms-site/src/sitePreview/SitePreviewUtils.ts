@@ -1,6 +1,6 @@
 //TODO add import "server-only"; once this file gets correctly tree-shaked out of the client bundle
 
-import { jwtDecrypt, SignJWT } from "jose";
+import { jwtVerify, SignJWT } from "jose";
 import { cookies, draftMode } from "next/headers";
 import { redirect } from "next/navigation";
 import { type NextRequest } from "next/server";
@@ -73,7 +73,7 @@ export async function previewParams(): Promise<SitePreviewParams | null> {
     if (!draftMode().isEnabled) return null;
     const cookie = cookies().get("__comet_preview");
     if (cookie) {
-        const { payload } = await jwtDecrypt<SitePreviewParams>(cookie.value, new TextEncoder().encode(previewScopeSigningKey));
+        const { payload } = await jwtVerify<SitePreviewParams>(cookie.value, new TextEncoder().encode(previewScopeSigningKey));
         return payload;
     }
     return null;
