@@ -22,9 +22,9 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
 ### User Permissions
 
-1. _Prerequisites_: Manage or sync allowed users in project (not covered here)
+1.  _Prerequisites_: Manage or sync allowed users in project (not covered here)
 
-2. Remove custom `CurrentUser` and `CurrentUserLoader`
+2.  Remove custom `CurrentUser` and `CurrentUserLoader`
 
     ```diff
     - declare module "@comet/cms-api" {
@@ -75,7 +75,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
     It is not possible anymore to use a custom CurrentUserLoader neither to augment/use the CurrentUserInterface.
 
-3. Create the `AccessControlService` for the `UserPermissionsModule` (either in a new module or where it fits best)
+3.  Create the `AccessControlService` for the `UserPermissionsModule` (either in a new module or where it fits best)
 
     ```ts
     @Injectable()
@@ -89,7 +89,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     }
     ```
 
-4. Replace `ContentScopeModule` with `UserPermissionsModule`
+4.  Replace `ContentScopeModule` with `UserPermissionsModule`
 
     Remove `ContentScopeModule`:
 
@@ -112,7 +112,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     }),
     ```
 
-5. Adapt decorators
+5.  Adapt decorators
 
     Add `@RequiredPermission` to resolvers and controllers
 
@@ -127,7 +127,36 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
     - @AllowForRole(...)
     ```
 
-6. Optional: Add the `UserService` (required for Administration Panel, see Admin)
+6.  Annotate document entities with `@ScopedEntity()`
+
+    Document entities (e.g. `Page`, `Link`, `PredefinedPage`) don't have their own scope.
+    Instead, they get their scope from the `PageTreeNode` they are attached to.
+    For the scope check to work, you must add the following decorator to the entity:
+
+    ```diff
+      @Entity()
+      @ObjectType({
+         implements: () => [DocumentInterface],
+      })
+    + @ScopedEntity(PageTreeNodeDocumentEntityScopeService)
+      export class Page extends BaseEntity<Page, "id"> implements DocumentInterface {
+    ```
+
+7.  Make sure the scope check can be performed for all operations
+
+    All queries and mutations must
+
+    -   have a `scope` argument
+
+        or
+
+    -   be annotated with an `@AffectedEntity()` decorator
+
+        or
+
+    -   skip the scope check using `@RequiredPermission("examplePermission", { skipScopeCheck: true })`
+
+8.  Optional: Add the `UserService` (required for Administration Panel, see Admin)
 
     Create a `UserService`:
 
