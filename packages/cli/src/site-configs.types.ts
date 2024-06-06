@@ -4,7 +4,7 @@ export type BaseSiteConfig = {
     domains: {
         main: string;
         preliminary?: string;
-        pattern?: RegExp;
+        pattern?: string; // No RegExp because it's not serializable (necessary for Next.JS, see https://react.dev/reference/rsc/use-server#serializable-parameters-and-return-values)
         additional?: string[];
         preview: string;
     };
