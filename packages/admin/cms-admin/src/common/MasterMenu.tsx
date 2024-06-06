@@ -83,12 +83,15 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
     const checkPermission = (item: MasterMenuItem): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
 
     const mapFn = (item: MasterMenuItem): MenuItem => {
-        if (item.type === "externalLink") {
-            return { type: "externalLink", menuElement: item };
+        const { type } = item;
+
+        if (type === "externalLink") {
+            const { requiredPermission, ...menuElement } = item;
+            return { type: "externalLink", menuElement };
         }
 
-        if (item.type === "group") {
-            const { items, ...menuElement } = item;
+        if (type === "group") {
+            const { items, requiredPermission, ...menuElement } = item;
             return {
                 type: "group",
                 menuElement,
@@ -96,8 +99,8 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
             };
         }
 
-        if (item.type === "collapsible") {
-            const { route, items, ...menuElement } = item;
+        if (type === "collapsible") {
+            const { route, items, requiredPermission, ...menuElement } = item;
             return {
                 type: "collapsible",
                 menuElement,
@@ -105,7 +108,7 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
             };
         }
 
-        const { route, to, ...menuItem } = item;
+        const { route, to, requiredPermission, ...menuItem } = item;
         return {
             type: "route",
             menuElement: {
