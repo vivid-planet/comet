@@ -38,7 +38,7 @@ export const MenuItem = createComponentSlot(CometMenuItem)<MenuCollapsibleItemCl
         ${ownerState.childSelected &&
         css`
             .CometAdminMenuItem-text,
-            .CometAdminMenuItem-root .CometAdminMenuItem-icon {
+            .CometAdminMenuItem-icon {
                 color: ${theme.palette.primary.main};
             }
             .CometAdminMenuItem-primary {
