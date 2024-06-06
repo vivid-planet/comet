@@ -1,5 +1,5 @@
 import { EntityManager } from "@mikro-orm/postgresql";
-import { Controller, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
 import rimraf from "rimraf";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
@@ -27,5 +27,18 @@ export class PublicUploadsController {
         });
 
         return publicUploadsFile;
+    }
+
+    @Get(":id")
+    @DisableCometGuards()
+    async getFileById(@Param("id") id: string): Promise<PublicUpload> {
+        return this.publicUploadsService.getFileById(id);
+    }
+
+    @Get("download/:id")
+    @DisableCometGuards()
+    async downloadFileById(@Param("id") id: string, @Res() res: NodeJS.WritableStream): Promise<void> {
+        const stream = await this.publicUploadsService.getFileStreamById(id);
+        stream.pipe(res);
     }
 }
