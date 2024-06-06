@@ -698,9 +698,24 @@ export async function middleware(request: NextRequest) {
 
 ### Switch to Next.js preview mode
 
-// TODO
+#### Requires following changes to site:
 
-yellow-seahorses-lick.md
+-   Import `useRouter` from `next/router` (not exported from `@comet/cms-site` anymore)
+-   Import `Link` from `next/link` (not exported from `@comet/cms-site` anymore)
+-   Remove preview pages (pages in `src/pages/preview/` directory which call `createGetUniversalProps` with preview parameters)
+-   Remove `createGetUniversalProps`
+    -   Just implement `getStaticProps`/`getServerSideProps` (Preview Mode will SSR automatically)
+    -   Get `previewData` from `context` and use it to configure the GraphQL Client
+-   Add `SitePreviewProvider` to `App` (typically in `src/pages/_app.tsx`)
+-   Provide a protected environment for the site
+    -   Make sure that a Authorization-Header is present in this environment
+    -   Add a Next.JS API-Route for the site preview (eg. `/api/site-preview`)
+    -   Call `getValidatedSitePreviewParams()` in the API-Route (calls the API which checks the Authorization-Header with the submitted scope)
+    -   Use the `path`-part of the return value to redirect to the preview
+
+#### Requires following changes to admin:
+
+-   The `SitesConfig` must provide a `sitePreviewApiUrl`
 
 ### TODO: GraphQL fetch client
 
