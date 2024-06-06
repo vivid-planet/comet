@@ -78,6 +78,16 @@ export const staticUsers = {
 Replace all usages of `@PublicApi()` and `@DisableGlobalGuard()` with `@DisableCometGuards()`.
 Use this occasion to check if all operations decorated with this decorator **should actually be public and don't return any confidential data**.
 
+```diff
+- @PublicApi()
++ @DisableCometGuards()
+```
+
+```diff
+- @DisableGlobalGuard()
++ @DisableCometGuards()
+```
+
 ### Support dependency injection in `BlockData#transformToPlain`
 
 1. Remove dynamic registration of `BlocksModule`:
@@ -180,6 +190,7 @@ Use this occasion to check if all operations decorated with this decorator **sho
         };
     };
 
+    // news-link-block-transformer.service.ts
     @Injectable()
     class NewsLinkBlockTransformerService
         implements BlockTransformerServiceInterface<NewsLinkBlockData, TransformResponse>
@@ -334,8 +345,6 @@ The resulting order should look something like this:
 
 The `previewUrl` prop of `SiteConfig` was renamed to `blockPreviewBaseUrl`.
 
-Example:
-
 ```diff
 - previewUrl = `${siteConfig.previewUrl}/page`;
 + previewUrl = `${siteConfig.blockPreviewBaseUrl}/page`;
@@ -343,19 +352,20 @@ Example:
 
 ### @comet/admin
 
-#### Change admin component styling method
+#### Remove the `@mui/styles` package
 
 The legacy `@mui/styles` package was removed in favor of `@mui/material/styles`.
 You can remove `@mui/styles` too:
 
 ```diff
 //package.json
+
 - "@mui/styles": "^5.8.6",
 ```
 
 This has multiple implications:
 
--   Components can now be styled using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/)
+-   COMET Admin components can now be styled using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/)
 -   Individual elements (slots) of a component can now be styled using the `slotProps` and `sx` props
 -   The `$` syntax in the theme's `styleOverrides` is no longer supported, see: [MUI Docs](https://mui.com/material-ui/migration/v5-style-changes/#migrate-theme-styleoverrides-to-emotion):
 
@@ -429,7 +439,7 @@ This has multiple implications:
 
 <details>
 
-<summary>Affected components</summary>
+<summary>Expand for details</summary>
 
 -   `Alert`: Remove the `message` class key (use `.MuiAlert-message` instead)
 -   `AppHeaderButton`: Remove class keys `disabled` and `focusVisible` (use the `:disabled` or `:focus` selectors instead)
@@ -450,7 +460,7 @@ This has multiple implications:
 
 </details>
 
-### Change the structure of `MasterMenuData`
+#### Change the structure of `MasterMenuData`
 
 You must add a `type` to all items. There are four types available:
 
@@ -505,22 +515,11 @@ You must add a `type` to all items. There are four types available:
     },
     ```
 
-#### New Toolbar
-
-// TODO
-
-// brave-kiwis-pay.md
-// curly-pillows-decide.md
-// fifty-keys-sit.md
-// giant-ladybugs-greet.md
-
 #### New Content Scope Picker
 
-The content scope controls were changed to display all available combinations in a single select.
+The content scope controls were changed to display all available combinations in a single select. This requires a few changes:
 
-This requires a few breaking changes:
-
-1. The `values` props of `ContentScopeProvider` has been changed to an array:
+1. Change the `values` prop of `ContentScopeProvider` to an array:
 
     **Before**
 
@@ -569,24 +568,32 @@ This requires a few breaking changes:
     + import { ContentScopeControls } from "@comet/cms-admin";
     ```
 
+#### TODO: New Toolbar
+
+// TODO
+
+// brave-kiwis-pay.md
+// curly-pillows-decide.md
+// fifty-keys-sit.md
+// giant-ladybugs-greet.md
+
 ### @comet/admin-theme
 
 #### `Chip` theme rework
 
 If you use MUI's `Chip` anywhere in your project, check if the styling still looks as intended.
-Otherwise, adjust it to your needs.
 
 #### `Typography` theme rework
 
-The theme of `Typography` was changed for most variants.
+All variants of `Typography` were reworked.
 Check if the styling still looks as intended in your application.
 
 #### Colors
 
--   Colors in all palettes were changed
--   Most notable changes:
-    -   The grey palette (neutrals) were reworked
-    -   The secondary palette is now grey instead of green
+Colors in all palettes were changed. The most notable changes are
+
+-   The grey palette (neutrals) was completely reworked. Almost all color values changed
+-   The secondary palette is now grey instead of green
 
 Check if the styling still looks as intended in your application.
 
@@ -594,12 +601,14 @@ Check if the styling still looks as intended in your application.
 
 #### Prop renames and removals
 
+<details>
+
+<summary>Expand for details</summary>
+
 -   `ColorPicker`: Replace `componentsProps` with `slotProps`
+-   `ColorPicker`: Remove the `clearable` prop. The clear button will be shown automatically for optional fields
 
-#### Remove the `clearable` prop
-
-Remove the `clearable` prop from `ColorPicker`.
-The clear button will automatically be shown for optional fields.
+</details>
 
 ### @comet/admin-date-time
 
@@ -628,29 +637,35 @@ The code that handles values from these components needs to be adjusted.
     return <DateRangePicker value={dateRange} onChange={setDateRange} />;
 ```
 
-#### Remove the `clearable` prop
-
-Remove the `clearable` prop from `DatePicker`, `DateRangePicker`, `DateTimePicker`, `TimePicker` and `TimeRangePicker`.
-The clear button will automatically be shown for all optional fields.
-
 #### Prop renames and removals
+
+<details>
+
+<summary>Expand for details</summary>
 
 -   `DatePicker`:
 
     -   Replace the `componentsProps` prop with `slotProps`
     -   Remove the `DatePickerComponentsProps` type
+    -   Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
 
 -   `DateRangePicker`:
 
     -   Replace the `componentsProps` prop with `slotProps`
     -   Remove the `DateRangePickerComponentsProps` type
     -   Rename the `calendar` class-key to `dateRange`
+    -   Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
 
 -   `DateTimePicker`:
 
     -   Replace the `componentsProps` prop with `slotProps`
     -   Remove the `DateTimePickerComponentsProps` type
     -   Replace the `formControl` class-key with two separate class-keys: `dateFormControl` and `timeFormControl`
+    -   Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
+
+-   `TimePicker`:
+
+    -   Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
 
 -   `TimeRangePicker`:
 
@@ -658,35 +673,24 @@ The clear button will automatically be shown for all optional fields.
     -   Remove the `TimeRangePickerComponentsProps` and `TimeRangePickerIndividualPickerProps` types
     -   Replace the `formControl` class-key with two separate class-keys: `startFormControl` and `endFormControl`
     -   Replace the `timePicker` class-key with two separate class-keys: `startTimePicker` and `endTimePicker`
+    -   Remove the `clearable` prop. The clear button will be shown automatically for all optional fields.
+
+</details>
 
 ## Site
 
 ### Major dependency upgrades
 
--   Next.js to v14
--   React to v18
--   Styled Components to v6
+You must upgrade
 
-Follow the official migration guides:
-
-Migration Guides Next.js:
-
--   [12 -> 13](https://nextjs.org/docs/pages/building-your-application/upgrading/version-13)
--   [13 -> 14](https://nextjs.org/docs/pages/building-your-application/upgrading/version-14)
-
-Migration Guide React:
-
--   [17 -> 18](https://react.dev/blog/2022/03/08/react-18-upgrade-guide)
-
-Migration guide Styled Components:
-
--   [5 -> 6](https://styled-components.com/docs/faqs#what-do-i-need-to-do-to-migrate-to-v6)
+-   Next.js to v14 (Migration Guides: [12 -> 13](https://nextjs.org/docs/pages/building-your-application/upgrading/version-13), [13 -> 14](https://nextjs.org/docs/pages/building-your-application/upgrading/version-14))
+-   React to v18 (Migration Guide: [17 -> 18](https://react.dev/blog/2022/03/08/react-18-upgrade-guide))
+-   Styled Components to v6 (Migration Guide: [5 -> 6](https://styled-components.com/docs/faqs#what-do-i-need-to-do-to-migrate-to-v6))
 
 ### Add a custom `InternalLinkBlock`
 
 The `InternalLinkBlock` provided by `@comet/cms-site` is deprecated.
-Instead, implement your own `InternalLinkBlock` in your project.
-
+Instead, implement your own `InternalLinkBlock`.
 This is needed for more flexibility, e.g., support for internationalized routing.
 
 ### Add `aspectRatio` to `PixelImageBlock` and `Image`
@@ -700,11 +704,11 @@ Now `aspectRatio` is required and must be added to `PixelImageBlock` and `Image`
 Example:
 
 ```diff
-<PixelImageBlock
-  data={teaser}
-  layout="fill"
-+ aspectRatio="16x9"
-/>
+ <PixelImageBlock
+   data={teaser}
+   layout="fill"
++  aspectRatio="16x9"
+ />
 ```
 
 ### Make relative DAM URLs work
