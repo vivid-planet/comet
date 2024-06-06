@@ -568,14 +568,149 @@ The content scope controls were changed to display all available combinations in
     + import { ContentScopeControls } from "@comet/cms-admin";
     ```
 
-#### TODO: New Toolbar
+#### New Toolbar
 
-// TODO
+The Toolbar was reworked. Now there are three Toolbar components:
 
-// brave-kiwis-pay.md
-// curly-pillows-decide.md
-// fifty-keys-sit.md
-// giant-ladybugs-greet.md
+-   `Toolbar`
+-   `StackToolbar`
+-   `DataGridToolbar`
+
+Following steps are necessary to correctly use the new Toolbar:
+
+1. If your project has a custom `ContentScopeIndicator`, remove it
+
+    ```diff
+    - admin/src/common/ContentScopeIndicator.tsx
+    ```
+
+    Instead, the `ContentScopeIndicator` exported by `@comet/cms-admin` should be used.
+
+2. Grid: Use the `DataGridToolbar` in `DataGrid`s
+
+    Example:
+
+    ```diff
+    // NewsGrid.tsx
+
+    function NewsToolbar(): React.ReactElement {
+        // ...
+
+        return (
+    -       <Toolbar>
+    +       <DataGridToolbar>
+                // ...
+    -       </Toolbar>
+    +       </DataGridToolbar>
+        );
+    }
+
+    // ...
+
+    return (
+        <MainContent>
+            <DataGrid
+                // ...
+                components={{
+                    Toolbar: NewsToolbar,
+                }}
+            />
+        </MainContent>
+    );
+    ```
+
+3. Page: Add a `StackToolbar` to all `StackPage`s containing a `DataGrid`:
+
+    Example:
+
+    ```diff
+    // NewsPage.tsx
+
+    export default function NewsPage(): JSX.Element {
+        const intl = useIntl();
+
+        return (
+            <Stack topLevelTitle={intl.formatMessage({ id: "news.news", defaultMessage: "News" })}>
+                <StackSwitch initialPage="grid">
+                    <StackPage name="grid">
+    +                   <StackToolbar scopeIndicator={<ContentScopeIndicator />} />
+                        <NewsGrid />
+                    </StackPage>
+                    // ...
+                </StackSwitch>
+            </Stack>
+        );
+    }
+    ```
+
+4. Page: Correctly configure the `ContentScopeIndicator`
+
+    There are three cases:
+
+    1. The entity uses the normal `ContentScope`
+
+        Do nothing. The `ContentScopeIndicator` uses the scope provided by `useContentScope()` by default.
+
+    2. The entity has a custom `Scope`
+
+        Pass the custom scope:
+
+        ```tsx
+        <ContentScopeIndicator scope={customScope} />
+        ```
+
+    3. The entity has no scope
+
+        Mark the page as global:
+
+        ```tsx
+        <ContentScopeIndicator global />
+        ```
+
+5. Form: Remove the `EditPageLayout`
+
+    Example:
+
+    ```diff
+    // NewsForm.tsx
+
+    function NewsForm({ id, mode }: NewsFormProps): JSX.Element {
+        // ...
+
+        return (
+    -       <EditPageLayout>
+    +       <>
+                // ...
+    -       </EditPageLayout>
+    +       </>
+        );
+    }
+    ```
+
+6. Form: Add a `ContentScopeIndicator` to the `Toolbar`
+
+    **Configure the `ContentScopeIndicator` the same way as the one in the page (see step 3).**
+
+    Example:
+
+    ```diff
+    // NewsForm.tsx
+
+    function NewsForm({ id, mode }: NewsFormProps): JSX.Element {
+        // ...
+
+        return (
+            <>
+                // ...
+    -           <Toolbar>
+    +           <Toolbar scopeIndicator={<ContentScopeIndicator />}>
+                    // ...
+                </Toolbar>
+                // ...
+            </>
+        );
+    }
+    ```
 
 ### @comet/admin-theme
 
