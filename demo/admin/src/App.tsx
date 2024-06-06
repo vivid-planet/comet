@@ -1,7 +1,4 @@
-import "@fontsource/roboto/100.css";
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
+import "@fontsource-variable/roboto-flex/full.css";
 import "material-design-icons/iconfont/material-icons.css";
 import "typeface-open-sans";
 import "@src/polyfills";
@@ -28,7 +25,7 @@ import { additionalPageTreeNodeFieldsFragment } from "@src/common/EditPageNode";
 import { createConfig } from "@src/config";
 import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import { pageTreeCategories } from "@src/pageTree/pageTreeCategories";
-import theme from "@src/theme";
+import { theme } from "@src/theme";
 import * as React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";

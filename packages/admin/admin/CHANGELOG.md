@@ -1,5 +1,103 @@
 # @comet/admin
 
+## 6.12.0
+
+### Minor Changes
+
+-   16ffa7be9: Add `FinalFormAsyncSelect`, `AsyncSelectField`, and `FinalFormAsyncAutocomplete` components
+
+    Thin wrappers to ease using `useAsyncOptionsProps()` with `FinalFormSelect` and `FinalFormAutocomplete`.
+
+    **Example**
+
+    Previously:
+
+    ```tsx
+    const asyncOptionsProps = useAsyncOptionsProps(async () => {
+        // Load options here
+    });
+
+    // ...
+
+    <Field component={FinalFormAsyncAutocomplete} {...asyncOptionsProps} />;
+    ```
+
+    Now:
+
+    ```tsx
+    <Field
+        component={FinalFormAsyncAutocomplete}
+        loadOptions={async () => {
+            // Load options here
+        }}
+    />
+    ```
+
+### Patch Changes
+
+-   @comet/admin-icons@6.12.0
+
+## 6.11.0
+
+### Minor Changes
+
+-   8e3dec523: Change `writeClipboardText`/`readClipboardText` clipboard fallback to in-memory
+
+    Using the local storage as a fallback caused issues when writing clipboard contents larger than 5MB.
+    Changing the fallback to in-memory resolves the issue.
+
+### Patch Changes
+
+-   @comet/admin-icons@6.11.0
+
+## 6.10.0
+
+### Minor Changes
+
+-   d4a269e1e: Add `filterByFragment` to replace graphql-anywhere's `filter`
+
+    [graphql-anywhere](https://www.npmjs.com/package/graphql-anywhere) is no longer maintained.
+    However, its `filter` utility is useful for filtering data by a GraphQL document, e.g., a fragment.
+    Therefore, the function was copied to `@comet/admin`.
+    To migrate, replace all `filter` calls with `filterByFragment`:
+
+    ```diff
+    - import { filter } from "graphql-anywhere";
+    + import { filterByFragment } from "@comet/admin";
+
+    const initialValues: Partial<FormValues> = data?.product
+        ? {
+    -       ...filter<GQLProductPriceFormFragment>(productPriceFormFragment, data.product),
+    +       ...filterByFragment<GQLProductPriceFormFragment>(productPriceFormFragment, data.product),
+            price: String(data.product.price),
+        }
+        : {};
+    ```
+
+    You can then uninstall the `graphql-anywhere` package:
+
+    ```bash
+    # In admin/
+    npm uninstall graphql-anywhere
+    ```
+
+-   52130afba: Add `FinalFormFileSelect` component
+
+    Allows selecting files via the file dialog or using drag-and-drop.
+
+-   e938254bf: Add the `useDataGridExcelExport` hook for exporting data from a `DataGrid` to an excel file
+
+    The hook returns an `exportApi` encompassing:
+
+    -   `exportGrid`: a function to generate and export the excel file
+    -   `loading`: a boolean indicating if the export is in progress
+    -   `error`: an error when the export has failed
+
+### Patch Changes
+
+-   a8a098a24: muiGridFilterToGql: change fallback operator to 'and' to match MUI default
+    -   @comet/admin-icons@6.10.0
+
 ## 6.9.0
 
 ### Minor Changes

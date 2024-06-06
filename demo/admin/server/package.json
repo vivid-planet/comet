@@ -1,6 +1,7 @@
 {
-    "name": "server",
+    "name": "comet-demo-admin-server",
     "version": "1.0.0",
+    "private": true,
     "dependencies": {
         "compression": "^1.7.4",
         "express": "^4.18.2"

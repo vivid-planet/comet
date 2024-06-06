@@ -111,6 +111,44 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return this.streamFile(file, res, { range, overrideHeaders: { "Cache-control": "private" } });
         }
 
+        @Get(`/download/preview/${fileUrl}`)
+        async previewDownloadFile(
+            @Param() { fileId }: FileParams,
+            @Res() res: Response,
+            @GetCurrentUser() user: CurrentUser,
+            @Headers("range") range?: string,
+        ): Promise<void> {
+            const file = await this.filesService.findOneById(fileId);
+
+            if (file === null) {
+                throw new NotFoundException();
+            }
+
+            if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+                throw new ForbiddenException();
+            }
+
+            res.setHeader("Content-Disposition", "attachment");
+            return this.streamFile(file, res, { range, overrideHeaders: { "Cache-control": "private" } });
+        }
+
+        @DisableCometGuards()
+        @Get(`/download/:hash/${fileUrl}`)
+        async downloadFile(@Param() { hash, ...params }: HashFileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
+            if (!this.isValidHash(hash, params)) {
+                throw new NotFoundException();
+            }
+
+            const file = await this.filesService.findOneById(params.fileId);
+
+            if (file === null) {
+                throw new NotFoundException();
+            }
+
+            res.setHeader("Content-Disposition", "attachment");
+            return this.streamFile(file, res, { range });
+        }
+
         @DisableCometGuards()
         @Get(`/:hash/${fileUrl}`)
         async hashedFileUrl(@Param() { hash, ...params }: HashFileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {

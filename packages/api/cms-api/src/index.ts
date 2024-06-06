@@ -58,6 +58,7 @@ export { IsNullable } from "./common/validators/is-nullable";
 export { IsSlug } from "./common/validators/is-slug";
 export { IsUndefinable } from "./common/validators/is-undefinable";
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
+export { DamFileDownloadLinkBlock } from "./dam/blocks/dam-file-download-link.block";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";
 export { DamVideoBlock } from "./dam/blocks/dam-video.block";
 export { PixelImageBlock } from "./dam/blocks/pixel-image.block";

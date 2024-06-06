@@ -1,5 +1,21 @@
 # @comet/cms-site
 
+## 6.12.0
+
+### Minor Changes
+
+-   3ee8c7a33: Add a `DamFileDownloadLinkBlock` that can be used to download a file or open it in a new tab
+
+    Also, add new `/dam/files/download/:hash/:fileId/:filename` endpoint for downloading assets.
+
+## 6.11.0
+
+## 6.10.0
+
+### Minor Changes
+
+-   5c1ab80d6: SeoBlock: Change Open Graph image to recommended size and aspect ratio (`1200x630`)
+
 ## 6.9.0
 
 ## 6.8.0

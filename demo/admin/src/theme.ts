@@ -1,4 +1,4 @@
 import { createCometTheme } from "@comet/admin-theme";
 import type {} from "@mui/lab/themeAugmentation";
 
-export default createCometTheme();
+export const theme = createCometTheme();

@@ -1,5 +1,78 @@
 # @comet/cms-api
 
+## 6.12.0
+
+### Minor Changes
+
+-   3ee8c7a33: Add a `DamFileDownloadLinkBlock` that can be used to download a file or open it in a new tab
+
+    Also, add new `/dam/files/download/:hash/:fileId/:filename` endpoint for downloading assets.
+
+-   0597b1e0a: Add `DisablePermissionCheck` constant for use in `@RequiredPermission` decorator
+
+    You can disable authorization for a resolver or operation by adding the decorator `@RequiredPermission(DisablePermissionCheck)`
+
+### Patch Changes
+
+-   67176820c: API CrudSingleGenerator: Run `transformToBlockData()` for block fields on create
+-   b158e6a2c: ChangesCheckerConsole: Start exactly matching job or all partially matching jobs
+
+    Previously, the first job with a partially matching content scope was started.
+    Doing so could lead to problems when multiple jobs with overlapping content scopes exist.
+    For instance, jobs with the scopes `{ domain: "main", language: "de" }` and `{ domain: "main", language: "en" }` both partially match a change in `{ domain: "main", language: "de" }`.
+    To fix this, we either start a single job if the content scope matches exactly or start all jobs with partially matching content scopes.
+
+    -   @comet/blocks-api@6.12.0
+
+## 6.11.0
+
+### Minor Changes
+
+-   0db10a5f8: Add a console script to import redirects from a csv file
+
+    You can use the script like this: `npm run console import-redirects file-to-import.csv`
+
+    The CSV file must look like this:
+
+    ```csv
+    source;target;target_type;comment;scope_domain
+    /test-source;/test-target;internal;Internal Example;main
+    /test-source-external;https://www.comet-dxp.com/;external;External Example;secondary
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [93a84b651]
+    -   @comet/blocks-api@6.11.0
+
+## 6.10.0
+
+### Minor Changes
+
+-   536fdb85a: Add `createUserFromIdToken` to `UserService`-interface
+
+    This allows to override the default implementation of creating the User-Object from the JWT when logging in via `createAuthProxyJwtStrategy`
+
+-   f528bc340: CronJobModule: Show logs for job run
+
+### Patch Changes
+
+-   d340cabc2: DAM: Fix the duplicate name check when updating a file
+
+    Previously, there were two bugs:
+
+    1. In the `EditFile` form, the `folderId` wasn't passed to the mutation
+    2. In `FilesService#updateByEntity`, the duplicate check was always done against the root folder if no `folderId` was passed
+
+    This caused an error when saving a file in any folder if there was another file with the same name in the root folder.
+    And it was theoretically possible to create two files with the same name in one folder (though this was still prevented by admin-side validation).
+
+-   584d14d86: Only return duplicates within the same scope in the `FilesResolver#duplicates` field resolver
+
+    As a side effect `FilesService#findAllByHash` now accepts an optional scope parameter.
+
+    -   @comet/blocks-api@6.10.0
+
 ## 6.9.0
 
 ### Minor Changes

@@ -1,5 +1,17 @@
 # @comet/blocks-api
 
+## 6.12.0
+
+## 6.11.0
+
+### Patch Changes
+
+-   93a84b651: Fix type of `youtubeIdentifier` in `YouTubeVideoBlock`
+
+    Previously, it was incorrectly typed as required. Now it's optional.
+
+## 6.10.0
+
 ## 6.9.0
 
 ### Minor Changes

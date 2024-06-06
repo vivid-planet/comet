@@ -6,7 +6,7 @@ export const getMuiDialogTitle: GetMuiComponentTheme<"MuiDialogTitle"> = (compon
     styleOverrides: mergeOverrideStyles<"MuiDialogTitle">(component?.styleOverrides, {
         root: {
             backgroundColor: palette.grey["A200"],
-            color: palette.grey["A100"],
+            color: "#ffffff",
             padding: 20,
             fontSize: 14,
             lineHeight: "20px",
