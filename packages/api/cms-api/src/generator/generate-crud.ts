@@ -781,11 +781,14 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 : ""
         }
 
+        ${
+            generatorOptions.list
+                ? `
         @Query(() => Paginated${classNamePlural})
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
             @Args() { ${scopeProp ? `scope, ` : ""}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${
-        hasSortArg ? `sort, ` : ""
-    }offset, limit }: ${argsClassName}${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
+                      hasSortArg ? `sort, ` : ""
+                  }offset, limit }: ${argsClassName}${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
         ): Promise<Paginated${classNamePlural}> {
             const where${
                 hasSearchArg || hasFilterArg
@@ -811,8 +814,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             ${hasOutputRelations ? `// eslint-disable-next-line @typescript-eslint/no-explicit-any` : ""}
             const options: FindOptions<${metadata.className}${hasOutputRelations ? `, any` : ""}> = { offset, limit${
-        hasOutputRelations ? `, populate` : ""
-    }};
+                      hasOutputRelations ? `, populate` : ""
+                  }};
 
             ${
                 hasSortArg
@@ -828,7 +831,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             const [entities, totalCount] = await this.repository.findAndCount(where, options);
             return new Paginated${classNamePlural}(entities, totalCount);
-
+        }
+        `
+                : ""
         }
 
         ${
@@ -938,6 +943,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
         create: generatorOptionsParam.create ?? true,
         update: generatorOptionsParam.update ?? true,
         delete: generatorOptionsParam.delete ?? true,
+        list: generatorOptionsParam.list ?? true,
     };
 
     const generatedFiles: GeneratedFile[] = [];

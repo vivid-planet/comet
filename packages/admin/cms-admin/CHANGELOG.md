@@ -1,5 +1,61 @@
 # @comet/cms-admin
 
+## 6.12.0
+
+### Minor Changes
+
+-   3ee8c7a33: Add a `DamFileDownloadLinkBlock` that can be used to download a file or open it in a new tab
+
+    Also, add new `/dam/files/download/:hash/:fileId/:filename` endpoint for downloading assets.
+
+### Patch Changes
+
+-   Updated dependencies [dc7eaeccb]
+-   Updated dependencies [16ffa7be9]
+-   Updated dependencies [c06c6f1e9]
+    -   @comet/admin-rte@6.12.0
+    -   @comet/admin@6.12.0
+    -   @comet/admin-theme@6.12.0
+    -   @comet/admin-date-time@6.12.0
+    -   @comet/admin-icons@6.12.0
+    -   @comet/blocks-admin@6.12.0
+
+## 6.11.0
+
+### Minor Changes
+
+-   e10753b65: Allow disabling the "Open preview" button in the `PageTree` for certain document types
+
+    The "Open preview" button is shown for all document types in the `PageTree`.
+    But some document types (e.g., links) don't have a preview.
+    Clicking on the preview button leads to an error page.
+
+    Now, it's possible to disable the button by setting `hasNoSitePreview` for the document:
+
+    ```diff
+    export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> = {
+        // ...
+    +   hasNoSitePreview: true,
+    };
+    ```
+
+-   fdf9fa7cb: Automatic Redirects are now set to false if the page is unpublished or archived
+
+### Patch Changes
+
+-   815ba51e7: Fix link target validation in `ExternalLinkBlock`
+
+    Previously, two different validation checks were used.
+    This resulted in an error when saving an invalid link target but no error message was shown.
+
+-   Updated dependencies [8e3dec523]
+    -   @comet/admin@6.11.0
+    -   @comet/admin-date-time@6.11.0
+    -   @comet/admin-icons@6.11.0
+    -   @comet/admin-rte@6.11.0
+    -   @comet/admin-theme@6.11.0
+    -   @comet/blocks-admin@6.11.0
+
 ## 6.10.0
 
 ### Minor Changes
