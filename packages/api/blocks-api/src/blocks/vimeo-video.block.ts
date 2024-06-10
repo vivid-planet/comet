@@ -1,4 +1,4 @@
-import { IsBoolean, IsEnum, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsEnum, IsOptional, IsString, Matches } from "class-validator";
 
 import { VideoAspectRatio } from "../constants/enums";
 import { BlockData, BlockDataInterface, BlockInput, createBlock, inputToData } from "./block";
@@ -24,6 +24,7 @@ class VimeoVideoBlockData extends BlockData {
 class VimeoVideoBlockInput extends BlockInput {
     @IsOptional()
     @IsString()
+    @Matches(/^(https?:\/\/)?((www\.|player\.)?vimeo\.com\/?(showcase\/)*([0-9a-z]*\/)*([0-9]{6,11})[?]?.*)$|^([0-9]{6,11})$/)
     @BlockField({ nullable: true })
     vimeoIdentifier?: string;
 
