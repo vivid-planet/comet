@@ -2,4 +2,4 @@
 "@comet/cms-api": minor
 ---
 
-CRUD Generator: add support for enum array filter and sort
+API Generator: Add support for enum array filter and sort
