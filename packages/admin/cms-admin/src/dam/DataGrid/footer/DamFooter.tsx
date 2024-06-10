@@ -4,13 +4,16 @@ import * as React from "react";
 
 const FooterBar = styled(Paper)`
     position: fixed;
-    z-index: 1500;
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
 
     min-height: 60px;
     border-radius: 4px;
+
+    ${({ theme }) => theme.breakpoints.up(1024)} {
+        z-index: ${({ theme }) => theme.zIndex.snackbar};
+    }
 
     background-color: ${({ theme }) => theme.palette.grey.A400};
     color: ${({ theme }) => theme.palette.grey.A100};
