@@ -11,13 +11,13 @@ import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { BlockCategory, BlockInterface } from "./types";
 
 const isValidVimeoIdentifier = (value: string) => {
-    const urlRegEx = /(https?:\/\/)?(www\.)?(player\.)?vimeo\.com\/?(showcase\/)*([0-9)([a-z]*\/)*([0-9]{6,11})[?]?.*/;
-    const idRegEx = /([0-9]{6,11})/;
+    const urlRegEx = /^(https?:\/\/)?((www\.|player\.)?vimeo\.com\/?(showcase\/)*([0-9a-z]*\/)*([0-9]{6,11})[?]?.*)$/;
+    const idRegEx = /^([0-9]{6,11})$/;
 
-    const urlMatch = value.match(urlRegEx);
-    const idMatch = value.match(idRegEx);
+    const urlMatch = urlRegEx.test(value);
+    const idMatch = idRegEx.test(value);
 
-    return !!urlMatch || !!idMatch;
+    return urlMatch || idMatch;
 };
 
 const validateIdentifier = (value?: string) => {
@@ -40,7 +40,7 @@ export const VimeoVideoBlock: BlockInterface<VimeoVideoBlockData, VimeoVideoBloc
     category: BlockCategory.Media,
 
     // !vimeoIdentifier to allow saving empty string
-    isValid: ({ vimeoIdentifier }) => !vimeoIdentifier || isValidVimeoIdentifier(vimeoIdentifier),
+    isValid: ({ vimeoIdentifier }) => true,
 
     createPreviewState: (state, previewCtx) => {
         return { ...state, autoplay: false, adminMeta: { route: previewCtx.parentUrl } };

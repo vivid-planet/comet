@@ -6,28 +6,19 @@ import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { getHeightInPercentForAspectRatio, VideoContainer } from "./helpers";
 import { PropsWithData } from "./PropsWithData";
 
-const isUrl = (value: string) => {
-    try {
-        return Boolean(new URL(value));
-    } catch (e) {
-        return false;
-    }
-};
-
 function parseVimeoIdentifier(vimeoIdentifier: string): string | undefined {
-    const urlRegEx = /(https?:\/\/)?(www\.)?(player\.)?vimeo\.com\/?(showcase\/)*([0-9)([a-z]*\/)*([0-9]{6,11})[?]?.*/;
-    const idRegEx = /([0-9]{6,11})/;
+    const urlRegEx = /^(https?:\/\/)?((www\.|player\.)?vimeo\.com\/?(showcase\/)*([0-9a-z]*\/)*([0-9]{6,11})[?]?.*)$/;
+    const idRegEx = /^([0-9]{6,11})$/;
 
-    const identifierIsUrl = isUrl(vimeoIdentifier);
+    const urlRegExMatch = vimeoIdentifier.match(urlRegEx);
+    const idRegExMatch = vimeoIdentifier.match(idRegEx);
 
-    const regEx = identifierIsUrl ? urlRegEx : idRegEx;
-    const match = vimeoIdentifier.match(regEx);
+    if (!urlRegExMatch && !idRegExMatch) return undefined;
 
-    if (match) {
-        const idIndex = identifierIsUrl ? 6 : 1;
-        return match[idIndex];
-    } else {
-        return undefined;
+    if (urlRegExMatch) {
+        return urlRegExMatch[6];
+    } else if (idRegExMatch) {
+        return idRegExMatch[1];
     }
 }
 
