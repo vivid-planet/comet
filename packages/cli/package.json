@@ -14,7 +14,7 @@
     },
     "files": [
         "bin/**/*.js",
-        "lib/**/*.js"
+        "lib/*"
     ],
     "scripts": {
         "build": "$npm_execpath run clean && tsc",
