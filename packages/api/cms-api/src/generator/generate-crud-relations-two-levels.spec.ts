@@ -15,7 +15,7 @@ class ProductVariant extends BaseEntity<ProductVariant, "id"> {
     title: string;
 
     @ManyToOne(() => ProductData, { ref: true })
-    product: Ref<ProductData>;
+    productData: Ref<ProductData>;
 }
 
 @Entity()
@@ -26,7 +26,7 @@ class ProductData extends BaseEntity<ProductData, "id"> {
     @OneToOne(() => Product, { ref: true })
     product: Ref<Product>;
 
-    @OneToMany(() => ProductVariant, (variant) => variant.product, { orphanRemoval: true })
+    @OneToMany(() => ProductVariant, (variant) => variant.productData, { orphanRemoval: true })
     variants = new Collection<ProductVariant>(this);
 }
 
