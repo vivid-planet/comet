@@ -1,4 +1,4 @@
-import { MoreActionsDivider, MoreActionsGroup, MoreActionsMenu, SelectedItemsChip, useEditDialog, useSnackbarApi } from "@comet/admin";
+import { MoreActionsDivider, MoreActionsGroup, MoreActionsMenu, useEditDialog, useSnackbarApi } from "@comet/admin";
 import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, Upload } from "@comet/admin-icons";
 import { ListItemIcon, ListItemText, MenuItem, Slide, Snackbar } from "@mui/material";
 import { PopoverOrigin } from "@mui/material/Popover/Popover";
@@ -69,11 +69,6 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
         },
     });
 
-    const selectedItemsChip = React.useMemo(
-        () => (itemsSelected ? <SelectedItemsChip label={selectionSize} /> : null),
-        [itemsSelected, selectionSize],
-    );
-
     return (
         <>
             <MoreActionsMenu
@@ -83,7 +78,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                     anchorOrigin,
                 }}
             >
-                {({ handleClose }) => (
+                {({ handleClose, selectedItemsChip: SelectedItemsChip }) => (
                     <>
                         <MoreActionsGroup
                             groupTitle={<FormattedMessage id="comet.dam.moreActions.overallActions" defaultMessage="Overall actions" />}
@@ -150,7 +145,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                                     <Move />
                                 </ListItemIcon>
                                 <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.moveItems" defaultMessage="Move" />} />
-                                {selectedItemsChip}
+                                <SelectedItemsChip label={selectionSize} />
                             </MenuItem>
                             <MenuItem
                                 disabled={!itemsSelected}
@@ -163,7 +158,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                                     <Archive />
                                 </ListItemIcon>
                                 <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.archiveItems" defaultMessage="Archive" />} />
-                                {selectedItemsChip}
+                                <SelectedItemsChip label={selectionSize} />
                             </MenuItem>
                             <MenuItem
                                 disabled={!itemsSelected}
@@ -176,7 +171,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                                     <Restore />
                                 </ListItemIcon>
                                 <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.restoreItems" defaultMessage="Restore" />} />
-                                {selectedItemsChip}
+                                <SelectedItemsChip label={selectionSize} />
                             </MenuItem>
                             <MenuItem
                                 disabled={!itemsSelected}
@@ -189,7 +184,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                                     <Delete />
                                 </ListItemIcon>
                                 <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.deleteItems" defaultMessage="Delete" />} />
-                                {selectedItemsChip}
+                                <SelectedItemsChip label={selectionSize} />
                             </MenuItem>
                         </MoreActionsGroup>
                     </>

@@ -30,7 +30,7 @@ interface MoreActionsMenuProps {
     buttonProps?: React.ComponentProps<typeof Button>;
     menuProps?: Partial<MenuProps>;
     chipProps?: Partial<ChipProps>;
-    children?: (props: { handleClose: () => void }) => React.ReactNode;
+    children?: (props: { handleClose: () => void; selectedItemsChip: React.ComponentType<Partial<ChipProps>> }) => React.ReactNode;
 }
 
 function SelectedItemsChip({ label, ...restProps }: Partial<ChipProps>) {
@@ -82,7 +82,7 @@ export function MoreActionsMenu({ children, buttonProps, menuProps, chipProps, s
                     menuProps?.onClose?.(event, reason);
                 }}
             >
-                <Box px={2}>{children?.({ handleClose })}</Box>
+                <Box px={2}>{children?.({ handleClose, selectedItemsChip: SelectedItemsChip })}</Box>
             </Menu>
         </>
     );
