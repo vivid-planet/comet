@@ -165,8 +165,6 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
         const apolloClient = useApolloClient();
         const dependencyMap = useDependenciesConfig();
 
-        // console.log(dependencyMap["DamFile"].resolvePath({ apolloClient, id: state.damFile?.id }));
-
         // useSyncImageAttributes({ state, updateState });
 
         const handleClose = React.useCallback(() => {
