@@ -5,7 +5,6 @@ export interface DamConfig {
     allowedAspectRatios: string[];
     filesDirectory: string;
     cacheDirectory: string;
-    additionalMimeTypes?: string[];
-    overrideAcceptedMimeTypes?: string[];
+    acceptedMimeTypes?: string[];
     maxFileSize: number;
 }
