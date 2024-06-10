@@ -1,6 +1,6 @@
-import { gql } from "@apollo/client";
+import { gql, useApolloClient } from "@apollo/client";
 import { Field } from "@comet/admin";
-import { Crop, Delete, MoreVertical } from "@comet/admin-icons";
+import { Crop, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
 import {
     AdminComponentButton,
     AdminComponentPaper,
@@ -19,7 +19,8 @@ import { deepClone } from "@mui/x-data-grid/utils/utils";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { FileField } from "..";
+import { useDependenciesConfig } from "../../lib";
+import { FileField, useContentScope } from "..";
 import { PixelImageBlockData, PixelImageBlockInput } from "../blocks.generated";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { DamPathLazy } from "../form/file/DamPathLazy";
@@ -160,6 +161,11 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
         const context = useCmsBlockContext();
         const classes = useStyles();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
+        const contentScope = useContentScope();
+        const apolloClient = useApolloClient();
+        const dependencyMap = useDependenciesConfig();
+
+        // console.log(dependencyMap["DamFile"].resolvePath({ apolloClient, id: state.damFile?.id }));
 
         // useSyncImageAttributes({ state, updateState });
 
@@ -219,6 +225,22 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                                 </ListItemIcon>
                                 <FormattedMessage id="comet.blocks.image.cropImage" defaultMessage="Crop image" />
                             </MenuItem>
+                            {dependencyMap["DamFile"] && state.damFile?.id && (
+                                <MenuItem
+                                    onClick={async () => {
+                                        // id is checked three lines above
+                                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                        const path = await dependencyMap["DamFile"].resolvePath({ apolloClient, id: state.damFile!.id });
+                                        const url = contentScope.match.url + path;
+                                        window.open(url, "_blank");
+                                    }}
+                                >
+                                    <ListItemIcon>
+                                        <OpenNewTab />
+                                    </ListItemIcon>
+                                    <FormattedMessage id="comet.blocks.image.openInDam" defaultMessage="Open in DAM" />
+                                </MenuItem>
+                            )}
                         </Menu>
                         {open && (
                             <EditImageDialog
