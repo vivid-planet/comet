@@ -1,5 +1,86 @@
 # @comet/eslint-config
 
+## 7.0.0-beta.0
+
+### Major Changes
+
+-   45585f4cc: Enforce PascalCase for enums
+
+    Changing the casing of an existing enum can be problematic, e.g., if the enum values are persisted in the database.
+    In such cases, the rule can be disabled like so
+
+    ```diff
+    + /* eslint-disable @typescript-eslint/naming-convention */
+      export enum ExampleEnum {
+          attr1 = "attr1",
+      }
+    + /* eslint-enable @typescript-eslint/naming-convention */
+    ```
+
+-   45585f4cc: Add the rule `@typescript-eslint/prefer-enum-initializers` to require enum initializers
+
+    ```ts
+    // ✅
+    enum ExampleEnum {
+        One = "One",
+        Two = "Two",
+    }
+    ```
+
+    ```ts
+    // ❌
+    enum ExampleEnum {
+        One,
+        Two,
+    }
+    ```
+
+-   af37ac9d1: nextjs: Enable `react/jsx-curly-brace-presence` rule
+
+### Minor Changes
+
+-   769bd72f0: Uses the Next.JS Preview mode for the site preview
+
+    The preview is entered by navigating to an API-Route in the site, which has to be executed in a secured environment.
+    In the API-Routes the current scope is checked (and possibly stored), then the client is redirected to the Preview.
+
+    // TODO Move the following introduction to the migration guide before releasing
+
+    Requires following changes to site:
+
+    -   Import `useRouter` from `next/router` (not exported from `@comet/cms-site` anymore)
+    -   Import `Link` from `next/link` (not exported from `@comet/cms-site` anymore)
+    -   Remove preview pages (pages in `src/pages/preview/` directory which call `createGetUniversalProps` with preview parameters)
+    -   Remove `createGetUniversalProps`
+        -   Just implement `getStaticProps`/`getServerSideProps` (Preview Mode will SSR automatically)
+        -   Get `previewData` from `context` and use it to configure the GraphQL Client
+    -   Add `SitePreviewProvider` to `App` (typically in `src/pages/_app.tsx`)
+    -   Provide a protected environment for the site
+        -   Make sure that a Authorization-Header is present in this environment
+        -   Add a Next.JS API-Route for the site preview (eg. `/api/site-preview`)
+        -   Call `getValidatedSitePreviewParams()` in the API-Route (calls the API which checks the Authorization-Header with the submitted scope)
+        -   Use the `path`-part of the return value to redirect to the preview
+
+    Requires following changes to admin
+
+    -   The `SitesConfig` must provide a `sitePreviewApiUrl`
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.0.0-beta.0
+
+## 6.12.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.12.0
+
+## 6.11.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.11.0
+
 ## 6.10.0
 
 ### Patch Changes

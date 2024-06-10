@@ -14,6 +14,7 @@ import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
 import { GeneratorReturn, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
+import { findMutationType } from "./utils/findMutationType";
 import { findRootBlocks } from "./utils/findRootBlocks";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
@@ -38,13 +39,6 @@ function findQueryTypeOrThrow(queryName: string, schema: IntrospectionQuery) {
     const ret = findQueryType(queryName, schema);
     if (!ret) throw new Error(`Can't find query ${queryName} in gql schema`);
     return ret;
-}
-
-function findMutationType(mutationName: string, schema: IntrospectionQuery) {
-    if (!schema.__schema.mutationType) throw new Error("Schema has no Mutation type");
-    const queryType = schema.__schema.types.find((type) => type.name === schema.__schema.mutationType?.name) as IntrospectionObjectType | undefined;
-    if (!queryType) throw new Error("Can't find Mutation type in gql schema");
-    return queryType.fields.find((field) => field.name === mutationName);
 }
 
 export type Prop = { type: string; optional: boolean; name: string };
@@ -307,6 +301,7 @@ export function generateGrid(
         CrudContextMenu,
         filterByFragment,
         GridFilterButton,
+        GridColDef,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,
@@ -322,7 +317,7 @@ export function generateGrid(
     import { Add as AddIcon, Edit } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton } from "@mui/material";
-    import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
@@ -332,7 +327,7 @@ export function generateGrid(
         GQLCreate${gqlType}MutationVariables,
         GQLDelete${gqlType}Mutation,
         GQLDelete${gqlType}MutationVariables
-    } from "./${gqlTypePlural}Grid.generated";
+    } from "./${baseOutputFilename}.generated";
     import * as React from "react";
     import { FormattedMessage, useIntl } from "react-intl";
     ${generateImportsCode(imports)}
@@ -351,7 +346,7 @@ export function generateGrid(
     const ${instanceGqlTypePlural}Query = gql\`
         query ${gqlTypePlural}Grid(${[
         ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((gqlArg) => `$${gqlArg.name}: ${gqlArg.type}!`),
-        ...[`$offset: Int`, `$limit: Int`],
+        ...[`$offset: Int!`, `$limit: Int!`],
         ...(hasSort ? [`$sort: [${gqlType}Sort!]`] : []),
         ...(hasSearch ? [`$search: String`] : []),
         ...(hasFilter ? [`$filter: ${gqlType}Filter`] : []),

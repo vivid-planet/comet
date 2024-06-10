@@ -33,6 +33,10 @@ jobs:
             - name: Copy schema files
               run: pnpm run copy-schema-files
 
+            - name: "Exit Prelease Mode"
+              if: ${{ hashFiles('.changeset/pre.json') != '' }}
+              run: npx changeset pre exit beta
+
             - name: Publish Canary release
               if: ${{ github.ref_name == 'main' }}
               run: |
