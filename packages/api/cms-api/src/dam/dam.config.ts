@@ -11,6 +11,7 @@ export interface DamConfig {
     filesDirectory: string;
     cacheDirectory: string;
     additionalMimeTypes?: string[];
+    overrideAcceptedMimeTypes?: string[];
     maxFileSize: number;
 }
 
