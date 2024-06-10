@@ -51,21 +51,8 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
         );
 
         downloadSelected();
-
         isFolderInSelection && snackbarApi.showSnackbar(snackbarElement);
     };
-
-    const handleUploadFolderClick = () => folderInputRef.current?.click();
-
-    const handleAddFolderClick = () => editDialogApi.openAddDialog(folderId);
-
-    const handleMoveClick = () => moveSelected();
-
-    const handleArchiveClick = () => archiveSelected();
-
-    const handleRestoreClick = () => restoreSelected();
-
-    const handleDeleteClick = () => deleteSelected();
 
     const {
         uploadFiles,
@@ -104,7 +91,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                             <MenuItem
                                 disabled={itemsSelected}
                                 onClick={() => {
-                                    handleUploadFolderClick();
+                                    folderInputRef.current?.click();
                                     handleClose();
                                 }}
                             >
@@ -117,7 +104,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                             <MenuItem
                                 disabled={itemsSelected}
                                 onClick={() => {
-                                    handleAddFolderClick();
+                                    editDialogApi.openAddDialog(folderId);
                                     handleClose();
                                 }}
                             >
@@ -155,7 +142,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                             <MenuItem
                                 disabled={!itemsSelected}
                                 onClick={() => {
-                                    handleMoveClick();
+                                    moveSelected();
                                     handleClose();
                                 }}
                             >
@@ -168,7 +155,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                             <MenuItem
                                 disabled={!itemsSelected}
                                 onClick={() => {
-                                    handleArchiveClick();
+                                    archiveSelected();
                                     handleClose();
                                 }}
                             >
@@ -181,7 +168,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                             <MenuItem
                                 disabled={!itemsSelected}
                                 onClick={() => {
-                                    handleRestoreClick();
+                                    restoreSelected();
                                     handleClose();
                                 }}
                             >
@@ -194,7 +181,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                             <MenuItem
                                 disabled={!itemsSelected}
                                 onClick={() => {
-                                    handleDeleteClick();
+                                    deleteSelected();
                                     handleClose();
                                 }}
                             >
