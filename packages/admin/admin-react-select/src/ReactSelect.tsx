@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChevronDown, Clear, Close } from "@comet/admin-icons";
-import { Chip, ComponentsOverrides, InputBase, InputBaseProps, MenuItem, Paper, Theme, Typography, useTheme } from "@mui/material";
+import { Chip, ComponentsOverrides, InputBase, InputBaseProps, MenuItem, Paper, SvgIconProps, Theme, Typography, useTheme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import classNames from "classnames";
 import * as React from "react";
@@ -157,9 +157,9 @@ const components = {
 export interface SelectProps<OptionType extends OptionTypeBase> {
     theme: Theme;
     selectComponent: React.ComponentType<ReactSelectProps<OptionType>>;
-    clearIcon?: React.ReactNode;
-    dropdownIcon?: React.ReactNode;
-    dropdownIconOpen?: React.ReactNode;
+    clearIcon?: React.ComponentType<SvgIconProps>;
+    dropdownIcon?: React.ComponentType<SvgIconProps>;
+    dropdownIconOpen?: React.ComponentType<SvgIconProps>;
 }
 
 function SelectWrapper<OptionType extends OptionTypeBase>({
