@@ -4,7 +4,6 @@ import { IsEnum, IsOptional } from "class-validator";
 
 export interface EnumsFilterInterface<TEnum> {
     contains?: TEnum;
-    notContains?: TEnum;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
