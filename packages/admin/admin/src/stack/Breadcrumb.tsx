@@ -6,7 +6,6 @@ import { StackApiContext } from "./Api";
 interface IProps {
     url: string;
     title: React.ReactNode;
-    invisible?: boolean;
     ignoreParentId?: boolean;
 }
 
@@ -32,12 +31,12 @@ export class StackBreadcrumb extends React.Component<IProps> {
     }
 
     public componentDidMount() {
-        this.context.addBreadcrumb(this.id, this.parentId, this.props.url, this.props.title, !!this.props.invisible);
+        this.context.addBreadcrumb(this.id, this.parentId, this.props.url, this.props.title);
     }
 
     public componentDidUpdate(prevProps: IProps) {
         if (this.props.url !== prevProps.url || this.props.title !== prevProps.title) {
-            this.context.updateBreadcrumb(this.id, this.parentId, this.props.url, this.props.title, !!this.props.invisible);
+            this.context.updateBreadcrumb(this.id, this.parentId, this.props.url, this.props.title);
         }
     }
 
