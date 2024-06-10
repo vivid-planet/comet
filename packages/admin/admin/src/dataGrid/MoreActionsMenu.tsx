@@ -33,7 +33,7 @@ interface MoreActionsMenuProps {
     children?: (props: { handleClose: () => void }) => React.ReactNode;
 }
 
-export function SelectedItemsChip({ label, ...restProps }: Partial<ChipProps>) {
+function SelectedItemsChip({ label, ...restProps }: Partial<ChipProps>) {
     return (
         <Chip
             size="small"
