@@ -39,13 +39,7 @@ interface Props {
     category: string;
     path: string;
     allCategories: AllCategories;
-    /**
-     * @deprecated Use categoryToDocumentTypesMap instead
-     */
-    documentTypes?: Record<DocumentType, DocumentInterface>;
-    categoryToDocumentTypesMap?: {
-        [category: string]: Record<DocumentType, DocumentInterface>;
-    };
+    documentTypes: Record<DocumentType, DocumentInterface> | ((category: string) => Record<DocumentType, DocumentInterface>);
     editPageNode?: React.ComponentType<EditPageNodeProps>;
     renderContentScopeIndicator: (scope: ContentScopeInterface) => React.ReactNode;
 }
@@ -56,8 +50,7 @@ export function PagesPage({
     category,
     path,
     allCategories,
-    documentTypes: passedLegacyDocumentTypes,
-    categoryToDocumentTypesMap,
+    documentTypes: passedDocumentTypes,
     editPageNode: EditPageNode = DefaultEditPageNode,
     renderContentScopeIndicator,
 }: Props): React.ReactElement {
@@ -68,11 +61,7 @@ export function PagesPage({
 
     const siteConfig = useSiteConfig({ scope });
     const pagesQuery = React.useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
-    const documentTypes = categoryToDocumentTypesMap?.[category] ?? passedLegacyDocumentTypes;
-
-    if (documentTypes === undefined) {
-        throw new Error("You must pass either categoryToDocumentTypesMap or documentTypes");
-    }
+    const documentTypes = typeof passedDocumentTypes === "function" ? passedDocumentTypes(category) : passedDocumentTypes;
 
     React.useEffect(() => {
         setRedirectPathAfterChange(path);
@@ -170,7 +159,14 @@ export function PagesPage({
                             </ToolbarActions>
                         </Toolbar>
                         <PageTreeContext.Provider
-                            value={{ allCategories, currentCategory: category, documentTypes, categoryToDocumentTypesMap, tree, query: pagesQuery }}
+                            value={{
+                                allCategories,
+                                currentCategory: category,
+                                documentTypes,
+                                getDocumentTypesByCategory: typeof passedDocumentTypes === "function" ? passedDocumentTypes : undefined,
+                                tree,
+                                query: pagesQuery,
+                            }}
                         >
                             <PageTreeContent fullHeight>
                                 <ActionToolbarBox>

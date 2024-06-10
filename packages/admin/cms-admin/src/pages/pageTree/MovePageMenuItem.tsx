@@ -27,7 +27,7 @@ export function MovePageMenuItem({ page }: Props): React.ReactElement | null {
         }
     `);
     const { scope } = useContentScope();
-    const { allCategories, query, categoryToDocumentTypesMap } = usePageTreeContext();
+    const { allCategories, query, getDocumentTypesByCategory } = usePageTreeContext();
     const errorDialogApi = useErrorDialog();
 
     if (allCategories.length <= 1) {
@@ -35,7 +35,7 @@ export function MovePageMenuItem({ page }: Props): React.ReactElement | null {
     }
 
     const handleSubMenuItemClick = async (category: string) => {
-        if (!categorySupportsDocumentType(category, page.documentType, categoryToDocumentTypesMap)) {
+        if (!categorySupportsDocumentType(category, page.documentType, getDocumentTypesByCategory)) {
             errorDialogApi?.showError({ error: `Cannot move: Target category doesn't support documentType ${page.documentType}` });
             return;
         }
@@ -54,7 +54,7 @@ export function MovePageMenuItem({ page }: Props): React.ReactElement | null {
     return (
         <RowActionsMenu icon={<MovePage />} text={<FormattedMessage id="comet.pages.pages.page.movePage" defaultMessage="Move page" />}>
             {allCategories.map(({ category, label }) => {
-                const canMoveToTargetCategory = categorySupportsDocumentType(category, page.documentType, categoryToDocumentTypesMap);
+                const canMoveToTargetCategory = categorySupportsDocumentType(category, page.documentType, getDocumentTypesByCategory);
 
                 return (
                     <RowActionsItem
@@ -73,15 +73,13 @@ export function MovePageMenuItem({ page }: Props): React.ReactElement | null {
 const categorySupportsDocumentType = (
     category: string,
     documentType: string,
-    categoryToDocumentTypesMap?: {
-        [category: string]: Record<DocumentType, DocumentInterface>;
-    },
+    getDocumentTypesByCategory?: (category: string) => Record<DocumentType, DocumentInterface>,
 ) => {
-    if (categoryToDocumentTypesMap === undefined) {
-        // fallback because categoryToDocumentTypesMap can be undefined
+    if (getDocumentTypesByCategory === undefined) {
+        // fallback if no category->documentTypes mapping function was passed
         return true;
     }
 
-    const supportedDocumentTypes = Object.keys(categoryToDocumentTypesMap[category]);
+    const supportedDocumentTypes = Object.keys(getDocumentTypesByCategory(category));
     return supportedDocumentTypes.includes(documentType);
 };
