@@ -5,4 +5,4 @@
 "@comet/cms-api": minor
 ---
 
-Add PhoneLinkBlock and EmailLinkBlock
+Add `PhoneLinkBlock` and `EmailLinkBlock`
