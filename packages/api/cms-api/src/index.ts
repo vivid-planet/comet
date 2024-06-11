@@ -43,6 +43,7 @@ export { ValidationExceptionFactory } from "./common/errors/validation.exception
 export { BooleanFilter } from "./common/filter/boolean.filter";
 export { DateFilter } from "./common/filter/date.filter";
 export { createEnumFilter } from "./common/filter/enum.filter.factory";
+export { createEnumsFilter } from "./common/filter/enums.filter.factory";
 export { ManyToOneFilter } from "./common/filter/many-to-one.filter";
 export { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
 export { NumberFilter } from "./common/filter/number.filter";
