@@ -1,4 +1,4 @@
-import { ArrowBack } from "@mui/icons-material";
+import { ArrowLeft } from "@comet/admin-icons";
 import { Button, ButtonProps, ComponentsOverrides, Theme } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
@@ -10,7 +10,7 @@ import { StackBackButtonClassKey, styles } from "./StackBackButton.styles";
 
 export type StackBackButtonProps = ButtonProps;
 
-const StackBackBtn = ({ startIcon = <ArrowBack />, ...restProps }: StackBackButtonProps & WithStyles<typeof styles>): React.ReactElement => {
+const StackBackBtn = ({ startIcon = <ArrowLeft />, ...restProps }: StackBackButtonProps & WithStyles<typeof styles>): React.ReactElement => {
     return (
         <StackApiContext.Consumer>
             {(stackApi) => {
