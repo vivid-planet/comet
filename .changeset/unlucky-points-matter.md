@@ -2,4 +2,4 @@
 "@comet/cms-api": minor
 ---
 
-CRUD Generator: Add support for filtering ManyToMany relations by id
+API Generator: Add support for filtering many-to-many-relations by id
