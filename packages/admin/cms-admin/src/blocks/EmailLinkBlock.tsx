@@ -1,15 +1,10 @@
 import { Field, FinalFormInput } from "@comet/admin";
 import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, SelectPreviewComponent } from "@comet/blocks-admin";
+import { isEmail } from "class-validator";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-interface EmailLinkBlockData {
-    email?: string;
-}
-
-interface EmailLinkBlockInput {
-    email?: string;
-}
+import { EmailLinkBlockData, EmailLinkBlockInput } from "../blocks.generated";
 
 export const EmailLinkBlock: BlockInterface<EmailLinkBlockData, EmailLinkBlockData, EmailLinkBlockInput> = {
     ...createBlockSkeleton(),
@@ -21,22 +16,6 @@ export const EmailLinkBlock: BlockInterface<EmailLinkBlockData, EmailLinkBlockDa
     defaultValues: () => ({ email: undefined }),
 
     category: BlockCategory.Navigation,
-
-    input2State: (state) => {
-        return state;
-    },
-
-    state2Output: (state) => {
-        return {
-            email: state.email,
-        };
-    },
-
-    output2State: async (output) => {
-        return {
-            email: output.email,
-        };
-    },
 
     isValid: (state) => {
         return state.email ? isEmail(state.email) : true;
@@ -69,12 +48,4 @@ export const EmailLinkBlock: BlockInterface<EmailLinkBlockData, EmailLinkBlockDa
     previewContent: (state) => {
         return state.email ? [{ type: "text", content: state.email }] : [];
     },
-};
-
-const isEmail = (text: string) => {
-    return !!String(text)
-        .toLowerCase()
-        .match(
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        );
 };
