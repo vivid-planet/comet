@@ -3,13 +3,8 @@ import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, Se
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-interface PhoneLinkBlockData {
-    phone: string;
-}
-
-interface PhoneLinkBlockInput {
-    phone: string;
-}
+import { PhoneLinkBlockData, PhoneLinkBlockInput } from "../blocks.generated";
+import { isPhoneNumber } from "../validation/isPhoneNumber";
 
 export const PhoneLinkBlock: BlockInterface<PhoneLinkBlockData, PhoneLinkBlockData, PhoneLinkBlockInput> = {
     ...createBlockSkeleton(),
@@ -22,24 +17,8 @@ export const PhoneLinkBlock: BlockInterface<PhoneLinkBlockData, PhoneLinkBlockDa
 
     category: BlockCategory.Navigation,
 
-    input2State: (state) => {
-        return state;
-    },
-
-    state2Output: (state) => {
-        return {
-            phone: state.phone,
-        };
-    },
-
-    output2State: async (output) => {
-        return {
-            phone: output.phone,
-        };
-    },
-
     isValid: (state) => {
-        return state.phone ? isPhone(state.phone) : true;
+        return state.phone ? isPhoneNumber(state.phone) : true;
     },
 
     AdminComponent: ({ state, updateState }) => {
@@ -57,7 +36,7 @@ export const PhoneLinkBlock: BlockInterface<PhoneLinkBlockData, PhoneLinkBlockDa
                         component={FinalFormInput}
                         fullWidth
                         validate={(phone: string) => {
-                            if (phone && !isPhone(phone)) {
+                            if (phone && !isPhoneNumber(phone)) {
                                 return <FormattedMessage id="comet.blocks.link.phone.invalid" defaultMessage="Invalid phone number" />;
                             }
                         }}
@@ -69,8 +48,4 @@ export const PhoneLinkBlock: BlockInterface<PhoneLinkBlockData, PhoneLinkBlockDa
     previewContent: (state) => {
         return state.phone ? [{ type: "text", content: state.phone }] : [];
     },
-};
-
-const isPhone = (text: string) => {
-    return !!String(text).match(/^[+]?[0-9]{4,20}$/im);
 };

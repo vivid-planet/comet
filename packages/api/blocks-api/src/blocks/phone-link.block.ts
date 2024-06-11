@@ -1,17 +1,19 @@
-import { IsString } from "class-validator";
+import { IsOptional } from "class-validator";
 
 import { BlockData, BlockInput, createBlock, inputToData } from "./block";
 import { BlockField } from "./decorators/field";
+import { IsPhoneNumber } from "./validator/is-phone-number.validator";
 
 class PhoneLinkBlockData extends BlockData {
-    @BlockField()
-    phone: string;
+    @BlockField({ nullable: true })
+    phone?: string;
 }
 
 class PhoneLinkBlockInput extends BlockInput {
-    @IsString()
-    @BlockField()
-    phone: string;
+    @IsOptional()
+    @IsPhoneNumber()
+    @BlockField({ nullable: true })
+    phone?: string;
 
     transformToBlockData(): PhoneLinkBlockData {
         return inputToData(PhoneLinkBlockData, this);
