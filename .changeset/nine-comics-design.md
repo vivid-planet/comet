@@ -2,4 +2,4 @@
 "@comet/cms-api": patch
 ---
 
-CRUD Generator: support relation with primaryKey type int (in addition to integer)
+API Generator: Support relation with primary key type `int` (in addition to `integer`)
