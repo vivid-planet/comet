@@ -41,7 +41,7 @@ description: string;
 
 ### Generating Code
 
-After the entity has been successfully annotated, you can run the API Generator. To do this, first, add a new script to the scripts section of api/package.json:
+After the entity has been successfully annotated, you can run the API Generator. To do this, first, add a new script to the scripts section of `api/package.json`:
 
 ```json
 {
