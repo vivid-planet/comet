@@ -1,5 +1,25 @@
 # @comet/cms-admin
 
+## 6.12.0
+
+### Minor Changes
+
+-   3ee8c7a33: Add a `DamFileDownloadLinkBlock` that can be used to download a file or open it in a new tab
+
+    Also, add new `/dam/files/download/:hash/:fileId/:filename` endpoint for downloading assets.
+
+### Patch Changes
+
+-   Updated dependencies [dc7eaeccb]
+-   Updated dependencies [16ffa7be9]
+-   Updated dependencies [c06c6f1e9]
+    -   @comet/admin-rte@6.12.0
+    -   @comet/admin@6.12.0
+    -   @comet/admin-theme@6.12.0
+    -   @comet/admin-date-time@6.12.0
+    -   @comet/admin-icons@6.12.0
+    -   @comet/blocks-admin@6.12.0
+
 ## 6.11.0
 
 ### Minor Changes

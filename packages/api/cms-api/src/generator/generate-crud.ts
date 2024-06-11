@@ -380,11 +380,11 @@ function generateEntityImport(targetMetadata: EntityMetadata<any>, relativeTo: s
 function generateInputHandling(
     options: { mode: "create" | "update" | "updateNested"; inputName: string; assignEntityCode: string; excludeFields?: string[] },
     metadata: EntityMetadata<any>,
-): { code: string; injectRepositories: string[] } {
+): { code: string; injectRepositories: EntityMetadata<any>[] } {
     const { instanceNameSingular } = buildNameVariants(metadata);
     const { blockProps, hasVisibleProp, scopeProp } = buildOptions(metadata);
 
-    const injectRepositories: string[] = [];
+    const injectRepositories: EntityMetadata<any>[] = [];
 
     const props = metadata.props.filter((prop) => !options.excludeFields || !options.excludeFields.includes(prop.name));
 
@@ -396,7 +396,9 @@ function generateInputHandling(
     const inputRelationManyToOneProps = relationManyToOneProps
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
         .map((prop) => {
-            injectRepositories.push(prop.type);
+            const targetMeta = prop.targetMeta;
+            if (!targetMeta) throw new Error("targetMeta is not set for relation");
+            injectRepositories.push(targetMeta);
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
@@ -411,7 +413,7 @@ function generateInputHandling(
         .map((prop) => {
             const targetMeta = prop.targetMeta;
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
-            injectRepositories.push(prop.type);
+            injectRepositories.push(targetMeta);
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
@@ -426,7 +428,7 @@ function generateInputHandling(
         .map((prop) => {
             const targetMeta = prop.targetMeta;
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
-            injectRepositories.push(prop.type);
+            injectRepositories.push(targetMeta);
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
@@ -563,7 +565,6 @@ ${
         : ""
 }
     `;
-
     return { code, injectRepositories };
 }
 
@@ -700,7 +701,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     const outputRelationOneToOneProps = relationOneToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
 
     const imports: Imports = [];
-    const injectRepositories = new Array<string>();
+    const injectRepositories = new Array<EntityMetadata<any>>();
 
     const { code: createInputHandlingCode, injectRepositories: createInputHandlingInjectRepositories } = generateInputHandling(
         { mode: "create", inputName: "input", assignEntityCode: `const ${instanceNameSingular} = this.repository.create({` },
@@ -728,6 +729,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, generatorOptions.targetDirectory));
     }
+    imports.push(...injectRepositories.map((meta) => generateEntityImport(meta, generatorOptions.targetDirectory)));
 
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
@@ -749,7 +751,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             private readonly entityManager: EntityManager,
             private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
             @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
-            ${[...new Set<string>(injectRepositories)]
+            ${[...new Set<string>(injectRepositories.map((meta) => meta.className))]
                 .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>`)
                 .join(", ")}
         ) {}
@@ -781,11 +783,14 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 : ""
         }
 
+        ${
+            generatorOptions.list
+                ? `
         @Query(() => Paginated${classNamePlural})
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
             @Args() { ${scopeProp ? `scope, ` : ""}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${
-        hasSortArg ? `sort, ` : ""
-    }offset, limit }: ${argsClassName}${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
+                      hasSortArg ? `sort, ` : ""
+                  }offset, limit }: ${argsClassName}${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
         ): Promise<Paginated${classNamePlural}> {
             const where${
                 hasSearchArg || hasFilterArg
@@ -811,8 +816,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             ${hasOutputRelations ? `// eslint-disable-next-line @typescript-eslint/no-explicit-any` : ""}
             const options: FindOptions<${metadata.className}${hasOutputRelations ? `, any` : ""}> = { offset, limit${
-        hasOutputRelations ? `, populate` : ""
-    }};
+                      hasOutputRelations ? `, populate` : ""
+                  }};
 
             ${
                 hasSortArg
@@ -828,7 +833,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             const [entities, totalCount] = await this.repository.findAndCount(where, options);
             return new Paginated${classNamePlural}(entities, totalCount);
-
+        }
+        `
+                : ""
         }
 
         ${
@@ -938,6 +945,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
         create: generatorOptionsParam.create ?? true,
         update: generatorOptionsParam.update ?? true,
         delete: generatorOptionsParam.delete ?? true,
+        list: generatorOptionsParam.list ?? true,
     };
 
     const generatedFiles: GeneratedFile[] = [];
