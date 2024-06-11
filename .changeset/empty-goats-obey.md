@@ -2,4 +2,4 @@
 "@comet/cms-api": patch
 ---
 
-CRUD Generator: don't add skipScopeCheck when entity has @ScopedEntity
+API Generator: Don't add `skipScopeCheck` when the entity has a `@ScopedEntity()` decorator
