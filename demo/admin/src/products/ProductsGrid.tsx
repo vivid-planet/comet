@@ -79,7 +79,7 @@ export function ProductsGrid() {
             headerName: "Overview",
             minWidth: 200,
             flex: 1,
-            sortable: false,
+            sortBy: ["title", "price", "type", "category", "inStock"],
             visible: theme.breakpoints.down("md"),
             renderCell: ({ row }) => {
                 const secondaryValues = [
@@ -116,6 +116,22 @@ export function ProductsGrid() {
             width: 100,
             type: "singleSelect",
             visible: theme.breakpoints.up("md"),
+            valueOptions: ["Cap", "Shirt", "Tie"],
+        },
+        {
+            field: "additionalTypes",
+            headerName: "Additional Types",
+            width: 150,
+            renderCell: (params) => <>{params.row.additionalTypes.join(", ")}</>,
+            filterOperators: [
+                {
+                    value: "contains",
+                    getApplyFilterFn: (filterItem) => {
+                        throw new Error("not implemented, we filter server side");
+                    },
+                    InputComponent: GridFilterInputSingleSelect,
+                },
+            ],
             valueOptions: ["Cap", "Shirt", "Tie"],
         },
         {
@@ -247,7 +263,7 @@ export function ProductsGrid() {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
-            sort: muiGridSortToGql(sortModel),
+            sort: muiGridSortToGql(sortModel, dataGridProps.apiRef),
         },
     });
     const rows = data?.products.nodes ?? [];
@@ -279,6 +295,7 @@ const productsFragment = gql`
         description
         price
         type
+        additionalTypes
         inStock
         image
         status

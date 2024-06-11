@@ -1,6 +1,6 @@
 {
     "name": "@comet/eslint-config",
-    "version": "6.10.0",
+    "version": "7.0.0-beta.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -24,7 +24,7 @@
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-simple-import-sort": "^9.0.0",
         "eslint-plugin-unused-imports": "^2.0.0",
-        "@comet/eslint-plugin": "workspace:^6.10.0"
+        "@comet/eslint-plugin": "workspace:^7.0.0-beta.0"
     },
     "devDependencies": {
         "eslint": "^8.32.0",

@@ -1,7 +1,7 @@
 import * as React from "react";
 
 export interface DamConfig {
-    additionalMimeTypes?: string[];
+    acceptedMimeTypes?: string[];
     scopeParts?: string[];
     enableLicenseFeature?: boolean;
     requireLicense?: boolean;

@@ -92,7 +92,8 @@ export function buildOptions(metadata: EntityMetadata<any>) {
                 prop.type === "DateType" ||
                 prop.type === "Date" ||
                 prop.reference === "m:1" ||
-                prop.reference === "m:n") &&
+                prop.reference === "m:n" ||
+                prop.type === "EnumArrayType") &&
             !dedicatedResolverArgProps.some((dedicatedResolverArgProp) => dedicatedResolverArgProp.name == prop.name),
     );
     const hasFilterArg = crudFilterProps.length > 0;
@@ -109,7 +110,8 @@ export function buildOptions(metadata: EntityMetadata<any>) {
                 prop.type === "boolean" ||
                 prop.type === "DateType" ||
                 prop.type === "Date" ||
-                prop.reference === "m:1"),
+                prop.reference === "m:1" ||
+                prop.type === "EnumArrayType"),
     );
     const hasSortArg = crudSortProps.length > 0;
 
@@ -151,12 +153,23 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
     let enumFiltersOut = "";
 
     const generatedEnumNames = new Set<string>();
+    const generatedEnumsNames = new Set<string>();
     crudFilterProps.map((prop) => {
-        if (prop.enum) {
+        if (prop.type == "EnumArrayType") {
             const enumName = findEnumName(prop.name, metadata);
             const importPath = findEnumImportPath(enumName, `${generatorOptions.targetDirectory}/dto`, metadata);
             if (!generatedEnumNames.has(enumName)) {
                 generatedEnumNames.add(enumName);
+                enumFiltersOut += `@InputType()
+                    class ${enumName}EnumsFilter extends createEnumsFilter(${enumName}) {}
+                `;
+                importsOut += `import { ${enumName} } from "${importPath}";`;
+            }
+        } else if (prop.enum) {
+            const enumName = findEnumName(prop.name, metadata);
+            const importPath = findEnumImportPath(enumName, `${generatorOptions.targetDirectory}/dto`, metadata);
+            if (!generatedEnumsNames.has(enumName)) {
+                generatedEnumsNames.add(enumName);
                 enumFiltersOut += `@InputType()
                     class ${enumName}EnumFilter extends createEnumFilter(${enumName}) {}
                 `;
@@ -165,7 +178,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
         }
     });
 
-    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, ManyToOneFilter, ManyToManyFilter, createEnumFilter } from "@comet/cms-api";
+    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, ManyToOneFilter, ManyToManyFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
     import { Field, InputType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
@@ -177,7 +190,15 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
     export class ${classNameSingular}Filter {
         ${crudFilterProps
             .map((prop) => {
-                if (prop.enum) {
+                if (prop.type == "EnumArrayType") {
+                    const enumName = findEnumName(prop.name, metadata);
+                    return `@Field(() => ${enumName}EnumsFilter, { nullable: true })
+                    @ValidateNested()
+                    @IsOptional()
+                    @Type(() => ${enumName}EnumsFilter)
+                    ${prop.name}?: ${enumName}EnumsFilter;
+                    `;
+                } else if (prop.enum) {
                     const enumName = findEnumName(prop.name, metadata);
                     return `@Field(() => ${enumName}EnumFilter, { nullable: true })
                     @ValidateNested()
@@ -185,7 +206,8 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     @Type(() => ${enumName}EnumFilter)
                     ${prop.name}?: ${enumName}EnumFilter;
                     `;
-                } else if (prop.type === "string" || prop.type === "text") {
+                } else if (prop.type 
+                           "string" || prop.type === "text") {
                     return `@Field(() => StringFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()

@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-date-time",
-    "version": "6.10.0",
+    "version": "7.0.0-beta.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -25,8 +25,8 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
-        "@comet/admin": "workspace:^6.10.0",
-        "@comet/admin-icons": "workspace:^6.10.0",
+        "@comet/admin": "workspace:^7.0.0-beta.0",
+        "@comet/admin-icons": "workspace:^7.0.0-beta.0",
         "@mui/utils": "^5.4.1",
         "clsx": "^1.1.1",
         "date-fns": "^2.28.0",
@@ -35,8 +35,8 @@
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^6.10.0",
-        "@comet/eslint-config": "workspace:^6.10.0",
+        "@comet/admin-babel-preset": "workspace:^7.0.0-beta.0",
+        "@comet/eslint-config": "workspace:^7.0.0-beta.0",
         "@mui/material": "^5.0.0",
         "@types/react": "^17.0",
         "@types/react-date-range": "^1.4.3",

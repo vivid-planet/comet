@@ -1,6 +1,6 @@
 {
     "name": "@comet/blocks-admin",
-    "version": "6.10.0",
+    "version": "7.0.0-beta.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -29,8 +29,8 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "@comet/admin": "workspace:^6.10.0",
-        "@comet/admin-icons": "workspace:^6.10.0",
+        "@comet/admin": "workspace:^7.0.0-beta.0",
+        "@comet/admin-icons": "workspace:^7.0.0-beta.0",
         "@mui/lab": "^5.0.0-alpha.76",
         "clipboard-copy": "^4.0.0",
         "clsx": "^1.1.1",
@@ -42,9 +42,9 @@
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^6.10.0",
-        "@comet/cli": "workspace:^6.10.0",
-        "@comet/eslint-config": "workspace:^6.10.0",
+        "@comet/admin-babel-preset": "workspace:^7.0.0-beta.0",
+        "@comet/cli": "workspace:^7.0.0-beta.0",
+        "@comet/eslint-config": "workspace:^7.0.0-beta.0",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
         "@mui/lab": "^5.0.0-alpha.76",

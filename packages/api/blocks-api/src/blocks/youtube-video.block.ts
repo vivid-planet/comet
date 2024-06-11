@@ -12,7 +12,7 @@ enum AspectRatio {
 /* eslint-enable @typescript-eslint/naming-convention */
 
 class YouTubeVideoBlockData extends BlockData {
-    @BlockField()
+    @BlockField({ nullable: true })
     youtubeIdentifier?: string;
 
     @BlockField({ type: "enum", enum: AspectRatio })
@@ -31,7 +31,7 @@ class YouTubeVideoBlockData extends BlockData {
 class YouTubeVideoBlockInput extends BlockInput {
     @IsOptional()
     @IsString()
-    @BlockField()
+    @BlockField({ nullable: true })
     youtubeIdentifier?: string;
 
     @IsEnum(AspectRatio)

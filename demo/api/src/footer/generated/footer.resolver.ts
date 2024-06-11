@@ -39,6 +39,7 @@ export class FooterResolver {
         if (!footer) {
             footer = this.repository.create({
                 ...input,
+                content: input.content.transformToBlockData(),
                 scope,
             });
         }

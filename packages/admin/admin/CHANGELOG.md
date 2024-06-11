@@ -1,5 +1,388 @@
 # @comet/admin
 
+## 7.0.0-beta.0
+
+### Major Changes
+
+-   865f253d8: Add `@comet/admin-theme` as a peer dependency
+
+    `@comet/admin` now uses the custom `Typography` variants `list` and `listItem` defined in `@comet/admin-theme`.
+
+-   51a0861d8: Create a subroute by default in `SaveBoundary`
+
+    The default path is `./save`, you can change it using the `subRoutePath` prop.
+
+-   73140014f: Change theming method of `Menu`
+
+    -   Rename `permanent` class-key to `permanentDrawer` and `temporary` class-key to `temporaryDrawer`
+    -   Replace the `permanentDrawerProps` and `temporaryDrawerProps` props with `slotProps`
+
+-   9a4530b06: Remove the `listItem` class key from `MenuCollapsibleItemClassKey` due to a larger overhaul of the menu components
+-   dc8bb6a99: Remove the `openedIcon` and `closedIcon` props from `MenuCollapsibleItem` and add `iconMapping` instead
+
+    The icon shown as the collapse indicator will be chosen from `iconMapping`, depending on the collapsed states of the Menu and the Item.
+
+-   6054fdcab: Remove the `requiredSymbol` prop from `FieldContainer` and use MUIs native implementation
+
+    This prop was used to display a custom required symbol next to the label of the field. We now use the native implementation of the required attribute of MUI to ensure better accessibility and compatibility with screen readers.
+
+-   d0869ac82: Rework `Toolbar`
+
+    -   The `Toolbar` is now split into a top and a bottom bar.
+
+        The top bar displays a scope indicator and breadcrumbs. The bottom bar behaves like the old `Toolbar`.
+
+    -   The styling of `Toolbar`, `ToolbarItem`, `ToolbarActions`, `ToolbarAutomaticTitleItem` and `ToolbarBackButton` was adjusted
+
+    -   The new `ToolbarActionButton` should be used for buttons inside the `ToolbarActions`
+
+        It automatically switches from a normal `Button` to an `IconButton` for smaller screen sizes.
+
+    -   To show a scope indicator, you must pass a `<ContentScopeIndicator />` to the `Toolbar` via the `scopeIndicator` prop
+
+-   9a4530b06: Remove `temporaryDrawerProps`, `permanentDrawerProps`, `temporaryDrawerPaperProps` and `permanentDrawerPaperProps` props from `Menu` component.
+
+    Use `slotProps` instead.
+
+-   47ec528a4: Remove the `FieldContainerComponent` component
+
+    `FieldContainerComponent` was never intended to be exported, use `FieldContainer` instead.
+
+-   956111ab2: Rename the `FilterBarMoveFilersClassKey` type to `FilterBarMoreFiltersClassKey`
+-   19eaee4ca: Remove the `disabled` class-key in `TabScrollButton`
+
+    Use the `:disabled` selector instead when styling the disabled state.
+
+-   9a4530b06: Remove the `MenuLevel` type
+
+    The type can be used from `MenuItemProps['level']` instead, if necessary.
+
+-   04ed68cc9: Remove the `components` and `componentProps` props from `CopyToClipboardButton`
+
+    Instead, for the icons, use the `copyIcon` and `successIcon` props to pass a `ReactNode` instead of separately passing in values to the `components` and `componentProps` objects.
+    Use `slotPops` to pass props to the remaining elements.
+
+-   61b2acfb2: Add `FeedbackButton` component
+-   2a7bc765c: Replace the `componentsProps` prop with `slotProps` in `FieldSet`
+-   b87c3c292: Replace the `componentsProps` prop with `slotProps` in `InputWithPopper` and remove the `InputWithPopperComponentsProps` type
+-   2a7bc765c: Remove the `message` class-key from `Alert`
+
+    Use the `.MuiAlert-message` selector instead to style the message of the underlying MUI `Alert` component.
+
+-   d2e64d1ec: Remove the `paper` class-key from `FilterBarPopoverFilter`
+
+    Instead of using `styleOverrides` for `paper` in the theme, use the `slotProps` and `sx` props.
+
+-   241249bd4: Remove the `disabled` and `focusVisible` class-keys and rename the `inner` class-key to `content` in `AppHeaderButton`
+
+    Use the `:disabled` selector instead when styling the disabled state.
+    Use the `:focus` selector instead when styling the focus state.
+
+-   be4e6392d: Remove `endAdornment` prop from `FinalFormSelect` component
+
+    The reason were conflicts with the clearable prop. This decision was based on the fact that MUI doesn't support endAdornment on selects (see: [mui/material-ui#17799](https://github.com/mui/material-ui/issues/17799)), and that there are no common use cases where both `endAdornment` and `clearable` are needed simultaneously.
+
+-   a53545438: Remove the `disabled` class-key in `ClearInputButton`
+
+    Use the `:disabled` selector instead when styling the disabled state.
+
+-   1a1d83156: `MenuItem` no longer supports props from MUI's `ListItem` but those from `ListItemButton` instead
+-   a2f278bbd: Remove the `popoverPaper` class-key and rename the `popoverRoot` class-key to `popover` in `AppHeaderDropdown`
+
+    Instead of using `styleOverrides` for `popoverPaper` in the theme, use the `slotProps` and `sx` props.
+    Use the `popover` prop instead of `popoverRoot` to override styles.
+
+-   92eae2ba9: Change the method of overriding the styling of Admin components
+
+    -   Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
+    -   Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
+    -   Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
+    -   The `# @comet/admin syntax in the theme's `styleOverrides` is no longer supported, see: https://mui.com/material-ui/migration/v5-style-changes/#migrate-theme-styleoverrides-to-emotion
+
+    ```diff
+     const theme = createCometTheme({
+         components: {
+             CometAdminMyComponent: {
+                 styleOverrides: {
+    -                root: {
+    -                    "&$hasShadow": {
+    -                        boxShadow: "2px 2px 5px 0 rgba(0, 0, 0, 0.25)",
+    -                    },
+    -                    "& $header": {
+    -                        backgroundColor: "lime",
+    -                    },
+    -                },
+    +                hasShadow: {
+    +                    boxShadow: "2px 2px 5px 0 rgba(0, 0, 0, 0.25)",
+    +                },
+    +                header: {
+    +                    backgroundColor: "lime",
+    +                },
+                 },
+             },
+         },
+     });
+    ```
+
+    -   Overriding a component's styles using `withStyles` is no longer supported. Use the `sx` and `slotProps` props instead:
+
+    ```diff
+    -import { withStyles } from "@mui/styles";
+    -
+    -const StyledMyComponent = withStyles({
+    -    root: {
+    -        backgroundColor: "lime",
+    -    },
+    -    header: {
+    -        backgroundColor: "fuchsia",
+    -    },
+    -})(MyComponent);
+    -
+    -// ...
+    -
+    -<StyledMyComponent title="Hello World" />;
+    +<MyComponent
+    +    title="Hello World"
+    +    sx={{
+    +        backgroundColor: "lime",
+    +    }}
+    +    slotProps={{
+    +        header: {
+    +            sx: {
+    +                backgroundColor: "fuchsia",
+    +            },
+    +        },
+    +    }}
+    +/>
+    ```
+
+    -   The module augmentation for the `DefaultTheme` type from `@mui/styles/defaultTheme` is no longer needed and needs to be removed from the admins theme file, usually located in `admin/src/theme.ts`:
+
+    ```diff
+    -declare module "@mui/styles/defaultTheme" {
+    -    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    -    export interface DefaultTheme extends Theme {}
+    -}
+    ```
+
+    -   Class-keys originating from MUI components have been removed from Comet Admin components, causing certain class-names and `styleOverrides` to no longer be applied.
+        The components `root` class-key is not affected. Other class-keys will retain the class-names and `styleOverrides` from the underlying MUI component.
+        For example, in `ClearInputAdornment` (when used with `position="end"`) the class-name `CometAdminClearInputAdornment-positionEnd` and the `styleOverrides` for `CometAdminClearInputAdornment.positionEnd` will no longer be applied.
+        The component will retain the class-names `MuiInputAdornment-positionEnd`, `MuiInputAdornment-root`, and `CometAdminClearInputAdornment-root`.
+        Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
+
+        This affects the following components:
+
+        -   `AppHeader`
+        -   `AppHeaderMenuButton`
+        -   `ClearInputAdornment`
+        -   `Tooltip`
+        -   `CancelButton`
+        -   `DeleteButton`
+        -   `OkayButton`
+        -   `SaveButton`
+        -   `StackBackButton`
+        -   `DatePicker`
+        -   `DateRangePicker`
+        -   `TimePicker`
+
+    -   For more details, see MUI's migration guide: https://mui.com/material-ui/migration/v5-style-changes/#mui-styles
+
+### Minor Changes
+
+-   05ce68ec0: Add `StackToolbar`, a variant of `Toolbar` component that hides itself in a nested stack
+-   dc8bb6a99: Add hover effect for collapsed menu icons. This ensures that navigation is also possible in collapsed state.
+-   54f775497: Add new `DataGridToolbar` component
+
+    The "normal" `Toolbar` is meant to be used on page-level to show the current scope, breadcrumbs and page-wide action buttons (like save).
+    The `DataGridToolbar`, however, is meant to be used in DataGrids to contain a search input, filter options, bulk actions and an add button.
+
+    You can use it like this:
+
+    ```tsx
+    <DataGrid
+        // ...
+        components={{
+            Toolbar: () => <DataGridToolbar>{/* ... */}</DataGridToolbar>,
+        }}
+    />
+    ```
+
+-   e3efdfcc3: Add the ability to change by which fields a DataGrid column is sorted using `sortBy` in the column definition
+
+    This can be useful for custom columns that do not represent an actual field in the data, e.g., columns that render the data of multiple fields.
+
+    ```tsx
+    const columns: GridColDef[] = [
+        {
+            field: "fullName",
+            sortBy: ["firstName", "lastName"],
+            renderCell: ({ row }) => `${row.firstName} ${row.lastName}`,
+        },
+    ];
+    ```
+
+-   02d33e230: Show icons in permanent menu even in closed state.
+-   758c65656: Only use horizontal layout in `FieldContainer` when it exceeds `600px` in width
+-   0263a45fa: Add the ability to make `DataGrid` columns responsive by setting the `visible` property of the column definition to a media query
+
+    This can be used to hide certain columns on smaller screens and show a combined column instead.
+
+    This will only work when using `usePersistentColumnState` with `DataGridPro`/`DataGridPremium`.
+    When defining the columns, use the `GridColDef` type from `@comet/admin` instead of `@mui/x-data-grid`.
+
+    ```ts
+    const columns: GridColDef[] = [
+        {
+            field: "fullName",
+            visible: theme.breakpoints.down("md"),
+        },
+        {
+            field: "firstName",
+            visible: theme.breakpoints.up("md"),
+        },
+        {
+            field: "lastName",
+            visible: theme.breakpoints.up("md"),
+        },
+    ];
+    ```
+
+-   4ca4830f3: Router Prompt: actively reset form state when choosing discard in the prompt dialog
+-   3397ec1b6: Add the `GridCellContent` component
+
+    Used to display primary and secondary texts and an icon in a `DataGrid` cell using the columns `renderCell` function.
+
+    ```tsx
+    const columns: GridColDef[] = [
+        {
+            field: "title",
+            renderCell: ({ row }) => <GridCellContent>{row.title}</GridCellContent>,
+        },
+        {
+            field: "overview",
+            renderCell: ({ row }) => <GridCellContent primaryText={row.title} secondaryText={row.description} icon={<Favorite />} />,
+        },
+    ];
+    ```
+
+-   20b2bafd8: Add setting `signInUrl` to `createErrorDialogApolloLink`
+-   51a0861d8: Support relative paths in `SubRoute` component using `./subroute` notation
+-   9c4b7c974: Add support for third level menu items. Collapsible items can be nested in each other, which creates subsubitems.
+-   774977311: Add `GridColumnsButton`
+
+    This button opens a panel to hide or show columns of `DataGrid`, similar to MUIs `GridToolbarColumnsButton`.
+
+-   f8114cd39: Pass `required` prop to children of `Field` component
+-   f06f4bea6: Add `MenuItemGroup` component to group menu items
+
+    **Example:**
+
+    ```tsx
+    <MenuItemGroup title="Some item group title">
+        <MenuItemRouterLink primary="Menu item 1" icon={<Settings />} to="/menu-item-1" />
+        <MenuItemRouterLink primary="Menu item 2" icon={<Settings />} to="/menu-item-2" />
+        <MenuItemRouterLink primary="Menu item 3" icon={<Settings />} to="/menu-item-3" />
+        {/* Some more menu items... */}
+    </MenuItemGroup>
+    ```
+
+-   b0249e3bc: Add `helperIcon` prop to MenuItemGroup. Its intended purpose is to render an icon with a `Tooltip` behind the group section title, if the menu is not collapsed.
+
+    ### Examples:
+
+    **Render only an icon:**
+
+    ```tsx
+    <MenuItemGroup title="Group Title" helperIcon={<QuestionMark />}>
+        {/* ... */}
+    </MenuItemGroup>
+    ```
+
+    **Render an icon with tooltip:**
+
+    ```tsx
+    <MenuItemGroup
+        title="Group Title"
+        helperIcon={
+            <Tooltip title="Some help text">
+                <QuestionMark />
+            </Tooltip>
+        }
+    >
+        {/* ... */}
+    </MenuItemGroup>
+    ```
+
+### Patch Changes
+
+-   b5753e612: Allow partial props in the theme's `defaultProps` instead of requiring all props when setting the `defaultProps` of a component
+-   66330e4e6: Fix a bug where the `disabled` prop would not be passed to the children of `Field`
+-   Updated dependencies [803bc607f]
+-   Updated dependencies [33ba50719]
+-   Updated dependencies [33ba50719]
+-   Updated dependencies [c702cc5b2]
+-   Updated dependencies [535444623]
+-   Updated dependencies [33ba50719]
+-   Updated dependencies [f9615fbf4]
+-   Updated dependencies [33ba50719]
+-   Updated dependencies [cce88d448]
+-   Updated dependencies [865f253d8]
+-   Updated dependencies [92eae2ba9]
+-   Updated dependencies [33ba50719]
+    -   @comet/admin-theme@7.0.0-beta.0
+    -   @comet/admin-icons@7.0.0-beta.0
+
+## 6.12.0
+
+### Minor Changes
+
+-   16ffa7be9: Add `FinalFormAsyncSelect`, `AsyncSelectField`, and `FinalFormAsyncAutocomplete` components
+
+    Thin wrappers to ease using `useAsyncOptionsProps()` with `FinalFormSelect` and `FinalFormAutocomplete`.
+
+    **Example**
+
+    Previously:
+
+    ```tsx
+    const asyncOptionsProps = useAsyncOptionsProps(async () => {
+        // Load options here
+    });
+
+    // ...
+
+    <Field component={FinalFormAsyncAutocomplete} {...asyncOptionsProps} />;
+    ```
+
+    Now:
+
+    ```tsx
+    <Field
+        component={FinalFormAsyncAutocomplete}
+        loadOptions={async () => {
+            // Load options here
+        }}
+    />
+    ```
+
+### Patch Changes
+
+-   @comet/admin-icons@6.12.0
+
+## 6.11.0
+
+### Minor Changes
+
+-   8e3dec523: Change `writeClipboardText`/`readClipboardText` clipboard fallback to in-memory
+
+    Using the local storage as a fallback caused issues when writing clipboard contents larger than 5MB.
+    Changing the fallback to in-memory resolves the issue.
+
+### Patch Changes
+
+-   @comet/admin-icons@6.11.0
+
 ## 6.10.0
 
 ### Minor Changes

@@ -6,6 +6,7 @@ export const productFormFragment = gql`
         slug
         description
         type
+        additionalTypes
         inStock
         image
         category {

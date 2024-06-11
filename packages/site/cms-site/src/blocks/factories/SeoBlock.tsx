@@ -39,19 +39,19 @@ export const SeoBlock = <T = PixelImageBlockData,>({
             {metaDescription && <meta name="description" content={metaDescription} />}
 
             {/* Open Graph */}
-            {openGraphTitle && <meta property={"og:title"} content={openGraphTitle} />}
-            {openGraphDescription && <meta property={"og:description"} content={openGraphDescription} />}
-            <meta property={"og:type"} content={"website"} />
-            <meta property={"og:url"} content={usedCanonicalUrl} />
+            {openGraphTitle && <meta property="og:title" content={openGraphTitle} />}
+            {openGraphDescription && <meta property="og:description" content={openGraphDescription} />}
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content={usedCanonicalUrl} />
             {openGraphImageUrlTemplate && (
-                <meta property={"og:image"} content={generateImageUrl({ src: openGraphImageUrlTemplate, width: 1200 }, 1200 / 630)} />
+                <meta property="og:image" content={generateImageUrl({ src: openGraphImageUrlTemplate, width: 1200 }, 1200 / 630)} />
             )}
 
             {/* Structured Data */}
             {structuredData && structuredData.length > 0 && <script type="application/ld+json">{structuredData}</script>}
 
             {/* No Index */}
-            {noIndex && <meta name={"robots"} content={"noindex"} />}
+            {noIndex && <meta name="robots" content="noindex" />}
 
             {/* Canonical Url */}
             {usedCanonicalUrl && <link rel="canonical" href={usedCanonicalUrl} />}
