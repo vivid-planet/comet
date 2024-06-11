@@ -2,7 +2,7 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
-import { BlobStorageModule, defaultDamAcceptedMimetypes, DependentsResolverFactory } from "..";
+import { BlobStorageModule, damDefaultAcceptedMimetypes, DependentsResolverFactory } from "..";
 import { DamFileDownloadLinkBlockTransformerService } from "./blocks/dam-file-download-link-block-transformer.service";
 import { DamVideoBlockTransformerService } from "./blocks/dam-video-block-transformer.service";
 import { PixelImageBlockTransformerService } from "./blocks/pixel-image-block-transformer.service";
@@ -72,7 +72,7 @@ export class DamModule {
             provide: DAM_FILE_VALIDATION_SERVICE,
             useValue: new FileValidationService({
                 maxFileSize: damConfig.maxFileSize,
-                acceptedMimeTypes: [...defaultDamAcceptedMimetypes, ...(damConfig.additionalMimeTypes ?? [])],
+                acceptedMimeTypes: damConfig.acceptedMimeTypes ?? damDefaultAcceptedMimetypes,
             }),
         };
 
