@@ -17,10 +17,12 @@ import { deepClone } from "@mui/x-data-grid/utils/utils";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { useDependenciesConfig } from "../../lib";
-import { FileField, useContentScope, useDamAcceptedMimeTypes } from "..";
 import { SvgImageBlockData, SvgImageBlockInput } from "../blocks.generated";
+import { useContentScope } from "../contentScope/Provider";
+import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
+import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
+import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { GQLSvgImageBlockDamFileQuery, GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
 import { useCmsBlockContext } from "./useCmsBlockContext";
