@@ -44,6 +44,7 @@ function SearchTextField({
                     endAdornment
                 )
             }
+            disableContentTranslation={true}
         />
     );
 }

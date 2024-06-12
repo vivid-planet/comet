@@ -1,7 +1,6 @@
 import { DeleteButton, messages } from "@comet/admin";
-import { ArrowRight, Delete } from "@comet/admin-icons";
+import { ArrowRight, Clear, Delete } from "@comet/admin-icons";
 import { AdminComponentPaper } from "@comet/blocks-admin";
-import { Cancel } from "@mui/icons-material";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -138,7 +137,7 @@ export const PageDeleteDialog: React.FC<PageDeleteDialogProps> = (props) => {
                 )}
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCancelClick} color="inherit" startIcon={<Cancel />}>
+                <Button onClick={handleCancelClick} color="inherit" startIcon={<Clear />}>
                     <FormattedMessage {...messages.cancel} />
                 </Button>
 

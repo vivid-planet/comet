@@ -1,6 +1,5 @@
-import { OneOfBlock, PropsWithData, SupportedBlocks, VimeoVideoBlock, withPreview, YouTubeVideoBlock } from "@comet/cms-site";
+import { DamVideoBlock, OneOfBlock, PropsWithData, SupportedBlocks, VimeoVideoBlock, withPreview, YouTubeVideoBlock } from "@comet/cms-site";
 import { VideoBlockData } from "@src/blocks.generated";
-import DamVideoBlock from "@src/blocks/DamVideoBlock";
 import * as React from "react";
 
 const supportedBlocks: SupportedBlocks = {

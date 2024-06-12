@@ -150,7 +150,7 @@ export function filtersToMikroOrmQuery(
     return genericFilter(filter);
 }
 
-const splitSearchString = (search: string) => {
+export const splitSearchString = (search: string) => {
     // regex to match all single tokens or quotes in a string => "This is a 'quoted string'" will result in ["This", "is", "a", "quoted string"]
     // it will also take escaped quotes (prepended with a backslash => \) into account
     const regex = /(["'])(?:(?=(\\?))\2.)*?\1|\S+/g;
@@ -169,9 +169,11 @@ const splitSearchString = (search: string) => {
 export function searchToMikroOrmQuery(search: string, fields: string[]): ObjectQuery<any> {
     const quotedSearchParts = splitSearchString(search);
 
-    const ors = [];
-    for (const field of fields) {
-        for (const quotedSearch of quotedSearchParts) {
+    const ands = [];
+
+    for (const quotedSearch of quotedSearchParts) {
+        const ors = [];
+        for (const field of fields) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const or: any = {};
             let nestedFilter = or;
@@ -181,8 +183,9 @@ export function searchToMikroOrmQuery(search: string, fields: string[]): ObjectQ
             nestedFilter.$ilike = quotedSearch;
             ors.push(or);
         }
+        ands.push({ $or: ors });
     }
     return {
-        $or: ors,
+        $and: ands,
     };
 }

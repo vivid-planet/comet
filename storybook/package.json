@@ -24,7 +24,6 @@
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
         "@fontsource/roboto": "^4.2.3",
-        "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
         "@mui/styles": "^5.0.0",
         "@mui/system": "^5.0.0",

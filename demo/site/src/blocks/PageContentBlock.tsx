@@ -1,4 +1,4 @@
-import { BlocksBlock, PropsWithData, SupportedBlocks, VimeoVideoBlock, YouTubeVideoBlock } from "@comet/cms-site";
+import { BlocksBlock, DamVideoBlock, PropsWithData, SupportedBlocks, VimeoVideoBlock, YouTubeVideoBlock } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
 import { VideoBlock } from "@src/blocks/VideoBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
@@ -7,7 +7,6 @@ import * as React from "react";
 import { AnchorBlock } from "./AnchorBlock";
 import { ColumnsBlock } from "./ColumnsBlock";
 import { DamImageBlock } from "./DamImageBlock";
-import DamVideoBlock from "./DamVideoBlock";
 import { FullWidthImageBlock } from "./FullWidthImageBlock";
 import { HeadlineBlock } from "./HeadlineBlock";
 import { LinkListBlock } from "./LinkListBlock";

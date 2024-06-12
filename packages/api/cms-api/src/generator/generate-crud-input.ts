@@ -32,7 +32,7 @@ function findReferenceTargetType(
         return "uuid";
     } else if (referencedColumnProp.type == "string") {
         return "string";
-    } else if (referencedColumnProp.type == "integer") {
+    } else if (referencedColumnProp.type == "integer" || referencedColumnProp.type == "int") {
         return "integer";
     } else {
         return null;
@@ -263,7 +263,7 @@ export async function generateCrudInput(
                 generatedFiles.push(...nestedInputFiles);
                 imports.push({
                     name: inputNameClassName,
-                    importPath: nestedInputFiles[0].name.replace(/^dto/, ".").replace(/\.ts$/, ""),
+                    importPath: nestedInputFiles[nestedInputFiles.length - 1].name.replace(/^dto/, ".").replace(/\.ts$/, ""),
                 });
             }
             decorators.push(`@Field(() => ${inputNameClassName}${prop.nullable ? ", { nullable: true }" : ""})`);

@@ -1,5 +1,55 @@
 # @comet/admin
 
+## 6.12.0
+
+### Minor Changes
+
+-   16ffa7be9: Add `FinalFormAsyncSelect`, `AsyncSelectField`, and `FinalFormAsyncAutocomplete` components
+
+    Thin wrappers to ease using `useAsyncOptionsProps()` with `FinalFormSelect` and `FinalFormAutocomplete`.
+
+    **Example**
+
+    Previously:
+
+    ```tsx
+    const asyncOptionsProps = useAsyncOptionsProps(async () => {
+        // Load options here
+    });
+
+    // ...
+
+    <Field component={FinalFormAsyncAutocomplete} {...asyncOptionsProps} />;
+    ```
+
+    Now:
+
+    ```tsx
+    <Field
+        component={FinalFormAsyncAutocomplete}
+        loadOptions={async () => {
+            // Load options here
+        }}
+    />
+    ```
+
+### Patch Changes
+
+-   @comet/admin-icons@6.12.0
+
+## 6.11.0
+
+### Minor Changes
+
+-   8e3dec523: Change `writeClipboardText`/`readClipboardText` clipboard fallback to in-memory
+
+    Using the local storage as a fallback caused issues when writing clipboard contents larger than 5MB.
+    Changing the fallback to in-memory resolves the issue.
+
+### Patch Changes
+
+-   @comet/admin-icons@6.11.0
+
 ## 6.10.0
 
 ### Minor Changes
