@@ -206,8 +206,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     @Type(() => ${enumName}EnumFilter)
                     ${prop.name}?: ${enumName}EnumFilter;
                     `;
-                } else if (prop.type 
-                           "string" || prop.type === "text") {
+                } else if (prop.type === "string" || prop.type === "text") {
                     return `@Field(() => StringFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
