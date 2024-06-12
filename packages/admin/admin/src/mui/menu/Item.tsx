@@ -40,7 +40,6 @@ export const MenuItem = (inProps: MenuItemProps) => {
     if (level > 3) throw new Error("Maximum nesting level of 2 exceeded.");
 
     const showIcon = !!icon && level === 1;
-    const showText = isMenuOpen || level !== 1;
 
     const ownerState: OwnerState = {
         level,
@@ -60,7 +59,7 @@ export const MenuItem = (inProps: MenuItemProps) => {
                     {icon}
                 </Icon>
             )}
-            {showText && <Text ownerState={ownerState} primary={primary} secondary={secondary} inset={!icon} {...slotProps?.text} />}
+            <Text ownerState={ownerState} primary={primary} secondary={secondary} inset={!icon} {...slotProps?.text} />
             {!!secondaryAction && secondaryAction}
         </Root>
     );
