@@ -1,5 +1,82 @@
 # @comet/cms-admin
 
+## 7.0.0-beta.1
+
+### Major Changes
+
+-   c3940df58: Replace `additionalMimeTypes` and `overrideAcceptedMimeTypes` in `DamConfigProvider` with `acceptedMimeTypes`
+
+    You can now add mime types like this:
+
+    ```tsx
+    <DamConfigProvider
+        value={{
+            acceptedMimeTypes: [...damDefaultAcceptedMimetypes, "something-else"],
+        }}
+    >
+        {/* ... */}
+    </DamConfigProvider>
+    ```
+
+    And remove them like this:
+
+    ```tsx
+    <DamConfigProvider
+        value={{
+            acceptedMimeTypes: damDefaultAcceptedMimetypes.filter((mimeType) => mimeType !== "application/zip"),
+        }}
+    >
+        {/* ... */}
+    </DamConfigProvider>
+    ```
+
+    Don't forget to also remove/add the mime types in the API's `DamModule`
+
+### Minor Changes
+
+-   dcf3f70f4: Add `overrideAcceptedMimeTypes` configuration to DAM
+
+    If set, only the mimetypes specified in `overrideAcceptedMimeTypes` will be accepted.
+
+    You must configure `overrideAcceptedMimeTypes` in the API and the admin interface:
+
+    API:
+
+    ```diff
+    // app.module.ts
+
+    DamModule.register({
+        damConfig: {
+            // ...
+    +       overrideAcceptedMimeTypes: ["image/png"],
+            // ...
+        },
+        // ...
+    }),
+    ```
+
+    Admin:
+
+    ```diff
+    // App.tsx
+
+    <DamConfigProvider
+        value={{
+            // ...
+    +       overrideAcceptedMimeTypes: ["image/png"],
+        }}
+    >
+    ```
+
+### Patch Changes
+
+-   @comet/admin@7.0.0-beta.1
+-   @comet/admin-date-time@7.0.0-beta.1
+-   @comet/admin-icons@7.0.0-beta.1
+-   @comet/admin-rte@7.0.0-beta.1
+-   @comet/admin-theme@7.0.0-beta.1
+-   @comet/blocks-admin@7.0.0-beta.1
+
 ## 7.0.0-beta.0
 
 ### Major Changes

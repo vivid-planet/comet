@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-rte",
-    "version": "7.0.0-beta.0",
+    "version": "7.0.0-beta.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -27,8 +27,8 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "@comet/admin": "workspace:^7.0.0-beta.0",
-        "@comet/admin-icons": "workspace:^7.0.0-beta.0",
+        "@comet/admin": "workspace:^7.0.0-beta.1",
+        "@comet/admin-icons": "workspace:^7.0.0-beta.1",
         "detect-browser": "^5.2.1",
         "draft-js-export-html": "^1.4.1",
         "draft-js-import-html": "^1.4.1",
@@ -38,8 +38,8 @@
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^7.0.0-beta.0",
-        "@comet/eslint-config": "workspace:^7.0.0-beta.0",
+        "@comet/admin-babel-preset": "workspace:^7.0.0-beta.1",
+        "@comet/eslint-config": "workspace:^7.0.0-beta.1",
         "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
         "@testing-library/jest-dom": "^5.16.5",
