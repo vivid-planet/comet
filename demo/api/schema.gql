@@ -882,6 +882,7 @@ input NewsFilter {
   status: NewsStatusEnumFilter
   date: DateFilter
   category: NewsCategoryEnumFilter
+  comments: OneToManyFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   and: [NewsFilter!]
@@ -898,6 +899,10 @@ input NewsCategoryEnumFilter {
   isAnyOf: [NewsCategory!]
   equal: NewsCategory
   notEqual: NewsCategory
+}
+
+input OneToManyFilter {
+  contains: ID
 }
 
 input NewsSort {
@@ -926,8 +931,11 @@ input ProductFilter {
   inStock: BooleanFilter
   soldCount: NumberFilter
   availableSince: DateFilter
+  colors: OneToManyFilter
+  variants: OneToManyFilter
   category: ManyToOneFilter
   tags: ManyToManyFilter
+  tagsWithStatus: OneToManyFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   manufacturer: ManyToOneFilter
@@ -995,6 +1003,7 @@ enum ProductSortField {
 input ProductCategoryFilter {
   title: StringFilter
   slug: StringFilter
+  products: OneToManyFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   and: [ProductCategoryFilter!]
@@ -1016,6 +1025,7 @@ enum ProductCategorySortField {
 input ProductTagFilter {
   title: StringFilter
   products: ManyToManyFilter
+  productsWithStatus: OneToManyFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   and: [ProductTagFilter!]
