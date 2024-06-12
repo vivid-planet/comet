@@ -61,7 +61,7 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
     const location = useLocation();
 
     const [isSubmenuOpen, setIsSubmenuOpen] = React.useState<boolean>(openByDefault || hasSelectedChild.current);
-    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | undefined>(undefined);
+    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
     React.useEffect(() => {
         // set open state manually to false to avoid a menu opening when isMenuOpen state changes
@@ -98,7 +98,7 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
     }, [children, isMenuOpen, isSubmenuOpen, itemLevel, location.pathname]);
 
     const closeMenu = () => {
-        setAnchorEl(undefined);
+        setAnchorEl(null);
         setIsSubmenuOpen(false);
     };
 
@@ -185,7 +185,7 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
                     sx={{
                         pointerEvents: "none",
                     }}
-                    open={isSubmenuOpen}
+                    open={isSubmenuOpen && anchorEl !== null}
                     anchorEl={anchorEl}
                     TransitionComponent={Fade}
                     anchorOrigin={{

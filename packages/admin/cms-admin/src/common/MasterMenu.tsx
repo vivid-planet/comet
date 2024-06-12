@@ -84,30 +84,31 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
 
     const mapFn = (item: MasterMenuItem): MenuItem => {
         if (item.type === "externalLink") {
-            return { type: "externalLink", menuElement: item };
+            const { requiredPermission, type, ...menuElement } = item;
+            return { type, menuElement };
         }
 
         if (item.type === "group") {
-            const { items, ...menuElement } = item;
+            const { items, requiredPermission, type, ...menuElement } = item;
             return {
-                type: "group",
+                type,
                 menuElement,
                 items: items.filter(checkPermission).map(mapFn),
             };
         }
 
         if (item.type === "collapsible") {
-            const { route, items, ...menuElement } = item;
+            const { route, items, requiredPermission, type, ...menuElement } = item;
             return {
-                type: "collapsible",
+                type,
                 menuElement,
                 items: items ? items.filter(checkPermission).map(mapFn) : [],
             };
         }
 
-        const { route, to, ...menuItem } = item;
+        const { route, to, requiredPermission, type, ...menuItem } = item;
         return {
-            type: "route",
+            type,
             menuElement: {
                 ...menuItem,
                 to: to ?? route?.path?.toString() ?? "",

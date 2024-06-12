@@ -6,7 +6,6 @@ import { Tooltip as CommonTooltip } from "../../common/Tooltip";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MenuChild, MenuCollapsibleItemProps } from "./CollapsibleItem";
-import { MenuContext } from "./Context";
 import { MenuItemProps } from "./Item";
 import { MenuItemRouterLinkProps } from "./ItemRouterLink";
 
@@ -98,15 +97,18 @@ export interface MenuItemGroupProps
     shortTitle?: React.ReactNode;
     helperIcon?: React.ReactNode;
     children?: React.ReactNode;
+    isMenuOpen?: boolean;
 }
 
 export const MenuItemGroup = (inProps: MenuItemGroupProps) => {
-    const { title, shortTitle, helperIcon, children, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminMenuItemGroup" });
+    const { title, shortTitle, helperIcon, children, isMenuOpen, slotProps, ...restProps } = useThemeProps({
+        props: inProps,
+        name: "CometAdminMenuItemGroup",
+    });
 
-    const { open: menuOpen } = React.useContext(MenuContext);
     const intl = useIntl();
 
-    const ownerState: OwnerState = { open: menuOpen };
+    const ownerState: OwnerState = { open: Boolean(isMenuOpen) };
 
     function isFormattedMessage(node: React.ReactNode): node is React.ReactElement<MessageDescriptor> {
         return !!node && React.isValidElement(node) && node.type === FormattedMessage;
@@ -138,19 +140,19 @@ export const MenuItemGroup = (inProps: MenuItemGroupProps) => {
         () =>
             React.Children.map(children, (child: MenuChild) => {
                 return React.cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
-                    isMenuOpen: menuOpen,
+                    isMenuOpen,
                 });
             }),
-        [children, menuOpen],
+        [children, isMenuOpen],
     );
 
     return (
         <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
             <Tooltip
                 placement="right"
-                disableHoverListener={menuOpen}
-                disableFocusListener={menuOpen}
-                disableTouchListener={menuOpen}
+                disableHoverListener={isMenuOpen}
+                disableFocusListener={isMenuOpen}
+                disableTouchListener={isMenuOpen}
                 title={title}
                 {...slotProps?.tooltip}
             >
@@ -161,7 +163,7 @@ export const MenuItemGroup = (inProps: MenuItemGroupProps) => {
                     <Title variant="subtitle2" ownerState={ownerState} {...slotProps?.title}>
                         {title}
                     </Title>
-                    {menuOpen && !!helperIcon && helperIcon}
+                    {isMenuOpen && !!helperIcon && helperIcon}
                 </TitleContainer>
             </Tooltip>
             {childElements}
