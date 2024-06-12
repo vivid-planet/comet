@@ -1,5 +1,59 @@
 # @comet/admin
 
+## 6.13.0
+
+### Minor Changes
+
+-   5e25348bb: Add a dialog option to the translation feature
+
+    If enabled a dialog will open when pressing the translation button showing the original text and an editable translation
+
+    Control if the dialog should be shown for the current scope via the `showApplyTranslationDialog` prop (default: true)
+
+    ```diff
+    <ContentTranslationServiceProvider
+        enabled={true}
+    +   showApplyTranslationDialog={true}
+        translate={...}
+    >
+    ```
+
+-   796e83206: Add `AutocompleteField` and `AsyncAutocompleteField` components
+
+    **Examples**
+
+    ```tsx
+    <AutocompleteField
+        name="autocomplete"
+        label="Autocomplete"
+        options={[
+            { value: "chocolate", label: "Chocolate" },
+            { value: "strawberry", label: "Strawberry" },
+            { value: "vanilla", label: "Vanilla" },
+        ]}
+        getOptionLabel={(option: Option) => option.label}
+        isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
+        fullWidth
+    />
+    ```
+
+    ```tsx
+    <AsyncAutocompleteField
+        name="asyncAutocomplete"
+        label="Async Autocomplete"
+        loadOptions={async () => {
+            // Load options here
+        }}
+        getOptionLabel={(option: Option) => option.label}
+        isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
+        fullWidth
+    />
+    ```
+
+### Patch Changes
+
+-   @comet/admin-icons@6.13.0
+
 ## 6.12.0
 
 ### Minor Changes
