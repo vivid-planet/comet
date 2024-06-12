@@ -70,6 +70,7 @@ export async function sitePreviewRoute(request: NextRequest, graphQLFetch: Graph
 export async function previewParams(options: { checkDraftMode: boolean } = { checkDraftMode: true }): Promise<SitePreviewParams | null> {
     const previewScopeSigningKey = getPreviewScopeSigningKey();
 
+    // Allow skip checking for DraftMode is necessary when being called from middleware.ts (see https://github.com/vercel/next.js/issues/52080)
     if (options.checkDraftMode && !draftMode().isEnabled) return null;
     const cookie = cookies().get("__comet_preview");
     if (cookie) {
