@@ -186,7 +186,7 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
                         pointerEvents: "none",
                     }}
                     open={isSubmenuOpen && anchorEl !== null}
-                    anchorEl={anchorEl ?? null}
+                    anchorEl={anchorEl}
                     TransitionComponent={Fade}
                     anchorOrigin={{
                         vertical: "center",
