@@ -8,7 +8,7 @@ import { generateCrudInput } from "./generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";
 import { generateImportsCode, Imports } from "./utils/generate-imports-code";
-import { findEnumImportPath, findEnumName, morphTsProperty } from "./utils/ts-morph-helper";
+import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName, morphTsProperty } from "./utils/ts-morph-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
 // TODO move into own file
@@ -706,20 +706,26 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
 
     const imports: Imports = [];
 
-    const { imports: fieldImports, code, hasOutputRelations } = generateRelationsFieldResolver({ generatorOptions, metadata });
+    const {
+        imports: fieldImports,
+        code,
+        hasOutputRelations,
+        needsBlocksTransformer,
+    } = generateRelationsFieldResolver({ generatorOptions, metadata });
     if (!hasOutputRelations) return null;
     imports.push(...fieldImports);
 
     imports.push(generateEntityImport(metadata, generatorOptions.targetDirectory));
 
     return `
-    import { RequiredPermission } from "@comet/cms-api";
+    import { RequiredPermission, RootBlockDataScalar, RequestContextInterface, RequestContext, BlocksTransformerService } from "@comet/cms-api";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
     @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
+        ${needsBlocksTransformer ? `constructor(private readonly blocksTransformer: BlocksTransformerService) {}` : ""}
         ${code}
     }
     `;
@@ -750,6 +756,10 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
         }
     }
 
+    const resolveFieldBlockProps = metadata.props.filter((prop) => {
+        return hasFieldFeature(metadata.class, prop.name, "resolveField") && prop.type === "RootBlockType";
+    });
+
     const hasOutputRelations =
         outputRelationManyToOneProps.length > 0 ||
         outputRelationOneToManyProps.length > 0 ||
@@ -761,6 +771,12 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
     for (const prop of [...relationManyToOneProps, ...relationOneToManyProps, ...relationManyToManyProps, ...relationOneToOneProps]) {
         if (!prop.targetMeta) throw new Error(`Relation ${prop.name} has targetMeta not set`);
         imports.push(generateEntityImport(prop.targetMeta, generatorOptions.targetDirectory));
+    }
+
+    for (const prop of resolveFieldBlockProps) {
+        const blockName = findBlockName(prop.name, metadata);
+        const importPath = findBlockImportPath(blockName, `${generatorOptions.targetDirectory}`, metadata);
+        imports.push({ name: blockName, importPath });
     }
 
     const code = `
@@ -808,12 +824,28 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
         )
         .join("\n")}
 
+        ${resolveFieldBlockProps
+            .map(
+                (prop) => `
+        @ResolveField(() => RootBlockDataScalar(${findBlockName(prop.name, metadata)}))
+        async ${prop.name}(@Parent() ${instanceNameSingular}: ${
+                    metadata.className
+                }, @RequestContext() { includeInvisibleBlocks, previewDamUrls }: RequestContextInterface): Promise<object> {
+            return this.blocksTransformer.transformToPlain(${instanceNameSingular}.${
+                    prop.name
+                }, { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls });
+        }
+        `,
+            )
+            .join("\n")}
+
     `.trim();
 
     return {
         code,
         imports,
         hasOutputRelations,
+        needsBlocksTransformer: resolveFieldBlockProps.length > 0,
     };
 }
 
@@ -863,6 +895,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         imports: relationsFieldResolverImports,
         code: relationsFieldResolverCode,
         hasOutputRelations,
+        needsBlocksTransformer,
     } = generateRelationsFieldResolver({
         generatorOptions,
         metadata,
@@ -891,11 +924,20 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
     }
 
+    imports.push({ name: "extractGraphqlFields", importPath: "@comet/cms-api" });
+    imports.push({ name: "SortDirection", importPath: "@comet/cms-api" });
+    imports.push({ name: "RequiredPermission", importPath: "@comet/cms-api" });
+    imports.push({ name: "AffectedEntity", importPath: "@comet/cms-api" });
+    imports.push({ name: "validateNotModified", importPath: "@comet/cms-api" });
+    imports.push({ name: "RootBlockDataScalar", importPath: "@comet/cms-api" });
+    imports.push({ name: "RequestContextInterface", importPath: "@comet/cms-api" });
+    imports.push({ name: "RequestContext", importPath: "@comet/cms-api" });
+    imports.push({ name: "BlocksTransformerService", importPath: "@comet/cms-api" });
+
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { FindOptions, ObjectQuery, Reference } from "@mikro-orm/core";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
-    import { extractGraphqlFields, SortDirection, RequiredPermission, AffectedEntity, validateNotModified } from "@comet/cms-api";
     import { GraphQLResolveInfo } from "graphql";
 
     import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
@@ -912,8 +954,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
             @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
             ${[...new Set<string>(injectRepositories)]
-                .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>`)
-                .join(", ")}
+                .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>,`)
+                .join("\n")}
+            ${needsBlocksTransformer ? `private readonly blocksTransformer: BlocksTransformerService,` : ""}
         ) {}
 
         @Query(() => ${metadata.className})
