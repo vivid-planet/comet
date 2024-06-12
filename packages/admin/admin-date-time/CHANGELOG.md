@@ -1,5 +1,12 @@
 # @comet/admin-date-time
 
+## 7.0.0-beta.1
+
+### Patch Changes
+
+-   @comet/admin@7.0.0-beta.1
+-   @comet/admin-icons@7.0.0-beta.1
+
 ## 7.0.0-beta.0
 
 ### Major Changes
