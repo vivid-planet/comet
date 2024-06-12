@@ -1,24 +1,28 @@
 import { ApolloClient, RefetchQueriesOptions, useApolloClient } from "@apollo/client";
 import { Copy, Delete as DeleteIcon, Domain, Paste, ThreeDotSaving } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Snackbar } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { Alert } from "../alert/Alert";
 import { readClipboardText } from "../clipboard/readClipboardText";
 import { writeClipboardText } from "../clipboard/writeClipboardText";
+import { FeedbackButton } from "../common/buttons/feedback/FeedbackButton";
 import { useErrorDialog } from "../error/errordialog/useErrorDialog";
 import { messages } from "../messages";
 import { RowActionsItem } from "../rowActions/RowActionsItem";
 import { RowActionsMenu } from "../rowActions/RowActionsMenu";
+import { useSnackbarApi } from "../snackbar/SnackbarProvider";
 
 interface DeleteDialogProps {
     dialogOpen: boolean;
     onDelete: () => void;
     onCancel: () => void;
+    loading?: boolean;
 }
 
 const DeleteDialog: React.FC<DeleteDialogProps> = (props) => {
-    const { dialogOpen, onDelete, onCancel } = props;
+    const { dialogOpen, onDelete, onCancel, loading } = props;
 
     return (
         <Dialog open={dialogOpen} onClose={onDelete}>
@@ -32,13 +36,29 @@ const DeleteDialog: React.FC<DeleteDialogProps> = (props) => {
                 <Button onClick={onDelete} color="primary">
                     <FormattedMessage {...messages.no} />
                 </Button>
-                <Button onClick={onCancel} color="primary" variant="contained">
+                <FeedbackButton startIcon={<DeleteIcon />} onClick={onCancel} color="primary" variant="contained" loading={loading}>
                     <FormattedMessage {...messages.yes} />
-                </Button>
+                </FeedbackButton>
             </DialogActions>
         </Dialog>
     );
 };
+
+const successSnackbar = (
+    <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "left" }} autoHideDuration={5000}>
+        <Alert severity="success">
+            <FormattedMessage id="comet.common.deleteSuccess" defaultMessage="Sucessfully deleted" />
+        </Alert>
+    </Snackbar>
+);
+
+const errorSnackbar = (
+    <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "left" }} autoHideDuration={5000}>
+        <Alert severity="error">
+            <FormattedMessage id="comet.common.deleteFailed" defaultMessage="Failed to delete" />
+        </Alert>
+    </Snackbar>
+);
 
 export interface CrudContextMenuProps<CopyData> {
     url?: string;
@@ -53,18 +73,29 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
     const intl = useIntl();
     const client = useApolloClient();
     const errorDialog = useErrorDialog();
+    const { showSnackbar } = useSnackbarApi();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
     const [copyLoading, setCopyLoading] = React.useState(false);
     const [pasting, setPasting] = React.useState(false);
+    const [deleteLoading, setDeleteLoading] = React.useState(false);
 
     const handleDeleteClick = async () => {
         if (!onDelete) return;
-        await onDelete({
-            client,
-        });
-        if (refetchQueries) await client.refetchQueries({ include: refetchQueries });
-        setDeleteDialogOpen(false);
+        try {
+            setDeleteLoading(true);
+            await onDelete({
+                client,
+            });
+            if (refetchQueries) await client.refetchQueries({ include: refetchQueries });
+            setDeleteLoading(false);
+            setDeleteDialogOpen(false);
+            showSnackbar(successSnackbar);
+        } catch (_) {
+            setDeleteLoading(false);
+            showSnackbar(errorSnackbar);
+            setDeleteDialogOpen(false);
+        }
     };
 
     const handlePasteClick = async () => {
@@ -170,6 +201,7 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
                     setDeleteDialogOpen(false);
                 }}
                 onCancel={handleDeleteClick}
+                loading={deleteLoading}
             />
         </>
     );
