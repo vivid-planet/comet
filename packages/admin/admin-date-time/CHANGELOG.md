@@ -1,5 +1,6 @@
 # @comet/admin-date-time
 
+<<<<<<< HEAD
 ## 7.0.0-beta.1
 
 ### Patch Changes
@@ -216,6 +217,16 @@
 -   Updated dependencies [92eae2ba9]
     -   @comet/admin@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
+=======
+## 6.13.0
+
+### Patch Changes
+
+-   Updated dependencies [5e25348bb]
+-   Updated dependencies [796e83206]
+    -   @comet/admin@6.13.0
+    -   @comet/admin-icons@6.13.0
+>>>>>>> main
 
 ## 6.12.0
 

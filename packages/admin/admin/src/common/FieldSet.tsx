@@ -1,4 +1,4 @@
-import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
+import { ChevronRight } from "@comet/admin-icons";
 import { ComponentsOverrides, Theme } from "@mui/material";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
@@ -78,6 +78,7 @@ export function FieldSet(inProps: React.PropsWithChildren<FieldSetProps>): React
             {...slotProps?.root}
             {...restProps}
         >
+<<<<<<< HEAD
             <Summary expandIcon={collapsible && <ArrowForwardIosSharpIcon />} {...slotProps?.summary}>
                 <HeaderColumn {...slotProps?.headerColumn}>
                     <Title {...slotProps?.title}>{title}</Title>
@@ -88,6 +89,17 @@ export function FieldSet(inProps: React.PropsWithChildren<FieldSetProps>): React
             </Summary>
             <Children ownerState={ownerState} {...slotProps?.children}>
                 {disablePadding ? "disablePadding" : "not disablePadding"}
+=======
+            <MuiAccordionSummary classes={{ root: classes.summary }} expandIcon={collapsible && <ChevronRight />} {...componentsProps?.summary}>
+                <div className={classes.headerColumn}>
+                    <div className={classes.title}>{title}</div>
+                    <div className={classes.supportText}>{supportText}</div>
+                </div>
+                <div className={classes.placeholder} />
+                <div className={classes.endAdornment}>{endAdornment}</div>
+            </MuiAccordionSummary>
+            <MuiAccordionDetails className={clsx(classes.children, disablePadding && classes.disablePadding)} {...componentsProps?.details}>
+>>>>>>> main
                 {children}
             </Children>
         </Root>

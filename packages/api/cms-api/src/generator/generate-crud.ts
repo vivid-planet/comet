@@ -118,6 +118,14 @@ export function buildOptions(metadata: EntityMetadata<any>) {
 
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
     if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
+<<<<<<< HEAD
+=======
+    const hasUpdatedAt = metadata.props.some((prop) => prop.name == "updatedAt");
+
+    const scopedEntity = Reflect.getMetadata("scopedEntity", metadata.class);
+    const skipScopeCheck = !scopeProp && !scopedEntity;
+
+>>>>>>> main
     const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
     const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
 
@@ -137,6 +145,11 @@ export function buildOptions(metadata: EntityMetadata<any>) {
         statusActiveItems,
         hasStatusFilter,
         scopeProp,
+<<<<<<< HEAD
+=======
+        hasUpdatedAt,
+        skipScopeCheck,
+>>>>>>> main
         argsClassName,
         argsFileName,
         blockProps,
@@ -499,11 +512,11 @@ function generateEntityImport(targetMetadata: EntityMetadata<any>, relativeTo: s
 function generateInputHandling(
     options: { mode: "create" | "update" | "updateNested"; inputName: string; assignEntityCode: string; excludeFields?: string[] },
     metadata: EntityMetadata<any>,
-): { code: string; injectRepositories: string[] } {
+): { code: string; injectRepositories: EntityMetadata<any>[] } {
     const { instanceNameSingular } = buildNameVariants(metadata);
     const { blockProps, scopeProp, dedicatedResolverArgProps } = buildOptions(metadata);
 
-    const injectRepositories: string[] = [];
+    const injectRepositories: EntityMetadata<any>[] = [];
 
     const props = metadata.props.filter((prop) => !options.excludeFields || !options.excludeFields.includes(prop.name));
 
@@ -519,7 +532,9 @@ function generateInputHandling(
             return !dedicatedResolverArgProps.some((dedicatedResolverArgProp) => dedicatedResolverArgProp.name === prop.name);
         })
         .map((prop) => {
-            injectRepositories.push(prop.type);
+            const targetMeta = prop.targetMeta;
+            if (!targetMeta) throw new Error("targetMeta is not set for relation");
+            injectRepositories.push(targetMeta);
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
@@ -534,7 +549,7 @@ function generateInputHandling(
         .map((prop) => {
             const targetMeta = prop.targetMeta;
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
-            injectRepositories.push(prop.type);
+            injectRepositories.push(targetMeta);
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
@@ -549,7 +564,7 @@ function generateInputHandling(
         .map((prop) => {
             const targetMeta = prop.targetMeta;
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
-            injectRepositories.push(prop.type);
+            injectRepositories.push(targetMeta);
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
@@ -696,13 +711,12 @@ ${
         : ""
 }
     `;
-
     return { code, injectRepositories };
 }
 
 function generateNestedEntityResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
     const { classNameSingular } = buildNameVariants(metadata);
-    const { scopeProp } = buildOptions(metadata);
+    const { skipScopeCheck } = buildOptions(metadata);
 
     const imports: Imports = [];
 
@@ -718,7 +732,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         ${code}
     }
@@ -822,15 +836,24 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         buildNameVariants(metadata);
     const {
         scopeProp,
+<<<<<<< HEAD
+=======
+        skipScopeCheck,
+>>>>>>> main
         argsClassName,
         argsFileName,
         hasSlugProp,
         hasSearchArg,
         hasSortArg,
         hasFilterArg,
+<<<<<<< HEAD
         statusProp,
         hasStatusFilter,
         dedicatedResolverArgProps,
+=======
+        hasVisibleProp,
+        hasUpdatedAt,
+>>>>>>> main
     } = buildOptions(metadata);
 
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
@@ -843,7 +866,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     const outputRelationOneToOneProps = relationOneToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
 
     const imports: Imports = [];
-    const injectRepositories = new Array<string>();
+    const injectRepositories = new Array<EntityMetadata<any>>();
 
     const { code: createInputHandlingCode, injectRepositories: createInputHandlingInjectRepositories } = generateInputHandling(
         { mode: "create", inputName: "input", assignEntityCode: `const ${instanceNameSingular} = this.repository.create({` },
@@ -873,6 +896,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, generatorOptions.targetDirectory));
     }
+    imports.push(...injectRepositories.map((meta) => generateEntityImport(meta, generatorOptions.targetDirectory)));
 
     if (statusProp) {
         const enumName = findEnumName(statusProp.name, metadata);
@@ -905,13 +929,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
             private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
             @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
-            ${[...new Set<string>(injectRepositories)]
+            ${[...new Set<string>(injectRepositories.map((meta) => meta.className))]
                 .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>`)
                 .join(", ")}
         ) {}
@@ -949,6 +973,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             })
             .join("")}
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
+<<<<<<< HEAD
             @Args() {${Object.entries({
                 scope: !!scopeProp,
                 ...dedicatedResolverArgProps.reduce((acc, dedicatedResolverArgProp) => {
@@ -966,6 +991,11 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 .map(([key]) => key)
                 .join(", ")}}: ${argsClassName}
             ${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
+=======
+            @Args() { ${scopeProp ? `scope, ` : ""}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${
+                      hasSortArg ? `sort, ` : ""
+                  }offset, limit }: ${argsClassName}${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
+>>>>>>> main
         ): Promise<Paginated${classNamePlural}> {
             const where${
                 hasSearchArg || hasFilterArg

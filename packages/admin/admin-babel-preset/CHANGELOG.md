@@ -1,8 +1,12 @@
 # @comet/admin-babel-preset
 
+<<<<<<< HEAD
 ## 7.0.0-beta.1
 
 ## 7.0.0-beta.0
+=======
+## 6.13.0
+>>>>>>> main
 
 ## 6.12.0
 

@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { MoreHoriz } from "@mui/icons-material";
 import { ListItemIcon as MuiListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
 import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
+=======
+import { MoreHorizontal } from "@comet/admin-icons";
+import { ComponentsOverrides, ListItemIcon, Menu, MenuItem, Theme, Tooltip } from "@mui/material";
+import { createStyles, WithStyles, withStyles } from "@mui/styles";
+>>>>>>> main
 import { Editor } from "draft-js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -80,7 +86,7 @@ export function FeaturesButtonGroup(inProps: IProps) {
                             placement="top"
                         >
                             <span>
-                                <ControlButton onButtonClick={handleMoreOptionsClick} disabled={globallyDisabled} icon={MoreHoriz} />
+                                <ControlButton onButtonClick={handleMoreOptionsClick} disabled={globallyDisabled} icon={MoreHorizontal} />
                             </span>
                         </Tooltip>
                     </ButtonWrapper>

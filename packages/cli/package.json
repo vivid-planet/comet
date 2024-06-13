@@ -1,6 +1,10 @@
 {
     "name": "@comet/cli",
+<<<<<<< HEAD
     "version": "7.0.0-beta.1",
+=======
+    "version": "6.13.0",
+>>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -29,7 +33,11 @@
         "prettier": "^2.7.1"
     },
     "devDependencies": {
+<<<<<<< HEAD
         "@comet/eslint-config": "workspace:^7.0.0-beta.1",
+=======
+        "@comet/eslint-config": "workspace:^6.13.0",
+>>>>>>> main
         "@types/node": "^18.0.0",
         "eslint": "^8.0.0",
         "npm-run-all": "^4.1.5",
