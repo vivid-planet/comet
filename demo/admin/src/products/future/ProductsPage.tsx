@@ -5,6 +5,7 @@ import {
     SaveBoundary,
     SaveBoundarySaveButton,
     Stack,
+    StackLink,
     StackPage,
     StackSwitch,
     StackToolbar,
@@ -13,9 +14,11 @@ import {
     ToolbarBackButton,
     ToolbarFillSpace,
 } from "@comet/admin";
+import { Add as AddIcon } from "@comet/admin-icons";
+import { Button } from "@mui/material";
 import { ProductVariantsGrid } from "@src/products/future/generated/ProductVariantsGrid";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { ProductForm } from "./generated/ProductForm";
 import { ProductPriceForm } from "./generated/ProductPriceForm";
@@ -28,7 +31,20 @@ export function ProductsPage(): React.ReactElement {
             <StackSwitch>
                 <StackPage name="grid">
                     <MainContent fullHeight disablePadding>
-                        <ProductsGrid />
+                        <ProductsGrid
+                            addButton={
+                                <Button
+                                    startIcon={<AddIcon />}
+                                    component={StackLink}
+                                    pageName="add"
+                                    payload="add"
+                                    variant="contained"
+                                    color="primary"
+                                >
+                                    <FormattedMessage id="product.newProduct" defaultMessage="New Product" />
+                                </Button>
+                            }
+                        />
                     </MainContent>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>
@@ -61,10 +77,30 @@ export function ProductsPage(): React.ReactElement {
                         </SaveBoundary>
                     )}
                 </StackPage>
-                <StackPage name="variants" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Product variants" })}>
+                <StackPage
+                    name="variants"
+                    title={intl.formatMessage({
+                        id: "products.editProduct",
+                        defaultMessage: "Product variants",
+                    })}
+                >
                     {(selectedId) => (
                         <MainContent fullHeight disablePadding>
-                            <ProductVariantsGrid product={selectedId} />
+                            <ProductVariantsGrid
+                                product={selectedId}
+                                addButton={
+                                    <Button
+                                        startIcon={<AddIcon />}
+                                        component={StackLink}
+                                        pageName="add"
+                                        payload="add"
+                                        variant="contained"
+                                        color="primary"
+                                    >
+                                        <FormattedMessage id="productVariant.newProductVariant" defaultMessage="New Product Variant" />
+                                    </Button>
+                                }
+                            />
                         </MainContent>
                     )}
                 </StackPage>

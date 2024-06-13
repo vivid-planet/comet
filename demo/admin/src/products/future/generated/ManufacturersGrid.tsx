@@ -18,11 +18,11 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit } from "@comet/admin-icons";
-import { Button, IconButton } from "@mui/material";
+import { Edit } from "@comet/admin-icons";
+import { IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 
 import {
     GQLCreateManufacturerMutation,
@@ -83,7 +83,7 @@ const createManufacturerMutation = gql`
     }
 `;
 
-function ManufacturersGridToolbar() {
+function ManufacturersGridToolbar({ addButton }: { addButton?: React.ReactNode }) {
     return (
         <Toolbar>
             <ToolbarAutomaticTitleItem />
@@ -94,16 +94,16 @@ function ManufacturersGridToolbar() {
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarFillSpace />
-            <ToolbarActions>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="manufacturer.newManufacturer" defaultMessage="New Manufacturer" />
-                </Button>
-            </ToolbarActions>
+            {addButton && <ToolbarActions>{addButton}</ToolbarActions>}
         </Toolbar>
     );
 }
 
-export function ManufacturersGrid(): React.ReactElement {
+type Props = {
+    addButton?: React.ReactNode;
+};
+
+export function ManufacturersGrid({ addButton }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ManufacturersGrid") };
@@ -253,6 +253,9 @@ export function ManufacturersGrid(): React.ReactElement {
             loading={loading}
             components={{
                 Toolbar: ManufacturersGridToolbar,
+            }}
+            componentsProps={{
+                toolbar: { addButton: addButton },
             }}
         />
     );

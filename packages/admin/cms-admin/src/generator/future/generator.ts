@@ -54,7 +54,6 @@ export type GridConfig<T extends { __typename?: string }> = {
     fragmentName?: string;
     query?: string;
     columns: GridColumnConfig<T>[];
-    add?: boolean;
     edit?: boolean;
     delete?: boolean;
     copyPaste?: boolean;

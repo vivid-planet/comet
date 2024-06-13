@@ -1,7 +1,9 @@
-import { MainContent, Stack, StackPage, StackSwitch } from "@comet/admin";
+import { MainContent, Stack, StackLink, StackPage, StackSwitch } from "@comet/admin";
+import { Add as AddIcon } from "@comet/admin-icons";
+import { Button } from "@mui/material";
 import { ManufacturersGrid } from "@src/products/future/generated/ManufacturersGrid";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export function ManufacturersPage(): React.ReactElement {
     const intl = useIntl();
@@ -10,7 +12,20 @@ export function ManufacturersPage(): React.ReactElement {
             <StackSwitch>
                 <StackPage name="grid">
                     <MainContent fullHeight disablePadding>
-                        <ManufacturersGrid />
+                        <ManufacturersGrid
+                            addButton={
+                                <Button
+                                    startIcon={<AddIcon />}
+                                    component={StackLink}
+                                    pageName="add"
+                                    payload="add"
+                                    variant="contained"
+                                    color="primary"
+                                >
+                                    <FormattedMessage id="manufacturer.newManufacturer" defaultMessage="New Manufacturer" />
+                                </Button>
+                            }
+                        />
                     </MainContent>
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "manufacturers.addManufacturer", defaultMessage: "Add Manufacturer" })}>

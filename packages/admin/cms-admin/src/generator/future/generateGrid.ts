@@ -85,6 +85,9 @@ export function generateGrid(
     const imports: Imports = [];
     const props: Prop[] = [];
 
+    const addButtonType = "React.ReactNode";
+    props.push({ name: "addButton", type: addButtonType, optional: true });
+
     const fieldList = generateGqlFieldList({ columns: config.columns.filter((column) => column.name !== "id") }); // exclude id because it's always required
 
     // all root blocks including those we don't have columns for (required for copy/paste)
@@ -121,7 +124,6 @@ export function generateGrid(
     const hasCreateMutation = !!createMutationType;
 
     const allowCopyPaste = (typeof config.copyPaste === "undefined" || config.copyPaste === true) && !config.readOnly && hasCreateMutation;
-    const allowAdding = (typeof config.add === "undefined" || config.add === true) && !config.readOnly;
     const allowEditing = (typeof config.edit === "undefined" || config.edit === true) && !config.readOnly;
     const allowDeleting = (typeof config.delete === "undefined" || config.delete === true) && !config.readOnly && hasDeleteMutation;
 
@@ -406,7 +408,7 @@ export function generateGrid(
 
     ${
         toolbar
-            ? `function ${gqlTypePlural}GridToolbar() {
+            ? `function ${gqlTypePlural}GridToolbar({ addButton }: { addButton?: ${addButtonType} }) {
         return (
             <Toolbar>
                 <ToolbarAutomaticTitleItem />
@@ -425,15 +427,7 @@ export function generateGrid(
                         : ""
                 }
                 <ToolbarFillSpace />
-                ${
-                    allowAdding
-                        ? `<ToolbarActions>
-                    <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                        <FormattedMessage id="${instanceGqlType}.new${gqlType}" defaultMessage="New ${camelCaseToHumanReadable(gqlType)}" />
-                    </Button>
-                </ToolbarActions>`
-                        : ""
-                }
+                {addButton && <ToolbarActions>{addButton}</ToolbarActions>}
             </Toolbar>
         );
     }`
@@ -610,6 +604,9 @@ export function generateGrid(
                     toolbar
                         ? `components={{
 Toolbar: ${gqlTypePlural}GridToolbar,
+}}
+componentsProps={{
+    toolbar: { addButton: addButton },
 }}`
                         : ""
                 }

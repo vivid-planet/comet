@@ -18,12 +18,12 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { Edit } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 
 import {
     GQLCreateProductVariantMutation,
@@ -76,7 +76,7 @@ const createProductVariantMutation = gql`
     }
 `;
 
-function ProductVariantsGridToolbar() {
+function ProductVariantsGridToolbar({ addButton }: { addButton?: React.ReactNode }) {
     return (
         <Toolbar>
             <ToolbarAutomaticTitleItem />
@@ -87,20 +87,17 @@ function ProductVariantsGridToolbar() {
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarFillSpace />
-            <ToolbarActions>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="productVariant.newProductVariant" defaultMessage="New Product Variant" />
-                </Button>
-            </ToolbarActions>
+            {addButton && <ToolbarActions>{addButton}</ToolbarActions>}
         </Toolbar>
     );
 }
 
 type Props = {
+    addButton?: React.ReactNode;
     product: string;
 };
 
-export function ProductVariantsGrid({ product }: Props): React.ReactElement {
+export function ProductVariantsGrid({ addButton, product }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductVariantsGrid") };
@@ -183,6 +180,9 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             loading={loading}
             components={{
                 Toolbar: ProductVariantsGridToolbar,
+            }}
+            componentsProps={{
+                toolbar: { addButton: addButton },
             }}
         />
     );
