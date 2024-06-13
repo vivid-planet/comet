@@ -5,8 +5,6 @@ import {
     BlocksTransformerService,
     DamImageBlock,
     extractGraphqlFields,
-    RequestContext,
-    RequestContextInterface,
     RequiredPermission,
     RootBlockDataScalar,
 } from "@comet/cms-api";
@@ -138,12 +136,12 @@ export class NewsResolver {
     }
 
     @ResolveField(() => RootBlockDataScalar(DamImageBlock))
-    async image(@Parent() news: News, @RequestContext() { includeInvisibleBlocks, previewDamUrls }: RequestContextInterface): Promise<object> {
-        return this.blocksTransformer.transformToPlain(news.image, { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls });
+    async image(@Parent() news: News): Promise<object> {
+        return this.blocksTransformer.transformToPlain(news.image);
     }
 
     @ResolveField(() => RootBlockDataScalar(NewsContentBlock))
-    async content(@Parent() news: News, @RequestContext() { includeInvisibleBlocks, previewDamUrls }: RequestContextInterface): Promise<object> {
-        return this.blocksTransformer.transformToPlain(news.content, { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls });
+    async content(@Parent() news: News): Promise<object> {
+        return this.blocksTransformer.transformToPlain(news.content);
     }
 }

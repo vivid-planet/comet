@@ -5,8 +5,6 @@ import {
     BlocksTransformerService,
     DamImageBlock,
     extractGraphqlFields,
-    RequestContext,
-    RequestContextInterface,
     RequiredPermission,
     RootBlockDataScalar,
 } from "@comet/cms-api";
@@ -129,10 +127,7 @@ export class ProductVariantResolver {
     }
 
     @ResolveField(() => RootBlockDataScalar(DamImageBlock))
-    async image(
-        @Parent() productVariant: ProductVariant,
-        @RequestContext() { includeInvisibleBlocks, previewDamUrls }: RequestContextInterface,
-    ): Promise<object> {
-        return this.blocksTransformer.transformToPlain(productVariant.image, { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls });
+    async image(@Parent() productVariant: ProductVariant): Promise<object> {
+        return this.blocksTransformer.transformToPlain(productVariant.image);
     }
 }

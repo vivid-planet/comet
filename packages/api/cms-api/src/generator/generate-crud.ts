@@ -718,7 +718,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     imports.push(generateEntityImport(metadata, generatorOptions.targetDirectory));
 
     return `
-    import { RequiredPermission, RootBlockDataScalar, RequestContextInterface, RequestContext, BlocksTransformerService } from "@comet/cms-api";
+    import { RequiredPermission, RootBlockDataScalar, BlocksTransformerService } from "@comet/cms-api";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     ${generateImportsCode(imports)}
 
@@ -828,12 +828,8 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
             .map(
                 (prop) => `
         @ResolveField(() => RootBlockDataScalar(${findBlockName(prop.name, metadata)}))
-        async ${prop.name}(@Parent() ${instanceNameSingular}: ${
-                    metadata.className
-                }, @RequestContext() { includeInvisibleBlocks, previewDamUrls }: RequestContextInterface): Promise<object> {
-            return this.blocksTransformer.transformToPlain(${instanceNameSingular}.${
-                    prop.name
-                }, { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls });
+        async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<object> {
+            return this.blocksTransformer.transformToPlain(${instanceNameSingular}.${prop.name});
         }
         `,
             )
@@ -930,8 +926,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     imports.push({ name: "AffectedEntity", importPath: "@comet/cms-api" });
     imports.push({ name: "validateNotModified", importPath: "@comet/cms-api" });
     imports.push({ name: "RootBlockDataScalar", importPath: "@comet/cms-api" });
-    imports.push({ name: "RequestContextInterface", importPath: "@comet/cms-api" });
-    imports.push({ name: "RequestContext", importPath: "@comet/cms-api" });
     imports.push({ name: "BlocksTransformerService", importPath: "@comet/cms-api" });
 
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
