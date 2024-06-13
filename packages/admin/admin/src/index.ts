@@ -76,6 +76,7 @@ export {
 export { FinalFormSaveSplitButton } from "./FinalFormSaveSplitButton";
 export { FinalFormAutocomplete, FinalFormAutocompleteProps } from "./form/Autocomplete";
 export { FinalFormCheckbox, FinalFormCheckboxProps } from "./form/Checkbox";
+export { ChipSelect, ChipSelectClassKey, ChipSelectProps } from "./form/ChipSelect";
 export { Field, FieldProps } from "./form/Field";
 export { FieldContainer, FieldContainerClassKey, FieldContainerProps } from "./form/FieldContainer";
 export { AsyncSelectField, AsyncSelectFieldProps } from "./form/fields/AsyncSelectField";
