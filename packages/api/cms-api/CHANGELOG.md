@@ -1,5 +1,77 @@
 # @comet/cms-api
 
+## 7.0.0-beta.1
+
+### Major Changes
+
+-   c3940df58: Replace `additionalMimeTypes` and `overrideAcceptedMimeTypes` in `DamModule#damConfig` with `acceptedMimeTypes`
+
+    You can now add mime types like this:
+
+    ```ts
+    DamModule.register({
+        damConfig: {
+            acceptedMimeTypes: [...damDefaultAcceptedMimetypes, "something-else"],
+        },
+    });
+    ```
+
+    And remove them like this:
+
+    ```ts
+    DamModule.register({
+        damConfig: {
+            acceptedMimeTypes: damDefaultAcceptedMimetypes.filter((mimeType) => mimeType !== "application/zip"),
+        },
+    });
+    ```
+
+    Don't forget to also remove/add the mime types in the admin's `DamConfigProvider`
+
+-   c3940df58: Rename `defaultDamAcceptedMimetypes` to `damDefaultAcceptedMimetypes`
+
+### Minor Changes
+
+-   f38ecc186: API Generator: Add support for enum array filter and sort
+-   dcf3f70f4: Add `overrideAcceptedMimeTypes` configuration to DAM
+
+    If set, only the mimetypes specified in `overrideAcceptedMimeTypes` will be accepted.
+
+    You must configure `overrideAcceptedMimeTypes` in the API and the admin interface:
+
+    API:
+
+    ```diff
+    // app.module.ts
+
+    DamModule.register({
+        damConfig: {
+            // ...
+    +       overrideAcceptedMimeTypes: ["image/png"],
+            // ...
+        },
+        // ...
+    }),
+    ```
+
+    Admin:
+
+    ```diff
+    // App.tsx
+
+    <DamConfigProvider
+        value={{
+            // ...
+    +       overrideAcceptedMimeTypes: ["image/png"],
+        }}
+    >
+    ```
+
+### Patch Changes
+
+-   10424c744: Fix `SvgImageBlock` in site by always loading `fileUrl`
+    -   @comet/blocks-api@7.0.0-beta.1
+
 ## 7.0.0-beta.0
 
 ### Major Changes

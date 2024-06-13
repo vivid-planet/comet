@@ -1,5 +1,11 @@
 # @comet/admin-react-select
 
+## 7.0.0-beta.1
+
+### Patch Changes
+
+-   @comet/admin@7.0.0-beta.1
+
 ## 7.0.0-beta.0
 
 ### Major Changes
