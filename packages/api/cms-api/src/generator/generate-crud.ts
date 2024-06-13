@@ -709,7 +709,6 @@ ${
 
 function generateNestedEntityResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
     const { classNameSingular } = buildNameVariants(metadata);
-    const { scopeProp } = buildOptions(metadata);
     const { skipScopeCheck } = buildOptions(metadata);
 
     const imports: Imports = [];
