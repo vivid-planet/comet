@@ -5,10 +5,11 @@ import { Button, Card, Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridColDef, GridToolbarContainer } from "@mui/x-data-grid";
 import { differenceInDays, parseISO } from "date-fns";
-import React from "react";
+import React, { useContext } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
+import { LabelsContext } from "../../utils/LabelsContext";
 import { OverrideContentScopesDialog } from "./OverrideContentScopesDialog";
 import { PermissionDialog } from "./PermissionDialog";
 import { GQLPermissionForGridFragment, GQLPermissionsQuery, GQLPermissionsQueryVariables, namedOperations } from "./PermissionGrid.generated";
@@ -19,6 +20,7 @@ export const PermissionGrid: React.FC<{
     const intl = useIntl();
     const [permissionId, setPermissionId] = React.useState<string | "add" | null>(null);
     const [overrideContentScopesId, setOverrideContentScopesId] = React.useState<string | null>(null);
+    const { permissionLabels } = useContext(LabelsContext);
 
     const { data, loading, error } = useQuery<GQLPermissionsQuery, GQLPermissionsQueryVariables>(
         gql`
@@ -52,7 +54,13 @@ export const PermissionGrid: React.FC<{
             flex: 1,
             pinnable: false,
             headerName: intl.formatMessage({ id: "comet.userPermissions.permission", defaultMessage: "Permission" }),
-            renderCell: ({ row }) => <Typography variant="h6">{camelCaseToHumanReadable(row.permission)}</Typography>,
+            renderCell: ({ row }) => (
+                <Typography variant="h6">
+                    {permissionLabels && permissionLabels[row.permission]
+                        ? permissionLabels[row.permission]
+                        : camelCaseToHumanReadable(row.permission)}
+                </Typography>
+            ),
         },
         {
             field: "source",

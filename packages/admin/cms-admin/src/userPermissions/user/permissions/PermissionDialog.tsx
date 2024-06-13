@@ -2,10 +2,11 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, Loading, SaveButton } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
+import { LabelsContext } from "../../utils/LabelsContext";
 import {
     GQLAvailablePermissionsQuery,
     GQLAvailablePermissionsQueryVariables,
@@ -25,6 +26,7 @@ interface FormProps {
     handleDialogClose: () => void;
 }
 export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, handleDialogClose }) => {
+    const { permissionLabels } = useContext(LabelsContext);
     const client = useApolloClient();
     const submit = async (submitData: GQLUserPermissionDialogFragment) => {
         const { source, __typename, ...data } = submitData; // Remove source and __typename from data
@@ -129,7 +131,11 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
                                 name="permission"
                                 component={FinalFormSelect}
                                 options={availablePermissionsData.availablePermissions}
-                                getOptionLabel={(permission: string) => camelCaseToHumanReadable(permission)}
+                                getOptionLabel={(permission: string) =>
+                                    permissionLabels && permissionLabels[permission]
+                                        ? permissionLabels[permission]
+                                        : camelCaseToHumanReadable(permission)
+                                }
                                 disabled={disabled}
                                 label={<FormattedMessage id="comet.userPermissions.permission" defaultMessage="Permission" />}
                             />
