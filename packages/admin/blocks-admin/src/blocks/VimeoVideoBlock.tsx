@@ -40,7 +40,7 @@ export const VimeoVideoBlock: BlockInterface<VimeoVideoBlockData, VimeoVideoBloc
     category: BlockCategory.Media,
 
     // !vimeoIdentifier to allow saving empty string
-    isValid: ({ vimeoIdentifier }) => true,
+    isValid: ({ vimeoIdentifier }) => !vimeoIdentifier || isValidVimeoIdentifier(vimeoIdentifier),
 
     createPreviewState: (state, previewCtx) => {
         return { ...state, autoplay: false, adminMeta: { route: previewCtx.parentUrl } };
