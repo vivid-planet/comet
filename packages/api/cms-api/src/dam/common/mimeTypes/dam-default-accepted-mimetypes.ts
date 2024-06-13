@@ -3,7 +3,7 @@
 // if you change this file, change the admin file too
 // -------- IMPORTANT --------
 
-export const defaultDamAcceptedMimetypes = [
+export const damDefaultAcceptedMimetypes = [
     // svg
     "image/svg+xml",
     // pixel image

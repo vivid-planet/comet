@@ -552,6 +552,28 @@ export class FilesService {
         return [...baseUrl, file.id, filename].join("/");
     }
 
+    async createFileDownloadUrl(
+        file: FileInterface,
+        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
+    ): Promise<string> {
+        const filename = parse(file.name).name;
+
+        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/files/download`];
+
+        if (previewDamUrls) {
+            baseUrl.push("preview");
+        } else {
+            const hash = this.createHash({
+                fileId: file.id,
+                filename,
+            });
+
+            baseUrl.push(hash);
+        }
+
+        return [...baseUrl, file.id, filename].join("/");
+    }
+
     createHash(params: FileParams): string {
         const fileHash = `file:${params.fileId}:${params.filename}`;
         return createHmac("sha1", this.config.secret).update(fileHash).digest("hex");

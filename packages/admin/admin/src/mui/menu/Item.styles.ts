@@ -56,8 +56,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
 
         .${listItemIconClasses.root} {
             color: ${theme.palette.grey[900]};
-            min-width: ${ownerState.open ? 28 : 22}px;
-            margin: 0 auto;
+            min-width: unset;
         }
 
         .${listItemTextClasses.inset} {
@@ -72,6 +71,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            margin-left: 12px;
         }
 
         ${ownerState.level === 1 &&

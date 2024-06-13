@@ -521,6 +521,7 @@ type Product {
   slug: String!
   description: String!
   type: ProductType!
+  additionalTypes: [ProductType!]!
   price: Float
   inStock: Boolean!
   soldCount: Int
@@ -920,6 +921,7 @@ input ProductFilter {
   slug: StringFilter
   description: StringFilter
   type: ProductTypeEnumFilter
+  additionalTypes: ProductTypeEnumsFilter
   price: NumberFilter
   inStock: BooleanFilter
   soldCount: NumberFilter
@@ -942,6 +944,10 @@ input ProductTypeEnumFilter {
   isAnyOf: [ProductType!]
   equal: ProductType
   notEqual: ProductType
+}
+
+input ProductTypeEnumsFilter {
+  contains: [ProductType!]
 }
 
 input NumberFilter {
@@ -970,6 +976,7 @@ enum ProductSortField {
   slug
   description
   type
+  additionalTypes
   price
   inStock
   soldCount
@@ -1316,6 +1323,7 @@ input ProductInput {
   slug: String!
   description: String!
   type: ProductType!
+  additionalTypes: [ProductType!]! = []
   price: Float = null
   inStock: Boolean! = true
   availableSince: DateTime = null
@@ -1351,6 +1359,7 @@ input ProductUpdateInput {
   slug: String
   description: String
   type: ProductType
+  additionalTypes: [ProductType!]
   price: Float
   inStock: Boolean
   availableSince: DateTime

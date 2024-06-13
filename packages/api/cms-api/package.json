@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-api",
-    "version": "6.10.0",
+    "version": "7.0.0-beta.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -31,9 +31,9 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "@aws-sdk/client-s3": "^3.256.0",
-        "@azure/storage-blob": "^12.17.0",
-        "@comet/blocks-api": "workspace:^6.10.0",
+        "@aws-sdk/client-s3": "^3.591.0",
+        "@azure/storage-blob": "^12.23.0",
+        "@comet/blocks-api": "workspace:^7.0.0-beta.1",
         "@fast-csv/parse": "^4.3.6",
         "@golevelup/nestjs-discovery": "^3.0.0",
         "@hapi/accept": "^5.0.2",
@@ -81,7 +81,7 @@
     },
     "devDependencies": {
         "@aws-sdk/types": "^3.47.0",
-        "@comet/eslint-config": "workspace:^6.10.0",
+        "@comet/eslint-config": "workspace:^7.0.0-beta.1",
         "@golevelup/ts-jest": "^0.4.0",
         "@kubernetes/client-node": "^0.18.1",
         "@mikro-orm/core": "^5.7.1",
@@ -92,6 +92,7 @@
         "@nestjs/core": "^9.0.0",
         "@nestjs/graphql": "^10.0.0",
         "@nestjs/platform-express": "^9.0.0",
+        "@nestjs/testing": "^9.0.0",
         "@types/express": "^4.0.0",
         "@types/jest": "^29.5.0",
         "@types/jsonwebtoken": "^8.5.9",

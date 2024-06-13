@@ -217,6 +217,10 @@ export class KubernetesService {
                 json = JSON.parse(json);
             }
 
+            if (typeof json !== "object" || json === null || Object.keys(json).length === 0) {
+                return null;
+            }
+
             return json;
         }
 
