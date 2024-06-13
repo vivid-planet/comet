@@ -1,6 +1,5 @@
 # @comet/admin
 
-<<<<<<< HEAD
 ## 7.0.0-beta.1
 
 ### Patch Changes
@@ -320,7 +319,27 @@
     >
         {/* ... */}
     </MenuItemGroup>
-=======
+    ```
+
+### Patch Changes
+
+-   b5753e612: Allow partial props in the theme's `defaultProps` instead of requiring all props when setting the `defaultProps` of a component
+-   66330e4e6: Fix a bug where the `disabled` prop would not be passed to the children of `Field`
+-   Updated dependencies [803bc607f]
+-   Updated dependencies [33ba50719]
+-   Updated dependencies [33ba50719]
+-   Updated dependencies [c702cc5b2]
+-   Updated dependencies [535444623]
+-   Updated dependencies [33ba50719]
+-   Updated dependencies [f9615fbf4]
+-   Updated dependencies [33ba50719]
+-   Updated dependencies [cce88d448]
+-   Updated dependencies [865f253d8]
+-   Updated dependencies [92eae2ba9]
+-   Updated dependencies [33ba50719]
+    -   @comet/admin-theme@7.0.0-beta.0
+    -   @comet/admin-icons@7.0.0-beta.0
+
 ## 6.13.0
 
 ### Minor Changes
@@ -369,31 +388,11 @@
         isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
         fullWidth
     />
->>>>>>> main
     ```
 
 ### Patch Changes
 
-<<<<<<< HEAD
--   b5753e612: Allow partial props in the theme's `defaultProps` instead of requiring all props when setting the `defaultProps` of a component
--   66330e4e6: Fix a bug where the `disabled` prop would not be passed to the children of `Field`
--   Updated dependencies [803bc607f]
--   Updated dependencies [33ba50719]
--   Updated dependencies [33ba50719]
--   Updated dependencies [c702cc5b2]
--   Updated dependencies [535444623]
--   Updated dependencies [33ba50719]
--   Updated dependencies [f9615fbf4]
--   Updated dependencies [33ba50719]
--   Updated dependencies [cce88d448]
--   Updated dependencies [865f253d8]
--   Updated dependencies [92eae2ba9]
--   Updated dependencies [33ba50719]
-    -   @comet/admin-theme@7.0.0-beta.0
-    -   @comet/admin-icons@7.0.0-beta.0
-=======
 -   @comet/admin-icons@6.13.0
->>>>>>> main
 
 ## 6.12.0
 

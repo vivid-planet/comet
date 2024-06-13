@@ -1,6 +1,5 @@
 # @comet/cms-site
 
-<<<<<<< HEAD
 ## 7.0.0-beta.1
 
 ## 7.0.0-beta.0
@@ -136,13 +135,12 @@
     Requires following changes to admin
 
     -   The `SitesConfig` must provide a `sitePreviewApiUrl`
-=======
+
 ## 6.13.0
 
 ### Minor Changes
 
 -   493cad7e1: Add `DamVideoBlock`
->>>>>>> main
 
 ## 6.12.0
 
