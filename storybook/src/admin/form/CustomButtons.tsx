@@ -1,5 +1,5 @@
 import { Field, FinalForm, FinalFormInput } from "@comet/admin";
-import { BeachAccess as BeachAccessIcon } from "@mui/icons-material";
+import { Master } from "@comet/admin-icons";
 import { Box, Button, Card, CardContent } from "@mui/material";
 import withStyles from "@mui/styles/withStyles";
 import { storiesOf } from "@storybook/react";
@@ -28,7 +28,7 @@ const CustomButtons: React.FC = () => {
 
     return (
         <StyledButton
-            startIcon={<BeachAccessIcon />}
+            startIcon={<Master />}
             variant="text"
             disabled={pristine || hasValidationErrors || submitting}
             onClick={handleCustomButtonClick}

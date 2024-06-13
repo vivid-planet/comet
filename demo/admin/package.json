@@ -34,7 +34,6 @@
         "@emotion/react": "^11.9.3",
         "@emotion/styled": "^11.9.3",
         "@fontsource/roboto": "^4.5.5",
-        "@mui/icons-material": "^5.0.0",
         "@mui/lab": "^5.0.0-alpha.76",
         "@mui/material": "^5.0.0",
         "@mui/styles": "^5.0.0",

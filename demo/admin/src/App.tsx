@@ -26,7 +26,7 @@ import { additionalPageTreeNodeFieldsFragment } from "@src/common/EditPageNode";
 import { createConfig } from "@src/config";
 import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import { pageTreeCategories } from "@src/pageTree/pageTreeCategories";
-import theme from "@src/theme";
+import { theme } from "@src/theme";
 import * as React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";

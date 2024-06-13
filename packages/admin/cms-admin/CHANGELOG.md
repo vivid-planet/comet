@@ -1,5 +1,79 @@
 # @comet/cms-admin
 
+## 6.13.0
+
+### Minor Changes
+
+-   c51b250ca: Add loading spinner to `IFrameViewer`
+
+    This feature was added to inform users that the iframe is loading. It is particularly useful when loading takes a long time due to a slow network connection or a large amount of content or data. The feedback remains visible until the iframe is fully loaded and the `onLoad` event is triggered.
+
+-   dcf3f70f4: Add `overrideAcceptedMimeTypes` configuration to DAM
+
+    If set, only the mimetypes specified in `overrideAcceptedMimeTypes` will be accepted.
+
+    You must configure `overrideAcceptedMimeTypes` in the API and the admin interface:
+
+    API:
+
+    ```diff
+    // app.module.ts
+
+    DamModule.register({
+        damConfig: {
+            // ...
+    +       overrideAcceptedMimeTypes: ["image/png"],
+            // ...
+        },
+        // ...
+    }),
+    ```
+
+    Admin:
+
+    ```diff
+    // App.tsx
+
+    <DamConfigProvider
+        value={{
+            // ...
+    +       overrideAcceptedMimeTypes: ["image/png"],
+        }}
+    >
+    ```
+
+### Patch Changes
+
+-   aee7ae4a2: Use the same logic for checking the user's content scope in Admin as it is used in the API.
+-   Updated dependencies [5e25348bb]
+-   Updated dependencies [796e83206]
+    -   @comet/admin@6.13.0
+    -   @comet/admin-rte@6.13.0
+    -   @comet/admin-date-time@6.13.0
+    -   @comet/admin-icons@6.13.0
+    -   @comet/admin-theme@6.13.0
+    -   @comet/blocks-admin@6.13.0
+
+## 6.12.0
+
+### Minor Changes
+
+-   3ee8c7a33: Add a `DamFileDownloadLinkBlock` that can be used to download a file or open it in a new tab
+
+    Also, add new `/dam/files/download/:hash/:fileId/:filename` endpoint for downloading assets.
+
+### Patch Changes
+
+-   Updated dependencies [dc7eaeccb]
+-   Updated dependencies [16ffa7be9]
+-   Updated dependencies [c06c6f1e9]
+    -   @comet/admin-rte@6.12.0
+    -   @comet/admin@6.12.0
+    -   @comet/admin-theme@6.12.0
+    -   @comet/admin-date-time@6.12.0
+    -   @comet/admin-icons@6.12.0
+    -   @comet/blocks-admin@6.12.0
+
 ## 6.11.0
 
 ### Minor Changes

@@ -1,5 +1,9 @@
 # @comet/blocks-api
 
+## 6.13.0
+
+## 6.12.0
+
 ## 6.11.0
 
 ### Patch Changes
