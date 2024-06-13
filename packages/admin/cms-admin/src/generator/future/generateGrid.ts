@@ -85,9 +85,6 @@ export function generateGrid(
     const imports: Imports = [];
     const props: Prop[] = [];
 
-    const addButtonType = "React.ReactNode";
-    props.push({ name: "addButton", type: addButtonType, optional: true });
-
     const fieldList = generateGqlFieldList({ columns: config.columns.filter((column) => column.name !== "id") }); // exclude id because it's always required
 
     // all root blocks including those we don't have columns for (required for copy/paste)
@@ -163,6 +160,11 @@ export function generateGrid(
     }
 
     const toolbar = config.toolbar ?? true;
+
+    const forwardAddButton = !config.readOnly && toolbar;
+    if (forwardAddButton) {
+        props.push({ name: "addButton", type: "React.ReactNode", optional: true });
+    }
 
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
 
@@ -415,7 +417,7 @@ export function generateGrid(
 
     ${
         toolbar
-            ? `function ${gqlTypePlural}GridToolbar({ addButton }: { addButton?: ${addButtonType} }) {
+            ? `function ${gqlTypePlural}GridToolbar(${forwardAddButton ? `{ addButton }: { addButton?: React.ReactNode }` : ``}) {
         return (
             <DataGridToolbar>
                 ${
@@ -610,9 +612,13 @@ export function generateGrid(
                         ? `components={{
 Toolbar: ${gqlTypePlural}GridToolbar,
 }}
-componentsProps={{
+${
+    forwardAddButton
+        ? `componentsProps={{
     toolbar: { addButton: addButton },
 }}`
+        : ``
+}`
                         : ""
                 }
             />
