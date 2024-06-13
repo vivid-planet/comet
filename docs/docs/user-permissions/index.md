@@ -3,7 +3,7 @@ title: User Permissions
 sidebar_position: 6
 ---
 
-While COMET DXP does not provide authentication it handles authorization by providing a User Permissions system.
+While COMET DXP does not provide authentication, it handles authorization by providing a User Permissions system.
 
 ## Key concepts
 
