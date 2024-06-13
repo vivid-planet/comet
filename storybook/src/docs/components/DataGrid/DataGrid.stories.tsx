@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     FileIcon,
+    GridColDef,
     GridFilterButton,
     Loading,
     muiGridFilterToGql,
@@ -15,9 +16,10 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { MoreVert } from "@mui/icons-material";
-import { Button, Menu, MenuItem } from "@mui/material";
+import { Button, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
+import { DataGridPro } from "@mui/x-data-grid-pro";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -230,6 +232,39 @@ storiesOf("stories/components/DataGrid", module)
                 <DataGrid {...dataGridProps} rows={exampleRows} columns={exampleColumns} />
             </Box>
         );
+    })
+    .add("responsiveColumns", () => {
+        const dataGridProps = usePersistentColumnState("ResponsiveColumnsStory");
+        const theme = useTheme();
+
+        const columns: GridColDef[] = [
+            {
+                field: "id",
+                headerName: "ID",
+                width: 50,
+            },
+            {
+                field: "fullName",
+                headerName: "Full name",
+                flex: 1,
+                renderCell: ({ row }) => `${row.firstName} ${row.lastName}`,
+                visible: theme.breakpoints.down("md"),
+            },
+            {
+                field: "firstName",
+                headerName: "First name",
+                flex: 1,
+                visible: theme.breakpoints.up("md"),
+            },
+            {
+                field: "lastName",
+                headerName: "Last name",
+                flex: 1,
+                visible: theme.breakpoints.up("md"),
+            },
+        ];
+
+        return <DataGridPro sx={{ height: 200 }} rows={exampleRows} columns={columns} {...dataGridProps} />;
     })
     .add("GridFilterButton", () => {
         function DemoToolbar() {

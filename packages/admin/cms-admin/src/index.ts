@@ -35,7 +35,7 @@ export { PageName } from "./common/PageName";
 export { useEditState } from "./common/useEditState";
 export { useSaveState } from "./common/useSaveState";
 export { ContentScopeIndicator } from "./contentScope/ContentScopeIndicator";
-export type { ContentScopeControlsConfig } from "./contentScope/Controls";
+export { ContentScopeSelect } from "./contentScope/ContentScopeSelect";
 export { ContentScopeControls } from "./contentScope/Controls";
 export { LegacyContentScopeIndicator } from "./contentScope/LegacyContentScopeIndicator";
 export type { ContentScopeInterface, ContentScopeProviderProps, ContentScopeValues, UseContentScopeApi } from "./contentScope/Provider";
@@ -44,6 +44,7 @@ export type { ContentScopeConfigProps } from "./contentScope/useContentScopeConf
 export { useContentScopeConfig } from "./contentScope/useContentScopeConfig";
 export { CronJobsPage } from "./cronJobs/CronJobsPage";
 export { JobRuntime } from "./cronJobs/JobRuntime";
+export { DamFileDownloadLinkBlock } from "./dam/blocks/DamFileDownloadLinkBlock";
 export { DamImageBlock } from "./dam/blocks/DamImageBlock";
 export { DamConfigProvider } from "./dam/config/DamConfigProvider";
 export { damDefaultAcceptedMimeTypes } from "./dam/config/damDefaultAcceptedMimeTypes";

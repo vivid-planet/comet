@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     filterByFragment,
+    GridColDef,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -18,7 +19,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@mui/material";
-import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
     GQLCreateManufacturerMutation,
     GQLCreateManufacturerMutationVariables,

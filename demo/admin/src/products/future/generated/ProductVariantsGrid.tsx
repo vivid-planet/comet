@@ -5,6 +5,7 @@ import {
     CrudContextMenu,
     DataGridToolbar,
     filterByFragment,
+    GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -19,7 +20,7 @@ import {
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -44,8 +45,8 @@ const productVariantsFragment = gql`
 const productVariantsQuery = gql`
     query ProductVariantsGrid(
         $product: ID!
-        $offset: Int
-        $limit: Int
+        $offset: Int!
+        $limit: Int!
         $sort: [ProductVariantSort!]
         $search: String
         $filter: ProductVariantFilter

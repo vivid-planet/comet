@@ -33,7 +33,7 @@
         "@comet/cms-admin": "workspace:*",
         "@emotion/react": "^11.9.3",
         "@emotion/styled": "^11.9.3",
-        "@fontsource/roboto": "^4.5.5",
+        "@fontsource-variable/roboto-flex": "^5.0.14",
         "@mui/icons-material": "^5.0.0",
         "@mui/lab": "^5.0.0-alpha.76",
         "@mui/material": "^5.0.0",

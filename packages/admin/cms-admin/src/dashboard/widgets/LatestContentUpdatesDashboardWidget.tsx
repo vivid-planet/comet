@@ -1,6 +1,7 @@
+import { GridColDef } from "@comet/admin";
 import { ArrowRight } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import { DataGrid, DataGridProps, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, DataGridProps } from "@mui/x-data-grid";
 import * as React from "react";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
 import { Link } from "react-router-dom";

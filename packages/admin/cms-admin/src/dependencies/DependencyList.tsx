@@ -1,9 +1,9 @@
 import { TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
-import { messages, Tooltip, useDataGridRemote } from "@comet/admin";
+import { GridColDef, messages, Tooltip, useDataGridRemote } from "@comet/admin";
 import { ArrowRight, OpenNewTab, Reload } from "@comet/admin-icons";
 import { IconButton, LinearProgress, tablePaginationClasses } from "@mui/material";
 import { LabelDisplayedRowsArgs } from "@mui/material/TablePagination/TablePagination";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router";
