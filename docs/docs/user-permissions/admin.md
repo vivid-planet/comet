@@ -9,7 +9,7 @@ Please be aware that there is no access control possible in the admin panel. You
 
 ### CurrentUserProvider
 
-The `CurrentUserProvider` loads the current User from the API and provides the following Hooks:
+The `CurrentUserProvider` loads the current user from the API and provides the following hooks:
 
 **useCurrentUser**
 
