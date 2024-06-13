@@ -3,8 +3,8 @@ import * as React from "react";
 import { YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import { getHeightInPercentForAspectRatio, VideoContainer } from "./helpers";
 import { PropsWithData } from "./PropsWithData";
+import { getHeightInPercentForAspectRatio, VideoContainer } from "./videoBlockHelpers";
 
 const EXPECTED_YT_ID_LENGTH = 11;
 

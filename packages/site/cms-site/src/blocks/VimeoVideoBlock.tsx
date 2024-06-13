@@ -3,8 +3,8 @@ import * as React from "react";
 import { VimeoVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import { getHeightInPercentForAspectRatio, VideoContainer } from "./helpers";
 import { PropsWithData } from "./PropsWithData";
+import { getHeightInPercentForAspectRatio, VideoContainer } from "./videoBlockHelpers";
 
 function parseVimeoIdentifier(vimeoIdentifier: string): string | undefined {
     const urlRegEx = /^(https?:\/\/)?((www\.|player\.)?vimeo\.com\/?(showcase\/)*([0-9a-z]*\/)*([0-9]{6,11})[?]?.*)$/;
