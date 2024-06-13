@@ -4,6 +4,7 @@ import { BooleanFilter } from "./boolean.filter";
 import { DateFilter } from "./date.filter";
 import { EnumFilterInterface, isEnumFilter } from "./enum.filter.factory";
 import { EnumsFilterInterface, isEnumsFilter } from "./enums.filter.factory";
+import { ManyToManyFilter } from "./many-to-many.filter";
 import { ManyToOneFilter } from "./many-to-one.filter";
 import { NumberFilter } from "./number.filter";
 import { StringFilter } from "./string.filter";
@@ -95,6 +96,12 @@ export function filterToMikroOrmQuery(
         }
         if (filterProperty.isAnyOf !== undefined) {
             ret.$in = filterProperty.isAnyOf;
+        }
+    } else if (filterProperty instanceof ManyToManyFilter) {
+        if (filterProperty.contains !== undefined) {
+            ret.id = {
+                $eq: filterProperty.contains,
+            };
         }
     } else if (isEnumFilter(filterProperty)) {
         if (filterProperty.equal !== undefined) {
