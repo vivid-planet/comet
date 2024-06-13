@@ -15,13 +15,8 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-<<<<<<< HEAD
-import { MoreVert } from "@mui/icons-material";
-import { Button, Menu, MenuItem, useTheme } from "@mui/material";
-=======
 import { MoreVertical } from "@comet/admin-icons";
-import { Button, Menu, MenuItem } from "@mui/material";
->>>>>>> main
+import { Button, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";

@@ -1,10 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
-<<<<<<< HEAD
 import { Typography } from "@mui/material";
-import isEqual from "lodash.isequal";
-=======
->>>>>>> main
 import React from "react";
 
 import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";

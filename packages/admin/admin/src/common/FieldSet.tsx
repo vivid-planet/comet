@@ -78,8 +78,7 @@ export function FieldSet(inProps: React.PropsWithChildren<FieldSetProps>): React
             {...slotProps?.root}
             {...restProps}
         >
-<<<<<<< HEAD
-            <Summary expandIcon={collapsible && <ArrowForwardIosSharpIcon />} {...slotProps?.summary}>
+            <Summary expandIcon={collapsible && <ChevronRight />} {...slotProps?.summary}>
                 <HeaderColumn {...slotProps?.headerColumn}>
                     <Title {...slotProps?.title}>{title}</Title>
                     <SupportText {...slotProps?.supportText}>{supportText}</SupportText>
@@ -89,17 +88,7 @@ export function FieldSet(inProps: React.PropsWithChildren<FieldSetProps>): React
             </Summary>
             <Children ownerState={ownerState} {...slotProps?.children}>
                 {disablePadding ? "disablePadding" : "not disablePadding"}
-=======
-            <MuiAccordionSummary classes={{ root: classes.summary }} expandIcon={collapsible && <ChevronRight />} {...componentsProps?.summary}>
-                <div className={classes.headerColumn}>
-                    <div className={classes.title}>{title}</div>
-                    <div className={classes.supportText}>{supportText}</div>
-                </div>
-                <div className={classes.placeholder} />
-                <div className={classes.endAdornment}>{endAdornment}</div>
-            </MuiAccordionSummary>
-            <MuiAccordionDetails className={clsx(classes.children, disablePadding && classes.disablePadding)} {...componentsProps?.details}>
->>>>>>> main
+
                 {children}
             </Children>
         </Root>

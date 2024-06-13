@@ -2,7 +2,7 @@ import { BaseTranslationDialog } from "@comet/admin";
 import { EditorState } from "draft-js";
 import * as React from "react";
 
-import Rte from "../Rte";
+import { Rte } from "../Rte";
 import RteReadOnly from "../RteReadOnly";
 
 interface EditorStateTranslationDialogProps {

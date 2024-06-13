@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 "use client";
-import { OneOfBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
-=======
 import { DamVideoBlock, OneOfBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
->>>>>>> main
 import { MediaBlockData } from "@src/blocks.generated";
 import * as React from "react";
 

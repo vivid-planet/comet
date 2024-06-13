@@ -1,18 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-<<<<<<< HEAD
 import { createComponentSlot } from "@comet/admin";
-import { SvgIconComponent } from "@mui/icons-material";
-import CancelIcon from "@mui/icons-material/Cancel";
-import ClearIcon from "@mui/icons-material/Clear";
-import DropdownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { Chip, ComponentsOverrides, InputBase, inputBaseClasses, MenuItem, Paper, Theme, Typography, useTheme } from "@mui/material";
-import { css } from "@mui/material/styles";
-=======
 import { ChevronDown, Clear, Close } from "@comet/admin-icons";
-import { Chip, ComponentsOverrides, InputBase, InputBaseProps, MenuItem, Paper, SvgIconProps, Theme, Typography, useTheme } from "@mui/material";
-import { WithStyles, withStyles } from "@mui/styles";
-import classNames from "classnames";
->>>>>>> main
+import { Chip, ComponentsOverrides, InputBase, inputBaseClasses, MenuItem, Paper, SvgIconProps, Theme, Typography, useTheme } from "@mui/material";
+import { css } from "@mui/material/styles";
 import * as React from "react";
 import Select, { OptionTypeBase } from "react-select";
 import AsyncSelect, { Props as ReactSelectAsyncProps } from "react-select/async";
@@ -307,20 +297,11 @@ const components = {
     DropdownIndicator,
 };
 
-<<<<<<< HEAD
 export interface SelectProps<OptionType extends OptionTypeBase, IsMulti extends boolean = false> {
     selectComponent: React.ComponentType<ReactSelectProps<OptionType, IsMulti>>;
-    clearIcon?: SvgIconComponent;
-    dropdownIcon?: SvgIconComponent;
-    dropdownIconOpen?: SvgIconComponent;
-=======
-export interface SelectProps<OptionType extends OptionTypeBase> {
-    theme: Theme;
-    selectComponent: React.ComponentType<ReactSelectProps<OptionType>>;
     clearIcon?: React.ComponentType<SvgIconProps>;
     dropdownIcon?: React.ComponentType<SvgIconProps>;
     dropdownIconOpen?: React.ComponentType<SvgIconProps>;
->>>>>>> main
 }
 
 function SelectWrapper<OptionType extends OptionTypeBase, IsMulti extends boolean = false>({

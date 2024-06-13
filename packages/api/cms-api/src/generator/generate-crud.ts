@@ -118,14 +118,10 @@ export function buildOptions(metadata: EntityMetadata<any>) {
 
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
     if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
-<<<<<<< HEAD
-=======
-    const hasUpdatedAt = metadata.props.some((prop) => prop.name == "updatedAt");
 
     const scopedEntity = Reflect.getMetadata("scopedEntity", metadata.class);
     const skipScopeCheck = !scopeProp && !scopedEntity;
 
->>>>>>> main
     const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
     const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
 
@@ -145,11 +141,7 @@ export function buildOptions(metadata: EntityMetadata<any>) {
         statusActiveItems,
         hasStatusFilter,
         scopeProp,
-<<<<<<< HEAD
-=======
-        hasUpdatedAt,
         skipScopeCheck,
->>>>>>> main
         argsClassName,
         argsFileName,
         blockProps,
@@ -711,11 +703,13 @@ ${
         : ""
 }
     `;
+
     return { code, injectRepositories };
 }
 
 function generateNestedEntityResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
     const { classNameSingular } = buildNameVariants(metadata);
+    const { scopeProp } = buildOptions(metadata);
     const { skipScopeCheck } = buildOptions(metadata);
 
     const imports: Imports = [];
@@ -836,24 +830,16 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         buildNameVariants(metadata);
     const {
         scopeProp,
-<<<<<<< HEAD
-=======
         skipScopeCheck,
->>>>>>> main
         argsClassName,
         argsFileName,
         hasSlugProp,
         hasSearchArg,
         hasSortArg,
         hasFilterArg,
-<<<<<<< HEAD
         statusProp,
         hasStatusFilter,
         dedicatedResolverArgProps,
-=======
-        hasVisibleProp,
-        hasUpdatedAt,
->>>>>>> main
     } = buildOptions(metadata);
 
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
@@ -880,7 +866,12 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     );
     injectRepositories.push(...updateInputHandlingInjectRepositories);
 
-    injectRepositories.push(...dedicatedResolverArgProps.map((prop) => prop.type));
+    injectRepositories.push(
+        ...dedicatedResolverArgProps.map((prop) => {
+            if (!prop.targetMeta) throw new Error("targetMeta is not set for relation");
+            return prop.targetMeta;
+        }),
+    );
 
     const {
         imports: relationsFieldResolverImports,
@@ -973,7 +964,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             })
             .join("")}
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
-<<<<<<< HEAD
             @Args() {${Object.entries({
                 scope: !!scopeProp,
                 ...dedicatedResolverArgProps.reduce((acc, dedicatedResolverArgProp) => {
@@ -991,11 +981,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 .map(([key]) => key)
                 .join(", ")}}: ${argsClassName}
             ${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
-=======
-            @Args() { ${scopeProp ? `scope, ` : ""}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${
-                      hasSortArg ? `sort, ` : ""
-                  }offset, limit }: ${argsClassName}${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
->>>>>>> main
         ): Promise<Paginated${classNamePlural}> {
             const where${
                 hasSearchArg || hasFilterArg
