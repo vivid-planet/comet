@@ -3,18 +3,20 @@ import {
     SaveBoundary,
     SaveBoundarySaveButton,
     Stack,
+    StackLink,
     StackPage,
     StackSwitch,
     StackToolbar,
-    Toolbar,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
     ToolbarFillSpace,
 } from "@comet/admin";
+import { Add as AddIcon } from "@comet/admin-icons";
+import { Button } from "@mui/material";
 import { ManufacturersGrid } from "@src/products/future/generated/ManufacturersGrid";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export function ManufacturersPage(): React.ReactElement {
     const intl = useIntl();
@@ -22,9 +24,21 @@ export function ManufacturersPage(): React.ReactElement {
         <Stack topLevelTitle={intl.formatMessage({ id: "manufacturers.manufacturers", defaultMessage: "Manufacturers" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <Toolbar />
-                    <MainContent fullHeight>
-                        <ManufacturersGrid />
+                    <MainContent fullHeight disablePadding>
+                        <ManufacturersGrid
+                            addButton={
+                                <Button
+                                    startIcon={<AddIcon />}
+                                    component={StackLink}
+                                    pageName="add"
+                                    payload="add"
+                                    variant="contained"
+                                    color="primary"
+                                >
+                                    <FormattedMessage id="manufacturer.newManufacturer" defaultMessage="New Manufacturer" />
+                                </Button>
+                            }
+                        />
                     </MainContent>
                 </StackPage>
                 <StackPage
