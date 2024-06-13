@@ -1,5 +1,5 @@
+import { Favorite } from "@comet/admin-icons";
 import { IRteOptions, IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
-import { Highlight } from "@mui/icons-material";
 import { Box, Card, CardContent } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -11,7 +11,7 @@ const rteOptions: IRteOptions = {
     customInlineStyles: {
         HIGHLIGHT: {
             label: "Highlight!",
-            icon: Highlight,
+            icon: Favorite,
             style: {
                 backgroundColor: "yellow",
             },

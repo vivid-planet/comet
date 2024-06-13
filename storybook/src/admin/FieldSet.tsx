@@ -1,5 +1,5 @@
 import { FieldSet, Tooltip } from "@comet/admin";
-import { Info } from "@mui/icons-material";
+import { Info } from "@comet/admin-icons";
 import { Chip, Stack } from "@mui/material";
 import { Box } from "@mui/system";
 import { storiesOf } from "@storybook/react";

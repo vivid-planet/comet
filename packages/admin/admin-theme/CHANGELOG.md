@@ -187,6 +187,12 @@
 
 -   @comet/admin-icons@7.0.0-beta.0
 
+## 6.13.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.13.0
+
 ## 6.12.0
 
 ### Minor Changes

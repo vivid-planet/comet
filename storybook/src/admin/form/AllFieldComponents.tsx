@@ -1,5 +1,7 @@
 import {
+    AsyncAutocompleteField,
     AsyncSelectField,
+    AutocompleteField,
     CheckboxField,
     Field,
     FieldContainer,
@@ -23,18 +25,22 @@ import * as React from "react";
 import { Form } from "react-final-form";
 
 function Story() {
+    type Option = { value: string; label: string };
+
     const options = [
         { value: "chocolate", label: "Chocolate" },
         { value: "strawberry", label: "Strawberry" },
         { value: "vanilla", label: "Vanilla" },
     ];
 
+    const initalValues = React.useMemo(() => ({ multiSelect: [] }), []);
+
     return (
         <Form
             onSubmit={(values) => {
                 alert(JSON.stringify(values, undefined, 2));
             }}
-            initialValues={{ multiSelect: [] }}
+            initialValues={initalValues}
             render={({ handleSubmit, values }) => (
                 <form onSubmit={handleSubmit}>
                     <Grid container mb={2} spacing={2}>
@@ -59,6 +65,24 @@ function Story() {
                                             return new Promise<typeof options>((resolve) => setTimeout(() => resolve(options), 1000));
                                         }}
                                         getOptionLabel={(option) => option.label}
+                                        fullWidth
+                                    />
+                                    <AutocompleteField
+                                        name="autocomplete"
+                                        label="Autocomplete"
+                                        options={options}
+                                        getOptionLabel={(option: Option) => option.label}
+                                        isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
+                                        fullWidth
+                                    />
+                                    <AsyncAutocompleteField
+                                        name="asyncAutocomplete"
+                                        label="Async Autocomplete"
+                                        loadOptions={async () => {
+                                            return new Promise<typeof options>((resolve) => setTimeout(() => resolve(options), 1000));
+                                        }}
+                                        getOptionLabel={(option: Option) => option.label}
+                                        isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
                                         fullWidth
                                     />
                                     <CheckboxField

@@ -75,6 +75,12 @@
 
 -   @comet/eslint-plugin@7.0.0-beta.0
 
+## 6.13.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.13.0
+
 ## 6.12.0
 
 ### Patch Changes
