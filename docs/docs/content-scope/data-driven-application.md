@@ -44,4 +44,4 @@ const variables = {
 
 ### API: User permissions
 
-In data-driven applications, the scope system is primarily used for controlling permissions. For additional information refer to the [User Permissions chapter](/docs/user-permissions/access-control).
+In data-driven applications, the scope system is primarily used for controlling permissions. For additional information refer to the [user permissions documentation](/docs/user-permissions/access-control).
