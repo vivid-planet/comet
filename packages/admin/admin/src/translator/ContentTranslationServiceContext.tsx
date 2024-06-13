@@ -2,6 +2,7 @@ import * as React from "react";
 
 export interface ContentTranslationServiceContext {
     enabled: boolean;
+    showApplyTranslationDialog?: boolean;
     translate: (text: string) => Promise<string>;
 }
 

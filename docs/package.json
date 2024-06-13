@@ -45,7 +45,6 @@
         "@emotion/styled": "^11.3.0",
         "@fontsource/roboto": "^4.2.3",
         "@mdx-js/react": "^1.6.22",
-        "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
         "@mui/styles": "^5.0.0",
         "@mui/system": "^5.0.0",

@@ -1,5 +1,11 @@
 # @comet/cms-site
 
+## 6.13.0
+
+### Minor Changes
+
+-   493cad7e1: Add `DamVideoBlock`
+
 ## 6.12.0
 
 ### Minor Changes
