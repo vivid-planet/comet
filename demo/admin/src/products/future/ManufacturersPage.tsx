@@ -1,6 +1,6 @@
 import { MainContent, Stack, StackLink, StackPage, StackSwitch } from "@comet/admin";
-import { Add as AddIcon } from "@comet/admin-icons";
-import { Button } from "@mui/material";
+import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { Button, IconButton } from "@mui/material";
 import { ManufacturersGrid } from "@src/products/future/generated/ManufacturersGrid";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -25,6 +25,11 @@ export function ManufacturersPage(): React.ReactElement {
                                     <FormattedMessage id="manufacturer.newManufacturer" defaultMessage="New Manufacturer" />
                                 </Button>
                             }
+                            editButton={(params) => (
+                                <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
+                                    <Edit color="primary" />
+                                </IconButton>
+                            )}
                         />
                     </MainContent>
                 </StackPage>

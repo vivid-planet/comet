@@ -59,7 +59,17 @@ function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; grid
     }, []);
     return {
         gridPropsTypeCode: `type Props = {
-            ${uniqueProps.map((prop) => `${prop.name}${prop.optional ? `?` : ``}: ${prop.type};`).join("\n")}
+            ${uniqueProps
+                .map(
+                    (prop) =>
+                        `${
+                            prop.type.includes("any")
+                                ? `// eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                `
+                                : ``
+                        }${prop.name}${prop.optional ? `?` : ``}: ${prop.type};`,
+                )
+                .join("\n")}
         };`,
         gridPropsParamsCode: `{${uniqueProps.map((prop) => prop.name).join(", ")}}: Props`,
     };
@@ -159,8 +169,6 @@ export function generateGrid(
     if (forwardAddButton) {
         props.push({ name: "addButton", type: "React.ReactNode", optional: true });
     }
-
-    const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
 
     const sortArg = gridQueryType.args.find((arg) => arg.name === "sort");
     const hasSort = !!sortArg;
@@ -300,6 +308,16 @@ export function generateGrid(
 
     const fragmentName = config.fragmentName ?? `${gqlTypePlural}Form`;
 
+    if (allowEditing) {
+        props.push({
+            name: "editButton",
+            type: `(params: GridRenderCellParams<any, GQL${fragmentName}Fragment, any>) => React.ReactNode`,
+            optional: true,
+        });
+    }
+
+    const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
+
     const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
         CrudContextMenu,
@@ -321,7 +339,7 @@ export function generateGrid(
     import { Add as AddIcon, Edit } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton } from "@mui/material";
-    import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
@@ -492,14 +510,7 @@ export function generateGrid(
                         renderCell: (params) => {
                             return (
                                 <>
-                                ${
-                                    allowEditing
-                                        ? `
-                                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                                            <Edit color="primary" />
-                                        </IconButton>`
-                                        : ""
-                                }${
+                                ${allowEditing ? `{editButton && editButton(params)}` : ""}${
                               allowCopyPaste || allowDeleting
                                   ? `
                                         <CrudContextMenu

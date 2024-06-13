@@ -1,6 +1,6 @@
 import { Stack, StackLink, StackPage, StackSwitch } from "@comet/admin";
-import { Add as AddIcon } from "@comet/admin-icons";
-import { Button } from "@mui/material";
+import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { Button, IconButton } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -20,6 +20,11 @@ export function ProductsWithLowPricePage(): React.ReactElement {
                                 <FormattedMessage id="product.newProduct" defaultMessage="New Product" />
                             </Button>
                         }
+                        editButton={(params) => (
+                            <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
+                                <Edit color="primary" />
+                            </IconButton>
+                        )}
                     />
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>
