@@ -75,7 +75,7 @@ export function Stack(props: StackProps) {
 
     const getVisibleBreadcrumbs = React.useCallback(() => {
         return sortByParentId(breadcrumbs).map((i) => {
-            return { ...i, url: i.stateUrl ?? i.url }; // clone so we can modify in filter below
+            return { ...i, url: i.stateUrl ?? i.url };
         });
     }, [breadcrumbs]);
 
