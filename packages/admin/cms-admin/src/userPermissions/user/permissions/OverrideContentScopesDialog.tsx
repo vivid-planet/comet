@@ -53,7 +53,10 @@ export const OverrideContentScopesDialog: React.FC<FormProps> = ({ permissionId,
     const { data, error } = useQuery<GQLPermissionContentScopesQuery, GQLPermissionContentScopesQueryVariables>(
         gql`
             query PermissionContentScopes($permissionId: ID!, $userId: String) {
-                availableContentScopes: userPermissionsAvailableContentScopes
+                availableContentScopes: userPermissionsAvailableContentScopes {
+                    contentScope
+                    label
+                }
                 permission: userPermissionsPermission(id: $permissionId, userId: $userId) {
                     source
                     overrideContentScopes
@@ -102,7 +105,7 @@ export const OverrideContentScopesDialog: React.FC<FormProps> = ({ permissionId,
                                 disabled={disabled}
                             />
                             {values.overrideContentScopes &&
-                                data.availableContentScopes.map((contentScope: ContentScope) => (
+                                data.availableContentScopes.map(({ contentScope, label }: { contentScope: ContentScope; label: string }) => (
                                     <Field
                                         disabled={disabled}
                                         key={JSON.stringify(contentScope)}
@@ -112,12 +115,15 @@ export const OverrideContentScopesDialog: React.FC<FormProps> = ({ permissionId,
                                         type="checkbox"
                                         component={FinalFormCheckbox}
                                         value={JSON.stringify(contentScope)}
-                                        label={Object.entries(contentScope).map(([scope, value]) => (
-                                            <>
-                                                {camelCaseToHumanReadable(scope)}: {camelCaseToHumanReadable(value)}
-                                                <br />
-                                            </>
-                                        ))}
+                                        label={
+                                            label ||
+                                            Object.entries(contentScope).map(([scope, value]) => (
+                                                <>
+                                                    {camelCaseToHumanReadable(scope)}: {camelCaseToHumanReadable(value)}
+                                                    <br />
+                                                </>
+                                            ))
+                                        }
                                     />
                                 ))}
                         </DialogContent>

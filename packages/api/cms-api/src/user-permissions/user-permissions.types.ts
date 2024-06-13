@@ -38,6 +38,7 @@ export interface UserPermissionsUserServiceInterface {
 
 export interface UserPermissionsOptions {
     availableContentScopes?: ContentScope[] | (() => Promise<ContentScope[]> | ContentScope[]);
+    getLabelForContentScope?: (contentScope: ContentScope) => string;
 }
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {
     UserService?: Type<UserPermissionsUserServiceInterface>;

@@ -46,7 +46,10 @@ export const ContentScopeGrid: React.FC<{
     const { data, error } = useQuery<GQLContentScopesQuery, GQLContentScopesQueryVariables>(
         gql`
             query ContentScopes($userId: String!) {
-                availableContentScopes: userPermissionsAvailableContentScopes
+                availableContentScopes: userPermissionsAvailableContentScopes {
+                    contentScope
+                    label
+                }
                 userContentScopes: userPermissionsContentScopes(userId: $userId)
                 userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true)
             }
@@ -82,7 +85,7 @@ export const ContentScopeGrid: React.FC<{
                     </ToolbarActions>
                 </CardToolbar>
                 <CardContent>
-                    {data.availableContentScopes.map((contentScope: ContentScope) => (
+                    {data.availableContentScopes.map(({ contentScope, label }: { contentScope: ContentScope; label: string }) => (
                         <Field
                             disabled={data.userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, contentScope))}
                             key={JSON.stringify(contentScope)}
@@ -92,12 +95,15 @@ export const ContentScopeGrid: React.FC<{
                             type="checkbox"
                             component={FinalFormCheckbox}
                             value={JSON.stringify(contentScope)}
-                            label={Object.entries(contentScope).map(([scope, value]) => (
-                                <>
-                                    {camelCaseToHumanReadable(scope)}: {camelCaseToHumanReadable(value)}
-                                    <br />
-                                </>
-                            ))}
+                            label={
+                                label ||
+                                Object.entries(contentScope).map(([scope, value]) => (
+                                    <>
+                                        {camelCaseToHumanReadable(scope)}: {camelCaseToHumanReadable(value)}
+                                        <br />
+                                    </>
+                                ))
+                            }
                         />
                     ))}
                 </CardContent>
