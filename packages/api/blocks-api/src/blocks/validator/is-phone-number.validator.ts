@@ -3,7 +3,7 @@ import { isString, registerDecorator, ValidatorConstraint, ValidatorConstraintIn
 
 const PHONE_NUMBER_REGEX = /^\+?[0-9\s]+$/;
 
-export const testPhoneNumber = (value: string): boolean => {
+export const isPhoneNumber = (value: string): boolean => {
     return PHONE_NUMBER_REGEX.test(value);
 };
 
@@ -25,7 +25,7 @@ export class IsPhoneNumberConstraint implements ValidatorConstraintInterface {
         if (!isString(value)) {
             return false;
         }
-        return testPhoneNumber(value);
+        return isPhoneNumber(value);
     }
 
     defaultMessage(): string {
