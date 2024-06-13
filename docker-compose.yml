@@ -42,6 +42,12 @@ services:
         environment:
             COLLECTOR_OTLP_ENABLED: "true"
 
+    redis:
+        image: redis:7
+        command: redis-server --maxmemory 256M --maxmemory-policy allkeys-lru --loglevel warning 
+        ports:
+            - ${REDIS_PORT}:6379
+
 networks:
     postgres:
         driver: bridge

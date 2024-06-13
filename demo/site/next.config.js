@@ -28,6 +28,8 @@ const nextConfig = {
     compiler: {
         styledComponents: true,
     },
+    cacheHandler: require.resolve('./cache-handler.mjs'),
+    //cacheMaxMemorySize: 0, // disable default in-memory caching
 };
 
 module.exports = nextConfig;
