@@ -1,14 +1,5 @@
 import { Assets, Dashboard as DashboardIcon, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
-import {
-    createRedirectsPage,
-    CronJobsPage,
-    DamPage,
-    MasterMenu as CometMasterMenu,
-    MasterMenuData,
-    PagesPage,
-    PublisherPage,
-    UserPermissionsPage,
-} from "@comet/cms-admin";
+import { createRedirectsPage, CronJobsPage, DamPage, MasterMenuData, PagesPage, PublisherPage, UserPermissionsPage } from "@comet/cms-admin";
 import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import Dashboard from "@src/dashboard/Dashboard";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
@@ -205,6 +196,3 @@ export const masterMenuData: MasterMenuData = [
         requiredPermission: "userPermissions",
     },
 ];
-
-const MasterMenu = () => <CometMasterMenu menu={masterMenuData} />;
-export default MasterMenu;

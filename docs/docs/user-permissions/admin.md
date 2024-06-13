@@ -46,3 +46,44 @@ The `MasterMenuData` data type provides a unified format for
 -   the `menu` prop in `MasterMenuRoutes`
 
 Regarding user permissions, `MasterMenuData` also provides a `requiredPermission` field. Both of the mentioned components use this field to filter the data.
+
+```ts
+// src/common/MasterMenu.tsx
+export const masterMenuData: MasterMenuData = [
+    {
+        primary: "Demo",
+        icon: <Snips />,
+        route: ...,
+        requiredPermission: "demo",
+    },
+    {
+        primary: "Project Snips",
+        icon: <Snips />,
+        submenu: [
+            {
+                primary: "Main Menu",
+                route: {
+                    path: "/project-snips/main-menu",
+                    component: MainMenu,
+                },
+            },
+        ],
+        requiredPermission: "pageTree",
+    },
+    // ...
+];
+
+// src/common/Master.tsx
+export const Master: React.FC = () => (
+    <MasterLayout headerComponent={MasterHeader} menuComponent={() => <MasterMenu menu={masterMenuData} />}>
+        <MasterMenuRoutes menu={masterMenuData} />
+    </MasterLayout>
+);
+
+// src/App.tsx
+{({ match }) => (
+    <Switch>
+        <Route render={() => <Master />} />
+    </Switch>
+)}
+```
