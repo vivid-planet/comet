@@ -1,6 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
+import { Typography } from "@mui/material";
 import React from "react";
+import { FormattedMessage } from "react-intl";
 
 import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
 import { GQLCurrentUserPermission } from "../../graphql.generated";
@@ -39,7 +41,13 @@ export const CurrentUserProvider: React.FC<{
         }
     `);
 
-    if (error) throw error.message;
+    if (error) {
+        return (
+            <Typography gutterBottom>
+                <FormattedMessage id="comet.user.currentUserNotLoaded" defaultMessage="Cannot load user." />
+            </Typography>
+        );
+    }
 
     if (!data) return <Loading behavior="fillPageHeight" />;
 
