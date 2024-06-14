@@ -22,10 +22,6 @@ export function FinalFormNumberInput({
 }: FinalFormNumberInputProps): React.ReactElement {
     const intl = useIntl();
 
-    const numberParts = intl.formatNumberToParts(1111.111);
-    const decimalSymbol = numberParts.find(({ type }) => type === "decimal")?.value;
-    const thousandSeparatorSymbol = numberParts.find(({ type }) => type === "group")?.value;
-
     const [formattedNumberValue, setFormattedNumberValue] = React.useState("");
 
     const getFormattedValue = React.useCallback(
@@ -44,6 +40,9 @@ export function FinalFormNumberInput({
 
     const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
         const { value } = event.target;
+        const numberParts = intl.formatNumberToParts(1111.111);
+        const decimalSymbol = numberParts.find(({ type }) => type === "decimal")?.value;
+        const thousandSeparatorSymbol = numberParts.find(({ type }) => type === "group")?.value;
 
         const numericValue = parseFloat(
             value
