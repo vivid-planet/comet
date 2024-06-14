@@ -7,6 +7,7 @@ import {
     Stack,
     StackPage,
     StackSwitch,
+    StackSwitchApiContext,
     StackToolbar,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
@@ -23,20 +24,31 @@ import { ProductsGrid } from "./generated/ProductsGrid";
 
 export function ProductsPage(): React.ReactElement {
     const intl = useIntl();
+
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <MainContent fullHeight disablePadding>
-                        <ProductsGrid
-                            onAddClick={() => {
-                                console.log("Add clicked");
-                            }}
-                            onEditClick={(params) => {
-                                console.log("Edit clicked", params);
-                            }}
-                        />
-                    </MainContent>
+                    <StackSwitchApiContext.Consumer>
+                        {(stackApi) => {
+                            return (
+                                <MainContent fullHeight disablePadding>
+                                    <ProductsGrid
+                                        onAddClick={() => {
+                                            setTimeout(() => {
+                                                stackApi.activatePage("add", "add");
+                                            });
+                                        }}
+                                        onEditClick={(params) => {
+                                            setTimeout(() => {
+                                                stackApi.activatePage("edit", params.row.id);
+                                            });
+                                        }}
+                                    />
+                                </MainContent>
+                            );
+                        }}
+                    </StackSwitchApiContext.Consumer>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>
                     {(selectedProductId) => (
