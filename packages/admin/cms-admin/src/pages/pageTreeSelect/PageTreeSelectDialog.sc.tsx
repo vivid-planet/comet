@@ -27,8 +27,8 @@ export const PageVisibilityCell = styled(PageTreeCell)`
 
 export const RowClickContainer = styled("div")`
     position: absolute;
-    z-index: 10;
-    left: 0;
+    z-index: 20;
+    left: 40px;
     right: 0;
     bottom: 0;
     top: 0;
