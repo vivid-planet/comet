@@ -68,7 +68,7 @@ export function FinalFormNumberInput({
         } else {
             setFormattedNumberValue(getFormattedValue(input.value));
         }
-    }, [getFormattedValue, decimals, input.value, input]);
+    }, [getFormattedValue, decimals, input]);
 
     return (
         <InputBase
