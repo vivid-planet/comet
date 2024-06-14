@@ -35,14 +35,10 @@ export function ProductsPage(): React.ReactElement {
                                 <MainContent fullHeight disablePadding>
                                     <ProductsGrid
                                         onAddClick={() => {
-                                            setTimeout(() => {
-                                                stackApi.activatePage("add", "add");
-                                            });
+                                            stackApi.activatePage("add", "add");
                                         }}
                                         onEditClick={(params) => {
-                                            setTimeout(() => {
-                                                stackApi.activatePage("edit", params.row.id);
-                                            });
+                                            stackApi.activatePage("edit", params.row.id);
                                         }}
                                     />
                                 </MainContent>
