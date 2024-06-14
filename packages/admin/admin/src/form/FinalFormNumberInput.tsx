@@ -59,7 +59,6 @@ export function FinalFormNumberInput({
 
         const inputValue: number | undefined = isNaN(numericValue) ? undefined : roundToDecimals(numericValue, decimals);
         input.onChange(inputValue);
-        setFormattedNumberValue(getFormattedValue(inputValue));
     };
 
     React.useEffect(() => {
