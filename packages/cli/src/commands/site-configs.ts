@@ -29,7 +29,6 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
                     (({ public: publicVars, ...rest }) => ({
                         ...rest,
                         url: getUrlFromDomain(siteConfig.domains.preliminary ?? siteConfig.domains.main),
-                        previewUrl: getUrlFromDomain(siteConfig.domains.preview),
                     }))(siteConfig),
                 ),
             public: (siteConfigs: BaseSiteConfig[]): ExtractPublicSiteConfig<BaseSiteConfig>[] =>
@@ -40,7 +39,6 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
                     preloginEnabled: siteConfig.preloginEnabled || false,
                     public: siteConfig.public,
                     url: getUrlFromDomain(siteConfig.domains.preliminary ?? siteConfig.domains.main),
-                    previewUrl: getUrlFromDomain(siteConfig.domains.preview),
                 })),
         };
         str = str.replace(/"({{ site:\/\/configs\/.*\/.* }})"/g, "'$1'"); // convert to single quotes

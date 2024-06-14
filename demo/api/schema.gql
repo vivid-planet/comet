@@ -521,6 +521,7 @@ type Product {
   slug: String!
   description: String!
   type: ProductType!
+  additionalTypes: [ProductType!]!
   price: Float
   inStock: Boolean!
   soldCount: Int
@@ -920,11 +921,13 @@ input ProductFilter {
   slug: StringFilter
   description: StringFilter
   type: ProductTypeEnumFilter
+  additionalTypes: ProductTypeEnumsFilter
   price: NumberFilter
   inStock: BooleanFilter
   soldCount: NumberFilter
   availableSince: DateFilter
   category: ManyToOneFilter
+  tags: ManyToManyFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   manufacturer: ManyToOneFilter
@@ -944,6 +947,10 @@ input ProductTypeEnumFilter {
   notEqual: ProductType
 }
 
+input ProductTypeEnumsFilter {
+  contains: [ProductType!]
+}
+
 input NumberFilter {
   equal: Float
   lowerThan: Float
@@ -959,6 +966,10 @@ input ManyToOneFilter {
   notEqual: ID
 }
 
+input ManyToManyFilter {
+  contains: ID
+}
+
 input ProductSort {
   field: ProductSortField!
   direction: SortDirection! = ASC
@@ -970,6 +981,7 @@ enum ProductSortField {
   slug
   description
   type
+  additionalTypes
   price
   inStock
   soldCount
@@ -1003,6 +1015,7 @@ enum ProductCategorySortField {
 
 input ProductTagFilter {
   title: StringFilter
+  products: ManyToManyFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   and: [ProductTagFilter!]
@@ -1316,6 +1329,7 @@ input ProductInput {
   slug: String!
   description: String!
   type: ProductType!
+  additionalTypes: [ProductType!]! = []
   price: Float = null
   inStock: Boolean! = true
   availableSince: DateTime = null
@@ -1351,6 +1365,7 @@ input ProductUpdateInput {
   slug: String
   description: String
   type: ProductType
+  additionalTypes: [ProductType!]
   price: Float
   inStock: Boolean
   availableSince: DateTime

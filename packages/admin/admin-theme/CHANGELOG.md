@@ -1,5 +1,11 @@
 # @comet/admin-theme
 
+## 7.0.0-beta.1
+
+### Patch Changes
+
+-   @comet/admin-icons@7.0.0-beta.1
+
 ## 7.0.0-beta.0
 
 ### Major Changes
@@ -180,6 +186,12 @@
 ### Patch Changes
 
 -   @comet/admin-icons@7.0.0-beta.0
+
+## 6.13.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.13.0
 
 ## 6.12.0
 

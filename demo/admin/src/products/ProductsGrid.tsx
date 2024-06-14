@@ -22,7 +22,7 @@ import {
 import { Add as AddIcon, Edit, StateFilled } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton, useTheme } from "@mui/material";
-import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridFilterInputSingleSelect, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
@@ -32,8 +32,8 @@ import {
     GQLCreateProductMutationVariables,
     GQLDeleteProductMutation,
     GQLDeleteProductMutationVariables,
-    GQLProductGridCategoriesQuery,
-    GQLProductGridCategoriesQueryVariables,
+    GQLProductGridRelationsQuery,
+    GQLProductGridRelationsQueryVariables,
     GQLProductsListManualFragment,
     GQLProductsListQuery,
     GQLProductsListQueryVariables,
@@ -69,7 +69,7 @@ export function ProductsGrid() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
-    const { data: categoriesData } = useQuery<GQLProductGridCategoriesQuery, GQLProductGridCategoriesQueryVariables>(productCategoriesQuery);
+    const { data: relationsData } = useQuery<GQLProductGridRelationsQuery, GQLProductGridRelationsQueryVariables>(productRelationsQuery);
     const intl = useIntl();
     const theme = useTheme();
 
@@ -119,6 +119,22 @@ export function ProductsGrid() {
             valueOptions: ["Cap", "Shirt", "Tie"],
         },
         {
+            field: "additionalTypes",
+            headerName: "Additional Types",
+            width: 150,
+            renderCell: (params) => <>{params.row.additionalTypes.join(", ")}</>,
+            filterOperators: [
+                {
+                    value: "contains",
+                    getApplyFilterFn: (filterItem) => {
+                        throw new Error("not implemented, we filter server side");
+                    },
+                    InputComponent: GridFilterInputSingleSelect,
+                },
+            ],
+            valueOptions: ["Cap", "Shirt", "Tie"],
+        },
+        {
             field: "category",
             headerName: "Category",
             flex: 1,
@@ -126,7 +142,7 @@ export function ProductsGrid() {
             renderCell: (params) => <>{params.row.category?.title}</>,
             type: "singleSelect",
             visible: theme.breakpoints.up("md"),
-            valueOptions: categoriesData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
+            valueOptions: relationsData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
         },
         {
             field: "tags",
@@ -134,6 +150,16 @@ export function ProductsGrid() {
             flex: 1,
             minWidth: 150,
             renderCell: (params) => <>{params.row.tags.map((tag) => tag.title).join(", ")}</>,
+            filterOperators: [
+                {
+                    value: "contains",
+                    getApplyFilterFn: (filterItem) => {
+                        throw new Error("not implemented, we filter server side");
+                    },
+                    InputComponent: GridFilterInputSingleSelect,
+                },
+            ],
+            valueOptions: relationsData?.productTags.nodes.map((i) => ({ value: i.id, label: i.title })),
         },
         {
             field: "inStock",
@@ -269,6 +295,7 @@ const productsFragment = gql`
         description
         price
         type
+        additionalTypes
         inStock
         image
         status
@@ -308,9 +335,15 @@ const productsQuery = gql`
     ${productsFragment}
 `;
 
-const productCategoriesQuery = gql`
-    query ProductGridCategories {
+const productRelationsQuery = gql`
+    query ProductGridRelations {
         productCategories {
+            nodes {
+                id
+                title
+            }
+        }
+        productTags {
             nodes {
                 id
                 title
