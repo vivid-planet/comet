@@ -28,7 +28,14 @@ export function ProductsPage(): React.ReactElement {
             <StackSwitch>
                 <StackPage name="grid">
                     <MainContent fullHeight disablePadding>
-                        <ProductsGrid />
+                        <ProductsGrid
+                            onAddClick={() => {
+                                console.log("Add clicked");
+                            }}
+                            onEditClick={(params) => {
+                                console.log("Edit clicked", params);
+                            }}
+                        />
                     </MainContent>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>
