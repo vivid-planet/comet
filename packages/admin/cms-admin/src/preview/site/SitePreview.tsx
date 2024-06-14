@@ -25,6 +25,7 @@ interface SitePreviewParams {
 interface Props extends RouteComponentProps {
     resolvePath?: (path: string, scope: ContentScopeInterface) => string;
     logo?: React.ReactNode;
+    actions?: React.ReactNode;
 }
 
 function useSearchState<ParseFunction extends (value: string | undefined) => ReturnType<ParseFunction>>(
@@ -46,7 +47,7 @@ function useSearchState<ParseFunction extends (value: string | undefined) => Ret
     );
     return [value, setValue];
 }
-function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props): React.ReactElement {
+function SitePreview({ resolvePath, actions, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props): React.ReactElement {
     const [previewPath, setPreviewPath] = useSearchState("path", (v) => v ?? "");
 
     const [device, setDevice] = useSearchState("device", (v) => {
@@ -152,6 +153,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
                     </Grid>
                     <Grid item>
                         <VisibilityToggle showOnlyVisible={showOnlyVisible} onChange={handleShowOnlyVisibleChange} />
+                        {actions}
                     </Grid>
                 </Grid>
             </ActionsContainer>
