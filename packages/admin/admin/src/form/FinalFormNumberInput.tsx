@@ -25,12 +25,12 @@ export function FinalFormNumberInput({
     const [formattedNumberValue, setFormattedNumberValue] = React.useState("");
 
     const getFormattedValue = React.useCallback(
-        (value: number | undefined, decimals: number) => {
+        (value: number | undefined) => {
             const formattedValue =
                 value !== undefined ? intl.formatNumber(value, { minimumFractionDigits: decimals, maximumFractionDigits: decimals }) : "";
             return formattedValue;
         },
-        [intl],
+        [decimals, intl],
     );
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +59,7 @@ export function FinalFormNumberInput({
 
         const inputValue: number | undefined = isNaN(numericValue) ? undefined : roundToDecimals(numericValue, decimals);
         input.onChange(inputValue);
-        setFormattedNumberValue(getFormattedValue(inputValue, decimals));
+        setFormattedNumberValue(getFormattedValue(inputValue));
     };
 
     React.useEffect(() => {
@@ -67,7 +67,7 @@ export function FinalFormNumberInput({
             input.onChange(undefined);
             setFormattedNumberValue("");
         } else {
-            setFormattedNumberValue(getFormattedValue(input.value, decimals));
+            setFormattedNumberValue(getFormattedValue(input.value));
         }
     }, [getFormattedValue, decimals, input.value, input]);
 
