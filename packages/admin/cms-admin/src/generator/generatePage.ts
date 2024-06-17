@@ -17,7 +17,7 @@ export async function writeCrudPage({ entityName, target: targetDirectory }: Cru
     });
 
     const out = `
-        import { Stack, StackPage, StackSwitch, Toolbar } from "@comet/admin";
+        import { Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
         import { ContentScopeIndicator } from "@comet/cms-admin";
         import * as React from "react";
         import { useIntl } from "react-intl";
@@ -32,7 +32,7 @@ export async function writeCrudPage({ entityName, target: targetDirectory }: Cru
     )}" })}>
                     <StackSwitch>
                         <StackPage name="grid">
-                            <Toolbar scopeIndicator={<ContentScopeIndicator ${!hasScope ? "global" : ""} />} />
+                            <StackToolbar scopeIndicator={<ContentScopeIndicator ${!hasScope ? "global" : ""} />} />
                             <${classNamePlural}Grid />
                         </StackPage>
                         <StackPage name="edit" title={intl.formatMessage({ id: "${instanceNamePlural}.edit${classNameSingular}", defaultMessage: "Edit ${camelCaseToHumanReadable(
