@@ -1,6 +1,6 @@
 import { BlockContext, BlockDataInterface } from "@comet/blocks-api";
 import { Inject, Injectable } from "@nestjs/common";
-import { ModuleRef } from "@nestjs/core";
+import { ContextIdFactory, ModuleRef } from "@nestjs/core";
 import { CONTEXT } from "@nestjs/graphql";
 
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
@@ -39,6 +39,7 @@ export class BlocksTransformerService {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async transformToPlain(block: BlockDataInterface, context?: BlockContext): Promise<any> {
-        return transformToPlain(block, context ?? this.blockContext, this.moduleRef, this.context);
+        const contextId = ContextIdFactory.getByRequest(this.context);
+        return transformToPlain(block, context ?? this.blockContext, this.moduleRef, contextId);
     }
 }

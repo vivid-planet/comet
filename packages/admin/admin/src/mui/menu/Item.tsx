@@ -1,190 +1,82 @@
-import { ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText } from "@mui/material";
-import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
+import { ComponentsOverrides, ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText, Theme, useThemeProps } from "@mui/material";
 import * as React from "react";
 
-import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { MenuLevel } from "./CollapsibleItem";
-import { MenuContext } from "./Context";
+import { Icon, MenuItemClassKey, OwnerState, Root, Text } from "./Item.styles";
 
-export type MenuItemClassKey = "root" | "level1" | "level2" | "hasIcon" | "hasSecondaryText" | "hasSecondaryAction";
-
-type OwnerState = Pick<MenuItemProps, "level" | "icon" | "secondary" | "secondaryAction">;
-
-const colors = {
-    textLevel1: "#242424",
-    textLevel2: "#17181A",
-};
-
-const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerState>({
-    componentName: "MenuItem",
-    slotName: "root",
-    classesResolver(ownerState) {
-        return [
-            ownerState.level === 1 && "level1",
-            ownerState.level === 2 && "level2",
-            Boolean(ownerState.icon) && "hasIcon",
-            Boolean(ownerState.secondaryAction) && "hasSecondaryAction",
-            Boolean(ownerState.secondary) && "hasSecondaryText",
-        ];
-    },
-})(
-    ({ theme, ownerState }) => css`
-        flex-shrink: 0;
-        flex-grow: 0;
-
-        &:after {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: 2px;
-        }
-
-        .MuiListItemIcon-root {
-            color: ${colors.textLevel1};
-            min-width: 28px;
-        }
-
-        .MuiListItemText-inset {
-            padding-left: 28px;
-        }
-
-        .MuiSvgIcon-root {
-            font-size: 16px;
-        }
-
-        ${ownerState.level === 1 &&
-        css`
-            border-bottom: 1px solid ${theme.palette.grey[50]};
-            box-sizing: border-box;
-            color: ${colors.textLevel1};
-            padding-left: 20px;
-            padding-right: 20px;
-            padding-top: 16px;
-            padding-bottom: 16px;
-
-            &.Mui-selected {
-                background-color: ${theme.palette.grey[50]};
-                color: ${theme.palette.primary.main};
-
-                &:after {
-                    background-color: ${theme.palette.primary.main};
-                }
-                .MuiListItemIcon-root {
-                    color: ${theme.palette.primary.main};
-                }
-            }
-
-            .MuiListItemText-primary {
-                font-weight: ${theme.typography.fontWeightMedium};
-                font-size: 16px;
-                line-height: 20px;
-            }
-        `}
-
-        ${ownerState.level === 2 &&
-        css`
-            color: ${colors.textLevel2};
-            padding-left: 20px;
-            padding-right: 20px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-
-            &:last-child {
-                border-bottom: 1px solid ${theme.palette.grey[50]};
-                box-sizing: border-box;
-            }
-
-            &.Mui-selected {
-                background-color: ${theme.palette.primary.main};
-                color: #fff;
-
-                &:after {
-                    background-color: ${theme.palette.primary.dark};
-                }
-                &:hover {
-                    background-color: ${theme.palette.primary.dark};
-                }
-                & .MuiListItemText-primary {
-                    font-weight: ${theme.typography.fontWeightBold};
-                }
-            }
-
-            .MuiListItemText-root {
-                margin: 0;
-            }
-
-            .MuiListItemText-primary {
-                font-weight: ${theme.typography.fontWeightRegular};
-                font-size: 14px;
-                line-height: 20px;
-            }
-        `};
-
-        ${ownerState.secondaryAction &&
-        css`
-            padding-right: 18px;
-        `}
-    `,
-);
+export type MenuItemLevel = 1 | 2 | 3;
 
 export interface MenuItemProps
     extends ThemedComponentBaseProps<{
             root: typeof ListItemButton;
+            icon: typeof ListItemIcon;
+            text: typeof ListItemText;
         }>,
-        MenuLevel,
         ListItemButtonProps {
+    level?: MenuItemLevel;
     primary: React.ReactNode;
     secondary?: React.ReactNode;
     icon?: React.ReactElement;
     secondaryAction?: React.ReactNode;
+    isMenuOpen?: boolean;
+    isCollapsibleOpen?: boolean;
+    hasSubitems?: boolean;
 }
 
-export function MenuItem(inProps: MenuItemProps) {
+export const MenuItem = (inProps: MenuItemProps) => {
     const {
         primary,
         secondary,
         icon,
         level = 1,
         secondaryAction,
+        isMenuOpen,
+        hasSubitems,
+        isCollapsibleOpen,
         slotProps,
         ...restProps
-    } = useThemeProps({
-        props: inProps,
-        name: "CometAdminMenuItem",
-    });
+    } = useThemeProps({ props: inProps, name: "CometAdminMenuItem" });
+
+    if (level > 3) throw new Error("Maximum nesting level of 2 exceeded.");
+
+    const showIcon = !!icon && level === 1;
 
     const ownerState: OwnerState = {
         level,
-        icon,
-        secondaryAction,
-        secondary,
+        open: Boolean(isMenuOpen),
+        hasIcon: Boolean(icon),
+        collapsibleOpen: Boolean(isCollapsibleOpen),
+        hasSecondaryText: Boolean(secondary),
+        hasSecondaryAction: Boolean(secondaryAction),
+        hasSubItems: Boolean(hasSubitems),
     };
 
-    const hasIcon = !!icon;
-
-    const context = React.useContext(MenuContext);
-    if (!context) throw new Error("Could not find context for menu");
-    if (level > 2) throw new Error("Maximum nesting level of 2 exceeded.");
-
     return (
-        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
-            {hasIcon && <ListItemIcon>{icon}</ListItemIcon>}
-            <ListItemText primary={primary} secondary={secondary} inset={!icon} />
+        // @ts-expect-error The type of the `component` is missing when using `styled()`: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop
+        <Root component="div" ownerState={ownerState} {...slotProps?.root} {...restProps}>
+            {showIcon && (
+                <Icon ownerState={ownerState} {...slotProps?.icon}>
+                    {icon}
+                </Icon>
+            )}
+            <Text ownerState={ownerState} primary={primary} secondary={secondary} inset={!icon} {...slotProps?.text} />
             {!!secondaryAction && secondaryAction}
         </Root>
     );
-}
+};
 
 declare module "@mui/material/styles" {
+    interface ComponentsPropsList {
+        CometAdminMenuItem: MenuItemProps;
+    }
+
     interface ComponentNameToClassKey {
         CometAdminMenuItem: MenuItemClassKey;
     }
 
     interface Components {
         CometAdminMenuItem?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminMenuItem"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminMenuItem"];
         };
     }

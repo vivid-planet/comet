@@ -10,7 +10,6 @@ export default (): SiteConfig[] => [
         },
         domains: {
             main: "localhost:3000",
-            preview: "localhost:3000",
         },
     },
     {
@@ -21,7 +20,6 @@ export default (): SiteConfig[] => [
         },
         domains: {
             main: "en.localhost:3000",
-            preview: "localhost:3000",
         },
     },
     {
@@ -32,7 +30,6 @@ export default (): SiteConfig[] => [
         },
         domains: {
             main: "secondary-de.localhost:3000",
-            preview: "localhost:3000",
         },
     },
     {
@@ -43,7 +40,6 @@ export default (): SiteConfig[] => [
         },
         domains: {
             main: "secondary-en.localhost:3000",
-            preview: "localhost:3000",
         },
     },
 ];

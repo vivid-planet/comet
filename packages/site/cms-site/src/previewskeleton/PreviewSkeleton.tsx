@@ -37,12 +37,12 @@ const PreviewSkeleton: React.FunctionComponent<SkeletonProps> = ({
             );
         } else if (type === "rows") {
             return (
-                <sc.RowsContainer $width={"100%"}>
-                    <sc.RowSkeleton $width={"75%"} $backgroundColor={backgroundColor} $color={color}>
+                <sc.RowsContainer $width="100%">
+                    <sc.RowSkeleton $width="75%" $backgroundColor={backgroundColor} $color={color}>
                         {title}
                     </sc.RowSkeleton>
-                    <sc.RowSkeleton $width={"100%"} $backgroundColor={backgroundColor} $color={color} />
-                    <sc.RowSkeleton $width={"50%"} $backgroundColor={backgroundColor} $color={color} />
+                    <sc.RowSkeleton $width="100%" $backgroundColor={backgroundColor} $color={color} />
+                    <sc.RowSkeleton $width="50%" $backgroundColor={backgroundColor} $color={color} />
                 </sc.RowsContainer>
             );
         } else if (type === "media") {

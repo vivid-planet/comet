@@ -4,8 +4,9 @@ import {
     CrudVisibility,
     DataGridToolbar,
     filterByFragment,
-    GridCellText,
+    GridCellContent,
     GridColDef,
+    GridColumnsButton,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -17,10 +18,10 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { Add as AddIcon, Edit, StateFilled } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton, useTheme } from "@mui/material";
-import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridFilterInputSingleSelect, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
@@ -30,8 +31,8 @@ import {
     GQLCreateProductMutationVariables,
     GQLDeleteProductMutation,
     GQLDeleteProductMutationVariables,
-    GQLProductGridCategoriesQuery,
-    GQLProductGridCategoriesQueryVariables,
+    GQLProductGridRelationsQuery,
+    GQLProductGridRelationsQueryVariables,
     GQLProductsListManualFragment,
     GQLProductsListQuery,
     GQLProductsListQueryVariables,
@@ -51,6 +52,9 @@ function ProductsGridToolbar() {
             </ToolbarItem>
             <ToolbarFillSpace />
             <ToolbarItem>
+                <GridColumnsButton />
+            </ToolbarItem>
+            <ToolbarItem>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
                     <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
                 </Button>
@@ -63,7 +67,7 @@ export function ProductsGrid() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
-    const { data: categoriesData } = useQuery<GQLProductGridCategoriesQuery, GQLProductGridCategoriesQueryVariables>(productCategoriesQuery);
+    const { data: relationsData } = useQuery<GQLProductGridRelationsQuery, GQLProductGridRelationsQueryVariables>(productRelationsQuery);
     const intl = useIntl();
     const theme = useTheme();
 
@@ -73,7 +77,7 @@ export function ProductsGrid() {
             headerName: "Overview",
             minWidth: 200,
             flex: 1,
-            sortable: false,
+            sortBy: ["title", "price", "type", "category", "inStock"],
             visible: theme.breakpoints.down("md"),
             renderCell: ({ row }) => {
                 const secondaryValues = [
@@ -84,7 +88,7 @@ export function ProductsGrid() {
                         ? intl.formatMessage({ id: "comet.products.product.inStock", defaultMessage: "In Stock" })
                         : intl.formatMessage({ id: "comet.products.product.outOfStock", defaultMessage: "Out of Stock" }),
                 ];
-                return <GridCellText primary={row.title} secondary={secondaryValues.filter(Boolean).join(" • ")} />;
+                return <GridCellContent primaryText={row.title} secondaryText={secondaryValues.filter(Boolean).join(" • ")} />;
             },
         },
         {
@@ -113,6 +117,22 @@ export function ProductsGrid() {
             valueOptions: ["Cap", "Shirt", "Tie"],
         },
         {
+            field: "additionalTypes",
+            headerName: "Additional Types",
+            width: 150,
+            renderCell: (params) => <>{params.row.additionalTypes.join(", ")}</>,
+            filterOperators: [
+                {
+                    value: "contains",
+                    getApplyFilterFn: (filterItem) => {
+                        throw new Error("not implemented, we filter server side");
+                    },
+                    InputComponent: GridFilterInputSingleSelect,
+                },
+            ],
+            valueOptions: ["Cap", "Shirt", "Tie"],
+        },
+        {
             field: "category",
             headerName: "Category",
             flex: 1,
@@ -120,7 +140,7 @@ export function ProductsGrid() {
             renderCell: (params) => <>{params.row.category?.title}</>,
             type: "singleSelect",
             visible: theme.breakpoints.up("md"),
-            valueOptions: categoriesData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
+            valueOptions: relationsData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
         },
         {
             field: "tags",
@@ -128,14 +148,35 @@ export function ProductsGrid() {
             flex: 1,
             minWidth: 150,
             renderCell: (params) => <>{params.row.tags.map((tag) => tag.title).join(", ")}</>,
+            filterOperators: [
+                {
+                    value: "contains",
+                    getApplyFilterFn: (filterItem) => {
+                        throw new Error("not implemented, we filter server side");
+                    },
+                    InputComponent: GridFilterInputSingleSelect,
+                },
+            ],
+            valueOptions: relationsData?.productTags.nodes.map((i) => ({ value: i.id, label: i.title })),
         },
         {
             field: "inStock",
             headerName: "In Stock",
             flex: 1,
             minWidth: 80,
-            type: "boolean",
             visible: theme.breakpoints.up("md"),
+            renderCell: (params) => (
+                <GridCellContent
+                    icon={<StateFilled color={params.row.inStock ? "success" : "error"} />}
+                    primaryText={
+                        params.row.inStock ? (
+                            <FormattedMessage id="products.inStock" defaultMessage="In Stock" />
+                        ) : (
+                            <FormattedMessage id="products.outOfStock" defaultMessage="Out of Stock" />
+                        )
+                    }
+                />
+            ),
         },
         {
             field: "status",
@@ -220,7 +261,7 @@ export function ProductsGrid() {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
-            sort: muiGridSortToGql(sortModel),
+            sort: muiGridSortToGql(sortModel, dataGridProps.apiRef),
         },
     });
     const rows = data?.products.nodes ?? [];
@@ -252,6 +293,7 @@ const productsFragment = gql`
         description
         price
         type
+        additionalTypes
         inStock
         image
         status
@@ -291,9 +333,15 @@ const productsQuery = gql`
     ${productsFragment}
 `;
 
-const productCategoriesQuery = gql`
-    query ProductGridCategories {
+const productRelationsQuery = gql`
+    query ProductGridRelations {
         productCategories {
+            nodes {
+                id
+                title
+            }
+        }
+        productTags {
             nodes {
                 id
                 title

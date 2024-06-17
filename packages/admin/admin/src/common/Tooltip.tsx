@@ -17,8 +17,7 @@ export interface TooltipProps extends MuiTooltipProps {
     trigger?: "hover" | "focus" | "click";
     variant?: Variant;
 }
-
-type Variant = "light" | "dark" | "neutral" | "primary";
+type Variant = "light" | "dark" | "neutral" | "primary" | "error" | "success";
 
 export type TooltipClassKey = "root" | Variant | MuiTooltipClassKey;
 
@@ -91,6 +90,28 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
             }
             .${tooltipClasses.tooltip} {
                 background-color: ${theme.palette.primary.light};
+                color: ${theme.palette.common.black};
+            }
+        `};
+
+        ${ownerState.variant === "error" &&
+        css`
+            .${tooltipClasses.arrow} {
+                color: ${theme.palette.error.light};
+            }
+            .${tooltipClasses.tooltip} {
+                background-color: ${theme.palette.error.light};
+                color: ${theme.palette.common.white};
+            }
+        `};
+
+        ${ownerState.variant === "success" &&
+        css`
+            .${tooltipClasses.arrow} {
+                color: ${theme.palette.success.light};
+            }
+            .${tooltipClasses.tooltip} {
+                background-color: ${theme.palette.success.light};
                 color: ${theme.palette.common.black};
             }
         `};

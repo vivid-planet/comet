@@ -35,7 +35,7 @@ export class SvgImageBlockTransformerService implements BlockTransformerServiceI
             return {};
         }
 
-        const fileUrl = includeInvisibleContent ? await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }) : undefined;
+        const fileUrl = await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls });
 
         return {
             damFile: {

@@ -4,6 +4,7 @@ import { GQLRedirectScope } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { RouteHas } from "next/dist/lib/load-custom-routes";
 
+import { memoryCache } from "./cache";
 import { GQLRedirectsQuery, GQLRedirectsQueryVariables } from "./redirects.generated";
 
 const redirectsQuery = gql`
@@ -114,26 +115,12 @@ const createApiRedirects = async (scope: GQLRedirectScope): Promise<Map<string, 
 
 type Redirect = { destination: string; permanent: boolean; has?: RouteHas[] | undefined };
 
-const REDIRECTS_CACHE_TTL = 15 * 60 * 1000; // 15 minutes
-
-type RedirectsMap = Map<string, Redirect>;
-const redirectsCache = new Map<string, RedirectsMap>();
-const redirectsCacheLastUpdate = new Map<string, number>();
-
 export const createRedirects = async (scope: GQLRedirectScope) => {
-    const key = JSON.stringify(scope);
-    const lastUpdate = redirectsCacheLastUpdate.get(key);
-    if (lastUpdate && Date.now() - lastUpdate < REDIRECTS_CACHE_TTL) {
-        return redirectsCache.get(key) as RedirectsMap;
-    }
-
-    const redirectsMap = new Map<string, Redirect>([
-        ...Array.from(await createApiRedirects({ domain: scope.domain })),
-        ...Array.from(await createInternalRedirects()),
-    ]);
-
-    redirectsCache.set(key, redirectsMap);
-    redirectsCacheLastUpdate.set(key, Date.now());
-
-    return redirectsMap;
+    const key = `redirects-${JSON.stringify(scope)}`;
+    return memoryCache.wrap(key, async () => {
+        return new Map<string, Redirect>([
+            ...Array.from(await createApiRedirects({ domain: scope.domain })),
+            ...Array.from(await createInternalRedirects()),
+        ]);
+    });
 };

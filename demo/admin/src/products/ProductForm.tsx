@@ -79,6 +79,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         : {
               image: rootBlocks.image.defaultValues(),
               inStock: false,
+              additionalTypes: [],
               tags: [],
           };
 
@@ -164,6 +165,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
                         <SelectField name="type" label="Type" required fullWidth>
+                            <MenuItem value="Cap">Cap</MenuItem>
+                            <MenuItem value="Shirt">Shirt</MenuItem>
+                            <MenuItem value="Tie">Tie</MenuItem>
+                        </SelectField>
+                        <SelectField name="additionalTypes" label="Additional Type" required fullWidth multiple>
                             <MenuItem value="Cap">Cap</MenuItem>
                             <MenuItem value="Shirt">Shirt</MenuItem>
                             <MenuItem value="Tie">Tie</MenuItem>

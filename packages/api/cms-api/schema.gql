@@ -13,6 +13,7 @@ type CurrentUser {
   name: String!
   email: String!
   permissions: [CurrentUserPermission!]!
+  permissionsForScope(scope: JSONObject!): [String!]!
 }
 
 type UserPermission {
@@ -170,6 +171,15 @@ type FilenameResponse {
   name: String!
   folderId: ID
   isOccupied: Boolean!
+}
+
+type SitePreviewHash {
+  timestamp: Float!
+  hash: String!
+}
+
+type CurrentUserPermission {
+  permission: String!
 }
 
 type User {
@@ -357,7 +367,6 @@ type Query {
   kubernetesJob(name: String!): KubernetesJob!
   kubernetesJobLogs(name: String!): String!
   currentUser: CurrentUser!
-  isAllowedSitePreview(scope: JSONObject!): Boolean!
   userPermissionsUserById(id: String!): User!
   userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
