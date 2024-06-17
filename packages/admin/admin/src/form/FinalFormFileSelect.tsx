@@ -12,6 +12,9 @@ import { createComponentSlot } from "../helpers/createComponentSlot";
 import { PrettyBytes } from "../helpers/PrettyBytes";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
+/**
+ * @deprecated use `FileSelect` instead, if necessary by adding a final-form wrapper.
+ */
 export type FinalFormFileSelectClassKey =
     | "root"
     | "dropzone"
@@ -205,6 +208,9 @@ const SelectButton = createComponentSlot(Button)<FinalFormFileSelectClassKey>({
     `,
 );
 
+/**
+ * @deprecated use `FileSelect` instead, if necessary by adding a final-form wrapper.
+ */
 export interface FinalFormFileSelectProps
     extends FieldRenderProps<File | File[], HTMLInputElement>,
         ThemedComponentBaseProps<{
@@ -233,6 +239,9 @@ export interface FinalFormFileSelectProps
     };
 }
 
+/**
+ * @deprecated use `FileSelect` instead, if necessary by adding a final-form wrapper.
+ */
 export function FinalFormFileSelect(inProps: FinalFormFileSelectProps) {
     const {
         slotProps,
