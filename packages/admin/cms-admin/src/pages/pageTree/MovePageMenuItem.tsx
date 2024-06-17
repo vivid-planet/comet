@@ -1,5 +1,5 @@
 import { gql, useMutation } from "@apollo/client";
-import { RowActionsItem, RowActionsMenu, useErrorDialog } from "@comet/admin";
+import { RowActionsItem, RowActionsMenu } from "@comet/admin";
 import { MovePage } from "@comet/admin-icons";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -28,7 +28,6 @@ export function MovePageMenuItem({ page }: Props): React.ReactElement | null {
     `);
     const { scope } = useContentScope();
     const { allCategories, query, getDocumentTypesByCategory } = usePageTreeContext();
-    const errorDialogApi = useErrorDialog();
 
     if (allCategories.length <= 1) {
         return null;
@@ -36,8 +35,7 @@ export function MovePageMenuItem({ page }: Props): React.ReactElement | null {
 
     const handleSubMenuItemClick = async (category: string) => {
         if (!categorySupportsDocumentType(category, page.documentType, getDocumentTypesByCategory)) {
-            errorDialogApi?.showError({ error: `Cannot move: Target category doesn't support documentType ${page.documentType}` });
-            return;
+            throw new Error(`Cannot move: Target category doesn't support documentType ${page.documentType}`);
         }
 
         const refetchQueries = [
