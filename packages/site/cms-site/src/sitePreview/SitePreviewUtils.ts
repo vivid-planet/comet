@@ -69,7 +69,7 @@ export async function sitePreviewRoute(request: NextRequest, graphQLFetch: Graph
 
 /**
  * Helper for SitePreview
- * @param options - Allows skipping the draft mode check, only required when called from middleware.ts (see https://github.com/vercel/next.js/issues/52080)
+ * @param options.skipDraftModeCheck Allows skipping the draft mode check, only required when called from middleware.ts (see https://github.com/vercel/next.js/issues/52080)
  * @return If SitePreview is active the current preview settings
  */
 export async function previewParams(options: { skipDraftModeCheck: boolean } = { skipDraftModeCheck: false }): Promise<SitePreviewParams | null> {
