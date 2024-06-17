@@ -24,6 +24,7 @@ export class AzureAITranslatorResolver {
             body: [{ text: input.text }],
             queryParameters: {
                 to: input.targetLanguage,
+                textType: "html",
             },
         });
 
