@@ -1,18 +1,11 @@
-import { defaultLanguage, domain } from "@src/config";
-import { GQLPage } from "@src/graphql.generated";
+import { parsePreviewParams } from "@comet/cms-site";
+import { domain } from "@src/config";
+import { GQLPage, GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import NotFound404 from "@src/pages/404";
 import PageTypePage, { loader as pageTypePageLoader } from "@src/pageTypes/Page";
 import createGraphQLClient from "@src/util/createGraphQLClient";
 import { gql } from "graphql-request";
-import {
-    GetServerSidePropsContext,
-    GetServerSidePropsResult,
-    GetStaticPaths,
-    GetStaticProps,
-    GetStaticPropsContext,
-    GetStaticPropsResult,
-    InferGetStaticPropsType,
-} from "next";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import * as React from "react";
 
 import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTypeQuery, GQLPageTypeQueryVariables } from "./[[...path]].generated";
@@ -55,54 +48,36 @@ const pageTypes = {
 };
 
 export const getStaticProps: GetStaticProps<PageUniversalProps> = async (context) => {
-    const getUniversalProps = createGetUniversalProps();
-    return getUniversalProps(context);
-};
+    const { scope, previewData } = parsePreviewParams(context) || { scope: { domain, language: context.locale }, previewData: undefined };
 
-interface CreateGetUniversalPropsOptions {
-    includeInvisiblePages?: boolean;
-    includeInvisibleBlocks?: boolean;
-    previewDamUrls?: boolean;
-}
+    const client = createGraphQLClient({
+        includeInvisiblePages: context.draftMode,
+        includeInvisibleBlocks: previewData?.includeInvisible,
+        previewDamUrls: context.draftMode,
+    });
+    const path = context.params?.path ?? "";
+    //fetch pageType
+    const data = await client.request<GQLPageTypeQuery, GQLPageTypeQueryVariables>(pageTypeQuery, {
+        path: `/${Array.isArray(path) ? path.join("/") : path}`,
+        scope: scope as GQLPageTreeNodeScopeInput, //TODO fix type, the scope from parsePreviewParams() is not compatible with GQLPageTreeNodeScopeInput
+    });
+    if (!data.pageTreeNodeByPath?.documentType) {
+        // eslint-disable-next-line no-console
+        console.log("got no data from api", data, path);
+        return { notFound: true };
+    }
+    const pageTreeNodeId = data.pageTreeNodeByPath.id;
 
-// a function to create a universal function which can be used as getStaticProps or getServerSideProps (preview)
-export function createGetUniversalProps({
-    includeInvisiblePages = false,
-    includeInvisibleBlocks = false,
-    previewDamUrls = false,
-}: CreateGetUniversalPropsOptions = {}) {
-    return async function getUniversalProps<Context extends GetStaticPropsContext | GetServerSidePropsContext>({
-        params,
-        locale = defaultLanguage,
-    }: Context): Promise<
-        Context extends GetStaticPropsContext ? GetStaticPropsResult<PageUniversalProps> : GetServerSidePropsResult<PageUniversalProps>
-    > {
-        const client = createGraphQLClient({ includeInvisiblePages, includeInvisibleBlocks, previewDamUrls });
-        const path = params?.path ?? "";
-        const scope = { domain, language: locale };
-        //fetch pageType
-        const data = await client.request<GQLPageTypeQuery, GQLPageTypeQueryVariables>(pageTypeQuery, {
-            path: `/${Array.isArray(path) ? path.join("/") : path}`,
-            scope,
-        });
-        if (!data.pageTreeNodeByPath?.documentType) {
-            // eslint-disable-next-line no-console
-            console.log("got no data from api", data, path);
-            return { notFound: true };
-        }
-        const pageTreeNodeId = data.pageTreeNodeByPath.id;
-
-        //pageType dependent query
-        const { loader: loaderForPageType } = pageTypes[data.pageTreeNodeByPath.documentType];
-        return {
-            props: {
-                ...(await loaderForPageType({ client, scope, pageTreeNodeId })),
-                documentType: data.pageTreeNodeByPath.documentType,
-                id: pageTreeNodeId,
-            },
-        };
+    //pageType dependent query
+    const { loader: loaderForPageType } = pageTypes[data.pageTreeNodeByPath.documentType];
+    return {
+        props: {
+            ...(await loaderForPageType({ client, scope, pageTreeNodeId })),
+            documentType: data.pageTreeNodeByPath.documentType,
+            id: pageTreeNodeId,
+        },
     };
-}
+};
 
 const pagesQuery = gql`
     query Pages($scope: PageTreeNodeScopeInput!) {
