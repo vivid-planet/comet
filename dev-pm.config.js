@@ -225,5 +225,25 @@ module.exports = {
             group: ["demo-site", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },
+
+        //group demo site
+        {
+            name: "demo-site-pages",
+            script: "pnpm --filter comet-demo-site-pages run dev",
+            group: ["demo-site-pages", "demo"],
+            waitOn: [...waitOnPackages("@comet/cms-site"), "tcp:$API_PORT"],
+        },
+        {
+            name: "demo-site-pages-codegen",
+            script: "pnpm --filter comet-demo-site-pages run gql:watch",
+            group: ["demo-site-pages", "demo"],
+            waitOn: ["tcp:$API_PORT"],
+        },
+        {
+            name: "demo-site-pages-block-codegen",
+            script: "pnpm --filter comet-demo-site-pages run generate-block-types:watch",
+            group: ["demo-site-pages", "demo"],
+            waitOn: ["tcp:$API_PORT"],
+        },
     ],
 };

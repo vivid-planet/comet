@@ -89,6 +89,7 @@ export class AppModule {
                             { domain: "main", language: "de" },
                             { domain: "main", language: "en" },
                             { domain: "secondary", language: "en" },
+                            { domain: "secondary", language: "de" },
                         ],
                         userService,
                         accessControlService,
