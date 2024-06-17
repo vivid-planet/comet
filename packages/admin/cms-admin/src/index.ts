@@ -88,7 +88,6 @@ export { LocaleProvider } from "./locale/LocaleProvider";
 export { useLocale } from "./locale/useLocale";
 export { createEditPageNode } from "./pages/createEditPageNode";
 export { createUsePage } from "./pages/createUsePage";
-export { EditPageLayout } from "./pages/EditPageLayout";
 export { PagesPage } from "./pages/pagesPage/PagesPage";
 export type { AllCategories } from "./pages/pageTree/PageTreeContext";
 export { useCopyPastePages } from "./pages/pageTree/useCopyPastePages";
