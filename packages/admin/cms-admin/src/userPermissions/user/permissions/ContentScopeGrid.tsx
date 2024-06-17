@@ -113,7 +113,11 @@ export const ContentScopeGrid: React.FC<{
     };
 
     return (
-        <FieldSet title={<FormattedMessage id="comet.userPermissions.scopes" defaultMessage="Assigned Scopes" />} initiallyExpanded disablePadding>
+        <FieldSet
+            title={<FormattedMessage id="comet.userPermissions.scopes.assigned" defaultMessage="Assigned Scopes" />}
+            initiallyExpanded
+            disablePadding
+        >
             <Card>
                 <DataGrid<GQLUserContentScopes>
                     autoHeight

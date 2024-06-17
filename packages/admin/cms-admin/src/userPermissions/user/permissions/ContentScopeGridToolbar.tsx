@@ -23,7 +23,7 @@ export const ContentScopeGridToolbar = ({ actions }: Props) => {
                             <FormattedMessage id="comet.contentScopes.more" defaultMessage="More" />
                         </Button> */}
                         <Button variant="contained" color="primary" startIcon={<Select />} onClick={actions.openDialog}>
-                            <FormattedMessage id="comet.contentScope.select" defaultMessage="Select scopes" />
+                            <FormattedMessage id="comet.contentScope.select" defaultMessage="Select Scopes" />
                         </Button>
                     </CustomToolbarAction>
                 ) : null}
