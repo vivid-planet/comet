@@ -9,7 +9,7 @@ import { EmailLinkBlockData, EmailLinkBlockInput } from "../blocks.generated";
 export const EmailLinkBlock: BlockInterface<EmailLinkBlockData, EmailLinkBlockData, EmailLinkBlockInput> = {
     ...createBlockSkeleton(),
 
-    name: "Email",
+    name: "EmailLink",
 
     displayName: <FormattedMessage id="comet.blocks.link.email" defaultMessage="Email" />,
 
@@ -24,12 +24,7 @@ export const EmailLinkBlock: BlockInterface<EmailLinkBlockData, EmailLinkBlockDa
     AdminComponent: ({ state, updateState }) => {
         return (
             <SelectPreviewComponent>
-                <BlocksFinalForm
-                    onSubmit={(newState: EmailLinkBlockData) => {
-                        updateState((prevState) => ({ ...prevState, ...newState }));
-                    }}
-                    initialValues={state}
-                >
+                <BlocksFinalForm onSubmit={updateState} initialValues={state}>
                     <Field
                         label={<FormattedMessage id="comet.blocks.link.email" defaultMessage="Email" />}
                         name="email"
@@ -45,6 +40,7 @@ export const EmailLinkBlock: BlockInterface<EmailLinkBlockData, EmailLinkBlockDa
             </SelectPreviewComponent>
         );
     },
+
     previewContent: (state) => {
         return state.email ? [{ type: "text", content: state.email }] : [];
     },

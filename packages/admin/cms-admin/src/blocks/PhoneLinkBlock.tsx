@@ -5,11 +5,12 @@ import { FormattedMessage } from "react-intl";
 
 import { PhoneLinkBlockData, PhoneLinkBlockInput } from "../blocks.generated";
 import { isPhoneNumber } from "../validation/isPhoneNumber";
+import { validatePhoneNumber } from "../validation/validatePhoneNumber";
 
 export const PhoneLinkBlock: BlockInterface<PhoneLinkBlockData, PhoneLinkBlockData, PhoneLinkBlockInput> = {
     ...createBlockSkeleton(),
 
-    name: "Phone",
+    name: "PhoneLink",
 
     displayName: <FormattedMessage id="comet.blocks.link.phone" defaultMessage="Phone Number" />,
 
@@ -24,27 +25,19 @@ export const PhoneLinkBlock: BlockInterface<PhoneLinkBlockData, PhoneLinkBlockDa
     AdminComponent: ({ state, updateState }) => {
         return (
             <SelectPreviewComponent>
-                <BlocksFinalForm
-                    onSubmit={(newState: PhoneLinkBlockData) => {
-                        updateState((prevState) => ({ ...prevState, ...newState }));
-                    }}
-                    initialValues={state}
-                >
+                <BlocksFinalForm onSubmit={updateState} initialValues={state}>
                     <Field
                         label={<FormattedMessage id="comet.blocks.link.phone" defaultMessage="Phone Number" />}
                         name="phone"
                         component={FinalFormInput}
                         fullWidth
-                        validate={(phone: string) => {
-                            if (phone && !isPhoneNumber(phone)) {
-                                return <FormattedMessage id="comet.blocks.link.phone.invalid" defaultMessage="Invalid phone number" />;
-                            }
-                        }}
+                        validate={validatePhoneNumber}
                     />
                 </BlocksFinalForm>
             </SelectPreviewComponent>
         );
     },
+
     previewContent: (state) => {
         return state.phone ? [{ type: "text", content: state.phone }] : [];
     },
