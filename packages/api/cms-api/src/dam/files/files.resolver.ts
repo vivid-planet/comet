@@ -89,7 +89,7 @@ export function createFilesResolver({
         async findCopiesOfFileInScope(
             @Args({ type: () => FindCopiesOfFileInScopeArgs }) { id, scope, imageCropArea }: FindCopiesOfFileInScopeArgsInterface,
         ): Promise<FileInterface[]> {
-            return this.filesService.findCopiesOfFileInScope(id, imageCropArea, scope);
+            return this.filesService.findCopiesOfFileInScope(id, imageCropArea, nonEmptyScopeOrNothing(scope));
         }
 
         @Mutation(() => File)
@@ -118,7 +118,7 @@ export function createFilesResolver({
                 ...input,
                 imageCropArea: imageInput?.cropArea,
                 folderId: input.folderId ? input.folderId : undefined,
-                scope,
+                scope: nonEmptyScopeOrNothing(scope),
             });
             return uploadedFile;
         }
@@ -263,7 +263,7 @@ export function createFilesResolver({
 
         @ResolveField(() => [File])
         async duplicates(@Parent() file: FileInterface): Promise<FileInterface[]> {
-            const files = await this.filesService.findAllByHash(file.contentHash);
+            const files = await this.filesService.findAllByHash(file.contentHash, { scope: file.scope });
             return files.filter((f) => f.id !== file.id);
         }
 

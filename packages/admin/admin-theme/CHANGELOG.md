@@ -1,5 +1,55 @@
 # @comet/admin-theme
 
+## 6.13.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.13.0
+
+## 6.12.0
+
+### Minor Changes
+
+-   c06c6f1e9: Allow to pass args to createCometTheme to support localization via theme
+
+    See https://mui.com/material-ui/guides/localization/
+
+    ```tsx
+    import { deDE } from "@mui/x-data-grid-pro";
+
+    const theme = createCometTheme({}, deDE);
+
+    <MuiThemeProvider theme={theme} />;
+    ```
+
+### Patch Changes
+
+-   @comet/admin-icons@6.12.0
+
+## 6.11.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.11.0
+
+## 6.10.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.10.0
+
+## 6.9.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.9.0
+
+## 6.8.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.8.0
+
 ## 6.7.0
 
 ### Patch Changes

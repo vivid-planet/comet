@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin",
-    "version": "6.7.0",
+    "version": "6.13.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -27,7 +27,7 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "@comet/admin-icons": "workspace:^6.7.0",
+        "@comet/admin-icons": "workspace:^6.13.0",
         "@mui/private-theming": "^5.0.0",
         "clsx": "^1.1.1",
         "exceljs": "^3.4.0",
@@ -38,6 +38,7 @@
         "lodash.debounce": "^4.0.8",
         "lodash.isequal": "^4.5.0",
         "query-string": "^6.8.1",
+        "react-dropzone": "^14.0.0",
         "use-constant": "^1.0.0",
         "uuid": "^9.0.0"
     },
@@ -45,11 +46,10 @@
         "@apollo/client": "^3.7.0",
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^6.7.0",
-        "@comet/eslint-config": "workspace:^6.7.0",
+        "@comet/admin-babel-preset": "workspace:^6.13.0",
+        "@comet/eslint-config": "workspace:^6.13.0",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
-        "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
         "@mui/styles": "^5.0.0",
         "@mui/system": "^5.0.0",
@@ -87,7 +87,7 @@
         "react-dnd": "^16.0.0",
         "react-dom": "^17.0.0",
         "react-final-form": "^6.3.1",
-        "react-intl": "^5.10.0",
+        "react-intl": "^6.0.0",
         "react-router": "^5.1.2",
         "react-router-dom": "^5.1.2",
         "rimraf": "^3.0.2",
@@ -98,7 +98,6 @@
         "@apollo/client": "^3.7.0",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
-        "@mui/icons-material": "^5.0.0",
         "@mui/material": "^5.0.0",
         "@mui/styles": "^5.0.0",
         "@mui/x-data-grid": "^5.0.0",
@@ -111,7 +110,7 @@
         "react-dnd": "^16.0.0",
         "react-dom": "^17.0",
         "react-final-form": "^6.3.1",
-        "react-intl": "^5.10.0",
+        "react-intl": "^5.0.0 || ^6.0.0",
         "react-router": "^5.1.2",
         "react-router-dom": "^5.1.2"
     },

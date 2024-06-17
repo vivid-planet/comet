@@ -1,6 +1,6 @@
 import { FieldContainer } from "@comet/admin";
 import { ColorPicker, ColorPickerColorPreviewProps } from "@comet/admin-color-picker";
-import { EmojiEmotions, MoodBad, SentimentDissatisfied } from "@mui/icons-material";
+import { StateFilled, StateRing, Warning } from "@comet/admin-icons";
 import { Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -11,15 +11,15 @@ storiesOf("stories/components/Color Picker/Color Picker Customized", module).add
     const [colorThree, setColorThree] = React.useState<string | undefined>();
 
     const CustomColorPreview = ({ color }: ColorPickerColorPreviewProps): React.ReactElement => {
-        return <EmojiEmotions htmlColor={color} sx={{ fontSize: 24 }} />;
+        return <StateFilled htmlColor={color} sx={{ fontSize: 24 }} />;
     };
 
     const CustomColorEmptyPreview = (): React.ReactElement => {
-        return <SentimentDissatisfied color="warning" sx={{ fontSize: 24 }} />;
+        return <StateRing color="warning" sx={{ fontSize: 24 }} />;
     };
 
     const CustomColorInvalidPreview = (): React.ReactElement => {
-        return <MoodBad color="error" sx={{ fontSize: 24 }} />;
+        return <Warning color="error" sx={{ fontSize: 24 }} />;
     };
 
     return (

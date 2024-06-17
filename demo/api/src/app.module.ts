@@ -160,8 +160,16 @@ export class AppModule {
                 PredefinedPageModule,
                 CronJobsModule,
                 ProductsModule,
-                AccessLogModule,
                 ...(config.azureAiTranslator ? [AzureAITranslatorModule.register(config.azureAiTranslator)] : []),
+                AccessLogModule.forRoot({
+                    shouldLogRequest: ({ user }) => {
+                        // Ignore system user
+                        if (user === true) {
+                            return false;
+                        }
+                        return true;
+                    },
+                }),
             ],
         };
     }

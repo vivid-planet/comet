@@ -76,6 +76,10 @@ function buildOptions(metadata: EntityMetadata<any>) {
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
     if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
     const hasUpdatedAt = metadata.props.some((prop) => prop.name == "updatedAt");
+
+    const scopedEntity = Reflect.getMetadata("scopedEntity", metadata.class);
+    const skipScopeCheck = !scopeProp && !scopedEntity;
+
     const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
     const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
 
@@ -94,6 +98,7 @@ function buildOptions(metadata: EntityMetadata<any>) {
         hasVisibleProp,
         scopeProp,
         hasUpdatedAt,
+        skipScopeCheck,
         argsClassName,
         argsFileName,
         blockProps,
@@ -380,9 +385,11 @@ function generateEntityImport(targetMetadata: EntityMetadata<any>, relativeTo: s
 function generateInputHandling(
     options: { mode: "create" | "update" | "updateNested"; inputName: string; assignEntityCode: string; excludeFields?: string[] },
     metadata: EntityMetadata<any>,
-): string {
+): { code: string; injectRepositories: EntityMetadata<any>[] } {
     const { instanceNameSingular } = buildNameVariants(metadata);
     const { blockProps, hasVisibleProp, scopeProp } = buildOptions(metadata);
+
+    const injectRepositories: EntityMetadata<any>[] = [];
 
     const props = metadata.props.filter((prop) => !options.excludeFields || !options.excludeFields.includes(prop.name));
 
@@ -394,6 +401,9 @@ function generateInputHandling(
     const inputRelationManyToOneProps = relationManyToOneProps
         .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
         .map((prop) => {
+            const targetMeta = prop.targetMeta;
+            if (!targetMeta) throw new Error("targetMeta is not set for relation");
+            injectRepositories.push(targetMeta);
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
@@ -408,6 +418,7 @@ function generateInputHandling(
         .map((prop) => {
             const targetMeta = prop.targetMeta;
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
+            injectRepositories.push(targetMeta);
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
@@ -422,6 +433,7 @@ function generateInputHandling(
         .map((prop) => {
             const targetMeta = prop.targetMeta;
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
+            injectRepositories.push(targetMeta);
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
@@ -433,8 +445,14 @@ function generateInputHandling(
             };
         });
 
+    function innerGenerateInputHandling(...args: Parameters<typeof generateInputHandling>) {
+        const ret = generateInputHandling(...args);
+        injectRepositories.push(...ret.injectRepositories);
+        return ret.code;
+    }
+
     const noAssignProps = [...inputRelationToManyProps, ...inputRelationManyToOneProps, ...inputRelationOneToOneProps, ...blockProps];
-    return `
+    const code = `
     ${
         noAssignProps.length
             ? `const { ${noAssignProps.map((prop) => `${prop.name}: ${prop.name}Input`).join(", ")}, ...assignInput } = ${options.inputName};`
@@ -465,24 +483,29 @@ function generateInputHandling(
 ${inputRelationToManyProps
     .map((prop) => {
         if (prop.orphanRemoval) {
+            const code = innerGenerateInputHandling(
+                {
+                    mode: "updateNested",
+                    inputName: `${prop.singularName}Input`,
+
+                    // alternative `return this.${prop.repositoryName}.create({` requires back relation to be set
+                    assignEntityCode: `return this.${prop.repositoryName}.assign(new ${prop.type}(), {`,
+
+                    excludeFields: prop.targetMeta.props
+                        .filter((prop) => prop.reference == "m:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
+                        .map((prop) => prop.name),
+                },
+                prop.targetMeta,
+            );
+            const isAsync = code.includes("await ");
             return `if (${prop.name}Input) {
+        await ${instanceNameSingular}.${prop.name}.loadItems();
         ${instanceNameSingular}.${prop.name}.set(
-            ${prop.name}Input.map((${prop.singularName}Input) => {
-                ${generateInputHandling(
-                    {
-                        mode: "updateNested",
-                        inputName: `${prop.singularName}Input`,
-
-                        // alternative `return this.${prop.repositoryName}.create({` requires back relation to be set
-                        assignEntityCode: `return this.${prop.repositoryName}.assign(new ${prop.type}(), {`,
-
-                        excludeFields: prop.targetMeta.props
-                            .filter((prop) => prop.reference == "m:1" && prop.targetMeta == metadata) //filter out referencing back to this entity
-                            .map((prop) => prop.name),
-                    },
-                    prop.targetMeta,
-                )}
-            }),
+            ${isAsync ? `await Promise.all(` : ""}
+            ${prop.name}Input.map(${isAsync ? `async ` : ""}(${prop.singularName}Input) => {
+                ${code}
+            })
+            ${isAsync ? `)` : ""}
         );
         }`;
         } else {
@@ -506,7 +529,7 @@ ${inputRelationOneToOneProps
                 ? `${instanceNameSingular}.${prop.name} ? await ${instanceNameSingular}.${prop.name}.load() : new ${prop.type}();`
                 : `new ${prop.type}();`
         }
-                ${generateInputHandling(
+                ${innerGenerateInputHandling(
                     {
                         mode: "updateNested",
                         inputName: `${prop.name}Input`,
@@ -547,11 +570,12 @@ ${
         : ""
 }
     `;
+    return { code, injectRepositories };
 }
 
 function generateNestedEntityResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
     const { classNameSingular } = buildNameVariants(metadata);
-    const { scopeProp } = buildOptions(metadata);
+    const { skipScopeCheck } = buildOptions(metadata);
 
     const imports: Imports = [];
 
@@ -567,7 +591,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         ${code}
     }
@@ -669,8 +693,18 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
 function generateResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular, instanceNameSingular, classNamePlural, fileNamePlural, instanceNamePlural } =
         buildNameVariants(metadata);
-    const { scopeProp, argsClassName, argsFileName, hasSlugProp, hasSearchArg, hasSortArg, hasFilterArg, hasVisibleProp, hasUpdatedAt } =
-        buildOptions(metadata);
+    const {
+        scopeProp,
+        skipScopeCheck,
+        argsClassName,
+        argsFileName,
+        hasSlugProp,
+        hasSearchArg,
+        hasSortArg,
+        hasFilterArg,
+        hasVisibleProp,
+        hasUpdatedAt,
+    } = buildOptions(metadata);
 
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
     const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
@@ -682,14 +716,19 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     const outputRelationOneToOneProps = relationOneToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
 
     const imports: Imports = [];
+    const injectRepositories = new Array<EntityMetadata<any>>();
 
-    const injectRepositories = new Set<string>();
+    const { code: createInputHandlingCode, injectRepositories: createInputHandlingInjectRepositories } = generateInputHandling(
+        { mode: "create", inputName: "input", assignEntityCode: `const ${instanceNameSingular} = this.repository.create({` },
+        metadata,
+    );
+    injectRepositories.push(...createInputHandlingInjectRepositories);
 
-    [...relationManyToOneProps, ...relationOneToOneProps, ...relationOneToManyProps, ...relationManyToManyProps]
-        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "input"))
-        .forEach((prop) => {
-            injectRepositories.add(prop.type);
-        });
+    const { code: updateInputHandlingCode, injectRepositories: updateInputHandlingInjectRepositories } = generateInputHandling(
+        { mode: "update", inputName: "input", assignEntityCode: `${instanceNameSingular}.assign({` },
+        metadata,
+    );
+    injectRepositories.push(...updateInputHandlingInjectRepositories);
 
     const {
         imports: relationsFieldResolverImports,
@@ -705,6 +744,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, generatorOptions.targetDirectory));
     }
+    imports.push(...injectRepositories.map((meta) => generateEntityImport(meta, generatorOptions.targetDirectory)));
 
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
@@ -720,13 +760,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
             private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
             @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
-            ${[...injectRepositories]
+            ${[...new Set<string>(injectRepositories.map((meta) => meta.className))]
                 .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>`)
                 .join(", ")}
         ) {}
@@ -758,11 +798,14 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 : ""
         }
 
+        ${
+            generatorOptions.list
+                ? `
         @Query(() => Paginated${classNamePlural})
         async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
             @Args() { ${scopeProp ? `scope, ` : ""}${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""}${
-        hasSortArg ? `sort, ` : ""
-    }offset, limit }: ${argsClassName}${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
+                      hasSortArg ? `sort, ` : ""
+                  }offset, limit }: ${argsClassName}${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
         ): Promise<Paginated${classNamePlural}> {
             const where${
                 hasSearchArg || hasFilterArg
@@ -788,8 +831,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             ${hasOutputRelations ? `// eslint-disable-next-line @typescript-eslint/no-explicit-any` : ""}
             const options: FindOptions<${metadata.className}${hasOutputRelations ? `, any` : ""}> = { offset, limit${
-        hasOutputRelations ? `, populate` : ""
-    }};
+                      hasOutputRelations ? `, populate` : ""
+                  }};
 
             ${
                 hasSortArg
@@ -805,7 +848,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             const [entities, totalCount] = await this.repository.findAndCount(where, options);
             return new Paginated${classNamePlural}(entities, totalCount);
-
+        }
+        `
+                : ""
         }
 
         ${
@@ -818,10 +863,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             @Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
 
-            ${generateInputHandling(
-                { mode: "create", inputName: "input", assignEntityCode: `const ${instanceNameSingular} = this.repository.create({` },
-                metadata,
-            )}
+            ${createInputHandlingCode}
 
             await this.entityManager.flush();
 
@@ -853,7 +895,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             }`
                     : ""
             }
-            ${generateInputHandling({ mode: "update", inputName: "input", assignEntityCode: `${instanceNameSingular}.assign({` }, metadata)}
+            ${updateInputHandlingCode}
 
             await this.entityManager.flush();
 
@@ -874,7 +916,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                           : `@Args("id", { type: () => ID }) id: string`
                   }): Promise<boolean> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
-            await this.entityManager.remove(${instanceNameSingular});
+            this.entityManager.remove(${instanceNameSingular});
             await this.entityManager.flush();
             return true;
         }
@@ -918,6 +960,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
         create: generatorOptionsParam.create ?? true,
         update: generatorOptionsParam.update ?? true,
         delete: generatorOptionsParam.delete ?? true,
+        list: generatorOptionsParam.list ?? true,
     };
 
     const generatedFiles: GeneratedFile[] = [];
