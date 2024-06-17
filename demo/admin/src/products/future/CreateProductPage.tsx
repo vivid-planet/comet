@@ -8,6 +8,7 @@ import {
     ToolbarBackButton,
     ToolbarFillSpace,
 } from "@comet/admin";
+import { ContentScopeIndicator } from "@comet/cms-admin";
 import { CreateProductForm } from "@src/products/future/generated/CreateProductForm";
 import * as React from "react";
 import { useIntl } from "react-intl";
@@ -17,7 +18,7 @@ export function CreateProductPage(): React.ReactElement {
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "products.createCapProduct", defaultMessage: "Create Cap Product" })}>
             <SaveBoundary>
-                <StackToolbar>
+                <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
                     <ToolbarFillSpace />

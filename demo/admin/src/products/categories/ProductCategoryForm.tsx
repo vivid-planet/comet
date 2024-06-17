@@ -1,24 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import {
-    Field,
-    filterByFragment,
-    FinalForm,
-    FinalFormSaveSplitButton,
-    FinalFormSubmitEvent,
-    MainContent,
-    TextField,
-    Toolbar,
-    ToolbarActions,
-    ToolbarFillSpace,
-    ToolbarItem,
-    ToolbarTitleItem,
-    useFormApiRef,
-    useStackApi,
-    useStackSwitchApi,
-} from "@comet/admin";
-import { ArrowLeft } from "@comet/admin-icons";
+import { filterByFragment, FinalForm, FinalFormSubmitEvent, MainContent, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
 import { EditPageLayout, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { CircularProgress, IconButton } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { FormApi } from "final-form";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -49,7 +32,6 @@ interface FormProps {
 type FormState = GQLProductCategoryFormFragment;
 
 function ProductCategoryForm({ id }: FormProps): React.ReactElement {
-    const stackApi = useStackApi();
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormState>();
@@ -126,28 +108,6 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
             {() => (
                 <EditPageLayout>
                     {saveConflict.dialogs}
-                    <Toolbar>
-                        <ToolbarItem>
-                            <IconButton onClick={stackApi?.goBack}>
-                                <ArrowLeft />
-                            </IconButton>
-                        </ToolbarItem>
-                        <ToolbarTitleItem>
-                            <Field name="title">
-                                {({ input }) =>
-                                    input.value ? (
-                                        input.value
-                                    ) : (
-                                        <FormattedMessage id="products.productCategoryDetail" defaultMessage="Product Category Detail" />
-                                    )
-                                }
-                            </Field>
-                        </ToolbarTitleItem>
-                        <ToolbarFillSpace />
-                        <ToolbarActions>
-                            <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
-                        </ToolbarActions>
-                    </Toolbar>
                     <MainContent>
                         <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
                         <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
