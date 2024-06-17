@@ -7,7 +7,7 @@ import "typeface-open-sans";
 import "@src/polyfills";
 
 import { ApolloProvider } from "@apollo/client";
-import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
+import { ErrorDialogHandler, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import {
     CmsBlockContextProvider,
     createDamFileDependency,
@@ -16,7 +16,6 @@ import {
     DamConfigProvider,
     DependenciesConfigProvider,
     LocaleProvider,
-    MasterMenuRoutes,
     SitePreview,
     SitesConfigProvider,
 } from "@comet/cms-admin";
@@ -35,8 +34,8 @@ import * as ReactDOM from "react-dom";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { Route, Switch } from "react-router-dom";
 
-import MasterHeader from "./common/MasterHeader";
-import MasterMenu, { masterMenuData, pageTreeDocumentTypes } from "./common/MasterMenu";
+import { Master } from "./common/Master";
+import { pageTreeDocumentTypes } from "./common/MasterMenu";
 import { getMessages } from "./lang";
 import { Link } from "./links/Link";
 import { NewsDependency } from "./news/dependencies/NewsDependency";
@@ -118,16 +117,7 @@ class App extends React.Component {
                                                                                 path={`${match.path}/preview`}
                                                                                 render={(props) => <SitePreview {...props} />}
                                                                             />
-                                                                            <Route
-                                                                                render={() => (
-                                                                                    <MasterLayout
-                                                                                        headerComponent={MasterHeader}
-                                                                                        menuComponent={MasterMenu}
-                                                                                    >
-                                                                                        <MasterMenuRoutes menu={masterMenuData} />
-                                                                                    </MasterLayout>
-                                                                                )}
-                                                                            />
+                                                                            <Route render={() => <Master />} />
                                                                         </Switch>
                                                                     )}
                                                                 </ContentScopeProvider>
