@@ -1,9 +1,8 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { AsyncSelectField, FinalForm } from "@comet/admin";
+import { AsyncSelectField, FinalForm, OnChange } from "@comet/admin";
 import { Box } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import { Field, FieldRenderProps } from "react-final-form";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
 import { Manufacturer, Product } from "../../mocks/handlers";
@@ -72,40 +71,12 @@ storiesOf("@comet/admin/form", module)
                             />
                             <OnChange name="manufacturer">
                                 {() => {
-                                    console.log("Custom OnChange");
                                     form.change("product", undefined);
-                                    return null;
                                 }}
                             </OnChange>
-                            <Field name="manufacturer" subscription={{ value: true, dirty: true }}>
-                                {() => {
-                                    console.log("Field change");
-                                    form.change("product", undefined);
-                                    return null;
-                                }}
-                            </Field>
                         </>
                     )}
                 </FinalForm>
             </Box>
         );
     });
-
-type Props = { name: string; children: (value: any, previous: any) => void };
-
-function OnChange({ name, children }: Props) {
-    return <Field name={name}>{({ input }) => <InnerOnChange input={input}>{children}</InnerOnChange>}</Field>;
-}
-
-function InnerOnChange({ input, children }: Pick<FieldRenderProps<any>, "input"> & Pick<Props, "children">) {
-    const previousValue = React.useRef(input.value);
-
-    React.useEffect(() => {
-        if (input.value !== previousValue.current) {
-            children(input.value, previousValue.current);
-            previousValue.current = input.value;
-        }
-    }, [input.value, children]);
-
-    return null;
-}

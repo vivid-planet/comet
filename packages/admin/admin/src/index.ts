@@ -98,6 +98,7 @@ export { FinalFormRangeInput, FinalFormRangeInputClassKey, FinalFormRangeInputPr
 export { FinalFormSearchTextField, FinalFormSearchTextFieldProps } from "./form/FinalFormSearchTextField";
 export { FinalFormSelect, FinalFormSelectProps } from "./form/FinalFormSelect";
 export { FormSection, FormSectionClassKey, FormSectionProps } from "./form/FormSection";
+export { OnChange } from "./form/helpers/OnChange";
 export { FinalFormRadio, FinalFormRadioProps } from "./form/Radio";
 export { FinalFormSwitch, FinalFormSwitchProps } from "./form/Switch";
 export { FormMutation } from "./FormMutation";
