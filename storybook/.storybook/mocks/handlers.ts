@@ -98,9 +98,23 @@ input LaunchesPastFilter {
     or: [LaunchesPastFilter!]
 }
 
+type Manufacturer {
+    id: ID!
+    name: String!
+
+}
+
+type Product {
+    id: ID!
+    name: String!
+    manufacturer: Manufacturer!
+}
+
 type Query {
     launchesPastResult(limit: Int, offset: Int, sort: String, order: String, filter: LaunchesPastFilter): LaunchesPastResult!
     launchesPastPagePaging(page: Int, size: Int): LaunchesPastPagePagingResult!
+    manufacturers: [Manufacturer!]!
+    products(manufacturer: ID): [Product!]!
 }
 `;
 
@@ -197,11 +211,60 @@ const launchesPastRest: ResponseResolver = (req, res, ctx: RestContext) => {
     return res(ctx.status(200), ctx.json(allLaunches));
 };
 
+export type Manufacturer = {
+    id: string;
+    name: string;
+};
+
+const allManufacturers: Manufacturer[] = [];
+
+for (let i = 0; i < 10; i += 1) {
+    allManufacturers.push({
+        id: faker.datatype.uuid(),
+        name: faker.company.name(),
+    });
+}
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const manufacturers: GraphQLFieldResolver<unknown, unknown> = async () => {
+    await sleep(500);
+    return allManufacturers;
+};
+
+export type Product = {
+    id: string;
+    name: string;
+    manufacturer: Manufacturer;
+};
+
+const allProducts: Product[] = [];
+
+for (let i = 0; i < 100; i += 1) {
+    allProducts.push({
+        id: faker.datatype.uuid(),
+        name: faker.commerce.product(),
+        manufacturer: faker.helpers.arrayElement(allManufacturers),
+    });
+}
+
+const products: GraphQLFieldResolver<unknown, unknown, { manufacturer?: string }> = async (source, { manufacturer }) => {
+    await sleep(500);
+
+    if (manufacturer) {
+        return allProducts.filter((product) => product.manufacturer.id === manufacturer);
+    }
+
+    return allProducts;
+};
+
 const graphqlHandler = new GraphQLHandler({
     resolverMap: {
         Query: {
             launchesPastResult,
             launchesPastPagePaging,
+            manufacturers,
+            products,
         },
     },
 
