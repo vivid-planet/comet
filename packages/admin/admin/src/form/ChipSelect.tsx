@@ -40,6 +40,7 @@ export interface ChipSelectProps<T = string>
     options?: T[];
     selectedOption?: T;
     onChange: (event: SelectChangeEvent) => void;
+    fullWidth?: boolean;
 }
 
 const ChipInput = ({ chipProps, ...p }: InputBaseProps & { chipProps?: Omit<ChipProps, "children"> }) => {
@@ -99,6 +100,7 @@ export function ChipSelect<T = string>(inProps: ChipSelectProps<T>) {
         children,
         slotProps,
         onChange,
+        fullWidth,
         ...restProps
     } = useThemeProps({
         props: inProps,
@@ -106,7 +108,7 @@ export function ChipSelect<T = string>(inProps: ChipSelectProps<T>) {
     });
 
     return (
-        <Root {...slotProps?.root} {...restProps}>
+        <Root {...slotProps?.root} sx={fullWidth ? { ...slotProps?.root?.sx } : { ...slotProps?.root?.sx, width: "fit-content" }} {...restProps}>
             <Select {...slotProps?.select} value={selectedOption || ""} onChange={onChange} input={<ChipInput chipProps={slotProps?.chip} />}>
                 {children ??
                     options?.map((option) => (
