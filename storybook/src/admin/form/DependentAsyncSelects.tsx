@@ -1,5 +1,5 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { AsyncSelectField, FinalForm, OnChange } from "@comet/admin";
+import { AsyncSelectField, FinalForm, OnChangeField } from "@comet/admin";
 import { Box } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -69,11 +69,11 @@ storiesOf("@comet/admin/form", module)
                                 fullWidth
                                 disabled={!values.manufacturer}
                             />
-                            <OnChange name="manufacturer">
+                            <OnChangeField name="manufacturer">
                                 {() => {
                                     form.change("product", undefined);
                                 }}
-                            </OnChange>
+                            </OnChangeField>
                         </>
                     )}
                 </FinalForm>

@@ -3,20 +3,20 @@ import { cleanup, fireEvent, render } from "@testing-library/react";
 import React from "react";
 import { Field, Form } from "react-final-form";
 
-import { OnChange } from "./OnChange";
+import { OnChangeField } from "./OnChangeField";
 
 const onSubmitMock = () => {
     // Noop
 };
 
-describe("OnChange", () => {
+describe("OnChangeField", () => {
     afterEach(cleanup);
 
     it("should not call listener on first render", () => {
         const spy = jest.fn();
         render(
             <Form onSubmit={onSubmitMock} initialValues={{ foo: "bar" }}>
-                {() => <OnChange name="foo">{spy}</OnChange>}
+                {() => <OnChangeField name="foo">{spy}</OnChangeField>}
             </Form>,
         );
         expect(spy).not.toHaveBeenCalled();
@@ -29,7 +29,7 @@ describe("OnChange", () => {
                 {() => (
                     <form>
                         <Field name="name" component="input" data-testid="name" />
-                        <OnChange name="name">{spy}</OnChange>
+                        <OnChangeField name="name">{spy}</OnChangeField>
                     </form>
                 )}
             </Form>,
@@ -48,7 +48,7 @@ describe("OnChange", () => {
                 {() => (
                     <form>
                         <Field name="name" component="input" data-testid="name" />
-                        <OnChange name="name">{spy}</OnChange>
+                        <OnChangeField name="name">{spy}</OnChangeField>
                     </form>
                 )}
             </Form>,
@@ -67,7 +67,7 @@ describe("OnChange", () => {
                 {() => (
                     <form>
                         <Field name="name" component="input" data-testid="name" />
-                        <OnChange name="name">{spy}</OnChange>
+                        <OnChangeField name="name">{spy}</OnChangeField>
                     </form>
                 )}
             </Form>,
@@ -86,24 +86,24 @@ describe("OnChange", () => {
                 {({ form }) => (
                     <React.Fragment>
                         <Field name="everything" component="input" type="checkbox" data-testid="everything" />
-                        <OnChange name="everything">
+                        <OnChangeField name="everything">
                             {(next) => {
                                 if (next) {
                                     return form.change("toppings", toppings);
                                 }
                             }}
-                        </OnChange>
+                        </OnChangeField>
                         {toppings.length > 0 &&
                             toppings.map((topping, index) => {
                                 return (
                                     <Field component="input" key={topping} name="toppings" value={topping} type="checkbox" data-testid={topping} />
                                 );
                             })}
-                        <OnChange name="toppings">
+                        <OnChangeField name="toppings">
                             {(next) => {
                                 form.change("everything", next && next.length === toppings.length);
                             }}
-                        </OnChange>
+                        </OnChangeField>
                     </React.Fragment>
                 )}
             </Form>,

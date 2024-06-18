@@ -4,7 +4,7 @@ import { useField } from "react-final-form";
 
 type Props = { name: string; children: (value: any, previousValue: any) => void };
 
-function OnChange({ name, children }: Props) {
+function OnChangeField({ name, children }: Props) {
     const { input } = useField(name);
     const previousValue = useRef(input.value);
 
@@ -18,4 +18,4 @@ function OnChange({ name, children }: Props) {
     return null;
 }
 
-export { OnChange };
+export { OnChangeField };
