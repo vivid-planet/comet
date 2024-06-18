@@ -29,11 +29,11 @@ const CustomInputBase = createComponentSlot(InputBase)<ChipSelectClassKey>({
 
 export interface ChipSelectProps<T = string>
     extends ThemedComponentBaseProps<{
-        root: "div";
-        chip: typeof Chip;
-        select: typeof Select;
-        menuItem: typeof MenuItem;
-    }> {
+            root: "div";
+            select: typeof Select;
+            menuItem: typeof MenuItem;
+        }>,
+        Omit<ChipProps, "children" | "onChange"> {
     children?: React.ReactNode;
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
@@ -44,20 +44,11 @@ export interface ChipSelectProps<T = string>
 }
 
 const ChipInput = ({ chipProps, ...p }: InputBaseProps & { chipProps?: Omit<ChipProps, "children"> }) => {
+    const fallBackLabel = <FormattedMessage id="comet.admin.form.chipselect.placeholder" defaultMessage="Select a value" />;
+
     return (
         <Box sx={{ display: "flex", flexDirection: "column", position: "relative" }}>
-            <Chip
-                icon={<ChevronDown />}
-                label={
-                    p.value?.toString().length ? (
-                        p.value
-                    ) : (
-                        <FormattedMessage id="comet.admin.form.chipselect.placeholder" defaultMessage="Select a value" />
-                    )
-                }
-                variant="filled"
-                {...chipProps}
-            />
+            <Chip icon={<ChevronDown />} label={p.value?.toString().length ? p.value : fallBackLabel} variant="filled" {...chipProps} />
             <CustomInputBase
                 size="small"
                 sx={{
@@ -101,15 +92,16 @@ export function ChipSelect<T = string>(inProps: ChipSelectProps<T>) {
         slotProps,
         onChange,
         fullWidth,
-        ...restProps
+        className,
+        ...chipProps
     } = useThemeProps({
         props: inProps,
         name: "CometAdminChipSelect",
     });
 
     return (
-        <Root {...slotProps?.root} sx={fullWidth ? { ...slotProps?.root?.sx } : { ...slotProps?.root?.sx, width: "fit-content" }} {...restProps}>
-            <Select {...slotProps?.select} value={selectedOption || ""} onChange={onChange} input={<ChipInput chipProps={slotProps?.chip} />}>
+        <Root {...slotProps?.root} sx={fullWidth ? { ...slotProps?.root?.sx } : { ...slotProps?.root?.sx, width: "fit-content" }}>
+            <Select {...slotProps?.select} value={selectedOption || ""} onChange={onChange} input={<ChipInput chipProps={chipProps} />}>
                 {children ??
                     options?.map((option) => (
                         <MenuItem {...slotProps?.menuItem} key={getOptionValue(option)} value={getOptionValue(option)} autoFocus={false}>
