@@ -943,7 +943,8 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "image": "DamImage",
-                                "video": "DamVideo"
+                                "video": "DamVideo",
+                                "youTube": "YouTubeVideo"
                             },
                             "nullable": false
                         }
@@ -971,7 +972,8 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "image": "DamImage",
-                                "video": "DamVideo"
+                                "video": "DamVideo",
+                                "youTube": "YouTubeVideo"
                             },
                             "nullable": false
                         }
