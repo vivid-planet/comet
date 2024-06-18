@@ -47,7 +47,7 @@
         "@mui/lab": "^5.0.0-alpha.76",
         "axios": "^0.21.0",
         "change-case": "^4.1.2",
-        "class-validator": "0.13.2",
+        "class-validator": "0.14.1",
         "clsx": "^1.1.1",
         "commander": "^10.0.1",
         "date-fns": "^2.0.0",
@@ -162,5 +162,8 @@
     "publishConfig": {
         "access": "public",
         "registry": "https://registry.npmjs.org"
+    },
+    "overrides": {
+        "class-validator": "0.14.1"
     }
 }
