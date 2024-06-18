@@ -4,6 +4,7 @@ import {
     Field,
     filterByFragment,
     FinalForm,
+    FinalFormFileUpload,
     FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
@@ -16,7 +17,7 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
@@ -56,8 +57,10 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormManualFragment, "image"> & {
+type FormValues = Omit<GQLProductFormManualFragment, "image" | "factsheet" | "datasheets"> & {
     image: BlockState<typeof rootBlocks.image>;
+    factsheet: string[];
+    datasheets: string[];
 };
 
 export function ProductForm({ id }: FormProps): React.ReactElement {
@@ -75,6 +78,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         ? {
               ...filterByFragment<GQLProductFormManualFragment>(productFormFragment, data.product),
               image: rootBlocks.image.input2State(data.product.image),
+
+              // TODO: Is there a better solution?
+              // - Should `FinalFormFileUpload` be able to handle the `PublicUploads` entity as a value, instead of, or in addition to the `id`?
+              factsheet: data.product.factsheet?.id ? [data.product.factsheet.id] : [],
+              datasheets: data.product.datasheets.length ? data.product.datasheets.map(({ id }) => id) : [],
           }
         : {
               image: rootBlocks.image.defaultValues(),
@@ -96,6 +104,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
 
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+
         const output = {
             ...formValues,
             image: rootBlocks.image.state2Output(formValues.image),
@@ -105,7 +114,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             articleNumbers: [],
             discounts: [],
             statistics: { views: 0 },
+            factsheet: formValues.factsheet?.length ? formValues.factsheet[0] : null,
         };
+
         if (mode === "edit") {
             if (!id) throw new Error();
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
@@ -152,12 +163,13 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             initialValuesEqual={isEqual} //required to compare block data correctly
             subscription={{}}
         >
-            {() => (
+            {({ values }) => (
                 <EditPageLayout>
                     {saveConflict.dialogs}
                     <MainContent>
                         <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
                         <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
+
                         <TextAreaField
                             required
                             fullWidth
@@ -195,6 +207,22 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
+
+                        {/* TODO: TODO: Consider if we should include both, multi- and single-upload fields in this demo form */}
+                        <Field
+                            label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
+                            name="datasheets"
+                            component={FinalFormFileUpload}
+                            maxFiles={5}
+                            fullWidth
+                        />
+                        <Field
+                            label={<FormattedMessage id="product.factsheet" defaultMessage="Factsheet" />}
+                            name="factsheet"
+                            component={FinalFormFileUpload}
+                            maxFiles={1}
+                            fullWidth
+                        />
                     </MainContent>
                 </EditPageLayout>
             )}

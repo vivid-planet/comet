@@ -1,3 +1,4 @@
+import { PublicUpload } from "@comet/cms-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
@@ -32,6 +33,7 @@ import { ProductsService } from "./generated/products.service";
             ProductStatistics,
             ProductColor,
             Manufacturer,
+            PublicUpload,
         ]),
     ],
     providers: [

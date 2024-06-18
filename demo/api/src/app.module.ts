@@ -134,7 +134,7 @@ export class AppModule {
                 PublicUploadModule.register({
                     maxFileSize: config.publicUploads.maxFileSize,
                     directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
-                    acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
+                    acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip", "image/png", "image/jpeg", "image/gif"],
                 }),
                 NewsModule,
                 MenusModule,

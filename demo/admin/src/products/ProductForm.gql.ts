@@ -9,6 +9,12 @@ export const productFormFragment = gql`
         additionalTypes
         inStock
         image
+        factsheet {
+            id
+        }
+        datasheets {
+            id
+        }
         category {
             id
             title
