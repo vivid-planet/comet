@@ -32,6 +32,7 @@ export interface ChipSelectProps<T = string>
         root: "div";
         chip: typeof Chip;
         select: typeof Select;
+        menuItem: typeof MenuItem;
     }> {
     children?: React.ReactNode;
     getOptionLabel?: (option: T) => string;
@@ -109,7 +110,7 @@ export function ChipSelect<T = string>(inProps: ChipSelectProps<T>) {
             <Select {...slotProps?.select} value={selectedOption || ""} onChange={onChange} input={<ChipInput chipProps={slotProps?.chip} />}>
                 {children ??
                     options?.map((option) => (
-                        <MenuItem key={getOptionValue(option)} value={getOptionValue(option)} autoFocus={false}>
+                        <MenuItem {...slotProps?.menuItem} key={getOptionValue(option)} value={getOptionValue(option)} autoFocus={false}>
                             {getOptionLabel(option)}
                         </MenuItem>
                     ))}
