@@ -29,7 +29,7 @@ export type FileSelectSuccessfulFileValue<AdditionalFileValues extends object = 
 
 export type FileSelectErrorFileValue = {
     name?: string;
-    error: string;
+    error: boolean | React.ReactNode;
 };
 
 export type FileSelectLoadingFileValue = {
@@ -54,7 +54,7 @@ type ThemeProps = ThemedComponentBaseProps<{
 }>;
 
 export type FileSelectProps<AdditionalFileValues extends object = Record<string, unknown>> = {
-    value: undefined | FileSelectFileValue<AdditionalFileValues>[];
+    value: FileSelectFileValue<AdditionalFileValues>[];
     onDrop: DropzoneOptions["onDrop"];
     onRemove: (file: FileSelectFileValue<AdditionalFileValues>) => void;
     onDownload?: (file: FileSelectFileValue<AdditionalFileValues>) => void;
@@ -73,7 +73,7 @@ export const FileSelect = <AdditionalFileValues extends object = Record<string, 
         slotProps,
         disabled,
         accept,
-        maxFileSize = 50 * 1024 * 1024,
+        maxFileSize = 50 * 1024 * 1024, // 50 MB
         maxFiles,
         iconMapping = {},
         onDrop,
@@ -92,7 +92,6 @@ export const FileSelect = <AdditionalFileValues extends object = Record<string, 
     const multiple = typeof maxFiles === "number" && maxFiles > 1;
     const numberOfValidFiles = value?.filter((file) => !("error" in file)).length ?? 0;
     const maxAmountOfFilesSelected = multiple && numberOfValidFiles >= maxFiles;
-    const valuesList = !value ? [] : Array.isArray(value) ? value : [value];
     const maxNumberOfFilesToBeAdded = maxFiles ? maxFiles - numberOfValidFiles : undefined;
 
     return (
@@ -120,9 +119,9 @@ export const FileSelect = <AdditionalFileValues extends object = Record<string, 
                     {...slotProps?.dropzone}
                 />
             )}
-            {valuesList.length > 0 && (
+            {value.length > 0 && (
                 <FileList {...slotProps?.fileList}>
-                    {valuesList.map((file, index) => {
+                    {value.map((file, index) => {
                         return (
                             <FileListItem
                                 key={index}

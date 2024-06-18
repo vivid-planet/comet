@@ -40,6 +40,7 @@ export type FileSelectListItemClassKey =
 
 export type FileSelectListItemProps = ThemedComponentBaseProps<{
     root: "div";
+    skeleton: typeof MuiSkeleton;
     content: "div";
     fileListItemInfos: "div";
     fileName: typeof Typography;
@@ -99,7 +100,7 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
     };
 
     if (skeleton) {
-        return <Skeleton variant="rounded" height={35} animation="wave" width="100%" sx={{ borderRadius: 2 }} />;
+        return <Skeleton variant="rounded" height={35} animation="wave" width="100%" sx={{ borderRadius: 2 }} {...slotProps?.skeleton} />;
     }
 
     return (
@@ -310,6 +311,7 @@ const ErrorDetails = createComponentSlot("div")<FileSelectListItemClassKey>({
         line-height: 0;
     `,
 );
+
 const ErrorDetailsText = createComponentSlot(Typography)<FileSelectListItemClassKey>({
     componentName: "FileSelectListItem",
     slotName: "errorDetailsText",

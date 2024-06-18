@@ -7,7 +7,7 @@ type StoryProps = {
     hasExistingFiles?: boolean;
 };
 
-const dummyFiles = [
+const dummyFiles: FileSelectFileValue[] = [
     { name: "lorem ipsum.png", size: 3e5 },
     {
         name: "This is a file with a really long name to test truncating in the file list.jpeg",
