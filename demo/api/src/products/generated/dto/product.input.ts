@@ -114,6 +114,16 @@ export class ProductInput {
     @Field(() => ID, { nullable: true, defaultValue: null })
     @IsUUID()
     manufacturer?: string;
+
+    @IsNullable()
+    @Field(() => ID, { nullable: true, defaultValue: null })
+    @IsString()
+    factsheet?: string;
+
+    @Field(() => [ID], { defaultValue: [] })
+    @IsArray()
+    @IsString({ each: true })
+    datasheets: string[];
 }
 
 @InputType()

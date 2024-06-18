@@ -9,7 +9,7 @@ import { Alert } from "../../alert/Alert";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { FileDropzone } from "./FileDropzone";
-import { FileSelectItem } from "./fileSelectItemTypes";
+import { ErrorFileSelectItem, FileSelectItem, ValidFileSelectItem } from "./fileSelectItemTypes";
 import { FileSelectListItem } from "./FileSelectListItem";
 import { getFilesInfoText } from "./getFilesInfoText";
 
@@ -37,8 +37,8 @@ type ThemeProps = ThemedComponentBaseProps<{
 export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>> = {
     files: FileSelectItem<AdditionalValidFileValues>[];
     onDrop: DropzoneOptions["onDrop"];
-    onRemove: (file: FileSelectItem<AdditionalValidFileValues>) => void;
-    onDownload?: (file: FileSelectItem<AdditionalValidFileValues>) => void;
+    onRemove: (file: FileSelectItem<AdditionalValidFileValues> | ErrorFileSelectItem) => void;
+    onDownload?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => void;
     disabled?: boolean;
     accept?: Accept;
     maxFileSize?: number;
@@ -109,7 +109,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                                 key={index}
                                 file={file}
                                 onClickDownload={
-                                    "error" in file || !onDownload
+                                    "error" in file || "loading" in file || !onDownload
                                         ? undefined
                                         : () => {
                                               onDownload(file);

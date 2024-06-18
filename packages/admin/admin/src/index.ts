@@ -91,6 +91,7 @@ export { FileDropzone, FileDropzoneClassKey, FileDropzoneProps } from "./form/fi
 export { FileSelect, FileSelectClassKey, FileSelectProps } from "./form/file/FileSelect";
 export { ErrorFileSelectItem, FileSelectItem, LoadingFileSelectItem, ValidFileSelectItem } from "./form/file/fileSelectItemTypes";
 export { FileSelectListItem, FileSelectListItemClassKey, FileSelectListItemProps } from "./form/file/FileSelectListItem";
+export { FinalFormFileUpload, FinalFormFileUploadProps } from "./form/file/FinalFormFileUpload";
 export { FinalFormAsyncAutocomplete, FinalFormAsyncAutocompleteProps } from "./form/FinalFormAsyncAutocomplete";
 export { FinalFormAsyncSelect, FinalFormAsyncSelectProps } from "./form/FinalFormAsyncSelect";
 export { FinalFormContext, FinalFormContextProvider, FinalFormContextProviderProps, useFinalFormContext } from "./form/FinalFormContextProvider";

@@ -5,6 +5,7 @@ import { FindOptions, Reference } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { PublicUpload } from "@src/../../../packages/api/cms-api/lib/public-upload/entities/public-upload.entity.js";
 import { GraphQLResolveInfo } from "graphql";
 
 import { Manufacturer } from "../entities/manufacturer.entity";
@@ -29,6 +30,7 @@ export class ProductResolver {
         @InjectRepository(Product) private readonly repository: EntityRepository<Product>,
         @InjectRepository(ProductCategory) private readonly productCategoryRepository: EntityRepository<ProductCategory>,
         @InjectRepository(Manufacturer) private readonly manufacturerRepository: EntityRepository<Manufacturer>,
+        @InjectRepository(PublicUpload) private readonly publicUploadRepository: EntityRepository<PublicUpload>,
         @InjectRepository(ProductStatistics) private readonly productStatisticsRepository: EntityRepository<ProductStatistics>,
         @InjectRepository(ProductColor) private readonly productColorRepository: EntityRepository<ProductColor>,
         @InjectRepository(ProductToTag) private readonly productToTagRepository: EntityRepository<ProductToTag>,
@@ -65,6 +67,9 @@ export class ProductResolver {
         if (fields.includes("manufacturer")) {
             populate.push("manufacturer");
         }
+        if (fields.includes("factsheet")) {
+            populate.push("factsheet");
+        }
         if (fields.includes("colors")) {
             populate.push("colors");
         }
@@ -76,6 +81,9 @@ export class ProductResolver {
         }
         if (fields.includes("tags")) {
             populate.push("tags");
+        }
+        if (fields.includes("datasheets")) {
+            populate.push("datasheets");
         }
         if (fields.includes("statistics")) {
             populate.push("statistics");
@@ -102,8 +110,10 @@ export class ProductResolver {
             colors: colorsInput,
             tagsWithStatus: tagsWithStatusInput,
             tags: tagsInput,
+            datasheets: datasheetsInput,
             category: categoryInput,
             manufacturer: manufacturerInput,
+            factsheet: factsheetInput,
             statistics: statisticsInput,
             image: imageInput,
             ...assignInput
@@ -113,6 +123,7 @@ export class ProductResolver {
 
             category: categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined,
             manufacturer: manufacturerInput ? Reference.create(await this.manufacturerRepository.findOneOrFail(manufacturerInput)) : undefined,
+            factsheet: factsheetInput ? Reference.create(await this.publicUploadRepository.findOneOrFail(factsheetInput)) : undefined,
             image: imageInput.transformToBlockData(),
         });
         if (colorsInput) {
@@ -146,6 +157,12 @@ export class ProductResolver {
             await product.tags.loadItems();
             product.tags.set(tags.map((tag) => Reference.create(tag)));
         }
+        if (datasheetsInput) {
+            const datasheets = await this.publicUploadRepository.find({ id: datasheetsInput });
+            if (datasheets.length != datasheetsInput.length) throw new Error("Couldn't find all datasheets that were passed as input");
+            await product.datasheets.loadItems();
+            product.datasheets.set(datasheets.map((datasheet) => Reference.create(datasheet)));
+        }
 
         if (statisticsInput) {
             const statistic = new ProductStatistics();
@@ -172,8 +189,10 @@ export class ProductResolver {
             colors: colorsInput,
             tagsWithStatus: tagsWithStatusInput,
             tags: tagsInput,
+            datasheets: datasheetsInput,
             category: categoryInput,
             manufacturer: manufacturerInput,
+            factsheet: factsheetInput,
             statistics: statisticsInput,
             image: imageInput,
             ...assignInput
@@ -212,6 +231,12 @@ export class ProductResolver {
             await product.tags.loadItems();
             product.tags.set(tags.map((tag) => Reference.create(tag)));
         }
+        if (datasheetsInput) {
+            const datasheets = await this.publicUploadRepository.find({ id: datasheetsInput });
+            if (datasheets.length != datasheetsInput.length) throw new Error("Couldn't find all datasheets that were passed as input");
+            await product.datasheets.loadItems();
+            product.datasheets.set(datasheets.map((datasheet) => Reference.create(datasheet)));
+        }
 
         if (statisticsInput) {
             const statistic = product.statistics ? await product.statistics.load() : new ProductStatistics();
@@ -227,6 +252,9 @@ export class ProductResolver {
             product.manufacturer = manufacturerInput
                 ? Reference.create(await this.manufacturerRepository.findOneOrFail(manufacturerInput))
                 : undefined;
+        }
+        if (factsheetInput !== undefined) {
+            product.factsheet = factsheetInput ? Reference.create(await this.publicUploadRepository.findOneOrFail(factsheetInput)) : undefined;
         }
 
         if (imageInput) {
@@ -257,6 +285,11 @@ export class ProductResolver {
         return product.manufacturer?.load();
     }
 
+    @ResolveField(() => PublicUpload, { nullable: true })
+    async factsheet(@Parent() product: Product): Promise<PublicUpload | undefined> {
+        return product.factsheet?.load();
+    }
+
     @ResolveField(() => [ProductColor])
     async colors(@Parent() product: Product): Promise<ProductColor[]> {
         return product.colors.loadItems();
@@ -275,6 +308,11 @@ export class ProductResolver {
     @ResolveField(() => [ProductTag])
     async tags(@Parent() product: Product): Promise<ProductTag[]> {
         return product.tags.loadItems();
+    }
+
+    @ResolveField(() => [PublicUpload])
+    async datasheets(@Parent() product: Product): Promise<PublicUpload[]> {
+        return product.datasheets.loadItems();
     }
 
     @ResolveField(() => ProductStatistics, { nullable: true })
